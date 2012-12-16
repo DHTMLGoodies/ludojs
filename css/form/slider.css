@@ -1,0 +1,80 @@
+.ludo-form-slider-container{
+    position:relative;
+    margin:0;
+    /** This element should never have any border or padding */
+    padding:0 !important;
+    border:0 !important;
+}
+
+.ludo-form-slider-bg-first{
+    position:absolute;
+    left:0;
+    top:0;
+    background-repeat:no-repeat;
+    background-position:top left;
+}
+.ludo-form-slider-bg-last{
+    position:absolute;
+    background-repeat:no-repeat;
+}
+.ludo-form-slider-handle{
+    position:absolute;
+    left:0;
+    background-repeat:no-repeat;
+    background-position:top left;
+    cursor:pointer;
+}
+
+/* Horizontal slider */
+
+.ludo-form-slider-horizontal{
+    height:20px;
+    margin-right:2px;
+}
+.ludo-form-slider-horizontal .ludo-form-slider-bg-first{
+    width:60%;
+    height:100%;
+
+}
+
+
+.ludo-form-slider-horizontal .ludo-form-slider-bg-last{
+    width:60%;
+    top:0;
+    right:0;
+    height:100%;
+
+    background-position:top right;
+}
+
+.ludo-form-slider-horizontal .ludo-form-slider-handle{
+    width:10px;
+    height:100%;
+
+}
+
+/* Vertical slider */
+.ludo-form-slider-vertical{
+    width:20px;
+    margin-bottom:2px;
+}
+
+.ludo-form-slider-vertical .ludo-form-slider-bg-first{
+    height:60%;
+    width:100%;
+
+}
+
+.ludo-form-slider-vertical .ludo-form-slider-bg-last{
+    height:60%;
+    width:100%;
+    bottom:0;
+    left:0;
+    background-position:bottom left;
+}
+
+.ludo-form-slider-vertical .ludo-form-slider-handle{
+    height:10px;
+    left:0;
+    width:100%;
+}

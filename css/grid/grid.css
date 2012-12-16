@@ -1,0 +1,246 @@
+.ludo-grid-Grid {
+    border-radius:0;
+    border:0;
+    padding: 0px;
+    position:relative;
+}
+
+.ludo-grid-Grid .ludo-body div {
+    font-family: arial, helvetica;
+    -moz-user-select: none;
+}
+.ludo-header{
+    height:21px; /** To be removed */
+}
+.ludo-grid-Grid .ludo-header {
+    height: 21px;
+    font-size:13px;
+    line-height: 21px;
+
+    width: 2000px;
+    position: relative;
+    background-repeat: repeat-x;
+}
+.ludo-grid-Grid .ludo-grid-header-cell-top, .ludo-grid-Grid .ludo-grid-header-cell-bottom{
+    position:absolute;
+    width:100%;
+    left:0px;
+    background-repeat:repeat-x
+}
+.ludo-grid-Grid .ludo-grid-header-cell-top{
+    background-position: top left;
+    top:0px;
+}
+
+.ludo-grid-Grid .ludo-grid-header-cell-bottom{
+    background-position: bottom left;
+    bottom:0px;
+}
+
+.ludo-grid-header-cell {
+    position: absolute;
+    overflow: hidden;
+    padding-left: 5px;
+    padding-right: 5px;
+    height: 20px;
+    cursor: default;
+}
+
+.ludo-grid-Grid div.last-header-cell {
+    border-right: 0px;
+}
+
+.ludo-grid-row-header-container {
+    position: relative;
+    width: 50px;
+    height: 1000px;
+}
+
+.ludo-grid-Grid .ludo-header-cell {
+    height: 22px;
+    line-height: 25px;
+    text-align: center;
+}
+
+.ludo-grid-header-cell-over {
+    border-bottom: 1px solid #CCC;
+    cursor: pointer;
+}
+
+.ludo-body-grid {
+    padding:0;
+    padding-left: 2px;
+    cursor: default;
+}
+
+.ludo-grid-Grid .ludo-header .ludo-cell-text {
+    white-space: nowrap;
+    padding-right: 12px;
+    background-repeat: no-repeat;
+    background-position: right center;
+    z-index:10;
+    position:relative;
+}
+
+.ludo-grid-Grid .ludo-cell-text-sort-asc {
+    background-image: url('../images/grid/grid-sort-asc.png');
+}
+
+.ludo-grid-Grid .ludo-cell-text-sort-desc {
+    background-image: url('../images/grid/grid-sort-desc.png');
+}
+
+.ludo-grid-resize-handle {
+    background-color: transparent;
+    width: 5px;
+    border-left: 0px;
+    opacity: 0;
+    filter: alpha(opacity = 0);
+    margin-left: -1px;
+}
+
+.ludo-grid-resize-handle-over {
+    opacity: 0.05;
+    filter: alpha(opacity = 5);
+
+}
+
+.ludo-grid-Grid .ludo-resize-handle-active{
+    border-left: 1px dotted #777;
+    background-color:transparent;
+}
+.ludo-grid-data-container {
+    background-color: #FFF;
+}
+
+.ludo-grid-data-column {
+    position: absolute;
+    overflow: hidden;
+    padding-left:0;
+    padding-right:0;
+    border-right:1px solid #EEE;
+}
+
+.ludo-grid-data-last-column{
+    border-right:0px;
+}
+
+.ludo-grid-Grid .ludo-header-center{
+    text-align:center;
+}
+.ludo-grid-Grid .ludo-header-right{
+    text-align:right;
+}
+.ludo-grid-data-column-right .ludo-grid-data-cell, .ludo-grid-data-last-column-right .ludo-grid-data-cell {
+    float: right;
+    text-align: right;
+    padding-right: 6px;
+}
+
+.ludo-grid-data-last-column-right .ludo-grid-data-cell {
+    padding-right: 26px;
+}
+/* Div container for a cell in the grid */
+.ludo-grid-data-cell {
+    width: 2000px;
+    height: 21px;
+    line-height: 21px;
+    position: relative;
+    padding-left: 5px;
+    border-top:1px solid #FFF;
+}
+
+.ludo-grid-data-cell-text {
+    white-space: nowrap;
+    font-size: 11px;
+}
+/* Styling for cells in odd rows in grid */
+.ludo-grid-data-odd-row {
+    border-bottom: 1px solid #EEE;
+}
+/* Styling for cells in even rows in grid */
+.ludo-grid-data-even-row {
+    border-bottom: 1px solid #EEE;
+}
+/* Styling for mouse over rows in grid */
+.ludo-grid-record-over{
+    border-top:1px solid #F4F4F4;
+    background-color:#F4F4F4;
+
+}
+
+/* Styling for highlighted rows in grid, i.e. onclick */
+
+.ludo-grid-movable-shim {
+    opacity: 1;
+    filter: null;
+    background-color: #FFF;
+    line-height: 30px;
+    font-family: arial;
+    padding-left: 5px;
+    font-size: 12px;
+    z-index: 90000;
+}
+
+div.ludo-grid-movable-insertion-marker {
+    background-image: url('../images/grid/insertion-marker-top.png');
+    background-repeat: no-repeat;
+    background-postion:top center;
+    width: 7px;
+    height: 31px;
+    position: absolute;
+    background-color: transparent;
+    border:0;
+    margin-left: -4px;
+    z-index: 30000;
+}
+
+div.ludo-grid-movable-insertion-marker-bottom {
+    background-image: url('../images/grid/insertion-marker-bottom.png');
+    background-repeat: no-repeat;
+    background-postion:bottom center;
+    position:absolute;
+    width:100%;
+    height:4px;
+    bottom:0px;
+}
+
+.ludo-grid-Grid .ludo-body {
+    padding-top:0;
+    background-color: #FFF;
+}
+
+.ludo-paging-previous .ludo-form-button-value{
+    background-image:url('../images/grid/previous.png');
+}
+.ludo-form-button-disabled.ludo-paging-previous .ludo-form-button-value{
+    background-image:url('../images/grid/previous-disabled.png');
+}
+.ludo-form-button-disabled.ludo-paging-next .ludo-form-button-value{
+    background-image:url('../images/grid/next-disabled.png');
+}
+.ludo-paging-next .ludo-form-button-value{
+    background-image:url('../images/grid/next.png');
+}
+.ludo-paging-last .ludo-form-button-value{
+    background-image:url('../images/grid/last.png');
+}
+.ludo-form-button-disabled.ludo-paging-last .ludo-form-button-value{
+    background-image:url('../images/grid/last-disabled.png');
+}
+.ludo-paging-first .ludo-form-button-value{
+    background-image:url('../images/grid/first.png');
+}
+.ludo-form-button-disabled.ludo-paging-first .ludo-form-button-value{
+    background-image:url('../images/grid/first-disabled.png');
+}
+div.ludo-paging-total-pages{
+    margin-top:5px;
+}
+div.ludo-paging-total-pages .ludo-body{
+    font-size:12px;
+}
+
+
+
+

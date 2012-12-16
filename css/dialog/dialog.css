@@ -1,0 +1,16 @@
+.ludo-dialog-shim{
+    position:absolute;
+    left:0;
+    top:0;
+    background-color:#AAA;
+    filter:alpha(opacity=10);
+    opacity:.1;
+}
+
+
+.ludo-Porter-Dialog .ludo-body{
+    font-size:1.1em;
+    background-color:#FFF;
+    color:#000;
+    font-family:arial, Sans-Serif;
+}

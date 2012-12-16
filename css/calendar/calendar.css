@@ -1,0 +1,134 @@
+.ludo-calendar-year-container {
+     background-color:#555;
+     padding-bottom:5px;
+     padding-top:5px;
+     height:20;
+ }
+ .ludo-calendar-month-year-container{
+     background-color:#555;
+     padding-top:6px;
+     height:20;
+ }
+ .ludo-calendar-year, .ludo-calendar-month-year {
+     color:#FFF;
+     float:left;
+     font-size:10px;
+     padding-left:10px;
+     padding-right:10px;
+     cursor:pointer;
+ }
+ .ludo-calendar-year-selected {
+     background-color:#eeeee8;
+     color:#000;
+     border-top-left-radius:5px;
+     border-top-right-radius:5px;
+     border-bottom-left-radius:5px;
+     border-bottom-right-radius:5px;
+     font-weight:bold;
+ }
+ .ludo-calendar-month-year-selected{
+     background-color:#eeeee8;
+     color:#000;
+     border-top-left-radius:5px;
+     border-top-right-radius:5px;
+
+     font-weight:bold;
+ }
+ .ludo-calendar-year-disabled{
+     cursor:default;
+     color:#CCC;
+ }
+
+ .ludo-calendar-month-container{
+     background-color:#555;
+     padding-top:5px;
+     height:14px;
+ }
+ .ludo-calendar-month{
+     cursor:pointer;
+     float:left;
+     font-size:10px;
+     color:#FFF;
+
+ }
+ .ludo-calendar-month-selected{
+     background-color:#eeeee8;
+     color:#000;
+     border-top-left-radius:5px;
+     border-top-right-radius:5px;
+     font-weight:bold;
+     padding-left:10px;
+     padding-right:10px;
+ }
+ .ludo-calendar-month-tip{
+     background-color:#555;
+ }
+ .ludo-calendar-month-inactive{
+     width:10px;
+     height:10px;
+     background-image:url(../images/calendar-month-dot.png);
+     background-repeat:no-repeat;
+     background-position:center center;
+     padding-left:5px;
+     padding-right:5px;
+ }
+ .ludo-calendar-header{
+     border-bottom:1px solid #999;
+ }
+ .ludo-calendar-header td{
+     text-align:center;
+ }
+ .ludo-calendar-view{
+     font-size:11px;
+ }
+ .ludo-calendar-header{
+     height:20px;
+     line-height:20px;
+     position:relative;
+ }
+.ludo-calendar-container-days{
+    border-bottom:1px solid #999;
+    background-color:#FFF;
+}
+ .ludo-calendar-container-days td{
+     line-height:15px;
+ }
+ .calendar-week{
+     border-right:1px solid #999;
+     text-align:center;
+     background-color:#eeeee8;
+     color:#000;
+ }
+ td.calendar-day{
+     text-align:center;
+     cursor:pointer;
+ }
+ .calendar-sunday{
+     color:red;
+ }
+ .calendar-day-inactive{
+     color:#999;
+ }
+ .ludo-calendar-info-panel{
+     background-color:#555;
+ }
+ .ludo-calendar-month-info{
+     text-align:center;
+     color:#FFF;
+     font-size:10px;
+     font-weight:bold;
+     border-top:1px solid #999;
+ }
+.calendar-day{
+    border:1px solid #FFF;
+}
+.calendar-day-selected{
+    background-color:#eeeee8;
+    border:1px solid #AAA;
+}
+.calendar-day-today{
+    border:1px solid #eeeee8;
+}
+.calendar-day-mouse-over{
+    background-color:#eeeee8;
+}

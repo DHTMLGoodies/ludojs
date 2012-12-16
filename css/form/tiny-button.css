@@ -1,0 +1,20 @@
+.ludo-form-tinybutton{
+    padding-left:1px;
+    padding-right:1px;
+}
+.ludo-form-tinybutton .ludo-form-button-bg-left, .ludo-form-tinybutton .ludo-form-button-bg-right{
+    background-image:url('../images/tiny-button.png');
+}
+.ludo-form-tinybutton .ludo-form-button-over .ludo-form-button-bg-left, .ludo-form-tinybutton .ludo-form-button-over .ludo-form-button-bg-right{
+    background-image:url('../images/tiny-button-over.png');
+}
+.ludo-form-tinybutton .ludo-form-button-down .ludo-form-button-bg-left, .ludo-form-tinybutton .ludo-form-button-down .ludo-form-button-bg-right{
+    background-image:url('../images/tiny-button-down.png');
+}
+.ludo-form-tinybutton .ludo-form-button-disabled .ludo-form-button-bg-left, .ludo-form-tinybutton .ludo-form-button-disabled .ludo-form-button-bg-right{
+    background-image:url('../images/tiny-button-disabled.png');
+}
+.ludo-form-tiny-button .ludo-form-button-value{
+    line-height:15px;
+    font-size:11px;
+}

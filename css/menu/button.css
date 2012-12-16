@@ -1,0 +1,17 @@
+.ludo-menu-button{
+    width:16px;
+    z-index:10000;
+    cursor:pointer;
+}
+.ludo-menu-button-active{
+
+    background-image:url(../images/menu/button-arrow.png);
+    background-position : center center;
+    background-repeat:no-repeat;
+}
+.ludo-menu-button .ludo-menu-button-arrow{
+    border-left:1px solid #FFF;
+    width:100%;
+    height:100%;
+
+}

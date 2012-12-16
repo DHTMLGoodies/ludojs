@@ -1,0 +1,11 @@
+.ludo-input-file-name-initial{
+    font-weight:bold;
+    font-style:normal;
+}
+.ludo-input-file-name-new-file{
+
+}
+.ludo-input-file-name-not-uploaded{
+    font-style:italic;
+    color:#999;
+}

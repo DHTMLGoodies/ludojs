@@ -1,0 +1,22 @@
+.ludo-panel{
+    margin:5px;
+}
+
+.ludo-panel fieldset{
+    border-radius : 5px;
+     webkit-border-radius: 5px;
+     -moz-border-radius : 5px;    
+
+}
+.ludo-panel .ludo-view-container{
+    margin:2px;
+}
+.ludo-panel .ludo-view-container .ludo-view-container{
+    padding-left:0px;
+    padding-right:0px;
+}
+
+fieldset{
+    padding:0px;
+    margin:2px;
+}

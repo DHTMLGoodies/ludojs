@@ -1,0 +1,11 @@
+.ludo-form-element div.ludo-body {
+    padding: 2px;
+}
+
+.ludo-body label.ludo-form-label-disabled {
+    color: #AAA;
+}
+
+.ludo-body input, .ludo-body textarea {
+    font-family: arial, helvetica, Sans-Serif;
+}

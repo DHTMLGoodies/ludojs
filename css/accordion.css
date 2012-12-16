@@ -1,0 +1,36 @@
+.ludo-accordion{
+    border-radius:0;
+    border:1px solid #CCC;
+}
+.ludo-accordion .ludo-rich-view-titlebar{
+    border-bottom:0;
+    cursor:pointer;
+}
+.ludo-accordion .ludo-rich-view-titlebar-title{
+    margin-left:20px;
+    line-height:25px;
+}
+.ludo-accordion .ludo-title-bar-button-container{
+    left:2px !important;
+    top:4px !important;
+    height:20px;
+    border:0;
+    background-color:transparent;
+}
+.ludo-accordion .ludo-title-bar-button{
+    background-position:center center;
+}
+.ludo-accordion .ludo-title-bar-button-minimize {
+    background-image:url(../images/accordion-minimize.png);
+}
+.ludo-accordion .ludo-title-bar-button-maximize {
+    background-image:url(../images/accordion-maximize.png);
+}
+
+.ludo-accordion .ludo-title-bar-button-container-left-edge, .ludo-accordion .ludo-title-bar-button-container-right-edge{
+    background-image:none;
+}
+
+.ludo-accordion .ludo-rich-view-titlebar{
+    height:25px;
+}

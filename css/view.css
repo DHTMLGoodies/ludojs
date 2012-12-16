@@ -1,0 +1,404 @@
+/**
+* CSS RULES
+* All components are assigned to class ludo-<namespace>-<component name>
+* with component name in lowercase, example
+* ludo-tree-tree for Tree component,
+* ludo-form-button for a button,
+* ludo-grid for a grid
+*
+*
+*/
+.ludo-component-pleasewait {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-top: -10px;
+    width: 150px;
+    margin-left: -75px;
+    background-image: url('../images/ajax-loader.gif');
+    background-repeat: no-repeat;
+    background-position: 5px center;
+    padding-left: 25px;
+    height: 30px;
+    line-height: 30px;
+    border: 1px solid #999;
+    border-radius: 5px;
+    webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    z-index: 100;
+    background-color: #FFF;
+}
+
+.ludo-rich-view-shim {
+    z-index: 31000;
+}
+
+.ludo-rich-view-above {
+    position: absolute;
+    width: 100%;
+    height: 50%;
+}
+
+.ludo-rich-view-below {
+    position: absolute;
+    width: 100%;
+    height: 50%;
+    top: 50%;
+}
+
+/* bold title bar */
+.ludo-rich-view-titlebar {
+    width: 100%;
+    height:24px;
+    z-index: 100;
+    overflow: hidden;
+    position: relative;
+    background-position: top left;
+    background-repeat: repeat-x;
+    border-top-left-radius:4px;
+    border-top-right-radius:4px;
+}
+.ludo-dashboard .ludo-rich-view-titlebar{
+    height: 24px;
+}
+
+/* No bold titlebar */
+.ludo-component-titlebar {
+    width: 100%;
+    z-index: 100;
+    height: 22px;
+    overflow: hidden;
+    position: relative;
+    border-bottom: 1px solid;
+    background-image: url('../images/bg-title-bar-normal.png');
+}
+
+.ludo-component-titlebar .ludo-component-buttonbar {
+    height: 22px;
+}
+
+.ludo-rich-view-titlebar-icon {
+    position: absolute;
+    left: 1px;
+    width: 20px;
+    height: 100%;
+    background-position: center center;
+    background-repeat: no-repeat;
+}
+
+.ludo-rich-view-titlebar-title {
+    position: absolute;
+    margin-left: 3px;
+    height: 100%;
+    font-family: arial;
+    font-size:12px;
+    font-weight: bold;
+    line-height: 23px;
+    color: #000;
+}
+
+.ludo-rich-view-shim {
+    background-color: #CCC;
+    box-shadow: 3px 3px 8px #555;
+    position: absolute;
+    opacity: 0.5;
+    filter: alpha(opacity = 50);
+}
+
+.ludo-dashboard .ludo-rich-view-body {
+    background-color: #FFF;
+}
+
+.ludo-rich-view-body {
+    overflow-y: auto;
+    position: relative;
+}
+
+.ludo-component-buttonbar {
+    position: relative;
+    padding-right: 1px;
+    padding-top: 2px;
+    padding-bottom: 0px;
+    margin-left: 5px;
+    margin-right: 5px;
+    height: 24px;
+}
+
+.ludo-component-statusbar {
+    height: 18px;
+    border-top: 1px solid;
+    position: relative;
+}
+
+.ludo-component-statusbar div {
+    float: left;
+    padding-left: 3px;
+}
+
+
+.ludo-component-statusbar-icon {
+    position: relative;
+    left: 2px;
+    top: 0px;
+    background-repeat: no-repeat;
+    background-position: center center;
+    height: 100%;
+    width: 20px;
+}
+
+.ludo-component-statusbar-text {
+    position: relative;
+    line-height: 18px;
+    height: 100%;
+    font-family: arial;
+    font-size: 0.8em;
+    overflow: hidden;
+    white-space: nowrap;
+    color: #666;
+}
+
+.ludo-title-bar-button-container {
+    position: absolute;
+    overflow:hidden;
+    width: 50px;
+    right: 2px;
+    top: 4px;
+    padding-left: 2px;
+    padding-right: 2px;
+    background-color: transparent;
+    border-radius: 0;
+    border: 0;
+    height: 16px;
+
+}
+
+.ludo-title-bar-button {
+    width: 15px;
+    float: left;
+    background-position: center center;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    position:relative;
+    z-index:2;
+
+    height: 14px;
+    margin-top: 1px;
+    margin-bottom: 1px;
+}
+
+/** Title bar buttons */
+.ludo-title-bar-button-container {
+    right: 2px;
+    top: 4px;
+    padding-left: 2px;
+    padding-right: 2px;
+    background-color: transparent;
+    border-radius: 0;
+    border: 0;
+    height: 16px;
+}
+
+.ludo-title-bar-button {
+    height: 14px;
+    margin-top: 1px;
+    margin-bottom: 1px;
+    background-position: center center;
+}
+
+.ludo-title-bar-button-container-left-edge {
+    background-image: url('../images/bg-title-bar-buttons.png');
+}
+
+.ludo-title-bar-button-container-right-edge {
+    background-image: url('../images/bg-title-bar-buttons.png');
+}
+
+.ludo-view-collapsed-over {
+    background-color: #CCC;
+}
+
+.ludo-title-bar-button-close {
+    background-image: url('../images/title-bar-btn-close.png');
+}
+
+.ludo-title-bar-button-close-over {
+    background-image: url('../images/title-bar-btn-close-over.png');
+}
+
+.ludo-title-bar-button-minimize {
+    background-image: url('../images/title-bar-btn-minimize.png');
+}
+
+.ludo-title-bar-button-minimize-over {
+    background-image: url('../images/title-bar-btn-minimize-over.png');
+}
+
+.ludo-title-bar-button-maximize {
+    background-image: url('../images/title-bar-btn-maximize.png');
+}
+
+.ludo-title-bar-button-maximize-over {
+    background-image: url('../images/title-bar-btn-maximize-over.png');
+}
+
+.ludo-title-bar-button-collapse-left {
+    background-image: url('../images/title-bar-btn-coll-left.png');
+}
+
+.ludo-title-bar-button-collapse-left-over {
+    background-image: url('../images/title-bar-btn-coll-left-o.png');
+}
+
+.ludo-title-bar-button-collapse-right {
+    background-image: url('../images/title-bar-btn-coll-right.png');
+}
+
+.ludo-title-bar-button-collapse-right-over {
+    background-image: url('../images/title-bar-btn-coll-right-o.png');
+}
+
+.ludo-title-bar-button-collapse-bottom {
+    background-image: url('../images/title-bar-btn-coll-down.png');
+}
+
+.ludo-title-bar-button-collapse-bottom-over {
+    background-image: url('../images/title-bar-btn-coll-down-o.png');
+}
+
+.ludo-title-bar-button-collapse-top {
+    background-image: url('../images/title-bar-btn-coll-up.png');
+}
+
+.ludo-title-bar-button-collapse-top-over {
+    background-image: url('../images/title-bar-btn-coll-up-o.png');
+}
+
+.ludo-title-bar-button-with-border {
+    border-left: 1px solid #AAA;
+}
+.ludo-title-bar-button-menu {
+    background-image: url('../images/dropdown-menu.gif');
+}
+
+.ludo-title-bar-button-menu-over {
+    background-image: url('../images/dropdown-menu-over.gif');
+}
+
+.ludo-dashboard-insertion-marker {
+    position: relative;
+    border: 1px solid #AAA;
+    height: 100%;
+    margin-bottom: 8px;
+    background-color: white;
+    background-image: url(../images/pattern-green.gif);
+}
+
+.ludo-body {
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.ludo-menu .ludo-body {
+    overflow: hidden;
+}
+
+.ludo-component-full-screen .ludo-body {
+    overflow: hidden;
+}
+
+.ludo-component-full-screen-view-effect {
+    border: 1px dotted #000;
+}
+
+.ludo-body {
+    position: relative;
+}
+
+div.ludo-content-child-of-fullscreen {
+    padding: 0px;
+    margin: 0px;
+}
+
+.ludo-view-container {
+    overflow: hidden;
+    font-family:arial;
+}
+
+.ludo-richcomponent .ludo-component-resize {
+    display: none;
+}
+
+.ludo-component-resize, .ludo-window .ludo-component-resize, .ludo-dashboard-column .ludo-component-resize {
+    display: block;
+}
+
+.ludo-application-content .ludo-component-resize {
+    display: none;
+}
+
+.ludo-container-frame {
+    border: 1px solid;
+}
+
+.ludo-view-collapsed {
+    position: absolute;
+    border: 1px solid;
+    cursor: pointer;
+    margin: 0px;
+}
+
+.ludo-view-collapsed-cols {
+    width: 20px;
+}
+
+.ludo-view-collapsed-rows {
+    height: 20px;
+}
+.ludo-view-collapsed-title{
+    padding:1px;
+    font-weight:bold;
+    padding-left: 5px;
+}
+.ludo-view-collapsed-title-cols{
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    transform: rotate(90deg);
+    padding-left:3px;
+}
+/* Button container at the bottom */
+div.ludo-component-button-container, div.ludo-content-buttons {
+    padding: 0 !important;
+    margin: 0 !important;
+    border: 0 !important;
+    background-color: transparent !important;
+}
+
+.ludo-content-buttons .ludo-view-container{
+    background-color:transparent;
+}
+.ludo-component-button-container{
+    padding-left:3px;
+}
+
+div.ludo-window, div.ludo-rich-view-shim, div.ludo-dashboard-insertion-marker{
+    border-radius:3px;
+}
+div.ludo-RichView {
+    border-radius: 0px;
+}
+
+
+.ludo-unselectable *{
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}
+
+.ludo-view-container {
+    border-width: 1px;
+    background-color: #FFF;
+    overflow: hidden;
+    position: relative;
+}

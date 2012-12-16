@@ -1,0 +1,47 @@
+.ludo-combo{
+    padding-left:3px;
+    padding-right:3px;
+    padding-top:0px;
+    padding-bottom:0px;
+    margin:2px;
+    border-radius:5px !important;
+    border:1px solid #AAA;
+    background-image:url(../images/bg-form-combo.png);
+    background-repeat:repeat-x;
+}
+
+div.ludo-combo div.ludo-body{
+    font-weight:bold;
+    padding:0px;
+}
+
+div.ludo-combo-menu {
+    background-image: none;
+    padding: 0px;
+}
+div.ludo-combo-menu .ludo-menu-item{
+    border-radius:0px;
+}
+div.ludo-combo-menu .ludo-menu-item-over {
+    background-color: #99bf2e;
+    border-color:#99bf2e;
+    color: #FFF;
+}
+
+div.ludo-combo-menu .ludo-menu-item-selected{
+    background-color: #99bf2e;
+    border-color:#99bf2e;
+    color: #FFF;
+    font-weight:bold;
+}
+
+.ludo-combo-arrow {
+    position: absolute;
+    width: 15px;
+    height: 100%;
+    right: 0px;
+    top: 0px;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-image: url('../images/expand-menu-horizontal.png');
+}

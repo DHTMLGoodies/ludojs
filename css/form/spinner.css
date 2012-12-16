@@ -1,0 +1,31 @@
+.ludo-spinbox-container{
+	border:1px solid #7F9DB9;
+	padding-right: 10px;	/* The place needed for the arrows */
+}
+.ludo-spinbox-arrows-container{
+	background-color: #c9d8fc;
+	border-left:1px solid #7F9DB9;
+	width:11px;
+}
+div.ludo-spinbox-arrow-overeffect{
+	background-color:#d2eafe;
+}
+.ludo-spinbox-arrows-container div.ludo-spinbox-arrow-downeffect{
+	background-color:#93acf2;
+}
+
+.ludo-spinbox-arrow-up{
+	background-color: #c9d8fc;
+	width:11px;
+	background-image:url('../images/up-arrow.gif');
+}
+.ludo-spinbox-arrow-down{
+	background-color: #c9d8fc;
+	width:11px;
+	background-image:url('../images/down-arrow.gif');
+}
+.ludo-spinbox-arrow-separator{
+	width: 100%;
+	height:1px;
+	background-color:#c9d8fc;
+}

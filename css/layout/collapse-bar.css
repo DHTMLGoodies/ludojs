@@ -1,0 +1,64 @@
+.ludo-view-collapsed-title{
+    font-size:11px;
+    line-height:16px;
+    font-family:arial, helvetica, serif;
+    font-weight:normal;
+}
+
+.ludo-collapse-bar-top{
+    border-bottom:0;
+}
+.collapse-bar-button{
+    margin:1px;
+    position:absolute;
+    padding:1px;
+    cursor:pointer;
+    overflow:hidden;
+}
+.collapse-bar-button-left{
+    padding-bottom:10px;
+    padding-top:10px;
+    padding-left:2px;
+    padding-right:3px;
+}
+.collapse-bar-button-right{
+    padding-bottom:10px;
+    padding-top:10px;
+    padding-left:3px;
+    padding-right:2px;
+}
+
+.collapse-bar-button-bottom{
+    padding-left:10px;
+    padding-right:10px;
+    padding-top:3px;
+    padding-bottom:2px;
+}
+.collapse-bar-button-top{
+    padding-left:10px;
+    padding-right:10px;
+    padding-bottom:3px;
+    padding-top:2px;
+}
+
+.collapse-bar-button-bg-first, .collapse-bar-button-bg-last{
+    position:absolute;
+    z-index:1;
+}
+.collapse-bar-button-active{
+    border-bottom:0;
+    border-right:0;
+}
+
+.collapse-bar-button-active .collapse-bar-button-bg-first{
+    top:0;
+    right:0;
+    width:120%;
+    height:120%;
+}
+.collapse-bar-button-active .collapse-bar-button-bg-last{
+    bottom:0;
+    left:0;
+    width:120%;
+    height:120%;
+}

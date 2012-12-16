@@ -1,0 +1,48 @@
+.ludo-tab-active .tab-left-corner{
+    background-image:url('../images/ie-tab-top-left-corner.png');
+    width:5px;
+    height:5px;
+}
+.ludo-tab-active .tab-right-corner{
+    background-image:url('../images/ie-tab-top-right-corner.png');
+    width:5px;
+    height:5px;
+}
+
+.left-menu-bar{
+    background-image:url('../images/ie-menu-left.png');
+    background-position:top left;
+    width:5px;
+    height:30px;
+}
+.right-menu-bar{
+    background-image:url('../images/ie-menu-right.png');
+    width:5px;
+    height:30px;
+}
+
+.ludo-tab-active .ludo-tab-left-ludo{
+    background-image:url('../images/ie-cmp-tab-left-tr.gif');
+    width:4px;
+    height:5px;
+}
+.ludo-tab-active .ludo-tab-right-ludo{
+    background-image:url('../images/ie-cmp-tab-right-tr.gif');
+    width:4px;
+    height:5px;
+}
+
+.ludo-tab-left-ludo{
+    background-image:url('../images/ie-cmp-tab-top-left-corner2.gif');
+    background-position:top left;
+    width:5px;
+    height:5px;
+}
+.ludo-tab-right-ludo{
+    background-image:url('../images/ie-cmp-tab-top-right-crn-2.gif');
+    background-position:top right;
+    width:4px;
+    height:4px;
+}
+
+
