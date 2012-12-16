@@ -1,0 +1,16 @@
+load:
+  - ../../mootools/mootools-core-1.4.5.js
+  - ../../mootools/mootools-more-1.4.0.1.js
+  - ../../js/ludo-all.js
+  - ../../src/data-source/*.js
+  - ../../src/data-source/collection.js
+  - ../../src/data-source/tree-collection.js
+  - ../../src/tree/new-tree.js
+
+test:
+  - TreeTest.js
+
+plugin:
+ - name: "coverage"
+   jar: "../jstestdrive/coverage-1.3.4.b.jar"
+   module: "com.google.jstestdriver.coverage.CoverageModule"
