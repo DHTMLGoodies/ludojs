@@ -30,6 +30,7 @@ ludo.menu.Menu = new Class({
         this.parentMenuItem = config.parentMenuItem || this.parentMenuItem;
         if(this.direction === 'vertical'){
             config.height = 'auto';
+			this.layout.type = 'rows';
         }
 
         this.parent(config);
