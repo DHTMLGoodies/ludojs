@@ -1,0 +1,26 @@
+load:
+  - ../../mootools/mootools-core-1.4.5.js
+  - ../../mootools/mootools-more-1.4.0.1.js
+  - ../../js/ludo-all.js
+  - ../../src/form/*.js
+
+test:
+  - ButtonTest.js
+  - FileTest.js
+  - ManagerTest.js
+  - NumberTest.js
+  - SliderTest.js
+  - TextTest.js
+  - ValidationTest.js
+  - LinkedTest.js
+  - SearchFieldTest.js
+
+serve:
+  - ../../css/ludo-all.css
+  - ../../css/form/form.css
+  - ../../css/form/slider.css
+
+plugin:
+ - name: "coverage"
+   jar: "../jstestdrive/coverage-1.3.4.b.jar"
+   module: "com.google.jstestdriver.coverage.CoverageModule"

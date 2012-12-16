@@ -1,0 +1,18 @@
+load:
+  - ../../mootools/mootools-core-1.4.5.js
+  - ../../mootools/mootools-more-1.4.0.1.js
+  - ../../js/ludo-all.js
+  - ../../src/effect/effect.js
+  - ../../src/dom.js
+  - ../../src/view.js
+  - ../../src/view/loader.js
+  - ../../src/notification.js
+
+test:
+  - LoaderTest.js
+  - NotificationTest.js
+
+plugin:
+ - name: "coverage"
+   jar: "../jstestdrive/coverage-1.3.4.b.jar"
+   module: "com.google.jstestdriver.coverage.CoverageModule"

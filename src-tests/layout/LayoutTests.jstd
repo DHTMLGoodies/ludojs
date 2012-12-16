@@ -1,0 +1,43 @@
+load:
+  - ../../mootools/mootools-core-1.4.5.js
+  - ../../mootools/mootools-more-1.4.0.1.js
+  - ../../js/ludo-all.js
+  - ../../src/view.js
+  - ../../src/rich-view.js
+  - ../../src/window.js
+  - ../../src/card/progress-bar.js
+  - ../../src/card/button.js
+  - ../../src/card/previous-button.js
+  - ../../src/card/next-button.js
+  - ../../src/card/finish-button.js
+  - ../../src/layout/base.js
+  - ../../src/layout/linear.js
+  - ../../src/layout/linear-vertical.js
+  - ../../src/layout/linear-horizontal.js
+  - ../../src/layout/relative.js
+  - ../../src/layout/collapse-bar.js
+  - ../../src/layout/card.js
+  - ../../src/layout/tab.js
+  - ../../src/layout/renderer.js
+  - ../../src/layout/factory.js
+  - ../../src/layout/tab-strip.js
+  - ../../src/layout/popup.js
+  - ../../src/layout/resizer.js
+
+test:
+  - PopupTest.js
+  - GridTest.js
+  - CollapsedBarTest.js
+  - CompabilityTest.js
+  - FactoryTest.js
+  - LinearTest.js
+  - RelativeTest.js
+  - RendererTest.js
+  - TabTest.js
+  - CardTest.js
+
+
+plugin:
+ - name: "coverage"
+   jar: "../jstestdrive/coverage-1.3.4.b.jar"
+   module: "com.google.jstestdriver.coverage.CoverageModule"

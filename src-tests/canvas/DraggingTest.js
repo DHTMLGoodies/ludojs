@@ -1,0 +1,215 @@
+TestCase("DraggingTest", {
+
+	setUp:function(){
+		document.body.innerHTML = '';
+	},
+
+	getCanvas:function(){
+		var view = new ludo.View({
+			width:800,
+			height:800,
+			renderTo:document.body
+		});
+		return view.getCanvas();
+	},
+
+	getDD:function(config){
+		config = config || {};
+		return new ludo.canvas.Drag(config);
+	},
+
+	"test should determine config objects": function(){
+		var circle = new ludo.canvas.Node('circle', { attr: {'cx' : 100, cy:100, r: 50} } );
+		var dd = this.getDD();
+
+		// then
+		assertTrue(dd.isElConfigObject({
+			el:circle
+		}));
+		assertFalse(dd.isElConfigObject(circle))
+	},
+
+	"test should get valid added node": function(){
+		// given
+		var circle = new ludo.canvas.Node('circle', { attr: {'cx' : 100, cy:100, r: 50} } );
+		var dd = this.getDD();
+
+		var node = dd.add({
+			el: circle
+		});
+
+		// then
+		assertEquals(node.el, circle);
+	},
+
+	"test should be able to drag svg node": function(){
+		// given
+		var canvas = this.getCanvas();
+		var circle = new ludo.canvas.Node('circle', {'cx' : 100, cy:100, r: 50 } );
+		canvas.adopt(circle);
+		var dd = this.getDD();
+		dd.add(circle);
+
+		assertEquals('Initial value wrong', '100', circle.get('cx'));
+		assertEquals('Initial value wrong', '100', circle.get('cy'));
+
+		var e = {
+			page:{
+				x:70,
+				y:70
+			},
+			target:circle.getEl()
+		};
+
+		dd.startDrag(e);
+
+		e.page.x = 80;
+		e.page.y = 90;
+		dd.drag(e);
+
+		// then
+		assertEquals('100', circle.get('cx'));
+		assertEquals('100', circle.get('cy'));
+
+		this.assertInTransform(circle, 'translate(10 20)');
+	},
+
+	"test should be able to drag svg node step by step": function(){
+		// given
+		var canvas = this.getCanvas();
+		var circle = new ludo.canvas.Node('circle', {'cx' : 100, cy:100, r: 50 } );
+		canvas.adopt(circle);
+		var dd = this.getDD();
+		dd.add(circle);
+
+		var e = {
+			page:{
+				x:70,
+				y:70
+			},
+			target:circle.getEl()
+		};
+
+		dd.startDrag(e);
+
+		// when
+		e.page.x = 80;
+		e.page.y = 90;
+		dd.drag(e);
+		e.page.x = 90;
+		e.page.y = 100;
+		dd.drag(e);
+
+		// then
+		this.assertInTransform(circle, 'translate(20 30)');
+	},
+
+	"test should be able to drag svg node a second time": function(){
+		// given
+		var canvas = this.getCanvas();
+		var circle = new ludo.canvas.Node('circle', { attr: {'cx' : 100, cy:100, r: 50} } );
+		canvas.adopt(circle);
+		var dd = this.getDD();
+		dd.add(circle);
+
+		var e = {
+			page:{
+				x:70,
+				y:70
+			},
+			target:circle.getEl()
+		};
+
+		dd.startDrag(e);
+
+		// when
+		e.page.x = 80;
+		e.page.y = 90;
+		dd.drag(e);
+		dd.endDrag();
+		dd.startDrag(e);
+
+		e.page.x = 90;
+		e.page.y = 100;
+		dd.drag(e);
+
+		// then
+		this.assertInTransform(circle, 'translate(20 30)');
+	},
+
+	"test should be able to drag efficiently": function(){
+		// given
+		var canvas = this.getCanvas();
+		var circle = new ludo.canvas.Node('circle', { attr: {'cx' : 100, cy:100, r: 50} } );
+		canvas.adopt(circle);
+		var dd = this.getDD();
+		dd.add(circle);
+
+		var e = {
+			page:{
+				x:70,
+				y:70
+			},
+			target:circle.getEl()
+		};
+		dd.startDrag(e);
+		var start = new Date().getTime();
+
+		for(var i=0;i<1000;i++){
+			e.x++;e.y++;
+			dd.drag(e);
+		}
+
+		// then
+		var ellapsed = new Date().getTime() - start;
+		assertTrue('Not efficient dragging, time: ' + ellapsed, ellapsed<50);
+
+	},
+
+	"test should be able to get id of dragged when drag is triggered by child DOM node": function(){
+		// given
+		var node = this.getSliderDom();
+		var dd = this.getDD();
+		dd.add(node);
+
+		// when
+		var e = {
+			page:{
+				x:70,
+				y:70
+			},
+			target:node.getEl().getElementsByTagName('use')[0]
+		};
+		dd.startDrag(e);
+
+		// then
+		assertNotUndefined(dd.getIdByEvent(e));
+
+	},
+	
+	getSliderDom:function(){
+		var canvas = new ludo.canvas.Canvas({
+			renderTo:document.body
+		});
+		var slider = new ludo.canvas.Node('g', { x: 0, width:'100%', height:10, y: 0 });
+		slider.setStyle('cursor', 'pointer');
+		var symbol = new ludo.canvas.Node('symbol');
+		canvas.adoptDef(symbol);
+		var p = new ludo.canvas.Path('M 5 0 L 10 0 L 15 5 L 10 10 L 5 10 Z', { fill:'white', stroke : 'black'});
+		symbol.adopt(p);
+
+		var u = new ludo.canvas.Node('use');
+		u.href(symbol);
+		slider.adopt(u);
+		var u2 = new ludo.canvas.Node('use', { x : '-100%', 'transform' : 'scale(-1,1)'});
+		u2.href(symbol);
+		slider.adopt(u2);
+		canvas.adopt(slider);
+		return slider;
+	},
+	assertInTransform:function(el, what){
+		var t = el.get('transform');
+		t = t || '<empty>';
+		assertTrue('Actual: ' + t + ', expected: ' + what, t.indexOf(what)>=0);
+	}
+});
