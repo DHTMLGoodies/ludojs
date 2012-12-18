@@ -1,3 +1,11 @@
+/**
+ * @namespace layout
+ * @class Renderer
+ */
+
+/**
+ * @todo Support top and left resize of center aligned dialogs
+ */
 ludo.layout.Renderer = new Class({
 
 	rendering:{},
