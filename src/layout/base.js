@@ -1,3 +1,8 @@
+/**
+* Base class for ludoJS layouts
+ * @namespace layout
+ * @class Base
+ */
 ludo.layout.Base = new Class({
 	Extends:Events,
 	view:null,
@@ -23,8 +28,17 @@ ludo.layout.Base = new Class({
 			this.addCollapseBars();
 		}
 	},
+    /**
+    * Method executed when adding new child view to a layout
+     * @method addChild
+     * @param {ludo.View} child
+     * @param {ludo.View} insertAt
+     * @optional
+     * @param {String} pos
+     * @optional
+     */
 	addChild:function (child, insertAt, pos) {
-		child = this.getNewComponent(child, this.view);
+		child = this.getNewComponent(child);
 		var parentEl = this.getParentForNewChild();
 		if (insertAt) {
 			var children = [];
@@ -65,7 +79,11 @@ ludo.layout.Base = new Class({
 		this.fireEvent('addChild', [child, this]);
 		return child;
 	},
-
+    /**
+    * Return parent DOM element for new child
+     * @method getParentForNewChild
+     * @protected
+     */
 	getParentForNewChild:function(){
 		return this.view.els.body;
 	},
@@ -209,7 +227,11 @@ ludo.layout.Base = new Class({
 		this.updateViewport(bar.getChangedViewport());
 		this.resize();
 	},
-
+    /**
+     * Update viewport properties, coordinates of DHTML Container for child views, i.e. body of parent view
+     * @method updateViewport
+     * @param {Object} c
+     */
 	updateViewport:function (c) {
 		this.viewport[c.key] = c.value;
 	},
