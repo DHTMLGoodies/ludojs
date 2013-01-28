@@ -5,7 +5,17 @@
  */
 ludo.layout.Grid = new Class({
 	Extends:ludo.layout.Base,
+    /**
+     * Number of columns
+     * @config {Number} columns
+     * @default 5
+     */
 	columns:5,
+    /**
+     * Number of rows
+     * @config {Number} rows
+     * @default 5
+     */
 	rows:5,
 
 	onCreate:function () {
@@ -13,6 +23,7 @@ ludo.layout.Grid = new Class({
 		if (l.columns !== undefined)this.columns = l.columns;
 		if (l.rows !== undefined)this.rows = l.rows;
 	},
+
 	resize:function () {
 		this.storeCellSize();
 		var pos = 0;
