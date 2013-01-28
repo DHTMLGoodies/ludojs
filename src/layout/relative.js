@@ -14,7 +14,11 @@
 ludo.layout.Relative = new Class({
 	Extends:ludo.layout.Base,
 	children:undefined,
-
+    /**
+     * Array of valid layout properties
+     * @property {Array} layoutFnProperties
+     * @private
+     */
 	layoutFnProperties:[
 		'width', 'height',
 		'alignParentTop', 'alignParentBottom', 'alignParentLeft', 'alignParentRight',
@@ -25,13 +29,22 @@ ludo.layout.Relative = new Class({
 		'fillLeft', 'fillRight', 'fillUp', 'fillDown',
 		'absBottom','absWidth','absHeight','absLeft','absTop','absRight'
 	],
+    /**
+     * Internal child coordinates set during resize
+     * @property {Object} newChildCoordinates
+     * @private
+     */
 	newChildCoordinates:{},
+    /**
+     * Internal storage of child coordinates for last resize
+     * @property {Object} lastChildCoordinates
+     * @private
+     */
 	lastChildCoordinates:{},
 
 	onCreate:function () {
 		this.parent();
 		this.view.getBody().style.position = 'relative';
-
 	},
 
 	resize:function () {
@@ -43,18 +56,32 @@ ludo.layout.Relative = new Class({
 		}
 	},
 
+    /**
+     * No resize done yet, create resize functions
+     * @method prepareResize
+     * @private
+     */
 	prepareResize:function(){
 		this.fixLayoutReferences();
 		this.arrangeChildren();
 		this.createResizeFunctions();
 	},
 
+    /**
+     * Create/Compile resize functions for each child
+     * @method createResizeFunctions
+     * @private
+     */
 	createResizeFunctions:function () {
 		for (var i = 0; i < this.children.length; i++) {
 			this.children[i].layoutResizeFn = this.getResizeFnFor(this.children[i]);
 		}
 	},
-
+    /**
+     * Convert layout id references to direct view reference for optimal performance
+     * @method fixLayoutReferences
+     * @private
+     */
 	fixLayoutReferences:function () {
 		for (var i = 0; i < this.view.children.length; i++) {
 			var c = this.view.children[i];
@@ -64,7 +91,13 @@ ludo.layout.Relative = new Class({
 			}
 		}
 	},
-
+    /**
+     * Return resize function for a child
+     * @method getResizeFnFor
+     * @param {ludo.View} child
+     * @return {Function}
+     * @private
+     */
 	getResizeFnFor:function (child) {
 		var fns = this.getLayoutFnsFor(child);
 		return function (layoutManager) {
@@ -73,7 +106,13 @@ ludo.layout.Relative = new Class({
 			}
 		};
 	},
-
+    /**
+     * Return array of resize function to call when view is resized.
+     * @method getLayoutFnsFor
+     * @param {ludo.View} child
+     * @return {Array}
+     * @private
+     */
 	getLayoutFnsFor:function (child) {
 		var ret = [];
 		var p = this.layoutFnProperties;
@@ -86,7 +125,23 @@ ludo.layout.Relative = new Class({
 		ret.push(this.getLastLayoutFn(child));
 		return ret;
 	},
-
+    /**
+     Return one resize function for a child
+     @method getLayoutFn
+     @param {String} property
+     @param {ludo.View} child
+     @return {Function|undefined}
+     @private
+     @example
+        getLayoutFn(left, view)
+     may return
+        function(){
+            this.newChildCoordinates[view.id]['left'] = 20;
+        }
+     The resize functions are created before first resize is made. For second resize,
+     the layout functions for each view will simply be called. This is done for optimal performance
+     so that we don't need to calculate more than we have to(Only first time).
+     */
 	getLayoutFn:function (property, child) {
 		var c = this.newChildCoordinates[child.id];
 		var refC;
@@ -211,7 +266,15 @@ ludo.layout.Relative = new Class({
 		}
 		return undefined;
 	},
-
+    /**
+     * Return special resize function for the properties alignLeft, alignRight, alignTop and alignBottom
+     * @method getAlignmentFn
+     * @param {ludo.View} child
+     * @param {String} alignment
+     * @param {String} property
+     * @return {Function}
+     * @private
+     */
 	getAlignmentFn:function (child, alignment, property) {
 		var c = this.newChildCoordinates[child.id];
 		var refC = this.lastChildCoordinates[child.layout[alignment].id];
@@ -220,6 +283,14 @@ ludo.layout.Relative = new Class({
 		};
 	},
 
+    /**
+     * Returns layout function for the width and height layout properties
+     * @method getPropertyFn
+     * @param {ludo.View} child
+     * @param {String} property
+     * @return {Function|undefined}
+     * @private
+     */
 	getPropertyFn:function (child, property) {
 		var c = this.newChildCoordinates[child.id];
 
@@ -253,6 +324,16 @@ ludo.layout.Relative = new Class({
 
 	posProperties:['left', 'right', 'bottom', 'top'],
 
+    /**
+     * Final resize function for each child. All the other dynamically created
+     * layout function stores values for the left,width,top,bottom, width and height properties.
+     * This function call the resize function for each view with the values of these previously
+     * set properties
+     * @method getLayoutLayoutFn
+     * @param {ludo.View} child
+     * @return {Function}
+     * @private
+     */
 	getLastLayoutFn:function (child) {
 		return function (lm) {
 			var c = lm.newChildCoordinates[child.id];
@@ -276,6 +357,12 @@ ludo.layout.Relative = new Class({
 		}
 	},
 
+    /**
+     * Update lastChildCoordinates properties for a child after resize is completed
+     * @method updateLastCoordinatesFor
+     * @param {ludo.View} child
+     * @private
+     */
 	updateLastCoordinatesFor:function (child) {
 		var lc = this.lastChildCoordinates[child.id];
 		var el = child.getEl();
@@ -287,17 +374,38 @@ ludo.layout.Relative = new Class({
 		if (lc.bottom === undefined) lc.bottom = this.viewport.height - lc.top - lc.height;
 	},
 
+    /**
+     * Position child at this coordinates
+     * @method positionChild
+     * @param {ludo.View} child
+     * @param {String} property
+     * @param {Number} value
+     * @private
+     */
 	positionChild:function (child, property, value) {
 		child.getEl().style[property] = value + 'px';
 		child[property] = value;
 
 	},
-
+    /**
+     * Creates empty newChildCoordinates and lastChildCoordinates for a child view
+     * @method assignDefaultCoordinates
+     * @param {ludo.View} child
+     * @private
+     */
 	assignDefaultCoordinates:function (child) {
 		this.newChildCoordinates[child.id] = {};
 		this.lastChildCoordinates[child.id] = {};
 	},
 
+    /**
+     * Before first resize, the internal children array is arranged so that views dependent of
+     * other views are resized after the view it's depending on. example: if view "a" has leftOf property
+     * set to view "b", then view "b" should be resized and positioned first. This method rearranges
+     * the internal children array according to this
+     * @method arrangeChildren
+     * @private
+     */
 	arrangeChildren:function () {
 		this.children = [];
 		for (var i = 0; i < this.view.children.length; i++) {
@@ -340,6 +448,11 @@ ludo.layout.Relative = new Class({
 		'above':'above',
 		'below':'below'
 	},
+    /**
+     * Create resize handles for resizable children
+     * @method createResizables
+     * @private
+     */
 	createResizables:function () {
 		for (var i = this.children.length - 1; i >= 0; i--) {
 			var c = this.children[i];
@@ -363,16 +476,23 @@ ludo.layout.Relative = new Class({
 			}
 		}
 	},
-
-	getResizableFor:function (child, r) {
-		var resizeProp = (r === 'left' || r === 'right') ? 'width' : 'height';
+    /**
+     * Return resizable handle for a child view
+     * @method getResizableFor
+     * @param {ludo.View} child
+     * @param {String} direction
+     * @return {ludo.layout.Resizer}
+     * @private
+     */
+	getResizableFor:function (child, direction) {
+		var resizeProp = (direction === 'left' || direction === 'right') ? 'width' : 'height';
 		return new ludo.layout.Resizer({
 			name:'resizer-' + child.name,
-			orientation:(r === 'left' || r === 'right') ? 'horizontal' : 'vertical',
-			pos:r,
+			orientation:(direction === 'left' || direction === 'right') ? 'horizontal' : 'vertical',
+			pos:direction,
 			renderTo:this.view.getBody(),
-			sibling:this.getSiblingForResize(child,r),
-			layout:this.getResizerLayout(child, r),
+			sibling:this.getSiblingForResize(child,direction),
+			layout:this.getResizerLayout(child, direction),
 			view:child,
 			listeners:{
 				'resize':function (change) {
@@ -384,8 +504,16 @@ ludo.layout.Relative = new Class({
 		});
 	},
 
-	getSiblingForResize:function(child, r){
-		switch(r){
+    /**
+     * Return sibling which may be affected when a child is resized
+     * @method getSiblingForResize
+     * @param {ludo.View} child
+     * @param {String} direction
+     * @return {ludo.View|undefined}
+     * @private
+     */
+	getSiblingForResize:function(child, direction){
+		switch(direction){
 			case 'left':
 				return child.layout.rightOf;
 			case 'right':
@@ -397,7 +525,13 @@ ludo.layout.Relative = new Class({
 		}
 		return undefined;
 	},
-
+    /**
+     * Before resize function executed for a resize handle
+     * @method beforeResize
+     * @param {ludo.layout.Resizer} resize
+     * @param {ludo.View} child
+     * @private
+     */
 	beforeResize:function(resize, child){
 		if(resize.orientation === 'horizontal'){
 			resize.setMinWidth(child.layout.minWidth || 10);
@@ -407,7 +541,14 @@ ludo.layout.Relative = new Class({
 			resize.setMaxHeight(child.layout.maxHeight || this.view.getBody().offsetHeight);
 		}
 	},
-
+    /**
+     * Return layout config for a resize handle
+     * @method getResizerLayout
+     * @param {ludo.View} child
+     * @param {String} resize
+     * @return {ludo.layout.RelativeSpec}
+     * @private
+     */
 	getResizerLayout:function (child, resize) {
 		var ret = {};
 		switch (resize) {
@@ -425,6 +566,16 @@ ludo.layout.Relative = new Class({
 		return ret;
 	},
 
+    /**
+     * Update layout references when a resize handle has been created. example: When a resize handle
+     * is added to the left of a child view. The leftOf view of this child is now the resize handle
+     * and not another view
+     * @method updateReferences
+     * @param {String} property
+     * @param {ludo.View} child
+     * @param {ludo.layout.Resizer} resizer
+     * @private
+     */
 	updateReference:function (property, child, resizer) {
 		for (var i = 0; i < this.children.length; i++) {
 			if (this.children[i].layout[property] === child) {
@@ -434,11 +585,23 @@ ludo.layout.Relative = new Class({
 		}
 		resizer.layout[property] = child;
 	},
-
+    /**
+     * Returns true if a child is resizable
+     * @method isChildResizable
+     * @param {ludo.View} child
+     * @return {Boolean}
+     * @private
+     */
 	isChildResizable:function (child) {
 		return child.layout && child.layout.resize && child.layout.resize.length > 0;
 	},
 
+    /**
+     * Return a child which should be rearrange because it's layout depends on a next sibling
+     * @method getWronglyArrangedChild
+     * @return {ludo.View|undefined}
+     * @private
+     */
 	getWronglyArrangedChild:function () {
 		for (var i = 0; i < this.children.length; i++) {
 			var c = this.children[i];
@@ -453,13 +616,32 @@ ludo.layout.Relative = new Class({
 		}
 		return undefined;
 	},
-
+    /**
+     * Returns true if a child is previous sibling of another child
+     * @method isArrangedBefore
+     * @param {ludo.View} child
+     * @param {ludo.View} of
+     * @return {Boolean}
+     * @private
+     */
 	isArrangedBefore:function (child, of) {
 		return this.children.indexOf(child) < this.children.indexOf(of);
 	},
 
+    /**
+     * All the layout options where value is a reference to another child
+     * @property depKeys
+     * @private
+     */
 	depKeys:['above', 'below', 'leftOf', 'rightOf', 'alignLeft', 'alignBottom', 'alignRight', 'alignTop', 'sameWidthAs', 'sameHeightAs'],
 
+    /**
+     * Return all the siblings a child is depending on for layout
+     * @method getDependencies
+     * @param {ludo.View} child
+     * @return {Array}
+     * @private
+     */
 	getDependencies:function (child) {
 		var ret = [];
 		for (var i = 0; i < this.depKeys.length; i++) {
@@ -472,21 +654,44 @@ ludo.layout.Relative = new Class({
 		}
 		return ret;
 	},
-
+    /**
+     * Return direct reference to child
+     * @method getReference
+     * @param {String|ludo.View} child
+     * @return {ludo.View}
+     * @private
+     */
 	getReference:function (child) {
 		if (child['getId'] !== undefined)return child;
 		if (this.view.child[child] !== undefined)return this.view.child[child];
 		return ludo.get(child);
 	},
 
+    /**
+     * Clear internal children array. When this is done, resize function will be recreated. This happens
+     * when a child is removed or when a new child is added
+     * @method clearChildren
+     * @private
+     */
 	clearChildren:function () {
 		this.children = undefined;
 	},
-
+    /**
+     * Return internal children array
+     * @method getChildren
+     * @return {Array}
+     * @private
+     */
 	getChildren:function () {
 		return this.children;
 	},
 
+    /**
+     * Validate and set required layout properties of new children
+     * @method onNewChild
+     * @param {ludo.View} child
+     * @private
+     */
 	onNewChild:function (child) {
 		this.parent(child);
 		child.getEl().style.position = 'absolute';
@@ -508,6 +713,12 @@ ludo.layout.Relative = new Class({
 
 	},
 
+    /**
+     * Add events to child view
+     * @method addChildEvents
+     * @param {ludo.View} child
+     * @private
+     */
 	addChildEvents:function(child){
 		child.addEvent('hide', this.hideChild.bind(this));
 		child.addEvent('show', this.clearTemporaryValues.bind(this));
@@ -517,17 +728,37 @@ ludo.layout.Relative = new Class({
 		child.addEvent('maximize', this.clearTemporaryValues.bind(this));
 	},
 
+    /**
+     * Executed when a child is hidden. It set's the internal layout properties width and height to 0(zero)
+     * @method hideChild
+     * @param {ludo.View} child
+     * @private
+     */
 	hideChild:function(child){
 		this.setTemporarySize(child, {
 			width:0,height:0
 		});
 	},
 
+    /**
+     * Executed when a child is minimized. It set's temporary width or properties
+     * @method minimize
+     * @param {ludo.View} child
+     * @param {Object} newSize
+     * @private
+     */
 	minimize:function(child, newSize){
 		this.setTemporarySize(child, newSize);
 		this.resize();
 	},
 
+    /**
+     * Store temporary size when a child is minimized or hidden
+     * @method setTemporarySize
+     * @param {ludo.View} child
+     * @param {Object} newSize
+     * @private
+     */
 	setTemporarySize:function(child, newSize){
 		if(newSize.width !== undefined){
 			child.layout.cached_width = child.layout.width;
@@ -537,7 +768,13 @@ ludo.layout.Relative = new Class({
 			child.layout.height = newSize.height;
 		}
 	},
-
+    /**
+     * Clear temporary width or height values. This method is executed when a child
+     * is shown or maximized
+     * @method clearTemporaryValues
+     * @param {ludo.View} child
+     * @private
+     */
 	clearTemporaryValues:function(child){
 		if(child.layout.cached_width !== undefined)child.layout.width = child.layout.cached_width;
 		if(child.layout.cached_height !== undefined)child.layout.height = child.layout.cached_height;
