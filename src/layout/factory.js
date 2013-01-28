@@ -1,9 +1,26 @@
+/**
+ * Factory class for layout managers
+ * @namespace layout
+ * @class Factory
+ */
 ludo.layout.Factory = new Class({
 
+    /**
+     * Returns layout manager, a layout.Base or subclass
+     * @param {ludo.View} view
+     * @return {ludo.Base} manager
+     */
 	getManager:function(view){
 		return new ludo.layout[this.getLayoutClass(view)](view);
 	},
 
+    /**
+     * Returns correct name of layout class
+     * @method getLayoutClass
+     * @param {ludo.View} view
+     * @return {String} className
+     * @private
+     */
 	getLayoutClass:function(view){
 		if(!view.layout || !view.layout.type)return 'Base';
 
@@ -34,6 +51,14 @@ ludo.layout.Factory = new Class({
 		}
 	},
 
+    /**
+     * Returns valid layout configuration for a view
+     * @method getValidLayoutObject
+     * @param {ludo.View} view
+     * @param {Object} config
+     * @return {Object}
+     * @private
+     */
 	getValidLayoutObject:function(view, config){
 		var ret;
 		if(view.layout === undefined && config.layout === undefined && view.weight === undefined && config.weight === undefined && config.left===undefined)return {};
@@ -54,7 +79,15 @@ ludo.layout.Factory = new Class({
 		if(ret.type === undefined)ret.type = 'Base';
 		return ret;
 	},
-
+    /**
+     * Returned merged layout object, i.e. layout defind on HTML page merged
+     * with internal layout defined in class
+     * @method getMergedLayout
+     * @param {Object} layout
+     * @param {Object} mergeWith
+     * @return {Object}
+     * @private
+     */
 	getMergedLayout:function(layout, mergeWith){
 		for(var key in mergeWith){
 			if(mergeWith.hasOwnProperty(key)){
