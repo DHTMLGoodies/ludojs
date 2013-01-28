@@ -305,9 +305,9 @@ ludo.form.Button = new Class({
     /**
      * Trigger click on button
      * @method click
-     * @return void
+     * @return {undefined|Boolean}
      */
-    click:function (e) {
+    click:function () {
         this.focus();
         if (!this.isDisabled()) {
             this.getEl().focus();
