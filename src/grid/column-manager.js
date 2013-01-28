@@ -239,7 +239,7 @@ ludo.grid.ColumnManager = new Class({
 	 * Returns parent group object for a column
 	 * @method getGroupFor
 	 * @param {String} column
-	 * @return {grid.Column} parent
+	 * @return {grid.Column|undefined} parent
 	 */
 	getGroupFor:function (column) {
 		var id = this.getGroupIdOf(column);
@@ -473,7 +473,7 @@ ludo.grid.ColumnManager = new Class({
 	/**
 	 * @method insertIntoSameGroupAs
 	 * @param {String} column
-	 * @param {String} column as
+	 * @param {String} as
 	 * @private
 	 */
 	insertIntoSameGroupAs:function(column, as){
