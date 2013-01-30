@@ -11,7 +11,7 @@ TestCase("CardLayout", {
 		animate = animate || false;
 		var id = String.uniqueID();
 
-		return new ludo.RichView({
+		return new ludo.FramedView({
 			id:id,
 			renderTo:document.body,
 			layout:{
@@ -75,7 +75,7 @@ TestCase("CardLayout", {
 	getDeckSecondCardVisible:function (animate) {
 		animate = animate || false;
 		var id = String.uniqueID();
-		return new ludo.RichView({
+		return new ludo.FramedView({
 			animate:animate,
 			id:id,
 			layout:{
@@ -107,7 +107,7 @@ TestCase("CardLayout", {
 
 	getDeckLastCardVisible:function (animate) {
 		animate = animate || false;
-		return new ludo.RichView({
+		return new ludo.FramedView({
 			layout:{
 				type:'card',
 				animate:animate
@@ -139,7 +139,7 @@ TestCase("CardLayout", {
 	},
 
 	getDeckWithProgressBar:function (animate) {
-		return new ludo.RichView({
+		return new ludo.FramedView({
 			animate:animate,
 			layout:{
 				type:'card'
@@ -173,7 +173,7 @@ TestCase("CardLayout", {
 	},
 
 	getDeckWithHidingButtons:function () {
-		return new ludo.RichView({
+		return new ludo.FramedView({
 			layout:{
 				type:'card'
 			},
@@ -231,7 +231,7 @@ TestCase("CardLayout", {
 	},
 
 	getDeckWithForm:function () {
-		return new ludo.RichView({
+		return new ludo.FramedView({
 			layout:{
 				type:'card'
 			},
@@ -581,7 +581,7 @@ TestCase("CardLayout", {
 	"test should be able to find button":function () {
 		// given
 
-		var deck = new ludo.RichView({
+		var deck = new ludo.FramedView({
 			id:'testView',
 			layout:{
 				animate:false,

@@ -132,10 +132,12 @@ require_once("../includes/demo-header.php");
                 layout:{
                     width:250,
                     resizable:true,
-                    minWidth:150
+                    minWidth:150,
+                    type : 'linear',
+                    orientation:'vertical'
                 },
 
-				type:'RichView',
+				type:'FramedView',
 				title:'Edit record',
 				containerCss:{
 					'border':0,

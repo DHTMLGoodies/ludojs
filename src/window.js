@@ -1,6 +1,6 @@
 /**
 @class Window
-@extends RichView
+@extends FramedView
 @description Class for floating window
 @constructor
 @param {Object} config
@@ -23,7 +23,7 @@
 	});
  */
 ludo.Window = new Class({
-    Extends:ludo.RichView,
+    Extends:ludo.FramedView,
     type:'Window',
     cssSignature:'ludo-window',
 

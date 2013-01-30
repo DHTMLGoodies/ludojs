@@ -1,5 +1,5 @@
 ludo.DashboardItem_RSS = new Class({
-    Extends : ludo.RichView,
+    Extends : ludo.FramedView,
     type : 'DashboardItem_RSS',
     
     statusBar : {

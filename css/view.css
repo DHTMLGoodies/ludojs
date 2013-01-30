@@ -385,7 +385,7 @@ div.ludo-component-button-container, div.ludo-content-buttons {
 div.ludo-window, div.ludo-rich-view-shim, div.ludo-dashboard-insertion-marker{
     border-radius:3px;
 }
-div.ludo-RichView {
+div.ludo-FramedView {
     border-radius: 0px;
 }
 

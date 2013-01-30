@@ -1,5 +1,5 @@
 ludo.colorPicker.HSV = new Class({
-	Extends:ludo.RichView,
+	Extends:ludo.FramedView,
 	type:'colorPicker.HSV',
 	useController:true,
 	layout:'rows',

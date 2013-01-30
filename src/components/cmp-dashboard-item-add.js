@@ -1,5 +1,5 @@
 ludo.DashboardItem_AddItem = new Class({
-    Extends : ludo.RichView,
+    Extends : ludo.FramedView,
     type : 'DashboardItem_AddItem',
     statusBar : {
         visible : false

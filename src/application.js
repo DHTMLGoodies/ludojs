@@ -1,7 +1,7 @@
 /**
  * A component rendered to document.body and filling up entire screen
  * @class Application
- * @extends RichView
+ * @extends FramedView
  */
 ludo.Application = new Class({
     Extends:ludo.View,

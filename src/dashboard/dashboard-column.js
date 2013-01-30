@@ -1,7 +1,7 @@
 ludo.dashboard.Column = new Class({
     Extends : ludo.View,
     type : 'dashboard.Column',
-    cType : 'RichView',
+    cType : 'FramedView',
     id : null,
     
     els : {
