@@ -1,5 +1,5 @@
 ludo.colorPicker.RGB = new Class({
-    Extends:ludo.RichView,
+    Extends:ludo.FramedView,
     type:'colorPicker.RGB',
     useController:true,
     resizable:false,

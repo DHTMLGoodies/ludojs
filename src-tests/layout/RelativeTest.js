@@ -415,7 +415,7 @@ TestCase("RelativeTest", {
 	"test should resize when view is hidden": function(){
         // given
         var view = this.getView([
-            { type:'RichView', name : 'a1', collapsible:'left', layout: { height:500, alignParentTop:true, alignParentLeft:true, width:400 } },
+            { type:'FramedView', name : 'a1', collapsible:'left', layout: { height:500, alignParentTop:true, alignParentLeft:true, width:400 } },
             { name : 'b1', layout: { width:100, height:300, rightOf : 'a1',alignBottom:'a1',fillRight:true }}
         ]);
 
@@ -432,7 +432,7 @@ TestCase("RelativeTest", {
 	"test should update layout when child is shown": function(){
         // given
         var view = this.getView([
-            { type:'RichView', name : 'a1', collapsible:'left', layout: { height:500, alignParentTop:true, alignParentLeft:true, width:400 } },
+            { type:'FramedView', name : 'a1', collapsible:'left', layout: { height:500, alignParentTop:true, alignParentLeft:true, width:400 } },
             { name : 'b1', layout: { width:100, height:300, rightOf : 'a1',alignBottom:'a1',fillRight:true }}
         ]);
 
@@ -451,7 +451,7 @@ TestCase("RelativeTest", {
 	"test should find correct position when a view is initial hidden": function(){
         // given
         var view = this.getView([
-            { type:'RichView', hidden : true, name : 'a1', collapsible:'left', layout: { height:500, alignParentTop:true, alignParentLeft:true, width:400 } },
+            { type:'FramedView', hidden : true, name : 'a1', collapsible:'left', layout: { height:500, alignParentTop:true, alignParentLeft:true, width:400 } },
             { name : 'b1', layout: { width:100, height:300, rightOf : 'a1',alignBottom:'a1',fillRight:true }}
         ]);
 

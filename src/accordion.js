@@ -1,10 +1,10 @@
 /**
  * @class Accordion
- * @extends RichView
+ * @extends FramedView
  * @description Accordion component
  */
 ludo.Accordion = new Class({
-	Extends:ludo.RichView,
+	Extends:ludo.FramedView,
 	type:'Accordion',
 
 	closable:false,
