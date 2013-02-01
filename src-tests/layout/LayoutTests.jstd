@@ -3,7 +3,7 @@ load:
   - ../../mootools/mootools-more-1.4.0.1.js
   - ../../js/ludo-all.js
   - ../../src/view.js
-  - ../../src/rich-view.js
+  - ../../src/framed-view.js
   - ../../src/window.js
   - ../../src/card/progress-bar.js
   - ../../src/card/button.js

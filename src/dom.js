@@ -177,9 +177,9 @@ ludo.dom = {
 		el.className = el.className.replace(new RegExp('(^|\\s)' + className + '(?:\\s|$)'), '$1');
 	},
 
-	getParent:function(el, selector){
+	getParent:function (el, selector) {
 		el = el.parentNode;
-		while(el && !ludo.dom.hasClass(el, selector))el = el.parentNode;
+		while (el && !ludo.dom.hasClass(el, selector))el = el.parentNode;
 		return el;
 	},
 
@@ -232,5 +232,19 @@ ludo.dom = {
 			x:width + ludo.dom.getMBPW(b) + ludo.dom.getMBPW(el),
 			y:height + ludo.dom.getMBPH(b) + ludo.dom.getMBPH(el) + view.getTotalHeightOfTitleAndStatusBar() + 2
 		}
+	},
+
+	/**
+	 * Return measured width of a View
+	 * @method getMeasuredWidth
+	 * @param {ludo.View} view
+	 * @return {Number}
+	 */
+	getMeasuredWidth:function (view) {
+		var el = view.getBody();
+		var size = el.measure(function () {
+			return this.getSize();
+		});
+		return size.x + ludo.dom.getMW(el);
 	}
 };

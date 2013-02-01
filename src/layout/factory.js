@@ -7,8 +7,9 @@ ludo.layout.Factory = new Class({
 
     /**
      * Returns layout manager, a layout.Base or subclass
+	 * @method getManager
      * @param {ludo.View} view
-     * @return {ludo.Base} manager
+     * @return {ludo.layout.Base} manager
      */
 	getManager:function(view){
 		return new ludo.layout[this.getLayoutClass(view)](view);

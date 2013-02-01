@@ -618,14 +618,6 @@ ludo.View = new Class({
 		size.y += ludo.dom.getBH(this.getEl());
 		this.height = size.y;
 	},
-
-	getMeasuredWidth:function () {
-		var el = this.getBody();
-		var size = el.measure(function () {
-			return this.getSize();
-		});
-		return size.x + ludo.dom.getMW(el);
-	},
 	/**
 	 * Set HTML of components body element
 	 * @method setHtml
