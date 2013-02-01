@@ -2,7 +2,10 @@ load:
   - ../../mootools/mootools-core-1.4.5.js
   - ../../mootools/mootools-more-1.4.0.1.js
   - ../../js/ludo-all.js
+  - ../../src/assets.js
   - ../../src/socket/*.js
+
+test:
   - SocketTest.js
 
 plugin:
