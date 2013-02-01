@@ -201,7 +201,6 @@ $countries = array(
 );
 
 if (isset($_POST['query'])) {
-    require_once("../../jsonwrapper/jsonwrapper.php");
     $ret = array();
     $countFoundRecords = 0;
     for ($i = 0, $count = count($countries); $i < $count; $i++) {

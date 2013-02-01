@@ -1,5 +1,5 @@
 <?php
-require_once("../../jsonwrapper/jsonwrapper.php");
+
 $data = array(
     array( 'country' => 'Japan','capital' => 'Tokyo (de facto)','population' => '13,185,502'),
     array( 'country' => 'South Korea','capital' => 'Seoul','population' => '10,464,051'),

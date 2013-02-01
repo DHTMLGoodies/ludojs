@@ -1,5 +1,5 @@
 <?php
-require_once("../../jsonwrapper/jsonwrapper.php");
+
 
 if (isset($_POST['request'])) {
     $data = $_POST['request']['data'];

@@ -3,7 +3,6 @@ error_reporting(E_ALL);
 ini_set('display_errors', 'on');
 require_once("../php-progress-bar/progress-bar.class.php");
 require_once("../db-config.php");
-require_once("../../jsonwrapper/jsonwrapper.php");
 
 $request = $_POST['request'];
 

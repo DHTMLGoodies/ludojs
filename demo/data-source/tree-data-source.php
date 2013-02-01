@@ -1,7 +1,5 @@
 <?php
 
-require_once("../../jsonwrapper/jsonwrapper.php");
-
 $countries = array('Norway','Sweden','Spain','USA','United Kingdom','Ireland','Portugal','Israel');
 
 $cities = array('Oslo','Stockholm','Detroit','Chicago','Houston','Santa Fe','Phoenix','Washington','New York','London',
