@@ -2,10 +2,14 @@ load:
   - ../mootools/mootools-core-1.4.5.js
   - ../mootools/mootools-more-1.4.0.1.js
   - ../js/ludo-all.js
+  - ../src/socket/*.js
+  - ../src/assets.js
   - ../src/core.js
   - ../src/data-source/*.js
   - ../src/effect/*.js
   - ../src/canvas/*.js
+
+test:
   - controller/*.js
   - data-source/*.js
   - effect/*.js
