@@ -156,7 +156,7 @@ ludo.socket.Socket = new Class({
 		if (!this.hasIoSocketLibrary() || !this.hasIoSocketLibraryForThisUrl()) {
 			this.loadLib();
 		}
-		if (this.emitEvents !== undefined)this.assignComponentEvents();
+		if (this.emitEvents)this.assignComponentEvents();
 	},
 
 	assignComponentEvents:function () {
@@ -173,10 +173,10 @@ ludo.socket.Socket = new Class({
 
 	getUrl:function () {
 		var url = this.url;
-		if (url === undefined && window.LUDO_APP_CONFIG !== undefined) {
+		if (!url && window.LUDO_APP_CONFIG !== undefined) {
 			url = LUDO_APP_CONFIG.socket;
 		}
-		if (url !== undefined)url = url.trim();
+		if (url)url = url.trim();
 		return url;
 	},
 
