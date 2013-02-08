@@ -1016,12 +1016,12 @@ ludo.View = new Class({
 		return this.layout && this.layout.collapsible ? true : false;
 	},
 
-	setPosition:function (config) {
-		if (config.left !== undefined && config.left >= 0) {
-			this.getEl().setStyle('left', config.left);
+	setPosition:function (pos) {
+		if (pos.left !== undefined && pos.left >= 0) {
+			this.getEl().setStyle('left', pos.left);
 		}
-		if (config.top !== undefined && config.top >= 0) {
-			this.getEl().setStyle('top', config.top);
+		if (pos.top !== undefined && pos.top >= 0) {
+			this.getEl().setStyle('top', pos.top);
 		}
 	},
 
@@ -1171,26 +1171,8 @@ ludo.View = new Class({
 		this.disposeCanceled = false;
 		this.fireEvent('beforeDispose', this);
 		if(!this.disposeCanceled){
-			if (this.getParent()) {
-				this.getParent().removeChild(this);
-			}
-			var initialItemCount = this.children.length;
-			for (var i = initialItemCount - 1; i >= 0; i--) {
-				this.children[i].dispose();
-			}
-			for (var name in this.els) {
-				if (this.els.hasOwnProperty(name)) {
-					if (this.els[name] && this.els[name].tagName && name != 'parent') {
-						this.els[name].dispose();
-					}
-				}
-			}
-			this.getEl().dispose();
 			this.fireEvent('dispose', this);
-			ludo.CmpMgr.deleteComponent(this);
-			if(this.layoutManager)delete this.layoutManager;
-			delete this.els;
-			delete this;
+			ludo.util.disposeView(this);
 		}
 	},
 	/**
@@ -1200,17 +1182,6 @@ ludo.View = new Class({
 	 */
 	getTitle:function () {
 		return this.title;
-	},
-
-	getHtmlText:function () {
-		return this.html;
-	},
-
-	clearDomElements:function (cls) {
-		var els = this.els.body.getElements(cls);
-		for (var i = els.length - 1; i >= 0; i--) {
-			els[i].dispose();
-		}
 	},
 
 	dataSourceObj:undefined,

@@ -21,16 +21,14 @@ TestCase("ModelTest", {
 	},
 
 	getModel:function () {
-		var model = new ludo.model.Model({
+		return new ludo.model.Model({
 			columns:['id', { name:'firstname' }, 'lastname', 'address']
 		});
-
-		return model;
 	},
 
 	getComponentWithModel:function () {
 		if (!window.cmpWithModel) {
-			window.cmpWithModel = new Class({
+			window.CmpWithModel = new Class({
 				Extends:ludo.View,
 				model:{
 					type:'DefaultModel'
@@ -49,12 +47,12 @@ TestCase("ModelTest", {
 				]
 			});
 		}
-		return new window.cmpWithModel({});
+		return new window.CmpWithModel({});
 	},
 
 	getComponentWithTplChildren:function () {
 		if (!window.cmpWithTplModel) {
-			window.cmpWithTplModel = new Class({
+			window.CmpWithTplModel = new Class({
 				Extends:ludo.View,
 				model:{
 					type:'DefaultModel'
@@ -67,13 +65,13 @@ TestCase("ModelTest", {
 
 			});
 		}
-		return new window.cmpWithTplModel({});
+		return new window.CmpWithTplModel({});
 
 	},
 
 	getComponentWithTpl:function () {
 		if (!window.cmpTpl) {
-			window.cmpTpl = new Class({
+			window.CmpTpl = new Class({
 				Extends:ludo.View,
 				model:{
 					type:'DefaultModel'
@@ -82,18 +80,16 @@ TestCase("ModelTest", {
 
 			});
 		}
-		return new window.cmpTpl({});
+		return new window.CmpTpl({});
 
 	},
 
 	getModelWithDefaultValues:function () {
-		var model = new ludo.model.Model({
+		return new ludo.model.Model({
 			columns:['id', { name:'firstname' }, 'lastname', 'address', { name:'age', defaultValue:20}]
 		});
-
-		return model;
-
 	},
+
 	"tests_shouldCreateDynamicSetters":function () {
 		// given
 		var model = this.getModel();
@@ -125,7 +121,7 @@ TestCase("ModelTest", {
 			firstname:'Alf Magne',
 			lastname:'Kalleland',
 			address:'Rundaberget 27'
-		}
+		};
 		// then
 		assertEquals(100, model.getId());
 		assertEquals('Alf Magne', model.getFirstname());
@@ -176,7 +172,7 @@ TestCase("ModelTest", {
 	"test_should_register_children_of_components_using_same_model":function () {
 		// given
 		var c = this.getComponentWithModel();
-		var c2 = this.getComponentWithTplChildren();
+		this.getComponentWithTplChildren();
 		var model = c.getFormManager().getModel();
 
 		// then

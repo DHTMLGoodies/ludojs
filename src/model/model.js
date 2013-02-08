@@ -79,10 +79,7 @@ ludo.model.Model = new Class({
 		if (config.listeners) {
 			this.listeners = config.listeners;
 		}
-		if (config.url !== undefined) {
-			this.url = config.url;
-		}
-
+		if (config.url)this.url = config.url;
 		this.createSettersAndGetters();
 		if (this.listeners) {
 			this.addEvents(this.listeners);
@@ -118,6 +115,7 @@ ludo.model.Model = new Class({
 		if (this.columns[column]) {
 			return this.columns[column].defaultValue;
 		}
+		return undefined;
 	},
 
 	createSettersAndGetters:function () {
@@ -159,10 +157,7 @@ ludo.model.Model = new Class({
 				}
 			}
 			this.fireEvent('change', [value, this]);
-
-			this.fireEvent('update',this.currentRecord);
-
-
+			this.fireEvent('update', this.currentRecord);
 		}
 	},
 
@@ -210,7 +205,7 @@ ludo.model.Model = new Class({
 
 	 */
 	load:function (recordId) {
-		if(!this.url){
+		if (!this.url) {
 			return;
 		}
 		var req = new Request.JSON({
@@ -355,8 +350,9 @@ ludo.model.Model = new Class({
 			data:this.getSubmitData(data),
 			onSuccess:function (json) {
 				if (json.success) {
-					if (json.data && json.data['updates']) {
-						this.handleModelUpdates(json.data['updates']);
+					var updates = this.getUpdates();
+					if (updates) {
+						this.handleModelUpdates(updates);
 					}
 					/**
 					 * event fired when model is saved
@@ -391,18 +387,20 @@ ludo.model.Model = new Class({
 		req.send();
 	},
 
+	getUpdates:function(json){
+		return json.data && json.data['updates'] ? json.data['updates'] : json.response ? json.response : undefined;
+	},
+
 	getSubmitData:function (data) {
 		return {
-			request:{
-				id:'saveModelRecord',
-				data:{
-					recordId:this.recordId,
-					modelName:this.name,
-					record:this.currentRecord,
-					formData:data
-				}
-			},
-			progressBarId:this.getProgressBarId()
+			id:'saveModelRecord',
+			progressBarId:this.getProgressBarId(),
+			data:{
+				recordId:this.recordId,
+				modelName:this.name,
+				record:this.currentRecord,
+				formData:data
+			}
 		};
 	},
 
@@ -410,6 +408,7 @@ ludo.model.Model = new Class({
 		if (this.progressBar) {
 			return this.progressBar.getProgressBarId();
 		}
+		return undefined;
 	},
 
 	handleModelUpdates:function (updates) {
@@ -451,13 +450,12 @@ ludo.model.Model = new Class({
 		this.updateViews();
 	},
 
-	fill:function(data){
-		for(var key in data){
-			if(data.hasOwnProperty(key)){
+	fill:function (data) {
+		for (var key in data) {
+			if (data.hasOwnProperty(key)) {
 				this.currentRecord[key] = data[key];
 			}
 		}
-
 		this.fireEvent('update', this.currentRecord);
 	}
 });

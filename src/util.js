@@ -59,5 +59,28 @@ ludo.util = {
 			ret += 400000;
 		}
 		return ret;
+	},
+	
+	disposeView:function(view){
+		if (view.getParent()) {
+			view.getParent().removeChild(view);
+		}
+		var initialItemCount = view.children.length;
+		for (var i = initialItemCount - 1; i >= 0; i--) {
+			view.children[i].dispose();
+		}
+		for (var name in view.els) {
+			if (view.els.hasOwnProperty(name)) {
+				if (view.els[name] && view.els[name].tagName && name != 'parent') {
+					view.els[name].dispose();
+				}
+			}
+		}
+		view.getEl().dispose();
+
+		ludo.CmpMgr.deleteComponent(view);
+		if(view.layoutManager)delete view.layoutManager;
+		delete view.els;
+
 	}
 };
