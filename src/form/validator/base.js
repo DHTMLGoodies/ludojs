@@ -39,19 +39,26 @@ ludo.form.validator.Base = new Class({
 
 	*/
 	loadValue:function () {
-		this.JSONRequest('md5Validation', {
+		new ludo.remote.JSON({
+			url:this.getUrl,
 			data:{
-				getValidatorValueFor:this.applyTo.getName()
+				"request": ["Md5Validation",this.applyTo.getName(),"read"].join('/'),
+				"data": {
+					"md5Validation" : true,
+					"getValidatorValueFor": this.applyTo.getName()
+				}
 			},
-			onSuccess:function (json) {
-				this.value = json.data.value;
-				/**
-				 * Event fired after validator value has been loaded from server
-				 * @event loadValue
-				 * @param form.validator.Base this
-				 */
-				this.fireEvent('loadValue', this);
-			}.bind(this)
+			"listeners":{
+				"success":  function(request){
+					this.value = request.getData().value;
+					/**
+					 * Event fired after validator value has been loaded from server
+					 * @event loadValue
+					 * @param form.validator.Base this
+					 */
+					this.fireEvent('loadValue', this);
+				}.bind(this)
+			}
 		});
 	},
 

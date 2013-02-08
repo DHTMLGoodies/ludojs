@@ -20,7 +20,7 @@ ludo.remote.JSON = new Class({
 			data:data,
 			onSuccess:function (json) {
 				this.JSON = json;
-				if (json.success) {
+				if (json.success || json.success === undefined) {
 					this.fireEvent('success', this);
 				} else {
 					this.fireEvent('failure', this);
