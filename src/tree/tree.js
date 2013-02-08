@@ -848,16 +848,19 @@ ludo.tree.Tree = new Class({
 
     loadChildNodes:function (record) {
         var remoteConfig = this.getRemoteConfigFor(record);
-        this.JSONRequest({
-            url:remoteConfig.url,
-            onSuccess:function (json) {
-                record.children = json.data;
-                this.renderChildNodes(record);
-                this.remoteLoadedNodes[this.getUniqueRecordId(record)] = true;
-                this.showHideExpandElement(record);
-            }.bind(this),
-            params:Object.merge(remoteConfig.data, { record:record })
-        });
+
+		new ludo.remote.JSON({
+			url: remoteConfig.url,
+			data : Object.merge(remoteConfig.data, { record:record }),
+			listeners:{
+				"success": function(request){
+					record.children = request.getResponseData();
+					this.renderChildNodes(record);
+					this.remoteLoadedNodes[this.getUniqueRecordId(record)] = true;
+					this.showHideExpandElement(record);
+				}.bind(this)
+			}
+		});
     },
 
     isRendered:function (record) {

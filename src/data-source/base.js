@@ -37,11 +37,11 @@ ludo.dataSource.Base = new Class({
     autoload : true,
     /**
      * key used to identify request sent to server
-     * @attribute requestId
+     * @attribute request
 	 * @type String
      * @default ''
      */
-    requestId : '',
+    request : '',
 
 	inLoadMode : false,
 
@@ -50,7 +50,7 @@ ludo.dataSource.Base = new Class({
         if (config.url !== undefined)this.url = config.url;
         if (config.query !== undefined)this.query = config.query;
         if (config.autoload !== undefined)this.autoload = config.autoload;
-        if (config.requestId !== undefined)this.requestId = config.requestId;
+        if (config.request !== undefined)this.request = config.request;
 
     },
 

@@ -16,12 +16,43 @@ ludo.dataSource.JSON = new Class({
      */
     load:function () {
         this.parent();
-        this.JSONRequest(this.requestId, { onSuccess:this.loadComplete, data:this.getQuery() });
+
+		new ludo.remote.JSON({
+			url:this.getUrl(),
+			data:{
+				"request":this.request,
+				"data":this.getQuery()
+			},
+			listeners:{
+				"success":function (request) {
+					this.loadComplete(request.getResponseData(), request.getResponse());
+				}.bind(this),
+				"failure":function (request) {
+					/**
+					 * Event fired when success parameter in response from server is false
+					 * @event failure
+					 * @param {Object} JSON response from server. Error message should be in the "message" property
+					 * @param {Object} ludo.model.Model
+					 *
+					 */
+					this.fireEvent('failure', [request.getResponse(), this]);
+				}.bind(this),
+				"error":function (request) {
+					/**
+					 * Server error event. Fired when the server didn't handle the request
+					 * @event servererror
+					 * @param {String} error text
+					 * @param {String} error message
+					 */
+					this.fireEvent('servererror', [request.getErrorText(), request.getErrorCode()]);
+				}.bind(this)
+			}
+		});
     },
 
-    loadComplete:function (json) {
+    loadComplete:function (data,json) {
 		this.parent();
-        this.data = json.data;
+        this.data = data;
         this.fireEvent('parsedata');
         this.fireEvent('load', json);
     },

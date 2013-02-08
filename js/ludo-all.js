@@ -725,26 +725,6 @@ ludo.Core = new Class({
 		return document.id(window);
 	},
 
-	/**
-	 * Send a JSON request
-	 @method JSONRequest
-	 @param {String} requestId
-	 @param {Object} config
-	 @return void
-	 */
-	JSONRequest:function (requestId, config) {
-		var proxy;
-		var url = config.url || this.getUrl();
-		if (proxy = ludo.remote.getProxy(url)) {
-			proxy.addRequest(requestId, config);
-			return;
-		}
-		var request = this.getRequestConfig(requestId, config);
-		if(request.url){
-			var req = new Request.JSON(request);
-			req.send();
-		}
-	},
 	Request:function (requestId, config) {
 		var req = new Request(this.getRequestConfig(requestId, config));
 		req.send();
@@ -1323,7 +1303,7 @@ ludo.remote.JSON = new Class({
 			data:data,
 			onSuccess:function (json) {
 				this.JSON = json;
-				if (json.success) {
+				if (json.success || json.success === undefined) {
 					this.fireEvent('success', this);
 				} else {
 					this.fireEvent('failure', this);
@@ -5169,11 +5149,11 @@ ludo.dataSource.Base = new Class({
     autoload : true,
     /**
      * key used to identify request sent to server
-     * @attribute requestId
+     * @attribute request
 	 * @type String
      * @default ''
      */
-    requestId : '',
+    request : '',
 
 	inLoadMode : false,
 
@@ -5182,7 +5162,7 @@ ludo.dataSource.Base = new Class({
         if (config.url !== undefined)this.url = config.url;
         if (config.query !== undefined)this.query = config.query;
         if (config.autoload !== undefined)this.autoload = config.autoload;
-        if (config.requestId !== undefined)this.requestId = config.requestId;
+        if (config.request !== undefined)this.request = config.request;
 
     },
 
@@ -5249,12 +5229,43 @@ ludo.dataSource.JSON = new Class({
      */
     load:function () {
         this.parent();
-        this.JSONRequest(this.requestId, { onSuccess:this.loadComplete, data:this.getQuery() });
+
+		new ludo.remote.JSON({
+			url:this.getUrl(),
+			data:{
+				"request":this.request,
+				"data":this.getQuery()
+			},
+			listeners:{
+				"success":function (request) {
+					this.loadComplete(request.getResponseData(), request.getResponse());
+				}.bind(this),
+				"failure":function (request) {
+					/**
+					 * Event fired when success parameter in response from server is false
+					 * @event failure
+					 * @param {Object} JSON response from server. Error message should be in the "message" property
+					 * @param {Object} ludo.model.Model
+					 *
+					 */
+					this.fireEvent('failure', [request.getResponse(), this]);
+				}.bind(this),
+				"error":function (request) {
+					/**
+					 * Server error event. Fired when the server didn't handle the request
+					 * @event servererror
+					 * @param {String} error text
+					 * @param {String} error message
+					 */
+					this.fireEvent('servererror', [request.getErrorText(), request.getErrorCode()]);
+				}.bind(this)
+			}
+		});
     },
 
-    loadComplete:function (json) {
+    loadComplete:function (data,json) {
 		this.parent();
-        this.data = json.data;
+        this.data = data;
         this.fireEvent('parsedata');
         this.fireEvent('load', json);
     },
@@ -13055,9 +13066,9 @@ ludo.dataSource.Collection = new Class({
 		this.paging.initialOffset = undefined;
 	},
 
-	loadComplete:function (json) {
+	loadComplete:function (data, json) {
 		if (this.paging && json.rows)this.paging.rows = json.rows;
-		this.parent(json);
+		this.parent(data, json);
 
 		this.fireEvent('count', this.data.length);
 		if (this.shouldSortAfterLoad()) {
@@ -20489,16 +20500,19 @@ ludo.tree.Tree = new Class({
 
     loadChildNodes:function (record) {
         var remoteConfig = this.getRemoteConfigFor(record);
-        this.JSONRequest({
-            url:remoteConfig.url,
-            onSuccess:function (json) {
-                record.children = json.data;
-                this.renderChildNodes(record);
-                this.remoteLoadedNodes[this.getUniqueRecordId(record)] = true;
-                this.showHideExpandElement(record);
-            }.bind(this),
-            params:Object.merge(remoteConfig.data, { record:record })
-        });
+
+		new ludo.remote.JSON({
+			url: remoteConfig.url,
+			data : Object.merge(remoteConfig.data, { record:record }),
+			listeners:{
+				"success": function(request){
+					record.children = request.getResponseData();
+					this.renderChildNodes(record);
+					this.remoteLoadedNodes[this.getUniqueRecordId(record)] = true;
+					this.showHideExpandElement(record);
+				}.bind(this)
+			}
+		});
     },
 
     isRendered:function (record) {
@@ -25534,19 +25548,26 @@ ludo.form.validator.Base = new Class({
 
 	*/
 	loadValue:function () {
-		this.JSONRequest('md5Validation', {
+		new ludo.remote.JSON({
+			url:this.getUrl,
 			data:{
-				getValidatorValueFor:this.applyTo.getName()
+				"request": ["Md5Validation",this.applyTo.getName(),"read"].join('/'),
+				"data": {
+					"md5Validation" : true,
+					"getValidatorValueFor": this.applyTo.getName()
+				}
 			},
-			onSuccess:function (json) {
-				this.value = json.data.value;
-				/**
-				 * Event fired after validator value has been loaded from server
-				 * @event loadValue
-				 * @param form.validator.Base this
-				 */
-				this.fireEvent('loadValue', this);
-			}.bind(this)
+			"listeners":{
+				"success":  function(request){
+					this.value = request.getData().value;
+					/**
+					 * Event fired after validator value has been loaded from server
+					 * @event loadValue
+					 * @param form.validator.Base this
+					 */
+					this.fireEvent('loadValue', this);
+				}.bind(this)
+			}
 		});
 	},
 

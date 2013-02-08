@@ -178,26 +178,6 @@ ludo.Core = new Class({
 		return document.id(window);
 	},
 
-	/**
-	 * Send a JSON request
-	 @method JSONRequest
-	 @param {String} requestId
-	 @param {Object} config
-	 @return void
-	 */
-	JSONRequest:function (requestId, config) {
-		var proxy;
-		var url = config.url || this.getUrl();
-		if (proxy = ludo.remote.getProxy(url)) {
-			proxy.addRequest(requestId, config);
-			return;
-		}
-		var request = this.getRequestConfig(requestId, config);
-		if(request.url){
-			var req = new Request.JSON(request);
-			req.send();
-		}
-	},
 	Request:function (requestId, config) {
 		var req = new Request(this.getRequestConfig(requestId, config));
 		req.send();
