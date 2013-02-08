@@ -57,10 +57,10 @@ ludo.model.Model = new Class({
 	listeners:undefined,
 	/**
 	 * Initial record id
-	 * @attribute {String} record id
+	 * @attribute {String} recordId
 	 * @default undefined
 	 */
-	id:undefined,
+	recordId:undefined,
 
 	/**
 	 * Send initial server request even if no id is set. The model will then be populated from server with default data
@@ -71,7 +71,7 @@ ludo.model.Model = new Class({
 	initialize:function (config) {
 		if (config.name !== undefined)this.name = config.name;
 		if (config.columns !== undefined)this.columns = config.columns;
-		if (config.id !== undefined)this.id = config.id;
+		if (config.recordId !== undefined)this.recordId = config.recordId;
 		ludo.CmpMgr.registerComponent(this);
 
 		this._validateColumns();
@@ -178,26 +178,23 @@ ludo.model.Model = new Class({
 	 Example of query:
 	 @example
 	 request:{
-	 		id:'getModelRecord',
-	 		data:{
-	 			modelName:'user',
-	 			recordId:100
-	 		}
+	 		"request": "model/100/read"
 	 	}
-	 Example of response
+	 Example of expected response
 	 @example
 	 {
-	 	"success":true,
-	 	"message":"",
-	 	"data":{
-	 		"id":100,
-	 		"lastname":"Doe",
-	 		"firstname":"John",
-	 		"address":"My street 27",
-	 		"zipcode":"4330",
-	 		"city":"Springfield",
-	 		"phone":"+00 12 23 23 43",
-	 		"email":"john.doe@example-domain.com",
+		"success":true,
+		"message":"",
+		"code": 200,
+		"data":{
+			"id":100,
+			"lastname":"Doe",
+			"firstname":"John",
+			"address":"My street 27",
+			"zipcode":"4330",
+			"city":"Springfield",
+			"phone":"+00 12 23 23 43",
+			"email":"john.doe@example-domain.com",
 	 "picture":"john.psd"
 	 }
 	 }
@@ -208,37 +205,30 @@ ludo.model.Model = new Class({
 		if (!this.url) {
 			return;
 		}
-		var req = new Request.JSON({
+		new ludo.remote.JSON({
 			url:this.url,
-			method:'post',
 			data:{
-				request:{
-					id:'getModelRecord',
-					data:{
-						recordId:recordId,
-						modelName:this.name
-					}
-				}
+				"request":[this.name, recordId].join('/')
 			},
-			onSuccess:function (json) {
-				if (json.success) {
-					this.populate(recordId, json.data);
-				} else {
+			listeners:{
+				"success":function (request) {
+					this.populate(recordId, request.getResponseData());
+				}.bind(this),
+				"failure":function (request) {
 					/**
 					 * success parameter in response from server returned false
 					 * @event loadfail
 					 * @param {Object} JSON from server
 					 * @param {Object} ludo.model
 					 */
-					this.fireEvent('loadfail', [json, this]);
-				}
-			}.bind(this)
+					this.fireEvent('loadfail', [request.getResponse(), this]);
+				}.bind(this)
+			}
 		});
-		req.send();
 	},
 
 	populate:function (recordId, record) {
-		this.id = recordId;
+		this.recordId = recordId;
 		for (var prop in record) {
 			if (record.hasOwnProperty(prop)) {
 				this._setRecordValue(prop, record[prop]);
@@ -302,37 +292,43 @@ ludo.model.Model = new Class({
 	},
 
 	/**
-	 * Send model data to server. The server request will look like this
-	 * {
-     *      id : 'saveModelRecord',
-     *      data:{
-     *      recordId: this.recordId,
-     *      modelName: this.name,
-     *      record : { id:100,firstname:'Jane',lastname:'Doe',....},
-     *      formData : { other form data which is not part of the model }
-     *      }
-     *  }
-	 *
-	 *  Response from server should be in this format
-	 *  {
-     *      success : true,
-     *      message : '&lt;message>,
-     *      updates : [{ key: value }]
-     *  }
-	 * "message" is used for eventual error messages.
-	 * "updates" is an array of updated model values. In most cases, this would be empty or undefined. Here's a use case of when
-	 * it might be useful:
-	 *
-	 * - You have a Component with one file upload element named "image_file"
-	 * - In that component, you also have a component used for preview of existing image file
-	 * i.e. children : [{ type: 'form.File', label : 'New image', name : 'image_file' }, { tpl : '&lt;img src="{preview}">' }]
-	 * - On click on Submit, you send the newly uploaded image file to the server and use some Image Conversion software(example: ImageMagick)
-	 * to generate a new "preview".
-	 * - Now, you want to update the view with this new preview, so you send it back in the "updates" array: "updates" : [{ preview : 'images/new-file.jpg' }] back after saving.
-	 *
-	 * example: { freeText : 'Notes' }
-	 * @method save
-	 * @param {Object} formData
+	 example: { freeText : 'Notes' }
+	 @method save
+	 @param {Object} formData
+	 Save model data to server. The server request will look like this:
+	 @example
+		 {
+		 	   "request": "Person/100/save",
+			   "data": { "id:100","firstname":"Jane","lastname":"Doe" }
+		 }
+
+	 Response from server should be in this format
+	 @example
+	 	{
+		   "success" : true,
+		   "message" : "A message in case of error",
+		   "response" : {
+		   		"id": "100"
+		   }
+	   }
+
+
+	 "message" is used for eventual error messages.
+	 "code" is optional and may be used for internal error handling.
+	 "response" is an array of updated model values. In most cases, this would be empty or undefined. Here's a use case of when
+	 it might be useful:
+
+	 - You have a View with one file upload element named "image_file"
+	 - In that component, you also have a component used for preview of existing image file
+	 i.e. children :
+	 @example
+	 	[{ type: 'form.File', label : 'New image', name : 'image_file' }, { tpl : '&lt;img src="{preview}">' }]
+	 - On click on Submit, you send the newly uploaded image file to the server and use some Image Conversion software(example: ImageMagick)
+	 to generate a new "preview".
+	 - Now, you want to update the view with this new preview, so you send it back in the "updates" array:
+	 @example
+	 	"response" : [{ preview : 'images/new-file.jpg' }]
+
 	 */
 	save:function (formData) {
 		formData = formData || {};
@@ -344,13 +340,16 @@ ludo.model.Model = new Class({
 		}
 
 		this.fireEvent('beforesubmit', this);
-		var req = new Request.JSON({
+
+		new ludo.remote.JSON({
 			url:this.url,
-			method:'post',
-			data:this.getSubmitData(data),
-			onSuccess:function (json) {
-				if (json.success) {
-					var updates = this.getUpdates();
+			data:{
+				"request":this.recordId ? [this.name, this.recordId, 'save'].join('/') : [this.name, 'save'].join('/'),
+				"data":data
+			},
+			listeners:{
+				"success":function (request) {
+					var updates = request.getResponseData();
 					if (updates) {
 						this.handleModelUpdates(updates);
 					}
@@ -360,9 +359,10 @@ ludo.model.Model = new Class({
 					 * @param {Object} JSON response from server
 					 * @param {Object} ludo.model.Model
 					 */
-					this.fireEvent('success', [json, this]);
+					this.fireEvent('success', [request.getResponse(), this]);
 					this.commitFormFields();
-				} else {
+				}.bind(this),
+				"failure":function (request) {
 					/**
 					 * Event fired when success parameter in response from server is false
 					 * @event failure
@@ -370,25 +370,20 @@ ludo.model.Model = new Class({
 					 * @param {Object} ludo.model.Model
 					 *
 					 */
-					this.fireEvent('failure', [json, this]);
-				}
-
-			}.bind(this),
-			onError:function (text, error) {
-				/**
-				 * Server error event. Fired when the server didn't handle the request
-				 * @event servererror
-				 * @param {String} error text
-				 * @param {String} error message
-				 */
-				this.fireEvent('servererror', [text, error]);
-			}.bind(this)
+					this.fireEvent('failure', [request.getResponse(), this]);
+				}.bind(this),
+				"error":function (request) {
+					/**
+					 * Server error event. Fired when the server didn't handle the request
+					 * @event servererror
+					 * @param {String} error text
+					 * @param {String} error message
+					 */
+					this.fireEvent('servererror', [request.getErrorText(), request.getErrorCode()]);
+				}.bind(this)
+			}
 		});
-		req.send();
-	},
 
-	getUpdates:function(json){
-		return json.data && json.data['updates'] ? json.data['updates'] : json.response ? json.response : undefined;
 	},
 
 	getSubmitData:function (data) {

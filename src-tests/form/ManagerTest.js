@@ -14,6 +14,7 @@ TestCase("ManagerTest", {
 
 	getPanelWithButton:function () {
 		return new ludo.Window({
+			renderTo:document.body,
 			width:500, height:500,
 			children:[
 				{

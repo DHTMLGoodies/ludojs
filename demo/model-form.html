@@ -3,7 +3,7 @@ $pageTitle = 'Model/Form demo';
 require_once("includes/demo-header.php");
 ?>
 <body>
-
+<script type="text/javascript" src="../src/model/model.js"></script>
 <script type="text/javascript" class="source-code">
 var model = new ludo.model.Model({
     name:'user',
@@ -14,7 +14,10 @@ var model = new ludo.model.Model({
 
 var myWin = new ludo.Window({
     title:'Form/Model demo',
-    layout:'cols',
+    layout:{
+        type:'linear',
+        orientation:'horizontal'
+    },
     height:300,
     width:600,
     left:50,
@@ -23,9 +26,12 @@ var myWin = new ludo.Window({
     children:[
         {
             weight:1,
-            layout:'rows',
+            layout:{
+                type:'linear',
+                orientation:'vertical'
+            },
             children:[
-                { type:'form.Text', 'label':'First name', ucWords:true, stretchField:true, name:'firstname', value:'', required:true },
+                { type:'form.Text', 'label':'First name', ucWords:true, stretchField:true, name:'firstname', value:'', required:true, layout: { height:25 } },
                 { type:'form.Text', 'label':'Last name', ucWords:true, stretchField:true, value:'', name:'lastname' },
                 { type:'form.Email', 'label':'E-mail', stretchField:true, name:'email', value:'' },
                 { type:'form.Textarea', label:'Address', ucFirst:true, stretchField:true, name:'address', value:'', weight:1}
@@ -34,9 +40,12 @@ var myWin = new ludo.Window({
         {
             weight:1,
             overflow:'hidden',
-            layout:'rows',
+            layout:{
+                type:'linear',
+                orientation:'vertical'
+            },
             children:[
-                { type:'form.Text', 'label':'Phone', stretchField:true, name:'phone', value:'', required:true },
+                { type:'form.Text', 'label':'Phone', stretchField:true, name:'phone', value:'', required:true, layout: { height:25 } },
                 { type:'form.Text', minLength:4, 'label':'Zip code', stretchField:true, name:'zipcode', value:'' },
                 { type:'form.Text', name:'city', stretchField:true, 'label':'City', value:'' },
                 { type:'form.Text', name:'Free text', label:'Not model field', value:'Free text' },

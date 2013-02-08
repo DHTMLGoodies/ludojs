@@ -4,10 +4,14 @@
 if (isset($_POST['request'])) {
     $data = $_POST['request']['data'];
 
-    switch ($_POST['request']['id']) {
+    $tokens = explode("/", $_POST['request']);
+    $recordId = $tokens[1];
+    $service = count($tokens) == 3 ? $tokens[2] : 'read';
 
-        case 'getModelRecord':
-            switch ($data['recordId']) {
+    switch ($service) {
+
+        case 'read':
+            switch ($recordId) {
 
                 case '100':
                     $response = array(
@@ -45,11 +49,7 @@ if (isset($_POST['request'])) {
             echo utf8_encode(json_encode($response));
 
             break;
-        case 'saveModelRecord':
-            $response = array('success' => true, 'message' => '', 'data' => array());
-            echo utf8_encode(json_encode($response));
-            break;
-        case 'saveForm':
+        case 'save':
             $response = array('success' => true, 'message' => '', 'data' => array());
             echo utf8_encode(json_encode($response));
             break;
