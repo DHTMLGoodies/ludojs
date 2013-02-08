@@ -203,16 +203,13 @@ ludo.Core = new Class({
 		req.send();
 	},
 	getRequestConfig:function (requestId, config) {
+		config.data = config.data || {};
+		config.data.requestId = requestId;
 		return {
 			url:config.url || this.getUrl(),
 			method:'post',
 			noCache:!this.isCacheEnabled(),
-			data:{
-				request:{
-					id:requestId,
-					data:config.data
-				}
-			},
+			data:config.data,
 			evalScripts:true,
 			onSuccess:config.onSuccess.bind(this)
 		};

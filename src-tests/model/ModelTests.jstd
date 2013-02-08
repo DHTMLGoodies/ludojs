@@ -3,6 +3,8 @@ load:
   - ../../mootools/mootools-more-1.4.0.1.js
   - ../../js/ludo-all.js
   - ../../src/model/*.js
+
+test:
   - ModelTest.js
 
 plugin:

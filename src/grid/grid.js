@@ -126,6 +126,7 @@ ludo.grid.Grid = new Class({
 
 	ludoConfig:function (config) {
 		this.parent(config);
+
 		if (config.headerMenu !== undefined)this.headerMenu = config.headerMenu;
 		if (config.columnManager !== undefined)this.columnManager = config.columnManager;
 		if (config.rowManager !== undefined)this.rowManager = config.rowManager;
@@ -189,6 +190,9 @@ ludo.grid.Grid = new Class({
 		this.parent();
 
 		if (this.dataSource) {
+			if(this.dataSourceObj && this.dataSourceObj.hasData()){
+				this.populateData(this.dataSourceObj.getData());
+			}
 			var ds = this.getDataSource();
 			ds.addEvent('change', this.populateData.bind(this));
 			ds.addEvent('select', this.setSelectedRecord.bind(this));
@@ -489,7 +493,6 @@ ludo.grid.Grid = new Class({
 
 	positionVerticalScrollbar:function () {
 		var top = this.gridHeader.getHeight();
-
 		if (top == 0) {
 			this.positionVerticalScrollbar.delay(100, this);
 			return;
