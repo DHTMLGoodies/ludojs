@@ -21,6 +21,7 @@ test:
   - canvas/*.js
   - color/*.js
   - view/*.js
+  - remote/*.js
 
 serve:
   - ../css/ludo-all.css

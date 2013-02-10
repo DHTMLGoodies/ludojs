@@ -182,23 +182,22 @@ ludo.model.Model = new Class({
 	 	}
 	 Example of expected response
 	 @example
-	 {
-		"success":true,
-		"message":"",
-		"code": 200,
-		"data":{
-			"id":100,
-			"lastname":"Doe",
-			"firstname":"John",
-			"address":"My street 27",
-			"zipcode":"4330",
-			"city":"Springfield",
-			"phone":"+00 12 23 23 43",
-			"email":"john.doe@example-domain.com",
-	 "picture":"john.psd"
-	 }
-	 }
-
+         {
+            "success":true,
+            "message":"",
+            "code": 200,
+            "data":{
+                "id":100,
+                "lastname":"Doe",
+                "firstname":"John",
+                "address":"My street 27",
+                "zipcode":"4330",
+                "city":"Springfield",
+                "phone":"+00 12 23 23 43",
+                "email":"john.doe@example-domain.com",
+                "picture":"john.psd"
+            }
+         }
 
 	 */
 	load:function (recordId) {
@@ -341,50 +340,54 @@ ludo.model.Model = new Class({
 
 		this.fireEvent('beforesubmit', this);
 
-		new ludo.remote.JSON({
-			url:this.url,
-			data:{
-				"request":this.recordId ? [this.name, this.recordId, 'save'].join('/') : [this.name, 'save'].join('/'),
-				"data":data
-			},
-			listeners:{
-				"success":function (request) {
-					var updates = request.getResponseData();
-					if (updates) {
-						this.handleModelUpdates(updates);
-					}
-					/**
-					 * event fired when model is saved
-					 * @event success
-					 * @param {Object} JSON response from server
-					 * @param {Object} ludo.model.Model
-					 */
-					this.fireEvent('success', [request.getResponse(), this]);
-					this.commitFormFields();
-				}.bind(this),
-				"failure":function (request) {
-					/**
-					 * Event fired when success parameter in response from server is false
-					 * @event failure
-					 * @param {Object} JSON response from server. Error message should be in the "message" property
-					 * @param {Object} ludo.model.Model
-					 *
-					 */
-					this.fireEvent('failure', [request.getResponse(), this]);
-				}.bind(this),
-				"error":function (request) {
-					/**
-					 * Server error event. Fired when the server didn't handle the request
-					 * @event servererror
-					 * @param {String} error text
-					 * @param {String} error message
-					 */
-					this.fireEvent('servererror', [request.getErrorText(), request.getErrorCode()]);
-				}.bind(this)
-			}
-		});
+		this.remoteHandler().send("save", this.recordId, data);
 
 	},
+    _remoteHandler:undefined,
+    remoteHandler:function(){
+        if(this._remoteHandler === undefined){
+            this._remoteHandler = new ludo.remote.JSON({
+                url:this.url,
+                resource:this.name,
+                listeners:{
+                    "success":function (request) {
+                        var updates = request.getResponseData();
+                        if (updates) {
+                            this.handleModelUpdates(updates);
+                        }
+                        /**
+                         * event fired when model is saved
+                         * @event success
+                         * @param {Object} JSON response from server
+                         * @param {Object} ludo.model.Model
+                         */
+                        this.fireEvent('success', [request.getResponse(), this]);
+                        this.commitFormFields();
+                    }.bind(this),
+                    "failure":function (request) {
+                        /**
+                         * Event fired when success parameter in response from server is false
+                         * @event failure
+                         * @param {Object} JSON response from server. Error message should be in the "message" property
+                         * @param {Object} ludo.model.Model
+                         *
+                         */
+                        this.fireEvent('failure', [request.getResponse(), this]);
+                    }.bind(this),
+                    "error":function (request) {
+                        /**
+                         * Server error event. Fired when the server didn't handle the request
+                         * @event servererror
+                         * @param {String} error text
+                         * @param {String} error message
+                         */
+                        this.fireEvent('servererror', [request.getErrorText(), request.getErrorCode()]);
+                    }.bind(this)
+                }
+            });
+        }
+        return this._remoteHandler;
+    },
 
 	getSubmitData:function (data) {
 		return {
