@@ -8,6 +8,7 @@ load:
   - ../src/data-source/*.js
   - ../src/effect/*.js
   - ../src/canvas/*.js
+  - ../src/remote/*.js
 
 test:
   - controller/*.js

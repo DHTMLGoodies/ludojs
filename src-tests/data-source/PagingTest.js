@@ -95,7 +95,8 @@ TestCase("PagingTest", {
 				autoload:true,
 				load:function () {
 					this.fireEvent('beforeload');
-					this.loadComplete(Object.clone(data));
+                    var json = Object.clone(data);
+					this.loadComplete(json.data, json);
 				}
 			});
 		}
