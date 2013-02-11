@@ -204,11 +204,8 @@ ludo.model.Model = new Class({
 		if (!this.url && !ludo.remote.hasGlobalUrl()) {
 			return;
 		}
-		new ludo.remote.JSON({
+		var req =  ludo.remote.JSON({
 			url:this.url,
-			data:{
-				"request":[this.name, recordId].join('/')
-			},
 			listeners:{
 				"success":function (request) {
 					this.populate(recordId, request.getResponseData());
@@ -224,6 +221,7 @@ ludo.model.Model = new Class({
 				}.bind(this)
 			}
 		});
+        req.send("load", recordId);
 	},
 
 	populate:function (recordId, record) {
@@ -385,7 +383,7 @@ ludo.model.Model = new Class({
                 }
             });
         }
-        return this._remoteHa
+        return this._request;
     },
 
 	getSubmitData:function (data) {

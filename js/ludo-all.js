@@ -5186,7 +5186,7 @@ ludo.dataSource.Base = new Class({
         return this.data;
     },
 
-    setQueryParam:function (param, value) {
+    setPostParam:function (param, value) {
         this.query[param] = value;
     },
 
@@ -16750,7 +16750,7 @@ ludo.progress.DataSource = new Class({
     getProgressId:function(){
         if(!this.progressId){
             this.progressId = 'ludo-progress-' + String.uniqueID();
-            this.setQueryParam('progressBarId', this.getProgressId());
+            this.setPostParam('progressBarId', this.getProgressId());
         }
 
         return this.progressId;

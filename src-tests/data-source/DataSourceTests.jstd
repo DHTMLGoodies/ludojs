@@ -4,6 +4,9 @@ load:
   - ../../js/ludo-all.js
   - ../../src/paging/*.js
   - ../../src/data-source/*.js
+  - ../../src/data-source/base.js
+  - ../../src/data-source/json.js
+  - ../../src/data-source/collection.js
   - ../../src/remote/JSON.js
 
 test:
@@ -11,6 +14,7 @@ test:
   - TreeCollectionTest.js
   - CollectionSearchTest.js
   - CollectionTest.js
+  - PagingTest.js
 
 plugin:
  - name: "coverage"
