@@ -5355,6 +5355,7 @@ ludo.dataSource.Base = new Class({
         if (config.autoload !== undefined)this.autoload = config.autoload;
         if (config.resource !== undefined)this.resource = config.resource;
         if (config.service !== undefined)this.service = config.service;
+        if (config.arguments !== undefined)this.arguments = config.arguments;
     },
 
 	ludoEvents:function(){
