@@ -12,7 +12,10 @@ var w = new ludo.Window({
     form: {
         url: 'server-file-upload-form.php'
     },
-    layout : 'rows',
+    layout : {
+        'type' : 'linear',
+        'orientation' : 'vertical'
+    },
     children : [
         { type: 'form.Text', name:'title','label':'Title'},
         { type: 'form.File', name:'fileOne','label':'File 1',value:'green.psd',instantUpload:false },
