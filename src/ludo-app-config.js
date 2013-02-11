@@ -9,7 +9,7 @@ LUDOJS_CONFIG = {
     },
 
     fileupload : {
-        url : 'controller.php'
+        url : '/ludojs/api/demo/controller.php'
     },
 
 	mod_rewrite : false
