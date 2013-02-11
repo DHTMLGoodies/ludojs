@@ -214,11 +214,17 @@ ludo.form.File = new Class({
 		this.getEl().adopt(formEl);
 		formEl.adopt(this.getBody());
 
+		this.addElToForm('ludo-file-upload-name',this.getName());
+		this.addElToForm('request','FileUpload/save');
+
+	},
+
+	addElToForm:function(name,value){
 		var el = new Element('input');
 		el.type = 'hidden';
-		el.name = 'ludo-file-upload-name';
-		el.value = this.getName();
-		formEl.adopt(el);
+		el.name = name;
+		el.value = value;
+		this.els.form.adopt(el);
 	},
 
 	createIframe:function () {

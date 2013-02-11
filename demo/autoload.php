@@ -18,6 +18,7 @@ spl_autoload_register(
                 'democountry' => '/ludoDB/examples/cities/DemoCountry.php',
                 'demostate' => '/ludoDB/examples/cities/DemoState.php',
                 'demostates' => '/ludoDB/examples/cities/DemoStates.php',
+                'fileupload' => '/resources/FileUpload.php',
                 'gridwithpaging' => '/resources/GridWithPaging.php',
                 'ludodb' => '/ludoDB/LudoDB.php',
                 'ludodbadapter' => '/ludoDB/LudoDBInterfaces.php',

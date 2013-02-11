@@ -7,21 +7,30 @@
  * @extends form.Button
  */
 ludo.form.SubmitButton = new Class({
-    Extends:ludo.form.Button,
-    type:'form.SubmitButton',
-    value:'Submit',
-    component:undefined,
-    disableOnInvalid:true,
+	Extends:ludo.form.Button,
+	type:'form.SubmitButton',
+	value:'Submit',
+	component:undefined,
+	disableOnInvalid:true,
 
-    ludoRendered:function () {
-        this.parent();
-        this.addEvent('click', this.submit.bind(this));
+	ludoRendered:function () {
+		this.parent();
+		this.component = this.getParentComponent();
+		var manager = this.component.getFormManager();
+		if (this.component) {
+			manager.addEvent('valid', this.enable.bind(this));
+			manager.addEvent('invalid', this.disable.bind(this));
+		}
+		if(!manager.isValid()){
+			this.disable();
+		}
+		this.addEvent('click', this.submit.bind(this));
 
-    },
+	},
 
-    submit:function () {
-        if (this.component) {
-            this.component.submit();
-        }
-    }
+	submit:function () {
+		if (this.component) {
+			this.component.submit();
+		}
+	}
 });

@@ -70,8 +70,6 @@ TestCase("ButtonTest", {
 
 		assertFalse('form should be invalid', mgr.isValid());
 		assertTrue(button.isDisabled());
-
-
 	},
 
 	getButton:function (config) {
