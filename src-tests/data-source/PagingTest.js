@@ -116,7 +116,7 @@ TestCase("PagingTest", {
 		});
 
 		// when
-		var query = c.getQuery();
+		var query = c.getPostData();
 
 		// then
 		assertEquals(10, query._paging.size);
@@ -148,7 +148,7 @@ TestCase("PagingTest", {
 
 
 		// when
-		var query = c.getQuery();
+		var query = c.getPostData();
 
 		// then
 		assertEquals('country', query._sort.column);

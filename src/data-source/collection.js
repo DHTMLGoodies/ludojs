@@ -621,7 +621,7 @@ ludo.dataSource.Collection = new Class({
 		if (!this.paging) {
 			return this.parent();
 		}
-		var ret = this.postData;
+		var ret = this.postData || {};
 		ret._paging = {
 			size:this.paging.size,
 			offset:this.paging.offset
