@@ -42,9 +42,9 @@ ludo.remote.JSON = new Class({
      Send request to the server
      @method send
      @param {String} service
-     @param {Array} arguments
+     @param {Array} resourceArguments
      @optional
-     @param {Object} data
+     @param {Object} serviceArguments
      @optional
      @example
 	 	LUDOJS_CONFIG.url = '/controller.php';
@@ -104,12 +104,12 @@ ludo.remote.JSON = new Class({
         }
      i.e. without any "request" data in the post variable since it's already defined in the url.
      */
-    send:function (service, arguments, data) {
-        if (arguments && !ludo.util.isArray(arguments))arguments = [arguments];
+    send:function (service, resourceArguments, serviceArguments) {
+        if (resourceArguments && !ludo.util.isArray(resourceArguments))resourceArguments = [resourceArguments];
         var req = new Request.JSON({
-            url:this.getUrl(service, arguments),
+            url:this.getUrl(service, resourceArguments),
             method:this.method,
-            data:this.getDataForRequest(service, arguments, data),
+            data:this.getDataForRequest(service, resourceArguments, serviceArguments),
             onSuccess:function (json) {
                 this.JSON = json;
                 if (json.success || json.success === undefined) {

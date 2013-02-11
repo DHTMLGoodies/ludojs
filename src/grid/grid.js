@@ -350,7 +350,7 @@ ludo.grid.Grid = new Class({
 	 	grid.selectRecord({ id: 100 } );
 	 */
 	selectRecord:function (record) {
-		if (!record.id) {
+		if (ludo.util.isString(record)) {
 			record = { id:record };
 		}
 		this.getDataSource().selectRecord(record);
