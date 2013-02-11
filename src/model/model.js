@@ -340,13 +340,13 @@ ludo.model.Model = new Class({
 
 		this.fireEvent('beforesubmit', this);
 
-		this.remoteHandler().send("save", this.recordId, data);
+		this.request().send("save", this.recordId, data);
 
 	},
-    _remoteHandler:undefined,
-    remoteHandler:function(){
-        if(this._remoteHandler === undefined){
-            this._remoteHandler = new ludo.remote.JSON({
+    _request:undefined,
+    request:function(){
+        if(this._request === undefined){
+            this._request = new ludo.remote.JSON({
                 url:this.url,
                 resource:this.name,
                 listeners:{
@@ -386,7 +386,7 @@ ludo.model.Model = new Class({
                 }
             });
         }
-        return this._remoteHandler;
+        return this._request;
     },
 
 	getSubmitData:function (data) {

@@ -4,7 +4,9 @@ load:
   - ../../js/ludo-all.js
   - ../../src/paging/*.js
   - ../../src/data-source/*.js
+  - ../../src/remote/JSON.js
 
+test:
   - SearchParserTest.js
   - TreeCollectionTest.js
   - CollectionSearchTest.js

@@ -16,38 +16,43 @@ ludo.dataSource.JSON = new Class({
      */
     load:function () {
         this.parent();
+        this.request().send(this.service, this.arguments, this.getQuery());
+    },
 
-		new ludo.remote.JSON({
-			url:this.getUrl(),
-			data:{
-				"request":this.request,
-				"data":this.getQuery()
-			},
-			listeners:{
-				"success":function (request) {
-					this.loadComplete(request.getResponseData(), request.getResponse());
-				}.bind(this),
-				"failure":function (request) {
-					/**
-					 * Event fired when success parameter in response from server is false
-					 * @event failure
-					 * @param {Object} JSON response from server. Error message should be in the "message" property
-					 * @param {Object} ludo.model.Model
-					 *
-					 */
-					this.fireEvent('failure', [request.getResponse(), this]);
-				}.bind(this),
-				"error":function (request) {
-					/**
-					 * Server error event. Fired when the server didn't handle the request
-					 * @event servererror
-					 * @param {String} error text
-					 * @param {String} error message
-					 */
-					this.fireEvent('servererror', [request.getErrorText(), request.getErrorCode()]);
-				}.bind(this)
-			}
-		});
+    _request:undefined,
+    request:function(){
+        if(this._request === undefined){
+            this._request = new ludo.remote.JSON({
+                url:this.url,
+                resource: this.resource,
+                listeners:{
+                    "success":function (request) {
+                        this.loadComplete(request.getResponseData(), request.getResponse());
+                    }.bind(this),
+                    "failure":function (request) {
+                        /**
+                         * Event fired when success parameter in response from server is false
+                         * @event failure
+                         * @param {Object} JSON response from server. Error message should be in the "message" property
+                         * @param {Object} ludo.model.Model
+                         *
+                         */
+                        this.fireEvent('failure', [request.getResponse(), this]);
+                    }.bind(this),
+                    "error":function (request) {
+                        /**
+                         * Server error event. Fired when the server didn't handle the request
+                         * @event servererror
+                         * @param {String} error text
+                         * @param {String} error message
+                         */
+                        this.fireEvent('servererror', [request.getErrorText(), request.getErrorCode()]);
+                    }.bind(this)
+                }
+            });
+
+        }
+        return this._request;
     },
 
     loadComplete:function (data,json) {

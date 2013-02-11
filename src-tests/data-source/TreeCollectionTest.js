@@ -149,7 +149,8 @@ TestCase("TreeCollection", {
 				Extends:ludo.dataSource.TreeCollection,
 				autoload:true,
 				load:function () {
-					this.loadComplete(Object.clone(d));
+                    var data = Object.clone(d);
+					this.loadComplete(data.data,data);
 				}
 			});
 		}

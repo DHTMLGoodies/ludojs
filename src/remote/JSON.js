@@ -126,7 +126,14 @@ ludo.remote.JSON = new Class({
         });
         req.send();
     },
-
+    /**
+     * Return url for the request
+     * @method getUrl
+     * @param {String} service
+     * @param {Array} arguments
+     * @return {String}
+     * @private
+     */
     getUrl:function (service, arguments) {
         var ret = this.url !== undefined ? this.url : ludo.remote.globalUrl;
         if (ludo.remote.modRewriteEnabled) {
@@ -134,7 +141,13 @@ ludo.remote.JSON = new Class({
         }
         return ret;
     },
-
+    /**
+     * @method getServicePath
+     * @param {String} service
+     * @param {Array} arguments
+     * @return {String}
+     * @private
+     */
     getServicePath:function (service, arguments) {
         var parts = [this.resource];
         if (arguments)parts.push(arguments.join('/'));
@@ -142,7 +155,15 @@ ludo.remote.JSON = new Class({
 
         return parts.join('/');
     },
-
+    /**
+     * @method getDataForRequest
+     * @param {String} service
+     * @param {Array} arguments
+     * @param {Object} data
+     * @optional
+     * @return {Object}
+     * @private
+     */
     getDataForRequest:function (service, arguments, data) {
         var ret = {
             data:data
@@ -169,9 +190,19 @@ ludo.remote.JSON = new Class({
         return this.JSON;
     },
 
+    /**
+     * Return error text from last failed server request
+     * @method getErrorText
+     * @return {String}
+     */
     getErrorText:function () {
         return this.errorText;
     },
+    /**
+     * Return error code from last failed server request
+     * @method getErrorCode
+     * @return {String}
+     */
     getErrorCode:function () {
         return this.errorCode;
     },
