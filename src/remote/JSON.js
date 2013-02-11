@@ -168,7 +168,7 @@ ludo.remote.JSON = new Class({
         var ret = {
             data:data
         };
-        if (!ludo.remote.modRewriteEnabled) {
+        if (!ludo.remote.modRewriteEnabled && this.resource) {
             ret.request = this.getServicePath(service, arguments);
         }
         return ret;
