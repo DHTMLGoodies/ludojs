@@ -545,6 +545,22 @@ ludo.ObjectFactory = new Class({
 	}
 });
 ludo.factory = new ludo.ObjectFactory();
+/*
+* User specific config properties for ludoJS
+*/
+
+LUDOJS_CONFIG = {
+    url : '/ludojs/api/demo/controller.php',
+    socket : {
+        url : 'http://your-node-js-server-url:8080/'
+    },
+
+    fileupload : {
+        url : 'controller.php'
+    },
+
+	mod_rewrite : false
+};
 /**
  * Base class for components and views in ludoJS. This class extends
  * Mootools Events class.
@@ -686,6 +702,7 @@ ludo.Core = new Class({
 		return this.name;
 	},
 
+    // TODO refactor this to use only this.url or global url.
 	/**
 	 * Get url for component
 	 * @method getUrl
@@ -704,8 +721,8 @@ ludo.Core = new Class({
 		if (this.parentComponent) {
 			return this.parentComponent.getUrl();
 		}
-		if (window.LUDO_APP_CONFIG && LUDO_APP_CONFIG.url) {
-			return LUDO_APP_CONFIG.url;
+		if (window.LUDOJS_CONFIG && LUDOJS_CONFIG.url) {
+			return LUDOJS_CONFIG.url;
 		}
 		return undefined;
 	},
@@ -1281,82 +1298,232 @@ ludo.remote.createProxy = function (url, config) {
 		return ludo.remote.getProxy(url);
 	}
 };
+/**
+ * LudoJS class for remote JSON queries. Remote queries in ludoJS uses a REST-like API where you have
+ * resources, arguments, service and data. An example of resource is Person and City. Example of
+ * services are "load", "save". Arguments are arguments used when instantiating the resource on the
+ * server, example: Person with id 1. The "data" property is used for data which should be sent to
+ * the service on the server. Example: For Person with id equals 1, save these data.
+ * @namespace remote
+ * @class JSON
+ * @extends Events
+ */
 ludo.remote.JSON = new Class({
-	Extends:Events,
-	method:'post',
-	JSON : undefined,
-	errorText : undefined,
-	errorCode : undefined,
+    Extends:Events,
+    method:'post',
+    JSON:undefined,
+    errorText:undefined,
+    errorCode:undefined,
+    /**
+     * Name of resource to request, example: "Person"
+     * @config {String} resource
+     */
+    resource:undefined,
+    /**
+     * Optional url to use for the query instead of global set url.
+     * @config {String} url
+     * optional
+     */
+    url:undefined,
+    /**
+     * @constructor
+     * @param {Object} config
+     */
+    initialize:function (config) {
+        if (config.listeners !== undefined) {
+            this.addEvents(config.listeners);
+        }
+        this.method = config.method || this.method;
+        if (config.resource !== undefined) this.resource = config.resource;
+        if (config.url !== undefined) this.url = config.url;
+    },
 
-	initialize:function (config) {
-		if (config.listeners !== undefined) {
-			this.addEvents(config.listeners);
-		}
-		this.method = config.method || this.method;
-		this.send(config.url, config.data);
-	},
+    /**
+     Send request to the server
+     @method send
+     @param {String} service
+     @param {Array} arguments
+     @optional
+     @param {Object} data
+     @optional
+     @example
+	 	LUDOJS_CONFIG.url = '/controller.php';
+        var req = new ludo.remote.JSON({
+            resource : 'Person'
+        });
+        req.send('load', 1);
 
-	send:function (url, data) {
-		var req = new Request.JSON({
-			url:url,
-			method:this.method,
-			data:data,
-			onSuccess:function (json) {
-				this.JSON = json;
-				if (json.success || json.success === undefined) {
-					this.fireEvent('success', this);
-				} else {
-					this.fireEvent('failure', this);
-				}
-			}.bind(this),
-			onError:function (text, error) {
-				this.errorText = text;
-				this.errorCode = error;
-				this.fireEvent('servererror', this);
-			}.bind(this)
-		});
-		req.send();
-	},
-	/**
-	 * Return JSON response data from last request.
-	 * @method getResponseData
-	 * @return {Object|undefined}
-	 */
-	getResponseData: function(){
-		return this.JSON.data;
-	},
-	/**
-	 * Return entire server response of last request.
-	 * @method getResponse
-	 * @return {Object|undefined}
-	 */
-	getResponse:function(){
-		return this.JSON;
-	},
+     Will trigger the following data to be sent to controller.php:
 
-	getErrorText:function(){
-		return this.errorText;
-	},
-	getErrorCode:function(){
-		return this.errorCode;
-	},
-	/**
-	 * Return "code" property of last received server response.
-	 * @method getResponseCode
-	 * @return {String|undefined}
-	 */
-	getResponseCode:function(){
-		return this.JSON && this.JSON.code ? this.JSON.code : undefined;
-	},
-	/**
-	 * Return response message
-	 * @method getResponseMessage
-	 * @return {String|undefined}
-	 */
-	getResponseMessage:function(){
-		return this.JSON && this.JSON.message ? this.JSON.message : undefined;
-	}
+     @example
+        {
+            request:"Person/1/load"
+        }
+     If you have the mod_rewrite module enabled and activated on your web server, you may use code like this:
+     @example
+	 	LUDOJS_CONFIG.mod_rewrite = true;
+	 	LUDOJS_CONFIG.url = '/';
+        var req = new ludo.remote.JSON({
+            resource : 'Person'
+        });
+        req.send('load', 1);
+
+     which will send a request to the following url:
+     @example:
+        http://<your web server url>/Person/1/load
+     The query will not contain any POST data.
+
+     Here's another example for saving data(mod rewrite deactivated)
+     @example
+	     LUDOJS_CONFIG.url = '/controller.php';
+         var req = new ludo.remote.JSON({
+                resource : 'Person'
+            });
+         req.send('save', 1, {
+            "firstname": "John",
+            "lastname": "McCarthy"
+         });
+
+     which will send the following POST data to "controller.php":
+
+     @example
+        {
+            "request": "Person/1/save",
+            "data": {
+                "firstname": "John",
+                "lastname": McCarthy"
+            }
+        }
+     When mod_rewrite is enabled, the request will be sent to the url /Person/1/save and POST data will contain
+
+        {
+            "data": {
+                "firstname": "John",
+                "lastname": "McCarthy"
+            }
+        }
+     i.e. without any "request" data in the post variable since it's already defined in the url.
+     */
+    send:function (service, arguments, data) {
+        if (!ludo.util.isArray(arguments))arguments = [arguments];
+        var req = new Request.JSON({
+            url:this.getUrl(service, arguments),
+            method:this.method,
+            data:this.getDataForRequest(service, arguments, data),
+            onSuccess:function (json) {
+                this.JSON = json;
+                if (json.success || json.success === undefined) {
+                    this.fireEvent('success', this);
+                } else {
+                    this.fireEvent('failure', this);
+                }
+            }.bind(this),
+            onError:function (text, error) {
+                this.errorText = text;
+                this.errorCode = error;
+                this.fireEvent('servererror', this);
+            }.bind(this)
+        });
+        req.send();
+    },
+    /**
+     * Return url for the request
+     * @method getUrl
+     * @param {String} service
+     * @param {Array} arguments
+     * @return {String}
+     * @private
+     */
+    getUrl:function (service, arguments) {
+        var ret = this.url !== undefined ? this.url : LUDOJS_CONFIG.url;
+        if (LUDOJS_CONFIG.mod_rewrite) {
+            ret += this.getServicePath(service, arguments);
+        }
+        return ret;
+    },
+    /**
+     * @method getServicePath
+     * @param {String} service
+     * @param {Array} arguments
+     * @return {String}
+     * @private
+     */
+    getServicePath:function (service, arguments) {
+        var parts = [this.resource];
+        if (arguments)parts.push(arguments.join('/'));
+        if (service)parts.push(service);
+
+        return parts.join('/');
+    },
+    /**
+     * @method getDataForRequest
+     * @param {String} service
+     * @param {Array} arguments
+     * @param {Object} data
+     * @optional
+     * @return {Object}
+     * @private
+     */
+    getDataForRequest:function (service, arguments, data) {
+        var ret = {
+            data:data
+        };
+        if (!LUDOJS_CONFIG.mod_rewrite && this.resource) {
+            ret.request = this.getServicePath(service, arguments);
+        }
+        return ret;
+    },
+    /**
+     * Return JSON response data from last request.
+     * @method getResponseData
+     * @return {Object|undefined}
+     */
+    getResponseData:function () {
+        return this.JSON.response ? this.JSON.response.data : this.JSON.data;
+    },
+    /**
+     * Return entire server response of last request.
+     * @method getResponse
+     * @return {Object|undefined}
+     */
+    getResponse:function () {
+        return this.JSON;
+    },
+
+    /**
+     * Return error text from last failed server request
+     * @method getErrorText
+     * @return {String}
+     */
+    getErrorText:function () {
+        return this.errorText;
+    },
+    /**
+     * Return error code from last failed server request
+     * @method getErrorCode
+     * @return {String}
+     */
+    getErrorCode:function () {
+        return this.errorCode;
+    },
+    /**
+     * Return "code" property of last received server response.
+     * @method getResponseCode
+     * @return {String|undefined}
+     */
+    getResponseCode:function () {
+        return this.JSON && this.JSON.code ? this.JSON.code : undefined;
+    },
+    /**
+     * Return response message
+     * @method getResponseMessage
+     * @return {String|undefined}
+     */
+    getResponseMessage:function () {
+        return this.JSON && this.JSON.message ? this.JSON.message : undefined;
+    }
 });
+
 /**
  * JSON Content compiler. This component will return compiled JSON for a view. It will
  * be created on demand by a ludo.View. If you want to create your own parser, extend this
@@ -5125,18 +5292,20 @@ ludo.dataSource.Base = new Class({
 	 * @type {Boolean}
      */
     singleton:false,
+    // TODO show show to set global url.
     /**
-     * Remote url
+     * Remote url. If not set, global url will be used
      * @attribute url
 	 * @type String
+     * @optional
      */
     url:undefined,
     /**
-     * Remote query sent with request, example:
-     * query: { getUsers: 1 }
-     * @attribute object query
+     * Remote postData sent with request, example:
+     * postData: { getUsers: 1 }
+     * @attribute object postData
      */
-    query:{},
+    postData:{},
 
     data:undefined,
 
@@ -5148,22 +5317,44 @@ ludo.dataSource.Base = new Class({
      */
     autoload : true,
     /**
-     * key used to identify request sent to server
-     * @attribute request
+     * Name of resource to request on the server
+     * @config resource
 	 * @type String
      * @default ''
      */
-    request : '',
+    resource : '',
+    /**
+     * Name of service to request on the server
+     * @config service
+	 * @type String
+     * @default ''
+     */
+    service : '',
+    /**
+     Array of arguments to send to resource on server
+     @config arguments
+     @type Array
+     @default ''
+     Here are some examples:
+
+     Create a data source for server resource "Person", service name "load" and id : "1". You will then set these config properties:
+
+     @example
+        "resource": "Person",
+        "service": "load",
+        "arguments": [1]
+     */
+    arguments: undefined,
 
 	inLoadMode : false,
 
 	ludoConfig:function (config) {
         this.parent(config);
         if (config.url !== undefined)this.url = config.url;
-        if (config.query !== undefined)this.query = config.query;
+        if (config.postData !== undefined)this.postData = config.postData;
         if (config.autoload !== undefined)this.autoload = config.autoload;
-        if (config.request !== undefined)this.request = config.request;
-
+        if (config.resource !== undefined)this.resource = config.resource;
+        if (config.service !== undefined)this.service = config.service;
     },
 
 	ludoEvents:function(){
@@ -5187,7 +5378,7 @@ ludo.dataSource.Base = new Class({
     },
 
     setPostParam:function (param, value) {
-        this.query[param] = value;
+        this.postData[param] = value;
     },
 
     /**
@@ -5229,38 +5420,56 @@ ludo.dataSource.JSON = new Class({
      */
     load:function () {
         this.parent();
+        this.sendRequest(this.service, this.arguments, this.getPostData())
+    },
 
-		new ludo.remote.JSON({
-			url:this.getUrl(),
-			data:{
-				"request":this.request,
-				"data":this.getQuery()
-			},
-			listeners:{
-				"success":function (request) {
-					this.loadComplete(request.getResponseData(), request.getResponse());
-				}.bind(this),
-				"failure":function (request) {
-					/**
-					 * Event fired when success parameter in response from server is false
-					 * @event failure
-					 * @param {Object} JSON response from server. Error message should be in the "message" property
-					 * @param {Object} ludo.model.Model
-					 *
-					 */
-					this.fireEvent('failure', [request.getResponse(), this]);
-				}.bind(this),
-				"error":function (request) {
-					/**
-					 * Server error event. Fired when the server didn't handle the request
-					 * @event servererror
-					 * @param {String} error text
-					 * @param {String} error message
-					 */
-					this.fireEvent('servererror', [request.getErrorText(), request.getErrorCode()]);
-				}.bind(this)
-			}
-		});
+    /**
+     * Send a new request
+     * @method sendRequest
+     * @param {String} service
+     * @param {Array} arguments
+     * @optional
+     * @param {Object} data
+     * @optional
+     */
+    sendRequest:function(service, arguments, data){
+        this.request().send(service, arguments, data);
+    },
+
+    _request:undefined,
+    request:function(){
+        if(this._request === undefined){
+            this._request = new ludo.remote.JSON({
+                url:this.url,
+                resource: this.resource,
+                listeners:{
+                    "success":function (request) {
+                        this.loadComplete(request.getResponseData(), request.getResponse());
+                    }.bind(this),
+                    "failure":function (request) {
+                        /**
+                         * Event fired when success parameter in response from server is false
+                         * @event failure
+                         * @param {Object} JSON response from server. Error message should be in the "message" property
+                         * @param {Object} ludo.model.Model
+                         *
+                         */
+                        this.fireEvent('failure', [request.getResponse(), this]);
+                    }.bind(this),
+                    "error":function (request) {
+                        /**
+                         * Server error event. Fired when the server didn't handle the request
+                         * @event servererror
+                         * @param {String} error text
+                         * @param {String} error message
+                         */
+                        this.fireEvent('servererror', [request.getErrorText(), request.getErrorCode()]);
+                    }.bind(this)
+                }
+            });
+
+        }
+        return this._request;
     },
 
     loadComplete:function (data,json) {
@@ -5270,8 +5479,8 @@ ludo.dataSource.JSON = new Class({
         this.fireEvent('load', json);
     },
 
-    getQuery:function(){
-        return this.query;
+    getPostData:function(){
+        return this.postData;
     }
 });
 
@@ -6854,7 +7063,6 @@ ludo.View = new Class({
 				}
 				obj = this.dataSourceObj = ludo._new(this.dataSource);
 			}
-
 			switch (obj.getSourceType()) {
 				case 'HTML':
 					if (obj.hasData()) {
@@ -7949,7 +8157,7 @@ ludo.socket.Socket = new Class({
 
 	/**
 	 * Socket http url, example: http://localhost:1337
-	 * URL can also be defined in LUDO_APP_CONFIG.socket
+	 * URL can also be defined in LUDOJS_CONFIG.socket
 	 * @config url
 	 * @type String
 	 * @default undefined
@@ -8016,8 +8224,8 @@ ludo.socket.Socket = new Class({
 
 	getUrl:function () {
 		var url = this.url;
-		if (!url && window.LUDO_APP_CONFIG !== undefined) {
-			url = LUDO_APP_CONFIG.socket;
+		if (!url && window.LUDOJS_CONFIG !== undefined) {
+			url = LUDOJS_CONFIG.socket;
 		}
 		if (url)url = url.trim();
 		return url;
@@ -12224,6 +12432,167 @@ ludo.dataSource.CollectionSearch = new Class({
 	}
 });
 /**
+ * Class representing a record in {{#crossLink "dataSource.Collection"}}{{/crossLink}}
+ * Instances of this class are created from {{#crossLink "dataSource.Collection/getRecord"}}{{/crossLink}}
+ * When you update a record
+ * @namespace dataSource
+ * @class Record
+ */
+ludo.dataSource.Record = new Class({
+	Extends:Events,
+	record:undefined,
+	collection:undefined,
+
+	initialize:function (record, collection) {
+		this.record = record;
+		this.collection = collection;
+	},
+
+	/**
+	 * Update property of record
+	 * @method set
+	 * @param {String} key
+	 * @param {String|Number|Object} value
+	 * @return {dataSource.Record}
+	 */
+	set:function (key, value) {
+		this.fireEvent('beforeUpdate', this.record);
+		this.record[key] = value;
+		this.fireEvent('update', this.record);
+		return this;
+	},
+
+	/**
+	 Return value of key
+	 @method get
+	 @param {String} key
+	 @return {String|Number|Object} value
+	 */
+	get:function (key) {
+		return this.record[key];
+	},
+	/**
+	 Update multiple properties
+	 @method setProperties
+	 @param {Object} properties
+	 @return {dataSource.Record|undefined}
+	 @example
+	 var collection = new ludo.dataSource.Collection({
+	 		idField:'id'
+		});
+	 collection.getRecord(100).setProperties({ country:'Norway', capital:'Oslo' });
+	 will set country to "Norway" and capital to "Oslo" for record where "id" is equal to 100. If you're not sure
+	 that the record exists, you should use code like this:
+	 @example
+	 var rec = collection.getRecord(100);
+	 if(rec)rec.setProperties({ country:'Norway', capital:'Oslo' });
+
+	 */
+	setProperties:function (properties) {
+		this.fireEvent('beforeUpdate', this.record);
+		for (var key in properties) {
+			if (properties.hasOwnProperty(key)) {
+				this.record[key] = properties[key];
+			}
+		}
+		this.fireEvent('update', [this.record,undefined, 'update']);
+		return this;
+	},
+
+	addChild:function (record) {
+		record = this.getPlainRecord(record);
+		this.record.children = this.record.children || [];
+		this.record.children.push(record);
+		if (record.parentUid) {
+			var parent = this.collection.getRecord(record.parentUid);
+			if (parent)parent.removeChild(record);
+		}
+		this.fireEvent('addChild', [record, this.record, 'addChild']);
+		return this;
+	},
+
+	getParent:function () {
+		return this.collection.getRecord(this.record.parentUid);
+	},
+
+	isRecordObject:function (rec) {
+		return rec.initialize !== undefined && rec.record !== undefined;
+	},
+
+	getChildren:function () {
+		return this.record.children;
+	},
+
+	removeChild:function (record) {
+		record = this.getPlainRecord(record);
+		var index = this.record.children.indexOf(record);
+		if (index >= 0) {
+			this.record.children.splice(index, 1);
+			this.fireEvent('removeChild', [record, this.record, 'removeChild']);
+		}
+	},
+
+	getPlainRecord:function (record) {
+		return this.isRecordObject(record) ? record.record : record;
+	},
+
+	insertBefore:function (record, before) {
+		if (this.inject(record, before)) {
+			this.fireEvent('insertBefore', [record, before, 'insertBefore']);
+		}
+	},
+
+	insertAfter:function (record, after) {
+		if (this.inject(record, after, 1)) {
+			this.fireEvent('insertAfter', [record, after, 'insertAfter']);
+		}
+	},
+
+	inject:function (record, sibling, offset) {
+		offset = offset || 0;
+		record = this.getPlainRecord(record);
+		sibling = this.getPlainRecord(sibling);
+		if (record === sibling)return false;
+		if (record.parentUid) {
+			var parent = this.collection.getRecord(record.parentUid);
+			if (parent){
+				if(this.isMyChild(record)){
+					this.record.children.splice(this.getChildIndex(record), 1);
+				}else{
+					parent.removeChild(record);
+				}
+			}
+		}
+		var index = this.record.children.indexOf(sibling);
+		if (index !== -1) {
+			this.record.children.splice(index + offset, 0, record);
+			return true;
+		}
+		return false;
+	},
+
+	getChildIndex:function (record) {
+		return this.record.children ? this.record.children.indexOf(this.getPlainRecord(record)) : -1;
+	},
+
+	isMyChild:function (record) {
+		return this.record.children && this.record.children.indexOf(this.getPlainRecord(record)) !== -1;
+	},
+
+	getUID:function(){
+		return this.record.uid;
+	},
+
+	getData:function(){
+		return this.record;
+	},
+
+	dispose:function(){
+		this.fireEvent('dispose', this.record);
+		delete this.record;
+	}
+});
+/**
  Data source collection
  @namespace dataSource
  @class Collection
@@ -12277,6 +12646,7 @@ ludo.dataSource.Collection = new Class({
 	 * Primary key for records
 	 * @config {String} primaryKey
 	 * @default "id"
+     * @optional
 	 */
 	primaryKey:'id',
 
@@ -12422,6 +12792,7 @@ ludo.dataSource.Collection = new Class({
 	 @method sortBy
 	 @param {String} column
 	 @param {String} order
+     @optional
 	 @return {dataSource.Collection} this
 	 @example
 	 	grid.getDataSource().sortBy('firstname', 'desc');
@@ -12579,7 +12950,7 @@ ludo.dataSource.Collection = new Class({
 	 * Select a specific record
 	 * @method selectRecord
 	 * @param {Object} search
-	 * @return {Object} record
+	 * @return {Object|undefined} record
 	 */
 	selectRecord:function (search) {
 		var rec = this.findRecord(search);
@@ -12840,11 +13211,11 @@ ludo.dataSource.Collection = new Class({
 		return rec;
 	},
 
-	getQuery:function () {
+	getPostData:function () {
 		if (!this.paging) {
 			return this.parent();
 		}
-		var ret = this.query;
+		var ret = this.postData || {};
 		ret._paging = {
 			size:this.paging.size,
 			offset:this.paging.offset
@@ -13067,7 +13438,9 @@ ludo.dataSource.Collection = new Class({
 	},
 
 	loadComplete:function (data, json) {
+		// TODO refactor this
 		if (this.paging && json.rows)this.paging.rows = json.rows;
+		if (this.paging && json.response && json.response.rows)this.paging.rows = json.response.rows;
 		this.parent(data, json);
 
 		this.fireEvent('count', this.data.length);
@@ -18228,6 +18601,7 @@ ludo.model.Model = new Class({
 		if (config.name !== undefined)this.name = config.name;
 		if (config.columns !== undefined)this.columns = config.columns;
 		if (config.recordId !== undefined)this.recordId = config.recordId;
+		if (config.id !== undefined)this.id = config.id;
 		ludo.CmpMgr.registerComponent(this);
 
 		this._validateColumns();
@@ -18338,50 +18712,55 @@ ludo.model.Model = new Class({
 	 	}
 	 Example of expected response
 	 @example
-	 {
-		"success":true,
-		"message":"",
-		"code": 200,
-		"data":{
-			"id":100,
-			"lastname":"Doe",
-			"firstname":"John",
-			"address":"My street 27",
-			"zipcode":"4330",
-			"city":"Springfield",
-			"phone":"+00 12 23 23 43",
-			"email":"john.doe@example-domain.com",
-	 "picture":"john.psd"
-	 }
-	 }
-
+         {
+            "success":true,
+            "message":"",
+            "code": 200,
+            "data":{
+                "id":100,
+                "lastname":"Doe",
+                "firstname":"John",
+                "address":"My street 27",
+                "zipcode":"4330",
+                "city":"Springfield",
+                "phone":"+00 12 23 23 43",
+                "email":"john.doe@example-domain.com",
+                "picture":"john.psd"
+            }
+         }
 
 	 */
 	load:function (recordId) {
-		if (!this.url) {
+		if (!this.recordId || (!this.url && !LUDOJS_CONFIG.url)) {
 			return;
 		}
-		new ludo.remote.JSON({
-			url:this.url,
-			data:{
-				"request":[this.name, recordId].join('/')
-			},
-			listeners:{
-				"success":function (request) {
-					this.populate(recordId, request.getResponseData());
-				}.bind(this),
-				"failure":function (request) {
-					/**
-					 * success parameter in response from server returned false
-					 * @event loadfail
-					 * @param {Object} JSON from server
-					 * @param {Object} ludo.model
-					 */
-					this.fireEvent('loadfail', [request.getResponse(), this]);
-				}.bind(this)
-			}
-		});
+
+		this.loadRequest().send("load", recordId);
 	},
+
+    _loadRequest:undefined,
+    loadRequest:function(){
+        if(this._loadRequest === undefined){
+            this._loadRequest = new  ludo.remote.JSON({
+                url:this.url,
+                listeners:{
+                    "success":function (request) {
+                        this.populate(recordId, request.getResponseData());
+                    }.bind(this),
+                    "failure":function (request) {
+                        /**
+                         * success parameter in response from server returned false
+                         * @event loadfail
+                         * @param {Object} JSON from server
+                         * @param {Object} ludo.model
+                         */
+                        this.fireEvent('loadfail', [request.getResponse(), this]);
+                    }.bind(this)
+                }
+            });
+        }
+        return this._loadRequest;
+    },
 
 	populate:function (recordId, record) {
 		this.recordId = recordId;
@@ -18496,51 +18875,54 @@ ludo.model.Model = new Class({
 		}
 
 		this.fireEvent('beforesubmit', this);
-
-		new ludo.remote.JSON({
-			url:this.url,
-			data:{
-				"request":this.recordId ? [this.name, this.recordId, 'save'].join('/') : [this.name, 'save'].join('/'),
-				"data":data
-			},
-			listeners:{
-				"success":function (request) {
-					var updates = request.getResponseData();
-					if (updates) {
-						this.handleModelUpdates(updates);
-					}
-					/**
-					 * event fired when model is saved
-					 * @event success
-					 * @param {Object} JSON response from server
-					 * @param {Object} ludo.model.Model
-					 */
-					this.fireEvent('success', [request.getResponse(), this]);
-					this.commitFormFields();
-				}.bind(this),
-				"failure":function (request) {
-					/**
-					 * Event fired when success parameter in response from server is false
-					 * @event failure
-					 * @param {Object} JSON response from server. Error message should be in the "message" property
-					 * @param {Object} ludo.model.Model
-					 *
-					 */
-					this.fireEvent('failure', [request.getResponse(), this]);
-				}.bind(this),
-				"error":function (request) {
-					/**
-					 * Server error event. Fired when the server didn't handle the request
-					 * @event servererror
-					 * @param {String} error text
-					 * @param {String} error message
-					 */
-					this.fireEvent('servererror', [request.getErrorText(), request.getErrorCode()]);
-				}.bind(this)
-			}
-		});
+        this.request().send("save", this.recordId, data);
 
 	},
+    _request:undefined,
+    request:function(){
+        if(this._request === undefined){
+            this._request = new ludo.remote.JSON({
+                url:this.url,
+                resource:this.name,
+                listeners:{
+                    "success":function (request) {
+                        var updates = request.getResponseData();
+                        if (updates) {
+                            this.handleModelUpdates(updates);
+                        }
+                        /**
+                         * event fired when model is saved
+                         * @event success
+                         * @param {Object} JSON response from server
+                         * @param {Object} ludo.model.Model
+                         */
+                        this.fireEvent('success', [request.getResponse(), this]);
+                        this.commitFormFields();
+                    }.bind(this),
+                    "failure":function (request) {
+                        /**
+                         * Event fired when success parameter in response from server is false
+                         * @event failure
+                         * @param {Object} JSON response from server. Error message should be in the "message" property
+                         * @param {Object} ludo.model.Model
+                         *
+                         */
+                        this.fireEvent('failure', [request.getResponse(), this]);
+                    }.bind(this),
+                    "error":function (request) {
+                        /**
+                         * Server error event. Fired when the server didn't handle the request
+                         * @event servererror
+                         * @param {String} error text
+                         * @param {String} error message
+                         */
+                        this.fireEvent('servererror', [request.getErrorText(), request.getErrorCode()]);
+                    }.bind(this)
+                }
+            });
+        }
+        return this._request;
+    },
 
 	getSubmitData:function (data) {
 		return {
@@ -20990,7 +21372,7 @@ ludo.dataSource.HTML = new Class({
      */
     load:function () {
         this.parent();
-        this.Request(this.requestId, { onSuccess:this.loadComplete, data:this.query });
+        this.Request(this.requestId, { onSuccess:this.loadComplete, data:this.postData });
     },
 
     loadComplete:function (html) {
@@ -21759,59 +22141,61 @@ ludo.form.Manager = new Class({
 
 	save:function () {
 		var url = this.getUrl();
-
 		if (url) {
-
 			this.fireEvent('invalid');
-
-			new ludo.remote.JSON({
-				url:this.url,
-				method:this.form.method ? this.form.method : 'post',
-				data:{
-					"request":["Form", this.form.name, "save"].join('/'),
-					"data":this.getValues(),
-					"saveForm":1,
-					"progressBarId":this.getProgressBarId()
-				},
-				listeners:{
-					"success":function (request) {
-						this.commitFormElements();
-						/**
-						 * Event fired after a form has been saved successfully.
-						 * To add listeners, use <br>
-						 * ludo.View.getFormManager().addEvent('success', fn);
-						 * @event success
-						 * @param {Object} JSON response from server
-						 */
-						this.fireEvent('success', [request.getResponse(), this.component]);
-
-						this.fireEvent('clean');
-					}.bind(this),
-					"failure":function (request) {
-						/**
-						 * Event fired after form submission when success parameter in response is false.
-						 * To add listeners, use <br>
-						 * ludo.View.getFormManager().addEvent('failure', fn);<br>
-						 * @event failure
-						 * @param {Object} JSON response from server
-						 * @param {Object} Component
-						 */
-						this.fireEvent('failure', [request.getResponse(), this.component]);
-					}.bind(this),
-					"error":function (request) {
-						/**
-						 * Server error event. Fired when the server didn't handle the request
-						 * @event servererror
-						 * @param {String} error text
-						 * @param {String} error message
-						 */
-						this.fireEvent('servererror', [request.getErrorText(), request.getErrorCode()]);
-						this.fireEvent('valid', this);
-					}.bind(this)
-				}
-			});
+            this.request().send('save', undefined, {
+                "progressBarId":this.getProgressBarId(),
+                "data" : this.getValues()
+            });
 		}
 	},
+    _request:undefined,
+    request:function(){
+        if(this._request === undefined){
+            this._request = new ludo.remote.JSON({
+                url:this.url,
+                resource : 'Form',
+                method:this.form.method ? this.form.method : 'post',
+                listeners:{
+                    "success":function (request) {
+                        this.commitFormElements();
+                        /**
+                         * Event fired after a form has been saved successfully.
+                         * To add listeners, use <br>
+                         * ludo.View.getFormManager().addEvent('success', fn);
+                         * @event success
+                         * @param {Object} JSON response from server
+                         */
+                        this.fireEvent('success', [request.getResponse(), this.component]);
+
+                        this.fireEvent('clean');
+                    }.bind(this),
+                    "failure":function (request) {
+                        /**
+                         * Event fired after form submission when success parameter in response is false.
+                         * To add listeners, use <br>
+                         * ludo.View.getFormManager().addEvent('failure', fn);<br>
+                         * @event failure
+                         * @param {Object} JSON response from server
+                         * @param {Object} Component
+                         */
+                        this.fireEvent('failure', [request.getResponse(), this.component]);
+                    }.bind(this),
+                    "error":function (request) {
+                        /**
+                         * Server error event. Fired when the server didn't handle the request
+                         * @event servererror
+                         * @param {String} error text
+                         * @param {String} error message
+                         */
+                        this.fireEvent('servererror', [request.getErrorText(), request.getErrorCode()]);
+                        this.fireEvent('valid', this);
+                    }.bind(this)
+                }
+            });
+        }
+        return this._request;
+    },
 
 	getProgressBarId:function () {
 		return this.progressBar ? this.progressBar.getProgressBarId() : undefined;
@@ -24768,7 +25152,7 @@ ludo.form.RadioGroup = new Class({
 /**
  File upload component<br>
  This components submits the file to an iframe. The url of this iframe is by default.<br>
- LUDO_APP_CONFIG.fileupload.url. You can override it with remote.url config property.
+ LUDOJS_CONFIG.fileupload.url. You can override it with remote.url config property.
 
  The file upload component should be implemented this way:
 
@@ -25082,7 +25466,7 @@ ludo.form.File = new Class({
 
 	getUploadUrl:function () {
 		try {
-			return ludo['appConfig'].fileupload.url;
+			return window.LUDOJS_CONFIG.fileupload.url;
 		} catch (e) {
 			var url = this.getUrl();
 			if (!url) {

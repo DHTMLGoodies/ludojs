@@ -265,19 +265,18 @@ function cmp($a,$b){
     }
 }
 
-if(isset($_POST['request'])){
-    $request = $_POST['request'];
+if(isset($_POST['data'])){
+    $request = $_POST['data'];
     $response = array(
         'data' => array(),
         'rows' => count($data)
     );
-    $offset = $request['data']['_paging']['offset'];
-    $end = $request['data']['_paging']['size'] + $offset;
+    $offset = $request['_paging']['offset'];
+    $end = $request['_paging']['size'] + $offset;
 
-    if(isset($request['data']['_sort'])){
-        $data = getDataSortedBy($request['data']['_sort']);
+    if(isset($request['_sort'])){
+        $data = getDataSortedBy($request['_sort']);
     }
-
 
     for($i=$offset;$i<$end;$i++){
         if(isset($data[$i]))$response['data'][] = $data[$i];

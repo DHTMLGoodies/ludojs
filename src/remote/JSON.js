@@ -47,7 +47,7 @@ ludo.remote.JSON = new Class({
      @param {Object} data
      @optional
      @example
-        ludo.remote.setGlobalUrl('/controller.php');
+	 	LUDOJS_CONFIG.url = '/controller.php';
         var req = new ludo.remote.JSON({
             resource : 'Person'
         });
@@ -61,8 +61,8 @@ ludo.remote.JSON = new Class({
         }
      If you have the mod_rewrite module enabled and activated on your web server, you may use code like this:
      @example
-        ludo.remote.modRewrite(true);
-        ludo.remote.setGlobalUrl('/');
+	 	LUDOJS_CONFIG.mod_rewrite = true;
+	 	LUDOJS_CONFIG.url = '/';
         var req = new ludo.remote.JSON({
             resource : 'Person'
         });
@@ -75,7 +75,7 @@ ludo.remote.JSON = new Class({
 
      Here's another example for saving data(mod rewrite deactivated)
      @example
-         ludo.remote.setGlobalUrl('/controller.php');
+	     LUDOJS_CONFIG.url = '/controller.php';
          var req = new ludo.remote.JSON({
                 resource : 'Person'
             });
@@ -135,8 +135,8 @@ ludo.remote.JSON = new Class({
      * @private
      */
     getUrl:function (service, arguments) {
-        var ret = this.url !== undefined ? this.url : ludo.remote.globalUrl;
-        if (ludo.remote.modRewriteEnabled) {
+        var ret = this.url !== undefined ? this.url : LUDOJS_CONFIG.url;
+        if (LUDOJS_CONFIG.mod_rewrite) {
             ret += this.getServicePath(service, arguments);
         }
         return ret;
@@ -168,7 +168,7 @@ ludo.remote.JSON = new Class({
         var ret = {
             data:data
         };
-        if (!ludo.remote.modRewriteEnabled && this.resource) {
+        if (!LUDOJS_CONFIG.mod_rewrite && this.resource) {
             ret.request = this.getServicePath(service, arguments);
         }
         return ret;
@@ -179,7 +179,7 @@ ludo.remote.JSON = new Class({
      * @return {Object|undefined}
      */
     getResponseData:function () {
-        return this.JSON.data;
+        return this.JSON.response ? this.JSON.response.data : this.JSON.data;
     },
     /**
      * Return entire server response of last request.
@@ -223,16 +223,3 @@ ludo.remote.JSON = new Class({
         return this.JSON && this.JSON.message ? this.JSON.message : undefined;
     }
 });
-ludo.remote.modRewriteEnabled = false;
-ludo.remote.globalUrl = undefined;
-ludo.remote.modRewrite = function (enabled) {
-    ludo.remote.modRewriteEnabled = enabled ? true : false;
-};
-
-ludo.remote.setGlobalUrl = function (url) {
-    ludo.remote.globalUrl = url;
-};
-
-ludo.remote.hasGlobalUrl = function(){
-    return ludo.remote.globalUrl;
-}

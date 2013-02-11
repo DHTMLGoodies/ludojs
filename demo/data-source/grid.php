@@ -251,4 +251,5 @@ for($i=0,$count = count($data);$i<$count;$i++){
 $data = array(
     'data' => $data
 );
-echo json_encode($data);
+$data = json_encode($data);
+

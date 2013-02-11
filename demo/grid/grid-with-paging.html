@@ -4,6 +4,7 @@ $pageTitle = 'Grid demo with paging';
 require_once("../includes/demo-header.php");
 ?>
 <body>
+
 <script type="text/javascript" class="source-code">
     var w = new ludo.Window({
         left:250, top:50,
@@ -40,7 +41,8 @@ require_once("../includes/demo-header.php");
                     }
                 },
                 dataSource:{
-                    url:'../data-source/grid-paging.php',
+                    resource:'GridWithPaging',
+                    service:'read',
                     id:'myDataSource',
                     paging:{
                         size:12,

@@ -1,7 +1,7 @@
 /**
  File upload component<br>
  This components submits the file to an iframe. The url of this iframe is by default.<br>
- LUDO_APP_CONFIG.fileupload.url. You can override it with remote.url config property.
+ LUDOJS_CONFIG.fileupload.url. You can override it with remote.url config property.
 
  The file upload component should be implemented this way:
 
@@ -315,7 +315,7 @@ ludo.form.File = new Class({
 
 	getUploadUrl:function () {
 		try {
-			return ludo['appConfig'].fileupload.url;
+			return window.LUDOJS_CONFIG.fileupload.url;
 		} catch (e) {
 			var url = this.getUrl();
 			if (!url) {
