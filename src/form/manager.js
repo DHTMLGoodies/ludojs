@@ -265,59 +265,61 @@ ludo.form.Manager = new Class({
 
 	save:function () {
 		var url = this.getUrl();
-
 		if (url) {
-
 			this.fireEvent('invalid');
-
-			new ludo.remote.JSON({
-				url:this.url,
-				method:this.form.method ? this.form.method : 'post',
-				data:{
-					"request":["Form", this.form.name, "save"].join('/'),
-					"data":this.getValues(),
-					"saveForm":1,
-					"progressBarId":this.getProgressBarId()
-				},
-				listeners:{
-					"success":function (request) {
-						this.commitFormElements();
-						/**
-						 * Event fired after a form has been saved successfully.
-						 * To add listeners, use <br>
-						 * ludo.View.getFormManager().addEvent('success', fn);
-						 * @event success
-						 * @param {Object} JSON response from server
-						 */
-						this.fireEvent('success', [request.getResponse(), this.component]);
-
-						this.fireEvent('clean');
-					}.bind(this),
-					"failure":function (request) {
-						/**
-						 * Event fired after form submission when success parameter in response is false.
-						 * To add listeners, use <br>
-						 * ludo.View.getFormManager().addEvent('failure', fn);<br>
-						 * @event failure
-						 * @param {Object} JSON response from server
-						 * @param {Object} Component
-						 */
-						this.fireEvent('failure', [request.getResponse(), this.component]);
-					}.bind(this),
-					"error":function (request) {
-						/**
-						 * Server error event. Fired when the server didn't handle the request
-						 * @event servererror
-						 * @param {String} error text
-						 * @param {String} error message
-						 */
-						this.fireEvent('servererror', [request.getErrorText(), request.getErrorCode()]);
-						this.fireEvent('valid', this);
-					}.bind(this)
-				}
-			});
+            this.request().send('save', undefined, {
+                "progressBarId":this.getProgressBarId(),
+                "data" : this.getValues()
+            });
 		}
 	},
+    _request:undefined,
+    request:function(){
+        if(this._request === undefined){
+            this._request = new ludo.remote.JSON({
+                url:this.url,
+                resource : 'Form',
+                method:this.form.method ? this.form.method : 'post',
+                listeners:{
+                    "success":function (request) {
+                        this.commitFormElements();
+                        /**
+                         * Event fired after a form has been saved successfully.
+                         * To add listeners, use <br>
+                         * ludo.View.getFormManager().addEvent('success', fn);
+                         * @event success
+                         * @param {Object} JSON response from server
+                         */
+                        this.fireEvent('success', [request.getResponse(), this.component]);
+
+                        this.fireEvent('clean');
+                    }.bind(this),
+                    "failure":function (request) {
+                        /**
+                         * Event fired after form submission when success parameter in response is false.
+                         * To add listeners, use <br>
+                         * ludo.View.getFormManager().addEvent('failure', fn);<br>
+                         * @event failure
+                         * @param {Object} JSON response from server
+                         * @param {Object} Component
+                         */
+                        this.fireEvent('failure', [request.getResponse(), this.component]);
+                    }.bind(this),
+                    "error":function (request) {
+                        /**
+                         * Server error event. Fired when the server didn't handle the request
+                         * @event servererror
+                         * @param {String} error text
+                         * @param {String} error message
+                         */
+                        this.fireEvent('servererror', [request.getErrorText(), request.getErrorCode()]);
+                        this.fireEvent('valid', this);
+                    }.bind(this)
+                }
+            });
+        }
+        return this._request;
+    },
 
 	getProgressBarId:function () {
 		return this.progressBar ? this.progressBar.getProgressBarId() : undefined;

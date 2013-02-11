@@ -36,12 +36,34 @@ ludo.dataSource.Base = new Class({
      */
     autoload : true,
     /**
-     * key used to identify request sent to server
-     * @attribute request
+     * Name of resource to request on the server
+     * @config resource
 	 * @type String
      * @default ''
      */
-    request : '',
+    resource : '',
+    /**
+     * Name of service to request on the server
+     * @config service
+	 * @type String
+     * @default ''
+     */
+    service : '',
+    /**
+     Array of arguments to send to resource on server
+     @config arguments
+     @type Array
+     @default ''
+     Here are some examples:
+
+     Create a data source for server resource "Person", service name "load" and id : "1". You will then set these config properties:
+
+     @example
+        "resource": "Person",
+        "service": "load",
+        "arguments": [1]
+     */
+    arguments: undefined,
 
 	inLoadMode : false,
 
@@ -50,8 +72,8 @@ ludo.dataSource.Base = new Class({
         if (config.url !== undefined)this.url = config.url;
         if (config.query !== undefined)this.query = config.query;
         if (config.autoload !== undefined)this.autoload = config.autoload;
-        if (config.request !== undefined)this.request = config.request;
-
+        if (config.resource !== undefined)this.resource = config.resource;
+        if (config.service !== undefined)this.service = config.service;
     },
 
 	ludoEvents:function(){

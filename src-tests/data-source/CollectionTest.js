@@ -11,7 +11,8 @@ TestCase("CollectionTest", {
 				Extends:ludo.dataSource.Collection,
 				autoload:true,
 				load:function () {
-					this.loadComplete(Object.clone(d));
+                    var json = Object.clone(d);
+					this.loadComplete(json.data, json);
 				}
 			});
 		}

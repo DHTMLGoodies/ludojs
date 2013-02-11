@@ -5,7 +5,8 @@ TestCase("CollectionSearch", {
 				Extends:ludo.dataSource.Collection,
 				autoload:true,
 				load:function () {
-					this.loadComplete(Object.clone(data));
+                    var json = Object.clone(data);
+					this.loadComplete(json.data, json);
 				}
 			});
 		}
