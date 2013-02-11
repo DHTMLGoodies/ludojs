@@ -139,6 +139,7 @@ ludo.Core = new Class({
 		return this.name;
 	},
 
+    // TODO refactor this to use only this.url or global url.
 	/**
 	 * Get url for component
 	 * @method getUrl

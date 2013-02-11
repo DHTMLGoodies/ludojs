@@ -232,3 +232,7 @@ ludo.remote.modRewrite = function (enabled) {
 ludo.remote.setGlobalUrl = function (url) {
     ludo.remote.globalUrl = url;
 };
+
+ludo.remote.hasGlobalUrl = function(){
+    return ludo.remote.globalUrl;
+}
