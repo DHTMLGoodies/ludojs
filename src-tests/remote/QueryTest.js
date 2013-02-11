@@ -8,7 +8,7 @@
 TestCase("QueryTest", {
 
     setUp:function(){
-        ludo.remote.setGlobalUrl('/');
+        LUDOJS_CONFIG.url = '/';
 
         if(window.TestRemoteMock === undefined){
             window.TestRemoteMock = new Class({
@@ -30,7 +30,7 @@ TestCase("QueryTest", {
 
     "test should be able to get queries for mod rewrite": function(){
         // given
-        ludo.remote.modRewrite(true);
+       LUDOJS_CONFIG.mod_rewrite = true;
         var obj = new window.TestRemoteMock({
             "resource": "Game"
         });
@@ -46,8 +46,8 @@ TestCase("QueryTest", {
 
     "test should get correct url when mod rewrite is disabled": function(){
         // given
-        ludo.remote.modRewrite(false);
-        ludo.remote.setGlobalUrl('/router.php');
+       LUDOJS_CONFIG.mod_rewrite = false;
+        LUDOJS_CONFIG.url = '/router.php';
 
         // given
         var obj = new window.TestRemoteMock({
@@ -65,7 +65,7 @@ TestCase("QueryTest", {
 
     "test should get correct data when mod rewrite is enabled": function(){
         // given
-        ludo.remote.modRewrite(true);
+       LUDOJS_CONFIG.mod_rewrite = true;
         var obj = new window.TestRemoteMock({
             "resource": "Game"
         });
@@ -83,7 +83,7 @@ TestCase("QueryTest", {
 
     "test should get correct data when mod rewrite is disabled": function(){
         // given
-        ludo.remote.modRewrite(false);
+       LUDOJS_CONFIG.mod_rewrite = false;
         var obj = new window.TestRemoteMock({
             "resource": "Game"
         });
@@ -100,8 +100,8 @@ TestCase("QueryTest", {
 
     "test should be able to send request without any resource": function(){
         // given
-        ludo.remote.modRewrite(false);
-        ludo.remote.setGlobalUrl('/router.php');
+        LUDOJS_CONFIG.mod_rewrite = false;
+        LUDOJS_CONFIG.url = '/router.php';
         var obj = new window.TestRemoteMock({
         });
 

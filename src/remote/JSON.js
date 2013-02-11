@@ -105,7 +105,7 @@ ludo.remote.JSON = new Class({
      i.e. without any "request" data in the post variable since it's already defined in the url.
      */
     send:function (service, arguments, data) {
-        if (!ludo.util.isArray(arguments))arguments = [arguments];
+        if (arguments && !ludo.util.isArray(arguments))arguments = [arguments];
         var req = new Request.JSON({
             url:this.getUrl(service, arguments),
             method:this.method,
@@ -150,9 +150,8 @@ ludo.remote.JSON = new Class({
      */
     getServicePath:function (service, arguments) {
         var parts = [this.resource];
-        if (arguments)parts.push(arguments.join('/'));
+        if (arguments && arguments.length)parts.push(arguments.join('/'));
         if (service)parts.push(service);
-
         return parts.join('/');
     },
     /**
