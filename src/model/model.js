@@ -204,25 +204,32 @@ ludo.model.Model = new Class({
 		if (!this.url && !ludo.remote.hasGlobalUrl()) {
 			return;
 		}
-		var req =  ludo.remote.JSON({
-			url:this.url,
-			listeners:{
-				"success":function (request) {
-					this.populate(recordId, request.getResponseData());
-				}.bind(this),
-				"failure":function (request) {
-					/**
-					 * success parameter in response from server returned false
-					 * @event loadfail
-					 * @param {Object} JSON from server
-					 * @param {Object} ludo.model
-					 */
-					this.fireEvent('loadfail', [request.getResponse(), this]);
-				}.bind(this)
-			}
-		});
-        req.send("load", recordId);
+		this.loadRequest().send("load", recordId);
 	},
+
+    _loadRequest:undefined,
+    loadRequest:function(){
+        if(this._loadRequest === undefined){
+            this._loadRequest = new  ludo.remote.JSON({
+                url:this.url,
+                listeners:{
+                    "success":function (request) {
+                        this.populate(recordId, request.getResponseData());
+                    }.bind(this),
+                    "failure":function (request) {
+                        /**
+                         * success parameter in response from server returned false
+                         * @event loadfail
+                         * @param {Object} JSON from server
+                         * @param {Object} ludo.model
+                         */
+                        this.fireEvent('loadfail', [request.getResponse(), this]);
+                    }.bind(this)
+                }
+            });
+        }
+        return this._loadRequest();
+    },
 
 	populate:function (recordId, record) {
 		this.recordId = recordId;
