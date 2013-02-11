@@ -22272,7 +22272,6 @@ ludo.form.SubmitButton = new Class({
 			this.disable();
 		}
 		this.addEvent('click', this.submit.bind(this));
-
 	},
 
 	submit:function () {
