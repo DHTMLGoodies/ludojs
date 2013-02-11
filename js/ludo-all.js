@@ -5433,11 +5433,11 @@ ludo.dataSource.JSON = new Class({
      * @optional
      */
     sendRequest:function(service, arguments, data){
-        this.request().send(service, arguments, data);
+        this.requestHandler().send(service, arguments, data);
     },
 
     _request:undefined,
-    request:function(){
+	requestHandler:function(){
         if(this._request === undefined){
             this._request = new ludo.remote.JSON({
                 url:this.url,
