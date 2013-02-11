@@ -52,6 +52,7 @@ ludo.dataSource.Collection = new Class({
 	 * Primary key for records
 	 * @config {String} primaryKey
 	 * @default "id"
+     * @optional
 	 */
 	primaryKey:'id',
 
@@ -197,6 +198,7 @@ ludo.dataSource.Collection = new Class({
 	 @method sortBy
 	 @param {String} column
 	 @param {String} order
+     @optional
 	 @return {dataSource.Collection} this
 	 @example
 	 	grid.getDataSource().sortBy('firstname', 'desc');
@@ -354,7 +356,7 @@ ludo.dataSource.Collection = new Class({
 	 * Select a specific record
 	 * @method selectRecord
 	 * @param {Object} search
-	 * @return {Object} record
+	 * @return {Object|undefined} record
 	 */
 	selectRecord:function (search) {
 		var rec = this.findRecord(search);
@@ -615,11 +617,11 @@ ludo.dataSource.Collection = new Class({
 		return rec;
 	},
 
-	getQuery:function () {
+	getPostData:function () {
 		if (!this.paging) {
 			return this.parent();
 		}
-		var ret = this.query;
+		var ret = this.postData;
 		ret._paging = {
 			size:this.paging.size,
 			offset:this.paging.offset

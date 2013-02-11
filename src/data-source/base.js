@@ -20,11 +20,11 @@ ludo.dataSource.Base = new Class({
      */
     url:undefined,
     /**
-     * Remote query sent with request, example:
-     * query: { getUsers: 1 }
-     * @attribute object query
+     * Remote postData sent with request, example:
+     * postData: { getUsers: 1 }
+     * @attribute object postData
      */
-    query:{},
+    postData:{},
 
     data:undefined,
 
@@ -70,7 +70,7 @@ ludo.dataSource.Base = new Class({
 	ludoConfig:function (config) {
         this.parent(config);
         if (config.url !== undefined)this.url = config.url;
-        if (config.query !== undefined)this.query = config.query;
+        if (config.postData !== undefined)this.postData = config.postData;
         if (config.autoload !== undefined)this.autoload = config.autoload;
         if (config.resource !== undefined)this.resource = config.resource;
         if (config.service !== undefined)this.service = config.service;
@@ -97,7 +97,7 @@ ludo.dataSource.Base = new Class({
     },
 
     setQueryParam:function (param, value) {
-        this.query[param] = value;
+        this.postData[param] = value;
     },
 
     /**

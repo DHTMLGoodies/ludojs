@@ -16,7 +16,20 @@ ludo.dataSource.JSON = new Class({
      */
     load:function () {
         this.parent();
-        this.request().send(this.service, this.arguments, this.getQuery());
+        this.sendRequest(this.service, this.arguments, this.getPostData())
+    },
+
+    /**
+     * Send a new request
+     * @method sendRequest
+     * @param {String} service
+     * @param {Array} arguments
+     * @optional
+     * @param {Object} data
+     * @optional
+     */
+    sendRequest:function(service, arguments, data){
+        this.request().send(service, arguments, data);
     },
 
     _request:undefined,
@@ -62,8 +75,8 @@ ludo.dataSource.JSON = new Class({
         this.fireEvent('load', json);
     },
 
-    getQuery:function(){
-        return this.query;
+    getPostData:function(){
+        return this.postData;
     }
 });
 
