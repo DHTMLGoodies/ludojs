@@ -72,6 +72,7 @@ ludo.model.Model = new Class({
 		if (config.name !== undefined)this.name = config.name;
 		if (config.columns !== undefined)this.columns = config.columns;
 		if (config.recordId !== undefined)this.recordId = config.recordId;
+		if (config.id !== undefined)this.id = config.id;
 		ludo.CmpMgr.registerComponent(this);
 
 		this._validateColumns();
@@ -201,9 +202,10 @@ ludo.model.Model = new Class({
 
 	 */
 	load:function (recordId) {
-		if (!this.url && !ludo.remote.hasGlobalUrl()) {
+		if (!this.recordId || (!this.url && !LUDOJS_CONFIG.url)) {
 			return;
 		}
+
 		this.loadRequest().send("load", recordId);
 	},
 
@@ -228,7 +230,7 @@ ludo.model.Model = new Class({
                 }
             });
         }
-        return this._loadRequest();
+        return this._loadRequest;
     },
 
 	populate:function (recordId, record) {

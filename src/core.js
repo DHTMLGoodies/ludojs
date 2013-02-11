@@ -158,8 +158,8 @@ ludo.Core = new Class({
 		if (this.parentComponent) {
 			return this.parentComponent.getUrl();
 		}
-		if (window.LUDO_APP_CONFIG && LUDO_APP_CONFIG.url) {
-			return LUDO_APP_CONFIG.url;
+		if (window.LUDOJS_CONFIG && LUDOJS_CONFIG.url) {
+			return LUDOJS_CONFIG.url;
 		}
 		return undefined;
 	},

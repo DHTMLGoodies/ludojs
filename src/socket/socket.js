@@ -106,7 +106,7 @@ ludo.socket.Socket = new Class({
 
 	/**
 	 * Socket http url, example: http://localhost:1337
-	 * URL can also be defined in LUDO_APP_CONFIG.socket
+	 * URL can also be defined in LUDOJS_CONFIG.socket
 	 * @config url
 	 * @type String
 	 * @default undefined
@@ -173,8 +173,8 @@ ludo.socket.Socket = new Class({
 
 	getUrl:function () {
 		var url = this.url;
-		if (!url && window.LUDO_APP_CONFIG !== undefined) {
-			url = LUDO_APP_CONFIG.socket;
+		if (!url && window.LUDOJS_CONFIG !== undefined) {
+			url = LUDOJS_CONFIG.socket;
 		}
 		if (url)url = url.trim();
 		return url;

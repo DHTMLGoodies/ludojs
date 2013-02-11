@@ -1196,7 +1196,6 @@ ludo.View = new Class({
 				}
 				obj = this.dataSourceObj = ludo._new(this.dataSource);
 			}
-
 			switch (obj.getSourceType()) {
 				case 'HTML':
 					if (obj.hasData()) {
