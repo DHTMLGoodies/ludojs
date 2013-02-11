@@ -11,6 +11,8 @@ ludo.paging.Button = new Class({
     type : 'grid.paging.Next',
     width:25,
     buttonCls : '',
+	tpl:undefined,
+	onLoadMessage:undefined,
 
     ludoDOM:function(){
         this.parent();
