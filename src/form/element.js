@@ -9,9 +9,11 @@ ludo.form.Element = new Class({
 	label:'',
 	value:'',
 	remote:{
-		isJSON:true,
-		onLoadMessage:''
+		isJSON:true
 	},
+
+	onLoadMessage:'',
+
 	autoHeight:true,
 	/**
 	 * Width of label

@@ -15867,9 +15867,11 @@ ludo.form.Element = new Class({
 	label:'',
 	value:'',
 	remote:{
-		isJSON:true,
-		onLoadMessage:''
+		isJSON:true
 	},
+
+	onLoadMessage:'',
+
 	autoHeight:true,
 	/**
 	 * Width of label
@@ -25996,6 +25998,8 @@ ludo.paging.Button = new Class({
     type : 'grid.paging.Next',
     width:25,
     buttonCls : '',
+	tpl:undefined,
+	onLoadMessage:undefined,
 
     ludoDOM:function(){
         this.parent();
@@ -26231,6 +26235,7 @@ ludo.paging.TotalPages = new Class({
 	Extends:ludo.View,
 	type:'grid.paging.TotalPages',
 	width:25,
+	onLoadMessage:'',
 	/**
 	 * Text template for view. {pages} is replaced by number of pages in data source.
 	 * @attribute {String} tpl
@@ -26253,9 +26258,7 @@ ludo.paging.TotalPages = new Class({
 		}
 	},
 	setPageNumber:function () {
-		pages = this.getDataSource().getPageCount();
-		this.setHtml(this.tpl.replace('{pages}', pages));
-
+		this.setHtml(this.tpl.replace('{pages}', this.getDataSource().getPageCount()));
 	},
 
 	insertJSON:function () {
@@ -26330,6 +26333,10 @@ ludo.paging.NavBar = new Class({
 			}
 			this.dataSource = undefined;
 		}
+	},
+
+	insertJSON:function(){
+
 	}
 });
 /**

@@ -66,5 +66,9 @@ ludo.paging.NavBar = new Class({
 			}
 			this.dataSource = undefined;
 		}
+	},
+
+	insertJSON:function(){
+
 	}
 });
