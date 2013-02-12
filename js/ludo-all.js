@@ -768,9 +768,6 @@ ludo.Core = new Class({
 		if (this.parentComponent) {
 			return this.parentComponent.getUrl();
 		}
-		if (window.LUDOJS_CONFIG && LUDOJS_CONFIG.url) {
-			return LUDOJS_CONFIG.url;
-		}
 		return undefined;
 	},
 
@@ -10814,17 +10811,16 @@ ludo.FramedView = new Class({
 			this.collapsedObj.resize();
 			return;
 		}
-		if (!this.autoHeight) {
-			var height = this.getHeight();
-			height -= ludo.dom.getMBPH(this.els.container);
-			height -= ludo.dom.getMBPH(this.els.body);
-			height -= this.getTotalHeightOfTitleAndStatusBar();
-			if (height < 0) {
-				return;
-			}
-			this.els.body.style.height = height + 'px';
-			this.cachedInnerHeight = height;
+		var height = this.getHeight();
+		height -= ludo.dom.getMBPH(this.els.container);
+		height -= ludo.dom.getMBPH(this.els.body);
+		height -= this.getTotalHeightOfTitleAndStatusBar();
+		if (height < 0) {
+			return;
 		}
+		this.els.body.style.height = height + 'px';
+		this.cachedInnerHeight = height;
+
 
 		if (this.buttonBarComponent) {
 			this.buttonBarComponent.resize();
@@ -10990,13 +10986,9 @@ ludo.FramedView = new Class({
 		if (this.hidden) {
 			return;
 		}
-		if (this.autoHeight) {
-			this.getEl().style.height = 'auto';
-		} else {
-			this.resize({
-				height:this.height
-			});
-		}
+		this.resize({
+			height:this.height
+		});
 		this.els.body.style.visibility = 'visible';
 		this.showResizeHandles();
 		/**
@@ -15608,17 +15600,16 @@ ludo.grid.Grid = new Class({
 
 	resizeDOM:function () {
 		this.resizeColumns();
-		if (!this.autoHeight) {
-			var height = this.getHeight();
-			height -= ludo.dom.getMBPH(this.els.container);
-			height -= ludo.dom.getMBPH(this.els.body);
-			height -= this.scrollbar.horizontal.getHeight();
-			if (height < 0) {
-				return;
-			}
-			this.els.body.style.height = height + 'px';
-			this.cachedInnerHeight = height;
+		var height = this.getHeight();
+		height -= ludo.dom.getMBPH(this.els.container);
+		height -= ludo.dom.getMBPH(this.els.body);
+		height -= this.scrollbar.horizontal.getHeight();
+		if (height < 0) {
+			return;
 		}
+		this.els.body.style.height = height + 'px';
+		this.cachedInnerHeight = height;
+
 
 		var contentSize = this.getBody().getSize();
 		var contentHeight = contentSize.y;
@@ -15918,7 +15909,6 @@ ludo.form.Element = new Class({
 
 	onLoadMessage:'',
 
-	autoHeight:true,
 	/**
 	 * Width of label
 	 * @attribute labelWidth
@@ -15940,13 +15930,7 @@ ludo.form.Element = new Class({
 	 */
 	fieldWidth:undefined,
 	data:null,
-	/**
-	 * Custom class name to apply to input element
-	 * @attribute formCls
-	 * @type string
-	 * @default undefined
-	 */
-	formCls:undefined,
+
 	/**
 	 * Custom CSS rules to apply to input element
 	 * @attribute formCss
@@ -16048,7 +16032,7 @@ ludo.form.Element = new Class({
 		var defaultConfig = this.getInheritedFormConfig();
 		this.labelWidth = defaultConfig.labelWidth || this.labelWidth;
 		this.fieldWidth = defaultConfig.fieldWidth || this.fieldWidth;
-		this.formCls = defaultConfig.formCls || this.formCls;
+
 		this.formCss = defaultConfig.formCss || this.formCss;
 		this.elementId = defaultConfig.elementId || this.elementId;
 		if (defaultConfig.height && config.height === undefined) {
@@ -16076,9 +16060,7 @@ ludo.form.Element = new Class({
 		this.elementId = config.elementId || this.elementId;
 		this.value = config.value || this.value;
 		this.initialValue = this.constructorValue = this.value;
-		if (!this.name) {
-			this.name = 'ludo-form-el-' + String.uniqueID();
-		}
+		if (!this.name)this.name = 'ludo-form-el-' + String.uniqueID();
 		this.data = config.data || null;
 
 		config.fieldConfig = config.fieldConfig || {};
@@ -16105,9 +16087,7 @@ ludo.form.Element = new Class({
 
 	ludoEvents:function () {
 		this.parent();
-
 		var formEl = this.getFormEl();
-
 		if (formEl) {
 			formEl.addEvent('keydown', this.keyDown.bind(this));
 			formEl.addEvent('keypress', this.keyPress.bind(this));
@@ -16115,9 +16095,6 @@ ludo.form.Element = new Class({
 			formEl.addEvent('focus', this.focus.bind(this));
 			formEl.addEvent('change', this.change.bind(this));
 			formEl.addEvent('blur', this.blur.bind(this));
-		}
-		if (this.data) {
-			this.populate(this.data);
 		}
 		if (this.selectOnFocus) {
 			formEl.addEvent('focus', this.selectText.bind(this));
@@ -16175,19 +16152,12 @@ ludo.form.Element = new Class({
 		this.getFormEl().select();
 	},
 
-	ludoDOM:function () {
-		this.parent();
-	},
-
 	ludoCSS:function () {
 		this.parent();
 		this.getEl().addClass('ludo-form-element');
 		if (this.els.formEl) {
 			if (this.fieldWidth && this.getFormEl()) {
 				this.els.formEl.setStyle('width', this.fieldWidth - ludo.dom.getPW(this.getFormEl()) - ludo.dom.getBW(this.getFormEl()));
-			}
-			if (this.formCls) {
-				this.els.formEl.addClass(this.formCls);
 			}
 			if (this.elementId) {
 				this.els.formEl.id = this.elementId;
@@ -16207,24 +16177,16 @@ ludo.form.Element = new Class({
 
 	getWidth:function () {
 		var ret = this.parent();
-		if (!ret) {
-			ret = this.fieldWidth;
-			if (this.label) {
-				ret += this.labelWidth;
-			}
-			ret += 2;
-
-		}
-		return ret;
+		return ret ? ret : this.fieldWidth + (this.label ? this.labelWidth : 0) + 2;
 	},
 
 	keyUp:function (e) {
 		/**
 		 * key up event
 		 * @event key_up
-		 * @param key
-		 * @param value of form field
-		 * @param Component this
+		 * @param {String} key
+		 * @param {String|Boolean|Object|Number} value
+		 * @param {View} this
 		 */
 		this.fireEvent('key_up', [ e.key, this.getValue(), this ]);
 	},
@@ -16233,9 +16195,9 @@ ludo.form.Element = new Class({
 		/**
 		 * key down event
 		 * @event key_down
-		 * @param key
-		 * @param value of form field
-		 * @param Component this
+		 * @param {String} key
+		 * @param {String|Boolean|Object|Number} value
+		 * $param {View} this
 		 */
 		this.fireEvent('key_down', [ e.key, this.getValue(), this ]);
 	},
@@ -16244,9 +16206,9 @@ ludo.form.Element = new Class({
 		/**
 		 * key press event
 		 * @event key_press
-		 * @param key
-		 * @param value of form field
-		 * @param Component this
+		 * @param {String} key
+		 * @param {String|Boolean|Object|Number} value
+		 * $param {View} this
 		 */
 		this.fireEvent('key_press', [ e.key, this.getValue(), this ]);
 	},
@@ -16257,8 +16219,8 @@ ludo.form.Element = new Class({
 		/**
 		 * On focus event
 		 * @event focus
-		 * @param value of form field
-		 * @param Component this
+		 * @param {String|Boolean|Object|Number} value
+		 * $param {View} this
 		 */
 		this.fireEvent('focus', [ this.getValue(), this ]);
 	},
@@ -16275,8 +16237,8 @@ ludo.form.Element = new Class({
 		 * only the "valueChange" event is fired.
 		 *
 		 * @event change
-		 * @param value of form field
-		 * @param Component this
+		 * @param {String|Boolean|Object|Number} value
+		 * $param {View} this
 		 */
 		if(this.wasValid)this.fireEvent('change', [ this.getValue(), this ]);
 	},
@@ -16308,8 +16270,8 @@ ludo.form.Element = new Class({
 		/**
 		 * On blur event
 		 * @event blur
-		 * @param value of form field
-		 * @param Component this
+		 * @param {String|Boolean|Object|Number} value
+		 * $param {View} this
 		 */
 		this.fireEvent('blur', [ this.getValue(), this ]);
 	},
@@ -16619,7 +16581,6 @@ ludo.form.Button = new Class({
     selected:false,
 
     overflow:'hidden',
-    autoHeight:false,
 
     /**
      * Path to button icon
@@ -21686,7 +21647,7 @@ ludo.progress.Text = new Class({
 ludo.form.LabelElement = new Class({
     Extends:ludo.form.Element,
 
-    fieldTpl:['<table cellpadding="0" cellspacing="0" border="0" width="100%">',
+    fieldTpl:['<table ','cellpadding="0" cellspacing="0" border="0" width="100%">',
         '<tbody>',
         '<tr class="input-row">',
         '<td class="label-cell"><label></label></td>',
@@ -21713,7 +21674,6 @@ ludo.form.LabelElement = new Class({
             this.getLabelDOM().set('html', this.label + this.labelSuffix);
             this.els.label.setProperty('for', this.getFormElId());
         }
-
     },
 
     setWidthOfLabel:function () {
@@ -21978,7 +21938,7 @@ ludo.form.Manager = new Class({
 	},
 
 	/**
-	 * Get all form elements, storage them in an array and add valid and invalid events to them
+	 * Get all form elements, store them in an array and add valid and invalid events to them
 	 * @method getFormElements
 	 * @private
 	 */
@@ -21995,7 +21955,7 @@ ludo.form.Manager = new Class({
 		for (var i = 0, len = children.length; i < len; i++) {
 			c = children[i];
 
-			if (c.getProgressBarId !== undefined) {
+			if (c['getProgressBarId'] !== undefined) {
 				this.registerProgressBar(c);
 				if (this.model) {
 					this.model.registerProgressBar(c);
@@ -22191,18 +22151,18 @@ ludo.form.Manager = new Class({
 		var url = this.getUrl();
 		if (url) {
 			this.fireEvent('invalid');
-            this.request().send('save', undefined, {
+            this.requestHandler().send('save', undefined, {
                 "progressBarId":this.getProgressBarId(),
                 "data" : this.getValues()
             });
 		}
 	},
     _request:undefined,
-    request:function(){
+    requestHandler:function(){
         if(this._request === undefined){
             this._request = new ludo.remote.JSON({
                 url:this.url,
-                resource : 'Form',
+                resource : this.form.name ? this.form.name : 'Form',
                 method:this.form.method ? this.form.method : 'post',
                 listeners:{
                     "success":function (request) {
@@ -23229,7 +23189,6 @@ ludo.form.Textarea = new Class({
     type:'form.Textarea',
     inputType:undefined,
     inputTag:'textarea',
-    autoHeight:false,
     overflow:'hidden',
 
     ludoConfig:function (config) {
@@ -23349,13 +23308,13 @@ ludo.form.Checkbox = new Class({
     height:undefined,
     labelSuffix : '',
 
-    fieldTpl:['<table cellpadding="0" cellspacing="0" border="0" width="100%">',
+    fieldTpl:['<table ','cellpadding="0" cellspacing="0" border="0" width="100%">',
         '<tbody>',
         '<tr class="checkbox-image-row" style="display:none">',
         '<td colspan="2" class="input-image"></td>',
         '</tr>',
         '<tr class="input-row">',
-        '<td class="input-cell" width="30"></td>',
+        '<td class="input-cell" style="width:30px"></td>',
         '<td><label></label></td>',
         '<td class="suffix-cell" style="display:none"></td>',
         '</tr>',
@@ -25703,9 +25662,6 @@ ludo.form.Slider = new Class({
         this.parent(config);
         if (config.direction !== undefined) {
             this.direction = config.direction;
-            if (this.direction == 'vertical') {
-                this.autoHeight = false;
-            }
         }
         if (config.minValue !== undefined)this.minValue = config.minValue;
         if (config.maxValue !== undefined)this.maxValue = config.maxValue;
@@ -25811,7 +25767,6 @@ ludo.form.Slider = new Class({
                 this.direction = 'horizontal';
             } else {
                 this.direction = 'vertical';
-                this.autoHeight = false;
             }
         }
         return this.direction;
