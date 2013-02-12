@@ -16,7 +16,11 @@ class GridWithPaging implements LudoDBService
         return array('read');
     }
 
-    public function validateService($service, $arguments){
+    public function validateArguments($service, $arguments){
+        return true;
+    }
+
+    public function validateServiceData($service, $arguments){
         return true;
     }
 

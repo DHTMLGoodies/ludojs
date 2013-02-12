@@ -15,10 +15,13 @@ class FileUpload implements LudoDBService
         return array('1');
     }
 
-    public function validateService($service, $arguments){
+    public function validateArguments($service, $arguments){
         return isset($_POST['ludo-file-upload-name']);
     }
 
+    public function validateServiceData($service, $data){
+        return true;
+    }
     public function cacheEnabled(){
         return false;
     }
