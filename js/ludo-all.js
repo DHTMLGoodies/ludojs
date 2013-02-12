@@ -545,22 +545,69 @@ ludo.ObjectFactory = new Class({
 	}
 });
 ludo.factory = new ludo.ObjectFactory();
-/*
-* User specific config properties for ludoJS
-*/
+ludo._Config = new Class({
+	storage:undefined,
 
-LUDOJS_CONFIG = {
-    url : '/ludojs/api/demo/controller.php',
-    socket : {
-        url : 'http://your-node-js-server-url:8080/'
-    },
+	initialize:function () {
+		this.setDefaultValues();
+	},
 
-    fileupload : {
-        url : '/ludojs/api/demo/controller.php'
-    },
+	reset:function(){
+		this.setDefaultValues();
+	},
 
-	mod_rewrite : false
-};
+	setDefaultValues:function () {
+		this.storage = {
+			url:'/router.php',
+			documentRoot:'/',
+			socketUrl:'http://your-node-js-server-url:8080/',
+			modRewrite:false,
+			fileUploadUrl:undefined
+		};
+	},
+
+	setUrl:function (url) {
+		this.storage.url = url;
+	},
+
+	getUrl:function () {
+		return this.storage.url;
+	},
+
+	enableModRewriteUrls:function () {
+		this.storage.modRewrite = true;
+	},
+	disableModRewriteUrls:function () {
+		this.storage.modRewrite = false;
+	},
+
+	hasModRewriteUrls:function () {
+		return this.storage.modRewrite === true;
+	},
+
+	setSocketUrl:function (url) {
+		this.storage.socketUrl = url;
+	},
+	getSocketUrl:function () {
+		return this.storage.socketUrl;
+	},
+
+	setDocumentRoot:function (root) {
+		this.storage.documentRoot = root;
+	},
+
+	getDocumentRoot:function () {
+		return this.storage.documentRoot;
+	},
+	setFileUploadUrl:function (url) {
+		this.storage.fileUploadUrl = url;
+	},
+	getFileUploadUrl:function(){
+		return this.storage.fileUploadUrl;
+	}
+});
+
+ludo.config = new ludo._Config();
 /**
  * Base class for components and views in ludoJS. This class extends
  * Mootools Events class.
@@ -1330,6 +1377,7 @@ ludo.remote.JSON = new Class({
      * @param {Object} config
      */
     initialize:function (config) {
+		config = config || {};
         if (config.listeners !== undefined) {
             this.addEvents(config.listeners);
         }
@@ -1342,9 +1390,9 @@ ludo.remote.JSON = new Class({
      Send request to the server
      @method send
      @param {String} service
-     @param {Array} arguments
+     @param {Array} resourceArguments
      @optional
-     @param {Object} data
+     @param {Object} serviceArguments
      @optional
      @example
 	 	LUDOJS_CONFIG.url = '/controller.php';
@@ -1361,7 +1409,7 @@ ludo.remote.JSON = new Class({
         }
      If you have the mod_rewrite module enabled and activated on your web server, you may use code like this:
      @example
-	 	LUDOJS_CONFIG.mod_rewrite = true;
+	 	ludo.config.hasModRewriteUrls() = true;
 	 	LUDOJS_CONFIG.url = '/';
         var req = new ludo.remote.JSON({
             resource : 'Person'
@@ -1404,12 +1452,12 @@ ludo.remote.JSON = new Class({
         }
      i.e. without any "request" data in the post variable since it's already defined in the url.
      */
-    send:function (service, arguments, data) {
-        if (!ludo.util.isArray(arguments))arguments = [arguments];
+    send:function (service, resourceArguments, serviceArguments) {
+        if (resourceArguments && !ludo.util.isArray(resourceArguments))resourceArguments = [resourceArguments];
         var req = new Request.JSON({
-            url:this.getUrl(service, arguments),
+            url:this.getUrl(service, resourceArguments),
             method:this.method,
-            data:this.getDataForRequest(service, arguments, data),
+            data:this.getDataForRequest(service, resourceArguments, serviceArguments),
             onSuccess:function (json) {
                 this.JSON = json;
                 if (json.success || json.success === undefined) {
@@ -1435,8 +1483,8 @@ ludo.remote.JSON = new Class({
      * @private
      */
     getUrl:function (service, arguments) {
-        var ret = this.url !== undefined ? this.url : LUDOJS_CONFIG.url;
-        if (LUDOJS_CONFIG.mod_rewrite) {
+        var ret = this.url !== undefined ? this.url : ludo.config.getUrl();
+        if (ludo.config.hasModRewriteUrls()) {
             ret += this.getServicePath(service, arguments);
         }
         return ret;
@@ -1450,9 +1498,8 @@ ludo.remote.JSON = new Class({
      */
     getServicePath:function (service, arguments) {
         var parts = [this.resource];
-        if (arguments)parts.push(arguments.join('/'));
+        if (arguments && arguments.length)parts.push(arguments.join('/'));
         if (service)parts.push(service);
-
         return parts.join('/');
     },
     /**
@@ -1468,7 +1515,7 @@ ludo.remote.JSON = new Class({
         var ret = {
             data:data
         };
-        if (!LUDOJS_CONFIG.mod_rewrite && this.resource) {
+        if (!ludo.config.hasModRewriteUrls() && this.resource) {
             ret.request = this.getServicePath(service, arguments);
         }
         return ret;
@@ -5434,6 +5481,7 @@ ludo.dataSource.JSON = new Class({
      * @optional
      */
     sendRequest:function(service, arguments, data){
+        this.arguments = arguments;
         this.requestHandler().send(service, arguments, data);
     },
 
@@ -8158,7 +8206,7 @@ ludo.socket.Socket = new Class({
 
 	/**
 	 * Socket http url, example: http://localhost:1337
-	 * URL can also be defined in LUDOJS_CONFIG.socket
+	 * URL can also be defined in ludo.config.setSocketUrl()
 	 * @config url
 	 * @type String
 	 * @default undefined
@@ -8224,10 +8272,7 @@ ludo.socket.Socket = new Class({
 	},
 
 	getUrl:function () {
-		var url = this.url;
-		if (!url && window.LUDOJS_CONFIG !== undefined) {
-			url = LUDOJS_CONFIG.socket;
-		}
+		var url = this.url || ludo.config.getSocketUrl();
 		if (url)url = url.trim();
 		return url;
 	},
@@ -15465,7 +15510,7 @@ ludo.grid.Grid = new Class({
 	 	grid.selectRecord({ id: 100 } );
 	 */
 	selectRecord:function (record) {
-		if (!record.id) {
+		if (ludo.util.isString(record)) {
 			record = { id:record };
 		}
 		this.getDataSource().selectRecord(record);
@@ -25483,7 +25528,7 @@ ludo.form.File = new Class({
 
 	getUploadUrl:function () {
 		try {
-			return window.LUDOJS_CONFIG.fileupload.url;
+			return ludo.config.getFileUploadUrl();
 		} catch (e) {
 			var url = this.getUrl();
 			if (!url) {
