@@ -267,18 +267,18 @@ ludo.form.Manager = new Class({
 		var url = this.getUrl();
 		if (url) {
 			this.fireEvent('invalid');
-            this.request().send('save', undefined, {
+            this.requestHandler().send('save', undefined, {
                 "progressBarId":this.getProgressBarId(),
                 "data" : this.getValues()
             });
 		}
 	},
     _request:undefined,
-    request:function(){
+    requestHandler:function(){
         if(this._request === undefined){
             this._request = new ludo.remote.JSON({
                 url:this.url,
-                resource : 'Form',
+                resource : this.form.name ? this.form.name : 'Form',
                 method:this.form.method ? this.form.method : 'post',
                 listeners:{
                     "success":function (request) {
