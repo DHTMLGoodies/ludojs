@@ -1,6 +1,8 @@
 if(!window.ludo){
     window.ludo = {};
 }
+// TODO refactor this to support setting and getting ludoJS config parameters.
+// LUDOJS_CONFIG should be dropped.
 ludo.SystemConfig = new Class({
     relativePath : './',
 
