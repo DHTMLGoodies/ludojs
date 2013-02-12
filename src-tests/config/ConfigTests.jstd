@@ -2,11 +2,11 @@ load:
   - ../../mootools/mootools-core-1.4.5.js
   - ../../mootools/mootools-more-1.4.0.1.js
   - ../../js/ludo-all.js
-  - ../../src/remote/*.js
+  - ../../src/remote/JSON.js
   - ../../src/config.js
 
 test:
-  - QueryTest.js
+  - ConfigTest.js
 
 plugin:
  - name: "coverage"

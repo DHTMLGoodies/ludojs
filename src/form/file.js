@@ -321,7 +321,7 @@ ludo.form.File = new Class({
 
 	getUploadUrl:function () {
 		try {
-			return window.LUDOJS_CONFIG.fileupload.url;
+			return ludo.config.getFileUploadUrl();
 		} catch (e) {
 			var url = this.getUrl();
 			if (!url) {

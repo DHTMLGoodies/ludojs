@@ -30,6 +30,7 @@ ludo.remote.JSON = new Class({
      * @param {Object} config
      */
     initialize:function (config) {
+		config = config || {};
         if (config.listeners !== undefined) {
             this.addEvents(config.listeners);
         }
@@ -61,7 +62,7 @@ ludo.remote.JSON = new Class({
         }
      If you have the mod_rewrite module enabled and activated on your web server, you may use code like this:
      @example
-	 	LUDOJS_CONFIG.mod_rewrite = true;
+	 	ludo.config.hasModRewriteUrls() = true;
 	 	LUDOJS_CONFIG.url = '/';
         var req = new ludo.remote.JSON({
             resource : 'Person'
@@ -135,8 +136,8 @@ ludo.remote.JSON = new Class({
      * @private
      */
     getUrl:function (service, arguments) {
-        var ret = this.url !== undefined ? this.url : LUDOJS_CONFIG.url;
-        if (LUDOJS_CONFIG.mod_rewrite) {
+        var ret = this.url !== undefined ? this.url : ludo.config.getUrl();
+        if (ludo.config.hasModRewriteUrls()) {
             ret += this.getServicePath(service, arguments);
         }
         return ret;
@@ -167,7 +168,7 @@ ludo.remote.JSON = new Class({
         var ret = {
             data:data
         };
-        if (!LUDOJS_CONFIG.mod_rewrite && this.resource) {
+        if (!ludo.config.hasModRewriteUrls() && this.resource) {
             ret.request = this.getServicePath(service, arguments);
         }
         return ret;

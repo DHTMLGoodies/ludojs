@@ -7,111 +7,111 @@
  */
 TestCase("QueryTest", {
 
-    setUp:function(){
-        LUDOJS_CONFIG.url = '/';
+	setUp:function () {
 
-        if(window.TestRemoteMock === undefined){
-            window.TestRemoteMock = new Class({
-                Extends: ludo.remote.JSON,
-                getUrl:function(service,arguments){
-                    var ret = this.parent(service,arguments);
-                    window.UrlForUnitTest = ret;
-                    return ret;
-                },
+		ludo.config.setUrl('/');
 
-                getDataForRequest:function(service,arguments,data){
-                    var ret = this.parent(service,arguments,data);
-                    window.dataForUnitTest = ret;
-                    return ret;
-                }
-            });
-        }
-    },
+		if (window.TestRemoteMock === undefined) {
+			window.TestRemoteMock = new Class({
+				Extends:ludo.remote.JSON,
+				getUrl:function (service, arguments) {
+					var ret = this.parent(service, arguments);
+					window.UrlForUnitTest = ret;
+					return ret;
+				},
 
-    "test should be able to get queries for mod rewrite": function(){
-        // given
-       LUDOJS_CONFIG.mod_rewrite = true;
-        var obj = new window.TestRemoteMock({
-            "resource": "Game"
-        });
+				getDataForRequest:function (service, arguments, data) {
+					var ret = this.parent(service, arguments, data);
+					window.dataForUnitTest = ret;
+					return ret;
+				}
+			});
+		}
+	},
 
-        obj.send("load", 1);
+	"test should be able to get queries for mod rewrite":function () {
+		// given
+		ludo.config.enableModRewriteUrls();
+		var obj = new window.TestRemoteMock({
+			"resource":"Game"
+		});
 
-        // when
-        var url = window.UrlForUnitTest;
+		obj.send("load", 1);
 
-        // then
-        assertEquals('/Game/1/load', url);
-    },
+		// when
+		var url = window.UrlForUnitTest;
 
-    "test should get correct url when mod rewrite is disabled": function(){
-        // given
-       LUDOJS_CONFIG.mod_rewrite = false;
-        LUDOJS_CONFIG.url = '/router.php';
+		// then
+		assertEquals('/Game/1/load', url);
+	},
 
-        // given
-        var obj = new window.TestRemoteMock({
-            "resource": "Game"
-        });
+	"test should get correct url when mod rewrite is disabled":function () {
+		// given
+		ludo.config.disableModRewriteUrls();
+		ludo.config.setUrl('/router.php');
 
-        obj.send("load", 1);
+		// given
+		var obj = new window.TestRemoteMock({
+			"resource":"Game"
+		});
 
-        // when
-        var url = window.UrlForUnitTest;
+		obj.send("load", 1);
 
-        // then
-        assertEquals('/router.php', url);
-    },
+		// when
+		var url = window.UrlForUnitTest;
 
-    "test should get correct data when mod rewrite is enabled": function(){
-        // given
-       LUDOJS_CONFIG.mod_rewrite = true;
-        var obj = new window.TestRemoteMock({
-            "resource": "Game"
-        });
+		// then
+		assertEquals('/router.php', url);
+	},
 
-        obj.send("load", 1, {"firstname" : "alf" });
+	"test should get correct data when mod rewrite is enabled":function () {
+		// given
+		ludo.config.enableModRewriteUrls();
+		var obj = new window.TestRemoteMock({
+			"resource":"Game"
+		});
 
-        // when
-        var data = window.dataForUnitTest;
-        var expected = { "data": { "firstname": "alf" }};
+		obj.send("load", 1, {"firstname":"alf" });
 
-        // then
-        assertEquals(expected, data);
-    }
-    ,
+		// when
+		var data = window.dataForUnitTest;
+		var expected = { "data":{ "firstname":"alf" }};
 
-    "test should get correct data when mod rewrite is disabled": function(){
-        // given
-       LUDOJS_CONFIG.mod_rewrite = false;
-        var obj = new window.TestRemoteMock({
-            "resource": "Game"
-        });
+		// then
+		assertEquals(expected, data);
+	},
 
-        obj.send("load", 1, {"firstname" : "alf" });
+	"test should get correct data when mod rewrite is disabled":function () {
+		// given
+		ludo.config.disableModRewriteUrls();
+		var obj = new window.TestRemoteMock({
+			"resource":"Game"
+		});
 
-        // when
-        var data = window.dataForUnitTest;
-        var expected = { "data": { "firstname": "alf" }, "request": "Game/1/load"};
+		obj.send("load", 1, {"firstname":"alf" });
 
-        // then
-        assertEquals(expected, data);
-    },
+		// when
+		var data = window.dataForUnitTest;
+		var expected = { "data":{ "firstname":"alf" }, "request":"Game/1/load"};
 
-    "test should be able to send request without any resource": function(){
-        // given
-        LUDOJS_CONFIG.mod_rewrite = false;
-        LUDOJS_CONFIG.url = '/router.php';
-        var obj = new window.TestRemoteMock({
-        });
+		// then
+		assertEquals(expected, data);
+	},
 
-        obj.send(undefined, undefined, { "firstname" : "alf" });
-        var data = window.dataForUnitTest;
-        var expected = { "data": { "firstname": "alf" }};
+	"test should be able to send request without any resource":function () {
+		// given
+		ludo.config.disableModRewriteUrls();
+		LUDOJS_CONFIG.url = '/router.php';
+		var obj = new window.TestRemoteMock({
+		});
 
-        // then
-        assertEquals(expected, data);
+		obj.send(undefined, undefined, { "firstname":"alf" });
+		var data = window.dataForUnitTest;
+		var expected = { "data":{ "firstname":"alf" }};
+
+		// then
+		assertEquals(expected, data);
 
 
-    }
+	}
 });
