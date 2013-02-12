@@ -448,17 +448,16 @@ ludo.grid.Grid = new Class({
 
 	resizeDOM:function () {
 		this.resizeColumns();
-		if (!this.autoHeight) {
-			var height = this.getHeight();
-			height -= ludo.dom.getMBPH(this.els.container);
-			height -= ludo.dom.getMBPH(this.els.body);
-			height -= this.scrollbar.horizontal.getHeight();
-			if (height < 0) {
-				return;
-			}
-			this.els.body.style.height = height + 'px';
-			this.cachedInnerHeight = height;
+		var height = this.getHeight();
+		height -= ludo.dom.getMBPH(this.els.container);
+		height -= ludo.dom.getMBPH(this.els.body);
+		height -= this.scrollbar.horizontal.getHeight();
+		if (height < 0) {
+			return;
 		}
+		this.els.body.style.height = height + 'px';
+		this.cachedInnerHeight = height;
+
 
 		var contentSize = this.getBody().getSize();
 		var contentHeight = contentSize.y;

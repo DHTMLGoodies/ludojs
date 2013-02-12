@@ -7,7 +7,7 @@
 ludo.form.LabelElement = new Class({
     Extends:ludo.form.Element,
 
-    fieldTpl:['<table cellpadding="0" cellspacing="0" border="0" width="100%">',
+    fieldTpl:['<table ','cellpadding="0" cellspacing="0" border="0" width="100%">',
         '<tbody>',
         '<tr class="input-row">',
         '<td class="label-cell"><label></label></td>',
@@ -34,7 +34,6 @@ ludo.form.LabelElement = new Class({
             this.getLabelDOM().set('html', this.label + this.labelSuffix);
             this.els.label.setProperty('for', this.getFormElId());
         }
-
     },
 
     setWidthOfLabel:function () {

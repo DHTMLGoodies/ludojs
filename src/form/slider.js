@@ -72,9 +72,6 @@ ludo.form.Slider = new Class({
         this.parent(config);
         if (config.direction !== undefined) {
             this.direction = config.direction;
-            if (this.direction == 'vertical') {
-                this.autoHeight = false;
-            }
         }
         if (config.minValue !== undefined)this.minValue = config.minValue;
         if (config.maxValue !== undefined)this.maxValue = config.maxValue;
@@ -180,7 +177,6 @@ ludo.form.Slider = new Class({
                 this.direction = 'horizontal';
             } else {
                 this.direction = 'vertical';
-                this.autoHeight = false;
             }
         }
         return this.direction;

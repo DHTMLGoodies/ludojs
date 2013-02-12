@@ -9,7 +9,6 @@ ludo.form.Textarea = new Class({
     type:'form.Textarea',
     inputType:undefined,
     inputTag:'textarea',
-    autoHeight:false,
     overflow:'hidden',
 
     ludoConfig:function (config) {

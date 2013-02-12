@@ -242,17 +242,16 @@ ludo.FramedView = new Class({
 			this.collapsedObj.resize();
 			return;
 		}
-		if (!this.autoHeight) {
-			var height = this.getHeight();
-			height -= ludo.dom.getMBPH(this.els.container);
-			height -= ludo.dom.getMBPH(this.els.body);
-			height -= this.getTotalHeightOfTitleAndStatusBar();
-			if (height < 0) {
-				return;
-			}
-			this.els.body.style.height = height + 'px';
-			this.cachedInnerHeight = height;
+		var height = this.getHeight();
+		height -= ludo.dom.getMBPH(this.els.container);
+		height -= ludo.dom.getMBPH(this.els.body);
+		height -= this.getTotalHeightOfTitleAndStatusBar();
+		if (height < 0) {
+			return;
 		}
+		this.els.body.style.height = height + 'px';
+		this.cachedInnerHeight = height;
+
 
 		if (this.buttonBarComponent) {
 			this.buttonBarComponent.resize();
@@ -418,13 +417,9 @@ ludo.FramedView = new Class({
 		if (this.hidden) {
 			return;
 		}
-		if (this.autoHeight) {
-			this.getEl().style.height = 'auto';
-		} else {
-			this.resize({
-				height:this.height
-			});
-		}
+		this.resize({
+			height:this.height
+		});
 		this.els.body.style.visibility = 'visible';
 		this.showResizeHandles();
 		/**

@@ -1,7 +1,6 @@
 TestCase("ConfigTest", {
 	setUp:function () {
-		LUDOJS_CONFIG.url = '/';
-
+		ludo.config.reset();
 		if (window.TestQueryMock === undefined) {
 			window.TestQueryMock = new Class({
 				Extends:ludo.remote.JSON,

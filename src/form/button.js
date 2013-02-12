@@ -94,7 +94,6 @@ ludo.form.Button = new Class({
     selected:false,
 
     overflow:'hidden',
-    autoHeight:false,
 
     /**
      * Path to button icon
