@@ -171,16 +171,13 @@ ludo.model.Model = new Class({
 	},
 	/**
 	 Load remote record from server
-	 Query sent looks like this: { getModelRecord:1, recordId:recordId, modelName:this.name }
-	 Response should be in this format:
-	 { success: true|false, message : "on error message", data : { id:100,firstname:'John',...} }
 	 @method load
 	 @param {String} recordId
 
 	 Example of query:
 	 @example
 	 request:{
-	 		"request": "model/100/read"
+	 		"request": "Person/100/read"
 	 	}
 	 Example of expected response
 	 @example
@@ -312,7 +309,7 @@ ludo.model.Model = new Class({
 	hasColumn:function (key) {
 		return this.columnKeys.indexOf(key) >= 0;
 	},
-
+    // TODO save new model - update this.recordId
 	/**
 	 example: { freeText : 'Notes' }
 	 @method save
@@ -337,20 +334,7 @@ ludo.model.Model = new Class({
 
 	 "message" is used for eventual error messages.
 	 "code" is optional and may be used for internal error handling.
-	 "response" is an array of updated model values. In most cases, this would be empty or undefined. Here's a use case of when
-	 it might be useful:
-
-	 - You have a View with one file upload element named "image_file"
-	 - In that component, you also have a component used for preview of existing image file
-	 i.e. children :
-	 @example
-	 	[{ type: 'form.File', label : 'New image', name : 'image_file' }, { tpl : '&lt;img src="{preview}">' }]
-	 - On click on Submit, you send the newly uploaded image file to the server and use some Image Conversion software(example: ImageMagick)
-	 to generate a new "preview".
-	 - Now, you want to update the view with this new preview, so you send it back in the "updates" array:
-	 @example
-	 	"response" : [{ preview : 'images/new-file.jpg' }]
-
+	 "response" is an array of updated model values.
 	 */
 	save:function (formData) {
 		formData = formData || {};
