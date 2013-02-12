@@ -7,7 +7,7 @@
  */
 class FileUpload implements LudoDBService
 {
-    public static function getValidServices(){
+    public function getValidServices(){
         return array('save');
     }
 

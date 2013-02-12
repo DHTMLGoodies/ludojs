@@ -12,7 +12,7 @@ class GridWithPaging implements LudoDBService
 
     }
 
-    public static function getValidServices(){
+    public function getValidServices(){
         return array('read');
     }
 
