@@ -11,6 +11,6 @@ ini_set('display_errors','on');
 $handler = new LudoDBRequestHandler();
 $request = array(
     "request" => $_POST['request'],
-    "data" => $_POST['data']
+    "data" => isset($_POST['data']) ? $_POST['data'] : null
 );
 echo $handler->handle($request);

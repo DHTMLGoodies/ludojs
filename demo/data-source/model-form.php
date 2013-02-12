@@ -1,5 +1,5 @@
 <?php
-
+var_dump($_POST);
 
 if (isset($_POST['request'])) {
     $data = $_POST['request']['data'];
@@ -9,10 +9,8 @@ if (isset($_POST['request'])) {
     $service = count($tokens) == 3 ? $tokens[2] : 'read';
 
     switch ($service) {
-
         case 'read':
             switch ($recordId) {
-
                 case '100':
                     $response = array(
                         'id' => 100,

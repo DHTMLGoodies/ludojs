@@ -105,12 +105,12 @@ ludo.remote.JSON = new Class({
         }
      i.e. without any "request" data in the post variable since it's already defined in the url.
      */
-    send:function (service, resourceArguments, serviceArguments) {
+    send:function (service, resourceArguments, serviceArguments, additionalData) {
         if (resourceArguments && !ludo.util.isArray(resourceArguments))resourceArguments = [resourceArguments];
         var req = new Request.JSON({
             url:this.getUrl(service, resourceArguments),
             method:this.method,
-            data:this.getDataForRequest(service, resourceArguments, serviceArguments),
+            data:this.getDataForRequest(service, resourceArguments, serviceArguments, additionalData),
             onSuccess:function (json) {
                 this.JSON = json;
                 if (json.success || json.success === undefined) {
@@ -161,13 +161,20 @@ ludo.remote.JSON = new Class({
      * @param {Array} arguments
      * @param {Object} data
      * @optional
+     * @param {Object} additionalData
+     * @optional
      * @return {Object}
      * @private
      */
-    getDataForRequest:function (service, arguments, data) {
+    getDataForRequest:function (service, arguments, data, additionalData) {
         var ret = {
             data:data
         };
+        if(additionalData){
+            if(ludo.util.isObject(additionalData)){
+                ret = Object.merge(additionalData, ret);
+            }
+        }
         if (!ludo.config.hasModRewriteUrls() && this.resource) {
             ret.request = this.getServicePath(service, arguments);
         }
@@ -179,7 +186,7 @@ ludo.remote.JSON = new Class({
      * @return {Object|undefined}
      */
     getResponseData:function () {
-        return this.JSON.response ? this.JSON.response.data : this.JSON.data;
+        return this.JSON.response ? this.JSON.response : this.JSON.data;
     },
     /**
      * Return entire server response of last request.

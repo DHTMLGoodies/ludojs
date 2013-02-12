@@ -45,7 +45,8 @@ spl_autoload_register(
                 'ludodbsql' => '/ludodDB/LudoDBSQL.php',
                 'ludodbtreecollection' => '/ludodDB/LudoDBTreeCollection.php',
                 'ludodbunauthorizedexception' => '/ludodDB/LudoDBExceptions.php',
-                'ludodbutility' => '/ludodDB/LudoDBUtility.php'
+                'ludodbutility' => '/ludodDB/LudoDBUtility.php',
+                'user' => '/resources/User.php'
             );
         }
         $cn = strtolower($class);

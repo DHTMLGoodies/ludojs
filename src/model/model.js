@@ -73,6 +73,7 @@ ludo.model.Model = new Class({
 		if (config.columns !== undefined)this.columns = config.columns;
 		if (config.recordId !== undefined)this.recordId = config.recordId;
 		if (config.id !== undefined)this.id = config.id;
+		if (config.url !== undefined)this.url = config.url;
 		ludo.CmpMgr.registerComponent(this);
 
 		this._validateColumns();
@@ -85,8 +86,8 @@ ludo.model.Model = new Class({
 		if (this.listeners) {
 			this.addEvents(this.listeners);
 		}
-		if (config.id || config.autoLoad) {
-			this.load(config.id);
+		if (config.recordId || config.autoLoad) {
+			this.load(config.recordId);
 		}
 	},
 
@@ -202,11 +203,11 @@ ludo.model.Model = new Class({
 
 	 */
 	load:function (recordId) {
-		if (!this.recordId || (!this.url && !LUDOJS_CONFIG.url)) {
+		if (!recordId || (!this.url && !ludo.config.getUrl())) {
 			return;
 		}
-
-		this.loadRequest().send("load", recordId);
+        this.recordId = recordId;
+		this.loadRequest().send("read", recordId);
 	},
 
     _loadRequest:undefined,
@@ -214,11 +215,26 @@ ludo.model.Model = new Class({
         if(this._loadRequest === undefined){
             this._loadRequest = new  ludo.remote.JSON({
                 url:this.url,
+                resource:this.name,
                 listeners:{
                     "success":function (request) {
-                        this.populate(recordId, request.getResponseData());
+                        this.populate(this.recordId, request.getResponseData());
+                        /**
+                         * success parameter in response from server returned false
+                         * @event record loaded
+                         * @param {Object} JSON from server
+                         * @param {Object} ludo.model
+                         */
+                        this.fireEvent('loaded', [request.getResponse(), this]);
                     }.bind(this),
                     "failure":function (request) {
+                        /**
+                         * success parameter in response from server returned false
+                         * @event loadfail
+                         * @param {Object} JSON from server
+                         * @param {Object} ludo.model
+                         */
+                        this.fireEvent('loadFailed', [request.getResponse(), this]);
                         /**
                          * success parameter in response from server returned false
                          * @event loadfail
@@ -338,7 +354,7 @@ ludo.model.Model = new Class({
 	 */
 	save:function (formData) {
 		formData = formData || {};
-		var data = {};
+		var data = Object.merge(this.currentRecord);
 		for (var key in formData) {
 			if (formData.hasOwnProperty(key) && !this.hasColumn(key)) {
 				data[key] = formData[key];
@@ -346,13 +362,15 @@ ludo.model.Model = new Class({
 		}
 
 		this.fireEvent('beforesubmit', this);
-        this.request().send("save", this.recordId, data);
+        this.saveRequest().send("save", this.recordId, data, {
+            progressBarId:this.getProgressBarId()
+        });
 
 	},
-    _request:undefined,
-    request:function(){
-        if(this._request === undefined){
-            this._request = new ludo.remote.JSON({
+    _saveRequest:undefined,
+    saveRequest:function(){
+        if(this._saveRequest === undefined){
+            this._saveRequest = new ludo.remote.JSON({
                 url:this.url,
                 resource:this.name,
                 listeners:{
@@ -368,9 +386,24 @@ ludo.model.Model = new Class({
                          * @param {Object} ludo.model.Model
                          */
                         this.fireEvent('success', [request.getResponse(), this]);
+                        /**
+                         * Event fired after model has been saved
+                         * @event saved
+                         * @param {Object} JSON response from server
+                         * @param {Object} ludo.model.Model
+                         */
+                        this.fireEvent('saved', [request.getResponse(), this]);
                         this.commitFormFields();
                     }.bind(this),
                     "failure":function (request) {
+                        /**
+                         * Event fired when success parameter in response from server after saving model was false.
+                         * @event model saveFailed
+                         * @param {Object} JSON response from server. Error message should be in the "message" property
+                         * @param {Object} ludo.model.Model
+                         *
+                         */
+                        this.fireEvent('saveFailed', [request.getResponse(), this]);
                         /**
                          * Event fired when success parameter in response from server is false
                          * @event failure
@@ -392,21 +425,8 @@ ludo.model.Model = new Class({
                 }
             });
         }
-        return this._request;
+        return this._saveRequest;
     },
-
-	getSubmitData:function (data) {
-		return {
-			id:'saveModelRecord',
-			progressBarId:this.getProgressBarId(),
-			data:{
-				recordId:this.recordId,
-				modelName:this.name,
-				record:this.currentRecord,
-				formData:data
-			}
-		};
-	},
 
 	getProgressBarId:function () {
 		if (this.progressBar) {

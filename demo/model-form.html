@@ -4,14 +4,10 @@ require_once("includes/demo-header.php");
 ?>
 <body>
 <script type="text/javascript" src="../src/model/model.js"></script>
+<script type="text/javascript" src="../src/remote/JSON.js"></script>
 <script type="text/javascript" class="source-code">
-var model = new ludo.model.Model({
-    name:'user',
-    columns:['id', 'firstname', 'lastname', 'address', 'email', 'phone', 'zipcode', 'city','picture'],
-    url : 'data-source/model-form.php',
-    id:100
-});
-
+ludo.config.setUrl('controller.php');
+ludo.config.disableModRewriteUrls();
 var myWin = new ludo.Window({
     title:'Form/Model demo',
     layout:{
@@ -21,8 +17,13 @@ var myWin = new ludo.Window({
     height:300,
     width:600,
     left:50,
-    top:100,
-    model:model,
+    top:20,
+    model:{
+        id:'myModel',
+        name:'User',
+        columns:['id', 'firstname', 'lastname', 'address', 'email', 'phone', 'zipcode', 'city','picture'],
+        recordId:100
+    },
     children:[
         {
             weight:1,
@@ -51,7 +52,7 @@ var myWin = new ludo.Window({
                 { type:'form.Text', name:'Free text', label:'Not model field', value:'Free text' },
                 { type:'form.File', name:'picture', label:'Picture', value:'' },
                 { type : 'View', tpl : '{firstname}', name : 'picturepreview', weight:1},
-                { html : '<a href="#" onclick="model.load(100);return false">Load first user</a><br><a href="#" onclick="model.load(101);return false">Load second user</a>'}
+                { html : '<a href="#" onclick="ludo.get(\'myModel\').load(100);return false">Load first user</a><br><a href="#" onclick="ludo.get(\'myModel\').load(101);return false">Load second user</a>'}
             ]}
     ],
 
@@ -67,18 +68,15 @@ var myWin = new ludo.Window({
                 type:'form.CancelButton'
             }
         ]
-    },
-    listeners:{
-        'submit':function () {
-            new ludo.dialog.Alert({
-                title:'Thank you!',
-                resizable:true,
-                html:'Thank you. Your data has been saved..'
-            })
-
-        }.bind(this)
     }
 });
+ludo.get('myModel').addEvent('saved', function(){
+    new ludo.dialog.Alert({
+        title:'Thank you!',
+        resizable:true,
+        html:'Thank you. Your data has been saved..'
+    })
+})
 </script>
 
 </body>

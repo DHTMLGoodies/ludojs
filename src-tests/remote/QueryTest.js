@@ -20,8 +20,8 @@ TestCase("QueryTest", {
 					return ret;
 				},
 
-				getDataForRequest:function (service, arguments, data) {
-					var ret = this.parent(service, arguments, data);
+				getDataForRequest:function (service, arguments, data, add) {
+					var ret = this.parent(service, arguments, data,add);
 					window.dataForUnitTest = ret;
 					return ret;
 				}
@@ -97,11 +97,27 @@ TestCase("QueryTest", {
 		// then
 		assertEquals(expected, data);
 	},
+	"test should get additional data for request":function () {
+		// given
+		ludo.config.disableModRewriteUrls();
+		var obj = new window.TestRemoteMock({
+			"resource":"Game"
+		});
+
+		obj.send("load", 1, {"firstname":"alf" }, { "testparam": 1 });
+
+		// when
+		var data = window.dataForUnitTest;
+		var expected = { "data":{ "firstname":"alf" }, "testparam": 1, "request":"Game/1/load"};
+
+		// then
+		assertEquals(expected, data);
+	},
 
 	"test should be able to send request without any resource":function () {
 		// given
 		ludo.config.disableModRewriteUrls();
-		LUDOJS_CONFIG.url = '/router.php';
+        ludo.config.setUrl('/router.php');
 		var obj = new window.TestRemoteMock({
 		});
 
