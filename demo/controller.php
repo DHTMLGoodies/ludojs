@@ -7,7 +7,7 @@
  */
 
 require_once __DIR__."/autoload.php";
-
+ini_set('display_errors','on');
 $handler = new LudoDBRequestHandler();
 $request = array(
     "request" => $_POST['request'],

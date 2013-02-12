@@ -276,6 +276,7 @@ ludo.form.Manager = new Class({
     _request:undefined,
     requestHandler:function(){
         if(this._request === undefined){
+            if(!this.form.name)ludo.util.warn("Warning: form does not have any name. Falling back to default name 'Form'");
             this._request = new ludo.remote.JSON({
                 url:this.url,
                 resource : this.form.name ? this.form.name : 'Form',

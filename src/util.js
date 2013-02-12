@@ -50,6 +50,12 @@ ludo.util = {
 		}
 	},
 
+    warn:function(what){
+        if(window['console']){
+            console.warn(what);
+        }
+    },
+
 	getNewZIndex:function (view) {
 		var ret = ludo.CmpMgr.getNewZIndex();
 		if (view.els.parent == document.body) {
