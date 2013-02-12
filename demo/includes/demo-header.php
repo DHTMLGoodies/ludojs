@@ -43,4 +43,7 @@ if($sub)$prefix = '../'; else $prefix = '';
         }
 
     </script>
+    <script type="text/javascript">
+    ludo.config.setUrl('../controller.php');
+    </script>
 </head>

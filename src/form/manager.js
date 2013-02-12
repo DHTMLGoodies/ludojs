@@ -54,7 +54,7 @@ ludo.form.Manager = new Class({
 	},
 
 	/**
-	 * Get all form elements, storage them in an array and add valid and invalid events to them
+	 * Get all form elements, store them in an array and add valid and invalid events to them
 	 * @method getFormElements
 	 * @private
 	 */
@@ -71,7 +71,7 @@ ludo.form.Manager = new Class({
 		for (var i = 0, len = children.length; i < len; i++) {
 			c = children[i];
 
-			if (c.getProgressBarId !== undefined) {
+			if (c['getProgressBarId'] !== undefined) {
 				this.registerProgressBar(c);
 				if (this.model) {
 					this.model.registerProgressBar(c);
