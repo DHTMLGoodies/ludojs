@@ -3,6 +3,7 @@ ludo.view.Loader = new Class({
 	txt : 'Loading content...',
 	view:undefined,
 	el:undefined,
+    shim:undefined,
 
 	initialize:function(config){
 		this.view = config.view;
@@ -31,14 +32,26 @@ ludo.view.Loader = new Class({
 		return this.el;
 	},
 
+    getShim:function(){
+        if(this.shim === undefined){
+            this.shim = new Element('div');
+            ludo.dom.addClass(this.shim, 'ludo-loader-shim');
+            this.view.getEl().appendChild(this.shim);
+            this.shim.style.display = 'none';
+        }
+        return this.shim;
+    },
+
 	show:function(txt){
 		if(txt !== undefined){
 			this.el.set('html', txt);
 		}
+        this.getShim().style.display='';
 		this.getEl().style.display = '';
 	},
 
 	hide:function(){
+        this.getShim().style.display='none';
 		this.getEl().style.display = 'none';
 	}
 });

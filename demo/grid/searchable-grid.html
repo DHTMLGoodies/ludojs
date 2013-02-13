@@ -14,6 +14,7 @@ require_once("../includes/demo-header.php");
 <script type="text/javascript" src="../../src/model/model.js"></script>
 <script type="text/javascript" src="../../src/grid/grid.js"></script>
 <script type="text/javascript" src="../../src/grid/grid-header.js"></script>
+<script type="text/javascript" src="../../src/view/loader.js"></script>
 <style type="text/css">
     .ludo-grid-movable-shim {
         border: 1px solid #000;
@@ -25,6 +26,16 @@ require_once("../includes/demo-header.php");
     }
     .ludo-grid-resize-handle{
         background-color:transparent;
+    }
+    .ludo-loader-shim{
+        position:absolute;
+        width:100%;
+        height:100%;
+        background-color:#EEE;
+        opacity:.3;
+        filter:alpha(opacity=30);
+        left:0;top:0;
+        z-index:50;
     }
 </style>
 <script type="text/javascript" class="source-code skip-copy">
