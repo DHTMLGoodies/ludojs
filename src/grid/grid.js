@@ -553,9 +553,10 @@ ludo.grid.Grid = new Class({
 				this.colResizeHandler.hideHandle(columns[i]);
 			} else {
 				var width = this.columnManager.getWidthOf(columns[i]);
+                var bw = ludo.dom.getBW(this.els.dataColumns[columns[i]]) - (i===columns.length-1) ? 1 : 0;
 				this.els.dataColumns[columns[i]].setStyles({
 					'left':leftPos,
-					'width':(width - ludo.dom.getPW(this.els.dataColumns[columns[i]]) - ludo.dom.getBW(this.els.dataColumns[columns[i]]))
+					'width':(width - ludo.dom.getPW(this.els.dataColumns[columns[i]]) - bw)
 				});
 
 				this.columnManager.setLeft(columns[i], leftPos);

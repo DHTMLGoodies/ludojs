@@ -240,7 +240,9 @@ div.ludo-paging-total-pages{
 div.ludo-paging-total-pages .ludo-body{
     font-size:12px;
 }
-
+.ludo-grid-resize-handle {
+    background-color:transparent;
+}
 
 
 

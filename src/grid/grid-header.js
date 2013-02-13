@@ -48,6 +48,7 @@ ludo.grid.GridHeader = new Class({
 
 	renderColumns:function () {
 		var countRows = this.columnManager.getCountRows();
+
 		for (var i = 0; i < countRows; i++) {
 			var columns = this.columnManager.getColumnsInRow(i);
 			var left = 0;
@@ -60,7 +61,7 @@ ludo.grid.GridHeader = new Class({
 					cell.setStyle('left', left);
 					cell.setStyle('top', i * this.cellHeight);
 					var height = (this.columnManager.getRowSpanOf(columns[j]) * this.cellHeight) - this.spacing.height;
-					var spacing = (j==columns.length-1) ? this.spacing.width / 2 : this.spacing.width;
+					var spacing = (j==columns.length-1) ? this.spacing.width - 1 : this.spacing.width;
 					cell.setStyle('width', width - spacing);
 					cell.setStyle('height', height);
 					cell.setStyle('line-height', height);
