@@ -206,15 +206,5 @@ ludo.Window = new Class({
         var x = Math.round((bodySize.x / 2) - (this.getWidth() / 2));
         var y = Math.round((bodySize.y / 2) - (this.getHeight() / 2));
         this.showAt(x, y);
-    },
-
-    /**
-     * Equivalent to method show
-     * @method open
-     * @return void
-     */
-    open:function () {
-        this.show();
     }
-
 });
