@@ -339,6 +339,8 @@ ludo.form.Button = new Class({
         return true
     },
     resizeDOM:function () {
+        // TODO refactor - buttons should be too tall
+        this.getBody().style.height = '25px';
         /* No DOM resize for buttons */
     },
 
