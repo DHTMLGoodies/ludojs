@@ -83,7 +83,7 @@ ludo.dataSource.Record = new Class({
 	},
 
 	isRecordObject:function (rec) {
-		return rec.initialize !== undefined && rec.record !== undefined;
+		return rec['initialize'] !== undefined && rec.record !== undefined;
 	},
 
 	getChildren:function () {
