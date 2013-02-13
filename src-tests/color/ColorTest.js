@@ -26,7 +26,7 @@ TestCase("ColorTest", {
         color = c.rgbCode( { h:348, s:61, v:100 });
 
         // then
-        assertEquals('#ff6482', color);
+        assertEquals('#ff6383', color.toLowerCase());
 
     },
 
@@ -37,7 +37,7 @@ TestCase("ColorTest", {
         var color = c.toRGB(255,170,204);
 
         // then
-        assertEquals('#ffaacc', color);
+        assertEquals('#ffaacc', color.toLowerCase());
 
     },
 
@@ -84,7 +84,7 @@ TestCase("ColorTest", {
         var color = c.rgbCode(hsv);
 
         // then
-        assertEquals('#ffffff', color);
+        assertEquals('#ff0000', color.toLowerCase());
     }
 
 });

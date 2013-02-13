@@ -2,13 +2,14 @@ ludo.color = {};
 
 ludo.color.Color = new Class({
 
-    rgbColors:function (a, b, c) {
+    rgbColors:function (a) {
         if (a.substr !== undefined) {
             return this.rgbObject(a);
         }
         if (a.h !== undefined) {
             return this.hsvToRGB(a.h, a.s, a.v);
         }
+        return undefined;
     },
     rgbObject:function (rgbColor) {
         rgbColor = rgbColor.replace('#', '');
