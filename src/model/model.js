@@ -208,9 +208,11 @@ ludo.model.Model = new Class({
 
 	 */
 	load:function (recordId) {
+        console.log('load');
 		if (!recordId || (!this.url && !ludo.config.getUrl())) {
 			return;
 		}
+
         this.recordId = recordId;
 		this.loadRequest().send("read", recordId);
 	},

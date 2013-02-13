@@ -16,6 +16,8 @@ ludo.form.Manager = new Class({
 	form:{
 		method:'post'
 	},
+
+    service:undefined,
 	model:undefined,
 
 	ludoConfig:function (config) {
@@ -27,6 +29,7 @@ ludo.form.Manager = new Class({
 		if (this.form && this.form.url) {
 			this.url = this.form.url;
 		}
+        this.form.resource = this.form.resource || this.form.name || undefined;
 		this.id = String.uniqueID();
 		if (config.model !== undefined) {
 			if (config.model.type === undefined) {
@@ -239,6 +242,7 @@ ludo.form.Manager = new Class({
 		 * Event fired before form is submitted
 		 * @event startSubmit
 		 */
+
 		var el;
 		if (el = this.getUnfinishedFileUploadComponent()) {
 			el.upload();
@@ -264,22 +268,20 @@ ludo.form.Manager = new Class({
 	},
 
 	save:function () {
-		var url = this.getUrl();
-		if (url) {
+		if (this.getUrl() || ludo.config.getUrl()) {
 			this.fireEvent('invalid');
-            this.requestHandler().send('save', undefined, {
-                "progressBarId":this.getProgressBarId(),
-                "data" : this.getValues()
+            this.requestHandler().send(this.form.service || 'save', undefined, this.getValues(),{
+            "progressBarId":this.getProgressBarId()
             });
 		}
 	},
     _request:undefined,
     requestHandler:function(){
         if(this._request === undefined){
-            if(!this.form.name)ludo.util.warn("Warning: form does not have any name. Falling back to default name 'Form'");
+            if(!this.form.resource)ludo.util.warn("Warning: form does not have a resource property. Falling back to default: 'Form'");
             this._request = new ludo.remote.JSON({
                 url:this.url,
-                resource : this.form.name ? this.form.name : 'Form',
+                resource : this.form.resource ? this.form.resource : 'Form',
                 method:this.form.method ? this.form.method : 'post',
                 listeners:{
                     "success":function (request) {

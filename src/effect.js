@@ -3,9 +3,8 @@ ludo.Effect = new Class({
 	inProgress:false,
 
 	initialize:function(){
-		if(Browser.ie){
+		if(Browser['ie']){
 			document.id(document.documentElement).addEvent('selectstart', this.cancelSelection.bind(this));
-
 		}
 	},
 
