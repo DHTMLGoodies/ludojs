@@ -11,12 +11,10 @@ TestCase("ModelTest", {
 
 			initialize:function (config) {
 				this.parent(config);
-				if (window.countModels === undefined)window.countModels = 0;
+				if (window['countModels'] === undefined)window.countModels = 0;
 				window.countModels++;
 			}
 		});
-
-
 		ludo.SINGLETONS = {};
 	},
 
@@ -27,7 +25,7 @@ TestCase("ModelTest", {
 	},
 
 	getComponentWithModel:function () {
-		if (!window.cmpWithModel) {
+		if (!window['cmpWithModel']) {
 			window.CmpWithModel = new Class({
 				Extends:ludo.View,
 				model:{
@@ -51,7 +49,7 @@ TestCase("ModelTest", {
 	},
 
 	getComponentWithTplChildren:function () {
-		if (!window.cmpWithTplModel) {
+		if (!window['cmpWithTplModel']) {
 			window.CmpWithTplModel = new Class({
 				Extends:ludo.View,
 				model:{
@@ -70,7 +68,7 @@ TestCase("ModelTest", {
 	},
 
 	getComponentWithTpl:function () {
-		if (!window.cmpTpl) {
+		if (!window['cmpTpl']) {
 			window.CmpTpl = new Class({
 				Extends:ludo.View,
 				model:{
@@ -90,7 +88,7 @@ TestCase("ModelTest", {
 		});
 	},
 
-	"tests_shouldCreateDynamicSetters":function () {
+	"tests shouldCreateDynamicSetters":function () {
 		// given
 		var model = this.getModel();
 
@@ -102,7 +100,7 @@ TestCase("ModelTest", {
 		model.setAddress('alf');
 		model.setLastname('alf');
 	},
-	"tests_shouldCreateDynamicGetters":function () {
+	"tests shouldCreateDynamicGetters":function () {
 		// given
 		var model = this.getModel();
 
@@ -112,7 +110,7 @@ TestCase("ModelTest", {
 		assertTrue(model.hasOwnProperty('getAddress'));
 
 	},
-	"test_shouldReturnRecordValues":function () {
+	"test shouldReturnRecordValues":function () {
 		// given
 		var model = this.getModel();
 		// when
@@ -128,7 +126,7 @@ TestCase("ModelTest", {
 		assertEquals('Kalleland', model.getLastname());
 		assertEquals('Rundaberget 27', model.getAddress());
 	},
-	"test_sholdFindDefaultValues":function () {
+	"test should find default values":function () {
 		// given
 		var model = this.getModelWithDefaultValues();
 		// when
@@ -136,7 +134,7 @@ TestCase("ModelTest", {
 		// then
 		assertEquals(20, defaultValue);
 	},
-	"test_should_update_form_values_in_form":function () {
+	"test should update form values in form":function () {
 		// given
 		var c = this.getComponentWithModel();
 
@@ -154,7 +152,7 @@ TestCase("ModelTest", {
 		assertEquals('Kalleland', c.child['lastname'].getValue());
 		assertEquals('Rundaberget 27', c.child['address'].getValue());
 	},
-	"test_should_update_components_with_tpl_equals_model_column":function () {
+	"test should update components with tpl equals model column":function () {
 		// given
 		var c = this.getComponentWithTplChildren();
 		var model = c.getFormManager().getModel();
@@ -169,7 +167,7 @@ TestCase("ModelTest", {
 		// then
 		assertTrue(c.getBody().get('html').indexOf('Alf Magne') >= 0);
 	},
-	"test_should_register_children_of_components_using_same_model":function () {
+	"test should register children of components using same model":function () {
 		// given
 		var c = this.getComponentWithModel();
 		this.getComponentWithTplChildren();
@@ -180,7 +178,7 @@ TestCase("ModelTest", {
 		assertEquals(1, model.views.length);
 
 	},
-	"test_should_update_multiple_components_using_same_model":function () {
+	"test should update multiple components using same model":function () {
 		// given
 		var c = this.getComponentWithModel();
 		var c2 = this.getComponentWithTplChildren();
@@ -199,17 +197,38 @@ TestCase("ModelTest", {
 		assertEquals('Rundaberget 27', c.child['address'].getValue());
 		assertTrue('content was ' + c2.getBody().get('html'), c2.getBody().get('html').indexOf('John') >= 0);
 	},
-	"test_should_update_component_with_tpl_and_model":function () {
-		var c = this.getComponentWithTpl();
 
+	"test should update component with tpl and model":function () {
+        // given
+		var c = this.getComponentWithTpl();
 		var model = c.getFormManager().getModel();
 		// when
 		model.populate(100, {
 			firstname:'Jane'
 		});
-
+        // then
 		assertTrue('content was ' + c.getBody().get('html'), c.getBody().get('html').indexOf('Jane') >= 0);
-	}
+	},
+
+    "test should set record id after successful save": function(){
+        // given
+        var model = new ludo.model.Model({
+            idField : "id",
+            "columns": ["id", "firstname","lastname"]
+        });
+        // when
+        var updates = {
+            "id":200,
+            "firstname": "Alf Magne"
+        };
+        model.handleModelUpdates(updates);
+
+        // then
+        assertEquals("Alf Magne", model.getFirstname());
+        assertEquals(200, model.recordId);
+        assertEquals(200, model.getId());
+
+    }
 
 
 });

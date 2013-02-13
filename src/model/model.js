@@ -57,10 +57,17 @@ ludo.model.Model = new Class({
 	listeners:undefined,
 	/**
 	 * Initial record id
-	 * @attribute {String} recordId
+	 * @config {String} recordId
 	 * @default undefined
 	 */
 	recordId:undefined,
+
+    /**
+     * Name of id field
+     * @config {String} idField
+     * @default id
+     */
+    idField : 'id',
 
 	/**
 	 * Send initial server request even if no id is set. The model will then be populated from server with default data
@@ -72,6 +79,7 @@ ludo.model.Model = new Class({
 		if (config.name !== undefined)this.name = config.name;
 		if (config.columns !== undefined)this.columns = config.columns;
 		if (config.recordId !== undefined)this.recordId = config.recordId;
+		if (config.idField !== undefined)this.idField = config.idField;
 		if (config.id !== undefined)this.id = config.id;
 		if (config.url !== undefined)this.url = config.url;
 		ludo.CmpMgr.registerComponent(this);
@@ -420,6 +428,7 @@ ludo.model.Model = new Class({
 	},
 
 	handleModelUpdates:function (updates) {
+        if(updates && updates[this.idField] !== undefined)this.recordId = updates[this.idField];
 		for (var column in updates) {
 			if (updates.hasOwnProperty(column)) {
 				this._setRecordValue(column, updates[column]);
@@ -465,5 +474,7 @@ ludo.model.Model = new Class({
 			}
 		}
 		this.fireEvent('update', this.currentRecord);
+        this.updateViews();
+
 	}
 });
