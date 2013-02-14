@@ -101,7 +101,7 @@ ludo.calendar.Calendar = new Class({
     /**
      * Set new current date
 	 * @method setValue
-     * @param Date new date
+     * @param {Date} date
      */
     setValue:function(date){
         this.value = date;

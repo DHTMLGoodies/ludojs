@@ -41,5 +41,15 @@ ludo.effect.DropPoint = new Class({
 	 * @default undefined
 	 * @type {String|HTMLDivElement}
 	 */
-	el:undefined
+	el:undefined,
+
+	 /**
+	 Capture regions(north,south, west east) when moving over drop points
+	 @config {Boolean|undefined} captureRegions
+	 @optional
+	 @default false
+	 @example
+	 	captureRegions:true
+	 */
+	captureRegions:undefined
 });

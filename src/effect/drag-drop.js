@@ -12,7 +12,8 @@ ludo.effect.DragDrop = new Class({
 
 	/**
 	 Capture regions when moving over drop points
-	 @config Boolean captureRegions
+	 @config {Boolean|undefined} captureRegions
+	 @optional
 	 @default false
 	 @example
 	 	captureRegions:true
@@ -22,7 +23,8 @@ ludo.effect.DragDrop = new Class({
 	/**
 	 * While dragging, always show dragged element this amount of pixels below mouse cursor.
 	 * @config mouseYOffset
-	 * @type {Number} pixels
+	 * @type {Number|undefined} pixels
+	 * @optional
 	 * @default undefined
 	 */
 	mouseYOffset:undefined,
@@ -66,8 +68,8 @@ ludo.effect.DragDrop = new Class({
 	/**
 	 * Create new drop point.
 	 * @method addDropTarget
-	 * @param {effect.DropPoint} node
-	 * @return {effect.DropPoint} node
+	 * @param {ludo.effect.DropPoint} node
+	 * @return {ludo.effect.DropPoint} node
 	 */
 	addDropTarget:function (node) {
 		node = this.getValidNode(node);

@@ -103,7 +103,7 @@ ludo.canvas.Engine = new Class({
 	},
 
 	scale:function(el, width, height){
-		if(height === undefined)height = width;
+		height = height || width;
 		this.setTransformation(el, 'scale', width + ' ' + height);
 
 		// if(height === undefined)height = width;
@@ -131,16 +131,14 @@ ludo.canvas.Engine = new Class({
 
 	getTransformObject:function(el){
 		if(el.transform.baseVal.numberOfItems ==0){
-			var owner, dynamicSvg = false;
+			var owner;
 			if(el.ownerSVGElement){
 				owner = el.ownerSVGElement;
 			}else{
 				owner = document.createElementNS("http://www.w3.org/2000/svg", 'svg');
-				dynamicSvg = true;
 			}
 			var t = owner.createSVGTransform();
 			el.transform.baseVal.appendItem(t);
-			if(dynamicSvg)delete owner;
 		}
 		return el.transform.baseVal.getItem(0);
 	},

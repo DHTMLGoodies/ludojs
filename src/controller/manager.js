@@ -36,6 +36,7 @@ ludo.controller.Manager = new Class({
                 return this.controllers[i];
             }
         }
+		return undefined;
     },
 
     assignSpecificControllerFor:function(controller, component){

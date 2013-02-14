@@ -63,7 +63,7 @@ ludo.canvas.Canvas = new Class({
 	},
 
 	fitParent:function(){
-		size = this.renderTo.getSize();
+		var size = this.renderTo.getSize();
 		if(size.x === 0 || size.y === 0)return;
 		size.x -= (ludo.dom.getPW(this.renderTo) + ludo.dom.getBW(this.renderTo));
 		size.y -= (ludo.dom.getPH(this.renderTo) + ludo.dom.getBH(this.renderTo));

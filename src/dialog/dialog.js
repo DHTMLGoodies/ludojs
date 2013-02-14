@@ -10,12 +10,14 @@ ludo.dialog.Dialog = new Class({
 	/**
 	 * Show modal version of dialog
 	 * @attribute {Boolean} modal
+	 * @optional
 	 * @default true
 	 */
 	modal:true,
 	/**
 	 * Auto dispose/erase component on close
 	 * @attribute {Boolean} autoDispose
+	 * @optional
 	 * @default true
 	 */
 	autoDispose:true,
@@ -23,6 +25,7 @@ ludo.dialog.Dialog = new Class({
 	 * Auto hide component on button click. If autoDispose is set to true, the component
 	 * will be deleted
 	 * @attribute {Boolean} autoHideOnBtnClick
+	 * @optional
 	 * @default true
 	 */
 	autoHideOnBtnClick:true,

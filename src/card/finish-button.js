@@ -19,7 +19,7 @@ ludo.card.FinishButton = new Class({
     addButtonEvents:function(){
 		var lm;
         if (this.component) {
-			var lm = this.component.getLayoutManager();
+			lm = this.component.getLayoutManager();
             lm.addEvent('valid', this.enable.bind(this));
             lm.addEvent('invalid', this.disable.bind(this));
 			this.component.addEvent('beforesubmit', this.disable.bind(this));

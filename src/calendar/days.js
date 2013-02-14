@@ -55,6 +55,7 @@ ludo.calendar.Days = new Class({
         if(e.target.tagName.toLowerCase() == 'window'){
             return false;
         }
+		return undefined;
     },
     touchMove:function (e) {
         if (this.touchData.enabled) {
@@ -77,6 +78,7 @@ ludo.calendar.Days = new Class({
             }
             return false;
         }
+		return undefined;
     },
     touchEnd:function () {
         if (this.touchData.enabled) {
@@ -114,7 +116,7 @@ ludo.calendar.Days = new Class({
         ludo.dom.addClass(el, 'ludo-calendar-header');
         this.getBody().adopt(el);
 
-        var html = ['<table cellpadding="0" cellspacing="0" border="0" width="100%">'];
+        var html = ['<table ','cellpadding="0" cellspacing="0" border="0" width="100%">'];
         html.push(this.getColGroup().join(''));
         html.push('<tr>');
         var headers = this.getTextForHeader();
@@ -148,9 +150,9 @@ ludo.calendar.Days = new Class({
     getColGroup:function () {
         var html = [];
         html.push('<colgroup>');
-        html.push('<col width="' + this.colWidthFirst + '%">');
+        html.push('<col '+'width="' + this.colWidthFirst + '%" />');
         for (var i = 0; i < 7; i++) {
-            html.push('<col width="' + this.colWidthRest + '%">');
+            html.push('<col '+'width="' + this.colWidthRest + '%" />');
         }
         html.push('</colgroup>');
         return html;
@@ -196,7 +198,7 @@ ludo.calendar.Days = new Class({
 
         this.els.daysContainer.adopt(el);
 
-        var html = ['<table cellpadding="0" cellspacing="0" border="0" width="100%" style="height:100%">'];
+        var html = ['<table ','cellpadding="0" cellspacing="0" border="0" width="100%" style="height:100%">'];
         html.push(this.getColGroup().join(''));
 
         var days = this.getDaysForView();
@@ -270,10 +272,10 @@ ludo.calendar.Days = new Class({
     },
 
     isDisplayingMonthForCurrentValue:function () {
-        if (!this.value) {
-            return;
-        }
-        return this.value.get('month') == this.date.get('month') && this.value.get('year') == this.date.get('year');
+		if(this.value){
+			return this.value.get('month') == this.date.get('month') && this.value.get('year') == this.date.get('year');
+		}
+		return false;
     },
     isDisplayingTodaysMonth:function () {
         var today = new Date();
@@ -391,7 +393,7 @@ ludo.calendar.Days = new Class({
     /**
      * Set selected date
 	 * @method setValue
-     * @param Date
+     * @param {Date} date
      */
     setValue:function (date) {
         this.removeClsFromSelectedDay();
