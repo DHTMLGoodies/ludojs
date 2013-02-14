@@ -1,7 +1,7 @@
 .ludo-grid-Grid {
     border-radius:0;
     border:0;
-    padding: 0px;
+    padding: 0;
     position:relative;
 }
 
@@ -24,17 +24,17 @@
 .ludo-grid-Grid .ludo-grid-header-cell-top, .ludo-grid-Grid .ludo-grid-header-cell-bottom{
     position:absolute;
     width:100%;
-    left:0px;
+    left:0;
     background-repeat:repeat-x
 }
 .ludo-grid-Grid .ludo-grid-header-cell-top{
     background-position: top left;
-    top:0px;
+    top:0;
 }
 
 .ludo-grid-Grid .ludo-grid-header-cell-bottom{
     background-position: bottom left;
-    bottom:0px;
+    bottom:0;
 }
 
 .ludo-grid-header-cell {
@@ -47,7 +47,7 @@
 }
 
 .ludo-grid-Grid div.last-header-cell {
-    border-right: 0px;
+    border-right: 0;
 }
 
 .ludo-grid-row-header-container {
@@ -93,7 +93,7 @@
 .ludo-grid-resize-handle {
     background-color: transparent;
     width: 5px;
-    border-left: 0px;
+    border-left: 0;
     opacity: 0;
     filter: alpha(opacity = 0);
     margin-left: -1px;
@@ -102,7 +102,6 @@
 .ludo-grid-resize-handle-over {
     opacity: 0.05;
     filter: alpha(opacity = 5);
-
 }
 
 .ludo-grid-Grid .ludo-resize-handle-active{
@@ -122,7 +121,7 @@
 }
 
 .ludo-grid-data-last-column{
-    border-right:0px;
+    border-right:0;
 }
 
 .ludo-grid-Grid .ludo-header-center{
@@ -176,33 +175,28 @@
     filter: null;
     background-color: #FFF;
     line-height: 30px;
-    font-family: arial;
+    font-family: arial, sans-serif;
     padding-left: 5px;
     font-size: 12px;
     z-index: 90000;
 }
 
 div.ludo-grid-movable-insertion-marker {
-    background-image: url('../images/grid/insertion-marker-top.png');
-    background-repeat: no-repeat;
-    background-postion:top center;
     width: 7px;
     height: 31px;
     position: absolute;
-    background-color: transparent;
+    background: transparent url('../images/grid/insertion-marker-top.png') no-repeat top center;
     border:0;
     margin-left: -4px;
     z-index: 30000;
 }
 
 div.ludo-grid-movable-insertion-marker-bottom {
-    background-image: url('../images/grid/insertion-marker-bottom.png');
-    background-repeat: no-repeat;
-    background-postion:bottom center;
+    background: url('../images/grid/insertion-marker-bottom.png') no-repeat bottom center;
     position:absolute;
     width:100%;
     height:4px;
-    bottom:0px;
+    bottom:0;
 }
 
 .ludo-grid-Grid .ludo-body {
