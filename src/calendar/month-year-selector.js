@@ -132,5 +132,6 @@ ludo.calendar.MonthYearSelector = new Class({
                 return this.els.options[i];
             }
         }
+		return undefined;
     }
 });

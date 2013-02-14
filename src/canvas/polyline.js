@@ -28,7 +28,7 @@ ludo.canvas.Polyline = new Class({
 	 * Return x and y of a point
 	 * @method getPoint
 	 * @param {Number} index
-	 * @return {Object} x and y
+	 * @return {Object|undefined} x and y
 	 */
 	getPoint:function(index){
 		if(this.pointArray === undefined)this.buildPointArray();

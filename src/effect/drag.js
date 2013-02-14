@@ -125,6 +125,7 @@ ludo.effect.Drag = new Class({
 		active:false
 	},
 
+	coordinatesToDrag:undefined,
 	/**
 	 * Delay in seconds from mouse down to start drag. If mouse is released within this interval,
 	 * the drag will be cancelled.
@@ -422,7 +423,7 @@ ludo.effect.Drag = new Class({
 		this.fireEvent('before', [this.els[id], this, {x:x,y:y}]);
 
 		if(!this.isActive()){
-			return;
+			return undefined;
 		}
 
 		this.dragProcess.minX = this.getMinX();

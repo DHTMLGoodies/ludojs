@@ -12,14 +12,15 @@ ludo.dataSource.TreeCollection = new Class({
 	 * Return children of parent with this id
 	 * @method getChildren
 	 * @param {String} parent id
-	 * @return {Array} children
+	 * @return {Array|undefined} children
 	 */
 	getChildren:function (parent) {
-		parent = this.findRecord(parent);
-		if (parent) {
-			if (!parent.children)parent.children = [];
-			return parent.children;
+		var p = this.findRecord(parent);
+		if (p) {
+			if (!p.children)p.children = [];
+			return p.children;
 		}
+		return undefined;
 	},
 
 	addRecordEvents:function(record){

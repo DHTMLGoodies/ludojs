@@ -23,8 +23,8 @@ ludo.canvas.Gradient = new Class({
 	 @method addStop
 	 @param {String} offset
 	 @param {String} stopColor
-	 @param {Number} stopOpacity
-	 @return {canvas.Stop} stop
+	 @param {Number|undefined} stopOpacity
+	 @return {ludo.canvas.Stop} stop
 	 @example
 		 var gradient = new ludo.canvas.Gradient({
 			id:'myGradient'

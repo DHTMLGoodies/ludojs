@@ -113,5 +113,6 @@ ludo.calendar.YearSelector = new Class({
                 return this.els.options[i];
             }
         }
+		return undefined;
     }
 });

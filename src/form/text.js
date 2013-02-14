@@ -117,7 +117,7 @@ ludo.form.Text = new Class({
 
 	validateKey:function (e) {
 		if (e.control || e.alt) {
-			return;
+			return undefined;
 		}
 
 		if (this.regex && e.key && e.key.length == 1) {
@@ -126,6 +126,7 @@ ludo.form.Text = new Class({
 				return false;
 			}
 		}
+		return undefined;
 	},
 	/**
 	 * Return width of form field in pixels
@@ -158,11 +159,11 @@ ludo.form.Text = new Class({
 		if (!valid)return false;
 		var val = this.getFormEl().get('value').trim();
 
-		if (this.minLength && val.length < this.minLength) {
-			return false;
-		}
 		if (val.length == 0) {
 			return !this.required;
+		}
+		if (this.minLength && val.length < this.minLength) {
+			return false;
 		}
 		if (this.maxLength && val.length > this.maxLength) {
 			return false;
@@ -177,7 +178,7 @@ ludo.form.Text = new Class({
 	validate:function () {
 		this.parent();
 		if (!this.isValid() && !this._focus) {
-			this.getFormEl().addClass('ludo-form-el-invalid');
+			this.getEl().addClass('ludo-form-el-invalid');
 		}
 	},
 	keyUp:function (e) {

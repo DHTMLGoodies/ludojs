@@ -40,12 +40,12 @@ ludo.canvas.Drag = new Class({
 	/**
 	 * Add node
 	 * @method add
-	 * @param {effect.DraggableNode} node
+	 * @param {ludo.effect.DraggableNode} node
 	 * @return {effect.DraggableNode} added node
 	 */
 	add:function (node) {
 		node = this.getValidNode(node);
-		if (node.handle === undefined)node.handle = node.el;
+		if (!node.handle)node.handle = node.el;
 		var id = node.el.getEl().id;
 
 		this.els[id] = Object.merge(node, {
@@ -74,7 +74,7 @@ ludo.canvas.Drag = new Class({
 	},
 
 	getIdByEvent:function (e) {
-		var el = e.target || e.event.srcElement.correspondingUseElement;
+		var el = e.target || e.event.srcElement['correspondingUseElement'];
 		var id = el.id;
 
 		while(!this.els[id] && el.parentNode){
