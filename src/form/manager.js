@@ -158,7 +158,6 @@ ludo.form.Manager = new Class({
 	 * @param {String} value
 	 * @param {object } formComponent
 	 */
-
 	onValidFormElement:function (value, formComponent) {
 		this.invalidIds.erase(formComponent.getId());
 		if (this.invalidIds.length == 0) {
@@ -170,7 +169,6 @@ ludo.form.Manager = new Class({
 			 * be enabled automatically when this event is fired.
 			 */
 			this.fireEvent('valid', this);
-
 		}
 	},
 	/**
@@ -182,7 +180,6 @@ ludo.form.Manager = new Class({
 	 * @param {Object} formComponent
 	 */
 	onInvalidFormElement:function (value, formComponent) {
-
 		var elId = formComponent.getId();
 		if (this.invalidIds.indexOf(elId) == -1) {
 			this.invalidIds.push(elId);

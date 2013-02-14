@@ -142,10 +142,9 @@ ludo.form.Element = new Class({
 		this.elementId = defaultConfig.elementId || this.elementId;
 		if (defaultConfig.height && config.height === undefined) {
 			this.height = defaultConfig.height;
-			this.autoHeight = false;
 		}
-		if(config.validator !== undefined)this.validator = config.validator;
-		if (this.validator !== undefined) {
+		if(config.validator)this.validator = config.validator;
+		if (this.validator) {
 			this.createValidator();
 		}
 		if (config.stretchField !== undefined)this.stretchField = config.stretchField;
@@ -384,8 +383,8 @@ ludo.form.Element = new Class({
 	hasFocus:function () {
 		return this._focus;
 	},
-	insertJSON:function (json) {
-		this.populate(json.data);
+	insertJSON:function (data) {
+		this.populate(data);
 	},
 	populate:function () {
 
@@ -462,7 +461,6 @@ ludo.form.Element = new Class({
 		}
 		if (this.validatorFn) {
 			return this.validatorFn.call(this.validator, this.getValue());
-			// return this.validator.isValid(this.getValue());
 		}
 		return true;
 	},

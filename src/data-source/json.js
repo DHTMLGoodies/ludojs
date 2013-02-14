@@ -30,6 +30,7 @@ ludo.dataSource.JSON = new Class({
      */
     sendRequest:function(service, arguments, data){
         this.arguments = arguments;
+        this.beforeLoad();
         this.requestHandler().send(service, arguments, data);
     },
 

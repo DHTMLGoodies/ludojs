@@ -81,7 +81,6 @@ TestCase("TextTest", {
 		// then
 		assertFalse('t1 is invalid', t1.isValid());
 		assertFalse('t2 is invalid', t2.isValid());
-
 	},
 
 	"test should be able to link form components":function () {
@@ -268,8 +267,15 @@ TestCase("TextTest", {
 			formConfig:{
 				labelWidth:100,
 				fieldWidth:120
-			}
-		})
+			},
+            children:[{
+                name:'a-text-input', type:'form.Text','label' : 'My label'
+            }]
+		});
+
+        // then
+        assertEquals(100, v.child['a-text-input'].labelWidth);
+        assertEquals(120, v.child['a-text-input'].fieldWidth);
 
 	},
 

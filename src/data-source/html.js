@@ -21,6 +21,7 @@ ludo.dataSource.HTML = new Class({
      */
     load:function () {
         this.parent();
+        this.beforeLoad();
         this.Request(this.requestId, { onSuccess:this.loadComplete, data:this.postData });
     },
 

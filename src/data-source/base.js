@@ -112,9 +112,13 @@ ludo.dataSource.Base = new Class({
         return 'JSON';
     },
 
-    load:function(){
-		this.inLoadMode = true;
+    beforeLoad:function(){
+        this.inLoadMode = true;
         this.fireEvent('beforeload');
+    },
+
+    load:function(){
+
     },
 	loadComplete:function(){
 		this.inLoadMode = false;

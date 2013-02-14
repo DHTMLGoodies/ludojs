@@ -67,8 +67,6 @@ TestCase("ButtonTest", {
 
 		assertEquals(1, cmp.getAllChildren().length);
 		assertFalse(fn.isValid());
-
-		assertFalse('form should be invalid', mgr.isValid());
 		assertTrue(button.isDisabled());
 	},
 

@@ -19,6 +19,7 @@ serve:
   - ../../css/ludo-all.css
   - ../../css/form/form.css
   - ../../css/form/slider.css
+  - ../../css/ludo-all-blue-skin.css
 
 plugin:
  - name: "coverage"
