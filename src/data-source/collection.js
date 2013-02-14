@@ -717,6 +717,10 @@ ludo.dataSource.Collection = new Class({
 		return this.dataCache[this.getCacheKey()] !== undefined && !this.isCacheOutOfDate();
 	},
 
+    clearCache:function(){
+        this.dataCache = {};
+    },
+
 	isCacheOutOfDate:function () {
 		if (!this.paging.cacheTimeout)return false;
 
