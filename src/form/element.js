@@ -468,10 +468,7 @@ ludo.form.Element = new Class({
 	},
 
 	clearInvalid:function () {
-		var el = this.getFormEl();
-		if (el) {
-			el.removeClass('ludo-form-el-invalid');
-		}
+		this.getEl().removeClass('ludo-form-el-invalid');
 	},
 
 	wasValid:true,
