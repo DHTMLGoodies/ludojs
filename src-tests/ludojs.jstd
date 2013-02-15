@@ -8,6 +8,7 @@ load:
   - ../src/data-source/*.js
   - ../src/effect/*.js
   - ../src/canvas/*.js
+  - ../src/model/*.js
   - ../src/remote/message.js
   - ../src/remote/*.js
 
