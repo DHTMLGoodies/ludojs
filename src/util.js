@@ -58,7 +58,7 @@ ludo.util = {
 
 	getNewZIndex:function (view) {
 		var ret = ludo.CmpMgr.getNewZIndex();
-		if (view.els.parent == document.body) {
+		if (view.els.parent == document.body && view.els.container.style.position==='absolute') {
 			ret += 10000;
 		}
 		if (view.alwaysInFront) {
@@ -71,6 +71,7 @@ ludo.util = {
 		if (view.getParent()) {
 			view.getParent().removeChild(view);
 		}
+        view.removeEvents();
 		var initialItemCount = view.children.length;
 		for (var i = initialItemCount - 1; i >= 0; i--) {
 			view.children[i].dispose();

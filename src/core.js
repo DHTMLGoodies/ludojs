@@ -201,12 +201,6 @@ ludo.Core = new Class({
 		return ludo.util.isTabletOrMobile();
 	},
 
-	log:function (txt) {
-		if (window.console && console.log && !Browser.ie) {
-			console.log(txt);
-		}
-	},
-
 	getDragStartEvent:function () {
 		if (ludo.util.isTabletOrMobile()) {
 			return 'touchstart';

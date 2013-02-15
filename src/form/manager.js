@@ -291,7 +291,7 @@ ludo.form.Manager = new Class({
                          * @param {Object} JSON response from server
                          */
                         this.fireEvent('success', [request.getResponse(), this.component]);
-
+                        this.fireEvent('valid');
                         this.fireEvent('clean');
                     }.bind(this),
                     "failure":function (request) {
@@ -303,6 +303,7 @@ ludo.form.Manager = new Class({
                          * @param {Object} JSON response from server
                          * @param {Object} Component
                          */
+                        this.fireEvent('valid');
                         this.fireEvent('failure', [request.getResponse(), this.component]);
                     }.bind(this),
                     "error":function (request) {

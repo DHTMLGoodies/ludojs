@@ -12,6 +12,8 @@
  */
 ludo.remote.Broadcaster = new Class({
     Extends:Events,
+
+    defaultMessages:{},
     /**
      * @method broadcast
      * @param {ludo.remote.JSON} request
@@ -20,31 +22,37 @@ ludo.remote.Broadcaster = new Class({
      */
     broadcast:function (request, service) {
         var code = request.getResponseCode();
+
+        var eventName, eventNameWithService;
+        switch (code) {
+            case 200:
+                eventName = this.getEventName('success', request.getResource());
+                eventNameWithService = this.getEventName('success', request.getResource(), service);
+                break;
+            case 500:
+                eventName = this.getEventName('failure', request.getResource());
+                eventNameWithService = this.getEventName('failure', request.getResource(), service);
+                break;
+            default:
+                eventName = this.getEventName('serverError', request.getResource());
+                eventNameWithService = this.getEventName('serverError', request.getResource(), service);
+        }
+
         var eventObj = {
             "message":request.getResponseMessage(),
             "code":request.getResponseCode(),
             "resource":request.getResource(),
             "service":service
         };
-        var eventName, eventNameWithService;
-        switch (code) {
-            case 200:
-                eventName = this.getEventName('success', eventObj.resource);
-                eventNameWithService = this.getEventName('success', eventObj.resource, service);
-                break;
-            case 500:
-                eventName = this.getEventName('failure', eventObj.resource);
-                eventNameWithService = this.getEventName('failure', eventObj.resource, service);
-                break;
-            default:
-                eventName = this.getEventName('serverError', eventObj.resource);
-                eventNameWithService = this.getEventName('serverError', eventObj.resource, service);
-        }
-
+        if(!eventObj.message)eventObj.message = this.getDefaultMessage(eventNameWithService || eventName);
         this.fireEvent(eventName, eventObj);
         if(service){
             this.fireEvent(eventNameWithService, eventObj);
         }
+    },
+
+    getDefaultMessage:function(key){
+        return this.defaultMessages[key] ? this.defaultMessages[key] : '';
     },
 
     clear:function(request, service){
@@ -115,7 +123,22 @@ ludo.remote.Broadcaster = new Class({
      */
     addServiceEvent:function(eventType,resource,service, fn){
         this.addEvent(this.getEventName(eventType, resource, service), fn);
-}
+    },
+
+    /**
+     Specify default response messages for resource service
+     @method setDefaultMessage
+     @param {String} message
+     @param {String} eventType
+     @param {String} resource
+     @param {String} service
+     @example
+        ludo.remoteBroadcaster.setDefaultMessage('You have registered sucessfully', 'success', 'User', 'register');
+     */
+    setDefaultMessage:function(message, eventType, resource, service){
+        this.defaultMessages[this.getEventName(eventType,resource,service)] = message;
+
+    }
 });
 
 ludo.remoteBroadcaster = new ludo.remote.Broadcaster();

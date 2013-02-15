@@ -505,7 +505,6 @@ ludo.View = new Class({
 	ludoCSS:function () {
 
 	},
-
 	/**
 	 The third life cycle method
 	 This is the place where you add custom events

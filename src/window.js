@@ -189,10 +189,9 @@ ludo.Window = new Class({
      * @return void
      */
     showAt:function (x, y) {
-        this.setPosition({
-            left:x,
-            top:y
-        });
+        this.layout.left = x;
+        this.layout.top = y;
+        this.getLayoutManager().getRenderer().clearFn();
         this.show();
     },
 
@@ -205,6 +204,7 @@ ludo.Window = new Class({
         var bodySize = document.body.getSize();
         var x = Math.round((bodySize.x / 2) - (this.getWidth() / 2));
         var y = Math.round((bodySize.y / 2) - (this.getHeight() / 2));
-        this.showAt(x, y);
+        this.showAt(x,y);
+
     }
 });

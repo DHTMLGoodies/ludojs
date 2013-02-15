@@ -1,5 +1,8 @@
 TestCase("RemoteBroadcasterTest", {
 
+    setUp:function(){
+        ludo.remoteBroadcaster.defaultMessages = {};
+    },
 
     "test should get correct event names": function(){
         // given
@@ -56,6 +59,55 @@ TestCase("RemoteBroadcasterTest", {
 
         // then
         assertTrue(eventFired);
+    },
+
+    "test should be able to set default messages": function(){
+        // given
+        var b = ludo.remoteBroadcaster;
+        b.setDefaultMessage('Default message', 'success', 'Person');
+        var message = "";
+
+        // when
+        b.addResourceEvent('success', 'Person', function(payload){
+            message = payload.message;
+        }, "read");
+        b.broadcast(this.getRemoteMock({
+            resource:'Person',
+            code:200,
+            "message":""
+        }));
+
+        // then
+        assertEquals("Default message", message);
+    },
+
+    "test should be able to set default message on specific services": function(){
+        // given
+        var b = ludo.remoteBroadcaster;
+        b.setDefaultMessage('Default message', 'success', 'Person', 'read');
+        var message = "";
+        b.addResourceEvent('success', 'Person', function(payload){
+            message = payload.message;
+        });
+
+
+        // when
+        b.broadcast(this.getRemoteMock({
+            resource:'Person',
+            code:200,
+            "message":""
+        }));
+        // then
+        assertEquals("", message);
+
+        // when
+        b.broadcast(this.getRemoteMock({
+            resource:'Person',
+            code:200,
+            "message":""
+        }),"read");
+        // then
+        assertEquals("Default message", message);
     },
 
     getRemoteMock:function(config){
