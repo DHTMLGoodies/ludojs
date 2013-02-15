@@ -291,10 +291,16 @@ ludo.form.Manager = new Class({
                          * @param {Object} JSON response from server
                          */
                         this.fireEvent('success', [request.getResponse(), this.component]);
-                        this.fireEvent('valid');
+                        if(this.isValid()){
+                            this.fireEvent('valid');
+                        }
                         this.fireEvent('clean');
                     }.bind(this),
                     "failure":function (request) {
+                        if(this.isValid()){
+                            this.fireEvent('valid');
+                        }
+
                         /**
                          * Event fired after form submission when success parameter in response is false.
                          * To add listeners, use <br>
@@ -303,7 +309,7 @@ ludo.form.Manager = new Class({
                          * @param {Object} JSON response from server
                          * @param {Object} Component
                          */
-                        this.fireEvent('valid');
+
                         this.fireEvent('failure', [request.getResponse(), this.component]);
                     }.bind(this),
                     "error":function (request) {
