@@ -41,6 +41,9 @@ ludo.dataSource.JSON = new Class({
                 url:this.url,
                 resource: this.resource,
                 listeners:{
+                    "beforeload": function(request){
+                        this.fireEvent("beforeload", request);
+                    },
                     "success":function (request) {
                         this.loadComplete(request.getResponseData(), request.getResponse());
                     }.bind(this),
@@ -49,7 +52,7 @@ ludo.dataSource.JSON = new Class({
                          * Event fired when success parameter in response from server is false
                          * @event failure
                          * @param {Object} JSON response from server. Error message should be in the "message" property
-                         * @param {Object} ludo.model.Model
+                         * @param {ludo.dataSource.JSON} this
                          *
                          */
                         this.fireEvent('failure', [request.getResponse(), this]);

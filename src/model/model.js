@@ -223,6 +223,9 @@ ludo.model.Model = new Class({
                 url:this.url,
                 resource:this.name,
                 listeners:{
+                    "beforeload": function(request){
+                        this.fireEvent("beforeload", request);
+                    },
                     "success":function (request) {
                         this.populate(this.recordId, request.getResponseData());
                         /**
@@ -367,6 +370,9 @@ ludo.model.Model = new Class({
                 url:this.url,
                 resource:this.name,
                 listeners:{
+                    "beforeload": function(request){
+                        this.fireEvent("beforeload", request);
+                    },
                     "success":function (request) {
                         var updates = request.getResponseData();
                         if (updates) {

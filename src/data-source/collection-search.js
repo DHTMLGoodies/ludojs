@@ -149,7 +149,7 @@ ludo.dataSource.CollectionSearch = new Class({
 	appendSearch:function (args) {
 		this.preCondition(args);
 		var search = this.getActualArgument(args);
-
+        var searchObject;
 		if (typeof search === 'function') {
 			searchObject = { fn:search };
 		} else {

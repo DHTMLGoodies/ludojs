@@ -35,10 +35,17 @@ ludo.color.Color = new Class({
         }
         return this.toRGB(a, b, c);
     },
-    toRGB:function (r, g, b) {
-        r = Math.round(r).toString(16);
-        g = Math.round(g).toString(16);
-        b = Math.round(b).toString(16);
+    /**
+     * @method toRGB
+     * @param {Number} red
+     * @param {Number} green
+     * @param {Number} blue
+     * @return {String}
+     */
+    toRGB:function (red, green, blue) {
+        var r = Math.round(red).toString(16);
+        var g = Math.round(green).toString(16);
+        var b = Math.round(blue).toString(16);
         if (r.length === 1)r = ['0', r].join('');
         if (g.length === 1)g = ['0', g].join('');
         if (b.length === 1)b = ['0', b].join('');
@@ -93,7 +100,8 @@ ludo.color.Color = new Class({
 		if(s===undefined){
 			s = h.s;v = h.v;h= h.h;
 		}
-        return this.toRGB(this.hsvToRGB(h, s, v));
+        var rgb = this.hsvToRGB(h, s, v);
+        return this.toRGB(rgb.r,rgb.g,rgb.b);
     },
     hsvToRGB:function (h, s, v) {
         if (s === undefined) {

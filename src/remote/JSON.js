@@ -48,7 +48,7 @@ ludo.remote.JSON = new Class({
      @param {Object} serviceArguments
      @optional
      @example
-	 	LUDOJS_CONFIG.url = '/controller.php';
+        ludo.config.setUrl('/controller.php');
         var req = new ludo.remote.JSON({
             resource : 'Person'
         });
@@ -57,13 +57,13 @@ ludo.remote.JSON = new Class({
      Will trigger the following data to be sent to controller.php:
 
      @example
-        {
-            request:"Person/1/load"
-        }
+     {
+         request:"Person/1/load"
+     }
      If you have the mod_rewrite module enabled and activated on your web server, you may use code like this:
      @example
-	 	ludo.config.hasModRewriteUrls() = true;
-	 	LUDOJS_CONFIG.url = '/';
+	 	ludo.config.enableModRewriteUrls();
+        ludo.config.setDocumentRoot('/');
         var req = new ludo.remote.JSON({
             resource : 'Person'
         });
@@ -76,13 +76,13 @@ ludo.remote.JSON = new Class({
 
      Here's another example for saving data(mod rewrite deactivated)
      @example
-	     LUDOJS_CONFIG.url = '/controller.php';
+	     ludo.config.setUrl('/controller.php');
          var req = new ludo.remote.JSON({
-                resource : 'Person'
-            });
+            resource : 'Person'
+        });
          req.send('save', 1, {
             "firstname": "John",
-            "lastname": "McCarthy"
+            "lastname": "Johnson"
          });
 
      which will send the following POST data to "controller.php":
@@ -104,9 +104,14 @@ ludo.remote.JSON = new Class({
             }
         }
      i.e. without any "request" data in the post variable since it's already defined in the url.
+ * @param additionalData
      */
     send:function (service, resourceArguments, serviceArguments, additionalData) {
         if (resourceArguments && !ludo.util.isArray(resourceArguments))resourceArguments = [resourceArguments];
+
+        this.fireEvent('beforeload', this);
+
+        // TODO the events here should be fired for the components sending the request.
         var req = new Request.JSON({
             url:this.getUrl(service, resourceArguments),
             method:this.method,
@@ -138,7 +143,9 @@ ludo.remote.JSON = new Class({
     getUrl:function (service, arguments) {
         var ret = this.url !== undefined ? this.url : ludo.config.getUrl();
         if (ludo.config.hasModRewriteUrls()) {
-            ret += this.getServicePath(service, arguments);
+            ret = ludo.config.getDocumentRoot() + this.getServicePath(service, arguments);
+        }else{
+            ret = this.url !== undefined ? this.url : ludo.config.getUrl();
         }
         return ret;
     },
