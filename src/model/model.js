@@ -419,7 +419,7 @@ ludo.model.Model = new Class({
                          * @param {String} error text
                          * @param {String} error message
                          */
-                        this.fireEvent('servererror', [request.getErrorText(), request.getErrorCode()]);
+                        this.fireEvent('servererror', [request.getResponseMessage(), request.getResponseCode()]);
                     }.bind(this)
                 }
             });

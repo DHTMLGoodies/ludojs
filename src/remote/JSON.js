@@ -12,8 +12,7 @@ ludo.remote.JSON = new Class({
     Extends:Events,
     method:'post',
     JSON:undefined,
-    errorText:undefined,
-    errorCode:undefined,
+
     /**
      * Name of resource to request, example: "Person"
      * @config {String} resource
@@ -104,12 +103,13 @@ ludo.remote.JSON = new Class({
             }
         }
      i.e. without any "request" data in the post variable since it's already defined in the url.
- * @param additionalData
+     @param {Object} additionalData
+     @optional
      */
     send:function (service, resourceArguments, serviceArguments, additionalData) {
         if (resourceArguments && !ludo.util.isArray(resourceArguments))resourceArguments = [resourceArguments];
 
-        this.fireEvent('beforeload', this);
+        ludo.remoteBroadcaster.clear(this, service);
 
         // TODO the events here should be fired for the components sending the request.
         var req = new Request.JSON({
@@ -123,14 +123,19 @@ ludo.remote.JSON = new Class({
                 } else {
                     this.fireEvent('failure', this);
                 }
+                this.sendBroadCast(service);
             }.bind(this),
             onError:function (text, error) {
-                this.errorText = text;
-                this.errorCode = error;
+                this.JSON = { "code": 500, "message": error };
                 this.fireEvent('servererror', this);
+                this.sendBroadCast(service);
             }.bind(this)
         });
         req.send();
+    },
+
+    sendBroadCast:function(service){
+        ludo.remoteBroadcaster.broadcast(this, service);
     },
     /**
      * Return url for the request
@@ -203,23 +208,6 @@ ludo.remote.JSON = new Class({
     getResponse:function () {
         return this.JSON;
     },
-
-    /**
-     * Return error text from last failed server request
-     * @method getErrorText
-     * @return {String}
-     */
-    getErrorText:function () {
-        return this.errorText;
-    },
-    /**
-     * Return error code from last failed server request
-     * @method getErrorCode
-     * @return {String}
-     */
-    getErrorCode:function () {
-        return this.errorCode;
-    },
     /**
      * Return "code" property of last received server response.
      * @method getResponseCode
@@ -235,5 +223,9 @@ ludo.remote.JSON = new Class({
      */
     getResponseMessage:function () {
         return this.JSON && this.JSON.message ? this.JSON.message : undefined;
+    },
+
+    getResource:function(){
+        return this.resource;
     }
 });

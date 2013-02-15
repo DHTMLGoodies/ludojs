@@ -2,11 +2,16 @@ load:
   - ../../mootools/mootools-core-1.4.5.js
   - ../../mootools/mootools-more-1.4.0.1.js
   - ../../js/ludo-all.js
-  - ../../src/remote/*.js
   - ../../src/config.js
+  - ../../src/remote/JSON.js
+  - ../../src/remote/broadcaster.js
+  - ../../src/remote/message.js
+  - ../../src/remote/error-message.js
 
 test:
   - QueryTest.js
+  - BroadcasterTest.js
+  - MessageTest.js
 
 plugin:
  - name: "coverage"
