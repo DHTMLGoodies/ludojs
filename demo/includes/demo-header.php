@@ -13,12 +13,14 @@ if($sub)$prefix = '../'; else $prefix = '';
     body{
         font-family:arial,serif;
     }
+    body,html{
+        height:100%;
+    }
     </style>
     <script type="text/javascript" src="<?php echo $prefix; ?>../js/ludojs-all.js"></script>
 
     <script type="text/javascript" src="<?php echo $prefix; ?>code-highlight/code-highlight.js"></script>
-    <link rel="stylesheet" href="<?php echo $prefix; ?>../css/ludo-all.css" type="text/css">
-    <link rel="stylesheet" href="<?php echo $prefix; ?>../css/ludo-all-light-gray-skin.css" type="text/css">
+    <link rel="stylesheet" href="<?php echo $prefix; ?>../css/ludojs-light-gray.css" type="text/css">
     <script type="text/javascript">
         ludo.appConfig = {
             fileupload:{
