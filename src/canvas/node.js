@@ -74,7 +74,6 @@ ludo.canvas.Node = new Class({
 	},
 
 	addEvent:function (event, fn) {
-		console.log(event);
 		switch (event.toLowerCase()) {
 			case 'mouseenter':
 				ludo.canvasEventManager.addMouseEnter(this, fn);
