@@ -14,7 +14,8 @@ if($sub)$prefix = '../'; else $prefix = '';
         font-family:arial,serif;
     }
     </style>
-    <script type="text/javascript" src="<?php echo $prefix; ?>../js/ludo-all.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../js/ludojs-all.js"></script>
+
     <script type="text/javascript" src="<?php echo $prefix; ?>code-highlight/code-highlight.js"></script>
     <link rel="stylesheet" href="<?php echo $prefix; ?>../css/ludo-all.css" type="text/css">
     <link rel="stylesheet" href="<?php echo $prefix; ?>../css/ludo-all-light-gray-skin.css" type="text/css">

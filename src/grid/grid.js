@@ -595,6 +595,7 @@ ludo.grid.Grid = new Class({
 	},
 
 	populateData:function () {
+
 		this.fireEvent('state');
 		this.currentOverRecord = undefined;
 		this.currentData = this.getDataSource().getData();
@@ -613,6 +614,7 @@ ludo.grid.Grid = new Class({
 				contentHtml.push('<div id="' + columnId + '" col="' + keys[i] + '" class="ludo-grid-data-column ludo-grid-data-column-' + i + ' ' + this.getColumnCssClass(keys[i]) + '">' + this.getHtmlTextForColumn(keys[i]) + '</div>');
 			}
 		}
+
 		this.els.dataContainer.set('html', contentHtml.join(''));
 
 		var columns = this.els.dataContainer.getChildren('.ludo-grid-data-column');
@@ -713,6 +715,7 @@ ludo.grid.Grid = new Class({
 			}
 			ret.push('<div id="' + id + '" ' + over + ' class="ludo-grid-data-cell ' + (rowClasses[i % 2]) + rowCls + '" uid="' + data[i].uid + '"><span class="ludo-grid-data-cell-text">' + content + '</span></div>');
 		}
+
 		return ret.join('');
 	},
 

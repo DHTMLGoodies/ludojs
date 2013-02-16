@@ -400,6 +400,7 @@ ludo.dataSource.Collection = new Class({
 
 	_getData:function () {
 		if (this.hasSearchResult())return this.searcher.getData();
+
 		return this.data;
 	},
 
@@ -830,6 +831,7 @@ ludo.dataSource.Collection = new Class({
 		if (!this.paging || this.paging.pageQuery) {
 			return this.parent();
 		}
+
 		return this.getDataForPage(this.data);
 	},
 

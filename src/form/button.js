@@ -106,7 +106,8 @@ ludo.form.Button = new Class({
 
     ludoConfig:function (config) {
         var val = config.value || this.value;
-        config.width = config.width || this.width || Math.max(val.length * 10, 80);
+        var len = val ? val.length : 5;
+        config.width = config.width || this.width || Math.max(len * 10, 80);
         config.weight = undefined;
         this.parent(config);
 
