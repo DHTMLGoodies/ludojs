@@ -1,3 +1,6 @@
 [submodule "demo/ludodDB"]
 	path = demo/ludodDB
 	url = https://github.com/DHTMLGoodies/ludoDB.git
+[submodule "demo/ludoDB"]
+	path = demo/ludoDB
+	url = https://github.com/DHTMLGoodies/ludoDB.git
