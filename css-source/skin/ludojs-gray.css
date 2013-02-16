@@ -1,24 +1,4 @@
-/************************************************************************************************************
-@fileoverview
-Standalone script from ludoJS - Javascript framework
-Copyright (C) 2012-2013  ludoJS.com, Alf Magne Kalleland
-This library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Lesser General Public
-License as published by the Free Software Foundation; either
-version 2.1 of the License, or (at your option) any later version.
-This library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Lesser General Public License for more details.
-You should have received a copy of the GNU Lesser General Public
-License along with this library; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-ludoJS.com., hereby disclaims all copyright interest in this script
-written by Alf Magne Kalleland.
-Alf Magne Kalleland, 2013
-Owner of ludoJS.com
-************************************************************************************************************/
-/* ../ludojs/css-source/view.css */
+// ../ludojs/css/view.css
 /**
 * CSS RULES
 * All components are assigned to class ludo-<namespace>-<component name>
@@ -435,7 +415,7 @@ div.ludo-FramedView {
     overflow: hidden;
     position: relative;
 }
-/* ../ludojs/css-source/resize.css */
+// ../ludojs/css/resize.css
 .ludo-column-resize-handle {
     opacity: 0.05;
     filter: alpha(opacity = 5);
@@ -582,316 +562,42 @@ div.ludo-resize-handle-active {
     z-index: 15500;
     right: 0;
 }
-/* ../ludojs/css-source/layout/tab.css */
-
-
-.ludo-tab-container{
-    position: relative;
-    height: 30px;
-}
-
-.ludo-body-tabs{
-    padding:0px;
-}
-.ludo-tab{
-    margin-top:5px;
-    height:25px;
-    line-height:25px;
-    padding-left:18px;
-    padding-right:18px;
-    float:left;
+// ../ludojs/css/layout/tab.css
+.ludo-tab-close{
+    background-repeat:no-repeat;
+    background-position:center center;
+    background-image:url(../images/layout/tab-close.png);
+    position:absolute;
     cursor:pointer;
-    font-weight:bold;
-    font-family: arial;
-    font-size:0.9em;
-    position : relative;
-    color:#000;
 }
-.ludo-tab-active{
-    background-color:#f4f3f1;
-    color:#000;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
+.ludo-tab-close-top-over,.ludo-tab-close-bottom-over{
+    background-image:url(../images/layout/tab-close-over.png);
+}
+.ludo-tab-close-top, .ludo-tab-close-bottom{
+    right:2px;
+    top:2px;
+    height:90%;
+    width:12px;
 }
 
-.ludo-tab-container-content{
-    background-color:#d2d1cf;
+.ludo-tab-close-right{
+    background-image:url(../images/layout/tab-close-right.png);
+    bottom:2px;
+    width:90%;
+    height:12px;
 }
-
-.ludo-tab-spacer{
-    margin-left:5px;
-    margin-right:5px;
-    height:15px;
-    float:left;
-    width:2px;
-    margin-top:12px;
-    background-color:#555;
+.ludo-tab-close-left{
+    background-image:url(../images/layout/tab-close-left.png);
+    top:2px;
+    width:90%;
+    height:12px;
 }
-
-.ludo-tab-active .ludo-tab-close-button{
-    display : block;
+.ludo-tab-close-right-over{
+    background-image:url(../images/layout/tab-close-right-over.png);
 }
-
-.ludo-tab-close-button {
-    position: absolute;
-    right : 3px;
-    top: 8px;
-    width : 11px;
-    height: 11px;
-    display: none;
-    font-size:12px;
-    border-radius : 3px;
-    webkit-border-radius: 3px;
-    -moz-border-radius : 3px;      
-    background-image : url('../images/close-tab.png');
-    background-position : center center;
-    background-repeat : no-repeat;
-    text-align:center;
-    color:#555;
-}
-
-.ludo-tab-close-button-over{
-    background-color:#CCC;
-}/* ../ludojs/css-source/layout/tab-strip.css */
-.ludo-tab-strip {
-    margin: 0;
-}
-
-.ludo-tab-strip-line {
-    position: absolute;
-    z-index:1;
-}
-.ludo-tab-strip-tab {
-    position: absolute;
-    white-space: nowrap;
-    cursor: pointer;
-    z-index: 2;
-    overflow:hidden;
-}
-
-.ludo-tab-strip-tab-bg-first, .ludo-tab-strip-tab-bg-last{
-    position:absolute;
-    border:0;
-}
-
-.ludo-tab-strip-top .ludo-tab-strip-line,.ludo-tab-strip-bottom .ludo-tab-strip-line {
-    height:3px;
-    width:100%;
-}
-/** Tab strip on top */
-.ludo-tab-strip-top .ludo-tab-strip-line {
-    bottom: 0;
-    border-top: 1px solid;
-}
-
-.ludo-tab-strip-top {
-    border-bottom: 1px solid;
-    height: 26px;
-    padding-bottom: 1px;
-}
-
-.ludo-tab-strip-top .ludo-tab-strip-tab-bg-first {
-    left: 0;
-    width: 55%;
-    height: 120%;
-    border-left-width: 1px;
-    border-top-width: 1px;
-}
-
-.ludo-tab-strip-top .ludo-tab-strip-tab-bg-last {
-    right: 0;
-    width: 55%;
-    height: 120%;
-    border-right-width: 1px;
-    border-top-width: 1px;
-}
-
-.ludo-tab-strip-tab-top {
-    bottom: 3px;
-    height: 21px;
-    line-height: 22px;
-    padding-left: 5px;
-    padding-right: 5px;
-    border: 1px solid;
-    border-top: 0;
-}
-
-div.ludo-tab-strip-top .ludo-tab-strip-tab-active {
-    height: 22px;
-    bottom: 3px;
-    border-bottom:0;
-}
-
-/** Tab strip left */
-.ludo-tab-strip-left {
-    border-right: 1px solid;
-    padding-right: 1px;
-    width: 25px;
-}
-
-.ludo-tab-strip-left .ludo-tab-strip-line {
-    right: 0;
-    width: 3px;
-    border-left: 1px solid;
-    height: 100%;
-    z-index: 1;
-}
-.ludo-tab-strip-tab-left {
-    right: 3px;
-    width: 21px;
-    line-height: 22px;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    border: 1px solid;
-    border-left: 0;
-}
-
-div.ludo-tab-strip-left .ludo-tab-strip-tab-active {
-    width: 22px;
-    right: 3px;
-    border-right:0;
-}
-.ludo-tab-strip-left .ludo-tab-strip-tab-bg-first {
-    top: 0;
-    height: 55%;
-    width: 120%;
-    border-top-width: 1px;
-    border-left-width: 1px;
-}
-
-.ludo-tab-strip-left .ludo-tab-strip-tab-bg-last {
-    bottom: 0;
-    height: 55%;
-    width: 120%;
-    border-left-width: 1px;
-    border-bottom-width: 1px;
-}
-
-div.ludo-tab-strip-left div.ludo-body {
-    border-right: 1px solid;
-}
-
-div.ludo-tab-strip-top div.ludo-body {
-    border-bottom: 0;
-}
-
-
-
-
-/** Tab strip bottom */
-.ludo-tab-strip-bottom .ludo-tab-strip-line {
-    top: 0;
-    border-bottom: 1px solid;
-}
-
-.ludo-tab-strip-bottom {
-    border-top: 1px solid;
-    height: 26px;
-    padding-top: 1px;
-}
-.ludo-tab-strip-tab-bg-first,.ludo-tab-strip-tab-bg-last{
-    border-style: solid;
-    position:absolute;
-}
-
-.ludo-tab-strip-bottom .ludo-tab-strip-tab-bg-first {
-    left: 0;
-    width: 55%;
-    height: 120%;
-    border-bottom-width:1px;
-    border-left-width:1px;
-    border-right:0;
-}
-
-.ludo-tab-strip-bottom .ludo-tab-strip-tab-bg-last {
-    right: 0;
-    width: 55%;
-    height: 120%;
-    border-bottom-width:1px;
-    border-right-width:1px;
-    border-left:0;
-
-}
-
-.ludo-tab-strip-tab-bottom {
-    top: 3px;
-    height: 21px;
-    line-height: 22px;
-    padding-left: 5px;
-    padding-right: 5px;
-    border: 1px solid;
-    border-bottom: 0;
-}
-
-div.ludo-tab-strip-bottom .ludo-tab-strip-tab-active {
-    height: 21px;
-    padding-top:1px;
-    top: 3px;
-    border-top:0;
-}
-
-/** Right tabs */
-
-.ludo-tab-strip-right {
-    border-left: 1px solid;
-    padding-left: 1px;
-    width: 25px;
-}
-
-.ludo-tab-strip-right .ludo-tab-strip-line {
-    left: 0;
-    width: 3px;
-    border-right: 1px solid;
-    height: 100%;
-    z-index: 1;
-}
-.ludo-tab-strip-tab-right {
-    left: 3px;
-    width: 21px;
-    line-height: 22px;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    border: 1px solid;
-    border-right: 0;
-}
-
-div.ludo-tab-strip-right .ludo-tab-strip-tab-active {
-    width: 21px;
-    padding-left:1px;
-    left: 3px;
-    border-left:0;
-}
-.ludo-tab-strip-right .ludo-tab-strip-tab-bg-first {
-    top: 0;
-    right:0;
-    height: 55%;
-    width: 120%;
-    border-top-width: 1px;
-    border-right-width: 1px;
-}
-
-.ludo-tab-strip-right .ludo-tab-strip-tab-bg-last {
-    bottom: 0;
-    right:0;
-    height: 55%;
-    width: 120%;
-    border-right-width: 1px;
-    border-bottom-width: 1px;
-}
-
-div.ludo-tab-strip-right div.ludo-body {
-    border-left: 1px solid;
-}
-
-div.ludo-tab-strip-top div.ludo-body {
-    border-bottom: 0;
-}
-
-.ludo-tab-strip-tab-txt-svg{
-    font-family:arial, helvetica, serif;
-    font-size:11px;
-    line-height:20px;
-}/* ../ludojs/css-source/window.css */
+.ludo-tab-close-left-over{
+    background-image:url(../images/layout/tab-close-left-over.png);
+}// ../ludojs/css/window.css
 .ludo-window{
     box-shadow:2px 2px 3px #888;
     position:absolute;
@@ -900,7 +606,7 @@ div.ludo-tab-strip-top div.ludo-body {
     border-radius: 7px 7px 0px 0px;
     -moz-border-radius: 7px 7px 0px 0px;
     webkit-border-radius: 7px 7px 0px 0px;
-}/* ../ludojs/css-source/accordion.css */
+}// ../ludojs/css/accordion.css
 .ludo-accordion{
     border-radius:0;
     border:1px solid #CCC;
@@ -936,7 +642,7 @@ div.ludo-tab-strip-top div.ludo-body {
 
 .ludo-accordion .ludo-rich-view-titlebar{
     height:25px;
-}/* ../ludojs/css-source/grid/grid.css */
+}// ../ludojs/css/grid/grid.css
 .ludo-grid-Grid {
     border-radius:0;
     border:0;
@@ -1179,7 +885,7 @@ div.ludo-paging-total-pages .ludo-body{
 
 
 
-/* ../ludojs/css-source/form/form.css */
+// ../ludojs/css/form/form.css
 .ludo-form-element div.ludo-body {
     padding: 2px;
 }
@@ -1190,7 +896,7 @@ div.ludo-paging-total-pages .ludo-body{
 
 .ludo-body input, .ludo-body textarea {
     font-family: arial, helvetica, Sans-Serif;
-}/* ../ludojs/css-source/form/button.css */
+}// ../ludojs/css/form/button.css
 .ludo-component-buttonbar {
     box-shadow: 0 !important;
     padding-right: 2px;
@@ -1287,7 +993,7 @@ div.ludo-form-button-disabled .ludo-form-button-bg-right {
 }
 
 
-/* ../ludojs/css-source/calendar/calendar.css */
+// ../ludojs/css/calendar/calendar.css
 .ludo-calendar-year-container {
      background-color:#555;
      padding-bottom:5px;
@@ -1421,7 +1127,7 @@ div.ludo-form-button-disabled .ludo-form-button-bg-right {
 }
 .calendar-day-mouse-over{
     background-color:#eeeee8;
-}/* ../ludojs/css-source/menu/menu.css */
+}// ../ludojs/css/menu/menu.css
 .ludo-menu {
     font-family: arial !important;
     font-size: 11px;
@@ -1553,7 +1259,7 @@ div.ludo-menu-item-spacer-horizontal {
 
 .ludo-menu-item-horizontal-expand {
     background-image: url('../images/expand-menu-horizontal-wh.png');
-}/* ../ludojs/css-source/menu/button.css */
+}// ../ludojs/css/menu/button.css
 .ludo-menu-button{
     width:16px;
     z-index:10000;
@@ -1571,7 +1277,7 @@ div.ludo-menu-item-spacer-horizontal {
     height:100%;
 
 }
-/* ../ludojs/css-source/tree/tree.css */
+// ../ludojs/css/tree/tree.css
 div.ludo-tree-tree div.ludo-body{
     overflow-y:auto;
     overflow-x:hidden;
@@ -1726,7 +1432,7 @@ span.ludo-tree-node-spacer{
     -moz-user-select:none;
     line-height:16px;
     height:18px;
-}/* ../ludojs/css-source/form/tiny-button.css */
+}// ../ludojs/css/form/tiny-button.css
 .ludo-form-tinybutton{
     padding-left:1px;
     padding-right:1px;
@@ -1746,7 +1452,7 @@ span.ludo-tree-node-spacer{
 .ludo-form-tiny-button .ludo-form-button-value{
     line-height:15px;
     font-size:11px;
-}/* ../ludojs/css-source/form/combo.css */
+}// ../ludojs/css/form/combo.css
 .ludo-combo{
     padding-left:3px;
     padding-right:3px;
@@ -1793,7 +1499,7 @@ div.ludo-combo-menu .ludo-menu-item-selected{
     background-position: center center;
     background-repeat: no-repeat;
     background-image: url('../images/expand-menu-horizontal.png');
-}/* ../ludojs/css-source/form/text.css */
+}// ../ludojs/css/form/text.css
 .ludo-richcomponent .ludo-form_text .ludo-body,
 .ludo-richcomponent .ludo-form_select .ludo-body{
     margin:3px;
@@ -1869,7 +1575,7 @@ label {
     font-family: arial;
     font-size: 12px;
     font-weight:bold;
-}/* ../ludojs/css-source/form/radio.css */
+}// ../ludojs/css/form/radio.css
 .ludo-radio-image{
     cursor: pointer;
     width: 60px;
@@ -1893,7 +1599,7 @@ label {
     background-color:#bbd46d;
 
 
-}/* ../ludojs/css-source/form/spinner.css */
+}// ../ludojs/css/form/spinner.css
 .ludo-spinbox-container{
 	border:1px solid #7F9DB9;
 	padding-right: 10px;	/* The place needed for the arrows */
@@ -1924,7 +1630,7 @@ div.ludo-spinbox-arrow-overeffect{
 	width: 100%;
 	height:1px;
 	background-color:#c9d8fc;
-}/* ../ludojs/css-source/form/file.css */
+}// ../ludojs/css/form/file.css
 .ludo-input-file-name-initial{
     font-weight:bold;
     font-style:normal;
@@ -1935,7 +1641,7 @@ div.ludo-spinbox-arrow-overeffect{
 .ludo-input-file-name-not-uploaded{
     font-style:italic;
     color:#999;
-}/* ../ludojs/css-source/form/slider.css */
+}// ../ludojs/css/form/slider.css
 .ludo-form-slider-container{
     position:relative;
     margin:0;
@@ -2015,7 +1721,7 @@ div.ludo-spinbox-arrow-overeffect{
     height:10px;
     left:0;
     width:100%;
-}/* ../ludojs/css-source/Panel.css */
+}// ../ludojs/css/Panel.css
 .ludo-panel{
     margin:5px;
 }
@@ -2037,12 +1743,12 @@ div.ludo-spinbox-arrow-overeffect{
 fieldset{
     padding:0px;
     margin:2px;
-}/* ../ludojs/css-source/anchor.css */
+}// ../ludojs/css/anchor.css
 .ludo-anchor-text{
     text-decoration:underline;
     color:blue;
 }
-/* ../ludojs/css-source/dialog/dialog.css */
+// ../ludojs/css/dialog/dialog.css
 .ludo-dialog-shim{
     position:absolute;
     left:0;
