@@ -25,4 +25,11 @@ class FileUpload implements LudoDBService
     public function cacheEnabled(){
         return false;
     }
+
+    public function getOnSuccessMessageFor($service){
+        return "";
+    }
+    public function cacheEnabledFor($service){
+        return false;
+    }
 }
