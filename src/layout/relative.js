@@ -705,12 +705,10 @@ ludo.layout.Relative = new Class({
 
 		if (child.layout.height === undefined)child.layout.height = child.height ? child.height : undefined;
 
-		if (child.layout.leftOf !== undefined)child.layout.right = undefined;
-		if (child.layout.rightOf !== undefined)child.layout.left = undefined;
-		if (child.layout.below !== undefined)child.layout.top = undefined;
-		if (child.layout.above !== undefined)child.layout.bottom = undefined;
-
-
+		if (child.layout.leftOf)child.layout.right = undefined;
+		if (child.layout.rightOf)child.layout.left = undefined;
+		if (child.layout.below)child.layout.top = undefined;
+		if (child.layout.above)child.layout.bottom = undefined;
 	},
 
     /**

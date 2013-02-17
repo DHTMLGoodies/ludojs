@@ -44,8 +44,8 @@ TestCase("SocketTest", {
 
 		// then
 		assertEquals('http://127.0.0.1:1337', socket.getUrl());
-
 	},
+
 	"test should load library":function () {
 		// given
 		new ludo.View({
