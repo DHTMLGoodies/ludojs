@@ -1,6 +1,6 @@
 /************************************************************************************************************
 @fileoverview
-Standalone script from ludoJS - Javascript framework
+ludoJS - Javascript framework
 Copyright (C) 2012-2013  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -5376,7 +5376,7 @@ ludo.View = new Class({
 		if (child.name) {
 			this.child[child.name] = child;
 		}
-		child.addEvent('dispose', this.removeChild);
+		child.addEvent('dispose', this.removeChild.bind(this));
 		return child;
 	},
 

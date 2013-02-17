@@ -2,6 +2,7 @@ load:
   - ../../mootools/mootools-core-1.4.5.js
   - ../../mootools/mootools-more-1.4.0.1.js
   - ../../js/ludojs.js
+  - ../../src/view.js
 
 test:
   - PopupTest.js
@@ -14,7 +15,6 @@ test:
   - RendererTest.js
   - TabTest.js
   - CardTest.js
-
 
 plugin:
  - name: "coverage"
