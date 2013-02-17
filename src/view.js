@@ -974,9 +974,7 @@ ludo.View = new Class({
 					config.height = config.width / ratio;
 				}
 			}
-			if (!this.state.isCollapsed) {
-				this.width = config.width;
-			}
+            this.width = config.width;
 			var width = config.width - ludo.dom.getBW(this.els.container) - ludo.dom.getPW(this.els.container) - ludo.dom.getMW(this.els.container);
 			if (width > 0) {
 				this.els.container.style.width = width + 'px';
@@ -984,7 +982,7 @@ ludo.View = new Class({
 		}
 
 		if (config.height) {
-			if (!this.state.isCollapsed && !this.state.isMinimized) {
+			if (!this.state.isMinimized) {
 				this.height = config.height;
 			}
 			var height = config.height - ludo.dom.getMBPH(this.els.container);
@@ -1312,23 +1310,6 @@ ludo.View = new Class({
 	},
 	getHeightOfButtonBar:function () {
 		return 0;
-	},
-	/**
-	 * Resize component to fit size of only child
-	 * @method fitToChild
-	 * @return void
-	 */
-	fitToChild:function (child) {
-		var size = child.getEl().getSize();
-		var b = this.getBody();
-		var c = this.getEl();
-
-		var config = {
-			width:size.x + ludo.dom.getMW(child.getEl()) + ludo.dom.getBW(b) + ludo.dom.getPW(b) + ludo.dom.getMW(b) + ludo.dom.getBW(c) + ludo.dom.getPW(c) + ludo.dom.getMW(c),
-			height:size.y + ludo.dom.getMH(child.getEl()) + ludo.dom.getBH(b) + ludo.dom.getPH(b) + ludo.dom.getMH(b) + ludo.dom.getBH(c) + ludo.dom.getPH(c) + ludo.dom.getMH(c)
-		};
-		config.height += this.getTotalHeightOfTitleAndStatusBar();
-		this.resize(config);
 	},
 	getUnRenderedChildren:function () {
 		return this.unRenderedChildren;

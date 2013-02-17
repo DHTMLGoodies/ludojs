@@ -37,13 +37,6 @@ ludo.FramedView = new Class({
 	 * @default false
 	 */
 	closable:false,
-	/**
-	 * Is component collapsible. When set to true, a collapse button will appear on the title bar of the component
-	 * @attribute collapsible
-	 * @type {Boolean}
-	 * @default false
-	 */
-	collapsible:false,
 
 	width:null,
 	height:200,
@@ -103,22 +96,14 @@ ludo.FramedView = new Class({
 		}
 	 */
 	buttonBar:undefined,
-	/**
-	 Initially collapse component
-	 @attribute collapsed
-	 @type {Boolean}
-	 @default false
-	 */
-	collapsed:false,
+
 	menuConfig:null,
 	menuObj:null,
 
 	column:null,
 
 	state:{
-		isMinimized:false,
-		isCollapsed:false,
-		isFullScreen:false
+		isMinimized:false
 	},
 
 	ludoConfig:function (config) {
@@ -130,8 +115,6 @@ ludo.FramedView = new Class({
 		if (config.statusText !== undefined)this.statusText = config.statusText;
 		if (config.statusBar !== undefined)this.statusBar = config.statusBar;
 		if (config.titleBar !== undefined)this.titleBar = config.titleBar;
-		if (config.collapsible !== undefined)this.collapsible = config.collapsible;
-
 		if (config.menuConfig !== undefined)this.menuConfig = config.menuConfig;
 		if (config.buttons !== undefined) {
 			config.buttonBar = {
@@ -142,7 +125,6 @@ ludo.FramedView = new Class({
 		if (this.buttonBar !== undefined && !this.buttonBar.children) {
 			this.buttonBar = { children:this.buttonBar };
 		}
-		if (config.collapsed !== undefined)this.collapsed = config.collapsed;
 		if (config.boldTitle !== undefined)this.boldTitle = config.boldTitle;
 		if (config.minimized !== undefined) this.minimized = config.minimized;
 	},
@@ -229,19 +211,7 @@ ludo.FramedView = new Class({
 		this.resize({ width:this.els.container.getSize().x  });
 	},
 
-	isParentCollapsed:function () {
-		var parent = this.getParent();
-		return (parent && parent.state.isCollapsed);
-	},
-
 	resizeDOM:function () {
-		if (this.isParentCollapsed()) {
-			return;
-		}
-		if (this.state.isCollapsed) {
-			this.collapsedObj.resize();
-			return;
-		}
 		var height = this.getHeight();
 		height -= ludo.dom.getMBPH(this.els.container);
 		height -= ludo.dom.getMBPH(this.els.body);
@@ -330,72 +300,11 @@ ludo.FramedView = new Class({
 		return this.getTitleBar().getEl();
 	},
 
-	getElForCollapsedState:function () {
-		if (this.collapsedObj === undefined) {
-			this.collapsedObj = new ludo.view.Collapsed({
-				component:this,
-				listeners:{
-					expand:this.expand.bind(this)
-				}
-			});
-		}
-		return this.collapsedObj.getEl();
-	},
-
-	isCollapsed:function () {
-		return this.state.isCollapsed;
-	},
-
-	getWidth:function () {
-		if (this.isCollapsed()) {
-			return this.collapsedObj.getSize();
-		} else {
-			return this.parent();
-		}
-	},
-
 	getHeight:function () {
 		if (this.isMinimized()) {
 			return this.getHeightOfTitleBar();
 		}
-		else if (this.isCollapsed()) {
-			return this.collapsedObj.getSize();
-		} else {
-			return this.parent();
-		}
-	},
-	/**
-	 * Collapse component
-	 * @method collapse
-	 * @return void
-	 */
-	collapse:function () {
-		this.state.isCollapsed = true;
-		this.getEl().style.display = 'none';
-		this.collapsedObj.show();
-		/**
-		 * Fired when a component is collapsed
-		 * @event collapse
-		 * @param Component this
-		 */
-		this.fireEvent('collapse', [this, this.collapsedObj.getSizeConfig()]);
-	},
-	/**
-	 * Expand collapsed component
-	 * @method expand
-	 * @return void
-	 */
-	expand:function () {
-		this.state.isCollapsed = false;
-		this.getEl().style.display = '';
-		this.collapsedObj.hide();
-		this.getParent().resizeChildren();
-		/**
-		 * Fired when a collapsed component is expanded.
-		 * @event expand
-		 * @param {Object} this component
-		 */
-		this.fireEvent('expand', this);
+        return this.parent();
 	},
 
 	close:function () {
