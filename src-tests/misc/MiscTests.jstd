@@ -3,7 +3,7 @@ load:
   - ../../mootools/mootools-more-1.4.0.1.js
   - ../../src/ludo.js
   - ../../src/util.js
-  - ../../js/ludo-all.js
+  - ../../js/ludojs.js
   - ../../src/dom.js
   - ../../src/object-factory.js
 

@@ -19,7 +19,7 @@ ludo.calendar.Today = new Class({
     },
 
     setDate:function(){
-        // this.date is always todays date which is set in ludoConfig
+        // this.date is always today's date which is set in ludoConfig
     },
     setToday:function(){
         this.date = new Date();

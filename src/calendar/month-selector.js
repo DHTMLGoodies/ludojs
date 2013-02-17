@@ -9,7 +9,6 @@ ludo.calendar.MonthSelector = new Class({
     Extends: ludo.calendar.Base,
     height:25,
 
-
     ludoRendered:function(){
         this.parent();
         this.createMonthContainer();
@@ -77,13 +76,13 @@ ludo.calendar.MonthSelector = new Class({
         var el = this.getMonthEl(e.target);
         this.setMonth(el.getProperty('month'));
         this.sendSetDateEvent();
-
     },
 
     setDate:function(date){
         this.parent(date);
         this.renderMonths();
     },
+
     showTooltip:function(e){
         var el = this.getMonthEl(e.target);
         this.els.monthTip.setProperty('month', el.getProperty('month'));
@@ -91,11 +90,12 @@ ludo.calendar.MonthSelector = new Class({
         this.els.monthTip.set('html', month);
         this.els.monthTip.style.left = Math.max(0, el.offsetLeft) + 'px';
         this.els.monthTip.style.display = '';
-
     },
+
     hideTooltip:function(){
         this.els.monthTip.style.display='none';
     },
+
     getMonthEl:function(dom){
         if(!dom.hasClass('ludo-calendar-month'))dom = dom.getParent('.ludo-calendar-month');
         return dom;

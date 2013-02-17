@@ -1,5 +1,3 @@
-ludo.color = {};
-
 ludo.color.Color = new Class({
 
     rgbColors:function (a) {

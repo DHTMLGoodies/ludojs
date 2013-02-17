@@ -24,7 +24,7 @@ TestCase("ValidationTest", {
 		cmp.setValue('');
 
 		// then
-		assertFalse(cmp.isValid());
+		assertTrue(cmp.isValid());
 	},
 
 	"test should not validate when too long":function () {

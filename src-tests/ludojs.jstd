@@ -1,16 +1,7 @@
 load:
   - ../mootools/mootools-core-1.4.5.js
   - ../mootools/mootools-more-1.4.0.1.js
-  - ../js/ludo-all.js
-  - ../src/socket/*.js
-  - ../src/assets.js
-  - ../src/core.js
-  - ../src/data-source/*.js
-  - ../src/effect/*.js
-  - ../src/canvas/*.js
-  - ../src/model/*.js
-  - ../src/remote/message.js
-  - ../src/remote/*.js
+  - ../js/ludojs.js
 
 test:
   - controller/*.js
@@ -27,8 +18,7 @@ test:
   - remote/*.js
 
 serve:
-  - ../css/ludo-all.css
-  - ../css/ludo-all-blue-skin.css
+  - ../css/ludojs-blue.css
   - ../images/*.png
   - ../images/blue-skin/form/*.png
 

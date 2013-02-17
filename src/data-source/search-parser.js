@@ -175,10 +175,5 @@ ludo.dataSource.SearchParser = new Class({
 
 	setOperator:function (operator) {
 		this.branches[this.branches.length - 1].operator = operator;
-	},
-
-	log:function (what) {
-		if (typeof what == 'object')what = JSON.encode(what);
-		console.log(what);
 	}
 });

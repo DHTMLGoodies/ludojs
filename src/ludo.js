@@ -2,39 +2,16 @@
  * @module ludo
  * @main ludo
  */
-if (!window.ludo)window.ludo = {};
-ludo.form = {
-    validator:{}
+window.ludo = {
+    form:{ validator:{} },color:{}, dialog:{},remote:{},tree:{},model:{},tpl:{},video:{},storage:{},
+    grid:{}, effect:{},paging:{},calendar:{},layout:{},progress:{},
+    dataSource:{},controller:{},card:{},canvas:{},socket:{},menu:{},view:{},audio:{}
 };
-ludo.dashboard = {};
-ludo.dialog = {};
-ludo.remote = {};
-ludo.tree = {};
-ludo.model = {};
-ludo.tpl = {};
-ludo.video = {};
-ludo.storage = {};
-ludo.grid = {};
-ludo.effect = {};
-ludo.paging = {};
-ludo.calendar = {};
-ludo.layout = {};
-ludo.progress = {};
-ludo.dataSource = {};
-ludo.controller = {};
-ludo.card = {};
-ludo.canvas = {};
-ludo.svg = {};
-ludo.socket = {};
-ludo.menu = {};
-ludo.view = {};
-ludo.audio = {};
 
-if (Browser.ie) {
+if (Browser['ie']) {
     try {
         document.execCommand("BackgroundImageCache", false, true);
-    } catch (e) {
-    }
+    } catch (e) { }
 }
 
 ludo.SINGLETONS = {};

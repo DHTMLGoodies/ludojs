@@ -6,7 +6,6 @@
  */
 ludo.controller.Manager = new Class({
     Extends: ludo.Core,
-
     controllers : [],
     components : [],
 

@@ -106,8 +106,8 @@ ludo.calendar.Days = new Class({
                 this.sendSetDateEvent();
                 this.showMonth();
             }
-            this.els.monthView.style.left = '0px';
-            this.els.monthView.style.top = '0px';
+            this.els.monthView.style.left = '0';
+            this.els.monthView.style.top = '0';
         }
 
     },

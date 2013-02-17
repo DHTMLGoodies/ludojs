@@ -5,7 +5,6 @@
  * @extends View
  */
 ludo.menu.MenuItem = new Class({
-
 	Extends:ludo.View,
 	type:'menu.MenuItem',
 	menu:null,
@@ -286,6 +285,7 @@ ludo.menu.MenuItem = new Class({
 			}
 			return this;
 		}
+        return undefined;
 	},
 
 	getParentMenuItem:function () {

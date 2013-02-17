@@ -37,9 +37,7 @@ TestCase("SocketTest", {
 			socket:{}
 		});
 
-		LUDOJS_CONFIG = {
-			socket:'http://127.0.0.1:1337'
-		};
+        ludo.config.setSocketUrl('http://127.0.0.1:1337');
 
 		// when
 		var socket = c.getSocket();

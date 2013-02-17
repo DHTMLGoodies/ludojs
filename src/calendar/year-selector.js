@@ -26,7 +26,6 @@ ludo.calendar.YearSelector = new Class({
             this.els.options.push(el);
         }
         this.setMinAndMaxDisplayed();
-
     },
 
     setMinAndMaxDisplayed:function () {

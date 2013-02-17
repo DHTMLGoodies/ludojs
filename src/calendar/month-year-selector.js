@@ -55,7 +55,6 @@ ludo.calendar.MonthYearSelector = new Class({
 
         this.setMonthAndYear(el.getProperty('month'), el.getProperty('year'));
         this.sendSetDateEvent();
-
     },
 
     setMonthAndYear:function(month, year){
@@ -84,7 +83,6 @@ ludo.calendar.MonthYearSelector = new Class({
     populateActiveMonth:function() {
         ludo.dom.addClass(this.els.activeOption, 'ludo-calendar-month-year-selected');
         this.els.activeOption.set('html', this.months[this.date.get('month')] + ', ' + this.date.get('year'));
-
     },
 
     addAndRemoveOptions:function () {

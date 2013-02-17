@@ -2,7 +2,6 @@
  * TODO refactor this into the ludoJS framework
  */
 var Asset = {
-
     javascript: function(source, properties){
         if (!properties) properties = {};
 

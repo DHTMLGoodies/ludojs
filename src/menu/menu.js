@@ -5,7 +5,6 @@
  * @extends View
  */
 ludo.menu.Menu = new Class({
-
     Extends : ludo.View,
     type : 'menu.Menu',
     cType : 'menu.MenuItem',
@@ -32,7 +31,6 @@ ludo.menu.Menu = new Class({
             config.height = 'auto';
 			this.layout.type = 'rows';
         }
-
         this.parent(config);
     },
 
@@ -188,8 +186,6 @@ ludo.menu.Menu = new Class({
     isMenu:function(){
         return true;
     }
-
-
 });
 
 

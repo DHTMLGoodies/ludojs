@@ -123,10 +123,11 @@ ludo.calendar.Calendar = new Class({
     ludoRendered:function () {
         this.parent();
         for(var i=0;i<this.children.length;i++){
-            this.children[i].setDate(this.date);
-            this.children[i].setValue(this.date);
-            this.children[i].addEvent('setdate', this.setDate.bind(this));
-            this.children[i].addEvent('change', this.setValue.bind(this));
+            var c = this.children[i];
+            c.setDate(this.date);
+            c.setValue(this.date);
+            c.addEvent('setdate', this.setDate.bind(this));
+            c.addEvent('change', this.setValue.bind(this));
         }
 		this.getLayoutManager().resize();
     }

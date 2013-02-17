@@ -94,8 +94,7 @@ ludo.controller.Controller = new Class({
 	},
 
 	addBroadcastFor:function (component) {
-		if (this.broadcast === undefined)return;
-		if (this.broadcast[component.type] !== undefined) {
+		if (this.broadcast && this.broadcast[component.type] !== undefined) {
 			var ev = this.broadcast[component.type];
 			for (var i = 0; i < ev.length; i++) {
 				var eventNames = this.getBroadcastEventNames(ev[i]);
@@ -154,8 +153,6 @@ ludo.controller.Controller = new Class({
 	isInSameNamespaceAs:function (component) {
 		return this.getNamespace() == component.getNamespace();
 	}
-
-
 });
 
 ludo.getController = function (controller) {

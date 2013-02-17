@@ -20,7 +20,6 @@ ludo.layout.Card = new Class({
 			this.addEvent('highercard', this.animateHigherCard.bind(this));
 			this.addEvent('lowercard', this.animateLowerCard.bind(this));
 		}
-
 	},
 	addChild:function (child, insertAt, pos) {
 		if (!child.layout || !child.layout.visible)child.hidden = true;
@@ -72,11 +71,11 @@ ludo.layout.Card = new Class({
 	/**
 	 * Return reference to previus card of passed card
 	 * @method getPreviousCardOf
-	 * @param {Object} card.Card
-	 * @return card.Card
+	 * @param {View} view
+	 * @return View
 	 */
-	getPreviousCardOf:function (card) {
-		var index = this.view.children.indexOf(card);
+	getPreviousCardOf:function (view) {
+		var index = this.view.children.indexOf(view);
 		if (index > 0) {
 			return this.view.children[index - 1];
 		}
@@ -162,7 +161,7 @@ ludo.layout.Card = new Class({
 	/**
 	 * Return true if passed card is last card in deck
 	 * @method isLastCard
-	 * @param {Object} card.Card
+	 * @param {View} card
 	 * @return Boolean
 	 */
 	isLastCard:function (card) {
@@ -171,7 +170,7 @@ ludo.layout.Card = new Class({
 	/**
 	 * Return true if passed card is first card in deck
 	 * @method isFirstCard
-	 * @param {Object} card.Card
+	 * @param  {View} card
 	 * @return {Boolean}
 	 */
 	isFirstCard:function (card) {
@@ -197,16 +196,16 @@ ludo.layout.Card = new Class({
 			/**
 			 * Event fired when a higher card than current is shown
 			 * @event highercard
-			 * @param {card.Deck} this deck
-			 * @param {card.Card} shown card
+			 * @param {layout.Card} this deck
+			 * @param {View} shown card
 			 */
 			this.fireEvent('highercard', [this, card]);
 		} else if (indexDiff < 0) {
 			/**
 			 * Event fired when a lower card than current is shown
 			 * @event lowercard
-			 * @param {card.Deck} this deck
-			 * @param {card.Card} shown card
+			 * @param {layout.Card} this deck
+			 * @param {View} shown card
 			 */
 			this.fireEvent('lowercard', [this, card]);
 		}
@@ -214,8 +213,8 @@ ludo.layout.Card = new Class({
 		/**
 		 * Event fired when a card is shown
 		 * @event showcard
-		 * @param {card.Deck} this deck
-		 * @param {card.Card} shown card
+		 * @param {layout.Card} this deck
+		 * @param {View} shown card
 		 */
 		this.fireEvent('showcard', [this, this.visibleCard]);
 
@@ -223,16 +222,16 @@ ludo.layout.Card = new Class({
 			/**
 			 * Event fired when last card of deck is shown
 			 * @event lastcard
-			 * @param {card.Deck} this card
-			 * @param {card.Card} shown card
+			 * @param {layout.Card} this card
+			 * @param {View} shown card
 			 */
 			this.fireEvent('lastcard', [this, card]);
 		} else {
 			/**
 			 * Event fired when na card which is not the last card in the deck is shown
 			 * @event notlastcard
-			 * @param {card.Deck} this card
-			 * @param {card.Card} shown card
+			 * @param {layout.Card} this card
+			 * @param {View} shown card
 			 */
 			this.fireEvent('notlastcard', [this, card]);
 		}
@@ -240,8 +239,8 @@ ludo.layout.Card = new Class({
 			/**
 			 * Event fired when first card of deck is shown
 			 * @event firstcard
-			 * @param {card.Deck} this card
-			 * @param {card.Card} shown card
+			 * @param {layout.Card} this card
+			 * @param {View} shown card
 			 */
 			this.fireEvent('firstcard', [this, card]);
 		}
@@ -249,8 +248,8 @@ ludo.layout.Card = new Class({
 			/**
 			 * Event fired when a card which is not the first card in the deck is shown
 			 * @event notfirstcard
-			 * @param {card.Deck} this card
-			 * @param {card.Card} shown card
+			 * @param {layout.Card} this card
+			 * @param {View} shown card
 			 */
 			this.fireEvent('notfirstcard', [this, card]);
 		}

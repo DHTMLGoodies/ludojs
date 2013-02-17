@@ -44,16 +44,15 @@ ludo.dataSource.Record = new Class({
 	 @param {Object} properties
 	 @return {dataSource.Record|undefined}
 	 @example
-	 var collection = new ludo.dataSource.Collection({
+	    var collection = new ludo.dataSource.Collection({
 	 		idField:'id'
 		});
 	 collection.getRecord(100).setProperties({ country:'Norway', capital:'Oslo' });
 	 will set country to "Norway" and capital to "Oslo" for record where "id" is equal to 100. If you're not sure
 	 that the record exists, you should use code like this:
 	 @example
-	 var rec = collection.getRecord(100);
-	 if(rec)rec.setProperties({ country:'Norway', capital:'Oslo' });
-
+	    var rec = collection.getRecord(100);
+	    if(rec)rec.setProperties({ country:'Norway', capital:'Oslo' });
 	 */
 	setProperties:function (properties) {
 		this.fireEvent('beforeUpdate', this.record);

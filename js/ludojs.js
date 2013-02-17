@@ -23,39 +23,16 @@ Owner of ludoJS.com
  * @module ludo
  * @main ludo
  */
-if (!window.ludo)window.ludo = {};
-ludo.form = {
-    validator:{}
+window.ludo = {
+    form:{ validator:{} },color:{}, dialog:{},remote:{},tree:{},model:{},tpl:{},video:{},storage:{},
+    grid:{}, effect:{},paging:{},calendar:{},layout:{},progress:{},
+    dataSource:{},controller:{},card:{},canvas:{},socket:{},menu:{},view:{},audio:{}
 };
-ludo.dashboard = {};
-ludo.dialog = {};
-ludo.remote = {};
-ludo.tree = {};
-ludo.model = {};
-ludo.tpl = {};
-ludo.video = {};
-ludo.storage = {};
-ludo.grid = {};
-ludo.effect = {};
-ludo.paging = {};
-ludo.calendar = {};
-ludo.layout = {};
-ludo.progress = {};
-ludo.dataSource = {};
-ludo.controller = {};
-ludo.card = {};
-ludo.canvas = {};
-ludo.svg = {};
-ludo.socket = {};
-ludo.menu = {};
-ludo.view = {};
-ludo.audio = {};
 
-if (Browser.ie) {
+if (Browser['ie']) {
     try {
         document.execCommand("BackgroundImageCache", false, true);
-    } catch (e) {
-    }
+    } catch (e) { }
 }
 
 ludo.SINGLETONS = {};
@@ -668,7 +645,60 @@ ludo._Config = new Class({
 	}
 });
 
-ludo.config = new ludo._Config();/* ../ludojs/src/core.js */
+ludo.config = new ludo._Config();/* ../ludojs/src/assets.js */
+/**
+ * TODO refactor this into the ludoJS framework
+ */
+var Asset = {
+    javascript: function(source, properties){
+        if (!properties) properties = {};
+
+        var script = new Element('script', {src: source, type: 'text/javascript'}),
+            doc = properties.document || document,
+            load = properties.onload || properties.onLoad;
+
+        delete properties.onload;
+        delete properties.onLoad;
+        delete properties.document;
+
+        if (load){
+            if (typeof script.onreadystatechange != 'undefined'){
+                script.addEvent('readystatechange', function(){
+                    if (['loaded', 'complete'].contains(this.readyState)) load.call(this);
+                });
+            } else {
+                script.addEvent('load', load);
+            }
+        }
+
+        return script.set(properties).inject(doc.head);
+    },
+
+    css: function(source, properties){
+        if (!properties) properties = {};
+
+        var link = new Element('link', {
+            rel: 'stylesheet',
+            media: 'screen',
+            type: 'text/css',
+            href: source
+        });
+
+        var load = properties.onload || properties.onLoad,
+            doc = properties.document || document;
+
+        delete properties.onload;
+        delete properties.onLoad;
+        delete properties.document;
+
+        if (load) link.addEvent('load', load);
+        return link.set(properties).inject(doc.head);
+    }
+};
+
+if(Browser.ie && Browser.version <9){
+    Asset.css('dashboard/css/dashboard-ie.css');
+}/* ../ludojs/src/core.js */
 /**
  * Base class for components and views in ludoJS. This class extends
  * Mootools Events class.
@@ -5696,8 +5726,6 @@ ludo.remote.ErrorMessage = new Class({
     Extends:ludo.remote.Message,
     messageTypes:['failure','serverError']
 });/* ../ludojs/src/color/color.js */
-ludo.color = {};
-
 ludo.color.Color = new Class({
 
     rgbColors:function (a) {
@@ -11748,16 +11776,15 @@ ludo.dataSource.Record = new Class({
 	 @param {Object} properties
 	 @return {dataSource.Record|undefined}
 	 @example
-	 var collection = new ludo.dataSource.Collection({
+	    var collection = new ludo.dataSource.Collection({
 	 		idField:'id'
 		});
 	 collection.getRecord(100).setProperties({ country:'Norway', capital:'Oslo' });
 	 will set country to "Norway" and capital to "Oslo" for record where "id" is equal to 100. If you're not sure
 	 that the record exists, you should use code like this:
 	 @example
-	 var rec = collection.getRecord(100);
-	 if(rec)rec.setProperties({ country:'Norway', capital:'Oslo' });
-
+	    var rec = collection.getRecord(100);
+	    if(rec)rec.setProperties({ country:'Norway', capital:'Oslo' });
 	 */
 	setProperties:function (properties) {
 		this.fireEvent('beforeUpdate', this.record);
@@ -12040,11 +12067,6 @@ ludo.dataSource.SearchParser = new Class({
 
 	setOperator:function (operator) {
 		this.branches[this.branches.length - 1].operator = operator;
-	},
-
-	log:function (what) {
-		if (typeof what == 'object')what = JSON.encode(what);
-		console.log(what);
 	}
 });/* ../ludojs/src/data-source/collection-search.js */
 /**
@@ -12532,8 +12554,8 @@ ludo.dataSource.Collection = new Class({
 		this.parent(config);
 
 		if (config.searchConfig !== undefined)this.searchConfig = config.searchConfig;
-		if (config.sortFn !== undefined)this.sortFn = config.sortFn;
-		if (config.primaryKey !== undefined)this.primaryKey = config.primaryKey;
+		if (config.sortFn)this.sortFn = config.sortFn;
+		if (config.primaryKey)this.primaryKey = config.primaryKey;
 		if (this.primaryKey && !ludo.util.isArray(this.primaryKey))this.primaryKey = [this.primaryKey];
 
 		if (config.paging !== undefined) {
@@ -12736,13 +12758,13 @@ ludo.dataSource.Collection = new Class({
 	 *
 	 * @method findRecord
 	 * @param {Object} search
-	 * @return {Object} record
+	 * @return {Object|undefined} record
 	 */
 	findRecord:function (search) {
 		if (!this.data)return undefined;
-		if(search.getUID !== undefined)search = search.getUID();
+		if(search['getUID'] !== undefined)search = search.getUID();
         // TODO uid causes problems when you have a ludo.model.Model without uid. Refactor!
-		if(search.uid !== undefined)search = search.uid;
+		if(search.uid)search = search.uid;
 		var rec = this.getById(search);
 		if(rec)return rec;
 		for (var i = 0; i < this.data.length; i++) {
@@ -12940,7 +12962,7 @@ ludo.dataSource.Collection = new Class({
 	/**
 	 * Return selected record
 	 * @method getSelectedRecord
-	 * @return {Object} record
+	 * @return {Object|undefined} record
 	 */
 	getSelectedRecord:function () {
 		if (this.selectedRecords.length > 0) {
@@ -13151,10 +13173,10 @@ ludo.dataSource.Collection = new Class({
     },
 
 	isCacheOutOfDate:function () {
-		if (!this.paging.cacheTimeout)return false;
+		if (!this.paging['cacheTimeout'])return false;
 
 		var created = this.dataCache[this.getCacheKey()].time;
-		return created + (this.paging.cacheTimeout * 1000) < (new Date().getTime());
+		return created + (this.paging['cacheTimeout'] * 1000) < (new Date().getTime());
 	},
 
 	getCacheKey:function () {
@@ -13259,7 +13281,6 @@ ludo.dataSource.Collection = new Class({
 		if (!this.paging || this.paging.pageQuery) {
 			return this.parent();
 		}
-
 		return this.getDataForPage(this.data);
 	},
 
@@ -13429,7 +13450,7 @@ ludo.dataSource.Collection = new Class({
 	 of it's methods.
 	 @method getRecord
 	 @param {String|Object} search
-	 @return {dataSource.Record}
+	 @return {dataSource.Record|undefined}
 	 @example
 		 var collection = new ludo.dataSource.Collection({
 			url : 'get-countries.php',
@@ -17589,23 +17610,28 @@ ludo.card.ProgressBar = new Class({
     Extends: ludo.progress.Bar,
     hidden:false,
 	applyTo:undefined,
+
     ludoConfig:function(config){
         this.parent(config);
 		if(config.applyTo!==undefined)this.applyTo = config.applyTo;
         this.component = this.getParentComponent();
 		if(this.component)this.component.getLayoutManager().registerButton(this);
     },
+
     ludoEvents:function(){
         this.parent();
         this.component.getLayoutManager().addEvent('showcard', this.setCardPercent.bind(this))
     },
+
     ludoRendered:function(){
         this.parent();
         this.setCardPercent();
     },
+
     setCardPercent:function(){
         this.setPercent(this.component.getLayoutManager().getPercentCompleted());
     },
+
     getParentComponent:function () {
 		if(this.applyTo)return ludo.get(this.applyTo);
         var cmp = this.getParent();
@@ -17785,10 +17811,11 @@ ludo.calendar.Calendar = new Class({
     ludoRendered:function () {
         this.parent();
         for(var i=0;i<this.children.length;i++){
-            this.children[i].setDate(this.date);
-            this.children[i].setValue(this.date);
-            this.children[i].addEvent('setdate', this.setDate.bind(this));
-            this.children[i].addEvent('change', this.setValue.bind(this));
+            var c = this.children[i];
+            c.setDate(this.date);
+            c.setValue(this.date);
+            c.addEvent('setdate', this.setDate.bind(this));
+            c.addEvent('change', this.setValue.bind(this));
         }
 		this.getLayoutManager().resize();
     }
@@ -17901,8 +17928,8 @@ ludo.calendar.Days = new Class({
                 this.sendSetDateEvent();
                 this.showMonth();
             }
-            this.els.monthView.style.left = '0px';
-            this.els.monthView.style.top = '0px';
+            this.els.monthView.style.left = '0';
+            this.els.monthView.style.top = '0';
         }
 
     },
@@ -18364,7 +18391,6 @@ ludo.calendar.MonthSelector = new Class({
     Extends: ludo.calendar.Base,
     height:25,
 
-
     ludoRendered:function(){
         this.parent();
         this.createMonthContainer();
@@ -18432,13 +18458,13 @@ ludo.calendar.MonthSelector = new Class({
         var el = this.getMonthEl(e.target);
         this.setMonth(el.getProperty('month'));
         this.sendSetDateEvent();
-
     },
 
     setDate:function(date){
         this.parent(date);
         this.renderMonths();
     },
+
     showTooltip:function(e){
         var el = this.getMonthEl(e.target);
         this.els.monthTip.setProperty('month', el.getProperty('month'));
@@ -18446,11 +18472,12 @@ ludo.calendar.MonthSelector = new Class({
         this.els.monthTip.set('html', month);
         this.els.monthTip.style.left = Math.max(0, el.offsetLeft) + 'px';
         this.els.monthTip.style.display = '';
-
     },
+
     hideTooltip:function(){
         this.els.monthTip.style.display='none';
     },
+
     getMonthEl:function(dom){
         if(!dom.hasClass('ludo-calendar-month'))dom = dom.getParent('.ludo-calendar-month');
         return dom;
@@ -18477,7 +18504,7 @@ ludo.calendar.Today = new Class({
     },
 
     setDate:function(){
-        // this.date is always todays date which is set in ludoConfig
+        // this.date is always today's date which is set in ludoConfig
     },
     setToday:function(){
         this.date = new Date();
@@ -18513,7 +18540,6 @@ ludo.calendar.YearSelector = new Class({
             this.els.options.push(el);
         }
         this.setMinAndMaxDisplayed();
-
     },
 
     setMinAndMaxDisplayed:function () {
@@ -18660,7 +18686,6 @@ ludo.calendar.MonthYearSelector = new Class({
 
         this.setMonthAndYear(el.getProperty('month'), el.getProperty('year'));
         this.sendSetDateEvent();
-
     },
 
     setMonthAndYear:function(month, year){
@@ -18689,7 +18714,6 @@ ludo.calendar.MonthYearSelector = new Class({
     populateActiveMonth:function() {
         ludo.dom.addClass(this.els.activeOption, 'ludo-calendar-month-year-selected');
         this.els.activeOption.set('html', this.months[this.date.get('month')] + ', ' + this.date.get('year'));
-
     },
 
     addAndRemoveOptions:function () {
@@ -19335,7 +19359,6 @@ ludo.menu.MenuHandler = new Class({
  * @extends View
  */
 ludo.menu.MenuItem = new Class({
-
 	Extends:ludo.View,
 	type:'menu.MenuItem',
 	menu:null,
@@ -19616,6 +19639,7 @@ ludo.menu.MenuItem = new Class({
 			}
 			return this;
 		}
+        return undefined;
 	},
 
 	getParentMenuItem:function () {
@@ -19637,7 +19661,6 @@ ludo.menu.MenuItem = new Class({
  * @extends View
  */
 ludo.menu.Menu = new Class({
-
     Extends : ludo.View,
     type : 'menu.Menu',
     cType : 'menu.MenuItem',
@@ -19664,7 +19687,6 @@ ludo.menu.Menu = new Class({
             config.height = 'auto';
 			this.layout.type = 'rows';
         }
-
         this.parent(config);
     },
 
@@ -19820,8 +19842,6 @@ ludo.menu.Menu = new Class({
     isMenu:function(){
         return true;
     }
-
-
 });
 
 
@@ -21594,7 +21614,6 @@ ludo.dataSource.HTML = new Class({
     Extends:ludo.dataSource.Base,
     type:'dataSource.HTML',
 
-
     getSourceType:function () {
         return 'HTML';
     },
@@ -21616,6 +21635,52 @@ ludo.dataSource.HTML = new Class({
         this.data = html;
         this.fireEvent('load', this.data);
     }
+});/* ../ludojs/src/data-source/tree-collection.js */
+/**
+ * Special collection class for tree structures.
+ * @namespace dataSource
+ * @class TreeCollection
+ * @extends dataSource.Collection
+ */
+ludo.dataSource.TreeCollection = new Class({
+	Extends:ludo.dataSource.Collection,
+	type : 'dataSource.TreeCollection',
+	searcherType:'dataSource.TreeCollectionSearch',
+	/**
+	 * Return children of parent with this id
+	 * @method getChildren
+	 * @param {String} parent id
+	 * @return {Array|undefined} children
+	 */
+	getChildren:function (parent) {
+		var p = this.findRecord(parent);
+		if (p) {
+			if (!p.children)p.children = [];
+			return p.children;
+		}
+		return undefined;
+	},
+
+	addRecordEvents:function(record){
+		this.parent(record);
+		record.addEvent('addChild', this.indexRecord.bind(this));
+		record.addEvent('insertBefore', this.indexRecord.bind(this));
+		record.addEvent('insertAfter', this.indexRecord.bind(this));
+
+
+		var events = ['insertBefore','insertAfter','addChild','removeChild'];
+		for(var i=0;i<events.length;i++){
+			record.addEvent(events[i], this.fireRecordEvent.bind(this));
+		}
+	},
+
+	fireRecordEvent:function(record, otherRecord, eventName){
+		this.fireEvent(eventName, [record, otherRecord]);
+	},
+
+	addSearcherEvents:function(){
+
+	}
 });/* ../ludojs/src/controller/manager.js */
 /**
  * This class connects view modules and controllers
@@ -21625,7 +21690,6 @@ ludo.dataSource.HTML = new Class({
  */
 ludo.controller.Manager = new Class({
     Extends: ludo.Core,
-
     controllers : [],
     components : [],
 
@@ -21774,8 +21838,7 @@ ludo.controller.Controller = new Class({
 	},
 
 	addBroadcastFor:function (component) {
-		if (this.broadcast === undefined)return;
-		if (this.broadcast[component.type] !== undefined) {
+		if (this.broadcast && this.broadcast[component.type] !== undefined) {
 			var ev = this.broadcast[component.type];
 			for (var i = 0; i < ev.length; i++) {
 				var eventNames = this.getBroadcastEventNames(ev[i]);
@@ -21834,8 +21897,6 @@ ludo.controller.Controller = new Class({
 	isInSameNamespaceAs:function (component) {
 		return this.getNamespace() == component.getNamespace();
 	}
-
-
 });
 
 ludo.getController = function (controller) {
@@ -24063,8 +24124,7 @@ faultylabs.MD5 = function(data) {
         return int128le_to_hex(h3, h2, h1, h0).toUpperCase()
     }
 
-
-}/* ../ludojs/src/form/password.js */
+};/* ../ludojs/src/form/password.js */
 /**
  Password field
  @namespace form
@@ -26143,6 +26203,98 @@ ludo.form.SearchField = new Class({
 	search:function () {
 		return this.searchIn.getSearcher().search(this.searchFn ? this.searchFn : this.getValue());
 	}
+});/* ../ludojs/src/form/validator/base.js */
+/**
+ * Base class for form component validators
+ * @namespace form.validator
+ * @class Base
+ * @extends Core
+ */
+ludo.form.validator.Base = new Class({
+	Extends:ludo.Core,
+
+	value:undefined,
+
+	/**
+	 * Validator is applied to this component
+	 * @attribute object applyTo
+	 * @default undefined
+	 */
+	applyTo:undefined,
+
+	ludoConfig:function (config) {
+		this.parent(config);
+		if (config.value !== undefined)this.value = config.value;
+		if (config.applyTo !== undefined)this.applyTo = config.applyTo;
+		if (!this.value) {
+			this.loadValue();
+		}
+	},
+
+	/**
+	 Loading valid value from server.
+	 @method loadValue
+	 Request to server example:
+	 @example
+		{
+			getValidatorValueFor:'nameOfView',
+		}
+	 Response from server example:
+	 @example
+	 	{ success:true, data : { value : 'valid value} }
+
+	*/
+	loadValue:function () {
+		new ludo.remote.JSON({
+			url:this.getUrl,
+			data:{
+				"request": ["Md5Validation",this.applyTo.getName(),"read"].join('/'),
+				"data": {
+					"md5Validation" : true,
+					"getValidatorValueFor": this.applyTo.getName()
+				}
+			},
+			"listeners":{
+				"success":  function(request){
+					this.value = request.getData().value;
+					/**
+					 * Event fired after validator value has been loaded from server
+					 * @event loadValue
+					 * @param form.validator.Base this
+					 */
+					this.fireEvent('loadValue', this);
+				}.bind(this)
+			}
+		});
+	},
+
+	isValid:function (value) {
+		return value == this.value;
+	}
+});/* ../ludojs/src/form/validator/md5.js */
+/**
+ * Md5 validator for form elements
+ * When used, the associated form element will be flagged as invalid if MD5(value) doesn't match value of this validator.
+ * If no value is sent to the constructor of form.validator.Md5, it will send a request to the server and ask for it.
+ * @class Md5
+ * @extends form.validator.Base
+ *
+ */
+ludo.form.validator.Md5 = new Class({
+    Extends:ludo.form.validator.Base,
+    type : 'form.validator.Md5',
+
+    /**
+     * MD5 value to validate against. Component will be valid only when
+     * md5(formElement.value) matches this value
+     * @attribute value
+     * @default undefined
+     */
+    value:undefined,
+
+    isValid : function(value){
+        return faultylabs.MD5(value) == this.value;
+    }
 });/* ../ludojs/src/paging/button.js */
 /**
  * Base class, paging buttons for datasource.Collection

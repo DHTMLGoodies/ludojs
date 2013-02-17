@@ -8,7 +8,6 @@ ludo.dataSource.HTML = new Class({
     Extends:ludo.dataSource.Base,
     type:'dataSource.HTML',
 
-
     getSourceType:function () {
         return 'HTML';
     },

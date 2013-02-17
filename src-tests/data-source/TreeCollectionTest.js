@@ -1,7 +1,5 @@
 TestCase("TreeCollection", {
 
-
-
 	"test should be able to get children":function () {
 		// given
 		var c = this.getCollection();

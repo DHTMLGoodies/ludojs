@@ -104,8 +104,8 @@ ludo.dataSource.Collection = new Class({
 		this.parent(config);
 
 		if (config.searchConfig !== undefined)this.searchConfig = config.searchConfig;
-		if (config.sortFn !== undefined)this.sortFn = config.sortFn;
-		if (config.primaryKey !== undefined)this.primaryKey = config.primaryKey;
+		if (config.sortFn)this.sortFn = config.sortFn;
+		if (config.primaryKey)this.primaryKey = config.primaryKey;
 		if (this.primaryKey && !ludo.util.isArray(this.primaryKey))this.primaryKey = [this.primaryKey];
 
 		if (config.paging !== undefined) {
@@ -308,13 +308,13 @@ ludo.dataSource.Collection = new Class({
 	 *
 	 * @method findRecord
 	 * @param {Object} search
-	 * @return {Object} record
+	 * @return {Object|undefined} record
 	 */
 	findRecord:function (search) {
 		if (!this.data)return undefined;
-		if(search.getUID !== undefined)search = search.getUID();
+		if(search['getUID'] !== undefined)search = search.getUID();
         // TODO uid causes problems when you have a ludo.model.Model without uid. Refactor!
-		if(search.uid !== undefined)search = search.uid;
+		if(search.uid)search = search.uid;
 		var rec = this.getById(search);
 		if(rec)return rec;
 		for (var i = 0; i < this.data.length; i++) {
@@ -512,7 +512,7 @@ ludo.dataSource.Collection = new Class({
 	/**
 	 * Return selected record
 	 * @method getSelectedRecord
-	 * @return {Object} record
+	 * @return {Object|undefined} record
 	 */
 	getSelectedRecord:function () {
 		if (this.selectedRecords.length > 0) {
@@ -723,10 +723,10 @@ ludo.dataSource.Collection = new Class({
     },
 
 	isCacheOutOfDate:function () {
-		if (!this.paging.cacheTimeout)return false;
+		if (!this.paging['cacheTimeout'])return false;
 
 		var created = this.dataCache[this.getCacheKey()].time;
-		return created + (this.paging.cacheTimeout * 1000) < (new Date().getTime());
+		return created + (this.paging['cacheTimeout'] * 1000) < (new Date().getTime());
 	},
 
 	getCacheKey:function () {
@@ -831,7 +831,6 @@ ludo.dataSource.Collection = new Class({
 		if (!this.paging || this.paging.pageQuery) {
 			return this.parent();
 		}
-
 		return this.getDataForPage(this.data);
 	},
 
@@ -1001,7 +1000,7 @@ ludo.dataSource.Collection = new Class({
 	 of it's methods.
 	 @method getRecord
 	 @param {String|Object} search
-	 @return {dataSource.Record}
+	 @return {dataSource.Record|undefined}
 	 @example
 		 var collection = new ludo.dataSource.Collection({
 			url : 'get-countries.php',
