@@ -72,10 +72,8 @@ ludo.util = {
 			view.getParent().removeChild(view);
 		}
         view.removeEvents();
-		var initialItemCount = view.children.length;
-		for (var i = initialItemCount - 1; i >= 0; i--) {
-			view.children[i].dispose();
-		}
+        view.disposeAllChildren();
+
 		for (var name in view.els) {
 			if (view.els.hasOwnProperty(name)) {
 				if (view.els[name] && view.els[name].tagName && name != 'parent') {

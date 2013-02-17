@@ -29,7 +29,6 @@ ludo.dataSource.TreeCollection = new Class({
 		record.addEvent('insertBefore', this.indexRecord.bind(this));
 		record.addEvent('insertAfter', this.indexRecord.bind(this));
 
-
 		var events = ['insertBefore','insertAfter','addChild','removeChild'];
 		for(var i=0;i<events.length;i++){
 			record.addEvent(events[i], this.fireRecordEvent.bind(this));
