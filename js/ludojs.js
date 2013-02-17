@@ -4185,7 +4185,7 @@ ludo.util = {
 
 	getNewZIndex:function (view) {
 		var ret = ludo.CmpMgr.getNewZIndex();
-		if (view.els.parent == document.body) {
+		if (view.els.parent == document.body && view.els.container.style.position==='absolute') {
 			ret += 10000;
 		}
 		if (view.alwaysInFront) {
@@ -20338,13 +20338,14 @@ ludo.tree.Tree = new Class({
         this.addEvent('remove', this.removeRecord.bind(this));
         this.addEvent('add', this.addRecord.bind(this));
 
-        this.getBody().addEvent('click', this.recordClick.bind(this));
-        this.getBody().addEvent('dblclick', this.recordDblClick.bind(this));
-        this.getBody().addEvent('click', this.expandByDom.bind(this));
-        this.getBody().addEvent('contextmenu', this.showContextMenu.bind(this));
-        this.getBody().addEvent('click', this.toggleExpandCollapse.bind(this));
+        var b = this.getBody();
+        b.addEvent('click', this.recordClick.bind(this));
+        b.addEvent('dblclick', this.recordDblClick.bind(this));
+        b.addEvent('click', this.expandByDom.bind(this));
+        b.addEvent('contextmenu', this.showContextMenu.bind(this));
+        b.addEvent('click', this.toggleExpandCollapse.bind(this));
         if (Browser.ie) {
-            this.getBody().addEvent('selectstart', this.cancelSelection.bind(this));
+            b.addEvent('selectstart', this.cancelSelection.bind(this));
         }
     },
 
@@ -20400,9 +20401,9 @@ ludo.tree.Tree = new Class({
     /**
      * Method called by ludo.tree.
 	 * @method addRecord
-     * @param {Object} record
+     * @param {Object} obj
      */
-    addRecord:function (record) {
+    addRecord:function (obj) {
         obj.record.unique = undefined;
         if (obj.pos == 'sibling') {
             this.addSibling(obj.record, obj.targetRecord);
@@ -20613,11 +20614,11 @@ ludo.tree.Tree = new Class({
 
         var record = this.getRecordByDOM(el);
         if (!record) {
-            return;
+            return undefined;
         }
         var menuConfig = this.getContextMenuConfig(record);
         if (menuConfig.length == 0) {
-            return;
+            return undefined;
         }
 
         this.selectRecord(record);
@@ -20675,6 +20676,7 @@ ludo.tree.Tree = new Class({
             this.fireEvent('selectrecord', record);
             return record;
         }
+        return undefined;
     },
     getSelectedRecord:function () {
         return this.selectedRecord;
@@ -20774,6 +20776,7 @@ ludo.tree.Tree = new Class({
         if (record.children && record.children.length) {
             return record.children[record.children.length - 1];
         }
+        return undefined;
     },
 
     setRecordProperty:function (record, property, newValue) {
@@ -20800,7 +20803,7 @@ ludo.tree.Tree = new Class({
     },
     recordClick:function (e) {
         var el = this.getSelectableDomNode(e.target);
-        if (!el)return;
+        if (!el)return undefined;
         this.setSelectedNode(el);
         this.selectedRecord = this.recordMap[el.getProperty('id')].record;
         this.fireEvent('click', [this.recordMap[el.getProperty('id')].record, e]);
@@ -20993,7 +20996,6 @@ ludo.tree.Tree = new Class({
      * @method expandSome
      * @param {Object} parentRecord (optional - if not set, tree will be expanded from root)
      * @param {Number} depth How deep to expand, 1 will only expand direct children
-     *
      */
     expandSome:function (parentRecord, depth, currentDepth) {
         parentRecord = parentRecord || this.data;
@@ -21028,7 +21030,7 @@ ludo.tree.Tree = new Class({
     loadChildNodes:function (record) {
         var remoteConfig = this.getRemoteConfigFor(record);
 
-		new ludo.remote.JSON({
+		var req = ludo.remote.JSON({
 			url: remoteConfig.url,
 			data : Object.merge(remoteConfig.data, { record:record }),
 			listeners:{
@@ -21040,6 +21042,7 @@ ludo.tree.Tree = new Class({
 				}.bind(this)
 			}
 		});
+        req.send();
     },
 
     isRendered:function (record) {
@@ -21571,6 +21574,16 @@ ludo.dataSource.TreeCollection = new Class({
 	addSearcherEvents:function(){
 
 	}
+});/* ../ludojs/src/data-source/tree-collection-search.js */
+/**
+ Class created dynamically by dataSource.Collection.
+ It is used to search and filter data in a tree collection.
+ @namespace dataSource
+ @class TreeCollectionSearch
+ @extends Core
+ */
+ludo.dataSource.TreeCollectionSearch = new Class({
+	Extends: ludo.dataSource.CollectionSearch
 });/* ../ludojs/src/controller/manager.js */
 /**
  * This class connects view modules and controllers

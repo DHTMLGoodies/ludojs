@@ -42,7 +42,6 @@ TestCase("TreeTest", {
         // then
         assertEquals(1, record.getChildren().length);
         var newRec = ds.getRecord('svg');
-        assertNotUndefined(newRec);
         assertEquals('Stavanger', newRec.record.city);
         assertEquals(record.record.uid, newRec.record.parentUid);
 
