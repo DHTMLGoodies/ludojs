@@ -96,7 +96,7 @@ ludo.tree.Tree = new Class({
 	},
 
 	getDomByRecord:function (record) {
-		return this.getCachedNode(record, 'node', '');
+		return record ? this.getCachedNode(record, 'node', '') : undefined;
 	},
 
 	getCachedNode:function (record, cacheKey, idPrefix) {
