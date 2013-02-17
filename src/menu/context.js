@@ -1,23 +1,24 @@
 /**
- * Context menu class. You can create one or more context menus for a component by using the
- * ludo.View.contextMenu config array,
- * example:
- * new ludo.Window({<br>
- *  contextMenu:[{<br>
- *      selector : '.my-selector',<br>
- *      children:[{label:'Menu Item 1'},{label:'Menu item 2'}],<br>
- *      listeners:{<br>
- *          click : function(menuItem, menu){<br>
- *              // Do something<br>
- *          }<br>
- *      }<br>
- *<br>
- *  }]<br>
- *
- * });
- * @namespace menu
- * @class Context
- * @extends menu.Menu
+  Context menu class. You can create one or more context menus for a component by using the
+  ludo.View.contextMenu config array,
+  @namespace menu
+  @class Context
+  @extends menu.Menu
+  @constructor
+  @param {Object} config
+  @example
+      new ludo.Window({
+           contextMenu:[{
+               selector : '.my-selector',
+               children:[{label:'Menu Item 1'},{label:'Menu item 2'}],
+               listeners:{
+                   click : function(menuItem, menu){
+                       // Do something
+                   }
+               }
+
+           }]
+      });
  */
 ludo.menu.Context = new Class({
 	Extends:ludo.menu.Menu,
@@ -94,14 +95,14 @@ ludo.menu.Context = new Class({
 		if (this.selector) {
 			var domEl = this.getValidDomElement(e.target);
 			if (!domEl) {
-				return;
+				return undefined;
 			}
 			this.fireEvent('selectorclick', domEl);
 		}
 		if (this.recordType) {
 			var rec = this.component.getRecordByDOM(e.target);
 			if (!rec || rec.type !== this.recordType) {
-				return;
+				return undefined;
 			}
 			this.selectedRecord = rec;
 		}

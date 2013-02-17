@@ -351,7 +351,7 @@ ludo.View = new Class({
 
 		this.lifeCycleComplete = true;
 		this._styleDOM();
-		this.increaseZIndex();
+
 
 		if (config.children) {
 			for (var i = 0; i < config.children.length; i++) {
@@ -364,6 +364,8 @@ ludo.View = new Class({
 		this.ludoDOM();
 		this.ludoCSS();
 		this.ludoEvents();
+
+        this.increaseZIndex();
 
 		if (this.layout && this.layout.type && this.layout.type == 'tabs') {
 			this.getLayoutManager().prepareView();
