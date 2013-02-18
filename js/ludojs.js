@@ -1,3 +1,4 @@
+/* Generated Mon Feb 18 10:40:26 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -780,14 +781,14 @@ ludo.Core = new Class({
 		if (config.listeners !== undefined)this.addEvents(config.listeners);
 		if (config.controller !== undefined)this.controller = config.controller;
 		if (this.controller !== undefined)ludo.controllerManager.assignSpecificControllerFor(this.controller, this);
-		if (config.module !== undefined)this.module = config.module;
-		if (config.submodule !== undefined)this.submodule = config.submodule;
+		if (config.module)this.module = config.module;
+		if (config.submodule)this.submodule = config.submodule;
 		if (config.useController !== undefined)this.useController = config.useController;
 		if (config.stateful !== undefined)this.stateful = config.stateful;
 		if (this.module || this.useController)ludo.controllerManager.registerComponent(this);
 		this.id = config.id || this.id;
 
-		if (this.stateful && this.statefulProperties !== undefined && this.id) {
+		if (this.stateful && this.statefulProperties && this.id) {
 			config = this.appendPropertiesFromStore(config);
 			this.addEvent('state', this.saveStatefulProperties.bind(this));
 		}
@@ -927,7 +928,7 @@ ludo.Core = new Class({
 		return obj.initialize === undefined;
 	},
 
-	ns:undefined,
+	NS:undefined,
 
 	/**
 	 * Returns component type minus class name, example:
@@ -4199,10 +4200,8 @@ ludo.util = {
 			view.getParent().removeChild(view);
 		}
         view.removeEvents();
-		var initialItemCount = view.children.length;
-		for (var i = initialItemCount - 1; i >= 0; i--) {
-			view.children[i].dispose();
-		}
+        view.disposeAllChildren();
+
 		for (var name in view.els) {
 			if (view.els.hasOwnProperty(name)) {
 				if (view.els[name] && view.els[name].tagName && name != 'parent') {
@@ -14538,6 +14537,7 @@ ludo.ColResize = new Class({
             this.resizeProperties.currentX = pos;
             return false;
         }
+		return undefined;
     },
 
     stopColResize:function () {
@@ -14548,6 +14548,7 @@ ludo.ColResize = new Class({
             this.fireEvent('resize', [this.resizeProperties.index, change]);
             return false;
         }
+		return undefined;
     },
 
     getMinPos:function () {
@@ -21559,7 +21560,6 @@ ludo.dataSource.TreeCollection = new Class({
 		record.addEvent('addChild', this.indexRecord.bind(this));
 		record.addEvent('insertBefore', this.indexRecord.bind(this));
 		record.addEvent('insertAfter', this.indexRecord.bind(this));
-
 
 		var events = ['insertBefore','insertAfter','addChild','removeChild'];
 		for(var i=0;i<events.length;i++){
