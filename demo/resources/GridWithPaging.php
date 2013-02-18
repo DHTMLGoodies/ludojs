@@ -27,7 +27,7 @@ class GridWithPaging implements LudoDBService
     public function getOnSuccessMessageFor($service){
         return "";
     }
-    public function cacheEnabledFor($service){
+    public function shouldCache($service){
         return false;
     }
 

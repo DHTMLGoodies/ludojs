@@ -22,14 +22,11 @@ class FileUpload implements LudoDBService
     public function validateServiceData($service, $data){
         return true;
     }
-    public function cacheEnabled(){
-        return false;
-    }
 
     public function getOnSuccessMessageFor($service){
         return "";
     }
-    public function cacheEnabledFor($service){
+    public function shouldCache($service){
         return false;
     }
 }

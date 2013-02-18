@@ -79,14 +79,14 @@ ludo.Core = new Class({
 		if (config.listeners !== undefined)this.addEvents(config.listeners);
 		if (config.controller !== undefined)this.controller = config.controller;
 		if (this.controller !== undefined)ludo.controllerManager.assignSpecificControllerFor(this.controller, this);
-		if (config.module !== undefined)this.module = config.module;
-		if (config.submodule !== undefined)this.submodule = config.submodule;
+		if (config.module)this.module = config.module;
+		if (config.submodule)this.submodule = config.submodule;
 		if (config.useController !== undefined)this.useController = config.useController;
 		if (config.stateful !== undefined)this.stateful = config.stateful;
 		if (this.module || this.useController)ludo.controllerManager.registerComponent(this);
 		this.id = config.id || this.id;
 
-		if (this.stateful && this.statefulProperties !== undefined && this.id) {
+		if (this.stateful && this.statefulProperties && this.id) {
 			config = this.appendPropertiesFromStore(config);
 			this.addEvent('state', this.saveStatefulProperties.bind(this));
 		}
@@ -226,7 +226,7 @@ ludo.Core = new Class({
 		return obj.initialize === undefined;
 	},
 
-	ns:undefined,
+	NS:undefined,
 
 	/**
 	 * Returns component type minus class name, example:

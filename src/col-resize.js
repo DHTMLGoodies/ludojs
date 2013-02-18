@@ -113,6 +113,7 @@ ludo.ColResize = new Class({
             this.resizeProperties.currentX = pos;
             return false;
         }
+		return undefined;
     },
 
     stopColResize:function () {
@@ -123,6 +124,7 @@ ludo.ColResize = new Class({
             this.fireEvent('resize', [this.resizeProperties.index, change]);
             return false;
         }
+		return undefined;
     },
 
     getMinPos:function () {
