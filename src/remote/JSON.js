@@ -110,7 +110,7 @@ ludo.remote.JSON = new Class({
         if (resourceArguments && !ludo.util.isArray(resourceArguments))resourceArguments = [resourceArguments];
 
         ludo.remoteBroadcaster.clear(this, service);
-
+        // TODO escape slashes in resourceArguments and implement replacement in LudoDBRequestHandler
         // TODO the events here should be fired for the components sending the request.
         var req = new Request.JSON({
             url:this.getUrl(service, resourceArguments),
