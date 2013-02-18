@@ -8,7 +8,7 @@
     overflow:hidden;
 }
 .ludo-Progress-Bar-Bg-Left{
-    background-image:url('../images/progress-bg.png');
+    background-image:url('../images/progress-bar/progress-bg.png');
     width:60%;
     left:0px;
     position:absolute;
@@ -18,7 +18,7 @@
 
 }
 .ludo-Progress-Bar-Bg-Right{
-    background-image:url('../images/progress-bg.png');
+    background-image:url('../images/progress-bar/progress-bg.png');
     position:absolute;
     background-position:top right;
     right:0px;
@@ -41,7 +41,7 @@
 }
 
 .ludo-Progress-Bar-Left{
-    background-image:url('../images/progress-bg-filled.png');
+    background-image:url('../images/progress-bar/progress-bg-filled.png');
     background-repeat:no-repeat;
     position:absolute;
     left:0px;
@@ -51,7 +51,7 @@
 }
 
 .ludo-Progress-Bar-Right{
-    background-image:url('../images/progress-bg-filled.png');
+    background-image:url('../images/progress-bar/progress-bg-filled.png');
     background-repeat:no-repeat;
     background-position:top right;
     position:absolute;

@@ -932,35 +932,35 @@ div.ludo-form-button-disabled {
 }
 
 .ludo-form-button-selected .ludo-form-button-bg-left {
-    background-image: url('../images/button-bg-light-selected.png');
+    background-image: url('../images/button/button-bg-light-selected.png');
 }
 
 .ludo-form-button-selected .ludo-form-button-bg-right {
-    background-image: url('../images/button-bg-light-selected.png');
+    background-image: url('../images/button/button-bg-light-selected.png');
 }
 
 div.ludo-form-button-disabled .ludo-form-button-bg-left {
-    background-image: url('../images/button-bg-light-disabled.png');
+    background-image: url('../images/button/button-bg-light-disabled.png');
 }
 
 div.ludo-form-button-disabled .ludo-form-button-bg-right {
-    background-image: url('../images/button-bg-light-disabled.png');
+    background-image: url('../images/button/button-bg-light-disabled.png');
 }
 
 .ludo-form-button-over .ludo-form-button-bg-left {
-    background-image: url('../images/button-bg-light-over.png');
+    background-image: url('../images/button/button-bg-light-over.png');
 }
 
 .ludo-form-button-over .ludo-form-button-bg-right {
-    background-image: url('../images/button-bg-light-over.png');
+    background-image: url('../images/button/button-bg-light-over.png');
 }
 
 .ludo-form-button-down .ludo-form-button-bg-left {
-    background-image: url('../images/button-bg-light-down.png');
+    background-image: url('../images/button/button-bg-light-down.png');
 }
 
 .ludo-form-button-down .ludo-form-button-bg-right {
-    background-image: url('../images/button-bg-light-down.png');
+    background-image: url('../images/button/button-bg-light-down.png');
 }
 
 .ludo-form-button-bg-left {
@@ -968,7 +968,7 @@ div.ludo-form-button-disabled .ludo-form-button-bg-right {
     height: 100%;
     position: absolute;
     background-repeat: no-repeat;
-    background-image: url('../images/button-bg-light.png');
+    background-image: url('../images/button/button-bg-light.png');
 }
 
 .ludo-form-button-bg-right {
@@ -978,7 +978,7 @@ div.ludo-form-button-disabled .ludo-form-button-bg-right {
     background-repeat: no-repeat;
     position: absolute;
     background-position: top right;
-    background-image: url('../images/button-bg-light.png');
+    background-image: url('../images/button/button-bg-light.png');
 }
 
 .ludo-form-button-value {
