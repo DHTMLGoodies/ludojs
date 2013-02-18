@@ -1,4 +1,4 @@
-/* Generated Mon Feb 18 16:20:31 CET 2013 */
+/* Generated Mon Feb 18 22:36:22 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -1505,7 +1505,7 @@ ludo.remote.JSON = new Class({
      * @return {Object|undefined}
      */
     getResponseData:function () {
-        return this.JSON.response ? this.JSON.response : this.JSON.data;
+        return this.JSON.response ? this.JSON.response.data ? this.JSON.response.data : this.JSON.response : this.JSON.data;
     },
     /**
      * Return entire server response of last request.
@@ -1534,6 +1534,10 @@ ludo.remote.JSON = new Class({
 
     getResource:function(){
         return this.resource;
+    },
+
+    setResource:function(resource){
+        this.resource = resource;
     }
 });
 /* ../ludojs/src/remote/broadcaster.js */
@@ -3379,7 +3383,7 @@ ludo.dataSource.Base = new Class({
      * @return object data from server, example: { success:true, data:[]}
      */
     getData:function () {
-        return this.data.data ? this.data.data : this.data;
+        return this.data;
     },
 
     setPostParam:function (param, value) {
@@ -3486,11 +3490,11 @@ ludo.dataSource.JSON = new Class({
         return this._request;
     },
 
-    loadComplete:function (data,json) {
+    loadComplete:function (data) {
 		this.parent();
         this.data = data;
         this.fireEvent('parsedata');
-        this.fireEvent('load', json);
+        this.fireEvent('load', [this.data]);
     },
 
     getPostData:function(){
@@ -3849,9 +3853,9 @@ ludo.tpl.Parser = new Class({
      * @param {Object} json
      * @param {String} tpl
      */
-    getCompiled:function (json, tpl) {
+    getCompiled:function (data, tpl) {
 
-        var records = json.data ? json.data : json;
+        var records = data;
         if (!this.isArray(records)) {
             records = [records];
         }
@@ -4870,12 +4874,12 @@ ludo.View = new Class({
 	 * This method will be called automatically when you're using a ludo.model.Model or a
 	 * JSON data-source
 	 * @method insertJSON
-	 * @param {Object} json
+	 * @param {Object} data
 	 * @return void
 	 */
-	insertJSON:function (json) {
+	insertJSON:function (data) {
 		if (this.tpl) {
-			this.getBody().set('html', this.getTplParser().getCompiled(json, this.tpl));
+			this.getBody().set('html', this.getTplParser().getCompiled(data, this.tpl));
 		}
 	},
 
@@ -20315,7 +20319,7 @@ ludo.tree.Tree = new Class({
 
     ludoRendered:function () {
         if (this.data.length) {
-            this.insertJSON({ data:this.data });
+            this.insertJSON(this.data);
         }
         if (!this.showLines) {
             this.getEl().addClass('ludo-tree-no-lines');
@@ -20510,12 +20514,12 @@ ludo.tree.Tree = new Class({
         return this.modificationManager;
     },
 
-    insertJSON:function (json) {
+    insertJSON:function (remoteData) {
+        var data = remoteData;
         this.clearView();
-        var data = json.data ? json.data : json;
         if (data.length > 0 && data[0]['rootNode']) {
             this.rootRecord = data[0];
-            json.data = data[0].children;
+            data = data[0].children;
         }
         this.data = this.rootRecord;
         this.data.children = data;

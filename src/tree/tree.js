@@ -135,7 +135,7 @@ ludo.tree.Tree = new Class({
 
     ludoRendered:function () {
         if (this.data.length) {
-            this.insertJSON({ data:this.data });
+            this.insertJSON(this.data);
         }
         if (!this.showLines) {
             this.getEl().addClass('ludo-tree-no-lines');
@@ -330,12 +330,12 @@ ludo.tree.Tree = new Class({
         return this.modificationManager;
     },
 
-    insertJSON:function (json) {
+    insertJSON:function (remoteData) {
+        var data = remoteData;
         this.clearView();
-        var data = json.data ? json.data : json;
         if (data.length > 0 && data[0]['rootNode']) {
             this.rootRecord = data[0];
-            json.data = data[0].children;
+            data = data[0].children;
         }
         this.data = this.rootRecord;
         this.data.children = data;

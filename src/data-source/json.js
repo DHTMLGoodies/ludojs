@@ -73,11 +73,11 @@ ludo.dataSource.JSON = new Class({
         return this._request;
     },
 
-    loadComplete:function (data,json) {
+    loadComplete:function (data) {
 		this.parent();
         this.data = data;
         this.fireEvent('parsedata');
-        this.fireEvent('load', json);
+        this.fireEvent('load', [this.data]);
     },
 
     getPostData:function(){

@@ -594,12 +594,12 @@ ludo.View = new Class({
 	 * This method will be called automatically when you're using a ludo.model.Model or a
 	 * JSON data-source
 	 * @method insertJSON
-	 * @param {Object} json
+	 * @param {Object} data
 	 * @return void
 	 */
-	insertJSON:function (json) {
+	insertJSON:function (data) {
 		if (this.tpl) {
-			this.getBody().set('html', this.getTplParser().getCompiled(json, this.tpl));
+			this.getBody().set('html', this.getTplParser().getCompiled(data, this.tpl));
 		}
 	},
 

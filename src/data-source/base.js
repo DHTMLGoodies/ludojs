@@ -96,7 +96,7 @@ ludo.dataSource.Base = new Class({
      * @return object data from server, example: { success:true, data:[]}
      */
     getData:function () {
-        return this.data.data ? this.data.data : this.data;
+        return this.data;
     },
 
     setPostParam:function (param, value) {
