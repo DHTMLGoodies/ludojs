@@ -1321,7 +1321,7 @@ div.ludo-form-button-disabled .ludo-form-button-bg-right {
  .ludo-calendar-month-inactive{
      width:10px;
      height:10px;
-     background-image:url(../images/calendar-month-dot.png);
+     background-image:url(../images/calendar/calendar-month-dot.png);
      background-repeat:no-repeat;
      background-position:center center;
      padding-left:5px;
@@ -1824,7 +1824,7 @@ div.ludo-combo-menu .ludo-menu-item-selected{
 }
 
 input.ludo-form-el-invalid{
-    background-image:url('../images/form-el-invalid.png');
+    background-image:url('../images/form/form-el-invalid.png');
     background-position:5px bottom;
     background-repeat: repeat-x;
 }
