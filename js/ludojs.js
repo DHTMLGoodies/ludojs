@@ -1,4 +1,4 @@
-/* Generated Mon Feb 18 22:36:22 CET 2013 */
+/* Generated Mon Feb 18 22:42:48 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -1505,8 +1505,9 @@ ludo.remote.JSON = new Class({
      * @return {Object|undefined}
      */
     getResponseData:function () {
-        return this.JSON.response ? this.JSON.response.data ? this.JSON.response.data : this.JSON.response : this.JSON.data;
+        return this.JSON.response.data ? this.JSON.response.data : this.JSON.response;
     },
+
     /**
      * Return entire server response of last request.
      * @method getResponse
