@@ -630,10 +630,10 @@ div.ludo-resize-handle-active {
     background-position:center center;
 }
 .ludo-accordion .ludo-title-bar-button-minimize {
-    background-image:url(../images/accordion-minimize.png);
+    background-image:url(../images/accordion/accordion-minimize.png);
 }
 .ludo-accordion .ludo-title-bar-button-maximize {
-    background-image:url(../images/accordion-maximize.png);
+    background-image:url(../images/accordion/accordion-maximize.png);
 }
 
 .ludo-accordion .ludo-title-bar-button-container-left-edge, .ludo-accordion .ludo-title-bar-button-container-right-edge{
