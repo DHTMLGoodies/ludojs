@@ -198,8 +198,9 @@ ludo.remote.JSON = new Class({
      * @return {Object|undefined}
      */
     getResponseData:function () {
-        return this.JSON.response ? this.JSON.response.data ? this.JSON.response.data : this.JSON.response : this.JSON.data;
+        return this.JSON.response.data ? this.JSON.response.data : this.JSON.response;
     },
+
     /**
      * Return entire server response of last request.
      * @method getResponse
