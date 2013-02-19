@@ -143,7 +143,7 @@ ludo.layout.TextBox = new Class({
 		switch (this.rotation) {
 			case 270:
 			case 90:
-				return { x:this.size.y, y:this.size.x };
+				return { x:this.size['y'], y:this.size['x'] };
 			default:
 				return this.size;
 

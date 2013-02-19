@@ -93,7 +93,6 @@ ludo.canvas.Paint = new Class({
 	},
 
 	updateCssContent:function () {
-
 		var css = JSON.encode(this.css);
 		css  = css.replace(/"/g,"");
 		css  = css.replace(/,/g,";");

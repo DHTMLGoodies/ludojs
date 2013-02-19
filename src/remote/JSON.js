@@ -24,10 +24,7 @@ ludo.remote.JSON = new Class({
      * optional
      */
     url:undefined,
-    /**
-     * @constructor
-     * @param {Object} config
-     */
+
     initialize:function (config) {
 		config = config || {};
         if (config.listeners !== undefined) {
@@ -226,10 +223,19 @@ ludo.remote.JSON = new Class({
         return this.JSON && this.JSON.message ? this.JSON.message : undefined;
     },
 
+    /**
+     * Return name of resource
+     * @method getResource
+     * @return {String}
+     */
     getResource:function(){
         return this.resource;
     },
-
+    /**
+     * Set name of resource
+     * @method setResource
+     * @param {String} resource
+     */
     setResource:function(resource){
         this.resource = resource;
     }

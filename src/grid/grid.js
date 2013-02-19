@@ -476,7 +476,6 @@ ludo.grid.Grid = new Class({
 			type:'horizontal',
 			applyTo:this.getBody(),
 			parent:this.getBody()
-
 		});
 		this.scrollbar.horizontal.getEl().inject(this.getBody(), 'after');
 

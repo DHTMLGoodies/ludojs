@@ -307,7 +307,6 @@ ludo.canvas.Node = new Class({
 		ludo.canvasEngine.scale(this.el, width, height);
 	},
 	setTransformMatrix:function (el, a, b, c, d, e, f) {
-
 		this.setTransformMatrix(this.el, a, b, c, d, e, f);
 	}
 });

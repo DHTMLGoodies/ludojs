@@ -110,6 +110,7 @@ ludo.layout.Tab = new Class({
 					absWidth:true
 				};
 		}
+        return undefined;
 	},
 
 	isTabStrip:function (view) {

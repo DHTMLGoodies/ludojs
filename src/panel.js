@@ -48,16 +48,13 @@ ludo.Panel = new Class({
             return;
         }
 
-		height -= ludo.dom.getMBPH(this.getBody());
-		height -= ludo.dom.getMBPH(this.getEl());
-
+		height -= (ludo.dom.getMBPH(this.getBody()) + ludo.dom.getMBPH(this.getEl()));
         if(height > 0 && !isNaN(height)){
             this.getBody().style.height = height + 'px';
         }
         
         var width = this.getWidth();
-        width -= ludo.dom.getMBPW(this.getBody());
-        width -= ludo.dom.getMBPW(this.getEl());
+        width -= (ludo.dom.getMBPW(this.getBody()) + ludo.dom.getMBPW(this.getEl()));
 
         if(width > 0 && !isNaN(width)){
             this.getBody().style.width = width + 'px';

@@ -10,7 +10,7 @@ ludo.ObjectFactory = new Class({
 	/**
 	 Creates an instance of a class by "type" attribute
 	 @method create
-	 @param {Object} config
+	 @param {Object|ludo.Core} config
 	 @return {ludo.Core} object
 	 */
 	create:function(config){
@@ -40,7 +40,7 @@ ludo.ObjectFactory = new Class({
 	 @param {String} typeName
 	 @param {ludo.Core} classReference
 	 @example
-	 	MyApp = {};
+        ludo.factory.createNamespace('MyApp');
 	 	MyApp.MyView = new Class({
 	 		Extends: ludo.View,
 	 		type: 'MyApp.MyView'

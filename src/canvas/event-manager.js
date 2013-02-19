@@ -1,6 +1,5 @@
 ludo.canvas.EventManager = new Class({
 	nodes:{},
-
 	currentNodeId:undefined,
 
 	addMouseEnter:function (node, fn) {

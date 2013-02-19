@@ -14,11 +14,10 @@ ludo.tpl.Parser = new Class({
     /**
      * Get compiled string
 	 * @method getCompiled
-     * @param {Object} json
+     * @param {Object} data
      * @param {String} tpl
      */
     getCompiled:function (data, tpl) {
-
         var records = data;
         if (!this.isArray(records)) {
             records = [records];

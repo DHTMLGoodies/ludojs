@@ -74,17 +74,15 @@ ludo.canvas.Path = new Class({
 	getMinAndMax:function () {
 		if (this.pointArray === undefined)this.buildPointArray();
 		var p = this.pointArray;
-		var minX = 10000, maxX = -100000;
-		var minY = 10000, maxY = -100000;
-		for (var i = 0; i < p.length - 2; i += 3) {
-			minX = Math.min(minX, p[i+1]);
-			maxX = Math.max(maxX, p[i+1]);
-			minY = Math.min(minY, p[i + 2]);
-			maxY = Math.max(maxY, p[i + 2]);
-		}
-		return {
-			minX:minX, minY:minY,
-			maxX:maxX, maxY:maxY
-		}
+        var x = [];
+        var y = [];
+        for (var i = 0; i < p.length - 2; i += 3) {
+            x.push(p[i+1]);
+            y.push(p[i+2]);
+        }
+        return {
+            minX:Math.min.apply(this, x), minY:Math.min.apply(this, y),
+            maxX:Math.max.apply(this, x), maxY:Math.max.apply(this, y)
+        };
 	}
 });

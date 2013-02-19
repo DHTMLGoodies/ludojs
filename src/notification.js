@@ -64,14 +64,14 @@ ludo.Notification = new Class({
 		if (config.autoDispose !== undefined)this.autoDispose = config.autoDispose;
 		if (config.showEffect !== undefined)this.showEffect = config.showEffect;
 		if (config.hideEffect !== undefined)this.hideEffect = config.hideEffect;
-		if (config.effect !== undefined)this.effect = config.effect;
+		if (config.effect)this.effect = config.effect;
 		this.showEffect = this.showEffect || this.effect;
 		this.hideEffect = this.hideEffect || this.effect;
 		if (config.effectDuration !== undefined)this.effectDuration = config.effectDuration;
 		if (!config.layout && !this.layout) {
 			config.layout = {
 				centerIn:config.renderTo
-			}
+			};
 		}
 		this.parent(config);
 	},

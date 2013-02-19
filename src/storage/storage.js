@@ -17,8 +17,7 @@ ludo.storage.LocalStorage = new Class({
 	},
 
 	get:function(key){
-		if(!this.supported)return;
-
+		if(!this.supported)return undefined;
 		var type = this.getType(key);
 		if(type==='object'){
 			return JSON.decode(localStorage[key]);

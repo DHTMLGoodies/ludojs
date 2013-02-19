@@ -110,18 +110,18 @@ ludo.FramedView = new Class({
 		this.parent(config);
 		this.hasMenu = config.hasMenu || this.hasMenu;
 		if (config.menuConfig !== undefined)this.menuConfig = config.menuConfig;
-		if (config.icon !== undefined) this.icon = config.icon;
-		if (config.statusIcon !== undefined)this.statusIcon = config.statusIcon;
-		if (config.statusText !== undefined)this.statusText = config.statusText;
+		if (config.icon) this.icon = config.icon;
+		if (config.statusIcon)this.statusIcon = config.statusIcon;
+		if (config.statusText)this.statusText = config.statusText;
 		if (config.statusBar !== undefined)this.statusBar = config.statusBar;
 		if (config.titleBar !== undefined)this.titleBar = config.titleBar;
-		if (config.menuConfig !== undefined)this.menuConfig = config.menuConfig;
+		if (config.menuConfig)this.menuConfig = config.menuConfig;
 		if (config.buttons !== undefined) {
 			config.buttonBar = {
 				children:config.buttons
 			}
 		}
-		if (config.buttonBar !== undefined) this.buttonBar = config.buttonBar;
+		if (config.buttonBar) this.buttonBar = config.buttonBar;
 		if (this.buttonBar !== undefined && !this.buttonBar.children) {
 			this.buttonBar = { children:this.buttonBar };
 		}
@@ -208,20 +208,17 @@ ludo.FramedView = new Class({
 	},
 
 	autoSize:function () {
-		this.resize({ width:this.els.container.getSize().x  });
+		this.resize({ width:this.els.container.offsetWidth  });
 	},
 
 	resizeDOM:function () {
 		var height = this.getHeight();
-		height -= ludo.dom.getMBPH(this.els.container);
-		height -= ludo.dom.getMBPH(this.els.body);
-		height -= this.getTotalHeightOfTitleAndStatusBar();
+		height -= (ludo.dom.getMBPH(this.els.container) + ludo.dom.getMBPH(this.els.body) +  this.getTotalHeightOfTitleAndStatusBar());
 		if (height < 0) {
 			return;
 		}
 		this.els.body.style.height = height + 'px';
 		this.cachedInnerHeight = height;
-
 
 		if (this.buttonBarComponent) {
 			this.buttonBarComponent.resize();
@@ -231,22 +228,13 @@ ludo.FramedView = new Class({
 		}
 	},
 
-	totalHeightOfTitleAndStatusBar:undefined,
+	heightTitleAndStatusBar:undefined,
 	getTotalHeightOfTitleAndStatusBar:function () {
 		if (this.isHidden())return 0;
-		if (!this.totalHeightOfTitleAndStatusBar) {
-			this.totalHeightOfTitleAndStatusBar = this.getHeightOfTitleBar() + this.getHeightOfStatusBar() + this.getHeightOfButtonBar();
+		if (!this.heightTitleAndStatusBar) {
+			this.heightTitleAndStatusBar = this.getHeightOfTitleBar() + this.getHeightOfStatusBar() + this.getHeightOfButtonBar();
 		}
-
-		return this.totalHeightOfTitleAndStatusBar;
-	},
-
-	heightOfTabContainer:undefined,
-	getHeightOfTabContainer:function () {
-		if (this.heightOfTabContainer === undefined) {
-			this.heightOfTabContainer = this.els.tabContainer.offsetHeight;
-		}
-		return this.heightOfTabContainer;
+		return this.heightTitleAndStatusBar;
 	},
 
 	heightOfButtonBar:undefined,
@@ -492,12 +480,6 @@ ludo.FramedView = new Class({
 	},
 	stopMove:function (el, drag) {
 		this.getLayoutManager().getRenderer().setPosition(drag.getX(), drag.getY());
-		/*
-		this.setPosition({
-			left:drag.getX(),
-			top:drag.getY()
-		});
-		*/
 		/**
 		 * Event fired after moving Component
 		 * @event stopmove

@@ -83,13 +83,15 @@ ludo.Core = new Class({
 		if (config.submodule)this.submodule = config.submodule;
 		if (config.useController !== undefined)this.useController = config.useController;
 		if (config.stateful !== undefined)this.stateful = config.stateful;
-		if (this.module || this.useController)ludo.controllerManager.registerComponent(this);
+        if (this.stateful && this.statefulProperties && this.id) {
+            config = this.appendPropertiesFromStore(config);
+            this.addEvent('state', this.saveStatefulProperties.bind(this));
+        }
+
+        if (this.module || this.useController)ludo.controllerManager.registerComponent(this);
 		this.id = config.id || this.id;
 
-		if (this.stateful && this.statefulProperties && this.id) {
-			config = this.appendPropertiesFromStore(config);
-			this.addEvent('state', this.saveStatefulProperties.bind(this));
-		}
+
 		if(!this.id)this.id = 'ludo-' + String.uniqueID();
 		ludo.CmpMgr.registerComponent(this);
 	},
@@ -100,7 +102,7 @@ ludo.Core = new Class({
 
 	appendPropertiesFromStore:function (config) {
 		var c = ludo.getLocalStorage().get(this.getKeyForLocalStore());
-		if (c !== undefined) {
+		if (c) {
 			var keys = this.statefulProperties;
 			for (var i = 0; i < keys.length; i++) {
 				config[keys[i]] = c[keys[i]];
@@ -143,7 +145,7 @@ ludo.Core = new Class({
 	/**
 	 * Get url for component
 	 * @method getUrl
-	 * @return string url
+	 * @return {String|undefined} url
 	 */
 	getUrl:function () {
 		if (this.url) {
@@ -170,7 +172,7 @@ ludo.Core = new Class({
 	},
 
 	getEventEl:function () {
-		if (Browser.ie) {
+		if (Browser['ie']) {
 			return document.id(document.documentElement);
 		}
 		return document.id(window);

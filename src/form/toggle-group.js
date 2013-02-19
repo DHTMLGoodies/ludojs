@@ -81,5 +81,9 @@ ludo.form.ToggleGroup = new Class({
             }
         }
         return button;
+    },
+
+    getValue:function(){
+        return this.activeButton.getValue();
     }
 });

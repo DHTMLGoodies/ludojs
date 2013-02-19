@@ -7,6 +7,7 @@
  *
  * @namespace remote
  * @class Proxy
+ * @deprecated
  *
  */
 

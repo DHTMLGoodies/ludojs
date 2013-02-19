@@ -11,8 +11,6 @@ ludo.form.ToggleButton = new Class({
 
     ludoConfig:function (config) {
         this.parent(config);
-
-
     },
 
     ludoRendered:function () {
@@ -25,7 +23,6 @@ ludo.form.ToggleButton = new Class({
     click:function () {
         this.parent();
         if (!this.isDisabled()) {
-
             if (!this.active) {
                 this.turnOn();
             } else {

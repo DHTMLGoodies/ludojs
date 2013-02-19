@@ -6,7 +6,24 @@ ludo.canvas.Engine = new Class({
 	 * @private
 	 */
 	tCache:{},
+    /**
+     * Internal cache
+     * @property {Object} tCacheStrings
+     * @private
+     */
 	tCacheStrings:{},
+    /**
+     * Cache of class names
+     * @property {Object} classNameCache
+     * @private
+     */
+    classNameCache:{},
+    /**
+     * Internal cache
+     * @property {Object} tCacheStrings
+     * @private
+     */
+    cache:{},
 
 	/**
 	 * Updates a property of a SVG DOM node
@@ -56,14 +73,14 @@ ludo.canvas.Engine = new Class({
 	},
 
 	toBack:function (el) {
-		if (Browser.ie) this._toBack.delay(20, this, el); else this._toBack(el);
+		if (Browser['ie']) this._toBack.delay(20, this, el); else this._toBack(el);
 	},
 	_toBack:function (el) {
 		el.parentNode.insertBefore(el, el.parentNode.firstChild);
 	},
 
 	toFront:function (el) {
-		if (Browser.ie)this._toFront.delay(20, this, el); else this._toFront(el);
+		if (Browser['ie'])this._toFront.delay(20, this, el); else this._toFront(el);
 	},
 	_toFront:function (el) {
 		el.parentNode.appendChild(el);
@@ -89,13 +106,9 @@ ludo.canvas.Engine = new Class({
 			y:this.getHeight(el) / 2
 		}
 	},
-	cache:{
 
-	},
 	translate:function(el, x, y){
 		this.setTransformation(el, 'translate', x + ' ' + y);
-
-		// this.applyTransformationToMatrix(el, 'translate', x, y);
 	},
 
 	getCurrentCache:function(el, key){
@@ -105,9 +118,6 @@ ludo.canvas.Engine = new Class({
 	scale:function(el, width, height){
 		height = height || width;
 		this.setTransformation(el, 'scale', width + ' ' + height);
-
-		// if(height === undefined)height = width;
-		// this.applyTransformationToMatrix(el, 'scale', width, height);
 	},
 
 	applyTransformationToMatrix:function(el, transformation, x, y){
@@ -198,10 +208,10 @@ ludo.canvas.Engine = new Class({
 			t = t.substr(pos);
 			var start = t.indexOf('(') + 1;
 			var end = t.indexOf(')');
-			var translate = t.substring(start, end);
-			translate = translate.replace(/,/g, ' ');
-			translate = translate.replace(/\s+/g, ' ');
-			return translate.split(/[,\s]/g);
+			var tr = t.substring(start, end);
+			tr = tr.replace(/,/g, ' ');
+			tr = tr.replace(/\s+/g, ' ');
+			return tr.split(/[,\s]/g);
 		}
 		return ret;
 	},
@@ -248,7 +258,6 @@ ludo.canvas.Engine = new Class({
 		this.tCache[id] = {};
 		var keys = this.getTransformationKeys(el);
 		for (var i = 0; i < keys.length; i++) {
-
 			var values = this.getTransformationValues(el, keys[i]);
 			this.tCache[id][keys[i]] = {
 				values:values,
@@ -291,7 +300,6 @@ ludo.canvas.Engine = new Class({
 		el.style[String.camelCase(key)] = value;
 	},
 
-	classNameCache:{},
 	addClass:function(el, className){
 		if(!this.hasClass(el, className)){
 			var id = this.getId(el);

@@ -10,9 +10,7 @@ ludo.form.TinyButton = new Class({
     buttonHeight:15,
 
     ludoConfig:function (config) {
-
         if(config.width == undefined){
-
             if(config.value){
                 config.width = config.value.length*10;
             }else{
@@ -20,7 +18,6 @@ ludo.form.TinyButton = new Class({
             }
             config.width = Math.max(config.width, 20);
         }
-
         this.parent(config);
     },
 
@@ -35,19 +32,5 @@ ludo.form.TinyButton = new Class({
     addIcon:function(){
         this.parent();
         this.els.icon.style.width = '100%';
-    },
-    
-    disab2le:function () {
-        this.disabled = true;
-        ludo.dom.addClass(this.els.body, 'ludo-form-tiny-button-disabled');
-        this.els.body.removeClass('ludo-form-tiny-button-over');
-        this.els.body.removeClass('ludo-form-tiny-button-down');
-        this.els.body.removeClass('ludo-form-tiny-button-selected');
-    },
-
-    enab2le:function () {
-        this.disabled = false;
-        this.els.body.removeClass('ludo-form-tiny-button-disabled');
     }
-    
 });
