@@ -1,4 +1,4 @@
-/* Generated Tue Feb 19 15:36:50 CET 2013 */
+/* Generated Tue Feb 19 16:55:46 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -18018,7 +18018,11 @@ ludo.calendar.Days = new Class({
         }
         var i;
         if (dayOfWeek > 0 || daysInMonth < 31) {
-            this.setStartWeek(lastMonth.get('week'));
+			if(thisMonth.get('month') === 0){
+				this.setStartWeek(this.getFirstWeekOfYear());
+			}else{
+				this.setStartWeek(lastMonth.get('week'));
+			}
             var daysInLastMonth = lastMonth.getLastDayOfMonth();
             var count = dayOfWeek || 7;
             ret.push(this.getNextWeek());
@@ -18092,11 +18096,30 @@ ludo.calendar.Days = new Class({
         this.week++;
         if (this.week > 50 && this.date.get('month') == 0) {
             this.week = 1;
-        } else if (this.week > 52) {
+        }else if(this.week === 53){
+			this.week = this.getFirstWeekOfYear();
+		} else if (this.week > 53) {
             this.week = 1;
         }
         return ret;
     },
+
+	getFirstWeekOfYear:function(){
+		var d = this.date.clone();
+		if(d.get('month') === 0){
+			d.decrement('month', 1);
+			d.setDate(d.getLastDayOfMonth());
+			d.increment('day', 1);
+		}else{
+			d.increment('month', 1);
+			d.set('date', 1);
+
+		}
+		var day = d.getUTCDay();
+		if(!this.sundayFirst)day--;
+		return day < 4 ? 1 : 53;
+	},
+
     /**
      * Set currently viewed month
 	 * @method setDate
@@ -18129,7 +18152,7 @@ ludo.calendar.NavBar = new Class({
     type:'calendar.NavBar',
     height:20,
     date:undefined,
-    layout:'cols',
+    layout:{ type:'linear', orientation:'horizontal'},
     cls:'ludo-calendar-info-panel',
 
     children:[
@@ -18238,7 +18261,7 @@ ludo.calendar.Selector = new Class({
     resizeDOM:function () {
         this.parent();
         if (this.els.activeOption) {
-            this.animateDomToCenter(this.els.activeOption);
+            this.animateDomToCenter.delay(20, this, this.els.activeOption);
         }
     },
 
@@ -18541,6 +18564,7 @@ ludo.calendar.MonthYearSelector = new Class({
 
     renderOptions:function () {
         this.removeOptions();
+
         this.els.activeOption = undefined;
         for (var i = this.offsetOptions*-1; i <= this.offsetOptions; i++) {
             var el = this.getDomForAMonth(i);

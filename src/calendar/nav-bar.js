@@ -9,7 +9,7 @@ ludo.calendar.NavBar = new Class({
     type:'calendar.NavBar',
     height:20,
     date:undefined,
-    layout:'cols',
+    layout:{ type:'linear', orientation:'horizontal'},
     cls:'ludo-calendar-info-panel',
 
     children:[

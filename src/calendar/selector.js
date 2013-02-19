@@ -54,7 +54,7 @@ ludo.calendar.Selector = new Class({
     resizeDOM:function () {
         this.parent();
         if (this.els.activeOption) {
-            this.animateDomToCenter(this.els.activeOption);
+            this.animateDomToCenter.delay(20, this, this.els.activeOption);
         }
     },
 

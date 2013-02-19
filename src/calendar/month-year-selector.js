@@ -15,6 +15,7 @@ ludo.calendar.MonthYearSelector = new Class({
 
     renderOptions:function () {
         this.removeOptions();
+
         this.els.activeOption = undefined;
         for (var i = this.offsetOptions*-1; i <= this.offsetOptions; i++) {
             var el = this.getDomForAMonth(i);
