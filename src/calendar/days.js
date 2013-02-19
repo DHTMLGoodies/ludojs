@@ -375,7 +375,7 @@ ludo.calendar.Days = new Class({
         this.week++;
         if (this.week > 50 && this.date.get('month') == 0) {
             this.week = 1;
-        } else if (this.week > 53) {
+        } else if (this.week > 52) {
             this.week = 1;
         }
         return ret;
