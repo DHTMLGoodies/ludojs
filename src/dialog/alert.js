@@ -25,7 +25,6 @@ ludo.dialog.Alert = new Class({
 
 	resizable:false,
 
-
 	ludoConfig:function (config) {
 		if (config.substr) {
 			config = {

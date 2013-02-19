@@ -39,7 +39,6 @@ ludo.dialog.Prompt = new Class({
         });
 
         this.input = this.addChild(inputConfig);
-
         this.input.focus();
     },
     /**

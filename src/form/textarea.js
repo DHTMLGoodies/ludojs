@@ -30,17 +30,9 @@ ludo.form.Textarea = new Class({
                 height = parentComponent.getInnerHeightOfBody();
             } else {
                 height = this.getHeight();
-
             }
-            var c = this.getEl();
-            var e = this.getBody();
-            var f = this.els.formEl;
 
-            height -= ( ludo.dom.getMH(c) + ludo.dom.getPH(c) + ludo.dom.getBH(c));
-            height -= ( ludo.dom.getMH(e) + ludo.dom.getPH(e) + ludo.dom.getBH(e));
-            height -= ( ludo.dom.getMH(f) + ludo.dom.getPH(f) + ludo.dom.getBH(f));
-
-            height -= 1;
+            height -= (ludo.dom.getMBPH(this.getEl()) + ludo.dom.getMBPH(this.getBody()) + ludo.dom.getMBPH(this.els.formEl) + 1);
             if (height > 0) {
                 this.els.formEl.setStyle('height', height);
             }

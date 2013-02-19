@@ -37,7 +37,6 @@ ludo.form.DisplayField = new Class({
 			this.getFormEl().set('html', this.getTplParser().getCompiled({ value:value }));
 		} else {
 			this.getFormEl().set('html', value ? value : '');
-
 		}
 	},
 
@@ -48,5 +47,4 @@ ludo.form.DisplayField = new Class({
 	getValue:function () {
 		return this.value;
 	}
-
 });

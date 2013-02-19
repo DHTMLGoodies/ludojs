@@ -52,8 +52,6 @@ ludo.menu.Button = new Class({
 		if(config.region!==undefined)this.region = config.region;
 		if(config.renderTo!==undefined)this.renderTo = config.renderTo;
 		if(config.menu!==undefined)this.menu = config.menu;
-
-
 	},
 
 	ludoEvents:function(){
@@ -73,7 +71,6 @@ ludo.menu.Button = new Class({
 		});
 		this.createButtonEl();
 		this.positionButton();
-
 	},
 
 	createButtonEvents:function(){
@@ -107,8 +104,6 @@ ludo.menu.Button = new Class({
 	getEl:function(){
 		return this.el;
 	},
-
-
 
 	showMenu:function(e){
 		e.stop();

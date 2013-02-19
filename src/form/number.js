@@ -106,12 +106,11 @@ ludo.form.Number = new Class({
     isValid:function (value) {
         value = value != undefined ? value : this.value;
         var valid = this.parent();
-        if (!valid)return;
+        if (!valid)return false;
 
         if (this.minValue!==undefined && parseInt(value) < this.minValue) {
             return false;
         }
-        return !(this.maxValue && parseInt(value) > this.maxValue);
-
+        return this.maxValue && parseInt(value) > this.maxValue ? true : false;
     }
 });

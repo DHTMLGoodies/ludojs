@@ -29,7 +29,6 @@ ludo.effect.Effect = new Class({
 	 Which will first move "myDiv" to position 500x300 on the screen, then to 600x50.
 	 */
 	fly:function(config){
-
 		config.el = document.id(config.el);
 		config.duration = config.duration || .2;
 		if(config.from == undefined){

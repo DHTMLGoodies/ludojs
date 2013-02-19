@@ -10,6 +10,7 @@ ludo.effect.Resize = new Class({
     /**
      * Use shim
      * @attribute {Boolean} useShim
+     * @optional
      */
     useShim:true,
     component:undefined,
@@ -159,7 +160,7 @@ ludo.effect.Resize = new Class({
         var el = this.els.handle[region] = new Element('div');
         ludo.dom.addClass(el, 'ludo-component-resize-el');
         el.addClass(this.getCssFor(region));
-        if (cssClass !== undefined)el.addClass(cssClass);
+        if (cssClass)el.addClass(cssClass);
         el.set('html', '<span></span>');
         el.style.cursor = region + '-resize';
         el.setProperty('region', region);
@@ -203,7 +204,8 @@ ludo.effect.Resize = new Class({
         if (this.useShim) {
             this.showShim();
         }
-        if(this.shouldUseTouchEvents())return false;
+        return this.shouldUseTouchEvents() ? false : undefined;
+
     },
 
     /**
@@ -439,6 +441,7 @@ ludo.effect.Resize = new Class({
                     return d.el.left + d.start.x - d.current.x;
                 }
         }
+        return undefined;
     },
 
     getBWOfShim:function () {

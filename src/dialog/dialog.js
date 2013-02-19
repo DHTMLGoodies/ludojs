@@ -31,20 +31,22 @@ ludo.dialog.Dialog = new Class({
 	autoHideOnBtnClick:true,
 
 	/**
-	 * Camelcase string config for buttons.<br>
-	 * example: YesNoCancel for three buttons labeled "Yes", "No" and "Cancel"<br>
-	 * Example of use: <br>
-	 * new ludo.dialog.Dialog({<br>
-     *      html : 'Do you want to save your work?',<br>
-     *      buttonConfig : 'YesNoCancel'<br>
-     *      listeners : {<br>
-     *          'yes' : this.saveWork.bind(this),<br>
-     *          'no' : this.discardWork.bind(this),<br>
-     *          'cancel' : this.hide.bind(this)   <br>
-     *      }
-     * });
-	 * @attribute {String} buttonConfig
-	 * @default undefined
+	  Camel case string config for buttons.<br>
+	  example: YesNoCancel for three buttons labeled "Yes", "No" and "Cancel"<br>
+	  Example of use: <br>
+
+	  @attribute {String} buttonConfig
+	  @default undefined
+      @example
+         new ludo.dialog.Dialog({
+              html : 'Do you want to save your work?',
+               buttonConfig : 'YesNoCancel'
+               listeners : {
+                   'yes' : this.saveWork.bind(this),
+                   'no' : this.discardWork.bind(this),
+                   'cancel' : this.hide.bind(this)
+               }
+          });
 	 */
 	buttonConfig:undefined,
 
@@ -121,7 +123,7 @@ ludo.dialog.Dialog = new Class({
 	},
 
 	showShim:function () {
-		this.center();
+		this.showCentered();
 		if (this.isModal()) {
 			this.els.shim.setStyles({
 				display:'',
@@ -141,14 +143,6 @@ ludo.dialog.Dialog = new Class({
 		if (this.isModal()) {
 			this.els.shim.setStyle('display', 'none');
 		}
-	},
-
-	center:function () {
-		var size = document.body.getSize();
-		this.setPosition({
-			left:Math.round(size.x / 2) - Math.round(this.getWidth() / 2),
-			top:Math.round(size.y / 2) - Math.round(this.getHeight() / 2)
-		})
 	},
 
 	buttonClick:function (value, button) {

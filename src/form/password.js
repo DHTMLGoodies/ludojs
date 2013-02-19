@@ -42,5 +42,4 @@ ludo.form.Password = new Class({
 	reset:function () {
 		this.setValue('');
 	}
-
 });

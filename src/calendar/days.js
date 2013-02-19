@@ -390,16 +390,11 @@ ludo.calendar.Days = new Class({
 	getFirstWeekOfYear:function(){
 		var d = this.date.clone();
 		if(d.get('month') === 0){
-			d.decrement('month', 1);
-			d.setDate(d.getLastDayOfMonth());
-			d.increment('day', 1);
-		}else{
-			d.increment('month', 1);
 			d.set('date', 1);
-
+		}else{
+			d.increment('month', 1).set('date', 1);
 		}
-		var day = d.getUTCDay();
-		if(!this.sundayFirst)day--;
+		var day = d.getUTCDay() - this.sundayFirst ? 1 : 0;
 		return day < 4 ? 1 : 53;
 	},
 

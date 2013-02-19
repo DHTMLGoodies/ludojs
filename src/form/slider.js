@@ -8,7 +8,7 @@ ludo.form.Slider = new Class({
     Extends:ludo.form.LabelElement,
     cssSignature:'ludo-form-slider',
 
-    fieldTpl:['<table cellpadding="0" cellspacing="0" border="0" width="100%">',
+    fieldTpl:['<table ','cellpadding="0" cellspacing="0" border="0" width="100%">',
         '<tbody>',
         '<tr class="input-row">',
         '<td class="label-cell"><label></label></td>',
@@ -84,7 +84,6 @@ ludo.form.Slider = new Class({
     },
 
     moveSliderBackgrounds:function () {
-
         var offset = Math.round(this.getHandleSize() / 2);
 
         var css = ['top', 'bottom'];

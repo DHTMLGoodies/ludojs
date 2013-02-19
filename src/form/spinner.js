@@ -34,19 +34,26 @@ ludo.form.Spinner = new Class({
      */
     increment:1,
 
-    spinnerConfig:{
-        /**
-         * Number of decimals
-         * @attribute decimals
-         * @type int
-         * @default 0
-         */
-        decimals:0
-    },
+    /**
+     * Number of decimals
+     * @config {Number|undefined} decimals
+     * @default 0
+     */
+    decimals:0,
+
+    /**
+     * Disable arrow keyboard keys
+     * @param {Boolean|undefined} disableArrowKeys
+     * @default false
+     * @optional
+     */
+    disableArrowKeys : false,
 
     ludoConfig:function (config) {
         this.parent(config);
         if(config.increment !== undefined)this.increment = config.increment;
+        if(config.decimals !== undefined)this.decimals = config.decimals;
+        if(config.disableArrowKeys !== undefined)this.disableArrowKeys = config.disableArrowKeys;
     },
 
     mode:{},
@@ -276,7 +283,7 @@ ludo.form.Spinner = new Class({
         return parseInt(value);
     },
     setSpinnerValue:function (value) {
-        this.value = this.validateSpinnerValue(value).toFixed(this.spinnerConfig.decimals);
+        this.value = this.validateSpinnerValue(value).toFixed(this.decimals);
         this.getFormEl().value = this.value;
         /**
          * Change event fired when value is changed
@@ -288,7 +295,7 @@ ludo.form.Spinner = new Class({
     },
 
     _validateKeyStroke:function (e) {
-        if (!this.spinnerConfig['disableArrowKeys']) {
+        if (!this.disableArrowKeys) {
             if (e.key == 'up') {
                 this.incrementBy(1, e.shift);
                 return false;
@@ -306,8 +313,8 @@ ludo.form.Spinner = new Class({
         if (this.minValue < 0 && this.html.el.value.indexOf('-') == -1 && e.key == '-') {
             return true;
         }
-        if (this.spinnerConfig.decimals && (e.code == 190 || e.code == 46) && this.html.el.value.indexOf('.') == -1) {
-            return true; // Some strange things are going on with mootools here. e.key is "delete" when the user types in a period sign
+        if (this.decimals && (e.code == 190 || e.code == 46) && this.html.el.value.indexOf('.') == -1) {
+            return true;
         }
         if (Event.Keys.hasOwnProperty(e.key)) {
             return true;

@@ -16,6 +16,7 @@ ludo.calendar.Base = new Class({
         this.parent(config);
         this.date = new Date();
     },
+
     setDate:function (date) {
         this.date = date;
     },

@@ -71,9 +71,9 @@ ludo.form.Combo = new Class({
             this.menu.hide.delay(100, this.menu);
         }
     },
-    insertJSON:function (json) {
-        this.records = json.data;
-        this.data = json.data;
+    insertJSON:function (data) {
+        this.records = data;
+        this.data = data;
 
         this.menuItemsToRecords(this.records);
         this.addListenersToMenuItems(this.records);

@@ -192,7 +192,7 @@ ludo.effect.Drag = new Class({
 			this.add({
 				el:config.el,
 				handle:config.handle
-			})
+			});
 		}
 		if (config.useShim !== undefined)this.useShim = config.useShim;
 		if (config.autoHideShim !== undefined)this.autoHideShim = config.autoHideShim;
@@ -258,7 +258,7 @@ ludo.effect.Drag = new Class({
 		var el = document.id(node.el);
 		this.setPositioning(el);
 		var handle;
-		if (node.handle !== undefined) {
+		if (node.handle) {
 			handle = document.id(node.handle);
 		} else {
 			handle = el;

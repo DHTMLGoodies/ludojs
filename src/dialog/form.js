@@ -40,5 +40,4 @@ ludo.dialog.Form = new Class({
         this.fireEvent(value.toLowerCase(), [this.getValues()]);
         this.hide();
     }
-
 });

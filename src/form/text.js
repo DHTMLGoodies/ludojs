@@ -87,7 +87,7 @@ ludo.form.Text = new Class({
 		this.defaultValue = config.defaultValue || this.defaultValue;
 		this.maxLength = config.maxLength || this.maxLength;
 		if (config.regex !== undefined) this.regex = config.regex;
-		if (config.regexFlags !== undefined) this.regexFlags = config.regexFlags;
+		if (config.regexFlags) this.regexFlags = config.regexFlags;
 		if (config.minLength !== undefined) this.minLength = config.minLength;
 		if (config.validateKeyStrokes !== undefined) this.validateKeyStrokes = config.validateKeyStrokes;
 		if (config.ucFirst !== undefined) this.ucFirst = config.ucFirst;
@@ -159,10 +159,10 @@ ludo.form.Text = new Class({
 		if (!valid)return false;
 		var val = this.getFormEl().get('value').trim();
 
-		if (val.length == 0) {
-			return !this.required;
+		if (val.length == 0 && this.required) {
+			return false;
 		}
-		if (this.minLength && val.length < this.minLength) {
+		if (val.length > 0 && this.minLength && val.length < this.minLength) {
 			return false;
 		}
 		if (this.maxLength && val.length > this.maxLength) {
@@ -233,5 +233,4 @@ ludo.form.Text = new Class({
 			return r.text.length;
 		} else return this.els.formEl.selectionEnd;
 	}
-
 });

@@ -58,7 +58,7 @@ ludo.form.RadioGroup = new Class({
             if(cellHeight > this.getHeight()){
                 this.resize({
                     height : cellHeight
-                })
+                });
             }
         }
 
@@ -142,6 +142,4 @@ ludo.form.RadioGroup = new Class({
             }
         }
     }
-
-
 });
