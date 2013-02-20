@@ -135,19 +135,12 @@ ludo.form.File = new Class({
 	 */
 	accept:undefined,
 
-
 	ludoConfig:function (config) {
 		this.parent(config);
-		if (config.instantUpload !== undefined)this.instantUpload = config.instantUpload;
-		if (config.labelButton !== undefined)this.labelButton = config.labelButton;
-		if (config.labelRemove !== undefined)this.labelRemove = config.labelRemove;
-		if (config.labelDelete !== undefined)this.labelDelete = config.labelDelete;
-		if (config.buttonWidth !== undefined)this.buttonWidth = config.buttonWidth;
+        this.setConfigParams(config, ['instantUpload','labelButton','labelRemove','labelDelete','buttonWidth']);
 		if (config.accept !== undefined) {
-			config.accept = config.accept.toLowerCase();
-			this.accept = config.accept.split(/,/g);
+			this.accept = config.accept.toLowerCase().split(/,/g);
 		}
-
 		if (config.value) {
 			this.valueForDisplay = config.value;
 		}

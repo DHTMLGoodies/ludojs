@@ -27,9 +27,7 @@ ludo.canvas.Canvas = new Class({
 		config.attr = Object.merge(config.attr, this.defaultProperties);
 		this.parent(config);
 
-		if (config.renderTo !== undefined)this.renderTo = config.renderTo;
-		if (config.title !== undefined)this.title = config.title;
-		if (config.description !== undefined)this.description = config.description;
+        this.setConfigParams(config, ['renderTo','title','description']);
 
 		if(this.title)this.createTitle();
 		if(this.description)this.createDescription();

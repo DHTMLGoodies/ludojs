@@ -106,25 +106,14 @@ ludo.effect.Resize = new Class({
     aspectRatioMinMaxSet:false,
 
     ludoConfig:function (config) {
-        if (config.useShim !== undefined)this.useShim = config.useShim;
-        if (config.component !== undefined) {
+        this.setConfigParams(config, ['useShim','minX','maxX','minY','maxY','maxWidth','minWidth','minHeight','maxHeight','preserveAspectRatio']);
+        if (config.component) {
             this.component = config.component;
             this.els.applyTo = this.component.getEl();
         } else {
             this.els.applyTo = config.applyTo;
         }
-        if (config.minX !== undefined)this.minX = config.minX;
-        if (config.minY !== undefined)this.minY = config.minY;
-        if (config.maxX !== undefined)this.maxX = config.maxX;
-        if (config.maxY !== undefined)this.maxY = config.maxY;
-        if (config.minWidth !== undefined)this.minWidth = config.minWidth;
-        if (config.maxWidth !== undefined)this.maxWidth = config.maxWidth;
-        if (config.minHeight !== undefined)this.minHeight = config.minHeight;
-        if (config.maxHeight !== undefined)this.maxHeight = config.maxHeight;
-        if (config.preserveAspectRatio !== undefined)this.preserveAspectRatio = config.preserveAspectRatio;
-        if (config.listeners !== undefined)this.addEvents(config.listeners);
-
-
+        if (config.listeners)this.addEvents(config.listeners);
         this.addDragEvents();
         this.setDisplayPropertyOfEl.delay(100, this);
     },

@@ -51,9 +51,7 @@ ludo.form.Spinner = new Class({
 
     ludoConfig:function (config) {
         this.parent(config);
-        if(config.increment !== undefined)this.increment = config.increment;
-        if(config.decimals !== undefined)this.decimals = config.decimals;
-        if(config.disableArrowKeys !== undefined)this.disableArrowKeys = config.disableArrowKeys;
+        this.setConfigParams(config, ['increment','decimals','disableArrowKeys']);
     },
 
     mode:{},

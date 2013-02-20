@@ -194,20 +194,9 @@ ludo.effect.Drag = new Class({
 				handle:config.handle
 			});
 		}
-		if (config.useShim !== undefined)this.useShim = config.useShim;
-		if (config.autoHideShim !== undefined)this.autoHideShim = config.autoHideShim;
-		if (config.directions !== undefined)this.directions = config.directions;
-		if (config.delay !== undefined)this.delay = config.delay;
-		if (config.minX !== undefined)this.minX = config.minX;
-		if (config.maxX !== undefined)this.maxX = config.maxX;
-		if (config.minY !== undefined)this.minY = config.minY;
-		if (config.maxY !== undefined)this.maxY = config.maxY;
-		if (config.minPos !== undefined)this.minPos = config.minPos;
-		if (config.maxPos !== undefined)this.maxPos = config.maxPos;
-		if (config.unit !== undefined)this.unit = config.unit;
-		if (config.shimCls !== undefined)this.shimCls = config.shimCls;
-		if (config.mouseYOffset !== undefined)this.mouseYOffset = config.mouseYOffset;
-		if (config.mouseXOffset !== undefined)this.mouseXOffset = config.mouseXOffset;
+
+        this.setConfigParams(config, ['useShim','autoHideShim','directions','delay','minX','maxX','minY','maxY',
+            'minPos','maxPos','unit','shimCls','mouseYOffset','mouseXOffset']);
 	},
 
 	ludoEvents:function () {

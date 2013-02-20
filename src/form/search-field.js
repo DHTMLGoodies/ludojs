@@ -38,7 +38,7 @@ ludo.form.SearchField = new Class({
 
 	ludoConfig:function (config) {
 		this.parent(config);
-		if (config.searchIn !== undefined)this.searchIn = config.searchIn;
+		if (config.searchIn)this.searchIn = config.searchIn;
 		if (config.delay !== undefined)this.delay = config.delay;
 		if (config.searchFn !== undefined)this.searchFn = config.searchFn.bind(this);
 		this.addEvent('key', this.queue.bind(this));

@@ -23,7 +23,6 @@ ludo.Accordion = new Class({
 		if (!config.height) {
 			config.height = 'auto';
 		}
-
 		this.parent(config);
 	},
 

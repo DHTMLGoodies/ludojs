@@ -55,11 +55,10 @@ ludo.form.Number = new Class({
 
     ludoConfig:function (config) {
         this.parent(config);
+        this.setConfigParams(config, ['disableWheel','shiftIncrement','reverseWheel']);
+
         if (config.minValue !== undefined)this.minValue = parseInt(config.minValue);
         if (config.maxValue !== undefined)this.maxValue = parseInt(config.maxValue);
-        if (config.disableWheel !== undefined)this.disableWheel = config.disableWheel;
-        if (config.shiftIncrement !== undefined)this.shiftIncrement = config.shiftIncrement;
-        if (config.reverseWheel !== undefined)this.reverseWheel = config.reverseWheel;
     },
 
     ludoEvents:function () {

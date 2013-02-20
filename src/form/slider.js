@@ -70,12 +70,7 @@ ludo.form.Slider = new Class({
 
     ludoConfig:function (config) {
         this.parent(config);
-        if (config.direction !== undefined) {
-            this.direction = config.direction;
-        }
-        if (config.minValue !== undefined)this.minValue = config.minValue;
-        if (config.maxValue !== undefined)this.maxValue = config.maxValue;
-        if (config.reverse !== undefined)this.reverse = config.reverse;
+        this.setConfigParams(config, ['direction','minValue','maxValue','reverse']);
     },
 
     ludoRendered:function () {

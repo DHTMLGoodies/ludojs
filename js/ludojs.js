@@ -1,4 +1,4 @@
-/* Generated Wed Feb 20 2:34:20 CET 2013 */
+/* Generated Wed Feb 20 21:59:19 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -2084,7 +2084,6 @@ ludo.canvas.Node = new Class({
 	id:undefined,
 
 	initialize:function (tagName, properties, text) {
-
 		properties = properties || {};
 		properties.id = this.id = properties.id || 'ludo-svg-node-' + String.uniqueID();
 		if (tagName !== undefined)this.tagName = tagName;
@@ -2405,8 +2404,7 @@ ludo.canvas.Element = new Class({
 
 	ludoConfig:function (config) {
 		this.parent(config);
-		if (config.tag !== undefined)this.tag = config.tag;
-		if (config.attr !== undefined)this.attr= config.attr;
+        this.setConfigParams(config, ['tag','attr']);
 		this.node = new ludo.canvas.Node(this.tag, this.attr);
 	},
 
@@ -2506,9 +2504,7 @@ ludo.canvas.Canvas = new Class({
 		config.attr = Object.merge(config.attr, this.defaultProperties);
 		this.parent(config);
 
-		if (config.renderTo !== undefined)this.renderTo = config.renderTo;
-		if (config.title !== undefined)this.title = config.title;
-		if (config.description !== undefined)this.description = config.description;
+        this.setConfigParams(config, ['renderTo','title','description']);
 
 		if(this.title)this.createTitle();
 		if(this.description)this.createDescription();
@@ -9056,20 +9052,9 @@ ludo.effect.Drag = new Class({
 				handle:config.handle
 			});
 		}
-		if (config.useShim !== undefined)this.useShim = config.useShim;
-		if (config.autoHideShim !== undefined)this.autoHideShim = config.autoHideShim;
-		if (config.directions !== undefined)this.directions = config.directions;
-		if (config.delay !== undefined)this.delay = config.delay;
-		if (config.minX !== undefined)this.minX = config.minX;
-		if (config.maxX !== undefined)this.maxX = config.maxX;
-		if (config.minY !== undefined)this.minY = config.minY;
-		if (config.maxY !== undefined)this.maxY = config.maxY;
-		if (config.minPos !== undefined)this.minPos = config.minPos;
-		if (config.maxPos !== undefined)this.maxPos = config.maxPos;
-		if (config.unit !== undefined)this.unit = config.unit;
-		if (config.shimCls !== undefined)this.shimCls = config.shimCls;
-		if (config.mouseYOffset !== undefined)this.mouseYOffset = config.mouseYOffset;
-		if (config.mouseXOffset !== undefined)this.mouseXOffset = config.mouseXOffset;
+
+        this.setConfigParams(config, ['useShim','autoHideShim','directions','delay','minX','maxX','minY','maxY',
+            'minPos','maxPos','unit','shimCls','mouseYOffset','mouseXOffset']);
 	},
 
 	ludoEvents:function () {
@@ -9892,25 +9877,14 @@ ludo.effect.Resize = new Class({
     aspectRatioMinMaxSet:false,
 
     ludoConfig:function (config) {
-        if (config.useShim !== undefined)this.useShim = config.useShim;
-        if (config.component !== undefined) {
+        this.setConfigParams(config, ['useShim','minX','maxX','minY','maxY','maxWidth','minWidth','minHeight','maxHeight','preserveAspectRatio']);
+        if (config.component) {
             this.component = config.component;
             this.els.applyTo = this.component.getEl();
         } else {
             this.els.applyTo = config.applyTo;
         }
-        if (config.minX !== undefined)this.minX = config.minX;
-        if (config.minY !== undefined)this.minY = config.minY;
-        if (config.maxX !== undefined)this.maxX = config.maxX;
-        if (config.maxY !== undefined)this.maxY = config.maxY;
-        if (config.minWidth !== undefined)this.minWidth = config.minWidth;
-        if (config.maxWidth !== undefined)this.maxWidth = config.maxWidth;
-        if (config.minHeight !== undefined)this.minHeight = config.minHeight;
-        if (config.maxHeight !== undefined)this.maxHeight = config.maxHeight;
-        if (config.preserveAspectRatio !== undefined)this.preserveAspectRatio = config.preserveAspectRatio;
-        if (config.listeners !== undefined)this.addEvents(config.listeners);
-
-
+        if (config.listeners)this.addEvents(config.listeners);
         this.addDragEvents();
         this.setDisplayPropertyOfEl.delay(100, this);
     },
@@ -11515,7 +11489,6 @@ ludo.Accordion = new Class({
 		if (!config.height) {
 			config.height = 'auto';
 		}
-
 		this.parent(config);
 	},
 
@@ -22023,13 +21996,10 @@ ludo.form.Manager = new Class({
 
 	ludoConfig:function (config) {
 		this.component = config.component;
-		if (config.form !== undefined) {
-			this.form = config.form;
-		}
 
-		if (this.form && this.form.url) {
-			this.url = this.form.url;
-		}
+		if (config.form)this.form = config.form;
+		if (this.form && this.form.url)this.url = this.form.url;
+
         this.form.resource = this.form.resource || this.form.name || undefined;
 		this.id = String.uniqueID();
 		if (config.model !== undefined) {
@@ -23577,14 +23547,15 @@ ludo.form.Checkbox = new Class({
     }
 });/* ../ludojs/src/form/radio.js */
 /**
+ * Radio button
  * @namespace form
  * @class Radio
  * @extends form.Checkbox
  */
 ludo.form.Radio = new Class({
-    Extends : ludo.form.Checkbox,
-    type : 'form.Radio',
-    inputType : 'radio'
+    Extends:ludo.form.Checkbox,
+    type:'form.Radio',
+    inputType:'radio'
 });/* ../ludojs/src/external/md5.js */
 /*
  Javascript MD5 library - version 0.4
@@ -24039,11 +24010,10 @@ ludo.form.Number = new Class({
 
     ludoConfig:function (config) {
         this.parent(config);
+        this.setConfigParams(config, ['disableWheel','shiftIncrement','reverseWheel']);
+
         if (config.minValue !== undefined)this.minValue = parseInt(config.minValue);
         if (config.maxValue !== undefined)this.maxValue = parseInt(config.maxValue);
-        if (config.disableWheel !== undefined)this.disableWheel = config.disableWheel;
-        if (config.shiftIncrement !== undefined)this.shiftIncrement = config.shiftIncrement;
-        if (config.reverseWheel !== undefined)this.reverseWheel = config.reverseWheel;
     },
 
     ludoEvents:function () {
@@ -24101,7 +24071,7 @@ ludo.form.Number = new Class({
 /**
  * @namespace form
  * @class Email
- * @description A customized text field with validation of e-mail addrses
+ * @description A customized text field with automatic validation of e-mail addresses
  * @extends form.Text
  */
 ludo.form.Email = new Class({
@@ -24163,9 +24133,7 @@ ludo.form.Spinner = new Class({
 
     ludoConfig:function (config) {
         this.parent(config);
-        if(config.increment !== undefined)this.increment = config.increment;
-        if(config.decimals !== undefined)this.decimals = config.decimals;
-        if(config.disableArrowKeys !== undefined)this.disableArrowKeys = config.disableArrowKeys;
+        this.setConfigParams(config, ['increment','decimals','disableArrowKeys']);
     },
 
     mode:{},
@@ -24477,9 +24445,7 @@ ludo.form.Select = new Class({
 
     ludoConfig:function (config) {
         this.parent(config);
-        if (config.emptyItem !== undefined) {
-            this.emptyItem = config.emptyItem;
-        }
+        if (config.emptyItem)this.emptyItem = config.emptyItem;
     },
 
     populate:function (data) {
@@ -25411,19 +25377,12 @@ ludo.form.File = new Class({
 	 */
 	accept:undefined,
 
-
 	ludoConfig:function (config) {
 		this.parent(config);
-		if (config.instantUpload !== undefined)this.instantUpload = config.instantUpload;
-		if (config.labelButton !== undefined)this.labelButton = config.labelButton;
-		if (config.labelRemove !== undefined)this.labelRemove = config.labelRemove;
-		if (config.labelDelete !== undefined)this.labelDelete = config.labelDelete;
-		if (config.buttonWidth !== undefined)this.buttonWidth = config.buttonWidth;
+        this.setConfigParams(config, ['instantUpload','labelButton','labelRemove','labelDelete','buttonWidth']);
 		if (config.accept !== undefined) {
-			config.accept = config.accept.toLowerCase();
-			this.accept = config.accept.split(/,/g);
+			this.accept = config.accept.toLowerCase().split(/,/g);
 		}
-
 		if (config.value) {
 			this.valueForDisplay = config.value;
 		}
@@ -25770,12 +25729,7 @@ ludo.form.Slider = new Class({
 
     ludoConfig:function (config) {
         this.parent(config);
-        if (config.direction !== undefined) {
-            this.direction = config.direction;
-        }
-        if (config.minValue !== undefined)this.minValue = config.minValue;
-        if (config.maxValue !== undefined)this.maxValue = config.maxValue;
-        if (config.reverse !== undefined)this.reverse = config.reverse;
+        this.setConfigParams(config, ['direction','minValue','maxValue','reverse']);
     },
 
     ludoRendered:function () {
@@ -25996,7 +25950,7 @@ ludo.form.SearchField = new Class({
 
 	ludoConfig:function (config) {
 		this.parent(config);
-		if (config.searchIn !== undefined)this.searchIn = config.searchIn;
+		if (config.searchIn)this.searchIn = config.searchIn;
 		if (config.delay !== undefined)this.delay = config.delay;
 		if (config.searchFn !== undefined)this.searchFn = config.searchFn.bind(this);
 		this.addEvent('key', this.queue.bind(this));

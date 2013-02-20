@@ -35,7 +35,6 @@ ludo.canvas.Node = new Class({
 	id:undefined,
 
 	initialize:function (tagName, properties, text) {
-
 		properties = properties || {};
 		properties.id = this.id = properties.id || 'ludo-svg-node-' + String.uniqueID();
 		if (tagName !== undefined)this.tagName = tagName;

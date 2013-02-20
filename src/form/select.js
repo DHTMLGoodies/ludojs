@@ -32,9 +32,7 @@ ludo.form.Select = new Class({
 
     ludoConfig:function (config) {
         this.parent(config);
-        if (config.emptyItem !== undefined) {
-            this.emptyItem = config.emptyItem;
-        }
+        if (config.emptyItem)this.emptyItem = config.emptyItem;
     },
 
     populate:function (data) {

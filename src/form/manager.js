@@ -22,13 +22,10 @@ ludo.form.Manager = new Class({
 
 	ludoConfig:function (config) {
 		this.component = config.component;
-		if (config.form !== undefined) {
-			this.form = config.form;
-		}
 
-		if (this.form && this.form.url) {
-			this.url = this.form.url;
-		}
+		if (config.form)this.form = config.form;
+		if (this.form && this.form.url)this.url = this.form.url;
+
         this.form.resource = this.form.resource || this.form.name || undefined;
 		this.id = String.uniqueID();
 		if (config.model !== undefined) {

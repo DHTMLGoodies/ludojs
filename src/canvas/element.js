@@ -41,8 +41,7 @@ ludo.canvas.Element = new Class({
 
 	ludoConfig:function (config) {
 		this.parent(config);
-		if (config.tag !== undefined)this.tag = config.tag;
-		if (config.attr !== undefined)this.attr= config.attr;
+        this.setConfigParams(config, ['tag','attr']);
 		this.node = new ludo.canvas.Node(this.tag, this.attr);
 	},
 
