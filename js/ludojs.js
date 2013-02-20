@@ -1,4 +1,4 @@
-/* Generated Wed Feb 20 1:27:42 CET 2013 */
+/* Generated Wed Feb 20 2:34:20 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -7713,6 +7713,7 @@ ludo.layout.Tab = new Class({
 
 	onCreate:function () {
 		this.parent();
+        ludo.dom.addClass(this.view.getEl(), 'ludo-layout-tab');
 		this.addChild(this.getTabStrip());
 		this.updateViewport(this.tabStrip.getChangedViewport());
 	},
@@ -7732,8 +7733,6 @@ ludo.layout.Tab = new Class({
 			l.alignParentTop = true;
 			l.fillRight = true;
 			l.fillDown = true;
-
-
 		}
 		this.parent(child);
 	},
