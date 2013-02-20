@@ -352,7 +352,6 @@ ludo.View = new Class({
 		this.lifeCycleComplete = true;
 		this._styleDOM();
 
-
 		if (config.children) {
 			for (var i = 0; i < config.children.length; i++) {
 				config.children[i].id = config.children[i].id || 'ludo-' + String.uniqueID();
@@ -390,50 +389,29 @@ ludo.View = new Class({
 		this.parent(config);
 		config.els = config.els || {};
 
-		if (config.renderTo !== undefined)config.els.parent = config.renderTo;
-		if (config.tpl !== undefined)this.tpl = config.tpl;
-		this.css = config.css || this.css;
-
 		this.contextMenu = config.contextMenu || this.contextMenu;
 
-		if (config.css !== undefined)this.css = config.css;
-		if (config.containerCss !== undefined)this.containerCss = config.containerCss;
-		if (config.form !== undefined)this.form = config.form;
-		if (config.socket !== undefined)this.socket = config.socket;
-		if (this.socket !== undefined) {
+        var keys = ['css','contextMenu','renderTo','tpl','containerCss','socket','form','addons','title','html','hidden','copyEvents',
+                    'dataSource','onLoadMessage','movable','resizable','closable','minimizable','alwaysInFront',
+                    'parentComponent','cls','objMovable','width','height','model','frame','formConfig',
+                    'overflow'];
+
+        this.setConfigParams(config,keys);
+
+		if (this.socket) {
 			if (this.socket.type === undefined)this.socket.type = 'socket.Socket';
 			this.socket.component = this;
 			this.socket = ludo._new(this.socket);
 		}
-		if (config.addons !== undefined)this.addons = config.addons;
-		if (config.title !== undefined)this.title = config.title;
-		if (config.html !== undefined)this.html = config.html;
-		if (config.hidden !== undefined)this.hidden = config.hidden;
-		if (config.els.parent && !this.parentComponent)this.els.parent = document.id(config.els.parent);
-		this.overflow = config.overflow || this.overflow;
+
+		if (this.renderTo)this.els.parent = document.id(this.renderTo);
+
 		this.layout = ludo.layoutFactory.getValidLayoutObject(this, config);
 
-		if (config.copyEvents !== undefined)this.copyEvents = config.copyEvents;
-		if (this.copyEvents !== undefined) {
+		if (this.copyEvents) {
 			this.copyEvents = Object.clone(this.copyEvents);
 			this.createEventCopies();
 		}
-		if (config.dataSource !== undefined)this.dataSource = config.dataSource;
-		if (config.onLoadMessage !== undefined)this.onLoadMessage = config.onLoadMessage;
-		if (config.movable !== undefined)this.movable = config.movable;
-		if (config.resizable !== undefined)this.resizable = config.resizable;
-		if (config.closable !== undefined)this.closable = config.closable;
-		if (config.minimizable !== undefined)this.minimizable = config.minimizable;
-		if (config.alwaysInFront !== undefined)this.alwaysInFront = config.alwaysInFront;
-		if (config.parentComponent)this.parentComponent = config.parentComponent;
-		if (config.cls)this.cls = config.cls;
-		if (config.objMovable)this.objMovable = config.objMovable;
-		if (config.width !== undefined) this.width = config.width;
-		if (config.height !== undefined)this.height = config.height;
-
-		if (config.model !== undefined)this.model = config.model;
-		this.frame = config.frame || this.frame;
-		if (config.formConfig !== undefined)this.formConfig = config.formConfig;
 
 		if (this.layout && this.layout.aspectRatio) {
 			if (this.width) {
@@ -559,7 +537,7 @@ ludo.View = new Class({
 			this.getFormManager();
 		}
 
-		if (this.addons !== undefined) {
+		if (this.addons) {
 			for (var i = 0; i < this.addons.length; i++) {
 				var obj = this.addons[i];
 				obj.view = this;

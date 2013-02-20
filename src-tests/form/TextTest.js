@@ -291,7 +291,7 @@ TestCase("TextTest", {
 
 		// then
 		assertTrue('Is not valid', el.isValid());
-		assertFalse(el.getFormEl().hasClass('ludo-form-el-invalid'));
+		assertFalse(el.getEl().hasClass('ludo-form-el-invalid'));
 
 	}
 });

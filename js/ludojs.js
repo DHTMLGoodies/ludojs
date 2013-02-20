@@ -1,4 +1,4 @@
-/* Generated Tue Feb 19 23:49:36 CET 2013 */
+/* Generated Wed Feb 20 1:12:24 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -775,27 +775,27 @@ ludo.Core = new Class({
 	},
 
 	ludoConfig:function(config){
-		if (config.url !== undefined)this.url = config.url;
-		if (config.name !== undefined)this.name = config.name;
+        var keys = ['url','name','controller','module','submodule','stateful','id'];
+        this.setConfigParams(config, keys);
+
 		if (config.listeners !== undefined)this.addEvents(config.listeners);
-		if (config.controller !== undefined)this.controller = config.controller;
 		if (this.controller !== undefined)ludo.controllerManager.assignSpecificControllerFor(this.controller, this);
-		if (config.module)this.module = config.module;
-		if (config.submodule)this.submodule = config.submodule;
-		if (config.useController !== undefined)this.useController = config.useController;
-		if (config.stateful !== undefined)this.stateful = config.stateful;
         if (this.stateful && this.statefulProperties && this.id) {
             config = this.appendPropertiesFromStore(config);
             this.addEvent('state', this.saveStatefulProperties.bind(this));
         }
-
+        if (config.useController !== undefined)this.useController = config.useController;
         if (this.module || this.useController)ludo.controllerManager.registerComponent(this);
-		this.id = config.id || this.id;
-
-
 		if(!this.id)this.id = 'ludo-' + String.uniqueID();
 		ludo.CmpMgr.registerComponent(this);
 	},
+
+    setConfigParams:function(config, keys){
+        for(var i=0;i<keys.length;i++){
+            if(config[keys[i]] !== undefined)this[keys[i]] = config[keys[i]];
+        }
+    },
+
 
 	ludoEvents:function(){
 
@@ -3008,7 +3008,6 @@ ludo.layout.Base = new Class({
 			this.view.children = children;
 		} else {
 			this.view.children.push(child);
-			parentEl.adopt(child.getEl());
 		}
 
 		this.onNewChild(child);
@@ -3373,12 +3372,8 @@ ludo.dataSource.Base = new Class({
 
 	ludoConfig:function (config) {
         this.parent(config);
-        if (config.url !== undefined)this.url = config.url;
-        if (config.postData !== undefined)this.postData = config.postData;
-        if (config.autoload !== undefined)this.autoload = config.autoload;
-        if (config.resource !== undefined)this.resource = config.resource;
-        if (config.service !== undefined)this.service = config.service;
-        if (config.arguments !== undefined)this.arguments = config.arguments;
+        var keys = ['url','postData','autoload','resource','service','arguments'];
+        this.setConfigParams(config,keys);
     },
 
 	ludoEvents:function(){
@@ -4646,7 +4641,6 @@ ludo.View = new Class({
 		this.lifeCycleComplete = true;
 		this._styleDOM();
 
-
 		if (config.children) {
 			for (var i = 0; i < config.children.length; i++) {
 				config.children[i].id = config.children[i].id || 'ludo-' + String.uniqueID();
@@ -4684,50 +4678,29 @@ ludo.View = new Class({
 		this.parent(config);
 		config.els = config.els || {};
 
-		if (config.renderTo !== undefined)config.els.parent = config.renderTo;
-		if (config.tpl !== undefined)this.tpl = config.tpl;
-		this.css = config.css || this.css;
-
 		this.contextMenu = config.contextMenu || this.contextMenu;
 
-		if (config.css !== undefined)this.css = config.css;
-		if (config.containerCss !== undefined)this.containerCss = config.containerCss;
-		if (config.form !== undefined)this.form = config.form;
-		if (config.socket !== undefined)this.socket = config.socket;
-		if (this.socket !== undefined) {
+        var keys = ['css','contextMenu','renderTo','tpl','containerCss','socket','form','addons','title','html','hidden','copyEvents',
+                    'dataSource','onLoadMessage','movable','resizable','closable','minimizable','alwaysInFront',
+                    'parentComponent','cls','objMovable','width','height','model','frame','formConfig',
+                    'overflow'];
+
+        this.setConfigParams(config,keys);
+
+		if (this.socket) {
 			if (this.socket.type === undefined)this.socket.type = 'socket.Socket';
 			this.socket.component = this;
 			this.socket = ludo._new(this.socket);
 		}
-		if (config.addons !== undefined)this.addons = config.addons;
-		if (config.title !== undefined)this.title = config.title;
-		if (config.html !== undefined)this.html = config.html;
-		if (config.hidden !== undefined)this.hidden = config.hidden;
-		if (config.els.parent && !this.parentComponent)this.els.parent = document.id(config.els.parent);
-		this.overflow = config.overflow || this.overflow;
+
+		if (this.renderTo)this.els.parent = document.id(this.renderTo);
+
 		this.layout = ludo.layoutFactory.getValidLayoutObject(this, config);
 
-		if (config.copyEvents !== undefined)this.copyEvents = config.copyEvents;
-		if (this.copyEvents !== undefined) {
+		if (this.copyEvents) {
 			this.copyEvents = Object.clone(this.copyEvents);
 			this.createEventCopies();
 		}
-		if (config.dataSource !== undefined)this.dataSource = config.dataSource;
-		if (config.onLoadMessage !== undefined)this.onLoadMessage = config.onLoadMessage;
-		if (config.movable !== undefined)this.movable = config.movable;
-		if (config.resizable !== undefined)this.resizable = config.resizable;
-		if (config.closable !== undefined)this.closable = config.closable;
-		if (config.minimizable !== undefined)this.minimizable = config.minimizable;
-		if (config.alwaysInFront !== undefined)this.alwaysInFront = config.alwaysInFront;
-		if (config.parentComponent)this.parentComponent = config.parentComponent;
-		if (config.cls)this.cls = config.cls;
-		if (config.objMovable)this.objMovable = config.objMovable;
-		if (config.width !== undefined) this.width = config.width;
-		if (config.height !== undefined)this.height = config.height;
-
-		if (config.model !== undefined)this.model = config.model;
-		this.frame = config.frame || this.frame;
-		if (config.formConfig !== undefined)this.formConfig = config.formConfig;
 
 		if (this.layout && this.layout.aspectRatio) {
 			if (this.width) {
@@ -4853,7 +4826,7 @@ ludo.View = new Class({
 			this.getFormManager();
 		}
 
-		if (this.addons !== undefined) {
+		if (this.addons) {
 			for (var i = 0; i < this.addons.length; i++) {
 				var obj = this.addons[i];
 				obj.view = this;
@@ -10902,25 +10875,18 @@ ludo.FramedView = new Class({
 
 	ludoConfig:function (config) {
 		this.parent(config);
-		this.hasMenu = config.hasMenu || this.hasMenu;
-		if (config.menuConfig !== undefined)this.menuConfig = config.menuConfig;
-		if (config.icon) this.icon = config.icon;
-		if (config.statusIcon)this.statusIcon = config.statusIcon;
-		if (config.statusText)this.statusText = config.statusText;
-		if (config.statusBar !== undefined)this.statusBar = config.statusBar;
-		if (config.titleBar !== undefined)this.titleBar = config.titleBar;
-		if (config.menuConfig)this.menuConfig = config.menuConfig;
-		if (config.buttons !== undefined) {
-			config.buttonBar = {
-				children:config.buttons
-			}
-		}
-		if (config.buttonBar) this.buttonBar = config.buttonBar;
+        if (config.buttons !== undefined) {
+            config.buttonBar = {
+                children:config.buttons
+            }
+        }
+
+        var keys = ['buttonBar','hasMenu','menuConfig','icon','statusIcon','statusText','statusBar','titleBar','buttons','boldTitle','minimized'];
+        this.setConfigParams(config,keys);
+
 		if (this.buttonBar !== undefined && !this.buttonBar.children) {
 			this.buttonBar = { children:this.buttonBar };
 		}
-		if (config.boldTitle !== undefined)this.boldTitle = config.boldTitle;
-		if (config.minimized !== undefined) this.minimized = config.minimized;
 	},
 
 	ludoDOM:function () {
@@ -11420,18 +11386,15 @@ ludo.Window = new Class({
 		config = config || {};
 		config.left = config.left || config.x;
 		config.top = config.top || config.y;
-
 		config.renderTo = document.body;
+
+        var keys = ['resizeTop','resizeLeft','hideBodyOnMove','preserveAspectRatio'];
+        this.setConfigParams(config, keys);
+
 		if (config.left !== undefined)this.layout.left = config.left;
 		if (config.top !== undefined) this.layout.top = config.top;
 
 		this.parent(config);
-
-        if (config.resizeTop !== undefined)this.resizeTop = config.resizeTop;
-        if (config.resizeLeft !== undefined)this.resizeLeft = config.resizeLeft;
-        if (config.hideBodyOnMove !== undefined)this.hideBodyOnMove = config.hideBodyOnMove;
-        if (config.preserveAspectRatio !== undefined)this.preserveAspectRatio = config.preserveAspectRatio;
-
     },
 
     ludoEvents:function () {
@@ -15367,10 +15330,9 @@ ludo.grid.Grid = new Class({
 	ludoConfig:function (config) {
 		this.parent(config);
 
-		if (config.headerMenu !== undefined)this.headerMenu = config.headerMenu;
-		if (config.columnManager !== undefined)this.columnManager = config.columnManager;
-		if (config.rowManager !== undefined)this.rowManager = config.rowManager;
-		if (config.mouseOverEffect !== undefined)this.mouseOverEffect = config.mouseOverEffect;
+        var keys = ['headerMenu','columnManager','rowManager','mouseOverEffect'];
+        this.setConfigParams(config, keys);
+
 		if (this.columnManager) {
 			if (!this.columnManager.type)this.columnManager.type = 'grid.ColumnManager';
 			this.columnManager.stateful = this.stateful;
@@ -16114,44 +16076,28 @@ ludo.form.Element = new Class({
 	validatorFn:undefined,
 
 	ludoConfig:function (config) {
-
 		this.parent(config);
+        var defaultConfig = this.getInheritedFormConfig();
+        this.labelWidth = defaultConfig.labelWidth || this.labelWidth;
+        this.fieldWidth = defaultConfig.fieldWidth || this.fieldWidth;
+        this.elementId = defaultConfig.elementId || this.elementId;
 
-		this.label = config.label || this.label;
-		this.formCss = config.formCss || this.formCss;
-
-		var defaultConfig = this.getInheritedFormConfig();
-		this.labelWidth = defaultConfig.labelWidth || this.labelWidth;
-		this.fieldWidth = defaultConfig.fieldWidth || this.fieldWidth;
+        var keys = ['label','formCss','validator','stretchField','required','selectOnFocus','twin','disabled','labelWidth','fieldWidth',
+                'elementId','value','data'];
+        this.setConfigParams(config, keys);
 
 		this.formCss = defaultConfig.formCss || this.formCss;
-		this.elementId = defaultConfig.elementId || this.elementId;
-		if (defaultConfig.height && config.height === undefined) {
-			this.height = defaultConfig.height;
-		}
-		if(config.validator)this.validator = config.validator;
+
+		if (defaultConfig.height && config.height === undefined)this.height = defaultConfig.height;
+
 		if (this.validator) {
 			this.createValidator();
 		}
-		if (config.stretchField !== undefined)this.stretchField = config.stretchField;
-		if (config.required !== undefined)this.required = config.required;
-		if (config.selectOnFocus !== undefined) this.selectOnFocus = config.selectOnFocus;
-		if (config.required !== undefined) this.required = config.required;
-		if (config.twin !== undefined) this.twin = config.twin;
-		if (config.disabled !== undefined) this.disabled = config.disabled;
-
 		if (config.linkWith !== undefined) {
 			this.setLinkWith(config.linkWith);
 		}
-
-		this.labelWidth = config.labelWidth || this.labelWidth;
-		this.fieldWidth = config.fieldWidth || this.fieldWidth;
-
-		this.elementId = config.elementId || this.elementId;
-		this.value = config.value || this.value;
 		this.initialValue = this.constructorValue = this.value;
 		if (!this.name)this.name = 'ludo-form-el-' + String.uniqueID();
-		this.data = config.data || null;
 
 		config.fieldConfig = config.fieldConfig || {};
 		this.fieldConfig.value = config.fieldConfig.value || 'value';
@@ -23207,14 +23153,8 @@ ludo.form.Text = new Class({
 
 	ludoConfig:function (config) {
 		this.parent(config);
-		this.defaultValue = config.defaultValue || this.defaultValue;
-		this.maxLength = config.maxLength || this.maxLength;
-		if (config.regex !== undefined) this.regex = config.regex;
-		if (config.regexFlags) this.regexFlags = config.regexFlags;
-		if (config.minLength !== undefined) this.minLength = config.minLength;
-		if (config.validateKeyStrokes !== undefined) this.validateKeyStrokes = config.validateKeyStrokes;
-		if (config.ucFirst !== undefined) this.ucFirst = config.ucFirst;
-		if (config.ucWords !== undefined) this.ucWords = config.ucWords;
+        var keys = ['regex','regexFlags','minLength','maxLength','defaultValue','validateKeyStrokes','ucFirst','ucWords'];
+        this.setConfigParams(config,keys);
 	},
 
 	ludoEvents:function () {
@@ -24157,7 +24097,7 @@ ludo.form.Number = new Class({
         if (this.minValue!==undefined && parseInt(value) < this.minValue) {
             return false;
         }
-        return this.maxValue && parseInt(value) > this.maxValue ? true : false;
+        return this.maxValue && parseInt(value) > this.maxValue ? false : true;
     }
 });/* ../ludojs/src/form/email.js */
 /**
@@ -25840,10 +25780,12 @@ ludo.form.Slider = new Class({
         if (config.reverse !== undefined)this.reverse = config.reverse;
     },
 
-    ludoDOM:function () {
+    ludoRendered:function () {
         this.parent();
         this.moveSliderBackgrounds();
     },
+
+
 
     moveSliderBackgrounds:function () {
         var offset = Math.round(this.getHandleSize() / 2);
@@ -25923,11 +25865,13 @@ ludo.form.Slider = new Class({
     pixelToValue:function (px) {
         var min = this.getMinValue();
         var max = this.getMaxValue();
+
         var sliderSize = this.getSliderSize();
         var ret = Math.round(px / sliderSize * (max - min)) + min;
         if (this.shouldReverseAxis()) {
             ret = max - ret;
         }
+
         return ret;
     },
 
@@ -25970,6 +25914,7 @@ ludo.form.Slider = new Class({
             this.els.slider.style.height = this.getHeight() + 'px';
         }
         this.sliderSize -= this.getHandleSize();
+
         this.positionSliderHandle();
         this.drag.setMaxPos(this.sliderSize);
     },
@@ -26005,6 +25950,8 @@ ludo.form.Slider = new Class({
                 cssProperty = 'width';
                 this.handleCssProperty = 'left';
             }
+
+            console.log(this.els.sliderHandle.getSize());
 
             this.handleSize = parseInt(this.els.sliderHandle.getStyle(cssProperty).replace('px', ''));
         }

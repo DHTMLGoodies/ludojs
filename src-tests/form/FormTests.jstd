@@ -17,8 +17,6 @@ test:
 
 serve:
   - ../../css/ludojs-blue.css
-  - ../../css-source/form/form.css
-  - ../../css-source/form/slider.css
 
 plugin:
  - name: "coverage"

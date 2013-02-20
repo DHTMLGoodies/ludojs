@@ -127,10 +127,9 @@ ludo.grid.Grid = new Class({
 	ludoConfig:function (config) {
 		this.parent(config);
 
-		if (config.headerMenu !== undefined)this.headerMenu = config.headerMenu;
-		if (config.columnManager !== undefined)this.columnManager = config.columnManager;
-		if (config.rowManager !== undefined)this.rowManager = config.rowManager;
-		if (config.mouseOverEffect !== undefined)this.mouseOverEffect = config.mouseOverEffect;
+        var keys = ['headerMenu','columnManager','rowManager','mouseOverEffect'];
+        this.setConfigParams(config, keys);
+
 		if (this.columnManager) {
 			if (!this.columnManager.type)this.columnManager.type = 'grid.ColumnManager';
 			this.columnManager.stateful = this.stateful;

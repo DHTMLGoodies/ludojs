@@ -108,25 +108,18 @@ ludo.FramedView = new Class({
 
 	ludoConfig:function (config) {
 		this.parent(config);
-		this.hasMenu = config.hasMenu || this.hasMenu;
-		if (config.menuConfig !== undefined)this.menuConfig = config.menuConfig;
-		if (config.icon) this.icon = config.icon;
-		if (config.statusIcon)this.statusIcon = config.statusIcon;
-		if (config.statusText)this.statusText = config.statusText;
-		if (config.statusBar !== undefined)this.statusBar = config.statusBar;
-		if (config.titleBar !== undefined)this.titleBar = config.titleBar;
-		if (config.menuConfig)this.menuConfig = config.menuConfig;
-		if (config.buttons !== undefined) {
-			config.buttonBar = {
-				children:config.buttons
-			}
-		}
-		if (config.buttonBar) this.buttonBar = config.buttonBar;
+        if (config.buttons !== undefined) {
+            config.buttonBar = {
+                children:config.buttons
+            }
+        }
+
+        var keys = ['buttonBar','hasMenu','menuConfig','icon','statusIcon','statusText','statusBar','titleBar','buttons','boldTitle','minimized'];
+        this.setConfigParams(config,keys);
+
 		if (this.buttonBar !== undefined && !this.buttonBar.children) {
 			this.buttonBar = { children:this.buttonBar };
 		}
-		if (config.boldTitle !== undefined)this.boldTitle = config.boldTitle;
-		if (config.minimized !== undefined) this.minimized = config.minimized;
 	},
 
 	ludoDOM:function () {

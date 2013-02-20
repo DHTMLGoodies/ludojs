@@ -111,6 +111,6 @@ ludo.form.Number = new Class({
         if (this.minValue!==undefined && parseInt(value) < this.minValue) {
             return false;
         }
-        return this.maxValue && parseInt(value) > this.maxValue ? true : false;
+        return this.maxValue && parseInt(value) > this.maxValue ? false : true;
     }
 });

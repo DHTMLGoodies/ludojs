@@ -84,14 +84,8 @@ ludo.form.Text = new Class({
 
 	ludoConfig:function (config) {
 		this.parent(config);
-		this.defaultValue = config.defaultValue || this.defaultValue;
-		this.maxLength = config.maxLength || this.maxLength;
-		if (config.regex !== undefined) this.regex = config.regex;
-		if (config.regexFlags) this.regexFlags = config.regexFlags;
-		if (config.minLength !== undefined) this.minLength = config.minLength;
-		if (config.validateKeyStrokes !== undefined) this.validateKeyStrokes = config.validateKeyStrokes;
-		if (config.ucFirst !== undefined) this.ucFirst = config.ucFirst;
-		if (config.ucWords !== undefined) this.ucWords = config.ucWords;
+        var keys = ['regex','regexFlags','minLength','maxLength','defaultValue','validateKeyStrokes','ucFirst','ucWords'];
+        this.setConfigParams(config,keys);
 	},
 
 	ludoEvents:function () {

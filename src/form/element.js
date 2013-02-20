@@ -128,44 +128,28 @@ ludo.form.Element = new Class({
 	validatorFn:undefined,
 
 	ludoConfig:function (config) {
-
 		this.parent(config);
+        var defaultConfig = this.getInheritedFormConfig();
+        this.labelWidth = defaultConfig.labelWidth || this.labelWidth;
+        this.fieldWidth = defaultConfig.fieldWidth || this.fieldWidth;
+        this.elementId = defaultConfig.elementId || this.elementId;
 
-		this.label = config.label || this.label;
-		this.formCss = config.formCss || this.formCss;
-
-		var defaultConfig = this.getInheritedFormConfig();
-		this.labelWidth = defaultConfig.labelWidth || this.labelWidth;
-		this.fieldWidth = defaultConfig.fieldWidth || this.fieldWidth;
+        var keys = ['label','formCss','validator','stretchField','required','selectOnFocus','twin','disabled','labelWidth','fieldWidth',
+                'elementId','value','data'];
+        this.setConfigParams(config, keys);
 
 		this.formCss = defaultConfig.formCss || this.formCss;
-		this.elementId = defaultConfig.elementId || this.elementId;
-		if (defaultConfig.height && config.height === undefined) {
-			this.height = defaultConfig.height;
-		}
-		if(config.validator)this.validator = config.validator;
+
+		if (defaultConfig.height && config.height === undefined)this.height = defaultConfig.height;
+
 		if (this.validator) {
 			this.createValidator();
 		}
-		if (config.stretchField !== undefined)this.stretchField = config.stretchField;
-		if (config.required !== undefined)this.required = config.required;
-		if (config.selectOnFocus !== undefined) this.selectOnFocus = config.selectOnFocus;
-		if (config.required !== undefined) this.required = config.required;
-		if (config.twin !== undefined) this.twin = config.twin;
-		if (config.disabled !== undefined) this.disabled = config.disabled;
-
 		if (config.linkWith !== undefined) {
 			this.setLinkWith(config.linkWith);
 		}
-
-		this.labelWidth = config.labelWidth || this.labelWidth;
-		this.fieldWidth = config.fieldWidth || this.fieldWidth;
-
-		this.elementId = config.elementId || this.elementId;
-		this.value = config.value || this.value;
 		this.initialValue = this.constructorValue = this.value;
 		if (!this.name)this.name = 'ludo-form-el-' + String.uniqueID();
-		this.data = config.data || null;
 
 		config.fieldConfig = config.fieldConfig || {};
 		this.fieldConfig.value = config.fieldConfig.value || 'value';

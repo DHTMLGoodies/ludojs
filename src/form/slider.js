@@ -78,10 +78,12 @@ ludo.form.Slider = new Class({
         if (config.reverse !== undefined)this.reverse = config.reverse;
     },
 
-    ludoDOM:function () {
+    ludoRendered:function () {
         this.parent();
         this.moveSliderBackgrounds();
     },
+
+
 
     moveSliderBackgrounds:function () {
         var offset = Math.round(this.getHandleSize() / 2);
@@ -161,11 +163,13 @@ ludo.form.Slider = new Class({
     pixelToValue:function (px) {
         var min = this.getMinValue();
         var max = this.getMaxValue();
+
         var sliderSize = this.getSliderSize();
         var ret = Math.round(px / sliderSize * (max - min)) + min;
         if (this.shouldReverseAxis()) {
             ret = max - ret;
         }
+
         return ret;
     },
 
@@ -208,6 +212,7 @@ ludo.form.Slider = new Class({
             this.els.slider.style.height = this.getHeight() + 'px';
         }
         this.sliderSize -= this.getHandleSize();
+
         this.positionSliderHandle();
         this.drag.setMaxPos(this.sliderSize);
     },
@@ -243,6 +248,8 @@ ludo.form.Slider = new Class({
                 cssProperty = 'width';
                 this.handleCssProperty = 'left';
             }
+
+            console.log(this.els.sliderHandle.getSize());
 
             this.handleSize = parseInt(this.els.sliderHandle.getStyle(cssProperty).replace('px', ''));
         }

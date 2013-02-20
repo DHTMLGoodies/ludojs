@@ -74,27 +74,27 @@ ludo.Core = new Class({
 	},
 
 	ludoConfig:function(config){
-		if (config.url !== undefined)this.url = config.url;
-		if (config.name !== undefined)this.name = config.name;
+        var keys = ['url','name','controller','module','submodule','stateful','id'];
+        this.setConfigParams(config, keys);
+
 		if (config.listeners !== undefined)this.addEvents(config.listeners);
-		if (config.controller !== undefined)this.controller = config.controller;
 		if (this.controller !== undefined)ludo.controllerManager.assignSpecificControllerFor(this.controller, this);
-		if (config.module)this.module = config.module;
-		if (config.submodule)this.submodule = config.submodule;
-		if (config.useController !== undefined)this.useController = config.useController;
-		if (config.stateful !== undefined)this.stateful = config.stateful;
         if (this.stateful && this.statefulProperties && this.id) {
             config = this.appendPropertiesFromStore(config);
             this.addEvent('state', this.saveStatefulProperties.bind(this));
         }
-
+        if (config.useController !== undefined)this.useController = config.useController;
         if (this.module || this.useController)ludo.controllerManager.registerComponent(this);
-		this.id = config.id || this.id;
-
-
 		if(!this.id)this.id = 'ludo-' + String.uniqueID();
 		ludo.CmpMgr.registerComponent(this);
 	},
+
+    setConfigParams:function(config, keys){
+        for(var i=0;i<keys.length;i++){
+            if(config[keys[i]] !== undefined)this[keys[i]] = config[keys[i]];
+        }
+    },
+
 
 	ludoEvents:function(){
 

@@ -59,7 +59,6 @@ ludo.layout.Base = new Class({
 			this.view.children = children;
 		} else {
 			this.view.children.push(child);
-			parentEl.adopt(child.getEl());
 		}
 
 		this.onNewChild(child);

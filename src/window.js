@@ -98,18 +98,15 @@ ludo.Window = new Class({
 		config = config || {};
 		config.left = config.left || config.x;
 		config.top = config.top || config.y;
-
 		config.renderTo = document.body;
+
+        var keys = ['resizeTop','resizeLeft','hideBodyOnMove','preserveAspectRatio'];
+        this.setConfigParams(config, keys);
+
 		if (config.left !== undefined)this.layout.left = config.left;
 		if (config.top !== undefined) this.layout.top = config.top;
 
 		this.parent(config);
-
-        if (config.resizeTop !== undefined)this.resizeTop = config.resizeTop;
-        if (config.resizeLeft !== undefined)this.resizeLeft = config.resizeLeft;
-        if (config.hideBodyOnMove !== undefined)this.hideBodyOnMove = config.hideBodyOnMove;
-        if (config.preserveAspectRatio !== undefined)this.preserveAspectRatio = config.preserveAspectRatio;
-
     },
 
     ludoEvents:function () {

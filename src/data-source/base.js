@@ -71,12 +71,8 @@ ludo.dataSource.Base = new Class({
 
 	ludoConfig:function (config) {
         this.parent(config);
-        if (config.url !== undefined)this.url = config.url;
-        if (config.postData !== undefined)this.postData = config.postData;
-        if (config.autoload !== undefined)this.autoload = config.autoload;
-        if (config.resource !== undefined)this.resource = config.resource;
-        if (config.service !== undefined)this.service = config.service;
-        if (config.arguments !== undefined)this.arguments = config.arguments;
+        var keys = ['url','postData','autoload','resource','service','arguments'];
+        this.setConfigParams(config,keys);
     },
 
 	ludoEvents:function(){
