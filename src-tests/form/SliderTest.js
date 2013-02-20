@@ -3,7 +3,6 @@ TestCase("SliderTest", {
 	getSlider:function (config) {
 		config = config || {};
 		config = Object.merge(config, {
-
 		});
 		config.type = 'form.Slider';
 		config.id = String.uniqueID();

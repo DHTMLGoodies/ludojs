@@ -617,17 +617,17 @@ tab layout */
 }
 
 .ludo-tab-strip .ludo-tab-strip-line {
-    background-color: #f5f5f5;
+    background-color: #EBF0F5;
     border-color:#a3c7f0;
 }
 div.ludo-tab-strip-tab-bg-first, div.ludo-tab-strip-tab-bg-last {
-    border-color:#f5f5f5;
+    border-color:#EBF0F5;
 }
 .ludo-tab-strip,div.ludo-tab-strip-left div.ludo-body,.ludo-tab-strip-top {
     border-color:#A6CBF5;
 }
 div.ludo-tab-strip-tab-active {
-    background-color: #f5f5f5;
+    background-color: #EBF0F5;
 }
 .ludo-tab-strip-tab-top {
     border: 1px solid #A6CBF5;
