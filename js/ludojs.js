@@ -1,4 +1,4 @@
-/* Generated Wed Feb 20 1:12:24 CET 2013 */
+/* Generated Wed Feb 20 1:27:42 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -2987,6 +2987,7 @@ ludo.layout.Base = new Class({
      * @optional
      */
 	addChild:function (child, insertAt, pos) {
+        var previousParent = child.parentComponent;
 		child = this.getNewComponent(child);
 		var parentEl = this.getParentForNewChild();
 		if (insertAt) {
@@ -3008,6 +3009,7 @@ ludo.layout.Base = new Class({
 			this.view.children = children;
 		} else {
 			this.view.children.push(child);
+			if(previousParent && previousParent !== this.view || !child.getEl().parentNode)parentEl.adopt(child.getEl());
 		}
 
 		this.onNewChild(child);
@@ -8198,13 +8200,10 @@ ludo.Notification = new Class({
 
 	ludoConfig:function (config) {
 		config.renderTo = config.renderTo || document.body;
-		if (config.autoDispose !== undefined)this.autoDispose = config.autoDispose;
-		if (config.showEffect !== undefined)this.showEffect = config.showEffect;
-		if (config.hideEffect !== undefined)this.hideEffect = config.hideEffect;
-		if (config.effect)this.effect = config.effect;
+
+        this.setConfigParams(config, ['autoDispose','showEffect','hideEffect','effect','effectDuration']);
 		this.showEffect = this.showEffect || this.effect;
 		this.hideEffect = this.hideEffect || this.effect;
-		if (config.effectDuration !== undefined)this.effectDuration = config.effectDuration;
 		if (!config.layout && !this.layout) {
 			config.layout = {
 				centerIn:config.renderTo
@@ -14015,17 +14014,17 @@ ludo.grid.GridHeader = new Class({
 
 	ludoEvents:function () {
 		this.parent();
-		this.columnManager.addEvent('resize', this.renderColumns.bind(this));
-		this.columnManager.addEvent('stretch', this.renderColumns.bind(this));
-		this.columnManager.addEvent('movecolumn', this.renderColumns.bind(this));
-		this.columnManager.addEvent('hidecolumn', this.renderColumns.bind(this));
-		this.columnManager.addEvent('showcolumn', this.renderColumns.bind(this));
+        var c = this.columnManager;
+		c.addEvent('resize', this.renderColumns.bind(this));
+		c.addEvent('stretch', this.renderColumns.bind(this));
+		c.addEvent('movecolumn', this.renderColumns.bind(this));
+		c.addEvent('hidecolumn', this.renderColumns.bind(this));
+		c.addEvent('showcolumn', this.renderColumns.bind(this));
 		this.grid.addEvent('render', this.renderColumns.bind(this));
 		this.grid.getDataSource().addEvent('sort', this.updateSortArrow.bind(this));
 	},
 
 	createDOM:function () {
-
 		this.el = new Element('div');
 		ludo.dom.addClass(this.el, 'ludo-header');
 		ludo.dom.addClass(this.el, 'testing');

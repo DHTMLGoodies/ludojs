@@ -25,17 +25,17 @@ ludo.grid.GridHeader = new Class({
 
 	ludoEvents:function () {
 		this.parent();
-		this.columnManager.addEvent('resize', this.renderColumns.bind(this));
-		this.columnManager.addEvent('stretch', this.renderColumns.bind(this));
-		this.columnManager.addEvent('movecolumn', this.renderColumns.bind(this));
-		this.columnManager.addEvent('hidecolumn', this.renderColumns.bind(this));
-		this.columnManager.addEvent('showcolumn', this.renderColumns.bind(this));
+        var c = this.columnManager;
+		c.addEvent('resize', this.renderColumns.bind(this));
+		c.addEvent('stretch', this.renderColumns.bind(this));
+		c.addEvent('movecolumn', this.renderColumns.bind(this));
+		c.addEvent('hidecolumn', this.renderColumns.bind(this));
+		c.addEvent('showcolumn', this.renderColumns.bind(this));
 		this.grid.addEvent('render', this.renderColumns.bind(this));
 		this.grid.getDataSource().addEvent('sort', this.updateSortArrow.bind(this));
 	},
 
 	createDOM:function () {
-
 		this.el = new Element('div');
 		ludo.dom.addClass(this.el, 'ludo-header');
 		ludo.dom.addClass(this.el, 'testing');
