@@ -1,4 +1,4 @@
-/* Generated Fri Feb 22 0:32:40 CET 2013 */
+/* Generated Fri Feb 22 0:40:12 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -12547,7 +12547,7 @@ ludo.dataSource.Collection = new Class({
 		 * @param {Object} sortedBy
 		 */
 		this.fireEvent('sort', this.sortedBy);
-
+        this.fireEvent('firstPage');
 		this.fireEvent('state');
 
 		return this;
