@@ -1,4 +1,4 @@
-/* Generated Thu Feb 21 21:15:11 CET 2013 */
+/* Generated Thu Feb 21 21:21:57 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -17646,8 +17646,8 @@ ludo.calendar.Calendar = new Class({
 ludo.calendar.Days = new Class({
     Extends:ludo.calendar.Base,
     layout:{
-		weight:1
-	},
+        weight:1
+    },
     date:undefined,
     colWidthFirst:16,
     colWidthRest:12,
@@ -17691,10 +17691,10 @@ ludo.calendar.Days = new Class({
             y1:e.page.y, y2:e.page.y
         };
 
-        if(e.target.tagName.toLowerCase() == 'window'){
+        if (e.target.tagName.toLowerCase() == 'window') {
             return false;
         }
-		return undefined;
+        return undefined;
     },
     touchMove:function (e) {
         if (this.touchData.enabled) {
@@ -17717,7 +17717,7 @@ ludo.calendar.Days = new Class({
             }
             return false;
         }
-		return undefined;
+        return undefined;
     },
     touchEnd:function () {
         if (this.touchData.enabled) {
@@ -17755,7 +17755,7 @@ ludo.calendar.Days = new Class({
         ludo.dom.addClass(el, 'ludo-calendar-header');
         this.getBody().adopt(el);
 
-        var html = ['<table ','cellpadding="0" cellspacing="0" border="0" width="100%">'];
+        var html = ['<table ', 'cellpadding="0" cellspacing="0" border="0" width="100%">'];
         html.push(this.getColGroup().join(''));
         html.push('<tr>');
         var headers = this.getTextForHeader();
@@ -17789,9 +17789,9 @@ ludo.calendar.Days = new Class({
     getColGroup:function () {
         var html = [];
         html.push('<colgroup>');
-        html.push('<col '+'width="' + this.colWidthFirst + '%" />');
+        html.push('<col ' + 'width="' + this.colWidthFirst + '%" />');
         for (var i = 0; i < 7; i++) {
-            html.push('<col '+'width="' + this.colWidthRest + '%" />');
+            html.push('<col ' + 'width="' + this.colWidthRest + '%" />');
         }
         html.push('</colgroup>');
         return html;
@@ -17837,7 +17837,7 @@ ludo.calendar.Days = new Class({
 
         this.els.daysContainer.adopt(el);
 
-        var html = ['<table ','cellpadding="0" cellspacing="0" border="0" width="100%" style="height:100%">'];
+        var html = ['<table ', 'cellpadding="0" cellspacing="0" border="0" width="100%" style="height:100%">'];
         html.push(this.getColGroup().join(''));
 
         var days = this.getDaysForView();
@@ -17911,10 +17911,10 @@ ludo.calendar.Days = new Class({
     },
 
     isDisplayingMonthForCurrentValue:function () {
-		if(this.value){
-			return this.value.get('month') == this.date.get('month') && this.value.get('year') == this.date.get('year');
-		}
-		return false;
+        if (this.value) {
+            return this.value.get('month') == this.date.get('month') && this.value.get('year') == this.date.get('year');
+        }
+        return false;
     },
     isDisplayingTodaysMonth:function () {
         var today = new Date();
@@ -17940,11 +17940,7 @@ ludo.calendar.Days = new Class({
         }
         var i;
         if (dayOfWeek > 0 || daysInMonth < 31) {
-			if(thisMonth.get('month') === 0){
-				this.setStartWeek(this.getFirstWeekOfYear());
-			}else{
-				this.setStartWeek(lastMonth.get('week'));
-			}
+            this.setStartWeek(lastMonth.get('week'));
             var daysInLastMonth = lastMonth.getLastDayOfMonth();
             var count = dayOfWeek || 7;
             ret.push(this.getNextWeek());
@@ -18018,30 +18014,16 @@ ludo.calendar.Days = new Class({
         this.week++;
         if (this.week > 50 && this.date.get('month') == 0) {
             this.week = 1;
-        }else if(this.week === 53){
-			this.week = this.getFirstWeekOfYear();
-		} else if (this.week > 53) {
+        } else if (this.week > 53) {
             this.week = 1;
         }
         return ret;
     },
-
-	getFirstWeekOfYear:function(){
-		var d = this.date.clone();
-		if(d.get('month') === 0){
-			d.set('date', 1);
-		}else{
-			d.increment('month', 1).set('date', 1);
-		}
-		var day = d.getUTCDay() - this.sundayFirst ? 1 : 0;
-		return day < 4 ? 1 : 53;
-	},
-
     /**
      * Set currently viewed month
-	 * @method setDate
+     * @method setDate
      * @param {Object} date
-	 * @return void
+     * @return void
      */
     setDate:function (date) {
         this.date = date;
@@ -18049,7 +18031,7 @@ ludo.calendar.Days = new Class({
     },
     /**
      * Set selected date
-	 * @method setValue
+     * @method setValue
      * @param {Date} date
      */
     setValue:function (date) {
