@@ -1,4 +1,4 @@
-/* Generated Thu Feb 21 1:51:33 CET 2013 */
+/* Generated Thu Feb 21 15:12:29 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -6426,7 +6426,6 @@ ludo.layout.Card = new Class({
 	},
 	button:{},
 	registerButton:function (button) {
-
 		this.button[button.name || button.id] = button;
 
 	},
@@ -6550,13 +6549,19 @@ ludo.layout.Card = new Class({
 				duration:this.getAnimationDuration()
 			});
 			this.fx[this.visibleCard.id].addEvent('complete', this.animationComplete.bind(this));
+			this.fx[this.visibleCard.id].addEvent('start', this.animationStart.bind(this));
 		}
 		return this.fx[this.visibleCard.id];
 	},
 
+    animationStart:function(){
+        // TODO apply shadow or border during dragging and animation.
+    },
+
 	animationComplete:function (el) {
-		el.style.left = '0px';
-		el.style.top = '0px';
+		el.style.left = '0';
+		el.style.top = '0';
+        el.style.borderWidth = '0';
 	},
 
 	touchStart:function (e) {
@@ -6616,7 +6621,6 @@ ludo.layout.Card = new Class({
 	},
 
 	setZIndexOfOtherCards:function (pos) {
-
 		if (pos > 0 && this.touchConfig.previousPos <= 0) {
 			if (this.touchConfig.nextCard) {
 				this.touchConfig.nextCard.getEl().style.zIndex = (this.touchConfig.zIndex - 3);
@@ -6667,7 +6671,6 @@ ludo.layout.Card = new Class({
 		var skipEvents = true;
 		if (card = this.getPreviousCardOf(ludo.get(id))) {
 			card.show(skipEvents);
-			//this.view.resizeChildren();
 		}
 		if (card = this.getNextCardOf(ludo.get(id))) {
 			card.show(skipEvents);
@@ -26682,14 +26685,18 @@ ludo.dialog.Dialog = new Class({
 
 	ludoDOM:function () {
 		this.parent();
-		if (this.isModal()) {
-			var el = this.els.shim = new Element('div');
-			ludo.dom.addClass(el, 'ludo-dialog-shim');
-			el.setStyle('display', 'none');
-			document.body.adopt(el);
-		}
 		this.getEl().addClass('ludo-dialog');
 	},
+
+    getShim:function(){
+        if(this.els.shim === undefined){
+            var el = this.els.shim = new Element('div');
+            ludo.dom.addClass(el, 'ludo-dialog-shim');
+            el.setStyle('display', 'none');
+            document.body.adopt(el);
+        }
+        return this.els.shim;
+    },
 
 	ludoEvents:function () {
 		this.parent();
@@ -26732,7 +26739,7 @@ ludo.dialog.Dialog = new Class({
 	showShim:function () {
         this.center();
 		if (this.isModal()) {
-			this.els.shim.setStyles({
+			this.getShim().setStyles({
 				display:'',
 				'z-index':this.getEl().getStyle('z-index') - 1
 			});
@@ -26742,13 +26749,13 @@ ludo.dialog.Dialog = new Class({
 
 	resizeShim:function () {
 		var size = document.body.getSize();
-		this.els.shim.style.width = size.x + 'px';
-		this.els.shim.style.height = size.y + 'px';
+        this.getShim().style.width = size.x + 'px';
+        this.getShim().style.height = size.y + 'px';
 	},
 
 	hideShim:function () {
 		if (this.isModal()) {
-			this.els.shim.setStyle('display', 'none');
+            this.getShim().setStyle('display', 'none');
 		}
 	},
 

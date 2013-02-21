@@ -78,14 +78,18 @@ ludo.dialog.Dialog = new Class({
 
 	ludoDOM:function () {
 		this.parent();
-		if (this.isModal()) {
-			var el = this.els.shim = new Element('div');
-			ludo.dom.addClass(el, 'ludo-dialog-shim');
-			el.setStyle('display', 'none');
-			document.body.adopt(el);
-		}
 		this.getEl().addClass('ludo-dialog');
 	},
+
+    getShim:function(){
+        if(this.els.shim === undefined){
+            var el = this.els.shim = new Element('div');
+            ludo.dom.addClass(el, 'ludo-dialog-shim');
+            el.setStyle('display', 'none');
+            document.body.adopt(el);
+        }
+        return this.els.shim;
+    },
 
 	ludoEvents:function () {
 		this.parent();
@@ -128,7 +132,7 @@ ludo.dialog.Dialog = new Class({
 	showShim:function () {
         this.center();
 		if (this.isModal()) {
-			this.els.shim.setStyles({
+			this.getShim().setStyles({
 				display:'',
 				'z-index':this.getEl().getStyle('z-index') - 1
 			});
@@ -138,13 +142,13 @@ ludo.dialog.Dialog = new Class({
 
 	resizeShim:function () {
 		var size = document.body.getSize();
-		this.els.shim.style.width = size.x + 'px';
-		this.els.shim.style.height = size.y + 'px';
+        this.getShim().style.width = size.x + 'px';
+        this.getShim().style.height = size.y + 'px';
 	},
 
 	hideShim:function () {
 		if (this.isModal()) {
-			this.els.shim.setStyle('display', 'none');
+            this.getShim().setStyle('display', 'none');
 		}
 	},
 
