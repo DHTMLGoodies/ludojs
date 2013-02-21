@@ -176,6 +176,7 @@ TestCase("TextTest", {
 		assertTrue(eventFired);
 	},
 
+
 	"test should get correct md5 value":function () {
 		// given
 		var expected = faultylabs.MD5('John');

@@ -244,8 +244,6 @@ ludo.form.Slider = new Class({
                 this.handleCssProperty = 'left';
             }
 
-            console.log(this.els.sliderHandle.getSize());
-
             this.handleSize = parseInt(this.els.sliderHandle.getStyle(cssProperty).replace('px', ''));
         }
         return this.handleSize;

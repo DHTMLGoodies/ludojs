@@ -327,3 +327,6 @@ div.ludo-container-frame{
 .ludo-component-resize-both{
     background-image: url('../images/blue-skin/resize-dots.png');
 }
+div.ludo-form-el-invalid label{
+    color:#F00;
+}

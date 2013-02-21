@@ -138,3 +138,7 @@ div.ludo-resize-handle-over{
 div.ludo-container-frame{
     border:1px solid #54a173 !important;
 }
+
+div.ludo-form-el-invalid label{
+    color:#F00;
+}

@@ -12,6 +12,7 @@ ludo.form.LabelElement = new Class({
         '<tr class="input-row">',
         '<td class="label-cell"><label></label></td>',
         '<td class="input-cell"></td>',
+        '<td class="invalid-cell"><div class="invalid-cell-div"></div></td>',
         '<td class="suffix-cell" style="display:none"></td>',
         '<td class="help-cell" style="display:none"></td>',
         '</tr>',

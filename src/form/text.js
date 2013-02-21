@@ -51,7 +51,7 @@ ludo.form.Text = new Class({
 	 @type String
 	 @default undefined
 	 @example
-	 	regex:'[0-9]
+	 	regex:'[0-9]'
 	 This will only validate numbers
 	 */
 	regex:undefined,
@@ -164,7 +164,7 @@ ludo.form.Text = new Class({
 		}
 		if (this.regex) {
 			var regEx = new RegExp(this.regex, this.regexFlags);
-			return regEx.test(this.getValue());
+			return regEx.test(val);
 		}
 		return true;
 	},

@@ -714,3 +714,7 @@ div.ludo-tab-strip-tab-active {
     padding-right:5px;
     border:1px solid #b3b3b3;
 }
+
+div.ludo-form-el-invalid label{
+    color:#F00;
+}

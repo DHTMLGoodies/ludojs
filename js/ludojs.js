@@ -1,4 +1,4 @@
-/* Generated Thu Feb 21 1:02:16 CET 2013 */
+/* Generated Thu Feb 21 1:51:33 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -21782,6 +21782,7 @@ ludo.form.LabelElement = new Class({
         '<tr class="input-row">',
         '<td class="label-cell"><label></label></td>',
         '<td class="input-cell"></td>',
+        '<td class="invalid-cell"><div class="invalid-cell-div"></div></td>',
         '<td class="suffix-cell" style="display:none"></td>',
         '<td class="help-cell" style="display:none"></td>',
         '</tr>',
@@ -23116,7 +23117,7 @@ ludo.form.Text = new Class({
 	 @type String
 	 @default undefined
 	 @example
-	 	regex:'[0-9]
+	 	regex:'[0-9]'
 	 This will only validate numbers
 	 */
 	regex:undefined,
@@ -23229,7 +23230,7 @@ ludo.form.Text = new Class({
 		}
 		if (this.regex) {
 			var regEx = new RegExp(this.regex, this.regexFlags);
-			return regEx.test(this.getValue());
+			return regEx.test(val);
 		}
 		return true;
 	},
@@ -23980,7 +23981,49 @@ ludo.form.Password = new Class({
 		this.setValue('');
 	}
 });
-/* ../ludojs/src/form/number.js */
+/* ../ludojs/src/form/strong-password.js */
+/**
+ Strong password field, i.e
+ contain at least 1 upper case letter
+ contain at least 1 lower case letter
+ contain at least 1 number or special character
+ contain at least 8 characters in length
+ not limited in length
+ 
+ @namespace form
+ @class Password
+ @extends form.Text
+ @constructor
+ @description Form component for passwords.
+ @param {Object} config
+ @example
+ ...
+ children:[
+ {type:'form.password',label:'Password',name:'password',md5:true },
+ {type:'form.password',label:'Repeat password',name:'password_repeated',md5:true }
+ ]
+ ...
+ */
+ludo.form.StrongPassword = new Class({
+    Extends: ludo.form.Password,
+    regexFlags : '',
+    regex : '(?=^.{_length_,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$',
+
+    /**
+     * Custom minimum length of password
+     * @config {Number} passwordLength
+     * @default 8
+     * @optional
+     */
+    passwordLength : 8,
+
+    ludoConfig:function(config){
+        config = config || {};
+        this.passwordLength = config.passwordLength || this.passwordLength;
+        this.regex = this.regex.replace('_length_', this.passwordLength);
+        this.parent(config);
+    }
+});/* ../ludojs/src/form/number.js */
 /**
  * @namespace form
  * @class Number
@@ -25930,8 +25973,6 @@ ludo.form.Slider = new Class({
                 cssProperty = 'width';
                 this.handleCssProperty = 'left';
             }
-
-            console.log(this.els.sliderHandle.getSize());
 
             this.handleSize = parseInt(this.els.sliderHandle.getStyle(cssProperty).replace('px', ''));
         }
