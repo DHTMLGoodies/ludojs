@@ -123,8 +123,10 @@ div.ludo-resize-handle-over {
 }
 
 div.ludo-resize-handle-active {
-    background-color: #d7d7d7;
+    background-color: #e2e2e2;
 }
+
+div.ludo-resize-handle-
 
 .ludo-layout-resize-row {
     height: 6px;
