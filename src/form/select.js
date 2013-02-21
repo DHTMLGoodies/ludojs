@@ -68,7 +68,6 @@ ludo.form.Select = new Class({
         var option = new Element('option');
         option.set('value', value);
         option.set('text', text);
-
         this.getFormEl().adopt(option);
     }
 });

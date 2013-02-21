@@ -75,23 +75,22 @@ ludo.form.Spinner = new Class({
         input.setProperty('maxlength', (this.maxValue + '').length);
         ludo.dom.addClass(input, 'ludo-spinbox-input');
 
+        var p = this.els.spinnerContainer;
         this.els.arrowsContainer = this._createContainer({
             cls:'ludo-spinbox-arrows-container',
-            renderTo:this.els.spinnerContainer
+            renderTo:p
         });
-
         this.els.upArrow = this._createContainer({
             cls:'ludo-spinbox-arrow-up',
-            renderTo:this.els.arrowsContainer
+            renderTo:p
         });
         this.els.downArrow = this._createContainer({
             cls:'ludo-spinbox-arrow-down',
-            renderTo:this.els.arrowsContainer
+            renderTo:p
         });
-
         this.els.arrowSeparator = this._createContainer({
             cls:'ludo-spinbox-arrow-separator',
-            renderTo:this.els.arrowsContainer
+            renderTo:p
         });
     },
 

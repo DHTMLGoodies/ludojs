@@ -111,7 +111,6 @@ ludo.form.Slider = new Class({
         var handle = this.els.sliderHandle = new Element('div');
         ludo.dom.addClass(handle, 'ludo-form-slider-handle');
         this.els.slider.adopt(handle);
-
         this.drag = new ludo.effect.Drag(this.getDragConfig());
     },
 

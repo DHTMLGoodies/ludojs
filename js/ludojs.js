@@ -1,4 +1,4 @@
-/* Generated Thu Feb 21 21:09:40 CET 2013 */
+/* Generated Thu Feb 21 21:15:11 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -23940,6 +23940,7 @@ faultylabs.MD5 = function(data) {
     }
 
 };/* ../ludojs/src/form/password.js */
+// TODO indicate strength of password
 /**
  Password field
  @namespace form
@@ -24232,23 +24233,22 @@ ludo.form.Spinner = new Class({
         input.setProperty('maxlength', (this.maxValue + '').length);
         ludo.dom.addClass(input, 'ludo-spinbox-input');
 
+        var p = this.els.spinnerContainer;
         this.els.arrowsContainer = this._createContainer({
             cls:'ludo-spinbox-arrows-container',
-            renderTo:this.els.spinnerContainer
+            renderTo:p
         });
-
         this.els.upArrow = this._createContainer({
             cls:'ludo-spinbox-arrow-up',
-            renderTo:this.els.arrowsContainer
+            renderTo:p
         });
         this.els.downArrow = this._createContainer({
             cls:'ludo-spinbox-arrow-down',
-            renderTo:this.els.arrowsContainer
+            renderTo:p
         });
-
         this.els.arrowSeparator = this._createContainer({
             cls:'ludo-spinbox-arrow-separator',
-            renderTo:this.els.arrowsContainer
+            renderTo:p
         });
     },
 
@@ -24556,7 +24556,6 @@ ludo.form.Select = new Class({
         var option = new Element('option');
         option.set('value', value);
         option.set('text', text);
-
         this.getFormEl().adopt(option);
     }
 });/* ../ludojs/src/form/filter-text.js */
@@ -25845,7 +25844,6 @@ ludo.form.Slider = new Class({
         var handle = this.els.sliderHandle = new Element('div');
         ludo.dom.addClass(handle, 'ludo-form-slider-handle');
         this.els.slider.adopt(handle);
-
         this.drag = new ludo.effect.Drag(this.getDragConfig());
     },
 
