@@ -89,9 +89,10 @@ TestCase("ManagerTest", {
 	"test should fire invalid event when form element is invalid":function () {
 		// given
 		var component = new ludo.View({
+            renderTo:document.body,
 			layout:'rows',
 			children:[
-				{ type:'form.Text', name:'firstname', 'value':'', minLength:5 },
+				{ type:'form.Text', name:'firstname', 'value':'a', minLength:5 },
 				{ type:'form.Text', name:'lastname', 'value':'Doe' },
 				{ type:'form.Textarea', name:'address', 'value':'Park Avenue' }
 			]
@@ -108,7 +109,7 @@ TestCase("ManagerTest", {
 			eventFired = true;
 		});
 
-		firstname.setValue('a');
+		firstname.setValue('ab');
 		assertFalse('component should be invalid', component.child['firstname'].isValid());
 		assertTrue('Form element not registered', mgr.formComponents.indexOf(firstname) >= 0);
 		// then
@@ -119,11 +120,12 @@ TestCase("ManagerTest", {
 		// given
 		var cmp = this.getPanelWithButton();
 		cmp.show();
-
 		var mgr = cmp.getFormManager();
 
 		// then
 		assertTrue(mgr.component.isRendered);
+        mgr.getFormElements();
+
 		assertEquals('Wrong child count', 2, mgr.component.getAllChildren().length);
 		assertEquals(2, mgr.formComponents.length);
 	}

@@ -4,19 +4,21 @@ load:
   - ../js/ludojs.js
 
 test:
+  - canvas/*.js
+  - color/*.js
+  - config/*.js
   - controller/*.js
   - data-source/*.js
   - effect/*.js
   - form/*.js
   - grid/*.js
+  - layout/*.js
+  - misc/*.js
   - model/*.js
+  - remote/*.js
   - socket/*.js
   - store/*.js
-  - canvas/*.js
-  - color/*.js
   - view/*.js
-  - remote/*.js
-  - layout/*.js
 
 serve:
   - ../css/ludojs-blue.css

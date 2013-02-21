@@ -111,16 +111,7 @@ TestCase("SliderTest", {
 		// then
 		assertTrue('Pos was ' + this.getHandlePosition(slider), this.getHandlePosition(slider) > 0);
 	},
-	"test should return slider handle size":function () {
 
-		// given
-		var slider = this.getSlider({
-			direction:'horizontal'
-		});
-
-		// then
-		assertEquals(10, slider.getHandleSize());
-	},
 	"test should return horizontal slider size":function () {
 
 		// given

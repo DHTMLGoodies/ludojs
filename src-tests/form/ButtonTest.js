@@ -57,14 +57,21 @@ TestCase("ButtonTest", {
 		// then
 		assertNotUndefined(button.menu);
 	},
+
 	"test should be able to disable button when form is invalid":function () {
 		// given
 		var cmp = this.getPanelWithButton();
 		var button = cmp.getButton('ok');
-		var mgr = cmp.formManager;
+		var mgr = cmp.getFormManager();
 		var fn = cmp.child['firstname'];
-		fn.setValue('a');
 
+        // when
+		fn.setValue('a');
+        mgr.getFormElements();
+
+        // then
+        assertTrue(button.disableOnInvalid);
+        assertEquals(cmp, button.getParentComponent());
 		assertEquals(1, cmp.getAllChildren().length);
 		assertFalse(fn.isValid());
 		assertTrue(button.isDisabled());

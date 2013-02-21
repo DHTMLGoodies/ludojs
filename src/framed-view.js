@@ -124,20 +124,19 @@ ludo.FramedView = new Class({
 
 	ludoDOM:function () {
 		this.parent();
-		var el = this.els.container;
-		ludo.dom.addClass(el, 'ludo-rich-view');
+
+		ludo.dom.addClass(this.els.container, 'ludo-rich-view');
 
 		if (this.titleBar)this.getTitleBarEl().inject(this.getBody(), 'before');
+		ludo.dom.addClass(this.getBody(), 'ludo-rich-view-body');
 
-		var body = this.getBody();
-		ludo.dom.addClass(body, 'ludo-rich-view-body');
-
+        // TODO create button bar after view is rendered.
 		if (this.buttonBar) {
 			this.getButtonBar()
 		} else {
-			ludo.dom.addClass(el, 'ludo-component-no-buttonbar')
+			ludo.dom.addClass(this.els.container, 'ludo-component-no-buttonbar')
 		}
-		if (this.statusBar)el.adopt(this.getStatusBar());
+		if (this.statusBar)this.els.container.adopt(this.getStatusBar());
 
 		var parent = this.getParent();
 		if (!parent && this.isResizable()) {

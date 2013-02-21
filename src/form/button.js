@@ -111,13 +111,7 @@ ludo.form.Button = new Class({
         config.weight = undefined;
         this.parent(config);
 
-        if (config.menu !== undefined)this.menu = config.menu;
-        if (config.icon !== undefined)this.icon = config.icon;
-        if (config.toggle !== undefined)this.toggle = config.toggle;
-        if (config.disableOnInvalid !== undefined)this.disableOnInvalid = config.disableOnInvalid;
-        this.defaultSubmit = config.defaultSubmit || false;
-        this.disabled = config.disabled || this.disabled;
-        if (config.selected !== undefined) this.selected = config.selected;
+        this.setConfigParams(config, ['menu','icon','toggle','disableOnInvalid','defaultSubmit','disabled','selected']);
 
         if (config.toggleGroup !== undefined) {
             if (ludo.util.type(config.toggleGroup) === 'String') {
@@ -178,10 +172,11 @@ ludo.form.Button = new Class({
         }
 
         this.component = this.getParentComponent();
-
         if(this.component && this.disableOnInvalid){
-            this.component.getFormManager().addEvent('valid', this.enable.bind(this));
-            this.component.getFormManager().addEvent('invalid', this.disable.bind(this));
+            var m = this.component.getFormManager();
+            m.addEvent('valid', this.enable.bind(this));
+            m.addEvent('invalid', this.disable.bind(this));
+            if(!m.isValid())this.disable();
         }
     },
 

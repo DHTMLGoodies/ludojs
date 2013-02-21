@@ -4,6 +4,10 @@ load:
   - ../../js/ludojs.js
   - ../../src/form/*.js
 
+serve:
+  - ../../css/ludojs.css
+  - ../../css/ludojs-light-gray.css
+
 test:
   - ButtonTest.js
   - FileTest.js
@@ -15,9 +19,6 @@ test:
   - LinkedTest.js
   - SearchFieldTest.js
   - PasswordTest.js
-
-serve:
-  - ../../css/ludojs-blue.css
 
 plugin:
  - name: "coverage"

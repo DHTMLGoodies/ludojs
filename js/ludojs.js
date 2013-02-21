@@ -1,4 +1,4 @@
-/* Generated Thu Feb 21 22:15:52 CET 2013 */
+/* Generated Thu Feb 21 23:37:46 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -7626,21 +7626,20 @@ ludo.layout.Relative = new Class({
 		this.parent(child);
 		child.getEl().style.position = 'absolute';
         var l = child.layout;
-        
-		if (child.layout.centerInParent !== undefined) {
-			child.layout.centerHorizontal = undefined;
-			child.layout.centerVertical = undefined;
+		if (l.centerInParent !== undefined) {
+			l.centerHorizontal = undefined;
+			l.centerVertical = undefined;
 		}
-		if(child.layout.fillRight === undefined){
-			if (child.layout.width === undefined)child.layout.width = child.width ? child.width : undefined;
+		if(l.fillRight === undefined){
+			if (l.width === undefined)l.width = child.width ? child.width : undefined;
 		}
 
-		if (child.layout.height === undefined)child.layout.height = child.height ? child.height : undefined;
+		if (l.height === undefined)l.height = child.height ? child.height : undefined;
 
-		if (child.layout.leftOf)child.layout.right = undefined;
-		if (child.layout.rightOf)child.layout.left = undefined;
-		if (child.layout.below)child.layout.top = undefined;
-		if (child.layout.above)child.layout.bottom = undefined;
+		if (l.leftOf)l.right = undefined;
+		if (l.rightOf)l.left = undefined;
+		if (l.below)l.top = undefined;
+		if (l.above)l.bottom = undefined;
 	},
 
     /**
@@ -10874,20 +10873,19 @@ ludo.FramedView = new Class({
 
 	ludoDOM:function () {
 		this.parent();
-		var el = this.els.container;
-		ludo.dom.addClass(el, 'ludo-rich-view');
+
+		ludo.dom.addClass(this.els.container, 'ludo-rich-view');
 
 		if (this.titleBar)this.getTitleBarEl().inject(this.getBody(), 'before');
+		ludo.dom.addClass(this.getBody(), 'ludo-rich-view-body');
 
-		var body = this.getBody();
-		ludo.dom.addClass(body, 'ludo-rich-view-body');
-
+        // TODO create button bar after view is rendered.
 		if (this.buttonBar) {
 			this.getButtonBar()
 		} else {
-			ludo.dom.addClass(el, 'ludo-component-no-buttonbar')
+			ludo.dom.addClass(this.els.container, 'ludo-component-no-buttonbar')
 		}
-		if (this.statusBar)el.adopt(this.getStatusBar());
+		if (this.statusBar)this.els.container.adopt(this.getStatusBar());
 
 		var parent = this.getParent();
 		if (!parent && this.isResizable()) {
@@ -16622,13 +16620,7 @@ ludo.form.Button = new Class({
         config.weight = undefined;
         this.parent(config);
 
-        if (config.menu !== undefined)this.menu = config.menu;
-        if (config.icon !== undefined)this.icon = config.icon;
-        if (config.toggle !== undefined)this.toggle = config.toggle;
-        if (config.disableOnInvalid !== undefined)this.disableOnInvalid = config.disableOnInvalid;
-        this.defaultSubmit = config.defaultSubmit || false;
-        this.disabled = config.disabled || this.disabled;
-        if (config.selected !== undefined) this.selected = config.selected;
+        this.setConfigParams(config, ['menu','icon','toggle','disableOnInvalid','defaultSubmit','disabled','selected']);
 
         if (config.toggleGroup !== undefined) {
             if (ludo.util.type(config.toggleGroup) === 'String') {
@@ -16689,10 +16681,11 @@ ludo.form.Button = new Class({
         }
 
         this.component = this.getParentComponent();
-
         if(this.component && this.disableOnInvalid){
-            this.component.getFormManager().addEvent('valid', this.enable.bind(this));
-            this.component.getFormManager().addEvent('invalid', this.disable.bind(this));
+            var m = this.component.getFormManager();
+            m.addEvent('valid', this.enable.bind(this));
+            m.addEvent('invalid', this.disable.bind(this));
+            if(!m.isValid())this.disable();
         }
     },
 
