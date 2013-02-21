@@ -720,3 +720,6 @@ div.ludo-tab-strip-tab-active {
 div.ludo-form-el-invalid label{
     color:#F00;
 }
+div.ludo-form-element input{
+    height:14px;
+}

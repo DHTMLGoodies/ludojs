@@ -1,4 +1,4 @@
-/* Generated Fri Feb 22 0:01:12 CET 2013 */
+/* Generated Fri Feb 22 0:15:39 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -3616,6 +3616,8 @@ ludo.layout.Renderer = new Class({
 	},
 
 	addResizeEvent:function () {
+        // todo no resize should be done for absolute positioned views with a width. refactor the next line
+        if(this.view.isWindow)return;
 		var node = this.view.getEl().parentNode;
 		if (!node || !node.tagName)return;
 		if (node.tagName.toLowerCase() !== 'body') {
@@ -11483,6 +11485,10 @@ ludo.Window = new Class({
     showCentered:function () {
         this.center();
         this.showAt(x,y);
+    },
+
+    isWindow:function(){
+        return true;
     }
 });/* ../ludojs/src/accordion.js */
 /**
