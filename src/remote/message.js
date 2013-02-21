@@ -28,7 +28,7 @@ ludo.remote.Message = new Class({
      */
     service:undefined,
     listenTo:undefined,
-    messageTypes:['success','failure','success'],
+    messageTypes:['success','failure','error'],
 
     ludoConfig:function(config){
         this.parent(config);

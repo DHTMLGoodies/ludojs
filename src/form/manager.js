@@ -242,7 +242,8 @@ ludo.form.Manager = new Class({
 			el.upload();
 			return;
 		}
-		this.component.fireEvent('beforesubmit');
+
+		this.fireEvent('beforesubmit');
 		if (this.model) {
 			this.model.save(this.getValues());
 		}

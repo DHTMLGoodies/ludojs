@@ -32,7 +32,7 @@ ludo.progress.Base = new Class({
             component:this.component
         };
 
-        this.component.addEvent('beforesubmit', this.show.bind(this));
+        this.component.getFormManager().addEvent('beforesubmit', this.show.bind(this));
 
         this.getDataSource().addEvent('load', this.insertJSON.bind(this));
         this.getDataSource().addEvent('start', this.start.bind(this));

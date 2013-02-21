@@ -29,13 +29,14 @@ ludo.remote.Broadcaster = new Class({
                 eventName = this.getEventName('success', request.getResource());
                 eventNameWithService = this.getEventName('success', request.getResource(), service);
                 break;
-            case 500:
+            default:
                 eventName = this.getEventName('failure', request.getResource());
                 eventNameWithService = this.getEventName('failure', request.getResource(), service);
                 break;
-            default:
-                eventName = this.getEventName('serverError', request.getResource());
-                eventNameWithService = this.getEventName('serverError', request.getResource(), service);
+        }
+        if(!eventName){
+            eventName = this.getEventName('serverError', request.getResource());
+            eventNameWithService = this.getEventName('serverError', request.getResource(), service);
         }
 
         var eventObj = {

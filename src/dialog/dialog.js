@@ -97,6 +97,7 @@ ludo.dialog.Dialog = new Class({
 	ludoRendered:function () {
 		this.parent();
 		if (!this.isHidden()) {
+            this.center();
 			this.showShim();
 		}
 		var buttons = this.getButtons();
@@ -110,8 +111,10 @@ ludo.dialog.Dialog = new Class({
 		return this.modal;
 	},
 	show:function () {
+
+        this.showShim();
 		this.parent();
-		this.showShim();
+
 	},
 
 	hide:function () {
@@ -123,7 +126,7 @@ ludo.dialog.Dialog = new Class({
 	},
 
 	showShim:function () {
-		this.showCentered();
+        this.center();
 		if (this.isModal()) {
 			this.els.shim.setStyles({
 				display:'',

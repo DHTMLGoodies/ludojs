@@ -1,4 +1,4 @@
-/* Generated Wed Feb 20 21:59:19 CET 2013 */
+/* Generated Thu Feb 21 1:02:16 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -1429,11 +1429,13 @@ ludo.remote.JSON = new Class({
                     this.fireEvent('failure', this);
                 }
                 this.sendBroadCast(service);
+                this.fireEvent('complete', this);
             }.bind(this),
             onError:function (text, error) {
                 this.JSON = { "code": 500, "message": error };
                 this.fireEvent('servererror', this);
                 this.sendBroadCast(service);
+                this.fireEvent('complete', this);
             }.bind(this)
         });
         req.send();
@@ -1580,13 +1582,14 @@ ludo.remote.Broadcaster = new Class({
                 eventName = this.getEventName('success', request.getResource());
                 eventNameWithService = this.getEventName('success', request.getResource(), service);
                 break;
-            case 500:
+            default:
                 eventName = this.getEventName('failure', request.getResource());
                 eventNameWithService = this.getEventName('failure', request.getResource(), service);
                 break;
-            default:
-                eventName = this.getEventName('serverError', request.getResource());
-                eventNameWithService = this.getEventName('serverError', request.getResource(), service);
+        }
+        if(!eventName){
+            eventName = this.getEventName('serverError', request.getResource());
+            eventNameWithService = this.getEventName('serverError', request.getResource(), service);
         }
 
         var eventObj = {
@@ -5658,7 +5661,7 @@ ludo.remote.Message = new Class({
      */
     service:undefined,
     listenTo:undefined,
-    messageTypes:['success','failure','success'],
+    messageTypes:['success','failure','error'],
 
     ludoConfig:function(config){
         this.parent(config);
@@ -11446,10 +11449,22 @@ ludo.Window = new Class({
      * @return void
      */
     showAt:function (x, y) {
+        this.setXY(x,y);
+        this.show();
+    },
+
+    setXY:function(x,y){
         this.layout.left = x;
         this.layout.top = y;
         this.getLayoutManager().getRenderer().clearFn();
-        this.show();
+        this.getLayoutManager().getRenderer().resize();
+    },
+
+    center:function(){
+        var bodySize = document.body.getSize();
+        var x = Math.round((bodySize.x / 2) - (this.getWidth() / 2));
+        var y = Math.round((bodySize.y / 2) - (this.getHeight() / 2));
+        this.setXY(x,y);
     },
 
     /**
@@ -11458,9 +11473,7 @@ ludo.Window = new Class({
      * @return void
      */
     showCentered:function () {
-        var bodySize = document.body.getSize();
-        var x = Math.round((bodySize.x / 2) - (this.getWidth() / 2));
-        var y = Math.round((bodySize.y / 2) - (this.getHeight() / 2));
+        this.center();
         this.showAt(x,y);
     }
 });/* ../ludojs/src/accordion.js */
@@ -16967,12 +16980,15 @@ ludo.card.FinishButton = new Class({
 		var lm;
         if (this.component) {
 			lm = this.component.getLayoutManager();
+            var fm = this.component.getFormManager();
+
             lm.addEvent('valid', this.enable.bind(this));
             lm.addEvent('invalid', this.disable.bind(this));
-			this.component.addEvent('beforesubmit', this.disable.bind(this));
-
             lm.addEvent('lastcard', this.show.bind(this));
             lm.addEvent('notlastcard', this.hide.bind(this));
+
+            fm.addEvent('beforesubmit', this.disable.bind(this));
+            fm.addEvent('success', this.setSubmitted.bind(this));
 
             if(!lm.isValid()){
                 this.disabled = true;
@@ -16991,10 +17007,21 @@ ludo.card.FinishButton = new Class({
         }
     },
 
+    show:function(){
+        if(!this.submitted){
+            return this.parent();
+        }
+        return undefined;
+    },
+    submitted : false,
     submit:function () {
         if (this.component) {
             this.component.submit();
         }
+    },
+
+    setSubmitted:function(){
+        this.submitted = true;
     }
 });/* ../ludojs/src/card/next-button.js */
 /**
@@ -17109,7 +17136,7 @@ ludo.progress.DataSource = new Class({
         this.parent(config);
         if(config.pollFrequence !== undefined)this.pollFrequence = config.pollFrequence;
         this.component = config.component;
-        this.component.addEvent('beforesubmit', this.startProgress.bind(this));
+        this.component.getFormManager().addEvent('beforesubmit', this.startProgress.bind(this));
     },
 
     startProgress:function(){
@@ -17194,7 +17221,7 @@ ludo.progress.Base = new Class({
             component:this.component
         };
 
-        this.component.addEvent('beforesubmit', this.show.bind(this));
+        this.component.getFormManager().addEvent('beforesubmit', this.show.bind(this));
 
         this.getDataSource().addEvent('load', this.insertJSON.bind(this));
         this.getDataSource().addEvent('start', this.start.bind(this));
@@ -22216,7 +22243,8 @@ ludo.form.Manager = new Class({
 			el.upload();
 			return;
 		}
-		this.component.fireEvent('beforesubmit');
+
+		this.fireEvent('beforesubmit');
 		if (this.model) {
 			this.model.save(this.getValues());
 		}
@@ -26632,6 +26660,7 @@ ludo.dialog.Dialog = new Class({
 	ludoRendered:function () {
 		this.parent();
 		if (!this.isHidden()) {
+            this.center();
 			this.showShim();
 		}
 		var buttons = this.getButtons();
@@ -26645,8 +26674,10 @@ ludo.dialog.Dialog = new Class({
 		return this.modal;
 	},
 	show:function () {
+
+        this.showShim();
 		this.parent();
-		this.showShim();
+
 	},
 
 	hide:function () {
@@ -26658,7 +26689,7 @@ ludo.dialog.Dialog = new Class({
 	},
 
 	showShim:function () {
-		this.showCentered();
+        this.center();
 		if (this.isModal()) {
 			this.els.shim.setStyles({
 				display:'',

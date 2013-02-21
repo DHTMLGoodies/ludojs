@@ -186,10 +186,22 @@ ludo.Window = new Class({
      * @return void
      */
     showAt:function (x, y) {
+        this.setXY(x,y);
+        this.show();
+    },
+
+    setXY:function(x,y){
         this.layout.left = x;
         this.layout.top = y;
         this.getLayoutManager().getRenderer().clearFn();
-        this.show();
+        this.getLayoutManager().getRenderer().resize();
+    },
+
+    center:function(){
+        var bodySize = document.body.getSize();
+        var x = Math.round((bodySize.x / 2) - (this.getWidth() / 2));
+        var y = Math.round((bodySize.y / 2) - (this.getHeight() / 2));
+        this.setXY(x,y);
     },
 
     /**
@@ -198,9 +210,7 @@ ludo.Window = new Class({
      * @return void
      */
     showCentered:function () {
-        var bodySize = document.body.getSize();
-        var x = Math.round((bodySize.x / 2) - (this.getWidth() / 2));
-        var y = Math.round((bodySize.y / 2) - (this.getHeight() / 2));
+        this.center();
         this.showAt(x,y);
     }
 });
