@@ -417,13 +417,19 @@ ludo.layout.Card = new Class({
 				duration:this.getAnimationDuration()
 			});
 			this.fx[this.visibleCard.id].addEvent('complete', this.animationComplete.bind(this));
+			this.fx[this.visibleCard.id].addEvent('start', this.animationStart.bind(this));
 		}
 		return this.fx[this.visibleCard.id];
 	},
 
+    animationStart:function(){
+        // TODO apply shadow or border during dragging and animation.
+    },
+
 	animationComplete:function (el) {
-		el.style.left = '0px';
-		el.style.top = '0px';
+		el.style.left = '0';
+		el.style.top = '0';
+        el.style.borderWidth = '0';
 	},
 
 	touchStart:function (e) {
@@ -534,7 +540,6 @@ ludo.layout.Card = new Class({
 		var skipEvents = true;
 		if (card = this.getPreviousCardOf(ludo.get(id))) {
 			card.show(skipEvents);
-			//this.view.resizeChildren();
 		}
 		if (card = this.getNextCardOf(ludo.get(id))) {
 			card.show(skipEvents);
