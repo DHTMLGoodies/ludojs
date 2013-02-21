@@ -34,7 +34,8 @@ ludo.layout.Renderer = new Class({
 		this.fixReferences();
 		this.setDefaultProperties();
 		this.view.addEvent('show', this.resize.bind(this));
-		this.resize();
+        ludo.dom.clearCache();
+		// this.resize();
 		this.addResizeEvent();
 	},
 
@@ -99,6 +100,8 @@ ludo.layout.Renderer = new Class({
 	},
 
 	addResizeEvent:function () {
+        // todo no resize should be done for absolute positioned views with a width. refactor the next line
+        if(this.view.isWindow)return;
 		var node = this.view.getEl().parentNode;
 		if (!node || !node.tagName)return;
 		if (node.tagName.toLowerCase() !== 'body') {

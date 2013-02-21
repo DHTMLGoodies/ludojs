@@ -130,12 +130,6 @@ ludo.FramedView = new Class({
 		if (this.titleBar)this.getTitleBarEl().inject(this.getBody(), 'before');
 		ludo.dom.addClass(this.getBody(), 'ludo-rich-view-body');
 
-        // TODO create button bar after view is rendered.
-		if (this.buttonBar) {
-			this.getButtonBar()
-		} else {
-			ludo.dom.addClass(this.els.container, 'ludo-component-no-buttonbar')
-		}
 		if (this.statusBar)this.els.container.adopt(this.getStatusBar());
 
 		var parent = this.getParent();
@@ -146,6 +140,12 @@ ludo.FramedView = new Class({
 
 
 	ludoRendered:function () {
+        // TODO create button bar after view is rendered.
+        if (this.buttonBar) {
+            this.getButtonBar()
+        } else {
+            ludo.dom.addClass(this.els.container, 'ludo-component-no-buttonbar')
+        }
 		this.parent();
 		if (this.minimized) {
 			this.minimize();
@@ -233,7 +233,7 @@ ludo.FramedView = new Class({
 	getHeightOfButtonBar:function () {
 		if (!this.buttonBar)return 0;
 		if (this.heightOfButtonBar === undefined) {
-			this.heightOfButtonBar = this.els.buttonBar.el.offsetHeight + ludo.dom.getMH(this.els.buttonBar.el);
+			if(this.els.buttonBar)this.heightOfButtonBar = this.els.buttonBar.el.offsetHeight + ludo.dom.getMH(this.els.buttonBar.el);
 		}
 		return this.heightOfButtonBar;
 	},

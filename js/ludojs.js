@@ -1,4 +1,4 @@
-/* Generated Thu Feb 21 23:37:46 CET 2013 */
+/* Generated Fri Feb 22 0:01:12 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -3550,7 +3550,8 @@ ludo.layout.Renderer = new Class({
 		this.fixReferences();
 		this.setDefaultProperties();
 		this.view.addEvent('show', this.resize.bind(this));
-		this.resize();
+        ludo.dom.clearCache();
+		// this.resize();
 		this.addResizeEvent();
 	},
 
@@ -4666,7 +4667,7 @@ ludo.View = new Class({
 		if (!this.parentComponent) {
 			ludo.dom.clearCache();
 			ludo.dom.clearCache.delay(50, this);
-			this.resize({ width:this.width, height:this.height });
+            this.getLayoutManager().getRenderer().resize();
 		}
 	},
 
@@ -5098,6 +5099,7 @@ ludo.View = new Class({
 		 * @param {Object} this
 		 */
 		if (!skipEvents)this.fireEvent('show', this);
+
 		if (this.parentComponent) {
 			this.resizeParent();
 		} else {
@@ -10879,12 +10881,6 @@ ludo.FramedView = new Class({
 		if (this.titleBar)this.getTitleBarEl().inject(this.getBody(), 'before');
 		ludo.dom.addClass(this.getBody(), 'ludo-rich-view-body');
 
-        // TODO create button bar after view is rendered.
-		if (this.buttonBar) {
-			this.getButtonBar()
-		} else {
-			ludo.dom.addClass(this.els.container, 'ludo-component-no-buttonbar')
-		}
 		if (this.statusBar)this.els.container.adopt(this.getStatusBar());
 
 		var parent = this.getParent();
@@ -10895,6 +10891,12 @@ ludo.FramedView = new Class({
 
 
 	ludoRendered:function () {
+        // TODO create button bar after view is rendered.
+        if (this.buttonBar) {
+            this.getButtonBar()
+        } else {
+            ludo.dom.addClass(this.els.container, 'ludo-component-no-buttonbar')
+        }
 		this.parent();
 		if (this.minimized) {
 			this.minimize();
@@ -10982,7 +10984,7 @@ ludo.FramedView = new Class({
 	getHeightOfButtonBar:function () {
 		if (!this.buttonBar)return 0;
 		if (this.heightOfButtonBar === undefined) {
-			this.heightOfButtonBar = this.els.buttonBar.el.offsetHeight + ludo.dom.getMH(this.els.buttonBar.el);
+			if(this.els.buttonBar)this.heightOfButtonBar = this.els.buttonBar.el.offsetHeight + ludo.dom.getMH(this.els.buttonBar.el);
 		}
 		return this.heightOfButtonBar;
 	},
