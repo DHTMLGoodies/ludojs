@@ -303,7 +303,7 @@ ludo.model.Model = new Class({
 	},
 	registerView:function (view) {
 		this.views.push(view);
-		view.insertJSON({ data:this.currentRecord });
+		view.insertJSON(this.currentRecord);
 	},
 
 	updateViews:function () {

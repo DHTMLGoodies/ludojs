@@ -1,4 +1,4 @@
-/* Generated Fri Feb 22 0:29:05 CET 2013 */
+/* Generated Fri Feb 22 0:32:40 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -18893,7 +18893,7 @@ ludo.model.Model = new Class({
 	},
 	registerView:function (view) {
 		this.views.push(view);
-		view.insertJSON({ data:this.currentRecord });
+		view.insertJSON(this.currentRecord);
 	},
 
 	updateViews:function () {
