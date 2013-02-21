@@ -293,7 +293,6 @@ ludo.layout.Card = new Class({
 	},
 	button:{},
 	registerButton:function (button) {
-
 		this.button[button.name || button.id] = button;
 
 	},
@@ -489,7 +488,6 @@ ludo.layout.Card = new Class({
 	},
 
 	setZIndexOfOtherCards:function (pos) {
-
 		if (pos > 0 && this.touchConfig.previousPos <= 0) {
 			if (this.touchConfig.nextCard) {
 				this.touchConfig.nextCard.getEl().style.zIndex = (this.touchConfig.zIndex - 3);

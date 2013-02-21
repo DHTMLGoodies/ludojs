@@ -4,16 +4,17 @@ ludo.audio.Audio = new Class({
     bgSound:undefined,
 
     initialize:function () {
-        this.html5 = this.suportsHTML5Audio();
+        this.html5 = this.supportsHTML5Audio();
         console.log(this.html5);
     },
 
     createBgSound:function () {
+        var el;
         if (this.html5) {
-            var el = this.bgSound = document.createElement('audio');
+            el = this.bgSound = document.createElement('audio');
             document.body.adopt(el);
         } else {
-            var el = this.bgSound = new Element('bgsound');
+            el = this.bgSound = new Element('bgsound');
             document.body.adopt(el);
             el.setProperty('loop', '1');
             el.setProperty('autostart', 'true');
@@ -24,7 +25,7 @@ ludo.audio.Audio = new Class({
 
     },
 
-    suportsHTML5Audio:function () {
+    supportsHTML5Audio:function () {
         var a = document.createElement('audio');
         return a.canPlayType !== undefined;
         /*
