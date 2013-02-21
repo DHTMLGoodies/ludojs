@@ -1,4 +1,4 @@
-/* Generated Thu Feb 21 15:12:29 CET 2013 */
+/* Generated Thu Feb 21 20:23:12 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -2783,9 +2783,11 @@ ludo.layout.Resizer = new Class({
 		this.view = config.view;
 		this.layout = config.layout;
 		this.pos = config.pos;
+        if(config.hidden !== undefined)this.hidden = config.hidden;
 		this.createDOM(config.renderTo);
 		this.addViewEvents();
 		this.createDragable();
+        if(this.hidden)this.hide();
 	},
 
 	createDOM:function(renderTo){
@@ -5944,6 +5946,7 @@ ludo.layout.Linear = new Class({
 			name:'resizer-' + child.name,
 			orientation:(r === 'left' || r === 'right') ? 'horizontal' : 'vertical',
 			pos:r,
+            hidden:child.isHidden(),
 			renderTo:this.view.getBody(),
 			layout:{ width:5,height:5 },
 			view:child,
@@ -5955,6 +5958,8 @@ ludo.layout.Linear = new Class({
 				'before':this.beforeResize.bind(this)
 			}
 		});
+
+
 	}
 
 });/* ../ludojs/src/layout/linear-horizontal.js */
@@ -26023,6 +26028,7 @@ ludo.form.SearchField = new Class({
 	ludoConfig:function (config) {
 		this.parent(config);
 		if (config.searchIn)this.searchIn = config.searchIn;
+        if(ludo.util.isString(this.searchIn))this.searchIn = ludo.get(this.searchIn);
 		if (config.delay !== undefined)this.delay = config.delay;
 		if (config.searchFn !== undefined)this.searchFn = config.searchFn.bind(this);
 		this.addEvent('key', this.queue.bind(this));

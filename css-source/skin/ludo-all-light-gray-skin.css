@@ -617,6 +617,10 @@ div.ludo-component-buttonbar{
 
 /**
 tab layout */
+
+div.ludo-tab-strip-tab span{
+    color:#000;
+}
 .ludo-tab-strip .ludo-body,.ludo-tab-strip-tab {
     background-color: #D7D7D7;
     border-color:#c6c6c6;

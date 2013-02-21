@@ -14,9 +14,11 @@ ludo.layout.Resizer = new Class({
 		this.view = config.view;
 		this.layout = config.layout;
 		this.pos = config.pos;
+        if(config.hidden !== undefined)this.hidden = config.hidden;
 		this.createDOM(config.renderTo);
 		this.addViewEvents();
 		this.createDragable();
+        if(this.hidden)this.hide();
 	},
 
 	createDOM:function(renderTo){

@@ -55,6 +55,7 @@ ludo.layout.Linear = new Class({
 			name:'resizer-' + child.name,
 			orientation:(r === 'left' || r === 'right') ? 'horizontal' : 'vertical',
 			pos:r,
+            hidden:child.isHidden(),
 			renderTo:this.view.getBody(),
 			layout:{ width:5,height:5 },
 			view:child,
@@ -66,6 +67,8 @@ ludo.layout.Linear = new Class({
 				'before':this.beforeResize.bind(this)
 			}
 		});
+
+
 	}
 
 });
