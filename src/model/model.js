@@ -308,7 +308,7 @@ ludo.model.Model = new Class({
 
 	updateViews:function () {
 		for (var i = 0, len = this.views.length; i < len; i++) {
-			this.views[i].insertJSON({ data:this.currentRecord });
+			this.views[i].insertJSON(this.currentRecord);
 		}
 	},
 

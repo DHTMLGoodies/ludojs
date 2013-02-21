@@ -52,11 +52,13 @@ TestCase("ModelTest", {
 		if (!window['cmpWithTplModel']) {
 			window.CmpWithTplModel = new Class({
 				Extends:ludo.View,
+                renderTo:document.body,
 				model:{
 					type:'DefaultModel'
 				},
 				children:[
 					{
+                        name:'firstname',
 						tpl:'{firstname}'
 					}
 				]
@@ -165,7 +167,8 @@ TestCase("ModelTest", {
 		});
 
 		// then
-		assertTrue(c.getBody().get('html').indexOf('Alf Magne') >= 0);
+        assertTrue(c.getModel().views.indexOf(c.child['firstname']) >= 0);
+		assertEquals('Alf Magne', c.child['firstname'].getBody().innerHTML);
 	},
 	"test should register children of components using same model":function () {
 		// given
