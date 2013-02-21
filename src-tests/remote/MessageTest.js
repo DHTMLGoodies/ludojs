@@ -5,7 +5,6 @@ TestCase("MessageTest", {
         var message = new ludo.remote.Message({
             "resource": "Person"
         });
-
         ludo.remoteBroadcaster.broadcast(
             this.getRemoteMock({
                 "message": "My message",
@@ -15,7 +14,11 @@ TestCase("MessageTest", {
         );
 
         // then
-        assertEquals("My message", message.getBody().innerText);
+        assertEquals("My message", this.getInnerText(message.getBody()));
+    },
+
+    getInnerText:function(el){
+        return el.innerHTML.replace(/<\/[^>]+?>/g,'');
     },
 
     getRemoteMock:function(config){
