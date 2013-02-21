@@ -1,4 +1,4 @@
-/* Generated Thu Feb 21 20:23:12 CET 2013 */
+/* Generated Thu Feb 21 21:09:40 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -2779,11 +2779,7 @@ ludo.layout.Resizer = new Class({
 
 	ludoConfig:function (config) {
 		this.parent(config);
-		this.orientation = config.orientation;
-		this.view = config.view;
-		this.layout = config.layout;
-		this.pos = config.pos;
-        if(config.hidden !== undefined)this.hidden = config.hidden;
+        this.setConfigParams(config, ['orientation','view','layout','pos','hidden']);
 		this.createDOM(config.renderTo);
 		this.addViewEvents();
 		this.createDragable();

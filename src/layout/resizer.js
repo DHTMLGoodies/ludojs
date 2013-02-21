@@ -10,11 +10,7 @@ ludo.layout.Resizer = new Class({
 
 	ludoConfig:function (config) {
 		this.parent(config);
-		this.orientation = config.orientation;
-		this.view = config.view;
-		this.layout = config.layout;
-		this.pos = config.pos;
-        if(config.hidden !== undefined)this.hidden = config.hidden;
+        this.setConfigParams(config, ['orientation','view','layout','pos','hidden']);
 		this.createDOM(config.renderTo);
 		this.addViewEvents();
 		this.createDragable();
