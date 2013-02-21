@@ -2,10 +2,8 @@ load:
   - ../../mootools/mootools-core-1.4.5.js
   - ../../mootools/mootools-more-1.4.0.1.js
   - ../../js/ludojs.js
-  - ../../src/view.js
 
 test:
-  - PopupTest.js
   - GridTest.js
   - CollapsedBarTest.js
   - CompabilityTest.js
@@ -15,6 +13,12 @@ test:
   - RendererTest.js
   - TabTest.js
   - CardTest.js
+  - PopupTest.js
+
+serve:
+  - ../../css/ludojs-blue.css
+  - ../../images/*.png
+  - ../../images/blue-skin/form/*.png
 
 plugin:
  - name: "coverage"

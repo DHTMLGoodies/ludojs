@@ -390,7 +390,7 @@ ludo.layout.Relative = new Class({
     /**
      * Creates empty newChildCoordinates and lastChildCoordinates for a child view
      * @method assignDefaultCoordinates
-     * @param {ludo.View} child
+     * @param {ludo.View|ludo.layout.Resizer} child
      * @private
      */
 	assignDefaultCoordinates:function (child) {
@@ -695,6 +695,8 @@ ludo.layout.Relative = new Class({
 	onNewChild:function (child) {
 		this.parent(child);
 		child.getEl().style.position = 'absolute';
+        var l = child.layout;
+        
 		if (child.layout.centerInParent !== undefined) {
 			child.layout.centerHorizontal = undefined;
 			child.layout.centerVertical = undefined;

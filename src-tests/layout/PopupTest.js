@@ -1,5 +1,9 @@
 TestCase("PopupTest", {
 
+    setUp:function(){
+
+    },
+
 	"test layout type should be popup":function () {
 
 

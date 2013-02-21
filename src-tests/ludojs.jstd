@@ -16,6 +16,7 @@ test:
   - color/*.js
   - view/*.js
   - remote/*.js
+  - layout/*.js
 
 serve:
   - ../css/ludojs-blue.css

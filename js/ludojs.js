@@ -1,4 +1,4 @@
-/* Generated Thu Feb 21 21:21:57 CET 2013 */
+/* Generated Thu Feb 21 22:15:52 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -2984,7 +2984,6 @@ ludo.layout.Base = new Class({
      * @optional
      */
 	addChild:function (child, insertAt, pos) {
-        var previousParent = child.parentComponent;
 		child = this.getNewComponent(child);
 		var parentEl = this.getParentForNewChild();
 		if (insertAt) {
@@ -3006,7 +3005,10 @@ ludo.layout.Base = new Class({
 			this.view.children = children;
 		} else {
 			this.view.children.push(child);
-			if(previousParent && previousParent !== this.view || !child.getEl().parentNode)parentEl.adopt(child.getEl());
+            var el = child.getEl();
+            if(!el.parentNode || el.parentNode !== parentEl){
+                parentEl.appendChild(el);
+            }
 		}
 
 		this.onNewChild(child);
@@ -7318,7 +7320,7 @@ ludo.layout.Relative = new Class({
     /**
      * Creates empty newChildCoordinates and lastChildCoordinates for a child view
      * @method assignDefaultCoordinates
-     * @param {ludo.View} child
+     * @param {ludo.View|ludo.layout.Resizer} child
      * @private
      */
 	assignDefaultCoordinates:function (child) {
@@ -7623,6 +7625,8 @@ ludo.layout.Relative = new Class({
 	onNewChild:function (child) {
 		this.parent(child);
 		child.getEl().style.position = 'absolute';
+        var l = child.layout;
+        
 		if (child.layout.centerInParent !== undefined) {
 			child.layout.centerHorizontal = undefined;
 			child.layout.centerVertical = undefined;

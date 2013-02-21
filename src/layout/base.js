@@ -38,7 +38,6 @@ ludo.layout.Base = new Class({
      * @optional
      */
 	addChild:function (child, insertAt, pos) {
-        var previousParent = child.parentComponent;
 		child = this.getNewComponent(child);
 		var parentEl = this.getParentForNewChild();
 		if (insertAt) {
@@ -60,7 +59,10 @@ ludo.layout.Base = new Class({
 			this.view.children = children;
 		} else {
 			this.view.children.push(child);
-			if(previousParent && previousParent !== this.view || !child.getEl().parentNode)parentEl.adopt(child.getEl());
+            var el = child.getEl();
+            if(!el.parentNode || el.parentNode !== parentEl){
+                parentEl.appendChild(el);
+            }
 		}
 
 		this.onNewChild(child);
