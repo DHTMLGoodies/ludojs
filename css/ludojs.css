@@ -1,4 +1,4 @@
-/* Generated Fri Feb 22 0:53:25 CET 2013 */
+/* Generated Fri Feb 22 13:42:05 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -863,9 +863,9 @@ div.ludo-tab-strip-top div.ludo-body {
     position:absolute;
 }
 .ludo-window, .ludo-richcomponent, .ludo-rich-view-shim {
-    border-radius: 7px 7px 0px 0px;
-    -moz-border-radius: 7px 7px 0px 0px;
-    webkit-border-radius: 7px 7px 0px 0px;
+    border-radius: 7px 7px 0 0;
+    -moz-border-radius: 7px 7px 0 0;
+    webkit-border-radius: 7px 7px 0 0;
 }/* ../ludojs/css-source/accordion.css */
 .ludo-accordion{
     border-radius:0;
@@ -1253,85 +1253,7 @@ div.ludo-form-button-disabled .ludo-form-button-bg-right {
 }
 
 
-/* ../ludojs/css-source/progress/progress-bar.css */
-.ludo-Progress-Bar-Bg{
-    width:300px;
-    height:20px;
-    position:relative;
-    margin-left:2px;
-    margin-right:2px;
-    margin-top:1px;
-    overflow:hidden;
-}
-.ludo-Progress-Bar-Bg-Left{
-    background-image:url('../images/progress-bar/progress-bg.png');
-    width:60%;
-    left:0;
-    position:absolute;
-    background-position:top left;
-    height:20px;
-    background-repeat:no-repeat;
-
-}
-.ludo-Progress-Bar-Bg-Right{
-    background-image:url('../images/progress-bar/progress-bg.png');
-    position:absolute;
-    background-position:top right;
-    right:0;
-    top:0;
-    width:60%;
-    height:20px;
-    background-repeat:no-repeat;
-}
-
-
-.ludo-Progress-Bar{
-    background-repeat:repeat-x;
-    background-position:top left;
-    position:absolute;
-    top:0;
-    left:0;
-    height:20px;
-    width:300px;
-    overflow:hidden;
-}
-
-.ludo-Progress-Bar-Left{
-    background-image:url('../images/progress-bar/progress-bg-filled.png');
-    background-repeat:no-repeat;
-    position:absolute;
-    left:0;
-    top:0;
-    height:20px;
-    width:55%;
-}
-
-.ludo-Progress-Bar-Right{
-    background-image:url('../images/progress-bar/progress-bg-filled.png');
-    background-repeat:no-repeat;
-    background-position:top right;
-    position:absolute;
-    top:0;
-    right:0;
-    height:20px;
-    width:55%;
-}
-
-.ludo-Progress-Bar-Percent{
-    width:100%;
-    height:100%;
-    text-align:center;
-    color:#000;
-    line-height:20px;
-    z-index:100;
-    position:relative;
-    font-family:arial;
-    font-size:0.9em;
-}
-
-.ludo-Progress-Bar-Message{
-    text-align:center;
-}/* ../ludojs/css-source/calendar/calendar.css */
+/* ../ludojs/css-source/calendar/calendar.css */
 .ludo-calendar-year-container {
      background-color:#555;
      padding-bottom:5px;
@@ -1908,11 +1830,14 @@ input.ludo-form-el-invalid{
     background-repeat: repeat-x;
 }
 
-label {
+.ludo-body label {
     color: #555;
-    font-family: arial;
+    font-family: arial, sans-serif;
     font-size: 12px;
     font-weight:bold;
+}
+div.ludo-menu-menu label{
+   font-size:11px;
 }/* ../ludojs/css-source/form/radio.css */
 .ludo-radio-image{
     cursor: pointer;

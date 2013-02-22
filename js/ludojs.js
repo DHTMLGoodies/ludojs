@@ -1,4 +1,4 @@
-/* Generated Fri Feb 22 0:53:25 CET 2013 */
+/* Generated Fri Feb 22 13:42:05 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -4262,7 +4262,7 @@ ludo.view.Loader = new Class({
 			this.el = new Element('div');
 			ludo.dom.addClass(this.el, 'ludo-component-pleasewait');
 			this.el.set('html', this.txt);
-			this.view.getEl().appendChild(this.el);
+			this.view.getBody().appendChild(this.el);
 			this.el.style.display = 'none';
 		}
 		return this.el;
@@ -19589,8 +19589,8 @@ ludo.menu.Menu = new Class({
     },
 
     positionMenuItems : function(){
-        ludo.dom.clearCache();
         if(this.direction == 'horizontal'){
+			ludo.dom.clearCache();
             var left = 0;
             for(var i=0;i<this.menuItems.length;i++){
                 this.menuItems[i].getEl().setStyle('left', left);
@@ -23973,49 +23973,7 @@ ludo.form.Password = new Class({
 		this.setValue('');
 	}
 });
-/* ../ludojs/src/form/strong-password.js */
-/**
- Strong password field, i.e
- contain at least 1 upper case letter
- contain at least 1 lower case letter
- contain at least 1 number or special character
- contain at least 8 characters in length
- not limited in length
- 
- @namespace form
- @class Password
- @extends form.Text
- @constructor
- @description Form component for passwords.
- @param {Object} config
- @example
- ...
- children:[
- {type:'form.password',label:'Password',name:'password',md5:true },
- {type:'form.password',label:'Repeat password',name:'password_repeated',md5:true }
- ]
- ...
- */
-ludo.form.StrongPassword = new Class({
-    Extends: ludo.form.Password,
-    regexFlags : '',
-    regex : '(?=^.{_length_,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$',
-
-    /**
-     * Custom minimum length of password
-     * @config {Number} passwordLength
-     * @default 8
-     * @optional
-     */
-    passwordLength : 8,
-
-    ludoConfig:function(config){
-        config = config || {};
-        this.passwordLength = config.passwordLength || this.passwordLength;
-        this.regex = this.regex.replace('_length_', this.passwordLength);
-        this.parent(config);
-    }
-});/* ../ludojs/src/form/number.js */
+/* ../ludojs/src/form/number.js */
 /**
  * @namespace form
  * @class Number

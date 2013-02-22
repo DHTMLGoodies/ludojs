@@ -68,9 +68,12 @@ input.ludo-form-el-invalid{
     background-repeat: repeat-x;
 }
 
-label {
+.ludo-body label {
     color: #555;
-    font-family: arial;
+    font-family: arial, sans-serif;
     font-size: 12px;
     font-weight:bold;
+}
+div.ludo-menu-menu label{
+   font-size:11px;
 }

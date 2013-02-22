@@ -3,7 +3,7 @@
     position:absolute;
 }
 .ludo-window, .ludo-richcomponent, .ludo-rich-view-shim {
-    border-radius: 7px 7px 0px 0px;
-    -moz-border-radius: 7px 7px 0px 0px;
-    webkit-border-radius: 7px 7px 0px 0px;
+    border-radius: 7px 7px 0 0;
+    -moz-border-radius: 7px 7px 0 0;
+    webkit-border-radius: 7px 7px 0 0;
 }

@@ -109,8 +109,8 @@ ludo.menu.Menu = new Class({
     },
 
     positionMenuItems : function(){
-        ludo.dom.clearCache();
         if(this.direction == 'horizontal'){
+			ludo.dom.clearCache();
             var left = 0;
             for(var i=0;i<this.menuItems.length;i++){
                 this.menuItems[i].getEl().setStyle('left', left);
