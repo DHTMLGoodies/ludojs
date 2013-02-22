@@ -1,4 +1,4 @@
-/* Generated Fri Feb 22 15:17:17 CET 2013 */
+/* Generated Fri Feb 22 18:19:11 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -578,7 +578,7 @@ ludo._Config = new Class({
 	},
     /**
      * Enable url in format <url>/resource/arg1/arg2/service
-     * @method enableModrewriteUrls
+     * @method enableModRewriteUrls
      */
 	enableModRewriteUrls:function () {
 		this.storage.modRewrite = true;
@@ -592,6 +592,7 @@ ludo._Config = new Class({
 	},
     /**
      * Returns true when url's for mod rewrite has been enabled
+	 * @method hasModRewriteUrls
      * @return {Boolean}
      */
 	hasModRewriteUrls:function () {
@@ -646,9 +647,7 @@ ludo._Config = new Class({
 });
 
 ludo.config = new ludo._Config();/* ../ludojs/src/assets.js */
-/**
- * TODO refactor this into the ludoJS framework
- */
+// TODO refactor this into the ludoJS framework
 var Asset = {
     javascript: function(source, properties){
         if (!properties) properties = {};
@@ -23180,7 +23179,7 @@ ludo.form.Text = new Class({
 		return undefined;
 	},
 	/**
-	 * Return width of form field in pixels
+	 * Return width of input field in pixels.
 	 * @method getFieldWidth
 	 * @return {Number} width
 	 */
@@ -23197,11 +23196,13 @@ ludo.form.Text = new Class({
 		this.getFormEl().focus();
 	},
 	/**
-	 * Returns true if current value is valid
-	 * A value is invalid when
-	 * - required is true and trimmed length of value is 0
-	 * - length of value is greater than 0 but less than this.minLength
-	 * - length of value is greater than 0 but does not match this.regex (Regular expression).
+	 * Returns true when value of text field is valid.
+	 * A text field is considered invalid when:<br>
+	 *  - required is set and value is empty.<br>
+	 *  - minLength is set and value is not empty but contains fewer characters than min length.<br>
+	 *  - maxLength is set and number of characters exceeds maxLength.<br>
+	 *  - regex is set and current value does not match the regular expression..<br>
+	 *  - a validator function(set using "validator" property) returns false when validating the value.
 	 * @method isValid
 	 * @return {Boolean} valid
 	 */
@@ -23973,7 +23974,49 @@ ludo.form.Password = new Class({
 		this.setValue('');
 	}
 });
-/* ../ludojs/src/form/number.js */
+/* ../ludojs/src/form/strong-password.js */
+/**
+ Strong password field, i.e
+ contain at least 1 upper case letter
+ contain at least 1 lower case letter
+ contain at least 1 number or special character
+ contain at least 8 characters in length
+ not limited in length
+ 
+ @namespace form
+ @class Password
+ @extends form.Text
+ @constructor
+ @description Form component for passwords.
+ @param {Object} config
+ @example
+ ...
+ children:[
+ {type:'form.password',label:'Password',name:'password',md5:true },
+ {type:'form.password',label:'Repeat password',name:'password_repeated',md5:true }
+ ]
+ ...
+ */
+ludo.form.StrongPassword = new Class({
+    Extends: ludo.form.Password,
+    regexFlags : '',
+    regex : '(?=^.{_length_,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$',
+
+    /**
+     * Custom minimum length of password
+     * @config {Number} passwordLength
+     * @default 8
+     * @optional
+     */
+    passwordLength : 8,
+
+    ludoConfig:function(config){
+        config = config || {};
+        this.passwordLength = config.passwordLength || this.passwordLength;
+        this.regex = this.regex.replace('_length_', this.passwordLength);
+        this.parent(config);
+    }
+});/* ../ludojs/src/form/number.js */
 /**
  * @namespace form
  * @class Number
@@ -24146,7 +24189,7 @@ ludo.form.Spinner = new Class({
 
     /**
      * Disable arrow keyboard keys
-     * @param {Boolean|undefined} disableArrowKeys
+     * @config {Boolean|undefined} disableArrowKeys
      * @default false
      * @optional
      */
