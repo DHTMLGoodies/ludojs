@@ -237,7 +237,21 @@ ludo.layout.RelativeSpec = new Class({
 	 * @config type
 	 * @type {String}
 	 */
-	type:undefined
+	type:undefined,
 
+	/**
+	  Add resize handles for resize in these directions, possible values: 'up','down','left','right'.
+	  @config resize
+	  @type {String|Array}
+	 @example
+	 	layout:{
+			 height:200,
+			 width:150,
+			 alignParentLeft:true,
+			 resize:['below','right'],
+			 maxHeight:300
+		 }
+	 */
+	resize:undefined
 
 });

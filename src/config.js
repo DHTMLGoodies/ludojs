@@ -66,6 +66,7 @@ ludo._Config = new Class({
 	},
     /**
      * Returns true when url's for mod rewrite has been enabled
+	 * @method hasModRewriteUrls
      * @return {Boolean}
      */
 	hasModRewriteUrls:function () {

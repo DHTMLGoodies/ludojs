@@ -43,7 +43,7 @@ ludo.form.Spinner = new Class({
 
     /**
      * Disable arrow keyboard keys
-     * @param {Boolean|undefined} disableArrowKeys
+     * @config {Boolean|undefined} disableArrowKeys
      * @default false
      * @optional
      */

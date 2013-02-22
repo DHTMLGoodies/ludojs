@@ -1,4 +1,4 @@
-/* Generated Fri Feb 22 13:42:05 CET 2013 */
+/* Generated Fri Feb 22 15:17:17 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -4262,7 +4262,7 @@ ludo.view.Loader = new Class({
 			this.el = new Element('div');
 			ludo.dom.addClass(this.el, 'ludo-component-pleasewait');
 			this.el.set('html', this.txt);
-			this.view.getBody().appendChild(this.el);
+			this.view.getEl().appendChild(this.el);
 			this.el.style.display = 'none';
 		}
 		return this.el;
