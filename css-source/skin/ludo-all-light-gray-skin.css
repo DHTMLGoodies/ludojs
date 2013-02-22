@@ -427,7 +427,7 @@ div.ludo-menu-vertical {
 .ludo-calendar-month-inactive {
     width: 10px;
     height: 10px;
-    background-image: url(../images/calendar-month-dot.png);
+    background-image: url(../images/calendar/calendar-month-dot.png);
     background-repeat: no-repeat;
     background-position: center center;
     padding-left: 5px;
