@@ -123,7 +123,7 @@ ludo.form.Text = new Class({
 		return undefined;
 	},
 	/**
-	 * Return width of form field in pixels
+	 * Return width of input field in pixels.
 	 * @method getFieldWidth
 	 * @return {Number} width
 	 */
@@ -140,11 +140,13 @@ ludo.form.Text = new Class({
 		this.getFormEl().focus();
 	},
 	/**
-	 * Returns true if current value is valid
-	 * A value is invalid when
-	 * - required is true and trimmed length of value is 0
-	 * - length of value is greater than 0 but less than this.minLength
-	 * - length of value is greater than 0 but does not match this.regex (Regular expression).
+	 * Returns true when value of text field is valid.
+	 * A text field is considered invalid when:<br>
+	 *  - required is set and value is empty.<br>
+	 *  - minLength is set and value is not empty but contains fewer characters than min length.<br>
+	 *  - maxLength is set and number of characters exceeds maxLength.<br>
+	 *  - regex is set and current value does not match the regular expression..<br>
+	 *  - a validator function(set using "validator" property) returns false when validating the value.
 	 * @method isValid
 	 * @return {Boolean} valid
 	 */
