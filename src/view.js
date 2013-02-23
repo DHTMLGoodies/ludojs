@@ -397,7 +397,7 @@ ludo.View = new Class({
         this.setConfigParams(config,keys);
 
 		if (this.socket) {
-			if (this.socket.type === undefined)this.socket.type = 'socket.Socket';
+			if (!this.socket.type)this.socket.type = 'socket.Socket';
 			this.socket.component = this;
 			this.socket = ludo._new(this.socket);
 		}
@@ -443,7 +443,6 @@ ludo.View = new Class({
 		 }
 	 */
 	ludoDOM:function () {
-
 		if (this.contextMenu) {
 			if (!ludo.util.isArray(this.contextMenu)) {
 				this.contextMenu = [this.contextMenu];
@@ -458,12 +457,7 @@ ludo.View = new Class({
 		}
 
 		if (this.cls) {
-			if (!instanceOf(this.cls, Array)) {
-				this.cls = [this.cls];
-			}
-			for (var j = 0; j < this.cls.length; j++) {
-				ludo.dom.addClass(this.getEl(), this.cls[j]);
-			}
+            ludo.dom.addClass(this.getEl(), this.cls);
 		}
 
 		if (this.type) {
@@ -508,7 +502,8 @@ ludo.View = new Class({
 
 		if (!this.parentComponent && this.renderTo && this.renderTo.tagName.toLowerCase() == 'body') {
 			if (!this.isMovable()) {
-				document.id(window).addEvent('resize', this.resize.bind(this));
+                // todo refactor this.
+				// document.id(window).addEvent('resize', this.resize.bind(this));
 			}
 		}
 	},

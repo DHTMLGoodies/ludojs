@@ -177,6 +177,7 @@ ludo.form.Element = new Class({
 		this.parent();
 		var formEl = this.getFormEl();
 		if (formEl) {
+
 			formEl.addEvent('keydown', this.keyDown.bind(this));
 			formEl.addEvent('keypress', this.keyPress.bind(this));
 			formEl.addEvent('keyup', this.keyUp.bind(this));
@@ -276,7 +277,7 @@ ludo.form.Element = new Class({
 		 * @param {String|Boolean|Object|Number} value
 		 * @param {View} this
 		 */
-		this.fireEvent('key_up', [ e.key, this.getValue(), this ]);
+		this.fireEvent('key_up', [ e.key, this.value, this ]);
 	},
 
 	keyDown:function (e) {
@@ -287,7 +288,7 @@ ludo.form.Element = new Class({
 		 * @param {String|Boolean|Object|Number} value
 		 * $param {View} this
 		 */
-		this.fireEvent('key_down', [ e.key, this.getValue(), this ]);
+		this.fireEvent('key_down', [ e.key, this.value, this ]);
 	},
 
 	keyPress:function (e) {
@@ -298,7 +299,7 @@ ludo.form.Element = new Class({
 		 * @param {String|Boolean|Object|Number} value
 		 * $param {View} this
 		 */
-		this.fireEvent('key_press', [ e.key, this.getValue(), this ]);
+		this.fireEvent('key_press', [ e.key, this.value, this ]);
 	},
 
 	focus:function () {
@@ -310,7 +311,7 @@ ludo.form.Element = new Class({
 		 * @param {String|Boolean|Object|Number} value
 		 * $param {View} this
 		 */
-		this.fireEvent('focus', [ this.getValue(), this ]);
+		this.fireEvent('focus', [ this.value, this ]);
 	},
 	change:function () {
 		if (this.els.formEl) {
@@ -417,7 +418,7 @@ ludo.form.Element = new Class({
 			 * @param {Object|String|Number} value
 			 * @param {form.Element} form component
 			 */
-			this.fireEvent('valueChange', [value, this]);
+			this.fireEvent('valueChange', [this.getValue(), this]);
 			if(this.stateful)this.fireEvent('state');
 			if (this.linkWith)this.updateLinked();
 		}
@@ -439,12 +440,12 @@ ludo.form.Element = new Class({
 	isValid:function () {
 		if (this.twin) {
 			var cmp = ludo.get(this.twin);
-			if (cmp && this.getValue() !== cmp.getValue()) {
+			if (cmp && this.value !== cmp.value) {
 				return false;
 			}
 		}
 		if (this.validatorFn) {
-			return this.validatorFn.call(this.validator, this.getValue());
+			return this.validatorFn.call(this.validator, this.value);
 		}
 		return true;
 	},
@@ -465,7 +466,7 @@ ludo.form.Element = new Class({
 			 * @param {String} value
 			 * @param {Object} component
 			 */
-			this.fireEvent('valid', [this.getValue(), this]);
+			this.fireEvent('valid', [this.value, this]);
 		} else {
 			this.wasValid = false;
 			/**
@@ -474,7 +475,7 @@ ludo.form.Element = new Class({
 			 * @param {String} value
 			 * @param {Object} component
 			 */
-			this.fireEvent('invalid', [this.getValue(), this]);
+			this.fireEvent('invalid', [this.value, this]);
 		}
 	},
 
@@ -560,7 +561,7 @@ ludo.form.Element = new Class({
 		attempts = attempts || 0;
 		var cmp = ludo.get(this.linkWith);
 		if (cmp && !cmp.linkWith) {
-			if (!this.getValue())this.setValue(cmp.value);
+			if (!this.value)this.setValue(cmp.value);
 			cmp.setLinkWith(this.id);
 		} else {
 			if (attempts < 100) {

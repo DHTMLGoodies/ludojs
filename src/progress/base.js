@@ -9,7 +9,7 @@ ludo.progress.Base = new Class({
     component:undefined,
     pollFrequence:1,
     url:undefined,
-
+    onLoadMessage:'',
     /**
      * Hide progress bar on finish
      * @attribute {Boolean} hideOnFinish

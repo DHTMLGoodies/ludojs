@@ -8,6 +8,7 @@
 ludo.form.ComboTree = new Class({
     Extends:ludo.form.Element,
     type:'form.ComboTree',
+    cssSignature:'form-combo',
     /**
      * Configuration for tree panel. It can be a new config for ludo.tree.Tree or
      * a simple reference to your own pre-configured tree, example:
@@ -134,6 +135,7 @@ ludo.form.ComboTree = new Class({
         this.treePanel = new ludo.Window({
             cls:'ludo-Filter-Tree-Window',
             width:this.treeConfig.width,
+            alwaysInFront:true,
             resizeTop:false,
             resizeLeft:false,
             minWidth:this.fieldWidth,
@@ -272,8 +274,11 @@ ludo.form.ComboTree = new Class({
         }
 
         this.treePanel.show();
+
         this.positionTree();
         this.resizeChildren();
+
+        this.treePanel.increaseZIndex();
     },
 
     setViewValue:function (value) {

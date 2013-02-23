@@ -135,9 +135,16 @@ ludo.form.File = new Class({
 	 */
 	accept:undefined,
 
+    /**
+     * Name of resource on server to handle uploaded file.
+     * @config {String} FileUpload
+     * @default 'FileUpload'
+     */
+    resource:'FileUpload',
+
 	ludoConfig:function (config) {
 		this.parent(config);
-        this.setConfigParams(config, ['instantUpload','labelButton','labelRemove','labelDelete','buttonWidth']);
+        this.setConfigParams(config, ['resource','instantUpload','labelButton','labelRemove','labelDelete','buttonWidth']);
 		if (config.accept !== undefined) {
 			this.accept = config.accept.toLowerCase().split(/,/g);
 		}
@@ -208,9 +215,13 @@ ludo.form.File = new Class({
 		formEl.adopt(this.getBody());
 
 		this.addElToForm('ludo-file-upload-name',this.getName());
-		this.addElToForm('request','FileUpload/save');
+		this.addElToForm('request', this.getResource() + '/save');
 
 	},
+
+    getResource:function(){
+        return this.resource || 'FileUpload';
+    },
 
 	addElToForm:function(name,value){
 		var el = new Element('input');
@@ -241,20 +252,21 @@ ludo.form.File = new Class({
 		this.fileUploadComplete = true;
 
 		if (window.frames[this.iframeName].location.href.indexOf('http:') == -1) {
+
 			return;
 		}
 		try {
 			var json = JSON.decode(window.frames[this.iframeName].document.body.innerHTML);
 			if (json.success) {
-				this.value = json.data.value;
+				this.value = json.response;
 				/**
 				 * Event fired after a successful file upload, i.e. no server errors and json.success in
 				 * response is true
 				 * @event submit
-				 * @param {Object} JSON from server (response.data)
+				 * @param {Object} JSON from server (json.response)
 				 * @param {Object} ludo.form.file
 				 */
-				this.fireEvent('submit', [json.data, this]);
+				this.fireEvent('submit', [json.response, this]);
 			} else {
 				/**
 				 * Event fired after an unsuccessful file upload because json.success was false
@@ -267,7 +279,6 @@ ludo.form.File = new Class({
 
 			this.fireEvent('valid', ['', this]);
 		} catch (e) {
-
 			var html = '';
 			try {
 				html = window.frames[this.iframeName].document.body.innerHTML;
@@ -286,6 +297,8 @@ ludo.form.File = new Class({
 
 		this.uploadInProgress = false;
 		this.displayFileName();
+
+        this.validate();
 	},
 
 	isValid:function () {

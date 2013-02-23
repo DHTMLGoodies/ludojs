@@ -1,4 +1,4 @@
-/* Generated Sat Feb 23 3:01:22 CET 2013 */
+/* Generated Sat Feb 23 22:38:12 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -4687,7 +4687,7 @@ ludo.View = new Class({
         this.setConfigParams(config,keys);
 
 		if (this.socket) {
-			if (this.socket.type === undefined)this.socket.type = 'socket.Socket';
+			if (!this.socket.type)this.socket.type = 'socket.Socket';
 			this.socket.component = this;
 			this.socket = ludo._new(this.socket);
 		}
@@ -4733,7 +4733,6 @@ ludo.View = new Class({
 		 }
 	 */
 	ludoDOM:function () {
-
 		if (this.contextMenu) {
 			if (!ludo.util.isArray(this.contextMenu)) {
 				this.contextMenu = [this.contextMenu];
@@ -4748,12 +4747,7 @@ ludo.View = new Class({
 		}
 
 		if (this.cls) {
-			if (!instanceOf(this.cls, Array)) {
-				this.cls = [this.cls];
-			}
-			for (var j = 0; j < this.cls.length; j++) {
-				ludo.dom.addClass(this.getEl(), this.cls[j]);
-			}
+            ludo.dom.addClass(this.getEl(), this.cls);
 		}
 
 		if (this.type) {
@@ -4798,7 +4792,8 @@ ludo.View = new Class({
 
 		if (!this.parentComponent && this.renderTo && this.renderTo.tagName.toLowerCase() == 'body') {
 			if (!this.isMovable()) {
-				document.id(window).addEvent('resize', this.resize.bind(this));
+                // todo refactor this.
+				// document.id(window).addEvent('resize', this.resize.bind(this));
 			}
 		}
 	},
@@ -16121,6 +16116,7 @@ ludo.form.Element = new Class({
 		this.parent();
 		var formEl = this.getFormEl();
 		if (formEl) {
+
 			formEl.addEvent('keydown', this.keyDown.bind(this));
 			formEl.addEvent('keypress', this.keyPress.bind(this));
 			formEl.addEvent('keyup', this.keyUp.bind(this));
@@ -16220,7 +16216,7 @@ ludo.form.Element = new Class({
 		 * @param {String|Boolean|Object|Number} value
 		 * @param {View} this
 		 */
-		this.fireEvent('key_up', [ e.key, this.getValue(), this ]);
+		this.fireEvent('key_up', [ e.key, this.value, this ]);
 	},
 
 	keyDown:function (e) {
@@ -16231,7 +16227,7 @@ ludo.form.Element = new Class({
 		 * @param {String|Boolean|Object|Number} value
 		 * $param {View} this
 		 */
-		this.fireEvent('key_down', [ e.key, this.getValue(), this ]);
+		this.fireEvent('key_down', [ e.key, this.value, this ]);
 	},
 
 	keyPress:function (e) {
@@ -16242,7 +16238,7 @@ ludo.form.Element = new Class({
 		 * @param {String|Boolean|Object|Number} value
 		 * $param {View} this
 		 */
-		this.fireEvent('key_press', [ e.key, this.getValue(), this ]);
+		this.fireEvent('key_press', [ e.key, this.value, this ]);
 	},
 
 	focus:function () {
@@ -16254,7 +16250,7 @@ ludo.form.Element = new Class({
 		 * @param {String|Boolean|Object|Number} value
 		 * $param {View} this
 		 */
-		this.fireEvent('focus', [ this.getValue(), this ]);
+		this.fireEvent('focus', [ this.value, this ]);
 	},
 	change:function () {
 		if (this.els.formEl) {
@@ -16361,7 +16357,7 @@ ludo.form.Element = new Class({
 			 * @param {Object|String|Number} value
 			 * @param {form.Element} form component
 			 */
-			this.fireEvent('valueChange', [value, this]);
+			this.fireEvent('valueChange', [this.getValue(), this]);
 			if(this.stateful)this.fireEvent('state');
 			if (this.linkWith)this.updateLinked();
 		}
@@ -16383,12 +16379,12 @@ ludo.form.Element = new Class({
 	isValid:function () {
 		if (this.twin) {
 			var cmp = ludo.get(this.twin);
-			if (cmp && this.getValue() !== cmp.getValue()) {
+			if (cmp && this.value !== cmp.value) {
 				return false;
 			}
 		}
 		if (this.validatorFn) {
-			return this.validatorFn.call(this.validator, this.getValue());
+			return this.validatorFn.call(this.validator, this.value);
 		}
 		return true;
 	},
@@ -16409,7 +16405,7 @@ ludo.form.Element = new Class({
 			 * @param {String} value
 			 * @param {Object} component
 			 */
-			this.fireEvent('valid', [this.getValue(), this]);
+			this.fireEvent('valid', [this.value, this]);
 		} else {
 			this.wasValid = false;
 			/**
@@ -16418,7 +16414,7 @@ ludo.form.Element = new Class({
 			 * @param {String} value
 			 * @param {Object} component
 			 */
-			this.fireEvent('invalid', [this.getValue(), this]);
+			this.fireEvent('invalid', [this.value, this]);
 		}
 	},
 
@@ -16504,7 +16500,7 @@ ludo.form.Element = new Class({
 		attempts = attempts || 0;
 		var cmp = ludo.get(this.linkWith);
 		if (cmp && !cmp.linkWith) {
-			if (!this.getValue())this.setValue(cmp.value);
+			if (!this.value)this.setValue(cmp.value);
 			cmp.setLinkWith(this.id);
 		} else {
 			if (attempts < 100) {
@@ -17205,7 +17201,7 @@ ludo.progress.Base = new Class({
     component:undefined,
     pollFrequence:1,
     url:undefined,
-
+    onLoadMessage:'',
     /**
      * Hide progress bar on finish
      * @attribute {Boolean} hideOnFinish
@@ -22484,6 +22480,7 @@ ludo.form.Combo = new Class({
     menuItems:null,
     showOnClick:true,
     records : [],
+    cssSignature:'form-combo',
     selectedRecord:undefined,
     remote : {
         isJSON: true
@@ -22662,6 +22659,7 @@ ludo.form.Combo = new Class({
 ludo.form.ComboTree = new Class({
     Extends:ludo.form.Element,
     type:'form.ComboTree',
+    cssSignature:'form-combo',
     /**
      * Configuration for tree panel. It can be a new config for ludo.tree.Tree or
      * a simple reference to your own pre-configured tree, example:
@@ -22788,6 +22786,7 @@ ludo.form.ComboTree = new Class({
         this.treePanel = new ludo.Window({
             cls:'ludo-Filter-Tree-Window',
             width:this.treeConfig.width,
+            alwaysInFront:true,
             resizeTop:false,
             resizeLeft:false,
             minWidth:this.fieldWidth,
@@ -22926,8 +22925,11 @@ ludo.form.ComboTree = new Class({
         }
 
         this.treePanel.show();
+
         this.positionTree();
         this.resizeChildren();
+
+        this.treePanel.increaseZIndex();
     },
 
     setViewValue:function (value) {
@@ -23142,6 +23144,7 @@ ludo.form.Text = new Class({
 	ludoEvents:function () {
 		this.parent();
 		var el = this.getFormEl();
+        this.addEvent('blur', this.validate.bind(this));
 		if (this.validateKeyStrokes) {
 			el.addEvent('keydown', this.validateKey.bind(this));
 		}
@@ -23230,7 +23233,9 @@ ludo.form.Text = new Class({
 	},
 	keyUp:function (e) {
 		this.parent(e);
-		this.validate();
+		if(this.validateKeyStrokes){
+            this.validate();
+        }
 	},
 
 	upperCaseWords:function (e) {
@@ -25434,9 +25439,16 @@ ludo.form.File = new Class({
 	 */
 	accept:undefined,
 
+    /**
+     * Name of resource on server to handle uploaded file.
+     * @config {String} FileUpload
+     * @default 'FileUpload'
+     */
+    resource:'FileUpload',
+
 	ludoConfig:function (config) {
 		this.parent(config);
-        this.setConfigParams(config, ['instantUpload','labelButton','labelRemove','labelDelete','buttonWidth']);
+        this.setConfigParams(config, ['resource','instantUpload','labelButton','labelRemove','labelDelete','buttonWidth']);
 		if (config.accept !== undefined) {
 			this.accept = config.accept.toLowerCase().split(/,/g);
 		}
@@ -25507,9 +25519,13 @@ ludo.form.File = new Class({
 		formEl.adopt(this.getBody());
 
 		this.addElToForm('ludo-file-upload-name',this.getName());
-		this.addElToForm('request','FileUpload/save');
+		this.addElToForm('request', this.getResource() + '/save');
 
 	},
+
+    getResource:function(){
+        return this.resource || 'FileUpload';
+    },
 
 	addElToForm:function(name,value){
 		var el = new Element('input');
@@ -25540,20 +25556,21 @@ ludo.form.File = new Class({
 		this.fileUploadComplete = true;
 
 		if (window.frames[this.iframeName].location.href.indexOf('http:') == -1) {
+
 			return;
 		}
 		try {
 			var json = JSON.decode(window.frames[this.iframeName].document.body.innerHTML);
 			if (json.success) {
-				this.value = json.data.value;
+				this.value = json.response;
 				/**
 				 * Event fired after a successful file upload, i.e. no server errors and json.success in
 				 * response is true
 				 * @event submit
-				 * @param {Object} JSON from server (response.data)
+				 * @param {Object} JSON from server (json.response)
 				 * @param {Object} ludo.form.file
 				 */
-				this.fireEvent('submit', [json.data, this]);
+				this.fireEvent('submit', [json.response, this]);
 			} else {
 				/**
 				 * Event fired after an unsuccessful file upload because json.success was false
@@ -25566,7 +25583,6 @@ ludo.form.File = new Class({
 
 			this.fireEvent('valid', ['', this]);
 		} catch (e) {
-
 			var html = '';
 			try {
 				html = window.frames[this.iframeName].document.body.innerHTML;
@@ -25585,6 +25601,8 @@ ludo.form.File = new Class({
 
 		this.uploadInProgress = false;
 		this.displayFileName();
+
+        this.validate();
 	},
 
 	isValid:function () {

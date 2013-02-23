@@ -91,6 +91,7 @@ ludo.form.Text = new Class({
 	ludoEvents:function () {
 		this.parent();
 		var el = this.getFormEl();
+        this.addEvent('blur', this.validate.bind(this));
 		if (this.validateKeyStrokes) {
 			el.addEvent('keydown', this.validateKey.bind(this));
 		}
@@ -179,7 +180,9 @@ ludo.form.Text = new Class({
 	},
 	keyUp:function (e) {
 		this.parent(e);
-		this.validate();
+		if(this.validateKeyStrokes){
+            this.validate();
+        }
 	},
 
 	upperCaseWords:function (e) {

@@ -13,6 +13,7 @@ ludo.form.Combo = new Class({
     menuItems:null,
     showOnClick:true,
     records : [],
+    cssSignature:'form-combo',
     selectedRecord:undefined,
     remote : {
         isJSON: true
