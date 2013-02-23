@@ -388,9 +388,7 @@ ludo.View = new Class({
 	ludoConfig:function (config) {
 		this.parent(config);
 		config.els = config.els || {};
-
-		this.contextMenu = config.contextMenu || this.contextMenu;
-
+        if(this.parentComponent)config.renderTo = undefined;
         var keys = ['css','contextMenu','renderTo','tpl','containerCss','socket','form','addons','title','html','hidden','copyEvents',
                     'dataSource','onLoadMessage','movable','resizable','closable','minimizable','alwaysInFront',
                     'parentComponent','cls','objMovable','width','height','model','frame','formConfig',
@@ -404,7 +402,7 @@ ludo.View = new Class({
 			this.socket = ludo._new(this.socket);
 		}
 
-		if (this.renderTo)this.els.parent = document.id(this.renderTo);
+		if (this.renderTo)this.renderTo = document.id(this.renderTo);
 
 		this.layout = ludo.layoutFactory.getValidLayoutObject(this, config);
 
@@ -427,8 +425,8 @@ ludo.View = new Class({
 		if (this.hidden) {
 			this.els.container.style.display = 'none';
 		}
-		if (this.els.parent) {
-			this.els.parent.adopt(this.els.container);
+		if (this.renderTo) {
+			this.renderTo.adopt(this.els.container);
 		}
 	},
 
@@ -445,8 +443,9 @@ ludo.View = new Class({
 		 }
 	 */
 	ludoDOM:function () {
+
 		if (this.contextMenu) {
-			if (!this.isArray(this.contextMenu)) {
+			if (!ludo.util.isArray(this.contextMenu)) {
 				this.contextMenu = [this.contextMenu];
 			}
 			for (var i = 0; i < this.contextMenu.length; i++) {
@@ -507,7 +506,7 @@ ludo.View = new Class({
 			}
 		}
 
-		if (!this.parentComponent && this.els.parent && this.els.parent.tagName.toLowerCase() == 'body') {
+		if (!this.parentComponent && this.renderTo && this.renderTo.tagName.toLowerCase() == 'body') {
 			if (!this.isMovable()) {
 				document.id(window).addEvent('resize', this.resize.bind(this));
 			}
@@ -659,7 +658,7 @@ ludo.View = new Class({
 		if (this.parentComponent) {
 			return this.parentComponent.getBody();
 		}
-		return this.els.parent;
+		return this.renderTo;
 	},
 
 	_createDOM:function () {
@@ -812,7 +811,8 @@ ludo.View = new Class({
 		if (this.parentComponent) {
 			this.resizeParent();
 		} else {
-			this.resize({ width:this.width, height:this.height });
+            this.getLayoutManager().getRenderer().resize();
+			//this.resize({ width:this.width, height:this.height });
 		}
 	},
 

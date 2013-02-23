@@ -838,6 +838,7 @@ ludo.tree.Tree = new Class({
 
     expandNode:function (record, skipRemote) {
         var id = this.getUniqueRecordId(record);
+        if(!this.els.expand[id])return;
         this.els.expand[id].addClass('ludo-tree-node-collapse');
         this.els.childContainers[id].style.display = '';
 

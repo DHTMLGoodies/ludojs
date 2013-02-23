@@ -24,6 +24,7 @@ ludo.menu.Context = new Class({
 	Extends:ludo.menu.Menu,
 	type:'menu.ContextMenu',
 	direction:'vertical',
+    renderTo:document.body,
 	/**
 	 Show context menu only for DOM nodes matching a CSS selector. The context menu will also
 	 be shown if a match is found in one of the parent DOM elements.
@@ -53,8 +54,8 @@ ludo.menu.Context = new Class({
 	recordType:undefined,
 
 	ludoConfig:function (config) {
+        this.renderTo = document.body;
 		config.els = config.els || {};
-		config.els.parent = document.body;
 		this.parent(config);
 		this.selector = config.selector || this.selector;
 		this.recordType = config.recordType || this.recordType;
@@ -92,8 +93,10 @@ ludo.menu.Context = new Class({
 	},
 
 	show:function (e) {
+
 		if (this.selector) {
 			var domEl = this.getValidDomElement(e.target);
+
 			if (!domEl) {
 				return undefined;
 			}

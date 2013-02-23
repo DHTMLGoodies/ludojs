@@ -166,9 +166,7 @@ ludo.form.Combo = new Class({
     createMenu:function () {
         this.menu = new ludo.Menu({
             cls:'ludo-combo-menu',
-            els:{
-                parent:document.body
-            },
+            renderTo:document.body,
             direction:'vertical',
             width:this.getWidth(),
             children:this.menuItems

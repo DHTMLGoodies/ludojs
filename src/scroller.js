@@ -11,6 +11,7 @@ ludo.Scroller = new Class({
     wheelSize:5,
     type:'horizontal',
     currentSize:0,
+    renderTo:undefined,
 
     initialize:function (config) {
         this.type = config.type || this.type;
@@ -18,7 +19,7 @@ ludo.Scroller = new Class({
             this.setApplyTo(config.applyTo);
 
         }
-        this.els.parent = config.parent ? document.id(config.parent) : null;
+        this.renderTo = config.parent ? document.id(config.parent) : null;
         if (config.mouseWheelSizeCls) {
             this.determineMouseWheelSize(config.mouseWheelSizeCls);
         }
@@ -91,9 +92,9 @@ ludo.Scroller = new Class({
 
     resize:function () {
         if (this.type == 'horizontal') {
-            this.els.el.setStyle('width', this.els.parent.offsetWidth);
+            this.els.el.setStyle('width', this.renderTo.offsetWidth);
         } else {
-            var size = this.els.parent.offsetHeight;
+            var size = this.renderTo.offsetHeight;
             if (size == 0) {
                 return;
             }
@@ -192,7 +193,7 @@ ludo.Scroller = new Class({
     },
 
     getParentEl:function () {
-        return this.els.parent ? this.els.parent : this.els.el;
+        return this.renderTo ? this.renderTo : this.els.el;
     },
 
     show:function () {

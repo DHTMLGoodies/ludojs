@@ -139,9 +139,7 @@ ludo.form.ComboTree = new Class({
             minWidth:this.fieldWidth,
             height:this.treeConfig.height,
             titleBar:false,
-            els:{
-                parent:document.body
-            },
+            renderTo:document.body,
             layout:'fill',
             children:[this.treeConfig]
         });

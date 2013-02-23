@@ -18,8 +18,6 @@ ludo.menu.MenuHandler = new Class({
             parent:parentMenuItem ? parentMenuItem.getId() : null
         });
         item.addEvent('click', this.hideMenus.bind(this));
-
-
     },
 
     toggleActive:function (menuItem) {

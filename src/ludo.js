@@ -156,7 +156,7 @@ ludo.CmpMgrClass = new Class({
         } else {
             if (parentComponent) {
                 cmpConfig.els = cmpConfig.els || {};
-                if (!cmpConfig.els.parent && parentComponent.getEl())cmpConfig.els.parent = parentComponent.getEl();
+                if (!cmpConfig.renderTo && parentComponent.getEl())cmpConfig.renderTo = parentComponent.getEl();
                 cmpConfig.parentComponent = parentComponent;
             }
             var ret;

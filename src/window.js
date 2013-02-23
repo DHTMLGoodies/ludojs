@@ -211,7 +211,7 @@ ludo.Window = new Class({
      */
     showCentered:function () {
         this.center();
-        this.showAt(x,y);
+        this.show();
     },
 
     isWindow:function(){

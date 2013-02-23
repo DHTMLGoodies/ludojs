@@ -235,7 +235,7 @@ ludo.dataSource.Collection = new Class({
 		 * @param {Object} sortedBy
 		 */
 		this.fireEvent('sort', this.sortedBy);
-        this.firePageEvents();
+        if(this.paging)this.firePageEvents();
 		this.fireEvent('state');
 
 		return this;

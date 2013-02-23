@@ -10,7 +10,7 @@ ludo.menu.DropDown = new Class({
     pos:'below',
 
     ludoConfig:function (config) {
-        config.els = { parent:document.body };
+        config.renderTo = document.body;
         this.parent(config);
         if (config.applyTo !== undefined)this.applyTo = config.applyTo;
         if (config.pos !== undefined)this.pos = config.pos;

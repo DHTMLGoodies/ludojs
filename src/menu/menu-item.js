@@ -239,9 +239,7 @@ ludo.menu.MenuItem = new Class({
 			return;
 		}
 		this.menu = new ludo.menu.Menu({
-			els:{
-				parent:document.body
-			},
+			renderTo:document.body,
 			direction:'vertical',
 			children:this.menuItems,
 			parentMenuItem:this

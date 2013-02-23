@@ -471,7 +471,7 @@ ludo.form.TextFilterContainer = new Class({
     ludoConfig:function (config) {
         this.formComponent = config.formComponent;
         config.els = config.els || {};
-        config.els.parent = document.body;
+        config.renderTo = document.body;
         this.parent(config);
         this.alwaysInFront = true;
         this.maxDisplayed = config.maxDisplayed;
@@ -494,7 +494,7 @@ ludo.form.TextFilterContainer = new Class({
     },
 
     position:function () {
-        var pos = this.getFormEl().els.inputContainer.getCoordinates(this.els.parent);
+        var pos = this.getFormEl().els.inputContainer.getCoordinates(this.renderTo);
         this.setPosition({
             left:pos.left,
             top:pos.top + pos.height
