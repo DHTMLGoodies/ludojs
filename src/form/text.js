@@ -48,24 +48,13 @@ ludo.form.Text = new Class({
 	/**
 	 Regular expression used for validation
 	 @attribute regex
-	 @type String
+	 @type RegExp
 	 @default undefined
 	 @example
 	 	regex:'[0-9]'
 	 This will only validate numbers
 	 */
 	regex:undefined,
-
-	/**
-	 Regular expression flag used when regex is defined
-	 @attribute {String} regexFlags
-	 @default 'gi'
-	 @example
-	 	regexFlags:'gi';
-	 For global case-insensitive search
-	 */
-
-	regexFlags:'gi',
 
 	/**
 	Run RegEx validation on key strokes. Only keys matching "regex" will be added to the text field.
@@ -84,9 +73,10 @@ ludo.form.Text = new Class({
 
 	ludoConfig:function (config) {
 		this.parent(config);
-        var keys = ['regex','regexFlags','minLength','maxLength','defaultValue','validateKeyStrokes','ucFirst','ucWords'];
+        var keys = ['regex','minLength','maxLength','defaultValue','validateKeyStrokes','ucFirst','ucWords'];
         this.setConfigParams(config,keys);
-	},
+        this.applyValidatorFns(['minLength','maxLength','regex']);
+    },
 
 	ludoEvents:function () {
 		this.parent();
@@ -116,8 +106,7 @@ ludo.form.Text = new Class({
 		}
 
 		if (this.regex && e.key && e.key.length == 1) {
-			var reg = new RegExp(this.regex);
-			if (!reg.test(e.key)) {
+			if (!this.regex.test(e.key)) {
 				return false;
 			}
 		}
@@ -140,43 +129,13 @@ ludo.form.Text = new Class({
 		this.parent();
 		this.getFormEl().focus();
 	},
-	/**
-	 * Returns true when value of text field is valid.
-	 * A text field is considered invalid when:<br>
-	 *  - required is set and value is empty.<br>
-	 *  - minLength is set and value is not empty but contains fewer characters than min length.<br>
-	 *  - maxLength is set and number of characters exceeds maxLength.<br>
-	 *  - regex is set and current value does not match the regular expression..<br>
-	 *  - a validator function(set using "validator" property) returns false when validating the value.
-	 * @method isValid
-	 * @return {Boolean} valid
-	 */
-	isValid:function () {
-		var valid = this.parent();
-		if (!valid)return false;
-		var val = this.getFormEl().get('value').trim();
-
-		if (val.length == 0) {
-			return !this.required;
-		}
-		if (val.length > 0 && this.minLength && val.length < this.minLength) {
-			return false;
-		}
-		if (this.maxLength && val.length > this.maxLength) {
-			return false;
-		}
-		if (this.regex) {
-			var regEx = new RegExp(this.regex, this.regexFlags);
-			return regEx.test(val);
-		}
-		return true;
-	},
 
 	validate:function () {
-		this.parent();
-		if (!this.isValid() && !this._focus) {
+        var valid = this.parent();
+		if (!valid && !this._focus) {
 			this.getEl().addClass('ludo-form-el-invalid');
 		}
+        return valid;
 	},
 	keyUp:function (e) {
 		this.parent(e);

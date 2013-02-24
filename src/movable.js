@@ -59,8 +59,8 @@ ludo.Movable = new Class({
             el.id = 'ludo-movable-' + String.uniqueID();
         }
         if(this.sources[el.id]){
-            console.log(el.id);
-            console.log('Error: ' + el.id + ' has duplicates');
+            ludo.util.log(el.id);
+            ludo.util.log('Error: ' + el.id + ' has duplicates');
         }
         
         if(record){
@@ -76,7 +76,7 @@ ludo.Movable = new Class({
             try{
                 handleObj.addEvent('mousedown', this.startMove.bind(this));
             }catch(e){
-                console.log(obj);
+                ludo.util.log(obj);
             }
             ludo.dom.addClass(handleObj, 'ludo-movable-handle');
             handleObj.setStyle('cursor','move');

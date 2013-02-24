@@ -7,7 +7,7 @@
 ludo.form.Number = new Class({
     Extends:ludo.form.Text,
     type:'form.Number',
-    regex:'[0-9]',
+    regex:/^[0-9]+$/,
     validateKeyStrokes:true,
     formCss:{
         'text-align':'right'
@@ -59,6 +59,8 @@ ludo.form.Number = new Class({
 
         if (config.minValue !== undefined)this.minValue = parseInt(config.minValue);
         if (config.maxValue !== undefined)this.maxValue = parseInt(config.maxValue);
+
+        this.applyValidatorFns(['minValue','maxValue']);
     },
 
     ludoEvents:function () {
@@ -100,16 +102,5 @@ ludo.form.Number = new Class({
             this.setValue(value);
 			this.fireEvent('change', [ value, this ]);
         }
-    },
-
-    isValid:function (value) {
-        value = value != undefined ? value : this.value;
-        var valid = this.parent();
-        if (!valid)return false;
-
-        if (this.minValue!==undefined && parseInt(value) < this.minValue) {
-            return false;
-        }
-        return this.maxValue && parseInt(value) > this.maxValue ? false : true;
     }
 });

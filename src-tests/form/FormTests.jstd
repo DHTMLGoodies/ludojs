@@ -2,23 +2,29 @@ load:
   - ../../mootools/mootools-core-1.4.5.js
   - ../../mootools/mootools-more-1.4.0.1.js
   - ../../js/ludojs.js
+  - ../../src/form/element.js
+  - ../../src/form/label-element.js
+  - ../../src/form/text.js
+  - ../../src/form/number.js
+  - ../../src/form/password.js
   - ../../src/form/*.js
+  - ../../src/form/validator/*.js
 
 serve:
   - ../../css/ludojs.css
   - ../../css/ludojs-light-gray.css
 
 test:
-  - ButtonTest.js
-  - FileTest.js
-  - ManagerTest.js
-  - NumberTest.js
-  - SliderTest.js
+ # - ButtonTest.js
+ # - FileTest.js
+ # - ManagerTest.js
+ # - NumberTest.js
+ # - SliderTest.js
   - TextTest.js
-  - ValidationTest.js
-  - LinkedTest.js
-  - SearchFieldTest.js
-  - PasswordTest.js
+ # - ValidationTest.js
+ # - LinkedTest.js
+ # - SearchFieldTest.js
+  #- PasswordTest.js
 
 plugin:
  - name: "coverage"

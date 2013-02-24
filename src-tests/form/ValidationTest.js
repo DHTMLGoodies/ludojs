@@ -16,7 +16,7 @@ TestCase("ValidationTest", {
 		return new ludo.form[type](config);
 	},
 
-	"test should not validate when too short":function () {
+	"t_est should not validate when too short":function () {
 		// given
 		var cmp = this.getFormComponent('Text', { minLength:5});
 
@@ -24,10 +24,11 @@ TestCase("ValidationTest", {
 		cmp.setValue('');
 
 		// then
+        assertEquals(1, cmp.validators.length);
 		assertTrue(cmp.isValid());
 	},
 
-	"test should not validate when too long":function () {
+	"t_est should not validate when too long":function () {
 		// given
 		var cmp = this.getFormComponent('Text', { maxLength:5});
 
@@ -35,6 +36,8 @@ TestCase("ValidationTest", {
 		cmp.setValue('San Fransisco');
 
 		// then
+        assertEquals('maxLength', cmp.validators[0].key);
+        assertEquals(1, cmp.validators.length);
 		assertFalse(cmp.isValid());
 	},
 
@@ -46,12 +49,13 @@ TestCase("ValidationTest", {
 
 		// when
 		cmp.setValue('Invalid value');
-
+        
 		// then
+        assertEquals(1, cmp.validators.length);
 		assertFalse(cmp.isValid());
 	},
 
-	"test should alidate when matching validator":function () {
+	"t_est should validate when matching validator":function () {
 		// given
 		var cmp = this.getFormComponent('Text', { validator:{
 			type:'Validator'
@@ -64,7 +68,7 @@ TestCase("ValidationTest", {
 		assertTrue(cmp.isValid());
 	},
 
-	"test should not validate number when to big":function () {
+	"t_est should not validate number when to big":function () {
 		// given
 		var cmp = this.getFormComponent('Number', { minValue:100, maxValue:255 });
 
@@ -76,7 +80,7 @@ TestCase("ValidationTest", {
 
 	},
 
-	"test should not validate number when to small":function () {
+	"t_est should not validate number when to small":function () {
 		// given
 		var cmp = this.getFormComponent('Number', { minValue:100, maxValue:255 });
 
@@ -84,11 +88,17 @@ TestCase("ValidationTest", {
 		cmp.setValue(50);
 
 		// then
+        assertEquals('50', cmp.getFormEl().get('value').trim());
+       //assertEquals(4, cmp.validators.length);
+
+        assertEquals('regex', cmp.validators[0].key);
+        assertEquals('minValue', cmp.validators[1].key);
+        assertEquals('maxValue', cmp.validators[2].key);
 		assertFalse(cmp.isValid());
 
 	},
 
-	"test should validate number when between min and max":function () {
+	"t_est should validate number when between min and max":function () {
 		// given
 		var cmp = this.getFormComponent('Number', { minValue:100, maxValue:255 });
 
@@ -96,10 +106,11 @@ TestCase("ValidationTest", {
 		cmp.setValue(150);
 
 		// then
+        assertEquals(3, cmp.validators.length);
 		assertTrue(cmp.isValid());
 	},
 
-	"test should not validate number when not matching regex":function () {
+	"t_est should not validate number when not matching regex":function () {
 		// given
 		var cmp = this.getFormComponent('Text', { regex:'[a-z]', regexFlags:'g' });
 
@@ -117,9 +128,9 @@ TestCase("ValidationTest", {
 
 	},
 
-	"test should validate number when matching regex":function () {
+	"t_est should validate number when matching regex":function () {
 		// given
-		var cmp = this.getFormComponent('Text', { regex:'[a-z0-9 ]', regexFlags:'g' });
+		var cmp = this.getFormComponent('Text', { regex:/[a-z0-9 ]/g });
 
 		// when
 		cmp.setValue('valid expression');
@@ -134,9 +145,9 @@ TestCase("ValidationTest", {
 		assertTrue(cmp.isValid());
 	},
 
-	"test should be able to use custom function as validator": function(){
+	"t_est should be able to use custom function as validator": function(){
 		// given
-		var valueSentToValidator;
+		var valueSentToValidator = undefined;
 		var el = new ludo.form.Text({
 			value:'invalid',
 			validator:function(value){
@@ -148,11 +159,10 @@ TestCase("ValidationTest", {
 		// when
 		// then
 		assertEquals('invalid', valueSentToValidator);
-		assertNotUndefined(el.validatorFn);
 		assertFalse(el.isValid());
 	},
 
-	"test should not fire valueChange or change event when invalid value is set": function(){
+	"t_est should not fire valueChange or change event when invalid value is set": function(){
 		// given
 		var el = new ludo.form.Text({
 			value:'Valid',
@@ -178,5 +188,43 @@ TestCase("ValidationTest", {
 		assertFalse('valueChange was fired', valueChangeFired);
 		assertFalse('change was fired', changeFired);
 
-	}
+	},
+
+    "t_est should be able to set min value": function(){
+        // given
+        var cmp = this.getFormComponent('Number', { value:100, minValue:50, maxValue:255});
+
+        // when
+        cmp.setValue('20');
+
+        // then
+        assertFalse(cmp.isValid());
+    },
+
+    "t_est should be able to set max value": function(){
+        // given
+        var cmp = this.getFormComponent('Number', { value:100, minValue:50, maxValue:255});
+
+        // when
+        cmp.setValue('300');
+
+        // then
+        assertFalse(cmp.isValid());
+    },
+
+    "t_est should be able to set required": function(){
+        // given
+        var cmp = this.getFormComponent('Number', { required:true,value:''});
+        // then
+        assertFalse(cmp.isValid());
+        // when
+        cmp.setValue('20');
+
+
+        // then
+        assertEquals(2, cmp.validators.length);
+        assertEquals('required', cmp.validators[0].key);
+        assertEquals('regex', cmp.validators[1].key);
+        assertTrue(cmp.isValid());
+    }
 });
