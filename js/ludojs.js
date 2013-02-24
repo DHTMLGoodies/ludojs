@@ -1,4 +1,4 @@
-/* Generated Sun Feb 24 6:28:06 CET 2013 */
+/* Generated Sun Feb 24 22:30:54 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -15939,8 +15939,6 @@ ludo.grid.Grid = new Class({
 		return this.columnManager;
 	}
 });/* ../ludojs/src/form/validator/fns.js */
-
-
 ludo.form.validator.required = function(value, required){
     return !required || value.length > 0;
 };
@@ -15964,7 +15962,6 @@ ludo.form.validator.maxValue = function(value, maxValue){
     return value.length === 0 || parseInt(value) <= maxValue;
 };
 ludo.form.validator.twin = function(value, twin){
-    console.log(twin);
     var cmp = ludo.get(twin);
     return !cmp || (cmp && value === cmp.value);
 };/* ../ludojs/src/form/element.js */
@@ -18844,11 +18841,10 @@ ludo.model.Model = new Class({
 
 	 */
 	load:function (recordId) {
-		if (!recordId || (!this.url && !ludo.config.getUrl())) {
+		if (!this.url && !ludo.config.getUrl()) {
 			return;
 		}
-
-        this.recordId = recordId;
+        if(recordId)this.recordId = recordId;
 		this.loadRequest().send("read", recordId);
 	},
 
@@ -24141,7 +24137,7 @@ ludo.form.Number = new Class({
 ludo.form.Email = new Class({
     Extends:ludo.form.Text,
     type:'form.Email',
-    regex:'^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.(?:[A-Z]{2}|com|org|net|edu|gov|mil|biz|info|mobi|name|aero|asia|jobs|museum)$',
+    regex:/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.(?:[A-Z]{2}|com|org|net|edu|gov|mil|biz|info|mobi|name|aero|asia|jobs|museum)$/i,
     validateKeyStrokes:false
 });/* ../ludojs/src/form/spinner.js */
 /**

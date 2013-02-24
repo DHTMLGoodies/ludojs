@@ -9,6 +9,7 @@ load:
   - ../../src/form/password.js
   - ../../src/form/*.js
   - ../../src/form/validator/*.js
+  - ../../src/form/email.js
 
 serve:
   - ../../css/ludojs.css

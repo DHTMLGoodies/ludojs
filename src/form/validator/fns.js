@@ -21,7 +21,6 @@ ludo.form.validator.maxValue = function(value, maxValue){
     return value.length === 0 || parseInt(value) <= maxValue;
 };
 ludo.form.validator.twin = function(value, twin){
-    console.log(twin);
     var cmp = ludo.get(twin);
     return !cmp || (cmp && value === cmp.value);
 };

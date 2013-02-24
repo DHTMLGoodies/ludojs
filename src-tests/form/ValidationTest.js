@@ -16,7 +16,7 @@ TestCase("ValidationTest", {
 		return new ludo.form[type](config);
 	},
 
-	"t_est should not validate when too short":function () {
+	"test should not validate when too short":function () {
 		// given
 		var cmp = this.getFormComponent('Text', { minLength:5});
 
@@ -28,7 +28,7 @@ TestCase("ValidationTest", {
 		assertTrue(cmp.isValid());
 	},
 
-	"t_est should not validate when too long":function () {
+	"test should not validate when too long":function () {
 		// given
 		var cmp = this.getFormComponent('Text', { maxLength:5});
 
@@ -55,7 +55,7 @@ TestCase("ValidationTest", {
 		assertFalse(cmp.isValid());
 	},
 
-	"t_est should validate when matching validator":function () {
+	"test should validate when matching validator":function () {
 		// given
 		var cmp = this.getFormComponent('Text', { validator:{
 			type:'Validator'
@@ -68,7 +68,7 @@ TestCase("ValidationTest", {
 		assertTrue(cmp.isValid());
 	},
 
-	"t_est should not validate number when to big":function () {
+	"test should not validate number when to big":function () {
 		// given
 		var cmp = this.getFormComponent('Number', { minValue:100, maxValue:255 });
 
@@ -80,7 +80,7 @@ TestCase("ValidationTest", {
 
 	},
 
-	"t_est should not validate number when to small":function () {
+	"test should not validate number when to small":function () {
 		// given
 		var cmp = this.getFormComponent('Number', { minValue:100, maxValue:255 });
 
@@ -98,7 +98,7 @@ TestCase("ValidationTest", {
 
 	},
 
-	"t_est should validate number when between min and max":function () {
+	"test should validate number when between min and max":function () {
 		// given
 		var cmp = this.getFormComponent('Number', { minValue:100, maxValue:255 });
 
@@ -110,7 +110,7 @@ TestCase("ValidationTest", {
 		assertTrue(cmp.isValid());
 	},
 
-	"t_est should not validate number when not matching regex":function () {
+	"test should not validate number when not matching regex":function () {
 		// given
 		var cmp = this.getFormComponent('Text', { regex:'[a-z]', regexFlags:'g' });
 
@@ -128,9 +128,26 @@ TestCase("ValidationTest", {
 
 	},
 
-	"t_est should validate number when matching regex":function () {
+    "test should validate email": function(){
+        // given
+        var cmp = this.getFormComponent('Email', { });
+
+        // when
+        cmp.setValue('alf.magne.kalleland@gmail.com');
+
+        // then
+        assertTrue(cmp.isValid());
+
+        // when
+        cmp.setValue('invalid@v');
+
+        // then
+        assertFalse(cmp.isValid());
+    },
+
+	"test should validate number when matching regex":function () {
 		// given
-		var cmp = this.getFormComponent('Text', { regex:/[a-z0-9 ]/g });
+		var cmp = this.getFormComponent('Text', { regex:/[a-z0-9\s]/ });
 
 		// when
 		cmp.setValue('valid expression');
@@ -145,7 +162,7 @@ TestCase("ValidationTest", {
 		assertTrue(cmp.isValid());
 	},
 
-	"t_est should be able to use custom function as validator": function(){
+	"test should be able to use custom function as validator": function(){
 		// given
 		var valueSentToValidator = undefined;
 		var el = new ludo.form.Text({
@@ -162,7 +179,7 @@ TestCase("ValidationTest", {
 		assertFalse(el.isValid());
 	},
 
-	"t_est should not fire valueChange or change event when invalid value is set": function(){
+	"test should not fire valueChange or change event when invalid value is set": function(){
 		// given
 		var el = new ludo.form.Text({
 			value:'Valid',
@@ -190,7 +207,7 @@ TestCase("ValidationTest", {
 
 	},
 
-    "t_est should be able to set min value": function(){
+    "test should be able to set min value": function(){
         // given
         var cmp = this.getFormComponent('Number', { value:100, minValue:50, maxValue:255});
 
@@ -201,7 +218,7 @@ TestCase("ValidationTest", {
         assertFalse(cmp.isValid());
     },
 
-    "t_est should be able to set max value": function(){
+    "test should be able to set max value": function(){
         // given
         var cmp = this.getFormComponent('Number', { value:100, minValue:50, maxValue:255});
 
@@ -212,7 +229,7 @@ TestCase("ValidationTest", {
         assertFalse(cmp.isValid());
     },
 
-    "t_est should be able to set required": function(){
+    "test should be able to set required": function(){
         // given
         var cmp = this.getFormComponent('Number', { required:true,value:''});
         // then
