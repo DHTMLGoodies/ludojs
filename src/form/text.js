@@ -156,8 +156,8 @@ ludo.form.Text = new Class({
 		if (!valid)return false;
 		var val = this.getFormEl().get('value').trim();
 
-		if (val.length == 0 && this.required) {
-			return false;
+		if (val.length == 0) {
+			return !this.required;
 		}
 		if (val.length > 0 && this.minLength && val.length < this.minLength) {
 			return false;

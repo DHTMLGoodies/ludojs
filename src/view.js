@@ -991,10 +991,10 @@ ludo.View = new Class({
 
 	setPosition:function (pos) {
 		if (pos.left !== undefined && pos.left >= 0) {
-			this.getEl().setStyle('left', pos.left);
+			this.els.container.style.left = pos.left + 'px';
 		}
 		if (pos.top !== undefined && pos.top >= 0) {
-			this.getEl().setStyle('top', pos.top);
+			this.els.container.style.top = pos.top + 'px';
 		}
 	},
 

@@ -281,6 +281,8 @@ ludo.layout.Renderer = new Class({
 			var k = this.posKeys[i];
 			if (this.coordinates[k] !== undefined && this.coordinates[k] !== this.lastCoordinates[k])this.view.getEl().style[k] = c[k] + 'px';
 		}
+
+        if(this.view.children.length > 0)this.view.getLayoutManager().resizeChildren();
 		this.lastCoordinates = Object.clone(c);
 	},
 
