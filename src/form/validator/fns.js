@@ -1,5 +1,3 @@
-
-
 ludo.form.validator.required = function(value, required){
     return !required || value.length > 0;
 };
