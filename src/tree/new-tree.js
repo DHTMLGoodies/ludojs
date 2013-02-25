@@ -1,3 +1,5 @@
+// TODO define child custom child key
+// TODO should not have to have an "id" property
 ludo.tree.Tree = new Class({
 	Extends:ludo.View,
 	nodeCache:{},
