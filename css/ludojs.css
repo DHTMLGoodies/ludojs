@@ -1,4 +1,4 @@
-/* Generated Mon Feb 25 15:27:14 CET 2013 */
+/* Generated Mon Feb 25 22:56:49 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -1639,8 +1639,8 @@ div.ludo-tree-tree div.ludo-body{
 }
 div.ludo-tree-node-root{
     background-image:none;
-    padding-left:0px;
-    margin-left:0px;
+    padding-left:0;
+    margin-left:0;
 }
 
 span.ludo-tree-node-spacer{
@@ -1651,7 +1651,7 @@ span.ludo-tree-node-spacer{
     left:0;
     top:0;
     width:8px;
-    height:9px;
+    height:10px;
 }
 
 .ludo-tree-node-last-sibling .ludo-tree-node-spacer{
@@ -1763,16 +1763,14 @@ div.ludo-tree-movable-shim img{
     overflow-y:auto;
 }
 
-span.ludo-tree-node-spacer{
-    height:10px;
-    background-position:left bottom;
-}
 
 .ludo-tree-node span{
     -moz-user-select:none;
     line-height:16px;
     height:18px;
-}/* ../ludojs/css-source/form/tiny-button.css */
+}
+
+/* ../ludojs/css-source/form/tiny-button.css */
 .ludo-form-tinybutton{
     padding-left:1px;
     padding-right:1px;
@@ -1841,6 +1839,87 @@ div.ludo-combo-menu .ludo-menu-item-selected {
     background-position: center center;
     background-repeat: no-repeat;
     background-image: url('../images/expand-menu-horizontal.png');
+}/* ../ludojs/css-source/form/filter-tree.css */
+.ludo-Filter-Tree-Window{
+    border-radius:0;
+    padding:2px;
+    padding-top:0;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border-color:#000;
+}
+.ludo-Filter-Tree-Window .ludo-window-component-content{
+    border-bottom-left-radius: 2px;
+    border-bottom-right-radius: 2px;
+}
+.ludo-Filter-Tree-Window .ludo-component-resize-both{
+    background-image:none;
+}
+.ludo-Filter-Tree-Window .ludo-body{
+    background-color:#FFF;
+    padding-right:0;
+    padding-top:0;
+}
+.ludo-filter-tree input{
+    border-radius:2px;
+    background-color:#FFF;
+}
+
+input.ludo-filter-tree-input-active{
+    background-color:#FFF;
+}
+
+.ludo-input-simple-filter-tree{
+    background-color:#f1f1f1;
+    border-bottom:1px solid #959595;
+}
+
+.ludo-Filter-Tree-Combo-Field{
+    cursor:pointer;
+}
+div.ludo-Filter-Tree-Combo-Field div.ludo-body{
+    padding:0;
+    height:22px;
+}
+
+.ludo-Filter-Tree-Field-Arrow{
+    position:absolute;
+    right:3px;
+    top:0;
+    height:22px;
+    width:15px;
+    background-image: url("../../images/dropdown-arrow.gif");
+    background-position: center center;
+    background-repeat:no-repeat;
+    z-index:100;
+}
+.ludo-Filter-Tree-Bg-Left, .ludo-Filter-Tree-Bg-Right{
+    background-image:url('../../images/bg-combo-field.png');
+    background-repeat:no-repeat;
+}
+.ludo-Filter-Tree-Bg-Left{
+    width:60%;
+    position:absolute;
+    height:100%;
+    left:0;
+    background-position:top left;
+}
+.ludo-Filter-Tree-Bg-Right{
+    width:60%;
+    position:absolute;
+    height:100%;
+    right:0;
+    background-position:top right;
+}
+.ludo-Filter-Tree-Combo-Value{
+    z-index:120;
+    position:absolute;
+    line-height:22px;
+    left:5px;
+    top:0;
+    font-size:10px;
+    font-weight:bold;
+    width:100%;
 }/* ../ludojs/css-source/form/text.css */
 .ludo-richcomponent .ludo-form_text .ludo-body,
 .ludo-richcomponent .ludo-form_select .ludo-body{
