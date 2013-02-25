@@ -212,14 +212,13 @@ ludo.form.Element = new Class({
 
     ludoRendered:function () {
         this.parent();
-        if (this.getFormEl()) {
-            this.getFormEl().setProperty('name', this.getName());
-        }
+
         if (this.disabled)this.disable();
 
-        if (this.value && this.els.formEl) {
-            this.els.formEl.set('value', this.value);
-        }
+		if(this.els.formEl){
+			this.els.formEl.setProperty('name', this.getName());
+			if(this.value)this.els.formEl.set('value', this.value)
+		}
         if (this.linkWith) {
             this.setLinkWithOfOther();
         }
@@ -245,7 +244,7 @@ ludo.form.Element = new Class({
      */
     enable:function () {
         this.getFormEl().removeProperty('disabled');
-        this.els.label.removeClass('ludo-form-label-disabled');
+        ludo.dom.removeClass(this.els.label, 'ludo-form-label-disabled');
     },
 
     getInheritedFormConfig:function () {
@@ -264,8 +263,8 @@ ludo.form.Element = new Class({
         this.parent();
         this.getEl().addClass('ludo-form-element');
         if (this.els.formEl) {
-            if (this.fieldWidth && this.getFormEl()) {
-                this.els.formEl.setStyle('width', this.fieldWidth - ludo.dom.getPW(this.getFormEl()) - ludo.dom.getBW(this.getFormEl()));
+            if (this.fieldWidth) {
+                this.els.formEl.style.width = (this.fieldWidth - ludo.dom.getPW(this.els.formEl) - ludo.dom.getBW(this.els.formEl)) + 'px';
             }
             if (this.elementId) {
                 this.els.formEl.id = this.elementId;
@@ -336,7 +335,6 @@ ludo.form.Element = new Class({
         if (this.els.formEl) {
             this.setValue(this.els.formEl.get('value'));
         }
-
         /**
          * On change event. This event is fired when value is changed manually
          * by the user via GUI. The "change" event is followed by a
@@ -580,7 +578,10 @@ ludo.form.Element = new Class({
         attempts = attempts || 0;
         var cmp = ludo.get(this.linkWith);
         if (cmp && !cmp.linkWith) {
-            if (!this.value)this.setValue(cmp.value);
+            if (!this.value){
+				this.initialValue = cmp.value;
+				this.setValue(cmp.value);
+			}
             cmp.setLinkWith(this.id);
         } else {
             if (attempts < 100) {
