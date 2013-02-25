@@ -27,9 +27,9 @@ require_once("../includes/demo-header.php");
                 layout:'rows',
                 children:[
                     { type:'form.Text', 'label':'First name', ucWords:true, stretchField:true, name:'firstname', value:'', required:true },
-                    { type:'form.Text', 'label':'Last name', ucWords:true, stretchField:true, value:'', name:'lastname' },
+                    { type:'form.Text', 'label':'Last name', ucWords:true, stretchField:true, value:'', name:'lastname',required:true },
                     { type:'form.Email', 'label':'E-mail', stretchField:true, name:'email', value:'' },
-                    { type:'form.Textarea', label:'Address', ucFirst:true, stretchField:true, name:'address', value:'', weight:1}
+                    { type:'form.Textarea', label:'Address', ucFirst:true, stretchField:true, name:'address', value:'', layout:{ weight:1 }}
                 ]
             },
             {
@@ -48,7 +48,7 @@ require_once("../includes/demo-header.php");
                     { type:'form.Checkbox', label:'I agree'},
                     { type:'form.Checkbox', image:'../images/radio-image-bg.png', label:'Checkbox with image'},
                     { type:'form.Slider',  id:'mySlider', direction:'horizontal', label:'form.Slider', value:10, minValue:0, maxValue:255 },
-                    { type:'form.Number', label:'form.Number(linked)', fieldWidth:50, maxLength:3}
+                    { type:'form.Number', label:'form.Number(linked)', fieldWidth:50, maxLength:3, linkWith:'mySlider'}
 
                 ]}
         ],

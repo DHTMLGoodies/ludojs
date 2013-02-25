@@ -212,8 +212,6 @@ ludo.form.Element = new Class({
 
     ludoRendered:function () {
         this.parent();
-
-
         if (this.getFormEl()) {
             this.getFormEl().setProperty('name', this.getName());
         }
@@ -222,14 +220,14 @@ ludo.form.Element = new Class({
         if (this.value && this.els.formEl) {
             this.els.formEl.set('value', this.value);
         }
-        this.validate();
-        var parentFormManager = this.getParentFormManager();
-        if (parentFormManager) {
-            parentFormManager.registerFormElement(this);
-        }
         if (this.linkWith) {
             this.setLinkWithOfOther();
         }
+		var parentFormManager = this.getParentFormManager();
+	    if (parentFormManager) {
+			parentFormManager.registerFormElement(this);
+		}
+		this.validate();
     },
     /**
      * Disable form element

@@ -1,4 +1,4 @@
-/* Generated Sun Feb 24 22:30:54 CET 2013 */
+/* Generated Mon Feb 25 15:27:14 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -16179,8 +16179,6 @@ ludo.form.Element = new Class({
 
     ludoRendered:function () {
         this.parent();
-
-
         if (this.getFormEl()) {
             this.getFormEl().setProperty('name', this.getName());
         }
@@ -16189,14 +16187,14 @@ ludo.form.Element = new Class({
         if (this.value && this.els.formEl) {
             this.els.formEl.set('value', this.value);
         }
-        this.validate();
-        var parentFormManager = this.getParentFormManager();
-        if (parentFormManager) {
-            parentFormManager.registerFormElement(this);
-        }
         if (this.linkWith) {
             this.setLinkWithOfOther();
         }
+		var parentFormManager = this.getParentFormManager();
+	    if (parentFormManager) {
+			parentFormManager.registerFormElement(this);
+		}
+		this.validate();
     },
     /**
      * Disable form element
@@ -23182,13 +23180,14 @@ ludo.form.Text = new Class({
 	ludoEvents:function () {
 		this.parent();
 		var el = this.getFormEl();
+		if (this.ucFirst || this.ucWords) {
+			this.addEvent('blur', this.upperCaseWords.bind(this));
+		}
         this.addEvent('blur', this.validate.bind(this));
 		if (this.validateKeyStrokes) {
 			el.addEvent('keydown', this.validateKey.bind(this));
 		}
-		if (this.ucFirst || this.ucWords) {
-			el.addEvent('keyup', this.upperCaseWords.bind(this));
-		}
+
 		this.getFormEl().addEvent('keyup', this.sendKeyEvent.bind(this));
 	},
 
@@ -23245,9 +23244,8 @@ ludo.form.Text = new Class({
         }
 	},
 
-	upperCaseWords:function (e) {
+	upperCaseWords:function () {
 		if (this.ucFirst || this.ucWords) {
-			if (e.control || e.alt || this.hasSelection())return;
 			var val = this.getFormEl().get('value');
 			if (val.length == 0) {
 				return;

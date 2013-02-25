@@ -81,13 +81,14 @@ ludo.form.Text = new Class({
 	ludoEvents:function () {
 		this.parent();
 		var el = this.getFormEl();
+		if (this.ucFirst || this.ucWords) {
+			this.addEvent('blur', this.upperCaseWords.bind(this));
+		}
         this.addEvent('blur', this.validate.bind(this));
 		if (this.validateKeyStrokes) {
 			el.addEvent('keydown', this.validateKey.bind(this));
 		}
-		if (this.ucFirst || this.ucWords) {
-			el.addEvent('keyup', this.upperCaseWords.bind(this));
-		}
+
 		this.getFormEl().addEvent('keyup', this.sendKeyEvent.bind(this));
 	},
 
@@ -144,9 +145,8 @@ ludo.form.Text = new Class({
         }
 	},
 
-	upperCaseWords:function (e) {
+	upperCaseWords:function () {
 		if (this.ucFirst || this.ucWords) {
-			if (e.control || e.alt || this.hasSelection())return;
 			var val = this.getFormEl().get('value');
 			if (val.length == 0) {
 				return;
