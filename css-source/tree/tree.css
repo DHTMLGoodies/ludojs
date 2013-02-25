@@ -23,7 +23,7 @@ div.ludo-tree-node-root{
     margin-left:0;
 }
 
-span.ludo-tree-node-spacer{
+.ludo-tree-node span.ludo-tree-node-spacer{
     background-image: url('../images/tree/tree-dots-2.gif');
     background-repeat:repeat-x;
     background-position: left bottom;
