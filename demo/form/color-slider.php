@@ -16,7 +16,9 @@ require_once("../includes/demo-header.php");
         width:520, height:300,
         id:'myWindow',
         left:50, top:50,
-        layout:'relative',
+        layout:{
+            type:'relative'
+        },
         stateful:true,
         title:'Color picker - stateful',
         children:[

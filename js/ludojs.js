@@ -1,4 +1,4 @@
-/* Generated Tue Feb 26 2:24:15 CET 2013 */
+/* Generated Tue Feb 26 2:58:21 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -20150,10 +20150,11 @@ ludo.menu.Button = new Class({
 });/* ../ludojs/src/tree/tree.js */
 /**
  * Displays a tree
- * Possible features: filtering, drag and droptild
+ * This class will soon be replaced by a new Tree widget.
  * @namespace tree
  * @class Tree
  * @extends View
+ * @deprecated
  */
 ludo.tree.Tree = new Class({
     Extends:ludo.View,
@@ -20251,25 +20252,16 @@ ludo.tree.Tree = new Class({
 
     ludoConfig:function (config) {
         this.parent(config);
-        this.data = config.data || this.data;
-        this.nodeTpl = config.nodeTpl || this.nodeTpl;
-
-        if (config.recordConfig !== undefined)this.recordConfig = Object.merge(this.recordConfig, config.recordConfig);
-        if (config.showLines !== undefined)this.showLines = config.showLines;
-        if (config.autoScrollNode !== undefined)this.autoScrollNode = config.autoScrollNode;
-        if (config.expandDepth !== undefined)this.expandDepth = config.expandDepth;
+        this.setConfigParams(config, ['data','nodeTpl','recordConfig','showLines','autoScrollNode','expandDepth',
+            'search','dd','primaryKey']);
 
         config.treeConfig = config.treeConfig || {};
-        config.dd = config.dd || {};
-
-        this.search = config.search || this.search;
 
         if (config.rootRecord !== undefined) {
             this.rootRecord = config.rootRecord;
             this.rootRecord.id = this.rootRecord.id || 'ludo-tree-root-node-' + String.uniqueID();
             this.rootRecord.type = this.rootRecord.type || 'root';
         }
-        if (config.primaryKey !== undefined)this.primaryKey = config.primaryKey;
         if (config.treeConfig.defaultValues !== undefined)this.treeConfig.defaultValues = config.treeConfig.defaultValues;
 
         this.dd = config.dd || this.dd;
@@ -20313,9 +20305,8 @@ ludo.tree.Tree = new Class({
         b.addEvent('click', this.recordClick.bind(this));
         b.addEvent('dblclick', this.recordDblClick.bind(this));
         b.addEvent('click', this.expandByDom.bind(this));
-        b.addEvent('contextmenu', this.showContextMenu.bind(this));
         b.addEvent('click', this.toggleExpandCollapse.bind(this));
-        if (Browser.ie) {
+        if (Browser['ie']) {
             b.addEvent('selectstart', this.cancelSelection.bind(this));
         }
     },
@@ -20541,8 +20532,8 @@ ludo.tree.Tree = new Class({
             nodeText.push('<div style="position:absolute" class="ludo-tree-node-expand" id="' + id + '"></div>');
 
             el.innerHTML = nodeText.join('');
-			if(this.els.expand === undefined)this.els.expand = {};
-			if(this.els.childContainers === undefined)this.els.childContainers = {};
+			if(!this.els.expand)this.els.expand = {};
+			if(!this.els.childContainers)this.els.childContainers = {};
             this.els.expand[id] = el.getElement('.ludo-tree-node-expand');
             this.els.childContainers[id] = el.getElement('.ludo-tree-node-container');
 
@@ -20578,43 +20569,6 @@ ludo.tree.Tree = new Class({
 
     cancelSelection:function () {
         return false;
-    },
-
-    showContextMenu:function (e) {
-        var el = e.target;
-
-        var record = this.getRecordByDOM(el);
-        if (!record) {
-            return undefined;
-        }
-        var menuConfig = this.getContextMenuConfig(record);
-        if (menuConfig.length == 0) {
-            return undefined;
-        }
-
-        this.selectRecord(record);
-
-        var menu = this.getContextMenu();
-        menu.setNewMenuConfig(menuConfig);
-        menu.positionAt(e.page.x, e.page.y);
-        menu.show();
-        return false;
-    },
-
-    getContextMenu:function () {
-        if (!this.contextMenu) {
-            this.contextMenu = new ludo.DashboardItemMenu({});
-        }
-        return this.contextMenu;
-    },
-
-    getContextMenuConfig:function (record) {
-        var ret = [];
-        if (this.recordConfig[record.type]) {
-            var menuConfig = this.recordConfig[record.type].contextMenu;
-            ret = menuConfig || ret;
-        }
-        return ret;
     },
 
     isSelectable:function (record) {
@@ -21123,22 +21077,6 @@ ludo.tree.Tree = new Class({
                 this.showBranch(record.children[i]);
             }
         }
-    },
-    /**
-     * Return record from dom element
-     * This method has to be implemented for components using context menu which only should be shown for specific records
-     * @method getRecordByDOM
-     * @param {Object} el (DOM element)
-     * @private
-     */
-    getRecordByDOM:function (el) {
-        if (!el.hasClass('ludo-tree-node-plain')) {
-            el = el.getParent('.ludo-tree-node-plain');
-        }
-        if (!el) {
-            return null;
-        }
-        return this.recordMap[el.getProperty('id')].record;
     }
 });/* ../ludojs/src/tree/modifications.js */
 /**
