@@ -50,9 +50,13 @@ class User implements LudoDBService
         return $data;
     }
 
-    public function cacheEnabled()
+    public function shouldCache($service)
     {
         return false;
+    }
+
+    public function getOnSuccessMessageFor($service){
+        return "";
     }
 
     public function getValidServices()
