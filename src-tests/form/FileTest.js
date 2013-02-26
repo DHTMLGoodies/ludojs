@@ -12,7 +12,6 @@ TestCase("FileTest", {
 		var field = this.getFileUploadField({
 			name:'uploadField'
 		});
-
 		// then
 		assertEquals('uploadField', field.getFormEl().getProperty('name'));
 	}
