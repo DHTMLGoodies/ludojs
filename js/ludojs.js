@@ -1,4 +1,4 @@
-/* Generated Tue Feb 26 2:58:21 CET 2013 */
+/* Generated Tue Feb 26 19:59:27 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -11691,6 +11691,10 @@ ludo.dataSource.Record = new Class({
 		return this.isRecordObject(record) ? record.record : record;
 	},
 
+    select:function(){
+        this.fireEvent('select', this);
+    },
+
 	insertBefore:function (record, before) {
 		if (this.inject(record, before)) {
 			this.fireEvent('insertBefore', [record, before, 'insertBefore']);
@@ -11986,6 +11990,7 @@ ludo.dataSource.CollectionSearch = new Class({
 		this.clear();
 		this.where(search);
 		this.endBranch();
+
 		var delay = this.getSearchDelay();
 		if (delay === 0) {
 			this.executeSearch(this.searches[0].txt);
@@ -12190,14 +12195,10 @@ ludo.dataSource.CollectionSearch = new Class({
 		if (!this.hasSearchTokens()) {
 			this.deleteSearch();
 		} else {
+            this.fireEvent('initSearch');
 			this.searchResult = [];
 			this.compileSearch();
-			var data = this.getDataFromSource();
-			for (var i = 0; i < data.length; i++) {
-				if (this.isMatchingSearch(data[i])) {
-					this.searchResult.push(data[i]);
-				}
-			}
+            this.performSearch();
 		}
 		/**
 		 * Search executed
@@ -12206,6 +12207,15 @@ ludo.dataSource.CollectionSearch = new Class({
 		this.fireEvent('search');
 		return this;
 	},
+
+    performSearch:function(){
+        var data = this.getDataFromSource();
+        for (var i = 0; i < data.length; i++) {
+            if (this.isMatchingSearch(data[i])) {
+                this.searchResult.push(data[i]);
+            }
+        }
+    },
 
 	isMatchingSearch:function (record) {
 		return this.searchFn.call(this, record);
@@ -12247,7 +12257,7 @@ ludo.dataSource.CollectionSearch = new Class({
 	},
 
 	getDataFromSource:function () {
-		return this.dataSource.data;
+		return this.dataSource.getLinearData();
 	},
 
 	getSearchDelay:function () {
@@ -12259,20 +12269,27 @@ ludo.dataSource.CollectionSearch = new Class({
 	},
 
 	createSearchIndex:function () {
-		var keys = this.getSearchIndexKeys();
-		var index;
-		var data = this.getDataFromSource();
-		for (var i = 0; i < data.length; i++) {
-			index = [];
-			for (var j = 0; j < keys.length; j++) {
-				if (data[i][keys[j]]) {
-					index.push((data[i][keys[j]] + '').toLowerCase());
-				}
-			}
-			data[i].searchIndex = index.join(' ');
-		}
+
+		this.indexBranch(this.getDataFromSource());
 		this.searchIndexCreated = true;
 	},
+
+    indexBranch:function(data){
+        var keys = this.getSearchIndexKeys();
+        var index;
+        for (var i = 0; i < data.length; i++) {
+            index = [];
+            for (var j = 0; j < keys.length; j++) {
+                if (data[i][keys[j]]) {
+                    index.push((data[i][keys[j]] + '').toLowerCase());
+                }
+            }
+            data[i].searchIndex = index.join(' ');
+            if(data[i].children){
+                this.indexBranch(data[i].children);
+            }
+        }
+    },
 
 	getSearchIndexKeys:function () {
 		if (this.index !== undefined) {
@@ -12661,6 +12678,10 @@ ludo.dataSource.Collection = new Class({
 		return ret;
 	},
 
+    getLinearData:function(){
+        return this.data;
+    },
+
 	/**
 	 * Select a specific record
 	 * @method selectRecord
@@ -12686,7 +12707,7 @@ ludo.dataSource.Collection = new Class({
 	selectRecords:function (search) {
 		this.selectedRecords = this.findRecords(search);
 		for (var i = 0; i < this.selectedRecords.length; i++) {
-			this.fireEvent('select', this.selectedRecords[i]);
+			this.fireSelect(this.selectedRecords[i]);
 		}
 		return this.selectedRecords;
 	},
@@ -12814,7 +12835,7 @@ ludo.dataSource.Collection = new Class({
 		 		}
 		 	}
 		 */
-		this.fireEvent('select', Object.clone(rec));
+		this.fireSelect(Object.clone(rec));
 	},
 
 	/**
@@ -12901,12 +12922,12 @@ ludo.dataSource.Collection = new Class({
 			if (index > indexSelected) {
 				for (i = indexSelected; i <= index; i++) {
 					this.selectedRecords.push(this.data[i]);
-					this.fireEvent('select', this.data[i]);
+					this.fireSelect(this.data[i]);
 				}
 			} else {
 				for (i = indexSelected; i >= index; i--) {
 					this.selectedRecords.push(this.data[i]);
-					this.fireEvent('select', this.data[i]);
+					this.fireSelect(this.data[i]);
 				}
 			}
 		}
@@ -13332,7 +13353,12 @@ ludo.dataSource.Collection = new Class({
 	addRecordEvents:function(record){
 		record.addEvent('update', this.onRecordUpdate.bind(this));
 		record.addEvent('dispose', this.onRecordDispose.bind(this));
+		record.addEvent('select', this.selectRecord.bind(this));
 	},
+
+    fireSelect:function(record){
+        this.fireEvent('select', record);
+    },
 
 	onRecordUpdate:function(record){
 		this.indexRecord(record);
@@ -15464,6 +15490,7 @@ ludo.grid.Grid = new Class({
 	},
 
 	setSelectedRecord:function (record) {
+        // TODO should use dataSource.Record object instead of plain object
 		this.fireEvent('selectrecord', record);
 		this.highlightActiveRecord();
 	},
@@ -16371,7 +16398,7 @@ ludo.form.Element = new Class({
      * @return string
      */
     getValue:function () {
-        return this.value;
+        return this.els.formEl ? this.els.formEl.get('value') : this.value;
     },
     /**
      * Set new value
@@ -21464,6 +21491,10 @@ ludo.dataSource.TreeCollection = new Class({
 		return undefined;
 	},
 
+    fireSelect:function(record){
+        this.fireEvent('select', this.getRecord(record));
+    },
+
 	addRecordEvents:function(record){
 		this.parent(record);
 		record.addEvent('addChild', this.indexRecord.bind(this));
@@ -21481,7 +21512,12 @@ ludo.dataSource.TreeCollection = new Class({
 	},
 
 	addSearcherEvents:function(){
-
+        this.searcher.addEvent('match', function(record){
+            this.fireEvent('show', this.getRecord(record));
+        }.bind(this));
+        this.searcher.addEvent('mismatch', function(record){
+            this.fireEvent('hide', this.getRecord(record));
+        }.bind(this));
 	}
 });/* ../ludojs/src/data-source/tree-collection-search.js */
 /**
@@ -21492,7 +21528,31 @@ ludo.dataSource.TreeCollection = new Class({
  @extends Core
  */
 ludo.dataSource.TreeCollectionSearch = new Class({
-	Extends: ludo.dataSource.CollectionSearch
+    Extends:ludo.dataSource.CollectionSearch,
+    performSearch:function () {
+        var s = new Date().getTime();
+        this.performSearchIn(this.getDataFromSource());
+        console.log('Time used: ' + (new Date().getTime() - s));
+    },
+
+    performSearchIn:function(data){
+        var matchesFound = false;
+        for (var i = 0; i < data.length; i++) {
+            if (this.isMatchingSearch(data[i])) {
+                this.searchResult.push(data[i]);
+                this.fireEvent('match', data[i]);
+                matchesFound = true;
+            }else{
+                if(data[i].children){
+                    matchesFound = this.performSearchIn(data[i].children);
+                }
+                if(!matchesFound){
+                    this.fireEvent('mismatch', data[i]);
+                }
+            }
+        }
+        return matchesFound;
+    }
 });/* ../ludojs/src/controller/manager.js */
 /**
  * This class connects view modules and controllers
@@ -26029,10 +26089,9 @@ ludo.form.SearchField = new Class({
 
 	ludoConfig:function (config) {
 		this.parent(config);
-		if (config.searchIn)this.searchIn = config.searchIn;
+        this.setConfigParams(config, ['searchIn','delay','searchFn']);
         if(ludo.util.isString(this.searchIn))this.searchIn = ludo.get(this.searchIn);
-		if (config.delay !== undefined)this.delay = config.delay;
-		if (config.searchFn !== undefined)this.searchFn = config.searchFn.bind(this);
+		if (this.searchFn !== undefined)this.searchFn = this.searchFn.bind(this);
 		this.addEvent('key', this.queue.bind(this));
 	},
 

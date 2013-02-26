@@ -5,7 +5,9 @@ load:
   - ../../src/data-source/base.js
   - ../../src/data-source/json.js
   - ../../src/data-source/collection.js
+  - ../../src/data-source/tree-collection.js
   - ../../src/data-source/collection-search.js
+  - ../../src/data-source/tree-collection-search.js
 
 test:
   - SearchParserTest.js

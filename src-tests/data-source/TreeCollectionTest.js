@@ -137,7 +137,6 @@ TestCase("TreeCollection", {
 
 		// then
 		assertEquals(4, parent.getChildren().length);
-
 	},
 
 	getCollection:function (config) {

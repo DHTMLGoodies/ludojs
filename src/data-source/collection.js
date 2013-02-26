@@ -354,6 +354,10 @@ ludo.dataSource.Collection = new Class({
 		return ret;
 	},
 
+    getLinearData:function(){
+        return this.data;
+    },
+
 	/**
 	 * Select a specific record
 	 * @method selectRecord
@@ -379,7 +383,7 @@ ludo.dataSource.Collection = new Class({
 	selectRecords:function (search) {
 		this.selectedRecords = this.findRecords(search);
 		for (var i = 0; i < this.selectedRecords.length; i++) {
-			this.fireEvent('select', this.selectedRecords[i]);
+			this.fireSelect(this.selectedRecords[i]);
 		}
 		return this.selectedRecords;
 	},
@@ -507,7 +511,7 @@ ludo.dataSource.Collection = new Class({
 		 		}
 		 	}
 		 */
-		this.fireEvent('select', Object.clone(rec));
+		this.fireSelect(Object.clone(rec));
 	},
 
 	/**
@@ -594,12 +598,12 @@ ludo.dataSource.Collection = new Class({
 			if (index > indexSelected) {
 				for (i = indexSelected; i <= index; i++) {
 					this.selectedRecords.push(this.data[i]);
-					this.fireEvent('select', this.data[i]);
+					this.fireSelect(this.data[i]);
 				}
 			} else {
 				for (i = indexSelected; i >= index; i--) {
 					this.selectedRecords.push(this.data[i]);
-					this.fireEvent('select', this.data[i]);
+					this.fireSelect(this.data[i]);
 				}
 			}
 		}
@@ -1025,7 +1029,12 @@ ludo.dataSource.Collection = new Class({
 	addRecordEvents:function(record){
 		record.addEvent('update', this.onRecordUpdate.bind(this));
 		record.addEvent('dispose', this.onRecordDispose.bind(this));
+		record.addEvent('select', this.selectRecord.bind(this));
 	},
+
+    fireSelect:function(record){
+        this.fireEvent('select', record);
+    },
 
 	onRecordUpdate:function(record){
 		this.indexRecord(record);

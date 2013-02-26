@@ -58,6 +58,7 @@ ludo.dataSource.CollectionSearch = new Class({
 		this.clear();
 		this.where(search);
 		this.endBranch();
+
 		var delay = this.getSearchDelay();
 		if (delay === 0) {
 			this.executeSearch(this.searches[0].txt);
@@ -262,14 +263,10 @@ ludo.dataSource.CollectionSearch = new Class({
 		if (!this.hasSearchTokens()) {
 			this.deleteSearch();
 		} else {
+            this.fireEvent('initSearch');
 			this.searchResult = [];
 			this.compileSearch();
-			var data = this.getDataFromSource();
-			for (var i = 0; i < data.length; i++) {
-				if (this.isMatchingSearch(data[i])) {
-					this.searchResult.push(data[i]);
-				}
-			}
+            this.performSearch();
 		}
 		/**
 		 * Search executed
@@ -278,6 +275,15 @@ ludo.dataSource.CollectionSearch = new Class({
 		this.fireEvent('search');
 		return this;
 	},
+
+    performSearch:function(){
+        var data = this.getDataFromSource();
+        for (var i = 0; i < data.length; i++) {
+            if (this.isMatchingSearch(data[i])) {
+                this.searchResult.push(data[i]);
+            }
+        }
+    },
 
 	isMatchingSearch:function (record) {
 		return this.searchFn.call(this, record);
@@ -319,7 +325,7 @@ ludo.dataSource.CollectionSearch = new Class({
 	},
 
 	getDataFromSource:function () {
-		return this.dataSource.data;
+		return this.dataSource.getLinearData();
 	},
 
 	getSearchDelay:function () {
@@ -331,20 +337,27 @@ ludo.dataSource.CollectionSearch = new Class({
 	},
 
 	createSearchIndex:function () {
-		var keys = this.getSearchIndexKeys();
-		var index;
-		var data = this.getDataFromSource();
-		for (var i = 0; i < data.length; i++) {
-			index = [];
-			for (var j = 0; j < keys.length; j++) {
-				if (data[i][keys[j]]) {
-					index.push((data[i][keys[j]] + '').toLowerCase());
-				}
-			}
-			data[i].searchIndex = index.join(' ');
-		}
+
+		this.indexBranch(this.getDataFromSource());
 		this.searchIndexCreated = true;
 	},
+
+    indexBranch:function(data){
+        var keys = this.getSearchIndexKeys();
+        var index;
+        for (var i = 0; i < data.length; i++) {
+            index = [];
+            for (var j = 0; j < keys.length; j++) {
+                if (data[i][keys[j]]) {
+                    index.push((data[i][keys[j]] + '').toLowerCase());
+                }
+            }
+            data[i].searchIndex = index.join(' ');
+            if(data[i].children){
+                this.indexBranch(data[i].children);
+            }
+        }
+    },
 
 	getSearchIndexKeys:function () {
 		if (this.index !== undefined) {

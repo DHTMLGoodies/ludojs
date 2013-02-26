@@ -2,7 +2,10 @@
 // TODO should not have to have an "id" property
 ludo.tree.Tree = new Class({
 	Extends:ludo.View,
+    type:'tree.Tree',
 	nodeCache:{},
+    renderedRecords: {},
+
 	ludoConfig:function (config) {
 		this.parent(config);
 		if (this.dataSource && !this.dataSource.type)this.dataSource.type = 'dataSource.TreeCollection';
@@ -17,6 +20,8 @@ ludo.tree.Tree = new Class({
 			ds.addEvent('addChild', this.addChild.bind(this));
 			ds.addEvent('dispose', this.removeChild.bind(this));
 			ds.addEvent('removeChild', this.removeChild.bind(this));
+			ds.addEvent('show', this.showRecord.bind(this));
+			ds.addEvent('hide', this.hideRecord.bind(this));
 		}
 	},
 
@@ -46,6 +51,7 @@ ludo.tree.Tree = new Class({
 	},
 
 	selectRecord:function (record) {
+        if(!this.isRecordRendered(record))this.showRecord(record);
 		var el = this.getDomElement(record, '.ludo-tree-node-plain');
 		if (el)ludo.dom.addClass(el, 'ludo-tree-selected-node');
 	},
@@ -70,7 +76,10 @@ ludo.tree.Tree = new Class({
 	},
 
 	expand:function (record, el) {
-		el = el || this.getExpandEl();
+		el = el || this.getExpandEl(record);
+        if(!this.areChildrenRendered(record)){
+            this.renderChildrenOf(record);
+        }
 		ludo.dom.addClass(el, 'ludo-tree-node-collapse');
 		this.getCachedNode(record, 'children', 'child-container-').style.display = '';
 	},
@@ -90,16 +99,31 @@ ludo.tree.Tree = new Class({
 	},
 
 	hideRecord:function (record) {
-		this.getCachedNode(record, 'node', '').style.display = 'none';
+        if(this.isRecordRendered(record)){
+            this.getCachedNode(record, 'node', '').style.display = 'none';
+        }
 	},
 
 	showRecord:function (record) {
+        if(!this.isRecordRendered(record)){
+            this.showRecord(record.getParent());
+            this.expand(record.getParent());
+            this.showRecord(record.getParent());
+        }
 		this.getCachedNode(record, 'node', '').style.display = '';
 	},
 
 	getDomByRecord:function (record) {
 		return record ? this.getCachedNode(record, 'node', '') : undefined;
 	},
+
+    isRecordRendered:function(record){
+        return this.renderedRecords[record.getUID !== undefined ? record.getUID() : record.uid] ? true : false;
+    },
+
+    areChildrenRendered:function(record){
+        return record.children && record.children.length ? this.isRecordRendered(record.children[0]) : false;
+    },
 
 	getCachedNode:function (record, cacheKey, idPrefix) {
 		if (this.nodeCache[cacheKey] === undefined)this.nodeCache[cacheKey] = {};
@@ -121,6 +145,7 @@ ludo.tree.Tree = new Class({
 
 	insertJSON:function () {
 		this.nodeCache = {};
+		this.renderedRecords = {};
 		this.getBody().set('html', '');
 		this.render(this.getDataSource().getData());
 	},
@@ -139,8 +164,16 @@ ludo.tree.Tree = new Class({
 		return html.join('');
 	},
 
+    renderChildrenOf:function(record){
+        var p = this.getChildContainer(record);
+        if(p){
+            p.innerHTML = this.getHtmlForBranch(record.getChildren());
+        }
+    },
+
 	getHtmlFor:function (record, isLast, includeContainer) {
 		var ret = [];
+        this.renderedRecords[record.uid] = true;
 		if (includeContainer) {
 			ret.push('<div class="ludo-tree-a-node ludo-tree-node');
 			if (isLast)ret.push(' ludo-tree-node-last-sibling');
@@ -161,7 +194,6 @@ ludo.tree.Tree = new Class({
 		ret.push('<div class="ludo-tree-node-container" style="display:none" id="child-container-');
 		ret.push(record.uid);
 		ret.push('">');
-		if (record.children)ret.push(this.getHtmlForBranch(record.children));
 		ret.push('</div>');
 
 		if (includeContainer)ret.push('</div>');
@@ -213,6 +245,7 @@ ludo.tree.Tree = new Class({
 		var el = this.getDomByRecord(record);
 		if(el){
 			el.parentNode.removeChild(el);
+            this.renderedRecords.splice(this.renderedRecords.indexOf(record.getUID()), 1);
 			if(record.parentUid){
 				var p = this.dataSource.findRecord(record.parentUid);
 				if(p)this.cssBranch(p);

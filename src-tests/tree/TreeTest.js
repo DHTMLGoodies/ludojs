@@ -10,7 +10,6 @@ TestCase("TreeTest", {
 
         // then
         assertEquals(domNode.id, record.record.uid);
-
     },
 
     "test should be able to get Record by DOM":function () {
@@ -25,6 +24,68 @@ TestCase("TreeTest", {
 
         // then
         assertEquals(expectedRecord, record);
+    },
+
+    "test should be able to lazy render child nodes": function(){
+        // given
+        var tree = this.getTree();
+
+        // when
+        var child = tree.getDataSource().getRecord(11);
+
+        // then
+        assertFalse(tree.areChildrenRendered(tree.getDataSource().getRecord(1)));
+        assertFalse(tree.isRecordRendered(child));
+    },
+
+    "test should be able show unrendered records": function(){
+        // given
+        var tree = this.getTree();
+
+        // when
+        var child = tree.getDataSource().getRecord(11);
+        tree.showRecord(child);
+
+        // then
+        assertTrue(tree.isRecordRendered(child));
+    },
+
+    "test should render record when selected in data source": function(){
+        // given
+        var tree = this.getTree();
+        var record = tree.getDataSource().getRecord(121);
+        // when
+        record.select();
+
+        // then
+        assertTrue(tree.isRecordRendered(record));
+
+    },
+
+    "test should be able to show unrendered records deep down in the tree": function(){
+        // given
+        var tree = this.getTree();
+
+        // when
+        var child = tree.getDataSource().getRecord(121);
+        tree.showRecord(child);
+
+        // then
+        assertTrue(tree.isRecordRendered(child));
+
+    },
+
+    "test should be able to expand ": function(){
+        // given
+        var tree = this.getTree();
+
+        // when
+        var child = tree.getDataSource().getRecord(11);
+        assertFalse(tree.isRecordRendered(child));
+        tree.expand(tree.getDataSource().getRecord(1));
+        // then
+        assertTrue(tree.isRecordRendered(child));
+
     },
 
     "test should be able to add new nodes":function () {
@@ -76,7 +137,10 @@ TestCase("TreeTest", {
         return {"data":[
             { id:1, "country":"Japan", "capital":"Tokyo", "population":"13,185,502", children:[
                 { id:11, city:'Kobe' },
-                { id:12, city:'Kyoto' },
+                { id:12, city:'Kyoto', children:[
+                    { id:121, city: 'sub node' },
+                    { id:122, city: 'sub node' }
+                ] },
                 { id:13, city:'Sapporo'},
                 { id:14, city:'Sendai'},
                 { id:15, city:'Kawasaki'}
