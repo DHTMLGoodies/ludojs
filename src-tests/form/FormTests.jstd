@@ -10,22 +10,25 @@ load:
   - ../../src/form/*.js
   - ../../src/form/validator/*.js
   - ../../src/form/email.js
+  - ../../src/form/select.js
+  - ../../src/data-source/collection.js
 
 serve:
   - ../../css/ludojs.css
   - ../../css/ludojs-light-gray.css
 
 test:
-  - ButtonTest.js
-  - FileTest.js
-  - ManagerTest.js
-  - NumberTest.js
-  - SliderTest.js
-  - TextTest.js
-  - ValidationTest.js
-  - LinkedTest.js
-  - SearchFieldTest.js
-  - PasswordTest.js
+#  - ButtonTest.js
+#  - FileTest.js
+#  - ManagerTest.js
+#  - NumberTest.js
+#  - SliderTest.js
+#  - TextTest.js
+#  - ValidationTest.js
+#  - LinkedTest.js
+#  - SearchFieldTest.js
+#  - PasswordTest.js
+  - SelectTest.js
 
 plugin:
  - name: "coverage"

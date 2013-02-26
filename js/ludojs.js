@@ -1,4 +1,4 @@
-/* Generated Mon Feb 25 23:35:12 CET 2013 */
+/* Generated Tue Feb 26 2:24:15 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -3440,6 +3440,7 @@ ludo.dataSource.JSON = new Class({
      * @return void
      */
     load:function () {
+        if(!this.url && !this.resource)return;
         this.parent();
         this.sendRequest(this.service, this.arguments, this.getPostData())
     },
@@ -12596,6 +12597,7 @@ ludo.dataSource.Collection = new Class({
 	 * @param record
 	 */
 	addRecord:function (record) {
+        if(this.data === undefined)this.data = [];
 		this.data.push(record);
 		/**
 		 * Event fired when a record is added to the collection
@@ -24469,58 +24471,131 @@ ludo.form.Spinner = new Class({
     }
 });/* ../ludojs/src/form/select.js */
 /**
- * Select box (&lt;select>)
- * A select box can be populated from the server. The server should respond with data in the following format:
- * { success : true, data: [{ value:'1','text': 'Display text' }, { value:'2', 'text': 'Display text'} ]}
- * You can use different keys than "value" and "text" by defining a fieldConfig object.
- * @namespace form
- * @class Select
- * @extends form.Element
+ Select box (&lt;select>) 
+ @namespace form
+ @class Select
+ @extends form.Element
+ @constructor
+ @param {Object} config
+ @example
+    {
+        type:'form.Select',
+        name:'country',
+        valueKey:'id',
+        textKey:'title',
+        emptyItem:{
+            id:'',title:'Where do you live?'
+        },
+        dataSource:{
+            resource:'Country',
+            service:'read'
+        }
+    }
+ to populate the select box from the Country service on the server. The "id" column will be used as value for the options
+ and title for the displayed text.
+
+ @example
+    {
+        type:'form.Select',
+        emptyItem:{
+            value:'',text:'Please select an option'
+        },
+        options:[
+            { value:'1',text : 'Option a' },
+            { value:'2',text : 'Option b' },
+            { value:'3',text : 'Option c' }
+        ]
+    }
  */
 ludo.form.Select = new Class({
     Extends:ludo.form.LabelElement,
     type:'form.Select',
     labelWidth:100,
     /**
-     * value and text to display when no records has been selected, example: { value:'', text: 'Select country' }
-     * @attribute emptyItem
-     * @default null
+     First option in the select box, usually with an empty value.
+     @config {Object} emptyItem
+     @default undefined
+     @example
+        {
+            id : '',
+            title : 'Please select an option'
+
+        }
      */
-    emptyItem:null,
+    emptyItem:undefined,
+
     /**
-     * record keys to use for value and text
-     * @attribute fieldConfig
-     * @default { value : 'value', text : 'text' }
+     Name of column for the values of the select box. This option is useful when populating select box using a collection data source.
+     @config valueKey
+     @example
+        valueKey : 'id'
      */
-    fieldConfig:{
-        value:'value',
-        text:'text'
-    },
+    valueKey:'value',
+    /**
+     * Name of column for the displayed text of the options in the select box
+     */
+    textKey:'text',
 
     inputTag : 'select',
     inputType : '',
+    /**
+     * Config of dataSource.Collection object used to populate the select box from external data
+     * @config {Object|ludo.dataSource.Collection} dataSource
+     * @default undefined
+     */
+    dataSource:undefined,
+    /**
+     Array of options used to populate the select box
+     @config {Array} options
+     @default undefined
+     @example
+        options:[
+            { value:'1','Option number 1' },
+            { value:'2','Option number 2' },
+            { value:'3','Option number 3' }
+        ]
+     */
+    options : undefined,
 
     ludoConfig:function (config) {
         this.parent(config);
-        if (config.emptyItem)this.emptyItem = config.emptyItem;
+        this.setConfigParams(config, ['emptyItem','options','valueKey','textKey']);
+        if(!this.dataSource)this.dataSource = {};
+        if (this.dataSource && !this.dataSource.type)this.dataSource.type = 'dataSource.Collection';
     },
 
-    populate:function (data) {
-        if (this.emptyItem) {
-            this.addOption(this.emptyItem.value, this.emptyItem.text);
-        }
-
-        if (data.length > 0) {
-            if (data[0][this.fieldConfig.value] === undefined) {
-                this.fieldConfig.value = 'id';
+    ludoEvents:function(){
+        this.parent();
+        if (this.dataSource) {
+            if(this.options && this.dataSourceObj){
+                for(var i=0;i<this.options.length;i++){
+                    this.dataSourceObj.addRecord(this.options[i]);
+                }
             }
-            if (data[0][this.fieldConfig.text] === undefined) {
-                this.fieldConfig.text = 'title';
+            if(this.dataSourceObj && this.dataSourceObj.hasData()){
+                this.populate();
             }
+            var ds = this.getDataSource();
+            ds.addEvent('change', this.populate.bind(this));
+            ds.addEvent('select', this.selectRecord.bind(this));
+            ds.addEvent('update', this.populate.bind(this));
+            ds.addEvent('delete', this.populate.bind(this));
+            ds.addEvent('sort', this.populate.bind(this));
         }
+    },
 
+    selectRecord:function(record){
+        this.setValue(record[this.valueKey]);
+    },
+
+    populate:function () {
+        var data = this.dataSourceObj.getData() || [];
+        this.getFormEl().options.length = 0;
+        if(this.emptyItem){
+            data.splice(0, 0, this.emptyItem);
+        }
         for (var i = 0, count = data.length; i < count; i++) {
-            this.addOption(data[i][ this.fieldConfig.value ], data[i][ this.fieldConfig.text ]);
+            this.addOption(data[i][ this.valueKey ], data[i][ this.textKey ]);
         }
 
         if (this.value) {
@@ -24538,7 +24613,7 @@ ludo.form.Select = new Class({
         var option = new Element('option');
         option.set('value', value);
         option.set('text', text);
-        this.getFormEl().adopt(option);
+        this.getFormEl().appendChild(option);
     }
 });/* ../ludojs/src/form/filter-text.js */
 /**

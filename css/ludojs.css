@@ -1,4 +1,4 @@
-/* Generated Mon Feb 25 23:35:12 CET 2013 */
+/* Generated Tue Feb 26 2:24:15 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -1669,10 +1669,9 @@ div.ludo-tree-node-root{
 }
 
 div.ludo-tree-node-last-sibling{
-   background-position: left 2px;
    background-repeat: no-repeat;
    background-image:url('../images/tree/tree-dots-last-node-2.gif');
-    background-position:top left;
+   background-position:top left;
 }
 
 .ludo-tree-node-container{

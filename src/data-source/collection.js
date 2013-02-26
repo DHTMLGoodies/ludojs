@@ -290,6 +290,7 @@ ludo.dataSource.Collection = new Class({
 	 * @param record
 	 */
 	addRecord:function (record) {
+        if(this.data === undefined)this.data = [];
 		this.data.push(record);
 		/**
 		 * Event fired when a record is added to the collection
