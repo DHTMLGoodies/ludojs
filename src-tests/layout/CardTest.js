@@ -1,12 +1,4 @@
 TestCase("CardLayout", {
-
-	getCard:function () {
-		return new ludo.card.Card({
-			hidden:true
-		})
-
-	},
-
 	getDeck:function (animate) {
 		animate = animate || false;
 		var id = String.uniqueID();
@@ -910,7 +902,7 @@ TestCase("CardLayout", {
 		// given
 		var deck = this.getDeckWithProgressBar();
 		// when
-		var bar = deck.getLayoutManager().getButton('progress-bar')
+		var bar = deck.getLayoutManager().getButton('progress-bar');
 		// then
 		assertEquals('card', bar.component.layout.type);
 	},
@@ -934,7 +926,7 @@ TestCase("CardLayout", {
 		// given
 		var deck = this.getDeckWithProgressBar();
 		// when
-		var bar = deck.getLayoutManager().getButton('progress-bar')
+		var bar = deck.getLayoutManager().getButton('progress-bar');
 		// then
 		assertEquals(20, bar.getCurrentPercent());
 	},

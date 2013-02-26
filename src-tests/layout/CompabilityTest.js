@@ -43,7 +43,7 @@ TestCase("CompabilityTest", {
 			}
 		});
 
-		var v = new ludo.View({
+		new ludo.View({
 			layout:{
 			   type:'tab',
 			   tabs:'top'
