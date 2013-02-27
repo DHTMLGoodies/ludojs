@@ -51,6 +51,7 @@ ludo.tree.Tree = new Class({
 	},
 
 	selectRecord:function (record) {
+        if(!record.getPlainRecord)record = this.getDataSource().getRecord(record);
         if(!this.isRecordRendered(record))this.showRecord(record);
 		var el = this.getDomElement(record, '.ludo-tree-node-plain');
 		if (el)ludo.dom.addClass(el, 'ludo-tree-selected-node');

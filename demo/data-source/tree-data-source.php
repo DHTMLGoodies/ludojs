@@ -16,7 +16,7 @@ for($i=0;$i<50;$i++){
     for($j=0;$j<10;$j++){
         $subNode = array('id' => $i."_".$j, 'type' => 'city', 'title' =>$cities[rand(0,count($cities)-1)]);
         $subNode['children'] = array();
-        for($k=0;$k<4;$k++){
+        for($k=0;$k<8;$k++){
             $subNode2 = array('id' => $i."_".$j."_".$k, 'type' => 'letter', 'title' =>$nodes[rand(0,count($nodes)-1)]);
             $subNode['children'][] = $subNode2;
         }
