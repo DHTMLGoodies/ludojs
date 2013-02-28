@@ -1,4 +1,4 @@
-/* Generated Thu Feb 28 11:22:07 CET 2013 */
+/* Generated Thu Feb 28 23:08:37 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -3193,7 +3193,62 @@ ludo.layout.Base = new Class({
 
 	getRenderer:function(){
 		return this.renderer ? this.renderer : this.createRenderer();
-	}
+	},
+
+    /**
+     * Executed when a child is hidden. It set's the internal layout properties width and height to 0(zero)
+     * @method hideChild
+     * @param {ludo.View} child
+     * @private
+     */
+    hideChild:function(child){
+        this.setTemporarySize(child, {
+            width:0,height:0
+        });
+    },
+
+    /**
+     * Executed when a child is minimized. It set's temporary width or properties
+     * @method minimize
+     * @param {ludo.View} child
+     * @param {Object} newSize
+     * @protected
+     */
+    minimize:function(child, newSize){
+        this.setTemporarySize(child, newSize);
+        this.resize();
+    },
+
+    /**
+     * Store temporary size when a child is minimized or hidden
+     * @method setTemporarySize
+     * @param {ludo.View} child
+     * @param {Object} newSize
+     * @protected
+     */
+    setTemporarySize:function(child, newSize){
+        if(newSize.width !== undefined){
+            child.layout.cached_width = child.layout.width;
+            child.layout.width = newSize.width;
+        }else{
+            child.layout.cached_height = child.layout.height;
+            child.layout.height = newSize.height;
+        }
+    },
+    /**
+     * Clear temporary width or height values. This method is executed when a child
+     * is shown or maximized
+     * @method clearTemporaryValues
+     * @param {ludo.View} child
+     * @protected
+     */
+    clearTemporaryValues:function(child){
+        if(child.layout.cached_width !== undefined)child.layout.width = child.layout.cached_width;
+        if(child.layout.cached_height !== undefined)child.layout.height = child.layout.cached_height;
+        child.layout.cached_width = undefined;
+        child.layout.cached_height = undefined;
+        this.resize();
+    }
 });/* ../ludojs/src/layout/factory.js */
 /**
  * Factory class for layout managers
@@ -5894,13 +5949,20 @@ ludo.color.Color = new Class({
 ludo.layout.Linear = new Class({
 	Extends:ludo.layout.Base,
 
+    onCreate:function(){
+        // TODO refactor this.
+        this.view.getBody().style.overflow='hidden';
+        this.parent();
+    },
+
 	onNewChild:function (child) {
 		this.parent(child);
 		this.updateLayoutObject(child);
-		child.addEvent('collapse', this.resize.bind(this));
-		child.addEvent('expand', this.resize.bind(this));
-		child.addEvent('minimize', this.resize.bind(this));
-		child.addEvent('maximize', this.resize.bind(this));
+		child.addEvent('collapse', this.minimize.bind(this));
+		child.addEvent('expand', this.clearTemporaryValues.bind(this));
+		child.addEvent('minimize', this.minimize.bind(this));
+		child.addEvent('maximize', this.clearTemporaryValues.bind(this));
+		child.addEvent('show', this.clearTemporaryValues.bind(this));
 	},
 
 	updateLayoutObject:function (child) {
@@ -7654,61 +7716,6 @@ ludo.layout.Relative = new Class({
 		child.addEvent('minimize', this.minimize.bind(this));
 		child.addEvent('expand', this.clearTemporaryValues.bind(this));
 		child.addEvent('maximize', this.clearTemporaryValues.bind(this));
-	},
-
-    /**
-     * Executed when a child is hidden. It set's the internal layout properties width and height to 0(zero)
-     * @method hideChild
-     * @param {ludo.View} child
-     * @private
-     */
-	hideChild:function(child){
-		this.setTemporarySize(child, {
-			width:0,height:0
-		});
-	},
-
-    /**
-     * Executed when a child is minimized. It set's temporary width or properties
-     * @method minimize
-     * @param {ludo.View} child
-     * @param {Object} newSize
-     * @private
-     */
-	minimize:function(child, newSize){
-		this.setTemporarySize(child, newSize);
-		this.resize();
-	},
-
-    /**
-     * Store temporary size when a child is minimized or hidden
-     * @method setTemporarySize
-     * @param {ludo.View} child
-     * @param {Object} newSize
-     * @private
-     */
-	setTemporarySize:function(child, newSize){
-		if(newSize.width !== undefined){
-			child.layout.cached_width = child.layout.width;
-			child.layout.width = newSize.width;
-		}else{
-			child.layout.cached_height = child.layout.height;
-			child.layout.height = newSize.height;
-		}
-	},
-    /**
-     * Clear temporary width or height values. This method is executed when a child
-     * is shown or maximized
-     * @method clearTemporaryValues
-     * @param {ludo.View} child
-     * @private
-     */
-	clearTemporaryValues:function(child){
-		if(child.layout.cached_width !== undefined)child.layout.width = child.layout.cached_width;
-		if(child.layout.cached_height !== undefined)child.layout.height = child.layout.cached_height;
-		child.layout.cached_width = undefined;
-		child.layout.cached_height = undefined;
-		this.resize();
 	}
 });/* ../ludojs/src/layout/tab.js */
 ludo.layout.Tab = new Class({

@@ -6,13 +6,20 @@
 ludo.layout.Linear = new Class({
 	Extends:ludo.layout.Base,
 
+    onCreate:function(){
+        // TODO refactor this.
+        this.view.getBody().style.overflow='hidden';
+        this.parent();
+    },
+
 	onNewChild:function (child) {
 		this.parent(child);
 		this.updateLayoutObject(child);
-		child.addEvent('collapse', this.resize.bind(this));
-		child.addEvent('expand', this.resize.bind(this));
-		child.addEvent('minimize', this.resize.bind(this));
-		child.addEvent('maximize', this.resize.bind(this));
+		child.addEvent('collapse', this.minimize.bind(this));
+		child.addEvent('expand', this.clearTemporaryValues.bind(this));
+		child.addEvent('minimize', this.minimize.bind(this));
+		child.addEvent('maximize', this.clearTemporaryValues.bind(this));
+		child.addEvent('show', this.clearTemporaryValues.bind(this));
 	},
 
 	updateLayoutObject:function (child) {

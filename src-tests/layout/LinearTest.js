@@ -1,6 +1,4 @@
 TestCase("LinearTest", {
-
-
 	"test should be able to have linear layout":function () {
 		// given
 		var view = this.getLayoutWithChildren({
@@ -10,9 +8,6 @@ TestCase("LinearTest", {
 
 		// then
 		assertEquals(300, view.child['childOne'].getEl().offsetWidth);
-
-
-
 	},
 
 	getLayoutWithChildren:function (layout) {
