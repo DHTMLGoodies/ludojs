@@ -47,26 +47,6 @@ ludo.FramedView = new Class({
 	 * @attribute icon
 	 */
 	icon:null,
-	/**
-	 * Initial display of status bar
-	 * @attribute {Boolean} statusBar
-	 * @default false
-	 */
-	statusBar:false,
-	/**
-	 * Initial text of status bar
-	 * @attribute statusText
-	 * @type String
-	 * @default '' (empty string)
-	 */
-	statusText:'',
-	/**
-	 * Path to icon on status bar
-	 * @attribute statusIcon
-	 * @type String
-	 * @default undefined
-	 */
-	statusIcon:undefined,
 
 	/**
 	 * Show or hide title bar
@@ -114,7 +94,7 @@ ludo.FramedView = new Class({
             }
         }
 
-        var keys = ['buttonBar','hasMenu','menuConfig','icon','statusIcon','statusText','statusBar','titleBar','buttons','boldTitle','minimized'];
+        var keys = ['buttonBar','hasMenu','menuConfig','icon',,'titleBar','buttons','boldTitle','minimized'];
         this.setConfigParams(config,keys);
 
 		if (this.buttonBar !== undefined && !this.buttonBar.children) {
@@ -130,7 +110,6 @@ ludo.FramedView = new Class({
 		if (this.titleBar)this.getTitleBarEl().inject(this.getBody(), 'before');
 		ludo.dom.addClass(this.getBody(), 'ludo-rich-view-body');
 
-		if (this.statusBar)this.els.container.adopt(this.getStatusBar());
 
 		var parent = this.getParent();
 		if (!parent && this.isResizable()) {
@@ -173,23 +152,6 @@ ludo.FramedView = new Class({
 		return this.resizer;
 	},
 	/**
-	 * Set status bar text
-	 * @method setStatusText
-	 * @param text
-	 * @return void
-	 */
-	setStatusText:function (text) {
-		this.getStatusBar().setText(text);
-	},
-	/**
-	 * Clear status bar text
-	 * @method clearStatusText
-	 * @return void
-	 */
-	clearStatusText:function () {
-		this.getStatusBar().setText('');
-	},
-	/**
 	 * Set new title
 	 * @method setTitle
 	 * @param {String} title
@@ -205,7 +167,7 @@ ludo.FramedView = new Class({
 
 	resizeDOM:function () {
 		var height = this.getHeight();
-		height -= (ludo.dom.getMBPH(this.els.container) + ludo.dom.getMBPH(this.els.body) +  this.getTotalHeightOfTitleAndStatusBar());
+		height -= (ludo.dom.getMBPH(this.els.container) + ludo.dom.getMBPH(this.els.body) +  this.getHeightOfTitleAndButtonBar());
 		if (height < 0) {
 			return;
 		}
@@ -220,13 +182,13 @@ ludo.FramedView = new Class({
 		}
 	},
 
-	heightTitleAndStatusBar:undefined,
-	getTotalHeightOfTitleAndStatusBar:function () {
+	heightOfTitleAndButtonBar:undefined,
+	getHeightOfTitleAndButtonBar:function () {
 		if (this.isHidden())return 0;
-		if (!this.heightTitleAndStatusBar) {
-			this.heightTitleAndStatusBar = this.getHeightOfTitleBar() + this.getHeightOfStatusBar() + this.getHeightOfButtonBar();
+		if (!this.heightOfTitleAndButtonBar) {
+			this.heightOfTitleAndButtonBar = this.getHeightOfTitleBar() + this.getHeightOfButtonBar();
 		}
-		return this.heightTitleAndStatusBar;
+		return this.heightOfTitleAndButtonBar;
 	},
 
 	heightOfButtonBar:undefined,
@@ -241,11 +203,6 @@ ludo.FramedView = new Class({
 	getHeightOfTitleBar:function () {
 		if (!this.titleBar)return 0;
 		return this.titleBarObj.getHeight();
-	},
-
-	getHeightOfStatusBar:function () {
-		if (!this.statusBarObj)return 0;
-		return this.statusBarObj.getHeight();
 	},
 
 	getTitleBar:function(){
@@ -450,17 +407,6 @@ ludo.FramedView = new Class({
 			}
 		}
 		return null;
-	},
-
-	getStatusBar:function () {
-		if (this.statusBarObj == undefined) {
-			this.statusBarObj = ludo._new({
-				type:'view.StatusBar',
-				text:this.statusText,
-				icon:this.statusIcon
-			})
-		}
-		return this.statusBarObj.getEl();
 	},
 	/**
 	 * Is component resizable

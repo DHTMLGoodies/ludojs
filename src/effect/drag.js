@@ -228,7 +228,7 @@ ludo.effect.Drag = new Class({
 
 	 @example
 	 	dragobject.add({
-	 		id:'myReference',
+	 		id: "myReference',
 			el: 'myDiv',
 			column: 'city'
 		});
@@ -561,7 +561,7 @@ ludo.effect.Drag = new Class({
 
 	getXDrag:function (e) {
 		var posX;
-		if(this.mouseXOffset !== undefined){
+		if(this.mouseXOffset){
 			posX = e.page.x + this.mouseXOffset;
 		}else{
 			posX = e.page.x - this.dragProcess.mouseX + this.dragProcess.elX;
@@ -578,7 +578,7 @@ ludo.effect.Drag = new Class({
 
 	getYDrag:function (e) {
 		var posY;
-		if(this.mouseYOffset !== undefined){
+		if(this.mouseYOffset){
 			posY = e.page.y + this.mouseYOffset;
 		}else{
 			posY = e.page.y - this.dragProcess.mouseY + this.dragProcess.elY;
@@ -668,29 +668,22 @@ ludo.effect.Drag = new Class({
 
 	getMaxX:function () {
 		var maxX = this.getConfigProperty('maxX');
-		if (maxX !== undefined)return maxX;
-		if (this.maxPos !== undefined)return this.maxPos;
-		return 100000;
+        return maxX !== undefined ? maxX : this.maxPos !== undefined ? this.maxPos : 100000;
 	},
 
 	getMaxY:function () {
 		var maxY = this.getConfigProperty('maxY');
-		if (maxY !== undefined)return maxY;
-		if (this.maxPos !== undefined)return this.maxPos;
-		return 100000;
+        return maxY !== undefined ? maxY : this.maxPos !== undefined ? this.maxPos : 100000;
 	},
 
 	getMinX:function () {
 		var minX = this.getConfigProperty('minX');
-		if (minX !== undefined)return minX;
-		return this.minPos;
+        return minX !== undefined ? minX : this.minPos;
 	},
 
 	getMinY:function () {
 		var dragged = this.getDragged();
-		if(dragged && dragged.minY!==undefined)return dragged.minY;
-		if (this.minY !== undefined)return this.minY;
-		return this.minPos;
+        return dragged && dragged.minY!==undefined ? dragged.minY : this.minY!==undefined ? this.minY : this.minPos;
 	},
 	/**
 	 * Return amount dragged in x direction
@@ -772,7 +765,7 @@ ludo.effect.Drag = new Class({
 			});
 			document.body.adopt(this.shim);
 
-			if (this.shimCls !== undefined) {
+			if (this.shimCls) {
 				for (var i = 0; i < this.shimCls.length; i++) {
 					this.shim.addClass(this.shimCls[i]);
 				}
@@ -804,7 +797,7 @@ ludo.effect.Drag = new Class({
 	},
 
 	getShimY:function(){
-		if(this.mouseYOffset!==undefined){
+		if(this.mouseYOffset){
 			return this.dragProcess.mouseY + this.mouseYOffset;
 		}else{
 			return this.getTop() + ludo.dom.getMH(this.getEl()) - ludo.dom.getMW(this.shim);
@@ -812,7 +805,7 @@ ludo.effect.Drag = new Class({
 	},
 
 	getShimX:function(){
-		if(this.mouseXOffset!==undefined){
+		if(this.mouseXOffset){
 			return this.dragProcess.mouseX + this.mouseXOffset;
 		}else{
 			return this.getLeft() + ludo.dom.getMW(this.getEl()) - ludo.dom.getMW(this.shim);
@@ -820,14 +813,10 @@ ludo.effect.Drag = new Class({
 	},
 
 	getShimWidthDiff:function(){
-		var e = this.getEl();
-		var s = this.shim;
-		return ludo.dom.getMW(e) - ludo.dom.getBW(s) - ludo.dom.getPW(s) - ludo.dom.getMW(s);
+		return ludo.dom.getMW(this.getEl()) - ludo.dom.getMBPW(this.shim);
 	},
 	getShimHeightDiff:function(){
-		var e = this.getEl();
-		var s = this.shim;
-		return ludo.dom.getMH(e) - ludo.dom.getBH(s) - ludo.dom.getPH(s) - ludo.dom.getMH(s);
+		return ludo.dom.getMH(this.getEl()) - ludo.dom.getMBPH(this.shim);
 	},
 
 	/**
@@ -884,8 +873,6 @@ ludo.effect.Drag = new Class({
 	getStartY:function () {
 		return this.dragProcess.elY;
 	},
-
-
 
 	flyBackComplete:function(){
 		/**

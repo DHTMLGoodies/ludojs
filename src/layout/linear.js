@@ -74,8 +74,5 @@ ludo.layout.Linear = new Class({
 				'before':this.beforeResize.bind(this)
 			}
 		});
-
-
 	}
-
 });

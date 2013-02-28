@@ -1,4 +1,4 @@
-/* Generated Thu Feb 28 23:08:37 CET 2013 */
+/* Generated Fri Mar 1 0:32:16 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -2960,8 +2960,6 @@ ludo.layout.Base = new Class({
 		width:0, height:0,
 		bottom:0, right:0
 	},
-
-	measureDiv:undefined,
 
 	initialize:function (view) {
 		this.view = view;
@@ -6017,10 +6015,7 @@ ludo.layout.Linear = new Class({
 				'before':this.beforeResize.bind(this)
 			}
 		});
-
-
 	}
-
 });/* ../ludojs/src/layout/linear-horizontal.js */
 /**
  * This class arranges child views in a row layout.
@@ -9102,7 +9097,7 @@ ludo.effect.Drag = new Class({
 
 	 @example
 	 	dragobject.add({
-	 		id:'myReference',
+	 		id: "myReference',
 			el: 'myDiv',
 			column: 'city'
 		});
@@ -9435,7 +9430,7 @@ ludo.effect.Drag = new Class({
 
 	getXDrag:function (e) {
 		var posX;
-		if(this.mouseXOffset !== undefined){
+		if(this.mouseXOffset){
 			posX = e.page.x + this.mouseXOffset;
 		}else{
 			posX = e.page.x - this.dragProcess.mouseX + this.dragProcess.elX;
@@ -9452,7 +9447,7 @@ ludo.effect.Drag = new Class({
 
 	getYDrag:function (e) {
 		var posY;
-		if(this.mouseYOffset !== undefined){
+		if(this.mouseYOffset){
 			posY = e.page.y + this.mouseYOffset;
 		}else{
 			posY = e.page.y - this.dragProcess.mouseY + this.dragProcess.elY;
@@ -9542,29 +9537,22 @@ ludo.effect.Drag = new Class({
 
 	getMaxX:function () {
 		var maxX = this.getConfigProperty('maxX');
-		if (maxX !== undefined)return maxX;
-		if (this.maxPos !== undefined)return this.maxPos;
-		return 100000;
+        return maxX !== undefined ? maxX : this.maxPos !== undefined ? this.maxPos : 100000;
 	},
 
 	getMaxY:function () {
 		var maxY = this.getConfigProperty('maxY');
-		if (maxY !== undefined)return maxY;
-		if (this.maxPos !== undefined)return this.maxPos;
-		return 100000;
+        return maxY !== undefined ? maxY : this.maxPos !== undefined ? this.maxPos : 100000;
 	},
 
 	getMinX:function () {
 		var minX = this.getConfigProperty('minX');
-		if (minX !== undefined)return minX;
-		return this.minPos;
+        return minX !== undefined ? minX : this.minPos;
 	},
 
 	getMinY:function () {
 		var dragged = this.getDragged();
-		if(dragged && dragged.minY!==undefined)return dragged.minY;
-		if (this.minY !== undefined)return this.minY;
-		return this.minPos;
+        return dragged && dragged.minY!==undefined ? dragged.minY : this.minY!==undefined ? this.minY : this.minPos;
 	},
 	/**
 	 * Return amount dragged in x direction
@@ -9646,7 +9634,7 @@ ludo.effect.Drag = new Class({
 			});
 			document.body.adopt(this.shim);
 
-			if (this.shimCls !== undefined) {
+			if (this.shimCls) {
 				for (var i = 0; i < this.shimCls.length; i++) {
 					this.shim.addClass(this.shimCls[i]);
 				}
@@ -9678,7 +9666,7 @@ ludo.effect.Drag = new Class({
 	},
 
 	getShimY:function(){
-		if(this.mouseYOffset!==undefined){
+		if(this.mouseYOffset){
 			return this.dragProcess.mouseY + this.mouseYOffset;
 		}else{
 			return this.getTop() + ludo.dom.getMH(this.getEl()) - ludo.dom.getMW(this.shim);
@@ -9686,7 +9674,7 @@ ludo.effect.Drag = new Class({
 	},
 
 	getShimX:function(){
-		if(this.mouseXOffset!==undefined){
+		if(this.mouseXOffset){
 			return this.dragProcess.mouseX + this.mouseXOffset;
 		}else{
 			return this.getLeft() + ludo.dom.getMW(this.getEl()) - ludo.dom.getMW(this.shim);
@@ -9694,14 +9682,10 @@ ludo.effect.Drag = new Class({
 	},
 
 	getShimWidthDiff:function(){
-		var e = this.getEl();
-		var s = this.shim;
-		return ludo.dom.getMW(e) - ludo.dom.getBW(s) - ludo.dom.getPW(s) - ludo.dom.getMW(s);
+		return ludo.dom.getMW(this.getEl()) - ludo.dom.getMBPW(this.shim);
 	},
 	getShimHeightDiff:function(){
-		var e = this.getEl();
-		var s = this.shim;
-		return ludo.dom.getMH(e) - ludo.dom.getBH(s) - ludo.dom.getPH(s) - ludo.dom.getMH(s);
+		return ludo.dom.getMH(this.getEl()) - ludo.dom.getMBPH(this.shim);
 	},
 
 	/**
@@ -9758,8 +9742,6 @@ ludo.effect.Drag = new Class({
 	getStartY:function () {
 		return this.dragProcess.elY;
 	},
-
-
 
 	flyBackComplete:function(){
 		/**
@@ -10802,26 +10784,6 @@ ludo.FramedView = new Class({
 	 * @attribute icon
 	 */
 	icon:null,
-	/**
-	 * Initial display of status bar
-	 * @attribute {Boolean} statusBar
-	 * @default false
-	 */
-	statusBar:false,
-	/**
-	 * Initial text of status bar
-	 * @attribute statusText
-	 * @type String
-	 * @default '' (empty string)
-	 */
-	statusText:'',
-	/**
-	 * Path to icon on status bar
-	 * @attribute statusIcon
-	 * @type String
-	 * @default undefined
-	 */
-	statusIcon:undefined,
 
 	/**
 	 * Show or hide title bar
@@ -10869,7 +10831,7 @@ ludo.FramedView = new Class({
             }
         }
 
-        var keys = ['buttonBar','hasMenu','menuConfig','icon','statusIcon','statusText','statusBar','titleBar','buttons','boldTitle','minimized'];
+        var keys = ['buttonBar','hasMenu','menuConfig','icon',,'titleBar','buttons','boldTitle','minimized'];
         this.setConfigParams(config,keys);
 
 		if (this.buttonBar !== undefined && !this.buttonBar.children) {
@@ -10885,7 +10847,6 @@ ludo.FramedView = new Class({
 		if (this.titleBar)this.getTitleBarEl().inject(this.getBody(), 'before');
 		ludo.dom.addClass(this.getBody(), 'ludo-rich-view-body');
 
-		if (this.statusBar)this.els.container.adopt(this.getStatusBar());
 
 		var parent = this.getParent();
 		if (!parent && this.isResizable()) {
@@ -10928,23 +10889,6 @@ ludo.FramedView = new Class({
 		return this.resizer;
 	},
 	/**
-	 * Set status bar text
-	 * @method setStatusText
-	 * @param text
-	 * @return void
-	 */
-	setStatusText:function (text) {
-		this.getStatusBar().setText(text);
-	},
-	/**
-	 * Clear status bar text
-	 * @method clearStatusText
-	 * @return void
-	 */
-	clearStatusText:function () {
-		this.getStatusBar().setText('');
-	},
-	/**
 	 * Set new title
 	 * @method setTitle
 	 * @param {String} title
@@ -10960,7 +10904,7 @@ ludo.FramedView = new Class({
 
 	resizeDOM:function () {
 		var height = this.getHeight();
-		height -= (ludo.dom.getMBPH(this.els.container) + ludo.dom.getMBPH(this.els.body) +  this.getTotalHeightOfTitleAndStatusBar());
+		height -= (ludo.dom.getMBPH(this.els.container) + ludo.dom.getMBPH(this.els.body) +  this.getHeightOfTitleAndButtonBar());
 		if (height < 0) {
 			return;
 		}
@@ -10975,13 +10919,13 @@ ludo.FramedView = new Class({
 		}
 	},
 
-	heightTitleAndStatusBar:undefined,
-	getTotalHeightOfTitleAndStatusBar:function () {
+	heightOfTitleAndButtonBar:undefined,
+	getHeightOfTitleAndButtonBar:function () {
 		if (this.isHidden())return 0;
-		if (!this.heightTitleAndStatusBar) {
-			this.heightTitleAndStatusBar = this.getHeightOfTitleBar() + this.getHeightOfStatusBar() + this.getHeightOfButtonBar();
+		if (!this.heightOfTitleAndButtonBar) {
+			this.heightOfTitleAndButtonBar = this.getHeightOfTitleBar() + this.getHeightOfButtonBar();
 		}
-		return this.heightTitleAndStatusBar;
+		return this.heightOfTitleAndButtonBar;
 	},
 
 	heightOfButtonBar:undefined,
@@ -10996,11 +10940,6 @@ ludo.FramedView = new Class({
 	getHeightOfTitleBar:function () {
 		if (!this.titleBar)return 0;
 		return this.titleBarObj.getHeight();
-	},
-
-	getHeightOfStatusBar:function () {
-		if (!this.statusBarObj)return 0;
-		return this.statusBarObj.getHeight();
 	},
 
 	getTitleBar:function(){
@@ -11205,17 +11144,6 @@ ludo.FramedView = new Class({
 			}
 		}
 		return null;
-	},
-
-	getStatusBar:function () {
-		if (this.statusBarObj == undefined) {
-			this.statusBarObj = ludo._new({
-				type:'view.StatusBar',
-				text:this.statusText,
-				icon:this.statusIcon
-			})
-		}
-		return this.statusBarObj.getEl();
 	},
 	/**
 	 * Is component resizable

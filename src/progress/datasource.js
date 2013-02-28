@@ -13,7 +13,7 @@ ludo.progress.DataSource = new Class({
     stopped : false,
     pollFrequence : 1,
     /**
-     * Reference to parent component of status bar
+     * Reference to parent component
      * @property object Component
      */
     component:undefined,

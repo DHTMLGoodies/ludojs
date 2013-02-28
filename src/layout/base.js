@@ -16,8 +16,6 @@ ludo.layout.Base = new Class({
 		bottom:0, right:0
 	},
 
-	measureDiv:undefined,
-
 	initialize:function (view) {
 		this.view = view;
 		this.onCreate();
