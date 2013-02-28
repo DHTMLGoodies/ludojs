@@ -1,4 +1,4 @@
-/* Generated Tue Feb 26 19:59:27 CET 2013 */
+/* Generated Thu Feb 28 2:43:23 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -8205,7 +8205,7 @@ ludo.Notification = new Class({
 	ludoConfig:function (config) {
 		config.renderTo = config.renderTo || document.body;
 
-        this.setConfigParams(config, ['autoDispose','showEffect','hideEffect','effect','effectDuration']);
+        this.setConfigParams(config, ['autoDispose','showEffect','hideEffect','effect','effectDuration','duration']);
 		this.showEffect = this.showEffect || this.effect;
 		this.hideEffect = this.hideEffect || this.effect;
 		if (!config.layout && !this.layout) {
