@@ -13,10 +13,10 @@ for($i=0;$i<50;$i++){
     $node = array('id' => $i, 'type' => 'country', 'title' =>$countries[rand(0,count($countries)-1)]);
     $node['children'] = array();
 
-    for($j=0;$j<5;$j++){
+    for($j=0;$j<10;$j++){
         $subNode = array('id' => $i."_".$j, 'type' => 'city', 'title' =>$cities[rand(0,count($cities)-1)]);
         $subNode['children'] = array();
-        for($k=0;$k<5;$k++){
+        for($k=0;$k<8;$k++){
             $subNode2 = array('id' => $i."_".$j."_".$k, 'type' => 'letter', 'title' =>$nodes[rand(0,count($nodes)-1)]);
             $subNode['children'][] = $subNode2;
         }
@@ -26,7 +26,7 @@ for($i=0;$i<50;$i++){
     $ret[] = $node;
 }
 
-$data = array('success'=>true, 'data' => $ret);
+$data = array('success'=>true, 'response' => $ret);
 
 echo json_encode($data);
 

@@ -15,6 +15,7 @@ ludo.dataSource.JSON = new Class({
      * @return void
      */
     load:function () {
+        if(!this.url && !this.resource)return;
         this.parent();
         this.sendRequest(this.service, this.arguments, this.getPostData())
     },

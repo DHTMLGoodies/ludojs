@@ -19,11 +19,11 @@ div.ludo-tree-tree div.ludo-body{
 }
 div.ludo-tree-node-root{
     background-image:none;
-    padding-left:0px;
-    margin-left:0px;
+    padding-left:0;
+    margin-left:0;
 }
 
-span.ludo-tree-node-spacer{
+.ludo-tree-node span.ludo-tree-node-spacer{
     background-image: url('../images/tree/tree-dots-2.gif');
     background-repeat:repeat-x;
     background-position: left bottom;
@@ -31,7 +31,7 @@ span.ludo-tree-node-spacer{
     left:0;
     top:0;
     width:8px;
-    height:9px;
+    height:10px;
 }
 
 .ludo-tree-node-last-sibling .ludo-tree-node-spacer{
@@ -49,10 +49,9 @@ span.ludo-tree-node-spacer{
 }
 
 div.ludo-tree-node-last-sibling{
-   background-position: left 2px;
    background-repeat: no-repeat;
    background-image:url('../images/tree/tree-dots-last-node-2.gif');
-    background-position:top left;
+   background-position:top left;
 }
 
 .ludo-tree-node-container{
@@ -143,13 +142,10 @@ div.ludo-tree-movable-shim img{
     overflow-y:auto;
 }
 
-span.ludo-tree-node-spacer{
-    height:10px;
-    background-position:left bottom;
-}
 
 .ludo-tree-node span{
     -moz-user-select:none;
     line-height:16px;
     height:18px;
 }
+

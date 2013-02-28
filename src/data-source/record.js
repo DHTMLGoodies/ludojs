@@ -102,6 +102,10 @@ ludo.dataSource.Record = new Class({
 		return this.isRecordObject(record) ? record.record : record;
 	},
 
+    select:function(){
+        this.fireEvent('select', this);
+    },
+
 	insertBefore:function (record, before) {
 		if (this.inject(record, before)) {
 			this.fireEvent('insertBefore', [record, before, 'insertBefore']);

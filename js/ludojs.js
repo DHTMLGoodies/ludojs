@@ -1,4 +1,4 @@
-/* Generated Mon Feb 25 15:42:08 CET 2013 */
+/* Generated Thu Feb 28 11:22:07 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -3440,6 +3440,7 @@ ludo.dataSource.JSON = new Class({
      * @return void
      */
     load:function () {
+        if(!this.url && !this.resource)return;
         this.parent();
         this.sendRequest(this.service, this.arguments, this.getPostData())
     },
@@ -8204,7 +8205,7 @@ ludo.Notification = new Class({
 	ludoConfig:function (config) {
 		config.renderTo = config.renderTo || document.body;
 
-        this.setConfigParams(config, ['autoDispose','showEffect','hideEffect','effect','effectDuration']);
+        this.setConfigParams(config, ['autoDispose','showEffect','hideEffect','effect','effectDuration','duration']);
 		this.showEffect = this.showEffect || this.effect;
 		this.hideEffect = this.hideEffect || this.effect;
 		if (!config.layout && !this.layout) {
@@ -11690,6 +11691,10 @@ ludo.dataSource.Record = new Class({
 		return this.isRecordObject(record) ? record.record : record;
 	},
 
+    select:function(){
+        this.fireEvent('select', this);
+    },
+
 	insertBefore:function (record, before) {
 		if (this.inject(record, before)) {
 			this.fireEvent('insertBefore', [record, before, 'insertBefore']);
@@ -11985,6 +11990,7 @@ ludo.dataSource.CollectionSearch = new Class({
 		this.clear();
 		this.where(search);
 		this.endBranch();
+
 		var delay = this.getSearchDelay();
 		if (delay === 0) {
 			this.executeSearch(this.searches[0].txt);
@@ -12189,14 +12195,10 @@ ludo.dataSource.CollectionSearch = new Class({
 		if (!this.hasSearchTokens()) {
 			this.deleteSearch();
 		} else {
+            this.fireEvent('initSearch');
 			this.searchResult = [];
 			this.compileSearch();
-			var data = this.getDataFromSource();
-			for (var i = 0; i < data.length; i++) {
-				if (this.isMatchingSearch(data[i])) {
-					this.searchResult.push(data[i]);
-				}
-			}
+            this.performSearch();
 		}
 		/**
 		 * Search executed
@@ -12205,6 +12207,15 @@ ludo.dataSource.CollectionSearch = new Class({
 		this.fireEvent('search');
 		return this;
 	},
+
+    performSearch:function(){
+        var data = this.getDataFromSource();
+        for (var i = 0; i < data.length; i++) {
+            if (this.isMatchingSearch(data[i])) {
+                this.searchResult.push(data[i]);
+            }
+        }
+    },
 
 	isMatchingSearch:function (record) {
 		return this.searchFn.call(this, record);
@@ -12246,7 +12257,7 @@ ludo.dataSource.CollectionSearch = new Class({
 	},
 
 	getDataFromSource:function () {
-		return this.dataSource.data;
+		return this.dataSource.getLinearData();
 	},
 
 	getSearchDelay:function () {
@@ -12258,20 +12269,27 @@ ludo.dataSource.CollectionSearch = new Class({
 	},
 
 	createSearchIndex:function () {
-		var keys = this.getSearchIndexKeys();
-		var index;
-		var data = this.getDataFromSource();
-		for (var i = 0; i < data.length; i++) {
-			index = [];
-			for (var j = 0; j < keys.length; j++) {
-				if (data[i][keys[j]]) {
-					index.push((data[i][keys[j]] + '').toLowerCase());
-				}
-			}
-			data[i].searchIndex = index.join(' ');
-		}
+
+		this.indexBranch(this.getDataFromSource());
 		this.searchIndexCreated = true;
 	},
+
+    indexBranch:function(data){
+        var keys = this.getSearchIndexKeys();
+        var index;
+        for (var i = 0; i < data.length; i++) {
+            index = [];
+            for (var j = 0; j < keys.length; j++) {
+                if (data[i][keys[j]]) {
+                    index.push((data[i][keys[j]] + '').toLowerCase());
+                }
+            }
+            data[i].searchIndex = index.join(' ');
+            if(data[i].children){
+                this.indexBranch(data[i].children);
+            }
+        }
+    },
 
 	getSearchIndexKeys:function () {
 		if (this.index !== undefined) {
@@ -12596,6 +12614,7 @@ ludo.dataSource.Collection = new Class({
 	 * @param record
 	 */
 	addRecord:function (record) {
+        if(this.data === undefined)this.data = [];
 		this.data.push(record);
 		/**
 		 * Event fired when a record is added to the collection
@@ -12659,6 +12678,10 @@ ludo.dataSource.Collection = new Class({
 		return ret;
 	},
 
+    getLinearData:function(){
+        return this.data;
+    },
+
 	/**
 	 * Select a specific record
 	 * @method selectRecord
@@ -12684,7 +12707,7 @@ ludo.dataSource.Collection = new Class({
 	selectRecords:function (search) {
 		this.selectedRecords = this.findRecords(search);
 		for (var i = 0; i < this.selectedRecords.length; i++) {
-			this.fireEvent('select', this.selectedRecords[i]);
+			this.fireSelect(this.selectedRecords[i]);
 		}
 		return this.selectedRecords;
 	},
@@ -12812,7 +12835,7 @@ ludo.dataSource.Collection = new Class({
 		 		}
 		 	}
 		 */
-		this.fireEvent('select', Object.clone(rec));
+		this.fireSelect(Object.clone(rec));
 	},
 
 	/**
@@ -12899,12 +12922,12 @@ ludo.dataSource.Collection = new Class({
 			if (index > indexSelected) {
 				for (i = indexSelected; i <= index; i++) {
 					this.selectedRecords.push(this.data[i]);
-					this.fireEvent('select', this.data[i]);
+					this.fireSelect(this.data[i]);
 				}
 			} else {
 				for (i = indexSelected; i >= index; i--) {
 					this.selectedRecords.push(this.data[i]);
-					this.fireEvent('select', this.data[i]);
+					this.fireSelect(this.data[i]);
 				}
 			}
 		}
@@ -13330,7 +13353,12 @@ ludo.dataSource.Collection = new Class({
 	addRecordEvents:function(record){
 		record.addEvent('update', this.onRecordUpdate.bind(this));
 		record.addEvent('dispose', this.onRecordDispose.bind(this));
+		record.addEvent('select', this.selectRecord.bind(this));
 	},
+
+    fireSelect:function(record){
+        this.fireEvent('select', record);
+    },
 
 	onRecordUpdate:function(record){
 		this.indexRecord(record);
@@ -15462,6 +15490,7 @@ ludo.grid.Grid = new Class({
 	},
 
 	setSelectedRecord:function (record) {
+        // TODO should use dataSource.Record object instead of plain object
 		this.fireEvent('selectrecord', record);
 		this.highlightActiveRecord();
 	},
@@ -16367,7 +16396,7 @@ ludo.form.Element = new Class({
      * @return string
      */
     getValue:function () {
-        return this.value;
+        return this.els.formEl ? this.els.formEl.get('value') : this.value;
     },
     /**
      * Set new value
@@ -20149,10 +20178,11 @@ ludo.menu.Button = new Class({
 });/* ../ludojs/src/tree/tree.js */
 /**
  * Displays a tree
- * Possible features: filtering, drag and droptild
+ * This class will soon be replaced by a new Tree widget.
  * @namespace tree
  * @class Tree
  * @extends View
+ * @deprecated
  */
 ludo.tree.Tree = new Class({
     Extends:ludo.View,
@@ -20250,25 +20280,16 @@ ludo.tree.Tree = new Class({
 
     ludoConfig:function (config) {
         this.parent(config);
-        this.data = config.data || this.data;
-        this.nodeTpl = config.nodeTpl || this.nodeTpl;
-
-        if (config.recordConfig !== undefined)this.recordConfig = Object.merge(this.recordConfig, config.recordConfig);
-        if (config.showLines !== undefined)this.showLines = config.showLines;
-        if (config.autoScrollNode !== undefined)this.autoScrollNode = config.autoScrollNode;
-        if (config.expandDepth !== undefined)this.expandDepth = config.expandDepth;
+        this.setConfigParams(config, ['data','nodeTpl','recordConfig','showLines','autoScrollNode','expandDepth',
+            'search','dd','primaryKey']);
 
         config.treeConfig = config.treeConfig || {};
-        config.dd = config.dd || {};
-
-        this.search = config.search || this.search;
 
         if (config.rootRecord !== undefined) {
             this.rootRecord = config.rootRecord;
             this.rootRecord.id = this.rootRecord.id || 'ludo-tree-root-node-' + String.uniqueID();
             this.rootRecord.type = this.rootRecord.type || 'root';
         }
-        if (config.primaryKey !== undefined)this.primaryKey = config.primaryKey;
         if (config.treeConfig.defaultValues !== undefined)this.treeConfig.defaultValues = config.treeConfig.defaultValues;
 
         this.dd = config.dd || this.dd;
@@ -20312,9 +20333,8 @@ ludo.tree.Tree = new Class({
         b.addEvent('click', this.recordClick.bind(this));
         b.addEvent('dblclick', this.recordDblClick.bind(this));
         b.addEvent('click', this.expandByDom.bind(this));
-        b.addEvent('contextmenu', this.showContextMenu.bind(this));
         b.addEvent('click', this.toggleExpandCollapse.bind(this));
-        if (Browser.ie) {
+        if (Browser['ie']) {
             b.addEvent('selectstart', this.cancelSelection.bind(this));
         }
     },
@@ -20540,8 +20560,8 @@ ludo.tree.Tree = new Class({
             nodeText.push('<div style="position:absolute" class="ludo-tree-node-expand" id="' + id + '"></div>');
 
             el.innerHTML = nodeText.join('');
-			if(this.els.expand === undefined)this.els.expand = {};
-			if(this.els.childContainers === undefined)this.els.childContainers = {};
+			if(!this.els.expand)this.els.expand = {};
+			if(!this.els.childContainers)this.els.childContainers = {};
             this.els.expand[id] = el.getElement('.ludo-tree-node-expand');
             this.els.childContainers[id] = el.getElement('.ludo-tree-node-container');
 
@@ -20577,43 +20597,6 @@ ludo.tree.Tree = new Class({
 
     cancelSelection:function () {
         return false;
-    },
-
-    showContextMenu:function (e) {
-        var el = e.target;
-
-        var record = this.getRecordByDOM(el);
-        if (!record) {
-            return undefined;
-        }
-        var menuConfig = this.getContextMenuConfig(record);
-        if (menuConfig.length == 0) {
-            return undefined;
-        }
-
-        this.selectRecord(record);
-
-        var menu = this.getContextMenu();
-        menu.setNewMenuConfig(menuConfig);
-        menu.positionAt(e.page.x, e.page.y);
-        menu.show();
-        return false;
-    },
-
-    getContextMenu:function () {
-        if (!this.contextMenu) {
-            this.contextMenu = new ludo.DashboardItemMenu({});
-        }
-        return this.contextMenu;
-    },
-
-    getContextMenuConfig:function (record) {
-        var ret = [];
-        if (this.recordConfig[record.type]) {
-            var menuConfig = this.recordConfig[record.type].contextMenu;
-            ret = menuConfig || ret;
-        }
-        return ret;
     },
 
     isSelectable:function (record) {
@@ -21122,22 +21105,6 @@ ludo.tree.Tree = new Class({
                 this.showBranch(record.children[i]);
             }
         }
-    },
-    /**
-     * Return record from dom element
-     * This method has to be implemented for components using context menu which only should be shown for specific records
-     * @method getRecordByDOM
-     * @param {Object} el (DOM element)
-     * @private
-     */
-    getRecordByDOM:function (el) {
-        if (!el.hasClass('ludo-tree-node-plain')) {
-            el = el.getParent('.ludo-tree-node-plain');
-        }
-        if (!el) {
-            return null;
-        }
-        return this.recordMap[el.getProperty('id')].record;
     }
 });/* ../ludojs/src/tree/modifications.js */
 /**
@@ -21525,6 +21492,10 @@ ludo.dataSource.TreeCollection = new Class({
 		return undefined;
 	},
 
+    fireSelect:function(record){
+        this.fireEvent('select', this.getRecord(record));
+    },
+
 	addRecordEvents:function(record){
 		this.parent(record);
 		record.addEvent('addChild', this.indexRecord.bind(this));
@@ -21542,7 +21513,12 @@ ludo.dataSource.TreeCollection = new Class({
 	},
 
 	addSearcherEvents:function(){
-
+        this.searcher.addEvent('match', function(record){
+            this.fireEvent('show', this.getRecord(record));
+        }.bind(this));
+        this.searcher.addEvent('mismatch', function(record){
+            this.fireEvent('hide', this.getRecord(record));
+        }.bind(this));
 	}
 });/* ../ludojs/src/data-source/tree-collection-search.js */
 /**
@@ -21553,7 +21529,31 @@ ludo.dataSource.TreeCollection = new Class({
  @extends Core
  */
 ludo.dataSource.TreeCollectionSearch = new Class({
-	Extends: ludo.dataSource.CollectionSearch
+    Extends:ludo.dataSource.CollectionSearch,
+    performSearch:function () {
+        var s = new Date().getTime();
+        this.performSearchIn(this.getDataFromSource());
+        console.log('Time used: ' + (new Date().getTime() - s));
+    },
+
+    performSearchIn:function(data){
+        var matchesFound = false;
+        for (var i = 0; i < data.length; i++) {
+            if (this.isMatchingSearch(data[i])) {
+                this.searchResult.push(data[i]);
+                this.fireEvent('match', data[i]);
+                matchesFound = true;
+            }else{
+                if(data[i].children){
+                    matchesFound = this.performSearchIn(data[i].children);
+                }
+                if(!matchesFound){
+                    this.fireEvent('mismatch', data[i]);
+                }
+            }
+        }
+        return matchesFound;
+    }
 });/* ../ludojs/src/controller/manager.js */
 /**
  * This class connects view modules and controllers
@@ -24470,58 +24470,131 @@ ludo.form.Spinner = new Class({
     }
 });/* ../ludojs/src/form/select.js */
 /**
- * Select box (&lt;select>)
- * A select box can be populated from the server. The server should respond with data in the following format:
- * { success : true, data: [{ value:'1','text': 'Display text' }, { value:'2', 'text': 'Display text'} ]}
- * You can use different keys than "value" and "text" by defining a fieldConfig object.
- * @namespace form
- * @class Select
- * @extends form.Element
+ Select box (&lt;select>) 
+ @namespace form
+ @class Select
+ @extends form.Element
+ @constructor
+ @param {Object} config
+ @example
+    {
+        type:'form.Select',
+        name:'country',
+        valueKey:'id',
+        textKey:'title',
+        emptyItem:{
+            id:'',title:'Where do you live?'
+        },
+        dataSource:{
+            resource:'Country',
+            service:'read'
+        }
+    }
+ to populate the select box from the Country service on the server. The "id" column will be used as value for the options
+ and title for the displayed text.
+
+ @example
+    {
+        type:'form.Select',
+        emptyItem:{
+            value:'',text:'Please select an option'
+        },
+        options:[
+            { value:'1',text : 'Option a' },
+            { value:'2',text : 'Option b' },
+            { value:'3',text : 'Option c' }
+        ]
+    }
  */
 ludo.form.Select = new Class({
     Extends:ludo.form.LabelElement,
     type:'form.Select',
     labelWidth:100,
     /**
-     * value and text to display when no records has been selected, example: { value:'', text: 'Select country' }
-     * @attribute emptyItem
-     * @default null
+     First option in the select box, usually with an empty value.
+     @config {Object} emptyItem
+     @default undefined
+     @example
+        {
+            id : '',
+            title : 'Please select an option'
+
+        }
      */
-    emptyItem:null,
+    emptyItem:undefined,
+
     /**
-     * record keys to use for value and text
-     * @attribute fieldConfig
-     * @default { value : 'value', text : 'text' }
+     Name of column for the values of the select box. This option is useful when populating select box using a collection data source.
+     @config valueKey
+     @example
+        valueKey : 'id'
      */
-    fieldConfig:{
-        value:'value',
-        text:'text'
-    },
+    valueKey:'value',
+    /**
+     * Name of column for the displayed text of the options in the select box
+     */
+    textKey:'text',
 
     inputTag : 'select',
     inputType : '',
+    /**
+     * Config of dataSource.Collection object used to populate the select box from external data
+     * @config {Object|ludo.dataSource.Collection} dataSource
+     * @default undefined
+     */
+    dataSource:undefined,
+    /**
+     Array of options used to populate the select box
+     @config {Array} options
+     @default undefined
+     @example
+        options:[
+            { value:'1','Option number 1' },
+            { value:'2','Option number 2' },
+            { value:'3','Option number 3' }
+        ]
+     */
+    options : undefined,
 
     ludoConfig:function (config) {
         this.parent(config);
-        if (config.emptyItem)this.emptyItem = config.emptyItem;
+        this.setConfigParams(config, ['emptyItem','options','valueKey','textKey']);
+        if(!this.dataSource)this.dataSource = {};
+        if (this.dataSource && !this.dataSource.type)this.dataSource.type = 'dataSource.Collection';
     },
 
-    populate:function (data) {
-        if (this.emptyItem) {
-            this.addOption(this.emptyItem.value, this.emptyItem.text);
-        }
-
-        if (data.length > 0) {
-            if (data[0][this.fieldConfig.value] === undefined) {
-                this.fieldConfig.value = 'id';
+    ludoEvents:function(){
+        this.parent();
+        if (this.dataSource) {
+            if(this.options && this.dataSourceObj){
+                for(var i=0;i<this.options.length;i++){
+                    this.dataSourceObj.addRecord(this.options[i]);
+                }
             }
-            if (data[0][this.fieldConfig.text] === undefined) {
-                this.fieldConfig.text = 'title';
+            if(this.dataSourceObj && this.dataSourceObj.hasData()){
+                this.populate();
             }
+            var ds = this.getDataSource();
+            ds.addEvent('change', this.populate.bind(this));
+            ds.addEvent('select', this.selectRecord.bind(this));
+            ds.addEvent('update', this.populate.bind(this));
+            ds.addEvent('delete', this.populate.bind(this));
+            ds.addEvent('sort', this.populate.bind(this));
         }
+    },
 
+    selectRecord:function(record){
+        this.setValue(record[this.valueKey]);
+    },
+
+    populate:function () {
+        var data = this.dataSourceObj.getData() || [];
+        this.getFormEl().options.length = 0;
+        if(this.emptyItem){
+            data.splice(0, 0, this.emptyItem);
+        }
         for (var i = 0, count = data.length; i < count; i++) {
-            this.addOption(data[i][ this.fieldConfig.value ], data[i][ this.fieldConfig.text ]);
+            this.addOption(data[i][ this.valueKey ], data[i][ this.textKey ]);
         }
 
         if (this.value) {
@@ -24539,7 +24612,7 @@ ludo.form.Select = new Class({
         var option = new Element('option');
         option.set('value', value);
         option.set('text', text);
-        this.getFormEl().adopt(option);
+        this.getFormEl().appendChild(option);
     }
 });/* ../ludojs/src/form/filter-text.js */
 /**
@@ -26017,10 +26090,9 @@ ludo.form.SearchField = new Class({
 
 	ludoConfig:function (config) {
 		this.parent(config);
-		if (config.searchIn)this.searchIn = config.searchIn;
+        this.setConfigParams(config, ['searchIn','delay','searchFn']);
         if(ludo.util.isString(this.searchIn))this.searchIn = ludo.get(this.searchIn);
-		if (config.delay !== undefined)this.delay = config.delay;
-		if (config.searchFn !== undefined)this.searchFn = config.searchFn.bind(this);
+		if (this.searchFn !== undefined)this.searchFn = this.searchFn.bind(this);
 		this.addEvent('key', this.queue.bind(this));
 	},
 

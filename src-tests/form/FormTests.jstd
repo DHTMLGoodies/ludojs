@@ -10,6 +10,8 @@ load:
   - ../../src/form/*.js
   - ../../src/form/validator/*.js
   - ../../src/form/email.js
+  - ../../src/form/select.js
+  - ../../src/data-source/collection.js
 
 serve:
   - ../../css/ludojs.css
@@ -26,6 +28,7 @@ test:
   - LinkedTest.js
   - SearchFieldTest.js
   - PasswordTest.js
+  - SelectTest.js
 
 plugin:
  - name: "coverage"

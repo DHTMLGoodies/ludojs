@@ -12,7 +12,7 @@ TestCase("DomTest", {
 
 		el = new Element('div');
 		d = new Date().getTime();
-		for(var i=0;i<3000;i++){
+		for(i=0;i<3000;i++){
 			el.className = 'testing testing2 testing3';
 			ludo.dom.addClass(el, 'my class');
 		}

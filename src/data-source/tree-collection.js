@@ -23,6 +23,10 @@ ludo.dataSource.TreeCollection = new Class({
 		return undefined;
 	},
 
+    fireSelect:function(record){
+        this.fireEvent('select', this.getRecord(record));
+    },
+
 	addRecordEvents:function(record){
 		this.parent(record);
 		record.addEvent('addChild', this.indexRecord.bind(this));
@@ -40,6 +44,11 @@ ludo.dataSource.TreeCollection = new Class({
 	},
 
 	addSearcherEvents:function(){
-
+        this.searcher.addEvent('match', function(record){
+            this.fireEvent('show', this.getRecord(record));
+        }.bind(this));
+        this.searcher.addEvent('mismatch', function(record){
+            this.fireEvent('hide', this.getRecord(record));
+        }.bind(this));
 	}
 });

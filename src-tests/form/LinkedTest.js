@@ -14,7 +14,7 @@ TestCase("LinkedTest", {
 		var win = this.getWindowWithLinkedFormComponents();
 
 		// then
-		assertEquals(10, win.child['number'].getValue() / 1);
+		assertEquals(10, parseInt(win.child['number'].getValue()));
 	},
 	"test_should_fire_change_event_in_linked_element_when_value_is_changed":function () {
 		// given

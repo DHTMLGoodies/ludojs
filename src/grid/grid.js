@@ -266,6 +266,7 @@ ludo.grid.Grid = new Class({
 	},
 
 	setSelectedRecord:function (record) {
+        // TODO should use dataSource.Record object instead of plain object
 		this.fireEvent('selectrecord', record);
 		this.highlightActiveRecord();
 	},

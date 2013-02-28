@@ -400,7 +400,7 @@ ludo.form.Element = new Class({
      * @return string
      */
     getValue:function () {
-        return this.value;
+        return this.els.formEl ? this.els.formEl.get('value') : this.value;
     },
     /**
      * Set new value
