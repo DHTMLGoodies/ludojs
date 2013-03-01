@@ -33,42 +33,40 @@ ludo.form.Button = new Class({
     toggle:false,
 
     /**
-     * Assign button to a toggleGroup
-     * Example:
-     * var buttonLeft = new ludo.form.Button({
-     * value : 'left',
-     * toggle:true,
-     * toggleGroup:'alignment'
-     * });
-     *
-     * var buttonCenter = new ludo.form.Button({
-     * value : 'center',
-     * toggle:true,
-     * toggleGroup:'alignment'
-     * });
-     *
-     * which creates a singleton ludo.form.ToggleGroup instance and
-     * assign each button to it.
-     *
-     * When using a toggle group, only one button can be turned on. The toggle
-     * group will automatically turn off the other button.
-     *
-     * You can create your own ludo.form.ToggleGroup by extending
-     * ludo.form.ToggleGroup and set the toggleGroup property to an
-     * object:
-     *
-     * var buttonLeft = new ludo.form.Button({
-     *  value: 'left',
-     *  toggle:true,
-     *  toggleGroup:{
-     *      type : 'ludo.myapp.form.MyToggleGroup'
-     *  }
-     *
-     * });
-     *
-     * @attribute {Object} toggleGroup
-     * @default undefined
-     */
+     Assign button to a toggleGroup
+     @attribute {Object} toggleGroup
+     @default undefined
+	 @example
+		 var buttonLeft = new ludo.form.Button({
+		 	value : 'left',
+		 	toggle:true,
+		 	toggleGroup:'alignment'
+		 });
+
+		 var buttonCenter = new ludo.form.Button({
+		 	value : 'center',
+		 	toggle:true,
+		 	toggleGroup:'alignment'
+		 });
+
+	 which creates a singleton ludo.form.ToggleGroup instance and
+	 assign each button to it.
+
+	 When using a toggle group, only one button can be turned on. The toggle
+	 group will automatically turn off the other button.
+
+	 You can create your own ludo.form.ToggleGroup by extending
+	 ludo.form.ToggleGroup and set the toggleGroup property to an
+	 object:
+	 @example
+		 var buttonLeft = new ludo.form.Button({
+		 	value: 'left',
+		 	toggle:true,
+		 	toggleGroup:{
+		 		type : 'ludo.myapp.form.MyToggleGroup'
+		 	}
+		 });
+     /
     toggleGroup:undefined,
 
     /**
@@ -143,7 +141,6 @@ ludo.form.Button = new Class({
 
         var b = this.getBody();
 
-        // b.style.height = this.buttonHeight + 'px';
         b.setStyle('padding-left', 0);
         this.getEl().addEvent('selectstart', ludo.util.cancelEvent);
     },

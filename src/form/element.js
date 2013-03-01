@@ -197,7 +197,6 @@ ludo.form.Element = new Class({
         this.parent();
         var formEl = this.getFormEl();
         if (formEl) {
-
             formEl.addEvent('keydown', this.keyDown.bind(this));
             formEl.addEvent('keypress', this.keyPress.bind(this));
             formEl.addEvent('keyup', this.keyUp.bind(this));
@@ -354,7 +353,7 @@ ludo.form.Element = new Class({
         this.validate();
 
         if (this.getFormEl())this.value = this.getFormEl().value;
-        if (this.getValue() !== this.initialValue) {
+        if (this.value !== this.initialValue) {
             /**
              * @event dirty
              * @description event fired on blur when value is different from it's original value
@@ -362,7 +361,7 @@ ludo.form.Element = new Class({
              * @param {Object} ludo.form.* component
              */
             this.setDirty();
-            this.fireEvent('dirty', [this.getValue(), this]);
+            this.fireEvent('dirty', [this.value, this]);
         } else {
             /**
              * @event clean
@@ -371,7 +370,7 @@ ludo.form.Element = new Class({
              * @param {Object} ludo.form.* component
              */
             this.setClean();
-            this.fireEvent('clean', [this.getValue(), this]);
+            this.fireEvent('clean', [this.value, this]);
         }
         /**
          * On blur event
@@ -379,7 +378,7 @@ ludo.form.Element = new Class({
          * @param {String|Boolean|Object|Number} value
          * $param {View} this
          */
-        this.fireEvent('blur', [ this.getValue(), this ]);
+        this.fireEvent('blur', [ this.value, this ]);
     },
 
     hasFocus:function () {
