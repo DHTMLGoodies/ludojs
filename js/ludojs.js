@@ -1,4 +1,4 @@
-/* Generated Fri Mar 1 15:25:15 CET 2013 */
+/* Generated Fri Mar 1 15:58:19 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -4762,12 +4762,8 @@ ludo.View = new Class({
 	},
 
 	insertDOMContainer:function () {
-		if (this.hidden) {
-			this.els.container.style.display = 'none';
-		}
-		if (this.renderTo) {
-			this.renderTo.adopt(this.els.container);
-		}
+		if (this.hidden)this.els.container.style.display = 'none';
+		if (this.renderTo)this.renderTo.adopt(this.els.container);
 	},
 
 	/**
@@ -4796,22 +4792,14 @@ ludo.View = new Class({
 			this.contextMenu = undefined;
 		}
 
-		if (this.cls) {
-            ludo.dom.addClass(this.getEl(), this.cls);
-		}
-
-		if (this.type) {
-			ludo.dom.addClass(this.getEl(), 'ludo-' + (this.type.replace(/\./g, '-').toLowerCase()));
-		}
-
+		if (this.cls)ludo.dom.addClass(this.getEl(), this.cls);
+		if (this.type)ludo.dom.addClass(this.getEl(), 'ludo-' + (this.type.replace(/\./g, '-').toLowerCase()));
 		if (this.css)this.getBody().setStyles(this.css);
 		if (this.containerCss)this.getEl().setStyles(this.containerCss);
-
 		if (this.frame) {
 			ludo.dom.addClass(this.getEl(), 'ludo-container-frame');
 			ludo.dom.addClass(this.getBody(), 'ludo-body-frame');
 		}
-
 		if (this.cssSignature !== undefined)ludo.dom.addClass(this.getEl(), this.cssSignature);
 	},
 
@@ -5286,9 +5274,8 @@ ludo.View = new Class({
 
 		if (config.width) {
 			if (this.layout && this.layout.preserveAspectRatio && config.width && !this.isMinimized()) {
-				var ratio = this.layout.aspectRatio;
-				if (ratio) {
-					config.height = config.width / ratio;
+				if (this.layout.aspectRatio) {
+					config.height = config.width / this.layout.aspectRatio;
 				}
 			}
             this.width = config.width;
@@ -5382,9 +5369,7 @@ ludo.View = new Class({
 
 	getInnerWidthOfBody:function () {
 		if (this.width) {
-			var c = this.els.container;
-			var e = this.els.body;
-			return this.getWidth() - ludo.dom.getMBPW(c) - ludo.dom.getMBPW(e);
+			return this.width - ludo.dom.getMBPW(this.els.container) - ludo.dom.getMBPW(this.els.body);
 		}
 		return ludo.dom.getInnerWidthOf(this.els.body);
 	},
