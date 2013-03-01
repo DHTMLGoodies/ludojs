@@ -6,9 +6,8 @@ ludo.storage.LocalStorage = new Class({
 
 	save:function(key,value){
 		if(!this.supported)return;
-
 		var type = 'simple';
-		if(this.isObject(value)){
+		if(ludo.util.isObject(value)){
 			value = JSON.encode(value);
 			type = 'object';
 		}
@@ -23,10 +22,6 @@ ludo.storage.LocalStorage = new Class({
 			return JSON.decode(localStorage[key]);
 		}
 		return localStorage[key];
-	},
-
-	isObject:function(value){
-		return typeof(value) == 'object';
 	},
 
 	getTypeKey:function(key){

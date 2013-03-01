@@ -158,7 +158,7 @@ ludo.FramedView = new Class({
 	 */
 	setTitle:function (title) {
 		this.parent(title);
-		if(this.titleBarObj)this.titleBarObj.setTitle(title);
+        this.fireEvent('setTitle', title);
 	},
 
 	autoSize:function () {
@@ -176,9 +176,6 @@ ludo.FramedView = new Class({
 
 		if (this.buttonBarComponent) {
 			this.buttonBarComponent.resize();
-		}
-		if (this.titleBarObj && this.width && this.width > 30) {
-			this.titleBarObj.resizeDOM();
 		}
 	},
 

@@ -19,9 +19,7 @@ ludo.view.ButtonBar = new Class({
     component:undefined,
 
     ludoConfig:function (config) {
-        if (config.align !== undefined)this.align = config.align;
-
-        this.component = config.component;
+        this.setConfigParams(config, ['align','component']);
         config.children = this.getValidChildren(config.children);
         if (this.align == 'right') {
             config.children = this.getItemsWithSpacer(config.children);
@@ -60,7 +58,6 @@ ludo.view.ButtonBar = new Class({
     getButtons:function () {
         var ret = [];
         for (var i = 0; i < this.children.length; i++) {
-
             if (this.children[i].isButton && this.children[i].isButton()) {
                 ret.push(this.children[i]);
             }
@@ -69,25 +66,14 @@ ludo.view.ButtonBar = new Class({
     },
 
     getButton:function (key) {
-        for (var i = 0; i < this.children.length; i++) {
-            if (this.children[i].id == key) {
-                return this.children[i];
-            }
-            if (this.children[i].name == key) {
-                return this.children[i];
-            }
-            if (this.children[i].getValue && this.children[i].getValue().toLowerCase() == key.toLowerCase()) {
-                return this.children[i];
+        var c = this.children;
+        for (var i = 0; i < c.length; i++) {
+            if(c[i].id == key || c[i].name == key || (c[i].getValue && c[i].getValue().toLowerCase() == key.toLowerCase())){
+                return c[i];
             }
         }
 		return undefined;
     },
-
-
-
-	resize:function(config){
-		this.parent(config);
-	},
 
     getItemsWithSpacer:function (children) {
         for (var i = children.length; i > 0; i--) {

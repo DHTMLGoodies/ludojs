@@ -7,7 +7,7 @@ ludo.view.Loader = new Class({
 
 	initialize:function(config){
 		this.view = config.view;
-		if(config.txt !== undefined)this.txt = config.txt;
+		if(config.txt)this.txt = config.txt;
 		this.addDataSourceEvents();
 	},
 

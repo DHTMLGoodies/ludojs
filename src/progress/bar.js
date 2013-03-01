@@ -15,10 +15,6 @@ ludo.progress.Bar = new Class({
     hidden:true,
     fx:undefined,
 
-    ludoConfig:function (config) {
-        this.parent(config);
-    },
-
     ludoRendered:function () {
         this.parent();
 
@@ -137,7 +133,6 @@ ludo.progress.Bar = new Class({
                 duration:100,
                 unit : '%'
             });
-
         }
         return this.fx;
     }

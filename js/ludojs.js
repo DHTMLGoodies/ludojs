@@ -1,4 +1,4 @@
-/* Generated Fri Mar 1 0:32:16 CET 2013 */
+/* Generated Fri Mar 1 1:14:07 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -364,9 +364,8 @@ ludo.storage.LocalStorage = new Class({
 
 	save:function(key,value){
 		if(!this.supported)return;
-
 		var type = 'simple';
-		if(this.isObject(value)){
+		if(ludo.util.isObject(value)){
 			value = JSON.encode(value);
 			type = 'object';
 		}
@@ -381,10 +380,6 @@ ludo.storage.LocalStorage = new Class({
 			return JSON.decode(localStorage[key]);
 		}
 		return localStorage[key];
-	},
-
-	isObject:function(value){
-		return typeof(value) == 'object';
 	},
 
 	getTypeKey:function(key){
@@ -3925,7 +3920,7 @@ ludo.tpl.Parser = new Class({
         if (!this.isArray(records)) {
             records = [records];
         }
-        var html = '';
+        var html = [];
         for (var i = 0; i < records.length; i++) {
             var content = tpl;
             var prop;
@@ -3937,9 +3932,9 @@ ludo.tpl.Parser = new Class({
                     content = content.replace(reg, value);
                 }
             }
-            html = html + content;
+            html.push(content);
         }
-        return html;
+        return html.join('');
     },
 
     getTplValue:function (key, value) {
@@ -4296,7 +4291,7 @@ ludo.view.Loader = new Class({
 
 	initialize:function(config){
 		this.view = config.view;
-		if(config.txt !== undefined)this.txt = config.txt;
+		if(config.txt)this.txt = config.txt;
 		this.addDataSourceEvents();
 	},
 
@@ -10341,9 +10336,7 @@ ludo.view.ButtonBar = new Class({
     component:undefined,
 
     ludoConfig:function (config) {
-        if (config.align !== undefined)this.align = config.align;
-
-        this.component = config.component;
+        this.setConfigParams(config, ['align','component']);
         config.children = this.getValidChildren(config.children);
         if (this.align == 'right') {
             config.children = this.getItemsWithSpacer(config.children);
@@ -10382,7 +10375,6 @@ ludo.view.ButtonBar = new Class({
     getButtons:function () {
         var ret = [];
         for (var i = 0; i < this.children.length; i++) {
-
             if (this.children[i].isButton && this.children[i].isButton()) {
                 ret.push(this.children[i]);
             }
@@ -10391,25 +10383,14 @@ ludo.view.ButtonBar = new Class({
     },
 
     getButton:function (key) {
-        for (var i = 0; i < this.children.length; i++) {
-            if (this.children[i].id == key) {
-                return this.children[i];
-            }
-            if (this.children[i].name == key) {
-                return this.children[i];
-            }
-            if (this.children[i].getValue && this.children[i].getValue().toLowerCase() == key.toLowerCase()) {
-                return this.children[i];
+        var c = this.children;
+        for (var i = 0; i < c.length; i++) {
+            if(c[i].id == key || c[i].name == key || (c[i].getValue && c[i].getValue().toLowerCase() == key.toLowerCase())){
+                return c[i];
             }
         }
 		return undefined;
     },
-
-
-
-	resize:function(config){
-		this.parent(config);
-	},
 
     getItemsWithSpacer:function (children) {
         for (var i = children.length; i > 0; i--) {
@@ -10431,79 +10412,6 @@ ludo.view.ButtonBar = new Class({
     getView : function(){
         return this.component;
     }
-});/* ../ludojs/src/view/status-bar.js */
-ludo.view.StatusBar = new Class({
-    Extends: ludo.Core,
-
-    text:undefined,
-    icon:undefined,
-
-    el:undefined,
-    textEl:undefined,
-    iconEl:undefined,
-
-    hidden:false,
-
-    ludoConfig:function(config){
-        this.parent(config);
-        this.text = config.text;
-        this.icon = config.icon;
-        this.createDOM();
-    },
-
-    createDOM:function(){
-        var el = this.el = new Element('div');
-        ludo.dom.addClass(el, 'ludo-component-statusbar');
-
-        var statusIcon = this.iconEl = new Element('div');
-        ludo.dom.addClass(statusIcon, 'ludo-component-statusbar-icon');
-        if (this.icon) {
-            statusIcon.setStyle('background-image', 'url(' + this.icon + ')');
-        } else {
-            statusIcon.setStyle('display', 'none');
-        }
-        el.adopt(statusIcon);
-
-        var statusText = this.textEl = new Element('div');
-        ludo.dom.addClass(statusText, 'ludo-component-statusbar-text');
-        if (this.text) {
-            statusText.set('html', this.text);
-        }
-        el.adopt(statusText);
-    },
-
-    getEl:function(){
-        return this.el;
-    },
-
-    hideIcon:function(){
-        this.iconEl.style.visibility = 'hidden';
-    },
-
-    setText:function(text){
-        this.textEl.set('html', text);
-    },
-
-    showIcon:function(icon){
-        this.iconEl.setStyle('display', '');
-        if (icon !== undefined) {
-            this.iconEl.setStyle('background-image', 'url(' + icon + ')');
-        }
-    },
-    hide:function(){
-        this.el.style.display='none';
-        this.hidden = true;
-    },
-
-    getHeight:function(){
-        var ret = this.el.getSize();
-        if (ret.y == 0) {
-            ret.y = 1;
-        } else {
-            ret.y += ludo.dom.getMH(this.el);
-        }
-        return ret.y;
-    }
 });/* ../ludojs/src/view/title-bar.js */
 ludo.view.TitleBar = new Class({
     Extends:ludo.Core,
@@ -10519,6 +10427,8 @@ ludo.view.TitleBar = new Class({
     ludoConfig:function (config) {
         this.parent(config);
         this.view = config.view;
+        this.view.addEvent('setTitle', this.setTitle.bind(this));
+        this.view.addEvent('resize', this.resizeDOM.bind(this));
         this.createDOM();
         this.createEvents();
         this.setSizeOfButtonContainer.delay(20, this);
@@ -10567,13 +10477,16 @@ ludo.view.TitleBar = new Class({
     },
 
     showMaximize:function () {
-        this.els.buttons.maximize.style.display = '';
-        this.els.buttons.minimize.style.display = 'none';
+        this.toggleMinimize('none','');
     },
 
     showMinimize:function () {
-        this.els.buttons.maximize.style.display = 'none';
-        this.els.buttons.minimize.style.display = '';
+        this.toggleMinimize('','none');
+    },
+
+    toggleMinimize:function(min,max){
+        this.els.buttons.minimize.style.display = min;
+        this.els.buttons.maximize.style.display = max;
     },
 
     cancelTextSelection:function () {
@@ -10627,11 +10540,13 @@ ludo.view.TitleBar = new Class({
 
     getButton:function (buttonType) {
         var b = this.els.buttons[buttonType] = new Element('div');
-        b.id = 'ludo-title-bar-button-' + String.uniqueID();
+        b.id = 'b-' + String.uniqueID();
 		b.className = 'ludo-title-bar-button ludo-title-bar-button-' + buttonType;
-        b.addEvent('click', this.buttonClick.bind(this));
-        b.addEvent('mouseenter', this.enterButton.bind(this));
-        b.addEvent('mouseleave', this.leaveButton.bind(this));
+        b.addEvents({
+            'click' : this.buttonClick.bind(this),
+            'mouseenter' : this.enterButton.bind(this),
+            'mouseleave' : this.leaveButton.bind(this)
+        });
         b.setProperty('title', buttonType.capitalize());
         b.setProperty('buttonType', buttonType);
         this.els.buttonArray.push(b);
@@ -10724,8 +10639,8 @@ ludo.view.TitleBar = new Class({
 
     getCollapseButtonDirection:function () {
         var c = this.view;
-		if(ludo.util.isString(this.view.layout.collapsible)){
-			return this.view.layout.collapsible;
+		if(ludo.util.isString(c.layout.collapsible)){
+			return c.layout.collapsible;
 		}
 		var parent = c.getParent();
         if (parent && parent.layout && parent.layout.type === 'linear' && parent.layout.orientation === 'horizontal') {
@@ -10895,7 +10810,7 @@ ludo.FramedView = new Class({
 	 */
 	setTitle:function (title) {
 		this.parent(title);
-		if(this.titleBarObj)this.titleBarObj.setTitle(title);
+        this.fireEvent('setTitle', title);
 	},
 
 	autoSize:function () {
@@ -10913,9 +10828,6 @@ ludo.FramedView = new Class({
 
 		if (this.buttonBarComponent) {
 			this.buttonBarComponent.resize();
-		}
-		if (this.titleBarObj && this.width && this.width > 30) {
-			this.titleBarObj.resizeDOM();
 		}
 	},
 
@@ -17141,7 +17053,7 @@ ludo.progress.DataSource = new Class({
     stopped : false,
     pollFrequence : 1,
     /**
-     * Reference to parent component of status bar
+     * Reference to parent component
      * @property object Component
      */
     component:undefined,
@@ -17149,7 +17061,7 @@ ludo.progress.DataSource = new Class({
 
     ludoConfig:function(config){
         this.parent(config);
-        if(config.pollFrequence !== undefined)this.pollFrequence = config.pollFrequence;
+        if(config.pollFrequence)this.pollFrequence = config.pollFrequence;
         this.component = config.component;
         this.component.getFormManager().addEvent('beforesubmit', this.startProgress.bind(this));
     },
@@ -17222,9 +17134,7 @@ ludo.progress.Base = new Class({
 
     ludoConfig:function (config) {
         this.parent(config);
-        if (config.component !== undefined)this.component = config.component;
-        if (config.pollFrequence !== undefined)this.pollFrequence = config.pollFrequence;
-        if (config.hideOnFinish !== undefined)this.hideOnFinish = config.hideOnFinish;
+        this.setConfigParams(config, ['component','pollFrequence','hideOnFinish']);
 
         if (!this.component) {
             this.component = this.getParent();
@@ -17298,10 +17208,6 @@ ludo.progress.Bar = new Class({
     stopped:false,
     hidden:true,
     fx:undefined,
-
-    ludoConfig:function (config) {
-        this.parent(config);
-    },
 
     ludoRendered:function () {
         this.parent();
@@ -17421,7 +17327,6 @@ ludo.progress.Bar = new Class({
                 duration:100,
                 unit : '%'
             });
-
         }
         return this.fx;
     }

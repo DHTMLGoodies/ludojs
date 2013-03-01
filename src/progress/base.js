@@ -18,9 +18,7 @@ ludo.progress.Base = new Class({
 
     ludoConfig:function (config) {
         this.parent(config);
-        if (config.component !== undefined)this.component = config.component;
-        if (config.pollFrequence !== undefined)this.pollFrequence = config.pollFrequence;
-        if (config.hideOnFinish !== undefined)this.hideOnFinish = config.hideOnFinish;
+        this.setConfigParams(config, ['component','pollFrequence','hideOnFinish']);
 
         if (!this.component) {
             this.component = this.getParent();

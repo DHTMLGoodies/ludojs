@@ -22,7 +22,7 @@ ludo.tpl.Parser = new Class({
         if (!this.isArray(records)) {
             records = [records];
         }
-        var html = '';
+        var html = [];
         for (var i = 0; i < records.length; i++) {
             var content = tpl;
             var prop;
@@ -34,9 +34,9 @@ ludo.tpl.Parser = new Class({
                     content = content.replace(reg, value);
                 }
             }
-            html = html + content;
+            html.push(content);
         }
-        return html;
+        return html.join('');
     },
 
     getTplValue:function (key, value) {

@@ -21,7 +21,7 @@ ludo.progress.DataSource = new Class({
 
     ludoConfig:function(config){
         this.parent(config);
-        if(config.pollFrequence !== undefined)this.pollFrequence = config.pollFrequence;
+        if(config.pollFrequence)this.pollFrequence = config.pollFrequence;
         this.component = config.component;
         this.component.getFormManager().addEvent('beforesubmit', this.startProgress.bind(this));
     },

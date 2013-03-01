@@ -12,6 +12,8 @@ ludo.view.TitleBar = new Class({
     ludoConfig:function (config) {
         this.parent(config);
         this.view = config.view;
+        this.view.addEvent('setTitle', this.setTitle.bind(this));
+        this.view.addEvent('resize', this.resizeDOM.bind(this));
         this.createDOM();
         this.createEvents();
         this.setSizeOfButtonContainer.delay(20, this);
@@ -60,13 +62,16 @@ ludo.view.TitleBar = new Class({
     },
 
     showMaximize:function () {
-        this.els.buttons.maximize.style.display = '';
-        this.els.buttons.minimize.style.display = 'none';
+        this.toggleMinimize('none','');
     },
 
     showMinimize:function () {
-        this.els.buttons.maximize.style.display = 'none';
-        this.els.buttons.minimize.style.display = '';
+        this.toggleMinimize('','none');
+    },
+
+    toggleMinimize:function(min,max){
+        this.els.buttons.minimize.style.display = min;
+        this.els.buttons.maximize.style.display = max;
     },
 
     cancelTextSelection:function () {
@@ -120,11 +125,13 @@ ludo.view.TitleBar = new Class({
 
     getButton:function (buttonType) {
         var b = this.els.buttons[buttonType] = new Element('div');
-        b.id = 'ludo-title-bar-button-' + String.uniqueID();
+        b.id = 'b-' + String.uniqueID();
 		b.className = 'ludo-title-bar-button ludo-title-bar-button-' + buttonType;
-        b.addEvent('click', this.buttonClick.bind(this));
-        b.addEvent('mouseenter', this.enterButton.bind(this));
-        b.addEvent('mouseleave', this.leaveButton.bind(this));
+        b.addEvents({
+            'click' : this.buttonClick.bind(this),
+            'mouseenter' : this.enterButton.bind(this),
+            'mouseleave' : this.leaveButton.bind(this)
+        });
         b.setProperty('title', buttonType.capitalize());
         b.setProperty('buttonType', buttonType);
         this.els.buttonArray.push(b);
@@ -217,8 +224,8 @@ ludo.view.TitleBar = new Class({
 
     getCollapseButtonDirection:function () {
         var c = this.view;
-		if(ludo.util.isString(this.view.layout.collapsible)){
-			return this.view.layout.collapsible;
+		if(ludo.util.isString(c.layout.collapsible)){
+			return c.layout.collapsible;
 		}
 		var parent = c.getParent();
         if (parent && parent.layout && parent.layout.type === 'linear' && parent.layout.orientation === 'horizontal') {
