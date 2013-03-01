@@ -1,4 +1,4 @@
-/* Generated Fri Mar 1 1:46:00 CET 2013 */
+/* Generated Fri Mar 1 2:00:28 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -5197,7 +5197,7 @@ ludo.View = new Class({
 		var ret = [];
 		for (var i = 0; i < this.children.length; i++) {
 			ret.push(this.children[i]);
-			if (this.children[i].hasChildren) {
+			if (this.children[i].hasChildren()) {
 				ret = ret.append(this.children[i].getChildren());
 			}
 		}
@@ -5537,10 +5537,6 @@ ludo.View = new Class({
 			});
 		}
 		return this.formManager;
-	},
-
-	hasFormManager:function () {
-		return this.formManager !== undefined;
 	},
 
 	getParentFormManager:function () {
@@ -10644,9 +10640,9 @@ ludo.view.TitleBar = new Class({
 		}
 		var parent = c.getParent();
         if (parent && parent.layout && parent.layout.type === 'linear' && parent.layout.orientation === 'horizontal') {
-            return parent.getIndexOf(this) === 0 ? 'left' : 'right';
+            return parent.getIndexOf(c) === 0 ? 'left' : 'right';
         } else {
-            return parent.getIndexOf(this) === 0 ? 'top' : 'bottom';
+            return parent.getIndexOf(c) === 0 ? 'top' : 'bottom';
         }
     }
 });/* ../ludojs/src/framed-view.js */

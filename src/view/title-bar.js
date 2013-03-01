@@ -229,9 +229,9 @@ ludo.view.TitleBar = new Class({
 		}
 		var parent = c.getParent();
         if (parent && parent.layout && parent.layout.type === 'linear' && parent.layout.orientation === 'horizontal') {
-            return parent.getIndexOf(this) === 0 ? 'left' : 'right';
+            return parent.getIndexOf(c) === 0 ? 'left' : 'right';
         } else {
-            return parent.getIndexOf(this) === 0 ? 'top' : 'bottom';
+            return parent.getIndexOf(c) === 0 ? 'top' : 'bottom';
         }
     }
 });

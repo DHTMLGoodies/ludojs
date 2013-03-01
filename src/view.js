@@ -848,7 +848,7 @@ ludo.View = new Class({
 		return ret;
 	},
 	/**
-	 * Return array of all child components, including childrens children
+	 * Return array of all child components, including grand children
 	 * @method getAllChildren
 	 * @return Array of sub components
 	 */
@@ -856,7 +856,7 @@ ludo.View = new Class({
 		var ret = [];
 		for (var i = 0; i < this.children.length; i++) {
 			ret.push(this.children[i]);
-			if (this.children[i].hasChildren) {
+			if (this.children[i].hasChildren()) {
 				ret = ret.append(this.children[i].getChildren());
 			}
 		}
@@ -1196,10 +1196,6 @@ ludo.View = new Class({
 			});
 		}
 		return this.formManager;
-	},
-
-	hasFormManager:function () {
-		return this.formManager !== undefined;
 	},
 
 	getParentFormManager:function () {
