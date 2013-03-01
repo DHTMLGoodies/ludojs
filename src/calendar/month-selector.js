@@ -16,12 +16,9 @@ ludo.calendar.MonthSelector = new Class({
         this.autoResize();
     },
     autoResize:function(){
-        var height = this.els.monthContainer.getSize().y;
+        var height = this.els.monthContainer.offsetHeight;
         height += ludo.dom.getMH(this.els.monthContainer);
-        var b = this.getBody();
-        var c = this.getEl();
-        height += ludo.dom.getBH(b) + ludo.dom.getMH(b) + ludo.dom.getPH(b);
-        height += ludo.dom.getBH(c) + ludo.dom.getMH(c) + ludo.dom.getPH(c);
+        height += ludo.dom.getMBPH(this.getBody()) + ludo.dom.getMBPH(this.getEl());
         this.height = height;
 
     },
@@ -63,7 +60,6 @@ ludo.calendar.MonthSelector = new Class({
                 el.addEvent('mouseenter', this.hideTooltip.bind(this));
             }else{
                 el.addEvent('mouseenter', this.showTooltip.bind(this));
-
                 el.setProperty('title', this.months[i]);
                 ludo.dom.addClass(el, 'ludo-calendar-month-inactive');
             }

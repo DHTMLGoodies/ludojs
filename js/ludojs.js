@@ -1,4 +1,4 @@
-/* Generated Fri Mar 1 1:25:55 CET 2013 */
+/* Generated Fri Mar 1 1:46:00 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -11374,16 +11374,11 @@ ludo.Accordion = new Class({
 		});
 		this.fx.addEvent('complete', this.animationComplete.bind(this));
 
-		var titleBar = this.getTitleBarEl();
-		titleBar.addEvent('click', this.toggleExpandCollapse.bind(this));
+        this.getTitleBarEl().addEvent('click', this.toggleExpandCollapse.bind(this));
 		this.parent();
 	},
 	toggleExpandCollapse:function () {
-		if (this.state.isMinimized) {
-			this.maximize();
-		} else {
-			this.minimize();
-		}
+        this.state.isMinimized ? this.maximize() : this.minimize();
 	},
 	/**
 	 * Maximize accordion component
@@ -11420,12 +11415,10 @@ ludo.Accordion = new Class({
 		this.fx.start({
 			'height':[this.heightBeforeMinimize, h]
 		});
-
 		this.fxContent.start({
 			'margin-top':[ 0, (this.heightBeforeMinimize - h) * -1 ]
 		});
         this.fireEvent('minimize', [this, { height: h }]);
-
 	},
 
 	animationComplete:function () {
@@ -17466,16 +17459,11 @@ ludo.calendar.Calendar = new Class({
 
     ludoConfig:function (config) {
         this.parent(config);
-        if (config.inputFormat !== undefined)this.inputFormat = config.inputFormat;
-        if(config.value !== undefined)config.date = config.value;
-        if (config.date !== undefined) {
-            this.date = Date.parse(config.date);
-        } else {
-            this.date = new Date();
-        }
+        this.setConfigParams(config, ['inputFormat','value','minDate','maxDate','date']);
+        this.date = this.date || this.value;
+        this.date = this.date ?  Date.parse(config.date) : new Date();
+
         this.value = this.date;
-        if (config.minDate !== undefined)this.minDate = config.minDate;
-        if (config.maxDate !== undefined)this.maxDate = config.maxDate;
 
         if (this.minDate)this.minDate = Date.parse(this.minDate);
         if (this.maxDate)this.maxDate = Date.parse(this.maxDate);
@@ -17877,7 +17865,6 @@ ludo.calendar.Days = new Class({
         }
         var len = ret.length;
         for (i = ret.length; i < 48; i++) {
-
             if (ret.length < 48) {
                 if (ret.length % 8 == 0) {
                     ret.push(this.getNextWeek());
@@ -18063,11 +18050,7 @@ ludo.calendar.Selector = new Class({
     autoResize:function () {
         var height = this.els.calendarContainer.getSize().y;
         height += ludo.dom.getMH(this.els.calendarContainer);
-        var b = this.getBody();
-        var c = this.getEl();
-        height += ludo.dom.getBH(b) + ludo.dom.getMH(b) + ludo.dom.getPH(b);
-        height += ludo.dom.getBH(c) + ludo.dom.getMH(c) + ludo.dom.getPH(c);
-        this.height = height;
+        this.height = height + ludo.dom.getMBPH(this.getBody()) + ludo.dom.getMBPH(this.getEl());
 
     },
 
@@ -18129,12 +18112,9 @@ ludo.calendar.MonthSelector = new Class({
         this.autoResize();
     },
     autoResize:function(){
-        var height = this.els.monthContainer.getSize().y;
+        var height = this.els.monthContainer.offsetHeight;
         height += ludo.dom.getMH(this.els.monthContainer);
-        var b = this.getBody();
-        var c = this.getEl();
-        height += ludo.dom.getBH(b) + ludo.dom.getMH(b) + ludo.dom.getPH(b);
-        height += ludo.dom.getBH(c) + ludo.dom.getMH(c) + ludo.dom.getPH(c);
+        height += ludo.dom.getMBPH(this.getBody()) + ludo.dom.getMBPH(this.getEl());
         this.height = height;
 
     },
@@ -18176,7 +18156,6 @@ ludo.calendar.MonthSelector = new Class({
                 el.addEvent('mouseenter', this.hideTooltip.bind(this));
             }else{
                 el.addEvent('mouseenter', this.showTooltip.bind(this));
-
                 el.setProperty('title', this.months[i]);
                 ludo.dom.addClass(el, 'ludo-calendar-month-inactive');
             }
@@ -21536,10 +21515,9 @@ ludo.controller.Controller = new Class({
 
 	ludoConfig:function (config) {
 		config = config || {};
-		if (config !== undefined) {
-			config.controller = undefined;
-			config.useController = false;
-		}
+        config.controller = undefined;
+        config.useController = false;
+
 		this.parent(config);
 		if (config.broadcast !== undefined)this.broadcast = config.broadcast;
 		ludo.controllerManager.registerController(this);

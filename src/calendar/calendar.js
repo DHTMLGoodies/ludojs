@@ -47,16 +47,11 @@ ludo.calendar.Calendar = new Class({
 
     ludoConfig:function (config) {
         this.parent(config);
-        if (config.inputFormat !== undefined)this.inputFormat = config.inputFormat;
-        if(config.value !== undefined)config.date = config.value;
-        if (config.date !== undefined) {
-            this.date = Date.parse(config.date);
-        } else {
-            this.date = new Date();
-        }
+        this.setConfigParams(config, ['inputFormat','value','minDate','maxDate','date']);
+        this.date = this.date || this.value;
+        this.date = this.date ?  Date.parse(config.date) : new Date();
+
         this.value = this.date;
-        if (config.minDate !== undefined)this.minDate = config.minDate;
-        if (config.maxDate !== undefined)this.maxDate = config.maxDate;
 
         if (this.minDate)this.minDate = Date.parse(this.minDate);
         if (this.maxDate)this.maxDate = Date.parse(this.maxDate);

@@ -324,7 +324,6 @@ ludo.calendar.Days = new Class({
         }
         var len = ret.length;
         for (i = ret.length; i < 48; i++) {
-
             if (ret.length < 48) {
                 if (ret.length % 8 == 0) {
                     ret.push(this.getNextWeek());

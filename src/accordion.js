@@ -39,16 +39,11 @@ ludo.Accordion = new Class({
 		});
 		this.fx.addEvent('complete', this.animationComplete.bind(this));
 
-		var titleBar = this.getTitleBarEl();
-		titleBar.addEvent('click', this.toggleExpandCollapse.bind(this));
+        this.getTitleBarEl().addEvent('click', this.toggleExpandCollapse.bind(this));
 		this.parent();
 	},
 	toggleExpandCollapse:function () {
-		if (this.state.isMinimized) {
-			this.maximize();
-		} else {
-			this.minimize();
-		}
+        this.state.isMinimized ? this.maximize() : this.minimize();
 	},
 	/**
 	 * Maximize accordion component
@@ -85,12 +80,10 @@ ludo.Accordion = new Class({
 		this.fx.start({
 			'height':[this.heightBeforeMinimize, h]
 		});
-
 		this.fxContent.start({
 			'margin-top':[ 0, (this.heightBeforeMinimize - h) * -1 ]
 		});
         this.fireEvent('minimize', [this, { height: h }]);
-
 	},
 
 	animationComplete:function () {

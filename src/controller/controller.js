@@ -81,10 +81,9 @@ ludo.controller.Controller = new Class({
 
 	ludoConfig:function (config) {
 		config = config || {};
-		if (config !== undefined) {
-			config.controller = undefined;
-			config.useController = false;
-		}
+        config.controller = undefined;
+        config.useController = false;
+
 		this.parent(config);
 		if (config.broadcast !== undefined)this.broadcast = config.broadcast;
 		ludo.controllerManager.registerController(this);
