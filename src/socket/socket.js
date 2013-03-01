@@ -186,7 +186,6 @@ ludo.socket.Socket = new Class({
 			if (ludo.socket.libLoaded[url] === undefined) {
 				if (url !== undefined) {
 					ludo.socket.libLoaded[url] = true;
-                    // TODO Asset is missing
 					Asset.javascript(url + '/socket.io/socket.io.js');
 				}
 			}

@@ -499,13 +499,14 @@ ludo.View = new Class({
 				});
 			}
 		}
-
+		/*
 		if (!this.parentComponent && this.renderTo && this.renderTo.tagName.toLowerCase() == 'body') {
 			if (!this.isMovable()) {
                 // todo refactor this.
 				// document.id(window).addEvent('resize', this.resize.bind(this));
 			}
 		}
+		*/
 	},
 
 	/**
@@ -1200,19 +1201,11 @@ ludo.View = new Class({
 
 	getParentFormManager:function () {
 		var parent = this.getParent();
-		while (parent) {
-			if (parent.formManager !== undefined)return parent.formManager;
-			parent = parent.getParent();
-		}
-		return undefined;
+		return parent ? parent.formManager ? parent.formManager : parent.getParentFormManager() : undefined;
 	},
 
 	getIndexOf:function (child) {
 		return this.children.indexOf(child);
-	},
-
-	getTotalHeightOfTitleAndStatusBar:function () {
-		return 0;
 	},
 
 	isFormElement:function () {

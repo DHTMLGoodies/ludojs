@@ -1,4 +1,4 @@
-/* Generated Fri Mar 1 2:00:28 CET 2013 */
+/* Generated Fri Mar 1 14:59:30 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -3360,7 +3360,6 @@ ludo.dataSource.Base = new Class({
 	 * @type {Boolean}
      */
     singleton:false,
-    // TODO show show to set global url.
     /**
      * Remote url. If not set, global url will be used
      * @attribute url
@@ -4173,7 +4172,7 @@ ludo.dom = {
 
 		return {
 			x:width + ludo.dom.getMBPW(b) + ludo.dom.getMBPW(el),
-			y:height + ludo.dom.getMBPH(b) + ludo.dom.getMBPH(el) + view.getTotalHeightOfTitleAndStatusBar() + 2
+			y:height + ludo.dom.getMBPH(b) + ludo.dom.getMBPH(el) + (view.getHeightOfTitleBar ? view.getHeightOfTitleBar() : 0) + 2
 		}
 	},
 
@@ -4840,13 +4839,14 @@ ludo.View = new Class({
 				});
 			}
 		}
-
+		/*
 		if (!this.parentComponent && this.renderTo && this.renderTo.tagName.toLowerCase() == 'body') {
 			if (!this.isMovable()) {
                 // todo refactor this.
 				// document.id(window).addEvent('resize', this.resize.bind(this));
 			}
 		}
+		*/
 	},
 
 	/**
@@ -5189,7 +5189,7 @@ ludo.View = new Class({
 		return ret;
 	},
 	/**
-	 * Return array of all child components, including childrens children
+	 * Return array of all child components, including grand children
 	 * @method getAllChildren
 	 * @return Array of sub components
 	 */
@@ -5541,19 +5541,11 @@ ludo.View = new Class({
 
 	getParentFormManager:function () {
 		var parent = this.getParent();
-		while (parent) {
-			if (parent.formManager !== undefined)return parent.formManager;
-			parent = parent.getParent();
-		}
-		return undefined;
+		return parent ? parent.formManager ? parent.formManager : parent.getParentFormManager() : undefined;
 	},
 
 	getIndexOf:function (child) {
 		return this.children.indexOf(child);
-	},
-
-	getTotalHeightOfTitleAndStatusBar:function () {
-		return 0;
 	},
 
 	isFormElement:function () {
@@ -8473,7 +8465,6 @@ ludo.socket.Socket = new Class({
 			if (ludo.socket.libLoaded[url] === undefined) {
 				if (url !== undefined) {
 					ludo.socket.libLoaded[url] = true;
-                    // TODO Asset is missing
 					Asset.javascript(url + '/socket.io/socket.io.js');
 				}
 			}
@@ -16027,7 +16018,6 @@ ludo.form.Element = new Class({
         this.parent();
         var formEl = this.getFormEl();
         if (formEl) {
-
             formEl.addEvent('keydown', this.keyDown.bind(this));
             formEl.addEvent('keypress', this.keyPress.bind(this));
             formEl.addEvent('keyup', this.keyUp.bind(this));
@@ -16184,7 +16174,7 @@ ludo.form.Element = new Class({
         this.validate();
 
         if (this.getFormEl())this.value = this.getFormEl().value;
-        if (this.getValue() !== this.initialValue) {
+        if (this.value !== this.initialValue) {
             /**
              * @event dirty
              * @description event fired on blur when value is different from it's original value
@@ -16192,7 +16182,7 @@ ludo.form.Element = new Class({
              * @param {Object} ludo.form.* component
              */
             this.setDirty();
-            this.fireEvent('dirty', [this.getValue(), this]);
+            this.fireEvent('dirty', [this.value, this]);
         } else {
             /**
              * @event clean
@@ -16201,7 +16191,7 @@ ludo.form.Element = new Class({
              * @param {Object} ludo.form.* component
              */
             this.setClean();
-            this.fireEvent('clean', [this.getValue(), this]);
+            this.fireEvent('clean', [this.value, this]);
         }
         /**
          * On blur event
@@ -16209,7 +16199,7 @@ ludo.form.Element = new Class({
          * @param {String|Boolean|Object|Number} value
          * $param {View} this
          */
-        this.fireEvent('blur', [ this.getValue(), this ]);
+        this.fireEvent('blur', [ this.value, this ]);
     },
 
     hasFocus:function () {
@@ -16455,42 +16445,40 @@ ludo.form.Button = new Class({
     toggle:false,
 
     /**
-     * Assign button to a toggleGroup
-     * Example:
-     * var buttonLeft = new ludo.form.Button({
-     * value : 'left',
-     * toggle:true,
-     * toggleGroup:'alignment'
-     * });
-     *
-     * var buttonCenter = new ludo.form.Button({
-     * value : 'center',
-     * toggle:true,
-     * toggleGroup:'alignment'
-     * });
-     *
-     * which creates a singleton ludo.form.ToggleGroup instance and
-     * assign each button to it.
-     *
-     * When using a toggle group, only one button can be turned on. The toggle
-     * group will automatically turn off the other button.
-     *
-     * You can create your own ludo.form.ToggleGroup by extending
-     * ludo.form.ToggleGroup and set the toggleGroup property to an
-     * object:
-     *
-     * var buttonLeft = new ludo.form.Button({
-     *  value: 'left',
-     *  toggle:true,
-     *  toggleGroup:{
-     *      type : 'ludo.myapp.form.MyToggleGroup'
-     *  }
-     *
-     * });
-     *
-     * @attribute {Object} toggleGroup
-     * @default undefined
-     */
+     Assign button to a toggleGroup
+     @attribute {Object} toggleGroup
+     @default undefined
+	 @example
+		 var buttonLeft = new ludo.form.Button({
+		 	value : 'left',
+		 	toggle:true,
+		 	toggleGroup:'alignment'
+		 });
+
+		 var buttonCenter = new ludo.form.Button({
+		 	value : 'center',
+		 	toggle:true,
+		 	toggleGroup:'alignment'
+		 });
+
+	 which creates a singleton ludo.form.ToggleGroup instance and
+	 assign each button to it.
+
+	 When using a toggle group, only one button can be turned on. The toggle
+	 group will automatically turn off the other button.
+
+	 You can create your own ludo.form.ToggleGroup by extending
+	 ludo.form.ToggleGroup and set the toggleGroup property to an
+	 object:
+	 @example
+		 var buttonLeft = new ludo.form.Button({
+		 	value: 'left',
+		 	toggle:true,
+		 	toggleGroup:{
+		 		type : 'ludo.myapp.form.MyToggleGroup'
+		 	}
+		 });
+     /
     toggleGroup:undefined,
 
     /**
@@ -16565,7 +16553,6 @@ ludo.form.Button = new Class({
 
         var b = this.getBody();
 
-        // b.style.height = this.buttonHeight + 'px';
         b.setStyle('padding-left', 0);
         this.getEl().addEvent('selectstart', ludo.util.cancelEvent);
     },
@@ -16757,7 +16744,7 @@ ludo.form.Button = new Class({
         return true
     },
     resizeDOM:function () {
-        // TODO refactor - buttons should be too tall
+        // TODO refactor - buttons too tall in relative layout
         this.getBody().style.height = '25px';
         /* No DOM resize for buttons */
     },

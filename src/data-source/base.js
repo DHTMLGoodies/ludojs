@@ -13,7 +13,6 @@ ludo.dataSource.Base = new Class({
 	 * @type {Boolean}
      */
     singleton:false,
-    // TODO show show to set global url.
     /**
      * Remote url. If not set, global url will be used
      * @attribute url
