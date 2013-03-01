@@ -1,4 +1,4 @@
-/* Generated Fri Mar 1 1:14:07 CET 2013 */
+/* Generated Fri Mar 1 1:25:55 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -11395,15 +11395,14 @@ ludo.Accordion = new Class({
 		this.slideInProgress = true;
 		this.state.isMinimized = false;
 
-		this.showAllHandles();
-
+        this.showResizeHandles();
 		this.fx.start({
 			'height':[this.getHeightOfTitleBar(), this.heightBeforeMinimize]
 		});
 		this.fxContent.start({
 			'margin-top':[this.getBody().getStyle('margin-top'), 0]
 		});
-		this.cssMaxMinButton();
+		this.fireEvent('maximize', this);
 	},
 	/**
 	 * Minimize accordion component
@@ -11412,27 +11411,26 @@ ludo.Accordion = new Class({
 	 */
 	minimize:function () {
 		if (this.slideInProgress)return;
-		this.heightBeforeMinimize = this.getEl().getSize().y - ludo.dom.getBH(this.getEl()) - ludo.dom.getPH(this.getEl());
+		this.heightBeforeMinimize = this.getEl().offsetHeight - ludo.dom.getBH(this.getEl()) - ludo.dom.getPH(this.getEl());
 		this.slideInProgress = true;
 
 		this.state.isMinimized = true;
 		this.hideResizeHandles();
-
+        var h = this.getHeightOfTitleBar();
 		this.fx.start({
-			'height':[this.heightBeforeMinimize, this.getHeightOfTitleBar()]
+			'height':[this.heightBeforeMinimize, h]
 		});
 
 		this.fxContent.start({
-			'margin-top':[ 0, (this.heightBeforeMinimize - this.getHeightOfTitleBar()) * -1 ]
+			'margin-top':[ 0, (this.heightBeforeMinimize - h) * -1 ]
 		});
-		this.cssMaxMinButton();
+        this.fireEvent('minimize', [this, { height: h }]);
 
 	},
 
 	animationComplete:function () {
 		this.slideInProgress = false;
 	}
-
 });/* ../ludojs/src/data-source/record.js */
 /**
  * Class representing a record in {{#crossLink "dataSource.Collection"}}{{/crossLink}}
@@ -26906,14 +26904,11 @@ ludo.video.Video = new Class({
 
 	ludoConfig:function (config) {
 		this.parent(config);
-		if (config.movieId) {
-			this.movieId = config.movieId;
-		}
+		if (config.movieId)this.movieId = config.movieId;
 	},
 
 	setContent:function () {
 		var el = this.els.body;
-
 		var obj = new Element('object');
 		obj.setProperties({
 			'width':'100%',

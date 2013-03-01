@@ -17,14 +17,11 @@ ludo.video.Video = new Class({
 
 	ludoConfig:function (config) {
 		this.parent(config);
-		if (config.movieId) {
-			this.movieId = config.movieId;
-		}
+		if (config.movieId)this.movieId = config.movieId;
 	},
 
 	setContent:function () {
 		var el = this.els.body;
-
 		var obj = new Element('object');
 		obj.setProperties({
 			'width':'100%',
