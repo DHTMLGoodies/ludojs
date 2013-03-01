@@ -945,14 +945,14 @@ ludo.View = new Class({
 		config = config || {};
 
 		if (config.width) {
-			if (this.layout && this.layout.preserveAspectRatio && this.width && !this.isMinimized()) {
+			if (this.layout && this.layout.preserveAspectRatio && config.width && !this.isMinimized()) {
 				var ratio = this.layout.aspectRatio;
 				if (ratio) {
 					config.height = config.width / ratio;
 				}
 			}
             this.width = config.width;
-			var width = config.width - ludo.dom.getBW(this.els.container) - ludo.dom.getPW(this.els.container) - ludo.dom.getMW(this.els.container);
+			var width = config.width - ludo.dom.getMBPW(this.els.container);
 			if (width > 0) {
 				this.els.container.style.width = width + 'px';
 			}
