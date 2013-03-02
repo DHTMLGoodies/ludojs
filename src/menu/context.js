@@ -39,7 +39,15 @@ ludo.menu.Context = new Class({
 	layout:{
 		width:'wrap'
 	},
+    // TODO change this code to record:{ keys that has to match }, example: record:{ type:'country' }
 
+    /**
+     Show context menu for records with these properties
+     @config {Object} record
+     @default undefined
+     @example
+     */
+    record:undefined,
 	/**
 	 Show context menu only for records of a specific type. The component creating the context
 	 menu has to have a getRecordByDOM method in order for this to work. These methods are already
@@ -57,9 +65,8 @@ ludo.menu.Context = new Class({
         this.renderTo = document.body;
 		config.els = config.els || {};
 		this.parent(config);
-		this.selector = config.selector || this.selector;
-		this.recordType = config.recordType || this.recordType;
-		this.component = config.component;
+        this.setConfigParams(config, ['selector','recordType','record', 'component']);
+        if(this.recordType)this.record = { type: this.recordType };
 	},
 
 	ludoDOM:function () {
@@ -93,22 +100,20 @@ ludo.menu.Context = new Class({
 	},
 
 	show:function (e) {
-
 		if (this.selector) {
 			var domEl = this.getValidDomElement(e.target);
-
 			if (!domEl) {
 				return undefined;
 			}
 			this.fireEvent('selectorclick', domEl);
 		}
-		if (this.recordType) {
-			var rec = this.component.getRecordByDOM(e.target);
-			if (!rec || rec.type !== this.recordType) {
-				return undefined;
-			}
-			this.selectedRecord = rec;
-		}
+        if (this.record){
+            var r = this.component.getRecordByDOM(e.target);
+            if(!r)return undefined;
+            if(this.isContextMenuFor(r)){
+                this.selectedRecord = r;
+            }
+        }
 		this.parent();
 		if (!this.getParent()) {
 			var el = this.getEl();
@@ -118,6 +123,14 @@ ludo.menu.Context = new Class({
 		}
 		return false;
 	},
+
+    isContextMenuFor:function(record){
+        for(var key in this.record){
+            if(this.record.hasOwnProperty(key))
+                if(!record[key] || this.record[key] !== record[key])return false;
+        }
+        return true;
+    },
 
 	getXAndYPos:function (e) {
 		var ret = {

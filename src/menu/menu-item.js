@@ -61,21 +61,22 @@ ludo.menu.MenuItem = new Class({
 	action:undefined,
 	record:undefined,
 
+    /**
+     * Fire an event with this name on click
+     * @config {String} fire
+     * @default undefined
+     */
+    fire:undefined,
+
 	ludoConfig:function (config) {
 		if (config.children) {
 			this.menuItems = config.children;
 			config.children = [];
 		}
+        this.setConfigParams(config, ['menuDirection','icon','record','value','label','action','disabled','fire']);
+
 		this.menuDirection = config.menuDirection || this.menuDirection;
 		config.html = config.html || config.label;
-		this.icon = config.icon || this.icon;
-		this.record = config.record || this.record;
-		this.value = config.value || this.value;
-		this.label = config.label || this.label;
-		this.action = config.action || this.action;
-		if (config.disabled !== undefined) {
-			this.disabled = config.disabled;
-		}
 		if (config.html === '|') {
 			this.spacer = true;
 		}
@@ -153,6 +154,7 @@ ludo.menu.MenuItem = new Class({
 		}
 		this.getEl().addClass('ludo-menu-item-down');
 		this.fireEvent('click', this);
+        if(this.fire)this.fireEvent(this.fire, this);
 		var rootMenu = this.getRootMenuComponent();
 		if (rootMenu) {
 			rootMenu.click(this);

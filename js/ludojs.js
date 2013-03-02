@@ -1,4 +1,4 @@
-/* Generated Sat Mar 2 3:02:59 CET 2013 */
+/* Generated Sat Mar 2 20:48:45 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -18912,7 +18912,6 @@ ludo.model.Model = new Class({
 		}
 		this.fireEvent('update', this.currentRecord);
         this.updateViews();
-
 	}
 });
 /* ../ludojs/src/menu/menu-handler.js */
@@ -19077,21 +19076,22 @@ ludo.menu.MenuItem = new Class({
 	action:undefined,
 	record:undefined,
 
+    /**
+     * Fire an event with this name on click
+     * @config {String} fire
+     * @default undefined
+     */
+    fire:undefined,
+
 	ludoConfig:function (config) {
 		if (config.children) {
 			this.menuItems = config.children;
 			config.children = [];
 		}
+        this.setConfigParams(config, ['menuDirection','icon','record','value','label','action','disabled','fire']);
+
 		this.menuDirection = config.menuDirection || this.menuDirection;
 		config.html = config.html || config.label;
-		this.icon = config.icon || this.icon;
-		this.record = config.record || this.record;
-		this.value = config.value || this.value;
-		this.label = config.label || this.label;
-		this.action = config.action || this.action;
-		if (config.disabled !== undefined) {
-			this.disabled = config.disabled;
-		}
 		if (config.html === '|') {
 			this.spacer = true;
 		}
@@ -19169,6 +19169,7 @@ ludo.menu.MenuItem = new Class({
 		}
 		this.getEl().addClass('ludo-menu-item-down');
 		this.fireEvent('click', this);
+        if(this.fire)this.fireEvent(this.fire, this);
 		var rootMenu = this.getRootMenuComponent();
 		if (rootMenu) {
 			rootMenu.click(this);
@@ -19547,7 +19548,15 @@ ludo.menu.Context = new Class({
 	layout:{
 		width:'wrap'
 	},
+    // TODO change this code to record:{ keys that has to match }, example: record:{ type:'country' }
 
+    /**
+     Show context menu for records with these properties
+     @config {Object} record
+     @default undefined
+     @example
+     */
+    record:undefined,
 	/**
 	 Show context menu only for records of a specific type. The component creating the context
 	 menu has to have a getRecordByDOM method in order for this to work. These methods are already
@@ -19565,9 +19574,8 @@ ludo.menu.Context = new Class({
         this.renderTo = document.body;
 		config.els = config.els || {};
 		this.parent(config);
-		this.selector = config.selector || this.selector;
-		this.recordType = config.recordType || this.recordType;
-		this.component = config.component;
+        this.setConfigParams(config, ['selector','recordType','record', 'component']);
+        if(this.recordType)this.record = { type: this.recordType };
 	},
 
 	ludoDOM:function () {
@@ -19601,22 +19609,20 @@ ludo.menu.Context = new Class({
 	},
 
 	show:function (e) {
-
 		if (this.selector) {
 			var domEl = this.getValidDomElement(e.target);
-
 			if (!domEl) {
 				return undefined;
 			}
 			this.fireEvent('selectorclick', domEl);
 		}
-		if (this.recordType) {
-			var rec = this.component.getRecordByDOM(e.target);
-			if (!rec || rec.type !== this.recordType) {
-				return undefined;
-			}
-			this.selectedRecord = rec;
-		}
+        if (this.record){
+            var r = this.component.getRecordByDOM(e.target);
+            if(!r)return undefined;
+            if(this.isContextMenuFor(r)){
+                this.selectedRecord = r;
+            }
+        }
 		this.parent();
 		if (!this.getParent()) {
 			var el = this.getEl();
@@ -19626,6 +19632,14 @@ ludo.menu.Context = new Class({
 		}
 		return false;
 	},
+
+    isContextMenuFor:function(record){
+        for(var key in this.record){
+            if(this.record.hasOwnProperty(key))
+                if(!record[key] || this.record[key] !== record[key])return false;
+        }
+        return true;
+    },
 
 	getXAndYPos:function (e) {
 		var ret = {
