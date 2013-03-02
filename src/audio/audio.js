@@ -1,3 +1,4 @@
+// TODO try mp3 files
 ludo.audio.Audio = new Class({
     soundElCreated:false,
     html5:false,
@@ -21,8 +22,6 @@ ludo.audio.Audio = new Class({
 
         }
         el.src = '#';
-
-
     },
 
     supportsHTML5Audio:function () {
@@ -37,12 +36,10 @@ ludo.audio.Audio = new Class({
         if (!this.soundElCreated) {
             this.createBgSound();
         }
-
         this.bgSound.src = file;
         this.bgSound.pause();
         this.bgSound.play();
         this.bgSound.currentTime -= 30.0;
-
     }
 });
 
