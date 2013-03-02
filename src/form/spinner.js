@@ -82,15 +82,15 @@ ludo.form.Spinner = new Class({
         });
         this.els.upArrow = this._createContainer({
             cls:'ludo-spinbox-arrow-up',
-            renderTo:p
+            renderTo:this.els.arrowsContainer
         });
         this.els.downArrow = this._createContainer({
             cls:'ludo-spinbox-arrow-down',
-            renderTo:p
+            renderTo:this.els.arrowsContainer
         });
         this.els.arrowSeparator = this._createContainer({
             cls:'ludo-spinbox-arrow-separator',
-            renderTo:p
+            renderTo:this.els.arrowsContainer
         });
     },
 
@@ -199,6 +199,7 @@ ludo.form.Spinner = new Class({
         if (this.stretchField) {
             width -= 11;
         }
+        width++;
         this.els.spinnerContainer.setStyle('width', width);
     },
     _createEvents:function () {

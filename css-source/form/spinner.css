@@ -2,6 +2,9 @@
 	border:1px solid #7F9DB9;
 	padding-right: 10px;	/* The place needed for the arrows */
 }
+.ludo-spinbox-container input{
+    padding-right:3px;
+}
 .ludo-spinbox-arrows-container{
 	background-color: #c9d8fc;
 	border-left:1px solid #7F9DB9;

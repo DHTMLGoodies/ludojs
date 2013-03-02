@@ -1,4 +1,4 @@
-/* Generated Fri Mar 1 15:58:19 CET 2013 */
+/* Generated Sat Mar 2 3:02:59 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -2573,9 +2573,7 @@ ludo.canvas.Canvas = new Class({
 	 * @optional
 	 */
 	setViewBox:function (width, height, x, y) {
-		x = x || 0;
-		y = y || 0;
-		this.set('viewBox', x + ' ' + y + ' ' + width + ' ' + height);
+		this.set('viewBox', (x || 0) + ' ' + (y || 0) + ' ' + width + ' ' + height);
 	},
 
 	createTitle:function(){
@@ -4879,8 +4877,7 @@ ludo.View = new Class({
 
 	getEventCopyFn:function (eventName) {
 		return function () {
-			var args = Array.prototype.slice.call(arguments);
-			this.fireEvent.call(this, eventName, args);
+			this.fireEvent.call(this, eventName, Array.prototype.slice.call(arguments));
 		}.bind(this)
 	},
 
@@ -4971,18 +4968,6 @@ ludo.View = new Class({
 
 	setParentComponent:function (parentComponent) {
 		this.parentComponent = parentComponent;
-	},
-
-	/**
-	 * Return reference to parent DOM element for this component
-	 * @method getParentEl
-	 * @return DOMElement el
-	 */
-	getParentEl:function () {
-		if (this.parentComponent) {
-			return this.parentComponent.getBody();
-		}
-		return this.renderTo;
 	},
 
 	_createDOM:function () {
@@ -24007,15 +23992,15 @@ ludo.form.Spinner = new Class({
         });
         this.els.upArrow = this._createContainer({
             cls:'ludo-spinbox-arrow-up',
-            renderTo:p
+            renderTo:this.els.arrowsContainer
         });
         this.els.downArrow = this._createContainer({
             cls:'ludo-spinbox-arrow-down',
-            renderTo:p
+            renderTo:this.els.arrowsContainer
         });
         this.els.arrowSeparator = this._createContainer({
             cls:'ludo-spinbox-arrow-separator',
-            renderTo:p
+            renderTo:this.els.arrowsContainer
         });
     },
 
@@ -24124,6 +24109,7 @@ ludo.form.Spinner = new Class({
         if (this.stretchField) {
             width -= 11;
         }
+        width++;
         this.els.spinnerContainer.setStyle('width', width);
     },
     _createEvents:function () {
