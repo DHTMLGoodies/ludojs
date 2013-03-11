@@ -1,4 +1,4 @@
-/* Generated Mon Mar 11 11:13:50 CET 2013 */
+/* Generated Mon Mar 11 12:05:04 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -2573,9 +2573,7 @@ ludo.canvas.Canvas = new Class({
 	 * @optional
 	 */
 	setViewBox:function (width, height, x, y) {
-		x = x || 0;
-		y = y || 0;
-		this.set('viewBox', x + ' ' + y + ' ' + width + ' ' + height);
+		this.set('viewBox', (x || 0) + ' ' + (y || 0) + ' ' + width + ' ' + height);
 	},
 
 	createTitle:function(){
@@ -13797,13 +13795,13 @@ ludo.Scroller = new Class({
 
     show:function () {
         this.active = true;
-        this.els.el.setStyle('display', '');
+        this.els.el.style.display='';
     },
 
     hide:function () {
         this.active = false;
         this.scrollTo(0);
-        this.els.el.setStyle('display', 'none');
+        this.els.el.style.display='none';
     }
 });/* ../ludojs/src/grid/grid-header.js */
 /**
@@ -18914,7 +18912,6 @@ ludo.model.Model = new Class({
 		}
 		this.fireEvent('update', this.currentRecord);
         this.updateViews();
-
 	}
 });
 /* ../ludojs/src/menu/menu-handler.js */
@@ -19079,21 +19076,22 @@ ludo.menu.MenuItem = new Class({
 	action:undefined,
 	record:undefined,
 
+    /**
+     * Fire an event with this name on click
+     * @config {String} fire
+     * @default undefined
+     */
+    fire:undefined,
+
 	ludoConfig:function (config) {
 		if (config.children) {
 			this.menuItems = config.children;
 			config.children = [];
 		}
+        this.setConfigParams(config, ['menuDirection','icon','record','value','label','action','disabled','fire']);
+
 		this.menuDirection = config.menuDirection || this.menuDirection;
 		config.html = config.html || config.label;
-		this.icon = config.icon || this.icon;
-		this.record = config.record || this.record;
-		this.value = config.value || this.value;
-		this.label = config.label || this.label;
-		this.action = config.action || this.action;
-		if (config.disabled !== undefined) {
-			this.disabled = config.disabled;
-		}
 		if (config.html === '|') {
 			this.spacer = true;
 		}
@@ -19171,6 +19169,7 @@ ludo.menu.MenuItem = new Class({
 		}
 		this.getEl().addClass('ludo-menu-item-down');
 		this.fireEvent('click', this);
+        if(this.fire)this.fireEvent(this.fire, this);
 		var rootMenu = this.getRootMenuComponent();
 		if (rootMenu) {
 			rootMenu.click(this);
@@ -19549,7 +19548,15 @@ ludo.menu.Context = new Class({
 	layout:{
 		width:'wrap'
 	},
+    // TODO change this code to record:{ keys that has to match }, example: record:{ type:'country' }
 
+    /**
+     Show context menu for records with these properties
+     @config {Object} record
+     @default undefined
+     @example
+     */
+    record:undefined,
 	/**
 	 Show context menu only for records of a specific type. The component creating the context
 	 menu has to have a getRecordByDOM method in order for this to work. These methods are already
@@ -19567,9 +19574,8 @@ ludo.menu.Context = new Class({
         this.renderTo = document.body;
 		config.els = config.els || {};
 		this.parent(config);
-		this.selector = config.selector || this.selector;
-		this.recordType = config.recordType || this.recordType;
-		this.component = config.component;
+        this.setConfigParams(config, ['selector','recordType','record', 'component']);
+        if(this.recordType)this.record = { type: this.recordType };
 	},
 
 	ludoDOM:function () {
@@ -19603,22 +19609,20 @@ ludo.menu.Context = new Class({
 	},
 
 	show:function (e) {
-
 		if (this.selector) {
 			var domEl = this.getValidDomElement(e.target);
-
 			if (!domEl) {
 				return undefined;
 			}
 			this.fireEvent('selectorclick', domEl);
 		}
-		if (this.recordType) {
-			var rec = this.component.getRecordByDOM(e.target);
-			if (!rec || rec.type !== this.recordType) {
-				return undefined;
-			}
-			this.selectedRecord = rec;
-		}
+        if (this.record){
+            var r = this.component.getRecordByDOM(e.target);
+            if(!r)return undefined;
+            if(this.isContextMenuFor(r)){
+                this.selectedRecord = r;
+            }
+        }
 		this.parent();
 		if (!this.getParent()) {
 			var el = this.getEl();
@@ -19628,6 +19632,14 @@ ludo.menu.Context = new Class({
 		}
 		return false;
 	},
+
+    isContextMenuFor:function(record){
+        for(var key in this.record){
+            if(this.record.hasOwnProperty(key))
+                if(!record[key] || this.record[key] !== record[key])return false;
+        }
+        return true;
+    },
 
 	getXAndYPos:function (e) {
 		var ret = {
@@ -23994,15 +24006,15 @@ ludo.form.Spinner = new Class({
         });
         this.els.upArrow = this._createContainer({
             cls:'ludo-spinbox-arrow-up',
-            renderTo:p
+            renderTo:this.els.arrowsContainer
         });
         this.els.downArrow = this._createContainer({
             cls:'ludo-spinbox-arrow-down',
-            renderTo:p
+            renderTo:this.els.arrowsContainer
         });
         this.els.arrowSeparator = this._createContainer({
             cls:'ludo-spinbox-arrow-separator',
-            renderTo:p
+            renderTo:this.els.arrowsContainer
         });
     },
 
@@ -24111,6 +24123,7 @@ ludo.form.Spinner = new Class({
         if (this.stretchField) {
             width -= 11;
         }
+        width++;
         this.els.spinnerContainer.setStyle('width', width);
     },
     _createEvents:function () {

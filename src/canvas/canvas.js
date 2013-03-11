@@ -99,9 +99,7 @@ ludo.canvas.Canvas = new Class({
 	 * @optional
 	 */
 	setViewBox:function (width, height, x, y) {
-		x = x || 0;
-		y = y || 0;
-		this.set('viewBox', x + ' ' + y + ' ' + width + ' ' + height);
+		this.set('viewBox', (x || 0) + ' ' + (y || 0) + ' ' + width + ' ' + height);
 	},
 
 	createTitle:function(){

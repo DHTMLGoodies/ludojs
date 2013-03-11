@@ -1,4 +1,4 @@
-/* Generated Mon Mar 11 11:13:50 CET 2013 */
+/* Generated Mon Mar 11 12:05:04 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -2026,6 +2026,9 @@ div.ludo-menu-menu label{
 .ludo-spinbox-container{
 	border:1px solid #7F9DB9;
 	padding-right: 10px;	/* The place needed for the arrows */
+}
+.ludo-spinbox-container input{
+    padding-right:3px;
 }
 .ludo-spinbox-arrows-container{
 	background-color: #c9d8fc;

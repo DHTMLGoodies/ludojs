@@ -481,6 +481,5 @@ ludo.model.Model = new Class({
 		}
 		this.fireEvent('update', this.currentRecord);
         this.updateViews();
-
 	}
 });
