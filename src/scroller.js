@@ -198,12 +198,12 @@ ludo.Scroller = new Class({
 
     show:function () {
         this.active = true;
-        this.els.el.setStyle('display', '');
+        this.els.el.style.display='';
     },
 
     hide:function () {
         this.active = false;
         this.scrollTo(0);
-        this.els.el.setStyle('display', 'none');
+        this.els.el.style.display='none';
     }
 });

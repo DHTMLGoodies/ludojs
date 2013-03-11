@@ -1,4 +1,4 @@
-/* Generated Fri Mar 1 15:58:19 CET 2013 */
+/* Generated Mon Mar 11 11:13:50 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -4879,8 +4879,7 @@ ludo.View = new Class({
 
 	getEventCopyFn:function (eventName) {
 		return function () {
-			var args = Array.prototype.slice.call(arguments);
-			this.fireEvent.call(this, eventName, args);
+			this.fireEvent.call(this, eventName, Array.prototype.slice.call(arguments));
 		}.bind(this)
 	},
 
@@ -4971,18 +4970,6 @@ ludo.View = new Class({
 
 	setParentComponent:function (parentComponent) {
 		this.parentComponent = parentComponent;
-	},
-
-	/**
-	 * Return reference to parent DOM element for this component
-	 * @method getParentEl
-	 * @return DOMElement el
-	 */
-	getParentEl:function () {
-		if (this.parentComponent) {
-			return this.parentComponent.getBody();
-		}
-		return this.renderTo;
 	},
 
 	_createDOM:function () {
