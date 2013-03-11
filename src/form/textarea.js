@@ -18,23 +18,18 @@ ludo.form.Textarea = new Class({
 
     resizeDOM:function () {
         this.parent();
-        if (this.layout && this.layout.weight) {
-            if (!this.label) {
-                var w = this.getInnerWidthOfBody();
-                if (w <= 0)return;
-                this.els.formEl.setStyle('width', this.getInnerWidthOfBody() + 'px');
-            }
-            var parentComponent = this.getParent();
-            var height;
-            if ((parentComponent && parentComponent.layout.type === 'fill')) {
-                height = parentComponent.getInnerHeightOfBody();
-            } else {
-                height = this.getHeight();
-            }
+        if (!this.label) {
+            var w = this.getInnerWidthOfBody();
+            if (w <= 0)return;
+            this.els.formEl.setStyle('width', w + 'px');
+        }
 
-            height -= (ludo.dom.getMBPH(this.getEl()) + ludo.dom.getMBPH(this.getBody()) + ludo.dom.getMBPH(this.els.formEl) + 1);
+        if (this.layout && this.layout.weight) {
+            var height = this.getEl().offsetHeight;
+            // TODO refactor the static value 6
+            height -= (ludo.dom.getMBPH(this.getEl()) + ludo.dom.getMBPH(this.getBody()) + ludo.dom.getMBPH(this.els.formEl.parentNode) + 2);
             if (height > 0) {
-                this.els.formEl.setStyle('height', height);
+                this.els.formEl.style.height = height+'px';
             }
         }
     }

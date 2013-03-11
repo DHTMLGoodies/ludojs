@@ -88,8 +88,8 @@ ludo.form.Text = new Class({
 		if (this.validateKeyStrokes) {
 			el.addEvent('keydown', this.validateKey.bind(this));
 		}
-
-		this.getFormEl().addEvent('keyup', this.sendKeyEvent.bind(this));
+        ludo.dom.addClass(el.parentNode, 'ludo-form-text-element');
+		el.addEvent('keyup', this.sendKeyEvent.bind(this));
 	},
 
 	sendKeyEvent:function(){

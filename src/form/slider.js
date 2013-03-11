@@ -7,11 +7,11 @@
 ludo.form.Slider = new Class({
     Extends:ludo.form.LabelElement,
     cssSignature:'ludo-form-slider',
-
+    type:'form.Slider',
     fieldTpl:['<table ','cellpadding="0" cellspacing="0" border="0" width="100%">',
         '<tbody>',
         '<tr class="input-row">',
-        '<td class="label-cell"><label></label></td>',
+        '<td class="label-cell"><label class="input-label"></label></td>',
         '<td class="input-cell"></td>',
         '<td class="suffix-cell" style="display:none"></td>',
         '<td class="help-cell" style="display:none"></td>',
@@ -78,15 +78,9 @@ ludo.form.Slider = new Class({
         this.moveSliderBackgrounds();
     },
 
-
-
     moveSliderBackgrounds:function () {
         var offset = Math.round(this.getHandleSize() / 2);
-
-        var css = ['top', 'bottom'];
-        if (this.getDirection() == 'horizontal') {
-            css = ['left', 'right'];
-        }
+        var css = this.getDirection() == 'horizontal' ? ['left','right'] : ['top','bottom'];
         this.els['bgfirst'].style[css[0]] = offset + 'px';
         this.els['bglast'].style[css[1]] = offset + 'px';
     },

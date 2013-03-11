@@ -160,7 +160,7 @@ ludo.form.File = new Class({
 		var cell = new Element('td');
 		cell.width = this.buttonWidth;
 		cell.style.textAlign = 'right';
-		this.els.inputRow.adopt(cell);
+		this.getInputRow().adopt(cell);
 		cell.adopt(this.getFormEl());
 
 		var btn = new ludo.form.Button({

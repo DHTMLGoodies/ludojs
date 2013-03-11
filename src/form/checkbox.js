@@ -34,7 +34,7 @@ ludo.form.Checkbox = new Class({
         '</tr>',
         '<tr class="input-row">',
         '<td class="input-cell" style="width:30px"></td>',
-        '<td><label></label></td>',
+        '<td><label class="input-label"></label></td>',
         '<td class="suffix-cell" style="display:none"><label></label></td>',
         '</tr>',
         '</tbody>',

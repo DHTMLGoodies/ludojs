@@ -4,6 +4,22 @@ $pageTitle = 'Example of ludo form components';
 require_once("../includes/demo-header.php");
 ?>
 <body>
+<style type="text/css">
+.ludo-form-text-element input, .ludo-form-text-element textarea{
+    border:0;
+    padding:0;
+    outline: none;
+}
+.ludo-form-text-element{
+    border:1px solid #ccc;
+    background-color:#FFF;
+    padding:1px;
+}
+.input-row .input-cell{
+    margin-top:1px;
+    margin-bottom:1px;
+}
+</style>
 <script type="text/javascript" src="../../src/form/slider.js"></script>
 <script type="text/javascript" class="source-code">
 
@@ -16,7 +32,7 @@ require_once("../includes/demo-header.php");
         height:400,
         width:650,
         left:50,
-        top:100,
+        top:30,
 
         children:[
             {

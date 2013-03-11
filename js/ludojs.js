@@ -1,4 +1,4 @@
-/* Generated Mon Mar 11 15:20:22 CET 2013 */
+/* Generated Mon Mar 11 23:12:24 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -21607,8 +21607,8 @@ ludo.form.LabelElement = new Class({
     fieldTpl:['<table ','cellpadding="0" cellspacing="0" border="0" width="100%">',
         '<tbody>',
         '<tr class="input-row">',
-        '<td class="label-cell"><label></label></td>',
-        '<td class="input-cell"></td>',
+        '<td class="label-cell"><label class="input-label"></label></td>',
+        '<td><div class="input-cell"></div></td>',
         '<td class="invalid-cell"><div class="invalid-cell-div"></div></td>',
         '<td class="suffix-cell" style="display:none"><label></label></td>',
         '<td class="help-cell" style="display:none"></td>',
@@ -21648,10 +21648,7 @@ ludo.form.LabelElement = new Class({
     },
 
     getLabelDOM:function () {
-        if (this.els.label === undefined) {
-            this.els.label = this.getInputRow().getElements('label')[0];
-        }
-        return this.els.label;
+        return this.getCell('.input-label','label');
     },
 
     addInput:function () {
@@ -21672,8 +21669,6 @@ ludo.form.LabelElement = new Class({
 			this.els.formEl.parentNode.style.width = (this.fieldWidth  + ludo.dom.getMBPW(this.els.formEl)) + 'px';
 		}
         this.els.formEl.id = this.getFormElId();
-
-
     },
 
 	getSuffixCell:function(){
@@ -21686,11 +21681,9 @@ ludo.form.LabelElement = new Class({
 
     getInputRow:function () {
 		return this.getCell('.input-row','inputRow');
-
     },
 
 	getCell:function(selector, cacheKey){
-		cacheKey = cacheKey || selector.substr(1);
 		if(!this.els[cacheKey]){
 			this.els[cacheKey] = this.getBody().getElement(selector);
 		}
@@ -21720,7 +21713,6 @@ ludo.form.LabelElement = new Class({
             if (width > 0 && !isNaN(width)) {
                 this.formFieldWidth = width;
                 this.getFormEl().style.width = width + 'px';
-
             }
         }
     }
@@ -23006,8 +22998,8 @@ ludo.form.Text = new Class({
 		if (this.validateKeyStrokes) {
 			el.addEvent('keydown', this.validateKey.bind(this));
 		}
-
-		this.getFormEl().addEvent('keyup', this.sendKeyEvent.bind(this));
+        ludo.dom.addClass(el.parentNode, 'ludo-form-text-element');
+		el.addEvent('keyup', this.sendKeyEvent.bind(this));
 	},
 
 	sendKeyEvent:function(){
@@ -23131,23 +23123,18 @@ ludo.form.Textarea = new Class({
 
     resizeDOM:function () {
         this.parent();
-        if (this.layout && this.layout.weight) {
-            if (!this.label) {
-                var w = this.getInnerWidthOfBody();
-                if (w <= 0)return;
-                this.els.formEl.setStyle('width', this.getInnerWidthOfBody() + 'px');
-            }
-            var parentComponent = this.getParent();
-            var height;
-            if ((parentComponent && parentComponent.layout.type === 'fill')) {
-                height = parentComponent.getInnerHeightOfBody();
-            } else {
-                height = this.getHeight();
-            }
+        if (!this.label) {
+            var w = this.getInnerWidthOfBody();
+            if (w <= 0)return;
+            this.els.formEl.setStyle('width', w + 'px');
+        }
 
-            height -= (ludo.dom.getMBPH(this.getEl()) + ludo.dom.getMBPH(this.getBody()) + ludo.dom.getMBPH(this.els.formEl) + 1);
+        if (this.layout && this.layout.weight) {
+            var height = this.getEl().offsetHeight;
+            // TODO refactor the static value 6
+            height -= (ludo.dom.getMBPH(this.getEl()) + ludo.dom.getMBPH(this.getBody()) + ludo.dom.getMBPH(this.els.formEl.parentNode) + 2);
             if (height > 0) {
-                this.els.formEl.setStyle('height', height);
+                this.els.formEl.style.height = height+'px';
             }
         }
     }
@@ -23187,11 +23174,8 @@ ludo.form.DisplayField = new Class({
 	},
 
 	setTextContent:function(value){
-		if (this.tpl) {
-			this.getFormEl().set('html', this.getTplParser().getCompiled({ value:value }));
-		} else {
-			this.getFormEl().set('html', value ? value : '');
-		}
+        var html = this.tpl ? this.getTplParser().getCompiled({ value:value }) : value ? value : '';
+        this.getFormEl().set('html', html);
 	},
 
 	isValid:function () {
@@ -23238,7 +23222,7 @@ ludo.form.Checkbox = new Class({
         '</tr>',
         '<tr class="input-row">',
         '<td class="input-cell" style="width:30px"></td>',
-        '<td><label></label></td>',
+        '<td><label class="input-label"></label></td>',
         '<td class="suffix-cell" style="display:none"><label></label></td>',
         '</tr>',
         '</tbody>',
@@ -25351,7 +25335,7 @@ ludo.form.File = new Class({
 		var cell = new Element('td');
 		cell.width = this.buttonWidth;
 		cell.style.textAlign = 'right';
-		this.els.inputRow.adopt(cell);
+		this.getInputRow().adopt(cell);
 		cell.adopt(this.getFormEl());
 
 		var btn = new ludo.form.Button({
@@ -25628,11 +25612,11 @@ ludo.form.File = new Class({
 ludo.form.Slider = new Class({
     Extends:ludo.form.LabelElement,
     cssSignature:'ludo-form-slider',
-
+    type:'form.Slider',
     fieldTpl:['<table ','cellpadding="0" cellspacing="0" border="0" width="100%">',
         '<tbody>',
         '<tr class="input-row">',
-        '<td class="label-cell"><label></label></td>',
+        '<td class="label-cell"><label class="input-label"></label></td>',
         '<td class="input-cell"></td>',
         '<td class="suffix-cell" style="display:none"></td>',
         '<td class="help-cell" style="display:none"></td>',
@@ -25699,15 +25683,9 @@ ludo.form.Slider = new Class({
         this.moveSliderBackgrounds();
     },
 
-
-
     moveSliderBackgrounds:function () {
         var offset = Math.round(this.getHandleSize() / 2);
-
-        var css = ['top', 'bottom'];
-        if (this.getDirection() == 'horizontal') {
-            css = ['left', 'right'];
-        }
+        var css = this.getDirection() == 'horizontal' ? ['left','right'] : ['top','bottom'];
         this.els['bgfirst'].style[css[0]] = offset + 'px';
         this.els['bglast'].style[css[1]] = offset + 'px';
     },

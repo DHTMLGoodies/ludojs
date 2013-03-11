@@ -10,8 +10,8 @@ ludo.form.LabelElement = new Class({
     fieldTpl:['<table ','cellpadding="0" cellspacing="0" border="0" width="100%">',
         '<tbody>',
         '<tr class="input-row">',
-        '<td class="label-cell"><label></label></td>',
-        '<td class="input-cell"></td>',
+        '<td class="label-cell"><label class="input-label"></label></td>',
+        '<td><div class="input-cell"></div></td>',
         '<td class="invalid-cell"><div class="invalid-cell-div"></div></td>',
         '<td class="suffix-cell" style="display:none"><label></label></td>',
         '<td class="help-cell" style="display:none"></td>',
@@ -51,10 +51,7 @@ ludo.form.LabelElement = new Class({
     },
 
     getLabelDOM:function () {
-        if (this.els.label === undefined) {
-            this.els.label = this.getInputRow().getElements('label')[0];
-        }
-        return this.els.label;
+        return this.getCell('.input-label','label');
     },
 
     addInput:function () {
@@ -75,8 +72,6 @@ ludo.form.LabelElement = new Class({
 			this.els.formEl.parentNode.style.width = (this.fieldWidth  + ludo.dom.getMBPW(this.els.formEl)) + 'px';
 		}
         this.els.formEl.id = this.getFormElId();
-
-
     },
 
 	getSuffixCell:function(){
@@ -89,11 +84,9 @@ ludo.form.LabelElement = new Class({
 
     getInputRow:function () {
 		return this.getCell('.input-row','inputRow');
-
     },
 
 	getCell:function(selector, cacheKey){
-		cacheKey = cacheKey || selector.substr(1);
 		if(!this.els[cacheKey]){
 			this.els[cacheKey] = this.getBody().getElement(selector);
 		}

@@ -1,4 +1,4 @@
-/* Generated Mon Mar 11 15:20:22 CET 2013 */
+/* Generated Mon Mar 11 23:12:24 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -1998,7 +1998,26 @@ input.ludo-form-el-invalid{
 }
 div.ludo-menu-menu label{
    font-size:11px;
-}/* ../ludojs/css-source/form/radio.css */
+}
+
+.ludo-form-text-element input, .ludo-form-text-element textarea{
+    border:0;
+    padding:0;
+    outline: none;
+}
+.ludo-form-text-element{
+    border:1px solid #ccc;
+    background-color:#FFF;
+    padding:1px;
+}
+
+.input-row .input-cell{
+    margin-top:1px;
+    margin-bottom:1px;
+    padding-top:1px;
+    padding-bottom:1px;
+}
+/* ../ludojs/css-source/form/radio.css */
 .ludo-radio-image{
     cursor: pointer;
     width: 60px;

@@ -33,11 +33,8 @@ ludo.form.DisplayField = new Class({
 	},
 
 	setTextContent:function(value){
-		if (this.tpl) {
-			this.getFormEl().set('html', this.getTplParser().getCompiled({ value:value }));
-		} else {
-			this.getFormEl().set('html', value ? value : '');
-		}
+        var html = this.tpl ? this.getTplParser().getCompiled({ value:value }) : value ? value : '';
+        this.getFormEl().set('html', html);
 	},
 
 	isValid:function () {
