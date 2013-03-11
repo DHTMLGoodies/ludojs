@@ -13,7 +13,7 @@ ludo.form.LabelElement = new Class({
         '<td class="label-cell"><label></label></td>',
         '<td class="input-cell"></td>',
         '<td class="invalid-cell"><div class="invalid-cell-div"></div></td>',
-        '<td class="suffix-cell" style="display:none"></td>',
+        '<td class="suffix-cell" style="display:none"><label></label></td>',
         '<td class="help-cell" style="display:none"></td>',
         '</tr>',
         '</tbody>',
@@ -35,10 +35,19 @@ ludo.form.LabelElement = new Class({
             this.getLabelDOM().set('html', this.label + this.labelSuffix);
             this.els.label.setProperty('for', this.getFormElId());
         }
+		if(this.suffix){
+			var s = this.getSuffixCell();
+			s.style.display='';
+			var label = s.getElement('label');
+			if(label){
+				label.set('html', this.suffix);
+				label.setProperty('for', this.getFormElId());
+			}
+		}
     },
 
     setWidthOfLabel:function () {
-        this.getLabelDOM().getParent().setStyle('width', this.labelWidth);
+		this.getLabelDOM().parentNode.style.width = this.labelWidth + 'px';
     },
 
     getLabelDOM:function () {
@@ -53,31 +62,43 @@ ludo.form.LabelElement = new Class({
             return;
         }
         this.els.formEl = new Element(this.inputTag);
+
         if (this.inputType) {
             this.els.formEl.setProperty('type', this.inputType);
         }
         if (this.maxLength) {
             this.els.formEl.setProperty('maxlength', this.maxLength);
         }
-		if(this.fieldWidth)this.els.formEl.style.width = this.fieldWidth + 'px';
+		this.getInputCell().adopt(this.els.formEl);
+		if(this.fieldWidth){
+			this.els.formEl.style.width = this.fieldWidth + 'px';
+			this.els.formEl.parentNode.style.width = (this.fieldWidth  + ludo.dom.getMBPW(this.els.formEl)) + 'px';
+		}
         this.els.formEl.id = this.getFormElId();
 
-        this.getInputCell().adopt(this.els.formEl);
+
     },
 
+	getSuffixCell:function(){
+		return this.getCell('.suffix-cell','labelSuffix');
+	},
+
     getInputCell:function () {
-        if (this.els.cellInput === undefined) {
-            this.els.cellInput = this.getInputRow().getElement('.input-cell');
-        }
-        return this.els.cellInput;
+		return this.getCell('.input-cell','cellInput');
     },
 
     getInputRow:function () {
-        if (this.els.inputRow === undefined) {
-            this.els.inputRow = this.getBody().getElement('.input-row');
-        }
-        return this.els.inputRow;
+		return this.getCell('.input-row','inputRow');
+
     },
+
+	getCell:function(selector, cacheKey){
+		cacheKey = cacheKey || selector.substr(1);
+		if(!this.els[cacheKey]){
+			this.els[cacheKey] = this.getBody().getElement(selector);
+		}
+		return this.els[cacheKey];
+	},
 
     resizeDOM:function () {
         this.parent();
@@ -97,6 +118,7 @@ ludo.form.LabelElement = new Class({
                 }
             }
             if (this.label)width -= this.labelWidth;
+			if (this.suffix)width -= this.getSuffixCell().offsetWidth;
             width -= 10;
             if (width > 0 && !isNaN(width)) {
                 this.formFieldWidth = width;

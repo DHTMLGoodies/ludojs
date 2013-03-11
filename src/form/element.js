@@ -6,7 +6,19 @@
  */
 ludo.form.Element = new Class({
     Extends:ludo.View,
+	/**
+	 * Form element label
+	 * @config {String} label
+	 * @default ''
+	 */
     label:'',
+	/**
+	 * Label after input field
+	 * @config {String} suffix
+	 *
+	 */
+	suffix:'',
+
     value:'',
     remote:{
         isJSON:true
@@ -136,7 +148,7 @@ ludo.form.Element = new Class({
         this.fieldWidth = defaultConfig.fieldWidth || this.fieldWidth;
         this.elementId = defaultConfig.elementId || this.elementId;
 
-        var keys = ['label', 'formCss', 'validator', 'stretchField', 'required', 'selectOnFocus', 'twin', 'disabled', 'labelWidth', 'fieldWidth',
+        var keys = ['label', 'suffix', 'formCss', 'validator', 'stretchField', 'required', 'selectOnFocus', 'twin', 'disabled', 'labelWidth', 'fieldWidth',
             'elementId', 'value', 'data'];
         this.setConfigParams(config, keys);
 

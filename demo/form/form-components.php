@@ -48,7 +48,7 @@ require_once("../includes/demo-header.php");
                     { type:'form.Checkbox', label:'I agree'},
                     { type:'form.Checkbox', image:'../images/radio-image-bg.png', label:'Checkbox with image'},
                     { type:'form.Slider',  id:'mySlider', direction:'horizontal', label:'form.Slider', value:10, minValue:0, maxValue:255 },
-                    { type:'form.Number', label:'form.Number(linked)', fieldWidth:50, maxLength:3}
+                    { type:'form.Number', label:'form.Number(linked)', fieldWidth:50, maxLength:3, suffix:'RGB Color', linkWith:'mySlider'}
 
                 ]}
         ],
