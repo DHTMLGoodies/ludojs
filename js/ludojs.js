@@ -1,4 +1,4 @@
-/* Generated Tue Mar 12 4:56:06 CET 2013 */
+/* Generated Tue Mar 12 14:45:24 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -23130,17 +23130,23 @@ ludo.form.Textarea = new Class({
         this.ucWords = false;
     },
 
+    ludoRendered:function(){
+        this.parent();
+        this.els.formEl.style.paddingRight = 0;
+    },
     resizeDOM:function () {
         this.parent();
         if (!this.label) {
             var w = this.getInnerWidthOfBody();
             if (w <= 0)return;
             this.els.formEl.setStyle('width', w + 'px');
+        }else{
+            var p = this.els.formEl.parentNode;
+            this.els.formEl.style.width = (p.offsetWidth - ludo.dom.getBW(p) - ludo.dom.getPW(p)) + 'px';
         }
 
         if (this.layout && this.layout.weight) {
             var height = this.getEl().offsetHeight;
-            // TODO refactor the static value 6
             height -= (ludo.dom.getMBPH(this.getEl()) + ludo.dom.getMBPH(this.getBody()) + ludo.dom.getMBPH(this.els.formEl.parentNode) + 2);
             if (height > 0) {
                 this.els.formEl.style.height = height+'px';
@@ -24436,6 +24442,12 @@ ludo.form.Select = new Class({
         option.set('value', value);
         option.set('text', text);
         this.getFormEl().appendChild(option);
+    },
+
+    resizeDOM:function(){
+        this.parent();
+        var p = this.els.formEl.parentNode;
+        this.els.formEl.style.width = (p.offsetWidth - ludo.dom.getBW(p) - ludo.dom.getPW(p)) + 'px';
     }
 });/* ../ludojs/src/form/filter-text.js */
 /**

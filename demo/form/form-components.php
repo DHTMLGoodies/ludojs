@@ -6,6 +6,7 @@ require_once("../includes/demo-header.php");
 <body>
 <script type="text/javascript" src="../../src/form/combo.js"></script>
 <script type="text/javascript" src="../../src/menu/button.js"></script>
+<script type="text/javascript" src="../../src/form/select.js"></script>
 <style type="text/css">
 .ludo-form-text-element input, .ludo-form-text-element textarea{
     border:0;
@@ -22,6 +23,7 @@ require_once("../includes/demo-header.php");
 </style>
 <script type="text/javascript" src="../../src/form/slider.js"></script>
 <script type="text/javascript" src="../../src/form/date.js"></script>
+<script type="text/javascript" src="../../src/form/textarea.js"></script>
 <script type="text/javascript" class="source-code">
 
     new ludo.Window({
@@ -60,11 +62,18 @@ require_once("../includes/demo-header.php");
                     { type:'form.Text', 'label':'Phone', stretchField:true, name:'phone', value:'', required:true },
                     { type:'form.Text', minLength:4, 'label':'Zip code', stretchField:true, name:'zipcode', value:'' },
                     { type:'form.Text', name:'city', stretchField:true, 'label':'City', value:'' },
+                    { type:'form.Select', name:'country', stretchField:true, 'label':'Country',
+                        valueKey:'id',textKey:'name',
+                        emptyItem:{
+                            id:'',name:'Select country'
+                        },
+                    dataSource:{
+                        resource:'Countries',service:'read',url:'../controller.php'
+                    }},
                     { type:'form.Date', name:'birth', readonly:true, id:'birth', stretchField:true, 'label':'Born'},
                     { type:'form.File', name:'picture', label:'Picture', value:'', height:25 },
                     { type:'form.DisplayField', label:'form.DisplayField', value:'My value'},
                     { type:'form.Checkbox', label:'I agree'},
-                    { type:'form.Checkbox', image:'../images/radio-image-bg.png', label:'Checkbox with image'},
                     { type:'form.Slider',  id:'mySlider', direction:'horizontal', label:'form.Slider', value:10, minValue:0, maxValue:255 },
                     { type:'form.Number', label:'form.Number(linked)', minValue:0,maxValue:255, fieldWidth:50, maxLength:3, suffix:'RGB Color', linkWith:'mySlider'}
                 ]}

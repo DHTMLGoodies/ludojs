@@ -142,5 +142,11 @@ ludo.form.Select = new Class({
         option.set('value', value);
         option.set('text', text);
         this.getFormEl().appendChild(option);
+    },
+
+    resizeDOM:function(){
+        this.parent();
+        var p = this.els.formEl.parentNode;
+        this.els.formEl.style.width = (p.offsetWidth - ludo.dom.getBW(p) - ludo.dom.getPW(p)) + 'px';
     }
 });
