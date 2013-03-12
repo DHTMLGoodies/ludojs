@@ -69,7 +69,6 @@ ludo.form.Number = new Class({
             this.getFormEl().addEvent('mousewheel', this._mouseWheel.bind(this));
         }
         this.getFormEl().addEvent('keydown', this.keyIncrement.bind(this));
-
     },
 
     keyIncrement:function(e){
@@ -78,6 +77,7 @@ ludo.form.Number = new Class({
             if(e.key === 'down')this.incrementBy(-1, e.shift);
             return false;
         }
+        return undefined;
     },
 
     blur:function(){

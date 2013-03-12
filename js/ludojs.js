@@ -1,4 +1,4 @@
-/* Generated Tue Mar 12 3:51:41 CET 2013 */
+/* Generated Tue Mar 12 4:56:06 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -23903,7 +23903,6 @@ ludo.form.Number = new Class({
             this.getFormEl().addEvent('mousewheel', this._mouseWheel.bind(this));
         }
         this.getFormEl().addEvent('keydown', this.keyIncrement.bind(this));
-
     },
 
     keyIncrement:function(e){
@@ -23912,6 +23911,7 @@ ludo.form.Number = new Class({
             if(e.key === 'down')this.incrementBy(-1, e.shift);
             return false;
         }
+        return undefined;
     },
 
     blur:function(){

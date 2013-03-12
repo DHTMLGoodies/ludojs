@@ -17,11 +17,6 @@ require_once("../includes/demo-header.php");
     background-color:#FFF;
     padding:1px;
 }
-.input-row .input-cell{
-    margin-top:1px;
-    margin-bottom:1px;
-}
-
 
 
 </style>
