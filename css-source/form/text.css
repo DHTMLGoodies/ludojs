@@ -83,6 +83,9 @@ div.ludo-menu-menu label{
     padding:0;
     outline: none;
 }
+.ludo-form-element select{
+    border:1px solid #ccc;
+}
 .ludo-form-text-element{
     border:1px solid #ccc;
     background-color:#FFF;

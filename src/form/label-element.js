@@ -72,7 +72,7 @@ ludo.form.LabelElement = new Class({
 		this.getInputCell().adopt(this.els.formEl);
 		if(this.fieldWidth){
 			this.els.formEl.style.width = this.fieldWidth + 'px';
-			this.els.formEl.parentNode.style.width = (this.fieldWidth  + ludo.dom.getMBPW(this.els.formEl)) + 'px';
+			this.getInputCell().parentNode.style.width = (this.fieldWidth  + ludo.dom.getMBPW(this.els.formEl)) + 'px';
 		}
         this.els.formEl.id = this.getFormElId();
     },

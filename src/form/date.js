@@ -32,6 +32,7 @@ ludo.form.Date = new Class({
         this.displayFormat = this.displayFormat.replace(/([a-z])/gi, '%$1');
         this.inputFormat = this.inputFormat.replace(/([a-z])/gi, '%$1');
         this.value = this.value ? ludo.util.parseDate(this.value, this.inputFormat) :undefined;
+        this.initialValue = this.constructorValue = this.value;
     },
 
     autoHide:function(focused){
@@ -50,6 +51,7 @@ ludo.form.Date = new Class({
         this.parent(child);
         this.children[0].addEvent('change', function(date){
             this.setValue(ludo.util.parseDate(date, this.inputFormat));
+            this.blur();
         }.bind(this));
     },
     ludoEvents:function(){
@@ -66,13 +68,13 @@ ludo.form.Date = new Class({
     },
 
     setFormElValue:function(value){
-        if (value && this.els.formEl && this.els.formEl.value !== value) {
-            value = ludo.util.isString(value) ? value : value.format(this.displayFormat);
+        if (this.els.formEl && this.els.formEl.value !== value) {
+            value = value ? ludo.util.isString(value) ? value : value.format(this.displayFormat) : '';
             this.els.formEl.set('value', value);
         }
         this.children[0].hide();
     },
     getValue:function(){
-        return ludo.util.parseDate(this.value, this.displayFormat).format(this.inputFormat);
+        return this.value ? ludo.util.parseDate(this.value, this.displayFormat).format(this.inputFormat) : undefined;
     }
 });

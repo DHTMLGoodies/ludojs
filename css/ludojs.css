@@ -1,4 +1,4 @@
-/* Generated Tue Mar 12 14:45:24 CET 2013 */
+/* Generated Tue Mar 12 16:54:44 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -1875,6 +1875,9 @@ div.ludo-menu-menu label{
     padding:0;
     outline: none;
 }
+.ludo-form-element select{
+    border:1px solid #ccc;
+}
 .ludo-form-text-element{
     border:1px solid #ccc;
     background-color:#FFF;
@@ -1938,17 +1941,7 @@ div.ludo-combo-menu .ludo-menu-item-selected {
     background-image: url('../images/expand-menu-horizontal.png');
 }
 
-.input-row .ludo-menu-button{
-    background-color:#eeeee8;
-
-}
-.form-combo-child{
-    border:1px solid #d7d7d7;
-    box-shadow: 2px 2px 5px 0px #555;
-}
-.input-row .ludo-menu-button-arrow{
-    border-left:1px solid #d7d7d7;
-}/* ../ludojs/css-source/form/filter-tree.css */
+/* ../ludojs/css-source/form/filter-tree.css */
 .ludo-Filter-Tree-Window{
     border-radius:0;
     padding:2px;

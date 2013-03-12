@@ -48,14 +48,3 @@ div.ludo-combo-menu .ludo-menu-item-selected {
     background-image: url('../images/expand-menu-horizontal.png');
 }
 
-.input-row .ludo-menu-button{
-    background-color:#eeeee8;
-
-}
-.form-combo-child{
-    border:1px solid #d7d7d7;
-    box-shadow: 2px 2px 5px 0px #555;
-}
-.input-row .ludo-menu-button-arrow{
-    border-left:1px solid #d7d7d7;
-}

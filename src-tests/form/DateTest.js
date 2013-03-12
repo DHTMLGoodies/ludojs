@@ -47,12 +47,59 @@ TestCase("DateTest", {
         assertEquals('1973-09-06', d.getValue());
     },
 
+    "test should set form to dirty when picking value from date picker": function(){
+        // given
+        var d = this.getDatePicker();
+
+        // when
+        d.children[0].setValue(Date.parse('1973-09-06'));
+
+        // then
+        assertTrue(d.isDirty());
+
+    },
+
+    "test should set correct date when resetting form": function(){
+        // given
+        var view = this.getDatePickerInForm();
+        var d = view.children[0];
+        // when
+        view.getFormManager().reset();
+
+        // then
+        assertUndefined(d.value);
+        assertUndefined(d.getValue());
+
+        // when
+        d.children[0].setValue(Date.parse('2011-02-02'));
+        assertEquals('2011-02-02', d.getValue());
+        view.getFormManager().reset();
+
+        // then
+        assertUndefined(d.value);
+        assertUndefined(d.getValue());
+        assertEquals('', d.getFormEl().value);
+
+    },
+
     getDatePicker:function(date){
         return new ludo.form.Date({
             value:date,
             displayFormat:'d.m.Y',
             renderTo:document.body
         });
+    },
+
+
+    getDatePickerInForm:function(date){
+        return new ludo.View({
+            children:[{
+                type:'form.Date',
+                value:date,
+                displayFormat:'d.m.Y'
+            }],
+            renderTo:document.body
+        })
     },
 
     changeByForm:function(picker, date){

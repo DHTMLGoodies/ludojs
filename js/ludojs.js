@@ -1,4 +1,4 @@
-/* Generated Tue Mar 12 14:45:24 CET 2013 */
+/* Generated Tue Mar 12 16:54:44 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -21712,7 +21712,7 @@ ludo.form.LabelElement = new Class({
 		this.getInputCell().adopt(this.els.formEl);
 		if(this.fieldWidth){
 			this.els.formEl.style.width = this.fieldWidth + 'px';
-			this.els.formEl.parentNode.style.width = (this.fieldWidth  + ludo.dom.getMBPW(this.els.formEl)) + 'px';
+			this.getInputCell().parentNode.style.width = (this.fieldWidth  + ludo.dom.getMBPW(this.els.formEl)) + 'px';
 		}
         this.els.formEl.id = this.getFormElId();
     },
@@ -22626,6 +22626,7 @@ ludo.form.Date = new Class({
         this.displayFormat = this.displayFormat.replace(/([a-z])/gi, '%$1');
         this.inputFormat = this.inputFormat.replace(/([a-z])/gi, '%$1');
         this.value = this.value ? ludo.util.parseDate(this.value, this.inputFormat) :undefined;
+        this.initialValue = this.constructorValue = this.value;
     },
 
     autoHide:function(focused){
@@ -22644,6 +22645,7 @@ ludo.form.Date = new Class({
         this.parent(child);
         this.children[0].addEvent('change', function(date){
             this.setValue(ludo.util.parseDate(date, this.inputFormat));
+            this.blur();
         }.bind(this));
     },
     ludoEvents:function(){
@@ -22660,14 +22662,14 @@ ludo.form.Date = new Class({
     },
 
     setFormElValue:function(value){
-        if (value && this.els.formEl && this.els.formEl.value !== value) {
-            value = ludo.util.isString(value) ? value : value.format(this.displayFormat);
+        if (this.els.formEl && this.els.formEl.value !== value) {
+            value = value ? ludo.util.isString(value) ? value : value.format(this.displayFormat) : '';
             this.els.formEl.set('value', value);
         }
         this.children[0].hide();
     },
     getValue:function(){
-        return ludo.util.parseDate(this.value, this.displayFormat).format(this.inputFormat);
+        return this.value ? ludo.util.parseDate(this.value, this.displayFormat).format(this.inputFormat) : undefined;
     }
 });/* ../ludojs/src/form/reset-button.js */
 /**
@@ -23133,6 +23135,7 @@ ludo.form.Textarea = new Class({
     ludoRendered:function(){
         this.parent();
         this.els.formEl.style.paddingRight = 0;
+        this.els.formEl.style.paddingTop = 0;
     },
     resizeDOM:function () {
         this.parent();
