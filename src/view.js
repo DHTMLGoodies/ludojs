@@ -481,10 +481,7 @@ ludo.View = new Class({
 		if (this.dataSource) {
 			this.getDataSource();
 			if(this.onLoadMessage){
-				new ludo.view.Loader({
-					view: this,
-					txt : this.onLoadMessage
-				});
+				this.getLoader();
 			}
 		}
 		/*
@@ -496,6 +493,16 @@ ludo.View = new Class({
 		}
 		*/
 	},
+
+    getLoader:function(){
+        if(this.loader === undefined){
+            this.loader = new ludo.view.Loader({
+                view: this,
+                txt : this.onLoadMessage
+            });
+        }
+        return this.loader;
+    },
 
 	/**
 	 * The final life cycle method. When this method is executed, the componenent (including child components)
