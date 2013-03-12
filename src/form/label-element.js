@@ -12,7 +12,7 @@ ludo.form.LabelElement = new Class({
         '<tr class="input-row">',
         '<td class="label-cell"><label class="input-label"></label></td>',
         '<td><div class="input-cell"></div></td>',
-        '<td class="invalid-cell"><div class="invalid-cell-div"></div></td>',
+        '<td class="invalid-cell" style="position:relative"><div class="invalid-cell-div"></div></td>',
         '<td class="suffix-cell" style="display:none"><label></label></td>',
         '<td class="help-cell" style="display:none"></td>',
         '</tr>',
@@ -65,6 +65,9 @@ ludo.form.LabelElement = new Class({
         }
         if (this.maxLength) {
             this.els.formEl.setProperty('maxlength', this.maxLength);
+        }
+        if(this.readonly){
+            this.els.formEl.setProperty('readonly', true);
         }
 		this.getInputCell().adopt(this.els.formEl);
 		if(this.fieldWidth){

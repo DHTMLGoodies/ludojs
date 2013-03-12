@@ -87,5 +87,19 @@ ludo.util = {
 		if(view.layoutManager)delete view.layoutManager;
 		delete view.els;
 
-	}
+	},
+
+    parseDate:function(date, format){
+        if(ludo.util.isString(date)){
+            var tokens = format.split(/[^a-z%]/gi);
+            var dateTokens = date.split(/[\.\-\/]/g);
+            var dateParts = {};
+            for(var i=0;i<tokens.length;i++){
+                dateParts[tokens[i]] = dateTokens[i];
+            }
+            dateParts['%m'] = dateParts['%m'] ? dateParts['%m'] -1 : 0;
+            return new Date(dateParts['%Y'], dateParts['%m'], dateParts['%d']);
+        }
+        return date;
+    }
 };

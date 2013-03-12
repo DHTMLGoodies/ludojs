@@ -49,7 +49,7 @@ ludo.calendar.Calendar = new Class({
         this.parent(config);
         this.setConfigParams(config, ['inputFormat','value','minDate','maxDate','date']);
         this.date = this.date || this.value;
-        this.date = this.date ?  Date.parse(config.date) : new Date();
+        this.date = this.date ?  Date.parse(this.date) : new Date();
 
         this.value = this.date;
 
@@ -99,8 +99,8 @@ ludo.calendar.Calendar = new Class({
      * @param {Date} date
      */
     setValue:function(date){
-        this.value = date;
-        this.fireEvent('change', [this.getValue(), this]);
+        this.value = Date.parse(date);
+        this.fireEvent('change', [this.value, this]);
     },
 
     /**

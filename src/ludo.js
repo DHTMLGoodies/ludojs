@@ -233,6 +233,7 @@ ludo._new = function (config) {
 
 
 ludo.FormMgrClass = new Class({
+    Extends:Events,
     formElements:{},
     elementArray:[],
     posArray:{},
@@ -273,6 +274,8 @@ ludo.FormMgrClass = new Class({
 				this.currentFocusedElement.blur();
 			}
             this.currentFocusedElement = component;
+
+            this.fireEvent('focus', component);
         }
     }
 

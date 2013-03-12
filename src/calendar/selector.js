@@ -10,7 +10,7 @@ ludo.calendar.Selector = new Class({
     date:undefined,
     minDate:undefined,
     maxDate:undefined,
-
+    overflow:'hidden',
     minDisplayedYear:undefined,
     maxDisplayedYear:undefined,
     fx:undefined,

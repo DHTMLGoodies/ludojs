@@ -11,7 +11,6 @@ ludo.calendar.Base = new Class({
     days:['M', 'T', 'W', 'T', 'F', 'S', 'S'],
     headerWeek : 'Week',
 
-
     ludoConfig:function(config){
         this.parent(config);
         this.date = new Date();

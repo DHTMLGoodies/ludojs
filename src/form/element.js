@@ -428,10 +428,8 @@ ludo.form.Element = new Class({
         if (value == this.value) {
             return;
         }
-        if (this.els.formEl && this.els.formEl.value !== value) {
-            this.els.formEl.set('value', value);
-        }
 
+        this.setFormElValue(value);
         this.value = value;
 
         this.validate();
@@ -449,6 +447,12 @@ ludo.form.Element = new Class({
             this.fireEvent('valueChange', [this.getValue(), this]);
             if (this.stateful)this.fireEvent('state');
             if (this.linkWith)this.updateLinked();
+        }
+    },
+
+    setFormElValue:function(value){
+        if (this.els.formEl && this.els.formEl.value !== value) {
+            this.els.formEl.set('value', value);
         }
     },
 

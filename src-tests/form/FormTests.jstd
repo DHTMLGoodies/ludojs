@@ -11,6 +11,8 @@ load:
   - ../../src/form/validator/*.js
   - ../../src/form/email.js
   - ../../src/form/select.js
+  - ../../src/form/combo.js
+  - ../../src/form/date.js
   - ../../src/data-source/collection.js
 
 serve:
@@ -29,6 +31,7 @@ test:
   - SearchFieldTest.js
   - PasswordTest.js
   - SelectTest.js
+  - DateTest.js
 
 plugin:
  - name: "coverage"

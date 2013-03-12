@@ -1,4 +1,4 @@
-/* Generated Mon Mar 11 23:12:24 CET 2013 */
+/* Generated Tue Mar 12 3:13:56 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -255,6 +255,7 @@ ludo._new = function (config) {
 
 
 ludo.FormMgrClass = new Class({
+    Extends:Events,
     formElements:{},
     elementArray:[],
     posArray:{},
@@ -295,6 +296,8 @@ ludo.FormMgrClass = new Class({
 				this.currentFocusedElement.blur();
 			}
             this.currentFocusedElement = component;
+
+            this.fireEvent('focus', component);
         }
     }
 
@@ -4277,7 +4280,21 @@ ludo.util = {
 		if(view.layoutManager)delete view.layoutManager;
 		delete view.els;
 
-	}
+	},
+
+    parseDate:function(date, format){
+        if(ludo.util.isString(date)){
+            var tokens = format.split(/[^a-z%]/gi);
+            var dateTokens = date.split(/[\.\-\/]/g);
+            var dateParts = {};
+            for(var i=0;i<tokens.length;i++){
+                dateParts[tokens[i]] = dateTokens[i];
+            }
+            dateParts['%m'] = dateParts['%m'] ? dateParts['%m'] -1 : 0;
+            return new Date(dateParts['%Y'], dateParts['%m'], dateParts['%d']);
+        }
+        return date;
+    }
 };/* ../ludojs/src/view/loader.js */
 ludo.view.Loader = new Class({
 	Extends: Events,
@@ -16219,10 +16236,8 @@ ludo.form.Element = new Class({
         if (value == this.value) {
             return;
         }
-        if (this.els.formEl && this.els.formEl.value !== value) {
-            this.els.formEl.set('value', value);
-        }
 
+        this.setFormElValue(value);
         this.value = value;
 
         this.validate();
@@ -16240,6 +16255,12 @@ ludo.form.Element = new Class({
             this.fireEvent('valueChange', [this.getValue(), this]);
             if (this.stateful)this.fireEvent('state');
             if (this.linkWith)this.updateLinked();
+        }
+    },
+
+    setFormElValue:function(value){
+        if (this.els.formEl && this.els.formEl.value !== value) {
+            this.els.formEl.set('value', value);
         }
     },
 
@@ -17353,7 +17374,6 @@ ludo.calendar.Base = new Class({
     days:['M', 'T', 'W', 'T', 'F', 'S', 'S'],
     headerWeek : 'Week',
 
-
     ludoConfig:function(config){
         this.parent(config);
         this.date = new Date();
@@ -17426,7 +17446,7 @@ ludo.calendar.Calendar = new Class({
         this.parent(config);
         this.setConfigParams(config, ['inputFormat','value','minDate','maxDate','date']);
         this.date = this.date || this.value;
-        this.date = this.date ?  Date.parse(config.date) : new Date();
+        this.date = this.date ?  Date.parse(this.date) : new Date();
 
         this.value = this.date;
 
@@ -17476,8 +17496,8 @@ ludo.calendar.Calendar = new Class({
      * @param {Date} date
      */
     setValue:function(date){
-        this.value = date;
-        this.fireEvent('change', [this.getValue(), this]);
+        this.value = Date.parse(date);
+        this.fireEvent('change', [this.value, this]);
     },
 
     /**
@@ -17982,7 +18002,7 @@ ludo.calendar.Selector = new Class({
     date:undefined,
     minDate:undefined,
     maxDate:undefined,
-
+    overflow:'hidden',
     minDisplayedYear:undefined,
     maxDisplayedYear:undefined,
     fx:undefined,
@@ -18394,6 +18414,7 @@ ludo.calendar.MonthYearSelector = new Class({
     },
 
     addAndRemoveOptions:function () {
+
         var min = this.date.clone().decrement('month', this.offsetOptions);
         var max = this.date.clone().increment('month', this.offsetOptions);
         if(max < this.minDisplayed || min > this.maxDisplayed){
@@ -19755,222 +19776,231 @@ ludo.menu.DropDown = new Class({
  @extends Core
  */
 ludo.menu.Button = new Class({
-	Extends: ludo.Core,
-	width:15,
+    Extends:ludo.Core,
+    width:15,
 
-	/**
-	 * Render button to this element
-	 * @attribute renderTo
-	 * @type {String}|DOMElement
-	 * @default undefined
-	 */
-	renderTo:undefined,
+    /**
+     * Render button to this element
+     * @attribute renderTo
+     * @type {String}|DOMElement
+     * @default undefined
+     */
+    renderTo:undefined,
 
-	/**
-	 * Button always visible. When false, it will be visible when mouse enters
-	 * parent DOM element and hidden when it leaves it
-	 * @attribute alwaysVisible
-	 * @type {Boolean}
-	 * default false
-	 */
-	alwaysVisible:false,
+    /**
+     * Button always visible. When false, it will be visible when mouse enters
+     * parent DOM element and hidden when it leaves it
+     * @attribute alwaysVisible
+     * @type {Boolean}
+     * default false
+     */
+    alwaysVisible:false,
 
-	/**
-	 * Position button in this region. Valid values : 'nw','ne','sw' and 'se'
-	 * @attribute region
-	 * @type String
-	 * @default 'ne'
-	 */
-	region : 'ne',
+    /**
+     * Position button in this region. Valid values : 'nw','ne','sw' and 'se'
+     * @attribute region
+     * @type String
+     * @default 'ne'
+     */
+    region:'ne',
 
-	el:undefined,
+    el:undefined,
 
-	/**
-	 * Configuration object for the object to show on click on button
-	 * @attribute menu
-	 * @type {View}
-	 * @default undefined
-	 */
-	menu:undefined,
+    /**
+     * Configuration object for the object to show on click on button
+     * @attribute menu
+     * @type {View}
+     * @default undefined
+     */
+    menu:undefined,
 
-	menuCreated:false,
+    menuCreated:false,
 
-	ludoConfig:function(config){
-		this.parent(config);
-		if(config.alwaysVisible!==undefined)this.alwaysVisible = config.alwaysVisible;
-		if(config.region!==undefined)this.region = config.region;
-		if(config.renderTo!==undefined)this.renderTo = config.renderTo;
-		if(config.menu!==undefined)this.menu = config.menu;
-	},
+    autoPosition:true,
 
-	ludoEvents:function(){
-		this.parent();
-		this.ludoDOM();
-		this.createButtonEvents();
-	},
+    toggleOnClick:false,
 
-	ludoDOM:function(){
-		var el = this.el = new Element('div');
-		el.id = 'ludo-menu-button-' + String.uniqueID();
-		ludo.dom.addClass(el, 'ludo-menu-button');
-		document.id(this.renderTo).adopt(el);
-		el.setStyles({
-			position : 'absolute',
-			height : '100%'
-		});
-		this.createButtonEl();
-		this.positionButton();
-	},
+    ludoConfig:function (config) {
+        this.parent(config);
+        this.setConfigParams(config, ['alwaysVisible', 'region', 'renderTo', 'menu', 'autoPosition','toggleOnClick']);
+    },
 
-	createButtonEvents:function(){
-		this.buttonEl.addEvent('click', this.showMenu.bind(this));
-		ludo.EffectObject.addEvent('start', this.hideMenu.bind(this));
-		if(!this.alwaysVisible){
-			var el = document.id(this.renderTo);
-			el.addEvent('mouseenter', this.show.bind(this));
-			el.addEvent('mouseleave', this.hide.bind(this));
-			this.hide();
-		}else{
-			this.show();
-		}
-	},
+    ludoEvents:function () {
+        this.parent();
+        this.ludoDOM();
+        this.createButtonEvents();
+    },
 
-	createButtonEl:function(){
-		var el = this.buttonEl = new Element('div');
-		ludo.dom.addClass(el, 'ludo-menu-button-arrow');
-		this.getEl().adopt(el);
-	},
+    ludoDOM:function () {
+        var el = this.el = new Element('div');
+        el.id = 'ludo-menu-button-' + String.uniqueID();
+        ludo.dom.addClass(el, 'ludo-menu-button');
+        document.id(this.renderTo).adopt(el);
+        el.setStyles({
+            position:'absolute',
+            height:'100%'
+        });
+        this.createButtonEl();
+        this.positionButton();
+    },
 
-	positionButton:function(){
-		var e = this.getEl();
-		var r = this.region;
-		if(r == 'ne' || r == 'se')e.setStyle('right', 0);
-		if(r == 'nw' || r == 'sw')e.setStyle('left', 0);
-		if(r == 'se' || r == 'sw')e.setStyle('bottom', 0);
-		if(r == 'ne' || r == 'nw')e.setStyle('top', 0);
-	},
+    createButtonEvents:function () {
+        this.buttonEl.addEvent('click', this.toggle.bind(this));
+        ludo.EffectObject.addEvent('start', this.hideMenu.bind(this));
+        if (!this.alwaysVisible) {
+            var el = document.id(this.renderTo);
+            el.addEvent('mouseenter', this.show.bind(this));
+            el.addEvent('mouseleave', this.hide.bind(this));
+            this.hide();
+        } else {
+            this.show();
+        }
+    },
 
-	getEl:function(){
-		return this.el;
-	},
+    toggle:function(e){
+        e.stop();
+        if(this.toggleOnClick && this.menuCreated){
+            this.menu[this.menu.isHidden() ? 'show' : 'hide']();
+        }else{
+            this.showMenu();
+        }
+    },
 
-	showMenu:function(e){
-		e.stop();
-		if(!this.menuCreated){
-			this.createMenuView();
-		}
-		if(this.menu._button && this.menu._button !== this.id){
-			var el = ludo.get(this.menu._button);
-			if(el)el.hideButton();
-		}
+    createButtonEl:function () {
+        var el = this.buttonEl = new Element('div');
+        ludo.dom.addClass(el, 'ludo-menu-button-arrow');
+        this.getEl().adopt(el);
+    },
 
-		this.menu._button = this.id;
-		this.menu.show();
+    positionButton:function () {
+        var e = this.getEl();
+        var r = this.region;
+        if (r == 'ne' || r == 'se')e.setStyle('right', 0);
+        if (r == 'nw' || r == 'sw')e.setStyle('left', 0);
+        if (r == 'se' || r == 'sw')e.setStyle('bottom', 0);
+        if (r == 'ne' || r == 'nw')e.setStyle('top', 0);
+    },
 
-		this.positionMenu();
-		this.fireEvent('show', this);
-	},
+    getEl:function () {
+        return this.el;
+    },
 
-	/**
-	 This method should be called from function added as event handler to "beforeShow"
-	 @method cancelShow
-	 @example
-	 	button.addEvent('beforeShow', function(button){
+    showMenu:function () {
+        if (!this.menuCreated) {
+            this.createMenuView();
+        }
+        if (this.menu._button && this.menu._button !== this.id) {
+            var el = ludo.get(this.menu._button);
+            if (el)el.hideButton();
+        }
+
+        this.menu._button = this.id;
+        this.menu.show();
+
+        this.positionMenu();
+        this.fireEvent('show', this);
+    },
+
+    /**
+     This method should be called from function added as event handler to "beforeShow"
+     @method cancelShow
+     @example
+     button.addEvent('beforeShow', function(button){
 	 		if(!this.isOkToShowButton()){
 	 			button.cancel();
 	 		}
 	 	});
-	 */
-	cancelShow:function(){
-		this.okToShowButton = false;
-	},
+     */
+    cancelShow:function () {
+        this.okToShowButton = false;
+    },
 
-	hideMenu:function(){
-		if(this.menu.hide !== undefined)this.menu.hide();
-		this.hide();
-	},
+    hideMenu:function () {
+        if (this.menu.hide !== undefined)this.menu.hide();
+        this.hide();
+    },
 
-	createMenuView:function(){
-		if(this.menu.id){
-			var menu = ludo.get(this.menu.id);
-			if(menu)this.menu = menu;
-		}
+    createMenuView:function () {
+        if (this.menu.id) {
+            var menu = ludo.get(this.menu.id);
+            if (menu)this.menu = menu;
+        }
+        this.menuCreated = true;
+        if (this.menu.getEl === undefined) {
+            this.menu.renderTo = document.body;
+            this.menu.type = this.menu.type || 'View';
+            this.menu.hidden = true;
+            this.menu = ludo._new(this.menu);
+            this.menu._button = this.getEl().id;
+            document.body.addEvent('mouseup', this.autoHideMenu.bind(this));
+        } else {
+            document.body.adopt(this.menu.getEl());
+        }
 
-		if(this.menu.getEl === undefined){
-			this.menu.renderTo = document.body;
-			this.menu.type = this.menu.type || 'View';
-			this.menu.hidden = true;
-			this.menu = ludo._new(this.menu);
-			this.menu._button = this.getEl().id;
-			document.body.addEvent('mouseup', this.autoHideMenu.bind(this));
-		}else{
-			document.body.adopt(this.menu.getEl());
-		}
+        this.menu.addEvent('show', this.showIf.bind(this));
+        this.menu.addEvent('hide', this.hideButton.bind(this));
+        this.menu.getEl().style.position = 'absolute';
+        this.menu.getEl().addClass('ludo-menu-button-menu');
+    },
 
-		this.menu.addEvent('show', this.showIf.bind(this));
-		this.menu.addEvent('hide', this.hideButton.bind(this));
-		this.menu.getEl().style.position = 'absolute';
-		this.menu.getEl().addClass('ludo-menu-button-menu');
-	},
+    positionMenu:function () {
+        if (this.autoPosition) {
+            var pos = this.el.getCoordinates();
+            this.menu.resize({
+                left:pos.left,
+                top:pos.top + pos.height
+            });
+        }
+    },
 
-	positionMenu:function(){
-		if(!this.menu){
-			return;
-		}
-		var pos = this.el.getCoordinates();
-		this.menu.resize({
-			left:pos.left,
-			top:pos.top + pos.height
-		});
-	},
+    showIf:function () {
+        if (this.menu._button === this.id) {
+            this.show();
+        }
+    },
 
-	showIf:function(){
-		if(this.menu._button === this.id){
-			this.show();
-		}
-	},
+    okToShowButton:false,
 
-	okToShowButton:false,
+    show:function () {
+        this.okToShowButton = true;
+        /**
+         * Event fired before button is shown. You can use this event and call
+         * the cancel method if there are situations where you don't always want to show the button
+         * @event beforeShow
+         * @param {menu.Button} this
+         */
+        this.fireEvent('beforeShow', this);
 
-	show:function(){
-		this.okToShowButton = true;
-		/**
-		 * Event fired before button is shown. You can use this event and call
-		 * the cancel method if there are situations where you don't always want to show the button
-		 * @event beforeShow
-		 * @param {menu.Button} this
-		 */
-		this.fireEvent('beforeShow', this);
+        if (this.okToShowButton) {
+            this.buttonEl.style.display = '';
+            ludo.dom.addClass(this.el, 'ludo-menu-button-active');
+        }
+    },
 
-		if(this.okToShowButton){
-			this.buttonEl.style.display='';
-			ludo.dom.addClass(this.el, 'ludo-menu-button-active');
-		}
-	},
+    hide:function () {
+        if (this.menu === undefined || this.menu.isHidden === undefined || this.menu.isHidden()) {
+            this.hideButton();
+        } else if (this.menu._button !== this.id) {
+            this.hideButton();
+        }
+    },
 
-	hide:function(){
-		if(this.menu === undefined || this.menu.isHidden === undefined || this.menu.isHidden()){
-			this.hideButton();
-		}else if(this.menu._button !== this.id){
-			this.hideButton();
-		}
-	},
+    hideButton:function () {
+        if (this.alwaysVisible)return;
+        this.buttonEl.style.display = 'none';
+        this.el.removeClass('ludo-menu-button-active');
+    },
+    getMenuView:function () {
+        return this.menu;
+    },
 
-	hideButton:function(){
-		this.buttonEl.style.display='none';
-		this.el.removeClass('ludo-menu-button-active');
-	},
-	getMenuView:function(){
-		return this.menu;
-	},
-
-	autoHideMenu:function(e){
-		if(this.menu && this.menu.hidden)return;
-		if(!ludo.dom.isInFamilies(e.target, [this.el.id, this.menu.getEl().id])){
-			this.hideMenu();
-			this.hideButton();
-		}
-	}
+    autoHideMenu:function (e) {
+        if (this.menu && this.menu.hidden)return;
+        if (!ludo.dom.isInFamilies(e.target, [this.el.id, this.menu.getEl().id])) {
+            this.hideMenu();
+            this.hideButton();
+        }
+    }
 });/* ../ludojs/src/tree/tree.js */
 /**
  * Displays a tree
@@ -21609,7 +21639,7 @@ ludo.form.LabelElement = new Class({
         '<tr class="input-row">',
         '<td class="label-cell"><label class="input-label"></label></td>',
         '<td><div class="input-cell"></div></td>',
-        '<td class="invalid-cell"><div class="invalid-cell-div"></div></td>',
+        '<td class="invalid-cell" style="position:relative"><div class="invalid-cell-div"></div></td>',
         '<td class="suffix-cell" style="display:none"><label></label></td>',
         '<td class="help-cell" style="display:none"></td>',
         '</tr>',
@@ -21662,6 +21692,9 @@ ludo.form.LabelElement = new Class({
         }
         if (this.maxLength) {
             this.els.formEl.setProperty('maxlength', this.maxLength);
+        }
+        if(this.readonly){
+            this.els.formEl.setProperty('readonly', true);
         }
 		this.getInputCell().adopt(this.els.formEl);
 		if(this.fieldWidth){
@@ -22281,6 +22314,308 @@ ludo.form.CancelButton = new Class({
             this.component.hide();
         }
     }
+});/* ../ludojs/src/form/text.js */
+/**
+ * @namespace form
+ * @class Text
+ * @description Form input text
+ * @extends form.LabelElement
+ *
+ */
+ludo.form.Text = new Class({
+	Extends:ludo.form.LabelElement,
+	type:'form.Text',
+	labelWidth:100,
+	defaultValue:'',
+	/**
+	 * Max length of input field
+	 * @attribute maxLength
+	 * @type int
+	 * @default undefined
+	 */
+	maxLength:undefined,
+
+	/**
+	 * Minimum length of value. invalid event will be fired when
+	 * value is too short. The value will be trimmed before checking size
+	 * @attribute minLength
+	 * @type {Number}
+	 * @default undefined
+	 */
+	minLength:undefined,
+
+	/**
+	 * When true, capitalize first letter automatically
+	 * @attribute {Boolean} ucFirst
+	 * @default false
+	 */
+	ucFirst:false,
+
+	/**
+	 When true, capitalize first letter of every word while typing
+	 Note! ucWords is not an option for ludo.form.Textarea
+	 @attribute {Boolean} ucWords
+	 @default false
+	 */
+	ucWords:false,
+
+	inputType:'text',
+	inputTag:'input',
+
+	/**
+	 Regular expression used for validation
+	 @attribute regex
+	 @type RegExp
+	 @default undefined
+	 @example
+	 	regex:'[0-9]'
+	 This will only validate numbers
+	 */
+	regex:undefined,
+
+	/**
+	Run RegEx validation on key strokes. Only keys matching "regex" will be added to the text field.
+	@property validateKeyStrokes
+	@type {Boolean}
+	@default false
+	*/
+	validateKeyStrokes:false,
+
+	/**
+	 * current pixel width of form element
+	 * @property int
+	 * @private
+	 */
+	formFieldWidth:undefined,
+
+    /**
+     * True to apply readonly attribute to element
+     * @config {Boolean} readonly
+     * @default false
+     */
+    readonly : false,
+
+	ludoConfig:function (config) {
+		this.parent(config);
+        var keys = ['regex','minLength','maxLength','defaultValue','validateKeyStrokes','ucFirst','ucWords','readonly'];
+        this.setConfigParams(config,keys);
+        this.applyValidatorFns(['minLength','maxLength','regex']);
+    },
+
+	ludoEvents:function () {
+		this.parent();
+		var el = this.getFormEl();
+		if (this.ucFirst || this.ucWords) {
+			this.addEvent('blur', this.upperCaseWords.bind(this));
+		}
+        this.addEvent('blur', this.validate.bind(this));
+		if (this.validateKeyStrokes) {
+			el.addEvent('keydown', this.validateKey.bind(this));
+		}
+        ludo.dom.addClass(el.parentNode, 'ludo-form-text-element');
+		el.addEvent('keyup', this.sendKeyEvent.bind(this));
+	},
+
+	sendKeyEvent:function(){
+		/**
+		 * Event fired when a key is pressed
+		 * @event key
+		 * @param {String} value
+		 */
+		this.fireEvent('key', this.els.formEl.value);
+	},
+
+	validateKey:function (e) {
+		if (e.control || e.alt) {
+			return undefined;
+		}
+
+		if (this.regex && e.key && e.key.length == 1) {
+			if (!this.regex.test(e.key)) {
+				return false;
+			}
+		}
+		return undefined;
+	},
+	/**
+	 * Return width of input field in pixels.
+	 * @method getFieldWidth
+	 * @return {Number} width
+	 */
+	getFieldWidth:function () {
+		return this.formFieldWidth;
+	},
+	/**
+	 * Focus form element
+	 * @method focus
+	 * @return void
+	 */
+	focus:function () {
+		this.parent();
+		this.getFormEl().focus();
+	},
+
+	validate:function () {
+        var valid = this.parent();
+		if (!valid && !this._focus) {
+			this.getEl().addClass('ludo-form-el-invalid');
+		}
+        return valid;
+	},
+	keyUp:function (e) {
+		this.parent(e);
+		if(this.validateKeyStrokes){
+            this.validate();
+        }
+	},
+
+	upperCaseWords:function () {
+		if (this.ucFirst || this.ucWords) {
+			var val = this.getFormEl().get('value');
+			if (val.length == 0) {
+				return;
+			}
+			if (this.ucWords && val.length > 1) {
+				var tokens = val.split(/\s/g);
+				for (var i = 0; i < tokens.length; i++) {
+					if (tokens[i].length == 1) {
+						tokens[i] = tokens[i].toUpperCase();
+					} else {
+						tokens[i] = tokens[i].substr(0, 1).toUpperCase() + tokens[i].substr(1);
+					}
+				}
+				this.getFormEl().set('value', tokens.join(' '));
+			}
+			else {
+				val = val.substr(0, 1).toUpperCase() + val.substr(1);
+				this.getFormEl().set('value', val);
+			}
+		}
+	},
+
+	hasSelection:function () {
+		var start = this.getSelectionStart();
+		var end = this.getSelectionEnd();
+		return end > start;
+	},
+
+	getSelectionStart:function () {
+		if (this.els.formEl.createTextRange) {
+			var r = document.selection.createRange().duplicate();
+			r.moveEnd('character', this.els.formEl.value.length);
+			if (r.text == '') return this.els.formEl.value.length;
+			return this.els.formEl.value.lastIndexOf(r.text);
+		} else return this.els.formEl.selectionStart;
+	},
+
+	getSelectionEnd:function () {
+		if (this.els.formEl.createTextRange) {
+			var r = document.selection.createRange().duplicate();
+			r.moveStart('character', -this.els.formEl.value.length);
+			return r.text.length;
+		} else return this.els.formEl.selectionEnd;
+	}
+});
+/* ../ludojs/src/form/combo.js */
+/**
+ * @namespace form
+ * @class Combo
+ * @extends form.Element
+ */
+ludo.form.Combo = new Class({
+    Extends:ludo.form.Text,
+    type:'form.Combo',
+    layout:{
+        type:'popup'
+    },
+
+    ludoRendered:function(){
+        this.parent();
+
+        var c = this.children[0];
+        c.layout = c.layout || {};
+        c.layout.below = this.getInputCell();
+        c.layout.alignLeft = this.getInputCell();
+        c.layout.sameWidthAs = this.getInputCell();
+        c.layout.height = 200;
+        c.alwaysInFront = true;
+        c.cls = 'form-combo-child';
+
+        this.getInputCell().style.position='relative';
+        new ludo.menu.Button({
+            renderTo: this.getInputCell(),
+            alwaysVisible:true,
+            region:'ne',
+            autoPosition:false,
+            menu:this.children[0],
+            toggleOnClick:true,
+            listeners:{
+                show:function(){
+                    this.fireEvent('showCombo');
+                }.bind(this)
+            }
+        });
+    }
+});
+/* ../ludojs/src/form/date.js */
+ludo.form.Date = new Class({
+    Extends: ludo.form.Combo,
+    children:[{
+       type:'calendar.Calendar'
+    }],
+    displayFormat : 'd.m.Y',
+    inputFormat : 'Y-m-d',
+
+    ludoConfig:function(config){
+        this.parent(config);
+        this.setConfigParams(config, ['displayFormat','inputFormat']);
+
+        this.displayFormat = this.displayFormat.replace(/([a-z])/gi, '%$1');
+        this.inputFormat = this.inputFormat.replace(/([a-z])/gi, '%$1');
+        this.value = this.value ? ludo.util.parseDate(this.value, this.inputFormat) :undefined;
+    },
+
+    autoHide:function(focused){
+        if(focused.isButton && focused.isButton())return;
+        if(focused !== this)this.children[0].hide();
+    },
+
+    ludoRendered:function(){
+        this.parent();
+        this.setFormElValue(this.value);
+    },
+
+    addChild:function(child){
+        child.value = this.value || new Date();
+
+        this.parent(child);
+        this.children[0].addEvent('change', function(date){
+            this.setValue(ludo.util.parseDate(date, this.inputFormat));
+        }.bind(this));
+    },
+    ludoEvents:function(){
+        this.parent();
+        this.addEvent('showCombo', function(){
+            this.children[0].setDate(this.value ? ludo.util.parseDate(this.value, this.displayFormat) : new Date());
+        }.bind(this));
+        ludo.Form.addEvent('focus', this.autoHide.bind(this));
+    },
+
+    setValue:function(value){
+        value = ludo.util.parseDate(value, this.displayFormat);
+        this.parent(value);
+    },
+
+    setFormElValue:function(value){
+        if (value && this.els.formEl && this.els.formEl.value !== value) {
+            value = ludo.util.isString(value) ? value : value.format(this.displayFormat);
+            this.els.formEl.set('value', value);
+        }
+        this.children[0].hide();
+    },
+    getValue:function(){
+        return ludo.util.parseDate(this.value, this.displayFormat).format(this.inputFormat);
+    }
 });/* ../ludojs/src/form/reset-button.js */
 /**
  * Special Button used to reset all form fields of component back to it's original state.
@@ -22321,191 +22656,7 @@ ludo.form.ResetButton = new Class({
             this.component.reset();
         }
     }
-});/* ../ludojs/src/form/combo.js */
-/**
- * @namespace form
- * @class Combo
- * @extends form.Element
- */
-ludo.form.Combo = new Class({
-    Extends:ludo.form.Element,
-    type:'form.Combo',
-    direction:'horizontal',
-    height:25,
-    labelWidth:0,
-    comboMenu:undefined,
-    menuItems:null,
-    showOnClick:true,
-    records : [],
-    cssSignature:'form-combo',
-    selectedRecord:undefined,
-    remote : {
-        isJSON: true
-    },
-
-    /**
-     * Records for the drop down,<br>
-     * example: [{ id: 1, title: 'Record One', id: 2, title: 'Record two' }]<br>
-     * The combo can also be populated remotely by specifying remote properties, example:<br>
-     * remote:{<br>
-     *    url:'my-url.php',<br>
-     *    data:{<br>
-     *        getRecords:1<br>
-     *    }<br>
-     *}<br>
-     *<br>
-     *The response should return structure like this:<br>
-     *{ success : true, data: [{ id: 1, title: 'Record One', id: 2, title: 'Record two' }] }
-     * @attribute {Array} data
-     * @default undefined
-     */
-    data : undefined,
-
-    getMenuDirection:function () {
-        return 'vertical'
-    },
-
-    ludoDOM:function () {
-        this.parent();
-        var el = this.els.arrow = new Element('div');
-        ludo.dom.addClass(el, 'ludo-combo-arrow');
-        this.getEl().adopt(el);
-
-        el = this.getEl();
-        this.getBody().style.cursor = 'pointer';
-
-        el.style.position = 'relative';
-        el.style.overflow = 'visible';
-        ludo.dom.addClass(el, 'ludo-combo');
-
-    },
-    ludoEvents:function () {
-        this.parent();
-        this.getBody().addEvent('click', this.toggleMenu.bind(this));
-        this.getEventEl().addEvent('resize', this.positionMenu.bind(this));
-        this.getEventEl().addEvent('click', this.autoHide.bind(this));
-    },
-    ludoRendered:function () {
-        this.parent();
-        var el = this.getEl();
-        this.getBody().style.lineHeight = (this.getHeight() - ludo.dom.getPH(el) - ludo.dom.getBH(el)) + 'px';
-    },
-
-    autoHide : function(e){
-        if(!e.target.hasClass('ludo-combo') && !e.target.getParent('.ludo-combo')){
-            this.menu.hide.delay(100, this.menu);
-        }
-    },
-    insertJSON:function (data) {
-        this.records = data;
-        this.data = data;
-
-        this.menuItemsToRecords(this.records);
-        this.addListenersToMenuItems(this.records);
-        this.createMenu();
-
-        this.selectRecord(this.records[0]);
-    },
-
-    menuItemsToRecords:function (records) {
-        this.menuItems = [];
-        for (var i = 0; i < records.length; i++) {
-            this.menuItems.push({
-                label:records[i].title,
-                record:records[i]
-            });
-        }
-    },
-    addListenersToMenuItems:function () {
-        for (var i = 0; i < this.menuItems.length; i++) {
-            var el = this.menuItems[i];
-            if (el !== '|') {
-                if (!el.listeners) {
-                    el.listeners = {};
-                }
-                el.listeners.click = this.menuClick.bind(this);
-            }
-        }
-    },
-    /**
-     * Return value, i.e. id of selected record
-     * @method getValue
-     * @return string value
-     */
-    getValue:function () {
-        if (this.selectedRecord) {
-            return this.selectedRecord.id;
-        }
-        return null;
-    },
-    /**
-     * Return selected record
-     * @method getSelectedRecord
-     * @return {Object} selected record
-     */
-    getSelectedRecord:function () {
-        return this.selectedRecord;
-    },
-
-    menuClick:function (obj) {
-        this.selectRecord(obj.getRecord());
-        this.menu.hide();
-        /**
-         * @event change
-         * @param {Object} selected record
-         * @param Component this
-         */
-        this.fireEvent('change', [ this.selectedRecord, this ]);
-    },
-
-    selectRecord:function (record) {
-        this.selectedRecord = record;
-        this.setHtml(this.selectedRecord.title);
-        this.menu.selectRecord(record);
-    },
-
-    setValue : function(value){
-        for(var i=0;i<this.records.length;i++){
-            if(this.records[i].id && this.records[i].id === value){
-                this.selectRecord(this.records[i]);
-            }
-        }
-    },
-
-    toggleMenu:function () {
-        if (this.menu.isVisible()) {
-            this.menu.hide();
-        } else {
-            this.menu.show();
-            this.positionMenu();
-        }
-    },
-
-    positionMenu:function () {
-        var el = this.menu.getEl();
-        var coordinates = this.getEl().getCoordinates();
-        el.style.top = (coordinates.top + coordinates.height) + 'px';
-        el.style.left = coordinates.left + 'px';
-    },
-
-    createMenu:function () {
-        this.menu = new ludo.Menu({
-            cls:'ludo-combo-menu',
-            renderTo:document.body,
-            direction:'vertical',
-            width:this.getWidth(),
-            children:this.menuItems
-
-        });
-        this.menu.getEl().setStyles({
-            position:'absolute',
-            width:200
-        });
-        this.menu.hide();
-    }
-
-});
-/* ../ludojs/src/form/combo-tree.js */
+});/* ../ludojs/src/form/combo-tree.js */
 /**
  * @namespace form
  * @class ComboTree
@@ -22907,202 +23058,7 @@ ludo.form.Hidden = new Class({
     getWidth : function(){
         return 0;
     }
-});/* ../ludojs/src/form/text.js */
-/**
- * @namespace form
- * @class Text
- * @description Form input text
- * @extends form.LabelElement
- *
- */
-ludo.form.Text = new Class({
-	Extends:ludo.form.LabelElement,
-	type:'form.Text',
-	labelWidth:100,
-	defaultValue:'',
-	/**
-	 * Max length of input field
-	 * @attribute maxLength
-	 * @type int
-	 * @default undefined
-	 */
-	maxLength:undefined,
-
-	/**
-	 * Minimum length of value. invalid event will be fired when
-	 * value is too short. The value will be trimmed before checking size
-	 * @attribute minLength
-	 * @type {Number}
-	 * @default undefined
-	 */
-	minLength:undefined,
-
-	/**
-	 * When true, capitalize first letter automatically
-	 * @attribute {Boolean} ucFirst
-	 * @default false
-	 */
-	ucFirst:false,
-
-	/**
-	 When true, capitalize first letter of every word while typing
-	 Note! ucWords is not an option for ludo.form.Textarea
-	 @attribute {Boolean} ucWords
-	 @default false
-	 */
-	ucWords:false,
-
-	inputType:'text',
-	inputTag:'input',
-
-	/**
-	 Regular expression used for validation
-	 @attribute regex
-	 @type RegExp
-	 @default undefined
-	 @example
-	 	regex:'[0-9]'
-	 This will only validate numbers
-	 */
-	regex:undefined,
-
-	/**
-	Run RegEx validation on key strokes. Only keys matching "regex" will be added to the text field.
-	@property validateKeyStrokes
-	@type {Boolean}
-	@default false
-	*/
-	validateKeyStrokes:false,
-
-	/**
-	 * current pixel width of form element
-	 * @property int
-	 * @private
-	 */
-	formFieldWidth:undefined,
-
-	ludoConfig:function (config) {
-		this.parent(config);
-        var keys = ['regex','minLength','maxLength','defaultValue','validateKeyStrokes','ucFirst','ucWords'];
-        this.setConfigParams(config,keys);
-        this.applyValidatorFns(['minLength','maxLength','regex']);
-    },
-
-	ludoEvents:function () {
-		this.parent();
-		var el = this.getFormEl();
-		if (this.ucFirst || this.ucWords) {
-			this.addEvent('blur', this.upperCaseWords.bind(this));
-		}
-        this.addEvent('blur', this.validate.bind(this));
-		if (this.validateKeyStrokes) {
-			el.addEvent('keydown', this.validateKey.bind(this));
-		}
-        ludo.dom.addClass(el.parentNode, 'ludo-form-text-element');
-		el.addEvent('keyup', this.sendKeyEvent.bind(this));
-	},
-
-	sendKeyEvent:function(){
-		/**
-		 * Event fired when a key is pressed
-		 * @event key
-		 * @param {String} value
-		 */
-		this.fireEvent('key', this.els.formEl.value);
-	},
-
-	validateKey:function (e) {
-		if (e.control || e.alt) {
-			return undefined;
-		}
-
-		if (this.regex && e.key && e.key.length == 1) {
-			if (!this.regex.test(e.key)) {
-				return false;
-			}
-		}
-		return undefined;
-	},
-	/**
-	 * Return width of input field in pixels.
-	 * @method getFieldWidth
-	 * @return {Number} width
-	 */
-	getFieldWidth:function () {
-		return this.formFieldWidth;
-	},
-	/**
-	 * Focus form element
-	 * @method focus
-	 * @return void
-	 */
-	focus:function () {
-		this.parent();
-		this.getFormEl().focus();
-	},
-
-	validate:function () {
-        var valid = this.parent();
-		if (!valid && !this._focus) {
-			this.getEl().addClass('ludo-form-el-invalid');
-		}
-        return valid;
-	},
-	keyUp:function (e) {
-		this.parent(e);
-		if(this.validateKeyStrokes){
-            this.validate();
-        }
-	},
-
-	upperCaseWords:function () {
-		if (this.ucFirst || this.ucWords) {
-			var val = this.getFormEl().get('value');
-			if (val.length == 0) {
-				return;
-			}
-			if (this.ucWords && val.length > 1) {
-				var tokens = val.split(/\s/g);
-				for (var i = 0; i < tokens.length; i++) {
-					if (tokens[i].length == 1) {
-						tokens[i] = tokens[i].toUpperCase();
-					} else {
-						tokens[i] = tokens[i].substr(0, 1).toUpperCase() + tokens[i].substr(1);
-					}
-				}
-				this.getFormEl().set('value', tokens.join(' '));
-			}
-			else {
-				val = val.substr(0, 1).toUpperCase() + val.substr(1);
-				this.getFormEl().set('value', val);
-			}
-		}
-	},
-
-	hasSelection:function () {
-		var start = this.getSelectionStart();
-		var end = this.getSelectionEnd();
-		return end > start;
-	},
-
-	getSelectionStart:function () {
-		if (this.els.formEl.createTextRange) {
-			var r = document.selection.createRange().duplicate();
-			r.moveEnd('character', this.els.formEl.value.length);
-			if (r.text == '') return this.els.formEl.value.length;
-			return this.els.formEl.value.lastIndexOf(r.text);
-		} else return this.els.formEl.selectionStart;
-	},
-
-	getSelectionEnd:function () {
-		if (this.els.formEl.createTextRange) {
-			var r = document.selection.createRange().duplicate();
-			r.moveStart('character', -this.els.formEl.value.length);
-			return r.text.length;
-		} else return this.els.formEl.selectionEnd;
-	}
-});
-/* ../ludojs/src/form/textarea.js */
+});/* ../ludojs/src/form/textarea.js */
 /**
  * Text Area field
  * @namespace form

@@ -71,9 +71,16 @@ ludo.form.Text = new Class({
 	 */
 	formFieldWidth:undefined,
 
+    /**
+     * True to apply readonly attribute to element
+     * @config {Boolean} readonly
+     * @default false
+     */
+    readonly : false,
+
 	ludoConfig:function (config) {
 		this.parent(config);
-        var keys = ['regex','minLength','maxLength','defaultValue','validateKeyStrokes','ucFirst','ucWords'];
+        var keys = ['regex','minLength','maxLength','defaultValue','validateKeyStrokes','ucFirst','ucWords','readonly'];
         this.setConfigParams(config,keys);
         this.applyValidatorFns(['minLength','maxLength','regex']);
     },
