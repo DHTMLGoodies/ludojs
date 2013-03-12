@@ -98,3 +98,6 @@ div.ludo-menu-menu label{
     padding-top:1px;
     padding-bottom:1px;
 }
+.input-row textarea{
+    overflow-y: auto;
+}

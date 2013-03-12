@@ -1,4 +1,4 @@
-/* Generated Tue Mar 12 17:45:58 CET 2013 */
+/* Generated Tue Mar 12 18:14:27 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -1890,7 +1890,9 @@ div.ludo-menu-menu label{
     padding-top:1px;
     padding-bottom:1px;
 }
-/* ../ludojs/css-source/form/combo.css */
+.input-row textarea{
+    overflow-y: auto;
+}/* ../ludojs/css-source/form/combo.css */
 .ludo-combo, .ludo-Filter-Tree-Combo-Field {
     padding-left: 3px;
     padding-right: 3px;
