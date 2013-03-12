@@ -68,8 +68,18 @@ ludo.form.Number = new Class({
         if (!this.disableWheel) {
             this.getFormEl().addEvent('mousewheel', this._mouseWheel.bind(this));
         }
+        this.getFormEl().addEvent('keydown', this.keyIncrement.bind(this));
 
     },
+
+    keyIncrement:function(e){
+        if(e.key === 'up' || e.key === 'down'){
+            if(e.key === 'up')this.incrementBy(1, e.shift);
+            if(e.key === 'down')this.incrementBy(-1, e.shift);
+            return false;
+        }
+    },
+
     blur:function(){
         var value = this.getFormEl().value;
         if(!this.isValid(value)){
@@ -97,7 +107,8 @@ ludo.form.Number = new Class({
     incrementBy:function (value, shift) {
         if(this.reverseWheel)value = value * -1;
         value = parseInt(this.value) + (shift ? value * this.shiftIncrement : value);
-
+        if(this.maxValue && value > this.maxValue)value = this.maxValue;
+        if(this.minValue !== undefined && value < this.minValue)value = this.minValue;
         if(this.isValid(value)){
             this.setValue(value);
 			this.fireEvent('change', [ value, this ]);

@@ -50,6 +50,7 @@ TestCase("DateTest", {
     getDatePicker:function(date){
         return new ludo.form.Date({
             value:date,
+            displayFormat:'d.m.Y',
             renderTo:document.body
         });
     },

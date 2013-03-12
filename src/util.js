@@ -98,7 +98,10 @@ ludo.util = {
                 dateParts[tokens[i]] = dateTokens[i];
             }
             dateParts['%m'] = dateParts['%m'] ? dateParts['%m'] -1 : 0;
-            return new Date(dateParts['%Y'], dateParts['%m'], dateParts['%d']);
+            dateParts['%h'] = dateParts['%h'] || 0;
+            dateParts['%i'] = dateParts['%i'] || 0;
+            dateParts['%s'] = dateParts['%s'] || 0;
+            return new Date(dateParts['%Y'], dateParts['%m'], dateParts['%d'], dateParts['%h'], dateParts['%i'], dateParts['%s']);
         }
         return date;
     }

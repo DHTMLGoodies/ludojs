@@ -727,3 +727,6 @@ div.ludo-form-element input{
     height:14px;
 }
 
+.input-row .ludo-menu-button-over{
+    background-color:#e2e2e2;
+}

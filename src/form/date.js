@@ -1,10 +1,29 @@
+/**
+ * Date picker
+ * @namespace form
+ * @class Date
+ * @extends form.Combo
+ */
 ludo.form.Date = new Class({
     Extends: ludo.form.Combo,
     children:[{
        type:'calendar.Calendar'
     }],
-    displayFormat : 'd.m.Y',
+    /**
+     * Display format, example: Y/m/d
+     * @config {String} displayFormat
+     * @default Y-m-d
+     */
+    displayFormat : 'Y-m-d',
+    /**
+     * Format of date returned by getValue method.
+     * @config {String} inputFormat
+     * @default Y-m-d
+     */
     inputFormat : 'Y-m-d',
+    childLayout:{
+        width:250,height:250
+    },
 
     ludoConfig:function(config){
         this.parent(config);

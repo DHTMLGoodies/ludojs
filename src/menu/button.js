@@ -77,6 +77,10 @@ ludo.menu.Button = new Class({
     createButtonEvents:function () {
         this.buttonEl.addEvent('click', this.toggle.bind(this));
         ludo.EffectObject.addEvent('start', this.hideMenu.bind(this));
+
+        this.buttonEl.addEvent('mouseenter', this.enterButton.bind(this));
+        this.buttonEl.addEvent('mouseleave', this.leaveButton.bind(this));
+
         if (!this.alwaysVisible) {
             var el = document.id(this.renderTo);
             el.addEvent('mouseenter', this.show.bind(this));
@@ -87,6 +91,12 @@ ludo.menu.Button = new Class({
         }
     },
 
+    enterButton:function(){
+        ludo.dom.addClass(this.el, 'ludo-menu-button-over');
+    },
+    leaveButton:function(){
+        ludo.dom.removeClass(this.el, 'ludo-menu-button-over');
+    },
     toggle:function(e){
         e.stop();
         if(this.toggleOnClick && this.menuCreated){

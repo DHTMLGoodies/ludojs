@@ -1,4 +1,4 @@
-/* Generated Tue Mar 12 3:13:56 CET 2013 */
+/* Generated Tue Mar 12 3:51:41 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -4291,7 +4291,10 @@ ludo.util = {
                 dateParts[tokens[i]] = dateTokens[i];
             }
             dateParts['%m'] = dateParts['%m'] ? dateParts['%m'] -1 : 0;
-            return new Date(dateParts['%Y'], dateParts['%m'], dateParts['%d']);
+            dateParts['%h'] = dateParts['%h'] || 0;
+            dateParts['%i'] = dateParts['%i'] || 0;
+            dateParts['%s'] = dateParts['%s'] || 0;
+            return new Date(dateParts['%Y'], dateParts['%m'], dateParts['%d'], dateParts['%h'], dateParts['%i'], dateParts['%s']);
         }
         return date;
     }
@@ -19847,6 +19850,10 @@ ludo.menu.Button = new Class({
     createButtonEvents:function () {
         this.buttonEl.addEvent('click', this.toggle.bind(this));
         ludo.EffectObject.addEvent('start', this.hideMenu.bind(this));
+
+        this.buttonEl.addEvent('mouseenter', this.enterButton.bind(this));
+        this.buttonEl.addEvent('mouseleave', this.leaveButton.bind(this));
+
         if (!this.alwaysVisible) {
             var el = document.id(this.renderTo);
             el.addEvent('mouseenter', this.show.bind(this));
@@ -19857,6 +19864,12 @@ ludo.menu.Button = new Class({
         }
     },
 
+    enterButton:function(){
+        ludo.dom.addClass(this.el, 'ludo-menu-button-over');
+    },
+    leaveButton:function(){
+        ludo.dom.removeClass(this.el, 'ludo-menu-button-over');
+    },
     toggle:function(e){
         e.stop();
         if(this.toggleOnClick && this.menuCreated){
@@ -22518,6 +22531,8 @@ ludo.form.Text = new Class({
 });
 /* ../ludojs/src/form/combo.js */
 /**
+ * A text field with combo button. Click on the combo button will child view beneath the text input
+ *
  * @namespace form
  * @class Combo
  * @extends form.Element
@@ -22529,15 +22544,34 @@ ludo.form.Combo = new Class({
         type:'popup'
     },
 
+    /**
+     Custom layout properties of child
+     @config {Object} childLayout
+     @default undefined
+     @example
+        childLayout:{
+            width:300,height:300
+        }
+     Default layout properties will be applied when
+     */
+    childLayout:undefined,
+
+    ludoConfig:function(config){
+        this.parent(config);
+        this.childLayout = config.childLayout || this.childLayout;
+    },
+
     ludoRendered:function(){
         this.parent();
 
         var c = this.children[0];
         c.layout = c.layout || {};
-        c.layout.below = this.getInputCell();
-        c.layout.alignLeft = this.getInputCell();
-        c.layout.sameWidthAs = this.getInputCell();
-        c.layout.height = 200;
+        if(this.childLayout)c.layout = Object.merge(c.layout, this.childLayout);
+
+        c.layout.below = c.layout.below || this.getInputCell();
+        if(c.left === undefined)c.layout.alignLeft = c.layout.alignLeft || this.getInputCell();
+        if(!c.layout.width)c.layout.sameWidthAs = this.getInputCell();
+        c.layout.height = c.layout.height || 200;
         c.alwaysInFront = true;
         c.cls = 'form-combo-child';
 
@@ -22558,13 +22592,32 @@ ludo.form.Combo = new Class({
     }
 });
 /* ../ludojs/src/form/date.js */
+/**
+ * Date picker
+ * @namespace form
+ * @class Date
+ * @extends form.Combo
+ */
 ludo.form.Date = new Class({
     Extends: ludo.form.Combo,
     children:[{
        type:'calendar.Calendar'
     }],
-    displayFormat : 'd.m.Y',
+    /**
+     * Display format, example: Y/m/d
+     * @config {String} displayFormat
+     * @default Y-m-d
+     */
+    displayFormat : 'Y-m-d',
+    /**
+     * Format of date returned by getValue method.
+     * @config {String} inputFormat
+     * @default Y-m-d
+     */
     inputFormat : 'Y-m-d',
+    childLayout:{
+        width:250,height:250
+    },
 
     ludoConfig:function(config){
         this.parent(config);
@@ -23849,8 +23902,18 @@ ludo.form.Number = new Class({
         if (!this.disableWheel) {
             this.getFormEl().addEvent('mousewheel', this._mouseWheel.bind(this));
         }
+        this.getFormEl().addEvent('keydown', this.keyIncrement.bind(this));
 
     },
+
+    keyIncrement:function(e){
+        if(e.key === 'up' || e.key === 'down'){
+            if(e.key === 'up')this.incrementBy(1, e.shift);
+            if(e.key === 'down')this.incrementBy(-1, e.shift);
+            return false;
+        }
+    },
+
     blur:function(){
         var value = this.getFormEl().value;
         if(!this.isValid(value)){
@@ -23878,7 +23941,8 @@ ludo.form.Number = new Class({
     incrementBy:function (value, shift) {
         if(this.reverseWheel)value = value * -1;
         value = parseInt(this.value) + (shift ? value * this.shiftIncrement : value);
-
+        if(this.maxValue && value > this.maxValue)value = this.maxValue;
+        if(this.minValue !== undefined && value < this.minValue)value = this.minValue;
         if(this.isValid(value)){
             this.setValue(value);
 			this.fireEvent('change', [ value, this ]);
