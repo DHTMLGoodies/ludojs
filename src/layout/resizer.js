@@ -59,6 +59,7 @@ ludo.layout.Resizer = new Class({
 		ludo.dom.removeClass(this.el, 'ludo-resize-handle-active');
 		ludo.dom.addClass(this.el, 'ludo-resize-handle-active');
 		this.fireEvent('before', [this, this.view]);
+		this.fireEvent('startResize');
 	},
 
 	setMinWidth:function(x){
@@ -114,6 +115,7 @@ ludo.layout.Resizer = new Class({
 			change *= -1;
 		}
 		this.fireEvent('resize', change);
+		this.fireEvent('stopResize');
 		this.isActive = false;
 	},
 
@@ -155,7 +157,7 @@ ludo.layout.Resizer = new Class({
 		this.el.style.bottom = '';
 
 		if(config.width !== undefined && config.width > 0)this.el.style.width = config.width + 'px';
-		if(config.height !== undefined && config.height > 0)this.el.style.height = config.height + 'px';
+		if(config.height !== undefined && config.height > 0)this.el.style.height = (config.height - ludo.dom.getMBPH(this.el)) + 'px';
 		if(config.left !== undefined)this.el.style.left = config.left + 'px';
 		if(config.top !== undefined)this.el.style.top = config.top + 'px';
 		if(config.bottom !== undefined)this.el.style.bottom = config.bottom + 'px';

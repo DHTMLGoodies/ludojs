@@ -1,4 +1,4 @@
-/* Generated Tue Mar 12 18:14:27 CET 2013 */
+/* Generated Wed Mar 13 15:56:25 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -2823,6 +2823,7 @@ ludo.layout.Resizer = new Class({
 		ludo.dom.removeClass(this.el, 'ludo-resize-handle-active');
 		ludo.dom.addClass(this.el, 'ludo-resize-handle-active');
 		this.fireEvent('before', [this, this.view]);
+		this.fireEvent('startResize');
 	},
 
 	setMinWidth:function(x){
@@ -2878,6 +2879,7 @@ ludo.layout.Resizer = new Class({
 			change *= -1;
 		}
 		this.fireEvent('resize', change);
+		this.fireEvent('stopResize');
 		this.isActive = false;
 	},
 
@@ -2919,7 +2921,7 @@ ludo.layout.Resizer = new Class({
 		this.el.style.bottom = '';
 
 		if(config.width !== undefined && config.width > 0)this.el.style.width = config.width + 'px';
-		if(config.height !== undefined && config.height > 0)this.el.style.height = config.height + 'px';
+		if(config.height !== undefined && config.height > 0)this.el.style.height = (config.height - ludo.dom.getMBPH(this.el)) + 'px';
 		if(config.left !== undefined)this.el.style.left = config.left + 'px';
 		if(config.top !== undefined)this.el.style.top = config.top + 'px';
 		if(config.bottom !== undefined)this.el.style.bottom = config.bottom + 'px';
@@ -7414,6 +7416,8 @@ ludo.layout.Relative = new Class({
 		'above':'above',
 		'below':'below'
 	},
+	resizables : {},
+
     /**
      * Create resize handles for resizable children
      * @method createResizables
@@ -7423,9 +7427,10 @@ ludo.layout.Relative = new Class({
 		for (var i = this.children.length - 1; i >= 0; i--) {
 			var c = this.children[i];
 			if (this.isChildResizable(c)) {
+				this.resizables[c.id] = {};
 				for (var j = 0; j < c.layout.resize.length; j++) {
 					var r = c.layout.resize[j];
-					var resizer = this.getResizableFor(c, r);
+					var resizer = this.resizables[c.id][r] = this.getResizableFor(c, r);
 					this.assignDefaultCoordinates(resizer);
 					this.updateReference(this.resizeKeys[r], c, resizer);
 					switch (r) {
@@ -7442,6 +7447,11 @@ ludo.layout.Relative = new Class({
 			}
 		}
 	},
+
+	getResizable:function(child, direction){
+		return this.resizables[child.id][direction];
+	},
+
     /**
      * Return resizable handle for a child view
      * @method getResizableFor
@@ -22334,6 +22344,46 @@ ludo.form.CancelButton = new Class({
             this.component.hide();
         }
     }
+});/* ../ludojs/src/form/reset-button.js */
+/**
+ * Special Button used to reset all form fields of component back to it's original state.
+ * This button will automatically be disabled when the form is "clean", and disabled when it's "dirty".
+ * @namespace form
+ * @class ResetButton
+ * @extends form.Button
+ */
+ludo.form.ResetButton = new Class({
+    Extends:ludo.form.Button,
+    type:'form.ResetButton',
+    /**
+     * Value of button
+     * @attribute {String} value
+     * @default 'Reset'
+     */
+    value:'Reset',
+
+    component:undefined,
+
+    ludoRendered:function () {
+        this.parent();
+        this.component = this.getParentComponent();
+        var manager = this.component.getFormManager();
+        if (this.component) {
+            manager.addEvent('dirty', this.enable.bind(this));
+            manager.addEvent('clean', this.disable.bind(this));
+        }
+
+        if(!manager.isDirty()){
+            this.disable();
+        }
+        this.addEvent('click', this.reset.bind(this));
+    },
+
+    reset:function () {
+        if (this.component) {
+            this.component.reset();
+        }
+    }
 });/* ../ludojs/src/form/text.js */
 /**
  * @namespace form
@@ -22677,46 +22727,6 @@ ludo.form.Date = new Class({
     },
     getValue:function(){
         return this.value ? ludo.util.parseDate(this.value, this.displayFormat).format(this.inputFormat) : undefined;
-    }
-});/* ../ludojs/src/form/reset-button.js */
-/**
- * Special Button used to reset all form fields of component back to it's original state.
- * This button will automatically be disabled when the form is "clean", and disabled when it's "dirty".
- * @namespace form
- * @class ResetButton
- * @extends form.Button
- */
-ludo.form.ResetButton = new Class({
-    Extends:ludo.form.Button,
-    type:'form.ResetButton',
-    /**
-     * Value of button
-     * @attribute {String} value
-     * @default 'Reset'
-     */
-    value:'Reset',
-
-    component:undefined,
-
-    ludoRendered:function () {
-        this.parent();
-        this.component = this.getParentComponent();
-        var manager = this.component.getFormManager();
-        if (this.component) {
-            manager.addEvent('dirty', this.enable.bind(this));
-            manager.addEvent('clean', this.disable.bind(this));
-        }
-
-        if(!manager.isDirty()){
-            this.disable();
-        }
-        this.addEvent('click', this.reset.bind(this));
-    },
-
-    reset:function () {
-        if (this.component) {
-            this.component.reset();
-        }
     }
 });/* ../ludojs/src/form/combo-tree.js */
 /**

@@ -448,6 +448,8 @@ ludo.layout.Relative = new Class({
 		'above':'above',
 		'below':'below'
 	},
+	resizables : {},
+
     /**
      * Create resize handles for resizable children
      * @method createResizables
@@ -457,9 +459,10 @@ ludo.layout.Relative = new Class({
 		for (var i = this.children.length - 1; i >= 0; i--) {
 			var c = this.children[i];
 			if (this.isChildResizable(c)) {
+				this.resizables[c.id] = {};
 				for (var j = 0; j < c.layout.resize.length; j++) {
 					var r = c.layout.resize[j];
-					var resizer = this.getResizableFor(c, r);
+					var resizer = this.resizables[c.id][r] = this.getResizableFor(c, r);
 					this.assignDefaultCoordinates(resizer);
 					this.updateReference(this.resizeKeys[r], c, resizer);
 					switch (r) {
@@ -476,6 +479,11 @@ ludo.layout.Relative = new Class({
 			}
 		}
 	},
+
+	getResizable:function(child, direction){
+		return this.resizables[child.id][direction];
+	},
+
     /**
      * Return resizable handle for a child view
      * @method getResizableFor
