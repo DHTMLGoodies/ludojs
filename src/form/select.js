@@ -1,39 +1,39 @@
 /**
- Select box (&lt;select>) 
+ Select box (&lt;select>)
  @namespace form
  @class Select
  @extends form.Element
  @constructor
  @param {Object} config
  @example
-    {
-        type:'form.Select',
-        name:'country',
-        valueKey:'id',
-        textKey:'title',
-        emptyItem:{
-            id:'',title:'Where do you live?'
-        },
-        dataSource:{
-            resource:'Country',
-            service:'read'
-        }
-    }
+ {
+     type:'form.Select',
+     name:'country',
+     valueKey:'id',
+     textKey:'title',
+     emptyItem:{
+         id:'',title:'Where do you live?'
+     },
+     dataSource:{
+         resource:'Country',
+         service:'read'
+     }
+ }
  to populate the select box from the Country service on the server. The "id" column will be used as value for the options
  and title for the displayed text.
 
  @example
-    {
-        type:'form.Select',
-        emptyItem:{
-            value:'',text:'Please select an option'
-        },
-        options:[
-            { value:'1',text : 'Option a' },
-            { value:'2',text : 'Option b' },
-            { value:'3',text : 'Option c' }
-        ]
-    }
+ {
+     type:'form.Select',
+     emptyItem:{
+         value:'',text:'Please select an option'
+     },
+     options:[
+         { value:'1',text : 'Option a' },
+         { value:'2',text : 'Option b' },
+         { value:'3',text : 'Option c' }
+     ]
+ }
  */
 ludo.form.Select = new Class({
     Extends:ludo.form.LabelElement,
@@ -44,11 +44,11 @@ ludo.form.Select = new Class({
      @config {Object} emptyItem
      @default undefined
      @example
-        {
-            id : '',
-            title : 'Please select an option'
+     {
+         id : '',
+         title : 'Please select an option'
 
-        }
+     }
      */
     emptyItem:undefined,
 
@@ -56,7 +56,7 @@ ludo.form.Select = new Class({
      Name of column for the values of the select box. This option is useful when populating select box using a collection data source.
      @config valueKey
      @example
-        valueKey : 'id'
+     valueKey : 'id'
      */
     valueKey:'value',
     /**
@@ -64,8 +64,8 @@ ludo.form.Select = new Class({
      */
     textKey:'text',
 
-    inputTag : 'select',
-    inputType : '',
+    inputTag:'select',
+    inputType:'',
     /**
      * Config of dataSource.Collection object used to populate the select box from external data
      * @config {Object|ludo.dataSource.Collection} dataSource
@@ -77,30 +77,30 @@ ludo.form.Select = new Class({
      @config {Array} options
      @default undefined
      @example
-        options:[
-            { value:'1','Option number 1' },
-            { value:'2','Option number 2' },
-            { value:'3','Option number 3' }
-        ]
+     options:[
+     { value:'1','Option number 1' },
+     { value:'2','Option number 2' },
+     { value:'3','Option number 3' }
+     ]
      */
-    options : undefined,
+    options:undefined,
 
     ludoConfig:function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['emptyItem','options','valueKey','textKey']);
-        if(!this.dataSource)this.dataSource = {};
+        this.setConfigParams(config, ['emptyItem', 'options', 'valueKey', 'textKey']);
+        if (!this.dataSource)this.dataSource = {};
         if (this.dataSource && !this.dataSource.type)this.dataSource.type = 'dataSource.Collection';
     },
 
-    ludoEvents:function(){
+    ludoEvents:function () {
         this.parent();
         if (this.dataSource) {
-            if(this.options && this.dataSourceObj){
-                for(var i=0;i<this.options.length;i++){
+            if (this.options && this.dataSourceObj) {
+                for (var i = 0; i < this.options.length; i++) {
                     this.dataSourceObj.addRecord(this.options[i]);
                 }
             }
-            if(this.dataSourceObj && this.dataSourceObj.hasData()){
+            if (this.dataSourceObj && this.dataSourceObj.hasData()) {
                 this.populate();
             }
             var ds = this.getDataSource();
@@ -112,14 +112,14 @@ ludo.form.Select = new Class({
         }
     },
 
-    selectRecord:function(record){
+    selectRecord:function (record) {
         this.setValue(record[this.valueKey]);
     },
 
     populate:function () {
         var data = this.dataSourceObj.getData() || [];
         this.getFormEl().options.length = 0;
-        if(this.emptyItem){
+        if (this.emptyItem) {
             data.splice(0, 0, this.emptyItem);
         }
         for (var i = 0, count = data.length; i < count; i++) {
@@ -144,9 +144,11 @@ ludo.form.Select = new Class({
         this.getFormEl().appendChild(option);
     },
 
-    resizeDOM:function(){
+    resizeDOM:function () {
         this.parent();
-        var p = this.els.formEl.parentNode;
-        this.els.formEl.style.width = (p.offsetWidth - ludo.dom.getBW(p) - ludo.dom.getPW(p)) + 'px';
+        if (this.els.formEl) {
+            var p = this.els.formEl.parentNode;
+            this.els.formEl.style.width = (p.offsetWidth - ludo.dom.getBW(p) - ludo.dom.getPW(p)) + 'px';
+        }
     }
 });

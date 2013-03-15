@@ -63,7 +63,6 @@ ludo.form.Element = new Class({
      * @default true
      */
     stretchField:true,
-    fieldConfig:{},
 
     /**
      * On focus, auto select text of input field.
@@ -165,9 +164,7 @@ ludo.form.Element = new Class({
         this.initialValue = this.constructorValue = this.value;
         if (!this.name)this.name = 'ludo-form-el-' + String.uniqueID();
 
-        config.fieldConfig = config.fieldConfig || {};
-        this.fieldConfig.value = config.fieldConfig.value || 'value';
-        this.fieldConfig.text = config.fieldConfig.text || 'text';
+
 
         if (this.dataSource) {
             this.isReady = false;

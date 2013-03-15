@@ -1,3 +1,4 @@
+// TODO rename this class
 ludo.view.Loader = new Class({
 	Extends: Events,
 	txt : 'Loading content...',

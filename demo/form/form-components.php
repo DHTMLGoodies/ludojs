@@ -7,6 +7,7 @@ require_once("../includes/demo-header.php");
 <script type="text/javascript" src="../../src/form/combo.js"></script>
 <script type="text/javascript" src="../../src/menu/button.js"></script>
 <script type="text/javascript" src="../../src/form/select.js"></script>
+<script type="text/javascript" src="../../src/form/radio-group.js"></script>
 <style type="text/css">
 .ludo-form-text-element input, .ludo-form-text-element textarea{
     border:0;
@@ -74,6 +75,13 @@ require_once("../includes/demo-header.php");
                     { type:'form.File', name:'picture', label:'Picture', value:'', height:25 },
                     { type:'form.DisplayField', label:'form.DisplayField', value:'My value'},
                     { type:'form.Checkbox', label:'I agree'},
+                    { type:'form.RadioGroup',
+                        id:'gender',
+                        label:'Gender',
+                        options:[
+                        { value:'female', text : 'Female' },
+                        { value:'male', text : 'Male' }
+                    ]},
                     { type:'form.Slider',  id:'mySlider', direction:'horizontal', label:'form.Slider', value:10, minValue:0, maxValue:255 },
                     { type:'form.Number', label:'form.Number(linked)', minValue:0,maxValue:255, fieldWidth:50, maxLength:3, suffix:'RGB Color', linkWith:'mySlider'}
                 ]}

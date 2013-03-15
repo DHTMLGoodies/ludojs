@@ -1,4 +1,4 @@
-/* Generated Wed Mar 13 15:56:25 CET 2013 */
+/* Generated Fri Mar 15 1:24:14 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -4301,6 +4301,7 @@ ludo.util = {
         return date;
     }
 };/* ../ludojs/src/view/loader.js */
+// TODO rename this class
 ludo.view.Loader = new Class({
 	Extends: Events,
 	txt : 'Loading content...',
@@ -4854,6 +4855,11 @@ ludo.View = new Class({
 		*/
 	},
 
+    /**
+     * Returns class used to display messages while remote content is being loaded
+     * @method getLoader
+     * @return {view.Loader}
+     */
     getLoader:function(){
         if(this.loader === undefined){
             this.loader = new ludo.view.Loader({
@@ -15891,7 +15897,6 @@ ludo.form.Element = new Class({
      * @default true
      */
     stretchField:true,
-    fieldConfig:{},
 
     /**
      * On focus, auto select text of input field.
@@ -15993,9 +15998,7 @@ ludo.form.Element = new Class({
         this.initialValue = this.constructorValue = this.value;
         if (!this.name)this.name = 'ludo-form-el-' + String.uniqueID();
 
-        config.fieldConfig = config.fieldConfig || {};
-        this.fieldConfig.value = config.fieldConfig.value || 'value';
-        this.fieldConfig.text = config.fieldConfig.text || 'text';
+
 
         if (this.dataSource) {
             this.isReady = false;
@@ -22344,46 +22347,6 @@ ludo.form.CancelButton = new Class({
             this.component.hide();
         }
     }
-});/* ../ludojs/src/form/reset-button.js */
-/**
- * Special Button used to reset all form fields of component back to it's original state.
- * This button will automatically be disabled when the form is "clean", and disabled when it's "dirty".
- * @namespace form
- * @class ResetButton
- * @extends form.Button
- */
-ludo.form.ResetButton = new Class({
-    Extends:ludo.form.Button,
-    type:'form.ResetButton',
-    /**
-     * Value of button
-     * @attribute {String} value
-     * @default 'Reset'
-     */
-    value:'Reset',
-
-    component:undefined,
-
-    ludoRendered:function () {
-        this.parent();
-        this.component = this.getParentComponent();
-        var manager = this.component.getFormManager();
-        if (this.component) {
-            manager.addEvent('dirty', this.enable.bind(this));
-            manager.addEvent('clean', this.disable.bind(this));
-        }
-
-        if(!manager.isDirty()){
-            this.disable();
-        }
-        this.addEvent('click', this.reset.bind(this));
-    },
-
-    reset:function () {
-        if (this.component) {
-            this.component.reset();
-        }
-    }
 });/* ../ludojs/src/form/text.js */
 /**
  * @namespace form
@@ -22496,11 +22459,7 @@ ludo.form.Text = new Class({
 	},
 
 	validateKey:function (e) {
-		if (e.control || e.alt) {
-			return undefined;
-		}
-
-		if (this.regex && e.key && e.key.length == 1) {
+		if (!e.control && !e.alt && this.regex && e.key && e.key.length == 1) {
 			if (!this.regex.test(e.key)) {
 				return false;
 			}
@@ -22727,6 +22686,46 @@ ludo.form.Date = new Class({
     },
     getValue:function(){
         return this.value ? ludo.util.parseDate(this.value, this.displayFormat).format(this.inputFormat) : undefined;
+    }
+});/* ../ludojs/src/form/reset-button.js */
+/**
+ * Special Button used to reset all form fields of component back to it's original state.
+ * This button will automatically be disabled when the form is "clean", and disabled when it's "dirty".
+ * @namespace form
+ * @class ResetButton
+ * @extends form.Button
+ */
+ludo.form.ResetButton = new Class({
+    Extends:ludo.form.Button,
+    type:'form.ResetButton',
+    /**
+     * Value of button
+     * @attribute {String} value
+     * @default 'Reset'
+     */
+    value:'Reset',
+
+    component:undefined,
+
+    ludoRendered:function () {
+        this.parent();
+        this.component = this.getParentComponent();
+        var manager = this.component.getFormManager();
+        if (this.component) {
+            manager.addEvent('dirty', this.enable.bind(this));
+            manager.addEvent('clean', this.disable.bind(this));
+        }
+
+        if(!manager.isDirty()){
+            this.disable();
+        }
+        this.addEvent('click', this.reset.bind(this));
+    },
+
+    reset:function () {
+        if (this.component) {
+            this.component.reset();
+        }
     }
 });/* ../ludojs/src/form/combo-tree.js */
 /**
@@ -24319,41 +24318,41 @@ ludo.form.Spinner = new Class({
     }
 });/* ../ludojs/src/form/select.js */
 /**
- Select box (&lt;select>) 
+ Select box (&lt;select>)
  @namespace form
  @class Select
  @extends form.Element
  @constructor
  @param {Object} config
  @example
-    {
-        type:'form.Select',
-        name:'country',
-        valueKey:'id',
-        textKey:'title',
-        emptyItem:{
-            id:'',title:'Where do you live?'
-        },
-        dataSource:{
-            resource:'Country',
-            service:'read'
-        }
-    }
+ {
+     type:'form.Select',
+     name:'country',
+     valueKey:'id',
+     textKey:'title',
+     emptyItem:{
+         id:'',title:'Where do you live?'
+     },
+     dataSource:{
+         resource:'Country',
+         service:'read'
+     }
+ }
  to populate the select box from the Country service on the server. The "id" column will be used as value for the options
  and title for the displayed text.
 
  @example
-    {
-        type:'form.Select',
-        emptyItem:{
-            value:'',text:'Please select an option'
-        },
-        options:[
-            { value:'1',text : 'Option a' },
-            { value:'2',text : 'Option b' },
-            { value:'3',text : 'Option c' }
-        ]
-    }
+ {
+     type:'form.Select',
+     emptyItem:{
+         value:'',text:'Please select an option'
+     },
+     options:[
+         { value:'1',text : 'Option a' },
+         { value:'2',text : 'Option b' },
+         { value:'3',text : 'Option c' }
+     ]
+ }
  */
 ludo.form.Select = new Class({
     Extends:ludo.form.LabelElement,
@@ -24364,11 +24363,11 @@ ludo.form.Select = new Class({
      @config {Object} emptyItem
      @default undefined
      @example
-        {
-            id : '',
-            title : 'Please select an option'
+     {
+         id : '',
+         title : 'Please select an option'
 
-        }
+     }
      */
     emptyItem:undefined,
 
@@ -24376,7 +24375,7 @@ ludo.form.Select = new Class({
      Name of column for the values of the select box. This option is useful when populating select box using a collection data source.
      @config valueKey
      @example
-        valueKey : 'id'
+     valueKey : 'id'
      */
     valueKey:'value',
     /**
@@ -24384,8 +24383,8 @@ ludo.form.Select = new Class({
      */
     textKey:'text',
 
-    inputTag : 'select',
-    inputType : '',
+    inputTag:'select',
+    inputType:'',
     /**
      * Config of dataSource.Collection object used to populate the select box from external data
      * @config {Object|ludo.dataSource.Collection} dataSource
@@ -24397,30 +24396,30 @@ ludo.form.Select = new Class({
      @config {Array} options
      @default undefined
      @example
-        options:[
-            { value:'1','Option number 1' },
-            { value:'2','Option number 2' },
-            { value:'3','Option number 3' }
-        ]
+     options:[
+     { value:'1','Option number 1' },
+     { value:'2','Option number 2' },
+     { value:'3','Option number 3' }
+     ]
      */
-    options : undefined,
+    options:undefined,
 
     ludoConfig:function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['emptyItem','options','valueKey','textKey']);
-        if(!this.dataSource)this.dataSource = {};
+        this.setConfigParams(config, ['emptyItem', 'options', 'valueKey', 'textKey']);
+        if (!this.dataSource)this.dataSource = {};
         if (this.dataSource && !this.dataSource.type)this.dataSource.type = 'dataSource.Collection';
     },
 
-    ludoEvents:function(){
+    ludoEvents:function () {
         this.parent();
         if (this.dataSource) {
-            if(this.options && this.dataSourceObj){
-                for(var i=0;i<this.options.length;i++){
+            if (this.options && this.dataSourceObj) {
+                for (var i = 0; i < this.options.length; i++) {
                     this.dataSourceObj.addRecord(this.options[i]);
                 }
             }
-            if(this.dataSourceObj && this.dataSourceObj.hasData()){
+            if (this.dataSourceObj && this.dataSourceObj.hasData()) {
                 this.populate();
             }
             var ds = this.getDataSource();
@@ -24432,14 +24431,14 @@ ludo.form.Select = new Class({
         }
     },
 
-    selectRecord:function(record){
+    selectRecord:function (record) {
         this.setValue(record[this.valueKey]);
     },
 
     populate:function () {
         var data = this.dataSourceObj.getData() || [];
         this.getFormEl().options.length = 0;
-        if(this.emptyItem){
+        if (this.emptyItem) {
             data.splice(0, 0, this.emptyItem);
         }
         for (var i = 0, count = data.length; i < count; i++) {
@@ -24464,10 +24463,12 @@ ludo.form.Select = new Class({
         this.getFormEl().appendChild(option);
     },
 
-    resizeDOM:function(){
+    resizeDOM:function () {
         this.parent();
-        var p = this.els.formEl.parentNode;
-        this.els.formEl.style.width = (p.offsetWidth - ludo.dom.getBW(p) - ludo.dom.getPW(p)) + 'px';
+        if (this.els.formEl) {
+            var p = this.els.formEl.parentNode;
+            this.els.formEl.style.width = (p.offsetWidth - ludo.dom.getBW(p) - ludo.dom.getPW(p)) + 'px';
+        }
     }
 });/* ../ludojs/src/form/filter-text.js */
 /**
@@ -25089,33 +25090,31 @@ ludo.form.TextFilterContainer = new Class({
  * @extends form.Element
  */
 ludo.form.RadioGroup = new Class({
-    Extends: ludo.form.Element,
+    Extends: ludo.form.Select,
     type : 'form.RadioGroup',
     labelWidth : 100,
     checkboxes : [],
     height : undefined,
-    /**
-     * record keys to use for value and text of the radio buttons
-     * @attribute fieldConfig
-     * @default { value : 'value', text : 'text' }
-     */
-    fieldConfig : {
-        value : 'value',
-        text : 'text'
-    },
+    inputTag:'',
 
     ludoDOM : function() {
         this.parent();
         var table = new Element('table');
-        this.getBody().adopt(table);
+        this.getInputCell().adopt(table);
         var tbody = this.els.tBody = new Element('tbody');
         table.adopt(tbody);
     },
 
-    populate : function(data){
-        var row = new Element('tr');
-        this.els.tBody.adopt(row);
+    selectRecord:function(record){
+        this.setValue(record[this.valueKey]);
+    },
 
+    populate : function(){
+        var data = this.dataSource ? this.getDataSource().getData() || [] : [];
+        var row = new Element('tr');
+        this.els.tBody.innerHTML = '';
+        this.els.tBody.adopt(row);
+        this.disposeCheckboxes();
         for(var i=0;i<data.length;i++){
             var cell = new Element('td');
             row.adopt(cell);
@@ -25123,8 +25122,8 @@ ludo.form.RadioGroup = new Class({
             var radio = new ludo.form.Checkbox({
                 inputType : 'radio',
                 name : this.getName(),
-                value : data[i][this.fieldConfig.value],
-                label : data[i][this.fieldConfig.text],
+                value : data[i][this.valueKey],
+                label : data[i][this.textKey],
                 checked  : data[i].checked ? true : false,
                 image : data[i].image ? data[i].image : null,
                 listeners : {
@@ -25143,7 +25142,13 @@ ludo.form.RadioGroup = new Class({
                 });
             }
         }
+    },
 
+    disposeCheckboxes:function(){
+        for(var i=0;i<this.checkboxes.length;i++){
+            this.checkboxes[i].dispose();
+        }
+        this.checkboxes = [];
     },
 
     valueChange : function(){
@@ -25196,7 +25201,7 @@ ludo.form.RadioGroup = new Class({
         if(radio){
             return radio.getValue();
         }
-        return null;
+        return undefined;
     },
     /**
      * Return reference to selected radio button component
@@ -25209,7 +25214,7 @@ ludo.form.RadioGroup = new Class({
                 return this.checkboxes[i];
             }
         }
-        return null;
+        return undefined;
     },
     /**
      * The radio button with the chose value will be checked

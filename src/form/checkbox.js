@@ -59,7 +59,7 @@ ludo.form.Checkbox = new Class({
     addInput:function () {
         var id = this.getFormElId();
         var radio;
-        if (Browser.ie && Browser.version < 9) {
+        if (Browser.ie && parseInt(Browser.version) < 9) {
             radio = document.createElement('<input type="' + this.inputType + '" name="' + this.getName() + '" value="' + this.value + '" id="' + id + '">');
             this.getInputCell().adopt(radio);
             this.els.formEl = document.id(radio);

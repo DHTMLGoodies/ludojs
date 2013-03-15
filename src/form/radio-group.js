@@ -7,33 +7,31 @@
  * @extends form.Element
  */
 ludo.form.RadioGroup = new Class({
-    Extends: ludo.form.Element,
+    Extends: ludo.form.Select,
     type : 'form.RadioGroup',
     labelWidth : 100,
     checkboxes : [],
     height : undefined,
-    /**
-     * record keys to use for value and text of the radio buttons
-     * @attribute fieldConfig
-     * @default { value : 'value', text : 'text' }
-     */
-    fieldConfig : {
-        value : 'value',
-        text : 'text'
-    },
+    inputTag:'',
 
     ludoDOM : function() {
         this.parent();
         var table = new Element('table');
-        this.getBody().adopt(table);
+        this.getInputCell().adopt(table);
         var tbody = this.els.tBody = new Element('tbody');
         table.adopt(tbody);
     },
 
-    populate : function(data){
-        var row = new Element('tr');
-        this.els.tBody.adopt(row);
+    selectRecord:function(record){
+        this.setValue(record[this.valueKey]);
+    },
 
+    populate : function(){
+        var data = this.dataSource ? this.getDataSource().getData() || [] : [];
+        var row = new Element('tr');
+        this.els.tBody.innerHTML = '';
+        this.els.tBody.adopt(row);
+        this.disposeCheckboxes();
         for(var i=0;i<data.length;i++){
             var cell = new Element('td');
             row.adopt(cell);
@@ -41,8 +39,8 @@ ludo.form.RadioGroup = new Class({
             var radio = new ludo.form.Checkbox({
                 inputType : 'radio',
                 name : this.getName(),
-                value : data[i][this.fieldConfig.value],
-                label : data[i][this.fieldConfig.text],
+                value : data[i][this.valueKey],
+                label : data[i][this.textKey],
                 checked  : data[i].checked ? true : false,
                 image : data[i].image ? data[i].image : null,
                 listeners : {
@@ -61,7 +59,13 @@ ludo.form.RadioGroup = new Class({
                 });
             }
         }
+    },
 
+    disposeCheckboxes:function(){
+        for(var i=0;i<this.checkboxes.length;i++){
+            this.checkboxes[i].dispose();
+        }
+        this.checkboxes = [];
     },
 
     valueChange : function(){
@@ -114,7 +118,7 @@ ludo.form.RadioGroup = new Class({
         if(radio){
             return radio.getValue();
         }
-        return null;
+        return undefined;
     },
     /**
      * Return reference to selected radio button component
@@ -127,7 +131,7 @@ ludo.form.RadioGroup = new Class({
                 return this.checkboxes[i];
             }
         }
-        return null;
+        return undefined;
     },
     /**
      * The radio button with the chose value will be checked

@@ -109,11 +109,7 @@ ludo.form.Text = new Class({
 	},
 
 	validateKey:function (e) {
-		if (e.control || e.alt) {
-			return undefined;
-		}
-
-		if (this.regex && e.key && e.key.length == 1) {
+		if (!e.control && !e.alt && this.regex && e.key && e.key.length == 1) {
 			if (!this.regex.test(e.key)) {
 				return false;
 			}

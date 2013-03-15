@@ -494,6 +494,11 @@ ludo.View = new Class({
 		*/
 	},
 
+    /**
+     * Returns class used to display messages while remote content is being loaded
+     * @method getLoader
+     * @return {view.Loader}
+     */
     getLoader:function(){
         if(this.loader === undefined){
             this.loader = new ludo.view.Loader({
