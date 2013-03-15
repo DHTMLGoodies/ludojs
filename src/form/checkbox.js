@@ -166,7 +166,9 @@ ludo.form.Checkbox = new Class({
     setChecked:function (checked) {
         this.setCheckedProperty(checked);
         this.fireEvent('change', [this.getValue(), this]);
+        this.value = this.getValue();
         this.toggleImage();
+        this.toggleDirtyFlag();
     },
 
     setCheckedProperty:function(checked){
