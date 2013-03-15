@@ -29,7 +29,6 @@ ludo.view.ButtonBar = new Class({
                 config.children[0].containerCss['margin-left'] = 2
             }
         }
-		//
         this.parent(config);
     },
     ludoDOM:function () {

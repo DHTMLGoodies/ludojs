@@ -16,7 +16,7 @@ ludo.form.Checkbox = new Class({
      * @type string
      * @default null
      */
-    image:null,
+    image:undefined,
     /**
      * Initial state
      * @attribute {Boolean} checked
@@ -42,11 +42,11 @@ ludo.form.Checkbox = new Class({
     ],
 
     ludoConfig:function (config) {
+        config = config || {};
+        config.value = config.value || '1';
         this.parent(config);
-        this.inputType = config.inputType || this.inputType;
-        this.image = config.image || this.image;
-        this.checked = config.checked || this.checked;
-        if (!this.value)this.value = '1';
+        this.setConfigParams(config, ['inputType','image','checked']);
+        this.initialValue = this.constructorValue = this.checked ? this.value : '';
     },
 
     ludoDOM:function () {
@@ -74,6 +74,9 @@ ludo.form.Checkbox = new Class({
             });
         }
         this.els.formEl.addEvent('click', this.toggleImage.bind(this));
+        if(this.inputType === 'checkbox'){
+            this.els.formEl.addEvent('click', this.valueChange.bind(this));
+        }
         if (this.checked) {
             this.getFormEl().checked = true;
             this.toggleImage();
@@ -101,10 +104,7 @@ ludo.form.Checkbox = new Class({
     },
 
     getImageCell:function () {
-        if (this.els.imageCell === undefined) {
-            this.els.imageCell = this.getBody().getElement('.input-image');
-        }
-        return this.els.imageCell;
+        return this.getCell('.input-image','imageCell');
     },
 
     setWidthOfLabel:function () {
@@ -156,10 +156,7 @@ ludo.form.Checkbox = new Class({
     },
 
     getValue:function () {
-        if (this.isChecked()) {
-            return this.getFormEl().get('value');
-        }
-        return '';
+        return this.isChecked() ? this.getFormEl().get('value') : '';
     },
     /**
      * Set checkbox to checked or unchecked
@@ -167,13 +164,27 @@ ludo.form.Checkbox = new Class({
      * @param {Boolean} checked
      */
     setChecked:function (checked) {
+        this.setCheckedProperty(checked);
+        this.fireEvent('change', [this.getValue(), this]);
+        this.toggleImage();
+    },
+
+    setCheckedProperty:function(checked){
         if(checked){
             this.getFormEl().setProperty('checked', '1');
         }else{
             this.getFormEl().removeProperty('checked');
         }
+    },
 
-        this.fireEvent('change', [this.getValue(), this]);
+    valueChange:function(){
+        this.value = this.isChecked() ? this.getFormEl().get('value') : '';
+        this.toggleDirtyFlag();
+    },
+
+    reset:function(){
+        this.setCheckedProperty(this.initialValue ? true : false);
+        this.fireEvent('valueChange', [this.getValue(), this]);
         this.toggleImage();
     },
 
@@ -182,7 +193,7 @@ ludo.form.Checkbox = new Class({
             if (this.isChecked()) {
                 ludo.dom.addClass(this.els.radioImageDiv, 'ludo-radio-image-checked');
             } else {
-                this.els.radioImageDiv.removeClass('ludo-radio-image-checked');
+                ludo.dom.removeClass(this.els.radioImageDiv, 'ludo-radio-image-checked');
             }
         }
     }

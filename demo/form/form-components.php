@@ -7,6 +7,8 @@ require_once("../includes/demo-header.php");
 <script type="text/javascript" src="../../src/form/combo.js"></script>
 <script type="text/javascript" src="../../src/menu/button.js"></script>
 <script type="text/javascript" src="../../src/form/select.js"></script>
+<script type="text/javascript" src="../../src/form/element.js"></script>
+<script type="text/javascript" src="../../src/form/checkbox.js"></script>
 <script type="text/javascript" src="../../src/form/radio-group.js"></script>
 <style type="text/css">
     .ludo-form-text-element input, .ludo-form-text-element textarea {
@@ -75,7 +77,7 @@ require_once("../includes/demo-header.php");
                     { type:'form.Date', name:'birth', readonly:true, id:'birth', stretchField:true, 'label':'Born'},
                     { type:'form.File', name:'picture', label:'Picture', value:'', height:25 },
                     { type:'form.DisplayField', label:'form.DisplayField', value:'My value'},
-                    { type:'form.Checkbox', label:'I agree'},
+                    { type:'form.Checkbox', label:'I agree', id:"agree"},
                     { type:'form.RadioGroup',
                         id:'gender',
                         label:'Gender',
@@ -117,12 +119,10 @@ require_once("../includes/demo-header.php");
                     resizable:true,
                     html:'Thank you. Your data has been saved..'
                 })
-
             }.bind(this)
         }
     });
 
 </script>
-
 </body>
 </html>

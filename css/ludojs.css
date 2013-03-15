@@ -1,4 +1,4 @@
-/* Generated Fri Mar 15 4:08:10 CET 2013 */
+/* Generated Fri Mar 15 5:20:18 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -1865,6 +1865,12 @@ input.ludo-form-el-invalid{
     font-family: arial, sans-serif;
     font-size: 12px;
     font-weight:bold;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 div.ludo-menu-menu label{
    font-size:11px;
