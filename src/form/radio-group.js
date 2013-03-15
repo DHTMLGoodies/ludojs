@@ -36,7 +36,6 @@ ludo.form.RadioGroup = new Class({
                 name : this.getName(),
                 value : data[i][this.valueKey],
                 label : data[i][this.textKey],
-                checked  : data[i].checked ? true : false,
                 image : data[i].image ? data[i].image : null,
                 listeners : {
                     change : this.valueChange.bind(this)
@@ -46,13 +45,8 @@ ludo.form.RadioGroup = new Class({
             cell.adopt(radio.getEl());
         }
 
-        if(data.length > 0){
-            var cellHeight = cell.getSize().y;
-            if(cellHeight > this.getHeight()){
-                this.resize({
-                    height : cellHeight
-                });
-            }
+        if (this.value) {
+            this.setValue(this.value);
         }
     },
 

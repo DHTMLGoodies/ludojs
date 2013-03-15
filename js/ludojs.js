@@ -1,4 +1,4 @@
-/* Generated Fri Mar 15 1:34:16 CET 2013 */
+/* Generated Fri Mar 15 1:57:35 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -15854,9 +15854,6 @@ ludo.form.Element = new Class({
 	suffix:'',
 
     value:'',
-    remote:{
-        isJSON:true
-    },
 
     onLoadMessage:'',
 
@@ -15880,7 +15877,6 @@ ludo.form.Element = new Class({
      * @default undefined
      */
     fieldWidth:undefined,
-    data:null,
 
     /**
      * Custom CSS rules to apply to input element
@@ -15889,7 +15885,6 @@ ludo.form.Element = new Class({
      * @default undefined
      */
     formCss:undefined,
-    elementId:undefined,
     /**
      * Let input field use all remaining space of the component
      * @attribute stretchField
@@ -15961,10 +15956,10 @@ ludo.form.Element = new Class({
      @property validator
      @type Object
      @example
-     validator : { type : 'form.validator.Md5', value : 'MD5 hash of something' }
+        validator : { type : 'form.validator.Md5', value : 'MD5 hash of something' }
      In order to validate this field, the MD5 of form field value must match form.validator.Md5.value
      @example
-     validator:function(value){
+        validator:function(value){
 	 		return value === 'Valid value';
 	 	}
      is example of simple function used as validator.
@@ -15979,12 +15974,12 @@ ludo.form.Element = new Class({
         var defaultConfig = this.getInheritedFormConfig();
         this.labelWidth = defaultConfig.labelWidth || this.labelWidth;
         this.fieldWidth = defaultConfig.fieldWidth || this.fieldWidth;
-        this.elementId = defaultConfig.elementId || this.elementId;
 
         var keys = ['label', 'suffix', 'formCss', 'validator', 'stretchField', 'required', 'selectOnFocus', 'twin', 'disabled', 'labelWidth', 'fieldWidth',
-            'elementId', 'value', 'data'];
+            'value', 'data'];
         this.setConfigParams(config, keys);
 
+        this.elementId = 'el-' + this.id;
         this.formCss = defaultConfig.formCss || this.formCss;
 
         if (defaultConfig.height && config.height === undefined)this.height = defaultConfig.height;
@@ -15998,13 +15993,10 @@ ludo.form.Element = new Class({
         this.initialValue = this.constructorValue = this.value;
         if (!this.name)this.name = 'ludo-form-el-' + String.uniqueID();
 
-
-
         if (this.dataSource) {
             this.isReady = false;
             this.getDataSource().addEvent('load', this.setReady.bind(this));
         }
-
         ludo.Form.add(this);
         if(this.required)this.applyValidatorFns(['required']);
         this.applyValidatorFns(['twin']);
@@ -16108,9 +16100,9 @@ ludo.form.Element = new Class({
             if (this.fieldWidth) {
                 this.els.formEl.style.width = (this.fieldWidth - ludo.dom.getPW(this.els.formEl) - ludo.dom.getBW(this.els.formEl)) + 'px';
             }
-            if (this.elementId) {
-                this.els.formEl.id = this.elementId;
-            }
+
+            this.els.formEl.id = this.elementId;
+
             if (this.formCss) {
                 this.els.formEl.setStyles(this.formCss);
             }
@@ -16118,9 +16110,6 @@ ludo.form.Element = new Class({
     },
 
     getFormElId:function () {
-        if (!this.elementId) {
-            this.elementId = 'ludo-form-el-' + String.uniqueID();
-        }
         return this.elementId;
     },
 
@@ -25119,7 +25108,6 @@ ludo.form.RadioGroup = new Class({
                 name : this.getName(),
                 value : data[i][this.valueKey],
                 label : data[i][this.textKey],
-                checked  : data[i].checked ? true : false,
                 image : data[i].image ? data[i].image : null,
                 listeners : {
                     change : this.valueChange.bind(this)
@@ -25129,13 +25117,8 @@ ludo.form.RadioGroup = new Class({
             cell.adopt(radio.getEl());
         }
 
-        if(data.length > 0){
-            var cellHeight = cell.getSize().y;
-            if(cellHeight > this.getHeight()){
-                this.resize({
-                    height : cellHeight
-                });
-            }
+        if (this.value) {
+            this.setValue(this.value);
         }
     },
 

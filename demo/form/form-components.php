@@ -9,16 +9,17 @@ require_once("../includes/demo-header.php");
 <script type="text/javascript" src="../../src/form/select.js"></script>
 <script type="text/javascript" src="../../src/form/radio-group.js"></script>
 <style type="text/css">
-.ludo-form-text-element input, .ludo-form-text-element textarea{
-    border:0;
-    padding:0;
-    outline: none;
-}
-.ludo-form-text-element{
-    border:1px solid #ccc;
-    background-color:#FFF;
-    padding:1px;
-}
+    .ludo-form-text-element input, .ludo-form-text-element textarea {
+        border: 0;
+        padding: 0;
+        outline: none;
+    }
+
+    .ludo-form-text-element {
+        border: 1px solid #ccc;
+        background-color: #FFF;
+        padding: 1px;
+    }
 
 
 </style>
@@ -64,13 +65,13 @@ require_once("../includes/demo-header.php");
                     { type:'form.Text', minLength:4, 'label':'Zip code', stretchField:true, name:'zipcode', value:'' },
                     { type:'form.Text', name:'city', stretchField:true, 'label':'City', value:'' },
                     { type:'form.Select', name:'country', stretchField:true, 'label':'Country',
-                        valueKey:'id',textKey:'name',
+                        valueKey:'id', textKey:'name',
                         emptyItem:{
-                            id:'',name:'Select country'
+                            id:'', name:'Select country'
                         },
-                    dataSource:{
-                        resource:'Countries',service:'read',url:'../controller.php'
-                    }},
+                        dataSource:{
+                            resource:'Countries', service:'read', url:'../controller.php'
+                        }},
                     { type:'form.Date', name:'birth', readonly:true, id:'birth', stretchField:true, 'label':'Born'},
                     { type:'form.File', name:'picture', label:'Picture', value:'', height:25 },
                     { type:'form.DisplayField', label:'form.DisplayField', value:'My value'},
@@ -79,11 +80,13 @@ require_once("../includes/demo-header.php");
                         id:'gender',
                         label:'Gender',
                         options:[
-                        { value:'female', text : 'Female' },
-                        { value:'male', text : 'Male' }
-                    ]},
-                    { type:'form.Slider',  id:'mySlider', direction:'horizontal', label:'form.Slider', value:10, minValue:0, maxValue:255 },
-                    { type:'form.Number', label:'form.Number(linked)', minValue:0,maxValue:255, fieldWidth:50, maxLength:3, suffix:'RGB Color', linkWith:'mySlider'}
+                            { value:'female', text:'Female' },
+                            { value:'male', text:'Male' }
+                        ],
+                        value:'male'
+                    },
+                    { type:'form.Slider', id:'mySlider', direction:'horizontal', label:'form.Slider', value:10, minValue:0, maxValue:255 },
+                    { type:'form.Number', label:'form.Number(linked)', minValue:0, maxValue:255, fieldWidth:50, maxLength:3, suffix:'RGB Color', linkWith:'mySlider'}
                 ]}
         ],
 
@@ -91,8 +94,8 @@ require_once("../includes/demo-header.php");
             align:'left',
             children:[
                 { type:'form.Button', toggle:true, icon:'../images/icon-left.png', value:'Left', width:80, toggleGroup:'alignment' },
-                { type:'form.Button', toggle:true, icon: '../images/icon-center.png', value:'Center', width:80, toggleGroup: 'alignment' },
-                { type:'form.Button', toggle:true, icon:'../images/icon-right.png', value:'Right', width:80, toggleGroup: 'alignment' },
+                { type:'form.Button', toggle:true, icon:'../images/icon-center.png', value:'Center', width:80, toggleGroup:'alignment' },
+                { type:'form.Button', toggle:true, icon:'../images/icon-right.png', value:'Right', width:80, toggleGroup:'alignment' },
                 {
                     weight:1
                 },

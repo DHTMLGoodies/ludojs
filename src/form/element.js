@@ -20,9 +20,6 @@ ludo.form.Element = new Class({
 	suffix:'',
 
     value:'',
-    remote:{
-        isJSON:true
-    },
 
     onLoadMessage:'',
 
@@ -46,7 +43,6 @@ ludo.form.Element = new Class({
      * @default undefined
      */
     fieldWidth:undefined,
-    data:null,
 
     /**
      * Custom CSS rules to apply to input element
@@ -55,7 +51,6 @@ ludo.form.Element = new Class({
      * @default undefined
      */
     formCss:undefined,
-    elementId:undefined,
     /**
      * Let input field use all remaining space of the component
      * @attribute stretchField
@@ -64,13 +59,6 @@ ludo.form.Element = new Class({
      */
     stretchField:true,
 
-    /**
-     * On focus, auto select text of input field.
-     * @attribute selectOnFocus
-     * @type {Boolean}
-     * @default false
-     */
-    selectOnFocus:false,
 
     /**
      * Is a value required for this field
@@ -127,10 +115,10 @@ ludo.form.Element = new Class({
      @property validator
      @type Object
      @example
-     validator : { type : 'form.validator.Md5', value : 'MD5 hash of something' }
+        validator : { type : 'form.validator.Md5', value : 'MD5 hash of something' }
      In order to validate this field, the MD5 of form field value must match form.validator.Md5.value
      @example
-     validator:function(value){
+        validator:function(value){
 	 		return value === 'Valid value';
 	 	}
      is example of simple function used as validator.
@@ -145,12 +133,12 @@ ludo.form.Element = new Class({
         var defaultConfig = this.getInheritedFormConfig();
         this.labelWidth = defaultConfig.labelWidth || this.labelWidth;
         this.fieldWidth = defaultConfig.fieldWidth || this.fieldWidth;
-        this.elementId = defaultConfig.elementId || this.elementId;
 
-        var keys = ['label', 'suffix', 'formCss', 'validator', 'stretchField', 'required', 'selectOnFocus', 'twin', 'disabled', 'labelWidth', 'fieldWidth',
-            'elementId', 'value', 'data'];
+        var keys = ['label', 'suffix', 'formCss', 'validator', 'stretchField', 'required', 'twin', 'disabled', 'labelWidth', 'fieldWidth',
+            'value', 'data'];
         this.setConfigParams(config, keys);
 
+        this.elementId = 'el-' + this.id;
         this.formCss = defaultConfig.formCss || this.formCss;
 
         if (defaultConfig.height && config.height === undefined)this.height = defaultConfig.height;
@@ -164,13 +152,10 @@ ludo.form.Element = new Class({
         this.initialValue = this.constructorValue = this.value;
         if (!this.name)this.name = 'ludo-form-el-' + String.uniqueID();
 
-
-
         if (this.dataSource) {
             this.isReady = false;
             this.getDataSource().addEvent('load', this.setReady.bind(this));
         }
-
         ludo.Form.add(this);
         if(this.required)this.applyValidatorFns(['required']);
         this.applyValidatorFns(['twin']);
@@ -213,9 +198,7 @@ ludo.form.Element = new Class({
             formEl.addEvent('change', this.change.bind(this));
             formEl.addEvent('blur', this.blur.bind(this));
         }
-        if (this.selectOnFocus) {
-            formEl.addEvent('focus', this.selectText.bind(this));
-        }
+
     },
 
     ludoRendered:function () {
@@ -263,10 +246,6 @@ ludo.form.Element = new Class({
         return {};
     },
 
-    selectText:function () {
-        this.getFormEl().select();
-    },
-
     ludoCSS:function () {
         this.parent();
         this.getEl().addClass('ludo-form-element');
@@ -274,9 +253,9 @@ ludo.form.Element = new Class({
             if (this.fieldWidth) {
                 this.els.formEl.style.width = (this.fieldWidth - ludo.dom.getPW(this.els.formEl) - ludo.dom.getBW(this.els.formEl)) + 'px';
             }
-            if (this.elementId) {
-                this.els.formEl.id = this.elementId;
-            }
+
+            this.els.formEl.id = this.elementId;
+
             if (this.formCss) {
                 this.els.formEl.setStyles(this.formCss);
             }
@@ -284,9 +263,6 @@ ludo.form.Element = new Class({
     },
 
     getFormElId:function () {
-        if (!this.elementId) {
-            this.elementId = 'ludo-form-el-' + String.uniqueID();
-        }
         return this.elementId;
     },
 

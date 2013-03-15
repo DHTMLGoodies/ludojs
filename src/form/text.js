@@ -78,9 +78,18 @@ ludo.form.Text = new Class({
      */
     readonly : false,
 
-	ludoConfig:function (config) {
+    /**
+     * On focus, auto select text of input field.
+     * @attribute selectOnFocus
+     * @type {Boolean}
+     * @default false
+     */
+    selectOnFocus:false,
+
+
+    ludoConfig:function (config) {
 		this.parent(config);
-        var keys = ['regex','minLength','maxLength','defaultValue','validateKeyStrokes','ucFirst','ucWords','readonly'];
+        var keys = ['selectOnFocus', 'regex','minLength','maxLength','defaultValue','validateKeyStrokes','ucFirst','ucWords','readonly'];
         this.setConfigParams(config,keys);
         this.applyValidatorFns(['minLength','maxLength','regex']);
     },
@@ -97,6 +106,10 @@ ludo.form.Text = new Class({
 		}
         ludo.dom.addClass(el.parentNode, 'ludo-form-text-element');
 		el.addEvent('keyup', this.sendKeyEvent.bind(this));
+
+        if (this.selectOnFocus) {
+            el.addEvent('focus', this.selectText.bind(this));
+        }
 	},
 
 	sendKeyEvent:function(){
@@ -177,6 +190,10 @@ ludo.form.Text = new Class({
 		var end = this.getSelectionEnd();
 		return end > start;
 	},
+
+    selectText:function () {
+        this.getFormEl().select();
+    },
 
 	getSelectionStart:function () {
 		if (this.els.formEl.createTextRange) {
