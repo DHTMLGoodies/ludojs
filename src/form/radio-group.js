@@ -4,12 +4,11 @@
  * @description class for a group of radio buttons. Config for the radio buttons should be passed to the
  * constructor or loaded remotely. Here's an example of format:
  * [{ value: 1, text : 'my radio', image: 'images/my-radio-image.png' }]
- * @extends form.Element
+ * @extends form.Select
  */
 ludo.form.RadioGroup = new Class({
     Extends: ludo.form.Select,
     type : 'form.RadioGroup',
-    labelWidth : 100,
     checkboxes : [],
     height : undefined,
     inputTag:'',
@@ -20,10 +19,6 @@ ludo.form.RadioGroup = new Class({
         this.getInputCell().adopt(table);
         var tbody = this.els.tBody = new Element('tbody');
         table.adopt(tbody);
-    },
-
-    selectRecord:function(record){
-        this.setValue(record[this.valueKey]);
     },
 
     populate : function(){
