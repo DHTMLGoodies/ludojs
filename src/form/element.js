@@ -338,6 +338,17 @@ ludo.form.Element = new Class({
         this.validate();
 
         if (this.getFormEl())this.value = this.getFormEl().value;
+        this.toggleDirtyFlag();
+        /**
+         * On blur event
+         * @event blur
+         * @param {String|Boolean|Object|Number} value
+         * $param {View} this
+         */
+        this.fireEvent('blur', [ this.value, this ]);
+    },
+
+    toggleDirtyFlag:function(){
         if (this.value !== this.initialValue) {
             /**
              * @event dirty
@@ -357,13 +368,6 @@ ludo.form.Element = new Class({
             this.setClean();
             this.fireEvent('clean', [this.value, this]);
         }
-        /**
-         * On blur event
-         * @event blur
-         * @param {String|Boolean|Object|Number} value
-         * $param {View} this
-         */
-        this.fireEvent('blur', [ this.value, this ]);
     },
 
     hasFocus:function () {
@@ -537,12 +541,12 @@ ludo.form.Element = new Class({
 
     setDirty:function () {
         this.dirtyFlag = true;
-        this.getEl().addClass('ludo-form-el-dirty');
+        ludo.dom.addClass(this.getEl(), 'ludo-form-el-dirty');
     },
 
     setClean:function () {
         this.dirtyFlag = false;
-        this.getEl().removeClass('ludo-form-el-dirty');
+        ludo.dom.removeClass(this.getEl(), 'ludo-form-el-dirty');
     },
 
     setReady:function () {

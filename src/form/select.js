@@ -114,6 +114,7 @@ ludo.form.Select = new Class({
 
     selectRecord:function (record) {
         this.setValue(record[this.valueKey]);
+        this.toggleDirtyFlag();
     },
 
     populate:function () {

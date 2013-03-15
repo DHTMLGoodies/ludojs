@@ -243,13 +243,6 @@ ludo.model.Model = new Class({
                          * @param {Object} ludo.model
                          */
                         this.fireEvent('loadFailed', [request.getResponse(), this]);
-                        /**
-                         * success parameter in response from server returned false
-                         * @event loadfail
-                         * @param {Object} JSON from server
-                         * @param {Object} ludo.model
-                         */
-                        this.fireEvent('loadfail', [request.getResponse(), this]);
                     }.bind(this)
                 }
             });

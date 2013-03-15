@@ -1,4 +1,4 @@
-/* Generated Fri Mar 15 1:57:35 CET 2013 */
+/* Generated Fri Mar 15 4:08:10 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -15893,13 +15893,6 @@ ludo.form.Element = new Class({
      */
     stretchField:true,
 
-    /**
-     * On focus, auto select text of input field.
-     * @attribute selectOnFocus
-     * @type {Boolean}
-     * @default false
-     */
-    selectOnFocus:false,
 
     /**
      * Is a value required for this field
@@ -15975,7 +15968,7 @@ ludo.form.Element = new Class({
         this.labelWidth = defaultConfig.labelWidth || this.labelWidth;
         this.fieldWidth = defaultConfig.fieldWidth || this.fieldWidth;
 
-        var keys = ['label', 'suffix', 'formCss', 'validator', 'stretchField', 'required', 'selectOnFocus', 'twin', 'disabled', 'labelWidth', 'fieldWidth',
+        var keys = ['label', 'suffix', 'formCss', 'validator', 'stretchField', 'required', 'twin', 'disabled', 'labelWidth', 'fieldWidth',
             'value', 'data'];
         this.setConfigParams(config, keys);
 
@@ -16039,9 +16032,7 @@ ludo.form.Element = new Class({
             formEl.addEvent('change', this.change.bind(this));
             formEl.addEvent('blur', this.blur.bind(this));
         }
-        if (this.selectOnFocus) {
-            formEl.addEvent('focus', this.selectText.bind(this));
-        }
+
     },
 
     ludoRendered:function () {
@@ -16087,10 +16078,6 @@ ludo.form.Element = new Class({
             return cmp.formConfig || {};
         }
         return {};
-    },
-
-    selectText:function () {
-        this.getFormEl().select();
     },
 
     ludoCSS:function () {
@@ -16185,6 +16172,17 @@ ludo.form.Element = new Class({
         this.validate();
 
         if (this.getFormEl())this.value = this.getFormEl().value;
+        this.toggleDirtyFlag();
+        /**
+         * On blur event
+         * @event blur
+         * @param {String|Boolean|Object|Number} value
+         * $param {View} this
+         */
+        this.fireEvent('blur', [ this.value, this ]);
+    },
+
+    toggleDirtyFlag:function(){
         if (this.value !== this.initialValue) {
             /**
              * @event dirty
@@ -16204,13 +16202,6 @@ ludo.form.Element = new Class({
             this.setClean();
             this.fireEvent('clean', [this.value, this]);
         }
-        /**
-         * On blur event
-         * @event blur
-         * @param {String|Boolean|Object|Number} value
-         * $param {View} this
-         */
-        this.fireEvent('blur', [ this.value, this ]);
     },
 
     hasFocus:function () {
@@ -16384,12 +16375,12 @@ ludo.form.Element = new Class({
 
     setDirty:function () {
         this.dirtyFlag = true;
-        this.getEl().addClass('ludo-form-el-dirty');
+        ludo.dom.addClass(this.getEl(), 'ludo-form-el-dirty');
     },
 
     setClean:function () {
         this.dirtyFlag = false;
-        this.getEl().removeClass('ludo-form-el-dirty');
+        ludo.dom.removeClass(this.getEl(), 'ludo-form-el-dirty');
     },
 
     setReady:function () {
@@ -18719,13 +18710,6 @@ ludo.model.Model = new Class({
                          * @param {Object} ludo.model
                          */
                         this.fireEvent('loadFailed', [request.getResponse(), this]);
-                        /**
-                         * success parameter in response from server returned false
-                         * @event loadfail
-                         * @param {Object} JSON from server
-                         * @param {Object} ludo.model
-                         */
-                        this.fireEvent('loadfail', [request.getResponse(), this]);
                     }.bind(this)
                 }
             });
@@ -22038,7 +22022,7 @@ ludo.form.Manager = new Class({
 	onCleanFormElement:function (value, formComponent) {
 		this.dirtyIds.erase(formComponent.getId());
 
-		if (this.dirtyIds.length == 0) {
+		if (this.dirtyIds.length === 0) {
 			/**
 			 * @event clean
 			 * @description Fired when value of all components are equal to their original start value
@@ -22115,7 +22099,6 @@ ludo.form.Manager = new Class({
 	 * @description Return array of values of all form elements inside this component. The format is [{name:value},{name:value}]
 	 */
 	getValues:function () {
-
 		var ret = {};
 		for (var i = 0; i < this.formComponents.length; i++) {
 			var el = this.formComponents[i];
@@ -22164,9 +22147,11 @@ ludo.form.Manager = new Class({
 	save:function () {
 		if (this.getUrl() || ludo.config.getUrl()) {
 			this.fireEvent('invalid');
-            this.requestHandler().send(this.form.service || 'save', undefined, this.getValues(),{
-            "progressBarId":this.getProgressBarId()
-            });
+            this.requestHandler().send(this.form.service || 'save', undefined, this.getValues(),
+                {
+                    "progressBarId":this.getProgressBarId()
+                }
+            );
 		}
 	},
     _request:undefined,
@@ -22417,9 +22402,18 @@ ludo.form.Text = new Class({
      */
     readonly : false,
 
-	ludoConfig:function (config) {
+    /**
+     * On focus, auto select text of input field.
+     * @attribute selectOnFocus
+     * @type {Boolean}
+     * @default false
+     */
+    selectOnFocus:false,
+
+
+    ludoConfig:function (config) {
 		this.parent(config);
-        var keys = ['regex','minLength','maxLength','defaultValue','validateKeyStrokes','ucFirst','ucWords','readonly'];
+        var keys = ['selectOnFocus', 'regex','minLength','maxLength','defaultValue','validateKeyStrokes','ucFirst','ucWords','readonly'];
         this.setConfigParams(config,keys);
         this.applyValidatorFns(['minLength','maxLength','regex']);
     },
@@ -22436,6 +22430,10 @@ ludo.form.Text = new Class({
 		}
         ludo.dom.addClass(el.parentNode, 'ludo-form-text-element');
 		el.addEvent('keyup', this.sendKeyEvent.bind(this));
+
+        if (this.selectOnFocus) {
+            el.addEvent('focus', this.selectText.bind(this));
+        }
 	},
 
 	sendKeyEvent:function(){
@@ -22516,6 +22514,10 @@ ludo.form.Text = new Class({
 		var end = this.getSelectionEnd();
 		return end > start;
 	},
+
+    selectText:function () {
+        this.getFormEl().select();
+    },
 
 	getSelectionStart:function () {
 		if (this.els.formEl.createTextRange) {
@@ -24422,6 +24424,7 @@ ludo.form.Select = new Class({
 
     selectRecord:function (record) {
         this.setValue(record[this.valueKey]);
+        this.toggleDirtyFlag();
     },
 
     populate:function () {
@@ -25129,17 +25132,20 @@ ludo.form.RadioGroup = new Class({
         this.checkboxes = [];
     },
 
-    valueChange : function(){
+    valueChange : function(value){
+        this.value = value;
         for(var i=0;i<this.checkboxes.length;i++){
             this.checkboxes[i].toggleImage();
         }
+
         /**
          * @event change
          * @description Value has changed
          * @param {String} value
          * @param {Object} this component
          */
-        this.fireEvent('change', [ this.getValue(), this ]);
+        this.fireEvent('change', [ this.value, this ]);
+        this.toggleDirtyFlag();
     },
 
     ludoRendered : function() {
@@ -25206,6 +25212,7 @@ ludo.form.RadioGroup = new Class({
                 return this.checkboxes[i].check();
             }
         }
+        this.parent(value);
     }
 });/* ../ludojs/src/form/file.js */
 /**
@@ -25829,6 +25836,7 @@ ludo.form.Slider = new Class({
         }
         this.parent(value);
         this.positionSliderHandle();
+        this.toggleDirtyFlag();
     },
 
     resizeDOM:function () {

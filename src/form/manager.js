@@ -139,7 +139,7 @@ ludo.form.Manager = new Class({
 	onCleanFormElement:function (value, formComponent) {
 		this.dirtyIds.erase(formComponent.getId());
 
-		if (this.dirtyIds.length == 0) {
+		if (this.dirtyIds.length === 0) {
 			/**
 			 * @event clean
 			 * @description Fired when value of all components are equal to their original start value
@@ -216,7 +216,6 @@ ludo.form.Manager = new Class({
 	 * @description Return array of values of all form elements inside this component. The format is [{name:value},{name:value}]
 	 */
 	getValues:function () {
-
 		var ret = {};
 		for (var i = 0; i < this.formComponents.length; i++) {
 			var el = this.formComponents[i];
@@ -265,9 +264,11 @@ ludo.form.Manager = new Class({
 	save:function () {
 		if (this.getUrl() || ludo.config.getUrl()) {
 			this.fireEvent('invalid');
-            this.requestHandler().send(this.form.service || 'save', undefined, this.getValues(),{
-            "progressBarId":this.getProgressBarId()
-            });
+            this.requestHandler().send(this.form.service || 'save', undefined, this.getValues(),
+                {
+                    "progressBarId":this.getProgressBarId()
+                }
+            );
 		}
 	},
     _request:undefined,

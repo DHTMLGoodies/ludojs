@@ -189,6 +189,7 @@ ludo.form.Slider = new Class({
         }
         this.parent(value);
         this.positionSliderHandle();
+        this.toggleDirtyFlag();
     },
 
     resizeDOM:function () {

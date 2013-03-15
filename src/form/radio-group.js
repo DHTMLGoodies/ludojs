@@ -57,17 +57,20 @@ ludo.form.RadioGroup = new Class({
         this.checkboxes = [];
     },
 
-    valueChange : function(){
+    valueChange : function(value){
+        this.value = value;
         for(var i=0;i<this.checkboxes.length;i++){
             this.checkboxes[i].toggleImage();
         }
+
         /**
          * @event change
          * @description Value has changed
          * @param {String} value
          * @param {Object} this component
          */
-        this.fireEvent('change', [ this.getValue(), this ]);
+        this.fireEvent('change', [ this.value, this ]);
+        this.toggleDirtyFlag();
     },
 
     ludoRendered : function() {
@@ -134,5 +137,6 @@ ludo.form.RadioGroup = new Class({
                 return this.checkboxes[i].check();
             }
         }
+        this.parent(value);
     }
 });
