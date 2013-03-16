@@ -1,4 +1,4 @@
-/* Generated Fri Mar 15 5:20:18 CET 2013 */
+/* Generated Sat Mar 16 11:52:20 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -10346,7 +10346,6 @@ ludo.view.ButtonBar = new Class({
                 config.children[0].containerCss['margin-left'] = 2
             }
         }
-		//
         this.parent(config);
     },
     ludoDOM:function () {
@@ -23298,15 +23297,12 @@ ludo.form.Checkbox = new Class({
 
     addRadioImage:function () {
         var div = this.els.radioImageDiv = new Element('div');
-
         var radioDivInner = new Element('div');
         ludo.dom.addClass(radioDivInner, 'ludo-radio-image-inner');
         radioDivInner.setStyles({
             'width':'100%',
             'height':'100%',
-            'background-repeat':'no-repeat',
-            'background-position':'center center',
-            'background-image':'url(' + this.image + ')'
+            'background' : 'url(' + this.image + ') no-repeat center center'
         });
 
         div.adopt(radioDivInner);
@@ -23379,7 +23375,9 @@ ludo.form.Checkbox = new Class({
     setChecked:function (checked) {
         this.setCheckedProperty(checked);
         this.fireEvent('change', [this.getValue(), this]);
+        this.value = this.getValue();
         this.toggleImage();
+        this.toggleDirtyFlag();
     },
 
     setCheckedProperty:function(checked){
