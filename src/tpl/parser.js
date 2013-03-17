@@ -19,7 +19,7 @@ ludo.tpl.Parser = new Class({
      */
     getCompiled:function (data, tpl) {
         var records = data;
-        if (!this.isArray(records)) {
+        if (!ludo.util.isArray(records)) {
             records = [records];
         }
         var html = [];

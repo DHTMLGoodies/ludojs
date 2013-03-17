@@ -145,7 +145,7 @@ ludo.grid.Grid = new Class({
 			if (!this.rowManager.type)this.rowManager.type = 'grid.RowManager';
 			this.rowManager = ludo._new(this.rowManager);
 		}
-		if (this.stateful && this.dataSource !== undefined && this.isObject(this.dataSource)) {
+		if (this.stateful && this.dataSource !== undefined && ludo.util.isObject(this.dataSource)) {
 			this.dataSource.id = this.dataSource.id || this.id + '_ds';
 			this.dataSource.stateful = this.stateful;
 		}

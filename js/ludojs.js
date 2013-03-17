@@ -1,4 +1,4 @@
-/* Generated Sat Mar 16 11:52:20 CET 2013 */
+/* Generated Sun Mar 17 15:35:51 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -861,14 +861,6 @@ ludo.Core = new Class({
 		return undefined;
 	},
 
-	isArray:function (obj) {
-		return typeof(obj) == 'object' && (obj instanceof Array);
-	},
-
-	isObject:function (obj) {
-		return typeof(obj) == 'object';
-	},
-
 	getEventEl:function () {
 		if (Browser['ie']) {
 			return document.id(document.documentElement);
@@ -902,17 +894,11 @@ ludo.Core = new Class({
 	},
 
 	getDragStartEvent:function () {
-		if (ludo.util.isTabletOrMobile()) {
-			return 'touchstart';
-		}
-		return 'mousedown';
+        return ludo.util.isTabletOrMobile() ? 'touchstart' : 'mousedown';
 	},
 
 	getDragMoveEvent:function () {
-		if (ludo.util.isTabletOrMobile()) {
-			return 'touchmove';
-		}
-		return 'mousemove';
+        return ludo.util.isTabletOrMobile() ? 'touchmove' : 'mousemove';
 	},
 
 	getDragEndEvent:function () {
@@ -979,11 +965,7 @@ ludo.Core = new Class({
 	},
 
 	getInheritedProperty:function (key) {
-		if (this[key] !== undefined)return this[key];
-		if (this.parentComponent) {
-			return this.parentComponent.getInheritedProperty(key);
-		}
-		return undefined;
+        return this[key] !== undefined ? this[key] : this.parentComponent ? this.parentComponent.getInheritedProperty(key) : undefined;
 	},
 
 	/**
@@ -3919,7 +3901,7 @@ ludo.tpl.Parser = new Class({
      */
     getCompiled:function (data, tpl) {
         var records = data;
-        if (!this.isArray(records)) {
+        if (!ludo.util.isArray(records)) {
             records = [records];
         }
         var html = [];
@@ -12074,7 +12056,7 @@ ludo.dataSource.CollectionSearch = new Class({
 	hasContentInFirstSearch:function () {
 		if (this.searches.length === 0)return false;
 		var s = this.searches[0];
-		return (this.isArray(s) || s.fn !== undefined || (s.txt !== undefined && s.txt.length > 0));
+		return (ludo.util.isArray(s) || s.fn !== undefined || (s.txt !== undefined && s.txt.length > 0));
 	},
 
 	/**
@@ -15206,7 +15188,7 @@ ludo.grid.Grid = new Class({
 			if (!this.rowManager.type)this.rowManager.type = 'grid.RowManager';
 			this.rowManager = ludo._new(this.rowManager);
 		}
-		if (this.stateful && this.dataSource !== undefined && this.isObject(this.dataSource)) {
+		if (this.stateful && this.dataSource !== undefined && ludo.util.isObject(this.dataSource)) {
 			this.dataSource.id = this.dataSource.id || this.id + '_ds';
 			this.dataSource.stateful = this.stateful;
 		}

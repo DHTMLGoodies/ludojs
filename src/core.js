@@ -163,14 +163,6 @@ ludo.Core = new Class({
 		return undefined;
 	},
 
-	isArray:function (obj) {
-		return typeof(obj) == 'object' && (obj instanceof Array);
-	},
-
-	isObject:function (obj) {
-		return typeof(obj) == 'object';
-	},
-
 	getEventEl:function () {
 		if (Browser['ie']) {
 			return document.id(document.documentElement);
@@ -204,17 +196,11 @@ ludo.Core = new Class({
 	},
 
 	getDragStartEvent:function () {
-		if (ludo.util.isTabletOrMobile()) {
-			return 'touchstart';
-		}
-		return 'mousedown';
+        return ludo.util.isTabletOrMobile() ? 'touchstart' : 'mousedown';
 	},
 
 	getDragMoveEvent:function () {
-		if (ludo.util.isTabletOrMobile()) {
-			return 'touchmove';
-		}
-		return 'mousemove';
+        return ludo.util.isTabletOrMobile() ? 'touchmove' : 'mousemove';
 	},
 
 	getDragEndEvent:function () {

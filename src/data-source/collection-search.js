@@ -305,7 +305,7 @@ ludo.dataSource.CollectionSearch = new Class({
 	hasContentInFirstSearch:function () {
 		if (this.searches.length === 0)return false;
 		var s = this.searches[0];
-		return (this.isArray(s) || s.fn !== undefined || (s.txt !== undefined && s.txt.length > 0));
+		return (ludo.util.isArray(s) || s.fn !== undefined || (s.txt !== undefined && s.txt.length > 0));
 	},
 
 	/**
