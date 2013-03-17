@@ -281,11 +281,7 @@ ludo.Core = new Class({
 	},
 
 	getInheritedProperty:function (key) {
-		if (this[key] !== undefined)return this[key];
-		if (this.parentComponent) {
-			return this.parentComponent.getInheritedProperty(key);
-		}
-		return undefined;
+        return this[key] !== undefined ? this[key] : this.parentComponent ? this.parentComponent.getInheritedProperty(key) : undefined;
 	},
 
 	/**
