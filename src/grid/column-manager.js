@@ -68,8 +68,8 @@ ludo.grid.ColumnManager = new Class({
 
 	ludoConfig:function (config) {
 		this.parent(config);
-		if (config.fill !== undefined)this.fill = config.fill;
-		if (config.columns !== undefined)this.columns = config.columns;
+        this.setConfigParams(config, ['fill','columns']);
+
 		this.createColumnLookup();
 
 		if (config.columnKeys !== undefined && this.hasValidColumnKeys(config.columnKeys)) {

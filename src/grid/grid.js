@@ -127,8 +127,7 @@ ludo.grid.Grid = new Class({
 	ludoConfig:function (config) {
 		this.parent(config);
 
-        var keys = ['headerMenu','columnManager','rowManager','mouseOverEffect'];
-        this.setConfigParams(config, keys);
+        this.setConfigParams(config, ['headerMenu','columnManager','rowManager','mouseOverEffect']);
 
 		if (this.columnManager) {
 			if (!this.columnManager.type)this.columnManager.type = 'grid.ColumnManager';

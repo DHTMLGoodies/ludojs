@@ -71,9 +71,7 @@ ludo.dialog.Dialog = new Class({
 			}
 		}
 		this.parent(config);
-		if (config.modal !== undefined) this.modal = config.modal;
-		if (config.autoDispose !== undefined)this.autoDispose = config.autoDispose;
-		if (config.autoHideOnBtnClick !== undefined) this.autoHideOnBtnClick = config.autoHideOnBtnClick;
+        this.setConfigParams(config, ['modal','autoDispose','autoHideOnBtnClick']);
 	},
 
 	ludoDOM:function () {
@@ -83,9 +81,9 @@ ludo.dialog.Dialog = new Class({
 
     getShim:function(){
         if(this.els.shim === undefined){
-            var el = this.els.shim = new Element('div');
+            var el = this.els.shim = document.createElement('div');
             ludo.dom.addClass(el, 'ludo-dialog-shim');
-            el.setStyle('display', 'none');
+            el.style.display='none';
             document.body.adopt(el);
         }
         return this.els.shim;
@@ -132,10 +130,9 @@ ludo.dialog.Dialog = new Class({
 	showShim:function () {
         this.center();
 		if (this.isModal()) {
-			this.getShim().setStyles({
-				display:'',
-				'z-index':this.getEl().getStyle('z-index') - 1
-			});
+            var s = this.getShim().style;
+            s.display='';
+            s.zIndex = this.getEl().getStyle('z-index') - 1;
 			this.resizeShim();
 		}
 	},
@@ -148,7 +145,7 @@ ludo.dialog.Dialog = new Class({
 
 	hideShim:function () {
 		if (this.isModal()) {
-            this.getShim().setStyle('display', 'none');
+            this.getShim().style.display='none';
 		}
 	},
 

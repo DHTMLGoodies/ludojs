@@ -15,9 +15,7 @@ ludo.grid.GridHeader = new Class({
 
 	ludoConfig:function (config) {
 		this.parent(config);
-		this.columnManager = config.columnManager;
-		this.headerMenu = config.headerMenu;
-		this.grid = config.grid;
+        this.setConfigParams(config, ['columnManager','headerMenu','grid']);
 
 		this.measureCellHeight();
 		this.createDOM();

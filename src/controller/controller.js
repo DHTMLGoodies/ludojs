@@ -85,7 +85,7 @@ ludo.controller.Controller = new Class({
         config.useController = false;
 
 		this.parent(config);
-		if (config.broadcast !== undefined)this.broadcast = config.broadcast;
+		if (config.broadcast)this.broadcast = config.broadcast;
 		ludo.controllerManager.registerController(this);
 		if (this['addView'] == undefined) {
 			alert('You need to implement an addView method for the controller (' + this.type + ')');

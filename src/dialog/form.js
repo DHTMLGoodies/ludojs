@@ -18,8 +18,7 @@ ludo.dialog.Form = new Class({
                 }
             ]
         }
-        this.labelWidth = config.labelWidth || this.labelWidth;
-        this.elements = config.elements || this.elements;
+        this.setConfigParams(config, 'labelWidth','elements');
         this.parent(config);
     },
 

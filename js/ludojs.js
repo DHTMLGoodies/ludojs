@@ -1,4 +1,4 @@
-/* Generated Mon Mar 18 18:00:35 CET 2013 */
+/* Generated Mon Mar 18 18:34:08 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -13495,8 +13495,7 @@ ludo.grid.ColumnMove = new Class({
 
 	ludoConfig:function (config) {
 		this.parent(config);
-		this.gridHeader = config.gridHeader;
-		this.columnManager = config.columnManager;
+        this.setConfigParams(config, ['gridHeader','columnManager']);
 	},
 
 	ludoEvents:function(){
@@ -13772,9 +13771,7 @@ ludo.grid.GridHeader = new Class({
 
 	ludoConfig:function (config) {
 		this.parent(config);
-		this.columnManager = config.columnManager;
-		this.headerMenu = config.headerMenu;
-		this.grid = config.grid;
+        this.setConfigParams(config, ['columnManager','headerMenu','grid']);
 
 		this.measureCellHeight();
 		this.createDOM();
@@ -14356,8 +14353,8 @@ ludo.grid.ColumnManager = new Class({
 
 	ludoConfig:function (config) {
 		this.parent(config);
-		if (config.fill !== undefined)this.fill = config.fill;
-		if (config.columns !== undefined)this.columns = config.columns;
+        this.setConfigParams(config, ['fill','columns']);
+
 		this.createColumnLookup();
 
 		if (config.columnKeys !== undefined && this.hasValidColumnKeys(config.columnKeys)) {
@@ -14964,7 +14961,7 @@ ludo.grid.RowManager = new Class({
 
 	ludoConfig:function(config){
 		this.parent(config);
-		if(config.renderer !== undefined)this.renderer = config.renderer;
+		if(config.renderer)this.renderer = config.renderer;
 	}
 
 });/* ../ludojs/src/grid/grid.js */
@@ -15097,8 +15094,7 @@ ludo.grid.Grid = new Class({
 	ludoConfig:function (config) {
 		this.parent(config);
 
-        var keys = ['headerMenu','columnManager','rowManager','mouseOverEffect'];
-        this.setConfigParams(config, keys);
+        this.setConfigParams(config, ['headerMenu','columnManager','rowManager','mouseOverEffect']);
 
 		if (this.columnManager) {
 			if (!this.columnManager.type)this.columnManager.type = 'grid.ColumnManager';
@@ -16432,7 +16428,6 @@ ludo.form.Button = new Class({
         var val = config.value || this.value;
         var len = val ? val.length : 5;
         config.width = config.width || this.width || Math.max(len * 10, 80);
-        config.weight = undefined;
         this.parent(config);
 
         this.setConfigParams(config, ['menu','icon','toggle','disableOnInvalid','defaultSubmit','disabled','selected']);
@@ -21442,7 +21437,7 @@ ludo.controller.Controller = new Class({
         config.useController = false;
 
 		this.parent(config);
-		if (config.broadcast !== undefined)this.broadcast = config.broadcast;
+		if (config.broadcast)this.broadcast = config.broadcast;
 		ludo.controllerManager.registerController(this);
 		if (this['addView'] == undefined) {
 			alert('You need to implement an addView method for the controller (' + this.type + ')');
@@ -26504,9 +26499,7 @@ ludo.dialog.Dialog = new Class({
 			}
 		}
 		this.parent(config);
-		if (config.modal !== undefined) this.modal = config.modal;
-		if (config.autoDispose !== undefined)this.autoDispose = config.autoDispose;
-		if (config.autoHideOnBtnClick !== undefined) this.autoHideOnBtnClick = config.autoHideOnBtnClick;
+        this.setConfigParams(config, ['modal','autoDispose','autoHideOnBtnClick']);
 	},
 
 	ludoDOM:function () {
@@ -26516,9 +26509,9 @@ ludo.dialog.Dialog = new Class({
 
     getShim:function(){
         if(this.els.shim === undefined){
-            var el = this.els.shim = new Element('div');
+            var el = this.els.shim = document.createElement('div');
             ludo.dom.addClass(el, 'ludo-dialog-shim');
-            el.setStyle('display', 'none');
+            el.style.display='none';
             document.body.adopt(el);
         }
         return this.els.shim;
@@ -26565,10 +26558,9 @@ ludo.dialog.Dialog = new Class({
 	showShim:function () {
         this.center();
 		if (this.isModal()) {
-			this.getShim().setStyles({
-				display:'',
-				'z-index':this.getEl().getStyle('z-index') - 1
-			});
+            var s = this.getShim().style;
+            s.display='';
+            s.zIndex = this.getEl().getStyle('z-index') - 1;
 			this.resizeShim();
 		}
 	},
@@ -26581,7 +26573,7 @@ ludo.dialog.Dialog = new Class({
 
 	hideShim:function () {
 		if (this.isModal()) {
-            this.getShim().setStyle('display', 'none');
+            this.getShim().style.display='none';
 		}
 	},
 
@@ -26782,8 +26774,7 @@ ludo.dialog.Form = new Class({
                 }
             ]
         }
-        this.labelWidth = config.labelWidth || this.labelWidth;
-        this.elements = config.elements || this.elements;
+        this.setConfigParams(config, 'labelWidth','elements');
         this.parent(config);
     },
 

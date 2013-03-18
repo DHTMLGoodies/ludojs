@@ -17,8 +17,7 @@ ludo.grid.ColumnMove = new Class({
 
 	ludoConfig:function (config) {
 		this.parent(config);
-		this.gridHeader = config.gridHeader;
-		this.columnManager = config.columnManager;
+        this.setConfigParams(config, ['gridHeader','columnManager']);
 	},
 
 	ludoEvents:function(){

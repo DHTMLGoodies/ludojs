@@ -13,7 +13,7 @@ ludo.grid.RowManager = new Class({
 
 	ludoConfig:function(config){
 		this.parent(config);
-		if(config.renderer !== undefined)this.renderer = config.renderer;
+		if(config.renderer)this.renderer = config.renderer;
 	}
 
 });
