@@ -62,6 +62,7 @@ ludo.layout.Factory = new Class({
      */
 	getValidLayoutObject:function(view, config){
 		var ret;
+        if(view.layout && ludo.util.isString(view.layout))view.layout = { type : view.layout };
 		if(view.layout === undefined && config.layout === undefined && view.weight === undefined && config.weight === undefined && config.left===undefined)return {};
 		if(config.layout !== undefined){
 			if(view.layout !== undefined)config.layout = this.getMergedLayout(view.layout, config.layout);
@@ -77,7 +78,7 @@ ludo.layout.Factory = new Class({
 		if(ret.width === undefined)ret.width = config.width || view.width;
 		if(ret.height === undefined)ret.height = config.height || view.height;
 		if(ret.weight === undefined)ret.weight = config.weight || view.weight;
-		if(ret.type === undefined)ret.type = 'Base';
+        ret.type = ret.type || 'Base';
 		return ret;
 	},
     /**

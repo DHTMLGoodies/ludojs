@@ -102,15 +102,11 @@ ludo.dataSource.Collection = new Class({
 
 	ludoConfig:function (config) {
 		this.parent(config);
+        this.setConfigParams(config, ['searchConfig','sortFn','primaryKey','sortedBy','paging']);
 
-		if (config.searchConfig !== undefined)this.searchConfig = config.searchConfig;
-		if (config.sortFn)this.sortFn = config.sortFn;
-		if (config.primaryKey)this.primaryKey = config.primaryKey;
 		if (this.primaryKey && !ludo.util.isArray(this.primaryKey))this.primaryKey = [this.primaryKey];
-
-		if (config.paging !== undefined) {
-			this.paging = config.paging;
-			this.paging.offset = config.paging.offset || 0;
+		if (this.paging) {
+			this.paging.offset = this.paging.offset || 0;
 			this.paging.initialOffset = this.paging.offset;
 			if (this.paging.initialOffset !== undefined) {
 				this.fireEvent('page', (this.paging.initialOffset / this.paging.size) + 1);
@@ -119,8 +115,6 @@ ludo.dataSource.Collection = new Class({
 				this.addEvent('load', this.populateCache.bind(this));
 			}
 		}
-
-		if (config.sortedBy !== undefined)this.sortedBy = config.sortedBy;
 
 		this.addEvent('parsedata', this.createIndex.bind(this));
 	},
@@ -207,9 +201,7 @@ ludo.dataSource.Collection = new Class({
 	 	grid.getDataSource().by('firstname').descending().sort();
 	 */
 	sortBy:function (column, order) {
-		if (order === undefined) {
-			order = this.getSortOrderFor(column);
-		}
+        order = order || this.getSortOrderFor(column);
 
 		this.sortedBy = {
 			column:column,
@@ -290,7 +282,7 @@ ludo.dataSource.Collection = new Class({
 	 * @param record
 	 */
 	addRecord:function (record) {
-        if(this.data === undefined)this.data = [];
+        this.data = this.data || [];
 		this.data.push(record);
 		/**
 		 * Event fired when a record is added to the collection
@@ -437,20 +429,12 @@ ludo.dataSource.Collection = new Class({
 	 */
 	getPreviousOf:function (record) {
 		var data = this._getData();
-		var previous;
 		if (record) {
 			var index = data.indexOf(record);
-			if (index > 0) {
-				previous = data[index - 1];
-			} else {
-				previous = undefined;
-			}
+            return index > 0 ? data[index-1] : undefined;
 		} else {
-			if (data.length > 0) {
-				previous = data[0];
-			}
+            return data.length > 0 ? data[0] : undefined;
 		}
-		return previous;
 	},
 
 	/**
@@ -473,20 +457,12 @@ ludo.dataSource.Collection = new Class({
 	 */
 	getNextOf:function (record) {
 		var data = this._getData();
-		var next;
 		if (record) {
 			var index = data.indexOf(record);
-			if (index < data.length - 1) {
-				next = data[index + 1];
-			} else {
-				next = undefined;
-			}
+            return index < data.length - 1 ? data[index+1] : undefined;
 		} else {
-			if (data.length > 0) {
-				next = data[0];
-			}
+            return data.length > 0 ? data[0] : undefined;
 		}
-		return next;
 	},
 
 	_setSelectedRecord:function (rec) {
@@ -520,10 +496,7 @@ ludo.dataSource.Collection = new Class({
 	 * @return {Object|undefined} record
 	 */
 	getSelectedRecord:function () {
-		if (this.selectedRecords.length > 0) {
-			return this.selectedRecords[0];
-		}
-		return undefined;
+        return this.selectedRecords.length > 0 ? this.selectedRecords[0] : undefined;
 	},
 
 	/**
@@ -812,8 +785,7 @@ ludo.dataSource.Collection = new Class({
 	 * @return {Number} page
 	 */
 	getPageNumber:function () {
-		if (!this.paging)return 1;
-		return Math.floor(this.paging.offset / this.paging.size) + 1;
+        return this.paging ? Math.floor(this.paging.offset / this.paging.size) + 1 : 1;
 	},
 
 	/**
@@ -822,8 +794,7 @@ ludo.dataSource.Collection = new Class({
 	 * @return {Number}
 	 */
 	getPageCount:function () {
-		if (!this.paging)return 1;
-		return Math.ceil(this.getCount() / this.paging.size);
+        return this.paging ? Math.ceil(this.getCount() / this.paging.size) : 1;
 	},
 
 	getData:function () {

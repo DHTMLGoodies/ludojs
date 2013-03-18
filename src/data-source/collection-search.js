@@ -35,9 +35,7 @@ ludo.dataSource.CollectionSearch = new Class({
 
 	ludoConfig:function (config) {
 		this.parent(config);
-		this.dataSource = config.dataSource;
-		if (config.index !== undefined)this.index = config.index;
-		if (config.delay !== undefined)this.delay = config.delay;
+        this.setConfigParams(config, ['dataSource','index','delay']);
 		this.searchParser = new ludo.dataSource.SearchParser();
 		this.clear();
 	},

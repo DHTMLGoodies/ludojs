@@ -1,4 +1,4 @@
-/* Generated Sun Mar 17 15:35:51 CET 2013 */
+/* Generated Mon Mar 18 18:00:35 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -3292,6 +3292,7 @@ ludo.layout.Factory = new Class({
      */
 	getValidLayoutObject:function(view, config){
 		var ret;
+        if(view.layout && ludo.util.isString(view.layout))view.layout = { type : view.layout };
 		if(view.layout === undefined && config.layout === undefined && view.weight === undefined && config.weight === undefined && config.left===undefined)return {};
 		if(config.layout !== undefined){
 			if(view.layout !== undefined)config.layout = this.getMergedLayout(view.layout, config.layout);
@@ -3307,7 +3308,7 @@ ludo.layout.Factory = new Class({
 		if(ret.width === undefined)ret.width = config.width || view.width;
 		if(ret.height === undefined)ret.height = config.height || view.height;
 		if(ret.weight === undefined)ret.weight = config.weight || view.weight;
-		if(ret.type === undefined)ret.type = 'Base';
+        ret.type = ret.type || 'Base';
 		return ret;
 	},
     /**
@@ -4930,9 +4931,7 @@ ludo.View = new Class({
 		var size = this.getBody().measure(function () {
 			return this.getSize();
 		});
-		size.y += ludo.dom.getBH(this.getBody());
-		size.y += ludo.dom.getBH(this.getEl());
-		this.height = size.y;
+        this.height = size.y + ludo.dom.getBH(this.getBody()) + ludo.dom.getBH(this.getEl());
 	},
 	/**
 	 * Set HTML of components body element
@@ -5016,8 +5015,7 @@ ludo.View = new Class({
 	},
 
 	addCoreEvents:function () {
-		var parent = this.getParent();
-		if (!parent && this.type !== 'Application') {
+		if (!this.getParent() && this.type !== 'Application') {
 			this.getEl().addEvent('mousedown', this.increaseZIndex.bind(this));
 		}
 	},
@@ -5072,7 +5070,7 @@ ludo.View = new Class({
 	 * @return void
 	 */
 	hide:function () {
-		if (!this.hidden && this.getEl().getStyle('display') !== 'none') {
+		if (!this.hidden && this.getEl().style.display !== 'none') {
 			this.getEl().style.display='none';
 			this.hidden = true;
 			/**
@@ -5091,8 +5089,7 @@ ludo.View = new Class({
 	 * @default 1
 	 */
 	hideAfterDelay:function (seconds) {
-		seconds = seconds || 1;
-		this.hide.delay(seconds * 1000, this);
+		this.hide.delay((seconds || 1) * 1000, this);
 	},
 	/**
 	 * Is this component hidden?
@@ -5157,13 +5154,12 @@ ludo.View = new Class({
 	 * @return {Boolean} success
 	 */
 	showChild:function (key) {
-		for (var i = 0, count = this.children.length; i < count; i++) {
-			if (this.children[i].getId() == key || this.children[i].getName() == key) {
-				this.children[i].show();
-				return true;
-			}
-		}
-		return false;
+        var child = this.getChild(key);
+        if(child){
+            child.show();
+            return true;
+        }
+        return false;
 	},
 
 	/**
@@ -5172,11 +5168,7 @@ ludo.View = new Class({
 	 * @return Array of Child components
 	 */
 	getChildren:function () {
-		var ret = [];
-		for (var i = 0; i < this.children.length; i++) {
-			ret.push(this.children[i]);
-		}
-		return ret;
+        return this.children;
 	},
 	/**
 	 * Return array of all child components, including grand children
@@ -5348,12 +5340,7 @@ ludo.View = new Class({
 		if (this.height <= 0) {
 			return;
 		}
-		var height;
-		if (this.height) {
-			height = this.height - ludo.dom.getMBPH(this.els.container);
-		} else {
-			height = this.els.container.style.height.replace('px', '');
-		}
+        var height = this.height ? this.height - ludo.dom.getMBPH(this.els.container) : this.els.container.style.height.replace('px', '');
 		height -= ludo.dom.getMBPH(this.els.body);
 		if (height <= 0 || isNaN(height)) {
 			return;
@@ -5363,18 +5350,12 @@ ludo.View = new Class({
 	},
 
 	getInnerHeightOfBody:function () {
-		if (this.cachedInnerHeight) {
-			return this.cachedInnerHeight;
-		}
-		return ludo.dom.getInnerHeightOf(this.els.body);
+        return this.cachedInnerHeight ? this.cachedInnerHeight : ludo.dom.getInnerHeightOf(this.els.body);
 	},
 
 	getInnerWidthOfBody:function () {
-		if (this.width) {
-			return this.width - ludo.dom.getMBPW(this.els.container) - ludo.dom.getMBPW(this.els.body);
-		}
-		return ludo.dom.getInnerWidthOf(this.els.body);
-	},
+        return this.width ? this.width - ludo.dom.getMBPW(this.els.container) - ludo.dom.getMBPW(this.els.body) : ludo.dom.getInnerWidthOf(this.els.body);
+    },
 
 	/**
 	 * Add child components
@@ -10727,9 +10708,7 @@ ludo.FramedView = new Class({
             }
         }
 
-        var keys = ['buttonBar','hasMenu','menuConfig','icon',,'titleBar','buttons','boldTitle','minimized'];
-        this.setConfigParams(config,keys);
-
+        this.setConfigParams(config,['buttonBar','hasMenu','menuConfig','icon',,'titleBar','buttons','boldTitle','minimized']);
 		if (this.buttonBar !== undefined && !this.buttonBar.children) {
 			this.buttonBar = { children:this.buttonBar };
 		}
@@ -10742,7 +10721,6 @@ ludo.FramedView = new Class({
 
 		if (this.titleBar)this.getTitleBarEl().inject(this.getBody(), 'before');
 		ludo.dom.addClass(this.getBody(), 'ludo-rich-view-body');
-
 
 		var parent = this.getParent();
 		if (!parent && this.isResizable()) {
@@ -10776,7 +10754,6 @@ ludo.FramedView = new Class({
 				maxHeight:r.getMaxHeight(),
 				maxWidth:r.getMaxWidth(),
 				listeners:{
-
 					stop:r.setSize.bind(r)
 				}
 			});
@@ -10868,10 +10845,7 @@ ludo.FramedView = new Class({
 	},
 
 	getHeight:function () {
-		if (this.isMinimized()) {
-			return this.getHeightOfTitleBar();
-		}
-        return this.parent();
+        return this.isMinimized() ? this.getHeightOfTitleBar() : this.parent();
 	},
 
 	close:function () {
@@ -10889,21 +10863,20 @@ ludo.FramedView = new Class({
 	 * @return void
 	 */
 	maximize:function () {
-		this.state.isMinimized = false;
-		if (this.hidden) {
-			return;
-		}
-		this.resize({
-			height:this.height
-		});
-		this.els.body.style.visibility = 'visible';
-		this.showResizeHandles();
-		/**
-		 * Fired when a component is maximized
-		 * @event maximize
-		 * @param component this
-		 */
-		this.fireEvent('maximize', this);
+        this.state.isMinimized = false;
+        if (!this.hidden) {
+            this.resize({
+                height:this.height
+            });
+            this.els.body.style.visibility = 'visible';
+            this.showResizeHandles();
+            /**
+             * Fired when a component is maximized
+             * @event maximize
+             * @param component this
+             */
+            this.fireEvent('maximize', this);
+        }
 	},
 
 	showResizeHandles:function () {
@@ -10924,22 +10897,21 @@ ludo.FramedView = new Class({
 	 * @return void
 	 */
 	minimize:function () {
-		this.state.isMinimized = true;
-		if (this.hidden) {
-			return;
-		}
-		var height = this.height;
-		var newHeight = this.getHeightOfTitleBar();
-		this.els.container.setStyle('height', this.getHeightOfTitleBar());
-		this.els.body.style.visibility = 'hidden';
-		this.hideResizeHandles();
+        this.state.isMinimized = true;
+		if (!this.hidden) {
+            var height = this.height;
+            var newHeight = this.getHeightOfTitleBar();
+            this.els.container.setStyle('height', this.getHeightOfTitleBar());
+            this.els.body.style.visibility = 'hidden';
+            this.hideResizeHandles();
 
-		this.height = height;
-		/**
-		 * @event minimize
-		 * @param Component this
-		 */
-		this.fireEvent('minimize', [this, { height: newHeight }]);
+            this.height = height;
+            /**
+             * @event minimize
+             * @param Component this
+             */
+            this.fireEvent('minimize', [this, { height: newHeight }]);
+        }
 	},
 
 	getHtml:function () {
@@ -10970,12 +10942,7 @@ ludo.FramedView = new Class({
 	 * @return {Boolean} success
 	 */
 	hideButton:function (id) {
-		var button = this.getButtonByKey(id);
-		if (button) {
-			button.hide();
-			return true;
-		}
-		return false;
+        return this.buttonEffect(id, 'hide');
 	},
 	/**
 	 * Show a button on the button bar
@@ -10984,19 +10951,11 @@ ludo.FramedView = new Class({
 	 * @return {Boolean} success
 	 */
 	showButton:function (id) {
-		var button = this.getButtonByKey(id);
-		if (button) {
-			button.show();
-			return true;
-		}
-		return false;
+        return this.buttonEffect(id, 'show');
 	},
 
 	getButtons:function () {
-		if (this.buttonBarComponent) {
-			return this.buttonBarComponent.getButtons();
-		}
-		return [];
+        return this.buttonBarComponent ? this.buttonBarComponent.getButtons() : [];
 	},
 	/**
 	 * Disable a button on the button bar
@@ -11005,12 +10964,7 @@ ludo.FramedView = new Class({
 	 * @return {Boolean} success
 	 */
 	disableButton:function (id) {
-		var button = this.getButtonByKey(id);
-		if (button) {
-			button.disable();
-			return true;
-		}
-		return false;
+        return this.buttonEffect(id, 'disable');
 	},
 	/**
 	 * Enable a button on the button bar
@@ -11019,13 +10973,17 @@ ludo.FramedView = new Class({
 	 * @return {Boolean} success
 	 */
 	enableButton:function (id) {
-		var button = this.getButtonByKey(id);
-		if (button) {
-			button.enable();
-			return true;
-		}
-		return false;
+        return this.buttonEffect(id, 'enable');
 	},
+
+    buttonEffect:function(id,effect){
+        var button = this.getButtonByKey(id);
+        if (button) {
+            button[effect]();
+            return true;
+        }
+        return false;
+    },
 
 	getButtonByKey:function (key) {
 		if (this.buttonBarComponent) {
@@ -11786,9 +11744,7 @@ ludo.dataSource.CollectionSearch = new Class({
 
 	ludoConfig:function (config) {
 		this.parent(config);
-		this.dataSource = config.dataSource;
-		if (config.index !== undefined)this.index = config.index;
-		if (config.delay !== undefined)this.delay = config.delay;
+        this.setConfigParams(config, ['dataSource','index','delay']);
 		this.searchParser = new ludo.dataSource.SearchParser();
 		this.clear();
 	},
@@ -12245,15 +12201,11 @@ ludo.dataSource.Collection = new Class({
 
 	ludoConfig:function (config) {
 		this.parent(config);
+        this.setConfigParams(config, ['searchConfig','sortFn','primaryKey','sortedBy','paging']);
 
-		if (config.searchConfig !== undefined)this.searchConfig = config.searchConfig;
-		if (config.sortFn)this.sortFn = config.sortFn;
-		if (config.primaryKey)this.primaryKey = config.primaryKey;
 		if (this.primaryKey && !ludo.util.isArray(this.primaryKey))this.primaryKey = [this.primaryKey];
-
-		if (config.paging !== undefined) {
-			this.paging = config.paging;
-			this.paging.offset = config.paging.offset || 0;
+		if (this.paging) {
+			this.paging.offset = this.paging.offset || 0;
 			this.paging.initialOffset = this.paging.offset;
 			if (this.paging.initialOffset !== undefined) {
 				this.fireEvent('page', (this.paging.initialOffset / this.paging.size) + 1);
@@ -12262,8 +12214,6 @@ ludo.dataSource.Collection = new Class({
 				this.addEvent('load', this.populateCache.bind(this));
 			}
 		}
-
-		if (config.sortedBy !== undefined)this.sortedBy = config.sortedBy;
 
 		this.addEvent('parsedata', this.createIndex.bind(this));
 	},
@@ -12350,9 +12300,7 @@ ludo.dataSource.Collection = new Class({
 	 	grid.getDataSource().by('firstname').descending().sort();
 	 */
 	sortBy:function (column, order) {
-		if (order === undefined) {
-			order = this.getSortOrderFor(column);
-		}
+        order = order || this.getSortOrderFor(column);
 
 		this.sortedBy = {
 			column:column,
@@ -12433,7 +12381,7 @@ ludo.dataSource.Collection = new Class({
 	 * @param record
 	 */
 	addRecord:function (record) {
-        if(this.data === undefined)this.data = [];
+        this.data = this.data || [];
 		this.data.push(record);
 		/**
 		 * Event fired when a record is added to the collection
@@ -12580,20 +12528,12 @@ ludo.dataSource.Collection = new Class({
 	 */
 	getPreviousOf:function (record) {
 		var data = this._getData();
-		var previous;
 		if (record) {
 			var index = data.indexOf(record);
-			if (index > 0) {
-				previous = data[index - 1];
-			} else {
-				previous = undefined;
-			}
+            return index > 0 ? data[index-1] : undefined;
 		} else {
-			if (data.length > 0) {
-				previous = data[0];
-			}
+            return data.length > 0 ? data[0] : undefined;
 		}
-		return previous;
 	},
 
 	/**
@@ -12616,20 +12556,12 @@ ludo.dataSource.Collection = new Class({
 	 */
 	getNextOf:function (record) {
 		var data = this._getData();
-		var next;
 		if (record) {
 			var index = data.indexOf(record);
-			if (index < data.length - 1) {
-				next = data[index + 1];
-			} else {
-				next = undefined;
-			}
+            return index < data.length - 1 ? data[index+1] : undefined;
 		} else {
-			if (data.length > 0) {
-				next = data[0];
-			}
+            return data.length > 0 ? data[0] : undefined;
 		}
-		return next;
 	},
 
 	_setSelectedRecord:function (rec) {
@@ -12663,10 +12595,7 @@ ludo.dataSource.Collection = new Class({
 	 * @return {Object|undefined} record
 	 */
 	getSelectedRecord:function () {
-		if (this.selectedRecords.length > 0) {
-			return this.selectedRecords[0];
-		}
-		return undefined;
+        return this.selectedRecords.length > 0 ? this.selectedRecords[0] : undefined;
 	},
 
 	/**
@@ -12955,8 +12884,7 @@ ludo.dataSource.Collection = new Class({
 	 * @return {Number} page
 	 */
 	getPageNumber:function () {
-		if (!this.paging)return 1;
-		return Math.floor(this.paging.offset / this.paging.size) + 1;
+        return this.paging ? Math.floor(this.paging.offset / this.paging.size) + 1 : 1;
 	},
 
 	/**
@@ -12965,8 +12893,7 @@ ludo.dataSource.Collection = new Class({
 	 * @return {Number}
 	 */
 	getPageCount:function () {
-		if (!this.paging)return 1;
-		return Math.ceil(this.getCount() / this.paging.size);
+        return this.paging ? Math.ceil(this.getCount() / this.paging.size) : 1;
 	},
 
 	getData:function () {

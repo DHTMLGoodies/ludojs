@@ -587,9 +587,7 @@ ludo.View = new Class({
 		var size = this.getBody().measure(function () {
 			return this.getSize();
 		});
-		size.y += ludo.dom.getBH(this.getBody());
-		size.y += ludo.dom.getBH(this.getEl());
-		this.height = size.y;
+        this.height = size.y + ludo.dom.getBH(this.getBody()) + ludo.dom.getBH(this.getEl());
 	},
 	/**
 	 * Set HTML of components body element
@@ -673,8 +671,7 @@ ludo.View = new Class({
 	},
 
 	addCoreEvents:function () {
-		var parent = this.getParent();
-		if (!parent && this.type !== 'Application') {
+		if (!this.getParent() && this.type !== 'Application') {
 			this.getEl().addEvent('mousedown', this.increaseZIndex.bind(this));
 		}
 	},
@@ -729,7 +726,7 @@ ludo.View = new Class({
 	 * @return void
 	 */
 	hide:function () {
-		if (!this.hidden && this.getEl().getStyle('display') !== 'none') {
+		if (!this.hidden && this.getEl().style.display !== 'none') {
 			this.getEl().style.display='none';
 			this.hidden = true;
 			/**
@@ -748,8 +745,7 @@ ludo.View = new Class({
 	 * @default 1
 	 */
 	hideAfterDelay:function (seconds) {
-		seconds = seconds || 1;
-		this.hide.delay(seconds * 1000, this);
+		this.hide.delay((seconds || 1) * 1000, this);
 	},
 	/**
 	 * Is this component hidden?
@@ -814,13 +810,12 @@ ludo.View = new Class({
 	 * @return {Boolean} success
 	 */
 	showChild:function (key) {
-		for (var i = 0, count = this.children.length; i < count; i++) {
-			if (this.children[i].getId() == key || this.children[i].getName() == key) {
-				this.children[i].show();
-				return true;
-			}
-		}
-		return false;
+        var child = this.getChild(key);
+        if(child){
+            child.show();
+            return true;
+        }
+        return false;
 	},
 
 	/**
@@ -829,11 +824,7 @@ ludo.View = new Class({
 	 * @return Array of Child components
 	 */
 	getChildren:function () {
-		var ret = [];
-		for (var i = 0; i < this.children.length; i++) {
-			ret.push(this.children[i]);
-		}
-		return ret;
+        return this.children;
 	},
 	/**
 	 * Return array of all child components, including grand children
@@ -1005,12 +996,7 @@ ludo.View = new Class({
 		if (this.height <= 0) {
 			return;
 		}
-		var height;
-		if (this.height) {
-			height = this.height - ludo.dom.getMBPH(this.els.container);
-		} else {
-			height = this.els.container.style.height.replace('px', '');
-		}
+        var height = this.height ? this.height - ludo.dom.getMBPH(this.els.container) : this.els.container.style.height.replace('px', '');
 		height -= ludo.dom.getMBPH(this.els.body);
 		if (height <= 0 || isNaN(height)) {
 			return;
@@ -1020,18 +1006,12 @@ ludo.View = new Class({
 	},
 
 	getInnerHeightOfBody:function () {
-		if (this.cachedInnerHeight) {
-			return this.cachedInnerHeight;
-		}
-		return ludo.dom.getInnerHeightOf(this.els.body);
+        return this.cachedInnerHeight ? this.cachedInnerHeight : ludo.dom.getInnerHeightOf(this.els.body);
 	},
 
 	getInnerWidthOfBody:function () {
-		if (this.width) {
-			return this.width - ludo.dom.getMBPW(this.els.container) - ludo.dom.getMBPW(this.els.body);
-		}
-		return ludo.dom.getInnerWidthOf(this.els.body);
-	},
+        return this.width ? this.width - ludo.dom.getMBPW(this.els.container) - ludo.dom.getMBPW(this.els.body) : ludo.dom.getInnerWidthOf(this.els.body);
+    },
 
 	/**
 	 * Add child components

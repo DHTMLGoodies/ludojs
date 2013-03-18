@@ -94,9 +94,7 @@ ludo.FramedView = new Class({
             }
         }
 
-        var keys = ['buttonBar','hasMenu','menuConfig','icon',,'titleBar','buttons','boldTitle','minimized'];
-        this.setConfigParams(config,keys);
-
+        this.setConfigParams(config,['buttonBar','hasMenu','menuConfig','icon',,'titleBar','buttons','boldTitle','minimized']);
 		if (this.buttonBar !== undefined && !this.buttonBar.children) {
 			this.buttonBar = { children:this.buttonBar };
 		}
@@ -109,7 +107,6 @@ ludo.FramedView = new Class({
 
 		if (this.titleBar)this.getTitleBarEl().inject(this.getBody(), 'before');
 		ludo.dom.addClass(this.getBody(), 'ludo-rich-view-body');
-
 
 		var parent = this.getParent();
 		if (!parent && this.isResizable()) {
@@ -143,7 +140,6 @@ ludo.FramedView = new Class({
 				maxHeight:r.getMaxHeight(),
 				maxWidth:r.getMaxWidth(),
 				listeners:{
-
 					stop:r.setSize.bind(r)
 				}
 			});
@@ -235,10 +231,7 @@ ludo.FramedView = new Class({
 	},
 
 	getHeight:function () {
-		if (this.isMinimized()) {
-			return this.getHeightOfTitleBar();
-		}
-        return this.parent();
+        return this.isMinimized() ? this.getHeightOfTitleBar() : this.parent();
 	},
 
 	close:function () {
@@ -256,21 +249,20 @@ ludo.FramedView = new Class({
 	 * @return void
 	 */
 	maximize:function () {
-		this.state.isMinimized = false;
-		if (this.hidden) {
-			return;
-		}
-		this.resize({
-			height:this.height
-		});
-		this.els.body.style.visibility = 'visible';
-		this.showResizeHandles();
-		/**
-		 * Fired when a component is maximized
-		 * @event maximize
-		 * @param component this
-		 */
-		this.fireEvent('maximize', this);
+        this.state.isMinimized = false;
+        if (!this.hidden) {
+            this.resize({
+                height:this.height
+            });
+            this.els.body.style.visibility = 'visible';
+            this.showResizeHandles();
+            /**
+             * Fired when a component is maximized
+             * @event maximize
+             * @param component this
+             */
+            this.fireEvent('maximize', this);
+        }
 	},
 
 	showResizeHandles:function () {
@@ -291,22 +283,21 @@ ludo.FramedView = new Class({
 	 * @return void
 	 */
 	minimize:function () {
-		this.state.isMinimized = true;
-		if (this.hidden) {
-			return;
-		}
-		var height = this.height;
-		var newHeight = this.getHeightOfTitleBar();
-		this.els.container.setStyle('height', this.getHeightOfTitleBar());
-		this.els.body.style.visibility = 'hidden';
-		this.hideResizeHandles();
+        this.state.isMinimized = true;
+		if (!this.hidden) {
+            var height = this.height;
+            var newHeight = this.getHeightOfTitleBar();
+            this.els.container.setStyle('height', this.getHeightOfTitleBar());
+            this.els.body.style.visibility = 'hidden';
+            this.hideResizeHandles();
 
-		this.height = height;
-		/**
-		 * @event minimize
-		 * @param Component this
-		 */
-		this.fireEvent('minimize', [this, { height: newHeight }]);
+            this.height = height;
+            /**
+             * @event minimize
+             * @param Component this
+             */
+            this.fireEvent('minimize', [this, { height: newHeight }]);
+        }
 	},
 
 	getHtml:function () {
@@ -337,12 +328,7 @@ ludo.FramedView = new Class({
 	 * @return {Boolean} success
 	 */
 	hideButton:function (id) {
-		var button = this.getButtonByKey(id);
-		if (button) {
-			button.hide();
-			return true;
-		}
-		return false;
+        return this.buttonEffect(id, 'hide');
 	},
 	/**
 	 * Show a button on the button bar
@@ -351,19 +337,11 @@ ludo.FramedView = new Class({
 	 * @return {Boolean} success
 	 */
 	showButton:function (id) {
-		var button = this.getButtonByKey(id);
-		if (button) {
-			button.show();
-			return true;
-		}
-		return false;
+        return this.buttonEffect(id, 'show');
 	},
 
 	getButtons:function () {
-		if (this.buttonBarComponent) {
-			return this.buttonBarComponent.getButtons();
-		}
-		return [];
+        return this.buttonBarComponent ? this.buttonBarComponent.getButtons() : [];
 	},
 	/**
 	 * Disable a button on the button bar
@@ -372,12 +350,7 @@ ludo.FramedView = new Class({
 	 * @return {Boolean} success
 	 */
 	disableButton:function (id) {
-		var button = this.getButtonByKey(id);
-		if (button) {
-			button.disable();
-			return true;
-		}
-		return false;
+        return this.buttonEffect(id, 'disable');
 	},
 	/**
 	 * Enable a button on the button bar
@@ -386,13 +359,17 @@ ludo.FramedView = new Class({
 	 * @return {Boolean} success
 	 */
 	enableButton:function (id) {
-		var button = this.getButtonByKey(id);
-		if (button) {
-			button.enable();
-			return true;
-		}
-		return false;
+        return this.buttonEffect(id, 'enable');
 	},
+
+    buttonEffect:function(id,effect){
+        var button = this.getButtonByKey(id);
+        if (button) {
+            button[effect]();
+            return true;
+        }
+        return false;
+    },
 
 	getButtonByKey:function (key) {
 		if (this.buttonBarComponent) {
