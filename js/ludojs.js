@@ -1,4 +1,4 @@
-/* Generated Mon Mar 18 18:34:08 CET 2013 */
+/* Generated Tue Mar 19 15:41:07 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -5703,6 +5703,11 @@ ludo.remote.ErrorMessage = new Class({
     Extends:ludo.remote.Message,
     messageTypes:['failure','serverError']
 });/* ../ludojs/src/color/color.js */
+/**
+ * Color functions
+ * @namespace color
+ * @class Color
+ */
 ludo.color.Color = new Class({
 
     rgbColors:function (a) {
@@ -5714,6 +5719,15 @@ ludo.color.Color = new Class({
         }
         return undefined;
     },
+    /**
+     Converts rgb color string to rgb color object
+     @method rgbObject
+     @param {String} rgbColor
+     @return {Object}
+     @example
+        var c = new ludo.color.Color();
+        console.log(c.rgbObject('#FFEEDD'); // returns { 'r': 'FF','g' : 'EE', 'b' : 'DD' }
+     */
     rgbObject:function (rgbColor) {
         rgbColor = rgbColor.replace('#', '');
         return {
@@ -5722,6 +5736,14 @@ ludo.color.Color = new Class({
             b:rgbColor.substr(4, 2).toInt(16)
         };
     },
+    /**
+     * Converts RGB or HSV color object to rgb code
+     * @method rgbCode
+     * @param a
+     * @param b
+     * @param c
+     * @return {String}
+     */
     rgbCode:function (a, b, c) {
         if (b === undefined) {
             if (a.r !== undefined) {
@@ -5739,6 +5761,7 @@ ludo.color.Color = new Class({
         return this.toRGB(a, b, c);
     },
     /**
+     * Converts rgb object to rgb string
      * @method toRGB
      * @param {Number} red
      * @param {Number} green
@@ -5765,7 +5788,14 @@ ludo.color.Color = new Class({
         var color = this.rgbObject(rgbColor);
         return this.toHSVFromRGB(color.r, color.g, color.b);
     },
-
+    /**
+     * Converts red,green and blue to hsv h,s v
+     * @method toHSVFromRGB
+     * @param r
+     * @param g
+     * @param b
+     * @return {Object}
+     */
     toHSVFromRGB:function (r, g, b) {
         r = r / 255;
         g = g / 255;
@@ -5777,7 +5807,7 @@ ludo.color.Color = new Class({
         s = max == 0 ? 0 : d / max;
 
         if (max == min) {
-            h = 0; // achromatic
+            h = 0;
         } else {
             switch (max) {
                 case r:
@@ -5800,7 +5830,7 @@ ludo.color.Color = new Class({
     },
 
     hsvToRGBCode:function (h, s, v) {
-		if(s===undefined){
+		if(s === undefined){
 			s = h.s;v = h.v;h= h.h;
 		}
         var rgb = this.hsvToRGB(h, s, v);
@@ -22718,13 +22748,11 @@ ludo.form.ComboTree = new Class({
 
     ludoConfig:function (config) {
         this.parent(config);
-        if (config.searchable !== undefined) this.searchable = config.searchable;
-        this.inputConfig = config.inputConfig || this.inputConfig;
-        this.treeConfig = config.treeConfig;
+        this.setConfigParams(config, ['searchable','inputConfig','treeConfig','emptyText']);
+
         if (this.treeConfig.type === undefined)this.treeConfig.type = 'tree.Tree';
         this.inputConfig.type = 'form.Text';
         this.inputConfig.stretchField = true;
-        if (config.emptyText !== undefined)this.emptyText = config.emptyText;
     },
 
     ludoEvents:function () {

@@ -94,13 +94,11 @@ ludo.form.ComboTree = new Class({
 
     ludoConfig:function (config) {
         this.parent(config);
-        if (config.searchable !== undefined) this.searchable = config.searchable;
-        this.inputConfig = config.inputConfig || this.inputConfig;
-        this.treeConfig = config.treeConfig;
+        this.setConfigParams(config, ['searchable','inputConfig','treeConfig','emptyText']);
+
         if (this.treeConfig.type === undefined)this.treeConfig.type = 'tree.Tree';
         this.inputConfig.type = 'form.Text';
         this.inputConfig.stretchField = true;
-        if (config.emptyText !== undefined)this.emptyText = config.emptyText;
     },
 
     ludoEvents:function () {
