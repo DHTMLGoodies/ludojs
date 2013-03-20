@@ -1,4 +1,4 @@
-/* Generated Tue Mar 19 15:41:07 CET 2013 */
+/* Generated Wed Mar 20 11:50:32 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -3661,8 +3661,7 @@ ludo.layout.Renderer = new Class({
 
 	buildResizeFn:function () {
 		var parent = this.view.getEl().parentNode;
-		if (!parent)this.fn = function () {
-		};
+		if (!parent)this.fn = function () {};
 		var fns = [];
 		for (var i = 0; i < this.options.length; i++) {
 			if (this.rendering[this.options[i]] !== undefined) {
@@ -4666,7 +4665,6 @@ ludo.View = new Class({
 	 */
 	tplParserConfig:{ type:'tpl.Parser' },
 	layoutManager:null,
-	initialItemCount:0,
 	initialItemsObject:[],
 	contextMenu:undefined,
 	lifeCycleComplete:false,
@@ -4701,7 +4699,6 @@ ludo.View = new Class({
 				config.children[i].id = config.children[i].id || 'ludo-' + String.uniqueID();
 			}
 			this.initialItemsObject = config.children;
-			this.initialItemCount = config.children.length;
 			this.addChildren(config.children);
 		}
 		this.ludoDOM();
@@ -4878,9 +4875,8 @@ ludo.View = new Class({
 
 		if (this.addons) {
 			for (var i = 0; i < this.addons.length; i++) {
-				var obj = this.addons[i];
-				obj.view = this;
-				this.addons[i] = ludo._new(obj);
+                this.addons[i].view = this;
+				this.addons[i] = ludo._new(this.addons[i]);
 			}
 		}
 	},
@@ -4897,11 +4893,6 @@ ludo.View = new Class({
 		return function () {
 			this.fireEvent.call(this, eventName, Array.prototype.slice.call(arguments));
 		}.bind(this)
-	},
-
-	receiveJSON:function (json) {
-		this.data = json.data;
-		this.insertJSON(json);
 	},
 
 	/**
@@ -5008,7 +4999,6 @@ ludo.View = new Class({
 
 		if (ludo.util.isTabletOrMobile()) {
 			ludo.dom.addClass(this.els.container, 'ludo-view-container-mobile');
-			ludo.dom.addClass(this.els.body, 'ludo-body-mobile');
 		}
 
 		this.setContent();
@@ -5121,7 +5111,6 @@ ludo.View = new Class({
 		 */
 		if (!skipEvents)this.fireEvent('beforeshow', this);
 
-
 		this.setNewZIndex();
 
 		/**
@@ -5135,7 +5124,6 @@ ludo.View = new Class({
 			this.resizeParent();
 		} else {
             this.getLayoutManager().getRenderer().resize();
-			//this.resize({ width:this.width, height:this.height });
 		}
 	},
 
@@ -5213,14 +5201,6 @@ ludo.View = new Class({
 		this.title = title;
 	},
 
-	setWidth:function (width) {
-		this.width = width;
-	},
-
-	setHeight:function (height) {
-		this.height = height;
-	},
-
 	/**
 	 * Returns total width of component including padding, borders and margins
 	 * @method getWidth
@@ -5245,10 +5225,6 @@ ludo.View = new Class({
 	 */
 	getType:function () {
 		return this.type;
-	},
-
-	getLayout:function () {
-		return this.layout;
 	},
 
 	/**
@@ -5293,7 +5269,8 @@ ludo.View = new Class({
 			this.setPosition(config);
 		}
 		this.resizeDOM();
-		if (config.height || config.width) {
+
+        if (config.height || config.width) {
 			/**
 			 * Event fired when component is resized
 			 * @event resize
@@ -5337,16 +5314,15 @@ ludo.View = new Class({
 
 	cachedInnerHeight:undefined,
 	resizeDOM:function () {
-		if (this.height <= 0) {
-			return;
-		}
-        var height = this.height ? this.height - ludo.dom.getMBPH(this.els.container) : this.els.container.style.height.replace('px', '');
-		height -= ludo.dom.getMBPH(this.els.body);
-		if (height <= 0 || isNaN(height)) {
-			return;
-		}
-		this.els.body.style.height = height + 'px';
-		this.cachedInnerHeight = height;
+		if (this.height > 0){
+            var height = this.height ? this.height - ludo.dom.getMBPH(this.els.container) : this.els.container.style.height.replace('px', '');
+            height -= ludo.dom.getMBPH(this.els.body);
+            if (height <= 0 || isNaN(height)) {
+                return;
+            }
+            this.els.body.style.height = height + 'px';
+            this.cachedInnerHeight = height;
+        }
 	},
 
 	getInnerHeightOfBody:function () {
@@ -5564,7 +5540,7 @@ ludo.View = new Class({
 		this.getFormManager().submit();
 	},
 	/**
-	 * Reset all form elements of this component(including childrens children) back to it's
+	 * Reset all form elements of this component(including children's children) back to it's
 	 * initial or commited value
 	 * @method reset
 	 * @return void
@@ -5583,9 +5559,6 @@ ludo.View = new Class({
 	},
 	getHeightOfButtonBar:function () {
 		return 0;
-	},
-	getUnRenderedChildren:function () {
-		return this.unRenderedChildren;
 	},
 
 	/**
@@ -10673,7 +10646,6 @@ ludo.FramedView = new Class({
 	minimizable:true,
 
 	resizable:false,
-	fullScreen:false,
 	/**
 	 * Is component closable. When set to true, a close button will appear on the title bar of the component
 	 * @attribute closable
@@ -10688,13 +10660,14 @@ ludo.FramedView = new Class({
 	preserveAspectRatio:false,
 	/**
 	 * Path to icon to be placed on the title bar
-	 * @attribute icon
+	 * @config {String} icon
+     * @default undefined
 	 */
-	icon:null,
+	icon:undefined,
 
 	/**
 	 * Show or hide title bar
-	 * @attribute titleBar
+	 * @config titleBar
 	 * @type {Boolean}
 	 * @default true
 	 */
@@ -10739,7 +10712,7 @@ ludo.FramedView = new Class({
         }
 
         this.setConfigParams(config,['buttonBar','hasMenu','menuConfig','icon',,'titleBar','buttons','boldTitle','minimized']);
-		if (this.buttonBar !== undefined && !this.buttonBar.children) {
+		if (this.buttonBar && !this.buttonBar.children) {
 			this.buttonBar = { children:this.buttonBar };
 		}
 	},
@@ -10749,11 +10722,10 @@ ludo.FramedView = new Class({
 
 		ludo.dom.addClass(this.els.container, 'ludo-rich-view');
 
-		if (this.titleBar)this.getTitleBarEl().inject(this.getBody(), 'before');
+		if (this.titleBar)this.getTitleBar().getEl().inject(this.getBody(), 'before');
 		ludo.dom.addClass(this.getBody(), 'ludo-rich-view-body');
 
-		var parent = this.getParent();
-		if (!parent && this.isResizable()) {
+		if (!this.getParent() && this.isResizable()) {
 			this.getResizer().addHandle('s');
 		}
 	},
@@ -10799,10 +10771,6 @@ ludo.FramedView = new Class({
 	setTitle:function (title) {
 		this.parent(title);
         this.fireEvent('setTitle', title);
-	},
-
-	autoSize:function () {
-		this.resize({ width:this.els.container.offsetWidth  });
 	},
 
 	resizeDOM:function () {
@@ -10868,10 +10836,6 @@ ludo.FramedView = new Class({
 			}
 		}
 		return this.titleBarObj;
-	},
-
-	getTitleBarEl:function () {
-		return this.getTitleBar().getEl();
 	},
 
 	getHeight:function () {
@@ -11312,7 +11276,6 @@ ludo.Accordion = new Class({
 	type:'Accordion',
 
 	closable:false,
-	fullScreen:false,
 	minimizable:true,
 	resizable:false,
 
@@ -11343,7 +11306,7 @@ ludo.Accordion = new Class({
 		});
 		this.fx.addEvent('complete', this.animationComplete.bind(this));
 
-        this.getTitleBarEl().addEvent('click', this.toggleExpandCollapse.bind(this));
+        this.getTitleBar().getEl().addEvent('click', this.toggleExpandCollapse.bind(this));
 		this.parent();
 	},
 	toggleExpandCollapse:function () {
@@ -26510,7 +26473,6 @@ ludo.dialog.Dialog = new Class({
 	movable:true,
 	closable:false,
 	minimizable:false,
-	fullScreen:false,
 
 	ludoConfig:function (config) {
 

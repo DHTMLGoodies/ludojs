@@ -54,7 +54,6 @@ ludo.dialog.Dialog = new Class({
 	movable:true,
 	closable:false,
 	minimizable:false,
-	fullScreen:false,
 
 	ludoConfig:function (config) {
 

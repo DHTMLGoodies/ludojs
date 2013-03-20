@@ -1,4 +1,4 @@
-/* Generated Tue Mar 19 15:41:07 CET 2013 */
+/* Generated Wed Mar 20 11:50:32 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -349,8 +349,8 @@ Owner of ludoJS.com
 }
 
 div.ludo-content-child-of-fullscreen {
-    padding: 0px;
-    margin: 0px;
+    padding: 0;
+    margin: 0;
 }
 
 .ludo-view-container {

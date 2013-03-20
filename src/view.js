@@ -322,7 +322,6 @@ ludo.View = new Class({
 	 */
 	tplParserConfig:{ type:'tpl.Parser' },
 	layoutManager:null,
-	initialItemCount:0,
 	initialItemsObject:[],
 	contextMenu:undefined,
 	lifeCycleComplete:false,
@@ -357,7 +356,6 @@ ludo.View = new Class({
 				config.children[i].id = config.children[i].id || 'ludo-' + String.uniqueID();
 			}
 			this.initialItemsObject = config.children;
-			this.initialItemCount = config.children.length;
 			this.addChildren(config.children);
 		}
 		this.ludoDOM();
@@ -534,9 +532,8 @@ ludo.View = new Class({
 
 		if (this.addons) {
 			for (var i = 0; i < this.addons.length; i++) {
-				var obj = this.addons[i];
-				obj.view = this;
-				this.addons[i] = ludo._new(obj);
+                this.addons[i].view = this;
+				this.addons[i] = ludo._new(this.addons[i]);
 			}
 		}
 	},
@@ -553,11 +550,6 @@ ludo.View = new Class({
 		return function () {
 			this.fireEvent.call(this, eventName, Array.prototype.slice.call(arguments));
 		}.bind(this)
-	},
-
-	receiveJSON:function (json) {
-		this.data = json.data;
-		this.insertJSON(json);
 	},
 
 	/**
@@ -664,7 +656,6 @@ ludo.View = new Class({
 
 		if (ludo.util.isTabletOrMobile()) {
 			ludo.dom.addClass(this.els.container, 'ludo-view-container-mobile');
-			ludo.dom.addClass(this.els.body, 'ludo-body-mobile');
 		}
 
 		this.setContent();
@@ -777,7 +768,6 @@ ludo.View = new Class({
 		 */
 		if (!skipEvents)this.fireEvent('beforeshow', this);
 
-
 		this.setNewZIndex();
 
 		/**
@@ -791,7 +781,6 @@ ludo.View = new Class({
 			this.resizeParent();
 		} else {
             this.getLayoutManager().getRenderer().resize();
-			//this.resize({ width:this.width, height:this.height });
 		}
 	},
 
@@ -869,14 +858,6 @@ ludo.View = new Class({
 		this.title = title;
 	},
 
-	setWidth:function (width) {
-		this.width = width;
-	},
-
-	setHeight:function (height) {
-		this.height = height;
-	},
-
 	/**
 	 * Returns total width of component including padding, borders and margins
 	 * @method getWidth
@@ -901,10 +882,6 @@ ludo.View = new Class({
 	 */
 	getType:function () {
 		return this.type;
-	},
-
-	getLayout:function () {
-		return this.layout;
 	},
 
 	/**
@@ -949,7 +926,8 @@ ludo.View = new Class({
 			this.setPosition(config);
 		}
 		this.resizeDOM();
-		if (config.height || config.width) {
+
+        if (config.height || config.width) {
 			/**
 			 * Event fired when component is resized
 			 * @event resize
@@ -993,16 +971,15 @@ ludo.View = new Class({
 
 	cachedInnerHeight:undefined,
 	resizeDOM:function () {
-		if (this.height <= 0) {
-			return;
-		}
-        var height = this.height ? this.height - ludo.dom.getMBPH(this.els.container) : this.els.container.style.height.replace('px', '');
-		height -= ludo.dom.getMBPH(this.els.body);
-		if (height <= 0 || isNaN(height)) {
-			return;
-		}
-		this.els.body.style.height = height + 'px';
-		this.cachedInnerHeight = height;
+		if (this.height > 0){
+            var height = this.height ? this.height - ludo.dom.getMBPH(this.els.container) : this.els.container.style.height.replace('px', '');
+            height -= ludo.dom.getMBPH(this.els.body);
+            if (height <= 0 || isNaN(height)) {
+                return;
+            }
+            this.els.body.style.height = height + 'px';
+            this.cachedInnerHeight = height;
+        }
 	},
 
 	getInnerHeightOfBody:function () {
@@ -1220,7 +1197,7 @@ ludo.View = new Class({
 		this.getFormManager().submit();
 	},
 	/**
-	 * Reset all form elements of this component(including childrens children) back to it's
+	 * Reset all form elements of this component(including children's children) back to it's
 	 * initial or commited value
 	 * @method reset
 	 * @return void
@@ -1239,9 +1216,6 @@ ludo.View = new Class({
 	},
 	getHeightOfButtonBar:function () {
 		return 0;
-	},
-	getUnRenderedChildren:function () {
-		return this.unRenderedChildren;
 	},
 
 	/**

@@ -29,7 +29,6 @@ ludo.FramedView = new Class({
 	minimizable:true,
 
 	resizable:false,
-	fullScreen:false,
 	/**
 	 * Is component closable. When set to true, a close button will appear on the title bar of the component
 	 * @attribute closable
@@ -44,13 +43,14 @@ ludo.FramedView = new Class({
 	preserveAspectRatio:false,
 	/**
 	 * Path to icon to be placed on the title bar
-	 * @attribute icon
+	 * @config {String} icon
+     * @default undefined
 	 */
-	icon:null,
+	icon:undefined,
 
 	/**
 	 * Show or hide title bar
-	 * @attribute titleBar
+	 * @config titleBar
 	 * @type {Boolean}
 	 * @default true
 	 */
@@ -95,7 +95,7 @@ ludo.FramedView = new Class({
         }
 
         this.setConfigParams(config,['buttonBar','hasMenu','menuConfig','icon',,'titleBar','buttons','boldTitle','minimized']);
-		if (this.buttonBar !== undefined && !this.buttonBar.children) {
+		if (this.buttonBar && !this.buttonBar.children) {
 			this.buttonBar = { children:this.buttonBar };
 		}
 	},
@@ -105,11 +105,10 @@ ludo.FramedView = new Class({
 
 		ludo.dom.addClass(this.els.container, 'ludo-rich-view');
 
-		if (this.titleBar)this.getTitleBarEl().inject(this.getBody(), 'before');
+		if (this.titleBar)this.getTitleBar().getEl().inject(this.getBody(), 'before');
 		ludo.dom.addClass(this.getBody(), 'ludo-rich-view-body');
 
-		var parent = this.getParent();
-		if (!parent && this.isResizable()) {
+		if (!this.getParent() && this.isResizable()) {
 			this.getResizer().addHandle('s');
 		}
 	},
@@ -155,10 +154,6 @@ ludo.FramedView = new Class({
 	setTitle:function (title) {
 		this.parent(title);
         this.fireEvent('setTitle', title);
-	},
-
-	autoSize:function () {
-		this.resize({ width:this.els.container.offsetWidth  });
 	},
 
 	resizeDOM:function () {
@@ -224,10 +219,6 @@ ludo.FramedView = new Class({
 			}
 		}
 		return this.titleBarObj;
-	},
-
-	getTitleBarEl:function () {
-		return this.getTitleBar().getEl();
 	},
 
 	getHeight:function () {

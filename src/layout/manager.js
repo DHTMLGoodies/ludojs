@@ -34,9 +34,6 @@ ludo.layout.Manager = new Class({
         }
 
         this.view.fireEvent('addChild', child);
-        if (this.view.type !== 'ludo.ViewToFullScreen' && child.isMovable()) {
-            this.view.getObjMovable().addSource({ component:child, handle:'.ludo-rich-view-titlebar-title' });
-        }
 
         this.onNewChild(child);
         if (child.isCollapsible()) {
@@ -269,10 +266,6 @@ ludo.layout.Manager = new Class({
 
         child.getEl().addClass('ludo-component-in-layout-' + this.getLayout());
 
-        if (this.view.fullScreen) {
-            child.getEl().addClass('ludo-container-child-of-fullscreen');
-        }
-
         var isLastSibling, resizable, separator;
 
         if (this.getLayout() == 'cols') {
@@ -386,7 +379,7 @@ ludo.layout.Manager = new Class({
     },
 
     getLayout:function () {
-        return this.view.getLayout().type ? this.view.getLayout().type : 'default';
+        return this.view.layout.type ? this.view.layout.type : 'default';
     },
 
     hasDynamicHeight:function () {
@@ -395,11 +388,11 @@ ludo.layout.Manager = new Class({
 
     },
     getLayoutObject:function () {
-        return this.view.getLayout();
+        return this.view.layout;
     },
 
     isTabLayout:function () {
-        return this.view.getLayout().type == 'tabs';
+        return this.view.layout.type == 'tabs';
     },
 
     isInATabLayout:function () {

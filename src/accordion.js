@@ -8,7 +8,6 @@ ludo.Accordion = new Class({
 	type:'Accordion',
 
 	closable:false,
-	fullScreen:false,
 	minimizable:true,
 	resizable:false,
 
@@ -39,7 +38,7 @@ ludo.Accordion = new Class({
 		});
 		this.fx.addEvent('complete', this.animationComplete.bind(this));
 
-        this.getTitleBarEl().addEvent('click', this.toggleExpandCollapse.bind(this));
+        this.getTitleBar().getEl().addEvent('click', this.toggleExpandCollapse.bind(this));
 		this.parent();
 	},
 	toggleExpandCollapse:function () {

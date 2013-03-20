@@ -114,8 +114,7 @@ ludo.layout.Renderer = new Class({
 
 	buildResizeFn:function () {
 		var parent = this.view.getEl().parentNode;
-		if (!parent)this.fn = function () {
-		};
+		if (!parent)this.fn = function () {};
 		var fns = [];
 		for (var i = 0; i < this.options.length; i++) {
 			if (this.rendering[this.options[i]] !== undefined) {
