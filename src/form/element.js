@@ -398,7 +398,7 @@ ludo.form.Element = new Class({
      */
     setValue:function (value) {
         if (!this.isReady) {
-            this.setValue.delay(50, this, value);
+            if(value)this.setValue.delay(50, this, value);
             return;
         }
 

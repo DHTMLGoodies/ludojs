@@ -27,7 +27,10 @@ class User implements LudoDBService
                     'city' => 'Springfield',
                     'phone' => '+00 12 23 23 43',
                     'email' => 'john.doe@example-domain.com',
-                    'picture' => 'john.psd'
+                    'picture' => 'john.psd',
+                    'country' => 131,
+                    'birth' => '1973-06-09',
+                    'gender' => 'male'
                 );
             case "101":
                 return array(
@@ -39,6 +42,8 @@ class User implements LudoDBService
                     'city' => 'Springfield',
                     'phone' => '+00 43 23 23 43',
                     'email' => 'jane.doe@example-domain.com',
+                    'country' => 33,
+                    'gender' => 'female',
                     'picture' => 'jane.psd');
             default:
                 return array();

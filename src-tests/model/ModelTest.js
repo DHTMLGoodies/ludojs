@@ -128,6 +128,26 @@ TestCase("ModelTest", {
 		assertEquals('Kalleland', model.getLastname());
 		assertEquals('Rundaberget 27', model.getAddress());
 	},
+
+    "test should get value from form when form is updated":function(){
+        // given
+        var c = this.getComponentWithModel();
+
+        var model = c.getFormManager().getModel();
+
+        // when
+        model.populate(100, {
+            firstname:'Alf Magne',
+            lastname:'Kalleland',
+            address:'Rundaberget 27'
+        });
+        c.child['firstname'].setValue('John');
+
+        // then
+        assertEquals('John', model.getFirstname());
+
+    },
+
 	"test should find default values":function () {
 		// given
 		var model = this.getModelWithDefaultValues();

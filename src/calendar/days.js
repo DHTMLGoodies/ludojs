@@ -272,11 +272,9 @@ ludo.calendar.Days = new Class({
     },
 
     isDisplayingMonthForCurrentValue:function () {
-        if (this.value) {
-            return this.value.get('month') == this.date.get('month') && this.value.get('year') == this.date.get('year');
-        }
-        return false;
+        return this.value ? this.value.get('month') == this.date.get('month') && this.value.get('year') == this.date.get('year') : false;
     },
+
     isDisplayingTodaysMonth:function () {
         var today = new Date();
         return today.get('month') == this.date.get('month') && today.get('year') == this.date.get('year');

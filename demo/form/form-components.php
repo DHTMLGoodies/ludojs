@@ -40,7 +40,12 @@ require_once("../includes/demo-header.php");
         width:650,
         left:50,
         top:30,
-
+        model:{
+            id:'userModel',
+            columns:["firstname","lastname","address","email","phone","zipcode","city", "birth","country"],
+            name:'User',
+            recordId:100
+        },
         children:[
             {
                 formConfig:{
@@ -74,9 +79,9 @@ require_once("../includes/demo-header.php");
                         dataSource:{
                             resource:'Countries', service:'read', url:'../controller.php'
                         }},
-                    { type:'form.Date', name:'birth', readonly:true, id:'birth', stretchField:true, 'label':'Born'},
-                    { type:'form.File', name:'picture', label:'Picture', value:'', height:25 },
-                    { type:'form.DisplayField', label:'form.DisplayField', value:'My value'},
+                    { type:'form.Date', name:'birth', id:'birth', stretchField:true, 'label':'Born'},
+                    { type:'form.File', name:'picture', label:'Picture', value:'', height:30 },
+                    { type:'form.DisplayField', label:'form.DisplayField', value:'My value',height:30},
                     { type:'form.Checkbox', label:'I agree', id:"agree"},
                     { type:'form.RadioGroup',
                         id:'gender',

@@ -6,12 +6,15 @@
  */
 ludo.calendar.Today = new Class({
     Extends:ludo.calendar.Base,
-    layout : 'cols',
+    layout : {
+        type:'relative'
+    },
     height:25,
+    overflow:'hidden',
     css:{
         'margin-top' : 2
     },
-    children : [{ weight:1 }, { name:'today', type:'form.Button', value : 'Today'}, { weight:1 }],
+    children : [{ name:'today', type:'form.Button', value : 'Today', layout: { centerInParent:true}}],
 
     ludoRendered:function(){
         this.parent();
@@ -26,5 +29,4 @@ ludo.calendar.Today = new Class({
         this.date = new Date();
         this.sendSetDateEvent();
     }
-
 });

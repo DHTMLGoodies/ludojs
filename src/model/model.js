@@ -76,12 +76,9 @@ ludo.model.Model = new Class({
 	autoLoad:false,
 
 	initialize:function (config) {
-		if (config.name !== undefined)this.name = config.name;
-		if (config.columns !== undefined)this.columns = config.columns;
-		if (config.recordId !== undefined)this.recordId = config.recordId;
-		if (config.idField !== undefined)this.idField = config.idField;
-		if (config.id !== undefined)this.id = config.id;
-		if (config.url !== undefined)this.url = config.url;
+
+        this.setConfigParams(config, ['name','columns','recordId','idField','id','url']);
+
 		ludo.CmpMgr.registerComponent(this);
 
 		this._validateColumns();
@@ -89,7 +86,7 @@ ludo.model.Model = new Class({
 		if (config.listeners) {
 			this.listeners = config.listeners;
 		}
-		if (config.url)this.url = config.url;
+
 		this.createSettersAndGetters();
 		if (this.listeners) {
 			this.addEvents(this.listeners);
@@ -98,6 +95,11 @@ ludo.model.Model = new Class({
 			this.load(config.recordId);
 		}
 	},
+    setConfigParams:function(config, keys){
+        for(var i=0;i<keys.length;i++){
+            if(config[keys[i]] !== undefined)this[keys[i]] = config[keys[i]];
+        }
+    },
 
 	_setUrl:function (url) {
 		this.url = url;
@@ -159,6 +161,7 @@ ludo.model.Model = new Class({
 	},
 
 	_setRecordValue:function (property, value) {
+
 		if (this.currentRecord) {
 			this.currentRecord[property] = value;
 			if (this.formComponents[property]) {
@@ -173,7 +176,7 @@ ludo.model.Model = new Class({
 
 	getRecordProperty:function (property) {
 		if (this.currentRecord) {
-			return this.currentRecord[property];
+			return this.formComponents[property] ? this.formComponents[property][0].getValue() : this.currentRecord[property];
 		}
 		return '';
 	},
@@ -305,9 +308,8 @@ ludo.model.Model = new Class({
 	},
 
 	updateByForm:function (value, formComponent) {
-		this._setRecordValue(formComponent.getName(), value);
+		//this._setRecordValue(formComponent.getName(), value);
 		this.updateViews();
-
 	},
 
 	hasColumn:function (key) {
@@ -341,20 +343,29 @@ ludo.model.Model = new Class({
 	 "response" is an array of updated model values.
 	 */
 	save:function (formData) {
-		formData = formData || {};
-		var data = Object.merge(this.currentRecord);
-		for (var key in formData) {
-			if (formData.hasOwnProperty(key) && !this.hasColumn(key)) {
-				data[key] = formData[key];
-			}
-		}
-
+        var data = this.getDataToSubmit(formData);
 		this.fireEvent('beforesubmit', this);
         this.saveRequest().send("save", this.recordId, data, {
             progressBarId:this.getProgressBarId()
         });
-
 	},
+
+    getDataToSubmit:function(formData){
+        formData = formData || {};
+        var data = Object.merge(this.currentRecord);
+        for(var key in data){
+            if(data.hasOwnProperty(key)){
+                data[key] = this.getRecordProperty(key);
+            }
+        }
+        for (key in formData) {
+            if (formData.hasOwnProperty(key) && !this.hasColumn(key)) {
+                data[key] = formData[key];
+            }
+        }
+        return data;
+    },
+
     _saveRequest:undefined,
     saveRequest:function(){
         if(this._saveRequest === undefined){
