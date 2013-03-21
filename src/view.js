@@ -1008,7 +1008,7 @@ ludo.View = new Class({
 	 * Add a child component. The method will returned the created component.
 	 * @method addChild
 	 * @param {Object} child. A Child object can be a component or a JSON object describing the component.
-	 * @return component child
+	 * @return {View} child
 	 */
 	addChild:function (child, insertAt, pos) {
 		child = this.getLayoutManager().addChild(child, insertAt, pos);

@@ -246,5 +246,21 @@ ludo.dom = {
 			return this.getSize();
 		});
 		return size.x + ludo.dom.getMW(el);
-	}
+	},
+
+    create:function(node){
+        var el = document.createElement(node.tag || 'div');
+        if(node.cls)ludo.dom.addClass(el, node.cls);
+        if(node.renderTo)node.renderTo.appendChild(el);
+        if(node.css){
+            for(var key in node.css){
+                if(node.css.hasOwnProperty(key)){
+                    el.style[key] = node.css[key];
+                }
+            }
+        }
+        if(node.html)el.innerHTML = node.html;
+        return el;
+
+    }
 };

@@ -21,12 +21,7 @@ ludo.view.TitleBar = new Class({
 
     createDOM:function () {
         var el = this.els.el = new Element('div');
-        if (this.view.boldTitle) {
-            ludo.dom.addClass(el, 'ludo-rich-view-titlebar');
-        } else {
-            ludo.dom.addClass(el, 'ludo-component-titlebar');
-        }
-
+        ludo.dom.addClass(el, this.view.boldTitle ? 'ludo-rich-view-titlebar' : 'ludo-component-titlebar');
         var left = 0;
         if (this.view.icon) {
             this.createIconDOM();
@@ -34,27 +29,29 @@ ludo.view.TitleBar = new Class({
         }
         this.createTitleDOM();
         el.adopt(this.getButtonContainer());
-		this.resizeButtonContainer.delay(20, this);
+        this.resizeButtonContainer.delay(20, this);
         this.els.title.style.left = left + 'px';
         el.addEvent('selectstart', ludo.util.cancelEvent);
     },
 
     createIconDOM:function () {
-        var icon = this.els.icon = document.createElement('div');
-        ludo.dom.addClass(icon, 'ludo-rich-view-titlebar-icon');
-		icon.style.backgroundImage = 'url(' + this.view.icon + ')';
-        this.els.el.appendChild(icon);
+        this.els.icon = ludo.dom.create({
+            renderTo:this.els.el,
+            cls:'ludo-rich-view-titlebar-icon',
+            css:{ 'backgroundImage':'url(' + this.view.icon + ')'}
+        });
+
     },
 
-	setTitle:function(title){
-		this.els.title.innerHTML = title;
-	},
+    setTitle:function (title) {
+        this.els.title.innerHTML = title;
+    },
 
     createTitleDOM:function () {
         var title = this.els.title = document.createElement('div');
-		title.className = 'ludo-rich-view-titlebar-title';
+        title.className = 'ludo-rich-view-titlebar-title';
         this.els.el.appendChild(title);
-		this.setTitle(this.view.title);
+        this.setTitle(this.view.title);
     },
     createEvents:function () {
         this.addEvent('minimize', this.showMaximize.bind(this));
@@ -62,14 +59,14 @@ ludo.view.TitleBar = new Class({
     },
 
     showMaximize:function () {
-        this.toggleMinimize('none','');
+        this.toggleMinimize('none', '');
     },
 
     showMinimize:function () {
-        this.toggleMinimize('','none');
+        this.toggleMinimize('', 'none');
     },
 
-    toggleMinimize:function(min,max){
+    toggleMinimize:function (min, max) {
         this.els.buttons.minimize.style.display = min;
         this.els.buttons.maximize.style.display = max;
     },
@@ -80,17 +77,17 @@ ludo.view.TitleBar = new Class({
 
     getButtonContainer:function () {
         var el = this.els.controls = document.createElement('div');
-		el.className = 'ludo-title-bar-button-container';
+        el.className = 'ludo-title-bar-button-container';
         el.style.cursor = 'default';
 
         var le = document.createElement('div');
-		le.className = 'ludo-title-bar-button-container-left-edge';
-		le.style.cssText = "position:absolute;z-index:1;left:0;top:0;width:55%;height:100%;background-repeat:no-repeat;background-position:top left";
+        le.className = 'ludo-title-bar-button-container-left-edge';
+        le.style.cssText = "position:absolute;z-index:1;left:0;top:0;width:55%;height:100%;background-repeat:no-repeat;background-position:top left";
         el.appendChild(le);
 
         var re = document.createElement('div');
-		re.className = 'ludo-title-bar-button-container-right-edge';
-		re.style.cssText = 'position:absolute;z-index:1;right:0;top:0;width:55%;height:100%;background-repeat:no-repeat;background-position:top right';
+        re.className = 'ludo-title-bar-button-container-right-edge';
+        re.style.cssText = 'position:absolute;z-index:1;right:0;top:0;width:55%;height:100%;background-repeat:no-repeat;background-position:top right';
         el.appendChild(re);
 
         if (this.view.isMinimizable()) {
@@ -102,8 +99,8 @@ ludo.view.TitleBar = new Class({
         if (this.view.isCollapsible()) {
             if (this.shouldShowCollapseButton()) {
                 var button = this.getButton('collapse', 'collapse');
-				var direction = this.getCollapseButtonDirection();
-    			ludo.dom.addClass(button, 'ludo-title-bar-button-collapse-' + direction);
+                var direction = this.getCollapseButtonDirection();
+                ludo.dom.addClass(button, 'ludo-title-bar-button-collapse-' + direction);
                 el.appendChild(button);
             }
         }
@@ -116,7 +113,7 @@ ludo.view.TitleBar = new Class({
 
     shouldShowCollapseButton:function () {
         var parent = this.view.getParent();
-		return parent.layout && parent.layout.type ? parent.layout.type ==='linear' || parent.layout.type=='relative' : false;
+        return parent.layout && parent.layout.type ? parent.layout.type === 'linear' || parent.layout.type == 'relative' : false;
     },
 
     resizeButtonContainer:function () {
@@ -126,11 +123,11 @@ ludo.view.TitleBar = new Class({
     getButton:function (buttonType) {
         var b = this.els.buttons[buttonType] = new Element('div');
         b.id = 'b-' + String.uniqueID();
-		b.className = 'ludo-title-bar-button ludo-title-bar-button-' + buttonType;
+        b.className = 'ludo-title-bar-button ludo-title-bar-button-' + buttonType;
         b.addEvents({
-            'click' : this.buttonClick.bind(this),
-            'mouseenter' : this.enterButton.bind(this),
-            'mouseleave' : this.leaveButton.bind(this)
+            'click':this.buttonClick.bind(this),
+            'mouseenter':this.enterButton.bind(this),
+            'mouseleave':this.leaveButton.bind(this)
         });
         b.setProperty('title', buttonType.capitalize());
         b.setProperty('buttonType', buttonType);
@@ -204,7 +201,7 @@ ludo.view.TitleBar = new Class({
     },
 
     getWidthOfIconAndButtons:function () {
-		var ret = this.view.icon ? this.els.icon.offsetWidth : 0;
+        var ret = this.view.icon ? this.els.icon.offsetWidth : 0;
         return ret + this.els.controls.offsetWidth;
     },
 
@@ -224,10 +221,10 @@ ludo.view.TitleBar = new Class({
 
     getCollapseButtonDirection:function () {
         var c = this.view;
-		if(ludo.util.isString(c.layout.collapsible)){
-			return c.layout.collapsible;
-		}
-		var parent = c.getParent();
+        if (ludo.util.isString(c.layout.collapsible)) {
+            return c.layout.collapsible;
+        }
+        var parent = c.getParent();
         if (parent && parent.layout && parent.layout.type === 'linear' && parent.layout.orientation === 'horizontal') {
             return parent.getIndexOf(c) === 0 ? 'left' : 'right';
         } else {

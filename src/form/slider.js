@@ -5,6 +5,7 @@
  * @extends form.LabelElement
  */
 ludo.form.Slider = new Class({
+    // TODO implement support for min and max, example slider from 0 to 100, min and max from 10 to 90
     Extends:ludo.form.LabelElement,
     cssSignature:'ludo-form-slider',
     type:'form.Slider',
@@ -102,16 +103,12 @@ ludo.form.Slider = new Class({
     },
 
     createSliderHandle:function () {
-        var handle = this.els.sliderHandle = new Element('div');
-        ludo.dom.addClass(handle, 'ludo-form-slider-handle');
-        this.els.slider.adopt(handle);
+        this.els.sliderHandle = ludo.dom.create({ renderTo : this.els.slider, cls : 'ludo-form-slider-handle'});
         this.drag = new ludo.effect.Drag(this.getDragConfig());
     },
 
     addSliderBg:function (pos) {
-        var el = this.els['bg' + pos] = new Element('div');
-        ludo.dom.addClass(el, 'ludo-form-slider-bg-' + pos);
-        this.els.slider.adopt(el);
+        this.els['bg' + pos] = ludo.dom.create({ renderTo : this.els.slider, cls : 'ludo-form-slider-bg-' + pos });
     },
 
     getDragConfig:function () {

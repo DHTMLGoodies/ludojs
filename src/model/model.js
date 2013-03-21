@@ -284,7 +284,6 @@ ludo.model.Model = new Class({
 	 * @private
 	 */
 	registerFormComponent:function (formComponent) {
-
 		var name = formComponent.getName();
 		if (this.columnKeys.indexOf(name) >= 0) {
 			if (!this.formComponents[name]) {
@@ -307,7 +306,7 @@ ludo.model.Model = new Class({
 		}
 	},
 
-	updateByForm:function (value, formComponent) {
+	updateByForm:function () {
 		//this._setRecordValue(formComponent.getName(), value);
 		this.updateViews();
 	},

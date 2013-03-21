@@ -1,4 +1,4 @@
-/* Generated Wed Mar 20 14:17:40 CET 2013 */
+/* Generated Thu Mar 21 12:13:31 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -4173,7 +4173,23 @@ ludo.dom = {
 			return this.getSize();
 		});
 		return size.x + ludo.dom.getMW(el);
-	}
+	},
+
+    create:function(node){
+        var el = document.createElement(node.tag || 'div');
+        if(node.cls)ludo.dom.addClass(el, node.cls);
+        if(node.renderTo)node.renderTo.appendChild(el);
+        if(node.css){
+            for(var key in node.css){
+                if(node.css.hasOwnProperty(key)){
+                    el.style[key] = node.css[key];
+                }
+            }
+        }
+        if(node.html)el.innerHTML = node.html;
+        return el;
+
+    }
 };/* ../ludojs/src/util.js */
 ludo.util = {
 	type:function (o) {
@@ -4285,61 +4301,65 @@ ludo.util = {
 };/* ../ludojs/src/view/loader.js */
 // TODO rename this class
 ludo.view.Loader = new Class({
-	Extends: Events,
-	txt : 'Loading content...',
-	view:undefined,
-	el:undefined,
+    Extends:Events,
+    txt:'Loading content...',
+    view:undefined,
+    el:undefined,
     shim:undefined,
 
-	initialize:function(config){
-		this.view = config.view;
-		if(config.txt)this.txt = config.txt;
-		this.addDataSourceEvents();
-	},
+    initialize:function (config) {
+        this.view = config.view;
+        if (config.txt)this.txt = config.txt;
+        this.addDataSourceEvents();
+    },
 
-	addDataSourceEvents:function(){
-		var dsConfig = this.view.dataSource;
-		if(dsConfig){
-			var ds = this.view.getDataSource();
-			ds.addEvent('beforeload', this.show.bind(this));
-			ds.addEvent('load', this.hide.bind(this));
-			if(ds.isLoading())this.show();
-		}
-	},
+    addDataSourceEvents:function () {
+        var dsConfig = this.view.dataSource;
+        if (dsConfig) {
+            var ds = this.view.getDataSource();
+            ds.addEvent('beforeload', this.show.bind(this));
+            ds.addEvent('load', this.hide.bind(this));
+            if (ds.isLoading())this.show();
+        }
+    },
 
-	getEl:function(){
-		if(this.el === undefined){
-			this.el = new Element('div');
-			ludo.dom.addClass(this.el, 'ludo-component-pleasewait');
-			this.el.set('html', this.txt);
-			this.view.getEl().appendChild(this.el);
-			this.el.style.display = 'none';
-		}
-		return this.el;
-	},
+    getEl:function () {
+        if (this.el === undefined) {
+            this.el = ludo.dom.create({
+                renderTo:this.view.getEl(),
+                cls:'ludo-component-pleasewait',
+                css:{'display':'none'},
+                html : this.txt
+            });
+        }
+        return this.el;
+    },
 
-    getShim:function(){
-        if(this.shim === undefined){
-            this.shim = new Element('div');
-            ludo.dom.addClass(this.shim, 'ludo-loader-shim');
-            this.view.getEl().appendChild(this.shim);
-            this.shim.style.display = 'none';
+    getShim:function () {
+        if (this.shim === undefined) {
+            this.shim = ludo.dom.create({
+                renderTo:this.view.getEl(),
+                cls:'ludo-loader-shim',
+                css:{'display':'none'}
+            });
         }
         return this.shim;
     },
 
-	show:function(txt){
-		if(txt !== undefined){
-			this.el.set('html', txt);
-		}
-        this.getShim().style.display='';
-		this.getEl().style.display = '';
-	},
+    show:function (txt) {
+        if (txt !== undefined) {
+            this.el.set('html', txt);
+        }
+        this.css('');
+    },
 
-	hide:function(){
-        this.getShim().style.display='none';
-		this.getEl().style.display = 'none';
-	}
+    hide:function () {
+        this.css('none');
+    },
+    css:function (d) {
+        this.getShim().style.display = d;
+        this.getEl().style.display = d;
+    }
 });/* ../ludojs/src/view.js */
 /**
  ludoJS View
@@ -5351,7 +5371,7 @@ ludo.View = new Class({
 	 * Add a child component. The method will returned the created component.
 	 * @method addChild
 	 * @param {Object} child. A Child object can be a component or a JSON object describing the component.
-	 * @return component child
+	 * @return {View} child
 	 */
 	addChild:function (child, insertAt, pos) {
 		child = this.getLayoutManager().addChild(child, insertAt, pos);
@@ -10401,12 +10421,7 @@ ludo.view.TitleBar = new Class({
 
     createDOM:function () {
         var el = this.els.el = new Element('div');
-        if (this.view.boldTitle) {
-            ludo.dom.addClass(el, 'ludo-rich-view-titlebar');
-        } else {
-            ludo.dom.addClass(el, 'ludo-component-titlebar');
-        }
-
+        ludo.dom.addClass(el, this.view.boldTitle ? 'ludo-rich-view-titlebar' : 'ludo-component-titlebar');
         var left = 0;
         if (this.view.icon) {
             this.createIconDOM();
@@ -10414,27 +10429,29 @@ ludo.view.TitleBar = new Class({
         }
         this.createTitleDOM();
         el.adopt(this.getButtonContainer());
-		this.resizeButtonContainer.delay(20, this);
+        this.resizeButtonContainer.delay(20, this);
         this.els.title.style.left = left + 'px';
         el.addEvent('selectstart', ludo.util.cancelEvent);
     },
 
     createIconDOM:function () {
-        var icon = this.els.icon = document.createElement('div');
-        ludo.dom.addClass(icon, 'ludo-rich-view-titlebar-icon');
-		icon.style.backgroundImage = 'url(' + this.view.icon + ')';
-        this.els.el.appendChild(icon);
+        this.els.icon = ludo.dom.create({
+            renderTo:this.els.el,
+            cls:'ludo-rich-view-titlebar-icon',
+            css:{ 'backgroundImage':'url(' + this.view.icon + ')'}
+        });
+
     },
 
-	setTitle:function(title){
-		this.els.title.innerHTML = title;
-	},
+    setTitle:function (title) {
+        this.els.title.innerHTML = title;
+    },
 
     createTitleDOM:function () {
         var title = this.els.title = document.createElement('div');
-		title.className = 'ludo-rich-view-titlebar-title';
+        title.className = 'ludo-rich-view-titlebar-title';
         this.els.el.appendChild(title);
-		this.setTitle(this.view.title);
+        this.setTitle(this.view.title);
     },
     createEvents:function () {
         this.addEvent('minimize', this.showMaximize.bind(this));
@@ -10442,14 +10459,14 @@ ludo.view.TitleBar = new Class({
     },
 
     showMaximize:function () {
-        this.toggleMinimize('none','');
+        this.toggleMinimize('none', '');
     },
 
     showMinimize:function () {
-        this.toggleMinimize('','none');
+        this.toggleMinimize('', 'none');
     },
 
-    toggleMinimize:function(min,max){
+    toggleMinimize:function (min, max) {
         this.els.buttons.minimize.style.display = min;
         this.els.buttons.maximize.style.display = max;
     },
@@ -10460,17 +10477,17 @@ ludo.view.TitleBar = new Class({
 
     getButtonContainer:function () {
         var el = this.els.controls = document.createElement('div');
-		el.className = 'ludo-title-bar-button-container';
+        el.className = 'ludo-title-bar-button-container';
         el.style.cursor = 'default';
 
         var le = document.createElement('div');
-		le.className = 'ludo-title-bar-button-container-left-edge';
-		le.style.cssText = "position:absolute;z-index:1;left:0;top:0;width:55%;height:100%;background-repeat:no-repeat;background-position:top left";
+        le.className = 'ludo-title-bar-button-container-left-edge';
+        le.style.cssText = "position:absolute;z-index:1;left:0;top:0;width:55%;height:100%;background-repeat:no-repeat;background-position:top left";
         el.appendChild(le);
 
         var re = document.createElement('div');
-		re.className = 'ludo-title-bar-button-container-right-edge';
-		re.style.cssText = 'position:absolute;z-index:1;right:0;top:0;width:55%;height:100%;background-repeat:no-repeat;background-position:top right';
+        re.className = 'ludo-title-bar-button-container-right-edge';
+        re.style.cssText = 'position:absolute;z-index:1;right:0;top:0;width:55%;height:100%;background-repeat:no-repeat;background-position:top right';
         el.appendChild(re);
 
         if (this.view.isMinimizable()) {
@@ -10482,8 +10499,8 @@ ludo.view.TitleBar = new Class({
         if (this.view.isCollapsible()) {
             if (this.shouldShowCollapseButton()) {
                 var button = this.getButton('collapse', 'collapse');
-				var direction = this.getCollapseButtonDirection();
-    			ludo.dom.addClass(button, 'ludo-title-bar-button-collapse-' + direction);
+                var direction = this.getCollapseButtonDirection();
+                ludo.dom.addClass(button, 'ludo-title-bar-button-collapse-' + direction);
                 el.appendChild(button);
             }
         }
@@ -10496,7 +10513,7 @@ ludo.view.TitleBar = new Class({
 
     shouldShowCollapseButton:function () {
         var parent = this.view.getParent();
-		return parent.layout && parent.layout.type ? parent.layout.type ==='linear' || parent.layout.type=='relative' : false;
+        return parent.layout && parent.layout.type ? parent.layout.type === 'linear' || parent.layout.type == 'relative' : false;
     },
 
     resizeButtonContainer:function () {
@@ -10506,11 +10523,11 @@ ludo.view.TitleBar = new Class({
     getButton:function (buttonType) {
         var b = this.els.buttons[buttonType] = new Element('div');
         b.id = 'b-' + String.uniqueID();
-		b.className = 'ludo-title-bar-button ludo-title-bar-button-' + buttonType;
+        b.className = 'ludo-title-bar-button ludo-title-bar-button-' + buttonType;
         b.addEvents({
-            'click' : this.buttonClick.bind(this),
-            'mouseenter' : this.enterButton.bind(this),
-            'mouseleave' : this.leaveButton.bind(this)
+            'click':this.buttonClick.bind(this),
+            'mouseenter':this.enterButton.bind(this),
+            'mouseleave':this.leaveButton.bind(this)
         });
         b.setProperty('title', buttonType.capitalize());
         b.setProperty('buttonType', buttonType);
@@ -10584,7 +10601,7 @@ ludo.view.TitleBar = new Class({
     },
 
     getWidthOfIconAndButtons:function () {
-		var ret = this.view.icon ? this.els.icon.offsetWidth : 0;
+        var ret = this.view.icon ? this.els.icon.offsetWidth : 0;
         return ret + this.els.controls.offsetWidth;
     },
 
@@ -10604,10 +10621,10 @@ ludo.view.TitleBar = new Class({
 
     getCollapseButtonDirection:function () {
         var c = this.view;
-		if(ludo.util.isString(c.layout.collapsible)){
-			return c.layout.collapsible;
-		}
-		var parent = c.getParent();
+        if (ludo.util.isString(c.layout.collapsible)) {
+            return c.layout.collapsible;
+        }
+        var parent = c.getParent();
         if (parent && parent.layout && parent.layout.type === 'linear' && parent.layout.orientation === 'horizontal') {
             return parent.getIndexOf(c) === 0 ? 'left' : 'right';
         } else {
@@ -18647,7 +18664,6 @@ ludo.model.Model = new Class({
 	 * @private
 	 */
 	registerFormComponent:function (formComponent) {
-
 		var name = formComponent.getName();
 		if (this.columnKeys.indexOf(name) >= 0) {
 			if (!this.formComponents[name]) {
@@ -18670,7 +18686,7 @@ ludo.model.Model = new Class({
 		}
 	},
 
-	updateByForm:function (value, formComponent) {
+	updateByForm:function () {
 		//this._setRecordValue(formComponent.getName(), value);
 		this.updateViews();
 	},
@@ -23941,11 +23957,11 @@ ludo.form.Spinner = new Class({
      * @default false
      * @optional
      */
-    disableArrowKeys : false,
+    disableArrowKeys:false,
 
     ludoConfig:function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['increment','decimals','disableArrowKeys']);
+        this.setConfigParams(config, ['increment', 'decimals', 'disableArrowKeys']);
     },
 
     mode:{},
@@ -23998,10 +24014,8 @@ ludo.form.Spinner = new Class({
     },
 
     createSpinnerContainer:function () {
-        var el = this.els.spinnerContainer = new Element('div');
-        this.getFormEl().getParent().adopt(el);
+        var el = this.els.spinnerContainer = ludo.dom.create({ renderTo:this.getFormEl().getParent(), cls:'ludo-spinbox-container'});
         el.adopt(this.getFormEl());
-        ludo.dom.addClass(el, 'ludo-spinbox-container')
     },
 
     _createContainer:function (config) {
@@ -24020,9 +24034,7 @@ ludo.form.Spinner = new Class({
     },
 
     _setStyles:function () {
-        this.els.spinnerContainer.setStyles({
-            position:'relative'
-        });
+        this.els.spinnerContainer.style.position = 'relative';
         this.getFormEl().setStyles({
             border:'0px'
         });
@@ -24051,7 +24063,7 @@ ludo.form.Spinner = new Class({
             'top':'50%'
         });
 
-        this.els.spinnerContainer.setStyles({ width:this.fieldWidth });
+        this.els.spinnerContainer.style.width = this.fieldWidth + 'px';
     },
     _initNudge:function (e) {
         this._startMode({
@@ -24094,7 +24106,7 @@ ludo.form.Spinner = new Class({
             width -= 11;
         }
         width++;
-        this.els.spinnerContainer.setStyle('width', width);
+        this.els.spinnerContainer.style.width = width + 'px';
     },
     _createEvents:function () {
         if (!this.disableWheel) {
@@ -25567,6 +25579,7 @@ ludo.form.File = new Class({
  * @extends form.LabelElement
  */
 ludo.form.Slider = new Class({
+    // TODO implement support for min and max, example slider from 0 to 100, min and max from 10 to 90
     Extends:ludo.form.LabelElement,
     cssSignature:'ludo-form-slider',
     type:'form.Slider',
@@ -25664,16 +25677,12 @@ ludo.form.Slider = new Class({
     },
 
     createSliderHandle:function () {
-        var handle = this.els.sliderHandle = new Element('div');
-        ludo.dom.addClass(handle, 'ludo-form-slider-handle');
-        this.els.slider.adopt(handle);
+        this.els.sliderHandle = ludo.dom.create({ renderTo : this.els.slider, cls : 'ludo-form-slider-handle'});
         this.drag = new ludo.effect.Drag(this.getDragConfig());
     },
 
     addSliderBg:function (pos) {
-        var el = this.els['bg' + pos] = new Element('div');
-        ludo.dom.addClass(el, 'ludo-form-slider-bg-' + pos);
-        this.els.slider.adopt(el);
+        this.els['bg' + pos] = ludo.dom.create({ renderTo : this.els.slider, cls : 'ludo-form-slider-bg-' + pos });
     },
 
     getDragConfig:function () {

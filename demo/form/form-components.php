@@ -82,7 +82,6 @@ require_once("../includes/demo-header.php");
                     { type:'form.Date', name:'birth', id:'birth', stretchField:true, 'label':'Born'},
                     { type:'form.File', name:'picture', label:'Picture', value:'', height:30 },
                     { type:'form.DisplayField', label:'form.DisplayField', value:'My value',height:30},
-                    { type:'form.Checkbox', label:'I agree', id:"agree"},
                     { type:'form.RadioGroup',
                         id:'gender',
                         label:'Gender',
@@ -93,7 +92,8 @@ require_once("../includes/demo-header.php");
                         value:'male'
                     },
                     { type:'form.Slider', id:'mySlider', direction:'horizontal', label:'form.Slider', value:10, minValue:0, maxValue:255 },
-                    { type:'form.Number', label:'form.Number(linked)', minValue:0, maxValue:255, fieldWidth:50, maxLength:3, suffix:'RGB Color', linkWith:'mySlider'}
+                    { type:'form.Number', label:'form.Number(linked)', minValue:0, maxValue:255, fieldWidth:50, maxLength:3, suffix:'RGB Color', linkWith:'mySlider'},
+                    { type:'form.Checkbox', label:'I agree', id:"agree"}
                 ]}
         ],
 

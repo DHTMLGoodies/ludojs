@@ -47,11 +47,11 @@ ludo.form.Spinner = new Class({
      * @default false
      * @optional
      */
-    disableArrowKeys : false,
+    disableArrowKeys:false,
 
     ludoConfig:function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['increment','decimals','disableArrowKeys']);
+        this.setConfigParams(config, ['increment', 'decimals', 'disableArrowKeys']);
     },
 
     mode:{},
@@ -104,10 +104,8 @@ ludo.form.Spinner = new Class({
     },
 
     createSpinnerContainer:function () {
-        var el = this.els.spinnerContainer = new Element('div');
-        this.getFormEl().getParent().adopt(el);
+        var el = this.els.spinnerContainer = ludo.dom.create({ renderTo:this.getFormEl().getParent(), cls:'ludo-spinbox-container'});
         el.adopt(this.getFormEl());
-        ludo.dom.addClass(el, 'ludo-spinbox-container')
     },
 
     _createContainer:function (config) {
@@ -126,9 +124,7 @@ ludo.form.Spinner = new Class({
     },
 
     _setStyles:function () {
-        this.els.spinnerContainer.setStyles({
-            position:'relative'
-        });
+        this.els.spinnerContainer.style.position = 'relative';
         this.getFormEl().setStyles({
             border:'0px'
         });
@@ -157,7 +153,7 @@ ludo.form.Spinner = new Class({
             'top':'50%'
         });
 
-        this.els.spinnerContainer.setStyles({ width:this.fieldWidth });
+        this.els.spinnerContainer.style.width = this.fieldWidth + 'px';
     },
     _initNudge:function (e) {
         this._startMode({
@@ -200,7 +196,7 @@ ludo.form.Spinner = new Class({
             width -= 11;
         }
         width++;
-        this.els.spinnerContainer.setStyle('width', width);
+        this.els.spinnerContainer.style.width = width + 'px';
     },
     _createEvents:function () {
         if (!this.disableWheel) {
