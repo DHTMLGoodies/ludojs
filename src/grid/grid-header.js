@@ -254,7 +254,6 @@ ludo.grid.GridHeader = new Class({
 			this.cachedHeight += ludo.dom.getMBPH(this.el);
 		}
 		return this.cachedHeight;
-
 	},
 
 	getEl:function () {
@@ -366,9 +365,8 @@ ludo.grid.GridHeader = new Class({
 
 	updateSortArrow:function (sortedBy) {
 		this.clearSortClassNameFromHeaders();
-		var headerCell = this.cells[sortedBy.column];
-		if (headerCell) {
-			headerCell.getElements('span')[0].addClass('ludo-cell-text-sort-' + sortedBy.order);
+		if (this.cells[sortedBy.column]) {
+            this.cells[sortedBy.column].getElements('span')[0].addClass('ludo-cell-text-sort-' + sortedBy.order);
 		}
 	}
 });

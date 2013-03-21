@@ -36,6 +36,7 @@ ludo.form.Manager = new Class({
 			if (this.model.url == undefined) {
 				this.model._setUrl(this.getUrl());
 			}
+            this.model.addEvent('beforePopulate', this.clear.bind(this));
 			this.model.addEvent('success', function (json) {
 				this.fireEvent('success', json);
 				this.fireEvent('clean');

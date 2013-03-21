@@ -30,7 +30,7 @@ require_once("../includes/demo-header.php");
 <script type="text/javascript" src="../../src/form/textarea.js"></script>
 <script type="text/javascript" class="source-code">
 
-    new ludo.Window({
+    var w = new ludo.Window({
         id:'myWindow',
         title:'Form components',
         layout:{
@@ -42,7 +42,7 @@ require_once("../includes/demo-header.php");
         top:30,
         model:{
             id:'userModel',
-            columns:["firstname","lastname","address","email","phone","zipcode","city", "birth","country"],
+            columns:["firstname","lastname","address","email","phone","zipcode","city", "birth","country","gender"],
             name:'User',
             recordId:100
         },
@@ -84,6 +84,7 @@ require_once("../includes/demo-header.php");
                     { type:'form.DisplayField', label:'form.DisplayField', value:'My value',height:30},
                     { type:'form.RadioGroup',
                         id:'gender',
+                        name:'gender',
                         label:'Gender',
                         options:[
                             { value:'female', text:'Female' },
@@ -92,7 +93,7 @@ require_once("../includes/demo-header.php");
                         value:'male'
                     },
                     { type:'form.Slider', id:'mySlider', direction:'horizontal', label:'form.Slider', value:10, minValue:0, maxValue:255 },
-                    { type:'form.Number', label:'form.Number(linked)', minValue:0, maxValue:255, fieldWidth:50, maxLength:3, suffix:'RGB Color', linkWith:'mySlider'},
+                    { type:'form.Number', label:'form.Number(linked)', minValue:0, maxValue:255, fieldWidth:50, value:10, maxLength:3, suffix:'RGB Color', linkWith:'mySlider'},
                     { type:'form.Checkbox', label:'I agree', id:"agree"}
                 ]}
         ],

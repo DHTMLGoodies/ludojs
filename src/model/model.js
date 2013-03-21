@@ -161,9 +161,7 @@ ludo.model.Model = new Class({
 	},
 
 	_setRecordValue:function (property, value) {
-
 		if (this.currentRecord) {
-			this.currentRecord[property] = value;
 			if (this.formComponents[property]) {
 				for (var i = 0; i < this.formComponents[property].length; i++) {
 					this.formComponents[property][i].setValue(value);
@@ -191,7 +189,7 @@ ludo.model.Model = new Class({
 	 		"request": "Person/100/read"
 	 	}
 	 Example of expected response
-	 @example
+    @example
          {
             "success":true,
             "message":"",
@@ -254,6 +252,7 @@ ludo.model.Model = new Class({
     },
 
 	populate:function (recordId, record) {
+        this.fireEvent('beforePopulate', [record, this]);
 		this.recordId = recordId;
 		for (var prop in record) {
 			if (record.hasOwnProperty(prop)) {
@@ -306,8 +305,9 @@ ludo.model.Model = new Class({
 		}
 	},
 
-	updateByForm:function () {
-		//this._setRecordValue(formComponent.getName(), value);
+	updateByForm:function (value, formComponent) {
+        this.currentRecord[formComponent.getName()] = value;
+        this.fireEvent('update', this.currentRecord);
 		this.updateViews();
 	},
 
@@ -430,16 +430,14 @@ ludo.model.Model = new Class({
     },
 
 	getProgressBarId:function () {
-		if (this.progressBar) {
-			return this.progressBar.getProgressBarId();
-		}
-		return undefined;
+		return this.progressBar ? this.progressBar.getProgressBarId() : undefined;
 	},
 
 	handleModelUpdates:function (updates) {
         if(updates && updates[this.idField] !== undefined)this.recordId = updates[this.idField];
 		for (var column in updates) {
 			if (updates.hasOwnProperty(column)) {
+                // TODO this fires a lot of update events. refactor to fire only one
 				this._setRecordValue(column, updates[column]);
 			}
 		}

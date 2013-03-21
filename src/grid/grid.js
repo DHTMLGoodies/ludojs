@@ -189,7 +189,7 @@ ludo.grid.Grid = new Class({
 
 		if (this.dataSource) {
 			if(this.dataSourceObj && this.dataSourceObj.hasData()){
-				this.populateData(this.dataSourceObj.getData());
+				this.populateData();
 			}
 			var ds = this.getDataSource();
 			ds.addEvent('change', this.populateData.bind(this));
@@ -447,9 +447,7 @@ ludo.grid.Grid = new Class({
 
 	resizeDOM:function () {
 		this.resizeColumns();
-		var height = this.getHeight();
-		height -= ludo.dom.getMBPH(this.els.container);
-		height -= ludo.dom.getMBPH(this.els.body);
+		var height = this.getHeight() - ludo.dom.getMBPH(this.els.container) - ludo.dom.getMBPH(this.els.body);
 		height -= this.scrollbar.horizontal.getHeight();
 		if (height < 0) {
 			return;
@@ -457,9 +455,7 @@ ludo.grid.Grid = new Class({
 		this.els.body.style.height = height + 'px';
 		this.cachedInnerHeight = height;
 
-
-		var contentSize = this.getBody().getSize();
-		var contentHeight = contentSize.y;
+		var contentHeight = this.getBody().offsetHeight;
 		if (contentHeight == 0) {
 			this.resizeDOM.delay(100, this);
 			return;
@@ -662,7 +658,7 @@ ludo.grid.Grid = new Class({
 		if (!column) {
 			return;
 		}
-		var height = column.getSize().y;
+		var height = column.offsetHeight;
 		if (height === 0) {
 			this.resizeVerticalScrollbar.delay(300, this);
 		} else {
@@ -675,12 +671,10 @@ ludo.grid.Grid = new Class({
 		this.els.dataColumns = {};
 		var keys = this.columnManager.getLeafKeys();
 		for (var i = 0; i < keys.length; i++) {
-			var el = new Element('div');
-			ludo.dom.addClass(el, 'ludo-grid-data-column');
+            var el = ludo.dom.create({ cls : 'ludo-grid-data-column', renderTo : this.els.dataContainer});
 			el.setProperty('col', keys[i]);
 			ludo.dom.addClass(el, this.getColumnCssClass(i));
 			el.id = 'ludo-grid-column-' + keys[i] + '-' + this.uniqueId;
-			this.els.dataContainer.adopt(el);
 			this.els.dataColumns[keys[i]] = el;
 		}
 	},

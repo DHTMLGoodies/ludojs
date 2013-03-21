@@ -193,8 +193,9 @@ ludo.Window = new Class({
     setXY:function(x,y){
         this.layout.left = x;
         this.layout.top = y;
-        this.getLayoutManager().getRenderer().clearFn();
-        this.getLayoutManager().getRenderer().resize();
+        var r = this.getLayoutManager().getRenderer();
+        r.clearFn();
+        r.resize();
     },
 
     center:function(){

@@ -37,7 +37,7 @@ ludo.Panel = new Class({
     heightOfLegend : undefined,
     getHeightOfLegend : function(){
         if(this.heightOfLegend === undefined){
-            this.heightOfLegend = this.els.legend.getSize().y;
+            this.heightOfLegend = this.els.legend.offsetHeight;
         }
         return this.heightOfLegend;
     },

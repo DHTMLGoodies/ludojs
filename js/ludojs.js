@@ -1,4 +1,4 @@
-/* Generated Thu Mar 21 12:13:31 CET 2013 */
+/* Generated Thu Mar 21 20:35:58 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -11258,8 +11258,9 @@ ludo.Window = new Class({
     setXY:function(x,y){
         this.layout.left = x;
         this.layout.top = y;
-        this.getLayoutManager().getRenderer().clearFn();
-        this.getLayoutManager().getRenderer().resize();
+        var r = this.getLayoutManager().getRenderer();
+        r.clearFn();
+        r.resize();
     },
 
     center:function(){
@@ -14020,7 +14021,6 @@ ludo.grid.GridHeader = new Class({
 			this.cachedHeight += ludo.dom.getMBPH(this.el);
 		}
 		return this.cachedHeight;
-
 	},
 
 	getEl:function () {
@@ -14132,9 +14132,8 @@ ludo.grid.GridHeader = new Class({
 
 	updateSortArrow:function (sortedBy) {
 		this.clearSortClassNameFromHeaders();
-		var headerCell = this.cells[sortedBy.column];
-		if (headerCell) {
-			headerCell.getElements('span')[0].addClass('ludo-cell-text-sort-' + sortedBy.order);
+		if (this.cells[sortedBy.column]) {
+            this.cells[sortedBy.column].getElements('span')[0].addClass('ludo-cell-text-sort-' + sortedBy.order);
 		}
 	}
 });/* ../ludojs/src/col-resize.js */
@@ -15166,7 +15165,7 @@ ludo.grid.Grid = new Class({
 
 		if (this.dataSource) {
 			if(this.dataSourceObj && this.dataSourceObj.hasData()){
-				this.populateData(this.dataSourceObj.getData());
+				this.populateData();
 			}
 			var ds = this.getDataSource();
 			ds.addEvent('change', this.populateData.bind(this));
@@ -15424,9 +15423,7 @@ ludo.grid.Grid = new Class({
 
 	resizeDOM:function () {
 		this.resizeColumns();
-		var height = this.getHeight();
-		height -= ludo.dom.getMBPH(this.els.container);
-		height -= ludo.dom.getMBPH(this.els.body);
+		var height = this.getHeight() - ludo.dom.getMBPH(this.els.container) - ludo.dom.getMBPH(this.els.body);
 		height -= this.scrollbar.horizontal.getHeight();
 		if (height < 0) {
 			return;
@@ -15434,9 +15431,7 @@ ludo.grid.Grid = new Class({
 		this.els.body.style.height = height + 'px';
 		this.cachedInnerHeight = height;
 
-
-		var contentSize = this.getBody().getSize();
-		var contentHeight = contentSize.y;
+		var contentHeight = this.getBody().offsetHeight;
 		if (contentHeight == 0) {
 			this.resizeDOM.delay(100, this);
 			return;
@@ -15639,7 +15634,7 @@ ludo.grid.Grid = new Class({
 		if (!column) {
 			return;
 		}
-		var height = column.getSize().y;
+		var height = column.offsetHeight;
 		if (height === 0) {
 			this.resizeVerticalScrollbar.delay(300, this);
 		} else {
@@ -15652,12 +15647,10 @@ ludo.grid.Grid = new Class({
 		this.els.dataColumns = {};
 		var keys = this.columnManager.getLeafKeys();
 		for (var i = 0; i < keys.length; i++) {
-			var el = new Element('div');
-			ludo.dom.addClass(el, 'ludo-grid-data-column');
+            var el = ludo.dom.create({ cls : 'ludo-grid-data-column', renderTo : this.els.dataContainer});
 			el.setProperty('col', keys[i]);
 			ludo.dom.addClass(el, this.getColumnCssClass(i));
 			el.id = 'ludo-grid-column-' + keys[i] + '-' + this.uniqueId;
-			this.els.dataContainer.adopt(el);
 			this.els.dataColumns[keys[i]] = el;
 		}
 	},
@@ -18541,9 +18534,7 @@ ludo.model.Model = new Class({
 	},
 
 	_setRecordValue:function (property, value) {
-
 		if (this.currentRecord) {
-			this.currentRecord[property] = value;
 			if (this.formComponents[property]) {
 				for (var i = 0; i < this.formComponents[property].length; i++) {
 					this.formComponents[property][i].setValue(value);
@@ -18571,7 +18562,7 @@ ludo.model.Model = new Class({
 	 		"request": "Person/100/read"
 	 	}
 	 Example of expected response
-	 @example
+    @example
          {
             "success":true,
             "message":"",
@@ -18634,6 +18625,7 @@ ludo.model.Model = new Class({
     },
 
 	populate:function (recordId, record) {
+        this.fireEvent('beforePopulate', [record, this]);
 		this.recordId = recordId;
 		for (var prop in record) {
 			if (record.hasOwnProperty(prop)) {
@@ -18686,8 +18678,9 @@ ludo.model.Model = new Class({
 		}
 	},
 
-	updateByForm:function () {
-		//this._setRecordValue(formComponent.getName(), value);
+	updateByForm:function (value, formComponent) {
+        this.currentRecord[formComponent.getName()] = value;
+        this.fireEvent('update', this.currentRecord);
 		this.updateViews();
 	},
 
@@ -18810,16 +18803,14 @@ ludo.model.Model = new Class({
     },
 
 	getProgressBarId:function () {
-		if (this.progressBar) {
-			return this.progressBar.getProgressBarId();
-		}
-		return undefined;
+		return this.progressBar ? this.progressBar.getProgressBarId() : undefined;
 	},
 
 	handleModelUpdates:function (updates) {
         if(updates && updates[this.idField] !== undefined)this.recordId = updates[this.idField];
 		for (var column in updates) {
 			if (updates.hasOwnProperty(column)) {
+                // TODO this fires a lot of update events. refactor to fire only one
 				this._setRecordValue(column, updates[column]);
 			}
 		}
@@ -21842,6 +21833,7 @@ ludo.form.Manager = new Class({
 			if (this.model.url == undefined) {
 				this.model._setUrl(this.getUrl());
 			}
+            this.model.addEvent('beforePopulate', this.clear.bind(this));
 			this.model.addEvent('success', function (json) {
 				this.fireEvent('success', json);
 				this.fireEvent('clean');
@@ -26364,7 +26356,7 @@ ludo.Panel = new Class({
     heightOfLegend : undefined,
     getHeightOfLegend : function(){
         if(this.heightOfLegend === undefined){
-            this.heightOfLegend = this.els.legend.getSize().y;
+            this.heightOfLegend = this.els.legend.offsetHeight;
         }
         return this.heightOfLegend;
     },

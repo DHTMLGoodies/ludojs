@@ -92,7 +92,7 @@ ludo.colorPicker.HueBar = new Class({
     getGradient:function(){
         var gradient = new ludo.canvas.Gradient({x1:'0%', y1:'100%', x2:'0%', y2:'0%'});
 
-        for(var i=0;i<360;i+=60){
+        for(var i=0;i<=360;i+=60){
             var prs = Math.round(i / 360 * 100);
             var color = this.colorObj.rgbCode(this.colorObj.hsvToRGB(i, 100, 100));
             gradient.addStop(prs + '%', color, 1);

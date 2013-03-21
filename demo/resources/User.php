@@ -44,6 +44,7 @@ class User implements LudoDBService
                     'email' => 'jane.doe@example-domain.com',
                     'country' => 33,
                     'gender' => 'female',
+                    'birth' => '1977-06-14',
                     'picture' => 'jane.psd');
             default:
                 return array();
