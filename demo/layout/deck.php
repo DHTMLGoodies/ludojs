@@ -12,6 +12,7 @@ require_once("../includes/demo-header.php");
         id:'myWindow',
         left:50, top:50,
         width:310, height:290,
+        resizable:false,
         title:'Card/Deck inside a window',
         layout:'fill',
         children:[
