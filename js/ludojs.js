@@ -1,4 +1,4 @@
-/* Generated Fri Mar 22 19:47:29 CET 2013 */
+/* Generated Fri Mar 22 23:56:50 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -2967,7 +2967,6 @@ ludo.layout.Base = new Class({
 		this.onNewChild(child);
 		this.addChildEvents(child);
 		if (child.isCollapsible !== undefined && child.isCollapsible()) {
-			// if (child.getElForCollapsedState !== undefined)child.getElForCollapsedState().inject(child.getEl(), 'after');
 			if (child.collapsed) {
 				child.collapse();
 			}
@@ -3084,7 +3083,7 @@ ludo.layout.Base = new Class({
 		var config = {};
 		config.width = ludo.dom.getInnerWidthOf(this.view.getBody());
 		if (config.width < 0) {
-			config.width = null;
+			config.width = undefined;
 		}
 		for (var i = 0; i < this.view.children.length; i++) {
 			this.view.children[i].resize(config);
@@ -5992,13 +5991,7 @@ ludo.layout.LinearHorizontal = new Class({
 
 	resize:function () {
 		var totalWidth = this.view.getInnerWidthOfBody();
-		var height;
-		if (this.hasDynamicHeight()) {
-			height = 'auto';
-		} else {
-			height = this.view.getInnerHeightOfBody();
-		}
-
+		var height = this.hasDynamicHeight() ? 'auto' : this.view.getInnerHeightOfBody();
 		if (height == 0) {
 			return;
 		}
@@ -6090,14 +6083,8 @@ ludo.layout.LinearVertical = new Class({
 		var tm = 0;
 		for (var i = 0; i < this.view.children.length; i++) {
 			if (!this.hasLayoutWeight(this.view.children[i])) {
-				if (!this.view.children[i].isHidden()) {
-					height = this.getHeightOf(this.view.children[i]);
-				} else {
-					height = 0;
-				}
-				if (height) {
-					totalHeightOfItems += height
-				}
+                height = this.view.children[i].isHidden() ? 0 :  this.getHeightOf(this.view.children[i]);
+                totalHeightOfItems += height
 			} else {
 				if (!this.view.children[i].isHidden()) {
 					totalWeight += this.view.children[i].layout.weight;
@@ -6193,15 +6180,9 @@ ludo.layout.Card = new Class({
 	},
 
 	addDragEvents:function (child) {
-		if (ludo.util.isTabletOrMobile()) {
-			child.getBody().addEvent('touchstart', this.touchStart.bind(this));
-			child.getEventEl().addEvent('touchmove', this.touchMove.bind(this));
-			child.getEventEl().addEvent('touchend', this.touchEnd.bind(this));
-		} else {
-			child.getBody().addEvent('mousedown', this.touchStart.bind(this));
-			child.getEventEl().addEvent('mousemove', this.touchMove.bind(this));
-			child.getEventEl().addEvent('mouseup', this.touchEnd.bind(this));
-		}
+        child.getBody().addEvent(ludo.util.getDragStartEvent(), this.touchStart.bind(this));
+        child.getEventEl().addEvent(ludo.util.getDragMoveEvent(), this.touchMove.bind(this));
+        child.getEventEl().addEvent(ludo.util.getDragEndEvent(), this.touchEnd.bind(this));
 	},
 
 	resize:function () {
@@ -6210,9 +6191,8 @@ ludo.layout.Card = new Class({
 		}
 		var height = this.view.getInnerHeightOfBody();
 		var width = ludo.dom.getInnerWidthOf(this.view.getBody());
-		var card = this.getVisibleCard();
-		if (card) {
-			card.resize({ height:height, width:width });
+		if (this.visibleCard) {
+            this.visibleCard.resize({ height:height, width:width });
 		}
 	},
 
@@ -6232,18 +6212,12 @@ ludo.layout.Card = new Class({
 	 */
 	getPreviousCardOf:function (view) {
 		var index = this.view.children.indexOf(view);
-		if (index > 0) {
-			return this.view.children[index - 1];
-		}
-		return null;
+        return index > 0 ? this.view.children[index - 1] : undefined;
 	},
 
 	getNextCardOf:function (card) {
 		var index = this.view.children.indexOf(card);
-		if (index < this.view.children.length - 1) {
-			return this.view.children[index + 1];
-		}
-		return undefined;
+        return index < this.view.children.length - 1 ? this.view.children[index + 1] : undefined;
 	},
 
 	/**
@@ -6258,7 +6232,7 @@ ludo.layout.Card = new Class({
 		}
 		if (this.visibleCard) {
 			var card = this.getPreviousCardOf(this.visibleCard);
-			if (card !== undefined) {
+			if (card) {
 				card.show();
 				return true;
 			}
@@ -6278,7 +6252,7 @@ ludo.layout.Card = new Class({
 		}
 		if (this.visibleCard) {
 			var card = this.getNextCardOf(this.visibleCard);
-			if (card !== undefined) {
+			if (card) {
 				card.show();
 				return true;
 			}
@@ -6481,10 +6455,7 @@ ludo.layout.Card = new Class({
 	 * @return {Number} card index
 	 */
 	getIndexOfVisibleCard:function () {
-		if (this.visibleCard) {
-			return this.view.children.indexOf(this.visibleCard);
-		}
-		return 0;
+        return this.visibleCard ? this.view.children.indexOf(this.visibleCard) : 0;
 	},
 
 	/**
@@ -6514,21 +6485,23 @@ ludo.layout.Card = new Class({
 	},
 
 	animateHigherCard:function () {
-		if (!this.animate)return;
-		if (this.animateX) {
-			this.animateFromRight();
-		} else {
-			this.animateFromBottom();
-		}
-
+        if(this.animate){
+            if (this.animateX) {
+                this.animateFromRight();
+            } else {
+                this.animateFromBottom();
+            }
+        }
 	},
+
 	animateLowerCard:function () {
-		if (!this.animate)return;
-		if (this.animateX) {
-			this.animateFromLeft();
-		} else {
-			this.animateFromTop();
-		}
+		if(this.animate){
+            if (this.animateX) {
+                this.animateFromLeft();
+            } else {
+                this.animateFromTop();
+            }
+        }
 	},
 
 	getAnimationDuration:function () {
@@ -18943,61 +18916,61 @@ ludo.menu.MenuHandler = new Class({
  * @extends View
  */
 ludo.menu.MenuItem = new Class({
-	Extends:ludo.View,
-	type:'menu.MenuItem',
-	menu:null,
-	subMenu:null,
-	menuItems:[],
-	spacer:undefined,
-	/**
-	 Path to menu item icon or text placed in the icon placeholder. If icon contains one
-	 or more periods(.) it will be consider an image. Otherwise, config.icon will be displayed
-	 as plain text
-	 @Attribute icon
-	 @type String
-	 @default undefined
-	 @example
-	 	icon: 'my-icon.jpg'
-	 Sets icon to my-icon.jpg
-	 @example
-	 	icon : '!'
-	 sets icon to the character "!", i.e. text
-	 */
-	icon:undefined,
-	expandSubMenuOnClick:true,
-	menuDirection:'horizontal',
-	/**
-	 * Initially disable the menu item
-	 * @attribute {Boolean} disabled
-	 * @default false
-	 */
-	disabled:false,
-	menuHandler:undefined,
-	parentMenuItem:undefined,
-	value:undefined,
-	/**
-	 * Text for menu item
-	 * @attribute label
-	 * @type String
-	 * @default '' empty string
-	 */
-	label:'',
-	/**
-	 * Useful property if you want to apply only one click event for the menu
-	 * and then determine which menu item was clicked. example:
-	 *
-	 * switch(menuItem.action){
+    Extends:ludo.View,
+    type:'menu.MenuItem',
+    menu:null,
+    subMenu:null,
+    menuItems:[],
+    spacer:undefined,
+    /**
+     Path to menu item icon or text placed in the icon placeholder. If icon contains one
+     or more periods(.) it will be consider an image. Otherwise, config.icon will be displayed
+     as plain text
+     @Attribute icon
+     @type String
+     @default undefined
+     @example
+     icon: 'my-icon.jpg'
+     Sets icon to my-icon.jpg
+     @example
+     icon : '!'
+     sets icon to the character "!", i.e. text
+     */
+    icon:undefined,
+    expandSubMenuOnClick:true,
+    menuDirection:'horizontal',
+    /**
+     * Initially disable the menu item
+     * @attribute {Boolean} disabled
+     * @default false
+     */
+    disabled:false,
+    menuHandler:undefined,
+    parentMenuItem:undefined,
+    value:undefined,
+    /**
+     * Text for menu item
+     * @attribute label
+     * @type String
+     * @default '' empty string
+     */
+    label:'',
+    /**
+     * Useful property if you want to apply only one click event for the menu
+     * and then determine which menu item was clicked. example:
+     *
+     * switch(menuItem.action){
      *
      *
      *
      * }
-	 *
-	 * @Attribute {String} action
-	 * @type String
-	 * @default undefined
-	 */
-	action:undefined,
-	record:undefined,
+     *
+     * @Attribute {String} action
+     * @type String
+     * @default undefined
+     */
+    action:undefined,
+    record:undefined,
 
     /**
      * Fire an event with this name on click
@@ -19006,237 +18979,233 @@ ludo.menu.MenuItem = new Class({
      */
     fire:undefined,
 
-	ludoConfig:function (config) {
-		if (config.children) {
-			this.menuItems = config.children;
-			config.children = [];
-		}
-        this.setConfigParams(config, ['menuDirection','icon','record','value','label','action','disabled','fire']);
+    ludoConfig:function (config) {
+        if (config.children) {
+            this.menuItems = config.children;
+            config.children = [];
+        }
+        this.setConfigParams(config, ['menuDirection', 'icon', 'record', 'value', 'label', 'action', 'disabled', 'fire']);
 
-		this.menuDirection = config.menuDirection || this.menuDirection;
-		config.html = config.html || config.label;
-		if (config.html === '|') {
-			this.spacer = true;
-		}
-		if (this.label && !this.html) {
-			this.html = this.label;
-		}
-		this.parent(config);
-	},
+        config.html = config.html || config.label;
+        if (config.html === '|') {
+            this.spacer = true;
+        }
+        if (this.label && !this.html) {
+            this.html = this.label;
+        }
+        this.parent(config);
+    },
 
-	ludoEvents:function () {
-		this.parent();
-		if (!this.isSpacer()) {
-			this.getEl().addEvent('click', this.click.bind(this));
-			this.getEl().addEvent('mouseenter', this.mouseOver.bind(this));
-			this.getEl().addEvent('mouseleave', this.mouseOut.bind(this));
-		}
-	},
+    ludoEvents:function () {
+        this.parent();
+        if (!this.isSpacer()) {
+            this.getEl().addEvent('click', this.click.bind(this));
+            this.getEl().addEvent('mouseenter', this.mouseOver.bind(this));
+            this.getEl().addEvent('mouseleave', this.mouseOut.bind(this));
+        }
+    },
 
-	ludoDOM:function () {
-		this.parent();
-		this.createMenu();
-		this.registerMenuHandler();
+    ludoDOM:function () {
+        this.parent();
+        this.createMenu();
+        this.registerMenuHandler();
 
-		this.getEl().addClass('ludo-menu-item');
-		this.getBody().setStyle('cursor', 'pointer');
+        this.getEl().addClass('ludo-menu-item');
+        this.getBody().setStyle('cursor', 'pointer');
 
-		if (this.isSpacer()) {
-			if (this.menuDirection === 'horizontal') {
-				this.getEl().setStyle('width', 1);
-			}
-			this.getEl().addClass('ludo-menu-item-spacer-' + this.getParent().getDirection());
-		}
+        if (this.isSpacer()) {
+            if (this.menuDirection === 'horizontal') {
+                this.getEl().setStyle('width', 1);
+            }
+            this.getEl().addClass('ludo-menu-item-spacer-' + this.getParent().getDirection());
+        }
 
-		if (this.getParent()) {
-			this.getEl().addClass('ludo-menu-item-' + this.getParent().getDirection());
-		}
+        if (this.getParent()) {
+            this.getEl().addClass('ludo-menu-item-' + this.getParent().getDirection());
+        }
 
-		if (this.icon) {
-			this.createIcon();
-		}
+        if (this.icon) {
+            this.createIcon();
+        }
 
-		if (this.disabled) {
-			this.disable();
-		}
-	},
+        if (this.disabled) {
+            this.disable();
+        }
+    },
 
-	getLabel:function () {
-		return this.label;
-	},
+    getLabel:function () {
+        return this.label;
+    },
 
-	getRecord:function () {
-		return this.record;
-	},
-	registerMenuHandler:function () {
-		var rootMenuComponent = this.getRootMenuComponent();
-		if (rootMenuComponent) {
-			this.menuHandler = rootMenuComponent.getMenuHandler();
-			if (this.menuHandler) {
-				this.menuHandler.addChild(this, this.menu, this.getParentMenuItem());
-			}
-		}
-	},
+    getRecord:function () {
+        return this.record;
+    },
+    registerMenuHandler:function () {
+        var rootMenuComponent = this.getRootMenuComponent();
+        if (rootMenuComponent) {
+            this.menuHandler = rootMenuComponent.getMenuHandler();
+            if (this.menuHandler) {
+                this.menuHandler.addChild(this, this.menu, this.getParentMenuItem());
+            }
+        }
+    },
 
-	ludoRendered:function () {
-		this.parent();
-		if (this.isSpacer()) {
-			this.getBody().setStyle('visibility', 'hidden');
-		}
-		this.parentMenuItem = this.getParentMenuItem();
-	},
+    ludoRendered:function () {
+        this.parent();
+        if (this.isSpacer()) {
+            this.getBody().setStyle('visibility', 'hidden');
+        }
+        this.parentMenuItem = this.getParentMenuItem();
+    },
 
-	click:function () {
-		if (this.disabled) {
-			return;
-		}
-		this.getEl().addClass('ludo-menu-item-down');
-		this.fireEvent('click', this);
-        if(this.fire)this.fireEvent(this.fire, this);
-		var rootMenu = this.getRootMenuComponent();
-		if (rootMenu) {
-			rootMenu.click(this);
-		}
-		if (!this.parentMenuItem) {
-			this.menuHandler.toggleActive(this);
-		}
-	},
-	select:function () {
-		this.getEl().addClass('ludo-menu-item-selected');
-	},
+    click:function () {
+        if (this.disabled) {
+            return;
+        }
+        this.getEl().addClass('ludo-menu-item-down');
+        this.fireEvent('click', this);
+        if (this.fire)this.fireEvent(this.fire, this);
+        var rootMenu = this.getRootMenuComponent();
+        if (rootMenu) {
+            rootMenu.click(this);
+        }
+        if (!this.parentMenuItem) {
+            this.menuHandler.toggleActive(this);
+        }
+    },
+    select:function () {
+        this.getEl().addClass('ludo-menu-item-selected');
+    },
 
-	deselect:function () {
-		this.getEl().removeClass('ludo-menu-item-selected');
-	},
+    deselect:function () {
+        this.getEl().removeClass('ludo-menu-item-selected');
+    },
 
-	/**
-	 * Disable menu item
-	 * @method disable
-	 * @return void
-	 */
-	disable:function () {
-		this.disabled = true;
-		this.getEl().addClass('ludo-menu-item-disabled');
-	},
+    /**
+     * Disable menu item
+     * @method disable
+     * @return void
+     */
+    disable:function () {
+        this.disabled = true;
+        this.getEl().addClass('ludo-menu-item-disabled');
+    },
 
-	/**
-	 * Return disable state of menu item
-	 * @method isDisabled
-	 * @return {Boolean} disabled
-	 */
-	isDisabled:function () {
-		return this.disabled;
-	},
+    /**
+     * Return disable state of menu item
+     * @method isDisabled
+     * @return {Boolean} disabled
+     */
+    isDisabled:function () {
+        return this.disabled;
+    },
 
-	/**
-	 * Enable menu item
-	 * @method enable
-	 * @return void
-	 */
-	enable:function () {
-		this.disabled = false;
-		this.getEl().removeClass('ludo-menu-item-disabled');
-	},
+    /**
+     * Enable menu item
+     * @method enable
+     * @return void
+     */
+    enable:function () {
+        this.disabled = false;
+        this.getEl().removeClass('ludo-menu-item-disabled');
+    },
 
-	createIcon:function () {
-		var el = this.els.icon = new Element('div');
-		ludo.dom.addClass(el, 'ludo-menu-item-icon');
-		el.setStyles({
-			'background-position':'top center',
-			'background-repeat':'no-repeat',
-			'position':'absolute',
-			'text-align':'center',
-			'left':0,
-			'top':0,
-			'height':'100%'
-		});
-		if (this.icon.indexOf('.') >= 0) {
-			el.setStyle('background-image', 'url(' + this.icon + ')');
-		} else {
-			el.set('html', this.icon);
-		}
-		this.getEl().adopt(el);
-	},
+    createIcon:function () {
+        var el = this.els.icon = new Element('div');
+        ludo.dom.addClass(el, 'ludo-menu-item-icon');
+        el.setStyles({
+            'background-position':'top center',
+            'background-repeat':'no-repeat',
+            'position':'absolute',
+            'text-align':'center',
+            'left':0,
+            'top':0,
+            'height':'100%'
+        });
+        if (this.icon.indexOf('.') >= 0) {
+            el.setStyle('background-image', 'url(' + this.icon + ')');
+        } else {
+            el.set('html', this.icon);
+        }
+        this.getEl().adopt(el);
+    },
 
-	mouseOver:function () {
-		if (this.disabled) {
-			return;
-		}
-		this.getEl().addClass('ludo-menu-item-over');
-		this.showMenu();
-	},
+    mouseOver:function () {
+        if (!this.disabled) {
+            this.getEl().addClass('ludo-menu-item-over');
+            this.showMenu();
+        }
+    },
 
-	mouseOut:function () {
-		if (this.disabled) {
-			return;
-		}
-		this.getEl().removeClass('ludo-menu-item-over');
-		this.getEl().removeClass('ludo-menu-item-down');
-	},
-	createMenu:function () {
+    mouseOut:function () {
+        if (!this.disabled) {
+            this.getEl().removeClass('ludo-menu-item-over');
+            this.getEl().removeClass('ludo-menu-item-down');
+        }
+    },
+    createMenu:function () {
+        if (this.menuItems.length === 0) {
+            return;
+        }
+        this.menu = new ludo.menu.Menu({
+            renderTo:document.body,
+            direction:'vertical',
+            children:this.menuItems,
+            parentMenuItem:this
+        });
+        this.menu.hide();
 
-		if (this.menuItems.length === 0) {
-			return;
-		}
-		this.menu = new ludo.menu.Menu({
-			renderTo:document.body,
-			direction:'vertical',
-			children:this.menuItems,
-			parentMenuItem:this
-		});
-		this.menu.hide();
+        var el = this.els.expand = new Element('div');
+        ludo.dom.addClass(el, 'ludo-menu-item-expand');
+        ludo.dom.addClass(el, 'ludo-menu-item-' + this.menuDirection + '-expand');
+        this.getEl().adopt(el);
 
-		var el = this.els.expand = new Element('div');
-		ludo.dom.addClass(el, 'ludo-menu-item-expand');
-		ludo.dom.addClass(el, 'ludo-menu-item-' + this.menuDirection + '-expand');
-		this.getEl().adopt(el);
+    },
 
-	},
+    getMeasuredWidth:function () {
+        if (this.isSpacer()) {
+            return ludo.dom.getTotalWidthOf(this.getEl());
+        }
+        return this.parent();
+    },
 
-	getMeasuredWidth:function () {
-		if (this.isSpacer()) {
-			return ludo.dom.getTotalWidthOf(this.getEl());
-		}
-		return this.parent();
-	},
+    isSpacer:function () {
+        return this.spacer;
+    },
 
-	isSpacer:function () {
-		return this.spacer;
-	},
+    showMenu:function () {
+        this.menuHandler.showMenu(this);
+    },
 
-	showMenu:function () {
-		this.menuHandler.showMenu(this);
-	},
+    getMenuDirection:function () {
+        return this.menuDirection;
+    },
 
-	getMenuDirection:function () {
-		return this.menuDirection;
-	},
-
-	getRootMenuComponent:function () {
-		var el;
-		if (el = this.getParent()) {
-			if (el.isMenu !== undefined) {
-				if (el.parentMenuItem) {
-					return el.parentMenuItem.getRootMenuComponent();
-				}
-				return el;
-			}
-			return this;
-		}
+    getRootMenuComponent:function () {
+        var el;
+        if (el = this.getParent()) {
+            if (el.isMenu !== undefined) {
+                if (el.parentMenuItem) {
+                    return el.parentMenuItem.getRootMenuComponent();
+                }
+                return el;
+            }
+            return this;
+        }
         return undefined;
-	},
+    },
 
-	getParentMenuItem:function () {
-		var el;
-		if (el = this.getParent()) {
-			if (el.isMenu) {
-				if (el.parentMenuItem) {
-					return el.parentMenuItem;
-				}
-			}
-		}
-		return null;
-	}
+    getParentMenuItem:function () {
+        var el;
+        if (el = this.getParent()) {
+            if (el.isMenu) {
+                if (el.parentMenuItem) {
+                    return el.parentMenuItem;
+                }
+            }
+        }
+        return null;
+    }
 });/* ../ludojs/src/menu/menu.js */
 /**
  * Menu class
@@ -19265,13 +19234,12 @@ ludo.menu.Menu = new Class({
     ludoConfig : function(config){
         this.menuItems = config.children;
         config.children = [];
-        this.direction = config.direction || this.direction;
-        this.parentMenuItem = config.parentMenuItem || this.parentMenuItem;
+        this.parent(config);
+        this.setConfigParams(config, ['direction','parentMenuItem']);
         if(this.direction === 'vertical'){
             config.height = 'auto';
 			this.layout.type = 'rows';
         }
-        this.parent(config);
     },
 
     ludoDOM : function(){
@@ -19338,12 +19306,7 @@ ludo.menu.Menu = new Class({
     },
 
     getMenuItemConfigObject : function(obj){
-        if(obj.substr){
-            obj = {
-                html : obj,
-                type : 'menu.MenuItem'
-            }
-        }
+        obj = obj.substr ? { html: obj, type:'menu.MenuItem' } : obj;
         obj.menuDirection = this.direction;
         return obj;
     },
@@ -21848,7 +21811,6 @@ ludo.form.Manager = new Class({
 		var c;
 		for (var i = 0, len = children.length; i < len; i++) {
 			c = children[i];
-
 			if (c['getProgressBarId'] !== undefined) {
 				this.registerProgressBar(c);
 				if (this.model) {
@@ -21892,7 +21854,6 @@ ludo.form.Manager = new Class({
 		if (this.model) {
 			this.model.registerFormComponent(c);
 		}
-
 	},
 
 	registerProgressBar:function (component) {
@@ -23880,6 +23841,7 @@ ludo.form.Email = new Class({
     regex:/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.(?:[A-Z]{2}|com|org|net|edu|gov|mil|biz|info|mobi|name|aero|asia|jobs|museum)$/i,
     validateKeyStrokes:false
 });/* ../ludojs/src/form/spinner.js */
+// TODO this class should be rewritten
 /**
  * Special form component used for Numbers. It will display control buttons
  * to the right of the input fields and you will be able to increment and decrement by
@@ -23923,17 +23885,10 @@ ludo.form.Spinner = new Class({
      */
     decimals:0,
 
-    /**
-     * Disable arrow keyboard keys
-     * @config {Boolean|undefined} disableArrowKeys
-     * @default false
-     * @optional
-     */
-    disableArrowKeys:false,
 
     ludoConfig:function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['increment', 'decimals', 'disableArrowKeys']);
+        this.setConfigParams(config, ['increment', 'decimals']);
     },
 
     mode:{},
@@ -24086,13 +24041,15 @@ ludo.form.Spinner = new Class({
         }
         this.getFormEl().addEvent('keydown', this._validateKeyStroke.bind(this));
         this.els.upArrow.addEvent('mouseover', this._arrowMouseOver.bind(this));
-        this.els.downArrow.addEvent('mouseover', this._arrowMouseOver.bind(this));
         this.els.upArrow.addEvent('mouseout', this._arrowMouseOut.bind(this));
-        this.els.downArrow.addEvent('mouseout', this._arrowMouseOut.bind(this));
         this.els.upArrow.addEvent('mousedown', this._arrowMouseDown.bind(this));
-        this.els.downArrow.addEvent('mousedown', this._arrowMouseDown.bind(this));
         this.els.upArrow.addEvent('mouseup', this._arrowMouseUp.bind(this));
+
+        this.els.downArrow.addEvent('mouseover', this._arrowMouseOver.bind(this));
+        this.els.downArrow.addEvent('mouseout', this._arrowMouseOut.bind(this));
+        this.els.downArrow.addEvent('mousedown', this._arrowMouseDown.bind(this));
         this.els.downArrow.addEvent('mouseup', this._arrowMouseUp.bind(this));
+
         Window.getDocument().addEvent('mouseup', this._clearMode.bind(this));
 
         if (this.els.label) {
@@ -24171,17 +24128,6 @@ ludo.form.Spinner = new Class({
     },
 
     _validateKeyStroke:function (e) {
-        if (!this.disableArrowKeys) {
-            if (e.key == 'up') {
-                this.incrementBy(1, e.shift);
-                return false;
-            }
-            if (e.key == 'down') {
-                this.incrementBy(-1, e.shift);
-                return false;
-            }
-        }
-
         if (e.key == 'backspace' || e.key == 'delete' || e.key == 'tab') {
             return true;
         }
@@ -24196,8 +24142,7 @@ ludo.form.Spinner = new Class({
             return true;
         }
 
-        var regExp = new RegExp('[0-9]');
-        return regExp.test(e.key);
+        return Event.Keys.hasOwnProperty(e.key) ? true : /[0-9]/.test(e.key);
     },
 
     resizeDOM:function () {

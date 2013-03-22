@@ -64,7 +64,6 @@ ludo.layout.Base = new Class({
 		this.onNewChild(child);
 		this.addChildEvents(child);
 		if (child.isCollapsible !== undefined && child.isCollapsible()) {
-			// if (child.getElForCollapsedState !== undefined)child.getElForCollapsedState().inject(child.getEl(), 'after');
 			if (child.collapsed) {
 				child.collapse();
 			}
@@ -181,7 +180,7 @@ ludo.layout.Base = new Class({
 		var config = {};
 		config.width = ludo.dom.getInnerWidthOf(this.view.getBody());
 		if (config.width < 0) {
-			config.width = null;
+			config.width = undefined;
 		}
 		for (var i = 0; i < this.view.children.length; i++) {
 			this.view.children[i].resize(config);

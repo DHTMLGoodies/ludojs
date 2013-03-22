@@ -21,14 +21,8 @@ ludo.layout.LinearVertical = new Class({
 		var tm = 0;
 		for (var i = 0; i < this.view.children.length; i++) {
 			if (!this.hasLayoutWeight(this.view.children[i])) {
-				if (!this.view.children[i].isHidden()) {
-					height = this.getHeightOf(this.view.children[i]);
-				} else {
-					height = 0;
-				}
-				if (height) {
-					totalHeightOfItems += height
-				}
+                height = this.view.children[i].isHidden() ? 0 :  this.getHeightOf(this.view.children[i]);
+                totalHeightOfItems += height
 			} else {
 				if (!this.view.children[i].isHidden()) {
 					totalWeight += this.view.children[i].layout.weight;

@@ -1,3 +1,4 @@
+// TODO this class should be rewritten
 /**
  * Special form component used for Numbers. It will display control buttons
  * to the right of the input fields and you will be able to increment and decrement by
@@ -41,17 +42,10 @@ ludo.form.Spinner = new Class({
      */
     decimals:0,
 
-    /**
-     * Disable arrow keyboard keys
-     * @config {Boolean|undefined} disableArrowKeys
-     * @default false
-     * @optional
-     */
-    disableArrowKeys:false,
 
     ludoConfig:function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['increment', 'decimals', 'disableArrowKeys']);
+        this.setConfigParams(config, ['increment', 'decimals']);
     },
 
     mode:{},
@@ -204,13 +198,15 @@ ludo.form.Spinner = new Class({
         }
         this.getFormEl().addEvent('keydown', this._validateKeyStroke.bind(this));
         this.els.upArrow.addEvent('mouseover', this._arrowMouseOver.bind(this));
-        this.els.downArrow.addEvent('mouseover', this._arrowMouseOver.bind(this));
         this.els.upArrow.addEvent('mouseout', this._arrowMouseOut.bind(this));
-        this.els.downArrow.addEvent('mouseout', this._arrowMouseOut.bind(this));
         this.els.upArrow.addEvent('mousedown', this._arrowMouseDown.bind(this));
-        this.els.downArrow.addEvent('mousedown', this._arrowMouseDown.bind(this));
         this.els.upArrow.addEvent('mouseup', this._arrowMouseUp.bind(this));
+
+        this.els.downArrow.addEvent('mouseover', this._arrowMouseOver.bind(this));
+        this.els.downArrow.addEvent('mouseout', this._arrowMouseOut.bind(this));
+        this.els.downArrow.addEvent('mousedown', this._arrowMouseDown.bind(this));
         this.els.downArrow.addEvent('mouseup', this._arrowMouseUp.bind(this));
+
         Window.getDocument().addEvent('mouseup', this._clearMode.bind(this));
 
         if (this.els.label) {
@@ -289,17 +285,6 @@ ludo.form.Spinner = new Class({
     },
 
     _validateKeyStroke:function (e) {
-        if (!this.disableArrowKeys) {
-            if (e.key == 'up') {
-                this.incrementBy(1, e.shift);
-                return false;
-            }
-            if (e.key == 'down') {
-                this.incrementBy(-1, e.shift);
-                return false;
-            }
-        }
-
         if (e.key == 'backspace' || e.key == 'delete' || e.key == 'tab') {
             return true;
         }
@@ -314,8 +299,7 @@ ludo.form.Spinner = new Class({
             return true;
         }
 
-        var regExp = new RegExp('[0-9]');
-        return regExp.test(e.key);
+        return Event.Keys.hasOwnProperty(e.key) ? true : /[0-9]/.test(e.key);
     },
 
     resizeDOM:function () {

@@ -25,13 +25,12 @@ ludo.menu.Menu = new Class({
     ludoConfig : function(config){
         this.menuItems = config.children;
         config.children = [];
-        this.direction = config.direction || this.direction;
-        this.parentMenuItem = config.parentMenuItem || this.parentMenuItem;
+        this.parent(config);
+        this.setConfigParams(config, ['direction','parentMenuItem']);
         if(this.direction === 'vertical'){
             config.height = 'auto';
 			this.layout.type = 'rows';
         }
-        this.parent(config);
     },
 
     ludoDOM : function(){
@@ -98,12 +97,7 @@ ludo.menu.Menu = new Class({
     },
 
     getMenuItemConfigObject : function(obj){
-        if(obj.substr){
-            obj = {
-                html : obj,
-                type : 'menu.MenuItem'
-            }
-        }
+        obj = obj.substr ? { html: obj, type:'menu.MenuItem' } : obj;
         obj.menuDirection = this.direction;
         return obj;
     },

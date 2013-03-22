@@ -114,7 +114,6 @@ ludo.form.Manager = new Class({
 		if (this.model) {
 			this.model.registerFormComponent(c);
 		}
-
 	},
 
 	registerProgressBar:function (component) {

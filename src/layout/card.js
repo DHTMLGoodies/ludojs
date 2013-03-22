@@ -37,15 +37,9 @@ ludo.layout.Card = new Class({
 	},
 
 	addDragEvents:function (child) {
-		if (ludo.util.isTabletOrMobile()) {
-			child.getBody().addEvent('touchstart', this.touchStart.bind(this));
-			child.getEventEl().addEvent('touchmove', this.touchMove.bind(this));
-			child.getEventEl().addEvent('touchend', this.touchEnd.bind(this));
-		} else {
-			child.getBody().addEvent('mousedown', this.touchStart.bind(this));
-			child.getEventEl().addEvent('mousemove', this.touchMove.bind(this));
-			child.getEventEl().addEvent('mouseup', this.touchEnd.bind(this));
-		}
+        child.getBody().addEvent(ludo.util.getDragStartEvent(), this.touchStart.bind(this));
+        child.getEventEl().addEvent(ludo.util.getDragMoveEvent(), this.touchMove.bind(this));
+        child.getEventEl().addEvent(ludo.util.getDragEndEvent(), this.touchEnd.bind(this));
 	},
 
 	resize:function () {
@@ -54,9 +48,8 @@ ludo.layout.Card = new Class({
 		}
 		var height = this.view.getInnerHeightOfBody();
 		var width = ludo.dom.getInnerWidthOf(this.view.getBody());
-		var card = this.getVisibleCard();
-		if (card) {
-			card.resize({ height:height, width:width });
+		if (this.visibleCard) {
+            this.visibleCard.resize({ height:height, width:width });
 		}
 	},
 
@@ -76,18 +69,12 @@ ludo.layout.Card = new Class({
 	 */
 	getPreviousCardOf:function (view) {
 		var index = this.view.children.indexOf(view);
-		if (index > 0) {
-			return this.view.children[index - 1];
-		}
-		return null;
+        return index > 0 ? this.view.children[index - 1] : undefined;
 	},
 
 	getNextCardOf:function (card) {
 		var index = this.view.children.indexOf(card);
-		if (index < this.view.children.length - 1) {
-			return this.view.children[index + 1];
-		}
-		return undefined;
+        return index < this.view.children.length - 1 ? this.view.children[index + 1] : undefined;
 	},
 
 	/**
@@ -102,7 +89,7 @@ ludo.layout.Card = new Class({
 		}
 		if (this.visibleCard) {
 			var card = this.getPreviousCardOf(this.visibleCard);
-			if (card !== undefined) {
+			if (card) {
 				card.show();
 				return true;
 			}
@@ -122,7 +109,7 @@ ludo.layout.Card = new Class({
 		}
 		if (this.visibleCard) {
 			var card = this.getNextCardOf(this.visibleCard);
-			if (card !== undefined) {
+			if (card) {
 				card.show();
 				return true;
 			}
@@ -325,10 +312,7 @@ ludo.layout.Card = new Class({
 	 * @return {Number} card index
 	 */
 	getIndexOfVisibleCard:function () {
-		if (this.visibleCard) {
-			return this.view.children.indexOf(this.visibleCard);
-		}
-		return 0;
+        return this.visibleCard ? this.view.children.indexOf(this.visibleCard) : 0;
 	},
 
 	/**
@@ -358,21 +342,23 @@ ludo.layout.Card = new Class({
 	},
 
 	animateHigherCard:function () {
-		if (!this.animate)return;
-		if (this.animateX) {
-			this.animateFromRight();
-		} else {
-			this.animateFromBottom();
-		}
-
+        if(this.animate){
+            if (this.animateX) {
+                this.animateFromRight();
+            } else {
+                this.animateFromBottom();
+            }
+        }
 	},
+
 	animateLowerCard:function () {
-		if (!this.animate)return;
-		if (this.animateX) {
-			this.animateFromLeft();
-		} else {
-			this.animateFromTop();
-		}
+		if(this.animate){
+            if (this.animateX) {
+                this.animateFromLeft();
+            } else {
+                this.animateFromTop();
+            }
+        }
 	},
 
 	getAnimationDuration:function () {
