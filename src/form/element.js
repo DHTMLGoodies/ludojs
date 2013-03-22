@@ -248,7 +248,7 @@ ludo.form.Element = new Class({
 
     ludoCSS:function () {
         this.parent();
-        this.getEl().addClass('ludo-form-element');
+        ludo.dom.addClass(this.getEl(), 'ludo-form-element');
         if (this.els.formEl) {
             if (this.fieldWidth) {
                 this.els.formEl.style.width = (this.fieldWidth - ludo.dom.getPW(this.els.formEl) - ludo.dom.getBW(this.els.formEl)) + 'px';
@@ -336,8 +336,7 @@ ludo.form.Element = new Class({
     blur:function () {
         this._focus = false;
         this.validate();
-
-        if (this.getFormEl())this.value = this.getFormEl().value;
+        if (this.getFormEl())this.value = this.getFormEl().get('value');
         this.toggleDirtyFlag();
         /**
          * On blur event
@@ -458,7 +457,7 @@ ludo.form.Element = new Class({
     },
 
     clearInvalid:function () {
-        this.getEl().removeClass('ludo-form-el-invalid');
+        ludo.dom.removeClass(this.getEl(), 'ludo-form-el-invalid');
     },
 
     wasValid:true,
@@ -555,9 +554,8 @@ ludo.form.Element = new Class({
 
     updateLinked:function () {
         var cmp = ludo.get(this.linkWith);
-        var val = this.value;
-        if (cmp.value !== val) {
-            cmp.setValue(val);
+        if (cmp.value !== this.value) {
+            cmp.setValue(this.value);
         }
     },
 

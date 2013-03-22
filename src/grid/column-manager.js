@@ -7,7 +7,7 @@
  @constructor
  @param {Object} config
  @example
- columnManager:{
+    columnManager:{
 		columns:{
 			'country':{
 				heading:'Country',
@@ -139,17 +139,18 @@ ludo.grid.ColumnManager = new Class({
 	},
 
 	/**
-	 * Returns object of visible columns, example:
-	 * {
-     country : {
-     heading : 'Country'
-     },
-     population: {
-     heading : 'Population'
-     }
-     }
-	 * @method getVisibleColumns
-	 * @return {Object} visible columns
+	 Returns object of visible columns, example:
+	 @method getVisibleColumns
+	 @return {Object} visible columns
+     @example
+        {
+            country : {
+                heading : 'Country'
+            },
+            population: {
+                heading : 'Population'
+            }
+        }
 	 */
 	getVisibleColumns:function () {
 		var ret = {};
@@ -243,8 +244,7 @@ ludo.grid.ColumnManager = new Class({
 	 */
 	getGroupFor:function (column) {
 		var id = this.getGroupIdOf(column);
-		if (id)return this.columnLookup[id];
-		return undefined;
+        return id ? this.columnLookup[id] : undefined;
 	},
 
 	getChildCount:function (groupId) {
@@ -604,8 +604,8 @@ ludo.grid.ColumnManager = new Class({
 	getColumnsInRow:function (rowNumber) {
 		var ret = [];
 		for(var i=0;i<this.columnKeys.length;i++){
-			var col = this.columnKeys[i];
 			if(!this.isHidden(this.columnKeys[i])){
+                var col = this.columnKeys[i];
 				var startRow = this.getStartRowOf(col);
 				if(startRow <= rowNumber && !this.isGroup(col)){
 					ret.push(col);
@@ -622,11 +622,7 @@ ludo.grid.ColumnManager = new Class({
 
 	getRowSpanOf:function(column){
 		var countRows = this.getCountRows();
-		if(!this.isGroup(column)){
-			return countRows - this.getStartRowOf(column);
-		}else{
-			return countRows - this.getStartRowOf(column) - this.getChildDepthOf(column);
-		}
+        return countRows - this.getStartRowOf(column) - (this.isGroup(column) ? this.getChildDepthOf(column) : 0);
 	},
 
 	columnDepthCache:{},

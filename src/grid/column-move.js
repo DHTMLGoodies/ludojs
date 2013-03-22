@@ -26,18 +26,17 @@ ludo.grid.ColumnMove = new Class({
 	},
 
 	setZIndex:function(shim){
-		shim.setStyle('z-index', 50000);
+		shim.style.zIndex = 50000;
 	},
 
 	getMarker:function () {
 		if (this.insertionMarker === undefined) {
-			var el = this.insertionMarker = new Element('div');
-			ludo.dom.addClass(el, 'ludo-grid-movable-insertion-marker');
-			el.setStyle('display', 'none');
-			document.body.adopt(el);
-			var b = new Element('div');
-			ludo.dom.addClass(b, 'ludo-grid-movable-insertion-marker-bottom');
-			el.adopt(b);
+            this.insertionMarker = ludo.dom.create({
+                cls : 'ludo-grid-movable-insertion-marker',
+                css : { display: 'none' },
+                renderTo : document.body
+            });
+            ludo.dom.create({ cls : 'ludo-grid-movable-insertion-marker-bottom', renderTo : this.insertionMarker});
 		}
 		return this.insertionMarker;
 	},
@@ -48,21 +47,20 @@ ludo.grid.ColumnMove = new Class({
 
 	showMarkerAt:function(cell, pos){
 		var coordinates = cell.getCoordinates();
-		this.getMarker().setStyle('display','');
-		this.getMarker().setStyles({
-			left : coordinates.left  + (pos=='after' ? coordinates.width : 0),
-			top : coordinates.top - this.getArrowHeight(),
-			height: coordinates.height
-		});
+        var s = this.getMarker().style;
+        s.display='';
+        s.left = (coordinates.left + (pos=='after' ? coordinates.width : 0)) + 'px';
+        s.top = (coordinates.top - this.getArrowHeight()) + 'px';
+        s.height = coordinates.height + 'px';
 	},
 
 	setMarkerHeight:function(height){
-		this.getMarker().setStyle('height', height + (this.getArrowHeight() * 2));
+		this.getMarker().style.height = (height + (this.getArrowHeight() * 2)) + 'px';
 	},
 
 	getArrowHeight:function(){
 		if(!this.arrowHeight){
-			this.arrowHeight = this.getMarker().getElement('.ludo-grid-movable-insertion-marker-bottom').getSize().y;
+			this.arrowHeight = this.getMarker().getElement('.ludo-grid-movable-insertion-marker-bottom').offsetHeight;
 		}
 		return this.arrowHeight;
 	}
