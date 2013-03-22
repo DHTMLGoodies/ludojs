@@ -71,7 +71,6 @@ ludo.form.Manager = new Class({
 		var c;
 		for (var i = 0, len = children.length; i < len; i++) {
 			c = children[i];
-
 			if (c['getProgressBarId'] !== undefined) {
 				this.registerProgressBar(c);
 				if (this.model) {

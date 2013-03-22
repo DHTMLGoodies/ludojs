@@ -36,7 +36,7 @@ ludo.calendar.Days = new Class({
     },
     ludoEvents:function () {
         this.parent();
-        if (this.shouldUseTouchEvents()) {
+        if (ludo.util.isTabletOrMobile()) {
             var el = this.getBody();
             el.addEvent('touchstart', this.touchStart.bind(this));
             this.getEventEl().addEvent('touchmove', this.touchMove.bind(this));

@@ -13,8 +13,8 @@ ludo.ColResize = new Class({
     },
 
     createEvents:function () {
-        this.getEventEl().addEvent(this.getDragMoveEvent(), this.moveColResizeHandle.bind(this));
-        this.getEventEl().addEvent(this.getDragEndEvent(), this.stopColResize.bind(this));
+        this.getEventEl().addEvent(ludo.util.getDragMoveEvent(), this.moveColResizeHandle.bind(this));
+        this.getEventEl().addEvent(ludo.util.getDragEndEvent(), this.stopColResize.bind(this));
     },
 
     setPos:function (index, pos) {
@@ -56,10 +56,8 @@ ludo.ColResize = new Class({
             display:isVisible ? '' : 'none'
         });
         el.setProperty('col-reference', key);
-        if (this.shouldUseTouchEvents()) {
-            el.addEvent('touchstart', this.startColResize.bind(this));
-        } else {
-            el.addEvent('mousedown', this.startColResize.bind(this));
+        el.addEvent(ludo.util.getDragStartEvent(), this.startColResize.bind(this));
+        if (!ludo.util.isTabletOrMobile()) {
             el.addEvent('mouseenter', this.mouseOverResizeHandle.bind(this));
             el.addEvent('mouseleave', this.mouseOutResizeHandle.bind(this));
         }

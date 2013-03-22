@@ -100,16 +100,14 @@ ludo.layout.Resizable = new Class({
     },
 
     addResizeEvents:function () {
-        if (this.shouldUseTouchEvents()) {
-            this.el.addEvent('touchstart', this.startResize.bind(this));
-            this.getEventEl().addEvent('touchmove', this.moveResizeHandle.bind(this));
-            this.getEventEl().addEvent('touchend', this.stopResize.bind(this));
-        } else {
-            this.el.addEvent('mousedown', this.startResize.bind(this));
+
+        this.el.addEvent(ludo.util.getDragStartEvent(), this.startResize.bind(this));
+        this.getEventEl().addEvent(ludo.util.getDragMoveEvent(), this.moveResizeHandle.bind(this));
+        this.getEventEl().addEvent(ludo.util.getDragEndEvent(), this.stopResize.bind(this));
+
+        if (!ludo.util.isTabletOrMobile()) {
             this.el.addEvent('mouseover', this.mouseOverResizeHandle.bind(this));
             this.el.addEvent('mouseout', this.mouseOutResizeHandle.bind(this));
-            this.getEventEl().addEvent('mousemove', this.moveResizeHandle.bind(this));
-            this.getEventEl().addEvent('mouseup', this.stopResize.bind(this));
         }
     },
 

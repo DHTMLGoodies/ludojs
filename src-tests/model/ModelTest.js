@@ -178,7 +178,7 @@ TestCase("ModelTest", {
 		// given
 		var c = this.getComponentWithTplChildren();
 		var model = c.getFormManager().getModel();
-
+        assertTrue(c.getModel().views.indexOf(c.child['firstname']) >= 0);
 		// when
 		model.populate(100, {
 			firstname:'Alf Magne',
@@ -187,7 +187,7 @@ TestCase("ModelTest", {
 		});
 
 		// then
-        assertTrue(c.getModel().views.indexOf(c.child['firstname']) >= 0);
+        assertEquals('getFirstname', 'Alf Magne', model.getFirstname());
 		assertEquals('Alf Magne', c.child['firstname'].getBody().innerHTML);
 	},
 	"test should register children of components using same model":function () {

@@ -162,7 +162,7 @@ ludo.grid.Grid = new Class({
 
 		ludo.dom.addClass(t, 'ludo-grid-data-container');
 		t.setStyles({
-			'overflow':this.shouldUseTouchEvents() ? 'auto' : 'hidden',
+			'overflow':ludo.util.isTabletOrMobile() ? 'auto' : 'hidden',
 			'position':'relative'
 		});
 

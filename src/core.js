@@ -74,7 +74,7 @@ ludo.Core = new Class({
 	},
 
 	ludoConfig:function(config){
-        var keys = ['url','name','controller','module','submodule','stateful','id'];
+        var keys = ['url','name','controller','module','submodule','stateful','id','useController'];
         this.setConfigParams(config, keys);
 
 		if (config.listeners !== undefined)this.addEvents(config.listeners);
@@ -83,7 +83,6 @@ ludo.Core = new Class({
             config = this.appendPropertiesFromStore(config);
             this.addEvent('state', this.saveStatefulProperties.bind(this));
         }
-        if (config.useController !== undefined)this.useController = config.useController;
         if (this.module || this.useController)ludo.controllerManager.registerComponent(this);
 		if(!this.id)this.id = 'ludo-' + String.uniqueID();
 		ludo.CmpMgr.registerComponent(this);
@@ -164,10 +163,7 @@ ludo.Core = new Class({
 	},
 
 	getEventEl:function () {
-		if (Browser['ie']) {
-			return document.id(document.documentElement);
-		}
-		return document.id(window);
+        return Browser['ie'] ? document.id(document.documentElement) : document.id(window);
 	},
 
 	Request:function (requestId, config) {
@@ -189,25 +185,6 @@ ludo.Core = new Class({
 
 	isCacheEnabled:function () {
 		return false
-	},
-
-	shouldUseTouchEvents:function () {
-		return ludo.util.isTabletOrMobile();
-	},
-
-	getDragStartEvent:function () {
-        return ludo.util.isTabletOrMobile() ? 'touchstart' : 'mousedown';
-	},
-
-	getDragMoveEvent:function () {
-        return ludo.util.isTabletOrMobile() ? 'touchmove' : 'mousemove';
-	},
-
-	getDragEndEvent:function () {
-		if (ludo.util.isTabletOrMobile()) {
-			return 'touchend';
-		}
-		return 'mouseup';
 	},
 
 	isConfigObject:function (obj) {

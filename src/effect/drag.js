@@ -201,8 +201,8 @@ ludo.effect.Drag = new Class({
 
 	ludoEvents:function () {
 		this.parent();
-		this.getEventEl().addEvent(this.getDragMoveEvent(), this.drag.bind(this));
-		this.getEventEl().addEvent(this.getDragEndEvent(), this.endDrag.bind(this));
+		this.getEventEl().addEvent(ludo.util.getDragMoveEvent(), this.drag.bind(this));
+		this.getEventEl().addEvent(ludo.util.getDragEndEvent(), this.endDrag.bind(this));
 		if (this.useShim) {
 			this.addEvent('start', this.showShim.bind(this));
 			if(this.autoHideShim)this.addEvent('end', this.hideShim.bind(this));
@@ -254,7 +254,7 @@ ludo.effect.Drag = new Class({
 		}
 		handle.id = handle.id || 'ludo-' + String.uniqueID();
 		ludo.dom.addClass(handle, 'ludo-drag');
-		handle.addEvent(this.getDragStartEvent(), this.startDrag.bind(this));
+		handle.addEvent(ludo.util.getDragStartEvent(), this.startDrag.bind(this));
 		handle.setProperty('forId', node.id);
 		this.els[node.id] = Object.merge(node, {
 			el:document.id(el),
@@ -272,7 +272,7 @@ ludo.effect.Drag = new Class({
 	remove:function(id){
 		if(this.els[id]!==undefined){
 			var el = document.id(this.els[id].handle);
-			el.removeEvent(this.getDragStartEvent(), this.startDrag.bind(this));
+			el.removeEvent(ludo.util.getDragStartEvent(), this.startDrag.bind(this));
 			this.els[id] = undefined;
 			return true;
 		}
@@ -525,7 +525,7 @@ ludo.effect.Drag = new Class({
 			 * @param {effect.Drag} this
 			 */
 			this.fireEvent('drag', [pos, this.els[this.dragProcess.dragged], this]);
-			if (this.shouldUseTouchEvents())return false;
+			if (ludo.util.isTabletOrMobile())return false;
 
 		}
 		return undefined;

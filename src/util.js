@@ -104,5 +104,17 @@ ludo.util = {
             return new Date(dateParts['%Y'], dateParts['%m'], dateParts['%d'], dateParts['%h'], dateParts['%i'], dateParts['%s']);
         }
         return date;
+    },
+
+    getDragStartEvent:function () {
+        return ludo.util.isTabletOrMobile() ? 'touchstart' : 'mousedown';
+    },
+
+    getDragMoveEvent:function () {
+        return ludo.util.isTabletOrMobile() ? 'touchmove' : 'mousemove';
+    },
+
+    getDragEndEvent:function () {
+        return ludo.util.isTabletOrMobile() ? 'touchend' : 'mouseup';
     }
 };

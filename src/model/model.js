@@ -108,17 +108,12 @@ ludo.model.Model = new Class({
 	_validateColumns:function () {
 		var ret = {};
 		for (var i = 0; i < this.columns.length; i++) {
-			var obj = {};
-			var name;
-			if (!this.columns[i].name) {
-				obj.name = name = this.columns[i];
-				obj.defaultValue = '';
-			} else {
-				obj.name = name = this.columns[i].name;
-				obj.defaultValue = this.columns[i].defaultValue || '';
-			}
-			ret[name] = obj;
-			this.columnKeys.push(name);
+			var obj = {
+                name : this.getColumnName(this.columns[i]),
+                defaultValue:this.columns[i].defaultValue || ''
+            };
+			ret[obj.name] = obj;
+			this.columnKeys.push(obj.name);
 		}
 		this.columns = ret;
 	},
@@ -138,26 +133,26 @@ ludo.model.Model = new Class({
 	},
 
 	createSetterFor:function (columnName) {
-		var fn = 'set' + columnName.substr(0, 1).toUpperCase() + columnName.substr(1);
-		this[fn] = function (value) {
+		this[this.getFnName('set', columnName)] = function (value) {
 			this._setRecordValue(columnName, value);
+            this.fireEvent('update', this.currentRecord);
 			this.updateViews();
 			return value;
 		}.bind(this)
 	},
 
 	createGetterFor:function (columnName) {
-		var fn = 'get' + columnName.substr(0, 1).toUpperCase() + columnName.substr(1);
-		this[fn] = function () {
+		this[this.getFnName('get', columnName)] = function () {
 			return this.getRecordProperty(columnName)
 		}.bind(this)
 	},
 
+    getFnName:function(prefix, col){
+        return prefix + col.substr(0, 1).toUpperCase() + col.substr(1);
+    },
+
 	getColumnName:function (column) {
-		if (column.name) {
-			return column.name;
-		}
-		return column;
+        return column.name ? column.name : column;
 	},
 
 	_setRecordValue:function (property, value) {
@@ -167,8 +162,8 @@ ludo.model.Model = new Class({
 					this.formComponents[property][i].setValue(value);
 				}
 			}
-			this.fireEvent('change', [value, this]);
-			this.fireEvent('update', this.currentRecord);
+            this.currentRecord[property] = value;
+			this.fireEvent('change', [property, value, this]);
 		}
 	},
 
@@ -251,28 +246,10 @@ ludo.model.Model = new Class({
         return this._loadRequest;
     },
 
-	populate:function (recordId, record) {
-        this.fireEvent('beforePopulate', [record, this]);
-		this.recordId = recordId;
-		for (var prop in record) {
-			if (record.hasOwnProperty(prop)) {
-				this._setRecordValue(prop, record[prop]);
-			}
-		}
-		/**
-		 * Event fired when record has been successfully loaded from server
-		 * @event load
-		 * @param {Object} Returned record
-		 * @param {Object} ludo.model
-		 */
-		this.fireEvent('load', [this.currentRecord, this]);
-		this.commitFormFields();
-		this.updateViews();
-	},
-
 	registerProgressBar:function (cmp) {
 		this.progressBar = cmp;
 	},
+    fc:[],
 	/**
 	 * Register ludo.View object. if name of component is the same
 	 * as column name in model, it will add change event to the component and
@@ -290,7 +267,7 @@ ludo.model.Model = new Class({
 			}
 			this.formComponents[name].push(formComponent);
 			formComponent.addEvent('valueChange', this.updateByForm.bind(this));
-			formComponent.setValue(this.getRecordProperty(name));
+			formComponent.setValue(this.currentRecord[name]);
 			formComponent.commit();
 		}
 	},
@@ -473,6 +450,31 @@ ludo.model.Model = new Class({
 		this.commitFormFields();
 		this.updateViews();
 	},
+
+    populate:function (recordId, record) {
+        this.fireEvent('beforePopulate', [record, this]);
+        this.recordId = recordId;
+        for (var prop in record) {
+            if (record.hasOwnProperty(prop)) {
+                this._setRecordValue(prop, record[prop]);
+            }
+        }
+        /**
+         * Event fired when a record is updated.
+         * @event update
+         * @param {Object} Update record
+         */
+        this.fireEvent('update', this.currentRecord);
+        /**
+         * Event fired when record has been successfully loaded from server
+         * @event load
+         * @param {Object} Returned record
+         * @param {Object} ludo.model
+         */
+        this.fireEvent('load', [this.currentRecord, this]);
+        this.commitFormFields();
+        this.updateViews();
+    },
 
 	fill:function (data) {
 		for (var key in data) {

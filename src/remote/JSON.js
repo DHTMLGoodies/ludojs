@@ -112,6 +112,7 @@ ludo.remote.JSON = new Class({
         var req = new Request.JSON({
             url:this.getUrl(service, resourceArguments),
             method:this.method,
+            noCache:true,
             data:this.getDataForRequest(service, resourceArguments, serviceArguments, additionalData),
             onSuccess:function (json) {
                 this.JSON = json;

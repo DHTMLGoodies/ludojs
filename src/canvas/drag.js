@@ -51,7 +51,7 @@ ludo.canvas.Drag = new Class({
 		this.els[id] = Object.merge(node, {
 			handle:node.handle
 		});
-		this.els[id].handle.addEvent(this.getDragStartEvent(), this.startDrag.bind(this));
+		this.els[id].handle.addEvent(ludo.util.getDragStartEvent(), this.startDrag.bind(this));
 		return this.els[id];
 	},
 

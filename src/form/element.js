@@ -140,7 +140,6 @@ ludo.form.Element = new Class({
 
         this.elementId = 'el-' + this.id;
         this.formCss = defaultConfig.formCss || this.formCss;
-
         if (defaultConfig.height && config.height === undefined)this.height = defaultConfig.height;
 
         if (this.validator) {
@@ -198,7 +197,6 @@ ludo.form.Element = new Class({
             formEl.addEvent('change', this.change.bind(this));
             formEl.addEvent('blur', this.blur.bind(this));
         }
-
     },
 
     ludoRendered:function () {

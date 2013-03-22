@@ -127,8 +127,8 @@ ludo.effect.Resize = new Class({
     },
 
     addDragEvents:function () {
-        document.body.addEvent(this.getDragEndEvent(), this.stopResize.bind(this));
-        document.body.addEvent(this.getDragMoveEvent(), this.resize.bind(this));
+        document.body.addEvent(ludo.util.getDragEndEvent(), this.stopResize.bind(this));
+        document.body.addEvent(ludo.util.getDragMoveEvent(), this.resize.bind(this));
     },
 
     /**
@@ -153,7 +153,7 @@ ludo.effect.Resize = new Class({
         el.set('html', '<span></span>');
         el.style.cursor = region + '-resize';
         el.setProperty('region', region);
-        el.addEvent(this.getDragStartEvent(), this.startResize.bind(this));
+        el.addEvent(ludo.util.getDragStartEvent(), this.startResize.bind(this));
         this.els.applyTo.adopt(el);
     },
 
@@ -193,7 +193,7 @@ ludo.effect.Resize = new Class({
         if (this.useShim) {
             this.showShim();
         }
-        return this.shouldUseTouchEvents() ? false : undefined;
+        return ludo.util.isTabletOrMobile() ? false : undefined;
 
     },
 
