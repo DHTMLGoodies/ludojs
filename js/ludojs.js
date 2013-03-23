@@ -1,4 +1,4 @@
-/* Generated Sat Mar 23 13:45:11 CET 2013 */
+/* Generated Sat Mar 23 19:14:29 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -4163,6 +4163,7 @@ ludo.dom = {
                 }
             }
         }
+        if(node.id)el.id = node.id;
         if(node.html)el.innerHTML = node.html;
         return el;
 
@@ -4946,9 +4947,10 @@ ludo.View = new Class({
 	setContent:function () {
 		if (this.html) {
 			if(this.children.length){
-				var html = document.createElement('div');
-				html.innerHTML = this.html;
-				this.getBody().adopt(html);
+                ludo.dom.create({
+                    renderTo:this.getBody(),
+                    html : this.html
+                });
 			}else{
 				this.getBody().innerHTML = this.html;
 			}
@@ -6825,14 +6827,14 @@ ludo.layout.TabStrip = new Class({
     },
 
     getPlainTabFor:function (child) {
-
-        var el = new Element('div');
-        el.className = 'ludo-tab-strip-tab ludo-tab-strip-tab-' + this.tabPos;
-        this.getBody().adopt(el);
-        el.innerHTML = '<div class="ludo-tab-strip-tab-bg-first"></div><div class="ludo-tab-strip-tab-bg-last"></div>';
-        var span = document.createElement('span');
-        span.innerHTML = this.getTitleFor(child);
-        el.appendChild(span);
+        var el = ludo.dom.create({
+            cls: 'ludo-tab-strip-tab ludo-tab-strip-tab-' + this.tabPos,
+            renderTo:this.getBody(),
+            html : '<div class="ludo-tab-strip-tab-bg-first"></div><div class="ludo-tab-strip-tab-bg-last"></div>'
+        });
+        ludo.dom.create({
+            tag:'span',html : this.getTitleFor(child),renderTo:el
+        });
         return el;
     },
 
@@ -10411,9 +10413,10 @@ ludo.view.TitleBar = new Class({
     },
 
     createTitleDOM:function () {
-        var title = this.els.title = document.createElement('div');
-        title.className = 'ludo-rich-view-titlebar-title';
-        this.els.el.appendChild(title);
+        var title = this.els.title = ludo.dom.create({
+            cls : 'ludo-rich-view-titlebar-title',
+            renderTo : this.els.el
+        });
         this.setTitle(this.view.title);
     },
     createEvents:function () {
@@ -10439,19 +10442,22 @@ ludo.view.TitleBar = new Class({
     },
 
     getButtonContainer:function () {
-        var el = this.els.controls = document.createElement('div');
-        el.className = 'ludo-title-bar-button-container';
+        var el = this.els.controls = ludo.dom.create({
+            cls : 'ludo-title-bar-button-container'
+        });
         el.style.cursor = 'default';
 
-        var le = document.createElement('div');
-        le.className = 'ludo-title-bar-button-container-left-edge';
+        var le = ludo.dom.create({
+            cls : 'ludo-title-bar-button-container-left-edge',
+            renderTo:el
+        });
         le.style.cssText = "position:absolute;z-index:1;left:0;top:0;width:55%;height:100%;background-repeat:no-repeat;background-position:top left";
-        el.appendChild(le);
 
-        var re = document.createElement('div');
-        re.className = 'ludo-title-bar-button-container-right-edge';
+        var re = ludo.dom.create({
+            cls : 'ludo-title-bar-button-container-right-edge',
+            renderTo:el
+        });
         re.style.cssText = 'position:absolute;z-index:1;right:0;top:0;width:55%;height:100%;background-repeat:no-repeat;background-position:top right';
-        el.appendChild(re);
 
         if (this.view.isMinimizable()) {
             el.appendChild(this.getButton('minimize'));
@@ -10895,9 +10901,11 @@ ludo.FramedView = new Class({
 	getButtonBar:function () {
 		if (!this.els.buttonBar) {
 			this.els.buttonBar = this.els.buttonBar || {};
-			var el = this.els.buttonBar.el = document.createElement('div');
-			this.els.container.appendChild(el);
-			el.className = 'ludo-component-buttonbar';
+			var el = this.els.buttonBar.el = ludo.dom.create({
+                renderTo : this.els.container,
+                cls : 'ludo-component-buttonbar'
+            });
+
 			ludo.dom.addClass(this.getEl(), 'ludo-component-with-buttonbar');
 			this.buttonBar.renderTo = el;
 			this.buttonBar.component = this;
@@ -16263,7 +16271,7 @@ ludo.form.Element = new Class({
         var cmp = ludo.get(this.linkWith);
         if (cmp && !cmp.linkWith) {
             if (!this.value){
-				this.initialValue = cmp.value;
+				this.initialValue = this.constructorValue = cmp.value;
 				this.setValue(cmp.value);
 			}
             cmp.setLinkWith(this.id);
@@ -19851,7 +19859,7 @@ ludo.menu.Button = new Class({
     hideButton:function () {
         if (this.alwaysVisible)return;
         this.buttonEl.style.display = 'none';
-        this.el.removeClass('ludo-menu-button-active');
+        ludo.dom.removeClass(this.el, 'ludo-menu-button-active');
     },
     getMenuView:function () {
         return this.menu;
@@ -22433,7 +22441,7 @@ ludo.form.Combo = new Class({
 
         c.layout.below = c.layout.below || this.getInputCell();
         if(c.left === undefined)c.layout.alignLeft = c.layout.alignLeft || this.getInputCell();
-        if(!c.layout.width)c.layout.sameWidthAs = this.getInputCell();
+        if(!c.layout.width)c.layout.sameWidthAs = c.layout.sameWidthAs || this.getInputCell();
         c.layout.height = c.layout.height || 200;
         c.alwaysInFront = true;
         c.cls = 'form-combo-child';
@@ -26436,10 +26444,11 @@ ludo.dialog.Dialog = new Class({
 
     getShim:function(){
         if(this.els.shim === undefined){
-            var el = this.els.shim = document.createElement('div');
-            ludo.dom.addClass(el, 'ludo-dialog-shim');
+            var el = this.els.shim = ludo.dom.create({
+                cls : 'ludo-dialog-shim',
+                renderTo:document.body
+            });
             el.style.display='none';
-            document.body.adopt(el);
         }
         return this.els.shim;
     },

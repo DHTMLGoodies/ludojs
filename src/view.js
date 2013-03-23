@@ -594,9 +594,10 @@ ludo.View = new Class({
 	setContent:function () {
 		if (this.html) {
 			if(this.children.length){
-				var html = document.createElement('div');
-				html.innerHTML = this.html;
-				this.getBody().adopt(html);
+                ludo.dom.create({
+                    renderTo:this.getBody(),
+                    html : this.html
+                });
 			}else{
 				this.getBody().innerHTML = this.html;
 			}

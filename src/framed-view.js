@@ -298,9 +298,11 @@ ludo.FramedView = new Class({
 	getButtonBar:function () {
 		if (!this.els.buttonBar) {
 			this.els.buttonBar = this.els.buttonBar || {};
-			var el = this.els.buttonBar.el = document.createElement('div');
-			this.els.container.appendChild(el);
-			el.className = 'ludo-component-buttonbar';
+			var el = this.els.buttonBar.el = ludo.dom.create({
+                renderTo : this.els.container,
+                cls : 'ludo-component-buttonbar'
+            });
+
 			ludo.dom.addClass(this.getEl(), 'ludo-component-with-buttonbar');
 			this.buttonBar.renderTo = el;
 			this.buttonBar.component = this;

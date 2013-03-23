@@ -80,10 +80,11 @@ ludo.dialog.Dialog = new Class({
 
     getShim:function(){
         if(this.els.shim === undefined){
-            var el = this.els.shim = document.createElement('div');
-            ludo.dom.addClass(el, 'ludo-dialog-shim');
+            var el = this.els.shim = ludo.dom.create({
+                cls : 'ludo-dialog-shim',
+                renderTo:document.body
+            });
             el.style.display='none';
-            document.body.adopt(el);
         }
         return this.els.shim;
     },

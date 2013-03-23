@@ -221,11 +221,11 @@ ludo.tree.Tree = new Class({
 	getNewNodeFor:function (record) {
 		record = record.getUID !== undefined ? record.record : record;
 		if (!record.uid)this.indexRecord(record);
-		var el = document.createElement('div');
-		el.className = 'ludo-tree-a-node ludo-tree-node';
-		el.id = record.uid;
-		el.innerHTML = this.getHtmlFor(record, false, false);
-		return el;
+		return ludo.dom.create({
+            cls : 'ludo-tree-a-node ludo-tree-node',
+            html : this.getHtmlFor(record, false, false),
+            id : record.uid
+        });
 	},
 
 	cssBranch:function (parentRecord) {

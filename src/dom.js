@@ -259,6 +259,7 @@ ludo.dom = {
                 }
             }
         }
+        if(node.id)el.id = node.id;
         if(node.html)el.innerHTML = node.html;
         return el;
 

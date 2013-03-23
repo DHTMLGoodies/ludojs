@@ -567,7 +567,7 @@ ludo.form.Element = new Class({
         var cmp = ludo.get(this.linkWith);
         if (cmp && !cmp.linkWith) {
             if (!this.value){
-				this.initialValue = cmp.value;
+				this.initialValue = this.constructorValue = cmp.value;
 				this.setValue(cmp.value);
 			}
             cmp.setLinkWith(this.id);

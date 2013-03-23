@@ -48,9 +48,10 @@ ludo.view.TitleBar = new Class({
     },
 
     createTitleDOM:function () {
-        var title = this.els.title = document.createElement('div');
-        title.className = 'ludo-rich-view-titlebar-title';
-        this.els.el.appendChild(title);
+        var title = this.els.title = ludo.dom.create({
+            cls : 'ludo-rich-view-titlebar-title',
+            renderTo : this.els.el
+        });
         this.setTitle(this.view.title);
     },
     createEvents:function () {
@@ -76,19 +77,22 @@ ludo.view.TitleBar = new Class({
     },
 
     getButtonContainer:function () {
-        var el = this.els.controls = document.createElement('div');
-        el.className = 'ludo-title-bar-button-container';
+        var el = this.els.controls = ludo.dom.create({
+            cls : 'ludo-title-bar-button-container'
+        });
         el.style.cursor = 'default';
 
-        var le = document.createElement('div');
-        le.className = 'ludo-title-bar-button-container-left-edge';
+        var le = ludo.dom.create({
+            cls : 'ludo-title-bar-button-container-left-edge',
+            renderTo:el
+        });
         le.style.cssText = "position:absolute;z-index:1;left:0;top:0;width:55%;height:100%;background-repeat:no-repeat;background-position:top left";
-        el.appendChild(le);
 
-        var re = document.createElement('div');
-        re.className = 'ludo-title-bar-button-container-right-edge';
+        var re = ludo.dom.create({
+            cls : 'ludo-title-bar-button-container-right-edge',
+            renderTo:el
+        });
         re.style.cssText = 'position:absolute;z-index:1;right:0;top:0;width:55%;height:100%;background-repeat:no-repeat;background-position:top right';
-        el.appendChild(re);
 
         if (this.view.isMinimizable()) {
             el.appendChild(this.getButton('minimize'));
