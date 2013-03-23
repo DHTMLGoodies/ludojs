@@ -9,7 +9,8 @@ ludo.dialog.Prompt = new Class({
     type : 'dialog.Prompt',
     input : undefined,
     inputConfig : {},
-    
+    label:'',
+    value:'',
     ludoConfig : function(config){
         if(!config.buttons && !config.buttonConfig && !config.buttonBar){
             config.buttons = [
@@ -24,9 +25,7 @@ ludo.dialog.Prompt = new Class({
                 }
             ]
         }
-        this.label = config.label || '';
-        this.value = config.value || '';
-        this.inputConfig = config.inputConfig || {};
+        this.setConfigParams(config, ['label','value','inputConfig']);
         this.parent(config);
     },
 

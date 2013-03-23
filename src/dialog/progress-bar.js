@@ -5,10 +5,6 @@ ludo.dialog.ProgressBar = new Class({
     height : 120,
     modal : false,
 
-    ludoConfig : function(config){
-        this.parent(config);
-    },
-
     ludoRendered : function(){
         this.parent();
 

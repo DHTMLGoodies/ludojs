@@ -89,14 +89,5 @@ ludo.form.Form = new Class({
 
     submit:function () {
 
-    },
-
-    hasFileUpload:function (elements) {
-        for (var i = 0; i < elements.length; i++) {
-            if (elements[i].type === 'form.File') {
-                return true;
-            }
-        }
-        return false;
     }
 });

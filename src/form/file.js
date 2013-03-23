@@ -145,7 +145,7 @@ ludo.form.File = new Class({
 	ludoConfig:function (config) {
 		this.parent(config);
         this.setConfigParams(config, ['resource','instantUpload','labelButton','labelRemove','labelDelete','buttonWidth']);
-		if (config.accept !== undefined) {
+		if (config.accept) {
 			this.accept = config.accept.toLowerCase().split(/,/g);
 		}
 		if (config.value) {
@@ -349,15 +349,15 @@ ludo.form.File = new Class({
 	},
 
 	displayFileName:function () {
-
-		this.els.cellInput.set('html', '');
-		this.els.cellInput.removeClass('ludo-input-file-name-new-file');
-		this.els.cellInput.removeClass('ludo-input-file-name-initial');
-		this.els.cellInput.removeClass('ludo-input-file-name-not-uploaded');
+        var ci = this.els.cellInput;
+		ci.set('html', '');
+		ci.removeClass('ludo-input-file-name-new-file');
+		ci.removeClass('ludo-input-file-name-initial');
+		ci.removeClass('ludo-input-file-name-not-uploaded');
 		if (this.valueForDisplay) {
 			var span = new Element('span');
 			span.set('html', this.valueForDisplay + ' ');
-			this.els.cellInput.adopt(span);
+			ci.adopt(span);
 
 			var deleteLink = new Element('a');
 			deleteLink.addEvent('click', this.removeFile.bind(this));
@@ -365,19 +365,19 @@ ludo.form.File = new Class({
 			var html = this.labelRemove;
 			if (this.valueForDisplay == this.initialValue) {
 				html = this.labelDelete;
-				ludo.dom.addClass(this.els.cellInput, 'ludo-input-file-name-initial');
+				ludo.dom.addClass(ci, 'ludo-input-file-name-initial');
 			} else {
-				ludo.dom.addClass(this.els.cellInput, 'ludo-input-file-name-new-file');
+				ludo.dom.addClass(ci, 'ludo-input-file-name-new-file');
 			}
 			if (!this.fileUploadComplete) {
-				ludo.dom.addClass(this.els.cellInput, 'ludo-input-file-name-not-uploaded');
+				ludo.dom.addClass(ci, 'ludo-input-file-name-not-uploaded');
 			}
 			deleteLink.set('html', html);
-			this.els.cellInput.adopt(deleteLink);
+			ci.adopt(deleteLink);
 		}
 	},
 	resizeDOM:function () {
-		/* No DOM resize nescessary for this component */
+		/* No DOM resize necessary for this component */
 	},
 	upload:function () {
 		if (!this.hasValidExtension()) {
