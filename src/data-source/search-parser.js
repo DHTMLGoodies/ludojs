@@ -75,12 +75,7 @@ ludo.dataSource.SearchParser = new Class({
 			counter++;
 			ib = this.getIndexOfInnerBranch(branch);
 		}
-
-		if(branch.operator === '&'){
-			return this.getAndFn(branch);
-		}else{
-			return this.getOrFn(branch);
-		}
+        return branch.operator === '&' ? this.getAndFn(branch) : this.getOrFn(branch);
 	},
 
 	getAndFn:function(branch){
