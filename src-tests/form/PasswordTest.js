@@ -1,23 +1,47 @@
 TestCase("PasswordTest", {
 
     "test should not validate week passwords": function(){
+        var invalidPasswords = [
+            'alfmagnek',
+            'alfmagnek1',
+            'invalid456'
+        ];
+
+        for(var i=0;i<invalidPasswords.length;i++){
+            // given
+            var p = new ludo.form.StrongPassword({
+                value : invalidPasswords[i]
+            });
+            // then
+            assertFalse(invalidPasswords[i] + ' is considered valid', p.isValid());
+        }
+
+    },
+
+    "test should validate strong password": function(){
+
+        var passwords = [
+            'A24!abZde',
+            'A12magne',
+            'Valid123',
+            'valiD123',
+            '123Valid'
+        ];
+        // given
+        for(var i=0;i<passwords.length;i++){
+            var p = new ludo.form.StrongPassword({  value : passwords[i] });
+            // then
+            assertTrue(p.isValid());
+        }
+    },
+
+    "test should not validate weak passwords only containing letters": function(){
         // given
         var p = new ludo.form.StrongPassword({
             value : 'alfmagne'
         });
-
         // then
         assertFalse(p.isValid());
-    },
-
-    "test should validate strong password": function(){
-        // given
-        var p = new ludo.form.StrongPassword({
-            value : 'A24!abZde'
-        });
-
-        // then
-        assertTrue(p.isValid());
     },
 
 
@@ -29,10 +53,5 @@ TestCase("PasswordTest", {
 
         // then
         assertTrue(p.isValid());
-	},
-
-    "test should have regex" : function(){
-        assertTrue(/(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/.test('A24!abZde'))
-    }
-
+	}
 });

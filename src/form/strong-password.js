@@ -22,7 +22,7 @@
  */
 ludo.form.StrongPassword = new Class({
     Extends: ludo.form.Password,
-    regex : '(?=^.{_length_,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$',
+    regex : '(?=^.{_length_,}$)((?=.*[0-9])|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$',
     /**
      * Custom minimum length of password
      * @config {Number} passwordLength

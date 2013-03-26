@@ -1,4 +1,4 @@
-/* Generated Sat Mar 23 20:26:28 CET 2013 */
+/* Generated Tue Mar 26 20:08:30 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -11587,12 +11587,7 @@ ludo.dataSource.SearchParser = new Class({
 			counter++;
 			ib = this.getIndexOfInnerBranch(branch);
 		}
-
-		if(branch.operator === '&'){
-			return this.getAndFn(branch);
-		}else{
-			return this.getOrFn(branch);
-		}
+        return branch.operator === '&' ? this.getAndFn(branch) : this.getOrFn(branch);
 	},
 
 	getAndFn:function(branch){
@@ -21438,7 +21433,6 @@ ludo.controller.Controller = new Class({
 		if (!this.applyTo) {
 			return this.isInSameNamespaceAs(component);
 		}
-
 		var key = this.getModuleKeyFor(component);
 		if (this.isAppliedDirectlyToModule(key)) {
 			return true;
@@ -23704,7 +23698,7 @@ ludo.form.Password = new Class({
  */
 ludo.form.StrongPassword = new Class({
     Extends: ludo.form.Password,
-    regex : '(?=^.{_length_,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$',
+    regex : '(?=^.{_length_,}$)((?=.*[0-9])|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$',
     /**
      * Custom minimum length of password
      * @config {Number} passwordLength
