@@ -20,6 +20,17 @@ TestCase("PasswordTest", {
         assertTrue(p.isValid());
     },
 
+
+	"test should validate strong password with upper lower and number": function(){
+        // given
+        var p = new ludo.form.StrongPassword({
+            value : 'ABalfa33'
+        });
+
+        // then
+        assertTrue(p.isValid());
+	},
+
     "test should have regex" : function(){
         assertTrue(/(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/.test('A24!abZde'))
     }
