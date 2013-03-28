@@ -4,7 +4,9 @@ TestCase("PasswordTest", {
         var invalidPasswords = [
             'alfmagnek',
             'alfmagnek1',
-            'invalid456'
+            'invalid456',
+            'short',
+            'longbutwithoutuppercase1234'
         ];
 
         for(var i=0;i<invalidPasswords.length;i++){
