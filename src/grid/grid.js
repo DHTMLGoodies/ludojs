@@ -10,7 +10,6 @@
 	 {
 		  id:'myGrid',
 		  type:'grid.Grid',
-		  weight:1,
 		  stateful:true,
 		  resizable:false,
 		  columnManager:{
@@ -134,10 +133,12 @@ ludo.grid.Grid = new Class({
 			this.columnManager.stateful = this.stateful;
 			this.columnManager.id = this.columnManager.id || this.id + '_cm';
 			this.columnManager = ludo._new(this.columnManager);
-			this.columnManager.addEvent('hidecolumn', this.refreshData.bind(this));
-			this.columnManager.addEvent('showcolumn', this.refreshData.bind(this));
-			this.columnManager.addEvent('movecolumn', this.onColumnMove.bind(this));
-			this.columnManager.addEvent('resize', this.resizeColumns.bind(this));
+            this.columnManager.addEvents({
+                'hidecolumn' : this.refreshData.bind(this),
+                'showcolumn' : this.refreshData.bind(this),
+                'movecolumn' : this.onColumnMove.bind(this),
+                'resize' : this.resizeColumns.bind(this)
+            });
 		}
 
 		if (this.rowManager) {
@@ -191,18 +192,20 @@ ludo.grid.Grid = new Class({
 			if(this.dataSourceObj && this.dataSourceObj.hasData()){
 				this.populateData();
 			}
-			var ds = this.getDataSource();
-			ds.addEvent('change', this.populateData.bind(this));
-			ds.addEvent('select', this.setSelectedRecord.bind(this));
-			ds.addEvent('select', this.selectDOMForRecord.bind(this));
-			ds.addEvent('deselect', this.deselectDOMForRecord.bind(this));
-			ds.addEvent('update', this.showUpdatedRecord.bind(this));
-			ds.addEvent('delete', this.removeDOMForRecord.bind(this));
+            this.getDataSource().addEvents({
+                'change' : this.populateData.bind(this),
+                'select' : this.setSelectedRecord.bind(this),
+                'deselect' : this.deselectDOMForRecord.bind(this),
+                'update' : this.showUpdatedRecord.bind(this),
+                'delete' : this.removeDOMForRecord.bind(this)
+            });
+            this.getDataSource().addEvent('select', this.selectDOMForRecord.bind(this));
 		}
-		var b = this.getBody();
-		b.addEvent('selectstart', ludo.util.cancelEvent);
-		b.addEvent('click', this.cellClick.bind(this));
-		b.addEvent('dblclick', this.cellDoubleClick.bind(this));
+        this.getBody().addEvents({
+            'selectstart' : ludo.util.cancelEvent,
+            'click' : this.cellClick.bind(this),
+            'dblclick' : this.cellDoubleClick.bind(this)
+        });
 		if (this.mouseOverEffect) {
 			this.els.dataContainer.addEvent('mouseleave', this.mouseLeavesGrid.bind(this));
 		}
