@@ -104,28 +104,6 @@ ludo.dom = {
 	},
 
 	/**
-	 * Return margin+border+padding width of elOne MINUS margin+border+padding width of elTwo
-	 * @method getMBPWDiff
-	 * @param elOne
-	 * @param elTwo
-	 * @return {Number}
-	 */
-	getMBPWDiff:function (elOne, elTwo) {
-		return ludo.dom.getMBPW(elOne) - ludo.dom.getMBPW(elTwo);
-	},
-	/**
-	 * Return margin+border+padding height of elOne MINUS margin+border+padding height of elTwo
-	 * @method getMBPHDiff
-	 * @param elOne
-	 * @param elTwo
-	 * @return {Number}
-	 */
-	getMBPHDiff:function (elOne, elTwo) {
-		return ludo.dom.getMBPH(elOne) - ludo.dom.getMBPH(elTwo);
-	},
-
-
-	/**
 	 * @method clearCacheStyles
 	 * Clear cached padding,border and margins.
 	 */
@@ -189,13 +167,13 @@ ludo.dom = {
 		var viewHeight = c.offsetHeight - ludo.dom.getPH(c) - ludo.dom.getBH(c) - ludo.dom.getMBPH(el);
 
 		var pos = domNode.getPosition(el).y;
-		var scrollTop = c.scrollTop;
 
-		var pxBeneathBottomEdge = (pos + 20) - (scrollTop + viewHeight);
-		var pxAboveTopEdge = scrollTop - pos;
+		var pxBeneathBottomEdge = (pos + 20) - (c.scrollTop + viewHeight);
 		if (pxBeneathBottomEdge > 0) {
 			el.scrollTop += pxBeneathBottomEdge;
 		}
+
+        var pxAboveTopEdge = c.scrollTop - pos;
 		if (pxAboveTopEdge > 0) {
 			el.scrollTop -= pxAboveTopEdge;
 		}

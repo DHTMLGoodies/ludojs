@@ -76,13 +76,12 @@ ludo.Core = new Class({
 	ludoConfig:function(config){
         var keys = ['url','name','controller','module','submodule','stateful','id','useController'];
         this.setConfigParams(config, keys);
-
-		if (config.listeners !== undefined)this.addEvents(config.listeners);
-		if (this.controller !== undefined)ludo.controllerManager.assignSpecificControllerFor(this.controller, this);
         if (this.stateful && this.statefulProperties && this.id) {
             config = this.appendPropertiesFromStore(config);
             this.addEvent('state', this.saveStatefulProperties.bind(this));
         }
+		if (config.listeners !== undefined)this.addEvents(config.listeners);
+		if (this.controller !== undefined)ludo.controllerManager.assignSpecificControllerFor(this.controller, this);
         if (this.module || this.useController)ludo.controllerManager.registerComponent(this);
 		if(!this.id)this.id = 'ludo-' + String.uniqueID();
 		ludo.CmpMgr.registerComponent(this);

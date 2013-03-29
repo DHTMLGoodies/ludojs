@@ -152,7 +152,6 @@ ludo.View = new Class({
 	 */
 	socket:undefined,
 
-
 	parentComponent:null,
 	objMovable:null,
 	/**
@@ -405,7 +404,6 @@ ludo.View = new Class({
 		this.layout = ludo.layoutFactory.getValidLayoutObject(this, config);
 
 		if (this.copyEvents) {
-			this.copyEvents = Object.clone(this.copyEvents);
 			this.createEventCopies();
 		}
 
@@ -539,6 +537,7 @@ ludo.View = new Class({
 	},
 
 	createEventCopies:function () {
+        this.copyEvents = Object.clone(this.copyEvents);
 		for (var eventName in this.copyEvents) {
 			if (this.copyEvents.hasOwnProperty(eventName)) {
 				this.addEvent(eventName, this.getEventCopyFn(this.copyEvents[eventName]));
@@ -579,7 +578,7 @@ ludo.View = new Class({
 		var size = this.getBody().measure(function () {
 			return this.getSize();
 		});
-        this.height = size.y + ludo.dom.getBH(this.getBody()) + ludo.dom.getBH(this.getEl());
+        this.height = size.y + ludo.dom.getMH(this.getBody()) + ludo.dom.getMBPH(this.getEl());
 	},
 	/**
 	 * Set HTML of components body element
@@ -703,16 +702,6 @@ ludo.View = new Class({
 		return this.els.body;
 	},
 	/**
-	 * Hide all child components
-	 * @method hideAllChildren
-	 * @return void
-	 */
-	hideAllChildren:function () {
-		for (var i = 0; i < this.children.length; i++) {
-			this.children[i].hide();
-		}
-	},
-	/**
 	 * Hide this component
 	 * @method hide
 	 * @return void
@@ -747,6 +736,17 @@ ludo.View = new Class({
 	isHidden:function () {
 		return this.hidden;
 	},
+
+    /**
+     * Return true if this component is visible
+     * @method isVisible
+     * @return {Boolean}
+     *
+     */
+    isVisible:function () {
+        return !this.hidden;
+    },
+
 	/**
 	 * Show this component.
 	 * @method show
@@ -840,15 +840,7 @@ ludo.View = new Class({
 		return this.children.length > 0;
 	},
 
-	/**
-	 * Return true if this component is visible
-	 * @method isVisible
-	 * @return {Boolean}
-	 *
-	 */
-	isVisible:function () {
-		return !this.hidden;
-	},
+
 
 	/**
 	 * Set new title
@@ -1112,20 +1104,10 @@ ludo.View = new Class({
 				}
 				obj = this.dataSourceObj = ludo._new(this.dataSource);
 			}
-			switch (obj.getSourceType()) {
-				case 'HTML':
-					if (obj.hasData()) {
-						this.setHtml(obj.getData());
-					}
-					obj.addEvent('load', this.setHtml.bind(this));
-					break;
-				case 'JSON':
-					if (obj.hasData()) {
-						this.insertJSON(obj.getData());
-					}
-					obj.addEvent('load', this.insertJSON.bind(this));
-					break;
-			}
+            var method = obj.getSourceType() === 'HTML' ? 'setHtml' : 'insertJSON';
+            if (obj.hasData()) {
+                this[method](obj.getData());
+            }
 		}
 		return this.dataSourceObj;
 	},
@@ -1144,10 +1126,6 @@ ludo.View = new Class({
 	getParentFormManager:function () {
 		var parent = this.getParent();
 		return parent ? parent.formManager ? parent.formManager : parent.getParentFormManager() : undefined;
-	},
-
-	getIndexOf:function (child) {
-		return this.children.indexOf(child);
 	},
 
 	isFormElement:function () {

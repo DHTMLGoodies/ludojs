@@ -385,11 +385,10 @@ ludo.grid.ColumnManager = new Class({
 		for (var i = 0; i < keys.length; i++) {
 			if (keys[i] == column) {
 				return ret;
-			} else {
-				if (!this.isHidden(keys[i])) {
-					ret += this.getWidthOf(keys[i]);
-				}
 			}
+            if (!this.isHidden(keys[i])) {
+                ret += this.getWidthOf(keys[i]);
+            }
 		}
 		return 0;
 	},

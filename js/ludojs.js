@@ -1,4 +1,4 @@
-/* Generated Tue Mar 26 20:09:58 CET 2013 */
+/* Generated Sat Mar 30 0:31:06 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -774,13 +774,12 @@ ludo.Core = new Class({
 	ludoConfig:function(config){
         var keys = ['url','name','controller','module','submodule','stateful','id','useController'];
         this.setConfigParams(config, keys);
-
-		if (config.listeners !== undefined)this.addEvents(config.listeners);
-		if (this.controller !== undefined)ludo.controllerManager.assignSpecificControllerFor(this.controller, this);
         if (this.stateful && this.statefulProperties && this.id) {
             config = this.appendPropertiesFromStore(config);
             this.addEvent('state', this.saveStatefulProperties.bind(this));
         }
+		if (config.listeners !== undefined)this.addEvents(config.listeners);
+		if (this.controller !== undefined)ludo.controllerManager.assignSpecificControllerFor(this.controller, this);
         if (this.module || this.useController)ludo.controllerManager.registerComponent(this);
 		if(!this.id)this.id = 'ludo-' + String.uniqueID();
 		ludo.CmpMgr.registerComponent(this);
@@ -4008,28 +4007,6 @@ ludo.dom = {
 	},
 
 	/**
-	 * Return margin+border+padding width of elOne MINUS margin+border+padding width of elTwo
-	 * @method getMBPWDiff
-	 * @param elOne
-	 * @param elTwo
-	 * @return {Number}
-	 */
-	getMBPWDiff:function (elOne, elTwo) {
-		return ludo.dom.getMBPW(elOne) - ludo.dom.getMBPW(elTwo);
-	},
-	/**
-	 * Return margin+border+padding height of elOne MINUS margin+border+padding height of elTwo
-	 * @method getMBPHDiff
-	 * @param elOne
-	 * @param elTwo
-	 * @return {Number}
-	 */
-	getMBPHDiff:function (elOne, elTwo) {
-		return ludo.dom.getMBPH(elOne) - ludo.dom.getMBPH(elTwo);
-	},
-
-
-	/**
 	 * @method clearCacheStyles
 	 * Clear cached padding,border and margins.
 	 */
@@ -4093,13 +4070,13 @@ ludo.dom = {
 		var viewHeight = c.offsetHeight - ludo.dom.getPH(c) - ludo.dom.getBH(c) - ludo.dom.getMBPH(el);
 
 		var pos = domNode.getPosition(el).y;
-		var scrollTop = c.scrollTop;
 
-		var pxBeneathBottomEdge = (pos + 20) - (scrollTop + viewHeight);
-		var pxAboveTopEdge = scrollTop - pos;
+		var pxBeneathBottomEdge = (pos + 20) - (c.scrollTop + viewHeight);
 		if (pxBeneathBottomEdge > 0) {
 			el.scrollTop += pxBeneathBottomEdge;
 		}
+
+        var pxAboveTopEdge = c.scrollTop - pos;
 		if (pxAboveTopEdge > 0) {
 			el.scrollTop -= pxAboveTopEdge;
 		}
@@ -4505,7 +4482,6 @@ ludo.View = new Class({
 	 */
 	socket:undefined,
 
-
 	parentComponent:null,
 	objMovable:null,
 	/**
@@ -4758,7 +4734,6 @@ ludo.View = new Class({
 		this.layout = ludo.layoutFactory.getValidLayoutObject(this, config);
 
 		if (this.copyEvents) {
-			this.copyEvents = Object.clone(this.copyEvents);
 			this.createEventCopies();
 		}
 
@@ -4892,6 +4867,7 @@ ludo.View = new Class({
 	},
 
 	createEventCopies:function () {
+        this.copyEvents = Object.clone(this.copyEvents);
 		for (var eventName in this.copyEvents) {
 			if (this.copyEvents.hasOwnProperty(eventName)) {
 				this.addEvent(eventName, this.getEventCopyFn(this.copyEvents[eventName]));
@@ -4932,7 +4908,7 @@ ludo.View = new Class({
 		var size = this.getBody().measure(function () {
 			return this.getSize();
 		});
-        this.height = size.y + ludo.dom.getBH(this.getBody()) + ludo.dom.getBH(this.getEl());
+        this.height = size.y + ludo.dom.getMH(this.getBody()) + ludo.dom.getMBPH(this.getEl());
 	},
 	/**
 	 * Set HTML of components body element
@@ -5056,16 +5032,6 @@ ludo.View = new Class({
 		return this.els.body;
 	},
 	/**
-	 * Hide all child components
-	 * @method hideAllChildren
-	 * @return void
-	 */
-	hideAllChildren:function () {
-		for (var i = 0; i < this.children.length; i++) {
-			this.children[i].hide();
-		}
-	},
-	/**
 	 * Hide this component
 	 * @method hide
 	 * @return void
@@ -5100,6 +5066,17 @@ ludo.View = new Class({
 	isHidden:function () {
 		return this.hidden;
 	},
+
+    /**
+     * Return true if this component is visible
+     * @method isVisible
+     * @return {Boolean}
+     *
+     */
+    isVisible:function () {
+        return !this.hidden;
+    },
+
 	/**
 	 * Show this component.
 	 * @method show
@@ -5193,15 +5170,7 @@ ludo.View = new Class({
 		return this.children.length > 0;
 	},
 
-	/**
-	 * Return true if this component is visible
-	 * @method isVisible
-	 * @return {Boolean}
-	 *
-	 */
-	isVisible:function () {
-		return !this.hidden;
-	},
+
 
 	/**
 	 * Set new title
@@ -5465,20 +5434,10 @@ ludo.View = new Class({
 				}
 				obj = this.dataSourceObj = ludo._new(this.dataSource);
 			}
-			switch (obj.getSourceType()) {
-				case 'HTML':
-					if (obj.hasData()) {
-						this.setHtml(obj.getData());
-					}
-					obj.addEvent('load', this.setHtml.bind(this));
-					break;
-				case 'JSON':
-					if (obj.hasData()) {
-						this.insertJSON(obj.getData());
-					}
-					obj.addEvent('load', this.insertJSON.bind(this));
-					break;
-			}
+            var method = obj.getSourceType() === 'HTML' ? 'setHtml' : 'insertJSON';
+            if (obj.hasData()) {
+                this[method](obj.getData());
+            }
 		}
 		return this.dataSourceObj;
 	},
@@ -5497,10 +5456,6 @@ ludo.View = new Class({
 	getParentFormManager:function () {
 		var parent = this.getParent();
 		return parent ? parent.formManager ? parent.formManager : parent.getParentFormManager() : undefined;
-	},
-
-	getIndexOf:function (child) {
-		return this.children.indexOf(child);
 	},
 
 	isFormElement:function () {
@@ -10595,9 +10550,9 @@ ludo.view.TitleBar = new Class({
         }
         var parent = c.getParent();
         if (parent && parent.layout && parent.layout.type === 'linear' && parent.layout.orientation === 'horizontal') {
-            return parent.getIndexOf(c) === 0 ? 'left' : 'right';
+            return parent.children.indexOf(c) === 0 ? 'left' : 'right';
         } else {
-            return parent.getIndexOf(c) === 0 ? 'top' : 'bottom';
+            return parent.children.indexOf(c) === 0 ? 'top' : 'bottom';
         }
     }
 });/* ../ludojs/src/framed-view.js */
@@ -11263,17 +11218,12 @@ ludo.Window = new Class({
 ludo.Accordion = new Class({
 	Extends:ludo.FramedView,
 	type:'Accordion',
-
 	closable:false,
-	minimizable:true,
-	resizable:false,
-
 	heightBeforeMinimize:undefined,
 	slideInProgress:false,
-	fx:null,
-	fxContent:null,
+	fx:undefined,
+	fxContent:undefined,
 	minimized:false,
-	titleBar:true,
 
 	ludoConfig:function (config) {
 		if (!config.height) {
@@ -13846,9 +13796,9 @@ ludo.grid.GridHeader = new Class({
 		ludo.dom.addClass(el, 'ludo-grid-header-cell');
 		ludo.dom.addClass(el, 'ludo-header-' + this.columnManager.getHeaderAlignmentOf(col));
 
-		var span = new Element('span');
-		ludo.dom.addClass(span, 'ludo-cell-text');
-		el.adopt(span);
+        ludo.dom.create({
+            tag:'span', cls : 'ludo-cell-text', renderTo:el, html : this.columnManager.getHeadingFor(col)
+        });
 
 		this.createTopAndBottomBackgrounds(col);
 		this.addDOMForDropTargets(el, col);
@@ -13869,7 +13819,6 @@ ludo.grid.GridHeader = new Class({
 				}
 			});
 		}
-		el.getElement('span').set('html', this.columnManager.getHeadingFor(col));
 		this.el.adopt(el);
 
 		this.getMovable().add({
@@ -13900,8 +13849,7 @@ ludo.grid.GridHeader = new Class({
 	},
 
 	resizeCellBackgrounds:function (col) {
-		var totalHeight = this.columnManager.getRowSpanOf(col) * this.cellHeight;
-		totalHeight -= this.spacing.height;
+		var totalHeight = (this.columnManager.getRowSpanOf(col) * this.cellHeight) -  this.spacing.height;
 		var height = Math.round(totalHeight) / 2;
 		this.cellBg[col].top.setStyle('height', height);
 		height = totalHeight - height;
@@ -14641,11 +14589,10 @@ ludo.grid.ColumnManager = new Class({
 		for (var i = 0; i < keys.length; i++) {
 			if (keys[i] == column) {
 				return ret;
-			} else {
-				if (!this.isHidden(keys[i])) {
-					ret += this.getWidthOf(keys[i]);
-				}
 			}
+            if (!this.isHidden(keys[i])) {
+                ret += this.getWidthOf(keys[i]);
+            }
 		}
 		return 0;
 	},

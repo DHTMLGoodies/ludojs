@@ -115,9 +115,9 @@ ludo.grid.GridHeader = new Class({
 		ludo.dom.addClass(el, 'ludo-grid-header-cell');
 		ludo.dom.addClass(el, 'ludo-header-' + this.columnManager.getHeaderAlignmentOf(col));
 
-		var span = new Element('span');
-		ludo.dom.addClass(span, 'ludo-cell-text');
-		el.adopt(span);
+        ludo.dom.create({
+            tag:'span', cls : 'ludo-cell-text', renderTo:el, html : this.columnManager.getHeadingFor(col)
+        });
 
 		this.createTopAndBottomBackgrounds(col);
 		this.addDOMForDropTargets(el, col);
@@ -138,7 +138,6 @@ ludo.grid.GridHeader = new Class({
 				}
 			});
 		}
-		el.getElement('span').set('html', this.columnManager.getHeadingFor(col));
 		this.el.adopt(el);
 
 		this.getMovable().add({
@@ -169,8 +168,7 @@ ludo.grid.GridHeader = new Class({
 	},
 
 	resizeCellBackgrounds:function (col) {
-		var totalHeight = this.columnManager.getRowSpanOf(col) * this.cellHeight;
-		totalHeight -= this.spacing.height;
+		var totalHeight = (this.columnManager.getRowSpanOf(col) * this.cellHeight) -  this.spacing.height;
 		var height = Math.round(totalHeight) / 2;
 		this.cellBg[col].top.setStyle('height', height);
 		height = totalHeight - height;

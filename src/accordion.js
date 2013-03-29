@@ -6,17 +6,12 @@
 ludo.Accordion = new Class({
 	Extends:ludo.FramedView,
 	type:'Accordion',
-
 	closable:false,
-	minimizable:true,
-	resizable:false,
-
 	heightBeforeMinimize:undefined,
 	slideInProgress:false,
-	fx:null,
-	fxContent:null,
+	fx:undefined,
+	fxContent:undefined,
 	minimized:false,
-	titleBar:true,
 
 	ludoConfig:function (config) {
 		if (!config.height) {
