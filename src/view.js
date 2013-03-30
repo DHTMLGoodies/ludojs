@@ -1105,9 +1105,12 @@ ludo.View = new Class({
 				obj = this.dataSourceObj = ludo._new(this.dataSource);
 			}
             var method = obj.getSourceType() === 'HTML' ? 'setHtml' : 'insertJSON';
+
             if (obj.hasData()) {
                 this[method](obj.getData());
             }
+
+            obj.addEvent('load',this[method].bind(this));
 		}
 		return this.dataSourceObj;
 	},

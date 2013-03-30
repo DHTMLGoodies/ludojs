@@ -1,4 +1,4 @@
-/* Generated Sat Mar 30 0:53:52 CET 2013 */
+/* Generated Sat Mar 30 23:53:45 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -5435,9 +5435,12 @@ ludo.View = new Class({
 				obj = this.dataSourceObj = ludo._new(this.dataSource);
 			}
             var method = obj.getSourceType() === 'HTML' ? 'setHtml' : 'insertJSON';
+
             if (obj.hasData()) {
                 this[method](obj.getData());
             }
+
+            obj.addEvent('load',this[method].bind(this));
 		}
 		return this.dataSourceObj;
 	},

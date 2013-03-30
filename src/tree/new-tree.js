@@ -29,8 +29,10 @@ ludo.tree.Tree = new Class({
 	ludoDOM:function () {
 		this.parent();
 		this.getBody().style.overflowY = 'auto';
-		this.getBody().addEvent('click', this.onClick.bind(this));
-		this.getBody().addEvent('dblclick', this.onDblClick.bind(this));
+        this.getBody().addEvents({
+            'click' : this.onClick.bind(this),
+            'dblclick' : this.onDblClick.bind(this)
+        });
 	},
 
 	onClick:function (e) {
@@ -120,7 +122,7 @@ ludo.tree.Tree = new Class({
 	},
 
     isRecordRendered:function(record){
-        return this.renderedRecords[record.getUID !== undefined ? record.getUID() : record.uid] ? true : false;
+        return this.renderedRecords[record.getUID ? record.getUID() : record.uid] ? true : false;
     },
 
     areChildrenRendered:function(record){
@@ -129,7 +131,7 @@ ludo.tree.Tree = new Class({
 
 	getCachedNode:function (record, cacheKey, idPrefix) {
 		if (this.nodeCache[cacheKey] === undefined)this.nodeCache[cacheKey] = {};
-		var uid = record.getUID !== undefined ? record.getUID() : record.uid;
+		var uid = record.getUID ? record.getUID() : record.uid;
 		if (!this.nodeCache[cacheKey][uid]) {
 			this.nodeCache[cacheKey][uid] = this.getBody().getElementById(idPrefix + uid)
 		}
@@ -220,7 +222,7 @@ ludo.tree.Tree = new Class({
 	},
 
 	getNewNodeFor:function (record) {
-		record = record.getUID !== undefined ? record.record : record;
+		record = record.getUID ? record.record : record;
 		if (!record.uid)this.indexRecord(record);
 		return ludo.dom.create({
             cls : 'ludo-tree-a-node ludo-tree-node',
