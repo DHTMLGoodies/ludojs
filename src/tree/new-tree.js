@@ -14,14 +14,15 @@ ludo.tree.Tree = new Class({
 	ludoEvents:function () {
 		this.parent();
 		if (this.dataSource) {
-			var ds = this.getDataSource();
-			ds.addEvent('select', this.selectRecord.bind(this));
-			ds.addEvent('deselect', this.deSelectRecord.bind(this));
-			ds.addEvent('addChild', this.addChild.bind(this));
-			ds.addEvent('dispose', this.removeChild.bind(this));
-			ds.addEvent('removeChild', this.removeChild.bind(this));
-			ds.addEvent('show', this.showRecord.bind(this));
-			ds.addEvent('hide', this.hideRecord.bind(this));
+            this.getDataSource().addEvents({
+                'select' : this.selectRecord.bind(this),
+                'deselect' : this.deSelectRecord.bind(this),
+                'addChild' : this.addChild.bind(this),
+                'dispose' : this.removeChild.bind(this),
+                'removeChild' : this.removeChild.bind(this),
+                'show' : this.showRecord.bind(this),
+                'hide' : this.hideRecord.bind(this)
+            });
 		}
 	},
 
