@@ -72,11 +72,8 @@ ludo.tree.Tree = new Class({
 	},
 
 	expandOrCollapse:function (record, el) {
-		if (ludo.dom.hasClass(el, 'ludo-tree-node-collapse')) {
-			this.collapse(record, el);
-		} else {
-			this.expand(record, el);
-		}
+        var method = ludo.dom.hasClass(el, 'ludo-tree-node-collapse') ? 'collapse' : 'expand';
+        this[method](record,el);
 	},
 
 	expand:function (record, el) {
@@ -184,11 +181,8 @@ ludo.tree.Tree = new Class({
 			ret.push('" id="' + record.uid + '">');
 		}
 		ret.push('<div class="ludo-tree-node-plain">');
-		ret.push('<span');
-		if (this.isSelectable(record)) {
-			ret.push(' class="ludo-tree-node-selectable"');
-		}
-		ret.push('>');
+
+        ret.push(this.isSelectable(record) ? '<span class="ludo-tree-node-selectable">' : '<span>');
 		ret.push(this.getNodeTextFor(record));
 		ret.push('</span>');
 

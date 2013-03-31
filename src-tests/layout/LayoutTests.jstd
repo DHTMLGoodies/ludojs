@@ -2,6 +2,13 @@ load:
   - ../../mootools/mootools-core-1.4.5.js
   - ../../mootools/mootools-more-1.4.0.1.js
   - ../../js/ludojs.js
+  - ../../src/layout/base.js
+  - ../../src/layout/linear.js
+  - ../../src/layout/relative.js
+  - ../../src/layout/popup.js
+  - ../../src/layout/linear-horizontal.js
+  - ../../src/layout/linear-vertical.js
+  - ../../src/layout/menu.js
 
 test:
   - GridTest.js
@@ -14,6 +21,7 @@ test:
   - TabTest.js
   - CardTest.js
   - PopupTest.js
+  - MenuTest.js
 
 serve:
   - ../../css/ludojs-blue.css

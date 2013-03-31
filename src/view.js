@@ -155,9 +155,8 @@ ludo.View = new Class({
 	parentComponent:null,
 	objMovable:null,
 	/**
-	 * width of component
-	 * @config width
-	 * @type : int
+	 * Width of component
+	 * @config {Number} width
 	 */
 	width:undefined,
 	/**
@@ -289,7 +288,7 @@ ludo.View = new Class({
 	 which is the same as linear horizontal
 
 	 Layout types:
-	 	linear, fill, grid, tab
+	 	linear, fill, grid, tab, popup
 
 	 */
 	layout:undefined,
@@ -1104,12 +1103,11 @@ ludo.View = new Class({
 				}
 				obj = this.dataSourceObj = ludo._new(this.dataSource);
 			}
-            var method = obj.getSourceType() === 'HTML' ? 'setHtml' : 'insertJSON';
 
+            var method = obj.getSourceType() === 'HTML' ? 'setHtml' : 'insertJSON';
             if (obj.hasData()) {
                 this[method](obj.getData());
             }
-
             obj.addEvent('load',this[method].bind(this));
 		}
 		return this.dataSourceObj;

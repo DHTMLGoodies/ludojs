@@ -34,6 +34,8 @@ ludo.layout.Factory = new Class({
 				return 'Card';
 			case 'grid':
 				return 'Grid';
+            case 'menu':
+                return ['Menu', (view.layout.orientation && view.layout.orientation.toLowerCase()=='horizontal') ? 'Horizontal' : 'Vertical'].join('');
 			case 'tabs':
 			case 'tab':
 				return 'Tab';
