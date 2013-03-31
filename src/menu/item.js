@@ -4,9 +4,9 @@
  * @class MenuItem
  * @extends View
  */
-ludo.menu.MenuItem = new Class({
+ludo.menu.Item = new Class({
     Extends:ludo.View,
-    type:'menu.MenuItem',
+    type:'menu.Item',
     menu:null,
     subMenu:null,
     menuItems:[],

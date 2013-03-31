@@ -1,4 +1,4 @@
-/* Generated Sat Mar 30 23:53:45 CET 2013 */
+/* Generated Sun Mar 31 23:17:51 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -3240,6 +3240,8 @@ ludo.layout.Factory = new Class({
 				return 'Card';
 			case 'grid':
 				return 'Grid';
+            case 'menu':
+                return ['Menu', (view.layout.orientation && view.layout.orientation.toLowerCase()=='horizontal') ? 'Horizontal' : 'Vertical'].join('');
 			case 'tabs':
 			case 'tab':
 				return 'Tab';
@@ -4485,9 +4487,8 @@ ludo.View = new Class({
 	parentComponent:null,
 	objMovable:null,
 	/**
-	 * width of component
-	 * @config width
-	 * @type : int
+	 * Width of component
+	 * @config {Number} width
 	 */
 	width:undefined,
 	/**
@@ -4619,7 +4620,7 @@ ludo.View = new Class({
 	 which is the same as linear horizontal
 
 	 Layout types:
-	 	linear, fill, grid, tab
+	 	linear, fill, grid, tab, popup
 
 	 */
 	layout:undefined,
@@ -5434,12 +5435,11 @@ ludo.View = new Class({
 				}
 				obj = this.dataSourceObj = ludo._new(this.dataSource);
 			}
-            var method = obj.getSourceType() === 'HTML' ? 'setHtml' : 'insertJSON';
 
+            var method = obj.getSourceType() === 'HTML' ? 'setHtml' : 'insertJSON';
             if (obj.hasData()) {
                 this[method](obj.getData());
             }
-
             obj.addEvent('load',this[method].bind(this));
 		}
 		return this.dataSourceObj;
@@ -18864,16 +18864,16 @@ ludo.menu.MenuHandler = new Class({
             this.isActive = false;
         }
     }
-});/* ../ludojs/src/menu/menu-item.js */
+});/* ../ludojs/src/menu/item.js */
 /**
  * Class for menu items. MenuItems are created dynamically from config object(children of ludo.menu.Menu or ludo.menu.Context)
  * @namespace menu
  * @class MenuItem
  * @extends View
  */
-ludo.menu.MenuItem = new Class({
+ludo.menu.Item = new Class({
     Extends:ludo.View,
-    type:'menu.MenuItem',
+    type:'menu.Item',
     menu:null,
     subMenu:null,
     menuItems:[],
@@ -19172,7 +19172,7 @@ ludo.menu.MenuItem = new Class({
 ludo.menu.Menu = new Class({
     Extends : ludo.View,
     type : 'menu.Menu',
-    cType : 'menu.MenuItem',
+    cType : 'menu.Item',
     /**
      * Direction of menu, "horizontal" or "vertical"
      * @property direction
@@ -19193,8 +19193,9 @@ ludo.menu.Menu = new Class({
         this.parent(config);
         this.setConfigParams(config, ['direction','parentMenuItem']);
         if(this.direction === 'vertical'){
-            config.height = 'auto';
-			this.layout.type = 'rows';
+			this.layout.type = 'linear';
+            this.layout.height = 'wrap';
+			this.layout.orientation = 'vertical';
         }
     },
 
@@ -19262,7 +19263,7 @@ ludo.menu.Menu = new Class({
     },
 
     getMenuItemConfigObject : function(obj){
-        obj = obj.substr ? { html: obj, type:'menu.MenuItem' } : obj;
+        obj = obj.substr ? { html: obj, type:'menu.Item' } : obj;
         obj.menuDirection = this.direction;
         return obj;
     },
@@ -19336,7 +19337,7 @@ ludo.menu.Menu = new Class({
         /**
          * Event fired when menu item is clicked
          * @event click
-         * @param {Object} ludo.menu.MenuItem
+         * @param {Object} ludo.menu.Item
          * @param {Object} ludo.menu.Menu
          */
         this.fireEvent('click', [menuItem, this]);

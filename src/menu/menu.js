@@ -7,7 +7,7 @@
 ludo.menu.Menu = new Class({
     Extends : ludo.View,
     type : 'menu.Menu',
-    cType : 'menu.MenuItem',
+    cType : 'menu.Item',
     /**
      * Direction of menu, "horizontal" or "vertical"
      * @property direction
@@ -28,8 +28,9 @@ ludo.menu.Menu = new Class({
         this.parent(config);
         this.setConfigParams(config, ['direction','parentMenuItem']);
         if(this.direction === 'vertical'){
-            config.height = 'auto';
-			this.layout.type = 'rows';
+			this.layout.type = 'linear';
+            this.layout.height = 'wrap';
+			this.layout.orientation = 'vertical';
         }
     },
 
@@ -97,7 +98,7 @@ ludo.menu.Menu = new Class({
     },
 
     getMenuItemConfigObject : function(obj){
-        obj = obj.substr ? { html: obj, type:'menu.MenuItem' } : obj;
+        obj = obj.substr ? { html: obj, type:'menu.Item' } : obj;
         obj.menuDirection = this.direction;
         return obj;
     },
@@ -171,7 +172,7 @@ ludo.menu.Menu = new Class({
         /**
          * Event fired when menu item is clicked
          * @event click
-         * @param {Object} ludo.menu.MenuItem
+         * @param {Object} ludo.menu.Item
          * @param {Object} ludo.menu.Menu
          */
         this.fireEvent('click', [menuItem, this]);

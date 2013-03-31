@@ -12,6 +12,10 @@ TestCase("MenuTest", {
         assertEquals('horizontal', child.layout.orientation);
     },
 
+    "test default type of children should be menu.Item": function(){
+
+    },
+
     getMenuComponent:function () {
         return new ludo.View({
             renderTo:document.body,
