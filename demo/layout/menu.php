@@ -1,6 +1,6 @@
 <?php
 $sub = true;
-$pageTitle = 'Linear layout';
+$pageTitle = 'Menu layout';
 require_once("../includes/demo-header.php");
 ?>
 <body>
@@ -13,6 +13,7 @@ require_once("../includes/demo-header.php");
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/menu-horizontal.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/menu-vertical.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/menu-container.js"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/menu/item.js"></script>
 <script type="text/javascript" class="source-code">
     var w = new ludo.Window({
         title:'Window with menu',
