@@ -551,10 +551,8 @@ ludo.grid.Grid = new Class({
 			} else {
 				var width = this.columnManager.getWidthOf(columns[i]);
                 var bw = ludo.dom.getBW(this.els.dataColumns[columns[i]]) - (i===columns.length-1) ? 1 : 0;
-				this.els.dataColumns[columns[i]].setStyles({
-					'left':leftPos,
-					'width':(width - ludo.dom.getPW(this.els.dataColumns[columns[i]]) - bw)
-				});
+                this.els.dataColumns[columns[i]].style.left = leftPos + 'px';
+                this.els.dataColumns[columns[i]].style.width = (width - ludo.dom.getPW(this.els.dataColumns[columns[i]]) - bw) + 'px';
 
 				this.columnManager.setLeft(columns[i], leftPos);
 
@@ -646,10 +644,10 @@ ludo.grid.Grid = new Class({
 
 		for (var i = 0; i < keys.length; i++) {
 			if (this.columnManager.isHidden(keys[i])) {
-				this.els.dataColumns[keys[i]].setStyle('display', 'none');
+				this.els.dataColumns[keys[i]].style.display='none';
 			} else {
-				this.els.dataColumns[keys[i]].setStyle('display', '');
-				this.els.dataColumns[keys[i]].set('html', this.getHtmlTextForColumn(keys[i]));
+				this.els.dataColumns[keys[i]].style.display='';
+				this.els.dataColumns[keys[i]].innerHTML = this.getHtmlTextForColumn(keys[i]);
 			}
 		}
 		this.resizeVerticalScrollbar();
@@ -675,7 +673,7 @@ ludo.grid.Grid = new Class({
 		var keys = this.columnManager.getLeafKeys();
 		for (var i = 0; i < keys.length; i++) {
             var el = ludo.dom.create({ cls : 'ludo-grid-data-column', renderTo : this.els.dataContainer});
-			el.setProperty('col', keys[i]);
+			el.setAttribute('col', keys[i]);
 			ludo.dom.addClass(el, this.getColumnCssClass(i));
 			el.id = 'ludo-grid-column-' + keys[i] + '-' + this.uniqueId;
 			this.els.dataColumns[keys[i]] = el;

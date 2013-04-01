@@ -129,11 +129,10 @@ ludo.layout.TabStrip = new Class({
     },
 
     getPlainTabFor:function (child) {
-        var el = ludo.dom.create({
-            cls: 'ludo-tab-strip-tab ludo-tab-strip-tab-' + this.tabPos,
-            renderTo:this.getBody(),
-            html : '<div class="ludo-tab-strip-tab-bg-first"></div><div class="ludo-tab-strip-tab-bg-last"></div>'
-        });
+        var el = new Element('div');
+        this.getBody().adopt(el);
+        el.className = 'ludo-tab-strip-tab ludo-tab-strip-tab-' + this.tabPos;
+        el.innerHTML = '<div class="ludo-tab-strip-tab-bg-first"></div><div class="ludo-tab-strip-tab-bg-last"></div>';
         ludo.dom.create({
             tag:'span',html : this.getTitleFor(child),renderTo:el
         });
