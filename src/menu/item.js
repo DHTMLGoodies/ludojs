@@ -88,9 +88,11 @@ ludo.menu.Item = new Class({
     ludoEvents:function () {
         this.parent();
         if (!this.isSpacer()) {
-            this.getEl().addEvent('click', this.click.bind(this));
-            this.getEl().addEvent('mouseenter', this.mouseOver.bind(this));
-            this.getEl().addEvent('mouseleave', this.mouseOut.bind(this));
+            this.getEl().addEvents({
+                'click' : this.click.bind(this),
+                'mouseenter' : this.mouseOver.bind(this),
+                'mouseleave' : this.mouseOut.bind(this)
+            });
         }
     },
 
@@ -131,7 +133,7 @@ ludo.menu.Item = new Class({
     },
     registerMenuHandler:function () {
         var rootMenuComponent = this.getRootMenuComponent();
-        if (rootMenuComponent) {
+        if (rootMenuComponent && rootMenuComponent.getMenuHandler) {
             this.menuHandler = rootMenuComponent.getMenuHandler();
             if (this.menuHandler) {
                 this.menuHandler.addChild(this, this.menu, this.getParentMenuItem());

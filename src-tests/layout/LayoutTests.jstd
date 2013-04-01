@@ -9,6 +9,11 @@ load:
   - ../../src/layout/linear-horizontal.js
   - ../../src/layout/linear-vertical.js
   - ../../src/layout/menu.js
+  - ../../src/layout/menu-vertical.js
+  - ../../src/layout/menu-horizontal.js
+  - ../../src/layout/menu-container.js
+  - ../../src/menu/menu.js
+  - ../../src/menu/item.js
 
 test:
   - GridTest.js

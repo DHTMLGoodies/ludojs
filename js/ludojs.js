@@ -1,4 +1,4 @@
-/* Generated Sun Mar 31 23:17:51 CEST 2013 */
+/* Generated Mon Apr 1 13:45:46 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -2938,6 +2938,7 @@ ludo.layout.Base = new Class({
      * @optional
      */
 	addChild:function (child, insertAt, pos) {
+        this.onBeforeNewChild(child);
 		child = this.getNewComponent(child);
 		var parentEl = this.getParentForNewChild();
 		if (insertAt) {
@@ -2989,7 +2990,12 @@ ludo.layout.Base = new Class({
 	},
 
 	layoutProperties:['collapsible', 'collapsed'],
-	/**
+
+    onBeforeNewChild:function(){
+
+    },
+
+    /**
 	 * Implementation in sub classes
 	 * @method onNewChild
 	 * @private
@@ -7868,6 +7874,34 @@ ludo.layout.Popup = new Class({
 			if(!c[i].isHidden())c[i].getLayoutManager().getRenderer().resize();
 		}
 	}
+});/* ../ludojs/src/layout/menu-container.js */
+ludo.layout.MenuContainer = new Class({
+    Extends:Events,
+
+    initialize:function(config){
+
+    },
+
+    resize:function(config){
+
+    }
+});/* ../ludojs/src/layout/menu.js */
+ludo.layout.Menu = new Class({
+    Extends: ludo.layout.Base,
+
+    onBeforeNewChild:function(child){
+        if(!child.layout || !child.layout.type){
+            child.layout = child.layout || {};
+            child.layout.type = 'Menu'
+        }
+        if(!child.type)child.type = 'menu.Item';
+    }
+});/* ../ludojs/src/layout/menu-horizontal.js */
+ludo.layout.MenuHorizontal = new Class({
+    Extends: ludo.layout.Menu
+});/* ../ludojs/src/layout/menu-vertical.js */
+ludo.layout.MenuVertical = new Class({
+    Extends: ludo.layout.Menu
 });/* ../ludojs/src/layout/collapse-bar.js */
 ludo.layout.CollapseBar = new Class({
 	Extends: ludo.View,
@@ -18955,9 +18989,11 @@ ludo.menu.Item = new Class({
     ludoEvents:function () {
         this.parent();
         if (!this.isSpacer()) {
-            this.getEl().addEvent('click', this.click.bind(this));
-            this.getEl().addEvent('mouseenter', this.mouseOver.bind(this));
-            this.getEl().addEvent('mouseleave', this.mouseOut.bind(this));
+            this.getEl().addEvents({
+                'click' : this.click.bind(this),
+                'mouseenter' : this.mouseOver.bind(this),
+                'mouseleave' : this.mouseOut.bind(this)
+            });
         }
     },
 
@@ -18998,7 +19034,7 @@ ludo.menu.Item = new Class({
     },
     registerMenuHandler:function () {
         var rootMenuComponent = this.getRootMenuComponent();
-        if (rootMenuComponent) {
+        if (rootMenuComponent && rootMenuComponent.getMenuHandler) {
             this.menuHandler = rootMenuComponent.getMenuHandler();
             if (this.menuHandler) {
                 this.menuHandler.addChild(this, this.menu, this.getParentMenuItem());

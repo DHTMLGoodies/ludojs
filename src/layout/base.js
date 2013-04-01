@@ -36,6 +36,7 @@ ludo.layout.Base = new Class({
      * @optional
      */
 	addChild:function (child, insertAt, pos) {
+        child = this.getValidChild(child);
 		child = this.getNewComponent(child);
 		var parentEl = this.getParentForNewChild();
 		if (insertAt) {
@@ -87,7 +88,12 @@ ludo.layout.Base = new Class({
 	},
 
 	layoutProperties:['collapsible', 'collapsed'],
-	/**
+
+    getValidChild:function(child){
+        return child;
+    },
+
+    /**
 	 * Implementation in sub classes
 	 * @method onNewChild
 	 * @private

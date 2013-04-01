@@ -13,6 +13,17 @@ TestCase("MenuTest", {
     },
 
     "test default type of children should be menu.Item": function(){
+        // given
+        var cmp = this.getMenuComponent();
+
+        // when
+        var child = cmp.child['b'];
+
+        // then
+        assertEquals('menu.Item', child.type);
+    },
+
+    "test should render children inside menu container": function(){
 
     },
 
