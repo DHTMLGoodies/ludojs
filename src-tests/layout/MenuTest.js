@@ -24,6 +24,17 @@ TestCase("MenuTest", {
     },
 
     "test should render children inside menu container": function(){
+        // given
+        var cmp = this.getMenuComponent();
+
+        // when
+        var child = cmp.child['b'];
+
+        // then
+        assertEquals(cmp.getLayoutManager().getMenuContainer().getEl(), child.getEl().parentNode);
+    },
+
+    "test width of horizontal menu items should be wrap": function(){
 
     },
 

@@ -5,6 +5,10 @@ ludo.layout.Menu = new Class({
         this.menuContainer = new ludo.layout.MenuContainer(this);
     },
 
+    getMenuContainer:function(){
+        return this.menuContainer;
+    },
+
     getValidChild:function(child){
         if(ludo.util.isString(child))child = { html : child };
         if(!child.layout || !child.layout.type){

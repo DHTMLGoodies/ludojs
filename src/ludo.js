@@ -4,7 +4,7 @@
  */
 window.ludo = {
     form:{ validator:{} },color:{}, dialog:{},remote:{},tree:{},model:{},tpl:{},video:{},storage:{},
-    grid:{}, effect:{},paging:{},calendar:{},layout:{},progress:{},
+    grid:{}, effect:{},paging:{},calendar:{},layout:{},progress:{},keyboard:{},
     dataSource:{},controller:{},card:{},canvas:{},socket:{},menu:{},view:{},audio:{}
 };
 
