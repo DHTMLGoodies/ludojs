@@ -15,13 +15,14 @@ ludo.menu.Item = new Class({
      Path to menu item icon or text placed in the icon placeholder. If icon contains one
      or more periods(.) it will be consider an image. Otherwise, config.icon will be displayed
      as plain text
-     @config {String} icon
+     @Attribute icon
+     @type String
      @default undefined
      @example
-        icon: 'my-icon.jpg'
+     icon: 'my-icon.jpg'
      Sets icon to my-icon.jpg
      @example
-        icon : '!'
+     icon : '!'
      sets icon to the character "!", i.e. text
      */
     icon:undefined,
@@ -29,7 +30,7 @@ ludo.menu.Item = new Class({
     menuDirection:'horizontal',
     /**
      * Initially disable the menu item
-     * @config {Boolean} disabled
+     * @attribute {Boolean} disabled
      * @default false
      */
     disabled:false,
@@ -38,7 +39,8 @@ ludo.menu.Item = new Class({
     value:undefined,
     /**
      * Text for menu item
-     * @config {String} label
+     * @attribute label
+     * @type String
      * @default '' empty string
      */
     label:'',
@@ -96,6 +98,9 @@ ludo.menu.Item = new Class({
 
     ludoDOM:function () {
         this.parent();
+        this.createMenu();
+        this.registerMenuHandler();
+
         this.getEl().addClass('ludo-menu-item');
         this.getBody().setStyle('cursor', 'pointer');
 
@@ -126,12 +131,22 @@ ludo.menu.Item = new Class({
     getRecord:function () {
         return this.record;
     },
+    registerMenuHandler:function () {
+        var rootMenuComponent = this.getRootMenuComponent();
+        if (rootMenuComponent && rootMenuComponent.getMenuHandler) {
+            this.menuHandler = rootMenuComponent.getMenuHandler();
+            if (this.menuHandler) {
+                this.menuHandler.addChild(this, this.menu, this.getParentMenuItem());
+            }
+        }
+    },
 
     ludoRendered:function () {
         this.parent();
         if (this.isSpacer()) {
             this.getBody().setStyle('visibility', 'hidden');
         }
+        this.parentMenuItem = this.getParentMenuItem();
     },
 
     click:function () {
@@ -141,6 +156,13 @@ ludo.menu.Item = new Class({
         this.getEl().addClass('ludo-menu-item-down');
         this.fireEvent('click', this);
         if (this.fire)this.fireEvent(this.fire, this);
+        var rootMenu = this.getRootMenuComponent();
+        if (rootMenu) {
+            rootMenu.click(this);
+        }
+        if (!this.parentMenuItem) {
+            this.menuHandler.toggleActive(this);
+        }
     },
     select:function () {
         this.getEl().addClass('ludo-menu-item-selected');
@@ -202,7 +224,7 @@ ludo.menu.Item = new Class({
     mouseOver:function () {
         if (!this.disabled) {
             this.getEl().addClass('ludo-menu-item-over');
-            this.fireEvent('enterMenuItem', this);
+            this.showMenu();
         }
     },
 
@@ -210,8 +232,25 @@ ludo.menu.Item = new Class({
         if (!this.disabled) {
             this.getEl().removeClass('ludo-menu-item-over');
             this.getEl().removeClass('ludo-menu-item-down');
-            this.fireEvent('leaveMenuItem', this);
         }
+    },
+    createMenu:function () {
+        if (this.menuItems.length === 0) {
+            return;
+        }
+        this.menu = new ludo.menu.Menu({
+            renderTo:document.body,
+            direction:'vertical',
+            children:this.menuItems,
+            parentMenuItem:this
+        });
+        this.menu.hide();
+
+        var el = this.els.expand = new Element('div');
+        ludo.dom.addClass(el, 'ludo-menu-item-expand');
+        ludo.dom.addClass(el, 'ludo-menu-item-' + this.menuDirection + '-expand');
+        this.getEl().adopt(el);
+
     },
 
     getMeasuredWidth:function () {
@@ -231,5 +270,31 @@ ludo.menu.Item = new Class({
 
     getMenuDirection:function () {
         return this.menuDirection;
+    },
+
+    getRootMenuComponent:function () {
+        var el;
+        if (el = this.getParent()) {
+            if (el.isMenu !== undefined) {
+                if (el.parentMenuItem) {
+                    return el.parentMenuItem.getRootMenuComponent();
+                }
+                return el;
+            }
+            return this;
+        }
+        return undefined;
+    },
+
+    getParentMenuItem:function () {
+        var el;
+        if (el = this.getParent()) {
+            if (el.isMenu) {
+                if (el.parentMenuItem) {
+                    return el.parentMenuItem;
+                }
+            }
+        }
+        return null;
     }
 });

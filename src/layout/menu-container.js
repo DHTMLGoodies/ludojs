@@ -17,6 +17,10 @@ ludo.layout.MenuContainer = new Class({
         });
     },
 
+    getEl:function(){
+        return this.el;
+    },
+
     resize:function(config){
 
     }

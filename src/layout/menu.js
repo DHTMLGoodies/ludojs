@@ -12,6 +12,8 @@ ludo.layout.Menu = new Class({
             child.layout.type = 'Menu'
         }
         if(!child.type)child.type = 'menu.Item';
+        child.renderTo = this.menuContainer.getEl();
+
         return child;
     }
 });

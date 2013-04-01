@@ -1,4 +1,4 @@
-/* Generated Mon Apr 1 13:45:46 CEST 2013 */
+/* Generated Mon Apr 1 14:21:29 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -2938,7 +2938,7 @@ ludo.layout.Base = new Class({
      * @optional
      */
 	addChild:function (child, insertAt, pos) {
-        this.onBeforeNewChild(child);
+        child = this.getValidChild(child);
 		child = this.getNewComponent(child);
 		var parentEl = this.getParentForNewChild();
 		if (insertAt) {
@@ -2991,8 +2991,8 @@ ludo.layout.Base = new Class({
 
 	layoutProperties:['collapsible', 'collapsed'],
 
-    onBeforeNewChild:function(){
-
+    getValidChild:function(child){
+        return child;
     },
 
     /**
@@ -7877,9 +7877,21 @@ ludo.layout.Popup = new Class({
 });/* ../ludojs/src/layout/menu-container.js */
 ludo.layout.MenuContainer = new Class({
     Extends:Events,
+    lm:undefined,
 
-    initialize:function(config){
+    initialize:function(layoutManager){
+        this.lm = layoutManager;
+        this.createDom();
+    },
 
+    createDom:function(){
+        this.el = ludo.dom.create({
+            'css' : {
+                'position' : 'absolute',
+                'display' : 'none'
+            },
+            renderTo:document.body
+        });
     },
 
     resize:function(config){
@@ -7889,12 +7901,18 @@ ludo.layout.MenuContainer = new Class({
 ludo.layout.Menu = new Class({
     Extends: ludo.layout.Base,
 
-    onBeforeNewChild:function(child){
+    onCreate:function(){
+        this.menuContainer = new ludo.layout.MenuContainer(this);
+    },
+
+    getValidChild:function(child){
+        if(ludo.util.isString(child))child = { html : child };
         if(!child.layout || !child.layout.type){
             child.layout = child.layout || {};
             child.layout.type = 'Menu'
         }
         if(!child.type)child.type = 'menu.Item';
+        return child;
     }
 });/* ../ludojs/src/layout/menu-horizontal.js */
 ludo.layout.MenuHorizontal = new Class({
@@ -19009,11 +19027,11 @@ ludo.menu.Item = new Class({
             if (this.menuDirection === 'horizontal') {
                 this.getEl().setStyle('width', 1);
             }
-            this.getEl().addClass('ludo-menu-item-spacer-' + this.getParent().getDirection());
+            this.getEl().addClass('ludo-menu-item-spacer-' + this.menuDirection);
         }
 
         if (this.getParent()) {
-            this.getEl().addClass('ludo-menu-item-' + this.getParent().getDirection());
+            this.getEl().addClass('ludo-menu-item-' + this.menuDirection);
         }
 
         if (this.icon) {
