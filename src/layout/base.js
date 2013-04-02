@@ -17,6 +17,7 @@ ludo.layout.Base = new Class({
 	},
 
 	initialize:function (view) {
+        this.id = String.uniqueID();
 		this.view = view;
 		this.onCreate();
 	},

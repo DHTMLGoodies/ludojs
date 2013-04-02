@@ -30,7 +30,12 @@ require_once("../includes/demo-header.php");
                     orientation:'horizontal'
                 },
                 children:[
-                    "File","Edit"
+                    { html : "File",
+                        children:[
+                            "New project", "Save"
+                        ]
+                    },
+                    "Edit","View","Navigate"
                 ]
             }
         ]

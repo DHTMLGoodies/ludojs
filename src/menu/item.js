@@ -68,8 +68,12 @@ ludo.menu.Item = new Class({
 
     ludoConfig:function (config) {
         if (config.children) {
-            this.menuItems = config.children;
-            config.children = [];
+            for(var i=0;i<config.children.length;i++){
+                if(ludo.util.isString(config.children[i])){
+                    config.children[i] = { html : config.children[i] };
+                }
+                config.children[i].hidden = true;
+            }
         }
         this.setConfigParams(config, ['menuDirection', 'icon', 'record', 'value', 'label', 'action', 'disabled', 'fire']);
 
