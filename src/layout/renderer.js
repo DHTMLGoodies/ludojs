@@ -8,12 +8,13 @@ ludo.layout.Renderer = new Class({
 	view:undefined,
 	options:['width', 'height',
 		'rightOf', 'leftOf', 'below', 'above',
+		'rightOrLeftOf', 'leftOrRightOf',
 		'alignLeft', 'alignRight', 'alignTop', 'alignBottom',
 		'sameHeightAs', 'sameWidthAs',
-		'offsetWidth','offsetHeight',
+		'offsetWidth', 'offsetHeight',
 		'centerIn',
-		'left','top',
-		'offsetX', 'offsetY'],
+		'left', 'top',
+		'offsetX', 'offsetY', 'fitVerticalViewPort'],
 	fn:undefined,
 	viewport:{
 		x:0, y:0, width:0, height:0
@@ -34,18 +35,18 @@ ludo.layout.Renderer = new Class({
 		this.fixReferences();
 		this.setDefaultProperties();
 		this.view.addEvent('show', this.resize.bind(this));
-        ludo.dom.clearCache();
+		ludo.dom.clearCache();
 		this.addResizeEvent();
 	},
 
 	fixReferences:function () {
 		var el;
 		var hasReferences = false;
-		if(this.rendering.x){
+		if (this.rendering.x) {
 			this.rendering.left = this.rendering.x;
 			this.rendering.x = undefined;
 		}
-		if(this.rendering.y){
+		if (this.rendering.y) {
 			this.rendering.top = this.rendering.y;
 			this.rendering.y = undefined;
 		}
@@ -58,6 +59,7 @@ ludo.layout.Renderer = new Class({
 				case 'height':
 				case 'left':
 				case 'top':
+				case 'fitVerticalViewPort':
 					break;
 				default:
 					el = undefined;
@@ -67,9 +69,9 @@ ludo.layout.Renderer = new Class({
 
 						if (typeof val === 'string') {
 							var view;
-							if(val === 'parent'){
+							if (val === 'parent') {
 								view = this.view.getParent();
-							}else{
+							} else {
 								view = ludo.get(val);
 							}
 							if (view) {
@@ -99,8 +101,8 @@ ludo.layout.Renderer = new Class({
 	},
 
 	addResizeEvent:function () {
-        // todo no resize should be done for absolute positioned views with a width. refactor the next line
-        if(this.view.isWindow)return;
+		// todo no resize should be done for absolute positioned views with a width. refactor the next line
+		if (this.view.isWindow)return;
 		var node = this.view.getEl().parentNode;
 		if (!node || !node.tagName)return;
 		if (node.tagName.toLowerCase() !== 'body') {
@@ -113,12 +115,13 @@ ludo.layout.Renderer = new Class({
 
 	buildResizeFn:function () {
 		var parent = this.view.getEl().parentNode;
-		if (!parent)this.fn = function () {
-		};
+		if (!parent)this.fn = function () {};
 		var fns = [];
+		var fnNames = [];
 		for (var i = 0; i < this.options.length; i++) {
 			if (this.rendering[this.options[i]] !== undefined) {
 				fns.push(this.getFnFor(this.options[i], this.rendering[this.options[i]]));
+				fnNames.push(this.options[i]);
 			}
 		}
 		this.fn = function () {
@@ -128,10 +131,11 @@ ludo.layout.Renderer = new Class({
 		}
 	},
 
-	getFnFor:function (option, value) {
+	getFnFor:function (option, value, index) {
 		var c = this.coordinates;
 
 		switch (option) {
+
 			case 'height':
 				if (value === 'matchParent') {
 					return function (view, renderer) {
@@ -181,6 +185,22 @@ ludo.layout.Renderer = new Class({
 			case 'leftOf':
 				return function () {
 					c.right = value.getPosition().x + value.offsetWidth;
+				};
+			case 'leftOrRightOf':
+				return function () {
+					var x = value.getPosition().x - c.width;
+					if (x - c.width < 0) {
+						x += (value.offsetWidth + c.width);
+					}
+					c.left = x;
+				};
+			case 'rightOrLeftOf' :
+				return function (view, renderer) {
+					var val = value.getPosition().x + value.offsetWidth;
+					if (val + c.width > renderer.viewport.width) {
+						val -= (value.offsetWidth + c.width);
+					}
+					c.left = val;
 				};
 			case 'above':
 				return function () {
@@ -254,6 +274,15 @@ ludo.layout.Renderer = new Class({
 				return function () {
 					c.top = this.rendering[option];
 				};
+			case 'fitVerticalViewPort':
+				return function (view, renderer) {
+					if (c.height) {
+						var pos = c.top || view.getEl().getPosition().y;
+						if (pos + c.height > renderer.viewport.height) {
+							c.top = renderer.viewport.height - c.height;
+						}
+					}
+				};
 			default:
 				return function () {
 				};
@@ -281,9 +310,7 @@ ludo.layout.Renderer = new Class({
 			if (this.coordinates[k] !== undefined && this.coordinates[k] !== this.lastCoordinates[k])this.view.getEl().style[k] = c[k] + 'px';
 		}
 
-
-
-        if(this.view.children.length > 0)this.view.getLayoutManager().resizeChildren();
+		if (this.view.children.length > 0)this.view.getLayoutManager().resizeChildren();
 		this.lastCoordinates = Object.clone(c);
 	},
 
@@ -335,10 +362,10 @@ ludo.layout.Renderer = new Class({
 		};
 	},
 
-	getSize:function(){
+	getSize:function () {
 		return {
-			x : this.coordinates.width,
-			y : this.coordinates.height
+			x:this.coordinates.width,
+			y:this.coordinates.height
 		}
 	}
 });

@@ -11,6 +11,10 @@ ludo.util = {
 		return typeof(obj) == 'object';
 	},
 
+	isBool:function (obj) {
+		return typeof(obj) == 'boolean';
+	},
+
 	isString:function (obj) {
 		return typeof(obj) == 'string';
 	},

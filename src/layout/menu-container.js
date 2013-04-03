@@ -1,5 +1,6 @@
 ludo.layout.MenuContainer = new Class({
 	Extends:Events,
+	type:'layout.MenuContainer',
 	lm:undefined,
 	layout:{
 		width:'wrap',
@@ -19,16 +20,13 @@ ludo.layout.MenuContainer = new Class({
 				this.layout.below = this.lm.view;
 				this.layout.alignLeft = this.lm.view;
 			} else {
-				this.layout.leftOrRightOf = this.lm.view;
-				this.layout.rightOf = this.lm.view;
+				this.layout.rightOrLeftOf = this.lm.view;
 				this.layout.alignTop = this.lm.view;
-				this.layout.fitVerticalViewPort = true;
 			}
-
-
-			this.layout.height = 'wrap';
 			this.layout.height = 'wrap';
 		}
+
+		this.layout.fitVerticalViewPort = true;
 	},
 
 	createDom:function () {
@@ -56,7 +54,6 @@ ludo.layout.MenuContainer = new Class({
 	},
 
 	resize:function (config) {
-
 		if (config.width) {
 			this.getEl().style.width = config.width + 'px';
 		}
@@ -67,8 +64,10 @@ ludo.layout.MenuContainer = new Class({
 	},
 
 	show:function () {
-		if (this.getEl().style.display === '')return;
 		this.getEl().style.zIndex = (ludo.util.getNewZIndex(this) + 100);
+
+		if (this.getEl().style.display === '')return;
+
 		this.getEl().style.display = '';
 		for (var i = 0; i < this.lm.view.children.length; i++) {
 			this.lm.view.children[i].show();
@@ -85,6 +84,7 @@ ludo.layout.MenuContainer = new Class({
 	},
 
 	setFixedRenderingWidth:function(){
+		this.layout.width = undefined;
 		var r = this.getRenderer();
 		r.clearFn();
 		r.rendering.width = r.getSize().x;
@@ -92,6 +92,7 @@ ludo.layout.MenuContainer = new Class({
 		for (var i = 0; i < this.lm.view.children.length; i++) {
 			var cr = this.lm.view.children[i].getLayoutManager().getRenderer();
 			cr.clearFn();
+
 			cr.rendering.width = r.rendering.width;
 			this.resizeChildren();
 		}

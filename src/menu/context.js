@@ -28,7 +28,9 @@ ludo.menu.Context = new Class({
 		type:'Menu',
 		orientation:'vertical',
 		width:'wrap',
-		height:'wrap'
+		height:'wrap',
+		active:true,
+		isContext:true
 	},
 
 
@@ -106,6 +108,7 @@ ludo.menu.Context = new Class({
 	},
 
 	show:function (e) {
+
 		if (this.selector) {
 			var domEl = this.getValidDomElement(e.target);
 			if (!domEl) {
@@ -120,6 +123,7 @@ ludo.menu.Context = new Class({
 				this.selectedRecord = r;
 			}
 		}
+		this.getLayoutManager().hideAllMenus();
 		this.parent();
 		if (!this.getParent()) {
 			var el = this.getEl();
@@ -144,10 +148,16 @@ ludo.menu.Context = new Class({
 			y:e.page.y
 		};
 		var clientWidth = document.body.clientWidth;
-		var ludo = ret.x + this.getEl().getSize().x;
+		var clientHeight = document.body.clientHeight;
+		var size = this.getEl().getSize();
+		var x = ret.x + size.x;
+		var y = ret.y + size.y;
 
-		if (ludo > clientWidth) {
-			ret.x -= (ludo - clientWidth);
+		if (x > clientWidth) {
+			ret.x -= (x - clientWidth);
+		}
+		if (y > clientHeight) {
+			ret.y -= (y - clientHeight);
 		}
 		return ret;
 	},

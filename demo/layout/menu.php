@@ -31,7 +31,7 @@ require_once("../includes/demo-header.php");
         },
         contextMenu:[
             {
-                children:['Item 1','Item 2', 'Item 3']
+                children:['Item 1', 'Item 2', 'Item 3', { html:'Item 4', children:['Item 4.1', 'Item 4.2']}]
             }
         ],
         children:[
@@ -46,23 +46,29 @@ require_once("../includes/demo-header.php");
                     orientation:'horizontal'
                 },
                 containerCss:{
-                    'border-bottom' : '1px solid #d7d7d7'
+                    'border-bottom':'1px solid #d7d7d7'
                 },
                 children:[
                     { html:"File", name:'file',
                         children:[
                             { html:"New project", name:'newproject', children:[
-                                { html : 'PHP', children:['Pear','Dependency Injection','Singleton'] }, 'Javascript', 'Java', 'Perl'
+                                { html:'PHP', children:['Pear', 'Dependency Injection', 'Singleton'] },
+                                'Javascript',
+                                'Java',
+                                'Perl'
                             ] },
                             "Save",
                             {
                                 type:'form.Checkbox', label:'Hello', layout:{ width:250, height:25 }
                             },
                             {
+                                'label':'Save as', disabled:true
+                            },
+                            {
                                 type:'calendar.Calendar',
                                 containerCss:{
-                                    'background-color' : '#FFF',
-                                    'border-top' : '1px solid #d7d7d7'
+                                    'background-color':'#FFF',
+                                    'border-top':'1px solid #d7d7d7'
                                 },
                                 layout:{
                                     width:'matchParent',
@@ -89,12 +95,20 @@ require_once("../includes/demo-header.php");
                 },
                 containerCss:{
                     border:0,
-                    'border-right' : '1px solid #d7d7d7'
+                    'border-right':'1px solid #d7d7d7'
                 },
                 children:[
                     {
-                        html : "Front page", hidden:false
-                    }, "Page 2", "Page3"
+                        html:"Front page",
+                        hidden:false
+                    },
+                    {
+                        html:"Pages",
+                        children:[
+                            'Page 1.1', 'Page 1.2'
+                        ]
+                    },
+                    "Page3"
                 ]
             },
             {
@@ -105,15 +119,15 @@ require_once("../includes/demo-header.php");
                     fillDown:true
                 },
                 containerCss:{
-                    'background-color' : '#FFF'
+                    'background-color':'#FFF'
                 },
                 css:{
-                    'overflow-y' : 'auto',
+                    'overflow-y':'auto',
                     padding:5
                 },
                 dataSource:{
                     type:'dataSource.HTML',
-                    url : '../data-source/article.php'
+                    url:'../data-source/article.php'
                 }
             }
         ]

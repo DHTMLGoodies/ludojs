@@ -277,11 +277,27 @@ TestCase("MenuTest", {
         var grandChild = c.child['b'].child['ba'].child['baa'];
 
         // then
-        assertEquals(c.child['b'].child['ba'], grandChild.getMenuContainer().layout.leftOrRightOf);
+        assertEquals(c.child['b'].child['ba'], grandChild.getMenuContainer().layout.rightOrLeftOf);
         assertEquals(c.child['b'].child['ba'], grandChild.getMenuContainer().layout.alignTop);
         assertTrue(grandChild.getMenuContainer().layout.fitVerticalViewPort);
 
     },
+
+	"test menu containers of sub items should have fitVerticalViewPort set to true": function(){
+        // given
+        var c = this.getMenuComponent();
+
+		// when
+		c.child['b'].click();
+		c.child['b'].child['ba'].mouseOver();
+
+		var child = c.child['b'].child['ba'].child['baa'];
+
+		// then
+		assertEquals('layout.MenuContainer', child.getMenuContainer().type);
+		assertTrue(child.getMenuContainer().layout.fitVerticalViewPort);
+		assertTrue(child.getMenuContainer().getRenderer().rendering.fitVerticalViewPort);
+	},
 
     "test should be able to define keyboard shortcuts":function () {
 
@@ -475,6 +491,17 @@ TestCase("MenuTest", {
 
 
 	},
+	"test classes extending menu items should have correct layout settings": function(){
+        // given
+        var c = this.getMenuComponent();
+
+		// when
+		var child = c.child['custom'];
+
+		// then
+		assertEquals('wrap', child.layout.height);
+
+	},
 
 	"test context menu should have correct layout settings": function(){
 		// given
@@ -485,9 +512,41 @@ TestCase("MenuTest", {
 		assertEquals('vertical', cm.layout.orientation.toLowerCase());
 	},
 
+	"test context menu should expand sub menus on mouse over": function(){
+		// given
+		var c = this.getContextMenu();
 
+		// when
+		c.child['a'].mouseOver();
+
+		// then
+		assertEquals('', c.child['a'].child['aa'].getMenuContainer().getEl().style.display);
+
+	},
+
+	getContextMenu:function(){
+		return new ludo.menu.Context({
+
+			children:[
+				{ name:'a', html : 'Item 1', children:[
+					{ name: 'aa', html : 'Item 1.1 '},
+					{ name: 'ab', html : 'Item 1.2 '},
+					{ name: 'ac', html : 'Item 1.2 '}
+				]},
+				'b','c'
+			]
+		})
+
+	},
 
     getMenuComponent:function (layout) {
+
+		if(!ludo.CustomItem){
+			ludo.CustomItem = new Class({
+				Extends: ludo.menu.Item,
+				type:'CustomItem'
+			})
+		}
 		layout = layout || {};
 		layout.type = 'menu';
 		layout.orientation = layout.orientation || 'horizontal';
@@ -521,7 +580,8 @@ TestCase("MenuTest", {
 
                 ]},
                 { name:'d', html:'D'},
-                { name:'e', html:'E'}
+                { name:'e', html:'E'},
+				{ name:'custom', type:'CustomItem' }
             ]
 
         });

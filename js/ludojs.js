@@ -1,4 +1,4 @@
-/* Generated Wed Apr 3 19:00:12 CEST 2013 */
+/* Generated Wed Apr 3 21:28:16 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -3540,12 +3540,13 @@ ludo.layout.Renderer = new Class({
 	view:undefined,
 	options:['width', 'height',
 		'rightOf', 'leftOf', 'below', 'above',
+		'rightOrLeftOf', 'leftOrRightOf',
 		'alignLeft', 'alignRight', 'alignTop', 'alignBottom',
 		'sameHeightAs', 'sameWidthAs',
-		'offsetWidth','offsetHeight',
+		'offsetWidth', 'offsetHeight',
 		'centerIn',
-		'left','top',
-		'offsetX', 'offsetY'],
+		'left', 'top',
+		'offsetX', 'offsetY', 'fitVerticalViewPort'],
 	fn:undefined,
 	viewport:{
 		x:0, y:0, width:0, height:0
@@ -3566,18 +3567,18 @@ ludo.layout.Renderer = new Class({
 		this.fixReferences();
 		this.setDefaultProperties();
 		this.view.addEvent('show', this.resize.bind(this));
-        ludo.dom.clearCache();
+		ludo.dom.clearCache();
 		this.addResizeEvent();
 	},
 
 	fixReferences:function () {
 		var el;
 		var hasReferences = false;
-		if(this.rendering.x){
+		if (this.rendering.x) {
 			this.rendering.left = this.rendering.x;
 			this.rendering.x = undefined;
 		}
-		if(this.rendering.y){
+		if (this.rendering.y) {
 			this.rendering.top = this.rendering.y;
 			this.rendering.y = undefined;
 		}
@@ -3590,6 +3591,7 @@ ludo.layout.Renderer = new Class({
 				case 'height':
 				case 'left':
 				case 'top':
+				case 'fitVerticalViewPort':
 					break;
 				default:
 					el = undefined;
@@ -3599,9 +3601,9 @@ ludo.layout.Renderer = new Class({
 
 						if (typeof val === 'string') {
 							var view;
-							if(val === 'parent'){
+							if (val === 'parent') {
 								view = this.view.getParent();
-							}else{
+							} else {
 								view = ludo.get(val);
 							}
 							if (view) {
@@ -3631,8 +3633,8 @@ ludo.layout.Renderer = new Class({
 	},
 
 	addResizeEvent:function () {
-        // todo no resize should be done for absolute positioned views with a width. refactor the next line
-        if(this.view.isWindow)return;
+		// todo no resize should be done for absolute positioned views with a width. refactor the next line
+		if (this.view.isWindow)return;
 		var node = this.view.getEl().parentNode;
 		if (!node || !node.tagName)return;
 		if (node.tagName.toLowerCase() !== 'body') {
@@ -3645,12 +3647,13 @@ ludo.layout.Renderer = new Class({
 
 	buildResizeFn:function () {
 		var parent = this.view.getEl().parentNode;
-		if (!parent)this.fn = function () {
-		};
+		if (!parent)this.fn = function () {};
 		var fns = [];
+		var fnNames = [];
 		for (var i = 0; i < this.options.length; i++) {
 			if (this.rendering[this.options[i]] !== undefined) {
 				fns.push(this.getFnFor(this.options[i], this.rendering[this.options[i]]));
+				fnNames.push(this.options[i]);
 			}
 		}
 		this.fn = function () {
@@ -3660,10 +3663,11 @@ ludo.layout.Renderer = new Class({
 		}
 	},
 
-	getFnFor:function (option, value) {
+	getFnFor:function (option, value, index) {
 		var c = this.coordinates;
 
 		switch (option) {
+
 			case 'height':
 				if (value === 'matchParent') {
 					return function (view, renderer) {
@@ -3713,6 +3717,22 @@ ludo.layout.Renderer = new Class({
 			case 'leftOf':
 				return function () {
 					c.right = value.getPosition().x + value.offsetWidth;
+				};
+			case 'leftOrRightOf':
+				return function () {
+					var x = value.getPosition().x - c.width;
+					if (x - c.width < 0) {
+						x += (value.offsetWidth + c.width);
+					}
+					c.left = x;
+				};
+			case 'rightOrLeftOf' :
+				return function (view, renderer) {
+					var val = value.getPosition().x + value.offsetWidth;
+					if (val + c.width > renderer.viewport.width) {
+						val -= (value.offsetWidth + c.width);
+					}
+					c.left = val;
 				};
 			case 'above':
 				return function () {
@@ -3786,6 +3806,15 @@ ludo.layout.Renderer = new Class({
 				return function () {
 					c.top = this.rendering[option];
 				};
+			case 'fitVerticalViewPort':
+				return function (view, renderer) {
+					if (c.height) {
+						var pos = c.top || view.getEl().getPosition().y;
+						if (pos + c.height > renderer.viewport.height) {
+							c.top = renderer.viewport.height - c.height;
+						}
+					}
+				};
 			default:
 				return function () {
 				};
@@ -3813,9 +3842,7 @@ ludo.layout.Renderer = new Class({
 			if (this.coordinates[k] !== undefined && this.coordinates[k] !== this.lastCoordinates[k])this.view.getEl().style[k] = c[k] + 'px';
 		}
 
-
-
-        if(this.view.children.length > 0)this.view.getLayoutManager().resizeChildren();
+		if (this.view.children.length > 0)this.view.getLayoutManager().resizeChildren();
 		this.lastCoordinates = Object.clone(c);
 	},
 
@@ -3867,10 +3894,10 @@ ludo.layout.Renderer = new Class({
 		};
 	},
 
-	getSize:function(){
+	getSize:function () {
 		return {
-			x : this.coordinates.width,
-			y : this.coordinates.height
+			x:this.coordinates.width,
+			y:this.coordinates.height
 		}
 	}
 });/* ../ludojs/src/tpl/parser.js */
@@ -4175,6 +4202,10 @@ ludo.util = {
 
 	isObject:function (obj) {
 		return typeof(obj) == 'object';
+	},
+
+	isBool:function (obj) {
+		return typeof(obj) == 'boolean';
 	},
 
 	isString:function (obj) {
@@ -7886,6 +7917,7 @@ ludo.layout.Popup = new Class({
 });/* ../ludojs/src/layout/menu-container.js */
 ludo.layout.MenuContainer = new Class({
 	Extends:Events,
+	type:'layout.MenuContainer',
 	lm:undefined,
 	layout:{
 		width:'wrap',
@@ -7905,16 +7937,13 @@ ludo.layout.MenuContainer = new Class({
 				this.layout.below = this.lm.view;
 				this.layout.alignLeft = this.lm.view;
 			} else {
-				this.layout.leftOrRightOf = this.lm.view;
-				this.layout.rightOf = this.lm.view;
+				this.layout.rightOrLeftOf = this.lm.view;
 				this.layout.alignTop = this.lm.view;
-				this.layout.fitVerticalViewPort = true;
 			}
-
-
-			this.layout.height = 'wrap';
 			this.layout.height = 'wrap';
 		}
+
+		this.layout.fitVerticalViewPort = true;
 	},
 
 	createDom:function () {
@@ -7942,7 +7971,6 @@ ludo.layout.MenuContainer = new Class({
 	},
 
 	resize:function (config) {
-
 		if (config.width) {
 			this.getEl().style.width = config.width + 'px';
 		}
@@ -7953,8 +7981,10 @@ ludo.layout.MenuContainer = new Class({
 	},
 
 	show:function () {
-		if (this.getEl().style.display === '')return;
 		this.getEl().style.zIndex = (ludo.util.getNewZIndex(this) + 100);
+
+		if (this.getEl().style.display === '')return;
+
 		this.getEl().style.display = '';
 		for (var i = 0; i < this.lm.view.children.length; i++) {
 			this.lm.view.children[i].show();
@@ -7971,6 +8001,7 @@ ludo.layout.MenuContainer = new Class({
 	},
 
 	setFixedRenderingWidth:function(){
+		this.layout.width = undefined;
 		var r = this.getRenderer();
 		r.clearFn();
 		r.rendering.width = r.getSize().x;
@@ -7978,6 +8009,7 @@ ludo.layout.MenuContainer = new Class({
 		for (var i = 0; i < this.lm.view.children.length; i++) {
 			var cr = this.lm.view.children[i].getLayoutManager().getRenderer();
 			cr.clearFn();
+
 			cr.rendering.width = r.rendering.width;
 			this.resizeChildren();
 		}
@@ -8037,7 +8069,6 @@ ludo.layout.Menu = new Class({
 			child.type = 'menu.Item';
 		}
 		if (child.type === 'menu.Item') {
-			child.layout.height = 'wrap';
 			child.orientation = this.view.layout.orientation;
 		}
 
@@ -8052,7 +8083,6 @@ ludo.layout.Menu = new Class({
 
 	getParentForNewChild:function () {
 		if (this.parentForNewChild === undefined) {
-
 			var isTop = !this.view.parentComponent || (this.view.parentComponent && this.view.parentComponent.layout.type.toLowerCase() !== 'menu');
 			var p = isTop ? this.parent() : this.getMenuContainer().getBody();
 
@@ -8189,6 +8219,9 @@ ludo.layout.Menu = new Class({
 	hideAllMenus:function () {
 		this.hideMenus();
 		this.clearHighlightedPath();
+		if(this.view.layout.isContext){
+			this.view.getEl().style.display='none';
+		}
 	},
 
 	hideMenus:function (except) {
@@ -8225,7 +8258,9 @@ ludo.layout.Menu = new Class({
 			}
 			if (!el.getParent('.ludo-menu')) {
 				this.hideAllMenus();
-				this.active = false;
+				if(this.view.layout.orientation === 'horizontal'){
+					this.active = false;
+				}
 			}
 		}
 	}
@@ -19193,6 +19228,11 @@ ludo.menu.Item = new Class({
     menuHandler:undefined,
     parentMenuItem:undefined,
     value:undefined,
+
+	layout:{
+		height:'wrap'
+	},
+
     /**
      * Text for menu item
      * @config {String} label
@@ -19466,7 +19506,9 @@ ludo.menu.Context = new Class({
 		type:'Menu',
 		orientation:'vertical',
 		width:'wrap',
-		height:'wrap'
+		height:'wrap',
+		active:true,
+		isContext:true
 	},
 
 
@@ -19544,6 +19586,7 @@ ludo.menu.Context = new Class({
 	},
 
 	show:function (e) {
+
 		if (this.selector) {
 			var domEl = this.getValidDomElement(e.target);
 			if (!domEl) {
@@ -19558,6 +19601,7 @@ ludo.menu.Context = new Class({
 				this.selectedRecord = r;
 			}
 		}
+		this.getLayoutManager().hideAllMenus();
 		this.parent();
 		if (!this.getParent()) {
 			var el = this.getEl();
@@ -19582,10 +19626,16 @@ ludo.menu.Context = new Class({
 			y:e.page.y
 		};
 		var clientWidth = document.body.clientWidth;
-		var ludo = ret.x + this.getEl().getSize().x;
+		var clientHeight = document.body.clientHeight;
+		var size = this.getEl().getSize();
+		var x = ret.x + size.x;
+		var y = ret.y + size.y;
 
-		if (ludo > clientWidth) {
-			ret.x -= (ludo - clientWidth);
+		if (x > clientWidth) {
+			ret.x -= (x - clientWidth);
+		}
+		if (y > clientHeight) {
+			ret.y -= (y - clientHeight);
 		}
 		return ret;
 	},

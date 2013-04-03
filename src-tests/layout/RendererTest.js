@@ -1,5 +1,12 @@
 TestCase("Renderer", {
 
+	setUp:function(){
+		document.body.style.margin = 0;
+		document.body.style.padding = 0;
+		document.documentElement.style.margin = 0;
+		document.documentElement.style.padding = 0;
+	},
+
 	"test should be able to define renderer for a view":function () {
 		// given
 		var v = new ludo.View({
@@ -39,6 +46,43 @@ TestCase("Renderer", {
 		// then
 		assertEquals(250, w.layout.left);
 		assertEquals(50, w.layout.top);
+	},
+
+	"test should be able to specify leftOrRightOf":function () {
+		// given
+		new ludo.View({
+			renderTo:document.body,
+			layout:{
+				type:'relative'
+			},
+			children:[
+				{
+					html:'View a',
+					id:'a',
+					layout:{
+						alignParentLeft:true,
+						width:300
+					},
+					containerCss:{
+						margin:0,padding:0,border:0
+					}
+				}
+			]
+		});
+
+		var v2 = new ludo.View({
+			renderTo:document.body,
+			layout:{
+				leftOrRightOf:ludo.get('a')
+			}
+		});
+
+		// then
+		assertEquals('300px', v2.getEl().style.left);
+
+	},
+
+	"test should be able to fit inside viewport": function(){
 
 
 	},

@@ -35,6 +35,11 @@ ludo.menu.Item = new Class({
     menuHandler:undefined,
     parentMenuItem:undefined,
     value:undefined,
+
+	layout:{
+		height:'wrap'
+	},
+
     /**
      * Text for menu item
      * @config {String} label
