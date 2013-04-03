@@ -1,4 +1,4 @@
-/* Generated Mon Apr 1 22:58:48 CEST 2013 */
+/* Generated Wed Apr 3 14:08:19 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -2919,6 +2919,7 @@ ludo.layout.Base = new Class({
 	},
 
 	initialize:function (view) {
+        this.id = String.uniqueID();
 		this.view = view;
 		this.onCreate();
 	},
@@ -7873,66 +7874,6 @@ ludo.layout.Popup = new Class({
 			if(!c[i].isHidden())c[i].getLayoutManager().getRenderer().resize();
 		}
 	}
-});/* ../ludojs/src/layout/menu-container.js */
-ludo.layout.MenuContainer = new Class({
-    Extends:Events,
-    lm:undefined,
-
-    initialize:function(layoutManager){
-        this.lm = layoutManager;
-        this.createDom();
-    },
-
-    createDom:function(){
-        this.el = ludo.dom.create({
-            'css' : {
-                'position' : 'absolute',
-                'display' : 'none'
-            },
-            renderTo:document.body
-        });
-    },
-
-    getEl:function(){
-        return this.el;
-    },
-
-    resize:function(config){
-
-    }
-});/* ../ludojs/src/layout/menu.js */
-ludo.layout.Menu = new Class({
-    Extends: ludo.layout.Base,
-
-    onCreate:function(){
-        this.menuContainer = new ludo.layout.MenuContainer(this);
-    },
-
-    getMenuContainer:function(){
-        return this.menuContainer;
-    },
-
-    getValidChild:function(child){
-        if(ludo.util.isString(child))child = { html : child };
-        if(!child.layout || !child.layout.type){
-            child.layout = child.layout || {};
-            child.layout.type = 'Menu'
-        }
-        if(!child.type)child.type = 'menu.Item';
-        child.renderTo = this.menuContainer.getEl();
-
-        return child;
-    }
-});/* ../ludojs/src/layout/menu-horizontal.js */
-ludo.layout.MenuHorizontal = new Class({
-    Extends: ludo.layout.Menu,
-
-    onNewChild:function(child){
-        child.getEl().style.position = 'absolute';
-    }
-});/* ../ludojs/src/layout/menu-vertical.js */
-ludo.layout.MenuVertical = new Class({
-    Extends: ludo.layout.Menu
 });/* ../ludojs/src/layout/collapse-bar.js */
 ludo.layout.CollapseBar = new Class({
 	Extends: ludo.View,
@@ -18927,7 +18868,7 @@ ludo.menu.MenuHandler = new Class({
             this.isActive = false;
         }
     }
-});/* ../ludojs/src/menu/item.js */
+});/* ../ludojs/src/menu/menu-item.js */
 /**
  * Class for menu items. MenuItems are created dynamically from config object(children of ludo.menu.Menu or ludo.menu.Context)
  * @namespace menu
@@ -18945,13 +18886,14 @@ ludo.menu.Item = new Class({
      Path to menu item icon or text placed in the icon placeholder. If icon contains one
      or more periods(.) it will be consider an image. Otherwise, config.icon will be displayed
      as plain text
-     @config {String} icon
+     @Attribute icon
+     @type String
      @default undefined
      @example
-        icon: 'my-icon.jpg'
+     icon: 'my-icon.jpg'
      Sets icon to my-icon.jpg
      @example
-        icon : '!'
+     icon : '!'
      sets icon to the character "!", i.e. text
      */
     icon:undefined,
@@ -18959,7 +18901,7 @@ ludo.menu.Item = new Class({
     menuDirection:'horizontal',
     /**
      * Initially disable the menu item
-     * @config {Boolean} disabled
+     * @attribute {Boolean} disabled
      * @default false
      */
     disabled:false,
@@ -18968,7 +18910,8 @@ ludo.menu.Item = new Class({
     value:undefined,
     /**
      * Text for menu item
-     * @config {String} label
+     * @attribute label
+     * @type String
      * @default '' empty string
      */
     label:'',
@@ -19026,6 +18969,9 @@ ludo.menu.Item = new Class({
 
     ludoDOM:function () {
         this.parent();
+        this.createMenu();
+        this.registerMenuHandler();
+
         this.getEl().addClass('ludo-menu-item');
         this.getBody().setStyle('cursor', 'pointer');
 
@@ -19056,12 +19002,22 @@ ludo.menu.Item = new Class({
     getRecord:function () {
         return this.record;
     },
+    registerMenuHandler:function () {
+        var rootMenuComponent = this.getRootMenuComponent();
+        if (rootMenuComponent && rootMenuComponent.getMenuHandler) {
+            this.menuHandler = rootMenuComponent.getMenuHandler();
+            if (this.menuHandler) {
+                this.menuHandler.addChild(this, this.menu, this.getParentMenuItem());
+            }
+        }
+    },
 
     ludoRendered:function () {
         this.parent();
         if (this.isSpacer()) {
             this.getBody().setStyle('visibility', 'hidden');
         }
+        this.parentMenuItem = this.getParentMenuItem();
     },
 
     click:function () {
@@ -19071,6 +19027,13 @@ ludo.menu.Item = new Class({
         this.getEl().addClass('ludo-menu-item-down');
         this.fireEvent('click', this);
         if (this.fire)this.fireEvent(this.fire, this);
+        var rootMenu = this.getRootMenuComponent();
+        if (rootMenu) {
+            rootMenu.click(this);
+        }
+        if (!this.parentMenuItem) {
+            this.menuHandler.toggleActive(this);
+        }
     },
     select:function () {
         this.getEl().addClass('ludo-menu-item-selected');
@@ -19132,7 +19095,7 @@ ludo.menu.Item = new Class({
     mouseOver:function () {
         if (!this.disabled) {
             this.getEl().addClass('ludo-menu-item-over');
-            this.fireEvent('enterMenuItem', this);
+            this.showMenu();
         }
     },
 
@@ -19140,8 +19103,25 @@ ludo.menu.Item = new Class({
         if (!this.disabled) {
             this.getEl().removeClass('ludo-menu-item-over');
             this.getEl().removeClass('ludo-menu-item-down');
-            this.fireEvent('leaveMenuItem', this);
         }
+    },
+    createMenu:function () {
+        if (this.menuItems.length === 0) {
+            return;
+        }
+        this.menu = new ludo.menu.Menu({
+            renderTo:document.body,
+            direction:'vertical',
+            children:this.menuItems,
+            parentMenuItem:this
+        });
+        this.menu.hide();
+
+        var el = this.els.expand = new Element('div');
+        ludo.dom.addClass(el, 'ludo-menu-item-expand');
+        ludo.dom.addClass(el, 'ludo-menu-item-' + this.menuDirection + '-expand');
+        this.getEl().adopt(el);
+
     },
 
     getMeasuredWidth:function () {
@@ -19161,6 +19141,32 @@ ludo.menu.Item = new Class({
 
     getMenuDirection:function () {
         return this.menuDirection;
+    },
+
+    getRootMenuComponent:function () {
+        var el;
+        if (el = this.getParent()) {
+            if (el.isMenu !== undefined) {
+                if (el.parentMenuItem) {
+                    return el.parentMenuItem.getRootMenuComponent();
+                }
+                return el;
+            }
+            return this;
+        }
+        return undefined;
+    },
+
+    getParentMenuItem:function () {
+        var el;
+        if (el = this.getParent()) {
+            if (el.isMenu) {
+                if (el.parentMenuItem) {
+                    return el.parentMenuItem;
+                }
+            }
+        }
+        return null;
     }
 });/* ../ludojs/src/menu/menu.js */
 /**
@@ -22133,6 +22139,46 @@ ludo.form.CancelButton = new Class({
             this.component.hide();
         }
     }
+});/* ../ludojs/src/form/reset-button.js */
+/**
+ * Special Button used to reset all form fields of component back to it's original state.
+ * This button will automatically be disabled when the form is "clean", and disabled when it's "dirty".
+ * @namespace form
+ * @class ResetButton
+ * @extends form.Button
+ */
+ludo.form.ResetButton = new Class({
+    Extends:ludo.form.Button,
+    type:'form.ResetButton',
+    /**
+     * Value of button
+     * @attribute {String} value
+     * @default 'Reset'
+     */
+    value:'Reset',
+
+    component:undefined,
+
+    ludoRendered:function () {
+        this.parent();
+        this.component = this.getParentComponent();
+        var manager = this.component.getFormManager();
+        if (this.component) {
+            manager.addEvent('dirty', this.enable.bind(this));
+            manager.addEvent('clean', this.disable.bind(this));
+        }
+
+        if(!manager.isDirty()){
+            this.disable();
+        }
+        this.addEvent('click', this.reset.bind(this));
+    },
+
+    reset:function () {
+        if (this.component) {
+            this.component.reset();
+        }
+    }
 });/* ../ludojs/src/form/text.js */
 /**
  * @namespace form
@@ -22489,46 +22535,6 @@ ludo.form.Date = new Class({
     },
     getValue:function(){
         return this.value ? ludo.util.parseDate(this.value, this.displayFormat).format(this.inputFormat) : undefined;
-    }
-});/* ../ludojs/src/form/reset-button.js */
-/**
- * Special Button used to reset all form fields of component back to it's original state.
- * This button will automatically be disabled when the form is "clean", and disabled when it's "dirty".
- * @namespace form
- * @class ResetButton
- * @extends form.Button
- */
-ludo.form.ResetButton = new Class({
-    Extends:ludo.form.Button,
-    type:'form.ResetButton',
-    /**
-     * Value of button
-     * @attribute {String} value
-     * @default 'Reset'
-     */
-    value:'Reset',
-
-    component:undefined,
-
-    ludoRendered:function () {
-        this.parent();
-        this.component = this.getParentComponent();
-        var manager = this.component.getFormManager();
-        if (this.component) {
-            manager.addEvent('dirty', this.enable.bind(this));
-            manager.addEvent('clean', this.disable.bind(this));
-        }
-
-        if(!manager.isDirty()){
-            this.disable();
-        }
-        this.addEvent('click', this.reset.bind(this));
-    },
-
-    reset:function () {
-        if (this.component) {
-            this.component.reset();
-        }
     }
 });/* ../ludojs/src/form/combo-tree.js */
 /**

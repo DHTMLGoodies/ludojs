@@ -54,7 +54,7 @@ ludo.layout.MenuContainer = new Class({
         return this.body;
     },
 
-    resize:function(config){
+    resize:function(){
 
     },
 
@@ -64,7 +64,7 @@ ludo.layout.MenuContainer = new Class({
 
     show:function(){
         if(this.getEl().style.display === '')return;
-        this.getEl().style.zIndex = (ludo.util.getNewZIndex(this) + 100);
+		this.getEl().style.zIndex = (ludo.util.getNewZIndex(this) + 100);
         this.getEl().style.display = '';
         for(var i=0;i<this.lm.view.children.length;i++){
             this.lm.view.children[i].show();
@@ -73,6 +73,8 @@ ludo.layout.MenuContainer = new Class({
         this.getRenderer().resize();
 
         this.resizeChildren();
+
+		this.fireEvent('show', this);
     },
 
     resizeChildren:function(){
@@ -83,6 +85,7 @@ ludo.layout.MenuContainer = new Class({
 
     hide:function(){
         this.getEl().style.display = 'none';
+		this.fireEvent('hide', this);
     },
     renderer:undefined,
     getRenderer:function(){

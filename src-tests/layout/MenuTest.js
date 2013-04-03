@@ -62,18 +62,6 @@ TestCase("MenuTest", {
         assertEquals(grandGrandChild.getMenuContainer().getEl(), childBa.getMenuContainersToShow()[1].getEl());
     },
 
-    "test should only set width to wrap of menu.Item": function(){
-        // given
-        var c = this.getMenuComponent();
-
-        // when
-        var textBox = c.child['b'].child['textBox'];
-
-        // then
-        assertEquals(25, textBox.layout.height);
-
-    },
-
     "test default type of children should be menu.Item":function () {
         // given
         var cmp = this.getMenuComponent();
@@ -84,6 +72,25 @@ TestCase("MenuTest", {
         // then
         assertEquals('menu.Item', child.type);
     },
+
+	"test should not hide and show menu container when moving from sibling to sibling": function(){
+       // given
+        var c = this.getMenuComponent();
+		var eventFired = false;
+
+        // when
+        c.child['b'].click();
+        c.child['b'].child['bb'].mouseOver();
+
+		c.child['b'].child['bb'].getMenuContainer().addEvent('hide', function(){
+			eventFired = true;
+		});
+
+		c.child['b'].child['bc'].mouseOver();
+
+        // then
+        assertFalse(eventFired);
+	},
 
     "test should render children inside menu container":function () {
         // given
@@ -300,8 +307,8 @@ TestCase("MenuTest", {
 
 
         // then
-        assertEquals('', c.child['b'].getMenuContainer().getEl().style.display);
         assertEquals('', c.child['b'].child['ba'].getMenuContainer().getEl().style.display);
+        assertEquals('', c.child['b'].child['ba'].child['baa'].getMenuContainer().getEl().style.display);
 
     },
 
@@ -346,13 +353,13 @@ TestCase("MenuTest", {
         assertEquals(c.child['b'].child['ba'], firedFromView);
     },
 
-    getMenuComponent:function () {
+    getMenuComponent:function (layout) {
+		layout = layout || {};
+		layout.type = 'menu';
+		layout.orientation = layout.orientation || 'horizontal';
         var v = new ludo.View({
             renderTo:document.body,
-            layout:{
-                type:'menu',
-                orientation:'horizontal'
-            },
+            layout:layout,
             children:[
                 { name:'a', html:'A'},
                 { name:'b', id:'b',
@@ -390,5 +397,4 @@ TestCase("MenuTest", {
         return v;
     }
 
-})
-;
+});
