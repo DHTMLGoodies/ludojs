@@ -35,7 +35,6 @@ ludo.layout.Renderer = new Class({
 		this.setDefaultProperties();
 		this.view.addEvent('show', this.resize.bind(this));
         ludo.dom.clearCache();
-		// this.resize();
 		this.addResizeEvent();
 	},
 
@@ -114,7 +113,8 @@ ludo.layout.Renderer = new Class({
 
 	buildResizeFn:function () {
 		var parent = this.view.getEl().parentNode;
-		if (!parent)this.fn = function () {};
+		if (!parent)this.fn = function () {
+		};
 		var fns = [];
 		for (var i = 0; i < this.options.length; i++) {
 			if (this.rendering[this.options[i]] !== undefined) {
@@ -281,6 +281,8 @@ ludo.layout.Renderer = new Class({
 			if (this.coordinates[k] !== undefined && this.coordinates[k] !== this.lastCoordinates[k])this.view.getEl().style[k] = c[k] + 'px';
 		}
 
+
+
         if(this.view.children.length > 0)this.view.getLayoutManager().resizeChildren();
 		this.lastCoordinates = Object.clone(c);
 	},
@@ -331,5 +333,12 @@ ludo.layout.Renderer = new Class({
 			x:this.coordinates.left,
 			y:this.coordinates.top
 		};
+	},
+
+	getSize:function(){
+		return {
+			x : this.coordinates.width,
+			y : this.coordinates.height
+		}
 	}
 });

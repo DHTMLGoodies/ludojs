@@ -1,4 +1,4 @@
-/* Generated Wed Apr 3 17:36:40 CEST 2013 */
+/* Generated Wed Apr 3 19:00:12 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -1532,7 +1532,7 @@ div.ludo-menu-item-spacer-horizontal {
 .ludo-menu-item .ludo-body{
     white-space:nowrap;
 }
-.ludo-menu-vertical .ludo-menu-item-over {
+.ludo-menu-vertical .ludo-menu-item-over,.ludo-menu-vertical .ludo-menu-item-active {
     background-color: #FFF;
     border: 1px solid #CCC;
     padding-left: 34px;
@@ -1548,7 +1548,7 @@ div.ludo-menu-item-spacer-horizontal {
     left: -1px !important;
 }
 
-.ludo-menu-item-over .ludo-menu-item-vertical-expand {
+.ludo-menu-item-over .ludo-menu-item-vertical-expand,.ludo-menu-item-active .ludo-menu-item-vertical-expand {
     right: -1px !important;
 }
 

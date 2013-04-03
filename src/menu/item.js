@@ -25,8 +25,7 @@ ludo.menu.Item = new Class({
      sets icon to the character "!", i.e. text
      */
     icon:undefined,
-    expandSubMenuOnClick:true,
-    menuDirection:'horizontal',
+    orientation:'horizontal',
     /**
      * Initially disable the menu item
      * @config {Boolean} disabled
@@ -75,7 +74,7 @@ ludo.menu.Item = new Class({
                 config.children[i].hidden = true;
             }
         }
-        this.setConfigParams(config, ['menuDirection', 'icon', 'record', 'value', 'label', 'action', 'disabled', 'fire']);
+        this.setConfigParams(config, ['orientation', 'icon', 'record', 'value', 'label', 'action', 'disabled', 'fire']);
 
         config.html = config.html || config.label;
         if (config.html === '|') {
@@ -98,19 +97,27 @@ ludo.menu.Item = new Class({
         }
     },
 
+	resizeParent:function(){
+
+	},
+
+	resize:function(config){
+		this.parent(config);
+	},
+
     ludoDOM:function () {
         this.parent();
         ludo.dom.addClass(this.getEl(), 'ludo-menu-item');
         this.getBody().setStyle('cursor', 'pointer');
 
         if (this.isSpacer()) {
-            if (this.menuDirection === 'horizontal') {
+            if (this.orientation === 'horizontal') {
                 this.getEl().setStyle('width', 1);
             }
-            ludo.dom.addClass(this.getEl(), 'ludo-menu-item-spacer-' + this.menuDirection);
+            ludo.dom.addClass(this.getEl(), 'ludo-menu-item-spacer-' + this.orientation);
         }
 
-        ludo.dom.addClass(this.getEl(), 'ludo-menu-item-' + this.menuDirection);
+        ludo.dom.addClass(this.getEl(), 'ludo-menu-item-' + this.orientation);
 
         if (this.icon) {
             this.createIcon();
@@ -119,6 +126,16 @@ ludo.menu.Item = new Class({
         if (this.disabled) {
             this.disable();
         }
+
+		if(this.children.length){
+			var el = this.els.expand = new Element('div');
+		    ludo.dom.addClass(el, 'ludo-menu-item-expand');
+		    ludo.dom.addClass(el, 'ludo-menu-item-' + this.orientation + '-expand');
+		    this.getEl().adopt(el);
+		}
+
+
+
     },
 
     getLabel:function () {
@@ -232,9 +249,5 @@ ludo.menu.Item = new Class({
 
     showMenu:function () {
         this.menuHandler.showMenu(this);
-    },
-
-    getMenuDirection:function () {
-        return this.menuDirection;
     }
 });

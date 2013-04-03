@@ -52,14 +52,18 @@ require_once("../includes/demo-header.php");
                     { html:"File", name:'file',
                         children:[
                             { html:"New project", name:'newproject', children:[
-                                'PHP', 'Javascript', 'Java', 'Perl'
+                                { html : 'PHP', children:['Pear','Dependency Injection','Singleton'] }, 'Javascript', 'Java', 'Perl'
                             ] },
                             "Save",
                             {
-                                type:'form.Text', label:'Hello', layout:{ width:300, height:25 }
+                                type:'form.Checkbox', label:'Hello', layout:{ width:250, height:25 }
                             },
                             {
                                 type:'calendar.Calendar',
+                                containerCss:{
+                                    'background-color' : '#FFF',
+                                    'border-top' : '1px solid #d7d7d7'
+                                },
                                 layout:{
                                     width:'matchParent',
                                     height:200
@@ -68,16 +72,14 @@ require_once("../includes/demo-header.php");
                         ]
                     },
                     { html:'Edit', children:[
-                        "Copy", "Cut",
-                        { name:'youtubevideo', weight:1, type:'video.YouTube', movieId:'fPTLa3ylmuw',
-                            layout:{
-                                width:300, height:300} }
+                        "Copy", "Cut"
                     ]},
                     "View",
                     "Navigate"
                 ]
             },
             {
+                name:'leftMenu',
                 layout:{
                     below:'top',
                     width:200,
@@ -94,6 +96,25 @@ require_once("../includes/demo-header.php");
                         html : "Front page", hidden:false
                     }, "Page 2", "Page3"
                 ]
+            },
+            {
+                layout:{
+                    rightOf:'leftMenu',
+                    below:'top',
+                    fillRight:true,
+                    fillDown:true
+                },
+                containerCss:{
+                    'background-color' : '#FFF'
+                },
+                css:{
+                    'overflow-y' : 'auto',
+                    padding:5
+                },
+                dataSource:{
+                    type:'dataSource.HTML',
+                    url : '../data-source/article.php'
+                }
             }
         ]
 

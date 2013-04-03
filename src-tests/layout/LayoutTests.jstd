@@ -30,9 +30,10 @@ test:
   - MenuTest.js
 
 serve:
-  - ../../css/ludojs-blue.css
+  - ../../css/ludojs-light-gray.css
   - ../../images/*.png
-  - ../../images/blue-skin/form/*.png
+  - ../../images/light-gray-skin/*.png
+  - ../../images/light-gray-skin/form/*.png
 
 plugin:
  - name: "coverage"

@@ -456,6 +456,26 @@ TestCase("MenuTest", {
         assertEquals(c.child['b'].child['ba'], firedFromView);
     },
 
+	"test size of menu containers should not change on second display": function(){
+        // given
+        var c = this.getMenuComponent();
+
+
+		c.child['c'].click();
+		c.child['c'].child['cb'].mouseOver();
+		var expectedSize = c.child['c'].child['cb'].getMenuContainer().getEl().offsetWidth;
+
+		// when
+		c.child['c'].child['cc'].mouseOver();
+		c.child['c'].child['cb'].mouseOver();
+
+		var size = c.child['c'].child['cb'].getMenuContainer().getEl().offsetWidth;
+
+		assertEquals(expectedSize.x, size.x);
+
+
+	},
+
 	"test context menu should have correct layout settings": function(){
 		// given
 		var cm = new ludo.menu.Context();
@@ -463,8 +483,9 @@ TestCase("MenuTest", {
 		// then
 		assertEquals('menu', cm.layout.type.toLowerCase());
 		assertEquals('vertical', cm.layout.orientation.toLowerCase());
-
 	},
+
+
 
     getMenuComponent:function (layout) {
 		layout = layout || {};
@@ -490,12 +511,13 @@ TestCase("MenuTest", {
                         { name:'textBox', type:'form.Text', label:'First name' }
                     ]
                 },
-                { name:'c', html:'C', children:[
-                    { name:'ca', html:'ca' },
+                { name:'c', html:'Component c', children:[
+                    { name:'ca', html:'Fugitant' },
                     { name:'cb', html:'cb', children:[
-                        { name:'cba', html:'cba' },
-                        { name:'cbb', html:'cbb' }
-                    ] }
+                        { name:'cba', html:'John' },
+                        { name:'cbb', html:'Splendida porro oculi' }
+                    ] },
+					{ name:'cc', html:'Doe' }
 
                 ]},
                 { name:'d', html:'D'},

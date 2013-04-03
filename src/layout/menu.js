@@ -5,8 +5,13 @@ ludo.layout.Menu = new Class({
 
 	onCreate:function () {
 		this.menuContainer = new ludo.layout.MenuContainer(this);
-		if(this.view.layout.active){
+		if (this.view.layout.active) {
 			this.alwaysActive = true;
+		}
+
+		if (this.view.id === this.getTopMenuComponent().id) {
+			document.id(document.documentElement).addEvent('click', this.autoHideMenus.bind(this));
+			ludo.EffectObject.addEvent('start', this.hideAllMenus.bind(this) );
 		}
 	},
 
@@ -26,7 +31,7 @@ ludo.layout.Menu = new Class({
 		}
 		if (child.type === 'menu.Item') {
 			child.layout.height = 'wrap';
-			child.menuDirection = this.view.layout.orientation;
+			child.orientation = this.view.layout.orientation;
 		}
 
 		if (this.view.layout.orientation === 'vertical' && !child.layout.width) {
@@ -46,7 +51,7 @@ ludo.layout.Menu = new Class({
 
 			ludo.dom.addClass(p.parentNode, 'ludo-menu');
 			ludo.dom.addClass(p.parentNode, 'ludo-menu-' + this.view.layout.orientation);
-			if(isTop)ludo.dom.addClass(p.parentNode, 'ludo-menu-top');
+			if (isTop)ludo.dom.addClass(p.parentNode, 'ludo-menu-top');
 			this.parentForNewChild = p;
 		}
 		return this.parentForNewChild;
@@ -123,11 +128,11 @@ ludo.layout.Menu = new Class({
 			return menuComponent;
 		}.bind(child);
 
-		child.getParentMenuItems = function(){
-			if(!this.parentMenuItems){
+		child.getParentMenuItems = function () {
+			if (!this.parentMenuItems) {
 				this.parentMenuItems = [];
 				var v = this.getParent();
-				while(v && v.getMenuContainer){
+				while (v && v.getMenuContainer) {
 					this.parentMenuItems.push(v);
 					v = v.getParent();
 				}
@@ -143,7 +148,7 @@ ludo.layout.Menu = new Class({
 			child.addEvent('click', function () {
 				menuComponent.getLayoutManager().activate(child);
 			}.bind(this));
-		}else{
+		} else {
 			child.addEvent('click', menuComponent.getLayoutManager().hideAllMenus.bind(menuComponent.getLayoutManager()));
 		}
 
@@ -153,7 +158,6 @@ ludo.layout.Menu = new Class({
 		}.bind(this))
 	},
 	shownMenus:[],
-
 
 
 	activate:function (child) {
@@ -175,7 +179,7 @@ ludo.layout.Menu = new Class({
 		}
 	},
 
-	hideAllMenus:function(){
+	hideAllMenus:function () {
 		this.hideMenus();
 		this.clearHighlightedPath();
 	},
@@ -187,21 +191,34 @@ ludo.layout.Menu = new Class({
 		}
 	},
 
-	highlightedItems : [],
-	highlightItemPath:function(child){
+	highlightedItems:[],
+	highlightItemPath:function (child) {
 		var items = child.getParentMenuItems();
 		this.clearHighlightedPath(items);
-		for(var i=0;i<items.length;i++){
+		for (var i = 0; i < items.length; i++) {
 			ludo.dom.addClass(items[i].getEl(), 'ludo-menu-item-active');
 		}
 		this.highlightedItems = items;
 	},
 
-	clearHighlightedPath:function(except){
+	clearHighlightedPath:function (except) {
 		except = except || [];
-		for(var i=0;i<this.highlightedItems.length;i++){
-			if(except.indexOf(this.highlightedItems[i]) === -1){
+		for (var i = 0; i < this.highlightedItems.length; i++) {
+			if (except.indexOf(this.highlightedItems[i]) === -1) {
 				ludo.dom.removeClass(this.highlightedItems[i].getEl(), 'ludo-menu-item-active');
+			}
+		}
+	},
+
+	autoHideMenus:function (e) {
+		if (this.active || this.alwaysActive) {
+			var el = e.target;
+			if (el.className.indexOf('ludo-menu-item') >= 0) {
+				return;
+			}
+			if (!el.getParent('.ludo-menu')) {
+				this.hideAllMenus();
+				this.active = false;
 			}
 		}
 	}
