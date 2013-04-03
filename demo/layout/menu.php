@@ -79,8 +79,14 @@ require_once("../includes/demo-header.php");
                     type:'Menu',
                     orientation:'vertical'
                 },
+                containerCss:{
+                    border:0,
+                    'border-right' : '1px solid #d7d7d7'
+                },
                 children:[
-                    "Front page", "Page 2", "Page3"
+                    {
+                        html : "Front page", hidden:false
+                    }, "Page 2", "Page3"
                 ]
             }
         ]

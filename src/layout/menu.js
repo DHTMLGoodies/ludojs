@@ -1,5 +1,6 @@
 ludo.layout.Menu = new Class({
 	Extends:ludo.layout.Base,
+	active:false,
 
 	onCreate:function () {
 		this.menuContainer = new ludo.layout.MenuContainer(this);
@@ -31,8 +32,20 @@ ludo.layout.Menu = new Class({
 		return child;
 	},
 
+	parentForNewChild:undefined,
+
 	getParentForNewChild:function () {
-		return this.view.layout.orientation === 'horizontal' ? this.parent() : this.getMenuContainer().getBody();
+		if (this.parentForNewChild === undefined) {
+
+			var isTop = !this.view.parentComponent || (this.view.parentComponent && this.view.parentComponent.layout.type.toLowerCase() !== 'menu');
+			var p = isTop ? this.parent() : this.getMenuContainer().getBody();
+
+			ludo.dom.addClass(p.parentNode, 'ludo-menu');
+			ludo.dom.addClass(p.parentNode, 'ludo-menu-' + this.view.layout.orientation);
+			if(isTop)ludo.dom.addClass(p.parentNode, 'ludo-menu-top');
+			this.parentForNewChild = p;
+		}
+		return this.parentForNewChild;
 	},
 
 	onNewChild:function (child) {
@@ -75,14 +88,14 @@ ludo.layout.Menu = new Class({
 		child.getMenuContainerToShow = function () {
 			if (this.containerToShow === undefined) {
 				if (this.layout.type && this.layout.type.toLowerCase() === 'menu' && this.children.length > 0) {
-					if(this.children[0].isHidden())this.children[0].show();
+					if (this.children[0].isHidden())this.children[0].show();
 					this.containerToShow = this.children[0].getMenuContainer();
-				}else{
+				} else {
 					this.containerToShow = undefined;
 				}
 			}
 
-			return this.containerToShow ;
+			return this.containerToShow;
 		}.bind(child);
 
 		child.getMenuContainersToShow = function () {
@@ -90,7 +103,7 @@ ludo.layout.Menu = new Class({
 				var cnt = [];
 				var v = this.getParent();
 				while (v && v.layout.orientation === 'vertical') {
-					cnt.unshift(v.getMenuContainerToShow());
+					if (v.getMenuContainerToShow)cnt.unshift(v.getMenuContainerToShow());
 					v = v.getParent();
 				}
 				var cmp = this.getMenuContainerToShow();
@@ -122,8 +135,6 @@ ludo.layout.Menu = new Class({
 	},
 	shownMenus:[],
 
-	active:false,
-
 	activate:function (child) {
 		this.active = !this.active;
 		this.showMenusFor(child);
@@ -132,14 +143,14 @@ ludo.layout.Menu = new Class({
 	showMenusFor:function (child) {
 		if (!this.active) {
 			this.hideMenus();
-			return;
-		}
-		var menusToShow = child.getMenuContainersToShow();
-		this.hideMenus(menusToShow);
+		} else {
+			var menusToShow = child.getMenuContainersToShow();
+			this.hideMenus(menusToShow);
 
-		this.shownMenus = menusToShow;
-		for (var i = 0; i < this.shownMenus.length; i++) {
-			this.shownMenus[i].show();
+			this.shownMenus = menusToShow;
+			for (var i = 0; i < this.shownMenus.length; i++) {
+				this.shownMenus[i].show();
+			}
 		}
 	},
 

@@ -29,7 +29,6 @@ ludo.layout.MenuContainer = new Class({
 
     createDom:function(){
         this.el = ludo.dom.create({
-            cls:'ludo-menu',
             'css' : {
                 'position' : 'absolute',
                 'display' : 'none'
@@ -38,8 +37,6 @@ ludo.layout.MenuContainer = new Class({
         });
 
         this.el.setAttribute('forel', this.lm.view.name);
-
-        ludo.dom.addClass(this.el, 'ludo-menu-' + this.lm.view.layout.orientation);
 
         this.body  = ludo.dom.create({
             renderTo:this.el

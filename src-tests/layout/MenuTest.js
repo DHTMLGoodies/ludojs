@@ -130,12 +130,53 @@ TestCase("MenuTest", {
     },
 
     "test should by default activate vertical menu on mouse over":function () {
+        // given
+        var c = this.getMenuComponent({
+			orientation:'vertical'
+		});
+
+		// when
+		c.child['b'].mouseOver();
+
+		// then
+		assertEquals('', c.child['b'].child['ba'].getMenuContainer().getEl().style.display);
 
     },
 
-    "test should show sub menu container on mouse over":function () {
+	"test vertical menu items on top level should by default be visible": function(){
+        // given
+        var c = this.getMenuComponent({
+			orientation:'vertical'
+		});
 
-    },
+		// when
+		assertFalse(c.child['b'].isHidden());
+	},
+
+	"test menu container of vertical top menu should be parents body": function(){
+        // given
+        var c = this.getMenuComponent({
+			orientation:'vertical'
+		});
+
+		// when
+		var child = c.child['b'];
+
+		// then
+		assertEquals(c.getBody(), child.getEl().parentNode);
+	},
+
+	"test should assign css class to menu containers": function(){
+        // given
+        var c = this.getMenuComponent({
+			orientation:'vertical'
+		});
+
+		// then
+		assertTrue(ludo.dom.hasClass(c.child['b'].child['ba'].getEl().parentNode.parentNode, 'ludo-menu'));
+		assertTrue(ludo.dom.hasClass(c.child['b'].getEl().parentNode.parentNode, 'ludo-menu'));
+
+	},
 
     "test should find menu container to show for an item":function () {
         // given

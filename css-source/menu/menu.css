@@ -132,3 +132,9 @@ div.ludo-menu-item-spacer-horizontal {
 .ludo-menu-item-horizontal-expand {
     background-image: url('../images/expand-menu-horizontal-wh.png');
 }
+
+div.ludo-menu-top{
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
