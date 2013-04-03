@@ -115,6 +115,11 @@ ludo.dataSource.Base = new Class({
     load:function(){
 
     },
+    loadUrl:function(url){
+        this.url = url;
+        this.load();
+    },
+
 	loadComplete:function(){
 		this.inLoadMode = false;
 	},

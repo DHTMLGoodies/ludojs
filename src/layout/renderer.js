@@ -181,7 +181,7 @@ ludo.layout.Renderer = new Class({
 				}
 				return function () {
 					c.width = this.rendering[option];
-				};
+                }.bind(this);
 			case 'rightOf':
 				return function () {
 					c.left = value.getPosition().x + value.offsetWidth;
@@ -272,18 +272,18 @@ ludo.layout.Renderer = new Class({
 			case 'left':
 				return function () {
 					c.left = this.rendering[option];
-				};
+                }.bind(this);
 			case 'y':
 			case 'top':
 				return function () {
 					c.top = this.rendering[option];
-				};
+                }.bind(this);
 			case 'fitVerticalViewPort':
 				return function (view, renderer) {
 					if (c.height) {
-						var pos = c.top || view.getEl().getPosition().y;
-						if (pos + c.height > renderer.viewport.height) {
-							c.top = renderer.viewport.height - c.height;
+						var pos = c.top !== undefined ? c.top : view.getEl().getPosition().y;
+						if (pos + c.height > renderer.viewport.height - 2) {
+							c.top = renderer.viewport.height - c.height - 2;
 						}
 					}
 				};

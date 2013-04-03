@@ -31,7 +31,9 @@ ludo.layout.Menu = new Class({
 		}
 		if (child.type === 'menu.Item') {
 			child.orientation = this.view.layout.orientation;
-		}
+		}else{
+            child.layout.height = child.layout.height || child.height;
+        }
 
 		if (this.view.layout.orientation === 'vertical' && !child.layout.width) {
 			child.layout.width = 'fitParent';

@@ -499,7 +499,7 @@ TestCase("MenuTest", {
 		var child = c.child['custom'];
 
 		// then
-		assertEquals('wrap', child.layout.height);
+		assertEquals(25, child.layout.height);
 
 	},
 
@@ -520,9 +520,9 @@ TestCase("MenuTest", {
         });
 
         // then
-        assertEquals('wrap', c.child['a'].layout.height);
-        assertEquals('wrap', c.child['c'].layout.height);
-        assertEquals('wrap', c.child['a'].getLayoutManager().getRenderer().rendering.height);
+        assertEquals(25, c.child['a'].layout.height);
+        assertEquals(25, c.child['c'].layout.height);
+        assertEquals(25, c.child['a'].getLayoutManager().getRenderer().rendering.height);
     },
 
 	"test context menu should expand sub menus on mouse over": function(){

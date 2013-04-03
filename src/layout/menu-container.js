@@ -26,7 +26,6 @@ ludo.layout.MenuContainer = new Class({
 			}
 			l.height = 'wrap';
 		}
-
 		l.fitVerticalViewPort = true;
 	},
 
@@ -38,8 +37,6 @@ ludo.layout.MenuContainer = new Class({
 			},
 			renderTo:document.body
 		});
-
-		this.el.setAttribute('forel', this.lm.view.name);
 
 		this.body = ludo.dom.create({
 			renderTo:this.el
@@ -95,9 +92,7 @@ ludo.layout.MenuContainer = new Class({
         this.resizeChildren();
 	},
 
-	childrenResized:false,
 	resizeChildren:function () {
-		if (this.childrenResized)return;
 		for (var i = 0; i < this.lm.view.children.length; i++) {
 			this.lm.view.children[i].getLayoutManager().getRenderer().resize();
 		}

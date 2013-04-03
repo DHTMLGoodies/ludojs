@@ -165,7 +165,6 @@ var w = new ludo.Window({
                 columns:['uid','id', 'country', 'capital', 'population'],
                 listeners:{
                     'update':function (record) {
-                        console.log(record);
                         if (record.id) {
                             ludo.get('myDataSource').updateRecord(record, record);
                         }

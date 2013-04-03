@@ -100,24 +100,37 @@ require_once("../includes/demo-header.php");
                             type:'Menu',
                             orientation:'vertical'
                         },
+                        listeners:{
+                            'click' : function(item){
+                                if(item.action){
+                                    ludo.get('mainPanel').getDataSource().loadUrl('../data-source/articles/' + item.action);
+                                }
+                            }
+                        },
                         containerCss:{
                             border:0
                         },
                         children:[
                             {
                                 html:"Front page",
-                                hidden:false
+                                hidden:false,
+                                action : 'front-page.php'
                             },
                             {
                                 html:"Pages",
                                 children:[
-                                    'Page 1.1', 'Page 1.2'
+                                    {
+                                        html : 'Page 1.1', action:'article-1.php'
+                                    }, {
+                                        html : 'Sport news', action:'sport.php'
+                                    }
                                 ]
                             },
-                            "Page3"
+                            { html : "Page3", action:'page-3.php' }
                         ]
                     },
                     {
+                        id:'mainPanel',
                         layout:{
                             rightOf:'leftMenu',
                             below:'top',
@@ -135,7 +148,7 @@ require_once("../includes/demo-header.php");
                         },
                         dataSource:{
                             type:'dataSource.HTML',
-                            url:'../data-source/article.php'
+                            url:'../data-source/articles/front-page.php'
                         }
                     }
                 ]

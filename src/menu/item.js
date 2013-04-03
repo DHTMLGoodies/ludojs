@@ -71,16 +71,14 @@ ludo.menu.Item = new Class({
     fire:undefined,
 
     ludoConfig:function (config) {
+        this.parent(config);
         this.setConfigParams(config, ['orientation', 'icon', 'record', 'value', 'label', 'action', 'disabled', 'fire']);
-        config.html = config.html || config.label;
-        if (config.html === '|') {
+        this.html = this.html || this.label;
+        if (this.html === '|') {
             this.spacer = true;
             this.layout.height = 1;
         }
-        if (this.label && !this.html) {
-            this.html = this.label;
-        }
-        this.parent(config);
+
     },
 
     ludoEvents:function () {

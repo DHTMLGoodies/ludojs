@@ -16,10 +16,6 @@ ludo.menu.Menu = new Class({
 
     addCoreEvents : function(){
 
-    },
-
-    isMenu:function(){
-        return true;
     }
 });
 
