@@ -30,12 +30,29 @@ require_once("../includes/demo-header.php");
                     orientation:'horizontal'
                 },
                 children:[
-                    { html : "File",
+                    { html:"File", name:'file',
                         children:[
-                            "New project", "Save"
+                            { html : "New project", name : 'newproject', children:[
+                                'PHP','Javascript','Java','Perl'
+                            ] }, "Save", {
+                                type:'form.Text',label:'Hello', layout: { width: 300, height: 25 }
+                            }, {
+                                type:'calendar.Calendar',
+                                layout:{
+                                    width:'matchParent',
+                                    height:200
+                                }
+                            }
                         ]
                     },
-                    "Edit","View","Navigate"
+                    { html:'Edit', children:[
+                        "Copy", "Cut",
+                        { name:'youtubevideo', weight:1, type:'video.YouTube', movieId:'fPTLa3ylmuw',
+                            layout:{
+                            width:300, height:300} }
+                    ]},
+                    "View",
+                    "Navigate"
                 ]
             }
         ]

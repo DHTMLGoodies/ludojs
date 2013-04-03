@@ -100,19 +100,17 @@ ludo.menu.Item = new Class({
 
     ludoDOM:function () {
         this.parent();
-        this.getEl().addClass('ludo-menu-item');
+        ludo.dom.addClass(this.getEl(), 'ludo-menu-item');
         this.getBody().setStyle('cursor', 'pointer');
 
         if (this.isSpacer()) {
             if (this.menuDirection === 'horizontal') {
                 this.getEl().setStyle('width', 1);
             }
-            this.getEl().addClass('ludo-menu-item-spacer-' + this.menuDirection);
+            ludo.dom.addClass(this.getEl(), 'ludo-menu-item-spacer-' + this.menuDirection);
         }
 
-        if (this.getParent()) {
-            this.getEl().addClass('ludo-menu-item-' + this.menuDirection);
-        }
+        ludo.dom.addClass(this.getEl(), 'ludo-menu-item-' + this.menuDirection);
 
         if (this.icon) {
             this.createIcon();
@@ -142,12 +140,15 @@ ludo.menu.Item = new Class({
         if (this.disabled) {
             return;
         }
-        this.getEl().addClass('ludo-menu-item-down');
+        ludo.dom.addClass(this.getEl(), 'ludo-menu-item-down');
         this.fireEvent('click', this);
         if (this.fire)this.fireEvent(this.fire, this);
     },
+
+
+
     select:function () {
-        this.getEl().addClass('ludo-menu-item-selected');
+        ludo.dom.addClass(this.getEl(), 'ludo-menu-item-selected');
     },
 
     deselect:function () {
@@ -161,7 +162,7 @@ ludo.menu.Item = new Class({
      */
     disable:function () {
         this.disabled = true;
-        this.getEl().addClass('ludo-menu-item-disabled');
+        ludo.dom.addClass(this.getEl(), 'ludo-menu-item-disabled');
     },
 
     /**
@@ -205,7 +206,7 @@ ludo.menu.Item = new Class({
 
     mouseOver:function () {
         if (!this.disabled) {
-            this.getEl().addClass('ludo-menu-item-over');
+            ludo.dom.addClass(this.getEl(), 'ludo-menu-item-over');
             this.fireEvent('enterMenuItem', this);
         }
     },

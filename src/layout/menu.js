@@ -16,12 +16,23 @@ ludo.layout.Menu = new Class({
             child.layout.type = 'menu';
             child.layout.orientation = 'vertical';
         }
-        if(!child.type)child.type = 'menu.Item';
+        if(!child.type){
+            child.type = 'menu.Item';
+        }
+        if(child.type === 'menu.Item'){
+            child.layout.height = 'wrap';
+            child.menuDirection = this.view.layout.orientation;
+        }
+
+        if(this.view.layout.orientation === 'vertical' && !child.layout.width){
+            child.layout.width = 'fitParent';
+        }
+
         return child;
     },
 
     getParentForNewChild:function(){
-        return this.view.layout.orientation === 'horizontal' ? this.parent() : this.getMenuContainer().getEl();
+        return this.view.layout.orientation === 'horizontal' ? this.parent() : this.getMenuContainer().getBody();
     },
 
     onNewChild:function(child){
@@ -33,16 +44,12 @@ ludo.layout.Menu = new Class({
 
     parentContainers:undefined,
 
-    getMenuContainersToShow:function(){
-        if(this.parentContainers === undefined){
-            var v = this.view;
-            this.parentContainers = [];
-            while(v && v.getParentMenuItem){
-                this.parentContainers.push(v.getMenuContainerToShow());
-                v = v.getParent();
-            }
+    getTopMenuComponent:function(){
+        var v = this.view;
+        while(v.parentComponent && v.parentComponent.layout.type.toLowerCase() === 'menu'){
+            v = v.getParent();
         }
-        return this.parentContainers;
+        return v;
     },
 
     assignMenuItemFns:function(child){
@@ -74,10 +81,62 @@ ludo.layout.Menu = new Class({
         }.bind(child);
 
         child.getMenuContainersToShow = function(){
-            var cnt = lm.getMenuContainersToShow();
-            var cmp = this.getMenuContainerToShow();
-            if(cmp)cnt.push(cmp);
-            return cnt;
+            if(!this.menuContainersToShow){
+                var cnt = [];
+                var v = this.getParent();
+                while(v && v.layout.orientation === 'vertical'){
+                    cnt.unshift(v.getMenuContainerToShow());
+                    v = v.getParent();
+                }
+                var cmp = this.getMenuContainerToShow();
+                if(cmp)cnt.push(cmp);
+
+                this.menuContainersToShow = cnt;
+            }
+            return this.menuContainersToShow;
         }.bind(child);
+
+        var menuComponent = this.getTopMenuComponent();
+        child.getMenuComponent = function(){
+            return menuComponent;
+        }.bind(child);
+
+        child.addEvent('click', function(){
+            menuComponent.fireEvent('click', this);
+        }.bind(child));
+
+        if(this.view.layout.orientation === 'horizontal' && child.children.length > 0){
+            child.addEvent('click', function(){
+                menuComponent.getLayoutManager().activate(child);
+            }.bind(this));
+        }
+
+        child.addEvent('enterMenuItem', function(){
+            menuComponent.getLayoutManager().showMenusFor(child);
+        }.bind(this))
+    },
+    shownMenus:[],
+
+    active : false,
+
+    activate:function(child){
+        this.active = !this.active;
+        this.showMenusFor(child);
+    },
+
+    showMenusFor:function(child){
+        this.hideMenus();
+        if(!this.active)return;
+
+        this.shownMenus = child.getMenuContainersToShow();
+        for(var i=0;i<this.shownMenus.length;i++){
+            this.shownMenus[i].show();
+        }
+    },
+
+    hideMenus:function(){
+        for(var i=0;i<this.shownMenus.length;i++){
+            this.shownMenus[i].hide();
+        }
     }
 });
