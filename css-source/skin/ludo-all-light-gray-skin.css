@@ -281,6 +281,12 @@ div.ludo-menu-vertical {
     background-color: #7fa2c9;
 }
 
+.ludo-menu div.ludo-menu-item-spacer-vertical {
+    background-color: #d7d7d7;
+    margin-top:2px;
+    margin-bottom:2px;
+    height:1px;
+}
 .ludo-menu-horizontal .ludo-menu-item {
     font-weight: bold;
     color: #333;
@@ -304,7 +310,6 @@ div.ludo-menu-vertical {
 
 .ludo-menu-vertical {
     border: 1px solid #c6c6c6;
-    padding: 2px;
     background: url(../images/light-gray-skin/menu-bg-vertical.png) repeat-y;
     -moz-box-shadow: 1px 1px 4px #555;
     -webkit-box-shadow: 1px 1px 4px #555;

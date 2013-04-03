@@ -15,18 +15,19 @@ ludo.layout.MenuContainer = new Class({
 	},
 
 	setLayout:function () {
+        var l = this.layout;
 		if (this.lm.view.parentComponent) {
 			if (this.lm.view.parentComponent.layout.orientation === 'horizontal') {
-				this.layout.below = this.lm.view;
-				this.layout.alignLeft = this.lm.view;
+				l.below = this.lm.view;
+				l.alignLeft = this.lm.view;
 			} else {
-				this.layout.rightOrLeftOf = this.lm.view;
-				this.layout.alignTop = this.lm.view;
+				l.rightOrLeftOf = this.lm.view;
+				l.alignTop = this.lm.view;
 			}
-			this.layout.height = 'wrap';
+			l.height = 'wrap';
 		}
 
-		this.layout.fitVerticalViewPort = true;
+		l.fitVerticalViewPort = true;
 	},
 
 	createDom:function () {
@@ -69,9 +70,6 @@ ludo.layout.MenuContainer = new Class({
 		if (this.getEl().style.display === '')return;
 
 		this.getEl().style.display = '';
-		for (var i = 0; i < this.lm.view.children.length; i++) {
-			this.lm.view.children[i].show();
-		}
 
 		this.resizeChildren();
 		this.getRenderer().resize();
@@ -92,10 +90,9 @@ ludo.layout.MenuContainer = new Class({
 		for (var i = 0; i < this.lm.view.children.length; i++) {
 			var cr = this.lm.view.children[i].getLayoutManager().getRenderer();
 			cr.clearFn();
-
 			cr.rendering.width = r.rendering.width;
-			this.resizeChildren();
 		}
+        this.resizeChildren();
 	},
 
 	childrenResized:false,

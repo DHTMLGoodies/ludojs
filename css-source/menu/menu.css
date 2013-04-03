@@ -1,10 +1,13 @@
 .ludo-menu {
-    font-family: arial !important;
+    font-family: arial, sans-serif  !important;
     font-size: 11px;
 }
 
 .ludo-menu .ludo-body label {
     font-weight: normal;
+    font-size: 11px;
+    line-height:18px;
+    padding-left:3px;
 }
 
 div.ludo-menu-item-spacer-horizontal {
@@ -20,6 +23,7 @@ div.ludo-menu-item-spacer-horizontal {
     color: #FFF;
     border-color: #000;
 }
+
 
 .ludo-menu-item-horizontal {
     padding-top: 4px;
@@ -41,7 +45,7 @@ div.ludo-menu-item-spacer-horizontal {
 .ludo-menu-vertical {
     border: 1px solid #999;
     background-color: #FFF;
-    padding: 2px;
+    padding: 0;
     background-image: url(../images/menu-bar-bg-vertical.png);
     background-repeat: repeat-y;
     -moz-box-shadow: 1px 1px 4px #555;
@@ -49,6 +53,10 @@ div.ludo-menu-item-spacer-horizontal {
     box-shadow: 1px 1px 3px #555;
 }
 
+.ludo-menu-item-vertical{
+    margin:2px;
+    line-height:18px;
+}
 .ludo-menu-item-horizontal {
     padding-right: 10px;
 }

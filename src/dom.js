@@ -141,6 +141,7 @@ ludo.dom = {
 
 	},
 
+    // TODO rename to cls
 	addClass:function (el, className) {
 		if (!this.hasClass(el, className)) {
 			el.className = el.className ? el.className + ' ' + className : className;

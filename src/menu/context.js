@@ -7,7 +7,7 @@
  @constructor
  @param {Object} config
  @example
- new ludo.Window({
+    new ludo.Window({
            contextMenu:[{
                selector : '.my-selector',
                children:[{label:'Menu Item 1'},{label:'Menu item 2'}],
@@ -42,7 +42,7 @@ ludo.menu.Context = new Class({
 	 @type String
 	 @default undefined
 	 @example
-	 selector : '.selected-records'
+	    selector : '.selected-records'
 	 */
 	selector:undefined,
 	component:undefined,
@@ -108,7 +108,6 @@ ludo.menu.Context = new Class({
 	},
 
 	show:function (e) {
-
 		if (this.selector) {
 			var domEl = this.getValidDomElement(e.target);
 			if (!domEl) {

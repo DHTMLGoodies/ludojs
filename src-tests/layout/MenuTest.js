@@ -512,6 +512,19 @@ TestCase("MenuTest", {
 		assertEquals('vertical', cm.layout.orientation.toLowerCase());
 	},
 
+    "test context menu items should have correct layout settings": function(){
+        // given
+        var c = this.getContextMenu();
+        c.show({
+            page:{ x: 100, y : 100 }
+        });
+
+        // then
+        assertEquals('wrap', c.child['a'].layout.height);
+        assertEquals('wrap', c.child['c'].layout.height);
+        assertEquals('wrap', c.child['a'].getLayoutManager().getRenderer().rendering.height);
+    },
+
 	"test context menu should expand sub menus on mouse over": function(){
 		// given
 		var c = this.getContextMenu();
@@ -533,10 +546,9 @@ TestCase("MenuTest", {
 					{ name: 'ab', html : 'Item 1.2 '},
 					{ name: 'ac', html : 'Item 1.2 '}
 				]},
-				'b','c'
+				'b',{ name : 'c', html : 'Item 3' }
 			]
-		})
-
+		});
 	},
 
     getMenuComponent:function (layout) {

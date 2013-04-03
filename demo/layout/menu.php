@@ -21,119 +21,127 @@ require_once("../includes/demo-header.php");
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/menu/context.js"></script>
 <script type="text/javascript" class="source-code">
     var w = new ludo.Window({
-        title:'Window with menu',
-        layout:{
-            width:600,
-            height:400,
-            left:50,
-            top:50,
-            type:'relative'
-        },
-        contextMenu:[
-            {
-                children:['Item 1', 'Item 2', 'Item 3', { html:'Item 4', children:['Item 4.1', 'Item 4.2']}]
-            }
-        ],
-        children:[
-            {
-                name:'top',
+                title:'Window with menu',
                 layout:{
-                    alignParentTop:true,
-                    alignParentLeft:true,
-                    fillRight:true,
-                    height:20,
-                    type:'Menu',
-                    orientation:'horizontal'
+                    width:600,
+                    height:400,
+                    left:50,
+                    top:50,
+                    type:'relative'
                 },
-                containerCss:{
-                    'border-bottom':'1px solid #d7d7d7'
-                },
-                children:[
-                    { html:"File", name:'file',
-                        children:[
-                            { html:"New project", name:'newproject', children:[
-                                { html:'PHP', children:['Pear', 'Dependency Injection', 'Singleton'] },
-                                'Javascript',
-                                'Java',
-                                'Perl'
-                            ] },
-                            "Save",
-                            {
-                                type:'form.Checkbox', label:'Hello', layout:{ width:250, height:25 }
-                            },
-                            {
-                                'label':'Save as', disabled:true
-                            },
-                            {
-                                type:'calendar.Calendar',
-                                containerCss:{
-                                    'background-color':'#FFF',
-                                    'border-top':'1px solid #d7d7d7'
-                                },
-                                layout:{
-                                    width:'matchParent',
-                                    height:200
-                                }
-                            }
-                        ]
-                    },
-                    { html:'Edit', children:[
-                        "Copy", "Cut"
-                    ]},
-                    "View",
-                    "Navigate"
-                ]
-            },
-            {
-                name:'leftMenu',
-                layout:{
-                    below:'top',
-                    width:200,
-                    fillDown:true,
-                    type:'Menu',
-                    orientation:'vertical'
-                },
-                containerCss:{
-                    border:0
-                },
+                contextMenu:[
+                    {
+                        children:['Item 1', 'Item 2', 'Item 3', { html:'Item 4', children:['Item 4.1', 'Item 4.2']}]
+                    }
+                ],
                 children:[
                     {
-                        html:"Front page",
-                        hidden:false
-                    },
-                    {
-                        html:"Pages",
+                        name:'top',
+                        layout:{
+                            alignParentTop:true,
+                            alignParentLeft:true,
+                            fillRight:true,
+                            height:20,
+                            type:'Menu',
+                            orientation:'horizontal'
+                        },
+                        containerCss:{
+                            'border-bottom':'1px solid #d7d7d7'
+                        },
                         children:[
-                            'Page 1.1', 'Page 1.2'
+                            { html:"File", name:'file',
+                                children:[
+                                    { html:"New project", name:'newproject', children:[
+                                        { html:'PHP', children:['Pear', 'Dependency Injection', 'Singleton'] },
+                                        'Javascript',
+                                        'Java',
+                                        'Perl',
+                                        {
+                                            'html':'Hidden item',
+                                            hidden:true,
+                                            id:'hiddenItem'
+                                        }
+                                    ] },
+                                    "Save",
+                                    {
+                                        'label':'Save as', disabled:true
+                                    },
+                                    {
+                                        type:'calendar.Calendar',
+                                        containerCss:{
+                                            'background-color':'#FFF',
+                                            'border-top':'1px solid #d7d7d7'
+                                        },
+                                        layout:{
+                                            width:200,
+                                            height:200
+                                        }
+                                    }
+                                ]
+                            },
+                            { html:'Edit', children:[
+                                "Copy", "Cut", '|', 'Paste', 'Paste special'
+                            ]},
+                            {
+                                html:"View",
+                                children:[
+                                    'Live edit', 'Line numbers'
+                                ]
+                            },
+                            "Navigate"
                         ]
                     },
-                    "Page3"
+                    {
+                        name:'leftMenu',
+                        layout:{
+                            below:'top',
+                            width:200,
+                            fillDown:true,
+                            type:'Menu',
+                            orientation:'vertical'
+                        },
+                        containerCss:{
+                            border:0
+                        },
+                        children:[
+                            {
+                                html:"Front page",
+                                hidden:false
+                            },
+                            {
+                                html:"Pages",
+                                children:[
+                                    'Page 1.1', 'Page 1.2'
+                                ]
+                            },
+                            "Page3"
+                        ]
+                    },
+                    {
+                        layout:{
+                            rightOf:'leftMenu',
+                            below:'top',
+                            fillRight:true,
+                            fillDown:true
+                        },
+                        containerCss:{
+                            'background-color':'#FFF',
+                            'border-left':'1px solid #d7d7d7'
+
+                        },
+                        css:{
+                            'overflow-y':'auto',
+                            padding:5
+                        },
+                        dataSource:{
+                            type:'dataSource.HTML',
+                            url:'../data-source/article.php'
+                        }
+                    }
                 ]
-            },
-            {
-                layout:{
-                    rightOf:'leftMenu',
-                    below:'top',
-                    fillRight:true,
-                    fillDown:true
-                },
-                containerCss:{
-                    'background-color':'#FFF',
-                    'border-left':'1px solid #d7d7d7'
 
-                },
-                css:{
-                    'overflow-y':'auto',
-                    padding:5
-                },
-                dataSource:{
-                    type:'dataSource.HTML',
-                    url:'../data-source/article.php'
-                }
-            }
-        ]
-
-    });
+            })
+            ;
 </script>
 </body>
 </html>

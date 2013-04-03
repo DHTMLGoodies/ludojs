@@ -37,7 +37,7 @@ ludo.menu.Item = new Class({
     value:undefined,
 
 	layout:{
-		height:'wrap'
+		height:25
 	},
 
     /**
@@ -71,19 +71,11 @@ ludo.menu.Item = new Class({
     fire:undefined,
 
     ludoConfig:function (config) {
-        if (config.children) {
-            for(var i=0;i<config.children.length;i++){
-                if(ludo.util.isString(config.children[i])){
-                    config.children[i] = { html : config.children[i] };
-                }
-                config.children[i].hidden = true;
-            }
-        }
         this.setConfigParams(config, ['orientation', 'icon', 'record', 'value', 'label', 'action', 'disabled', 'fire']);
-
         config.html = config.html || config.label;
         if (config.html === '|') {
             this.spacer = true;
+            this.layout.height = 1;
         }
         if (this.label && !this.html) {
             this.html = this.label;

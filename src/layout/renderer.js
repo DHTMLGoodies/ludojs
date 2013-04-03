@@ -131,7 +131,7 @@ ludo.layout.Renderer = new Class({
 		}
 	},
 
-	getFnFor:function (option, value, index) {
+	getFnFor:function (option, value) {
 		var c = this.coordinates;
 
 		switch (option) {
@@ -144,9 +144,12 @@ ludo.layout.Renderer = new Class({
 				}
 				if (value === 'wrap') {
 					var s = ludo.dom.getWrappedSizeOfView(this.view);
+                    // TODO test out layout in order to check that the line below is working.
+                    this.rendering.height = s.y;
 					return function () {
 						c.height = s.y;
 					}
+
 				}
 				if (value.indexOf !== undefined && value.indexOf('%') > 0) {
 					value = parseInt(value);
@@ -165,6 +168,7 @@ ludo.layout.Renderer = new Class({
 				}
 				if (value === 'wrap') {
 					var size = ludo.dom.getWrappedSizeOfView(this.view);
+                    this.rendering.width = size.x;
 					return function () {
 						c.width = size.x;
 					}

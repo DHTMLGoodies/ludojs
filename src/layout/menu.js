@@ -46,11 +46,14 @@ ludo.layout.Menu = new Class({
 		if (this.parentForNewChild === undefined) {
 			var isTop = !this.view.parentComponent || (this.view.parentComponent && this.view.parentComponent.layout.type.toLowerCase() !== 'menu');
 			var p = isTop ? this.parent() : this.getMenuContainer().getBody();
-
 			ludo.dom.addClass(p.parentNode, 'ludo-menu');
 			ludo.dom.addClass(p.parentNode, 'ludo-menu-' + this.view.layout.orientation);
-			if (isTop)ludo.dom.addClass(p.parentNode, 'ludo-menu-top');
+			if (isTop && !this.view.layout.isContext)ludo.dom.addClass(p.parentNode, 'ludo-menu-top');
 			this.parentForNewChild = p;
+
+            if(isTop){
+                this.view.addEvent('show', this.resize.bind(this));
+            }
 		}
 		return this.parentForNewChild;
 	},
