@@ -175,8 +175,65 @@ TestCase("MenuTest", {
 		// then
 		assertTrue(ludo.dom.hasClass(c.child['b'].child['ba'].getEl().parentNode.parentNode, 'ludo-menu'));
 		assertTrue(ludo.dom.hasClass(c.child['b'].getEl().parentNode.parentNode, 'ludo-menu'));
+	},
+
+	"test should be able to get parent menu items as array": function(){
+		// given
+		var c = this.getMenuComponent();
+		var child = c.child['b'].child['ba'].child['bab'];
+		// when
+		var items = child.getParentMenuItems();
+
+		// then
+		assertEquals(2, items.length);
+		assertEquals(c.child['b'].child['ba'], items[0]);
+		assertEquals(c.child['b'], items[1]);
 
 	},
+
+	"test should set parent menu items to active when mouse over sub item": function(){
+		// given
+		var c = this.getMenuComponent();
+		var child = c.child['b'].child['ba'].child['bab'];
+
+		// when
+		child.mouseOver();
+		var items = child.getParentMenuItems();
+
+		// then
+		assertTrue(ludo.dom.hasClass(items[0].getEl(), 'ludo-menu-item-active'));
+		assertTrue(ludo.dom.hasClass(items[1].getEl(), 'ludo-menu-item-active'));
+	},
+
+	"test should clear previous highlighted path when mouse over new path": function(){
+		// given
+		var c = this.getMenuComponent();
+		var child = c.child['b'].child['ba'].child['bab'];
+
+		// when
+		child.mouseOver();
+		var items = child.getParentMenuItems();
+		c.child['c'].mouseOver();
+
+		// then
+		assertFalse(ludo.dom.hasClass(items[0].getEl(), 'ludo-menu-item-active'));
+		assertFalse(ludo.dom.hasClass(items[1].getEl(), 'ludo-menu-item-active'));
+	},
+
+	"test should hide menus on menu item click": function(){
+		// given
+		var c = this.getMenuComponent();
+
+		// when
+		c.child['b'].click();
+		assertEquals('', c.child['b'].child['ba'].getMenuContainer().getEl().style.display);
+		c.child['b'].child['bb'].click();
+
+
+		// then
+		assertEquals('none', c.child['b'].child['ba'].getMenuContainer().getEl().style.display);
+	},
+
 
     "test should find menu container to show for an item":function () {
         // given
@@ -367,12 +424,17 @@ TestCase("MenuTest", {
         assertEquals('none', c.child['b'].child['ba'].getMenuContainer().getEl().style.display);
     },
 
-    "test should determine if a menu is active": function(){
+    "test should be able to set menu default active": function(){
+		// given
+		var c = this.getMenuComponent({
+			active:true
+		});
 
-    },
+		// when
+		c.child['b'].mouseOver();
 
-    "test should show sub menu on mouse over": function(){
-
+		// then
+		assertEquals('', c.child['b'].child['ba'].getMenuContainer().getEl().style.display);
     },
 
     "test click event should be relayed to top menu component": function(){

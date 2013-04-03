@@ -249,9 +249,6 @@ div.ludo-form-button-disabled .ludo-form-button-bg-left, div.ludo-form-button-di
     text-align: left;
 }
 
-.ludo-menu-item-horizontal.ludo-menu-item-over {
-    background-image: url(../images/light-gray-skin/bg-horizontal-menu-over.png);
-}
 
 div.ludo-menu-vertical {
     background-color: #FFF;
@@ -261,9 +258,7 @@ div.ludo-menu-vertical {
     background-color: transparent;
 }
 
-.ludo-menu-vertical .ludo-menu-item-over {
-    background-color: #FFF;
-}
+
 
 .ludo-menu-item-horizontal {
     padding-top: 0;
@@ -291,10 +286,20 @@ div.ludo-menu-vertical {
     color: #333;
 }
 
+
+.ludo-menu-vertical .ludo-menu-item-over {
+    background-color: #FFF;
+}
+
 .ludo-menu-horizontal .ludo-menu-item-over {
     background-color: transparent;
     color: #000;
     border-color: #000;
+}
+
+.ludo-menu-item-horizontal.ludo-menu-item-over, .ludo-menu-horizontal .ludo-menu-item-active {
+    /* background-image: url(../images/light-gray-skin/bg-horizontal-menu-over.png); */
+    background-color:#CCC;
 }
 
 .ludo-menu-vertical {
@@ -307,8 +312,7 @@ div.ludo-menu-vertical {
 }
 
 
-
-.ludo-menu-vertical .ludo-menu-item-over {
+.ludo-menu-vertical .ludo-menu-item-over, .ludo-menu-vertical .ludo-menu-item-active {
     background-color: #FFF;
     border: 1px solid #c6c6c6;
     padding-left: 34px;

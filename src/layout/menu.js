@@ -1,9 +1,13 @@
 ludo.layout.Menu = new Class({
 	Extends:ludo.layout.Base,
 	active:false,
+	alwaysActive:false,
 
 	onCreate:function () {
 		this.menuContainer = new ludo.layout.MenuContainer(this);
+		if(this.view.layout.active){
+			this.alwaysActive = true;
+		}
 	},
 
 	getMenuContainer:function () {
@@ -119,6 +123,18 @@ ludo.layout.Menu = new Class({
 			return menuComponent;
 		}.bind(child);
 
+		child.getParentMenuItems = function(){
+			if(!this.parentMenuItems){
+				this.parentMenuItems = [];
+				var v = this.getParent();
+				while(v && v.getMenuContainer){
+					this.parentMenuItems.push(v);
+					v = v.getParent();
+				}
+			}
+			return this.parentMenuItems;
+		}.bind(child);
+
 		child.addEvent('click', function () {
 			menuComponent.fireEvent('click', this);
 		}.bind(child));
@@ -127,13 +143,18 @@ ludo.layout.Menu = new Class({
 			child.addEvent('click', function () {
 				menuComponent.getLayoutManager().activate(child);
 			}.bind(this));
+		}else{
+			child.addEvent('click', menuComponent.getLayoutManager().hideAllMenus.bind(menuComponent.getLayoutManager()));
 		}
 
 		child.addEvent('enterMenuItem', function () {
 			menuComponent.getLayoutManager().showMenusFor(child);
+			menuComponent.getLayoutManager().highlightItemPath(child);
 		}.bind(this))
 	},
 	shownMenus:[],
+
+
 
 	activate:function (child) {
 		this.active = !this.active;
@@ -141,7 +162,7 @@ ludo.layout.Menu = new Class({
 	},
 
 	showMenusFor:function (child) {
-		if (!this.active) {
+		if (!this.active && !this.alwaysActive) {
 			this.hideMenus();
 		} else {
 			var menusToShow = child.getMenuContainersToShow();
@@ -154,10 +175,34 @@ ludo.layout.Menu = new Class({
 		}
 	},
 
+	hideAllMenus:function(){
+		this.hideMenus();
+		this.clearHighlightedPath();
+	},
+
 	hideMenus:function (except) {
 		except = except || [];
 		for (var i = 0; i < this.shownMenus.length; i++) {
 			if (except.indexOf(this.shownMenus[i]) === -1) this.shownMenus[i].hide();
+		}
+	},
+
+	highlightedItems : [],
+	highlightItemPath:function(child){
+		var items = child.getParentMenuItems();
+		this.clearHighlightedPath(items);
+		for(var i=0;i<items.length;i++){
+			ludo.dom.addClass(items[i].getEl(), 'ludo-menu-item-active');
+		}
+		this.highlightedItems = items;
+	},
+
+	clearHighlightedPath:function(except){
+		except = except || [];
+		for(var i=0;i<this.highlightedItems.length;i++){
+			if(except.indexOf(this.highlightedItems[i]) === -1){
+				ludo.dom.removeClass(this.highlightedItems[i].getEl(), 'ludo-menu-item-active');
+			}
 		}
 	}
 });
