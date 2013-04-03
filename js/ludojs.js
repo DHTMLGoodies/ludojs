@@ -1,4 +1,4 @@
-/* Generated Wed Apr 3 16:44:09 CEST 2013 */
+/* Generated Wed Apr 3 17:36:40 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -7974,9 +7974,13 @@ ludo.layout.MenuContainer = new Class({
 ludo.layout.Menu = new Class({
 	Extends:ludo.layout.Base,
 	active:false,
+	alwaysActive:false,
 
 	onCreate:function () {
 		this.menuContainer = new ludo.layout.MenuContainer(this);
+		if(this.view.layout.active){
+			this.alwaysActive = true;
+		}
 	},
 
 	getMenuContainer:function () {
@@ -8112,6 +8116,8 @@ ludo.layout.Menu = new Class({
 			child.addEvent('click', function () {
 				menuComponent.getLayoutManager().activate(child);
 			}.bind(this));
+		}else{
+			child.addEvent('click', menuComponent.getLayoutManager().hideAllMenus.bind(menuComponent.getLayoutManager()));
 		}
 
 		child.addEvent('enterMenuItem', function () {
@@ -8129,7 +8135,7 @@ ludo.layout.Menu = new Class({
 	},
 
 	showMenusFor:function (child) {
-		if (!this.active) {
+		if (!this.active && !this.alwaysActive) {
 			this.hideMenus();
 		} else {
 			var menusToShow = child.getMenuContainersToShow();
@@ -8142,6 +8148,11 @@ ludo.layout.Menu = new Class({
 		}
 	},
 
+	hideAllMenus:function(){
+		this.hideMenus();
+		this.clearHighlightedPath();
+	},
+
 	hideMenus:function (except) {
 		except = except || [];
 		for (var i = 0; i < this.shownMenus.length; i++) {
@@ -8152,8 +8163,19 @@ ludo.layout.Menu = new Class({
 	highlightedItems : [],
 	highlightItemPath:function(child){
 		var items = child.getParentMenuItems();
+		this.clearHighlightedPath(items);
 		for(var i=0;i<items.length;i++){
 			ludo.dom.addClass(items[i].getEl(), 'ludo-menu-item-active');
+		}
+		this.highlightedItems = items;
+	},
+
+	clearHighlightedPath:function(except){
+		except = except || [];
+		for(var i=0;i<this.highlightedItems.length;i++){
+			if(except.indexOf(this.highlightedItems[i]) === -1){
+				ludo.dom.removeClass(this.highlightedItems[i].getEl(), 'ludo-menu-item-active');
+			}
 		}
 	}
 });/* ../ludojs/src/layout/menu-horizontal.js */
@@ -19082,105 +19104,7 @@ ludo.model.Model = new Class({
         this.updateViews();
 	}
 });
-/* ../ludojs/src/menu/menu-handler.js */
-ludo.menu.MenuHandler = new Class({
-    items:{},
-    menus:[],
-    initialItems:[],
-    itemPrepared:false,
-    isActive:true,
-    alwaysActive:true,
-
-    addChild:function (item, menu, parentMenuItem) {
-        if (parentMenuItem && parentMenuItem.menuDirection === 'horizontal') {
-            this.isActive = false;
-            this.alwaysActive = false;
-        }
-        this.initialItems.push({
-            id:item.getId(),
-            label : item.label,
-            menu:menu ? [menu.getId()] : null,
-            parent:parentMenuItem ? parentMenuItem.getId() : null
-        });
-        item.addEvent('click', this.hideMenus.bind(this));
-    },
-
-    toggleActive:function (menuItem) {
-        if (this.alwaysActive) {
-            return;
-        }
-        this.isActive = !this.isActive;
-        if (this.isActive) {
-            this.showMenu(menuItem);
-        } else {
-            this.hideMenus();
-        }
-    },
-
-    prepareItems:function () {
-        for (var i = this.initialItems.length - 1; i >= 0; i--) {
-            var item = this.initialItems[i];
-            item.menu = item.menu || [];
-            this.items[item.id] = {
-                label:ludo.get(item.id).label,
-                menus:this.getParentMenus(item.parent).concat(item.menu),
-                item:item.id
-            };
-
-            this.menus = this.menus.concat(this.items[item.id].menus);
-        }
-        this.itemPrepared = true;
-
-        document.id(document.documentElement).addEvent('click', this.autoHideMenus.bind(this));
-    },
-
-    getParentMenus:function (item) {
-        if (item && this.items[item]) {
-            return this.items[item].menus || [];
-        }
-        return [];
-    },
-
-    showMenu:function (menuItem) {
-        if (!this.isActive) {
-            return;
-        }
-        if (!this.itemPrepared) {
-            this.prepareItems();
-        }
-        this.hideMenus();
-        var menus = this.items[menuItem.getId()].menus;
-
-        for (var i = 0; i < menus.length; i++) {
-            ludo.getView(menus[i]).show();
-        }
-    },
-
-    hideMenus:function () {
-        for (var i = 0; i < this.menus.length; i++) {
-            ludo.getView(this.menus[i]).hide();
-        }
-    },
-
-    autoHideMenus:function (e) {
-        if (this.isActive) {
-            var el = e.target;
-            if (el.className.indexOf('ludo-menu-item') >= 0) {
-                return;
-            }
-            if (!el.getParent('.ludo-menu')) {
-                this.hideMenus();
-                this.setInactive();
-            }
-        }
-    },
-
-    setInactive:function () {
-        if (!this.alwaysActive) {
-            this.isActive = false;
-        }
-    }
-});/* ../ludojs/src/menu/item.js */
+/* ../ludojs/src/menu/item.js */
 /**
  * Class for menu items. MenuItems are created dynamically from config object(children of ludo.menu.Menu or ludo.menu.Context)
  * @namespace menu
@@ -19430,175 +19354,15 @@ ludo.menu.Item = new Class({
 ludo.menu.Menu = new Class({
     Extends : ludo.View,
     type : 'menu.Menu',
-    cType : 'menu.Item',
-    /**
-     * Direction of menu, "horizontal" or "vertical"
-     * @property direction
-     * @type String
-     * @default horizontal
-     */
-    direction : 'horizontal',
-    layout : { type : 'cols',width:'wrap' },
-    menuItems : [],
-    parentMenuItem : undefined,
-    menuHandler : undefined,
-    selectedRecord : undefined,
-    selectedMenuItem : undefined,
+    layout:{
+		type:'Menu',
+		orientation:'vertical',
+		width:'wrap',
+		height:'wrap'
+	},
 
-    ludoConfig : function(config){
-        this.menuItems = config.children;
-        config.children = [];
-        this.parent(config);
-        this.setConfigParams(config, ['direction','parentMenuItem']);
-        if(this.direction === 'vertical'){
-			this.layout.type = 'linear';
-            this.layout.height = 'wrap';
-			this.layout.orientation = 'vertical';
-        }
-    },
-
-    ludoDOM : function(){
-        this.parent();
-        this.getEl().addClass('ludo-menu-' + this.direction);
-        this.getEl().addClass('ludo-menu');
-    },
-
-    ludoRendered : function() {
-        this.parent();
-        if(!this.menuItems){
-            return;
-        }
-        if(this.direction == 'horizontal'){
-            var height = this.getInnerHeightOfBody();
-        }
-        var lm = this.getLayoutManager();
-        var i;
-        for(i=0;i<this.menuItems.length;i++){
-            var item = this.getMenuItemConfigObject(this.menuItems[i]);
-
-            item = lm.getNewComponent(item);
-            this.menuItems[i] = item;
-            this.getBody().adopt(item.getEl());
-
-            if(this.direction == 'horizontal'){
-                item.resize({ height : height, width : item.width ? item.width : undefined });
-            }
-        }
-        if(this.direction === 'horizontal'){
-            for(i=0;i<this.menuItems.length;i++){
-                this.menuItems[i].getEl().setStyle('position', 'absolute');
-            }
-        }
-        if(this.parentMenuItem){
-            this.getEl().setStyle('position', 'absolute');
-        }
-        if(this.direction == 'horizontal'){
-            this.resizeMenuItems.delay(100, this);
-        }
-        this.positionMenuItems();
-    },
-
-    resizeMenuItems : function() {
-        var height = this.getInnerHeightOfBody();
-        for(var i=0;i<this.menuItems.length;i++){
-            this.menuItems[i].resize({ height : height });
-        }
-    },
-
-    selectRecord : function(recordToSelect){
-        if(this.selectedMenuItem){
-            this.selectedMenuItem.deselect();
-        }
-        for(var i=0;i<this.menuItems.length;i++){
-            var record = this.menuItems[i].getRecord();
-            if(record){
-                if(record.type && record.type == recordToSelect.type && record.id === recordToSelect.id){
-                    this.menuItems[i].select();
-                    this.selectedMenuItem = this.menuItems[i];
-                }
-            }
-        }
-    },
-
-    getMenuItemConfigObject : function(obj){
-        obj = obj.substr ? { html: obj, type:'menu.Item' } : obj;
-        obj.menuDirection = this.direction;
-        return obj;
-    },
-
-    positionMenuItems : function(){
-        if(this.direction == 'horizontal'){
-			ludo.dom.clearCache();
-            var left = 0;
-            for(var i=0;i<this.menuItems.length;i++){
-                this.menuItems[i].getEl().setStyle('left', left);
-                var width = ludo.dom.getMeasuredWidth(this.menuItems[i]);
-                width += ludo.dom.getMBPW(this.menuItems[i].getEl());
-                left += width;
-            }
-        }
-    },
-
-    getDirection : function(){
-        return this.direction;
-    },
-    alignWithMenuItem : function(){
-        if(!this.parentMenuItem){
-            return;
-        }
-        var menuDirection = this.parentMenuItem.getMenuDirection();
-        var coords = this.parentMenuItem.getEl().getCoordinates();
-        var styles;
-        if(menuDirection === 'horizontal'){
-            styles = {
-                left : coords.left,
-                top : coords.top + coords.height
-            }
-        }else{
-            var x = coords.left + coords.width;
-            if(this.isEnoughSpaceToTheRight(x)){
-            styles = {
-                left : x,
-                top : coords.top
-            }
-            }else{
-                styles = {
-                    left : coords.left - this.getEl().getSize().x,
-                    top : coords.top
-                }
-            }
-        }
-
-        this.getEl().setStyles(styles);
-    },
-
-    isEnoughSpaceToTheRight : function(x) {
-        return x + this.getEl().getSize().x <= document.body.clientWidth;
-    },
-
-    getMenuHandler : function(){
-        if(!this.menuHandler){
-            this.menuHandler = new ludo.menu.MenuHandler();
-        }
-        return this.menuHandler;
-    },
-
-    show:function(){
-        this.parent();
-        this.alignWithMenuItem();
-    },
     addCoreEvents : function(){
 
-    },
-
-    click : function(menuItem){
-        /**
-         * Event fired when menu item is clicked
-         * @event click
-         * @param {Object} ludo.menu.Item
-         * @param {Object} ludo.menu.Menu
-         */
-        this.fireEvent('click', [menuItem, this]);
     },
 
     isMenu:function(){
@@ -19609,15 +19373,15 @@ ludo.menu.Menu = new Class({
 
 /* ../ludojs/src/menu/context.js */
 /**
-  Context menu class. You can create one or more context menus for a component by using the
-  ludo.View.contextMenu config array,
-  @namespace menu
-  @class Context
-  @extends menu.Menu
-  @constructor
-  @param {Object} config
-  @example
-      new ludo.Window({
+ Context menu class. You can create one or more context menus for a component by using the
+ ludo.View.contextMenu config array,
+ @namespace menu
+ @class Context
+ @extends menu.Menu
+ @constructor
+ @param {Object} config
+ @example
+ new ludo.Window({
            contextMenu:[{
                selector : '.my-selector',
                children:[{label:'Menu Item 1'},{label:'Menu item 2'}],
@@ -19631,10 +19395,18 @@ ludo.menu.Menu = new Class({
       });
  */
 ludo.menu.Context = new Class({
-	Extends:ludo.menu.Menu,
+	Extends:ludo.View,
 	type:'menu.ContextMenu',
-	direction:'vertical',
-    renderTo:document.body,
+
+	layout:{
+		type:'Menu',
+		orientation:'vertical',
+		width:'wrap',
+		height:'wrap'
+	},
+
+
+	renderTo:document.body,
 	/**
 	 Show context menu only for DOM nodes matching a CSS selector. The context menu will also
 	 be shown if a match is found in one of the parent DOM elements.
@@ -19642,22 +19414,20 @@ ludo.menu.Context = new Class({
 	 @type String
 	 @default undefined
 	 @example
-	 	selector : '.selected-records'
+	 selector : '.selected-records'
 	 */
 	selector:undefined,
 	component:undefined,
-	layout:{
-		width:'wrap'
-	},
-    // TODO change this code to record:{ keys that has to match }, example: record:{ type:'country' }
 
-    /**
-     Show context menu for records with these properties
-     @config {Object} record
-     @default undefined
-     @example
-     */
-    record:undefined,
+	// TODO change this code to record:{ keys that has to match }, example: record:{ type:'country' }
+
+	/**
+	 Show context menu for records with these properties
+	 @config {Object} record
+	 @default undefined
+	 @example
+	 */
+	record:undefined,
 	/**
 	 Show context menu only for records of a specific type. The component creating the context
 	 menu has to have a getRecordByDOM method in order for this to work. These methods are already
@@ -19667,16 +19437,16 @@ ludo.menu.Context = new Class({
 	 @type String
 	 @default undefined
 	 @example
-	 	recordType : 'city'
+	 recordType : 'city'
 	 */
 	recordType:undefined,
 
 	ludoConfig:function (config) {
-        this.renderTo = document.body;
+		this.renderTo = document.body;
 		config.els = config.els || {};
 		this.parent(config);
-        this.setConfigParams(config, ['selector','recordType','record', 'component']);
-        if(this.recordType)this.record = { type: this.recordType };
+		this.setConfigParams(config, ['selector', 'recordType', 'record', 'component']);
+		if (this.recordType)this.record = { type:this.recordType };
 	},
 
 	ludoDOM:function () {
@@ -19717,13 +19487,13 @@ ludo.menu.Context = new Class({
 			}
 			this.fireEvent('selectorclick', domEl);
 		}
-        if (this.record){
-            var r = this.component.getRecordByDOM(e.target);
-            if(!r)return undefined;
-            if(this.isContextMenuFor(r)){
-                this.selectedRecord = r;
-            }
-        }
+		if (this.record) {
+			var r = this.component.getRecordByDOM(e.target);
+			if (!r)return undefined;
+			if (this.isContextMenuFor(r)) {
+				this.selectedRecord = r;
+			}
+		}
 		this.parent();
 		if (!this.getParent()) {
 			var el = this.getEl();
@@ -19734,13 +19504,13 @@ ludo.menu.Context = new Class({
 		return false;
 	},
 
-    isContextMenuFor:function(record){
-        for(var key in this.record){
-            if(this.record.hasOwnProperty(key))
-                if(!record[key] || this.record[key] !== record[key])return false;
-        }
-        return true;
-    },
+	isContextMenuFor:function (record) {
+		for (var key in this.record) {
+			if (this.record.hasOwnProperty(key))
+				if (!record[key] || this.record[key] !== record[key])return false;
+		}
+		return true;
+	},
 
 	getXAndYPos:function (e) {
 		var ret = {
@@ -19754,6 +19524,10 @@ ludo.menu.Context = new Class({
 			ret.x -= (ludo - clientWidth);
 		}
 		return ret;
+	},
+
+	addCoreEvents:function () {
+
 	},
 
 	getValidDomElement:function (el) {
@@ -19785,14 +19559,11 @@ ludo.menu.DropDown = new Class({
     ludoConfig:function (config) {
         config.renderTo = document.body;
         this.parent(config);
-        if (config.applyTo !== undefined)this.applyTo = config.applyTo;
-        if (config.pos !== undefined)this.pos = config.pos;
+		this.setConfigParams(config, ['applyTo']);
+		this.layout.below = this.layout.below || this.applyTo;
+		this.layout.alignLeft = this.layout.alignLeft || this.applyTo;
     },
 
-    ludoDOM:function () {
-        this.parent();
-        this.getEl().style.position = 'absolute';
-    },
     ludoEvents:function () {
         this.parent();
         document.id(document.documentElement).addEvent('click', this.hideAfterDelay.bind(this));
@@ -19802,30 +19573,6 @@ ludo.menu.DropDown = new Class({
         if (!this.isHidden()) {
             this.hide.delay(50, this);
         }
-    },
-
-    show:function () {
-        this.parent();
-        var el = this.getEl();
-        var pos = this.getXAndYPos();
-        el.style.left = pos.x + 'px';
-        el.style.top = pos.y + 'px';
-    },
-
-    getXAndYPos:function () {
-        var coords = this.applyTo.getEl().getCoordinates();
-        var ret = {
-            x:coords.left,
-            y:coords.top + coords.height
-        };
-        switch (this.pos) {
-            case 'right':
-                ret.x = coords.left + coords.width;
-                ret.y = coords.top;
-                break;
-            default:
-        }
-        return ret;
     },
 
     toggle:function(){

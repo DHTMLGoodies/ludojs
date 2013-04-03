@@ -456,6 +456,16 @@ TestCase("MenuTest", {
         assertEquals(c.child['b'].child['ba'], firedFromView);
     },
 
+	"test context menu should have correct layout settings": function(){
+		// given
+		var cm = new ludo.menu.Context();
+
+		// then
+		assertEquals('menu', cm.layout.type.toLowerCase());
+		assertEquals('vertical', cm.layout.orientation.toLowerCase());
+
+	},
+
     getMenuComponent:function (layout) {
 		layout = layout || {};
 		layout.type = 'menu';

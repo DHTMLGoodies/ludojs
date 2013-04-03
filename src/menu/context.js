@@ -1,13 +1,13 @@
 /**
-  Context menu class. You can create one or more context menus for a component by using the
-  ludo.View.contextMenu config array,
-  @namespace menu
-  @class Context
-  @extends menu.Menu
-  @constructor
-  @param {Object} config
-  @example
-      new ludo.Window({
+ Context menu class. You can create one or more context menus for a component by using the
+ ludo.View.contextMenu config array,
+ @namespace menu
+ @class Context
+ @extends menu.Menu
+ @constructor
+ @param {Object} config
+ @example
+ new ludo.Window({
            contextMenu:[{
                selector : '.my-selector',
                children:[{label:'Menu Item 1'},{label:'Menu item 2'}],
@@ -21,10 +21,18 @@
       });
  */
 ludo.menu.Context = new Class({
-	Extends:ludo.menu.Menu,
+	Extends:ludo.View,
 	type:'menu.ContextMenu',
-	direction:'vertical',
-    renderTo:document.body,
+
+	layout:{
+		type:'Menu',
+		orientation:'vertical',
+		width:'wrap',
+		height:'wrap'
+	},
+
+
+	renderTo:document.body,
 	/**
 	 Show context menu only for DOM nodes matching a CSS selector. The context menu will also
 	 be shown if a match is found in one of the parent DOM elements.
@@ -32,22 +40,20 @@ ludo.menu.Context = new Class({
 	 @type String
 	 @default undefined
 	 @example
-	 	selector : '.selected-records'
+	 selector : '.selected-records'
 	 */
 	selector:undefined,
 	component:undefined,
-	layout:{
-		width:'wrap'
-	},
-    // TODO change this code to record:{ keys that has to match }, example: record:{ type:'country' }
 
-    /**
-     Show context menu for records with these properties
-     @config {Object} record
-     @default undefined
-     @example
-     */
-    record:undefined,
+	// TODO change this code to record:{ keys that has to match }, example: record:{ type:'country' }
+
+	/**
+	 Show context menu for records with these properties
+	 @config {Object} record
+	 @default undefined
+	 @example
+	 */
+	record:undefined,
 	/**
 	 Show context menu only for records of a specific type. The component creating the context
 	 menu has to have a getRecordByDOM method in order for this to work. These methods are already
@@ -57,16 +63,16 @@ ludo.menu.Context = new Class({
 	 @type String
 	 @default undefined
 	 @example
-	 	recordType : 'city'
+	 recordType : 'city'
 	 */
 	recordType:undefined,
 
 	ludoConfig:function (config) {
-        this.renderTo = document.body;
+		this.renderTo = document.body;
 		config.els = config.els || {};
 		this.parent(config);
-        this.setConfigParams(config, ['selector','recordType','record', 'component']);
-        if(this.recordType)this.record = { type: this.recordType };
+		this.setConfigParams(config, ['selector', 'recordType', 'record', 'component']);
+		if (this.recordType)this.record = { type:this.recordType };
 	},
 
 	ludoDOM:function () {
@@ -107,13 +113,13 @@ ludo.menu.Context = new Class({
 			}
 			this.fireEvent('selectorclick', domEl);
 		}
-        if (this.record){
-            var r = this.component.getRecordByDOM(e.target);
-            if(!r)return undefined;
-            if(this.isContextMenuFor(r)){
-                this.selectedRecord = r;
-            }
-        }
+		if (this.record) {
+			var r = this.component.getRecordByDOM(e.target);
+			if (!r)return undefined;
+			if (this.isContextMenuFor(r)) {
+				this.selectedRecord = r;
+			}
+		}
 		this.parent();
 		if (!this.getParent()) {
 			var el = this.getEl();
@@ -124,13 +130,13 @@ ludo.menu.Context = new Class({
 		return false;
 	},
 
-    isContextMenuFor:function(record){
-        for(var key in this.record){
-            if(this.record.hasOwnProperty(key))
-                if(!record[key] || this.record[key] !== record[key])return false;
-        }
-        return true;
-    },
+	isContextMenuFor:function (record) {
+		for (var key in this.record) {
+			if (this.record.hasOwnProperty(key))
+				if (!record[key] || this.record[key] !== record[key])return false;
+		}
+		return true;
+	},
 
 	getXAndYPos:function (e) {
 		var ret = {
@@ -144,6 +150,10 @@ ludo.menu.Context = new Class({
 			ret.x -= (ludo - clientWidth);
 		}
 		return ret;
+	},
+
+	addCoreEvents:function () {
+
 	},
 
 	getValidDomElement:function (el) {

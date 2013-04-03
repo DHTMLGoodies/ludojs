@@ -9,7 +9,9 @@ ludo.menu.Menu = new Class({
     type : 'menu.Menu',
     layout:{
 		type:'Menu',
-		orientation:'vertical'
+		orientation:'vertical',
+		width:'wrap',
+		height:'wrap'
 	},
 
     addCoreEvents : function(){

@@ -18,6 +18,7 @@ require_once("../includes/demo-header.php");
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/framed-view.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/window.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/menu/item.js"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/menu/context.js"></script>
 <script type="text/javascript" class="source-code">
     var w = new ludo.Window({
         title:'Window with menu',
@@ -28,6 +29,11 @@ require_once("../includes/demo-header.php");
             top:50,
             type:'relative'
         },
+        contextMenu:[
+            {
+                children:['Item 1','Item 2', 'Item 3']
+            }
+        ],
         children:[
             {
                 name:'top',

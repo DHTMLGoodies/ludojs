@@ -12,6 +12,7 @@ load:
   - ../../src/layout/menu-vertical.js
   - ../../src/layout/menu-horizontal.js
   - ../../src/layout/menu-container.js
+  - ../../src/menu/context.js
   - ../../src/menu/menu.js
   - ../../src/menu/item.js
 
