@@ -94,8 +94,7 @@ require_once("../includes/demo-header.php");
                     orientation:'vertical'
                 },
                 containerCss:{
-                    border:0,
-                    'border-right':'1px solid #d7d7d7'
+                    border:0
                 },
                 children:[
                     {
@@ -119,7 +118,9 @@ require_once("../includes/demo-header.php");
                     fillDown:true
                 },
                 containerCss:{
-                    'background-color':'#FFF'
+                    'background-color':'#FFF',
+                    'border-left':'1px solid #d7d7d7'
+
                 },
                 css:{
                     'overflow-y':'auto',
