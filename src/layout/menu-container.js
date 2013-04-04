@@ -85,13 +85,12 @@ ludo.layout.MenuContainer = new Class({
 		this.layout.width = undefined;
 		var r = this.getRenderer();
 		r.clearFn();
-		r.rendering.width = r.getSize().x;
+		r.setValue('width', r.getSize().x);
 		r.resize();
 		for (var i = 0; i < this.lm.view.children.length; i++) {
 			var cr = this.lm.view.children[i].getLayoutManager().getRenderer();
 			cr.clearFn();
-			cr.rendering.width = r.rendering.width;
-
+			cr.setValue('width', r.getValue('width'));
 		}
 
         this.resizeChildren();

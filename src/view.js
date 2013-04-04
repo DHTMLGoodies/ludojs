@@ -406,14 +406,6 @@ ludo.View = new Class({
 		if (this.copyEvents) {
 			this.createEventCopies();
 		}
-
-		if (this.layout && this.layout.aspectRatio) {
-			if (this.layout.width) {
-				this.layout.height = Math.round(this.layout.width / this.layout.aspectRatio);
-			} else if (this.layout.height) {
-				this.layout.width = Math.round(this.layout.height * this.layout.aspectRatio);
-			}
-		}
 		this.insertDOMContainer();
 	},
 
@@ -898,6 +890,7 @@ ludo.View = new Class({
 					config.height = config.width / this.layout.aspectRatio;
 				}
 			}
+			// TODO layout properties should not be set here.
             this.layout.width = config.width;
 			var width = config.width - ludo.dom.getMBPW(this.els.container);
 			if (width > 0) {

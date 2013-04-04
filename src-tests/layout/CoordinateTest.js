@@ -38,6 +38,20 @@ TestCase("CoordinateTest", {
 
 		// then
 		assertEquals(100, c.layout.height);
+	},
+
+	"test should preserve aspect ratio": function(){
+		// given
+		var c = new ludo.View({
+			layout:{
+				width:200,
+				aspectRatio: 2
+			}
+		});
+
+		// then
+		assertEquals(100, c.layout.height);
+
 	}
 
 });

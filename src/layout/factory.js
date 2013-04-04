@@ -81,6 +81,15 @@ ludo.layout.Factory = new Class({
 		}
 
 		ret = this.transferFromView(view, config, ret);
+		
+		if (ret.aspectRatio) {
+			if (ret.width) {
+				ret.height = Math.round(ret.width / ret.aspectRatio);
+			} else if (ret.height) {
+				ret.width = Math.round(ret.height * ret.aspectRatio);
+			}
+		}
+		
         ret.type = ret.type || 'Base';
 		return ret;
 	},

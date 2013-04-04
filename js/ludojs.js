@@ -1,4 +1,4 @@
-/* Generated Thu Apr 4 18:14:42 CEST 2013 */
+/* Generated Thu Apr 4 18:23:42 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -3302,6 +3302,15 @@ ludo.layout.Factory = new Class({
 		}
 
 		ret = this.transferFromView(view, config, ret);
+		
+		if (ret.aspectRatio) {
+			if (ret.width) {
+				ret.height = Math.round(ret.width / ret.aspectRatio);
+			} else if (ret.height) {
+				ret.width = Math.round(ret.height * ret.aspectRatio);
+			}
+		}
+		
         ret.type = ret.type || 'Base';
 		return ret;
 	},
@@ -4826,14 +4835,6 @@ ludo.View = new Class({
 
 		if (this.copyEvents) {
 			this.createEventCopies();
-		}
-
-		if (this.layout && this.layout.aspectRatio) {
-			if (this.layout.width) {
-				this.layout.height = Math.round(this.layout.width / this.layout.aspectRatio);
-			} else if (this.layout.height) {
-				this.layout.width = Math.round(this.layout.height * this.layout.aspectRatio);
-			}
 		}
 		this.insertDOMContainer();
 	},
@@ -7970,7 +7971,7 @@ ludo.layout.MenuContainer = new Class({
         var l = this.layout;
 		if (this.lm.view.parentComponent) {
 			if (this.lm.view.parentComponent.layout.orientation === 'horizontal') {
-				l.below = this.lm.view;
+				l.below = this.lm.view.getParent().getEl();
 				l.alignLeft = this.lm.view;
 			} else {
 				l.rightOrLeftOf = this.lm.view;

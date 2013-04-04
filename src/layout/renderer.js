@@ -4,6 +4,7 @@
  */
 ludo.layout.Renderer = new Class({
 	// TODO Support top and left resize of center aligned dialogs
+	// TODO store inner height and width of views(body) for fast lookup
 	rendering:{},
 	view:undefined,
 	options:['width', 'height',
@@ -375,5 +376,13 @@ ludo.layout.Renderer = new Class({
 			x:this.coordinates.width,
 			y:this.coordinates.height
 		}
+	},
+
+	setValue:function(key, value){
+		this.rendering[key] = value;
+	},
+
+	getValue:function(key){
+		return this.rendering[key];
 	}
 });
