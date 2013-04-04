@@ -28,6 +28,16 @@ TestCase("CoordinateTest", {
 
 		// then
 		assertEquals(100, c.layout.width);
+	},
+
+	"test layout height should be equal to view height": function(){
+		// given
+		var c = new ludo.View({
+			height:100
+		});
+
+		// then
+		assertEquals(100, c.layout.height);
 	}
 
 });

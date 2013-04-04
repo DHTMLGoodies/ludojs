@@ -65,7 +65,10 @@ ludo.layout.Factory = new Class({
 	getValidLayoutObject:function(view, config){
 		var ret;
         if(view.layout && ludo.util.isString(view.layout))view.layout = { type : view.layout };
-		if(view.layout === undefined && config.layout === undefined && view.width === undefined && config.weight === undefined && config.left===undefined && config.top===undefined)return {};
+		//if(view.layout === undefined && config.layout === undefined && view.height === undefined && view.width === undefined && config.weight === undefined && config.left===undefined && config.top===undefined)return {};
+		if(!this.hasLayoutProperties(view, config)){
+			return {};
+		}
 		if(config.layout !== undefined){
 			if(view.layout !== undefined)config.layout = this.getMergedLayout(view.layout, config.layout);
 			ret = config.layout;
@@ -77,14 +80,28 @@ ludo.layout.Factory = new Class({
 			ret = { type:ret }
 		}
 
-		if(ret.left === undefined)ret.left = config.left || view.left;
-		if(ret.top === undefined)ret.top = config.top || view.top;
-		if(ret.width === undefined)ret.width = config.width || view.width;
-		if(ret.height === undefined)ret.height = config.height || view.height;
-		if(ret.weight === undefined)ret.weight = config.weight || view.weight;
+		ret = this.transferFromView(view, config, ret);
         ret.type = ret.type || 'Base';
 		return ret;
 	},
+
+	hasLayoutProperties:function(view, config){
+		if(view.layout || config.layout)return true;
+		var keys = ['left','top','height','width','weight'];
+		for(var i=0;i<keys.length;i++){
+			if(config[keys[i]] !== undefined || view[keys[i]] !== undefined)return true;
+		}
+		return false;
+	},
+
+	transferFromView:function(view, config, ret){
+		var keys = ['left','top','width','height','weight'];
+		for(var i=0;i<keys.length;i++){
+			if(ret[keys[i]] === undefined)ret[keys[i]] = config[keys[i]] || view[keys[i]];
+		}
+		return ret;
+	},
+
     /**
      * Returned merged layout object, i.e. layout defind on HTML page merged
      * with internal layout defined in class

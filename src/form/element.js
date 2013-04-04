@@ -140,7 +140,7 @@ ludo.form.Element = new Class({
 
         this.elementId = 'el-' + this.id;
         this.formCss = defaultConfig.formCss || this.formCss;
-        if (defaultConfig.height && config.height === undefined)this.height = defaultConfig.height;
+        if (defaultConfig.height && config.height === undefined)this.layout.height = defaultConfig.height;
 
         if (this.validator) {
             this.createValidator();

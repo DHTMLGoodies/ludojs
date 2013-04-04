@@ -481,8 +481,8 @@ ludo.form.TextFilterContainer = new Class({
     ludoRendered:function () {
         this.parent();
         this.resize({
-            width:this.width,
-            height:this.height
+            width:this.layout.width,
+            height:this.layout.height
         });
 
         this.getBody().setStyle('overflow', 'hidden');
@@ -599,12 +599,12 @@ ludo.form.TextFilterContainer = new Class({
     heightOfSuggestionElement:undefined,
 
     getHeightOfSuggestionElement:function (el) {
-        if (this.heightOfSuggestionElement === undefined) {
-            this.heightOfSuggestionElement = el.measure(function () {
+        if (this.layout.heightOfSuggestionElement === undefined) {
+            this.layout.heightOfSuggestionElement = el.measure(function () {
 
                 return this.getSize().y;
             });
         }
-        return this.heightOfSuggestionElement;
+        return this.layout.heightOfSuggestionElement;
     }
 });

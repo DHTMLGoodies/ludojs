@@ -26,7 +26,7 @@ ludo.Panel = new Class({
         var sizeLegend = this.els.legend.measure(function(){
             return this.getSize();
         });
-        this.height += sizeLegend.y;
+        this.layout.height += sizeLegend.y;
 
     },
 
@@ -36,10 +36,10 @@ ludo.Panel = new Class({
 
     heightOfLegend : undefined,
     getHeightOfLegend : function(){
-        if(this.heightOfLegend === undefined){
-            this.heightOfLegend = this.els.legend.offsetHeight;
+        if(this.layout.heightOfLegend === undefined){
+            this.layout.heightOfLegend = this.els.legend.offsetHeight;
         }
-        return this.heightOfLegend;
+        return this.layout.heightOfLegend;
     },
 
     resizeDOM : function(){

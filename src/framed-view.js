@@ -173,19 +173,19 @@ ludo.FramedView = new Class({
 	heightOfTitleAndButtonBar:undefined,
 	getHeightOfTitleAndButtonBar:function () {
 		if (this.isHidden())return 0;
-		if (!this.heightOfTitleAndButtonBar) {
-			this.heightOfTitleAndButtonBar = this.getHeightOfTitleBar() + this.getHeightOfButtonBar();
+		if (!this.layout.heightOfTitleAndButtonBar) {
+			this.layout.heightOfTitleAndButtonBar = this.getHeightOfTitleBar() + this.getHeightOfButtonBar();
 		}
-		return this.heightOfTitleAndButtonBar;
+		return this.layout.heightOfTitleAndButtonBar;
 	},
 
 	heightOfButtonBar:undefined,
 	getHeightOfButtonBar:function () {
 		if (!this.buttonBar)return 0;
-		if (this.heightOfButtonBar === undefined) {
-			if(this.els.buttonBar)this.heightOfButtonBar = this.els.buttonBar.el.offsetHeight + ludo.dom.getMH(this.els.buttonBar.el);
+		if (this.layout.heightOfButtonBar === undefined) {
+			if(this.els.buttonBar)this.layout.heightOfButtonBar = this.els.buttonBar.el.offsetHeight + ludo.dom.getMH(this.els.buttonBar.el);
 		}
-		return this.heightOfButtonBar;
+		return this.layout.heightOfButtonBar;
 	},
 
 	getHeightOfTitleBar:function () {
@@ -243,7 +243,7 @@ ludo.FramedView = new Class({
         this.state.isMinimized = false;
         if (!this.hidden) {
             this.resize({
-                height:this.height
+                height:this.layout.height
             });
             this.els.body.style.visibility = 'visible';
             this.showResizeHandles();
@@ -276,13 +276,13 @@ ludo.FramedView = new Class({
 	minimize:function () {
         this.state.isMinimized = true;
 		if (!this.hidden) {
-            var height = this.height;
+            var height = this.layout.height;
             var newHeight = this.getHeightOfTitleBar();
             this.els.container.setStyle('height', this.getHeightOfTitleBar());
             this.els.body.style.visibility = 'hidden';
             this.hideResizeHandles();
 
-            this.height = height;
+            this.layout.height = height;
             /**
              * @event minimize
              * @param Component this

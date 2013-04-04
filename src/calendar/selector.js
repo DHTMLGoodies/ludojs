@@ -43,7 +43,7 @@ ludo.calendar.Selector = new Class({
     autoResize:function () {
         var height = this.els.calendarContainer.getSize().y;
         height += ludo.dom.getMH(this.els.calendarContainer);
-        this.height = height + ludo.dom.getMBPH(this.getBody()) + ludo.dom.getMBPH(this.getEl());
+        this.layout.height = height + ludo.dom.getMBPH(this.getBody()) + ludo.dom.getMBPH(this.getEl());
 
     },
 

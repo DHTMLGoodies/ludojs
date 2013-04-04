@@ -103,10 +103,12 @@ ludo.form.Button = new Class({
     active:false,
 
     ludoConfig:function (config) {
+		this.parent(config);
+
         var val = config.value || this.value;
         var len = val ? val.length : 5;
-        config.width = config.width || this.width || Math.max(len * 10, 80);
-        this.parent(config);
+        this.layout.width = this.layout.width || Math.max(len * 10, 80);
+
 
         this.setConfigParams(config, ['menu','icon','toggle','disableOnInvalid','defaultSubmit','disabled','selected']);
 

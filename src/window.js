@@ -103,9 +103,6 @@ ludo.Window = new Class({
         var keys = ['resizeTop','resizeLeft','hideBodyOnMove','preserveAspectRatio'];
         this.setConfigParams(config, keys);
 
-		if (config.left !== undefined)this.layout.left = config.left;
-		if (config.top !== undefined) this.layout.top = config.top;
-
 		this.parent(config);
     },
 

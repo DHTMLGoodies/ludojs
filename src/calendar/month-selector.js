@@ -19,7 +19,7 @@ ludo.calendar.MonthSelector = new Class({
         var height = this.els.monthContainer.offsetHeight;
         height += ludo.dom.getMH(this.els.monthContainer);
         height += ludo.dom.getMBPH(this.getBody()) + ludo.dom.getMBPH(this.getEl());
-        this.height = height;
+        this.layout.height = height;
 
     },
     createMonthTooltip:function(){
