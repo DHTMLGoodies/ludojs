@@ -52,6 +52,25 @@ TestCase("CoordinateTest", {
 		// then
 		assertEquals(100, c.layout.height);
 
+	},
+
+	"test should transfer x and y coordinates": function(){
+		// given
+		var c = new ludo.View({
+			x:100,y:150
+		});
+
+		// then
+		assertEquals(100, c.layout.left);
+		assertEquals(150, c.layout.top);
+		// given
+		var d = new ludo.View({
+			layout:{ x:100,y:150 }
+		});
+
+		// then
+		assertEquals(100, d.layout.left);
+		assertEquals(150, d.layout.top);
 	}
 
 });

@@ -5,7 +5,6 @@
 ludo.layout.Renderer = new Class({
 	// TODO Support top and left resize of center aligned dialogs
 	// TODO store inner height and width of views(body) for fast lookup
-	rendering:{},
 	view:undefined,
 	options:['width', 'height',
 		'rightOf', 'leftOf', 'below', 'above',
@@ -32,8 +31,6 @@ ludo.layout.Renderer = new Class({
 
 	initialize:function (config) {
 		this.view = config.view;
-		// TODO use this.view.layout instead of this.rendering to avoid confusion. It's a reference!
-		this.rendering = this.view.layout || {};
 		this.fixReferences();
 		this.setDefaultProperties();
 		this.view.addEvent('show', this.resize.bind(this));
@@ -44,14 +41,7 @@ ludo.layout.Renderer = new Class({
 	fixReferences:function () {
 		var el;
 		var hasReferences = false;
-		if (this.rendering.x) {
-			this.rendering.left = this.rendering.x;
-			this.rendering.x = undefined;
-		}
-		if (this.rendering.y) {
-			this.rendering.top = this.rendering.y;
-			this.rendering.y = undefined;
-		}
+
 		for (var i = 0; i < this.options.length; i++) {
 			var key = this.options[i];
 			switch (key) {
@@ -99,8 +89,8 @@ ludo.layout.Renderer = new Class({
 
 	setDefaultProperties:function () {
         // TODO is this necessary ?
-		this.rendering.width = this.rendering.width || 'matchParent';
-		this.rendering.height = this.rendering.height || 'matchParent';
+		this.view.layout.width = this.view.layout.width || 'matchParent';
+		this.view.layout.height = this.view.layout.height || 'matchParent';
 	},
 
 	addResizeEvent:function () {
@@ -122,8 +112,8 @@ ludo.layout.Renderer = new Class({
 		var fns = [];
 		var fnNames = [];
 		for (var i = 0; i < this.options.length; i++) {
-			if (this.rendering[this.options[i]] !== undefined) {
-				fns.push(this.getFnFor(this.options[i], this.rendering[this.options[i]]));
+			if (this.view.layout[this.options[i]] !== undefined) {
+				fns.push(this.getFnFor(this.options[i], this.view.layout[this.options[i]]));
 				fnNames.push(this.options[i]);
 			}
 		}
@@ -148,7 +138,7 @@ ludo.layout.Renderer = new Class({
 				if (value === 'wrap') {
 					var s = ludo.dom.getWrappedSizeOfView(this.view);
                     // TODO test out layout in order to check that the line below is working.
-                    this.rendering.height = s.y;
+                    this.view.layout.height = s.y;
 					return function () {
 						c.height = s.y;
 					}
@@ -161,7 +151,7 @@ ludo.layout.Renderer = new Class({
 					}
 				}
 				return function () {
-					c.height = this.rendering[option];
+					c.height = this.view.layout[option];
 				}.bind(this);
 			case 'width':
 				if (value === 'matchParent') {
@@ -171,7 +161,7 @@ ludo.layout.Renderer = new Class({
 				}
 				if (value === 'wrap') {
 					var size = ludo.dom.getWrappedSizeOfView(this.view);
-                    this.rendering.width = size.x;
+                    this.view.layout.width = size.x;
 					return function () {
 						c.width = size.x;
 					}
@@ -183,7 +173,7 @@ ludo.layout.Renderer = new Class({
 					}
 				}
 				return function () {
-					c.width = this.rendering[option];
+					c.width = this.view.layout[option];
                 }.bind(this);
 			case 'rightOf':
 				return function () {
@@ -274,12 +264,12 @@ ludo.layout.Renderer = new Class({
 			case 'x':
 			case 'left':
 				return function () {
-					c.left = this.rendering[option];
+					c.left = this.view.layout[option];
                 }.bind(this);
 			case 'y':
 			case 'top':
 				return function () {
-					c.top = this.rendering[option];
+					c.top = this.view.layout[option];
                 }.bind(this);
 			case 'fitVerticalViewPort':
 				return function (view, renderer) {
@@ -331,19 +321,19 @@ ludo.layout.Renderer = new Class({
 	},
 
 	getMinWidth:function () {
-		return this.rendering.minWidth || 5;
+		return this.view.layout.minWidth || 5;
 	},
 
 	getMinHeight:function () {
-		return this.rendering.minHeight || 5;
+		return this.view.layout.minHeight || 5;
 	},
 
 	getMaxHeight:function () {
-		return this.rendering.maxHeight || 5000;
+		return this.view.layout.maxHeight || 5000;
 	},
 
 	getMaxWidth:function () {
-		return this.rendering.maxWidth || 5000;
+		return this.view.layout.maxWidth || 5000;
 	},
 
 	setPosition:function (x, y) {
@@ -357,8 +347,8 @@ ludo.layout.Renderer = new Class({
 	},
 
 	setSize:function (config) {
-		if (config.left)this.coordinates.x = this.rendering.left = config.left;
-		if (config.top)this.coordinates.y = this.rendering.top = config.top;
+		if (config.left)this.coordinates.x = this.view.layout.left = config.left;
+		if (config.top)this.coordinates.y = this.view.layout.top = config.top;
 		if (config.width)this.view.layout.width = this.coordinates.width = config.width;
 		if (config.height)this.view.layout.height = this.coordinates.height = config.height;
 		this.resize();
@@ -379,10 +369,10 @@ ludo.layout.Renderer = new Class({
 	},
 
 	setValue:function(key, value){
-		this.rendering[key] = value;
+		this.view.layout[key] = value;
 	},
 
 	getValue:function(key){
-		return this.rendering[key];
+		return this.view.layout[key];
 	}
 });

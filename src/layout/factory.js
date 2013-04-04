@@ -63,25 +63,26 @@ ludo.layout.Factory = new Class({
      * @private
      */
 	getValidLayoutObject:function(view, config){
-		var ret;
-        if(view.layout && ludo.util.isString(view.layout))view.layout = { type : view.layout };
-		//if(view.layout === undefined && config.layout === undefined && view.height === undefined && view.width === undefined && config.weight === undefined && config.left===undefined && config.top===undefined)return {};
+
+		view.layout = this.toLayoutObject(view.layout);
+		config.layout = this.toLayoutObject(config.layout);
+
+
 		if(!this.hasLayoutProperties(view, config)){
 			return {};
 		}
-		if(config.layout !== undefined){
-			if(view.layout !== undefined)config.layout = this.getMergedLayout(view.layout, config.layout);
-			ret = config.layout;
-		}else{
-			ret = view.layout || { type : 'Base' };
-		}
+
+		var ret = this.getMergedLayout(view.layout, config.layout);
 
 		if (typeof ret === 'string') {
 			ret = { type:ret }
 		}
 
 		ret = this.transferFromView(view, config, ret);
-		
+
+		if(ret.left === undefined && ret.x !== undefined)ret.left = ret.x;
+		if(ret.top === undefined && ret.y !== undefined)ret.top = ret.y;
+
 		if (ret.aspectRatio) {
 			if (ret.width) {
 				ret.height = Math.round(ret.width / ret.aspectRatio);
@@ -94,9 +95,15 @@ ludo.layout.Factory = new Class({
 		return ret;
 	},
 
+	toLayoutObject:function(obj){
+		if(!obj)return {};
+		if(ludo.util.isString(obj))return { type : obj };
+		return obj;
+	},
+
 	hasLayoutProperties:function(view, config){
 		if(view.layout || config.layout)return true;
-		var keys = ['left','top','height','width','weight'];
+		var keys = ['left','top','height','width','weight','x','y'];
 		for(var i=0;i<keys.length;i++){
 			if(config[keys[i]] !== undefined || view[keys[i]] !== undefined)return true;
 		}
@@ -104,7 +111,7 @@ ludo.layout.Factory = new Class({
 	},
 
 	transferFromView:function(view, config, ret){
-		var keys = ['left','top','width','height','weight'];
+		var keys = ['left','top','width','height','weight','x','y'];
 		for(var i=0;i<keys.length;i++){
 			if(ret[keys[i]] === undefined)ret[keys[i]] = config[keys[i]] || view[keys[i]];
 		}

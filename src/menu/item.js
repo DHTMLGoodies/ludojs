@@ -71,7 +71,7 @@ ludo.menu.Item = new Class({
             this.spacer = true;
             this.layout.height = 1;
         }else{
-            this.layout.height = this.layout.height || 25;
+            this.layout.height = this.layout.height || this.orientation === 'vertical' ? 25 : 'matchParent';
         }
 
     },

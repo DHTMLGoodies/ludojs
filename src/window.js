@@ -96,10 +96,7 @@ ludo.Window = new Class({
 
     ludoConfig:function (config) {
 		config = config || {};
-		config.left = config.left || config.x;
-		config.top = config.top || config.y;
 		config.renderTo = document.body;
-
         var keys = ['resizeTop','resizeLeft','hideBodyOnMove','preserveAspectRatio'];
         this.setConfigParams(config, keys);
 
