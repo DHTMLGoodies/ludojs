@@ -22,7 +22,7 @@
  */
 ludo.menu.Context = new Class({
 	Extends:ludo.View,
-	type:'menu.ContextMenu',
+	type:'menu.Context',
 
 	layout:{
 		type:'Menu',
@@ -32,7 +32,6 @@ ludo.menu.Context = new Class({
 		active:true,
 		isContext:true
 	},
-
 
 	renderTo:document.body,
 	/**
@@ -71,7 +70,6 @@ ludo.menu.Context = new Class({
 
 	ludoConfig:function (config) {
 		this.renderTo = document.body;
-		config.els = config.els || {};
 		this.parent(config);
 		this.setConfigParams(config, ['selector', 'recordType', 'record', 'component']);
 		if (this.recordType)this.record = { type:this.recordType };

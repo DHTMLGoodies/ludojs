@@ -23,6 +23,7 @@ require_once("../includes/demo-header.php");
 <script type="text/javascript" class="source-code">
     var w = new ludo.Window({
                 title:'Window with menu',
+                stateful:true,
                 layout:{
                     width:600,
                     height:400,

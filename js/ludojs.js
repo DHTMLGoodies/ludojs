@@ -1,4 +1,4 @@
-/* Generated Thu Apr 4 18:55:50 CEST 2013 */
+/* Generated Thu Apr 4 19:20:28 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -5315,16 +5315,15 @@ ludo.View = new Class({
 		);
 	 */
 	resize:function (config) {
+
 		if (this.isHidden()) {
 			return;
 		}
 		config = config || {};
 
 		if (config.width) {
-			if (this.layout && this.layout.preserveAspectRatio && config.width && !this.isMinimized()) {
-				if (this.layout.aspectRatio) {
-					config.height = config.width / this.layout.aspectRatio;
-				}
+			if (this.layout.aspectRatio && this.layout.preserveAspectRatio && config.width && !this.isMinimized()) {
+				config.height = config.width / this.layout.aspectRatio;
 			}
 			// TODO layout properties should not be set here.
             this.layout.width = config.width;
@@ -19536,7 +19535,7 @@ ludo.menu.Menu = new Class({
  */
 ludo.menu.Context = new Class({
 	Extends:ludo.View,
-	type:'menu.ContextMenu',
+	type:'menu.Context',
 
 	layout:{
 		type:'Menu',
@@ -19546,7 +19545,6 @@ ludo.menu.Context = new Class({
 		active:true,
 		isContext:true
 	},
-
 
 	renderTo:document.body,
 	/**
@@ -19585,7 +19583,6 @@ ludo.menu.Context = new Class({
 
 	ludoConfig:function (config) {
 		this.renderTo = document.body;
-		config.els = config.els || {};
 		this.parent(config);
 		this.setConfigParams(config, ['selector', 'recordType', 'record', 'component']);
 		if (this.recordType)this.record = { type:this.recordType };

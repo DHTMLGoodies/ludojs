@@ -82,7 +82,7 @@ ludo.View = new Class({
 
 	alwaysInFront:false,
 
-	statefulProperties:['width','height'],
+	statefulProperties:['layout'],
 
 	els:{
 
@@ -879,16 +879,15 @@ ludo.View = new Class({
 		);
 	 */
 	resize:function (config) {
+
 		if (this.isHidden()) {
 			return;
 		}
 		config = config || {};
 
 		if (config.width) {
-			if (this.layout && this.layout.preserveAspectRatio && config.width && !this.isMinimized()) {
-				if (this.layout.aspectRatio) {
-					config.height = config.width / this.layout.aspectRatio;
-				}
+			if (this.layout.aspectRatio && this.layout.preserveAspectRatio && config.width && !this.isMinimized()) {
+				config.height = config.width / this.layout.aspectRatio;
 			}
 			// TODO layout properties should not be set here.
             this.layout.width = config.width;

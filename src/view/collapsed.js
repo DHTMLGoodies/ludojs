@@ -132,14 +132,6 @@ ludo.view.Collapsed = new Class({
         return this.cachedHeightOfCollapsed;
     },
 
-	getSizeConfig:function(){
-		if(this.isVertical()){
-			return { width: this.el.offsetWidth + ludo.dom.getMW(this.el)};
-		}else{
-			return { width: this.el.offsetHeight + ludo.dom.getMH(this.el)};
-		}
-	},
-
 	isVertical:function(){
 		return this.component.layout.collapsible === 'left' || this.component.layout.collapsible === 'right'
 	}
