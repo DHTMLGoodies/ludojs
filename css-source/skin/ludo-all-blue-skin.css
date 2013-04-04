@@ -254,9 +254,6 @@ div.ludo-menu-vertical {
     background-color: transparent;
 }
 
-.ludo-menu-vertical .ludo-menu-item-over {
-    background-color: #FFF;
-}
 
 .ludo-menu-item-horizontal {
     padding-top: 0;
@@ -299,7 +296,7 @@ div.ludo-menu-vertical {
     box-shadow: 1px 1px 3px #555;
 }
 
-.ludo-menu-vertical .ludo-menu-item-over {
+.ludo-menu-vertical .ludo-menu-item-over, .ludo-menu-vertical .ludo-menu-item-active {
     background-color: #FFF;
     border: 1px solid #a6cbf5;
     padding-left: 34px;

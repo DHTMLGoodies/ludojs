@@ -1,4 +1,4 @@
-/* Generated Thu Apr 4 19:20:28 CEST 2013 */
+/* Generated Thu Apr 4 19:46:27 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -4518,7 +4518,7 @@ ludo.View = new Class({
 
 	alwaysInFront:false,
 
-	statefulProperties:['width','height'],
+	statefulProperties:['layout'],
 
 	els:{
 
@@ -4869,9 +4869,8 @@ ludo.View = new Class({
 			}
 			for (var i = 0; i < this.contextMenu.length; i++) {
 				this.contextMenu[i].component = this;
-				var cm = new ludo.menu.Context(this.contextMenu[i]);
-				var el = this.isFormElement() ? this.getFormEl() : this.getEl();
-				el.addEvent('contextmenu', cm.show.bind(cm));
+				this.contextMenu[i].contextEl = this.isFormElement() ? this.getFormEl() : this.getEl();
+				new ludo.menu.Context(this.contextMenu[i]);
 			}
 			this.contextMenu = undefined;
 		}
@@ -19581,10 +19580,17 @@ ludo.menu.Context = new Class({
 	 */
 	recordType:undefined,
 
+	/**
+	 * Add context menu to this DOM element
+	 * @config {String|HTMLElement} contextEl
+	 * @default undefined
+	 */
+	contextEl:undefined,
+
 	ludoConfig:function (config) {
 		this.renderTo = document.body;
 		this.parent(config);
-		this.setConfigParams(config, ['selector', 'recordType', 'record', 'component']);
+		this.setConfigParams(config, ['selector', 'recordType', 'record', 'component','contextEl']);
 		if (this.recordType)this.record = { type:this.recordType };
 	},
 
@@ -19595,6 +19601,9 @@ ludo.menu.Context = new Class({
 	ludoEvents:function () {
 		this.parent();
 		document.id(document.documentElement).addEvent('click', this.hideAfterDelay.bind(this));
+		if(this.contextEl){
+			document.id(this.contextEl).addEvent('contextmenu', this.show.bind(this));
+		}
 	},
 
 	hideAfterDelay:function () {

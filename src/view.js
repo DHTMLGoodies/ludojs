@@ -433,9 +433,8 @@ ludo.View = new Class({
 			}
 			for (var i = 0; i < this.contextMenu.length; i++) {
 				this.contextMenu[i].component = this;
-				var cm = new ludo.menu.Context(this.contextMenu[i]);
-				var el = this.isFormElement() ? this.getFormEl() : this.getEl();
-				el.addEvent('contextmenu', cm.show.bind(cm));
+				this.contextMenu[i].contextEl = this.isFormElement() ? this.getFormEl() : this.getEl();
+				new ludo.menu.Context(this.contextMenu[i]);
 			}
 			this.contextMenu = undefined;
 		}

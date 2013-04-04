@@ -68,10 +68,17 @@ ludo.menu.Context = new Class({
 	 */
 	recordType:undefined,
 
+	/**
+	 * Add context menu to this DOM element
+	 * @config {String|HTMLElement} contextEl
+	 * @default undefined
+	 */
+	contextEl:undefined,
+
 	ludoConfig:function (config) {
 		this.renderTo = document.body;
 		this.parent(config);
-		this.setConfigParams(config, ['selector', 'recordType', 'record', 'component']);
+		this.setConfigParams(config, ['selector', 'recordType', 'record', 'component','contextEl']);
 		if (this.recordType)this.record = { type:this.recordType };
 	},
 
@@ -82,6 +89,9 @@ ludo.menu.Context = new Class({
 	ludoEvents:function () {
 		this.parent();
 		document.id(document.documentElement).addEvent('click', this.hideAfterDelay.bind(this));
+		if(this.contextEl){
+			document.id(this.contextEl).addEvent('contextmenu', this.show.bind(this));
+		}
 	},
 
 	hideAfterDelay:function () {
