@@ -96,6 +96,7 @@ ludo.layout.Renderer = new Class({
 	},
 
 	setDefaultProperties:function () {
+        // TODO is this necessary ?
 		this.rendering.width = this.rendering.width || 'matchParent';
 		this.rendering.height = this.rendering.height || 'matchParent';
 	},
@@ -299,7 +300,7 @@ ludo.layout.Renderer = new Class({
 		this.fn = undefined;
 	},
 
-	resize:function () {
+	resize:function (skipChildren) {
 		if (this.view.isHidden())return;
 		if (this.fn === undefined)this.buildResizeFn();
 		this.setViewport();
@@ -314,7 +315,7 @@ ludo.layout.Renderer = new Class({
 			if (this.coordinates[k] !== undefined && this.coordinates[k] !== this.lastCoordinates[k])this.view.getEl().style[k] = c[k] + 'px';
 		}
 
-		if (this.view.children.length > 0)this.view.getLayoutManager().resizeChildren();
+		if (this.view.children.length > 0 && !skipChildren)this.view.getLayoutManager().resizeChildren();
 		this.lastCoordinates = Object.clone(c);
 	},
 

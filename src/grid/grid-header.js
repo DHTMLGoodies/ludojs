@@ -195,11 +195,20 @@ ludo.grid.GridHeader = new Class({
 				checked:this.columnManager.isVisible(columnKeys[i]),
 				label:this.columnManager.getHeadingFor(columnKeys[i]),
 				action:columnKeys[i],
+                layout:{ height: 25, width: 'wrap' },
 				listeners:{
 					change:this.getColumnToggleFn(columnKeys[i], forColumn)
 				}
 			});
 		}
+        ret.push({
+            html : 'Sort grid ',
+            children:[{
+                html: 'Ascending'
+            },{
+                html : 'Descending'
+            }]
+        });
 		return ret;
 	},
 

@@ -26,9 +26,7 @@ ludo.layout.Menu = new Class({
 			child.layout.type = 'menu';
 			child.layout.orientation = 'vertical';
 		}
-		if (!child.type) {
-			child.type = 'menu.Item';
-		}
+        child.type = child.type || 'menu.Item';
 		if (child.type === 'menu.Item') {
 			child.orientation = this.view.layout.orientation;
 		}else{
@@ -46,8 +44,8 @@ ludo.layout.Menu = new Class({
 
 	getParentForNewChild:function () {
 		if (this.parentForNewChild === undefined) {
-			var isTop = !this.view.parentComponent || (this.view.parentComponent && this.view.parentComponent.layout.type.toLowerCase() !== 'menu');
-			var p = isTop ? this.parent() : this.getMenuContainer().getBody();
+            var isTop = !this.hasMenuLayout(this.view.parentComponent);
+			var p = isTop  ? this.parent() : this.getMenuContainer().getBody();
 			ludo.dom.addClass(p.parentNode, 'ludo-menu');
 			ludo.dom.addClass(p.parentNode, 'ludo-menu-' + this.view.layout.orientation);
 			if (isTop && !this.view.layout.isContext)ludo.dom.addClass(p.parentNode, 'ludo-menu-top');
@@ -62,16 +60,20 @@ ludo.layout.Menu = new Class({
 
 	onNewChild:function (child) {
 		this.assignMenuItemFns(child);
-		if (child.layout && child.layout.type && child.layout.type.toLowerCase() === 'menu') {
+		if (this.hasMenuLayout(child)) {
 			child.addEvent('addChild', this.assignMenuItemFns.bind(this));
 		}
 	},
+
+    hasMenuLayout:function(item){
+        return item && item.layout && item.layout.type && item.layout.type.toLowerCase() === 'menu';
+    },
 
 	parentContainers:undefined,
 
 	getTopMenuComponent:function () {
 		var v = this.view;
-		while (v.parentComponent && v.parentComponent.layout.type.toLowerCase() === 'menu') {
+		while (v.parentComponent && this.hasMenuLayout(v.parentComponent)) {
 			v = v.getParent();
 		}
 		return v;
@@ -81,16 +83,25 @@ ludo.layout.Menu = new Class({
 		var lm = this;
 		var p = lm.view.getParent();
 
+        if(child.mouseOver === undefined){
+            child.getEl().addEvent('mouseenter', function(){
+                this.mouseOver();
+            }.bind(child));
+            child.mouseOver = function(){
+                this.fireEvent('enterMenuItem', this);
+            }.bind(child);
+        }
+
 		child.getMenuLayoutManager = function () {
 			return this.parentComponent && this.parentComponent.getMenuLayoutManager ? this.parentComponent.getMenuLayoutManager() : lm;
 		}.bind(child);
 
 		child.getParentMenuItem = function () {
-			return p && p.layout.type && p.layout.type.toLowerCase() === 'menu' ? lm.view : undefined;
+			return lm.hasMenuLayout(p) ? lm.view : undefined;
 		}.bind(child);
 
 		child.isTopMenuItem = function () {
-			return p ? p.layout.type.toLowerCase() !== 'menu' : true;
+            return !lm.hasMenuLayout(p);
 		}.bind(child);
 
 		child.getMenuContainer = function () {
@@ -99,7 +110,7 @@ ludo.layout.Menu = new Class({
 
 		child.getMenuContainerToShow = function () {
 			if (this.containerToShow === undefined) {
-				if (this.layout.type && this.layout.type.toLowerCase() === 'menu' && this.children.length > 0) {
+				if (lm.hasMenuLayout(this) && this.children.length > 0) {
 					if (this.children[0].isHidden())this.children[0].show();
 					this.containerToShow = this.children[0].getMenuContainer();
 				} else {
@@ -155,13 +166,12 @@ ludo.layout.Menu = new Class({
 			child.addEvent('click', menuComponent.getLayoutManager().hideAllMenus.bind(menuComponent.getLayoutManager()));
 		}
 
-		child.addEvent('enterMenuItem', function () {
-			menuComponent.getLayoutManager().showMenusFor(child);
-			menuComponent.getLayoutManager().highlightItemPath(child);
-		}.bind(this))
+        child.addEvent('enterMenuItem', function () {
+            menuComponent.getLayoutManager().showMenusFor(child);
+            menuComponent.getLayoutManager().highlightItemPath(child);
+        }.bind(this));
 	},
 	shownMenus:[],
-
 
 	activate:function (child) {
 		this.active = !this.active;
@@ -219,10 +229,7 @@ ludo.layout.Menu = new Class({
 	autoHideMenus:function (e) {
 		if (this.active || this.alwaysActive) {
 			var el = e.target;
-			if (el.className.indexOf('ludo-menu-item') >= 0) {
-				return;
-			}
-			if (!el.getParent('.ludo-menu')) {
+			if (el.className.indexOf('ludo-menu-item') === -1 && !el.getParent('.ludo-menu')) {
 				this.hideAllMenus();
 				if(this.view.layout.orientation === 'horizontal'){
 					this.active = false;

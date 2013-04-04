@@ -32,13 +32,6 @@ ludo.menu.Item = new Class({
      * @default false
      */
     disabled:false,
-    menuHandler:undefined,
-    parentMenuItem:undefined,
-    value:undefined,
-
-	layout:{
-		height:25
-	},
 
     /**
      * Text for menu item
@@ -77,6 +70,8 @@ ludo.menu.Item = new Class({
         if (this.html === '|') {
             this.spacer = true;
             this.layout.height = 1;
+        }else{
+            this.layout.height = this.layout.height || 25;
         }
 
     },
@@ -94,10 +89,6 @@ ludo.menu.Item = new Class({
 
 	resizeParent:function(){
 
-	},
-
-	resize:function(config){
-		this.parent(config);
 	},
 
     ludoDOM:function () {
@@ -219,8 +210,8 @@ ludo.menu.Item = new Class({
     mouseOver:function () {
         if (!this.disabled) {
             ludo.dom.addClass(this.getEl(), 'ludo-menu-item-over');
-            this.fireEvent('enterMenuItem', this);
         }
+        this.fireEvent('enterMenuItem', this);
     },
 
     mouseOut:function () {
@@ -229,13 +220,6 @@ ludo.menu.Item = new Class({
             this.getEl().removeClass('ludo-menu-item-down');
             this.fireEvent('leaveMenuItem', this);
         }
-    },
-
-    getMeasuredWidth:function () {
-        if (this.isSpacer()) {
-            return ludo.dom.getTotalWidthOf(this.getEl());
-        }
-        return this.parent();
     },
 
     isSpacer:function () {

@@ -194,6 +194,7 @@ TestCase("MenuTest", {
 	"test should set parent menu items to active when mouse over sub item": function(){
 		// given
 		var c = this.getMenuComponent();
+        c.child['b'].click();
 		var child = c.child['b'].child['ba'].child['bab'];
 
 		// when
@@ -201,7 +202,7 @@ TestCase("MenuTest", {
 		var items = child.getParentMenuItems();
 
 		// then
-		assertTrue(ludo.dom.hasClass(items[0].getEl(), 'ludo-menu-item-active'));
+		assertTrue(items[0].getEl().className, ludo.dom.hasClass(items[0].getEl(), 'ludo-menu-item-active'));
 		assertTrue(ludo.dom.hasClass(items[1].getEl(), 'ludo-menu-item-active'));
 	},
 
@@ -502,6 +503,33 @@ TestCase("MenuTest", {
 		assertEquals(25, child.layout.height);
 
 	},
+
+    "test menu containers without any Menu.Item should be wider than widest menu item": function(){
+        fail('Not implemented');
+
+    },
+
+    "test should not call resize function more than necessary" : function(){
+
+        var countResize = 0;
+        // given
+        var c = this.getMenuComponent();
+        c.child['a'].click();
+        // when
+        c.child['c'].addEvent('resize', function(){
+            countResize ++;
+        });
+        c.child['c'].mouseOver();
+        c.child['c'].child['ca'].mouseOver();
+
+        // then
+        assertEquals(1, countResize);
+
+    },
+
+    "test should be able to show vertical sub menu above horizontal menu items": function(){
+        fail('Not implemented');
+    },
 
 	"test context menu should have correct layout settings": function(){
 		// given

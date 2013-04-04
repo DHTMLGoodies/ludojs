@@ -8,7 +8,7 @@
 ludo.menu.Button = new Class({
     Extends:ludo.Core,
     width:15,
-
+    // TODO refactor this class
     /**
      * Render button to this element
      * @attribute renderTo
@@ -156,7 +156,10 @@ ludo.menu.Button = new Class({
     },
 
     hideMenu:function () {
-        if (this.menu.hide !== undefined)this.menu.hide();
+        if (this.menu.hide !== undefined){
+            this.menu.getLayoutManager().hideAllMenus();
+            this.menu.hide();
+        }
         this.hide();
     },
 

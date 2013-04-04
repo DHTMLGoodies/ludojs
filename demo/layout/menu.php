@@ -67,16 +67,22 @@ require_once("../includes/demo-header.php");
                                         'label':'Save as', disabled:true
                                     },
                                     {
-                                        type:'calendar.Calendar',
-                                        containerCss:{
-                                            'background-color':'#FFF',
-                                            'border-top':'1px solid #d7d7d7'
-                                        },
-                                        layout:{
-                                            width:200,
-                                            height:200
-                                        }
+                                        html:'Select date',
+                                        children:[
+                                            {
+                                                type:'calendar.Calendar',
+                                                containerCss:{
+                                                    'background-color':'#FFF',
+                                                    'border-top':'1px solid #d7d7d7'
+                                                },
+                                                layout:{
+                                                    width:200,
+                                                    height:200
+                                                }
+                                            }
+                                        ]
                                     }
+
                                 ]
                             },
                             { html:'Edit', children:[
@@ -101,8 +107,8 @@ require_once("../includes/demo-header.php");
                             orientation:'vertical'
                         },
                         listeners:{
-                            'click' : function(item){
-                                if(item.action){
+                            'click':function (item) {
+                                if (item.action) {
                                     ludo.get('mainPanel').getDataSource().loadUrl('../data-source/articles/' + item.action);
                                 }
                             }
@@ -114,19 +120,20 @@ require_once("../includes/demo-header.php");
                             {
                                 html:"Front page",
                                 hidden:false,
-                                action : 'front-page.php'
+                                action:'front-page.php'
                             },
                             {
                                 html:"Pages",
                                 children:[
                                     {
-                                        html : 'Page 1.1', action:'article-1.php'
-                                    }, {
-                                        html : 'Sport news', action:'sport.php'
+                                        html:'Page 1.1', action:'article-1.php'
+                                    },
+                                    {
+                                        html:'Sport news', action:'sport.php'
                                     }
                                 ]
                             },
-                            { html : "Page3", action:'page-3.php' }
+                            { html:"Page3", action:'page-3.php' }
                         ]
                     },
                     {
