@@ -25,7 +25,7 @@ ludo.menu.Item = new Class({
      sets icon to the character "!", i.e. text
      */
     icon:undefined,
-    orientation:'horizontal',
+    orientation:'vertical',
     /**
      * Initially disable the menu item
      * @config {Boolean} disabled
@@ -66,12 +66,13 @@ ludo.menu.Item = new Class({
     ludoConfig:function (config) {
         this.parent(config);
         this.setConfigParams(config, ['orientation', 'icon', 'record', 'value', 'label', 'action', 'disabled', 'fire']);
+
         this.html = this.html || this.label;
         if (this.html === '|') {
             this.spacer = true;
             this.layout.height = 1;
-        }else{
-            this.layout.height = this.layout.height || this.orientation === 'vertical' ? 25 : 'matchParent';
+		}else{
+			this.layout.height = this.layout.height || this.orientation === 'vertical' ? 25 : 'matchParent';
         }
 
     },

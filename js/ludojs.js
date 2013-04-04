@@ -1,4 +1,4 @@
-/* Generated Thu Apr 4 19:46:27 CEST 2013 */
+/* Generated Thu Apr 4 20:25:00 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -2939,7 +2939,7 @@ ludo.layout.Base = new Class({
      * @optional
      */
 	addChild:function (child, insertAt, pos) {
-        child = this.getValidChild(child);
+        if(!ludo.factory.isClass(child))child = this.getValidChild(child);
 		child = this.getNewComponent(child);
 		var parentEl = this.getParentForNewChild();
 		if (insertAt) {
@@ -8105,6 +8105,11 @@ ludo.layout.Menu = new Class({
 			child.layout.type = 'menu';
 			child.layout.orientation = 'vertical';
 		}
+		if(this.view.html === 'PHP'){
+			console.log(this.id + ',' + this.view.html + ',' + this.view.layout.orientation);
+			console.trace();
+		}
+		child.layout.orientation = this.view.layout.orientation;
         child.type = child.type || 'menu.Item';
 		if (child.type === 'menu.Item') {
 			child.orientation = this.view.layout.orientation;
@@ -19323,12 +19328,13 @@ ludo.menu.Item = new Class({
     ludoConfig:function (config) {
         this.parent(config);
         this.setConfigParams(config, ['orientation', 'icon', 'record', 'value', 'label', 'action', 'disabled', 'fire']);
+
         this.html = this.html || this.label;
         if (this.html === '|') {
             this.spacer = true;
             this.layout.height = 1;
-        }else{
-            this.layout.height = this.layout.height || this.orientation === 'vertical' ? 25 : 'matchParent';
+		}else{
+			this.layout.height = this.layout.height || this.orientation === 'vertical' ? 25 : 'matchParent';
         }
 
     },

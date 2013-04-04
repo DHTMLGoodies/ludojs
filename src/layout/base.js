@@ -65,11 +65,6 @@ ludo.layout.Base = new Class({
 
 		this.onNewChild(child);
 		this.addChildEvents(child);
-		if (child.isCollapsible !== undefined && child.isCollapsible()) {
-			if (child.collapsed) {
-				child.collapse();
-			}
-		}
 		/**
 		 * Event fired by layout manager when a new child is added
 		 * @event addChild
