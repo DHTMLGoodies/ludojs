@@ -505,27 +505,91 @@ TestCase("MenuTest", {
 	},
 
     "test menu containers without any Menu.Item should be wider than widest menu item": function(){
-        fail('Not implemented');
+		// given
+		var c = new ludo.menu.Context({
+			children:[
+				{ type:'form.Checkbox', width : 200, label : 'Hello', labelWidth:150 },
+				{ type:'form.Checkbox', layout:{ width : 300 }, label : 'Next item is coming here' },
+				{ type:'form.Checkbox', layout:{ width : 220 }, label : 'Next item' },
+				{ type:'form.Checkbox', layout:{ width : 180 }, label : 'Next item' },
+				{ type:'calendar.Calendar', layout:{ width : 400 } }
 
+			]
+		});
+		c.show({
+			page:{x:10,y:10}
+		});
+
+		var expectedWidth = 0;
+		for(var i=0;i< c.children.length;i++){
+			expectedWidth = Math.max(expectedWidth, c.children[i].getEl().offsetWidth + ludo.dom.getMW(c.children[i].getEl()));
+		}
+
+		var containerWidth = c.getEl().offsetWidth + ludo.dom.getMW(c.getEl());
+		console.log(containerWidth);
+		assertEquals(expectedWidth, containerWidth);
     },
+
+	"test should not show context menu in max width when item has layout width": function(){
+		// given
+		var c = new ludo.menu.Context({
+			children:[
+				{ type:'calendar.Calendar', layout:{ width : 400, height: 200 } }
+			]
+		});
+
+		// when
+		c.show({ page:{x:10,y:10 }});
+
+		console.log(c.layout);
+		console.log(c.children[0].layout);
+
+		assertEquals(400, ludo.dom.getWrappedSizeOfView(c).x);
+		assertEquals(200, ludo.dom.getWrappedSizeOfView(c).y);
+
+		// then
+		assertEquals(400, c.getEl().offsetWidth - ludo.dom.getPW(c.getEl()) - ludo.dom.getBW(c.getEl()) );
+
+	},
 
     "test should not call resize function more than necessary" : function(){
 
         var countResize = 0;
         // given
-        var c = this.getMenuComponent();
+        var c = this.getMenuComponent({
+			orientation:'vertical'
+		});
         c.child['a'].click();
         // when
-        c.child['c'].addEvent('resize', function(){
+        c.child['c'].child['ca'].getMenuContainer().addEvent('resize', function(){
             countResize ++;
         });
         c.child['c'].mouseOver();
+        c.child['c'].mouseOver();
         c.child['c'].child['ca'].mouseOver();
+        c.child['c'].child['cb'].mouseOver();
 
         // then
         assertEquals(1, countResize);
 
     },
+
+	"test height of context menu should be correct": function(){
+		// given
+		var c = new ludo.menu.Context({
+			children:['One','Two','Three','Four','Five']
+		});
+		c.show({
+			page:{x : 100, y : 100}
+		});
+
+		var expectedHeight = 0;
+		for(var i= 0;i< c.children.length;i++){
+			expectedHeight += c.children[i].getEl().offsetHeight + ludo.dom.getMH(c.children[i].getEl());
+		}
+
+		assertEquals(expectedHeight, c.getEl().offsetHeight - ludo.dom.getBH(c.getEl()) - ludo.dom.getPH(c.getEl()));
+	},
 
     "test should be able to show vertical sub menu above horizontal menu items": function(){
         fail('Not implemented');

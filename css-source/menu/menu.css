@@ -40,6 +40,8 @@ div.ludo-menu-item-spacer-horizontal {
     height: 1px;
     padding: 0 !important;
     background-color: #CCC;
+    margin-left:0;
+    margin-right:0;
 }
 
 .ludo-menu-vertical {

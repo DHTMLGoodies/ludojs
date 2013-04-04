@@ -1,4 +1,4 @@
-/* Generated Thu Apr 4 3:46:54 CEST 2013 */
+/* Generated Thu Apr 4 17:45:25 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -3209,7 +3209,15 @@ ludo.layout.Base = new Class({
         child.layout.cached_width = undefined;
         child.layout.cached_height = undefined;
         this.resize();
-    }
+    },
+
+	getWidthOf:function (child) {
+		return child.layout.width;
+	},
+
+	getHeightOf:function (child) {
+		return child.layout.height;
+	}
 });/* ../ludojs/src/layout/factory.js */
 /**
  * Factory class for layout managers
@@ -3633,6 +3641,7 @@ ludo.layout.Renderer = new Class({
 	},
 
 	setDefaultProperties:function () {
+        // TODO is this necessary ?
 		this.rendering.width = this.rendering.width || 'matchParent';
 		this.rendering.height = this.rendering.height || 'matchParent';
 	},
@@ -3836,7 +3845,7 @@ ludo.layout.Renderer = new Class({
 		this.fn = undefined;
 	},
 
-	resize:function (skipChildren) {
+	resize:function () {
 		if (this.view.isHidden())return;
 		if (this.fn === undefined)this.buildResizeFn();
 		this.setViewport();
@@ -3850,9 +3859,11 @@ ludo.layout.Renderer = new Class({
 			var k = this.posKeys[i];
 			if (this.coordinates[k] !== undefined && this.coordinates[k] !== this.lastCoordinates[k])this.view.getEl().style[k] = c[k] + 'px';
 		}
-
-		if (this.view.children.length > 0 && !skipChildren)this.view.getLayoutManager().resizeChildren();
 		this.lastCoordinates = Object.clone(c);
+	},
+
+	resizeChildren:function(){
+		if (this.view.children.length > 0)this.view.getLayoutManager().resizeChildren();
 	},
 
 	setViewport:function () {
@@ -4156,6 +4167,7 @@ ludo.dom = {
 	},
 
 	getWrappedSizeOfView:function (view) {
+
 		var el = view.getEl();
 		var b = view.getBody();
 		b.style.position = 'absolute';
@@ -4166,7 +4178,7 @@ ludo.dom = {
 
 		return {
 			x:width + ludo.dom.getMBPW(b) + ludo.dom.getMBPW(el),
-			y:height + ludo.dom.getMBPH(b) + ludo.dom.getMBPH(el) + (view.getHeightOfTitleBar ? view.getHeightOfTitleBar() : 0) + 2
+			y:height + ludo.dom.getMBPH(b) + ludo.dom.getMBPH(el) + (view.getHeightOfTitleBar ? view.getHeightOfTitleBar() : 0)
 		}
 	},
 
@@ -4762,6 +4774,7 @@ ludo.View = new Class({
 			ludo.dom.clearCache();
 			ludo.dom.clearCache.delay(50, this);
             this.getLayoutManager().getRenderer().resize();
+            this.getLayoutManager().getRenderer().resizeChildren();
 		}
 	},
 
@@ -5957,14 +5970,6 @@ ludo.layout.Linear = new Class({
 
 	isResizable:function (child) {
 		return child.layout.resizable ? true : false;
-	},
-
-	getWidthOf:function (child) {
-		return child.layout.width;
-	},
-
-	getHeightOf:function (child) {
-		return child.layout.height;
 	},
 
 	beforeResize:function (resize, child) {
@@ -8030,6 +8035,7 @@ ludo.layout.MenuContainer = new Class({
 		for (var i = 0; i < this.lm.view.children.length; i++) {
 			this.lm.view.children[i].getLayoutManager().getRenderer().resize();
 		}
+		this.fireEvent('resize');
 	},
 
 	hide:function () {
@@ -8158,7 +8164,7 @@ ludo.layout.Menu = new Class({
 
 		child.getMenuContainerToShow = function () {
 			if (this.containerToShow === undefined) {
-				if (this.layout.type && this.layout.type.toLowerCase() === 'menu' && this.children.length > 0) {
+				if (lm.hasMenuLayout(this) && this.children.length > 0) {
 					if (this.children[0].isHidden())this.children[0].show();
 					this.containerToShow = this.children[0].getMenuContainer();
 				} else {
@@ -14332,12 +14338,13 @@ ludo.grid.GridHeader = new Class({
 				checked:this.columnManager.isVisible(columnKeys[i]),
 				label:this.columnManager.getHeadingFor(columnKeys[i]),
 				action:columnKeys[i],
-                layout:{ height: 25, width: 'wrap' },
+                height: 25, width: 150,
 				listeners:{
 					change:this.getColumnToggleFn(columnKeys[i], forColumn)
 				}
 			});
 		}
+
         ret.push({
             html : 'Sort grid ',
             children:[{

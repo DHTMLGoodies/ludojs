@@ -307,5 +307,13 @@ ludo.layout.Base = new Class({
         child.layout.cached_width = undefined;
         child.layout.cached_height = undefined;
         this.resize();
-    }
+    },
+
+	getWidthOf:function (child) {
+		return child.layout.width;
+	},
+
+	getHeightOf:function (child) {
+		return child.layout.height;
+	}
 });

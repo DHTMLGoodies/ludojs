@@ -4,6 +4,7 @@ $pageTitle = 'Menu layout';
 require_once("../includes/demo-header.php");
 ?>
 <body>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/factory.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/base.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/renderer.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/linear.js"></script>

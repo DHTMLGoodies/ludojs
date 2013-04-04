@@ -373,6 +373,7 @@ ludo.View = new Class({
 			ludo.dom.clearCache();
 			ludo.dom.clearCache.delay(50, this);
             this.getLayoutManager().getRenderer().resize();
+            this.getLayoutManager().getRenderer().resizeChildren();
 		}
 	},
 

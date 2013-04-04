@@ -31,6 +31,7 @@ ludo.layout.Renderer = new Class({
 
 	initialize:function (config) {
 		this.view = config.view;
+		// TODO use this.view.layout instead of this.rendering to avoid confusion. It's a reference!
 		this.rendering = this.view.layout || {};
 		this.fixReferences();
 		this.setDefaultProperties();
@@ -300,7 +301,7 @@ ludo.layout.Renderer = new Class({
 		this.fn = undefined;
 	},
 
-	resize:function (skipChildren) {
+	resize:function () {
 		if (this.view.isHidden())return;
 		if (this.fn === undefined)this.buildResizeFn();
 		this.setViewport();
@@ -314,9 +315,11 @@ ludo.layout.Renderer = new Class({
 			var k = this.posKeys[i];
 			if (this.coordinates[k] !== undefined && this.coordinates[k] !== this.lastCoordinates[k])this.view.getEl().style[k] = c[k] + 'px';
 		}
-
-		if (this.view.children.length > 0 && !skipChildren)this.view.getLayoutManager().resizeChildren();
 		this.lastCoordinates = Object.clone(c);
+	},
+
+	resizeChildren:function(){
+		if (this.view.children.length > 0)this.view.getLayoutManager().resizeChildren();
 	},
 
 	setViewport:function () {

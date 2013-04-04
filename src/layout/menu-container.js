@@ -103,6 +103,7 @@ ludo.layout.MenuContainer = new Class({
 		for (var i = 0; i < this.lm.view.children.length; i++) {
 			this.lm.view.children[i].getLayoutManager().getRenderer().resize();
 		}
+		this.fireEvent('resize');
 	},
 
 	hide:function () {

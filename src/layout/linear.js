@@ -38,14 +38,6 @@ ludo.layout.Linear = new Class({
 		return child.layout.resizable ? true : false;
 	},
 
-	getWidthOf:function (child) {
-		return child.layout.width;
-	},
-
-	getHeightOf:function (child) {
-		return child.layout.height;
-	},
-
 	beforeResize:function (resize, child) {
 		if (resize.orientation === 'horizontal') {
 			resize.setMinWidth(child.layout.minWidth || 10);

@@ -199,6 +199,7 @@ ludo.dom = {
 	},
 
 	getWrappedSizeOfView:function (view) {
+
 		var el = view.getEl();
 		var b = view.getBody();
 		b.style.position = 'absolute';
@@ -209,7 +210,7 @@ ludo.dom = {
 
 		return {
 			x:width + ludo.dom.getMBPW(b) + ludo.dom.getMBPW(el),
-			y:height + ludo.dom.getMBPH(b) + ludo.dom.getMBPH(el) + (view.getHeightOfTitleBar ? view.getHeightOfTitleBar() : 0) + 2
+			y:height + ludo.dom.getMBPH(b) + ludo.dom.getMBPH(el) + (view.getHeightOfTitleBar ? view.getHeightOfTitleBar() : 0)
 		}
 	},
 

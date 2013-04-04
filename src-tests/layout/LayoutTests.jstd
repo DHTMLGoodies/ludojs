@@ -2,6 +2,8 @@ load:
   - ../../mootools/mootools-core-1.4.5.js
   - ../../mootools/mootools-more-1.4.0.1.js
   - ../../js/ludojs.js
+  - ../../src/dom.js
+  - ../../src/layout/factory.js
   - ../../src/layout/base.js
   - ../../src/layout/linear.js
   - ../../src/layout/relative.js
@@ -29,6 +31,7 @@ test:
   - CardTest.js
   - PopupTest.js
   - MenuTest.js
+  - CoordinateTest.js
 
 serve:
   - ../../css/ludojs-light-gray.css
