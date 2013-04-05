@@ -164,7 +164,8 @@ ludo.layout.Menu = new Class({
 				menuComponent.getLayoutManager().activate(child);
 			}.bind(this));
 		} else {
-			child.addEvent('click', menuComponent.getLayoutManager().hideAllMenus.bind(menuComponent.getLayoutManager()));
+			var ml = menuComponent.getLayoutManager();
+			child.addEvent('click', ml.hideAllMenus.bind(ml));
 		}
 
         child.addEvent('enterMenuItem', function () {

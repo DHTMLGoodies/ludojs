@@ -164,8 +164,8 @@ require_once("../includes/demo-header.php");
                     {
                         id:'bottom',
                         containerCss:{
-                            'border-top' : '1px solid #d7d7d7',
-                            'border-left' : '1px solid #d7d7d7'
+                            'border-top':'1px solid #d7d7d7',
+                            'border-left':'1px solid #d7d7d7'
                         },
                         layout:{
                             type:'Menu',
@@ -175,18 +175,25 @@ require_once("../includes/demo-header.php");
                             fillRight:true,
                             height:20,
                             alignSubMenuV:'above',
-                            alignSubMenuH:'leftOf'
+                            alignSubMenuH:'rightOrLeftOf'
                         },
                         children:[
                             {
-                                html : 'Item 1',
-                                children : ['Sub 1','Sub 2','Sub 3',{ html : 'Sub 4', children : ['Grandchild a', 'Grandchild b',
-                                    {
-                                        html : 'grand child c',
-                                        children: ['item 1', 'item 2', 'item 3']
-                                    }]}]
+                                html:'Games',
+                                children:[
+                                    { html:'Console games',
+                                        children:['XBox 360',
+                                            {
+                                                html:'Wii U',
+                                                children:['NintendoLand', 'Batman Arkham City', 'SuperMario Wii U']
+                                            }, 'PlayStation']},
+                                    'PC Games',
+                                    'Mac Games',
+                                    'Mobile games'
+                                ]
                             },
-                                'Item 2','Item 3'
+                            'Apps',
+                            'Utilities'
                         ]
                     }
                 ]

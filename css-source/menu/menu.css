@@ -154,8 +154,14 @@ div.ludo-menu-top,div.ludo-menu-vertical-above{
 /** Menus rendered to the left */
 div.ludo-menu-vertical-to-left div.ludo-menu-item-expand {
     left:1px;
+    background-image: url(../images/expand-menu-left.png);
 }
+
 div.ludo-menu-vertical-to-left div.ludo-menu-item-over .ludo-menu-item-vertical-expand,
 div.ludo-menu-vertical-to-left div.ludo-menu-item-active .ludo-menu-item-vertical-expand {
     left: 0;
+}
+
+div.ludo-menu-horizontal-up div.ludo-menu-item-expand {
+    background-image: url(../images/expand-menu-up.png);
 }

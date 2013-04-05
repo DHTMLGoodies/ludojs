@@ -1,4 +1,4 @@
-/* Generated Fri Apr 5 14:03:15 CEST 2013 */
+/* Generated Fri Apr 5 15:19:54 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -8011,6 +8011,11 @@ ludo.layout.MenuContainer = new Class({
         return p && p.layout.alignSubMenuH  && validKeys.indexOf(p.layout.alignSubMenuH) !== -1 ? p.layout.alignSubMenuH : 'rightOrLeftOf';
     },
 
+	getParentLayoutOrientation:function(){
+		var p = this.lm.view.parentComponent;
+		return p ? p.layout.orientation : '';
+	},
+
     createDom:function () {
         this.el = ludo.dom.create({
             'css':{
@@ -8024,6 +8029,11 @@ ludo.layout.MenuContainer = new Class({
         if(this.getSubMenuHAlign().indexOf('left') === 0){
             ludo.dom.addClass(this.el, 'ludo-menu-vertical-to-left');
         }
+
+		if(this.getParentLayoutOrientation() === 'horizontal' && this.getSubMenuVAlign().indexOf('above') === 0){
+            ludo.dom.addClass(this.el, 'ludo-menu-horizontal-up');
+        }
+
         this.body = ludo.dom.create({
             renderTo:this.el
         });
@@ -8268,7 +8278,8 @@ ludo.layout.Menu = new Class({
 				menuComponent.getLayoutManager().activate(child);
 			}.bind(this));
 		} else {
-			child.addEvent('click', menuComponent.getLayoutManager().hideAllMenus.bind(menuComponent.getLayoutManager()));
+			var ml = menuComponent.getLayoutManager();
+			child.addEvent('click', ml.hideAllMenus.bind(ml));
 		}
 
         child.addEvent('enterMenuItem', function () {

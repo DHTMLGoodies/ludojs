@@ -50,6 +50,11 @@ ludo.layout.MenuContainer = new Class({
         return p && p.layout.alignSubMenuH  && validKeys.indexOf(p.layout.alignSubMenuH) !== -1 ? p.layout.alignSubMenuH : 'rightOrLeftOf';
     },
 
+	getParentLayoutOrientation:function(){
+		var p = this.lm.view.parentComponent;
+		return p ? p.layout.orientation : '';
+	},
+
     createDom:function () {
         this.el = ludo.dom.create({
             'css':{
@@ -63,6 +68,11 @@ ludo.layout.MenuContainer = new Class({
         if(this.getSubMenuHAlign().indexOf('left') === 0){
             ludo.dom.addClass(this.el, 'ludo-menu-vertical-to-left');
         }
+
+		if(this.getParentLayoutOrientation() === 'horizontal' && this.getSubMenuVAlign().indexOf('above') === 0){
+            ludo.dom.addClass(this.lm.view.parentComponent.getEl(), 'ludo-menu-horizontal-up');
+        }
+
         this.body = ludo.dom.create({
             renderTo:this.el
         });
