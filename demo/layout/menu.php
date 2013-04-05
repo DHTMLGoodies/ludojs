@@ -10,6 +10,7 @@ require_once("../includes/demo-header.php");
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/linear.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/linear-horizontal.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/linear-horizontal.js"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/relative.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/menu.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/menu-horizontal.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/menu-vertical.js"></script>
@@ -106,7 +107,8 @@ require_once("../includes/demo-header.php");
                             width:200,
                             fillDown:true,
                             type:'Menu',
-                            orientation:'vertical'
+                            orientation:'vertical',
+                            resize:['right']
                         },
                         listeners:{
                             'click':function (item) {
@@ -116,7 +118,8 @@ require_once("../includes/demo-header.php");
                             }
                         },
                         containerCss:{
-                            border:0
+                            border:0,
+                            'border-right' : '1px solid #d7d7d7'
                         },
                         children:[
                             {

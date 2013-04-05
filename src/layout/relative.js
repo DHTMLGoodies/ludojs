@@ -198,6 +198,8 @@ ludo.layout.Relative = new Class({
 			case 'rightOf':
 				refC = this.lastChildCoordinates[child.layout.rightOf.id];
 				return function () {
+                    // TODO refactor this so that Math.max is no longer needed
+					// c.left = Math.max(0, refC.left) + refC.width;
 					c.left = refC.left + refC.width;
 				};
 			case 'below':
@@ -358,7 +360,6 @@ ludo.layout.Relative = new Class({
 			lm.updateLastCoordinatesFor(child);
 		}
 	},
-
     /**
      * Update lastChildCoordinates properties for a child after resize is completed
      * @method updateLastCoordinatesFor
@@ -366,10 +367,11 @@ ludo.layout.Relative = new Class({
      * @private
      */
 	updateLastCoordinatesFor:function (child) {
+        this.lastResizeId = child.id;
 		var lc = this.lastChildCoordinates[child.id];
 		var el = child.getEl();
-		if (lc.left === undefined) lc.left = el.offsetLeft;
-		if (lc.top === undefined) lc.top = el.offsetTop;
+		if (lc.left === undefined) lc.left = el.offsetLeft > 0? el.offsetLeft : 0;
+		if (lc.top === undefined) lc.top = el.offsetTop > 0 ? el.offsetTop : 0;
 		if (lc.width === undefined) lc.width = el.offsetWidth;
 		if (lc.height === undefined) lc.height = el.offsetHeight;
 		if (lc.right === undefined) lc.right = this.viewport.width - lc.left - lc.width;

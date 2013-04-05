@@ -1,4 +1,4 @@
-/* Generated Sat Apr 6 0:36:52 CEST 2013 */
+/* Generated Sat Apr 6 1:32:39 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -2879,6 +2879,7 @@ ludo.layout.Resizer = new Class({
 		this.el.style.right = '';
 		this.el.style.bottom = '';
 
+
 		if(config.width !== undefined && config.width > 0)this.el.style.width = config.width + 'px';
 		if(config.height !== undefined && config.height > 0)this.el.style.height = (config.height - ludo.dom.getMBPH(this.el)) + 'px';
 		if(config.left !== undefined)this.el.style.left = config.left + 'px';
@@ -4811,7 +4812,7 @@ ludo.View = new Class({
 			ludo.dom.clearCache();
 			ludo.dom.clearCache.delay(50, this);
             this.getLayoutManager().getRenderer().resize();
-            this.getLayoutManager().getRenderer().resizeChildren();
+            //this.getLayoutManager().getRenderer().resizeChildren();
 		}
 	},
 
@@ -5434,7 +5435,7 @@ ludo.View = new Class({
 	/**
 	 * Add a child component. The method will returned the created component.
 	 * @method addChild
-	 * @param {Object} child. A Child object can be a component or a JSON object describing the component.
+	 * @param {Object|View} child. A Child object can be a View or a JSON config object for a new View.
 	 * @return {View} child
 	 */
 	addChild:function (child, insertAt, pos) {
@@ -7174,6 +7175,8 @@ ludo.layout.Relative = new Class({
 			case 'rightOf':
 				refC = this.lastChildCoordinates[child.layout.rightOf.id];
 				return function () {
+                    // TODO refactor this so that Math.max is no longer needed
+					// c.left = Math.max(0, refC.left) + refC.width;
 					c.left = refC.left + refC.width;
 				};
 			case 'below':
@@ -7342,10 +7345,12 @@ ludo.layout.Relative = new Class({
      * @private
      */
 	updateLastCoordinatesFor:function (child) {
+        console.log('resize ' + child.id);
+        // console.trace();
 		var lc = this.lastChildCoordinates[child.id];
 		var el = child.getEl();
-		if (lc.left === undefined) lc.left = el.offsetLeft;
-		if (lc.top === undefined) lc.top = el.offsetTop;
+		if (lc.left === undefined) lc.left = el.offsetLeft > 0? el.offsetLeft : 0;
+		if (lc.top === undefined) lc.top = el.offsetTop > 0 ? el.offsetTop : 0;
 		if (lc.width === undefined) lc.width = el.offsetWidth;
 		if (lc.height === undefined) lc.height = el.offsetHeight;
 		if (lc.right === undefined) lc.right = this.viewport.width - lc.left - lc.width;
