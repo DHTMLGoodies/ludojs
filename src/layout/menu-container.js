@@ -23,8 +23,10 @@ ludo.layout.MenuContainer = new Class({
                 l[vAlign] = this.lm.view.getParent().getEl();
                 l.alignLeft = this.lm.view;
             } else {
-                l[hAlign] = this.lm.view;
+                l[hAlign] = this.lm.view.getEl();
                 l[vAlign === 'above' ? 'alignBottom' : 'alignTop'] = this.lm.view;
+                // TODO refactor this to dynamic value
+                l.offsetY = -3;
             }
 
             this.lm.view.layout.alignSubMenuV = this.lm.view.layout.alignSubMenuV || vAlign;
