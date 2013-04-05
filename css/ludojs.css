@@ -1,4 +1,4 @@
-/* Generated Thu Apr 4 20:25:00 CEST 2013 */
+/* Generated Fri Apr 5 14:03:15 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -1558,9 +1558,7 @@ div.ludo-menu-item-spacer-horizontal {
     left: -1px !important;
 }
 
-.ludo-menu-item-over .ludo-menu-item-vertical-expand,.ludo-menu-item-active .ludo-menu-item-vertical-expand {
-    right: -1px !important;
-}
+.
 
 .ludo-menu-item {
     position: relative;
@@ -1576,8 +1574,13 @@ div.ludo-menu-item-spacer-horizontal {
     background-repeat: no-repeat;
 }
 
+
 .ludo-menu-item-vertical-expand {
     background-image: url(../images/expand-menu.png);
+}
+
+div.ludo-menu-item-over .ludo-menu-item-vertical-expand,div.ludo-menu-item-active .ludo-menu-item-vertical-expand {
+    right: -1px;
 }
 
 .ludo-menu-item-horizontal-expand {
@@ -1611,12 +1614,19 @@ div.ludo-menu-item-spacer-horizontal {
     background-image: url('../images/expand-menu-horizontal-wh.png');
 }
 
-div.ludo-menu-top{
+div.ludo-menu-top,div.ludo-menu-vertical-above{
     -moz-box-shadow: none;
     -webkit-box-shadow: none;
     box-shadow: none;
 }
-/* ../ludojs/css-source/menu/button.css */
+/** Menus rendered to the left */
+div.ludo-menu-vertical-to-left div.ludo-menu-item-expand {
+    left:1px;
+}
+div.ludo-menu-vertical-to-left div.ludo-menu-item-over .ludo-menu-item-vertical-expand,
+div.ludo-menu-vertical-to-left div.ludo-menu-item-active .ludo-menu-item-vertical-expand {
+    left: 0;
+}/* ../ludojs/css-source/menu/button.css */
 .ludo-menu-button{
     width:16px;
     z-index:10000;

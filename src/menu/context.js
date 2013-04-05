@@ -116,6 +116,7 @@ ludo.menu.Context = new Class({
 	},
 
 	show:function (e) {
+
 		if (this.selector) {
 			var domEl = this.getValidDomElement(e.target);
 			if (!domEl) {
@@ -130,6 +131,11 @@ ludo.menu.Context = new Class({
 				this.selectedRecord = r;
 			}
 		}
+
+        ludo.EffectObject.start();
+        ludo.EffectObject.end();
+
+
 		this.getLayoutManager().hideAllMenus();
 		this.parent();
 		if (!this.getParent()) {

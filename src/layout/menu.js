@@ -48,6 +48,7 @@ ludo.layout.Menu = new Class({
 			var p = isTop  ? this.parent() : this.getMenuContainer().getBody();
 			ludo.dom.addClass(p.parentNode, 'ludo-menu');
 			ludo.dom.addClass(p.parentNode, 'ludo-menu-' + this.view.layout.orientation);
+
 			if (isTop && !this.view.layout.isContext)ludo.dom.addClass(p.parentNode, 'ludo-menu-top');
 			this.parentForNewChild = p;
 
@@ -175,6 +176,10 @@ ludo.layout.Menu = new Class({
 
 	activate:function (child) {
 		this.active = !this.active;
+        if(this.shownMenus.length === 0){
+            ludo.EffectObject.start();
+            ludo.EffectObject.end();
+        }
 		this.showMenusFor(child);
 	},
 

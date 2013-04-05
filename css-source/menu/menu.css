@@ -90,9 +90,7 @@ div.ludo-menu-item-spacer-horizontal {
     left: -1px !important;
 }
 
-.ludo-menu-item-over .ludo-menu-item-vertical-expand,.ludo-menu-item-active .ludo-menu-item-vertical-expand {
-    right: -1px !important;
-}
+.
 
 .ludo-menu-item {
     position: relative;
@@ -108,8 +106,13 @@ div.ludo-menu-item-spacer-horizontal {
     background-repeat: no-repeat;
 }
 
+
 .ludo-menu-item-vertical-expand {
     background-image: url(../images/expand-menu.png);
+}
+
+div.ludo-menu-item-over .ludo-menu-item-vertical-expand,div.ludo-menu-item-active .ludo-menu-item-vertical-expand {
+    right: -1px;
 }
 
 .ludo-menu-item-horizontal-expand {
@@ -143,8 +146,16 @@ div.ludo-menu-item-spacer-horizontal {
     background-image: url('../images/expand-menu-horizontal-wh.png');
 }
 
-div.ludo-menu-top{
+div.ludo-menu-top,div.ludo-menu-vertical-above{
     -moz-box-shadow: none;
     -webkit-box-shadow: none;
     box-shadow: none;
+}
+/** Menus rendered to the left */
+div.ludo-menu-vertical-to-left div.ludo-menu-item-expand {
+    left:1px;
+}
+div.ludo-menu-vertical-to-left div.ludo-menu-item-over .ludo-menu-item-vertical-expand,
+div.ludo-menu-vertical-to-left div.ludo-menu-item-active .ludo-menu-item-vertical-expand {
+    left: 0;
 }

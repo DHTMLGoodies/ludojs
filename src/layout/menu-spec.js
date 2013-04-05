@@ -29,5 +29,22 @@ ludo.layout.MenuSpec = {
 	 * @config {Boolean} active
 	 * @default false
 	 */
-	active:false
+	active:false,
+
+    /**
+     * For horizontal menus, where to show sub menu vertically, below or above
+     * @config {String} alignSubMenuV
+     * @default 'below'
+     */
+    alignSubMenuV:'below',
+
+    /**
+     * Where to show sub menu horizontally, rightOrLeftOf, leftOrRightOf, leftOr or rightOf.
+     * rightOrLeftOf will show sub menu to the right if there's enough space left. leftOrRightOf will show sub menu to
+     * the left if there's enough available space. leftOf and rightOf will always show the sub menu to the left or right no
+     * matter available space.
+     * @config {String} alignSubMenuH
+     * @default 'rightOrLeftOf'
+     */
+    alignSubMenuH:'rightOrLeftOf'
 };
