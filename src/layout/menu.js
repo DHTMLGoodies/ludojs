@@ -178,8 +178,7 @@ ludo.layout.Menu = new Class({
 	activate:function (child) {
 		this.active = !this.active;
         if(this.shownMenus.length === 0){
-            ludo.EffectObject.start();
-            ludo.EffectObject.end();
+            ludo.EffectObject.fireEvents();
         }
 		this.showMenusFor(child);
 	},
@@ -204,6 +203,7 @@ ludo.layout.Menu = new Class({
 		if(this.view.layout.isContext){
 			this.view.getEl().style.display='none';
 		}
+		this.shownMenus = [];
 	},
 
 	hideMenus:function (except) {

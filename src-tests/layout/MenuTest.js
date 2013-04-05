@@ -640,6 +640,11 @@ TestCase("MenuTest", {
 
     },
 
+	"test only one menu should be visible at any given time": function(){
+
+
+	},
+
     getContextMenu:function () {
         return new ludo.menu.Context({
 

@@ -132,9 +132,7 @@ ludo.menu.Context = new Class({
 			}
 		}
 
-        ludo.EffectObject.start();
-        ludo.EffectObject.end();
-
+        ludo.EffectObject.fireEvents();
 
 		this.getLayoutManager().hideAllMenus();
 		this.parent();

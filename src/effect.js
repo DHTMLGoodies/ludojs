@@ -8,9 +8,9 @@ ludo.Effect = new Class({
 		}
 	},
 
-	fireEvents:function(){
-		this.fireEvent('start');
-		this.fireEvent('end');
+	fireEvents:function(obj){
+		this.fireEvent('start', obj);
+		this.fireEvent('end', obj);
 	},
 
 	start:function(){
