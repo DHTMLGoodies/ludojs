@@ -502,7 +502,7 @@ ludo.View = new Class({
 	 * @method ludoRendered
 	 */
 	ludoRendered:function () {
-		if (!this.layout.height && !this.layout.height) {
+		if (!this.layout.height && !this.layout.above && !this.layout.sameHeightAs && !this.layout.alignWith) {
 			this.autoSetHeight();
 		}
 		if(!this.parentComponent){
@@ -909,6 +909,7 @@ ludo.View = new Class({
 		if (config.left !== undefined || config.top !== undefined) {
 			this.setPosition(config);
 		}
+
 		this.resizeDOM();
 
         if (config.height || config.width) {
@@ -955,6 +956,7 @@ ludo.View = new Class({
 
 	cachedInnerHeight:undefined,
 	resizeDOM:function () {
+
 		if (this.layout.height > 0){
             var height = this.layout.height ? this.layout.height - ludo.dom.getMBPH(this.els.container) : this.els.container.style.height.replace('px', '');
             height -= ludo.dom.getMBPH(this.els.body);

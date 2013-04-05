@@ -143,7 +143,7 @@ div.ludo-menu-item-spacer-horizontal {
     background-image: url('../images/expand-menu-horizontal-wh.png');
 }
 
-div.ludo-menu-top{
+div.ludo-menu-top,div.ludo-menu-vertical-above{
     -moz-box-shadow: none;
     -webkit-box-shadow: none;
     box-shadow: none;

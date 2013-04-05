@@ -12,7 +12,7 @@ TestCase("MenuTest", {
         assertEquals('vertical', child.layout.orientation);
     },
 
-    "test should get menu containers to show for a menu item": function(){
+    "test should get menu containers to show for a menu item":function () {
         // given
         var cmp = this.getMenuComponent();
 
@@ -48,7 +48,7 @@ TestCase("MenuTest", {
         assertEquals(grandGrandChild.getMenuContainer().getEl(), childBa.getMenuContainersToShow()[1].getEl());
     },
 
-    "test should find menu containers to show for sub item with children": function(){
+    "test should find menu containers to show for sub item with children":function () {
         // given
         var cmp = this.getMenuComponent();
 
@@ -73,24 +73,24 @@ TestCase("MenuTest", {
         assertEquals('menu.Item', child.type);
     },
 
-	"test should not hide and show menu container when moving from sibling to sibling": function(){
-       // given
+    "test should not hide and show menu container when moving from sibling to sibling":function () {
+        // given
         var c = this.getMenuComponent();
-		var eventFired = false;
+        var eventFired = false;
 
         // when
         c.child['b'].click();
         c.child['b'].child['bb'].mouseOver();
 
-		c.child['b'].child['bb'].getMenuContainer().addEvent('hide', function(){
-			eventFired = true;
-		});
+        c.child['b'].child['bb'].getMenuContainer().addEvent('hide', function () {
+            eventFired = true;
+        });
 
-		c.child['b'].child['bc'].mouseOver();
+        c.child['b'].child['bc'].mouseOver();
 
         // then
         assertFalse(eventFired);
-	},
+    },
 
     "test should render children inside menu container":function () {
         // given
@@ -132,108 +132,108 @@ TestCase("MenuTest", {
     "test should by default activate vertical menu on mouse over":function () {
         // given
         var c = this.getMenuComponent({
-			orientation:'vertical'
-		});
+            orientation:'vertical'
+        });
 
-		// when
-		c.child['b'].mouseOver();
+        // when
+        c.child['b'].mouseOver();
 
-		// then
-		assertEquals('', c.child['b'].child['ba'].getMenuContainer().getEl().style.display);
+        // then
+        assertEquals('', c.child['b'].child['ba'].getMenuContainer().getEl().style.display);
 
     },
 
-	"test vertical menu items on top level should by default be visible": function(){
+    "test vertical menu items on top level should by default be visible":function () {
         // given
         var c = this.getMenuComponent({
-			orientation:'vertical'
-		});
+            orientation:'vertical'
+        });
 
-		// when
-		assertFalse(c.child['b'].isHidden());
-	},
+        // when
+        assertFalse(c.child['b'].isHidden());
+    },
 
-	"test menu container of vertical top menu should be parents body": function(){
+    "test menu container of vertical top menu should be parents body":function () {
         // given
         var c = this.getMenuComponent({
-			orientation:'vertical'
-		});
+            orientation:'vertical'
+        });
 
-		// when
-		var child = c.child['b'];
+        // when
+        var child = c.child['b'];
 
-		// then
-		assertEquals(c.getBody(), child.getEl().parentNode);
-	},
+        // then
+        assertEquals(c.getBody(), child.getEl().parentNode);
+    },
 
-	"test should assign css class to menu containers": function(){
+    "test should assign css class to menu containers":function () {
         // given
         var c = this.getMenuComponent({
-			orientation:'vertical'
-		});
+            orientation:'vertical'
+        });
 
-		// then
-		assertTrue(ludo.dom.hasClass(c.child['b'].child['ba'].getEl().parentNode.parentNode, 'ludo-menu'));
-		assertTrue(ludo.dom.hasClass(c.child['b'].getEl().parentNode.parentNode, 'ludo-menu'));
-	},
+        // then
+        assertTrue(ludo.dom.hasClass(c.child['b'].child['ba'].getEl().parentNode.parentNode, 'ludo-menu'));
+        assertTrue(ludo.dom.hasClass(c.child['b'].getEl().parentNode.parentNode, 'ludo-menu'));
+    },
 
-	"test should be able to get parent menu items as array": function(){
-		// given
-		var c = this.getMenuComponent();
-		var child = c.child['b'].child['ba'].child['bab'];
-		// when
-		var items = child.getParentMenuItems();
+    "test should be able to get parent menu items as array":function () {
+        // given
+        var c = this.getMenuComponent();
+        var child = c.child['b'].child['ba'].child['bab'];
+        // when
+        var items = child.getParentMenuItems();
 
-		// then
-		assertEquals(2, items.length);
-		assertEquals(c.child['b'].child['ba'], items[0]);
-		assertEquals(c.child['b'], items[1]);
+        // then
+        assertEquals(2, items.length);
+        assertEquals(c.child['b'].child['ba'], items[0]);
+        assertEquals(c.child['b'], items[1]);
 
-	},
+    },
 
-	"test should set parent menu items to active when mouse over sub item": function(){
-		// given
-		var c = this.getMenuComponent();
+    "test should set parent menu items to active when mouse over sub item":function () {
+        // given
+        var c = this.getMenuComponent();
         c.child['b'].click();
-		var child = c.child['b'].child['ba'].child['bab'];
+        var child = c.child['b'].child['ba'].child['bab'];
 
-		// when
-		child.mouseOver();
-		var items = child.getParentMenuItems();
+        // when
+        child.mouseOver();
+        var items = child.getParentMenuItems();
 
-		// then
-		assertTrue(items[0].getEl().className, ludo.dom.hasClass(items[0].getEl(), 'ludo-menu-item-active'));
-		assertTrue(ludo.dom.hasClass(items[1].getEl(), 'ludo-menu-item-active'));
-	},
+        // then
+        assertTrue(items[0].getEl().className, ludo.dom.hasClass(items[0].getEl(), 'ludo-menu-item-active'));
+        assertTrue(ludo.dom.hasClass(items[1].getEl(), 'ludo-menu-item-active'));
+    },
 
-	"test should clear previous highlighted path when mouse over new path": function(){
-		// given
-		var c = this.getMenuComponent();
-		var child = c.child['b'].child['ba'].child['bab'];
+    "test should clear previous highlighted path when mouse over new path":function () {
+        // given
+        var c = this.getMenuComponent();
+        var child = c.child['b'].child['ba'].child['bab'];
 
-		// when
-		child.mouseOver();
-		var items = child.getParentMenuItems();
-		c.child['c'].mouseOver();
+        // when
+        child.mouseOver();
+        var items = child.getParentMenuItems();
+        c.child['c'].mouseOver();
 
-		// then
-		assertFalse(ludo.dom.hasClass(items[0].getEl(), 'ludo-menu-item-active'));
-		assertFalse(ludo.dom.hasClass(items[1].getEl(), 'ludo-menu-item-active'));
-	},
+        // then
+        assertFalse(ludo.dom.hasClass(items[0].getEl(), 'ludo-menu-item-active'));
+        assertFalse(ludo.dom.hasClass(items[1].getEl(), 'ludo-menu-item-active'));
+    },
 
-	"test should hide menus on menu item click": function(){
-		// given
-		var c = this.getMenuComponent();
+    "test should hide menus on menu item click":function () {
+        // given
+        var c = this.getMenuComponent();
 
-		// when
-		c.child['b'].click();
-		assertEquals('', c.child['b'].child['ba'].getMenuContainer().getEl().style.display);
-		c.child['b'].child['bb'].click();
+        // when
+        c.child['b'].click();
+        assertEquals('', c.child['b'].child['ba'].getMenuContainer().getEl().style.display);
+        c.child['b'].child['bb'].click();
 
 
-		// then
-		assertEquals('none', c.child['b'].child['ba'].getMenuContainer().getEl().style.display);
-	},
+        // then
+        assertEquals('none', c.child['b'].child['ba'].getMenuContainer().getEl().style.display);
+    },
 
 
     "test should find menu container to show for an item":function () {
@@ -258,7 +258,7 @@ TestCase("MenuTest", {
         assertEquals(c.child['b'].child['ba'], c.child['b'].child['ba'].child['baa'].getParentMenuItem());
     },
 
-    "test should set layout of menu containers for sub menu of horizontal": function(){
+    "test should set layout of menu containers for sub menu of horizontal":function () {
         // given
         var c = this.getMenuComponent();
 
@@ -266,11 +266,11 @@ TestCase("MenuTest", {
         var grandChild = c.child['b'].child['ba'];
 
         // then
-        assertEquals(c.child['b'], grandChild.getMenuContainer().layout.below);
+        assertEquals(c.child['b'].getParent().getEl(), grandChild.getMenuContainer().layout.below);
         assertEquals(c.child['b'], grandChild.getMenuContainer().layout.alignLeft);
 
     },
-    "test should set layout of menu containers for sub menu of vertical": function(){
+    "test should set layout of menu containers for sub menu of vertical":function () {
         // given
         var c = this.getMenuComponent();
 
@@ -284,21 +284,20 @@ TestCase("MenuTest", {
 
     },
 
-	"test menu containers of sub items should have fitVerticalViewPort set to true": function(){
+    "test menu containers of sub items should have fitVerticalViewPort set to true":function () {
         // given
         var c = this.getMenuComponent();
 
-		// when
-		c.child['b'].click();
-		c.child['b'].child['ba'].mouseOver();
+        // when
+        c.child['b'].click();
+        c.child['b'].child['ba'].mouseOver();
 
-		var child = c.child['b'].child['ba'].child['baa'];
+        var child = c.child['b'].child['ba'].child['baa'];
 
-		// then
-		assertEquals('layout.MenuContainer', child.getMenuContainer().type);
-		assertTrue(child.getMenuContainer().layout.fitVerticalViewPort);
-		assertTrue(child.getMenuContainer().getRenderer().rendering.fitVerticalViewPort);
-	},
+        // then
+        assertEquals('layout.MenuContainer', child.getMenuContainer().type);
+        assertTrue(child.getMenuContainer().layout.fitVerticalViewPort);
+    },
 
     "test should be able to define keyboard shortcuts":function () {
 
@@ -320,7 +319,7 @@ TestCase("MenuTest", {
 
     },
 
-    "test children with specific layout should not be changed": function(){
+    "test children with specific layout should not be changed":function () {
         // given
         var c = this.getMenuComponent();
 
@@ -331,11 +330,11 @@ TestCase("MenuTest", {
         assertEquals('linear', calendar.layout.type);
     },
 
-    "test should be able to navigate in menu items using arrow keys": function(){
+    "test should be able to navigate in menu items using arrow keys":function () {
 
     },
 
-    "test children with different layout type than menu should not have any sub containers to show": function(){
+    "test children with different layout type than menu should not have any sub containers to show":function () {
         // given
         var c = this.getMenuComponent();
 
@@ -347,7 +346,7 @@ TestCase("MenuTest", {
 
     },
 
-    "test items without children should not have any menu container to show": function(){
+    "test items without children should not have any menu container to show":function () {
         // given
         var c = this.getMenuComponent();
 
@@ -378,7 +377,7 @@ TestCase("MenuTest", {
         assertEquals(lm, lmItemSubSub);
     },
 
-    "test should get reference top top menu component": function(){
+    "test should get reference top top menu component":function () {
         // given
         var c = this.getMenuComponent();
 
@@ -388,7 +387,7 @@ TestCase("MenuTest", {
         assertEquals(c, c.child['b'].child['ba'].child['baa'].getMenuComponent());
     },
 
-    "test should expand sub menu of horizontal menu on click": function(){
+    "test should expand sub menu of horizontal menu on click":function () {
         // given
         var c = this.getMenuComponent();
 
@@ -399,7 +398,7 @@ TestCase("MenuTest", {
         assertEquals('', c.child['b'].child['ba'].getMenuContainer().getEl().style.display);
     },
 
-    "test expand menus on mouse over after activating on click": function(){
+    "test expand menus on mouse over after activating on click":function () {
         // given
         var c = this.getMenuComponent();
 
@@ -412,7 +411,7 @@ TestCase("MenuTest", {
         assertEquals('none', c.child['b'].child['ba'].getMenuContainer().getEl().style.display);
     },
 
-    "test should show sub menus on mouse over": function(){
+    "test should show sub menus on mouse over":function () {
         // given
         var c = this.getMenuComponent();
 
@@ -427,7 +426,7 @@ TestCase("MenuTest", {
 
     },
 
-    "test should hide other menus on click on new one": function(){
+    "test should hide other menus on click on new one":function () {
         // given
         var c = this.getMenuComponent();
 
@@ -441,27 +440,27 @@ TestCase("MenuTest", {
         assertEquals('none', c.child['b'].child['ba'].getMenuContainer().getEl().style.display);
     },
 
-    "test should be able to set menu default active": function(){
-		// given
-		var c = this.getMenuComponent({
-			active:true
-		});
+    "test should be able to set menu default active":function () {
+        // given
+        var c = this.getMenuComponent({
+            active:true
+        });
 
-		// when
-		c.child['b'].mouseOver();
+        // when
+        c.child['b'].mouseOver();
 
-		// then
-		assertEquals('', c.child['b'].child['ba'].getMenuContainer().getEl().style.display);
+        // then
+        assertEquals('', c.child['b'].child['ba'].getMenuContainer().getEl().style.display);
     },
 
-    "test click event should be relayed to top menu component": function(){
+    "test click event should be relayed to top menu component":function () {
         // given
         var c = this.getMenuComponent();
         var eventFired = false;
         var firedFromView = undefined;
 
         //  when
-        c.addEvent('click', function(view){
+        c.addEvent('click', function (view) {
             eventFired = true;
             firedFromView = view;
         });
@@ -473,96 +472,95 @@ TestCase("MenuTest", {
         assertEquals(c.child['b'].child['ba'], firedFromView);
     },
 
-	"test size of menu containers should not change on second display": function(){
+    "test size of menu containers should not change on second display":function () {
         // given
         var c = this.getMenuComponent();
 
 
-		c.child['c'].click();
-		c.child['c'].child['cb'].mouseOver();
-		var expectedSize = c.child['c'].child['cb'].getMenuContainer().getEl().offsetWidth;
+        c.child['c'].click();
+        c.child['c'].child['cb'].mouseOver();
+        var expectedSize = c.child['c'].child['cb'].getMenuContainer().getEl().offsetWidth;
 
-		// when
-		c.child['c'].child['cc'].mouseOver();
-		c.child['c'].child['cb'].mouseOver();
+        // when
+        c.child['c'].child['cc'].mouseOver();
+        c.child['c'].child['cb'].mouseOver();
 
-		var size = c.child['c'].child['cb'].getMenuContainer().getEl().offsetWidth;
+        var size = c.child['c'].child['cb'].getMenuContainer().getEl().offsetWidth;
 
-		assertEquals(expectedSize.x, size.x);
+        assertEquals(expectedSize.x, size.x);
 
 
-	},
-	"test classes extending menu items should have correct layout settings": function(){
+    },
+    "test classes extending menu items should have correct layout settings":function () {
         // given
         var c = this.getMenuComponent();
 
-		// when
-		var child = c.child['custom'];
+        // when
+        var child = c.child['custom'];
 
-		// then
-		assertEquals(25, child.layout.height);
-
-	},
-
-    "test menu containers without any Menu.Item should be wider than widest menu item": function(){
-		// given
-		var c = new ludo.menu.Context({
-			children:[
-				{ type:'form.Checkbox', width : 200, label : 'Hello', labelWidth:150 },
-				{ type:'form.Checkbox', layout:{ width : 300 }, label : 'Next item is coming here' },
-				{ type:'form.Checkbox', layout:{ width : 220 }, label : 'Next item' },
-				{ type:'form.Checkbox', layout:{ width : 180 }, label : 'Next item' },
-				{ type:'calendar.Calendar', layout:{ width : 400 } }
-
-			]
-		});
-		c.show({
-			page:{x:10,y:10}
-		});
-
-		var expectedWidth = 0;
-		for(var i=0;i< c.children.length;i++){
-			expectedWidth = Math.max(expectedWidth, c.children[i].getEl().offsetWidth + ludo.dom.getMW(c.children[i].getEl()));
-		}
-
-		var containerWidth = c.getEl().offsetWidth + ludo.dom.getMW(c.getEl());
-		console.log(containerWidth);
-		assertEquals(expectedWidth, containerWidth);
+        // then
+        assertEquals(25, child.layout.height);
     },
 
-	"test should not show context menu in max width when item has layout width": function(){
-		// given
-		var c = new ludo.menu.Context({
-			children:[
-				{ type:'calendar.Calendar', layout:{ width : 400, height: 200 } }
-			]
-		});
+    "test menu containers without any Menu.Item should be wider than widest menu item":function () {
+        // given
+        var c = new ludo.menu.Context({
+            children:[
+                { type:'form.Checkbox', width:200, label:'Hello', labelWidth:150 },
+                { type:'form.Checkbox', layout:{ width:300 }, label:'Next item is coming here' },
+                { type:'form.Checkbox', layout:{ width:220 }, label:'Next item' },
+                { type:'form.Checkbox', layout:{ width:180 }, label:'Next item' },
+                { type:'calendar.Calendar', layout:{ width:400 } }
 
-		// when
-		c.show({ page:{x:10,y:10 }});
+            ]
+        });
+        c.show({
+            page:{x:10, y:10}
+        });
 
-		console.log(c.layout);
-		console.log(c.children[0].layout);
+        var expectedWidth = 0;
+        for (var i = 0; i < c.children.length; i++) {
+            expectedWidth = Math.max(expectedWidth, c.children[i].getEl().offsetWidth + ludo.dom.getMW(c.children[i].getEl()));
+        }
 
-		assertEquals(400, ludo.dom.getWrappedSizeOfView(c).x);
-		assertEquals(200, ludo.dom.getWrappedSizeOfView(c).y);
+        var containerWidth = c.getEl().offsetWidth + ludo.dom.getMW(c.getEl());
+        console.log(containerWidth);
+        assertEquals(expectedWidth, containerWidth);
+    },
 
-		// then
-		assertEquals(400, c.getEl().offsetWidth - ludo.dom.getPW(c.getEl()) - ludo.dom.getBW(c.getEl()) );
+    "test should not show context menu in max width when item has layout width":function () {
+        // given
+        var c = new ludo.menu.Context({
+            children:[
+                { type:'calendar.Calendar', layout:{ width:400, height:200 } }
+            ]
+        });
 
-	},
+        // when
+        c.show({ page:{x:10, y:10 }});
 
-    "test should not call resize function more than necessary" : function(){
+        console.log(c.layout);
+        console.log(c.children[0].layout);
+
+        assertEquals(400, ludo.dom.getWrappedSizeOfView(c).x);
+        assertEquals(200, ludo.dom.getWrappedSizeOfView(c).y);
+
+        // then
+        assertEquals(400, c.getEl().offsetWidth - ludo.dom.getPW(c.getEl()) - ludo.dom.getBW(c.getEl()));
+
+    },
+
+    "test should not call resize function more than necessary":function () {
 
         var countResize = 0;
         // given
         var c = this.getMenuComponent({
-			orientation:'vertical'
-		});
+            orientation:'vertical'
+        });
         c.child['a'].click();
         // when
-        c.child['c'].child['ca'].getMenuContainer().addEvent('resize', function(){
-            countResize ++;
+        c.child['c'].child['ca'].getMenuContainer().addEvent('resize', function () {
+            countResize++;
         });
         c.child['c'].mouseOver();
         c.child['c'].mouseOver();
@@ -574,86 +572,100 @@ TestCase("MenuTest", {
 
     },
 
-	"test height of context menu should be correct": function(){
-		// given
-		var c = new ludo.menu.Context({
-			children:['One','Two','Three','Four','Five']
-		});
-		c.show({
-			page:{x : 100, y : 100}
-		});
+    "test height of context menu should be correct":function () {
+        // given
+        var c = new ludo.menu.Context({
+            children:['One', 'Two', 'Three', 'Four', 'Five']
+        });
+        c.show({
+            page:{x:100, y:100}
+        });
 
-		var expectedHeight = 0;
-		for(var i= 0;i< c.children.length;i++){
-			expectedHeight += c.children[i].getEl().offsetHeight + ludo.dom.getMH(c.children[i].getEl());
-		}
+        var expectedHeight = 0;
+        for (var i = 0; i < c.children.length; i++) {
+            expectedHeight += c.children[i].getEl().offsetHeight + ludo.dom.getMH(c.children[i].getEl());
+        }
 
-		assertEquals(expectedHeight, c.getEl().offsetHeight - ludo.dom.getBH(c.getEl()) - ludo.dom.getPH(c.getEl()));
-	},
-
-    "test should be able to show vertical sub menu above horizontal menu items": function(){
-        fail('Not implemented');
+        assertEquals(expectedHeight, c.getEl().offsetHeight - ludo.dom.getBH(c.getEl()) - ludo.dom.getPH(c.getEl()));
     },
 
-	"test context menu should have correct layout settings": function(){
-		// given
-		var cm = new ludo.menu.Context();
+    "test should be able to show vertical sub menu above horizontal menu items":function () {
+        // given
+        var c = this.getMenuComponent({
+            alignSubMenuV:'above'
+        });
+        // when
+        var child = c.child['b'];
+        var grandChild = c.child['b'].child['ba'];
+        // then
 
-		// then
-		assertEquals('menu', cm.layout.type.toLowerCase());
-		assertEquals('vertical', cm.layout.orientation.toLowerCase());
-	},
+        assertEquals('above', c.layout.alignSubMenuV);
+        assertEquals('above', child.layout.alignSubMenuV);
+        assertEquals('above', grandChild.layout.alignSubMenuV);
 
-    "test context menu items should have correct layout settings": function(){
+        assertUndefined(grandChild.getMenuContainer().layout.below);
+        assertNotUndefined(grandChild.getMenuContainer().layout.above);
+    },
+
+    "test context menu should have correct layout settings":function () {
+        // given
+        var cm = new ludo.menu.Context();
+
+        // then
+        assertEquals('menu', cm.layout.type.toLowerCase());
+        assertEquals('vertical', cm.layout.orientation.toLowerCase());
+    },
+
+    "test context menu items should have correct layout settings":function () {
         // given
         var c = this.getContextMenu();
         c.show({
-            page:{ x: 100, y : 100 }
+            page:{ x:100, y:100 }
         });
 
         // then
         assertEquals(25, c.child['a'].layout.height);
         assertEquals(25, c.child['c'].layout.height);
-        assertEquals(25, c.child['a'].getLayoutManager().getRenderer().rendering.height);
     },
 
-	"test context menu should expand sub menus on mouse over": function(){
-		// given
-		var c = this.getContextMenu();
+    "test context menu should expand sub menus on mouse over":function () {
+        // given
+        var c = this.getContextMenu();
 
-		// when
-		c.child['a'].mouseOver();
+        // when
+        c.child['a'].mouseOver();
 
-		// then
-		assertEquals('', c.child['a'].child['aa'].getMenuContainer().getEl().style.display);
+        // then
+        assertEquals('', c.child['a'].child['aa'].getMenuContainer().getEl().style.display);
 
-	},
+    },
 
-	getContextMenu:function(){
-		return new ludo.menu.Context({
+    getContextMenu:function () {
+        return new ludo.menu.Context({
 
-			children:[
-				{ name:'a', html : 'Item 1', children:[
-					{ name: 'aa', html : 'Item 1.1 '},
-					{ name: 'ab', html : 'Item 1.2 '},
-					{ name: 'ac', html : 'Item 1.2 '}
-				]},
-				'b',{ name : 'c', html : 'Item 3' }
-			]
-		});
-	},
+            children:[
+                { name:'a', html:'Item 1', children:[
+                    { name:'aa', html:'Item 1.1 '},
+                    { name:'ab', html:'Item 1.2 '},
+                    { name:'ac', html:'Item 1.2 '}
+                ]},
+                'b',
+                { name:'c', html:'Item 3' }
+            ]
+        });
+    },
 
     getMenuComponent:function (layout) {
 
-		if(!ludo.CustomItem){
-			ludo.CustomItem = new Class({
-				Extends: ludo.menu.Item,
-				type:'CustomItem'
-			})
-		}
-		layout = layout || {};
-		layout.type = 'menu';
-		layout.orientation = layout.orientation || 'horizontal';
+        if (!ludo.CustomItem) {
+            ludo.CustomItem = new Class({
+                Extends:ludo.menu.Item,
+                type:'CustomItem'
+            })
+        }
+        layout = layout || {};
+        layout.type = 'menu';
+        layout.orientation = layout.orientation || 'horizontal';
         var v = new ludo.View({
             renderTo:document.body,
             layout:layout,
@@ -665,7 +677,7 @@ TestCase("MenuTest", {
                             { name:'baa', id:'baa', type:'calendar.Calendar'},
                             { name:'bab', id:'bab', html:'bab'},
                             { name:'bac', id:'bac', children:[
-                                { name : 'baca' }
+                                { name:'baca' }
                             ]}
                         ] },
                         { name:'bb', html:'BB' },
@@ -680,15 +692,74 @@ TestCase("MenuTest", {
                         { name:'cba', html:'John' },
                         { name:'cbb', html:'Splendida porro oculi' }
                     ] },
-					{ name:'cc', html:'Doe' }
+                    { name:'cc', html:'Doe' }
 
                 ]},
                 { name:'d', html:'D'},
                 { name:'e', html:'E'},
-				{ name:'custom', type:'CustomItem' }
+                { name:'custom', type:'CustomItem' }
             ]
 
         });
+        v.child['b'].child['ba'].show();
+        v.child['b'].child['ba'].child['baa'].show();
+        v.child['b'].child['ba'].child['bac'].show();
+        v.child['b'].child['ba'].child['bac'].child['baca'].show();
+        return v;
+    },
+
+
+    getMenuComponentInsideView:function (layout) {
+
+        if (!ludo.CustomItem) {
+            ludo.CustomItem = new Class({
+                Extends:ludo.menu.Item,
+                type:'CustomItem'
+            })
+        }
+        layout = layout || {};
+        layout.type = 'menu';
+        layout.orientation = layout.orientation || 'horizontal';
+        var view = new ludo.View({
+            renderTo:document.body,
+            children:[
+                {
+                    layout:layout,
+                    name:'mainView',
+                    children:[
+                        { name:'a', html:'A'},
+                        { name:'b', id:'b',
+                            children:[
+                                { id:'ba', name:'ba', children:[
+                                    { name:'baa', id:'baa', type:'calendar.Calendar'},
+                                    { name:'bab', id:'bab', html:'bab'},
+                                    { name:'bac', id:'bac', children:[
+                                        { name:'baca' }
+                                    ]}
+                                ] },
+                                { name:'bb', html:'BB' },
+                                { name:'bc', html:'BC' },
+                                { name:'bd', html:'BD' },
+                                { name:'textBox', type:'form.Text', label:'First name' }
+                            ]
+                        },
+                        { name:'c', html:'Component c', children:[
+                            { name:'ca', html:'Fugitant' },
+                            { name:'cb', html:'cb', children:[
+                                { name:'cba', html:'John' },
+                                { name:'cbb', html:'Splendida porro oculi' }
+                            ] },
+                            { name:'cc', html:'Doe' }
+
+                        ]},
+                        { name:'d', html:'D'},
+                        { name:'e', html:'E'},
+                        { name:'custom', type:'CustomItem' }
+                    ]
+                }
+            ]
+        });
+        var v = view.child['mainView'];
         v.child['b'].child['ba'].show();
         v.child['b'].child['ba'].child['baa'].show();
         v.child['b'].child['ba'].child['bac'].show();

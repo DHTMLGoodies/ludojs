@@ -100,7 +100,7 @@ require_once("../includes/demo-header.php");
                         ]
                     },
                     {
-                        name:'leftMenu',
+                        id:'leftMenu',
                         layout:{
                             below:'top',
                             width:200,
@@ -144,7 +144,7 @@ require_once("../includes/demo-header.php");
                             rightOf:'leftMenu',
                             below:'top',
                             fillRight:true,
-                            fillDown:true
+                            above:'bottom'
                         },
                         containerCss:{
                             'background-color':'#FFF',
@@ -159,6 +159,35 @@ require_once("../includes/demo-header.php");
                             type:'dataSource.HTML',
                             url:'../data-source/articles/front-page.php'
                         }
+                    },
+
+                    {
+                        id:'bottom',
+                        containerCss:{
+                            'border-top' : '1px solid #d7d7d7',
+                            'border-left' : '1px solid #d7d7d7'
+                        },
+                        layout:{
+                            type:'Menu',
+                            rightOf:'leftMenu',
+                            orientation:'horizontal',
+                            alignParentBottom:true,
+                            fillRight:true,
+                            height:20,
+                            alignSubMenuV:'above',
+                            alignSubMenuH:'rightOrLeftOf'
+                        },
+                        children:[
+                            {
+                                html : 'Item 1',
+                                children : ['Sub 1','Sub 2','Sub 3',{ html : 'Sub 4', children : ['Grandchild a', 'Grandchild b',
+                                    {
+                                        html : 'grand child c',
+                                        children: ['item 1', 'item 2', 'item 3']
+                                    }]}]
+                            },
+                                'Item 2','Item 3'
+                        ]
                     }
                 ]
 

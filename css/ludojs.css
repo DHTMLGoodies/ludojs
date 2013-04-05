@@ -1,4 +1,4 @@
-/* Generated Thu Apr 4 19:46:27 CEST 2013 */
+/* Generated Fri Apr 5 2:10:54 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -1611,7 +1611,7 @@ div.ludo-menu-item-spacer-horizontal {
     background-image: url('../images/expand-menu-horizontal-wh.png');
 }
 
-div.ludo-menu-top{
+div.ludo-menu-top,div.ludo-menu-vertical-above{
     -moz-box-shadow: none;
     -webkit-box-shadow: none;
     box-shadow: none;

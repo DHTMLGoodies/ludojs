@@ -25,7 +25,7 @@ ludo.menu.Item = new Class({
      sets icon to the character "!", i.e. text
      */
     icon:undefined,
-    orientation:'horizontal',
+    orientation:'vertical',
     /**
      * Initially disable the menu item
      * @config {Boolean} disabled

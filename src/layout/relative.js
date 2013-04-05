@@ -339,7 +339,9 @@ ludo.layout.Relative = new Class({
 			var c = lm.newChildCoordinates[child.id];
 			var lc = lm.lastChildCoordinates[child.id];
 			var p = lm.posProperties;
-
+            if(child.layout.above && child.layout.below){
+                c.height = lm.viewport.height - c.bottom - c.top;
+            }
 			child.resize({
 				width:c.width !== lc.width ? c.width : undefined,
 				height:c.height !== lc.height ? c.height : undefined

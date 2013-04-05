@@ -8,10 +8,10 @@ ludo.layout.Renderer = new Class({
 	view:undefined,
 	options:['width', 'height',
 		'rightOf', 'leftOf', 'below', 'above',
-		'rightOrLeftOf', 'leftOrRightOf',
-		'alignLeft', 'alignRight', 'alignTop', 'alignBottom',
 		'sameHeightAs', 'sameWidthAs',
 		'offsetWidth', 'offsetHeight',
+        'rightOrLeftOf', 'leftOrRightOf',
+        'alignLeft', 'alignRight', 'alignTop', 'alignBottom',
 		'centerIn',
 		'left', 'top',
 		'offsetX', 'offsetY', 'fitVerticalViewPort'],
@@ -180,8 +180,8 @@ ludo.layout.Renderer = new Class({
 					c.left = value.getPosition().x + value.offsetWidth;
 				};
 			case 'leftOf':
-				return function () {
-					c.right = value.getPosition().x + value.offsetWidth;
+				return function (view, renderer) {
+                    c.left = value.getPosition().x - c.width;;
 				};
 			case 'leftOrRightOf':
 				return function () {
@@ -200,8 +200,8 @@ ludo.layout.Renderer = new Class({
 					c.left = val;
 				};
 			case 'above':
-				return function () {
-					c.top = value.getPosition().y - c.height;
+				return function (view, renderer) {
+                    c.bottom = renderer.viewport.height - value.getPosition().y;
 				};
 			case 'below':
 				return function () {
@@ -301,6 +301,9 @@ ludo.layout.Renderer = new Class({
 
 		var c = this.coordinates;
 		this.view.resize(c);
+
+        if(c['bottom'])c['top'] = undefined;
+        if(c['right'])c['left'] = undefined;
 
 		for (var i = 0; i < this.posKeys.length; i++) {
 			var k = this.posKeys[i];

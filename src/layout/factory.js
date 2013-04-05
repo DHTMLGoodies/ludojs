@@ -114,6 +114,7 @@ ludo.layout.Factory = new Class({
 		var keys = ['left','top','width','height','weight','x','y'];
 		for(var i=0;i<keys.length;i++){
 			if(ret[keys[i]] === undefined)ret[keys[i]] = config[keys[i]] || view[keys[i]];
+            view[keys[i]] = undefined;
 		}
 		return ret;
 	},
