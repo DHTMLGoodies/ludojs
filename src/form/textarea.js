@@ -34,7 +34,7 @@ ludo.form.Textarea = new Class({
 
         if (this.layout && this.layout.weight) {
             var height = this.getEl().offsetHeight;
-            height -= (ludo.dom.getMBPH(this.getEl()) + ludo.dom.getMBPH(this.getBody()) + ludo.dom.getMBPH(this.els.formEl.parentNode) + 2);
+            height -= (ludo.dom.getMH(this.getEl()) + ludo.dom.getMBPH(this.getBody()) + ludo.dom.getMH(this.els.formEl.parentNode));
             if (height > 0) {
                 this.els.formEl.style.height = height+'px';
             }

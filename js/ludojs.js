@@ -1,4 +1,4 @@
-/* Generated Sat Apr 6 1:32:39 CEST 2013 */
+/* Generated Sat Apr 6 1:43:09 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -4812,7 +4812,7 @@ ludo.View = new Class({
 			ludo.dom.clearCache();
 			ludo.dom.clearCache.delay(50, this);
             this.getLayoutManager().getRenderer().resize();
-            //this.getLayoutManager().getRenderer().resizeChildren();
+            this.getLayoutManager().getRenderer().resizeChildren();
 		}
 	},
 
@@ -7337,7 +7337,6 @@ ludo.layout.Relative = new Class({
 			lm.updateLastCoordinatesFor(child);
 		}
 	},
-
     /**
      * Update lastChildCoordinates properties for a child after resize is completed
      * @method updateLastCoordinatesFor
@@ -7345,8 +7344,7 @@ ludo.layout.Relative = new Class({
      * @private
      */
 	updateLastCoordinatesFor:function (child) {
-        console.log('resize ' + child.id);
-        // console.trace();
+        this.lastResizeId = child.id;
 		var lc = this.lastChildCoordinates[child.id];
 		var el = child.getEl();
 		if (lc.left === undefined) lc.left = el.offsetLeft > 0? el.offsetLeft : 0;
@@ -23191,7 +23189,7 @@ ludo.form.Textarea = new Class({
 
         if (this.layout && this.layout.weight) {
             var height = this.getEl().offsetHeight;
-            height -= (ludo.dom.getMBPH(this.getEl()) + ludo.dom.getMBPH(this.getBody()) + ludo.dom.getMBPH(this.els.formEl.parentNode) + 2);
+            height -= (ludo.dom.getMH(this.getEl()) + ludo.dom.getMBPH(this.getBody()) + ludo.dom.getMH(this.els.formEl.parentNode));
             if (height > 0) {
                 this.els.formEl.style.height = height+'px';
             }
