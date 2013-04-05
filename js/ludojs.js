@@ -1,4 +1,4 @@
-/* Generated Fri Apr 5 15:19:54 CEST 2013 */
+/* Generated Fri Apr 5 16:22:44 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -5324,7 +5324,7 @@ ludo.View = new Class({
 				config.height = config.width / this.layout.aspectRatio;
 			}
 			// TODO layout properties should not be set here.
-            this.layout.width = config.width;
+            if(this.layout.width !== 'matchParent') this.layout.width = config.width;
 			var width = config.width - ludo.dom.getMBPW(this.els.container);
 			if (width > 0) {
 				this.els.container.style.width = width + 'px';
@@ -5332,7 +5332,8 @@ ludo.View = new Class({
 		}
 
 		if (config.height) {
-			if (!this.state.isMinimized) {
+			// TODO refactor this part.
+			if (!this.state.isMinimized && this.layout.height !== 'matchParent') {
 				this.layout.height = config.height;
 			}
 			var height = config.height - ludo.dom.getMBPH(this.els.container);
@@ -7980,7 +7981,7 @@ ludo.layout.MenuContainer = new Class({
         if (this.lm.view.parentComponent) {
             var vAlign = this.getSubMenuVAlign();
             var hAlign = this.getSubMenuHAlign();
-            if (this.lm.view.parentComponent.layout.orientation === 'horizontal') {
+            if (this.getParentLayoutOrientation() === 'horizontal') {
                 l[vAlign] = this.lm.view.getParent().getEl();
                 l.alignLeft = this.lm.view;
             } else {
@@ -8031,7 +8032,7 @@ ludo.layout.MenuContainer = new Class({
         }
 
 		if(this.getParentLayoutOrientation() === 'horizontal' && this.getSubMenuVAlign().indexOf('above') === 0){
-            ludo.dom.addClass(this.el, 'ludo-menu-horizontal-up');
+            ludo.dom.addClass(this.lm.view.parentComponent.getEl(), 'ludo-menu-horizontal-up');
         }
 
         this.body = ludo.dom.create({
@@ -19393,7 +19394,7 @@ ludo.menu.Item = new Class({
     ludoDOM:function () {
         this.parent();
         ludo.dom.addClass(this.getEl(), 'ludo-menu-item');
-        this.getBody().setStyle('cursor', 'pointer');
+
 
         if (this.isSpacer()) {
             if (this.orientation === 'horizontal') {

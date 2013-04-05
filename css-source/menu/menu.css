@@ -122,6 +122,14 @@ div.ludo-menu-item-over .ludo-menu-item-vertical-expand,div.ludo-menu-item-activ
 .ludo-menu-item-disabled {
     opacity: .5;
     filter: alpha(opacity = 50);
+
+}
+
+.ludo-menu-item .ludo-body{
+    cursor:pointer;
+}
+div.ludo-menu-item-disabled div.ludo-body{
+    cursor:default;
 }
 
 .ludo-menu-item-icon {

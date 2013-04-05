@@ -1,4 +1,4 @@
-/* Generated Fri Apr 5 15:19:54 CEST 2013 */
+/* Generated Fri Apr 5 16:22:44 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -1590,6 +1590,14 @@ div.ludo-menu-item-over .ludo-menu-item-vertical-expand,div.ludo-menu-item-activ
 .ludo-menu-item-disabled {
     opacity: .5;
     filter: alpha(opacity = 50);
+
+}
+
+.ludo-menu-item .ludo-body{
+    cursor:pointer;
+}
+div.ludo-menu-item-disabled div.ludo-body{
+    cursor:default;
 }
 
 .ludo-menu-item-icon {

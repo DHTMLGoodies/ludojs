@@ -889,7 +889,7 @@ ludo.View = new Class({
 				config.height = config.width / this.layout.aspectRatio;
 			}
 			// TODO layout properties should not be set here.
-            this.layout.width = config.width;
+            if(this.layout.width !== 'matchParent') this.layout.width = config.width;
 			var width = config.width - ludo.dom.getMBPW(this.els.container);
 			if (width > 0) {
 				this.els.container.style.width = width + 'px';
@@ -897,7 +897,8 @@ ludo.View = new Class({
 		}
 
 		if (config.height) {
-			if (!this.state.isMinimized) {
+			// TODO refactor this part.
+			if (!this.state.isMinimized && this.layout.height !== 'matchParent') {
 				this.layout.height = config.height;
 			}
 			var height = config.height - ludo.dom.getMBPH(this.els.container);

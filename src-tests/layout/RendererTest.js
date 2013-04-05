@@ -29,7 +29,7 @@ TestCase("Renderer", {
 		var renderer = v.getLayoutManager().getRenderer();
 
 		// then
-		assertEquals('matchParent', renderer.rendering.width);
+		assertEquals('matchParent', renderer.view.layout.width);
 
 	},
 

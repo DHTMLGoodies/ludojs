@@ -19,7 +19,7 @@ ludo.layout.MenuContainer = new Class({
         if (this.lm.view.parentComponent) {
             var vAlign = this.getSubMenuVAlign();
             var hAlign = this.getSubMenuHAlign();
-            if (this.lm.view.parentComponent.layout.orientation === 'horizontal') {
+            if (this.getParentLayoutOrientation() === 'horizontal') {
                 l[vAlign] = this.lm.view.getParent().getEl();
                 l.alignLeft = this.lm.view;
             } else {

@@ -278,7 +278,7 @@ TestCase("MenuTest", {
         var grandChild = c.child['b'].child['ba'].child['baa'];
 
         // then
-        assertEquals(c.child['b'].child['ba'], grandChild.getMenuContainer().layout.rightOrLeftOf);
+        assertEquals(c.child['b'].child['ba'].getEl(), grandChild.getMenuContainer().layout.rightOrLeftOf);
         assertEquals(c.child['b'].child['ba'], grandChild.getMenuContainer().layout.alignTop);
         assertTrue(grandChild.getMenuContainer().layout.fitVerticalViewPort);
 

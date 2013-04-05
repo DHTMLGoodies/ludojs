@@ -95,7 +95,7 @@ ludo.menu.Item = new Class({
     ludoDOM:function () {
         this.parent();
         ludo.dom.addClass(this.getEl(), 'ludo-menu-item');
-        this.getBody().setStyle('cursor', 'pointer');
+
 
         if (this.isSpacer()) {
             if (this.orientation === 'horizontal') {
