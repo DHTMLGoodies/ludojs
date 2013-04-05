@@ -71,6 +71,32 @@ TestCase("CoordinateTest", {
 		// then
 		assertEquals(100, d.layout.left);
 		assertEquals(150, d.layout.top);
-	}
+	},
+
+    "test should preserve orientation defined in view": function(){
+        // given
+
+        var name = this.getCustomView({
+            layout:'linear',
+            orientation: 'horizontal',
+            width:'matchParent'
+        });
+
+        var v = new ludo[name]({
+            layout:{}
+        });
+
+        // then
+        assertEquals('horizontal', v.layout.orientation);
+
+    },
+
+    getCustomView:function(layout){
+        var name = String.uniqueID();
+        ludo[name] = new Class({
+            layout:layout
+        });
+        return name;
+    }
 
 });

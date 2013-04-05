@@ -67,12 +67,12 @@ ludo.layout.Factory = new Class({
 		view.layout = this.toLayoutObject(view.layout);
 		config.layout = this.toLayoutObject(config.layout);
 
-
 		if(!this.hasLayoutProperties(view, config)){
 			return {};
 		}
 
 		var ret = this.getMergedLayout(view.layout, config.layout);
+
 
 		if (typeof ret === 'string') {
 			ret = { type:ret }
@@ -92,6 +92,8 @@ ludo.layout.Factory = new Class({
 		}
 		
         ret.type = ret.type || 'Base';
+
+
 		return ret;
 	},
 
@@ -113,7 +115,7 @@ ludo.layout.Factory = new Class({
 	transferFromView:function(view, config, ret){
 		var keys = ['left','top','width','height','weight','x','y'];
 		for(var i=0;i<keys.length;i++){
-			if(ret[keys[i]] === undefined)ret[keys[i]] = config[keys[i]] || view[keys[i]];
+			if(ret[keys[i]] === undefined && (config[keys[i]] !== undefined || view[keys[i]] !== undefined))ret[keys[i]] = config[keys[i]] || view[keys[i]];
             view[keys[i]] = undefined;
 		}
 		return ret;

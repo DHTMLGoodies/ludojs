@@ -225,17 +225,17 @@ ludo.layout.Menu = new Class({
 
 	clearHighlightedPath:function (except) {
 		except = except || [];
-		for (var i = 0; i < this.highlightedItems.length; i++) {
-			if (except.indexOf(this.highlightedItems[i]) === -1) {
-				ludo.dom.removeClass(this.highlightedItems[i].getEl(), 'ludo-menu-item-active');
+        var items = this.highlightedItems;
+		for (var i = 0; i < items.length; i++) {
+			if (except.indexOf(items[i]) === -1) {
+				ludo.dom.removeClass(items[i].getEl(), 'ludo-menu-item-active');
 			}
 		}
 	},
 
 	autoHideMenus:function (e) {
 		if (this.active || this.alwaysActive) {
-			var el = e.target;
-			if (el.className.indexOf('ludo-menu-item') === -1 && !el.getParent('.ludo-menu')) {
+			if (e.target.className.indexOf('ludo-menu-item') === -1 && !e.target.getParent('.ludo-menu')) {
 				this.hideAllMenus();
 				if(this.view.layout.orientation === 'horizontal'){
 					this.active = false;

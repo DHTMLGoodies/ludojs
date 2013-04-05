@@ -75,6 +75,12 @@ ludo.view.ButtonBar = new Class({
     },
 
     getItemsWithSpacer:function (children) {
+        children.splice(0, 0, {
+            layout: { weight:1 },
+            containerCss:{ 'background-color':'transparent' },
+            css:{ 'background-color':'transparent'}
+        });
+        /*
         for (var i = children.length; i > 0; i--) {
             children[i] = children[i - 1];
         }
@@ -82,7 +88,7 @@ ludo.view.ButtonBar = new Class({
             layout: { weight:1 },
             containerCss:{ 'background-color':'transparent' },
             css:{ 'background-color':'transparent'}
-        };
+        };*/
         return children;
     },
     /**

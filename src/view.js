@@ -848,7 +848,7 @@ ludo.View = new Class({
 	 * @return {Number} width
 	 */
 	getWidth:function () {
-		return this.layout.width;
+		return this.layout.pixelWidth ? this.layout.pixelWidth : this.layout.width;
 	},
 	/**
 	 * Get current height of component
@@ -856,7 +856,7 @@ ludo.View = new Class({
 	 * @return {Number}
 	 */
 	getHeight:function () {
-		return this.layout.height;
+		return this.layout.pixelHeight ? this.layout.pixelHeight : this.layout.height;
 	},
 
 	/**
@@ -889,7 +889,8 @@ ludo.View = new Class({
 				config.height = config.width / this.layout.aspectRatio;
 			}
 			// TODO layout properties should not be set here.
-            if(this.layout.width !== 'matchParent') this.layout.width = config.width;
+            this.layout.pixelWidth = config.width;
+            if(!isNaN(this.layout.width))this.layout.width = config.width;
 			var width = config.width - ludo.dom.getMBPW(this.els.container);
 			if (width > 0) {
 				this.els.container.style.width = width + 'px';
@@ -898,8 +899,9 @@ ludo.View = new Class({
 
 		if (config.height) {
 			// TODO refactor this part.
-			if (!this.state.isMinimized && this.layout.height !== 'matchParent') {
-				this.layout.height = config.height;
+			if (!this.state.isMinimized ) {
+				this.layout.pixelHeight = config.height;
+                if(!isNaN(this.layout.height))this.layout.height = config.height;
 			}
 			var height = config.height - ludo.dom.getMBPH(this.els.container);
 			if (height > 0) {
@@ -958,8 +960,8 @@ ludo.View = new Class({
 	cachedInnerHeight:undefined,
 	resizeDOM:function () {
 
-		if (this.layout.height > 0){
-            var height = this.layout.height ? this.layout.height - ludo.dom.getMBPH(this.els.container) : this.els.container.style.height.replace('px', '');
+		if (this.layout.pixelHeight > 0){
+            var height = this.layout.pixelHeight ? this.layout.pixelHeight - ludo.dom.getMBPH(this.els.container) : this.els.container.style.height.replace('px', '');
             height -= ludo.dom.getMBPH(this.els.body);
             if (height <= 0 || isNaN(height)) {
                 return;
@@ -974,7 +976,7 @@ ludo.View = new Class({
 	},
 
 	getInnerWidthOfBody:function () {
-        return this.layout.width ? this.layout.width - ludo.dom.getMBPW(this.els.container) - ludo.dom.getMBPW(this.els.body) : ludo.dom.getInnerWidthOf(this.els.body);
+        return this.layout.pixelWidth ? this.layout.pixelWidth - ludo.dom.getMBPW(this.els.container) - ludo.dom.getMBPW(this.els.body) : ludo.dom.getInnerWidthOf(this.els.body);
     },
 
 	/**

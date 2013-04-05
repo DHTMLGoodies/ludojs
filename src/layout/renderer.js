@@ -30,6 +30,7 @@ ludo.layout.Renderer = new Class({
 	lastCoordinates:{},
 
 	initialize:function (config) {
+
 		this.view = config.view;
 		this.fixReferences();
 		this.setDefaultProperties();
@@ -180,8 +181,8 @@ ludo.layout.Renderer = new Class({
 					c.left = value.getPosition().x + value.offsetWidth;
 				};
 			case 'leftOf':
-				return function (view, renderer) {
-                    c.left = value.getPosition().x - c.width;;
+				return function () {
+                    c.left = value.getPosition().x - c.width;
 				};
 			case 'leftOrRightOf':
 				return function () {

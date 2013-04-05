@@ -10,7 +10,6 @@ ludo.layout.LinearVertical = new Class({
 		this.parent();
 	},
 	resize:function () {
-
 		var componentHeight = this.view.getInnerHeightOfBody();
 		if (componentHeight == 0) {
 			return;

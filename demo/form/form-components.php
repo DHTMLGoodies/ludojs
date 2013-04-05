@@ -11,6 +11,11 @@ require_once("../includes/demo-header.php");
 <script type="text/javascript" src="../../src/form/checkbox.js"></script>
 <script type="text/javascript" src="../../src/form/radio-group.js"></script>
 <script type="text/javascript" src="../../src/model/model.js"></script>
+<script type="text/javascript" src="../../src/layout/renderer.js"></script>
+<script type="text/javascript" src="../../src/layout/factory.js"></script>
+<script type="text/javascript" src="../../src/layout/linear-horizontal.js"></script>
+<script type="text/javascript" src="../../src/layout/linear-vertical.js"></script>
+<script type="text/javascript" src="../../src/view/button-bar.js"></script>
 <style type="text/css">
     .ludo-form-text-element input, .ludo-form-text-element textarea {
         border: 0;
@@ -35,7 +40,8 @@ require_once("../includes/demo-header.php");
         id:'myWindow',
         title:'Form components',
         layout:{
-            type:'cols'
+            type:'linear',
+            orientation:'horizontal'
         },
         height:400,
         width:650,
@@ -106,16 +112,16 @@ require_once("../includes/demo-header.php");
                 { type:'form.Button', toggle:true, icon:'../images/icon-center.png', value:'Center', width:80, toggleGroup:'alignment' },
                 { type:'form.Button', toggle:true, icon:'../images/icon-right.png', value:'Right', width:80, toggleGroup:'alignment' },
                 {
-                    weight:1
+                    layout:{ weight: 1 }
                 },
                 {
-                    type:'form.SubmitButton'
+                    type:'form.SubmitButton', width:80
                 },
                 {
-                    type:'form.ResetButton'
+                    type:'form.ResetButton',width:80
                 },
                 {
-                    type:'form.CancelButton'
+                    type:'form.CancelButton', width:80
                 }
             ]
         },
