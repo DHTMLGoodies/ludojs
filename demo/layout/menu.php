@@ -175,7 +175,7 @@ require_once("../includes/demo-header.php");
                             fillRight:true,
                             height:20,
                             alignSubMenuV:'above',
-                            alignSubMenuH:'rightOrLeftOf'
+                            alignSubMenuH:'leftOf'
                         },
                         children:[
                             {

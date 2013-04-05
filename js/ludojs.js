@@ -1,4 +1,4 @@
-/* Generated Fri Apr 5 2:10:54 CEST 2013 */
+/* Generated Fri Apr 5 2:48:41 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -3761,8 +3761,8 @@ ludo.layout.Renderer = new Class({
 					c.left = value.getPosition().x + value.offsetWidth;
 				};
 			case 'leftOf':
-				return function () {
-					c.right = value.getPosition().x + value.offsetWidth;
+				return function (view, renderer) {
+                    c.left = value.getPosition().x - c.width;;
 				};
 			case 'leftOrRightOf':
 				return function () {
@@ -3884,6 +3884,8 @@ ludo.layout.Renderer = new Class({
 		this.view.resize(c);
 
         if(c['bottom'])c['top'] = undefined;
+        if(c['right'])c['left'] = undefined;
+
 		for (var i = 0; i < this.posKeys.length; i++) {
 			var k = this.posKeys[i];
 			if (this.coordinates[k] !== undefined && this.coordinates[k] !== this.lastCoordinates[k])this.view.getEl().style[k] = c[k] + 'px';
@@ -7988,8 +7990,7 @@ ludo.layout.MenuContainer = new Class({
                 l.alignLeft = this.lm.view;
             } else {
                 l[hAlign] = this.lm.view;
-                var subAlign = vAlign === 'above' ? 'alignBottom' : 'alignTop';
-                l[subAlign] = this.lm.view;
+                l[vAlign === 'above' ? 'alignBottom' : 'alignTop'] = this.lm.view;
             }
 
             this.lm.view.layout.alignSubMenuV = this.lm.view.layout.alignSubMenuV || vAlign;
@@ -8282,6 +8283,10 @@ ludo.layout.Menu = new Class({
 
 	activate:function (child) {
 		this.active = !this.active;
+        if(this.shownMenus.length === 0){
+            ludo.EffectObject.start();
+            ludo.EffectObject.end();
+        }
 		this.showMenusFor(child);
 	},
 
@@ -19656,6 +19661,7 @@ ludo.menu.Context = new Class({
 	},
 
 	show:function (e) {
+
 		if (this.selector) {
 			var domEl = this.getValidDomElement(e.target);
 			if (!domEl) {
@@ -19670,6 +19676,11 @@ ludo.menu.Context = new Class({
 				this.selectedRecord = r;
 			}
 		}
+
+        ludo.EffectObject.start();
+        ludo.EffectObject.end();
+
+
 		this.getLayoutManager().hideAllMenus();
 		this.parent();
 		if (!this.getParent()) {
