@@ -4,10 +4,12 @@ $pageTitle = 'Example of ludo form components';
 require_once("../includes/demo-header.php");
 ?>
 <body>
+<script type="text/javascript" src="../../src/form/element.js"></script>
 <script type="text/javascript" src="../../src/form/combo.js"></script>
 <script type="text/javascript" src="../../src/menu/button.js"></script>
+<script type="text/javascript" src="../../src/form/label-element.js"></script>
+<script type="text/javascript" src="../../src/form/text.js"></script>
 <script type="text/javascript" src="../../src/form/select.js"></script>
-<script type="text/javascript" src="../../src/form/element.js"></script>
 <script type="text/javascript" src="../../src/form/checkbox.js"></script>
 <script type="text/javascript" src="../../src/form/radio-group.js"></script>
 <script type="text/javascript" src="../../src/model/model.js"></script>

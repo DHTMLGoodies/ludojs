@@ -1,4 +1,4 @@
-/* Generated Sat Apr 6 1:43:09 CEST 2013 */
+/* Generated Sat Apr 6 1:55:37 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -25116,6 +25116,7 @@ ludo.form.RadioGroup = new Class({
         this.getInputCell().adopt(table);
         var tbody = this.els.tBody = new Element('tbody');
         table.adopt(tbody);
+
     },
 
     populate : function(){
@@ -25229,6 +25230,7 @@ ludo.form.RadioGroup = new Class({
      * @return void
      */
     setValue : function(value){
+        console.log(this.initialValue);
         for(var i=0;i<this.checkboxes.length;i++){
             if(this.checkboxes[i].getFormEl().get('value') == value){
                 return this.checkboxes[i].check();

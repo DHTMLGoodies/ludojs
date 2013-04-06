@@ -19,6 +19,7 @@ ludo.form.RadioGroup = new Class({
         this.getInputCell().adopt(table);
         var tbody = this.els.tBody = new Element('tbody');
         table.adopt(tbody);
+
     },
 
     populate : function(){
@@ -132,6 +133,7 @@ ludo.form.RadioGroup = new Class({
      * @return void
      */
     setValue : function(value){
+        // TODO reset in form-components.php is not working for radio group
         for(var i=0;i<this.checkboxes.length;i++){
             if(this.checkboxes[i].getFormEl().get('value') == value){
                 return this.checkboxes[i].check();
