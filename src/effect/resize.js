@@ -121,7 +121,7 @@ ludo.effect.Resize = new Class({
     setDisplayPropertyOfEl:function () {
         var display = this.getEl().getStyle('display');
         if (display !== 'absolute' && display !== 'relative') {
-			if(Browser.ie && Browser.version < 9)return;
+			if(Browser['ie'] && Browser.version < 9)return;
             this.getEl().style.display = 'relative';
         }
     },

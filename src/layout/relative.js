@@ -367,10 +367,9 @@ ludo.layout.Relative = new Class({
      * @private
      */
 	updateLastCoordinatesFor:function (child) {
-        this.lastResizeId = child.id;
 		var lc = this.lastChildCoordinates[child.id];
 		var el = child.getEl();
-		if (lc.left === undefined) lc.left = el.offsetLeft > 0? el.offsetLeft : 0;
+		if (lc.left === undefined) lc.left = el.offsetLeft > 0 ? el.offsetLeft : 0;
 		if (lc.top === undefined) lc.top = el.offsetTop > 0 ? el.offsetTop : 0;
 		if (lc.width === undefined) lc.width = el.offsetWidth;
 		if (lc.height === undefined) lc.height = el.offsetHeight;
@@ -469,16 +468,8 @@ ludo.layout.Relative = new Class({
 					var resizer = this.resizables[c.id][r] = this.getResizableFor(c, r);
 					this.assignDefaultCoordinates(resizer);
 					this.updateReference(this.resizeKeys[r], c, resizer);
-					switch (r) {
-						case 'left':
-						case 'above':
-							this.children.splice(i, 0, resizer);
-							break;
-						default:
-							this.children.splice(i + 1, 0, resizer);
-							break;
-
-					}
+                    var pos = r == 'left' || r === 'above' ? i: i+1;
+                    this.children.splice(pos, 0, resizer);
 				}
 			}
 		}
@@ -497,6 +488,7 @@ ludo.layout.Relative = new Class({
      * @private
      */
 	getResizableFor:function (child, direction) {
+        // TODO should be possible to render size of resizer to sum of views (see relative.php demo)
 		var resizeProp = (direction === 'left' || direction === 'right') ? 'width' : 'height';
 		return new ludo.layout.Resizer({
 			name:'resizer-' + child.name,

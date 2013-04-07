@@ -1,4 +1,4 @@
-/* Generated Sat Apr 6 1:55:37 CEST 2013 */
+/* Generated Sun Apr 7 23:16:16 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -4811,8 +4811,9 @@ ludo.View = new Class({
 		if (!this.parentComponent) {
 			ludo.dom.clearCache();
 			ludo.dom.clearCache.delay(50, this);
-            this.getLayoutManager().getRenderer().resize();
-            this.getLayoutManager().getRenderer().resizeChildren();
+            var r = this.getLayoutManager().getRenderer();
+            r.resize();
+            r.resizeChildren();
 		}
 	},
 
@@ -5269,8 +5270,6 @@ ludo.View = new Class({
 	hasChildren:function () {
 		return this.children.length > 0;
 	},
-
-
 
 	/**
 	 * Set new title
@@ -7344,10 +7343,9 @@ ludo.layout.Relative = new Class({
      * @private
      */
 	updateLastCoordinatesFor:function (child) {
-        this.lastResizeId = child.id;
 		var lc = this.lastChildCoordinates[child.id];
 		var el = child.getEl();
-		if (lc.left === undefined) lc.left = el.offsetLeft > 0? el.offsetLeft : 0;
+		if (lc.left === undefined) lc.left = el.offsetLeft > 0 ? el.offsetLeft : 0;
 		if (lc.top === undefined) lc.top = el.offsetTop > 0 ? el.offsetTop : 0;
 		if (lc.width === undefined) lc.width = el.offsetWidth;
 		if (lc.height === undefined) lc.height = el.offsetHeight;
@@ -7446,16 +7444,8 @@ ludo.layout.Relative = new Class({
 					var resizer = this.resizables[c.id][r] = this.getResizableFor(c, r);
 					this.assignDefaultCoordinates(resizer);
 					this.updateReference(this.resizeKeys[r], c, resizer);
-					switch (r) {
-						case 'left':
-						case 'above':
-							this.children.splice(i, 0, resizer);
-							break;
-						default:
-							this.children.splice(i + 1, 0, resizer);
-							break;
-
-					}
+                    var pos = r == 'left' || r === 'above' ? i: i+1;
+                    this.children.splice(pos, 0, resizer);
 				}
 			}
 		}
@@ -7474,6 +7464,7 @@ ludo.layout.Relative = new Class({
      * @private
      */
 	getResizableFor:function (child, direction) {
+        // TODO should be possible to render size of resizer to sum of views (see relative.php demo)
 		var resizeProp = (direction === 'left' || direction === 'right') ? 'width' : 'height';
 		return new ludo.layout.Resizer({
 			name:'resizer-' + child.name,
@@ -9441,7 +9432,6 @@ ludo.effect.Drag = new Class({
 	 */
 	delay:0,
 
-	startTime:undefined,
 	inDelayMode:false,
 
 	els:{},
@@ -9552,14 +9542,12 @@ ludo.effect.Drag = new Class({
 		node = this.getValidNode(node);
 		var el = document.id(node.el);
 		this.setPositioning(el);
-		var handle;
-		if (node.handle) {
-			handle = document.id(node.handle);
-		} else {
-			handle = el;
-		}
+
+        var handle = node.handle ? document.id(node.handle) : el;
+
 		handle.id = handle.id || 'ludo-' + String.uniqueID();
 		ludo.dom.addClass(handle, 'ludo-drag');
+
 		handle.addEvent(ludo.util.getDragStartEvent(), this.startDrag.bind(this));
 		handle.setProperty('forId', node.id);
 		this.els[node.id] = Object.merge(node, {
@@ -9613,14 +9601,10 @@ ludo.effect.Drag = new Class({
 	},
 
 	setPositioning:function(el){
-		var pos = el.getStyle('position');
 		if (!this.useShim){
-			if(pos && pos === 'relative'){
-
-			}
 			el.style.position = 'absolute';
 		}else{
-
+            var pos = el.getStyle('position');
 			if(!pos || (pos!='relative' && pos!='absolute')){
 				el.style.position = 'relative';
 			}
@@ -9685,11 +9669,7 @@ ludo.effect.Drag = new Class({
 			pos = el.getPosition();
 		}else{
 			var parent = this.getPositionedParent(el);
-			if(parent){
-				pos = el.getPosition(parent);
-			}else{
-				pos = this.getPositionOf(el);
-			}
+            pos = parent ? el.getPosition(parent) : this.getPositionOf(el);
 		}
 
 		var x = pos.x;
@@ -9973,14 +9953,17 @@ ludo.effect.Drag = new Class({
 	},
 
 	getMaxX:function () {
-		var maxX = this.getConfigProperty('maxX');
-        return maxX !== undefined ? maxX : this.maxPos !== undefined ? this.maxPos : 100000;
+        return this.getMaxPos('maxX');
 	},
 
 	getMaxY:function () {
-		var maxY = this.getConfigProperty('maxY');
-        return maxY !== undefined ? maxY : this.maxPos !== undefined ? this.maxPos : 100000;
+        return this.getMaxPos('maxY');
 	},
+
+    getMaxPos:function(key){
+        var max = this.getConfigProperty(key);
+        return max !== undefined ? max : this.maxPos !== undefined ? this.maxPos : 100000;
+    },
 
 	getMinX:function () {
 		var minX = this.getConfigProperty('minX');
@@ -11188,7 +11171,7 @@ ludo.FramedView = new Class({
 
 	ludoConfig:function (config) {
 		this.parent(config);
-        if (config.buttons !== undefined) {
+        if (config.buttons) {
             config.buttonBar = {
                 children:config.buttons
             }
@@ -11259,33 +11242,28 @@ ludo.FramedView = new Class({
 	resizeDOM:function () {
 		var height = this.getHeight();
 		height -= (ludo.dom.getMBPH(this.els.container) + ludo.dom.getMBPH(this.els.body) +  this.getHeightOfTitleAndButtonBar());
-		if (height < 0) {
-			return;
-		}
-		this.els.body.style.height = height + 'px';
-		this.cachedInnerHeight = height;
+        if(height >= 0){
+            this.els.body.style.height = height + 'px';
+            this.cachedInnerHeight = height;
 
-		if (this.buttonBarComponent) {
-			this.buttonBarComponent.resize();
-		}
+            if (this.buttonBarComponent) {
+                this.buttonBarComponent.resize();
+            }
+        }
 	},
 
 	heightOfTitleAndButtonBar:undefined,
 	getHeightOfTitleAndButtonBar:function () {
 		if (this.isHidden())return 0;
-		if (!this.layout.heightOfTitleAndButtonBar) {
-			this.layout.heightOfTitleAndButtonBar = this.getHeightOfTitleBar() + this.getHeightOfButtonBar();
+		if (!this.heightOfTitleAndButtonBar) {
+			this.heightOfTitleAndButtonBar = this.getHeightOfTitleBar() + this.getHeightOfButtonBar();
 		}
-		return this.layout.heightOfTitleAndButtonBar;
+		return this.heightOfTitleAndButtonBar;
 	},
 
-	heightOfButtonBar:undefined,
 	getHeightOfButtonBar:function () {
 		if (!this.buttonBar)return 0;
-		if (this.layout.heightOfButtonBar === undefined) {
-			if(this.els.buttonBar)this.layout.heightOfButtonBar = this.els.buttonBar.el.offsetHeight + ludo.dom.getMH(this.els.buttonBar.el);
-		}
-		return this.layout.heightOfButtonBar;
+        return this.els.buttonBar.el.offsetHeight + ludo.dom.getMH(this.els.buttonBar.el);
 	},
 
 	getHeightOfTitleBar:function () {
@@ -23178,14 +23156,16 @@ ludo.form.Textarea = new Class({
     },
     resizeDOM:function () {
         this.parent();
+        var w;
         if (!this.label) {
-            var w = this.getInnerWidthOfBody();
+            w = this.getInnerWidthOfBody();
             if (w <= 0)return;
-            this.els.formEl.setStyle('width', w + 'px');
         }else{
             var p = this.els.formEl.parentNode;
-            this.els.formEl.style.width = (p.offsetWidth - ludo.dom.getBW(p) - ludo.dom.getPW(p)) + 'px';
+            w = (p.offsetWidth - ludo.dom.getBW(p) - ludo.dom.getPW(p));
         }
+
+        this.els.formEl.setStyle('width', w + 'px');
 
         if (this.layout && this.layout.weight) {
             var height = this.getEl().offsetHeight;
@@ -25230,7 +25210,7 @@ ludo.form.RadioGroup = new Class({
      * @return void
      */
     setValue : function(value){
-        console.log(this.initialValue);
+        // TODO reset in form-components.php is not working for radio group
         for(var i=0;i<this.checkboxes.length;i++){
             if(this.checkboxes[i].getFormEl().get('value') == value){
                 return this.checkboxes[i].check();

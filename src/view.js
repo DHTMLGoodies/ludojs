@@ -832,8 +832,6 @@ ludo.View = new Class({
 		return this.children.length > 0;
 	},
 
-
-
 	/**
 	 * Set new title
 	 * @method setTitle

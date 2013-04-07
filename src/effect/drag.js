@@ -135,7 +135,6 @@ ludo.effect.Drag = new Class({
 	 */
 	delay:0,
 
-	startTime:undefined,
 	inDelayMode:false,
 
 	els:{},
@@ -246,14 +245,12 @@ ludo.effect.Drag = new Class({
 		node = this.getValidNode(node);
 		var el = document.id(node.el);
 		this.setPositioning(el);
-		var handle;
-		if (node.handle) {
-			handle = document.id(node.handle);
-		} else {
-			handle = el;
-		}
+
+        var handle = node.handle ? document.id(node.handle) : el;
+
 		handle.id = handle.id || 'ludo-' + String.uniqueID();
 		ludo.dom.addClass(handle, 'ludo-drag');
+
 		handle.addEvent(ludo.util.getDragStartEvent(), this.startDrag.bind(this));
 		handle.setProperty('forId', node.id);
 		this.els[node.id] = Object.merge(node, {
@@ -307,14 +304,10 @@ ludo.effect.Drag = new Class({
 	},
 
 	setPositioning:function(el){
-		var pos = el.getStyle('position');
 		if (!this.useShim){
-			if(pos && pos === 'relative'){
-
-			}
 			el.style.position = 'absolute';
 		}else{
-
+            var pos = el.getStyle('position');
 			if(!pos || (pos!='relative' && pos!='absolute')){
 				el.style.position = 'relative';
 			}
@@ -379,11 +372,7 @@ ludo.effect.Drag = new Class({
 			pos = el.getPosition();
 		}else{
 			var parent = this.getPositionedParent(el);
-			if(parent){
-				pos = el.getPosition(parent);
-			}else{
-				pos = this.getPositionOf(el);
-			}
+            pos = parent ? el.getPosition(parent) : this.getPositionOf(el);
 		}
 
 		var x = pos.x;
@@ -667,14 +656,17 @@ ludo.effect.Drag = new Class({
 	},
 
 	getMaxX:function () {
-		var maxX = this.getConfigProperty('maxX');
-        return maxX !== undefined ? maxX : this.maxPos !== undefined ? this.maxPos : 100000;
+        return this.getMaxPos('maxX');
 	},
 
 	getMaxY:function () {
-		var maxY = this.getConfigProperty('maxY');
-        return maxY !== undefined ? maxY : this.maxPos !== undefined ? this.maxPos : 100000;
+        return this.getMaxPos('maxY');
 	},
+
+    getMaxPos:function(key){
+        var max = this.getConfigProperty(key);
+        return max !== undefined ? max : this.maxPos !== undefined ? this.maxPos : 100000;
+    },
 
 	getMinX:function () {
 		var minX = this.getConfigProperty('minX');

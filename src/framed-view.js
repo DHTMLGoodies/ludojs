@@ -88,7 +88,7 @@ ludo.FramedView = new Class({
 
 	ludoConfig:function (config) {
 		this.parent(config);
-        if (config.buttons !== undefined) {
+        if (config.buttons) {
             config.buttonBar = {
                 children:config.buttons
             }
@@ -159,33 +159,28 @@ ludo.FramedView = new Class({
 	resizeDOM:function () {
 		var height = this.getHeight();
 		height -= (ludo.dom.getMBPH(this.els.container) + ludo.dom.getMBPH(this.els.body) +  this.getHeightOfTitleAndButtonBar());
-		if (height < 0) {
-			return;
-		}
-		this.els.body.style.height = height + 'px';
-		this.cachedInnerHeight = height;
+        if(height >= 0){
+            this.els.body.style.height = height + 'px';
+            this.cachedInnerHeight = height;
 
-		if (this.buttonBarComponent) {
-			this.buttonBarComponent.resize();
-		}
+            if (this.buttonBarComponent) {
+                this.buttonBarComponent.resize();
+            }
+        }
 	},
 
 	heightOfTitleAndButtonBar:undefined,
 	getHeightOfTitleAndButtonBar:function () {
 		if (this.isHidden())return 0;
-		if (!this.layout.heightOfTitleAndButtonBar) {
-			this.layout.heightOfTitleAndButtonBar = this.getHeightOfTitleBar() + this.getHeightOfButtonBar();
+		if (!this.heightOfTitleAndButtonBar) {
+			this.heightOfTitleAndButtonBar = this.getHeightOfTitleBar() + this.getHeightOfButtonBar();
 		}
-		return this.layout.heightOfTitleAndButtonBar;
+		return this.heightOfTitleAndButtonBar;
 	},
 
-	heightOfButtonBar:undefined,
 	getHeightOfButtonBar:function () {
 		if (!this.buttonBar)return 0;
-		if (this.layout.heightOfButtonBar === undefined) {
-			if(this.els.buttonBar)this.layout.heightOfButtonBar = this.els.buttonBar.el.offsetHeight + ludo.dom.getMH(this.els.buttonBar.el);
-		}
-		return this.layout.heightOfButtonBar;
+        return this.els.buttonBar.el.offsetHeight + ludo.dom.getMH(this.els.buttonBar.el);
 	},
 
 	getHeightOfTitleBar:function () {

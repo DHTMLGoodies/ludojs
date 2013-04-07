@@ -32,6 +32,9 @@ require_once("../includes/demo-header.php");
                     top:50,
                     type:'relative'
                 },
+                css:{
+                    'border-bottom' : 0
+                },
                 contextMenu:[
                     {
                         children:['Item 1', 'Item 2', 'Item 3', { html:'Item 4', children:['Item 4.1', 'Item 4.2']}]
@@ -49,7 +52,7 @@ require_once("../includes/demo-header.php");
                             orientation:'horizontal'
                         },
                         containerCss:{
-                            'border-bottom':'1px solid #d7d7d7'
+                            'border-bottom':'0'
                         },
                         children:[
                             { html:"File", name:'file',
@@ -119,6 +122,8 @@ require_once("../includes/demo-header.php");
                         },
                         containerCss:{
                             border:0,
+                            'border-top' : '1px solid #d7d7d7',
+                            'border-bottom' : '1px solid #d7d7d7',
                             'border-right' : '1px solid #d7d7d7'
                         },
                         children:[
@@ -151,6 +156,7 @@ require_once("../includes/demo-header.php");
                         },
                         containerCss:{
                             'background-color':'#FFF',
+                            'border-top':'1px solid #d7d7d7',
                             'border-left':'1px solid #d7d7d7'
 
                         },
@@ -168,7 +174,8 @@ require_once("../includes/demo-header.php");
                         id:'bottom',
                         containerCss:{
                             'border-top':'1px solid #d7d7d7',
-                            'border-left':'1px solid #d7d7d7'
+                            'border-left':'1px solid #d7d7d7',
+                            'border-bottom':'1px solid #d7d7d7'
                         },
                         layout:{
                             type:'Menu',
