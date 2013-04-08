@@ -301,7 +301,9 @@ ludo.layout.Renderer = new Class({
 		this.fn.call(this);
 
 		var c = this.coordinates;
-		this.view.resize(c);
+		if(this.lastCoordinates.width != c.width || this.lastCoordinates.height != c.height){
+			this.view.resize(c);
+		}
 
         if(c['bottom'])c['top'] = undefined;
         if(c['right'])c['left'] = undefined;

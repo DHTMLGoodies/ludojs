@@ -896,7 +896,7 @@ ludo.View = new Class({
 			}
 		}
 
-		if (config.height) {
+		if (config.height && !this.state.isMinimized) {
 			// TODO refactor this part.
 			if (!this.state.isMinimized ) {
 				this.layout.pixelHeight = config.height;
