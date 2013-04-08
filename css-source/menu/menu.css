@@ -25,10 +25,18 @@ div.ludo-menu-item-spacer-horizontal {
 }
 
 
+.ludo-menu-item .ludo-body{
+    white-space:nowrap;
+}
+
 .ludo-menu-item-horizontal {
-    padding-top: 4px;
-    padding-bottom: 4px;
+    padding-top: 0;
+    padding-bottom: 0;
     padding-left: 10px;
+    padding-right: 10px;
+    font-size: 12px;
+
+
 }
 
 .ludo-menu-item-horizontal div.ludo-body {
@@ -59,9 +67,6 @@ div.ludo-menu-item-spacer-horizontal {
     margin:2px;
     line-height:18px;
 }
-.ludo-menu-item-horizontal {
-    padding-right: 10px;
-}
 
 .ludo-menu-vertical .ludo-menu-item {
     padding-right: 20px;
@@ -71,9 +76,7 @@ div.ludo-menu-item-spacer-horizontal {
     border: 0;
 
 }
-.ludo-menu-item .ludo-body{
-    white-space:nowrap;
-}
+
 .ludo-menu-vertical .ludo-menu-item-over,.ludo-menu-vertical .ludo-menu-item-active {
     background-color: #FFF;
     border: 1px solid #CCC;
@@ -89,8 +92,6 @@ div.ludo-menu-item-spacer-horizontal {
     top: -1px !important;
     left: -1px !important;
 }
-
-.
 
 .ludo-menu-item {
     position: relative;
@@ -136,19 +137,6 @@ div.ludo-menu-item-disabled div.ludo-body{
     width: 25px;
 }
 
-.ludo-menu-item-horizontal {
-    padding-top: 0;
-    padding-bottom: 0;
-    line-height: 30px;
-}
-
-.ludo-menu-item-horizontal.ludo-menu-item-over {
-
-}
-
-.ludo-menu-item-horizontal {
-    font-size: 12px;
-}
 
 .ludo-menu-item-horizontal-expand {
     background-image: url('../images/expand-menu-horizontal-wh.png');
