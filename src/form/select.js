@@ -6,34 +6,34 @@
  @constructor
  @param {Object} config
  @example
- {
-     type:'form.Select',
-     name:'country',
-     valueKey:'id',
-     textKey:'title',
-     emptyItem:{
-         id:'',title:'Where do you live?'
-     },
-     dataSource:{
-         resource:'Country',
-         service:'read'
-     }
- }
+	 {
+		 type:'form.Select',
+		 name:'country',
+		 valueKey:'id',
+		 textKey:'title',
+		 emptyItem:{
+			 id:'',title:'Where do you live?'
+		 },
+		 dataSource:{
+			 resource:'Country',
+			 service:'read'
+		 }
+	 }
  to populate the select box from the Country service on the server. The "id" column will be used as value for the options
  and title for the displayed text.
 
  @example
- {
-     type:'form.Select',
-     emptyItem:{
-         value:'',text:'Please select an option'
-     },
-     options:[
-         { value:'1',text : 'Option a' },
-         { value:'2',text : 'Option b' },
-         { value:'3',text : 'Option c' }
-     ]
- }
+	 {
+		 type:'form.Select',
+		 emptyItem:{
+			 value:'',text:'Please select an option'
+		 },
+		 options:[
+			 { value:'1',text : 'Option a' },
+			 { value:'2',text : 'Option b' },
+			 { value:'3',text : 'Option c' }
+		 ]
+	 }
  */
 ludo.form.Select = new Class({
     Extends:ludo.form.LabelElement,
@@ -44,23 +44,26 @@ ludo.form.Select = new Class({
      @config {Object} emptyItem
      @default undefined
      @example
-     {
-         id : '',
-         title : 'Please select an option'
+		 {
+			 id : '',
+			 title : 'Please select an option'
 
-     }
+		 }
      */
     emptyItem:undefined,
 
     /**
      Name of column for the values of the select box. This option is useful when populating select box using a collection data source.
-     @config valueKey
+     @config {String} valueKey
+	 @default 'id'
      @example
-     valueKey : 'id'
+     	valueKey : 'id'
      */
     valueKey:'value',
     /**
      * Name of column for the displayed text of the options in the select box
+	 * @config {String} textKey
+	 * @default 'text'
      */
     textKey:'text',
 
@@ -77,11 +80,11 @@ ludo.form.Select = new Class({
      @config {Array} options
      @default undefined
      @example
-     options:[
-     { value:'1','Option number 1' },
-     { value:'2','Option number 2' },
-     { value:'3','Option number 3' }
-     ]
+		 options:[
+		 { value:'1','Option number 1' },
+		 { value:'2','Option number 2' },
+		 { value:'3','Option number 3' }
+		 ]
      */
     options:undefined,
 
