@@ -1,3 +1,40 @@
+/**
+ Class for menu layouts in LudoJS
+ An instance of this class is created dynamically when
+ layout.type for a View is set to "menu".
+ @namespace layout
+ @class Menu
+ @constructor
+ @example
+ 	layout:{
+		 type:'Menu',
+		 rightOf:'leftMenu'
+	 },
+	 children:[
+		 {
+			 html:'Games',
+			 children:[
+				 { html:'Console games',
+					 children:['XBox 360',
+						 {
+							 html:'Wii U',
+							 children:['NintendoLand', 'Batman Arkham City', 'SuperMario Wii U']
+						 }, 'PlayStation']},
+				 'PC Games',
+				 'Mac Games',
+				 'Mobile games'
+			 ]
+		 },
+		 'Apps',
+		 'Utilities'
+	 ],
+ 	 listeners:{
+ 	 	'click' : function(item){
+ 	 		console.log('You clicked ' + item.html);
+ 	 	}
+ 	 }
+
+ */
 ludo.layout.Menu = new Class({
 	Extends:ludo.layout.Base,
 	active:false,

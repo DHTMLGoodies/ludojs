@@ -1,5 +1,5 @@
 /**
- * Spec of config options for menu layout
+ * Spec of config options for the Menu Layout.
  * @namespace layout
  * @class MenuSpec
  * @type {Object}
