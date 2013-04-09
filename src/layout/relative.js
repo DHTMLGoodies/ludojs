@@ -61,7 +61,7 @@ ludo.layout.Relative = new Class({
      * @method prepareResize
      * @private
      */
-	prepareResize:function(){
+	prepareResize:function( ){
 		this.fixLayoutReferences();
 		this.arrangeChildren();
 		this.createResizeFunctions();

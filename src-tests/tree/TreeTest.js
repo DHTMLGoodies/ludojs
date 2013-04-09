@@ -111,11 +111,19 @@ TestCase("TreeTest", {
         assertEquals('div', node.tagName.toLowerCase());
     },
 
-    getTree:function () {
-        return new ludo.tree.Tree({
-            dataSource:this.getCollection(),
-            renderTo:document.body
-        });
+	"test should be able to define tpl for nodes": function(){
+		// given
+		var tree = this.getTree({
+
+
+		});
+	},
+
+    getTree:function (config) {
+		config = config || {};
+		config.dataSource = this.getCollection();
+		config.renderTo = document.body;
+        return new ludo.tree.Tree(config);
     },
 
     getCollection:function (config) {

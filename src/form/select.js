@@ -81,9 +81,9 @@ ludo.form.Select = new Class({
      @default undefined
      @example
 		 options:[
-		 { value:'1','Option number 1' },
-		 { value:'2','Option number 2' },
-		 { value:'3','Option number 3' }
+			 { value:'1','Option number 1' },
+			 { value:'2','Option number 2' },
+			 { value:'3','Option number 3' }
 		 ]
      */
     options:undefined,
