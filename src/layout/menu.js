@@ -117,7 +117,7 @@ ludo.layout.Menu = new Class({
 		var lm = this;
 		var p = lm.view.getParent();
 		var topMenu = this.getTopMenuComponent();
-		var topLm = topMenu.getLayoutManager();
+		var topLm = topMenu.getLayout();
 
 		if (child.mouseOver === undefined) {
 			child.getEl().addEvent('mouseenter', function () {

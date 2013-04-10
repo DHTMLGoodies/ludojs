@@ -64,7 +64,7 @@ TestCase("DateTest", {
         var view = this.getDatePickerInForm();
         var d = view.children[0];
         // when
-        view.getFormManager().reset();
+        view.getForm().reset();
 
         // then
         assertUndefined(d.value);
@@ -73,7 +73,7 @@ TestCase("DateTest", {
         // when
         d.children[0].setValue(Date.parse('2011-02-02'));
         assertEquals('2011-02-02', d.getValue());
-        view.getFormManager().reset();
+        view.getForm().reset();
 
         // then
         assertUndefined(d.value);

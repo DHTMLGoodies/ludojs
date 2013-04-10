@@ -327,7 +327,7 @@ TestCase("CardLayout", {
 		var deck = this.getDeck();
 
 		// when
-		var card = deck.getLayoutManager().getVisibleCard();
+		var card = deck.getLayout().getVisibleCard();
 
 		// then
 		assertEquals('card1', card.getName());
@@ -339,7 +339,7 @@ TestCase("CardLayout", {
 
 
 		// when
-		var card = deck.getLayoutManager().getVisibleCard();
+		var card = deck.getLayout().getVisibleCard();
 
 		// then
 		assertEquals('card3', card.getName());
@@ -352,7 +352,7 @@ TestCase("CardLayout", {
 		// when
 		card.show();
 		// then
-		assertEquals('card1', deck.getLayoutManager().getVisibleCard().getName());
+		assertEquals('card1', deck.getLayout().getVisibleCard().getName());
 	},
 	"test should be able to find next card":function () {
 		// given
@@ -360,7 +360,7 @@ TestCase("CardLayout", {
 		var card1 = deck.child['card1'];
 		var card2 = deck.child['card2'];
 		// when
-		var nextCard = deck.getLayoutManager().getNextCardOf(card1);
+		var nextCard = deck.getLayout().getNextCardOf(card1);
 
 		// then
 		assertEquals('card2', nextCard.getName());
@@ -378,14 +378,14 @@ TestCase("CardLayout", {
 		button.fireEvent('click', [button.getValue(), button]);
 
 		// then
-		assertEquals('card2', deck.getLayoutManager().getVisibleCard().getName());
+		assertEquals('card2', deck.getLayout().getVisibleCard().getName());
 		assertFalse(card2.isHidden());
 
 		// when
 		button.fireEvent('click', [button.getValue(), button]);
 
 		// then
-		assertEquals('card3', deck.getLayoutManager().getVisibleCard().getName());
+		assertEquals('card3', deck.getLayout().getVisibleCard().getName());
 		assertFalse(card3.isHidden());
 
 
@@ -393,7 +393,7 @@ TestCase("CardLayout", {
 		button.fireEvent('click', [button.getValue(), button]);
 
 		// then
-		assertEquals('card4', deck.getLayoutManager().getVisibleCard().getName());
+		assertEquals('card4', deck.getLayout().getVisibleCard().getName());
 		assertFalse(card4.isHidden());
 	},
 	"test should be able to show next card":function () {
@@ -405,25 +405,25 @@ TestCase("CardLayout", {
 		card1.show();
 
 		// when
-		deck.getLayoutManager().showNextCard();
+		deck.getLayout().showNextCard();
 
 		// then
-		assertEquals('card2', deck.getLayoutManager().getVisibleCard().getName());
+		assertEquals('card2', deck.getLayout().getVisibleCard().getName());
 		assertFalse(card2.isHidden());
 
 		// when
-		deck.getLayoutManager().showNextCard();
+		deck.getLayout().showNextCard();
 
 		// then
-		assertEquals('card3', deck.getLayoutManager().getVisibleCard().getName());
+		assertEquals('card3', deck.getLayout().getVisibleCard().getName());
 		assertFalse(card3.isHidden());
 
 
 		// when
-		deck.getLayoutManager().showNextCard();
+		deck.getLayout().showNextCard();
 
 		// then
-		assertEquals('card4', deck.getLayoutManager().getVisibleCard().getName());
+		assertEquals('card4', deck.getLayout().getVisibleCard().getName());
 		assertFalse(card4.isHidden());
 	},
 	"test should be able to find previous card":function () {
@@ -432,7 +432,7 @@ TestCase("CardLayout", {
 		var card1 = deck.child['card1'];
 		var card2 = deck.child['card2'];
 		// when
-		var previousCard = deck.getLayoutManager().getPreviousCardOf(card2);
+		var previousCard = deck.getLayout().getPreviousCardOf(card2);
 
 		// then
 		assertEquals('card1', previousCard.getName());
@@ -441,17 +441,17 @@ TestCase("CardLayout", {
 		var deck = this.getDeck();
 		var card1 = deck.child['card1'];
 		var card2 = deck.child['card2'];
-		assertEquals('Initial card is wrong', 'card1', deck.getLayoutManager().getVisibleCard().getName());
+		assertEquals('Initial card is wrong', 'card1', deck.getLayout().getVisibleCard().getName());
 
 		card2.show();
 		// when
-		assertEquals('card2', deck.getLayoutManager().getVisibleCard().getName());
+		assertEquals('card2', deck.getLayout().getVisibleCard().getName());
 
-		deck.getLayoutManager().showPreviousCard();
+		deck.getLayout().showPreviousCard();
 
 		// then
 		assertFalse(card1.isHidden());
-		assertEquals('card1', deck.getLayoutManager().getVisibleCard().getName());
+		assertEquals('card1', deck.getLayout().getVisibleCard().getName());
 	},
 	"test cards should have position absolute":function () {
 		// given
@@ -468,21 +468,21 @@ TestCase("CardLayout", {
 		// given
 		var deck = this.getDeck();
 		// when
-		deck.getLayoutManager().showCard('card3');
+		deck.getLayout().showCard('card3');
 
 		// then
-		assertEquals('card3', deck.getLayoutManager().getVisibleCard().getName())
+		assertEquals('card3', deck.getLayout().getVisibleCard().getName())
 
 	},
 	"test should fire last card event when showing last card":function () {
 		// given
 		var deck = this.getDeck();
 		var eventFired = false;
-		deck.getLayoutManager().addEvent('lastcard', function () {
+		deck.getLayout().addEvent('lastcard', function () {
 			eventFired = true
 		});
 		// when
-		deck.getLayoutManager().showCard('lastcard');
+		deck.getLayout().showCard('lastcard');
 
 		// then
 		assertTrue(eventFired);
@@ -491,12 +491,12 @@ TestCase("CardLayout", {
 		// given
 		var deck = this.getDeck();
 		var eventFired = false;
-		deck.getLayoutManager().showCard('lastcard');
-		deck.getLayoutManager().addEvent('notlastcard', function () {
+		deck.getLayout().showCard('lastcard');
+		deck.getLayout().addEvent('notlastcard', function () {
 			eventFired = true
 		});
 		// when
-		deck.getLayoutManager().showCard('card1');
+		deck.getLayout().showCard('card1');
 
 		// then
 		assertTrue(eventFired);
@@ -509,7 +509,7 @@ TestCase("CardLayout", {
 		var card = deck.child['lastcard'];
 
 		// then
-		assertTrue(deck.getLayoutManager().isLastCard(card));
+		assertTrue(deck.getLayout().isLastCard(card));
 
 	},
 	"test should find if a card is first card":function () {
@@ -520,18 +520,18 @@ TestCase("CardLayout", {
 		var card = deck.child['card1'];
 
 		// then
-		assertTrue(deck.getLayoutManager().isFirstCard(card));
+		assertTrue(deck.getLayout().isFirstCard(card));
 
 	},
 	"test should fire first card event when showing first card":function () {
 		// given
 		var deck = this.getDeck();
 		var eventFired = false;
-		deck.getLayoutManager().addEvent('firstcard', function () {
+		deck.getLayout().addEvent('firstcard', function () {
 			eventFired = true
 		});
 		// when
-		deck.getLayoutManager().showCard('card1');
+		deck.getLayout().showCard('card1');
 
 		// then
 		assertTrue(eventFired);
@@ -540,34 +540,34 @@ TestCase("CardLayout", {
 		// given
 		var deck = this.getDeck();
 		var eventFired = false;
-		deck.getLayoutManager().showCard('card1');
-		deck.getLayoutManager().addEvent('notfirstcard', function () {
+		deck.getLayout().showCard('card1');
+		deck.getLayout().addEvent('notfirstcard', function () {
 			eventFired = true
 		});
 		// when
 
-		deck.getLayoutManager().showCard('card2');
+		deck.getLayout().showCard('card2');
 		// then
 		assertTrue(eventFired);
 	},
 	"test should be able to show first card":function () {
 		// given
 		var deck = this.getDeck();
-		deck.getLayoutManager().showCard('card2');
-		assertEquals('card2', deck.getLayoutManager().getVisibleCard().getName());
+		deck.getLayout().showCard('card2');
+		assertEquals('card2', deck.getLayout().getVisibleCard().getName());
 		// when
-		deck.getLayoutManager().showFirstCard();
+		deck.getLayout().showFirstCard();
 		// then
-		assertEquals('card1', deck.getLayoutManager().getVisibleCard().getName());
+		assertEquals('card1', deck.getLayout().getVisibleCard().getName());
 	},
 	"test should be able to show last card":function () {
 		// given
 		var deck = this.getDeck();
 
 		// when
-		deck.getLayoutManager().showLastCard();
+		deck.getLayout().showLastCard();
 		// then
-		assertEquals('lastcard', deck.getLayoutManager().getVisibleCard().getName());
+		assertEquals('lastcard', deck.getLayout().getVisibleCard().getName());
 	},
 
 	"test should be able to find button":function () {
@@ -603,7 +603,7 @@ TestCase("CardLayout", {
 		});
 
 		// then
-		assertNotEquals({}, deck.getLayoutManager().button);
+		assertNotEquals({}, deck.getLayout().button);
 
 	},
 	"test previous button should be initial disabled":function () {
@@ -611,7 +611,7 @@ TestCase("CardLayout", {
 		var deck = this.getDeck();
 
 		// when
-		var previousButton = deck.getLayoutManager().getButton('previousButton');
+		var previousButton = deck.getLayout().getButton('previousButton');
 
 		// then
 		assertTrue(previousButton.isDisabled());
@@ -621,10 +621,10 @@ TestCase("CardLayout", {
 		var deck = this.getDeckSecondCardVisible();
 
 		// when
-		var previousButton = deck.getLayoutManager().getButton('previousButton');
+		var previousButton = deck.getLayout().getButton('previousButton');
 
 		// then
-		assertFalse(deck.getLayoutManager().isOnFirstCard());
+		assertFalse(deck.getLayout().isOnFirstCard());
 		assertFalse(previousButton.isDisabled());
 
 	},
@@ -635,7 +635,7 @@ TestCase("CardLayout", {
 
 		assertTrue('Last card is not visible', card.isVisible());
 		// when
-		var button = deck.getLayoutManager().getButton('nextButton');
+		var button = deck.getLayout().getButton('nextButton');
 
 		// then
 		assertTrue(button.isDisabled());
@@ -644,10 +644,10 @@ TestCase("CardLayout", {
 	"test previous button should be disabled when showing first card":function () {
 		// given
 		var deck = this.getDeck();
-		var previousButton = deck.getLayoutManager().getButton('previousButton');
+		var previousButton = deck.getLayout().getButton('previousButton');
 
 		// when
-		deck.getLayoutManager().showFirstCard();
+		deck.getLayout().showFirstCard();
 
 		// then
 		assertTrue(previousButton.isDisabled());
@@ -655,26 +655,26 @@ TestCase("CardLayout", {
 	"test previous button should be enable when moving away from first card":function () {
 		// given
 		var deck = this.getDeck();
-		var previousButton = deck.getLayoutManager().getButton('previousButton');
+		var previousButton = deck.getLayout().getButton('previousButton');
 
 		// when
-		deck.getLayoutManager().showFirstCard();
+		deck.getLayout().showFirstCard();
 
 		// then
 		assertTrue(previousButton.isDisabled());
 
 		// when
-		deck.getLayoutManager().showCard('card2');
+		deck.getLayout().showCard('card2');
 		// then
 		assertFalse(previousButton.isDisabled());
 	},
 	"test next button should be disabled when showing last card":function () {
 		// given
 		var deck = this.getDeck();
-		var nextButton = deck.getLayoutManager().getButton('nextButton');
+		var nextButton = deck.getLayout().getButton('nextButton');
 
 		// when
-		deck.getLayoutManager().showLastCard();
+		deck.getLayout().showLastCard();
 
 		// then
 		assertTrue(nextButton.isDisabled());
@@ -682,16 +682,16 @@ TestCase("CardLayout", {
 	"test next button should be enable when moving away from last card":function () {
 		// given
 		var deck = this.getDeck();
-		var nextButton = deck.getLayoutManager().getButton('nextButton');
+		var nextButton = deck.getLayout().getButton('nextButton');
 
 		// when
-		deck.getLayoutManager().showLastCard();
+		deck.getLayout().showLastCard();
 
 		// then
 		assertTrue(nextButton.isDisabled());
 
 		// when
-		deck.getLayoutManager().showCard('card2');
+		deck.getLayout().showCard('card2');
 		// then
 		assertFalse(nextButton.isDisabled());
 	},
@@ -710,12 +710,12 @@ TestCase("CardLayout", {
 		// given
 		var deck = this.getDeckWithForm();
 		var eventFired = false;
-		deck.getLayoutManager().addEvent('invalid', function () {
+		deck.getLayout().addEvent('invalid', function () {
 			eventFired = true;
 		});
 
 		// when
-		deck.getLayoutManager().showCard('cardForm');
+		deck.getLayout().showCard('cardForm');
 
 		// then
 		assertTrue(eventFired);
@@ -725,10 +725,10 @@ TestCase("CardLayout", {
 	"test next button should be disabled when form of current card is invalid":function () {
 		// given
 		var deck = this.getDeckWithForm();
-		var nextButton = deck.getLayoutManager().getButton('nextButton');
+		var nextButton = deck.getLayout().getButton('nextButton');
 		assertFalse('nextButton is by default disabled', nextButton.isDisabled());
 		// when
-		deck.getLayoutManager().showCard('cardForm');
+		deck.getLayout().showCard('cardForm');
 
 		// then
 		assertTrue(nextButton.isDisabled());
@@ -736,24 +736,24 @@ TestCase("CardLayout", {
 	"test next button should be enabled again when moving away from invalid form card":function () {
 		// given
 		var deck = this.getDeckWithForm();
-		var nextButton = deck.getLayoutManager().getButton('nextButton');
+		var nextButton = deck.getLayout().getButton('nextButton');
 		assertFalse('nextButton is by default disabled', nextButton.isDisabled());
 		// when
-		deck.getLayoutManager().showCard('cardForm');
+		deck.getLayout().showCard('cardForm');
 
 		// then
 		assertTrue(nextButton.isDisabled());
 
-		deck.getLayoutManager().showCard('card1');
+		deck.getLayout().showCard('card1');
 		assertFalse(nextButton.isDisabled());
 	},
 	"test next button should be enabled once form of current card is valid":function () {
 		// given
 		var deck = this.getDeckWithForm();
-		var nextButton = deck.getLayoutManager().getButton('nextButton');
+		var nextButton = deck.getLayout().getButton('nextButton');
 		assertFalse('nextButton is by default disabled', nextButton.isDisabled());
 		// when
-		deck.getLayoutManager().showCard('cardForm');
+		deck.getLayout().showCard('cardForm');
 
 		// then
 		assertTrue(nextButton.isDisabled());
@@ -770,12 +770,12 @@ TestCase("CardLayout", {
 		// given
 		var deck = this.getDeck();
 		var eventFired = false;
-		deck.getLayoutManager().addEvent('highercard', function () {
+		deck.getLayout().addEvent('highercard', function () {
 			eventFired = true;
 		});
 
 		// when
-		deck.getLayoutManager().showCard('card3');
+		deck.getLayout().showCard('card3');
 
 		// then
 		assertTrue(eventFired);
@@ -785,14 +785,14 @@ TestCase("CardLayout", {
 	"test should fire lower card event when moving to higher card":function () {
 		// given
 		var deck = this.getDeck();
-		deck.getLayoutManager().showCard('card3');
+		deck.getLayout().showCard('card3');
 		var eventFired = false;
-		deck.getLayoutManager().addEvent('lowercard', function () {
+		deck.getLayout().addEvent('lowercard', function () {
 			eventFired = true;
 		});
 
 		// when
-		deck.getLayoutManager().showCard('card1');
+		deck.getLayout().showCard('card1');
 
 		// then
 		assertTrue(eventFired);
@@ -802,7 +802,7 @@ TestCase("CardLayout", {
 		var deckWith5Cards = this.getDeck();
 
 		// then
-		assertEquals(5, deckWith5Cards.getLayoutManager().getCountCards())
+		assertEquals(5, deckWith5Cards.getLayout().getCountCards())
 
 	},
 	"test should find index of current card":function () {
@@ -810,23 +810,23 @@ TestCase("CardLayout", {
 		var deck = this.getDeck();
 
 		// when
-		deck.getLayoutManager().showCard('card3');
+		deck.getLayout().showCard('card3');
 
 		// then
-		assertEquals(2, deck.getLayoutManager().getIndexOfVisibleCard());
+		assertEquals(2, deck.getLayout().getIndexOfVisibleCard());
 	},
 	"test should be possible to hide next button on lastcard":function () {
 		// given
 		var deck = this.getDeckWithHidingButtons();
-		var button = deck.getLayoutManager().getButton('nextButton');
+		var button = deck.getLayout().getButton('nextButton');
 		// when
-		deck.getLayoutManager().showLastCard();
+		deck.getLayout().showLastCard();
 
 		// then
 		assertTrue(button.isHidden());
 
 		// when
-		deck.getLayoutManager().showFirstCard();
+		deck.getLayout().showFirstCard();
 
 		// then
 		assertFalse(button.isHidden());
@@ -834,15 +834,15 @@ TestCase("CardLayout", {
 	"test should be possible to hide previous button on first card":function () {
 		// given
 		var deck = this.getDeckWithHidingButtons();
-		var button = deck.getLayoutManager().getButton('previousButton');
+		var button = deck.getLayout().getButton('previousButton');
 		// when
-		deck.getLayoutManager().showFirstCard();
+		deck.getLayout().showFirstCard();
 
 		// then
 		assertTrue(button.isHidden());
 
 		// when
-		deck.getLayoutManager().showLastCard();
+		deck.getLayout().showLastCard();
 
 		// then
 		assertFalse(button.isHidden());
@@ -852,20 +852,20 @@ TestCase("CardLayout", {
 		var deck = this.getDeck();
 
 		// then
-		assertTrue(deck.getLayoutManager().getButton('finishButton').isHidden());
+		assertTrue(deck.getLayout().getButton('finishButton').isHidden());
 
 		// when
-		deck.getLayoutManager().showCard('card3');
+		deck.getLayout().showCard('card3');
 
 		// then
-		assertTrue(deck.getLayoutManager().getButton('finishButton').isHidden());
+		assertTrue(deck.getLayout().getButton('finishButton').isHidden());
 	},
 	"test should initially show finish button when only one card":function () {
 		// given
 		var deck = this.getDeckWithOneCard();
 
 		// when
-		var finishButton = deck.children[0].getLayoutManager().getButton('finishButton');
+		var finishButton = deck.children[0].getLayout().getButton('finishButton');
 
 		// then
 		assertFalse(finishButton.isHidden());
@@ -876,15 +876,15 @@ TestCase("CardLayout", {
 		var deck = this.getDeck();
 
 		// when
-		deck.getLayoutManager().showLastCard();
+		deck.getLayout().showLastCard();
 
 		// then
-		assertFalse(deck.getLayoutManager().getButton('finishButton').isHidden());
+		assertFalse(deck.getLayout().getButton('finishButton').isHidden());
 	},
 	"test should disable finish button on before submit event":function () {
 		// given
 		var deck = this.getDeck();
-		var button = deck.getLayoutManager().getButton('finishButton');
+		var button = deck.getLayout().getButton('finishButton');
 		// when
 		assertFalse(button.isDisabled());
 		deck.submit();
@@ -894,7 +894,7 @@ TestCase("CardLayout", {
 	"test should be able to have progress bar":function () {
 		// given
 		var deck = this.getDeckWithProgressBar();
-		var bar = deck.getLayoutManager().getButton('progress-bar');
+		var bar = deck.getLayout().getButton('progress-bar');
 
 		assertFalse(bar.isHidden())
 	},
@@ -902,22 +902,22 @@ TestCase("CardLayout", {
 		// given
 		var deck = this.getDeckWithProgressBar();
 		// when
-		var bar = deck.getLayoutManager().getButton('progress-bar');
+		var bar = deck.getLayout().getButton('progress-bar');
 		// then
 		assertEquals('card', bar.component.layout.type);
 	},
 	"test should move progress bar when going to next card":function () {
 		// given
 		var deck = this.getDeckWithProgressBar();
-		var bar = deck.getLayoutManager().getButton('progress-bar');
+		var bar = deck.getLayout().getButton('progress-bar');
 
 		// when
-		deck.getLayoutManager().showCard('card2');
+		deck.getLayout().showCard('card2');
 
 		// then
 		assertEquals(40, bar.getCurrentPercent());
 		// when
-		deck.getLayoutManager().showCard('lastcard');
+		deck.getLayout().showCard('lastcard');
 
 		// then
 		assertEquals(100, bar.getCurrentPercent());
@@ -926,14 +926,14 @@ TestCase("CardLayout", {
 		// given
 		var deck = this.getDeckWithProgressBar();
 		// when
-		var bar = deck.getLayoutManager().getButton('progress-bar');
+		var bar = deck.getLayout().getButton('progress-bar');
 		// then
 		assertEquals(20, bar.getCurrentPercent());
 	},
 	"test next button should initial be disabled when first card contains invalid form":function () {
 		var deck = this.getDeckInWindowWithInvalidFormInFirstCard();
 		// when
-		var button = deck.children[0].getLayoutManager().getButton('nextButton');
+		var button = deck.children[0].getLayout().getButton('nextButton');
 
 		assertEquals('card', button.component.layout.type);
 		// then
@@ -946,7 +946,7 @@ TestCase("CardLayout", {
 		assertFalse(deck.isHidden());
 
 		// when
-		deck.children[1].getLayoutManager().getButton('nextButton').click();
+		deck.children[1].getLayout().getButton('nextButton').click();
 
 		// then
 		assertFalse(deck.isHidden());

@@ -43,7 +43,7 @@ ludo.layout.Popup = new Class({
 	resize:function(){
 		var c = this.view.children;
 		for(var i=0;i< c.length;i++){
-			if(!c[i].isHidden())c[i].getLayoutManager().getRenderer().resize();
+			if(!c[i].isHidden())c[i].getLayout().getRenderer().resize();
 		}
 	}
 });

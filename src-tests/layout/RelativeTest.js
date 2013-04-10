@@ -11,7 +11,7 @@ TestCase("RelativeTest", {
         ]);
 
         // when
-        var children = view.getLayoutManager().getChildren();
+        var children = view.getLayout().getChildren();
 
         // then
         assertEquals(5, children.length);
@@ -31,7 +31,7 @@ TestCase("RelativeTest", {
             { name : 'a', layout: {width:50, alignParentRight:true } }
         ]);
         // when
-        var children = view.getLayoutManager().getChildren();
+        var children = view.getLayout().getChildren();
 
         // then
         assertEquals(4, children.length);
@@ -58,7 +58,7 @@ TestCase("RelativeTest", {
         ]);
 
         // when
-        var lm = view.getLayoutManager();
+        var lm = view.getLayout();
 
         // then
         assertEquals(2, lm.getDependencies(view.child['b']).length);
@@ -72,11 +72,11 @@ TestCase("RelativeTest", {
         ]);
 
         // when
-        var c = view.getLayoutManager().lastChildCoordinates[view.child['b'].id];
+        var c = view.getLayout().lastChildCoordinates[view.child['b'].id];
 
         // then
-        assertEquals(1000, view.getLayoutManager().viewport.width);
-        assertEquals(1100, view.getLayoutManager().viewport.height);
+        assertEquals(1000, view.getLayout().viewport.width);
+        assertEquals(1100, view.getLayout().viewport.height);
         assertNotUndefined(c.left);
         assertNotUndefined(c.top);
         assertNotUndefined(c.width);
@@ -373,11 +373,11 @@ TestCase("RelativeTest", {
         ]);
 
         // then
-        assertTrue(view.getLayoutManager().isChildResizable(view.child['a']));
-		assertEquals(3, view.getLayoutManager().children.length);
+        assertTrue(view.getLayout().isChildResizable(view.child['a']));
+		assertEquals(3, view.getLayout().children.length);
 
-		assertEquals('a', view.getLayoutManager().children[0].name);
-		assertEquals('b', view.getLayoutManager().children[2].name);
+		assertEquals('a', view.getLayout().children[0].name);
+		assertEquals('b', view.getLayout().children[2].name);
 	},
 
 	"test should re-assign references when resizable": function(){
@@ -388,7 +388,7 @@ TestCase("RelativeTest", {
         ]);
 
 		// when
-		var l = view.getLayoutManager();
+		var l = view.getLayout();
 		var child = l.children[2];
 
 		// then
@@ -404,7 +404,7 @@ TestCase("RelativeTest", {
         ]);
 
 		// when
-		var resizer = view.getLayoutManager().children[1];
+		var resizer = view.getLayout().children[1];
 
 		// then
 		assertEquals(view.child['a'], resizer.layout.sameHeightAs);

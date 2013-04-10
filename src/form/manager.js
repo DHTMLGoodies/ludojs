@@ -1,6 +1,6 @@
 /**
  * Utility class for form Management. Instance of this class is created on demand
- * by ludo.View.getFormManager().
+ * by ludo.View.getForm().
  * @namespace form
  * @class Manager
  * @extends Core
@@ -284,7 +284,7 @@ ludo.form.Manager = new Class({
                         /**
                          * Event fired after a form has been saved successfully.
                          * To add listeners, use <br>
-                         * ludo.View.getFormManager().addEvent('success', fn);
+                         * ludo.View.getForm().addEvent('success', fn);
                          * @event success
                          * @param {Object} JSON response from server
                          */
@@ -302,7 +302,7 @@ ludo.form.Manager = new Class({
                         /**
                          * Event fired after form submission when success parameter in response is false.
                          * To add listeners, use <br>
-                         * ludo.View.getFormManager().addEvent('failure', fn);<br>
+                         * ludo.View.getForm().addEvent('failure', fn);<br>
                          * @event failure
                          * @param {Object} JSON response from server
                          * @param {Object} Component

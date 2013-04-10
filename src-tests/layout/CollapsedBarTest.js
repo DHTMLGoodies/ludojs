@@ -8,7 +8,7 @@ TestCase("CollapsedBar", {
 				collapseBar:'left'
 			}
 		});
-		var bar = view.getLayoutManager().getCollapseBar();
+		var bar = view.getLayout().getCollapseBar();
 
 		// then
 		assertTrue(bar.layout.absLeft);
@@ -25,7 +25,7 @@ TestCase("CollapsedBar", {
 				collapseBar:'right'
 			}
 		});
-		var bar = view.getLayoutManager().getCollapseBar('right');
+		var bar = view.getLayout().getCollapseBar('right');
 
 		// then
 		assertTrue(bar.layout.absRight);
@@ -42,7 +42,7 @@ TestCase("CollapsedBar", {
 			}
 		});
 		// when
-		var bar = view.getLayoutManager().getCollapseBar();
+		var bar = view.getLayout().getCollapseBar();
 		// then
 		assertTrue(ludo.dom.hasClass(bar.getEl(), 'ludo-collapse-bar'));
 		assertTrue(ludo.dom.hasClass(bar.getEl(), 'ludo-collapse-bar-vertical'));
@@ -84,7 +84,7 @@ TestCase("CollapsedBar", {
 		});
 
 		// when
-		var bar = view.getLayoutManager().getCollapseBar('right');
+		var bar = view.getLayout().getCollapseBar('right');
 		var views = bar.getViews();
 		// then
 		assertEquals('coll', views[0].id);

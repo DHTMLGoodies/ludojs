@@ -133,7 +133,7 @@ TestCase("ModelTest", {
         // given
         var c = this.getComponentWithModel();
 
-        var model = c.getFormManager().getModel();
+        var model = c.getForm().getModel();
 
         // when
         model.populate(100, {
@@ -160,7 +160,7 @@ TestCase("ModelTest", {
 		// given
 		var c = this.getComponentWithModel();
 
-		var model = c.getFormManager().getModel();
+		var model = c.getForm().getModel();
 
 		// when
 		model.populate(100, {
@@ -177,7 +177,7 @@ TestCase("ModelTest", {
 	"test should update components with tpl equals model column":function () {
 		// given
 		var c = this.getComponentWithTplChildren();
-		var model = c.getFormManager().getModel();
+		var model = c.getForm().getModel();
         assertTrue(c.getModel().views.indexOf(c.child['firstname']) >= 0);
 		// when
 		model.populate(100, {
@@ -194,7 +194,7 @@ TestCase("ModelTest", {
 		// given
 		var c = this.getComponentWithModel();
 		this.getComponentWithTplChildren();
-		var model = c.getFormManager().getModel();
+		var model = c.getForm().getModel();
 
 		// then
 		assertNotUndefined(model.formComponents['firstname']);
@@ -205,7 +205,7 @@ TestCase("ModelTest", {
 		// given
 		var c = this.getComponentWithModel();
 		var c2 = this.getComponentWithTplChildren();
-		var model = c.getFormManager().getModel();
+		var model = c.getForm().getModel();
 
 		// when
 		model.populate(100, {
@@ -224,7 +224,7 @@ TestCase("ModelTest", {
 	"test should update component with tpl and model":function () {
         // given
 		var c = this.getComponentWithTpl();
-		var model = c.getFormManager().getModel();
+		var model = c.getForm().getModel();
 		// when
 		model.populate(100, {
 			firstname:'Jane'

@@ -20,7 +20,7 @@ ludo.form.ResetButton = new Class({
     ludoRendered:function () {
         this.parent();
         this.component = this.getParentComponent();
-        var manager = this.component.getFormManager();
+        var manager = this.component.getForm();
         if (this.component) {
             manager.addEvent('dirty', this.enable.bind(this));
             manager.addEvent('clean', this.disable.bind(this));

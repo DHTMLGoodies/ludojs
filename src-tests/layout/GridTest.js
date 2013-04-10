@@ -16,8 +16,8 @@ TestCase("GridTest", {
 		var view = this.getView();
 
 		// then
-		assertEquals(4, view.getLayoutManager().columns);
-		assertEquals(8, view.getLayoutManager().rows);
+		assertEquals(4, view.getLayout().columns);
+		assertEquals(8, view.getLayout().rows);
 	},
 
 	"test should find cell size": function(){
@@ -25,7 +25,7 @@ TestCase("GridTest", {
 		var view = this.getView();
 
 		// when
-		var cellSize = view.getLayoutManager().getCellSize();
+		var cellSize = view.getLayout().getCellSize();
 
 		// then
 

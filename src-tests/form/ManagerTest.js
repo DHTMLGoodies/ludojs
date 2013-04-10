@@ -36,7 +36,7 @@ TestCase("ManagerTest", {
 		// given
 		var cmp =  this.getComponent();
 		// when
-		var manager = cmp.getFormManager();
+		var manager = cmp.getForm();
 		// then
 		assertNotUndefined(manager);
 		assertEquals(3, manager.formComponents.length);
@@ -45,7 +45,7 @@ TestCase("ManagerTest", {
 	"test should Get Values Of All Form Elements":function () {
 		// given
 		var cmp =  this.getComponent();
-		var manager = cmp.getFormManager();
+		var manager = cmp.getForm();
 		// when
 		cmp.child['firstname'].setValue('Jane');
 		cmp.child['address'].setValue('Park Avenue 5');
@@ -60,7 +60,7 @@ TestCase("ManagerTest", {
 	"test should be able to reset form elements":function () {
 		// given
 		var cmp =  this.getComponent();
-		var manager = cmp.getFormManager();
+		var manager = cmp.getForm();
 		// when
 		cmp.child['firstname'].setValue('Jane');
 		cmp.child['lastname'].setValue('Johnson');
@@ -76,7 +76,7 @@ TestCase("ManagerTest", {
 	"test should be able to register lazy form elements":function () {
 		// given
 		var cmp =  this.getComponent();
-		var manager = cmp.getFormManager();
+		var manager = cmp.getForm();
 
 		// when
 		var newChild = cmp.addChild({
@@ -98,7 +98,7 @@ TestCase("ManagerTest", {
 			]
 		});
 
-		var mgr = component.getFormManager();
+		var mgr = component.getForm();
 		var firstname = component.child['firstname'];
 		assertFalse(mgr.isValid());
 
@@ -120,7 +120,7 @@ TestCase("ManagerTest", {
 		// given
 		var cmp = this.getPanelWithButton();
 		cmp.show();
-		var mgr = cmp.getFormManager();
+		var mgr = cmp.getForm();
 
 		// then
 		assertTrue(mgr.component.isRendered);

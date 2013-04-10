@@ -101,7 +101,7 @@ TestCase("MenuTest", {
         var grandChild = cmp.child['b'].child['ba'];
 
         // then
-        assertEquals(cmp.child['b'].getLayoutManager().getMenuContainer().getBody(), grandChild.getEl().parentNode);
+        assertEquals(cmp.child['b'].getLayout().getMenuContainer().getBody(), grandChild.getEl().parentNode);
         assertEquals(cmp.getBody(), child.getEl().parentNode);
     },
 
@@ -361,7 +361,7 @@ TestCase("MenuTest", {
     "test should find reference to top layout manager":function () {
         // given
         var c = this.getMenuComponent();
-        var lm = c.getLayoutManager();
+        var lm = c.getLayout();
         c.child['b'].show();
         c.child['b'].showChild('ba');
         c.child['b'].child['ba'].showChild('baa');

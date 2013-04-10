@@ -120,7 +120,7 @@ ludo.layout.MenuContainer = new Class({
         r.setValue('width', r.getSize().x);
         r.resize();
         for (var i = 0; i < this.lm.view.children.length; i++) {
-            var cr = this.lm.view.children[i].getLayoutManager().getRenderer();
+            var cr = this.lm.view.children[i].getLayout().getRenderer();
             cr.clearFn();
             cr.setValue('width', r.getValue('width'));
         }
@@ -132,7 +132,7 @@ ludo.layout.MenuContainer = new Class({
     resizeChildren:function () {
         if (this.childrenResized)return;
         for (var i = 0; i < this.lm.view.children.length; i++) {
-            this.lm.view.children[i].getLayoutManager().getRenderer().resize();
+            this.lm.view.children[i].getLayout().getRenderer().resize();
         }
         this.fireEvent('resize');
     },

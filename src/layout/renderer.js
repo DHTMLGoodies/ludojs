@@ -316,7 +316,7 @@ ludo.layout.Renderer = new Class({
 	},
 
 	resizeChildren:function(){
-		if (this.view.children.length > 0)this.view.getLayoutManager().resizeChildren();
+		if (this.view.children.length > 0)this.view.getLayout().resizeChildren();
 	},
 
 	setViewport:function () {

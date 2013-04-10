@@ -12,7 +12,7 @@ ludo.layout.MenuVertical = new Class({
 
     resize:function () {
         for (var i = 0; i < this.view.children.length; i++) {
-            this.view.children[i].getLayoutManager().getRenderer().resize();
+            this.view.children[i].getLayout().getRenderer().resize();
         }
     }
 });

@@ -171,7 +171,7 @@ ludo.form.Button = new Class({
 
         this.component = this.getParentComponent();
         if(this.component && this.disableOnInvalid){
-            var m = this.component.getFormManager();
+            var m = this.component.getForm();
             m.addEvent('valid', this.enable.bind(this));
             m.addEvent('invalid', this.disable.bind(this));
             if(!m.isValid())this.disable();

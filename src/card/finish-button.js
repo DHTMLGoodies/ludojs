@@ -19,8 +19,8 @@ ludo.card.FinishButton = new Class({
     addButtonEvents:function(){
 		var lm;
         if (this.component) {
-			lm = this.component.getLayoutManager();
-            var fm = this.component.getFormManager();
+			lm = this.component.getLayout();
+            var fm = this.component.getForm();
 
             lm.addEvent('valid', this.enable.bind(this));
             lm.addEvent('invalid', this.disable.bind(this));
@@ -42,7 +42,7 @@ ludo.card.FinishButton = new Class({
     },
 
     enable:function(){
-        if(this.component.getLayoutManager().isValid()){
+        if(this.component.getLayout().isValid()){
             this.parent();
         }
     },

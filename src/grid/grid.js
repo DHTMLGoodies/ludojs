@@ -276,8 +276,7 @@ ludo.grid.Grid = new Class({
 	highlightActiveRecord:function () {
 		if (this.highlightRecord) {
 			var selectedRecord = this.getDataSource().getSelectedRecord();
-			// TODO what about records without "id" field - refactor!!
-			if (selectedRecord && selectedRecord.id) {
+			if (selectedRecord && selectedRecord.uid) {
 				this.selectDOMForRecord(selectedRecord, 'ludo-active-record');
 			}
 		}
@@ -495,14 +494,6 @@ ludo.grid.Grid = new Class({
 			return;
 		}
 		this.scrollbar.vertical.getEl().setStyle('top', top);
-	},
-
-	getColIndex:function (el) {
-		var ret = el.getProperty('col-index');
-		if (!ret && ret != '0') {
-			ret = el.getParent().getProperty('col-index');
-		}
-		return ret;
 	},
 
 	sortBy:function (key) {

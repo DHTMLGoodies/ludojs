@@ -42,7 +42,7 @@ ludo.view.ButtonBar = new Class({
     },
 
 	resizeRenderer:function(){
-		this.getLayoutManager().getRenderer().resize();
+		this.getLayout().getRenderer().resize();
 	},
 
     getValidChildren:function (children) {

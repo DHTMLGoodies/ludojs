@@ -62,7 +62,7 @@ TestCase("ButtonTest", {
 		// given
 		var cmp = this.getPanelWithButton();
 		var button = cmp.getButton('ok');
-		var mgr = cmp.getFormManager();
+		var mgr = cmp.getForm();
 		var fn = cmp.child['firstname'];
 
         // when

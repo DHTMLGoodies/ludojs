@@ -104,7 +104,7 @@ ludo.layout.Base = new Class({
 		if(child.layout.collapseTo !== undefined){
 			var view = ludo.get(child.layout.collapseTo);
 			if(view){
-				var bar = view.getLayoutManager().getCollapseBar(child.layout.collapsible);
+				var bar = view.getLayout().getCollapseBar(child.layout.collapsible);
 				if(bar)bar.addView(child);
 			}
 		}

@@ -363,7 +363,7 @@ ludo.View = new Class({
         this.increaseZIndex();
 
 		if (this.layout && this.layout.type && this.layout.type == 'tabs') {
-			this.getLayoutManager().prepareView();
+			this.getLayout().prepareView();
 		}
 
 		this.addCoreEvents();
@@ -372,7 +372,7 @@ ludo.View = new Class({
 		if (!this.parentComponent) {
 			ludo.dom.clearCache();
 			ludo.dom.clearCache.delay(50, this);
-            var r = this.getLayoutManager().getRenderer();
+            var r = this.getLayout().getRenderer();
             r.resize();
             r.resizeChildren();
 		}
@@ -507,7 +507,7 @@ ludo.View = new Class({
 			this.autoSetHeight();
 		}
 		if(!this.parentComponent){
-			this.getLayoutManager().createRenderer();
+			this.getLayout().createRenderer();
 		}
 		/**
 		 * Event fired when component has been rendered
@@ -517,7 +517,7 @@ ludo.View = new Class({
 		this.fireEvent('render', this);
 		this.isRendered = true;
 		if (this.model) {
-			this.getFormManager();
+			this.getForm();
 		}
 
 		if (this.addons) {
@@ -773,14 +773,14 @@ ludo.View = new Class({
 		if (this.parentComponent) {
 			this.resizeParent();
 		} else {
-            this.getLayoutManager().getRenderer().resize();
+            this.getLayout().getRenderer().resize();
 		}
 	},
 
 	resizeParent:function () {
 		var parent = this.getParent();
 		if (parent) {
-			if(parent.children.length > 0)parent.getLayoutManager().resizeChildren();
+			if(parent.children.length > 0)parent.getLayout().resizeChildren();
 		}
 	},
 
@@ -921,7 +921,7 @@ ludo.View = new Class({
 			 */
 			this.fireEvent('resize');
 		}
-		if(this.children.length > 0)this.getLayoutManager().resizeChildren();
+		if(this.children.length > 0)this.getLayout().resizeChildren();
 	},
 	/**
 	 * Returns true component is collapsible
@@ -941,7 +941,7 @@ ludo.View = new Class({
 		}
 	},
 
-	getLayoutManager:function () {
+	getLayout:function () {
 		if (!this.layoutManager) {
 			this.layoutManager = ludo.layoutFactory.getManager(this);
 		}
@@ -949,7 +949,7 @@ ludo.View = new Class({
 	},
 
 	resizeChildren:function () {
-		if(this.children.length > 0)this.getLayoutManager().resizeChildren();
+		if(this.children.length > 0)this.getLayout().resizeChildren();
 	},
 
 	isMinimized:function () {
@@ -999,7 +999,7 @@ ludo.View = new Class({
 	 * @return {View} child
 	 */
 	addChild:function (child, insertAt, pos) {
-		child = this.getLayoutManager().addChild(child, insertAt, pos);
+		child = this.getLayout().addChild(child, insertAt, pos);
 		if (child.name) {
 			this.child[child.name] = child;
 		}
@@ -1109,7 +1109,7 @@ ludo.View = new Class({
 		return this.dataSourceObj;
 	},
 
-	getFormManager:function () {
+	getForm:function () {
 		if (!this.formManager) {
 			this.formManager = new ludo.form.Manager({
 				component:this,
@@ -1134,7 +1134,7 @@ ludo.View = new Class({
 	 * @return Array of Objects, example: [ {name:value},{name:value}]
 	 */
 	getValues:function () {
-		return this.getFormManager().getValues();
+		return this.getForm().getValues();
 	},
 	/**
 	 * Returns true if all form components inside this component are valid(including childrens children)
@@ -1142,7 +1142,7 @@ ludo.View = new Class({
 	 * @return {Boolean} valid
 	 */
 	isFormValid:function () {
-		return this.getFormManager().isValid();
+		return this.getForm().isValid();
 	},
 	/**
 	 Submit form to server. This method will call the submit method of ludo.form.Manager.
@@ -1170,7 +1170,7 @@ ludo.View = new Class({
 	 */
 	submit:function () {
 		this.fireEvent('submit', this);
-		this.getFormManager().submit();
+		this.getForm().submit();
 	},
 	/**
 	 * Reset all form elements of this component(including children's children) back to it's
@@ -1179,7 +1179,7 @@ ludo.View = new Class({
 	 * @return void
 	 */
 	reset:function () {
-		this.getFormManager().reset();
+		this.getForm().reset();
 	},
 
 	/**
@@ -1188,7 +1188,7 @@ ludo.View = new Class({
 	 * @return {model.Model} model
 	 */
 	getModel:function () {
-		return this.getFormManager().getModel();
+		return this.getForm().getModel();
 	},
 	getHeightOfButtonBar:function () {
 		return 0;

@@ -102,7 +102,7 @@ ludo.Notification = new Class({
 				this.getEl(),
 				this.effectDuration,
 				this.onHideComplete.bind(this),
-				this.getLayoutManager().getRenderer().getPosition()
+				this.getLayout().getRenderer().getPosition()
 			);
 		} else {
 			this.parent();
@@ -116,7 +116,7 @@ ludo.Notification = new Class({
 				this.getEl(),
 				this.effectDuration,
 				this.autoHide.bind(this),
-				this.getLayoutManager().getRenderer().getPosition()
+				this.getLayout().getRenderer().getPosition()
 			);
 		}
 		this.parent();

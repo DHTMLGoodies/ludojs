@@ -250,7 +250,7 @@ ludo.layout.Card = new Class({
 	},
 
 	addValidationEvents:function () {
-		var manager = this.visibleCard.getFormManager();
+		var manager = this.visibleCard.getForm();
 		manager.addEvent('invalid', this.setInvalid.bind(this));
 		manager.addEvent('valid', this.setValid.bind(this));
 		manager.validate();

@@ -15,8 +15,8 @@ ludo.crop.Controls = new Class({
 
     ludoRendered:function(){
         this.parent();
-        this.getFormManager().addEvent('dirty', this.receiveCoordinate.bind(this));
-        console.log(this.getFormManager());
+        this.getForm().addEvent('dirty', this.receiveCoordinate.bind(this));
+        console.log(this.getForm());
     },
 
     receiveCoordinate:function(formComponent){

@@ -130,7 +130,7 @@ ludo.FramedView = new Class({
 	resizer:undefined,
 	getResizer:function () {
 		if (this.resizer === undefined) {
-			var r = this.getLayoutManager().getRenderer();
+			var r = this.getLayout().getRenderer();
 			this.resizer = new ludo.effect.Resize({
 				component:this,
 				preserveAspectRatio:this.layout.preserveAspectRatio,
@@ -379,7 +379,7 @@ ludo.FramedView = new Class({
 		return this.resizable;
 	},
 	stopMove:function (el, drag) {
-		this.getLayoutManager().getRenderer().setPosition(drag.getX(), drag.getY());
+		this.getLayout().getRenderer().setPosition(drag.getX(), drag.getY());
 		/**
 		 * Event fired after moving Component
 		 * @event stopmove

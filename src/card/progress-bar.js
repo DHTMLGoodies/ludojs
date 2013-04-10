@@ -14,12 +14,12 @@ ludo.card.ProgressBar = new Class({
         this.parent(config);
 		if(config.applyTo!==undefined)this.applyTo = config.applyTo;
         this.component = this.getParentComponent();
-		if(this.component)this.component.getLayoutManager().registerButton(this);
+		if(this.component)this.component.getLayout().registerButton(this);
     },
 
     ludoEvents:function(){
         this.parent();
-        this.component.getLayoutManager().addEvent('showcard', this.setCardPercent.bind(this))
+        this.component.getLayout().addEvent('showcard', this.setCardPercent.bind(this))
     },
 
     ludoRendered:function(){
@@ -28,7 +28,7 @@ ludo.card.ProgressBar = new Class({
     },
 
     setCardPercent:function(){
-        this.setPercent(this.component.getLayoutManager().getPercentCompleted());
+        this.setPercent(this.component.getLayout().getPercentCompleted());
     },
 
     getParentComponent:function () {

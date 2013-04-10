@@ -35,7 +35,7 @@ ludo.card.Button = new Class({
             this.component = this.getParentComponent();
         }
 
-		if(this.component)this.component.getLayoutManager().registerButton(this);
+		if(this.component)this.component.getLayout().registerButton(this);
         this.addButtonEvents();
     },
 

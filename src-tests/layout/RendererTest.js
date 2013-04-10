@@ -17,8 +17,8 @@ TestCase("Renderer", {
 		});
 
 		// then
-		assertNotUndefined(v.getLayoutManager().renderer);
-		assertEquals(v, v.getLayoutManager().renderer.view);
+		assertNotUndefined(v.getLayout().renderer);
+		assertEquals(v, v.getLayout().renderer.view);
 	},
 
 	"test should set default layout properties when not set":function () {
@@ -26,7 +26,7 @@ TestCase("Renderer", {
 			renderTo:document.body
 		});
 		// when
-		var renderer = v.getLayoutManager().getRenderer();
+		var renderer = v.getLayout().getRenderer();
 
 		// then
 		assertEquals('matchParent', renderer.view.layout.width);
@@ -91,8 +91,8 @@ TestCase("Renderer", {
 		// given
 		var v = this.getViewInParent();
 		// then
-		assertEquals(500, v.getLayoutManager().renderer.viewport.width);
-		assertEquals(600, v.getLayoutManager().renderer.viewport.height);
+		assertEquals(500, v.getLayout().renderer.viewport.width);
+		assertEquals(600, v.getLayout().renderer.viewport.height);
 	},
 
 	"test should be able to match parent size":function () {
@@ -114,8 +114,8 @@ TestCase("Renderer", {
 		assertNotUndefined(v.getEl().parentNode);
 
 		// then
-		assertEquals('500', v.getLayoutManager().renderer.coordinates.width);
-		assertEquals('600', v.getLayoutManager().renderer.coordinates.height);
+		assertEquals('500', v.getLayout().renderer.coordinates.width);
+		assertEquals('600', v.getLayout().renderer.coordinates.height);
 		assertEquals(500, v.getEl().offsetWidth);
 		assertEquals(600, v.getEl().offsetHeight);
 

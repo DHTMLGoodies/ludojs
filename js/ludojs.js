@@ -1,4 +1,4 @@
-/* Generated Wed Apr 10 12:53:03 CEST 2013 */
+/* Generated Thu Apr 11 0:49:59 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -3007,7 +3007,7 @@ ludo.layout.Base = new Class({
 		if(child.layout.collapseTo !== undefined){
 			var view = ludo.get(child.layout.collapseTo);
 			if(view){
-				var bar = view.getLayoutManager().getCollapseBar(child.layout.collapsible);
+				var bar = view.getLayout().getCollapseBar(child.layout.collapsible);
 				if(bar)bar.addView(child);
 			}
 		}
@@ -3431,6 +3431,9 @@ ludo.dataSource.Base = new Class({
 	ludoConfig:function (config) {
         this.parent(config);
         var keys = ['url','postData','autoload','resource','service','arguments'];
+		if(this.arguments && !ludo.util.isArray(this.arguments)){
+			this.arguments = [this.arguments];
+		}
         this.setConfigParams(config,keys);
     },
 
@@ -3895,7 +3898,7 @@ ludo.layout.Renderer = new Class({
 	},
 
 	resizeChildren:function(){
-		if (this.view.children.length > 0)this.view.getLayoutManager().resizeChildren();
+		if (this.view.children.length > 0)this.view.getLayout().resizeChildren();
 	},
 
 	setViewport:function () {
@@ -4807,7 +4810,7 @@ ludo.View = new Class({
         this.increaseZIndex();
 
 		if (this.layout && this.layout.type && this.layout.type == 'tabs') {
-			this.getLayoutManager().prepareView();
+			this.getLayout().prepareView();
 		}
 
 		this.addCoreEvents();
@@ -4816,7 +4819,7 @@ ludo.View = new Class({
 		if (!this.parentComponent) {
 			ludo.dom.clearCache();
 			ludo.dom.clearCache.delay(50, this);
-            var r = this.getLayoutManager().getRenderer();
+            var r = this.getLayout().getRenderer();
             r.resize();
             r.resizeChildren();
 		}
@@ -4951,7 +4954,7 @@ ludo.View = new Class({
 			this.autoSetHeight();
 		}
 		if(!this.parentComponent){
-			this.getLayoutManager().createRenderer();
+			this.getLayout().createRenderer();
 		}
 		/**
 		 * Event fired when component has been rendered
@@ -4961,7 +4964,7 @@ ludo.View = new Class({
 		this.fireEvent('render', this);
 		this.isRendered = true;
 		if (this.model) {
-			this.getFormManager();
+			this.getForm();
 		}
 
 		if (this.addons) {
@@ -5217,14 +5220,14 @@ ludo.View = new Class({
 		if (this.parentComponent) {
 			this.resizeParent();
 		} else {
-            this.getLayoutManager().getRenderer().resize();
+            this.getLayout().getRenderer().resize();
 		}
 	},
 
 	resizeParent:function () {
 		var parent = this.getParent();
 		if (parent) {
-			if(parent.children.length > 0)parent.getLayoutManager().resizeChildren();
+			if(parent.children.length > 0)parent.getLayout().resizeChildren();
 		}
 	},
 
@@ -5365,7 +5368,7 @@ ludo.View = new Class({
 			 */
 			this.fireEvent('resize');
 		}
-		if(this.children.length > 0)this.getLayoutManager().resizeChildren();
+		if(this.children.length > 0)this.getLayout().resizeChildren();
 	},
 	/**
 	 * Returns true component is collapsible
@@ -5385,7 +5388,7 @@ ludo.View = new Class({
 		}
 	},
 
-	getLayoutManager:function () {
+	getLayout:function () {
 		if (!this.layoutManager) {
 			this.layoutManager = ludo.layoutFactory.getManager(this);
 		}
@@ -5393,7 +5396,7 @@ ludo.View = new Class({
 	},
 
 	resizeChildren:function () {
-		if(this.children.length > 0)this.getLayoutManager().resizeChildren();
+		if(this.children.length > 0)this.getLayout().resizeChildren();
 	},
 
 	isMinimized:function () {
@@ -5443,7 +5446,7 @@ ludo.View = new Class({
 	 * @return {View} child
 	 */
 	addChild:function (child, insertAt, pos) {
-		child = this.getLayoutManager().addChild(child, insertAt, pos);
+		child = this.getLayout().addChild(child, insertAt, pos);
 		if (child.name) {
 			this.child[child.name] = child;
 		}
@@ -5553,7 +5556,7 @@ ludo.View = new Class({
 		return this.dataSourceObj;
 	},
 
-	getFormManager:function () {
+	getForm:function () {
 		if (!this.formManager) {
 			this.formManager = new ludo.form.Manager({
 				component:this,
@@ -5578,7 +5581,7 @@ ludo.View = new Class({
 	 * @return Array of Objects, example: [ {name:value},{name:value}]
 	 */
 	getValues:function () {
-		return this.getFormManager().getValues();
+		return this.getForm().getValues();
 	},
 	/**
 	 * Returns true if all form components inside this component are valid(including childrens children)
@@ -5586,7 +5589,7 @@ ludo.View = new Class({
 	 * @return {Boolean} valid
 	 */
 	isFormValid:function () {
-		return this.getFormManager().isValid();
+		return this.getForm().isValid();
 	},
 	/**
 	 Submit form to server. This method will call the submit method of ludo.form.Manager.
@@ -5614,7 +5617,7 @@ ludo.View = new Class({
 	 */
 	submit:function () {
 		this.fireEvent('submit', this);
-		this.getFormManager().submit();
+		this.getForm().submit();
 	},
 	/**
 	 * Reset all form elements of this component(including children's children) back to it's
@@ -5623,7 +5626,7 @@ ludo.View = new Class({
 	 * @return void
 	 */
 	reset:function () {
-		this.getFormManager().reset();
+		this.getForm().reset();
 	},
 
 	/**
@@ -5632,7 +5635,7 @@ ludo.View = new Class({
 	 * @return {model.Model} model
 	 */
 	getModel:function () {
-		return this.getFormManager().getModel();
+		return this.getForm().getModel();
 	},
 	getHeightOfButtonBar:function () {
 		return 0;
@@ -6452,7 +6455,7 @@ ludo.layout.Card = new Class({
 	},
 
 	addValidationEvents:function () {
-		var manager = this.visibleCard.getFormManager();
+		var manager = this.visibleCard.getForm();
 		manager.addEvent('invalid', this.setInvalid.bind(this));
 		manager.addEvent('valid', this.setValid.bind(this));
 		manager.validate();
@@ -7959,7 +7962,7 @@ ludo.layout.Popup = new Class({
 	resize:function(){
 		var c = this.view.children;
 		for(var i=0;i< c.length;i++){
-			if(!c[i].isHidden())c[i].getLayoutManager().getRenderer().resize();
+			if(!c[i].isHidden())c[i].getLayout().getRenderer().resize();
 		}
 	}
 });/* ../ludojs/src/layout/menu-container.js */
@@ -8085,7 +8088,7 @@ ludo.layout.MenuContainer = new Class({
         r.setValue('width', r.getSize().x);
         r.resize();
         for (var i = 0; i < this.lm.view.children.length; i++) {
-            var cr = this.lm.view.children[i].getLayoutManager().getRenderer();
+            var cr = this.lm.view.children[i].getLayout().getRenderer();
             cr.clearFn();
             cr.setValue('width', r.getValue('width'));
         }
@@ -8097,7 +8100,7 @@ ludo.layout.MenuContainer = new Class({
     resizeChildren:function () {
         if (this.childrenResized)return;
         for (var i = 0; i < this.lm.view.children.length; i++) {
-            this.lm.view.children[i].getLayoutManager().getRenderer().resize();
+            this.lm.view.children[i].getLayout().getRenderer().resize();
         }
         this.fireEvent('resize');
     },
@@ -8235,7 +8238,7 @@ ludo.layout.Menu = new Class({
 		var lm = this;
 		var p = lm.view.getParent();
 		var topMenu = this.getTopMenuComponent();
-		var topLm = topMenu.getLayoutManager();
+		var topLm = topMenu.getLayout();
 
 		if (child.mouseOver === undefined) {
 			child.getEl().addEvent('mouseenter', function () {
@@ -8432,7 +8435,7 @@ ludo.layout.MenuVertical = new Class({
 
     resize:function () {
         for (var i = 0; i < this.view.children.length; i++) {
-            this.view.children[i].getLayoutManager().getRenderer().resize();
+            this.view.children[i].getLayout().getRenderer().resize();
         }
     }
 });/* ../ludojs/src/layout/collapse-bar.js */
@@ -8719,7 +8722,7 @@ ludo.Notification = new Class({
 				this.getEl(),
 				this.effectDuration,
 				this.onHideComplete.bind(this),
-				this.getLayoutManager().getRenderer().getPosition()
+				this.getLayout().getRenderer().getPosition()
 			);
 		} else {
 			this.parent();
@@ -8733,7 +8736,7 @@ ludo.Notification = new Class({
 				this.getEl(),
 				this.effectDuration,
 				this.autoHide.bind(this),
-				this.getLayoutManager().getRenderer().getPosition()
+				this.getLayout().getRenderer().getPosition()
 			);
 		}
 		this.parent();
@@ -10827,7 +10830,7 @@ ludo.view.ButtonBar = new Class({
     },
 
 	resizeRenderer:function(){
-		this.getLayoutManager().getRenderer().resize();
+		this.getLayout().getRenderer().resize();
 	},
 
     getValidChildren:function (children) {
@@ -11256,7 +11259,7 @@ ludo.FramedView = new Class({
 	resizer:undefined,
 	getResizer:function () {
 		if (this.resizer === undefined) {
-			var r = this.getLayoutManager().getRenderer();
+			var r = this.getLayout().getRenderer();
 			this.resizer = new ludo.effect.Resize({
 				component:this,
 				preserveAspectRatio:this.layout.preserveAspectRatio,
@@ -11505,7 +11508,7 @@ ludo.FramedView = new Class({
 		return this.resizable;
 	},
 	stopMove:function (el, drag) {
-		this.getLayoutManager().getRenderer().setPosition(drag.getX(), drag.getY());
+		this.getLayout().getRenderer().setPosition(drag.getX(), drag.getY());
 		/**
 		 * Event fired after moving Component
 		 * @event stopmove
@@ -11741,7 +11744,7 @@ ludo.Window = new Class({
     setXY:function(x,y){
         this.layout.left = x;
         this.layout.top = y;
-        var r = this.getLayoutManager().getRenderer();
+        var r = this.getLayout().getRenderer();
         r.clearFn();
         r.resize();
     },
@@ -15724,7 +15727,7 @@ ludo.grid.Grid = new Class({
 	highlightActiveRecord:function () {
 		if (this.highlightRecord) {
 			var selectedRecord = this.getDataSource().getSelectedRecord();
-			if (selectedRecord && selectedRecord.id) {
+			if (selectedRecord && selectedRecord.uid) {
 				this.selectDOMForRecord(selectedRecord, 'ludo-active-record');
 			}
 		}
@@ -15942,14 +15945,6 @@ ludo.grid.Grid = new Class({
 			return;
 		}
 		this.scrollbar.vertical.getEl().setStyle('top', top);
-	},
-
-	getColIndex:function (el) {
-		var ret = el.getProperty('col-index');
-		if (!ret && ret != '0') {
-			ret = el.getParent().getProperty('col-index');
-		}
-		return ret;
 	},
 
 	sortBy:function (key) {
@@ -16965,7 +16960,7 @@ ludo.form.Button = new Class({
 
         this.component = this.getParentComponent();
         if(this.component && this.disableOnInvalid){
-            var m = this.component.getFormManager();
+            var m = this.component.getForm();
             m.addEvent('valid', this.enable.bind(this));
             m.addEvent('invalid', this.disable.bind(this));
             if(!m.isValid())this.disable();
@@ -17226,7 +17221,7 @@ ludo.card.Button = new Class({
             this.component = this.getParentComponent();
         }
 
-		if(this.component)this.component.getLayoutManager().registerButton(this);
+		if(this.component)this.component.getLayout().registerButton(this);
         this.addButtonEvents();
     },
 
@@ -17263,8 +17258,8 @@ ludo.card.FinishButton = new Class({
     addButtonEvents:function(){
 		var lm;
         if (this.component) {
-			lm = this.component.getLayoutManager();
-            var fm = this.component.getFormManager();
+			lm = this.component.getLayout();
+            var fm = this.component.getForm();
 
             lm.addEvent('valid', this.enable.bind(this));
             lm.addEvent('invalid', this.disable.bind(this));
@@ -17286,7 +17281,7 @@ ludo.card.FinishButton = new Class({
     },
 
     enable:function(){
-        if(this.component.getLayoutManager().isValid()){
+        if(this.component.getLayout().isValid()){
             this.parent();
         }
     },
@@ -17325,7 +17320,7 @@ ludo.card.NextButton = new Class({
 
 	addButtonEvents:function () {
 		if (this.component) {
-			var lm = this.component.getLayoutManager();
+			var lm = this.component.getLayout();
 			lm.addEvent('valid', this.enable.bind(this));
 			lm.addEvent('invalid', this.disable.bind(this));
 			if (!lm.isValid()) {
@@ -17346,14 +17341,14 @@ ludo.card.NextButton = new Class({
 	},
 
 	enable:function () {
-		if (this.component.getLayoutManager().isValid()) {
+		if (this.component.getLayout().isValid()) {
 			this.parent();
 		}
 	},
 
 	nextCard:function () {
 		if (this.component) {
-			this.component.getLayoutManager().showNextCard();
+			this.component.getLayout().showNextCard();
 		}
 	}
 });/* ../ludojs/src/card/previous-button.js */
@@ -17376,7 +17371,7 @@ ludo.card.PreviousButton = new Class({
 	addButtonEvents:function () {
 		this.addEvent('click', this.showPreviousCard.bind(this));
 		if (this.component) {
-			var lm = this.component.getLayoutManager();
+			var lm = this.component.getLayout();
 			if (this.autoHide) {
 				if(!lm.isOnFirstCard())this.show(); else this.hide();
 				lm.addEvent('firstcard', this.hide.bind(this));
@@ -17391,7 +17386,7 @@ ludo.card.PreviousButton = new Class({
 
 	showPreviousCard:function () {
 		if (this.component) {
-			this.component.getLayoutManager().showPreviousCard();
+			this.component.getLayout().showPreviousCard();
 		}
 	}
 });/* ../ludojs/src/progress/datasource.js */
@@ -17420,7 +17415,7 @@ ludo.progress.DataSource = new Class({
         this.parent(config);
         if(config.pollFrequence)this.pollFrequence = config.pollFrequence;
         this.component = config.component;
-        this.component.getFormManager().addEvent('beforesubmit', this.startProgress.bind(this));
+        this.component.getForm().addEvent('beforesubmit', this.startProgress.bind(this));
     },
 
     startProgress:function(){
@@ -17503,7 +17498,7 @@ ludo.progress.Base = new Class({
             component:this.component
         };
 
-        this.component.getFormManager().addEvent('beforesubmit', this.show.bind(this));
+        this.component.getForm().addEvent('beforesubmit', this.show.bind(this));
 
         this.getDataSource().addEvent('load', this.insertJSON.bind(this));
         this.getDataSource().addEvent('start', this.start.bind(this));
@@ -17704,12 +17699,12 @@ ludo.card.ProgressBar = new Class({
         this.parent(config);
 		if(config.applyTo!==undefined)this.applyTo = config.applyTo;
         this.component = this.getParentComponent();
-		if(this.component)this.component.getLayoutManager().registerButton(this);
+		if(this.component)this.component.getLayout().registerButton(this);
     },
 
     ludoEvents:function(){
         this.parent();
-        this.component.getLayoutManager().addEvent('showcard', this.setCardPercent.bind(this))
+        this.component.getLayout().addEvent('showcard', this.setCardPercent.bind(this))
     },
 
     ludoRendered:function(){
@@ -17718,7 +17713,7 @@ ludo.card.ProgressBar = new Class({
     },
 
     setCardPercent:function(){
-        this.setPercent(this.component.getLayoutManager().getPercentCompleted());
+        this.setPercent(this.component.getLayout().getPercentCompleted());
     },
 
     getParentComponent:function () {
@@ -17901,7 +17896,7 @@ ludo.calendar.Calendar = new Class({
             c.addEvent('setdate', this.setDate.bind(this));
             c.addEvent('change', this.setValue.bind(this));
         }
-		this.getLayoutManager().resize();
+		this.getLayout().resize();
     }
 });/* ../ludojs/src/calendar/days.js */
 /**
@@ -19723,7 +19718,7 @@ ludo.menu.Context = new Class({
 
         ludo.EffectObject.fireEvents();
 
-		this.getLayoutManager().hideAllMenus();
+		this.getLayout().hideAllMenus();
 		this.parent();
 		if (!this.getParent()) {
 			var el = this.getEl();
@@ -19977,7 +19972,7 @@ ludo.menu.Button = new Class({
 
     hideMenu:function () {
         if (this.menu.hide !== undefined){
-            if(this.menu.getLayoutManager().hideAllMenus)this.menu.getLayoutManager().hideAllMenus();
+            if(this.menu.getLayout().hideAllMenus)this.menu.getLayout().hideAllMenus();
             this.menu.hide();
         }
         this.hide();
@@ -21939,7 +21934,7 @@ ludo.form.TinyButton = new Class({
 });/* ../ludojs/src/form/manager.js */
 /**
  * Utility class for form Management. Instance of this class is created on demand
- * by ludo.View.getFormManager().
+ * by ludo.View.getForm().
  * @namespace form
  * @class Manager
  * @extends Core
@@ -22223,7 +22218,7 @@ ludo.form.Manager = new Class({
                         /**
                          * Event fired after a form has been saved successfully.
                          * To add listeners, use <br>
-                         * ludo.View.getFormManager().addEvent('success', fn);
+                         * ludo.View.getForm().addEvent('success', fn);
                          * @event success
                          * @param {Object} JSON response from server
                          */
@@ -22241,7 +22236,7 @@ ludo.form.Manager = new Class({
                         /**
                          * Event fired after form submission when success parameter in response is false.
                          * To add listeners, use <br>
-                         * ludo.View.getFormManager().addEvent('failure', fn);<br>
+                         * ludo.View.getForm().addEvent('failure', fn);<br>
                          * @event failure
                          * @param {Object} JSON response from server
                          * @param {Object} Component
@@ -22329,7 +22324,7 @@ ludo.form.SubmitButton = new Class({
 	ludoRendered:function () {
 		this.parent();
 		this.component = this.getParentComponent();
-		var manager = this.component.getFormManager();
+		var manager = this.component.getForm();
 		if (this.component) {
 			manager.addEvent('valid', this.enable.bind(this));
 			manager.addEvent('invalid', this.disable.bind(this));
@@ -22756,7 +22751,7 @@ ludo.form.ResetButton = new Class({
     ludoRendered:function () {
         this.parent();
         this.component = this.getParentComponent();
-        var manager = this.component.getFormManager();
+        var manager = this.component.getForm();
         if (this.component) {
             manager.addEvent('dirty', this.enable.bind(this));
             manager.addEvent('clean', this.disable.bind(this));

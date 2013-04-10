@@ -34,7 +34,7 @@ TestCase("TabLayout", {
 
 		// then
 		assertEquals('tab', v.layout.type);
-		assertEquals('right', v.getLayoutManager().getTabPosition());
+		assertEquals('right', v.getLayout().getTabPosition());
 	},
 
 	"test should set correct layout of children":function () {
@@ -55,11 +55,11 @@ TestCase("TabLayout", {
 		var v = this.getView('top');
 
 		// when
-		var tabStrip = v.getLayoutManager().tabStrip;
+		var tabStrip = v.getLayout().tabStrip;
 
 		// then
 		assertNotUndefined(tabStrip);
-		assertTrue(v.getLayoutManager().isTabStrip(tabStrip));
+		assertTrue(v.getLayout().isTabStrip(tabStrip));
 		assertFalse(tabStrip.isHidden());
 
 		assertEquals('top', tabStrip.tabPos);
@@ -99,7 +99,7 @@ TestCase("TabLayout", {
 		});
 
 		// then
-		assertEquals(v.child['a'].type, v.getLayoutManager().visibleChild.type);
+		assertEquals(v.child['a'].type, v.getLayout().visibleChild.type);
 		assertFalse(v.child['a'].isHidden());
 
 	},
@@ -131,7 +131,7 @@ TestCase("TabLayout", {
 		var v = this.getView('top');
 
 		// when
-		var tabStrip = v.getLayoutManager().getTabStrip();
+		var tabStrip = v.getLayout().getTabStrip();
 
 		// then
 		assertEquals(4, tabStrip.getCount());
@@ -142,7 +142,7 @@ TestCase("TabLayout", {
 		var v = this.getView('top');
 
 		// when
-		var tabStrip = v.getLayoutManager().getTabStrip();
+		var tabStrip = v.getLayout().getTabStrip();
 		var tab = tabStrip.getTabFor(v.child['c']);
 		// then
 		assertNotUndefined(tabStrip.activeTab);
@@ -154,7 +154,7 @@ TestCase("TabLayout", {
 		var eventFired = false;
 		var eventChild = undefined;
 		var v = this.getView('top');
-		v.getLayoutManager().addEvent('showChild', function (child) {
+		v.getLayout().addEvent('showChild', function (child) {
 			eventFired = true;
 			eventChild = child;
 		});
@@ -173,7 +173,7 @@ TestCase("TabLayout", {
 		var v = this.getView('top');
 
 		// when
-		var tabStrip = v.getLayoutManager().getTabStrip();
+		var tabStrip = v.getLayout().getTabStrip();
 		v.child['b'].show();
 		var tabB = tabStrip.getTabFor(v.child['b']);
 		var tabC = tabStrip.getTabFor(v.child['c']);
