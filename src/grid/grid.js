@@ -276,6 +276,7 @@ ludo.grid.Grid = new Class({
 	highlightActiveRecord:function () {
 		if (this.highlightRecord) {
 			var selectedRecord = this.getDataSource().getSelectedRecord();
+			// TODO what about records without "id" field - refactor!!
 			if (selectedRecord && selectedRecord.id) {
 				this.selectDOMForRecord(selectedRecord, 'ludo-active-record');
 			}

@@ -1,4 +1,4 @@
-/* Generated Mon Apr 8 16:04:23 CEST 2013 */
+/* Generated Wed Apr 10 12:53:03 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -7042,7 +7042,7 @@ ludo.layout.Relative = new Class({
      * @method prepareResize
      * @private
      */
-	prepareResize:function(){
+	prepareResize:function( ){
 		this.fixLayoutReferences();
 		this.arrangeChildren();
 		this.createResizeFunctions();
@@ -24436,9 +24436,9 @@ ludo.form.Select = new Class({
      @default undefined
      @example
 		 options:[
-		 { value:'1','Option number 1' },
-		 { value:'2','Option number 2' },
-		 { value:'3','Option number 3' }
+			 { value:'1','Option number 1' },
+			 { value:'2','Option number 2' },
+			 { value:'3','Option number 3' }
 		 ]
      */
     options:undefined,
