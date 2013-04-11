@@ -52,13 +52,13 @@ TestCase("ModelTest", {
 		if (!window['cmpWithTplModel']) {
 			window.CmpWithTplModel = new Class({
 				Extends:ludo.View,
-                renderTo:document.body,
+				renderTo:document.body,
 				model:{
 					type:'DefaultModel'
 				},
 				children:[
 					{
-                        name:'firstname',
+						name:'firstname',
 						tpl:'{firstname}'
 					}
 				]
@@ -129,33 +129,65 @@ TestCase("ModelTest", {
 		assertEquals('Rundaberget 27', model.getAddress());
 	},
 
-    "test should get value from form when form is updated":function(){
-        // given
-        var c = this.getComponentWithModel();
+	"test should get value from form when form is updated":function () {
+		// given
+		var c = this.getComponentWithModel();
 
-        var model = c.getForm().getModel();
+		var model = c.getForm().getModel();
 
-        // when
-        model.populate(100, {
-            firstname:'Alf Magne',
-            lastname:'Kalleland',
-            address:'Rundaberget 27'
-        });
-        c.child['firstname'].setValue('John');
+		// when
+		model.populate(100, {
+			firstname:'Alf Magne',
+			lastname:'Kalleland',
+			address:'Rundaberget 27'
+		});
+		c.child['firstname'].setValue('John');
 
-        // then
-        assertEquals('John', model.getFirstname());
+		// then
+		assertEquals('John', model.getFirstname());
 
-    },
+	},
 
 	"test should find default values":function () {
 		// given
 		var model = this.getModelWithDefaultValues();
 		// when
-		var defaultValue = model._getDefaultValue('age');
+		var defaultValue = model._getDefaultValueFn('age');
 		// then
-		assertEquals(20, defaultValue);
+		assertEquals(20, defaultValue.call(model, 'age'));
 	},
+
+	"test should return default value after model is populated": function(){
+		// given
+		var model = new ludo.model.Model({
+			columns:['id', 'global_color', { name:'color', defaultValue : '#ff0000'}]
+		});
+
+		// when
+		model.populate(100, {
+			'global_color' : '#ff0000'
+		});
+		// then
+		assertEquals('#ff0000', model.get('color'));
+
+
+	},
+
+	"test should be able to set default value to another model column":function () {
+		// given
+		var model = new ludo.model.Model({
+			columns:['id', 'global_color', { name:'color', defaultValue : 'column:global_color'}]
+		});
+
+		// when
+		model.populate(100, {
+			'global_color' : '#ff0000'
+		});
+		// then
+		assertEquals('#ff0000', model.get('color'));
+
+	},
+
 	"test should update form values in form":function () {
 		// given
 		var c = this.getComponentWithModel();
@@ -178,7 +210,7 @@ TestCase("ModelTest", {
 		// given
 		var c = this.getComponentWithTplChildren();
 		var model = c.getForm().getModel();
-        assertTrue(c.getModel().views.indexOf(c.child['firstname']) >= 0);
+		assertTrue(c.getModel().views.indexOf(c.child['firstname']) >= 0);
 		// when
 		model.populate(100, {
 			firstname:'Alf Magne',
@@ -187,7 +219,7 @@ TestCase("ModelTest", {
 		});
 
 		// then
-        assertEquals('getFirstname', 'Alf Magne', model.getFirstname());
+		assertEquals('getFirstname', 'Alf Magne', model.getFirstname());
 		assertEquals('Alf Magne', c.child['firstname'].getBody().innerHTML);
 	},
 	"test should register children of components using same model":function () {
@@ -222,36 +254,36 @@ TestCase("ModelTest", {
 	},
 
 	"test should update component with tpl and model":function () {
-        // given
+		// given
 		var c = this.getComponentWithTpl();
 		var model = c.getForm().getModel();
 		// when
 		model.populate(100, {
 			firstname:'Jane'
 		});
-        // then
+		// then
 		assertTrue('content was ' + c.getBody().get('html'), c.getBody().get('html').indexOf('Jane') >= 0);
 	},
 
-    "test should set record id after successful save": function(){
-        // given
-        var model = new ludo.model.Model({
-            idField : "id",
-            "columns": ["id", "firstname","lastname"]
-        });
-        // when
-        var updates = {
-            "id":200,
-            "firstname": "Alf Magne"
-        };
-        model.handleModelUpdates(updates);
+	"test should set record id after successful save":function () {
+		// given
+		var model = new ludo.model.Model({
+			idField:"id",
+			"columns":["id", "firstname", "lastname"]
+		});
+		// when
+		var updates = {
+			"id":200,
+			"firstname":"Alf Magne"
+		};
+		model.handleModelUpdates(updates);
 
-        // then
-        assertEquals("Alf Magne", model.getFirstname());
-        assertEquals(200, model.recordId);
-        assertEquals(200, model.getId());
+		// then
+		assertEquals("Alf Magne", model.getFirstname());
+		assertEquals(200, model.recordId);
+		assertEquals(200, model.getId());
 
-    }
+	}
 
 
 });

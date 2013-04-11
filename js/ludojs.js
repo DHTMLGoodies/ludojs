@@ -1,4 +1,4 @@
-/* Generated Thu Apr 11 0:49:59 CEST 2013 */
+/* Generated Thu Apr 11 17:47:21 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -18914,9 +18914,16 @@ ludo.model.Model = new Class({
 	 */
 	autoLoad:false,
 
+	/**
+	 * Automatically populate form fields where name is equal to the name of a column in the model
+	 * @config {Boolean} autoPopulate
+	 * @default true
+	 */
+	autoPopulate:true,
+
 	initialize:function (config) {
 
-        this.setConfigParams(config, ['name','columns','recordId','idField','id','url']);
+        this.setConfigParams(config, ['name','columns','recordId','idField','id','url','autoPopulate']);
 
 		ludo.CmpMgr.registerComponent(this);
 
@@ -18956,12 +18963,23 @@ ludo.model.Model = new Class({
 		}
 		this.columns = ret;
 	},
-
-	_getDefaultValue:function (column) {
+	_defaultValueFns: {},
+	_getDefaultValueFn:function (column) {
 		if (this.columns[column]) {
-			return this.columns[column].defaultValue;
+			var ret = this.columns[column].defaultValue;
+			if(ret && ret.indexOf && ret.indexOf('column:') === 0){
+				var tokens = ret.split(/:/g);
+				return function(){
+					return this.get(tokens[1]);
+				}
+			}else{
+				return function(){
+					return ret;
+				}
+			}
 		}
-		return undefined;
+		return function(){ return undefined };
+
 	},
 
 	createSettersAndGetters:function () {
@@ -18973,7 +18991,7 @@ ludo.model.Model = new Class({
 
 	createSetterFor:function (columnName) {
 		this[this.getFnName('set', columnName)] = function (value) {
-			this._setRecordValue(columnName, value);
+			this.set(columnName, value);
             this.fireEvent('update', this.currentRecord);
 			this.updateViews();
 			return value;
@@ -18982,8 +19000,10 @@ ludo.model.Model = new Class({
 
 	createGetterFor:function (columnName) {
 		this[this.getFnName('get', columnName)] = function () {
-			return this.getRecordProperty(columnName)
-		}.bind(this)
+			return this.get(columnName);
+
+		}.bind(this);
+		this._defaultValueFns[columnName] = this._getDefaultValueFn(columnName);
 	},
 
     getFnName:function(prefix, col){
@@ -18994,8 +19014,8 @@ ludo.model.Model = new Class({
         return column.name ? column.name : column;
 	},
 
-	_setRecordValue:function (property, value) {
-		if (this.currentRecord) {
+	set:function (property, value) {
+		if (this.currentRecord && this.autoPopulate) {
 			if (this.formComponents[property]) {
 				for (var i = 0; i < this.formComponents[property].length; i++) {
 					this.formComponents[property][i].setValue(value);
@@ -19006,9 +19026,11 @@ ludo.model.Model = new Class({
 		}
 	},
 
-	getRecordProperty:function (property) {
+	get:function (property) {
 		if (this.currentRecord) {
-			return this.formComponents[property] ? this.formComponents[property][0].getValue() : this.currentRecord[property];
+			if(this.formComponents[property]) return this.formComponents[property][0].getValue();
+			if(this.currentRecord[property])return this.currentRecord[property];
+			return this._defaultValueFns[property].call(this,property);
 		}
 		return '';
 	},
@@ -19106,8 +19128,10 @@ ludo.model.Model = new Class({
 			}
 			this.formComponents[name].push(formComponent);
 			formComponent.addEvent('valueChange', this.updateByForm.bind(this));
-			formComponent.setValue(this.currentRecord[name]);
-			formComponent.commit();
+			if(this.autoPopulate){
+				formComponent.setValue(this.get(name));
+				formComponent.commit();
+			}
 		}
 	},
 	registerView:function (view) {
@@ -19170,7 +19194,7 @@ ludo.model.Model = new Class({
         var data = Object.merge(this.currentRecord);
         for(var key in data){
             if(data.hasOwnProperty(key)){
-                data[key] = this.getRecordProperty(key);
+                data[key] = this.get(key);
             }
         }
         for (key in formData) {
@@ -19254,7 +19278,7 @@ ludo.model.Model = new Class({
 		for (var column in updates) {
 			if (updates.hasOwnProperty(column)) {
                 // TODO this fires a lot of update events. refactor to fire only one
-				this._setRecordValue(column, updates[column]);
+				this.set(column, updates[column]);
 			}
 		}
 	},
@@ -19283,7 +19307,7 @@ ludo.model.Model = new Class({
 	newRecord:function () {
 		for (var column in this.columns) {
 			if (this.columns.hasOwnProperty(column)) {
-				this._setRecordValue(column, this.columns[column].defaultValue);
+				this.set(column, this.columns[column].defaultValue);
 			}
 		}
 		this.commitFormFields();
@@ -19295,7 +19319,7 @@ ludo.model.Model = new Class({
         this.recordId = recordId;
         for (var prop in record) {
             if (record.hasOwnProperty(prop)) {
-                this._setRecordValue(prop, record[prop]);
+                this.set(prop, record[prop]);
             }
         }
         /**
@@ -19315,7 +19339,8 @@ ludo.model.Model = new Class({
         this.updateViews();
     },
 
-	fill:function (data) {
+	fill:function (recordId, data) {
+		this.recordId = recordId;
 		for (var key in data) {
 			if (data.hasOwnProperty(key)) {
 				this.currentRecord[key] = data[key];
