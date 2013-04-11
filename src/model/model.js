@@ -499,7 +499,7 @@ ludo.model.Model = new Class({
         this.commitFormFields();
         this.updateViews();
     },
-
+	// TODO is this method needed ?
 	fill:function (recordId, data) {
 		this.recordId = recordId;
 		for (var key in data) {
