@@ -344,20 +344,21 @@ ludo.layout.Renderer = new Class({
 
 	setPosition:function (x, y) {
 		if (x !== undefined && x >= 0) {
-			this.coordinates.x = this.view.layout.left = x;
+			this.coordinates.left = this.view.layout.left = x;
 			this.view.getEl().style.left = x + 'px';
-			this.lastCoordinates.x = x;
+			this.lastCoordinates.left = x;
 		}
 		if (y !== undefined && y >= 0) {
-			this.coordinates.y = this.view.layout.top = y;
+			this.coordinates.top = this.view.layout.top = y;
 			this.view.getEl().style.top = y + 'px';
-			this.lastCoordinates.y = y;
+			this.lastCoordinates.top = y;
 		}
 	},
 
 	setSize:function (config) {
-		if (config.left)this.coordinates.x = this.view.layout.left = config.left;
-		if (config.top)this.coordinates.y = this.view.layout.top = config.top;
+
+		if (config.left)this.coordinates.left = this.view.layout.left = config.left;
+		if (config.top)this.coordinates.top = this.view.layout.top = config.top;
 		if (config.width)this.view.layout.width = this.coordinates.width = config.width;
 		if (config.height)this.view.layout.height = this.coordinates.height = config.height;
 		this.resize();

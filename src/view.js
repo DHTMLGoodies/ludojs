@@ -324,6 +324,12 @@ ludo.View = new Class({
 	contextMenu:undefined,
 	lifeCycleComplete:false,
 
+    /**
+     * Config object for LudoDB integration.
+     * @config {Object} ludoDB
+     */
+    ludoDB:undefined,
+
 	lifeCycle:function (config) {
 		if (this.children && !config.children) {
 			config.children = this.children;
@@ -390,7 +396,7 @@ ludo.View = new Class({
         var keys = ['css','contextMenu','renderTo','tpl','containerCss','socket','form','addons','title','html','hidden','copyEvents',
                     'dataSource','onLoadMessage','movable','resizable','closable','minimizable','alwaysInFront',
                     'parentComponent','cls','objMovable','width','height','model','frame','formConfig',
-                    'overflow'];
+                    'overflow','ludoDB'];
 
         this.setConfigParams(config,keys);
 
@@ -403,6 +409,22 @@ ludo.View = new Class({
 		if (this.renderTo)this.renderTo = document.id(this.renderTo);
 
 		this.layout = ludo.layoutFactory.getValidLayoutObject(this, config);
+
+
+        if(this.ludoDB){
+            var f = new ludo.ludoDB.Factory(this.ludoDB);
+            var initialHidden = this.hidden;
+            f.addEvent('load', function(children){
+                this.unRenderedChildren = children.children;
+                this.hidden = initialHidden;
+                if(!this.hidden){
+                    this.show();
+                }
+
+            }.bind(this));
+            this.hidden = true;
+            f.load();
+        }
 
 		if (this.copyEvents) {
 			this.createEventCopies();

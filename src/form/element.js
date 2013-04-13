@@ -148,17 +148,20 @@ ludo.form.Element = new Class({
         if (config.linkWith !== undefined) {
             this.setLinkWith(config.linkWith);
         }
-        this.initialValue = this.constructorValue = this.value;
-        if (!this.name)this.name = 'ludo-form-el-' + String.uniqueID();
 
         if (this.dataSource) {
             this.isReady = false;
-            this.getDataSource().addEvent('load', this.setReady.bind(this));
         }
+        this.initialValue = this.constructorValue = this.value;
+        if (!this.name)this.name = 'ludo-form-el-' + String.uniqueID();
+
+
         ludo.Form.add(this);
         if(this.required)this.applyValidatorFns(['required']);
         this.applyValidatorFns(['twin']);
     },
+
+
 
     applyValidatorFns:function (keys) {
         for (var i = 0; i < keys.length; i++) {
@@ -188,6 +191,11 @@ ludo.form.Element = new Class({
 
     ludoEvents:function () {
         this.parent();
+
+        if (this.dataSource) {
+            this.getDataSource().addEvent('load', this.setReady.bind(this));
+        }
+
         var formEl = this.getFormEl();
         if (formEl) {
             formEl.addEvent('keydown', this.keyDown.bind(this));

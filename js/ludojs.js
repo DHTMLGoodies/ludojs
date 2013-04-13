@@ -1,4 +1,4 @@
-/* Generated Thu Apr 11 23:47:30 CEST 2013 */
+/* Generated Sat Apr 13 22:19:53 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -27,7 +27,7 @@ Owner of ludoJS.com
 window.ludo = {
     form:{ validator:{} },color:{}, dialog:{},remote:{},tree:{},model:{},tpl:{},video:{},storage:{},
     grid:{}, effect:{},paging:{},calendar:{},layout:{},progress:{},keyboard:{},
-    dataSource:{},controller:{},card:{},canvas:{},socket:{},menu:{},view:{},audio:{}
+    dataSource:{},controller:{},card:{},canvas:{},socket:{},menu:{},view:{},audio:{}, ludoDB:{}
 };
 
 if (Browser['ie']) {
@@ -3430,11 +3430,10 @@ ludo.dataSource.Base = new Class({
 
 	ludoConfig:function (config) {
         this.parent(config);
-        var keys = ['url','postData','autoload','resource','service','arguments'];
+        this.setConfigParams(config,['url','postData','autoload','resource','service','arguments','data']);
 		if(this.arguments && !ludo.util.isArray(this.arguments)){
 			this.arguments = [this.arguments];
 		}
-        this.setConfigParams(config,keys);
     },
 
 	ludoEvents:function(){
@@ -3926,20 +3925,21 @@ ludo.layout.Renderer = new Class({
 
 	setPosition:function (x, y) {
 		if (x !== undefined && x >= 0) {
-			this.coordinates.x = this.view.layout.left = x;
+			this.coordinates.left = this.view.layout.left = x;
 			this.view.getEl().style.left = x + 'px';
-			this.lastCoordinates.x = x;
+			this.lastCoordinates.left = x;
 		}
 		if (y !== undefined && y >= 0) {
-			this.coordinates.y = this.view.layout.top = y;
+			this.coordinates.top = this.view.layout.top = y;
 			this.view.getEl().style.top = y + 'px';
-			this.lastCoordinates.y = y;
+			this.lastCoordinates.top = y;
 		}
 	},
 
 	setSize:function (config) {
-		if (config.left)this.coordinates.x = this.view.layout.left = config.left;
-		if (config.top)this.coordinates.y = this.view.layout.top = config.top;
+
+		if (config.left)this.coordinates.left = this.view.layout.left = config.left;
+		if (config.top)this.coordinates.top = this.view.layout.top = config.top;
 		if (config.width)this.view.layout.width = this.coordinates.width = config.width;
 		if (config.height)this.view.layout.height = this.coordinates.height = config.height;
 		this.resize();
@@ -4771,6 +4771,12 @@ ludo.View = new Class({
 	contextMenu:undefined,
 	lifeCycleComplete:false,
 
+    /**
+     * Config object for LudoDB integration.
+     * @config {Object} ludoDB
+     */
+    ludoDB:undefined,
+
 	lifeCycle:function (config) {
 		if (this.children && !config.children) {
 			config.children = this.children;
@@ -4837,7 +4843,7 @@ ludo.View = new Class({
         var keys = ['css','contextMenu','renderTo','tpl','containerCss','socket','form','addons','title','html','hidden','copyEvents',
                     'dataSource','onLoadMessage','movable','resizable','closable','minimizable','alwaysInFront',
                     'parentComponent','cls','objMovable','width','height','model','frame','formConfig',
-                    'overflow'];
+                    'overflow','ludoDB'];
 
         this.setConfigParams(config,keys);
 
@@ -4850,6 +4856,22 @@ ludo.View = new Class({
 		if (this.renderTo)this.renderTo = document.id(this.renderTo);
 
 		this.layout = ludo.layoutFactory.getValidLayoutObject(this, config);
+
+
+        if(this.ludoDB){
+            var f = new ludo.ludoDB.Factory(this.ludoDB);
+            var initialHidden = this.hidden;
+            f.addEvent('load', function(children){
+                this.unRenderedChildren = children.children;
+                this.hidden = initialHidden;
+                if(!this.hidden){
+                    this.show();
+                }
+
+            }.bind(this));
+            this.hidden = true;
+            f.load();
+        }
 
 		if (this.copyEvents) {
 			this.createEventCopies();
@@ -12983,7 +13005,6 @@ ludo.dataSource.Collection = new Class({
 
 	_getData:function () {
 		if (this.hasSearchResult())return this.searcher.getData();
-
 		return this.data;
 	},
 
@@ -16357,17 +16378,20 @@ ludo.form.Element = new Class({
         if (config.linkWith !== undefined) {
             this.setLinkWith(config.linkWith);
         }
-        this.initialValue = this.constructorValue = this.value;
-        if (!this.name)this.name = 'ludo-form-el-' + String.uniqueID();
 
         if (this.dataSource) {
             this.isReady = false;
-            this.getDataSource().addEvent('load', this.setReady.bind(this));
         }
+        this.initialValue = this.constructorValue = this.value;
+        if (!this.name)this.name = 'ludo-form-el-' + String.uniqueID();
+
+
         ludo.Form.add(this);
         if(this.required)this.applyValidatorFns(['required']);
         this.applyValidatorFns(['twin']);
     },
+
+
 
     applyValidatorFns:function (keys) {
         for (var i = 0; i < keys.length; i++) {
@@ -16397,6 +16421,11 @@ ludo.form.Element = new Class({
 
     ludoEvents:function () {
         this.parent();
+
+        if (this.dataSource) {
+            this.getDataSource().addEvent('load', this.setReady.bind(this));
+        }
+
         var formEl = this.getFormEl();
         if (formEl) {
             formEl.addEvent('keydown', this.keyDown.bind(this));
@@ -24496,6 +24525,7 @@ ludo.form.Select = new Class({
     },
 
     populate:function () {
+
         var data = this.dataSourceObj.getData() || [];
         this.getFormEl().options.length = 0;
         if (this.emptyItem) {

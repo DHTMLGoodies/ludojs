@@ -121,6 +121,7 @@ ludo.form.Select = new Class({
     },
 
     populate:function () {
+
         var data = this.dataSourceObj.getData() || [];
         this.getFormEl().options.length = 0;
         if (this.emptyItem) {
