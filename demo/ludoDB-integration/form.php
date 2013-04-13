@@ -18,7 +18,7 @@ require_once("../includes/demo-header.php");
                 },
                 'ludoDB':{
                     'resource':'LudoJSPerson',
-                    'id':1,
+                    'arguments':1,
                     'url':'../ludoDB/router.php'
                 }
             }

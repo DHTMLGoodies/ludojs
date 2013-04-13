@@ -325,8 +325,16 @@ ludo.View = new Class({
 	lifeCycleComplete:false,
 
     /**
-     * Config object for LudoDB integration.
-     * @config {Object} ludoDB
+     Config object for LudoDB integration.
+     @config {Object} ludoDB
+     @example
+        ludoDB:{
+            'resource' : 'Person',
+            'arguments' : 1, // id of person
+            'url' : 'router.php' // optional url
+        }
+
+     This example assumes that ludoJS properties are defined in the LudoDBModel called "Person".
      */
     ludoDB:undefined,
 

@@ -1,4 +1,4 @@
-/* Generated Sat Apr 13 22:24:01 CEST 2013 */
+/* Generated Sat Apr 13 23:22:02 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -21377,24 +21377,22 @@ ludo.ludoDB.Factory = new Class({
     Extends:ludo.Core,
     ludoDBConfig:undefined,
 
-    recordId:undefined,
+    arguments:undefined,
     resource:undefined,
     url:undefined,
 
     ludoConfig:function (config) {
-        if (config.id) {
-            this.recordId = config.id;
-            config.id = undefined;
-        }
         this.parent(config);
-        this.setConfigParams(config, ['url', 'resource']);
-
+        this.setConfigParams(config, ['url', 'resource','arguments']);
+        if(this.arguments && !ludo.util.isArray(this.arguments)){
+            this.arguments = [this.arguments];
+        }
         this.ludoDBConfig = config;
     },
 
     load:function () {
         var arguments = [this.resource];
-        if(this.recordId)arguments.push(this.recordId);
+        if(this.arguments)arguments.splice(1, 0, this.arguments);
         var req = new ludo.remote.JSON({
             resource:'LudoJS',
             url : this.getUrl()
