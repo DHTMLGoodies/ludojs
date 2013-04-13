@@ -397,7 +397,6 @@ ludo.dataSource.Collection = new Class({
 
 	_getData:function () {
 		if (this.hasSearchResult())return this.searcher.getData();
-
 		return this.data;
 	},
 

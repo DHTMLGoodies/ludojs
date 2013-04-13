@@ -19,6 +19,41 @@ TestCase("CollectionTest", {
 		config = config || {};
 		return new ludo.MyDataSource2(config);
 	},
+
+    getCollectionWithData:function(config){
+        if (ludo.MyDataSourceWithData === undefined) {
+            var d = this.getData();
+            ludo.MyDataSourceWithData = new Class({
+                Extends:ludo.dataSource.Collection,
+                autoload:false,
+                load:function () {
+                    var json = Object.clone(d);
+                    this.loadComplete(json.data, json);
+                }
+            });
+        }
+        config = config || {};
+        config.data = this.getData().data.slice(0);
+        return new ludo.MyDataSourceWithData(config);
+    },
+
+    getCollectionWithDataInClassSpec:function(){
+        if (ludo.MyDataSourceWithDataInSpec === undefined) {
+            var d = this.getData();
+            ludo.MyDataSourceWithDataInSpec = new Class({
+                Extends:ludo.dataSource.Collection,
+                autoload:false,
+                data:this.getData().data.slice(0),
+                load:function () {
+                    var json = Object.clone(d);
+                    this.loadComplete(json.data, json);
+                }
+            });
+        }
+        return new ludo.MyDataSourceWithDataInSpec({});
+
+    },
+
 	"test should be able to get record count":function () {
 		// given
 		var c = this.getCollection();
@@ -59,6 +94,28 @@ TestCase("CollectionTest", {
 		assertEquals('Zimbabwe', c.getData()[0].country);
 
 	},
+
+    "test should be able to define initial data for collection": function(){
+        // given
+        var c = this.getCollectionWithData();
+
+        // then
+        assertTrue(c.hasData());
+        assertEquals(249, c.getData().length);
+    },
+
+    "test should be able to define initial data in class spec": function(){
+        // given
+        var c = this.getCollectionWithDataInClassSpec();
+
+        // then
+        assertTrue(c.hasData());
+        assertEquals(249, c.getData().length);
+
+    },
+
+
+
 	"test should fire sort event when sorting":function () {
 		// given
 		var c = this.getCollection();

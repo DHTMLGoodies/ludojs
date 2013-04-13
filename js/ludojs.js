@@ -1,4 +1,4 @@
-/* Generated Thu Apr 11 17:47:21 CEST 2013 */
+/* Generated Thu Apr 11 23:47:30 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -19338,7 +19338,7 @@ ludo.model.Model = new Class({
         this.commitFormFields();
         this.updateViews();
     },
-
+	// TODO is this method needed ?
 	fill:function (recordId, data) {
 		this.recordId = recordId;
 		for (var key in data) {
