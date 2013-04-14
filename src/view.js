@@ -428,7 +428,6 @@ ludo.View = new Class({
                 if(!this.hidden){
                     this.show();
                 }
-
             }.bind(this));
             this.hidden = true;
             f.load();
@@ -879,6 +878,7 @@ ludo.View = new Class({
 	getWidth:function () {
 		return this.layout.pixelWidth ? this.layout.pixelWidth : this.layout.width;
 	},
+
 	/**
 	 * Get current height of component
 	 * @method getHeight
@@ -886,15 +886,6 @@ ludo.View = new Class({
 	 */
 	getHeight:function () {
 		return this.layout.pixelHeight ? this.layout.pixelHeight : this.layout.height;
-	},
-
-	/**
-	 * Return component type, example "Component", "Window" or "form.Text"
-	 * @method getType
-	 * @return string
-	 */
-	getType:function () {
-		return this.type;
 	},
 
 	/**
