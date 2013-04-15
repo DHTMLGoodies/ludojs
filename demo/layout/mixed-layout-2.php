@@ -93,17 +93,34 @@ require_once("../includes/demo-header.php");
                 'id':'buttonBar',
                 layout:{
                     below:'menu',
-                    height:40,
+                    height:68,
                     alignParentLeft:true,
                     fillRight:true,
                     type:'relative'
                 },
                 children:[
                     {
-                        html:'<img src="images/button1.gif">',
+                        html:'<img src="images/previous.png">',
+                        id:'firstButton',
+                        containerCss:{
+                            'margin-top' : 3
+                        },
                         layout:{
                             alignParentLeft:true,
-                            width:30,
+                            width:70,
+                            height:'matchParent'
+                        }
+                    },
+                    {
+                        html:'<img src="images/next.png">',
+                        containerCss:{
+                            'margin-top' : 3
+                        },
+
+                        layout:{
+                            alignParentLeft:true,
+                            rightOf:'firstButton',
+                            width:70,
                             height:'matchParent'
                         }
                     }
