@@ -14,6 +14,9 @@ require_once("../includes/demo-header.php");
             type:'tab',
             tabs:'top'
         },
+        css:{
+            'border-top' : 0
+        },
         children:[
             {
                 id:'firstTab',
