@@ -1,7 +1,9 @@
 <?php
 $sub = true;
 $pageTitle = 'Mixed layout';
+$skin = 'blue';
 require_once("../includes/demo-header.php");
+
 ?>
 <body>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/framed-view.js"></script>
@@ -40,7 +42,8 @@ require_once("../includes/demo-header.php");
                                     'closable':true
                                 },
                                 containerCss:{
-                                    'border' : 0
+                                    'border' : 0,
+                                    'background-color' : '#d1e7ff'
                                 },
                                 css:{
                                     'background-color':'#fff',
@@ -61,10 +64,9 @@ require_once("../includes/demo-header.php");
                     fillRight:true
                 },
                 containerCss:{
-                    'border-bottom':'1px solid #d7d7d7',
-                    'border-top':'1px solid #d7d7d7',
-                    'margin-top' : 3,
-                    'background-color' : '#FFF'
+                    'border-bottom':'1px solid #a6cbf5',
+                    'border-top':'1px solid #a6cbf5',
+                    'margin-top' : 3
                 },
                 css:{
                     'margin-left':10
@@ -93,30 +95,28 @@ require_once("../includes/demo-header.php");
                 'id':'buttonBar',
                 layout:{
                     below:'menu',
-                    height:68,
+                    height:58,
                     alignParentLeft:true,
                     fillRight:true,
                     type:'relative'
+                },
+                containerCss:{
+                    'padding-top' : 6,
+                    'padding-left' : 3
                 },
                 children:[
                     {
                         html:'<img src="images/previous.png">',
                         id:'firstButton',
-                        containerCss:{
-                            'margin-top' : 3
-                        },
                         layout:{
                             alignParentLeft:true,
+                            offsetX:3,
                             width:70,
                             height:'matchParent'
                         }
                     },
                     {
                         html:'<img src="images/next.png">',
-                        containerCss:{
-                            'margin-top' : 3
-                        },
-
                         layout:{
                             alignParentLeft:true,
                             rightOf:'firstButton',
@@ -135,10 +135,14 @@ require_once("../includes/demo-header.php");
                     fillDown:true,
                     fillRight:true
                 },
+                containerCss:{
+                    'background-color' : '#d1e7ff'
+                },
                 css:{
                     margin:5,
-                    border:'1px solid #d7d7d7',
+                    border:'1px solid #a6cbf5',
                     'border-bottom':0
+
                 },
                 children:[
                     {

@@ -1,5 +1,7 @@
 <?php
 if($sub)$prefix = '../'; else $prefix = '';
+
+$skin = isset($skin) ? $skin : 'light-gray';
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
@@ -20,7 +22,7 @@ if($sub)$prefix = '../'; else $prefix = '';
     <script type="text/javascript" src="<?php echo $prefix; ?>../js/ludojs-minified.js"></script>
 
     <script type="text/javascript" src="<?php echo $prefix; ?>code-highlight/code-highlight.js"></script>
-    <link rel="stylesheet" href="<?php echo $prefix; ?>../css/ludojs-light-gray.css" type="text/css">
+    <link rel="stylesheet" href="<?php echo $prefix; ?>../css/ludojs-<?php echo $skin; ?>.css" type="text/css">
     <script type="text/javascript">
         ludo.appConfig = {
             fileupload:{
