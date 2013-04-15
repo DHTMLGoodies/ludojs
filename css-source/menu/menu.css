@@ -89,7 +89,6 @@ div.ludo-menu-item-spacer-horizontal {
 }
 
 .ludo-menu-item-over .ludo-menu-item-icon {
-    top: -1px !important;
     left: -1px !important;
 }
 

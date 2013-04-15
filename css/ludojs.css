@@ -1,4 +1,4 @@
-/* Generated Sat Apr 13 23:22:02 CEST 2013 */
+/* Generated Mon Apr 15 1:45:19 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -1557,7 +1557,6 @@ div.ludo-menu-item-spacer-horizontal {
 }
 
 .ludo-menu-item-over .ludo-menu-item-icon {
-    top: -1px !important;
     left: -1px !important;
 }
 

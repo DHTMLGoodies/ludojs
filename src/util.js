@@ -120,5 +120,9 @@ ludo.util = {
 
     getDragEndEvent:function () {
         return ludo.util.isTabletOrMobile() ? 'touchend' : 'mouseup';
+    },
+
+    supportsSVG:function(){
+        return !!document.createElementNS && !!document.createElementNS('http://www.w3.org/2000/svg', 'svg').createSVGRect;
     }
 };

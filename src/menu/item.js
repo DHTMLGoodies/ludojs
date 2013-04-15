@@ -192,7 +192,7 @@ ludo.menu.Item = new Class({
         var el = this.els.icon = new Element('div');
         ludo.dom.addClass(el, 'ludo-menu-item-icon');
         el.setStyles({
-            'background-position':'top center',
+            'background-position':'center center',
             'background-repeat':'no-repeat',
             'position':'absolute',
             'text-align':'center',

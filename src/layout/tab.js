@@ -16,6 +16,7 @@ ludo.layout.Tab = new Class({
 	},
 
 	onNewChild:function (child) {
+
 		if (!this.isTabStrip(child)) {
 			if(!child.isHidden()){
 				this.setVisibleChild(child);
@@ -74,10 +75,13 @@ ludo.layout.Tab = new Class({
 		if(this.visibleChild === undefined){
 			if(this.view.children.length>1)this.view.children[1].show();
 		}else{
-			if (this.children === undefined) {
+			if (this.children === undefined || !this.visibleChild.layoutResizeFn) {
 				this.prepareResize();
 			}
 			this.tabStrip.layoutResizeFn.call(this.visibleChild, this);
+            if(!this.visibleChild.layoutResizeFn){
+                this.prepareResize();
+            }
 			this.visibleChild.layoutResizeFn.call(this.visibleChild, this);
 		}
 	},

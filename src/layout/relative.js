@@ -52,6 +52,9 @@ ludo.layout.Relative = new Class({
 			this.prepareResize();
 		}
 		for (var i = 0; i < this.children.length; i++) {
+            if(!this.children[i].layoutResizeFn){
+                this.children[i].layoutResizeFn = this.getResizeFnFor(this.children[i]);
+            }
 			this.children[i].layoutResizeFn.call(this.children[i], this);
 		}
 	},
@@ -64,7 +67,7 @@ ludo.layout.Relative = new Class({
 	prepareResize:function( ){
 		this.fixLayoutReferences();
 		this.arrangeChildren();
-		this.createResizeFunctions();
+     	this.createResizeFunctions();
 	},
 
     /**

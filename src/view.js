@@ -504,7 +504,6 @@ ludo.View = new Class({
 		/*
 		if (!this.parentComponent && this.renderTo && this.renderTo.tagName.toLowerCase() == 'body') {
 			if (!this.isMovable()) {
-                // todo refactor this.
 				// document.id(window).addEvent('resize', this.resize.bind(this));
 			}
 		}

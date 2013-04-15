@@ -1,4 +1,4 @@
-/* Generated Sat Apr 13 23:22:02 CEST 2013 */
+/* Generated Mon Apr 15 1:45:19 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -4381,6 +4381,10 @@ ludo.util = {
 
     getDragEndEvent:function () {
         return ludo.util.isTabletOrMobile() ? 'touchend' : 'mouseup';
+    },
+
+    supportsSVG:function(){
+        return !!document.createElementNS && !!document.createElementNS('http://www.w3.org/2000/svg', 'svg').createSVGRect;
     }
 };/* ../ludojs/src/view/loader.js */
 // TODO rename this class
@@ -4772,8 +4776,16 @@ ludo.View = new Class({
 	lifeCycleComplete:false,
 
     /**
-     * Config object for LudoDB integration.
-     * @config {Object} ludoDB
+     Config object for LudoDB integration.
+     @config {Object} ludoDB
+     @example
+        ludoDB:{
+            'resource' : 'Person',
+            'arguments' : 1, // id of person
+            'url' : 'router.php' // optional url
+        }
+
+     This example assumes that ludoJS properties are defined in the LudoDBModel called "Person".
      */
     ludoDB:undefined,
 
@@ -4867,7 +4879,6 @@ ludo.View = new Class({
                 if(!this.hidden){
                     this.show();
                 }
-
             }.bind(this));
             this.hidden = true;
             f.load();
@@ -4944,7 +4955,6 @@ ludo.View = new Class({
 		/*
 		if (!this.parentComponent && this.renderTo && this.renderTo.tagName.toLowerCase() == 'body') {
 			if (!this.isMovable()) {
-                // todo refactor this.
 				// document.id(window).addEvent('resize', this.resize.bind(this));
 			}
 		}
@@ -5318,6 +5328,7 @@ ludo.View = new Class({
 	getWidth:function () {
 		return this.layout.pixelWidth ? this.layout.pixelWidth : this.layout.width;
 	},
+
 	/**
 	 * Get current height of component
 	 * @method getHeight
@@ -5325,15 +5336,6 @@ ludo.View = new Class({
 	 */
 	getHeight:function () {
 		return this.layout.pixelHeight ? this.layout.pixelHeight : this.layout.height;
-	},
-
-	/**
-	 * Return component type, example "Component", "Window" or "form.Text"
-	 * @method getType
-	 * @return string
-	 */
-	getType:function () {
-		return this.type;
 	},
 
 	/**
@@ -19574,7 +19576,7 @@ ludo.menu.Item = new Class({
         var el = this.els.icon = new Element('div');
         ludo.dom.addClass(el, 'ludo-menu-item-icon');
         el.setStyles({
-            'background-position':'top center',
+            'background-position':'center center',
             'background-repeat':'no-repeat',
             'position':'absolute',
             'text-align':'center',
