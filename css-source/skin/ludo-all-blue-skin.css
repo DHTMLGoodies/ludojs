@@ -614,7 +614,7 @@ tab layout */
 }
 
 .ludo-tab-strip .ludo-tab-strip-line {
-    background-color: #EBF0F5;
+    background-color: #fff;
     border-color:#a3c7f0;
 }
 div.ludo-tab-strip-tab-bg-first, div.ludo-tab-strip-tab-bg-last {
@@ -624,7 +624,7 @@ div.ludo-tab-strip-tab-bg-first, div.ludo-tab-strip-tab-bg-last {
     border-color:#A6CBF5;
 }
 div.ludo-tab-strip-tab-active {
-    background-color: #EBF0F5;
+    background-color: #fff;
 }
 .ludo-layout-tabstrip{
     background-color:#a6cbf5;
