@@ -214,7 +214,7 @@ ludo.form.Element = new Class({
 
 		if(this.els.formEl){
 			this.els.formEl.setProperty('name', this.getName());
-			if(this.value)this.els.formEl.set('value', this.value)
+			if(this.value !== undefined)this.els.formEl.set('value', this.value)
 		}
         if (this.linkWith) {
             this.setLinkWithOfOther();
@@ -559,8 +559,8 @@ ludo.form.Element = new Class({
     },
 
     updateLinked:function () {
-        var cmp = ludo.get(this.linkWith);
-        if (cmp.value !== this.value) {
+        var cmp = this.getLinkWith();
+        if (cmp && cmp.value !== this.value) {
             cmp.setValue(this.value);
         }
     },
@@ -572,17 +572,22 @@ ludo.form.Element = new Class({
 
     setLinkWithOfOther:function (attempts) {
         attempts = attempts || 0;
-        var cmp = ludo.get(this.linkWith);
+        var cmp = this.getLinkWith();
         if (cmp && !cmp.linkWith) {
-            if (!this.value){
+            if (this.value === undefined){
 				this.initialValue = this.constructorValue = cmp.value;
 				this.setValue(cmp.value);
 			}
-            cmp.setLinkWith(this.id);
+            cmp.setLinkWith(this);
         } else {
             if (attempts < 100) {
                 this.setLinkWithOfOther.delay(50, this, attempts + 1);
             }
         }
+    },
+
+    getLinkWith:function(){
+        var cmp = ludo.get(this.linkWith);
+        return cmp ? cmp : this.parentComponent ? this.parentComponent.child[this.linkWith] : undefined;
     }
 });

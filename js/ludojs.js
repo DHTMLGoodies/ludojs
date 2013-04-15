@@ -1,4 +1,4 @@
-/* Generated Mon Apr 15 3:50:02 CEST 2013 */
+/* Generated Mon Apr 15 18:08:03 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -155,7 +155,7 @@ ludo.CmpMgrClass = new Class({
     },
 
     get:function (id) {
-        return this.components[id];
+        return id['initialize'] !== undefined ? id : this.components[id];
     },
 
     zIndex:1,
@@ -4790,13 +4790,18 @@ ludo.View = new Class({
     ludoDB:undefined,
 
 	lifeCycle:function (config) {
-		if (this.children && !config.children) {
+
+        this._createDOM();
+		if (!config.children) {
 			config.children = this.children;
 			this.children = [];
 		}
-		this._createDOM();
 
 		this.ludoConfig(config);
+
+        if(!config.children || !config.children.length){
+            config.children = this.getClassChildren();
+        }
 
 		if (this.hidden) {
 			this.unRenderedChildren = config.children;
@@ -4804,6 +4809,18 @@ ludo.View = new Class({
 			this.remainingLifeCycle(config);
 		}
 	},
+
+    /**
+     * Return child views of this class.
+     * By default it returns the children property of the class. There may be advantages of defining children
+     * in this method. By defining children in the children property of the class, you don't have access to "this". By returning
+     * children from getClassChildren, you will be able to use "this" as a reference to the class instance.
+     * @method getClassChildren
+     * @return {Array|children}
+     */
+    getClassChildren:function(){
+        return this.children;
+    },
 
 	remainingLifeCycle:function (config) {
 		if(this.lifeCycleComplete)return;
@@ -16453,7 +16470,7 @@ ludo.form.Element = new Class({
 
 		if(this.els.formEl){
 			this.els.formEl.setProperty('name', this.getName());
-			if(this.value)this.els.formEl.set('value', this.value)
+			if(this.value !== undefined)this.els.formEl.set('value', this.value)
 		}
         if (this.linkWith) {
             this.setLinkWithOfOther();
@@ -16798,8 +16815,8 @@ ludo.form.Element = new Class({
     },
 
     updateLinked:function () {
-        var cmp = ludo.get(this.linkWith);
-        if (cmp.value !== this.value) {
+        var cmp = this.getLinkWith();
+        if (cmp && cmp.value !== this.value) {
             cmp.setValue(this.value);
         }
     },
@@ -16811,18 +16828,23 @@ ludo.form.Element = new Class({
 
     setLinkWithOfOther:function (attempts) {
         attempts = attempts || 0;
-        var cmp = ludo.get(this.linkWith);
+        var cmp = this.getLinkWith();
         if (cmp && !cmp.linkWith) {
-            if (!this.value){
+            if (this.value === undefined){
 				this.initialValue = this.constructorValue = cmp.value;
 				this.setValue(cmp.value);
 			}
-            cmp.setLinkWith(this.id);
+            cmp.setLinkWith(this);
         } else {
             if (attempts < 100) {
                 this.setLinkWithOfOther.delay(50, this, attempts + 1);
             }
         }
+    },
+
+    getLinkWith:function(){
+        var cmp = ludo.get(this.linkWith);
+        return cmp ? cmp : this.parentComponent ? this.parentComponent.child[this.linkWith] : undefined;
     }
 });/* ../ludojs/src/form/button.js */
 /**

@@ -133,7 +133,7 @@ ludo.CmpMgrClass = new Class({
     },
 
     get:function (id) {
-        return this.components[id];
+        return id['initialize'] !== undefined ? id : this.components[id];
     },
 
     zIndex:1,

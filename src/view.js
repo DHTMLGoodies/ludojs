@@ -339,13 +339,18 @@ ludo.View = new Class({
     ludoDB:undefined,
 
 	lifeCycle:function (config) {
-		if (this.children && !config.children) {
+
+        this._createDOM();
+		if (!config.children) {
 			config.children = this.children;
 			this.children = [];
 		}
-		this._createDOM();
 
 		this.ludoConfig(config);
+
+        if(!config.children || !config.children.length){
+            config.children = this.getClassChildren();
+        }
 
 		if (this.hidden) {
 			this.unRenderedChildren = config.children;
@@ -353,6 +358,18 @@ ludo.View = new Class({
 			this.remainingLifeCycle(config);
 		}
 	},
+
+    /**
+     * Return child views of this class.
+     * By default it returns the children property of the class. There may be advantages of defining children
+     * in this method. By defining children in the children property of the class, you don't have access to "this". By returning
+     * children from getClassChildren, you will be able to use "this" as a reference to the class instance.
+     * @method getClassChildren
+     * @return {Array|children}
+     */
+    getClassChildren:function(){
+        return this.children;
+    },
 
 	remainingLifeCycle:function (config) {
 		if(this.lifeCycleComplete)return;
