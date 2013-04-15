@@ -1,4 +1,4 @@
-/* Generated Mon Apr 15 18:08:03 CEST 2013 */
+/* Generated Tue Apr 16 1:51:13 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -8463,7 +8463,7 @@ ludo.layout.MenuHorizontal = new Class({
             this.resized = true;
             var left = 0;
             for (var i = 0; i < this.view.children.length; i++) {
-                this.view.children[i].resize({ left:left });
+                this.view.children[i].resize({ left:left,height:this.viewport.height });
                 left += this.view.children[i].getEl().offsetWidth + ludo.dom.getMW(this.view.children[i].getEl());
             }
         }
@@ -19501,6 +19501,10 @@ ludo.menu.Item = new Class({
         }
     },
 
+    resizeDOM:function(){
+        this.parent();
+        this.getBody().style.lineHeight = this.cachedInnerHeight + 'px';
+    },
 	resizeParent:function(){
 
 	},

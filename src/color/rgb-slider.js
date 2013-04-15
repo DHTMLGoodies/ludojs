@@ -3,9 +3,8 @@ ludo.color.RGBSlider = new Class({
     layout:{
         type:'relative'
     },
-
     value:'#000000',
-    regex : /^#[0-9A-F]{6}/gi,
+    regex:/^#[0-9A-F]{6}/gi,
 
     ludoConfig:function (config) {
         this.parent(config);
@@ -21,8 +20,8 @@ ludo.color.RGBSlider = new Class({
         this.child['preview'].child['colorValue'].addEvent('setColor', this.receiveColor.bind(this));
     },
 
-    setColor:function(color){
-        if(this.regex.test(color)){
+    setColor:function (color) {
+        if (this.regex.test(color)) {
 
         }
     },
@@ -55,14 +54,14 @@ ludo.color.RGBSlider = new Class({
                 children:[
                     {
                         name:'colorValue',
-                        type : 'color.RGBSliderValue'
+                        type:'color.RGBSliderValue'
                     }
                 ]
             }
         ];
     },
 
-    receiveColor:function(color){
+    receiveColor:function (color) {
         this.fireEvent('selectColor', color.toUpperCase());
     },
 
@@ -116,7 +115,7 @@ ludo.color.RGBSlider = new Class({
 
     },
 
-    prefixed:function(color){
+    prefixed:function (color) {
         return color.length === 1 ? '0' + color : color;
     },
     cInstance:undefined,
@@ -133,16 +132,15 @@ ludo.color.RGBSlider = new Class({
 });
 
 ludo.color.RGBSliderValue = new Class({
-    Extends: ludo.View,
+    Extends:ludo.View,
     color:undefined,
-
     css:{
-        'line-height' : 20,
-        'font-weight' : 'bold',
-        'text-align' : 'center',
+        'line-height':20,
+        'font-weight':'bold',
+        'text-align':'center',
         color:'blue',
-        'cursor': 'pointer',
-        'text-decoration' : 'underline'
+        cursor:'pointer',
+        'text-decoration':'underline'
     },
     layout:{
         width:70,
@@ -151,20 +149,20 @@ ludo.color.RGBSliderValue = new Class({
     },
     containerCss:{
         border:'1px solid #000',
-        'background-color' : '#fff'
+        'background-color':'#fff'
     },
 
-    ludoEvents:function(){
+    ludoEvents:function () {
         this.parent();
         this.getBody().addEvent('click', this.sendColor.bind(this));
     },
 
-    setColor:function(color){
+    setColor:function (color) {
         this.color = color;
         this.getBody().innerHTML = color.toUpperCase();
     },
 
-    sendColor:function(){
+    sendColor:function () {
         this.fireEvent('setColor', this.color);
     }
 });

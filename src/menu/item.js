@@ -88,6 +88,10 @@ ludo.menu.Item = new Class({
         }
     },
 
+    resizeDOM:function(){
+        this.parent();
+        this.getBody().style.lineHeight = this.cachedInnerHeight + 'px';
+    },
 	resizeParent:function(){
 
 	},

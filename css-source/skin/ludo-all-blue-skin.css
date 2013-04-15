@@ -242,8 +242,10 @@ div.ludo-form-button-disabled .ludo-form-button-bg-left, div.ludo-form-button-di
     text-align: left;
 }
 
-.ludo-menu-item-horizontal.ludo-menu-item-over {
-    background-image: url(../images/blue-skin/bg-horizontal-menu-over.png);
+
+div.ludo-menu-item-horizontal.ludo-menu-item-over, div.ludo-menu-horizontal .ludo-menu-item-active {
+    /* background-image: url(../images/light-gray-skin/bg-horizontal-menu-over.png); */
+    background-color:#a6cbf5;
 }
 
 div.ludo-menu-vertical {
@@ -273,7 +275,7 @@ div.ludo-menu-vertical {
 }
 
 .ludo-menu div.ludo-menu-item-spacer-horizontal {
-    background-color: #7fa2c9;
+    background-color: #a6cbf5;
 }
 
 .ludo-menu-horizontal .ludo-menu-item {
