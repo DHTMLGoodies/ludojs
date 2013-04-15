@@ -1,4 +1,4 @@
-/* Generated Mon Apr 15 1:45:19 CEST 2013 */
+/* Generated Mon Apr 15 3:29:28 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -7060,6 +7060,9 @@ ludo.layout.Relative = new Class({
 			this.prepareResize();
 		}
 		for (var i = 0; i < this.children.length; i++) {
+            if(!this.children[i].layoutResizeFn){
+                this.children[i].layoutResizeFn = this.getResizeFnFor(this.children[i]);
+            }
 			this.children[i].layoutResizeFn.call(this.children[i], this);
 		}
 	},
@@ -7072,7 +7075,7 @@ ludo.layout.Relative = new Class({
 	prepareResize:function( ){
 		this.fixLayoutReferences();
 		this.arrangeChildren();
-		this.createResizeFunctions();
+     	this.createResizeFunctions();
 	},
 
     /**
@@ -7757,6 +7760,7 @@ ludo.layout.Tab = new Class({
 	},
 
 	onNewChild:function (child) {
+
 		if (!this.isTabStrip(child)) {
 			if(!child.isHidden()){
 				this.setVisibleChild(child);
@@ -7815,10 +7819,13 @@ ludo.layout.Tab = new Class({
 		if(this.visibleChild === undefined){
 			if(this.view.children.length>1)this.view.children[1].show();
 		}else{
-			if (this.children === undefined) {
+			if (this.children === undefined || !this.visibleChild.layoutResizeFn) {
 				this.prepareResize();
 			}
 			this.tabStrip.layoutResizeFn.call(this.visibleChild, this);
+            if(!this.visibleChild.layoutResizeFn){
+                this.prepareResize();
+            }
 			this.visibleChild.layoutResizeFn.call(this.visibleChild, this);
 		}
 	},
