@@ -114,6 +114,7 @@ ludo.form.Slider = new Class({
     getDragConfig:function () {
         return {
             el:this.els.sliderHandle,
+            fireEffectEvents:false,
             directions:this.getDirection() == 'horizontal' ? 'X' : 'Y',
             listeners:{
                 'drag':this.receivePosition.bind(this)

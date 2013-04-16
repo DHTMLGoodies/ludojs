@@ -71,7 +71,7 @@ ludo.color.RGBSlider = new Class({
     },
 
     receiveColor:function (color) {
-        this.fireEvent('selectColor', color.toUpperCase());
+        this.fireEvent('setColor', color.toUpperCase());
     },
 
     getSlider:function (name, below) {
@@ -109,6 +109,9 @@ ludo.color.RGBSlider = new Class({
                 alignParentRight:true,
                 width:40,
                 below:below
+            },
+            listeners:{
+                'change':this.updatePreview.bind(this)
             }
         };
     },
@@ -118,7 +121,7 @@ ludo.color.RGBSlider = new Class({
         var color = '#';
 
         for (var i = 0; i < items.length; i++) {
-            color = color + this.prefixed(this.child[items[i]].getValue().toString(16));
+            color = color + this.prefixed(parseInt(this.child[items[i]].getValue()).toString(16));
         }
         this.child['preview'].getBody().style.backgroundColor = color;
         this.child['preview'].child['colorValue'].setColor(color);
@@ -155,23 +158,14 @@ ludo.color.RGBSlider = new Class({
 ludo.color.RGBSliderValue = new Class({
     Extends:ludo.View,
     color:undefined,
-    css:{
-        'line-height':20,
-        'font-weight':'bold',
-        'text-align':'center',
-        color:'blue',
-        cursor:'pointer',
-        'text-decoration':'underline'
-    },
+    cls:'ludo-color-rgb-slider-value',
     layout:{
         width:70,
         height:20,
         centerInParent:true
     },
-    containerCss:{
-        border:'1px solid #000',
-        'background-color':'#fff'
-    },
+
+    overflow:'hidden',
 
     ludoEvents:function () {
         this.parent();

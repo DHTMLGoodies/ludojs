@@ -32,6 +32,8 @@ ludo.form.Combo = new Class({
     ludoRendered:function(){
         this.parent();
 
+        ludo.Form.addEvent('focus', this.autoHide.bind(this));
+
         var c = this.children[0];
         c.layout = c.layout || {};
         if(this.childLayout)c.layout = Object.merge(c.layout, this.childLayout);
@@ -41,7 +43,7 @@ ludo.form.Combo = new Class({
         if(!c.layout.width)c.layout.sameWidthAs = c.layout.sameWidthAs || this.getInputCell();
         c.layout.height = c.layout.height || 200;
         c.alwaysInFront = true;
-        c.cls = 'form-combo-child';
+        c.cls = c.cls ? c.cls + ' ' + 'form-combo-child' : 'form-combo-child';
 
         this.getInputCell().style.position='relative';
         new ludo.menu.Button({
@@ -57,5 +59,15 @@ ludo.form.Combo = new Class({
                 }.bind(this)
             }
         });
+    },
+    autoHide:function(focused){
+        if(focused.isButton && focused.isButton())return;
+        if(focused !== this && !focused.isChildOf(this.children[0])){
+            this.children[0].hide();
+        }
+    },
+
+    hideMenu:function(){
+        this.children[0].hide();
     }
 });

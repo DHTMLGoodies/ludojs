@@ -1,0 +1,26 @@
+.ludo-color-box {
+    width: 12px;
+    height: 12px;
+    float: left;
+    margin-right: 2px;
+    margin-top: 2px;
+    cursor: pointer;
+    border: 1px solid #000;
+}
+
+div.ludo-tabs-in-dropdown{
+    padding:3px;
+}
+.ludo-color-rgb-slider-value {
+    border: 1px solid #000;
+    background-color: #fff;
+}
+
+.ludo-color-rgb-slider-value .ludo-body {
+    line-height: 20px;
+    font-weight: bold;
+    text-align: center;
+    color: blue;
+    cursor: pointer;
+    text-decoration: underline;
+}

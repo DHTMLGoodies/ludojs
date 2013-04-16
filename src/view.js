@@ -58,6 +58,7 @@ ludo.View = new Class({
 	type:'View',
 	cType:'View',
 	cls:'',
+    bodyCls:'',
 
 	/**
 	 * CSS class added to container of this component
@@ -420,10 +421,12 @@ ludo.View = new Class({
         if(this.parentComponent)config.renderTo = undefined;
         var keys = ['css','contextMenu','renderTo','tpl','containerCss','socket','form','addons','title','html','hidden','copyEvents',
                     'dataSource','onLoadMessage','movable','resizable','closable','minimizable','alwaysInFront',
-                    'parentComponent','cls','objMovable','width','height','model','frame','formConfig',
+                    'parentComponent','cls','bodyCls','objMovable','width','height','model','frame','formConfig',
                     'overflow','ludoDB'];
 
         this.setConfigParams(config,keys);
+
+
 
 		if (this.socket) {
 			if (!this.socket.type)this.socket.type = 'socket.Socket';
@@ -486,7 +489,11 @@ ludo.View = new Class({
 			this.contextMenu = undefined;
 		}
 
-		if (this.cls)ludo.dom.addClass(this.getEl(), this.cls);
+		if (this.cls){
+            console.log(this.cls);
+            ludo.dom.addClass(this.getEl(), this.cls);
+        }
+		if (this.bodyCls)ludo.dom.addClass(this.getBody(), this.bodyCls);
 		if (this.type)ludo.dom.addClass(this.getEl(), 'ludo-' + (this.type.replace(/\./g, '-').toLowerCase()));
 		if (this.css)this.getBody().setStyles(this.css);
 		if (this.containerCss)this.getEl().setStyles(this.containerCss);
@@ -683,9 +690,6 @@ ludo.View = new Class({
 
 		this.els.container.id = this.getId();
 
-		if (this.cls) {
-			ludo.dom.addClass(this.els.container, this.cls);
-		}
 		this.els.body.style.height = '100%';
 		if (this.overflow == 'hidden') {
 			this.els.body.style.overflow = 'hidden';
@@ -968,6 +972,15 @@ ludo.View = new Class({
 	isCollapsible:function () {
 		return this.layout && this.layout.collapsible ? true : false;
 	},
+
+    isChildOf:function(view){
+        var p = this.parentComponent;
+        while(p){
+            if(p.id === view.id)return true;
+            p = p.parentComponent;
+        }
+        return false;
+    },
 
 	setPosition:function (pos) {
 		if (pos.left !== undefined && pos.left >= 0) {

@@ -35,10 +35,6 @@ ludo.form.Date = new Class({
         this.initialValue = this.constructorValue = this.value;
     },
 
-    autoHide:function(focused){
-        if(focused.isButton && focused.isButton())return;
-        if(focused !== this)this.children[0].hide();
-    },
 
     ludoRendered:function(){
         this.parent();
@@ -59,7 +55,7 @@ ludo.form.Date = new Class({
         this.addEvent('showCombo', function(){
             this.children[0].setDate(this.value ? ludo.util.parseDate(this.value, this.displayFormat) : new Date());
         }.bind(this));
-        ludo.Form.addEvent('focus', this.autoHide.bind(this));
+
     },
 
     setValue:function(value){

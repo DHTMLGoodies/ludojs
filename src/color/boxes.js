@@ -105,7 +105,7 @@ ludo.color.Boxes = new Class({
 
     clickOnColorBox:function(e){
         if(e.target.hasClass('ludo-color-box')){
-            this.fireEvent('selectColor', e.target.getAttribute('rgbColor'));
+            this.fireEvent('setColor', e.target.getAttribute('rgbColor'));
         }
     }
 });

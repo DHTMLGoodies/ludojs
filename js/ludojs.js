@@ -1,4 +1,4 @@
-/* Generated Tue Apr 16 2:17:32 CEST 2013 */
+/* Generated Tue Apr 16 3:57:18 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -4509,6 +4509,7 @@ ludo.View = new Class({
 	type:'View',
 	cType:'View',
 	cls:'',
+    bodyCls:'',
 
 	/**
 	 * CSS class added to container of this component
@@ -4871,10 +4872,12 @@ ludo.View = new Class({
         if(this.parentComponent)config.renderTo = undefined;
         var keys = ['css','contextMenu','renderTo','tpl','containerCss','socket','form','addons','title','html','hidden','copyEvents',
                     'dataSource','onLoadMessage','movable','resizable','closable','minimizable','alwaysInFront',
-                    'parentComponent','cls','objMovable','width','height','model','frame','formConfig',
+                    'parentComponent','cls','bodyCls','objMovable','width','height','model','frame','formConfig',
                     'overflow','ludoDB'];
 
         this.setConfigParams(config,keys);
+
+
 
 		if (this.socket) {
 			if (!this.socket.type)this.socket.type = 'socket.Socket';
@@ -4937,7 +4940,11 @@ ludo.View = new Class({
 			this.contextMenu = undefined;
 		}
 
-		if (this.cls)ludo.dom.addClass(this.getEl(), this.cls);
+		if (this.cls){
+            console.log(this.cls);
+            ludo.dom.addClass(this.getEl(), this.cls);
+        }
+		if (this.bodyCls)ludo.dom.addClass(this.getBody(), this.bodyCls);
 		if (this.type)ludo.dom.addClass(this.getEl(), 'ludo-' + (this.type.replace(/\./g, '-').toLowerCase()));
 		if (this.css)this.getBody().setStyles(this.css);
 		if (this.containerCss)this.getEl().setStyles(this.containerCss);
@@ -5134,9 +5141,6 @@ ludo.View = new Class({
 
 		this.els.container.id = this.getId();
 
-		if (this.cls) {
-			ludo.dom.addClass(this.els.container, this.cls);
-		}
 		this.els.body.style.height = '100%';
 		if (this.overflow == 'hidden') {
 			this.els.body.style.overflow = 'hidden';
@@ -5419,6 +5423,15 @@ ludo.View = new Class({
 	isCollapsible:function () {
 		return this.layout && this.layout.collapsible ? true : false;
 	},
+
+    isChildOf:function(view){
+        var p = this.parentComponent;
+        while(p){
+            if(p.id === view.id)return true;
+            p = p.parentComponent;
+        }
+        return false;
+    },
 
 	setPosition:function (pos) {
 		if (pos.left !== undefined && pos.left >= 0) {
@@ -9576,6 +9589,8 @@ ludo.effect.Drag = new Class({
 	 */
 	mouseXOffset:undefined,
 
+    fireEffectEvents:true,
+
 	ludoConfig:function (config) {
 		this.parent(config);
 		if (config.el !== undefined) {
@@ -9586,7 +9601,7 @@ ludo.effect.Drag = new Class({
 		}
 
         this.setConfigParams(config, ['useShim','autoHideShim','directions','delay','minX','maxX','minY','maxY',
-            'minPos','maxPos','unit','shimCls','mouseYOffset','mouseXOffset']);
+            'minPos','maxPos','unit','shimCls','mouseYOffset','mouseXOffset','fireEffectEvents']);
 	},
 
 	ludoEvents:function () {
@@ -9814,7 +9829,7 @@ ludo.effect.Drag = new Class({
 			 */
 			this.fireEvent('start', [this.els[id], this, {x:x,y:y}]);
 
-			ludo.EffectObject.start();
+			if(this.fireEffectEvents)ludo.EffectObject.start();
 		}
 
 		return false;
@@ -9859,7 +9874,7 @@ ludo.effect.Drag = new Class({
 	cancelDrag:function () {
 		this.dragProcess.active = false;
 		this.dragProcess.el = undefined;
-		ludo.EffectObject.end();
+        if(this.fireEffectEvents)ludo.EffectObject.end();
 	},
 
 	getShimFor:function (el) {
@@ -22743,6 +22758,8 @@ ludo.form.Combo = new Class({
     ludoRendered:function(){
         this.parent();
 
+        ludo.Form.addEvent('focus', this.autoHide.bind(this));
+
         var c = this.children[0];
         c.layout = c.layout || {};
         if(this.childLayout)c.layout = Object.merge(c.layout, this.childLayout);
@@ -22752,7 +22769,7 @@ ludo.form.Combo = new Class({
         if(!c.layout.width)c.layout.sameWidthAs = c.layout.sameWidthAs || this.getInputCell();
         c.layout.height = c.layout.height || 200;
         c.alwaysInFront = true;
-        c.cls = 'form-combo-child';
+        c.cls = c.cls ? c.cls + ' ' + 'form-combo-child' : 'form-combo-child';
 
         this.getInputCell().style.position='relative';
         new ludo.menu.Button({
@@ -22768,6 +22785,16 @@ ludo.form.Combo = new Class({
                 }.bind(this)
             }
         });
+    },
+    autoHide:function(focused){
+        if(focused.isButton && focused.isButton())return;
+        if(focused !== this && !focused.isChildOf(this.children[0])){
+            this.children[0].hide();
+        }
+    },
+
+    hideMenu:function(){
+        this.children[0].hide();
     }
 });
 /* ../ludojs/src/form/date.js */
@@ -22808,10 +22835,6 @@ ludo.form.Date = new Class({
         this.initialValue = this.constructorValue = this.value;
     },
 
-    autoHide:function(focused){
-        if(focused.isButton && focused.isButton())return;
-        if(focused !== this)this.children[0].hide();
-    },
 
     ludoRendered:function(){
         this.parent();
@@ -22832,7 +22855,7 @@ ludo.form.Date = new Class({
         this.addEvent('showCombo', function(){
             this.children[0].setDate(this.value ? ludo.util.parseDate(this.value, this.displayFormat) : new Date());
         }.bind(this));
-        ludo.Form.addEvent('focus', this.autoHide.bind(this));
+
     },
 
     setValue:function(value){
@@ -23263,6 +23286,49 @@ ludo.form.ComboField = new Class({
         var valueField = this.els.valueField = new Element('div');
         ludo.dom.addClass(valueField, 'ludo-Filter-Tree-Combo-Value');
         this.getBody().adopt(valueField);
+    }
+});/* ../ludojs/src/form/color.js */
+ludo.form.Color = new Class({
+    Extends:ludo.form.Combo,
+    regex:/^#[0-9A-F]{6}$/i,
+    childLayout:{
+        width:250, height:250
+    },
+
+    getClassChildren:function () {
+        return [
+            {
+                layout:{
+                    'type':'tabs'
+                },
+                cls:'ludo-tabs-in-dropdown',
+                bodyCls:'ludo-tabs-in-dropdown-body',
+                children:[
+                    {
+                        title:'Color boxes',
+                        type:'color.Boxes',
+                        value:this.value,
+                        listeners:{
+                            'setColor' : this.receiveColor.bind(this)
+                        }
+                    },
+                    {
+                        title:'Color Slider',
+                        type:'color.RGBSlider',
+                        value:this.value,
+                        listeners:{
+                            'setColor' : this.receiveColor.bind(this)
+                        }
+
+                    }
+                ]
+            }
+        ];
+    },
+
+    receiveColor:function (color) {
+        this.setValue(color);
+        this.hideMenu();
     }
 });/* ../ludojs/src/form/hidden.js */
 ludo.form.Hidden = new Class({
@@ -25929,6 +25995,7 @@ ludo.form.Slider = new Class({
     getDragConfig:function () {
         return {
             el:this.els.sliderHandle,
+            fireEffectEvents:false,
             directions:this.getDirection() == 'horizontal' ? 'X' : 'Y',
             listeners:{
                 'drag':this.receivePosition.bind(this)

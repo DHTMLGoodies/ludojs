@@ -185,6 +185,8 @@ ludo.effect.Drag = new Class({
 	 */
 	mouseXOffset:undefined,
 
+    fireEffectEvents:true,
+
 	ludoConfig:function (config) {
 		this.parent(config);
 		if (config.el !== undefined) {
@@ -195,7 +197,7 @@ ludo.effect.Drag = new Class({
 		}
 
         this.setConfigParams(config, ['useShim','autoHideShim','directions','delay','minX','maxX','minY','maxY',
-            'minPos','maxPos','unit','shimCls','mouseYOffset','mouseXOffset']);
+            'minPos','maxPos','unit','shimCls','mouseYOffset','mouseXOffset','fireEffectEvents']);
 	},
 
 	ludoEvents:function () {
@@ -423,7 +425,7 @@ ludo.effect.Drag = new Class({
 			 */
 			this.fireEvent('start', [this.els[id], this, {x:x,y:y}]);
 
-			ludo.EffectObject.start();
+			if(this.fireEffectEvents)ludo.EffectObject.start();
 		}
 
 		return false;
@@ -468,7 +470,7 @@ ludo.effect.Drag = new Class({
 	cancelDrag:function () {
 		this.dragProcess.active = false;
 		this.dragProcess.el = undefined;
-		ludo.EffectObject.end();
+        if(this.fireEffectEvents)ludo.EffectObject.end();
 	},
 
 	getShimFor:function (el) {
