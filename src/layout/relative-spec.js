@@ -56,7 +56,7 @@ ludo.layout.RelativeSpec = new Class({
 	above:undefined,
 	/**
 	Render below this sibling View. Reference can be name, id of a view reference.
-	@config {String|View} above
+	@config {String|View} below
 	@example
 	 	children:[{
 			name : 'a', html : 'View A', layout: { width: 'matchParent', height:100, alignParentTop:true }
@@ -67,7 +67,7 @@ ludo.layout.RelativeSpec = new Class({
 	below:undefined,
 	/**
 	Render left of this sibling View. Reference can be name, id of a view reference.
-	@config {String|View} above
+	@config {String|View} leftOf
 	@example
 	 	children:[{
 			name : 'a', html : 'View A', layout: { width: '200', height:100, alignParentTop:true, alignParentRight:true }
@@ -147,7 +147,7 @@ ludo.layout.RelativeSpec = new Class({
 	 */
 	fillLeft:false,
 	/**
-	 Fill up inside parent view.
+	 Fill upwards inside parent view (i.e. "top" attribute set to 0).
 	 @config {Boolean} fillUp
 	 @default false
 	 @example
