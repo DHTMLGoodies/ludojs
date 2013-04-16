@@ -18,6 +18,7 @@ require_once("../includes/demo-header.php");
 <script type="text/javascript" src="../../src/layout/linear-horizontal.js"></script>
 <script type="text/javascript" src="../../src/layout/linear-vertical.js"></script>
 <script type="text/javascript" src="../../src/view/button-bar.js"></script>
+<script type="text/javascript" src="../../src/color/base.js"></script>
 <script type="text/javascript" src="../../src/color/color.js"></script>
 <script type="text/javascript" src="../../src/color/boxes.js"></script>
 <script type="text/javascript" src="../../src/color/rgb-slider.js"></script>
@@ -92,7 +93,7 @@ require_once("../includes/demo-header.php");
                             resource:'Countries', service:'read', url:'../controller.php'
                         }},
                     { type:'form.Date', name:'birth', id:'birth', stretchField:true, 'label':'Born'},
-                    { type:'form.Color', name:'color', id:'color', stretchField:true, 'label':'Favorite color', value:'#FF0000'},
+                    { type:'form.Color', name:'color', id:'color', stretchField:true, 'label':'Favorite color'},
                     { type:'form.File', name:'picture', label:'Picture', value:'', height:30 },
                     { type:'form.DisplayField', label:'form.DisplayField', value:'My value',height:30},
                     { type:'form.RadioGroup',

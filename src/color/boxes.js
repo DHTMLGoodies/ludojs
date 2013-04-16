@@ -1,5 +1,5 @@
 ludo.color.Boxes = new Class({
-    Extends : ludo.View,
+    Extends : ludo.color.Base,
     colors:['grayScale','namedColors'],
     namedColors:[
         ['AliceBlue','#F0F8FF'],['AntiqueWhite','#FAEBD7'],['Aqua','#00FFFF'],['Aquamarine','#7FFFD4'],

@@ -1,17 +1,15 @@
 ludo.color.RGBSlider = new Class({
-    Extends:ludo.View,
+    Extends:ludo.color.Base,
+	type:'color.RGBSlider',
     layout:{
         type:'relative'
     },
     value:'#000000',
-    regex:/^\#[0-9A-F]{6}$/gi,
+    regex:/^\#[0-9A-Fa-f]{6}$/i,
 
     ludoConfig:function (config) {
         this.parent(config);
         this.setConfigParams(config, ['value']);
-        if (this.value && !/^\#[0-9A-F]{6}$/gi.test(this.value)) {
-            this.value = '#000000';
-        }
     },
 
     ludoRendered:function () {
@@ -26,12 +24,9 @@ ludo.color.RGBSlider = new Class({
     },
 
     setColor:function (color) {
-        if (/^\#[0-9A-F]{6}$/gi.test(color)) {
+        if (this.regex.test(color)) {
             this.value = color;
             this.updateSliders();
-        }else{
-            console.log(this.regex);
-            console.log('No match ' + color);
         }
     },
 
@@ -140,11 +135,12 @@ ludo.color.RGBSlider = new Class({
     },
 
     getColorValue:function (color) {
-        return this.colorInstance().rgbObject(this.value)[color.substr(0, 1)];
+        return this.colorInstance().rgbObject(this.value)[color.substr(0, 1)] || 0;
     },
 
     updateSliders:function(){
-        if(!this.child['red'])return;
+
+        if(!this.child['red'] || !this.value)return;
 
         var color = this.colorInstance().rgbObject(this.value);
 

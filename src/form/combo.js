@@ -12,6 +12,8 @@ ludo.form.Combo = new Class({
         type:'popup'
     },
 
+	menuButton:undefined,
+
     /**
      Custom layout properties of child
      @config {Object} childLayout
@@ -46,7 +48,7 @@ ludo.form.Combo = new Class({
         c.cls = c.cls ? c.cls + ' ' + 'form-combo-child' : 'form-combo-child';
 
         this.getInputCell().style.position='relative';
-        new ludo.menu.Button({
+        this.menuButton = new ludo.menu.Button({
             renderTo: this.getInputCell(),
             alwaysVisible:true,
             region:'ne',

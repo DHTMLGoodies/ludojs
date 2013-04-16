@@ -1,43 +1,67 @@
 ludo.form.Color = new Class({
-    Extends:ludo.form.Combo,
-    regex:/^#[0-9A-F]{6}$/i,
-    childLayout:{
-        width:250, height:250
-    },
+	Extends:ludo.form.Combo,
+	regex:/^#[0-9A-F]{6}$/i,
+	childLayout:{
+		width:250, height:250
+	},
 
-    getClassChildren:function () {
-        return [
-            {
-                layout:{
-                    'type':'tabs'
-                },
-                cls:'ludo-tabs-in-dropdown',
-                bodyCls:'ludo-tabs-in-dropdown-body',
-                children:[
-                    {
-                        title:'Color boxes',
-                        type:'color.Boxes',
-                        value:this.value,
-                        listeners:{
-                            'setColor' : this.receiveColor.bind(this)
-                        }
-                    },
-                    {
-                        title:'Color Slider',
-                        type:'color.RGBSlider',
-                        value:this.value,
-                        listeners:{
-                            'setColor' : this.receiveColor.bind(this)
-                        }
+	getClassChildren:function () {
+		return [
+			{
+				layout:{
+					'type':'tabs'
+				},
+				cls:'ludo-tabs-in-dropdown',
+				bodyCls:'ludo-tabs-in-dropdown-body',
+				children:[
+					{
+						title:'Color boxes',
+						type:'color.Boxes',
+						value:this.value,
+						listeners:{
+							'setColor':this.receiveColor.bind(this),
+							'render':this.setInitialWidgetValue.bind(this)
+						}
+					},
+					{
+						title:'Color Slider',
+						type:'color.RGBSlider',
+						value:this.value,
+						listeners:{
+							'setColor':this.receiveColor.bind(this),
+							'render':this.setInitialWidgetValue.bind(this)
+						}
 
-                    }
-                ]
-            }
-        ];
-    },
+					}
+				]
+			}
+		];
+	},
 
-    receiveColor:function (color) {
-        this.setValue(color);
-        this.hideMenu();
-    }
+	setInitialWidgetValue:function(widget){
+		widget.setColor(this.value);
+	},
+
+	ludoEvents:function () {
+		this.parent();
+		this.addEvent('change', this.updateWidgets.bind(this));
+	},
+
+	updateWidgets:function () {
+		var c = this.getColorWidgets();
+		for (var i = 0; i < c.length; i++) {
+			if(c[i].setColor){
+				c[i].setColor(this.value);
+			}
+		}
+	},
+
+	receiveColor:function (color) {
+		this.setValue(color);
+		this.hideMenu();
+	},
+
+	getColorWidgets:function () {
+		return this.children[0].children;
+	}
 });

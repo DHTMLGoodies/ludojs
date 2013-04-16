@@ -11,6 +11,7 @@ $skin = isset($skin) ? $skin : 'light-gray';
 
     <script type="text/javascript" src="<?php echo $prefix; ?>../mootools/mootools-core-1.4.5.js"></script>
     <script type="text/javascript" src="<?php echo $prefix; ?>../mootools/mootools-more-1.4.0.1.js"></script>
+    <link rel="icon" type="image/gif" href="<?php echo $prefix; ?>../images/favicon.png" />
     <style type="text/css">
     body{
         font-family:arial,serif;

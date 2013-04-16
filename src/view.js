@@ -490,7 +490,6 @@ ludo.View = new Class({
 		}
 
 		if (this.cls){
-            console.log(this.cls);
             ludo.dom.addClass(this.getEl(), this.cls);
         }
 		if (this.bodyCls)ludo.dom.addClass(this.getBody(), this.bodyCls);

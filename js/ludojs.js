@@ -1,4 +1,4 @@
-/* Generated Tue Apr 16 3:57:18 CEST 2013 */
+/* Generated Tue Apr 16 14:43:36 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -4941,7 +4941,6 @@ ludo.View = new Class({
 		}
 
 		if (this.cls){
-            console.log(this.cls);
             ludo.dom.addClass(this.getEl(), this.cls);
         }
 		if (this.bodyCls)ludo.dom.addClass(this.getBody(), this.bodyCls);
@@ -6026,7 +6025,2488 @@ ludo.color.Color = new Class({
     }
 });
 
-/* ../ludojs/src/layout/linear.js */
+/* ../ludojs/src/color/base.js */
+ludo.color.Base = new Class({
+	Extends: ludo.View,
+
+	setColor:function(color){
+		this.value = color;
+	}
+});/* ../ludojs/src/effect/draggable-node.js */
+/**
+ Specification of a draggable node objects sent to {{#crossLink "effect.Drag/add"}}{{/crossLink}}. You will
+ never create objects of this class.
+ @namespace effect
+ @class DraggableNode
+ @type {Object|String}
+ */
+ludo.effect.DraggableNode = new Class({
+	/**
+	 id of node. This attribute is optional
+	 @property id
+	 @type {String}
+	 @default undefined
+	 @optional
+	 @example
+	 	var dragDrop = new ludo.effect.Drag();
+	 	var el = new Element('div');
+	 	dragDrop.add({
+	 		id: 'myId',
+			el : el
+	 	});
+	 	var ref = dragDrop.getById('myId');
+	 Or you can use this code which does the same:
+	 @example
+	 	var dragDrop = new ludo.effect.Drag();
+	 	var el = new Element('div');
+	 	el.id = 'myId';
+	 	dragDrop.add(el);
+	 	var ref = dragDrop.getById('myId');
+	 Id's are only important if you need to access nodes later using {{#crossLink "effect.Drag/getById"}}{{/crossLink}}
+	 */
+	id: undefined,
+
+	/**
+	 * Reference to dragable DOM node
+	 * @property el
+	 * @default undefined
+	 * @type {String|HTMLDivElement}
+	 */
+	el:undefined,
+	/**
+	 * Reference to handle for dragging. el will only be draggable by dragging the handle.
+	 * @property handle
+	 * @type {String|HTMLDivElement}
+	 * @default undefined
+	 * @optional
+	 */
+	handle:undefined,
+
+	/**
+	 * Minimum x position. This is an optional argument. If not set, you will use the params
+	 * set when creating the ludo.effect.Drag component if any.
+	 * @property minX
+	 * @type {Number}
+	 * @default undefined
+	 * @optional
+	 */
+	minX:undefined,
+	/**
+	 * Maximum x position. This is an optional argument. If not set, you will use the params
+	 * set when creating the ludo.effect.Drag component if any.
+	 * @property maxX
+	 * @type {Number}
+	 * @default undefined
+	 * @optional
+	 */
+	maxX:undefined,
+	/**
+	 * Minimum x position. This is an optional argument. If not set, you will use the params
+	 * set when creating the ludo.effect.Drag component if any.
+	 * @property minY
+	 * @type {Number}
+	 * @default undefined
+	 * @optional
+	 */
+	minY:undefined,
+	/**
+	 * Maximum y position. This is an optional argument. If not set, you will use the params
+	 * set when creating the ludo.effect.Drag component if any.
+	 * @property maxY
+	 * @type {Number}
+	 * @default undefined
+	 * @optional
+	 */
+	maxY:undefined,
+	/**
+	 Allow dragging in these directions. This is an optional argument. If not set, you will use the params
+	 set when creating the ludo.effect.Drag component if any.
+	 @property directions
+	 @type {String}
+	 @default 'XY'
+	 @optional
+	 @example
+	 	directions:'XY'	//
+	 	..
+	 	directions:'X' // Only allow dragging along x-axis
+	 	..
+	 	directions:'Y' // Only allow dragging along y-axis
+	 */
+	directions:undefined
+});/* ../ludojs/src/effect/effect.js */
+/**
+ * Base class for animations
+ * @namespace effect
+ * @class Effect
+ */
+ludo.effect.Effect = new Class({
+	Extends: ludo.Core,
+	fps:33,
+	/**
+	 Fly/Slide DOM node to a position
+	 @method fly
+	 @param {Object} config
+	 @example
+	 	<div id="myDiv" style="position:absolute;width:100px;height:100px;border:1px solid #000;background-color:#DEF;left:50px;top:50px"></div>
+		<script type="text/javascript">
+		 new ludo.effect.Effect().fly({
+			el: 'myDiv',
+			duration:.5,
+			to:{ x:500, y: 300 },
+			 onComplete:function(){
+				 new ludo.effect.Effect().fly({
+					el: 'myDiv',
+					duration:1,
+					to:{ x:600, y: 50 }
+				 });
+			 }
+		 });
+	 	</script>
+	 Which will first move "myDiv" to position 500x300 on the screen, then to 600x50.
+	 */
+	fly:function(config){
+		config.el = document.id(config.el);
+		config.duration = config.duration || .2;
+		if(config.from == undefined){
+			config.from = config.el.getPosition();
+		}
+		var fx = this.getFx(config.el, config.duration, config.onComplete);
+		fx.start({
+			left : [config.from.x, config.to.x],
+			top : [config.from.y, config.to.y]
+		});
+	},
+
+	/**
+	 Fly/Slide DOM node from current location to given x and y coordinats in given seconds.
+	 @method flyTo
+	 @param {HTMLElement} el
+	 @param {Number} x
+	 @param {Number} y
+	 @param {Number} seconds
+	 @example
+
+	 You may also use this method like this:
+	 @example
+	 	<div id="myDiv" style="position:absolute;width:100px;height:100px;border:1px solid #000;background-color:#DEF;left:50px;top:50px"></div>
+		<script type="text/javascript">
+	 	new ludo.effect.Effect().flyTo('myDiv', 500, 300, .5);
+	 	</script>
+	 Which slides "myDiv" to position 500x300 in 0.5 seconds.
+	 */
+	flyTo:function(el, x, y, seconds){
+		this.fly({
+			el:el,
+			to:{x : x, y: y},
+			duration: seconds
+		});
+	},
+
+	getFx:function (el, duration, onComplete) {
+		duration*=1000;
+		var fx = new Fx.Morph(el, {
+			duration:duration
+		});
+		fx.addEvent('complete', this.animationComplete.bind(this, [onComplete, el]));
+		return fx;
+	},
+
+	animationComplete:function(onComplete, el){
+		/**
+		 * Fired when animation is completed
+		 * @event animationComplete
+		 * @param {effect.Drag} this
+		 */
+		this.fireEvent('animationComplete', this);
+
+		if(onComplete !== undefined){
+			onComplete.call(this, el);
+		}
+	},
+
+	fadeOut:function(el, duration, callback){
+		var stops = this.getStops(duration);
+		var stopIncrement = 100 / stops * -1;
+		this.execute({
+			el:el,
+			index:0,
+			stops:stops,
+			styles:[
+				{ key: 'opacity', currentValue: 100, change: stopIncrement }
+			],
+			callback : callback,
+			unit:''
+		})
+	},
+
+	slideIn:function(el, duration, callback, to){
+		to = to || el.getPosition();
+		var from = {
+			x: to.x,
+			y : el.parentNode.offsetWidth + el.offsetHeight
+		};
+		this.slide(el,from, to, duration, callback);
+	},
+
+	slideOut:function(el, duration, callback, from){
+		from = from || el.getPosition();
+		var to = {
+			x: from.x,
+			y : el.parentNode.offsetHeight + el.offsetHeight
+		};
+		this.slide(el, from, to, duration, callback);
+	},
+
+	slide:function(el, from, to, duration, callback){
+		var stops = this.getStops(duration);
+		var styles = [];
+		if(from.x !== to.x){
+			el.style.left = from.x + 'px';
+			styles.push({
+				key : 'left',
+				currentValue:from.x,
+				change: (to.x - from.x) / stops
+			});
+		}
+		if(from.y !== to.y){
+			el.style.top = from.y + 'px';
+			styles.push({
+				key : 'top',
+				currentValue:from.y,
+				change: (to.y - from.y) / stops
+			});
+		}
+		this.execute({
+			el:el,
+			index:0,
+			stops:stops,
+			styles:styles,
+			callback : callback,
+			unit:'px'
+		});
+		this.show(el);
+	},
+
+	fadeIn:function(el, duration, callback){
+		var stops = this.getStops(duration);
+		var stopIncrement = 100 / stops;
+		this.execute({
+			el:el,
+			index:0,
+			stops:stops,
+			styles:[
+				{ key: 'opacity', currentValue: 0, change: stopIncrement }
+			],
+			callback : callback,
+			unit:''
+		});
+		this.show(el);
+	},
+
+	show:function(el){
+		if(el.style.visibility==='hidden')el.style.visibility='visible';
+	},
+
+	getStops:function(duration){
+		return duration * this.fps;
+	},
+
+	execute:function(config){
+		var el = config.el;
+		for(var i=0;i<config.styles.length;i++){
+			var s = config.styles[i];
+			s.currentValue += s.change;
+			switch(s.key){
+				case 'opacity':
+					el.style.opacity = (s.currentValue / 100);
+					el.style.filter = ['alpha(opacity=', s.currentValue,')'].join('');
+					break;
+				default:
+					el.style[s.key] = s.currentValue + config.unit;
+			}
+			config.index ++;
+
+			if(config.index < config.stops){
+				this.execute.delay(this.fps, this, config);
+			}else{
+				if(config.callback)config.callback.apply(this);
+			}
+		}
+	}
+});
+
+/* ../ludojs/src/effect/drag.js */
+/**
+@namespace effect
+@class Drag
+@extends effect.Effect
+@description Class for dragging DOM elements.
+@constructor
+@param {Object} config
+@example
+	<style type="text/css">
+	.ludo-shim {
+		 border: 15px solid #AAA;
+		 background-color: #DEF;
+		 margin: 5;
+		 opacity: .5;
+		 border-radius: 5px;
+	}
+	.draggable{
+		width:150px;
+		z-index:1000;
+		height:150px;
+		border-radius:5px;
+		border:1px solid #555;
+		background-color:#DEF
+	}
+	</style>
+	<div id="draggable" class="draggable">
+		I am draggable
+	</div>
+	<script type="text/javascript">
+	 var d = new ludo.effect.Drag({
+		useShim:true,
+		 listeners:{
+			 endDrag:function(dragged, dragEffect){
+				 dragEffect.getEl().setStyles({
+					 left : dragEffect.getX(),
+					 top: dragEffect.getY()
+				 });
+			 },
+			 drag:function(pos, dragEffect){
+				 dragEffect.setShimText(dragEffect.getX() + 'x' + dragEffect.getY());
+			 }
+		 }
+	 });
+	d.add('draggable'); // "draggable" is the id of the div
+ 	</script>
+
+*/
+ludo.effect.Drag = new Class({
+	Extends:ludo.effect.Effect,
+
+	/**
+	 * Reference to drag handle (Optional). If not set, "el" will be used
+	 * @config handle
+	 * @type Object|String
+	 * @default undefined
+	 */
+	handle:undefined,
+	/**
+	 * Reference to DOM element to be dragged
+	 * @config el
+	 * @type Object|String
+	 * @default undefined
+	 */
+	el:undefined,
+
+	/**
+	 * Minimum x position
+	 * @config minX
+	 * @type {Number}
+	 * @default undefined
+	 */
+	minX:undefined,
+	/**
+	 * Minimum y position
+	 * @config minY
+	 * @type {Number}
+	 * @default undefined
+	 */
+	minY:undefined,
+
+	/**
+	 * Maximum x position
+	 * @config maxX
+	 * @type {Number}
+	 * @default undefined
+	 */
+	maxX:undefined,
+	/**
+	 * config y position
+	 * @attribute maxY
+	 * @type {Number}
+	 * @default undefined
+	 */
+	maxY:undefined,
+
+	/**
+	 * minPos and maxPos can be used instead of minX,maxX,minY and maxY if
+	 * you only accept dragging along x-axis or y-axis
+	 * @config {Number} minPos
+	 * @default undefined
+	 */
+	minPos:undefined,
+	/**
+	 * @config maxPos
+	 * @type {Number}
+	 * @default undefined
+	 */
+	maxPos:undefined,
+	/**
+	 * Accept dragging in these directions
+	 * @config dragX
+	 * @type String
+	 * @default XY
+	 */
+	directions:'XY',
+
+	/**
+	 * Unit used while dragging
+	 * @config unit, example : "px", "%"
+	 * @default px
+	 */
+	unit:'px',
+
+	dragProcess:{
+		active:false
+	},
+
+	coordinatesToDrag:undefined,
+	/**
+	 * Delay in seconds from mouse down to start drag. If mouse is released within this interval,
+	 * the drag will be cancelled.
+	 * @config delay
+	 * @type {Number}
+	 * @default 0
+	 */
+	delay:0,
+
+	inDelayMode:false,
+
+	els:{},
+
+	/**
+	 * True to use dynamically created shim while dragging. When true,
+	 * the original DOM element will not be dragged.
+	 * @config useShim
+	 * @type {Boolean}
+	 * @default false
+	 */
+	useShim:false,
+
+	/**
+	 * True to automatically hide shim after drag is finished
+	 * @config autohideShim
+	 * @type {Boolean}
+	 * @default true
+	 */
+	autoHideShim:true,
+
+	/**
+	 CSS classes to add to shim
+	 @config shimCls
+	 @type Array
+	 @default undefined
+	 @example
+		 shimCls:['myShim','myShim-2']
+	 which will results in this shim :
+	 @example
+	 	<div class="ludo-shim myShim myShim-2">
+	 */
+	shimCls:undefined,
+
+	/**
+	 * While dragging, always show dragged element this amount of pixels below mouse cursor.
+	 * @config mouseYOffset
+	 * @type {Number} pixels
+	 * @default undefined
+	 */
+	mouseYOffset:undefined,
+
+	/**
+	 * While dragging, always show dragged element this amount of pixels right of mouse cursor.
+	 * @config mouseXOffset
+	 * @type {Number} pixels
+	 * @default undefined
+	 */
+	mouseXOffset:undefined,
+
+    fireEffectEvents:true,
+
+	ludoConfig:function (config) {
+		this.parent(config);
+		if (config.el !== undefined) {
+			this.add({
+				el:config.el,
+				handle:config.handle
+			});
+		}
+
+        this.setConfigParams(config, ['useShim','autoHideShim','directions','delay','minX','maxX','minY','maxY',
+            'minPos','maxPos','unit','shimCls','mouseYOffset','mouseXOffset','fireEffectEvents']);
+	},
+
+	ludoEvents:function () {
+		this.parent();
+		this.getEventEl().addEvent(ludo.util.getDragMoveEvent(), this.drag.bind(this));
+		this.getEventEl().addEvent(ludo.util.getDragEndEvent(), this.endDrag.bind(this));
+		if (this.useShim) {
+			this.addEvent('start', this.showShim.bind(this));
+			if(this.autoHideShim)this.addEvent('end', this.hideShim.bind(this));
+		}
+	},
+
+	/**
+	 Add draggable object
+	 @method add
+	 @param {effect.DraggableNode|String|HTMLDivElement} node
+	 @return {effect.DraggableNode}
+	 @example
+	 	dragObject.add({
+			el: 'myDiv',
+			handle : 'myHandle'
+		});
+	 handle is optional.
+
+	 @example
+	 	dragObject.add('idOfMyDiv');
+
+	 You can also add custom properties:
+
+	 @example
+	 	dragobject.add({
+	 		id: "myReference',
+			el: 'myDiv',
+			column: 'city'
+		});
+	 	...
+	 	...
+	 	dragobject.addEvent('before', beforeDrag);
+		 ...
+		 ...
+	 	function beforeDrag(dragged){
+	 		console.log(dragged.el);
+	 		console.log(dragged.column);
+	 	}
+	 */
+	add:function (node) {
+		node = this.getValidNode(node);
+		var el = document.id(node.el);
+		this.setPositioning(el);
+
+        var handle = node.handle ? document.id(node.handle) : el;
+
+		handle.id = handle.id || 'ludo-' + String.uniqueID();
+		ludo.dom.addClass(handle, 'ludo-drag');
+
+		handle.addEvent(ludo.util.getDragStartEvent(), this.startDrag.bind(this));
+		handle.setProperty('forId', node.id);
+		this.els[node.id] = Object.merge(node, {
+			el:document.id(el),
+			handle:handle
+		});
+		return this.els[node.id];
+	},
+
+	/**
+	 * Remove node
+	 * @method remove
+	 * @param {String} id
+	 * @return {Boolean} success
+	 */
+	remove:function(id){
+		if(this.els[id]!==undefined){
+			var el = document.id(this.els[id].handle);
+			el.removeEvent(ludo.util.getDragStartEvent(), this.startDrag.bind(this));
+			this.els[id] = undefined;
+			return true;
+		}
+		return false;
+	},
+
+	removeAll:function(){
+		var keys = Object.keys(this.els);
+		for(var i=0;i<keys.length;i++){
+			this.remove(keys[i]);
+		}
+		this.els = {};
+	},
+
+	getValidNode:function(node){
+		if (!this.isElConfigObject(node)) {
+			node = {
+				el:document.id(node)
+			};
+		}
+		if(typeof node.el === 'string'){
+			node.el = document.id(node.el);
+		}
+		node.id = node.id || node.el.id || 'ludo-' + String.uniqueID();
+		if (!node.el.id)node.el.id = node.id;
+		node.el.setProperty('forId', node.id);
+		return node;
+	},
+
+	isElConfigObject:function (config) {
+		return config.el !== undefined || config.handle !== undefined;
+	},
+
+	setPositioning:function(el){
+		if (!this.useShim){
+			el.style.position = 'absolute';
+		}else{
+            var pos = el.getStyle('position');
+			if(!pos || (pos!='relative' && pos!='absolute')){
+				el.style.position = 'relative';
+			}
+		}
+	},
+
+	getById:function(id){
+		return this.els[id];
+	},
+
+	getIdByEvent:function (e) {
+		var el = e.target;
+		if (!el.hasClass('ludo-drag')) {
+			el = el.getParent('.ludo-drag');
+		}
+		return el.getProperty('forId');
+	},
+
+	/**
+	 * Returns reference to dragged object, i.e. object added in constructor or
+	 * by use of add method
+	 * @method getDragged
+	 * @return {Object}
+	 */
+	getDragged:function(){
+		return this.els[this.dragProcess.dragged];
+	},
+
+	/**
+	 * Returns reference to draggable DOM node
+	 * @method getEl
+	 * @return {Object} DOMNode
+	 */
+	getEl:function () {
+		return this.els[this.dragProcess.dragged].el;
+	},
+
+	getShimOrEl:function () {
+		return this.useShim ? this.getShim() : this.getEl();
+	},
+
+	getSizeOf:function(el){
+		return el.getSize !== undefined ? el.getSize() : { x: 0, y: 0 };
+	},
+
+	getPositionOf:function(el){
+		return el.getPosition();
+	},
+
+	setDragCoordinates:function(){
+		this.coordinatesToDrag = {
+			x : 'x', y:'y'
+		};
+	},
+	startDrag:function (e) {
+		var id = this.getIdByEvent(e);
+
+		var el = this.getById(id).el;
+		var size = this.getSizeOf(el);
+		var pos;
+		if(this.useShim){
+			pos = el.getPosition();
+		}else{
+			var parent = this.getPositionedParent(el);
+            pos = parent ? el.getPosition(parent) : this.getPositionOf(el);
+		}
+
+		var x = pos.x;
+		var y = pos.y;
+		this.dragProcess = {
+			active:true,
+			dragged:id,
+			currentX:x,
+			currentY:y,
+			elX:x,
+			elY:y,
+			width:size.x,
+			height:size.y,
+			mouseX:e.page.x,
+			mouseY:e.page.y
+		};
+
+		this.dragProcess.el = this.getShimOrEl();
+		/**
+		 * Event fired before drag
+		 * @event {effect.DraggableNode}
+		 * @param {Object} object to be dragged
+		 * @param {ludo.effect.Drag} component
+		 * @param {Object} pos(x and y)
+		 */
+		this.fireEvent('before', [this.els[id], this, {x:x,y:y}]);
+
+		if(!this.isActive()){
+			return undefined;
+		}
+
+		this.dragProcess.minX = this.getMinX();
+		this.dragProcess.maxX = this.getMaxX();
+		this.dragProcess.minY = this.getMinY();
+		this.dragProcess.maxY = this.getMaxY();
+		this.dragProcess.dragX = this.canDragAlongX();
+		this.dragProcess.dragY = this.canDragAlongY();
+
+		if (this.delay) {
+			this.setActiveAfterDelay();
+		} else {
+			/**
+			 * Event fired before dragging
+			 * @event start
+			 * @param {effect.DraggableNode} object to be dragged.
+			 * @param {ludo.effect.Drag} component
+			 * @param {Object} pos(x and y)
+			 */
+			this.fireEvent('start', [this.els[id], this, {x:x,y:y}]);
+
+			if(this.fireEffectEvents)ludo.EffectObject.start();
+		}
+
+		return false;
+	},
+
+	getPositionedParent:function(el){
+		var parent = el.parentNode;
+		while(parent){
+			var pos = parent.getStyle('position');
+			if (pos === 'relative' || pos === 'absolute')return parent;
+			parent = parent.getParent();
+		}
+		return undefined;
+	},
+
+	/**
+	 Cancel drag. This method is designed to be called from an event handler
+	 attached to the "beforeDrag" event.
+	 @method cancelDrag
+	 @example
+	 	// Here, dd is a {{#crossLink "effect.Drag"}}{{/crossLink}} object
+	 	dd.addEvent('before', function(draggable, dd, pos){
+	 		if(pos.x > 1000 || pos.y > 500){
+	 			dd.cancelDrag();
+			}
+	 	});
+	 In this example, dragging will be cancelled when the x position of the mouse
+	 is greater than 1000 or if the y position is greater than 500. Another more
+	 useful example is this:
+	 @example
+		 dd.addEvent('before', function(draggable, dd){
+		 	if(!this.isDraggable(draggable)){
+		 		dd.cancelDrag()
+		 	}
+		});
+	 Here, we assume that we have an isDraggable method which returns true or false
+	 for whether the given node is draggable or not. "draggable" in this example
+	 is one of the {{#crossLink "effect.DraggableNode"}}{{/crossLink}} objects added
+	 using the {{#crossLink "effect.Drag/add"}}{{/crossLink}} method.
+	 */
+
+	cancelDrag:function () {
+		this.dragProcess.active = false;
+		this.dragProcess.el = undefined;
+        if(this.fireEffectEvents)ludo.EffectObject.end();
+	},
+
+	getShimFor:function (el) {
+		return el;
+	},
+
+	setActiveAfterDelay:function () {
+		this.inDelayMode = true;
+		this.dragProcess.active = false;
+		this.startIfMouseNotReleased.delay(this.delay * 1000, this);
+	},
+
+	startIfMouseNotReleased:function () {
+		if (this.inDelayMode) {
+			this.dragProcess.active = true;
+			this.inDelayMode = false;
+			this.fireEvent('start', [this.getDragged(), this, {x:this.getX(),y:this.getY()}]);
+			ludo.EffectObject.start();
+		}
+	},
+
+	drag:function (e) {
+		if (this.dragProcess.active && this.dragProcess.el) {
+			var pos = {
+				x:undefined,
+				y:undefined
+			};
+			if (this.dragProcess.dragX) {
+				pos.x = this.getXDrag(e);
+			}
+
+			if (this.dragProcess.dragY) {
+				pos.y = this.getYDrag(e);
+			}
+
+			this.move(pos);
+
+			/**
+			 * Event fired while dragging. Sends position, example {x:100,y:50}
+			 * and reference to effect.Drag as arguments
+			 * @event drag
+			 * @param {Object} x and y
+			 * @param {effect.Drag} this
+			 */
+			this.fireEvent('drag', [pos, this.els[this.dragProcess.dragged], this]);
+			if (ludo.util.isTabletOrMobile())return false;
+
+		}
+		return undefined;
+	},
+
+	move:function (pos) {
+		if (pos.x !== undefined) {
+			this.dragProcess.currentX = pos.x;
+			this.dragProcess.el.style.left = pos.x + this.unit;
+		}
+		if (pos.y !== undefined) {
+			this.dragProcess.currentY = pos.y;
+			this.dragProcess.el.style.top = pos.y + this.unit;
+		}
+	},
+
+	/**
+	 * Return current x pos
+	 * @method getX
+	 * @return {Number} x
+	 */
+	getX:function(){
+		return this.dragProcess.currentX;
+	},
+	/**
+	 * Return current y pos
+	 * @method getY
+	 * @return {Number} y
+	 */
+	getY:function(){
+		return this.dragProcess.currentY;
+	},
+
+	getXDrag:function (e) {
+		var posX;
+		if(this.mouseXOffset){
+			posX = e.page.x + this.mouseXOffset;
+		}else{
+			posX = e.page.x - this.dragProcess.mouseX + this.dragProcess.elX;
+		}
+
+		if (posX < this.dragProcess.minX) {
+			posX = this.dragProcess.minX;
+		}
+		if (posX > this.dragProcess.maxX) {
+			posX = this.dragProcess.maxX;
+		}
+		return posX;
+	},
+
+	getYDrag:function (e) {
+		var posY;
+		if(this.mouseYOffset){
+			posY = e.page.y + this.mouseYOffset;
+		}else{
+			posY = e.page.y - this.dragProcess.mouseY + this.dragProcess.elY;
+		}
+
+		if (posY < this.dragProcess.minY) {
+			posY = this.dragProcess.minY;
+		}
+		if (posY > this.dragProcess.maxY) {
+			posY = this.dragProcess.maxY;
+		}
+		return posY;
+	},
+
+	endDrag:function () {
+		if (this.dragProcess.active) {
+			this.cancelDrag();
+			/**
+			 * Event fired on drag end
+			 * @event end
+			 * @param {effect.DraggableNode} dragged
+			 * @param {ludo.effect.Drag} this
+			 * @param {Object} x and y
+			 */
+			this.fireEvent('end', [
+				this.getDragged(),
+				this,
+				{
+					x:this.getX(),
+					y:this.getY()
+				}
+			]);
+
+		}
+		if (this.inDelayMode)this.inDelayMode = false;
+
+	},
+
+	/**
+	 * Set new max X pos
+	 * @method setMaxX
+	 * @param {Number} x
+	 */
+	setMaxX:function (x) {
+		this.maxX = x;
+	},
+	/**
+	 * Set new min X pos
+	 * @method setMinX
+	 * @param {Number} x
+	 */
+	setMinX:function (x) {
+		this.minX = x;
+	},
+	/**
+	 * Set new min Y pos
+	 * @method setMinY
+	 * @param {Number} y
+	 */
+	setMinY:function (y) {
+		this.minY = y;
+	},
+	/**
+	 * Set new max Y pos
+	 * @method setMaxY
+	 * @param {Number} y
+	 */
+	setMaxY:function (y) {
+		this.maxY = y;
+	},
+	/**
+	 * Set new min pos
+	 * @method setMinPos
+	 * @param {Number} pos
+	 */
+	setMinPos:function (pos) {
+		this.minPos = pos;
+	},
+	/**
+	 * Set new max pos
+	 * @method setMaxPos
+	 * @param {Number} pos
+	 */
+	setMaxPos:function (pos) {
+		this.maxPos = pos;
+	},
+
+	getMaxX:function () {
+        return this.getMaxPos('maxX');
+	},
+
+	getMaxY:function () {
+        return this.getMaxPos('maxY');
+	},
+
+    getMaxPos:function(key){
+        var max = this.getConfigProperty(key);
+        return max !== undefined ? max : this.maxPos !== undefined ? this.maxPos : 100000;
+    },
+
+	getMinX:function () {
+		var minX = this.getConfigProperty('minX');
+        return minX !== undefined ? minX : this.minPos;
+	},
+
+	getMinY:function () {
+		var dragged = this.getDragged();
+        return dragged && dragged.minY!==undefined ? dragged.minY : this.minY!==undefined ? this.minY : this.minPos;
+	},
+	/**
+	 * Return amount dragged in x direction
+	 * @method getDraggedX
+	 * @return {Number} x
+	 */
+	getDraggedX:function(){
+		return this.getX() - this.dragProcess.elX;
+	},
+	/**
+	 * Return amount dragged in y direction
+	 * @method getDraggedY
+	 * @return {Number} y
+	 */
+	getDraggedY:function(){
+		return this.getY() - this.dragProcess.elY;
+	},
+
+	canDragAlongX:function () {
+		return this.getConfigProperty('directions').indexOf('X') >= 0;
+	},
+	canDragAlongY:function () {
+		return this.getConfigProperty('directions').indexOf('Y') >= 0;
+	},
+
+	getConfigProperty:function(property){
+		var dragged = this.getDragged();
+		return dragged && dragged[property] !== undefined ? dragged[property] : this[property];
+	},
+
+	/**
+	 * Returns width of dragged element
+	 * @method getHeight
+	 * @return {Number}
+	 */
+	getWidth:function () {
+		return this.dragProcess.width;
+	},
+
+	/**
+	 * Returns height of dragged element
+	 * @method getHeight
+	 * @return {Number}
+	 */
+	getHeight:function () {
+		return this.dragProcess.height;
+	},
+	/**
+	 * Returns current left position of dragged
+	 * @method getLeft
+	 * @return {Number}
+	 */
+	getLeft:function () {
+		return this.dragProcess.currentX;
+	},
+
+	/**
+	 * Returns current top/y position of dragged.
+	 * @method getTop
+	 * @return {Number}
+	 */
+	getTop:function () {
+		return this.dragProcess.currentY;
+	},
+
+	/**
+	 * Returns reference to DOM element of shim
+	 * @method getShim
+	 * @return {HTMLDivElement} shim
+	 */
+	getShim:function () {
+		if (this.shim === undefined) {
+			this.shim = new Element('div');
+			ludo.dom.addClass(this.shim, 'ludo-shim');
+			this.shim.setStyles({
+				position:'absolute',
+				'z-index':50000,
+				display:'none'
+			});
+			document.body.adopt(this.shim);
+
+			if (this.shimCls) {
+				for (var i = 0; i < this.shimCls.length; i++) {
+					this.shim.addClass(this.shimCls[i]);
+				}
+			}
+			/**
+			 * Event fired when shim is created
+			 * @event createShim
+			 * @param {HTMLDivElement} shim
+			 */
+			this.fireEvent('createShim', this.shim);
+		}
+		return this.shim;
+	},
+
+	/**
+	 * Show shim
+	 * @method showShim
+	 */
+	showShim:function () {
+		this.getShim().setStyles({
+			display:'',
+			left:this.getShimX(),
+			top:this.getShimY(),
+			width:this.getWidth() + this.getShimWidthDiff(),
+			height:this.getHeight() + this.getShimHeightDiff()
+		});
+
+		this.fireEvent('showShim', [this.getShim(), this]);
+	},
+
+	getShimY:function(){
+		if(this.mouseYOffset){
+			return this.dragProcess.mouseY + this.mouseYOffset;
+		}else{
+			return this.getTop() + ludo.dom.getMH(this.getEl()) - ludo.dom.getMW(this.shim);
+		}
+	},
+
+	getShimX:function(){
+		if(this.mouseXOffset){
+			return this.dragProcess.mouseX + this.mouseXOffset;
+		}else{
+			return this.getLeft() + ludo.dom.getMW(this.getEl()) - ludo.dom.getMW(this.shim);
+		}
+	},
+
+	getShimWidthDiff:function(){
+		return ludo.dom.getMW(this.getEl()) - ludo.dom.getMBPW(this.shim);
+	},
+	getShimHeightDiff:function(){
+		return ludo.dom.getMH(this.getEl()) - ludo.dom.getMBPH(this.shim);
+	},
+
+	/**
+	 * Hide shim
+	 * @method hideShim
+	 */
+	hideShim:function () {
+		this.getShim().style.display = 'none';
+	},
+
+	/**
+	 * Set text content of shim
+	 * @method setShimText
+	 * @param {String} text
+	 */
+	setShimText:function (text) {
+		this.getShim().set('html', text);
+	},
+
+	/**
+	 * Fly/Slide dragged element back to it's original position
+	 * @method flyBack
+	 */
+	flyBack:function (duration) {
+		this.fly({
+			el: this.getShimOrEl(),
+			duration: duration,
+			from:{ x: this.getLeft(), y : this.getTop() },
+			to:{ x: this.getStartX(), y : this.getStartY() },
+			onComplete : this.flyBackComplete.bind(this)
+		});
+	},
+
+	/**
+	 * Fly/Slide dragged element to position of shim. This will only
+	 * work when useShim is set to true.
+	 * @method flyToShim
+	 * @param {Number} duration in seconds(default = .2)
+	 */
+	flyToShim:function(duration){
+		this.fly({
+			el: this.getEl(),
+			duration: duration,
+			from:{ x: this.getStartX(), y : this.getStartY() },
+			to:{ x: this.getLeft(), y : this.getTop() },
+			onComplete : this.flyToShimComplete.bind(this)
+		});
+	},
+
+	getStartX:function () {
+		return this.dragProcess.elX;
+	},
+
+	getStartY:function () {
+		return this.dragProcess.elY;
+	},
+
+	flyBackComplete:function(){
+		/**
+		 * Event fired after flyBack animation is complete
+		 * @event flyBack
+		 * @param {effect.Drag} this
+		 * @param {HTMLElement} dom node
+		 */
+		this.fireEvent('flyBack', [this, this.getShimOrEl()]);
+	},
+
+	flyToShimComplete:function(){
+		/**
+		 * Event fired after flyToShim animation is complete
+		 * @event flyBack
+		 * @param {effect.Drag} this
+		 * @param {HTMLElement} dom node
+		 */
+		this.fireEvent('flyToShim', [this, this.getEl()]);
+	},
+
+	isActive:function(){
+		return this.dragProcess.active;
+	}
+});/* ../ludojs/src/form/validator/fns.js */
+ludo.form.validator.required = function(value, required){
+    return !required || value.length > 0;
+};
+
+ludo.form.validator.minLength = function(value, minLength){
+    return value.length === 0 || value.length >= minLength;
+};
+
+ludo.form.validator.maxLength = function(value, maxLength){
+    return value.length === 0 || value.length <= maxLength;
+};
+
+ludo.form.validator.regex = function(value, regex){
+    return value.length === 0 || regex.test(value);
+};
+
+ludo.form.validator.minValue = function(value, minValue){
+    return value.length === 0 || parseInt(value) >= minValue;
+};
+ludo.form.validator.maxValue = function(value, maxValue){
+    return value.length === 0 || parseInt(value) <= maxValue;
+};
+ludo.form.validator.twin = function(value, twin){
+    var cmp = ludo.get(twin);
+    return !cmp || (cmp && value === cmp.value);
+};/* ../ludojs/src/form/element.js */
+/**
+ * @namespace form
+ * @class Element
+ * @extends View
+ * @description Super class for form components.
+ */
+ludo.form.Element = new Class({
+    Extends:ludo.View,
+	/**
+	 * Form element label
+	 * @config {String} label
+	 * @default ''
+	 */
+    label:'',
+	/**
+	 * Label after input field
+	 * @config {String} suffix
+	 *
+	 */
+	suffix:'',
+
+    value:'',
+
+    onLoadMessage:'',
+
+    /**
+     * Width of label
+     * @attribute labelWidth
+     * @default 100
+     */
+    labelWidth:100,
+    /**
+     * "name" is inherited from ludo.View. It will also be set as name of input element
+     * @attribute name
+     * @type string
+     * @default undefined
+     */
+    name:undefined,
+    /**
+     * Width of input element
+     * @attribute fieldWidth
+     * @type int
+     * @default undefined
+     */
+    fieldWidth:undefined,
+
+    /**
+     * Custom CSS rules to apply to input element
+     * @attribute formCss
+     * @type Object, example: { border : '1px solid #000' }
+     * @default undefined
+     */
+    formCss:undefined,
+    /**
+     * Let input field use all remaining space of the component
+     * @attribute stretchField
+     * @type {Boolean}
+     * @default true
+     */
+    stretchField:true,
+
+
+    /**
+     * Is a value required for this field
+     * @attribute required
+     * @type {Boolean}
+     * @default false
+     */
+    required:false,
+    dirtyFlag:false,
+    initialValue:undefined,
+    constructorValue:undefined,
+    /**
+     * Is form element ready for setValue. For combo boxes and select boxes it may
+     * not be ready until available values has been loaded remotely
+     * @property isReady
+     * @type {Boolean}
+     * @private
+     */
+    isReady:true,
+    overflow:'hidden',
+
+    /**
+     * Will not validate unless value is the same as value of the form element with this id
+     * Example of use: Password and Repeat password. It's sufficient to specify "twin" for one of
+     * the views.
+     * @property twin
+     * @type String
+     * @default undefined
+     */
+    twin:undefined,
+
+    /**
+     * Link with a form component with this id. Value of these components will always be the same
+     * Update one and the other component will be updated automatically. It's sufficient
+     * to specify linkWith for one of the two views.
+     * @property linkWith
+     * @type String
+     * @default undefined
+     */
+    linkWith:undefined,
+
+    /**
+     * When using stateful:true, value will be preserved to next visit.
+     * @property statefulProperties
+     * @type Array
+     * @default ['value']
+     */
+    statefulProperties:['value'],
+
+    /**
+     Object of class form.validator.* or a plain validator function
+     When set the isValid method of the validator will be called after standard validation is complete
+     and form element is valid.
+     @property validator
+     @type Object
+     @example
+        validator : { type : 'form.validator.Md5', value : 'MD5 hash of something' }
+     In order to validate this field, the MD5 of form field value must match form.validator.Md5.value
+     @example
+        validator:function(value){
+	 		return value === 'Valid value';
+	 	}
+     is example of simple function used as validator.
+     */
+    validator:undefined,
+    validatorFn:undefined,
+
+    validators:[],
+
+    ludoConfig:function (config) {
+        this.parent(config);
+        var defaultConfig = this.getInheritedFormConfig();
+        this.labelWidth = defaultConfig.labelWidth || this.labelWidth;
+        this.fieldWidth = defaultConfig.fieldWidth || this.fieldWidth;
+
+        var keys = ['label', 'suffix', 'formCss', 'validator', 'stretchField', 'required', 'twin', 'disabled', 'labelWidth', 'fieldWidth',
+            'value', 'data'];
+        this.setConfigParams(config, keys);
+
+        this.elementId = 'el-' + this.id;
+        this.formCss = defaultConfig.formCss || this.formCss;
+        if (defaultConfig.height && config.height === undefined)this.layout.height = defaultConfig.height;
+
+        if (this.validator) {
+            this.createValidator();
+        }
+        if (config.linkWith !== undefined) {
+            this.setLinkWith(config.linkWith);
+        }
+
+        if (this.dataSource) {
+            this.isReady = false;
+        }
+        this.initialValue = this.constructorValue = this.value;
+        if (!this.name)this.name = 'ludo-form-el-' + String.uniqueID();
+
+
+        ludo.Form.add(this);
+        if(this.required)this.applyValidatorFns(['required']);
+        this.applyValidatorFns(['twin']);
+    },
+
+
+
+    applyValidatorFns:function (keys) {
+        for (var i = 0; i < keys.length; i++) {
+            var key = keys[i];
+            if (this[key] !== undefined) {
+                this.validators.push({
+                    fn:ludo.form.validator[key],
+                    key:key
+                });
+            }
+        }
+    },
+
+    createValidator:function () {
+        var fn;
+        if (ludo.util.isFunction(this.validator)) {
+            fn = this.validator;
+        } else {
+            this.validator.applyTo = this;
+            this.validator = ludo._new(this.validator);
+            fn = this.validator.isValid.bind(this.validator);
+        }
+        this.validators.push({
+            fn : fn,key:''
+        });
+    },
+
+    ludoEvents:function () {
+        this.parent();
+
+        if (this.dataSource) {
+            this.getDataSource().addEvent('load', this.setReady.bind(this));
+        }
+
+        var formEl = this.getFormEl();
+        if (formEl) {
+            formEl.addEvent('keydown', this.keyDown.bind(this));
+            formEl.addEvent('keypress', this.keyPress.bind(this));
+            formEl.addEvent('keyup', this.keyUp.bind(this));
+            formEl.addEvent('focus', this.focus.bind(this));
+            formEl.addEvent('change', this.change.bind(this));
+            formEl.addEvent('blur', this.blur.bind(this));
+        }
+    },
+
+    ludoRendered:function () {
+        this.parent();
+
+        if (this.disabled)this.disable();
+
+		if(this.els.formEl){
+			this.els.formEl.setProperty('name', this.getName());
+			if(this.value !== undefined)this.els.formEl.set('value', this.value)
+		}
+        if (this.linkWith) {
+            this.setLinkWithOfOther();
+        }
+		var parentFormManager = this.getParentFormManager();
+	    if (parentFormManager) {
+			parentFormManager.registerFormElement(this);
+		}
+		this.validate();
+    },
+    /**
+     * Disable form element
+     * @method disable
+     * @return void
+     */
+    disable:function () {
+        this.getFormEl().setProperty('disabled', '1');
+        ludo.dom.addClass(this.els.label, 'ludo-form-label-disabled');
+    },
+    /**
+     * Enable form element
+     * @method enable
+     * @return void
+     */
+    enable:function () {
+        this.getFormEl().removeProperty('disabled');
+        ludo.dom.removeClass(this.els.label, 'ludo-form-label-disabled');
+    },
+
+    getInheritedFormConfig:function () {
+        var cmp = this.getParent();
+        if (cmp) {
+            return cmp.formConfig || {};
+        }
+        return {};
+    },
+
+    ludoCSS:function () {
+        this.parent();
+        ludo.dom.addClass(this.getEl(), 'ludo-form-element');
+        if (this.els.formEl) {
+            if (this.fieldWidth) {
+                this.els.formEl.style.width = (this.fieldWidth - ludo.dom.getPW(this.els.formEl) - ludo.dom.getBW(this.els.formEl)) + 'px';
+            }
+
+            this.els.formEl.id = this.elementId;
+
+            if (this.formCss) {
+                this.els.formEl.setStyles(this.formCss);
+            }
+        }
+    },
+
+    getFormElId:function () {
+        return this.elementId;
+    },
+
+    getWidth:function () {
+        var ret = this.parent();
+        return ret ? ret : this.fieldWidth + (this.label ? this.labelWidth : 0) + 2;
+    },
+
+    keyUp:function (e) {
+        /**
+         * key up event
+         * @event key_up
+         * @param {String} key
+         * @param {String|Boolean|Object|Number} value
+         * @param {View} this
+         */
+        this.fireEvent('key_up', [ e.key, this.value, this ]);
+    },
+
+    keyDown:function (e) {
+        /**
+         * key down event
+         * @event key_down
+         * @param {String} key
+         * @param {String|Boolean|Object|Number} value
+         * $param {View} this
+         */
+        this.fireEvent('key_down', [ e.key, this.value, this ]);
+    },
+
+    keyPress:function (e) {
+        /**
+         * key press event
+         * @event key_press
+         * @param {String} key
+         * @param {String|Boolean|Object|Number} value
+         * $param {View} this
+         */
+        this.fireEvent('key_press', [ e.key, this.value, this ]);
+    },
+
+    focus:function () {
+        this._focus = true;
+        this.clearInvalid();
+        /**
+         * On focus event
+         * @event focus
+         * @param {String|Boolean|Object|Number} value
+         * $param {View} this
+         */
+        this.fireEvent('focus', [ this.value, this ]);
+    },
+    change:function () {
+        if (this.els.formEl) {
+            this.setValue(this.els.formEl.get('value'));
+        }
+        /**
+         * On change event. This event is fired when value is changed manually
+         * by the user via GUI. The "change" event is followed by a
+         * "valueChange" event.
+         * When value is changed using the setValue method
+         * only the "valueChange" event is fired.
+         *
+         * @event change
+         * @param {String|Boolean|Object|Number} value
+         * $param {View} this
+         */
+        if (this.wasValid)this.fireEvent('change', [ this.getValue(), this ]);
+    },
+
+    blur:function () {
+        this._focus = false;
+        this.validate();
+        if (this.getFormEl())this.value = this.getFormEl().get('value');
+        this.toggleDirtyFlag();
+        /**
+         * On blur event
+         * @event blur
+         * @param {String|Boolean|Object|Number} value
+         * $param {View} this
+         */
+        this.fireEvent('blur', [ this.value, this ]);
+    },
+
+    toggleDirtyFlag:function(){
+        if (this.value !== this.initialValue) {
+            /**
+             * @event dirty
+             * @description event fired on blur when value is different from it's original value
+             * @param {String} value
+             * @param {Object} ludo.form.* component
+             */
+            this.setDirty();
+            this.fireEvent('dirty', [this.value, this]);
+        } else {
+            /**
+             * @event clean
+             * @description event fired on blur when value is equal to original/start value
+             * @param {String} value
+             * @param {Object} ludo.form.* component
+             */
+            this.setClean();
+            this.fireEvent('clean', [this.value, this]);
+        }
+    },
+
+    hasFocus:function () {
+        return this._focus;
+    },
+    insertJSON:function (data) {
+        this.populate(data);
+    },
+    populate:function () {
+
+    },
+    getLabel:function () {
+        return this.label;
+    },
+    /**
+     * Return current value
+     * @method getValue
+     * @return string
+     */
+    getValue:function () {
+        return this.els.formEl ? this.els.formEl.get('value') : this.value;
+    },
+    /**
+     * Set new value
+     * @method setValue
+     * @param value
+     * @return void
+     */
+    setValue:function (value) {
+        if (!this.isReady) {
+            if(value)this.setValue.delay(50, this, value);
+            return;
+        }
+
+        if (value == this.value) {
+            return;
+        }
+
+        this.setFormElValue(value);
+        this.value = value;
+
+        this.validate();
+
+        if (this.wasValid) {
+            /**
+             * This event is fired whenever current value is changed, either
+             * manually by user or by calling setValue. When the value is changed
+             * manually by user via GUI, the "change" event is fired first, then
+             * "valueChange" afterwards.
+             * @event valueChange
+             * @param {Object|String|Number} value
+             * @param {form.Element} form component
+             */
+            this.fireEvent('valueChange', [this.getValue(), this]);
+            if (this.stateful)this.fireEvent('state');
+            if (this.linkWith)this.updateLinked();
+        }
+    },
+
+    setFormElValue:function(value){
+        if (this.els.formEl && this.els.formEl.value !== value) {
+            this.els.formEl.set('value', value);
+        }
+    },
+
+    /**
+     * Get reference to input element
+     * @method getFormEl
+     * @return DOMElement
+     */
+    getFormEl:function () {
+        return this.els.formEl;
+    },
+    /**
+     * Returns true when value of form element is valid, i.e. larger than minValue, matching regex etc.
+     * @method isValid
+     * @return {Boolean} valid
+     */
+    isValid:function () {
+        if(this.validators.length === 0)return true;
+        var val = this.getFormEl() ? this.getFormEl().get('value').trim() : this.value;
+        for (var i = 0; i < this.validators.length; i++) {
+            if (!this.validators[i].fn.apply(this, [val, this[this.validators[i].key]])){
+                return false;
+            }
+        }
+        return true;
+    },
+
+    clearInvalid:function () {
+        ludo.dom.removeClass(this.getEl(), 'ludo-form-el-invalid');
+    },
+
+    wasValid:true,
+
+    validate:function () {
+        this.clearInvalid();
+        if (this.isValid()) {
+            this.wasValid = true;
+            /**
+             * Event fired when value of form component is valid. This is fired on blur
+             * @event valid
+             * @param {String} value
+             * @param {Object} component
+             */
+            this.fireEvent('valid', [this.value, this]);
+            return true;
+        } else {
+            this.wasValid = false;
+            /**
+             * Event fired when value of form component is valid. This is fired on blur
+             * @event invalid
+             * @param {String} value
+             * @param {Object} component
+             */
+            this.fireEvent('invalid', [this.value, this]);
+            return false;
+        }
+    },
+
+    isFormElement:function () {
+        return true;
+    },
+
+    /**
+     * Returns initial value sent to constructor
+     * @method getInitialValue
+     * @return string initial value
+     */
+    getInitialValue:function () {
+        return this.initialValue;
+    },
+
+    /**
+     * Reset / Roll back to last committed value. It could be the value stored by last commit method call
+     * or if the original value/default value of this field.
+     * @method reset
+     * @return void
+     */
+    reset:function () {
+        this.setValue(this.initialValue);
+    },
+
+    /**
+     * Reset value back to the original value sent(constructor value)
+     * @method clear
+     * @return void
+     */
+    clear:function () {
+        this.setValue(this.constructorValue);
+    },
+
+    /**
+     * Update initial value to current value. These actions will always trigger a commit<br>
+     * - Form or Model submission
+     * - Fetching new record for a ludo.model.Model
+     * @method commit
+     * @return void
+     */
+    commit:function () {
+        this.initialValue = this.value;
+    },
+    /**
+     * Returns true if current value is different from original value
+     * @method isDirty
+     * @return {Boolean} isDirty
+     */
+    isDirty:function () {
+        return this.dirtyFlag;
+    },
+
+    setDirty:function () {
+        this.dirtyFlag = true;
+        ludo.dom.addClass(this.getEl(), 'ludo-form-el-dirty');
+    },
+
+    setClean:function () {
+        this.dirtyFlag = false;
+        ludo.dom.removeClass(this.getEl(), 'ludo-form-el-dirty');
+    },
+
+    setReady:function () {
+        this.isReady = true;
+    },
+
+    updateLinked:function () {
+        var cmp = this.getLinkWith();
+        if (cmp && cmp.value !== this.value) {
+            cmp.setValue(this.value);
+        }
+    },
+
+    setLinkWith:function (linkWith) {
+        this.linkWith = linkWith;
+        this.addEvent('valueChange', this.updateLinked.bind(this));
+    },
+
+    setLinkWithOfOther:function (attempts) {
+        attempts = attempts || 0;
+        var cmp = this.getLinkWith();
+        if (cmp && !cmp.linkWith) {
+            if (this.value === undefined){
+				this.initialValue = this.constructorValue = cmp.value;
+				this.setValue(cmp.value);
+			}
+            cmp.setLinkWith(this);
+        } else {
+            if (attempts < 100) {
+                this.setLinkWithOfOther.delay(50, this, attempts + 1);
+            }
+        }
+    },
+
+    getLinkWith:function(){
+        var cmp = ludo.get(this.linkWith);
+        return cmp ? cmp : this.parentComponent ? this.parentComponent.child[this.linkWith] : undefined;
+    }
+});/* ../ludojs/src/form/label-element.js */
+/**
+ * Base class for all form elements with label
+ * @namespace form
+ * @class LabelElement
+ * @extends form.Element
+ */
+ludo.form.LabelElement = new Class({
+    Extends:ludo.form.Element,
+
+    fieldTpl:['<table ','cellpadding="0" cellspacing="0" border="0" width="100%">',
+        '<tbody>',
+        '<tr class="input-row">',
+        '<td class="label-cell"><label class="input-label"></label></td>',
+        '<td><div class="input-cell"></div></td>',
+        '<td class="invalid-cell" style="position:relative"><div class="invalid-cell-div"></div></td>',
+        '<td class="suffix-cell" style="display:none"><label></label></td>',
+        '<td class="help-cell" style="display:none"></td>',
+        '</tr>',
+        '</tbody>',
+        '</table>'
+    ],
+
+    labelSuffix:':',
+
+    ludoDOM:function () {
+        this.parent();
+        this.getBody().set('html', this.fieldTpl.join(''));
+        this.addInput();
+        this.addLabel();
+        this.setWidthOfLabel();
+    },
+
+    addLabel:function () {
+        if (this.label) {
+            this.getLabelDOM().set('html', this.label + this.labelSuffix);
+            this.els.label.setProperty('for', this.getFormElId());
+        }
+		if(this.suffix){
+			var s = this.getSuffixCell();
+			s.style.display='';
+			var label = s.getElement('label');
+			if(label){
+				label.set('html', this.suffix);
+				label.setProperty('for', this.getFormElId());
+			}
+		}
+    },
+
+    setWidthOfLabel:function () {
+		this.getLabelDOM().parentNode.style.width = this.labelWidth + 'px';
+    },
+
+    getLabelDOM:function () {
+        return this.getCell('.input-label','label');
+    },
+
+    addInput:function () {
+        if (!this.inputTag) {
+            return;
+        }
+        this.els.formEl = new Element(this.inputTag);
+
+        if (this.inputType) {
+            this.els.formEl.setProperty('type', this.inputType);
+        }
+        if (this.maxLength) {
+            this.els.formEl.setProperty('maxlength', this.maxLength);
+        }
+        if(this.readonly){
+            this.els.formEl.setProperty('readonly', true);
+        }
+		this.getInputCell().adopt(this.els.formEl);
+		if(this.fieldWidth){
+			this.els.formEl.style.width = this.fieldWidth + 'px';
+			this.getInputCell().parentNode.style.width = (this.fieldWidth  + ludo.dom.getMBPW(this.els.formEl)) + 'px';
+		}
+        this.els.formEl.id = this.getFormElId();
+    },
+
+	getSuffixCell:function(){
+		return this.getCell('.suffix-cell','labelSuffix');
+	},
+
+    getInputCell:function () {
+		return this.getCell('.input-cell','cellInput');
+    },
+
+    getInputRow:function () {
+		return this.getCell('.input-row','inputRow');
+    },
+
+	getCell:function(selector, cacheKey){
+		if(!this.els[cacheKey]){
+			this.els[cacheKey] = this.getBody().getElement(selector);
+		}
+		return this.els[cacheKey];
+	},
+
+    resizeDOM:function () {
+        this.parent();
+        if (this.stretchField && this.els.formEl) {
+            var width = this.getWidth();
+            if (!isNaN(width) && width > 0) {
+                width -= (ludo.dom.getMBPW(this.getEl()) + ludo.dom.getMBPW(this.getBody()));
+            } else {
+                var parent = this.getParent();
+                if (parent && parent.layout.type !== 'linear' && parent.layout.orientation !== 'horizontal') {
+                    width = parent.getWidth();
+                    width -= (ludo.dom.getMBPW(parent.getEl()) + ludo.dom.getMBPW(parent.getBody()));
+                    width -= (ludo.dom.getMBPW(this.getEl()) + ludo.dom.getMBPW(this.getBody()));
+                } else {
+                    var c = this.els.container;
+                    width = c.offsetWidth - ludo.dom.getMBPW(this.els.body) - ludo.dom.getPW(c) - ludo.dom.getBW(c);
+                }
+            }
+            if (this.label)width -= this.labelWidth;
+			if (this.suffix)width -= this.getSuffixCell().offsetWidth;
+            width -= 10;
+            if (width > 0 && !isNaN(width)) {
+                this.formFieldWidth = width;
+                this.getFormEl().style.width = width + 'px';
+            }
+        }
+    }
+});/* ../ludojs/src/form/slider.js */
+/**
+ * Slider form component
+ * @namespace form
+ * @class Slider
+ * @extends form.LabelElement
+ */
+ludo.form.Slider = new Class({
+    // TODO implement support for min and max, example slider from 0 to 100, min and max from 10 to 90
+    Extends:ludo.form.LabelElement,
+    cssSignature:'ludo-form-slider',
+    type:'form.Slider',
+    fieldTpl:['<table ','cellpadding="0" cellspacing="0" border="0" width="100%">',
+        '<tbody>',
+        '<tr class="input-row">',
+        '<td class="label-cell"><label class="input-label"></label></td>',
+        '<td class="input-cell"></td>',
+        '<td class="suffix-cell" style="display:none"></td>',
+        '<td class="help-cell" style="display:none"></td>',
+        '</tr>',
+        '</tbody>',
+        '</table>'
+    ],
+
+    /* No input element for slider */
+    inputTag:undefined,
+    inputType:undefined,
+
+    /**
+     * Size of slider background
+     * @property sliderSize
+	 * @optional
+     * @private
+     */
+    sliderSize:100,
+
+    /**
+     * Direction of slider. If not explicit set, it will
+     * be set to "horizontal" when width of slide is greater than height of slider,
+     * otherwise it will be set to "vertical".
+     * @property {String} direction
+	 * @type String
+     * @default horizontal
+	 * @optional
+     *
+     */
+    direction:'horizontal',
+
+    /**
+     * Minimum value of slider
+     * @attribute {Number} minValue
+     * @default 1
+     */
+    minValue:1,
+
+    /**
+     * Maximum value of slider
+     * @attribute {Number} maxValue
+     * @default 10
+     */
+    maxValue:10,
+
+    height:undefined,
+
+    /**
+     * Revert x-, or y-axis, i.e. minimum value to the right instead of left or at the top instead of bottom
+     * @attribute {Boolean} reverse
+     * @default false
+     */
+    reverse:false,
+
+
+    ludoConfig:function (config) {
+        this.parent(config);
+        this.setConfigParams(config, ['direction','minValue','maxValue','reverse']);
+    },
+
+    ludoRendered:function () {
+        this.parent();
+        this.moveSliderBackgrounds();
+    },
+
+    moveSliderBackgrounds:function () {
+        var offset = Math.round(this.getHandleSize() / 2);
+        var css = this.getDirection() == 'horizontal' ? ['left','right'] : ['top','bottom'];
+        this.els['bgfirst'].style[css[0]] = offset + 'px';
+        this.els['bglast'].style[css[1]] = offset + 'px';
+    },
+
+    addInput:function () {
+        this.parent();
+
+        var el = this.els.slider = new Element('div');
+        this.els.slider.addEvent('click', this.sliderClick.bind(this));
+
+        ludo.dom.addClass(el, 'ludo-form-slider-container');
+        ludo.dom.addClass(el, 'ludo-form-slider-' + this.getDirection());
+        this.getInputCell().adopt(el);
+
+        this.addSliderBg('first');
+        this.addSliderBg('last');
+
+        this.createSliderHandle();
+    },
+
+    createSliderHandle:function () {
+        this.els.sliderHandle = ludo.dom.create({ renderTo : this.els.slider, cls : 'ludo-form-slider-handle'});
+        this.drag = new ludo.effect.Drag(this.getDragConfig());
+    },
+
+    addSliderBg:function (pos) {
+        this.els['bg' + pos] = ludo.dom.create({ renderTo : this.els.slider, cls : 'ludo-form-slider-bg-' + pos });
+    },
+
+    getDragConfig:function () {
+        return {
+            el:this.els.sliderHandle,
+            fireEffectEvents:false,
+            directions:this.getDirection() == 'horizontal' ? 'X' : 'Y',
+            listeners:{
+                'drag':this.receivePosition.bind(this)
+            },
+            minPos:0,
+            maxPos:this.getSliderSize()
+        };
+    },
+
+    sliderClick:function (e) {
+        if (!e.target.hasClass('ludo-form-slider-handle')) {
+            var pos = this.els.slider.getPosition();
+            var offset = Math.round(this.getHandleSize() / 2);
+            this.receivePosition({
+                x:e.page.x - pos.x - offset,
+                y:e.page.y - pos.y - offset
+            });
+        }
+
+    },
+    receivePosition:function (pos) {
+        this.setValue(this.pixelToValue(this.getDirection() == 'horizontal' ? pos.x : pos.y));
+        /**
+         * Change event
+         * @event change
+         * @param value of form field
+         * @param Component this
+         */
+        this.fireEvent('change', [ this.value, this ]);
+    },
+
+    pixelToValue:function (px) {
+        var min = this.getMinValue();
+        var max = this.getMaxValue();
+
+        var sliderSize = this.getSliderSize();
+        var ret = Math.round(px / sliderSize * (max - min)) + min;
+        if (this.shouldReverseAxis()) {
+            ret = max - ret;
+        }
+
+        return ret;
+    },
+
+    getDirection:function () {
+        if (this.direction === undefined) {
+            var size = this.getBody().getSize();
+            if (size.x >= size.y) {
+                this.direction = 'horizontal';
+            } else {
+                this.direction = 'vertical';
+            }
+        }
+        return this.direction;
+    },
+
+    getMinValue:function () {
+        return this.minValue;
+    },
+
+    getMaxValue:function () {
+        return this.maxValue;
+    },
+
+    setValue:function (value) {
+        if (value > this.getMaxValue()) {
+            value = this.getMaxValue();
+        } else if (value < this.getMinValue()) {
+            value = this.getMinValue();
+        }
+        this.parent(value);
+        this.positionSliderHandle();
+        this.toggleDirtyFlag();
+    },
+
+    resizeDOM:function () {
+        this.parent();
+        if (this.direction == 'horizontal') {
+            this.sliderSize = this.els.slider.offsetWidth;
+        } else {
+            this.sliderSize = this.getBody().offsetHeight - ludo.dom.getMH(this.els.slider);
+            this.els.slider.style.height = this.getHeight() + 'px';
+        }
+        this.sliderSize -= this.getHandleSize();
+
+        this.positionSliderHandle();
+        this.drag.setMaxPos(this.sliderSize);
+    },
+
+    positionSliderHandle:function () {
+        this.els.sliderHandle.style[this.handleCssProperty] = this.getHandlePos() + 'px';
+    },
+
+    getHandlePos:function () {
+        var ret = Math.round((this.value - this.minValue) / (this.maxValue - this.minValue) * this.sliderSize);
+        if (this.shouldReverseAxis()) {
+            ret = this.sliderSize - ret;
+        }
+        return ret;
+    },
+    _shouldReverse:undefined,
+    shouldReverseAxis:function () {
+        if (this._shouldReverse == undefined) {
+            this._shouldReverse = (this.direction == 'horizontal' && this.reverse) || (this.direction == 'vertical' && !this.reverse);
+        }
+        return this._shouldReverse;
+    },
+
+    getSliderSize:function () {
+        return this.sliderSize;
+    },
+
+    getHandleSize:function () {
+        if (this.handleSize === undefined) {
+            var cssProperty = 'height';
+            this.handleCssProperty = 'top';
+            if (this.getDirection() == 'horizontal') {
+                cssProperty = 'width';
+                this.handleCssProperty = 'left';
+            }
+
+            this.handleSize = parseInt(this.els.sliderHandle.getStyle(cssProperty).replace('px', ''));
+        }
+        return this.handleSize;
+    }
+});/* ../ludojs/src/color/rgb-slider.js */
+ludo.color.RGBSlider = new Class({
+    Extends:ludo.color.Base,
+	type:'color.RGBSlider',
+    layout:{
+        type:'relative'
+    },
+    value:'#000000',
+    regex:/^\#[0-9A-Fa-f]{6}$/i,
+
+    ludoConfig:function (config) {
+        this.parent(config);
+        this.setConfigParams(config, ['value']);
+    },
+
+    ludoRendered:function () {
+        this.parent();
+        this.updatePreview();
+        this.child['preview'].child['colorValue'].addEvent('setColor', this.receiveColor.bind(this));
+    },
+
+    show:function(){
+        this.parent();
+        this.updateSliders();
+    },
+
+    setColor:function (color) {
+        if (this.regex.test(color)) {
+            this.value = color;
+            this.updateSliders();
+        }
+    },
+
+    getClassChildren:function () {
+        return [
+            this.getSlider('red', undefined),
+            this.getSlider('green', 'red'),
+            this.getSlider('blue', 'green'),
+            this.getNumberField('red', undefined),
+            this.getNumberField('green', 'redValue'),
+            this.getNumberField('blue', 'greenValue'),
+            {
+                id:'colorPreview',
+                name:'preview',
+                layout:{
+                    alignParentLeft:true,
+                    fillRight:true,
+                    below:'blueValue',
+                    fillDown:true,
+                    width:'matchParent',
+                    type:'relative'
+                },
+                css:{
+                    border:'1px solid #000'
+                },
+                containerCss:{
+                    margin:3
+                },
+                children:[
+                    {
+                        name:'colorValue',
+                        type:'color.RGBSliderValue'
+                    }
+                ]
+            }
+        ];
+    },
+
+    receiveColor:function (color) {
+        this.fireEvent('setColor', color.toUpperCase());
+    },
+
+    getSlider:function (name, below) {
+        return {
+            name:name,
+            id:name,
+            value:this.getColorValue(name),
+            type:'form.Slider',
+            label:name.substr(0, 1).toUpperCase() + name.substr(1), minValue:0, maxValue:255,
+            labelWidth:45,
+            layout:{
+                alignParentTop:below ? false : true,
+                below:below,
+                height:20,
+                leftOf:name + 'Value',
+                fillLeft:true
+            },
+            listeners:{
+                'change':this.updatePreview.bind(this)
+            }
+        };
+    },
+
+    getNumberField:function (name, below) {
+        return {
+            type:'form.Number',
+            minValue:0,
+            maxValue:255,
+            fieldWidth:30,
+            value:this.getColorValue(name),
+            label:'',
+            name:name + 'Value',
+            linkWith:name,
+            layout:{
+                alignParentRight:true,
+                width:40,
+                below:below
+            },
+            listeners:{
+                'change':this.updatePreview.bind(this)
+            }
+        };
+    },
+
+    updatePreview:function () {
+        var items = ['red', 'green', 'blue'];
+        var color = '#';
+
+        for (var i = 0; i < items.length; i++) {
+            color = color + this.prefixed(parseInt(this.child[items[i]].getValue()).toString(16));
+        }
+        this.child['preview'].getBody().style.backgroundColor = color;
+        this.child['preview'].child['colorValue'].setColor(color);
+
+    },
+
+    prefixed:function (color) {
+        return color.length === 1 ? '0' + color : color;
+    },
+    cInstance:undefined,
+    colorInstance:function () {
+        if (this.cInstance === undefined) {
+            this.cInstance = new ludo.color.Color();
+        }
+        return this.cInstance;
+    },
+
+    getColorValue:function (color) {
+        return this.colorInstance().rgbObject(this.value)[color.substr(0, 1)] || 0;
+    },
+
+    updateSliders:function(){
+
+        if(!this.child['red'] || !this.value)return;
+
+        var color = this.colorInstance().rgbObject(this.value);
+
+        this.child['red'].setValue(color.r);
+        this.child['green'].setValue(color.g);
+        this.child['blue'].setValue(color.b);
+        this.updatePreview();
+    }
+});
+
+ludo.color.RGBSliderValue = new Class({
+    Extends:ludo.View,
+    color:undefined,
+    cls:'ludo-color-rgb-slider-value',
+    layout:{
+        width:70,
+        height:20,
+        centerInParent:true
+    },
+
+    overflow:'hidden',
+
+    ludoEvents:function () {
+        this.parent();
+        this.getBody().addEvent('click', this.sendColor.bind(this));
+    },
+
+    setColor:function (color) {
+        this.color = color;
+        this.getBody().innerHTML = color.toUpperCase();
+    },
+
+    sendColor:function () {
+        this.fireEvent('setColor', this.color);
+    }
+});/* ../ludojs/src/color/boxes.js */
+ludo.color.Boxes = new Class({
+    Extends : ludo.color.Base,
+    colors:['grayScale','namedColors'],
+    namedColors:[
+        ['AliceBlue','#F0F8FF'],['AntiqueWhite','#FAEBD7'],['Aqua','#00FFFF'],['Aquamarine','#7FFFD4'],
+        ['Azure','#F0FFFF'],['Beige','#F5F5DC'],['Bisque','#FFE4C4'],['Black','#000000'],['BlanchedAlmond','#FFEBCD'],
+        ['Blue','#0000FF'],['BlueViolet','#8A2BE2'],['Brown','#A52A2A'],['BurlyWood','#DEB887'],['CadetBlue','#5F9EA0'],
+        ['Chartreuse','#7FFF00'],['Chocolate','#D2691E'],['Coral','#FF7F50'],['CornflowerBlue','#6495ED'],
+        ['Cornsilk','#FFF8DC'],['Crimson','#DC143C'],['Cyan','#00FFFF'],['DarkBlue','#00008B'],['DarkCyan','#008B8B'],
+        ['DarkGoldenRod','#B8860B'],['DarkGray','#A9A9A9'],['DarkGreen','#006400'],['DarkKhaki','#BDB76B'],
+        ['DarkMagenta','#8B008B'],['DarkOliveGreen','#556B2F'],['Darkorange','#FF8C00'],['DarkOrchid','#9932CC'],
+        ['DarkRed','#8B0000'],['DarkSalmon','#E9967A'],['DarkSeaGreen','#8FBC8F'],['DarkSlateBlue','#483D8B'],
+        ['DarkSlateGray','#2F4F4F'],['DarkTurquoise','#00CED1'],['DarkViolet','#9400D3'],['DeepPink','#FF1493'],
+        ['DeepSkyBlue','#00BFFF'],['DimGray','#696969'],['DimGrey','#696969'],['DodgerBlue','#1E90FF'],
+        ['FireBrick','#B22222'],['FloralWhite','#FFFAF0'],['ForestGreen','#228B22'],['Fuchsia','#FF00FF'],
+        ['Gainsboro','#DCDCDC'],['GhostWhite','#F8F8FF'],['Gold','#FFD700'],['GoldenRod','#DAA520'],['Gray','#808080'],
+        ['Green','#008000'],['GreenYellow','#ADFF2F'],['HoneyDew','#F0FFF0'],['HotPink','#FF69B4'],['IndianRed','#CD5C5C'],
+        ['Indigo','#4B0082'],['Ivory','#FFFFF0'],['Khaki','#F0E68C'],['Lavender','#E6E6FA'],['LavenderBlush','#FFF0F5'],
+        ['LawnGreen','#7CFC00'],['LemonChiffon','#FFFACD'],['LightBlue','#ADD8E6'],['LightCoral','#F08080'],
+        ['LightCyan','#E0FFFF'],['LightGoldenRodYellow','#FAFAD2'],['LightGray','#D3D3D3'],['LightGreen','#90EE90'],
+        ['LightPink','#FFB6C1'],['LightSalmon','#FFA07A'],['LightSeaGreen','#20B2AA'],['LightSkyBlue','#87CEFA'],
+        ['LightSlateGray','#778899'],['LightSteelBlue','#B0C4DE'],['LightYellow','#FFFFE0'],['Lime','#00FF00'],
+        ['LimeGreen','#32CD32'],['Linen','#FAF0E6'],['Magenta','#FF00FF'],['Maroon','#800000'],['MediumAquaMarine','#66CDAA'],
+        ['MediumBlue','#0000CD'],['MediumOrchid','#BA55D3'],['MediumPurple','#9370DB'],['MediumSeaGreen','#3CB371'],
+        ['MediumSlateBlue','#7B68EE'],['MediumSpringGreen','#00FA9A'],['MediumTurquoise','#48D1CC'],['MediumVioletRed','#C71585'],
+        ['MidnightBlue','#191970'],['MintCream','#F5FFFA'],['MistyRose','#FFE4E1'],['Moccasin','#FFE4B5'],['NavajoWhite','#FFDEAD'],
+        ['Navy','#000080'],['OldLace','#FDF5E6'],['Olive','#808000'],['OliveDrab','#6B8E23'],['Orange','#FFA500'],
+        ['OrangeRed','#FF4500'],['Orchid','#DA70D6'],['PaleGoldenRod','#EEE8AA'],['PaleGreen','#98FB98'],['PaleTurquoise','#AFEEEE'],
+        ['PaleVioletRed','#DB7093'],['PapayaWhip','#FFEFD5'],['PeachPuff','#FFDAB9'],['Peru','#CD853F'],['Pink','#FFC0CB'],
+        ['Plum','#DDA0DD'],['PowderBlue','#B0E0E6'],['Purple','#800080'],['Red','#FF0000'],['RosyBrown','#BC8F8F'],
+        ['RoyalBlue','#4169E1'],['SaddleBrown','#8B4513'],['Salmon','#FA8072'],['SandyBrown','#F4A460'],['SeaGreen','#2E8B57'],
+        ['SeaShell','#FFF5EE'],['Sienna','#A0522D'],['Silver','#C0C0C0'],['SkyBlue','#87CEEB'],['SlateBlue','#6A5ACD'],
+        ['SlateGray','#708090'],['Snow','#FFFAFA'],['SpringGreen','#00FF7F'],['SteelBlue','#4682B4'],['Tan','#D2B48C'],
+        ['Teal','#008080'],['Thistle','#D8BFD8'],['Tomato','#FF6347'],['Turquoise','#40E0D0'],['Violet','#EE82EE'],
+        ['Wheat','#F5DEB3'],['White','#FFFFFF'],['WhiteSmoke','#F5F5F5'],['Yellow','#FFFF00'],['YellowGreen','#9ACD32']
+    ],
+    ludoConfig:function(config){
+        this.parent(config);
+        this.setConfigParams(config, ['colors']);
+    },
+
+    ludoDOM:function(){
+        this.parent();
+        this.getBody().style.overflowY = 'auto';
+    },
+
+    ludoEvents:function(){
+        this.parent();
+        this.getBody().addEvent('click', this.clickOnColorBox.bind(this));
+    },
+
+    ludoRendered:function(){
+        this.parent();
+        this.addColorBoxes();
+    },
+
+    addColorBoxes:function(){
+        var html = [];
+        for(var i=0;i<this.colors.length;i++){
+            var colors = this.getColorsIn(this.colors[i]);
+            if(colors.length > 1){
+                html.push('<div style="clear:both">');
+            }
+            for(var j=0;j<colors.length;j++){
+                html.push(this.getColorBox(colors[j]));
+            }
+            if(colors.length > 1){
+                html.push('</div>');
+            }
+        }
+        this.getBody().innerHTML = html.join('');
+
+    },
+
+    getColorBox:function(color){
+        var ret = [];
+        ret.push('<div title="' + color[0] + '" rgbColor="' + color[1] + '" class="ludo-color-box" style="background-color:' + color[1] + '"></div>');
+        return ret.join('');
+    },
+
+    getColorsIn:function(category){
+        var ret = [];
+        switch(category){
+            case 'grayScale':
+                for(var i=0;i<256;i+=8){
+                    var c = this.getColorPrefixed(i);
+                    var color = '#' + c + c +c;
+                    ret.push([color,color] );
+                }
+                break;
+            case 'namedColors':
+                return this.namedColors;
+            default:
+                return category;
+
+        }
+        return ret;
+    },
+
+    getColorPrefixed:function(colorNum){
+        var ret = colorNum.toString(16);
+        if(ret.length === 1)ret = '0' + ret;
+        return ret;
+    },
+
+    clickOnColorBox:function(e){
+        if(e.target.hasClass('ludo-color-box')){
+            this.fireEvent('setColor', e.target.getAttribute('rgbColor'));
+        }
+    }
+});/* ../ludojs/src/layout/linear.js */
 /**
  * Abstract base class for linear layouts
  * @namespace layout
@@ -9097,1203 +11577,6 @@ ludo.socket.Socket = new Class({
 		}
 
 		return this.socket;
-	}
-});/* ../ludojs/src/effect/draggable-node.js */
-/**
- Specification of a draggable node objects sent to {{#crossLink "effect.Drag/add"}}{{/crossLink}}. You will
- never create objects of this class.
- @namespace effect
- @class DraggableNode
- @type {Object|String}
- */
-ludo.effect.DraggableNode = new Class({
-	/**
-	 id of node. This attribute is optional
-	 @property id
-	 @type {String}
-	 @default undefined
-	 @optional
-	 @example
-	 	var dragDrop = new ludo.effect.Drag();
-	 	var el = new Element('div');
-	 	dragDrop.add({
-	 		id: 'myId',
-			el : el
-	 	});
-	 	var ref = dragDrop.getById('myId');
-	 Or you can use this code which does the same:
-	 @example
-	 	var dragDrop = new ludo.effect.Drag();
-	 	var el = new Element('div');
-	 	el.id = 'myId';
-	 	dragDrop.add(el);
-	 	var ref = dragDrop.getById('myId');
-	 Id's are only important if you need to access nodes later using {{#crossLink "effect.Drag/getById"}}{{/crossLink}}
-	 */
-	id: undefined,
-
-	/**
-	 * Reference to dragable DOM node
-	 * @property el
-	 * @default undefined
-	 * @type {String|HTMLDivElement}
-	 */
-	el:undefined,
-	/**
-	 * Reference to handle for dragging. el will only be draggable by dragging the handle.
-	 * @property handle
-	 * @type {String|HTMLDivElement}
-	 * @default undefined
-	 * @optional
-	 */
-	handle:undefined,
-
-	/**
-	 * Minimum x position. This is an optional argument. If not set, you will use the params
-	 * set when creating the ludo.effect.Drag component if any.
-	 * @property minX
-	 * @type {Number}
-	 * @default undefined
-	 * @optional
-	 */
-	minX:undefined,
-	/**
-	 * Maximum x position. This is an optional argument. If not set, you will use the params
-	 * set when creating the ludo.effect.Drag component if any.
-	 * @property maxX
-	 * @type {Number}
-	 * @default undefined
-	 * @optional
-	 */
-	maxX:undefined,
-	/**
-	 * Minimum x position. This is an optional argument. If not set, you will use the params
-	 * set when creating the ludo.effect.Drag component if any.
-	 * @property minY
-	 * @type {Number}
-	 * @default undefined
-	 * @optional
-	 */
-	minY:undefined,
-	/**
-	 * Maximum y position. This is an optional argument. If not set, you will use the params
-	 * set when creating the ludo.effect.Drag component if any.
-	 * @property maxY
-	 * @type {Number}
-	 * @default undefined
-	 * @optional
-	 */
-	maxY:undefined,
-	/**
-	 Allow dragging in these directions. This is an optional argument. If not set, you will use the params
-	 set when creating the ludo.effect.Drag component if any.
-	 @property directions
-	 @type {String}
-	 @default 'XY'
-	 @optional
-	 @example
-	 	directions:'XY'	//
-	 	..
-	 	directions:'X' // Only allow dragging along x-axis
-	 	..
-	 	directions:'Y' // Only allow dragging along y-axis
-	 */
-	directions:undefined
-});/* ../ludojs/src/effect/effect.js */
-/**
- * Base class for animations
- * @namespace effect
- * @class Effect
- */
-ludo.effect.Effect = new Class({
-	Extends: ludo.Core,
-	fps:33,
-	/**
-	 Fly/Slide DOM node to a position
-	 @method fly
-	 @param {Object} config
-	 @example
-	 	<div id="myDiv" style="position:absolute;width:100px;height:100px;border:1px solid #000;background-color:#DEF;left:50px;top:50px"></div>
-		<script type="text/javascript">
-		 new ludo.effect.Effect().fly({
-			el: 'myDiv',
-			duration:.5,
-			to:{ x:500, y: 300 },
-			 onComplete:function(){
-				 new ludo.effect.Effect().fly({
-					el: 'myDiv',
-					duration:1,
-					to:{ x:600, y: 50 }
-				 });
-			 }
-		 });
-	 	</script>
-	 Which will first move "myDiv" to position 500x300 on the screen, then to 600x50.
-	 */
-	fly:function(config){
-		config.el = document.id(config.el);
-		config.duration = config.duration || .2;
-		if(config.from == undefined){
-			config.from = config.el.getPosition();
-		}
-		var fx = this.getFx(config.el, config.duration, config.onComplete);
-		fx.start({
-			left : [config.from.x, config.to.x],
-			top : [config.from.y, config.to.y]
-		});
-	},
-
-	/**
-	 Fly/Slide DOM node from current location to given x and y coordinats in given seconds.
-	 @method flyTo
-	 @param {HTMLElement} el
-	 @param {Number} x
-	 @param {Number} y
-	 @param {Number} seconds
-	 @example
-
-	 You may also use this method like this:
-	 @example
-	 	<div id="myDiv" style="position:absolute;width:100px;height:100px;border:1px solid #000;background-color:#DEF;left:50px;top:50px"></div>
-		<script type="text/javascript">
-	 	new ludo.effect.Effect().flyTo('myDiv', 500, 300, .5);
-	 	</script>
-	 Which slides "myDiv" to position 500x300 in 0.5 seconds.
-	 */
-	flyTo:function(el, x, y, seconds){
-		this.fly({
-			el:el,
-			to:{x : x, y: y},
-			duration: seconds
-		});
-	},
-
-	getFx:function (el, duration, onComplete) {
-		duration*=1000;
-		var fx = new Fx.Morph(el, {
-			duration:duration
-		});
-		fx.addEvent('complete', this.animationComplete.bind(this, [onComplete, el]));
-		return fx;
-	},
-
-	animationComplete:function(onComplete, el){
-		/**
-		 * Fired when animation is completed
-		 * @event animationComplete
-		 * @param {effect.Drag} this
-		 */
-		this.fireEvent('animationComplete', this);
-
-		if(onComplete !== undefined){
-			onComplete.call(this, el);
-		}
-	},
-
-	fadeOut:function(el, duration, callback){
-		var stops = this.getStops(duration);
-		var stopIncrement = 100 / stops * -1;
-		this.execute({
-			el:el,
-			index:0,
-			stops:stops,
-			styles:[
-				{ key: 'opacity', currentValue: 100, change: stopIncrement }
-			],
-			callback : callback,
-			unit:''
-		})
-	},
-
-	slideIn:function(el, duration, callback, to){
-		to = to || el.getPosition();
-		var from = {
-			x: to.x,
-			y : el.parentNode.offsetWidth + el.offsetHeight
-		};
-		this.slide(el,from, to, duration, callback);
-	},
-
-	slideOut:function(el, duration, callback, from){
-		from = from || el.getPosition();
-		var to = {
-			x: from.x,
-			y : el.parentNode.offsetHeight + el.offsetHeight
-		};
-		this.slide(el, from, to, duration, callback);
-	},
-
-	slide:function(el, from, to, duration, callback){
-		var stops = this.getStops(duration);
-		var styles = [];
-		if(from.x !== to.x){
-			el.style.left = from.x + 'px';
-			styles.push({
-				key : 'left',
-				currentValue:from.x,
-				change: (to.x - from.x) / stops
-			});
-		}
-		if(from.y !== to.y){
-			el.style.top = from.y + 'px';
-			styles.push({
-				key : 'top',
-				currentValue:from.y,
-				change: (to.y - from.y) / stops
-			});
-		}
-		this.execute({
-			el:el,
-			index:0,
-			stops:stops,
-			styles:styles,
-			callback : callback,
-			unit:'px'
-		});
-		this.show(el);
-	},
-
-	fadeIn:function(el, duration, callback){
-		var stops = this.getStops(duration);
-		var stopIncrement = 100 / stops;
-		this.execute({
-			el:el,
-			index:0,
-			stops:stops,
-			styles:[
-				{ key: 'opacity', currentValue: 0, change: stopIncrement }
-			],
-			callback : callback,
-			unit:''
-		});
-		this.show(el);
-	},
-
-	show:function(el){
-		if(el.style.visibility==='hidden')el.style.visibility='visible';
-	},
-
-	getStops:function(duration){
-		return duration * this.fps;
-	},
-
-	execute:function(config){
-		var el = config.el;
-		for(var i=0;i<config.styles.length;i++){
-			var s = config.styles[i];
-			s.currentValue += s.change;
-			switch(s.key){
-				case 'opacity':
-					el.style.opacity = (s.currentValue / 100);
-					el.style.filter = ['alpha(opacity=', s.currentValue,')'].join('');
-					break;
-				default:
-					el.style[s.key] = s.currentValue + config.unit;
-			}
-			config.index ++;
-
-			if(config.index < config.stops){
-				this.execute.delay(this.fps, this, config);
-			}else{
-				if(config.callback)config.callback.apply(this);
-			}
-		}
-	}
-});
-
-/* ../ludojs/src/effect/drag.js */
-/**
-@namespace effect
-@class Drag
-@extends effect.Effect
-@description Class for dragging DOM elements.
-@constructor
-@param {Object} config
-@example
-	<style type="text/css">
-	.ludo-shim {
-		 border: 15px solid #AAA;
-		 background-color: #DEF;
-		 margin: 5;
-		 opacity: .5;
-		 border-radius: 5px;
-	}
-	.draggable{
-		width:150px;
-		z-index:1000;
-		height:150px;
-		border-radius:5px;
-		border:1px solid #555;
-		background-color:#DEF
-	}
-	</style>
-	<div id="draggable" class="draggable">
-		I am draggable
-	</div>
-	<script type="text/javascript">
-	 var d = new ludo.effect.Drag({
-		useShim:true,
-		 listeners:{
-			 endDrag:function(dragged, dragEffect){
-				 dragEffect.getEl().setStyles({
-					 left : dragEffect.getX(),
-					 top: dragEffect.getY()
-				 });
-			 },
-			 drag:function(pos, dragEffect){
-				 dragEffect.setShimText(dragEffect.getX() + 'x' + dragEffect.getY());
-			 }
-		 }
-	 });
-	d.add('draggable'); // "draggable" is the id of the div
- 	</script>
-
-*/
-ludo.effect.Drag = new Class({
-	Extends:ludo.effect.Effect,
-
-	/**
-	 * Reference to drag handle (Optional). If not set, "el" will be used
-	 * @config handle
-	 * @type Object|String
-	 * @default undefined
-	 */
-	handle:undefined,
-	/**
-	 * Reference to DOM element to be dragged
-	 * @config el
-	 * @type Object|String
-	 * @default undefined
-	 */
-	el:undefined,
-
-	/**
-	 * Minimum x position
-	 * @config minX
-	 * @type {Number}
-	 * @default undefined
-	 */
-	minX:undefined,
-	/**
-	 * Minimum y position
-	 * @config minY
-	 * @type {Number}
-	 * @default undefined
-	 */
-	minY:undefined,
-
-	/**
-	 * Maximum x position
-	 * @config maxX
-	 * @type {Number}
-	 * @default undefined
-	 */
-	maxX:undefined,
-	/**
-	 * config y position
-	 * @attribute maxY
-	 * @type {Number}
-	 * @default undefined
-	 */
-	maxY:undefined,
-
-	/**
-	 * minPos and maxPos can be used instead of minX,maxX,minY and maxY if
-	 * you only accept dragging along x-axis or y-axis
-	 * @config {Number} minPos
-	 * @default undefined
-	 */
-	minPos:undefined,
-	/**
-	 * @config maxPos
-	 * @type {Number}
-	 * @default undefined
-	 */
-	maxPos:undefined,
-	/**
-	 * Accept dragging in these directions
-	 * @config dragX
-	 * @type String
-	 * @default XY
-	 */
-	directions:'XY',
-
-	/**
-	 * Unit used while dragging
-	 * @config unit, example : "px", "%"
-	 * @default px
-	 */
-	unit:'px',
-
-	dragProcess:{
-		active:false
-	},
-
-	coordinatesToDrag:undefined,
-	/**
-	 * Delay in seconds from mouse down to start drag. If mouse is released within this interval,
-	 * the drag will be cancelled.
-	 * @config delay
-	 * @type {Number}
-	 * @default 0
-	 */
-	delay:0,
-
-	inDelayMode:false,
-
-	els:{},
-
-	/**
-	 * True to use dynamically created shim while dragging. When true,
-	 * the original DOM element will not be dragged.
-	 * @config useShim
-	 * @type {Boolean}
-	 * @default false
-	 */
-	useShim:false,
-
-	/**
-	 * True to automatically hide shim after drag is finished
-	 * @config autohideShim
-	 * @type {Boolean}
-	 * @default true
-	 */
-	autoHideShim:true,
-
-	/**
-	 CSS classes to add to shim
-	 @config shimCls
-	 @type Array
-	 @default undefined
-	 @example
-		 shimCls:['myShim','myShim-2']
-	 which will results in this shim :
-	 @example
-	 	<div class="ludo-shim myShim myShim-2">
-	 */
-	shimCls:undefined,
-
-	/**
-	 * While dragging, always show dragged element this amount of pixels below mouse cursor.
-	 * @config mouseYOffset
-	 * @type {Number} pixels
-	 * @default undefined
-	 */
-	mouseYOffset:undefined,
-
-	/**
-	 * While dragging, always show dragged element this amount of pixels right of mouse cursor.
-	 * @config mouseXOffset
-	 * @type {Number} pixels
-	 * @default undefined
-	 */
-	mouseXOffset:undefined,
-
-    fireEffectEvents:true,
-
-	ludoConfig:function (config) {
-		this.parent(config);
-		if (config.el !== undefined) {
-			this.add({
-				el:config.el,
-				handle:config.handle
-			});
-		}
-
-        this.setConfigParams(config, ['useShim','autoHideShim','directions','delay','minX','maxX','minY','maxY',
-            'minPos','maxPos','unit','shimCls','mouseYOffset','mouseXOffset','fireEffectEvents']);
-	},
-
-	ludoEvents:function () {
-		this.parent();
-		this.getEventEl().addEvent(ludo.util.getDragMoveEvent(), this.drag.bind(this));
-		this.getEventEl().addEvent(ludo.util.getDragEndEvent(), this.endDrag.bind(this));
-		if (this.useShim) {
-			this.addEvent('start', this.showShim.bind(this));
-			if(this.autoHideShim)this.addEvent('end', this.hideShim.bind(this));
-		}
-	},
-
-	/**
-	 Add draggable object
-	 @method add
-	 @param {effect.DraggableNode|String|HTMLDivElement} node
-	 @return {effect.DraggableNode}
-	 @example
-	 	dragObject.add({
-			el: 'myDiv',
-			handle : 'myHandle'
-		});
-	 handle is optional.
-
-	 @example
-	 	dragObject.add('idOfMyDiv');
-
-	 You can also add custom properties:
-
-	 @example
-	 	dragobject.add({
-	 		id: "myReference',
-			el: 'myDiv',
-			column: 'city'
-		});
-	 	...
-	 	...
-	 	dragobject.addEvent('before', beforeDrag);
-		 ...
-		 ...
-	 	function beforeDrag(dragged){
-	 		console.log(dragged.el);
-	 		console.log(dragged.column);
-	 	}
-	 */
-	add:function (node) {
-		node = this.getValidNode(node);
-		var el = document.id(node.el);
-		this.setPositioning(el);
-
-        var handle = node.handle ? document.id(node.handle) : el;
-
-		handle.id = handle.id || 'ludo-' + String.uniqueID();
-		ludo.dom.addClass(handle, 'ludo-drag');
-
-		handle.addEvent(ludo.util.getDragStartEvent(), this.startDrag.bind(this));
-		handle.setProperty('forId', node.id);
-		this.els[node.id] = Object.merge(node, {
-			el:document.id(el),
-			handle:handle
-		});
-		return this.els[node.id];
-	},
-
-	/**
-	 * Remove node
-	 * @method remove
-	 * @param {String} id
-	 * @return {Boolean} success
-	 */
-	remove:function(id){
-		if(this.els[id]!==undefined){
-			var el = document.id(this.els[id].handle);
-			el.removeEvent(ludo.util.getDragStartEvent(), this.startDrag.bind(this));
-			this.els[id] = undefined;
-			return true;
-		}
-		return false;
-	},
-
-	removeAll:function(){
-		var keys = Object.keys(this.els);
-		for(var i=0;i<keys.length;i++){
-			this.remove(keys[i]);
-		}
-		this.els = {};
-	},
-
-	getValidNode:function(node){
-		if (!this.isElConfigObject(node)) {
-			node = {
-				el:document.id(node)
-			};
-		}
-		if(typeof node.el === 'string'){
-			node.el = document.id(node.el);
-		}
-		node.id = node.id || node.el.id || 'ludo-' + String.uniqueID();
-		if (!node.el.id)node.el.id = node.id;
-		node.el.setProperty('forId', node.id);
-		return node;
-	},
-
-	isElConfigObject:function (config) {
-		return config.el !== undefined || config.handle !== undefined;
-	},
-
-	setPositioning:function(el){
-		if (!this.useShim){
-			el.style.position = 'absolute';
-		}else{
-            var pos = el.getStyle('position');
-			if(!pos || (pos!='relative' && pos!='absolute')){
-				el.style.position = 'relative';
-			}
-		}
-	},
-
-	getById:function(id){
-		return this.els[id];
-	},
-
-	getIdByEvent:function (e) {
-		var el = e.target;
-		if (!el.hasClass('ludo-drag')) {
-			el = el.getParent('.ludo-drag');
-		}
-		return el.getProperty('forId');
-	},
-
-	/**
-	 * Returns reference to dragged object, i.e. object added in constructor or
-	 * by use of add method
-	 * @method getDragged
-	 * @return {Object}
-	 */
-	getDragged:function(){
-		return this.els[this.dragProcess.dragged];
-	},
-
-	/**
-	 * Returns reference to draggable DOM node
-	 * @method getEl
-	 * @return {Object} DOMNode
-	 */
-	getEl:function () {
-		return this.els[this.dragProcess.dragged].el;
-	},
-
-	getShimOrEl:function () {
-		return this.useShim ? this.getShim() : this.getEl();
-	},
-
-	getSizeOf:function(el){
-		return el.getSize !== undefined ? el.getSize() : { x: 0, y: 0 };
-	},
-
-	getPositionOf:function(el){
-		return el.getPosition();
-	},
-
-	setDragCoordinates:function(){
-		this.coordinatesToDrag = {
-			x : 'x', y:'y'
-		};
-	},
-	startDrag:function (e) {
-		var id = this.getIdByEvent(e);
-
-		var el = this.getById(id).el;
-		var size = this.getSizeOf(el);
-		var pos;
-		if(this.useShim){
-			pos = el.getPosition();
-		}else{
-			var parent = this.getPositionedParent(el);
-            pos = parent ? el.getPosition(parent) : this.getPositionOf(el);
-		}
-
-		var x = pos.x;
-		var y = pos.y;
-		this.dragProcess = {
-			active:true,
-			dragged:id,
-			currentX:x,
-			currentY:y,
-			elX:x,
-			elY:y,
-			width:size.x,
-			height:size.y,
-			mouseX:e.page.x,
-			mouseY:e.page.y
-		};
-
-		this.dragProcess.el = this.getShimOrEl();
-		/**
-		 * Event fired before drag
-		 * @event {effect.DraggableNode}
-		 * @param {Object} object to be dragged
-		 * @param {ludo.effect.Drag} component
-		 * @param {Object} pos(x and y)
-		 */
-		this.fireEvent('before', [this.els[id], this, {x:x,y:y}]);
-
-		if(!this.isActive()){
-			return undefined;
-		}
-
-		this.dragProcess.minX = this.getMinX();
-		this.dragProcess.maxX = this.getMaxX();
-		this.dragProcess.minY = this.getMinY();
-		this.dragProcess.maxY = this.getMaxY();
-		this.dragProcess.dragX = this.canDragAlongX();
-		this.dragProcess.dragY = this.canDragAlongY();
-
-		if (this.delay) {
-			this.setActiveAfterDelay();
-		} else {
-			/**
-			 * Event fired before dragging
-			 * @event start
-			 * @param {effect.DraggableNode} object to be dragged.
-			 * @param {ludo.effect.Drag} component
-			 * @param {Object} pos(x and y)
-			 */
-			this.fireEvent('start', [this.els[id], this, {x:x,y:y}]);
-
-			if(this.fireEffectEvents)ludo.EffectObject.start();
-		}
-
-		return false;
-	},
-
-	getPositionedParent:function(el){
-		var parent = el.parentNode;
-		while(parent){
-			var pos = parent.getStyle('position');
-			if (pos === 'relative' || pos === 'absolute')return parent;
-			parent = parent.getParent();
-		}
-		return undefined;
-	},
-
-	/**
-	 Cancel drag. This method is designed to be called from an event handler
-	 attached to the "beforeDrag" event.
-	 @method cancelDrag
-	 @example
-	 	// Here, dd is a {{#crossLink "effect.Drag"}}{{/crossLink}} object
-	 	dd.addEvent('before', function(draggable, dd, pos){
-	 		if(pos.x > 1000 || pos.y > 500){
-	 			dd.cancelDrag();
-			}
-	 	});
-	 In this example, dragging will be cancelled when the x position of the mouse
-	 is greater than 1000 or if the y position is greater than 500. Another more
-	 useful example is this:
-	 @example
-		 dd.addEvent('before', function(draggable, dd){
-		 	if(!this.isDraggable(draggable)){
-		 		dd.cancelDrag()
-		 	}
-		});
-	 Here, we assume that we have an isDraggable method which returns true or false
-	 for whether the given node is draggable or not. "draggable" in this example
-	 is one of the {{#crossLink "effect.DraggableNode"}}{{/crossLink}} objects added
-	 using the {{#crossLink "effect.Drag/add"}}{{/crossLink}} method.
-	 */
-
-	cancelDrag:function () {
-		this.dragProcess.active = false;
-		this.dragProcess.el = undefined;
-        if(this.fireEffectEvents)ludo.EffectObject.end();
-	},
-
-	getShimFor:function (el) {
-		return el;
-	},
-
-	setActiveAfterDelay:function () {
-		this.inDelayMode = true;
-		this.dragProcess.active = false;
-		this.startIfMouseNotReleased.delay(this.delay * 1000, this);
-	},
-
-	startIfMouseNotReleased:function () {
-		if (this.inDelayMode) {
-			this.dragProcess.active = true;
-			this.inDelayMode = false;
-			this.fireEvent('start', [this.getDragged(), this, {x:this.getX(),y:this.getY()}]);
-			ludo.EffectObject.start();
-		}
-	},
-
-	drag:function (e) {
-		if (this.dragProcess.active && this.dragProcess.el) {
-			var pos = {
-				x:undefined,
-				y:undefined
-			};
-			if (this.dragProcess.dragX) {
-				pos.x = this.getXDrag(e);
-			}
-
-			if (this.dragProcess.dragY) {
-				pos.y = this.getYDrag(e);
-			}
-
-			this.move(pos);
-
-			/**
-			 * Event fired while dragging. Sends position, example {x:100,y:50}
-			 * and reference to effect.Drag as arguments
-			 * @event drag
-			 * @param {Object} x and y
-			 * @param {effect.Drag} this
-			 */
-			this.fireEvent('drag', [pos, this.els[this.dragProcess.dragged], this]);
-			if (ludo.util.isTabletOrMobile())return false;
-
-		}
-		return undefined;
-	},
-
-	move:function (pos) {
-		if (pos.x !== undefined) {
-			this.dragProcess.currentX = pos.x;
-			this.dragProcess.el.style.left = pos.x + this.unit;
-		}
-		if (pos.y !== undefined) {
-			this.dragProcess.currentY = pos.y;
-			this.dragProcess.el.style.top = pos.y + this.unit;
-		}
-	},
-
-	/**
-	 * Return current x pos
-	 * @method getX
-	 * @return {Number} x
-	 */
-	getX:function(){
-		return this.dragProcess.currentX;
-	},
-	/**
-	 * Return current y pos
-	 * @method getY
-	 * @return {Number} y
-	 */
-	getY:function(){
-		return this.dragProcess.currentY;
-	},
-
-	getXDrag:function (e) {
-		var posX;
-		if(this.mouseXOffset){
-			posX = e.page.x + this.mouseXOffset;
-		}else{
-			posX = e.page.x - this.dragProcess.mouseX + this.dragProcess.elX;
-		}
-
-		if (posX < this.dragProcess.minX) {
-			posX = this.dragProcess.minX;
-		}
-		if (posX > this.dragProcess.maxX) {
-			posX = this.dragProcess.maxX;
-		}
-		return posX;
-	},
-
-	getYDrag:function (e) {
-		var posY;
-		if(this.mouseYOffset){
-			posY = e.page.y + this.mouseYOffset;
-		}else{
-			posY = e.page.y - this.dragProcess.mouseY + this.dragProcess.elY;
-		}
-
-		if (posY < this.dragProcess.minY) {
-			posY = this.dragProcess.minY;
-		}
-		if (posY > this.dragProcess.maxY) {
-			posY = this.dragProcess.maxY;
-		}
-		return posY;
-	},
-
-	endDrag:function () {
-		if (this.dragProcess.active) {
-			this.cancelDrag();
-			/**
-			 * Event fired on drag end
-			 * @event end
-			 * @param {effect.DraggableNode} dragged
-			 * @param {ludo.effect.Drag} this
-			 * @param {Object} x and y
-			 */
-			this.fireEvent('end', [
-				this.getDragged(),
-				this,
-				{
-					x:this.getX(),
-					y:this.getY()
-				}
-			]);
-
-		}
-		if (this.inDelayMode)this.inDelayMode = false;
-
-	},
-
-	/**
-	 * Set new max X pos
-	 * @method setMaxX
-	 * @param {Number} x
-	 */
-	setMaxX:function (x) {
-		this.maxX = x;
-	},
-	/**
-	 * Set new min X pos
-	 * @method setMinX
-	 * @param {Number} x
-	 */
-	setMinX:function (x) {
-		this.minX = x;
-	},
-	/**
-	 * Set new min Y pos
-	 * @method setMinY
-	 * @param {Number} y
-	 */
-	setMinY:function (y) {
-		this.minY = y;
-	},
-	/**
-	 * Set new max Y pos
-	 * @method setMaxY
-	 * @param {Number} y
-	 */
-	setMaxY:function (y) {
-		this.maxY = y;
-	},
-	/**
-	 * Set new min pos
-	 * @method setMinPos
-	 * @param {Number} pos
-	 */
-	setMinPos:function (pos) {
-		this.minPos = pos;
-	},
-	/**
-	 * Set new max pos
-	 * @method setMaxPos
-	 * @param {Number} pos
-	 */
-	setMaxPos:function (pos) {
-		this.maxPos = pos;
-	},
-
-	getMaxX:function () {
-        return this.getMaxPos('maxX');
-	},
-
-	getMaxY:function () {
-        return this.getMaxPos('maxY');
-	},
-
-    getMaxPos:function(key){
-        var max = this.getConfigProperty(key);
-        return max !== undefined ? max : this.maxPos !== undefined ? this.maxPos : 100000;
-    },
-
-	getMinX:function () {
-		var minX = this.getConfigProperty('minX');
-        return minX !== undefined ? minX : this.minPos;
-	},
-
-	getMinY:function () {
-		var dragged = this.getDragged();
-        return dragged && dragged.minY!==undefined ? dragged.minY : this.minY!==undefined ? this.minY : this.minPos;
-	},
-	/**
-	 * Return amount dragged in x direction
-	 * @method getDraggedX
-	 * @return {Number} x
-	 */
-	getDraggedX:function(){
-		return this.getX() - this.dragProcess.elX;
-	},
-	/**
-	 * Return amount dragged in y direction
-	 * @method getDraggedY
-	 * @return {Number} y
-	 */
-	getDraggedY:function(){
-		return this.getY() - this.dragProcess.elY;
-	},
-
-	canDragAlongX:function () {
-		return this.getConfigProperty('directions').indexOf('X') >= 0;
-	},
-	canDragAlongY:function () {
-		return this.getConfigProperty('directions').indexOf('Y') >= 0;
-	},
-
-	getConfigProperty:function(property){
-		var dragged = this.getDragged();
-		return dragged && dragged[property] !== undefined ? dragged[property] : this[property];
-	},
-
-	/**
-	 * Returns width of dragged element
-	 * @method getHeight
-	 * @return {Number}
-	 */
-	getWidth:function () {
-		return this.dragProcess.width;
-	},
-
-	/**
-	 * Returns height of dragged element
-	 * @method getHeight
-	 * @return {Number}
-	 */
-	getHeight:function () {
-		return this.dragProcess.height;
-	},
-	/**
-	 * Returns current left position of dragged
-	 * @method getLeft
-	 * @return {Number}
-	 */
-	getLeft:function () {
-		return this.dragProcess.currentX;
-	},
-
-	/**
-	 * Returns current top/y position of dragged.
-	 * @method getTop
-	 * @return {Number}
-	 */
-	getTop:function () {
-		return this.dragProcess.currentY;
-	},
-
-	/**
-	 * Returns reference to DOM element of shim
-	 * @method getShim
-	 * @return {HTMLDivElement} shim
-	 */
-	getShim:function () {
-		if (this.shim === undefined) {
-			this.shim = new Element('div');
-			ludo.dom.addClass(this.shim, 'ludo-shim');
-			this.shim.setStyles({
-				position:'absolute',
-				'z-index':50000,
-				display:'none'
-			});
-			document.body.adopt(this.shim);
-
-			if (this.shimCls) {
-				for (var i = 0; i < this.shimCls.length; i++) {
-					this.shim.addClass(this.shimCls[i]);
-				}
-			}
-			/**
-			 * Event fired when shim is created
-			 * @event createShim
-			 * @param {HTMLDivElement} shim
-			 */
-			this.fireEvent('createShim', this.shim);
-		}
-		return this.shim;
-	},
-
-	/**
-	 * Show shim
-	 * @method showShim
-	 */
-	showShim:function () {
-		this.getShim().setStyles({
-			display:'',
-			left:this.getShimX(),
-			top:this.getShimY(),
-			width:this.getWidth() + this.getShimWidthDiff(),
-			height:this.getHeight() + this.getShimHeightDiff()
-		});
-
-		this.fireEvent('showShim', [this.getShim(), this]);
-	},
-
-	getShimY:function(){
-		if(this.mouseYOffset){
-			return this.dragProcess.mouseY + this.mouseYOffset;
-		}else{
-			return this.getTop() + ludo.dom.getMH(this.getEl()) - ludo.dom.getMW(this.shim);
-		}
-	},
-
-	getShimX:function(){
-		if(this.mouseXOffset){
-			return this.dragProcess.mouseX + this.mouseXOffset;
-		}else{
-			return this.getLeft() + ludo.dom.getMW(this.getEl()) - ludo.dom.getMW(this.shim);
-		}
-	},
-
-	getShimWidthDiff:function(){
-		return ludo.dom.getMW(this.getEl()) - ludo.dom.getMBPW(this.shim);
-	},
-	getShimHeightDiff:function(){
-		return ludo.dom.getMH(this.getEl()) - ludo.dom.getMBPH(this.shim);
-	},
-
-	/**
-	 * Hide shim
-	 * @method hideShim
-	 */
-	hideShim:function () {
-		this.getShim().style.display = 'none';
-	},
-
-	/**
-	 * Set text content of shim
-	 * @method setShimText
-	 * @param {String} text
-	 */
-	setShimText:function (text) {
-		this.getShim().set('html', text);
-	},
-
-	/**
-	 * Fly/Slide dragged element back to it's original position
-	 * @method flyBack
-	 */
-	flyBack:function (duration) {
-		this.fly({
-			el: this.getShimOrEl(),
-			duration: duration,
-			from:{ x: this.getLeft(), y : this.getTop() },
-			to:{ x: this.getStartX(), y : this.getStartY() },
-			onComplete : this.flyBackComplete.bind(this)
-		});
-	},
-
-	/**
-	 * Fly/Slide dragged element to position of shim. This will only
-	 * work when useShim is set to true.
-	 * @method flyToShim
-	 * @param {Number} duration in seconds(default = .2)
-	 */
-	flyToShim:function(duration){
-		this.fly({
-			el: this.getEl(),
-			duration: duration,
-			from:{ x: this.getStartX(), y : this.getStartY() },
-			to:{ x: this.getLeft(), y : this.getTop() },
-			onComplete : this.flyToShimComplete.bind(this)
-		});
-	},
-
-	getStartX:function () {
-		return this.dragProcess.elX;
-	},
-
-	getStartY:function () {
-		return this.dragProcess.elY;
-	},
-
-	flyBackComplete:function(){
-		/**
-		 * Event fired after flyBack animation is complete
-		 * @event flyBack
-		 * @param {effect.Drag} this
-		 * @param {HTMLElement} dom node
-		 */
-		this.fireEvent('flyBack', [this, this.getShimOrEl()]);
-	},
-
-	flyToShimComplete:function(){
-		/**
-		 * Event fired after flyToShim animation is complete
-		 * @event flyBack
-		 * @param {effect.Drag} this
-		 * @param {HTMLElement} dom node
-		 */
-		this.fireEvent('flyToShim', [this, this.getEl()]);
-	},
-
-	isActive:function(){
-		return this.dragProcess.active;
 	}
 });/* ../ludojs/src/effect/resize.js */
 /***
@@ -16242,625 +17525,6 @@ ludo.grid.Grid = new Class({
 	getColumnManager:function () {
 		return this.columnManager;
 	}
-});/* ../ludojs/src/form/validator/fns.js */
-ludo.form.validator.required = function(value, required){
-    return !required || value.length > 0;
-};
-
-ludo.form.validator.minLength = function(value, minLength){
-    return value.length === 0 || value.length >= minLength;
-};
-
-ludo.form.validator.maxLength = function(value, maxLength){
-    return value.length === 0 || value.length <= maxLength;
-};
-
-ludo.form.validator.regex = function(value, regex){
-    return value.length === 0 || regex.test(value);
-};
-
-ludo.form.validator.minValue = function(value, minValue){
-    return value.length === 0 || parseInt(value) >= minValue;
-};
-ludo.form.validator.maxValue = function(value, maxValue){
-    return value.length === 0 || parseInt(value) <= maxValue;
-};
-ludo.form.validator.twin = function(value, twin){
-    var cmp = ludo.get(twin);
-    return !cmp || (cmp && value === cmp.value);
-};/* ../ludojs/src/form/element.js */
-/**
- * @namespace form
- * @class Element
- * @extends View
- * @description Super class for form components.
- */
-ludo.form.Element = new Class({
-    Extends:ludo.View,
-	/**
-	 * Form element label
-	 * @config {String} label
-	 * @default ''
-	 */
-    label:'',
-	/**
-	 * Label after input field
-	 * @config {String} suffix
-	 *
-	 */
-	suffix:'',
-
-    value:'',
-
-    onLoadMessage:'',
-
-    /**
-     * Width of label
-     * @attribute labelWidth
-     * @default 100
-     */
-    labelWidth:100,
-    /**
-     * "name" is inherited from ludo.View. It will also be set as name of input element
-     * @attribute name
-     * @type string
-     * @default undefined
-     */
-    name:undefined,
-    /**
-     * Width of input element
-     * @attribute fieldWidth
-     * @type int
-     * @default undefined
-     */
-    fieldWidth:undefined,
-
-    /**
-     * Custom CSS rules to apply to input element
-     * @attribute formCss
-     * @type Object, example: { border : '1px solid #000' }
-     * @default undefined
-     */
-    formCss:undefined,
-    /**
-     * Let input field use all remaining space of the component
-     * @attribute stretchField
-     * @type {Boolean}
-     * @default true
-     */
-    stretchField:true,
-
-
-    /**
-     * Is a value required for this field
-     * @attribute required
-     * @type {Boolean}
-     * @default false
-     */
-    required:false,
-    dirtyFlag:false,
-    initialValue:undefined,
-    constructorValue:undefined,
-    /**
-     * Is form element ready for setValue. For combo boxes and select boxes it may
-     * not be ready until available values has been loaded remotely
-     * @property isReady
-     * @type {Boolean}
-     * @private
-     */
-    isReady:true,
-    overflow:'hidden',
-
-    /**
-     * Will not validate unless value is the same as value of the form element with this id
-     * Example of use: Password and Repeat password. It's sufficient to specify "twin" for one of
-     * the views.
-     * @property twin
-     * @type String
-     * @default undefined
-     */
-    twin:undefined,
-
-    /**
-     * Link with a form component with this id. Value of these components will always be the same
-     * Update one and the other component will be updated automatically. It's sufficient
-     * to specify linkWith for one of the two views.
-     * @property linkWith
-     * @type String
-     * @default undefined
-     */
-    linkWith:undefined,
-
-    /**
-     * When using stateful:true, value will be preserved to next visit.
-     * @property statefulProperties
-     * @type Array
-     * @default ['value']
-     */
-    statefulProperties:['value'],
-
-    /**
-     Object of class form.validator.* or a plain validator function
-     When set the isValid method of the validator will be called after standard validation is complete
-     and form element is valid.
-     @property validator
-     @type Object
-     @example
-        validator : { type : 'form.validator.Md5', value : 'MD5 hash of something' }
-     In order to validate this field, the MD5 of form field value must match form.validator.Md5.value
-     @example
-        validator:function(value){
-	 		return value === 'Valid value';
-	 	}
-     is example of simple function used as validator.
-     */
-    validator:undefined,
-    validatorFn:undefined,
-
-    validators:[],
-
-    ludoConfig:function (config) {
-        this.parent(config);
-        var defaultConfig = this.getInheritedFormConfig();
-        this.labelWidth = defaultConfig.labelWidth || this.labelWidth;
-        this.fieldWidth = defaultConfig.fieldWidth || this.fieldWidth;
-
-        var keys = ['label', 'suffix', 'formCss', 'validator', 'stretchField', 'required', 'twin', 'disabled', 'labelWidth', 'fieldWidth',
-            'value', 'data'];
-        this.setConfigParams(config, keys);
-
-        this.elementId = 'el-' + this.id;
-        this.formCss = defaultConfig.formCss || this.formCss;
-        if (defaultConfig.height && config.height === undefined)this.layout.height = defaultConfig.height;
-
-        if (this.validator) {
-            this.createValidator();
-        }
-        if (config.linkWith !== undefined) {
-            this.setLinkWith(config.linkWith);
-        }
-
-        if (this.dataSource) {
-            this.isReady = false;
-        }
-        this.initialValue = this.constructorValue = this.value;
-        if (!this.name)this.name = 'ludo-form-el-' + String.uniqueID();
-
-
-        ludo.Form.add(this);
-        if(this.required)this.applyValidatorFns(['required']);
-        this.applyValidatorFns(['twin']);
-    },
-
-
-
-    applyValidatorFns:function (keys) {
-        for (var i = 0; i < keys.length; i++) {
-            var key = keys[i];
-            if (this[key] !== undefined) {
-                this.validators.push({
-                    fn:ludo.form.validator[key],
-                    key:key
-                });
-            }
-        }
-    },
-
-    createValidator:function () {
-        var fn;
-        if (ludo.util.isFunction(this.validator)) {
-            fn = this.validator;
-        } else {
-            this.validator.applyTo = this;
-            this.validator = ludo._new(this.validator);
-            fn = this.validator.isValid.bind(this.validator);
-        }
-        this.validators.push({
-            fn : fn,key:''
-        });
-    },
-
-    ludoEvents:function () {
-        this.parent();
-
-        if (this.dataSource) {
-            this.getDataSource().addEvent('load', this.setReady.bind(this));
-        }
-
-        var formEl = this.getFormEl();
-        if (formEl) {
-            formEl.addEvent('keydown', this.keyDown.bind(this));
-            formEl.addEvent('keypress', this.keyPress.bind(this));
-            formEl.addEvent('keyup', this.keyUp.bind(this));
-            formEl.addEvent('focus', this.focus.bind(this));
-            formEl.addEvent('change', this.change.bind(this));
-            formEl.addEvent('blur', this.blur.bind(this));
-        }
-    },
-
-    ludoRendered:function () {
-        this.parent();
-
-        if (this.disabled)this.disable();
-
-		if(this.els.formEl){
-			this.els.formEl.setProperty('name', this.getName());
-			if(this.value !== undefined)this.els.formEl.set('value', this.value)
-		}
-        if (this.linkWith) {
-            this.setLinkWithOfOther();
-        }
-		var parentFormManager = this.getParentFormManager();
-	    if (parentFormManager) {
-			parentFormManager.registerFormElement(this);
-		}
-		this.validate();
-    },
-    /**
-     * Disable form element
-     * @method disable
-     * @return void
-     */
-    disable:function () {
-        this.getFormEl().setProperty('disabled', '1');
-        ludo.dom.addClass(this.els.label, 'ludo-form-label-disabled');
-    },
-    /**
-     * Enable form element
-     * @method enable
-     * @return void
-     */
-    enable:function () {
-        this.getFormEl().removeProperty('disabled');
-        ludo.dom.removeClass(this.els.label, 'ludo-form-label-disabled');
-    },
-
-    getInheritedFormConfig:function () {
-        var cmp = this.getParent();
-        if (cmp) {
-            return cmp.formConfig || {};
-        }
-        return {};
-    },
-
-    ludoCSS:function () {
-        this.parent();
-        ludo.dom.addClass(this.getEl(), 'ludo-form-element');
-        if (this.els.formEl) {
-            if (this.fieldWidth) {
-                this.els.formEl.style.width = (this.fieldWidth - ludo.dom.getPW(this.els.formEl) - ludo.dom.getBW(this.els.formEl)) + 'px';
-            }
-
-            this.els.formEl.id = this.elementId;
-
-            if (this.formCss) {
-                this.els.formEl.setStyles(this.formCss);
-            }
-        }
-    },
-
-    getFormElId:function () {
-        return this.elementId;
-    },
-
-    getWidth:function () {
-        var ret = this.parent();
-        return ret ? ret : this.fieldWidth + (this.label ? this.labelWidth : 0) + 2;
-    },
-
-    keyUp:function (e) {
-        /**
-         * key up event
-         * @event key_up
-         * @param {String} key
-         * @param {String|Boolean|Object|Number} value
-         * @param {View} this
-         */
-        this.fireEvent('key_up', [ e.key, this.value, this ]);
-    },
-
-    keyDown:function (e) {
-        /**
-         * key down event
-         * @event key_down
-         * @param {String} key
-         * @param {String|Boolean|Object|Number} value
-         * $param {View} this
-         */
-        this.fireEvent('key_down', [ e.key, this.value, this ]);
-    },
-
-    keyPress:function (e) {
-        /**
-         * key press event
-         * @event key_press
-         * @param {String} key
-         * @param {String|Boolean|Object|Number} value
-         * $param {View} this
-         */
-        this.fireEvent('key_press', [ e.key, this.value, this ]);
-    },
-
-    focus:function () {
-        this._focus = true;
-        this.clearInvalid();
-        /**
-         * On focus event
-         * @event focus
-         * @param {String|Boolean|Object|Number} value
-         * $param {View} this
-         */
-        this.fireEvent('focus', [ this.value, this ]);
-    },
-    change:function () {
-        if (this.els.formEl) {
-            this.setValue(this.els.formEl.get('value'));
-        }
-        /**
-         * On change event. This event is fired when value is changed manually
-         * by the user via GUI. The "change" event is followed by a
-         * "valueChange" event.
-         * When value is changed using the setValue method
-         * only the "valueChange" event is fired.
-         *
-         * @event change
-         * @param {String|Boolean|Object|Number} value
-         * $param {View} this
-         */
-        if (this.wasValid)this.fireEvent('change', [ this.getValue(), this ]);
-    },
-
-    blur:function () {
-        this._focus = false;
-        this.validate();
-        if (this.getFormEl())this.value = this.getFormEl().get('value');
-        this.toggleDirtyFlag();
-        /**
-         * On blur event
-         * @event blur
-         * @param {String|Boolean|Object|Number} value
-         * $param {View} this
-         */
-        this.fireEvent('blur', [ this.value, this ]);
-    },
-
-    toggleDirtyFlag:function(){
-        if (this.value !== this.initialValue) {
-            /**
-             * @event dirty
-             * @description event fired on blur when value is different from it's original value
-             * @param {String} value
-             * @param {Object} ludo.form.* component
-             */
-            this.setDirty();
-            this.fireEvent('dirty', [this.value, this]);
-        } else {
-            /**
-             * @event clean
-             * @description event fired on blur when value is equal to original/start value
-             * @param {String} value
-             * @param {Object} ludo.form.* component
-             */
-            this.setClean();
-            this.fireEvent('clean', [this.value, this]);
-        }
-    },
-
-    hasFocus:function () {
-        return this._focus;
-    },
-    insertJSON:function (data) {
-        this.populate(data);
-    },
-    populate:function () {
-
-    },
-    getLabel:function () {
-        return this.label;
-    },
-    /**
-     * Return current value
-     * @method getValue
-     * @return string
-     */
-    getValue:function () {
-        return this.els.formEl ? this.els.formEl.get('value') : this.value;
-    },
-    /**
-     * Set new value
-     * @method setValue
-     * @param value
-     * @return void
-     */
-    setValue:function (value) {
-        if (!this.isReady) {
-            if(value)this.setValue.delay(50, this, value);
-            return;
-        }
-
-        if (value == this.value) {
-            return;
-        }
-
-        this.setFormElValue(value);
-        this.value = value;
-
-        this.validate();
-
-        if (this.wasValid) {
-            /**
-             * This event is fired whenever current value is changed, either
-             * manually by user or by calling setValue. When the value is changed
-             * manually by user via GUI, the "change" event is fired first, then
-             * "valueChange" afterwards.
-             * @event valueChange
-             * @param {Object|String|Number} value
-             * @param {form.Element} form component
-             */
-            this.fireEvent('valueChange', [this.getValue(), this]);
-            if (this.stateful)this.fireEvent('state');
-            if (this.linkWith)this.updateLinked();
-        }
-    },
-
-    setFormElValue:function(value){
-        if (this.els.formEl && this.els.formEl.value !== value) {
-            this.els.formEl.set('value', value);
-        }
-    },
-
-    /**
-     * Get reference to input element
-     * @method getFormEl
-     * @return DOMElement
-     */
-    getFormEl:function () {
-        return this.els.formEl;
-    },
-    /**
-     * Returns true when value of form element is valid, i.e. larger than minValue, matching regex etc.
-     * @method isValid
-     * @return {Boolean} valid
-     */
-    isValid:function () {
-        if(this.validators.length === 0)return true;
-        var val = this.getFormEl() ? this.getFormEl().get('value').trim() : this.value;
-        for (var i = 0; i < this.validators.length; i++) {
-            if (!this.validators[i].fn.apply(this, [val, this[this.validators[i].key]])){
-                return false;
-            }
-        }
-        return true;
-    },
-
-    clearInvalid:function () {
-        ludo.dom.removeClass(this.getEl(), 'ludo-form-el-invalid');
-    },
-
-    wasValid:true,
-
-    validate:function () {
-        this.clearInvalid();
-        if (this.isValid()) {
-            this.wasValid = true;
-            /**
-             * Event fired when value of form component is valid. This is fired on blur
-             * @event valid
-             * @param {String} value
-             * @param {Object} component
-             */
-            this.fireEvent('valid', [this.value, this]);
-            return true;
-        } else {
-            this.wasValid = false;
-            /**
-             * Event fired when value of form component is valid. This is fired on blur
-             * @event invalid
-             * @param {String} value
-             * @param {Object} component
-             */
-            this.fireEvent('invalid', [this.value, this]);
-            return false;
-        }
-    },
-
-    isFormElement:function () {
-        return true;
-    },
-
-    /**
-     * Returns initial value sent to constructor
-     * @method getInitialValue
-     * @return string initial value
-     */
-    getInitialValue:function () {
-        return this.initialValue;
-    },
-
-    /**
-     * Reset / Roll back to last committed value. It could be the value stored by last commit method call
-     * or if the original value/default value of this field.
-     * @method reset
-     * @return void
-     */
-    reset:function () {
-        this.setValue(this.initialValue);
-    },
-
-    /**
-     * Reset value back to the original value sent(constructor value)
-     * @method clear
-     * @return void
-     */
-    clear:function () {
-        this.setValue(this.constructorValue);
-    },
-
-    /**
-     * Update initial value to current value. These actions will always trigger a commit<br>
-     * - Form or Model submission
-     * - Fetching new record for a ludo.model.Model
-     * @method commit
-     * @return void
-     */
-    commit:function () {
-        this.initialValue = this.value;
-    },
-    /**
-     * Returns true if current value is different from original value
-     * @method isDirty
-     * @return {Boolean} isDirty
-     */
-    isDirty:function () {
-        return this.dirtyFlag;
-    },
-
-    setDirty:function () {
-        this.dirtyFlag = true;
-        ludo.dom.addClass(this.getEl(), 'ludo-form-el-dirty');
-    },
-
-    setClean:function () {
-        this.dirtyFlag = false;
-        ludo.dom.removeClass(this.getEl(), 'ludo-form-el-dirty');
-    },
-
-    setReady:function () {
-        this.isReady = true;
-    },
-
-    updateLinked:function () {
-        var cmp = this.getLinkWith();
-        if (cmp && cmp.value !== this.value) {
-            cmp.setValue(this.value);
-        }
-    },
-
-    setLinkWith:function (linkWith) {
-        this.linkWith = linkWith;
-        this.addEvent('valueChange', this.updateLinked.bind(this));
-    },
-
-    setLinkWithOfOther:function (attempts) {
-        attempts = attempts || 0;
-        var cmp = this.getLinkWith();
-        if (cmp && !cmp.linkWith) {
-            if (this.value === undefined){
-				this.initialValue = this.constructorValue = cmp.value;
-				this.setValue(cmp.value);
-			}
-            cmp.setLinkWith(this);
-        } else {
-            if (attempts < 100) {
-                this.setLinkWithOfOther.delay(50, this, attempts + 1);
-            }
-        }
-    },
-
-    getLinkWith:function(){
-        var cmp = ludo.get(this.linkWith);
-        return cmp ? cmp : this.parentComponent ? this.parentComponent.child[this.linkWith] : undefined;
-    }
 });/* ../ludojs/src/form/button.js */
 /**
  * Button component
@@ -21422,39 +22086,6 @@ ludo.tree.Filter = new Class({
         }
         return '';
     }
-});/* ../ludojs/src/ludo-db/factory.js */
-ludo.ludoDB.Factory = new Class({
-    Extends:ludo.Core,
-    ludoDBConfig:undefined,
-
-    arguments:undefined,
-    resource:undefined,
-    url:undefined,
-
-    ludoConfig:function (config) {
-        this.parent(config);
-        this.setConfigParams(config, ['url', 'resource','arguments']);
-        if(this.arguments && !ludo.util.isArray(this.arguments)){
-            this.arguments = [this.arguments];
-        }
-        this.ludoDBConfig = config;
-    },
-
-    load:function () {
-        var arguments = [this.resource];
-        if(this.arguments)arguments.splice(1, 0, this.arguments);
-        var req = new ludo.remote.JSON({
-            resource:'LudoJS',
-            url : this.getUrl()
-        });
-        req.addEvent('success', this.loadComplete.bind(this));
-        req.send('form', arguments);
-    },
-
-    loadComplete:function(req){
-        this.fireEvent('load', req.getResponseData());
-    }
-
 });/* ../ludojs/src/data-source/html.js */
 /**
  * Class for remote data source.
@@ -21818,131 +22449,6 @@ ludo.progress.Text = new Class({
      * @type String
      */
     tpl : '{text}'
-});/* ../ludojs/src/form/label-element.js */
-/**
- * Base class for all form elements with label
- * @namespace form
- * @class LabelElement
- * @extends form.Element
- */
-ludo.form.LabelElement = new Class({
-    Extends:ludo.form.Element,
-
-    fieldTpl:['<table ','cellpadding="0" cellspacing="0" border="0" width="100%">',
-        '<tbody>',
-        '<tr class="input-row">',
-        '<td class="label-cell"><label class="input-label"></label></td>',
-        '<td><div class="input-cell"></div></td>',
-        '<td class="invalid-cell" style="position:relative"><div class="invalid-cell-div"></div></td>',
-        '<td class="suffix-cell" style="display:none"><label></label></td>',
-        '<td class="help-cell" style="display:none"></td>',
-        '</tr>',
-        '</tbody>',
-        '</table>'
-    ],
-
-    labelSuffix:':',
-
-    ludoDOM:function () {
-        this.parent();
-        this.getBody().set('html', this.fieldTpl.join(''));
-        this.addInput();
-        this.addLabel();
-        this.setWidthOfLabel();
-    },
-
-    addLabel:function () {
-        if (this.label) {
-            this.getLabelDOM().set('html', this.label + this.labelSuffix);
-            this.els.label.setProperty('for', this.getFormElId());
-        }
-		if(this.suffix){
-			var s = this.getSuffixCell();
-			s.style.display='';
-			var label = s.getElement('label');
-			if(label){
-				label.set('html', this.suffix);
-				label.setProperty('for', this.getFormElId());
-			}
-		}
-    },
-
-    setWidthOfLabel:function () {
-		this.getLabelDOM().parentNode.style.width = this.labelWidth + 'px';
-    },
-
-    getLabelDOM:function () {
-        return this.getCell('.input-label','label');
-    },
-
-    addInput:function () {
-        if (!this.inputTag) {
-            return;
-        }
-        this.els.formEl = new Element(this.inputTag);
-
-        if (this.inputType) {
-            this.els.formEl.setProperty('type', this.inputType);
-        }
-        if (this.maxLength) {
-            this.els.formEl.setProperty('maxlength', this.maxLength);
-        }
-        if(this.readonly){
-            this.els.formEl.setProperty('readonly', true);
-        }
-		this.getInputCell().adopt(this.els.formEl);
-		if(this.fieldWidth){
-			this.els.formEl.style.width = this.fieldWidth + 'px';
-			this.getInputCell().parentNode.style.width = (this.fieldWidth  + ludo.dom.getMBPW(this.els.formEl)) + 'px';
-		}
-        this.els.formEl.id = this.getFormElId();
-    },
-
-	getSuffixCell:function(){
-		return this.getCell('.suffix-cell','labelSuffix');
-	},
-
-    getInputCell:function () {
-		return this.getCell('.input-cell','cellInput');
-    },
-
-    getInputRow:function () {
-		return this.getCell('.input-row','inputRow');
-    },
-
-	getCell:function(selector, cacheKey){
-		if(!this.els[cacheKey]){
-			this.els[cacheKey] = this.getBody().getElement(selector);
-		}
-		return this.els[cacheKey];
-	},
-
-    resizeDOM:function () {
-        this.parent();
-        if (this.stretchField && this.els.formEl) {
-            var width = this.getWidth();
-            if (!isNaN(width) && width > 0) {
-                width -= (ludo.dom.getMBPW(this.getEl()) + ludo.dom.getMBPW(this.getBody()));
-            } else {
-                var parent = this.getParent();
-                if (parent && parent.layout.type !== 'linear' && parent.layout.orientation !== 'horizontal') {
-                    width = parent.getWidth();
-                    width -= (ludo.dom.getMBPW(parent.getEl()) + ludo.dom.getMBPW(parent.getBody()));
-                    width -= (ludo.dom.getMBPW(this.getEl()) + ludo.dom.getMBPW(this.getBody()));
-                } else {
-                    var c = this.els.container;
-                    width = c.offsetWidth - ludo.dom.getMBPW(this.els.body) - ludo.dom.getPW(c) - ludo.dom.getBW(c);
-                }
-            }
-            if (this.label)width -= this.labelWidth;
-			if (this.suffix)width -= this.getSuffixCell().offsetWidth;
-            width -= 10;
-            if (width > 0 && !isNaN(width)) {
-                this.formFieldWidth = width;
-                this.getFormEl().style.width = width + 'px';
-            }
-        }
-    }
 });/* ../ludojs/src/form/toggle-group.js */
 /**
  * @namespace form
@@ -22738,6 +23244,8 @@ ludo.form.Combo = new Class({
         type:'popup'
     },
 
+	menuButton:undefined,
+
     /**
      Custom layout properties of child
      @config {Object} childLayout
@@ -22772,7 +23280,7 @@ ludo.form.Combo = new Class({
         c.cls = c.cls ? c.cls + ' ' + 'form-combo-child' : 'form-combo-child';
 
         this.getInputCell().style.position='relative';
-        new ludo.menu.Button({
+        this.menuButton = new ludo.menu.Button({
             renderTo: this.getInputCell(),
             alwaysVisible:true,
             region:'ne',
@@ -22873,6 +23381,73 @@ ludo.form.Date = new Class({
     getValue:function(){
         return this.value ? ludo.util.parseDate(this.value, this.displayFormat).format(this.inputFormat) : undefined;
     }
+});/* ../ludojs/src/form/color.js */
+ludo.form.Color = new Class({
+	Extends:ludo.form.Combo,
+	regex:/^#[0-9A-F]{6}$/i,
+	childLayout:{
+		width:250, height:250
+	},
+
+	getClassChildren:function () {
+		return [
+			{
+				layout:{
+					'type':'tabs'
+				},
+				cls:'ludo-tabs-in-dropdown',
+				bodyCls:'ludo-tabs-in-dropdown-body',
+				children:[
+					{
+						title:'Color boxes',
+						type:'color.Boxes',
+						value:this.value,
+						listeners:{
+							'setColor':this.receiveColor.bind(this),
+							'render':this.setInitialWidgetValue.bind(this)
+						}
+					},
+					{
+						title:'Color Slider',
+						type:'color.RGBSlider',
+						value:this.value,
+						listeners:{
+							'setColor':this.receiveColor.bind(this),
+							'render':this.setInitialWidgetValue.bind(this)
+						}
+
+					}
+				]
+			}
+		];
+	},
+
+	setInitialWidgetValue:function(widget){
+		widget.setColor(this.value);
+	},
+
+	ludoEvents:function () {
+		this.parent();
+		this.addEvent('change', this.updateWidgets.bind(this));
+	},
+
+	updateWidgets:function () {
+		var c = this.getColorWidgets();
+		for (var i = 0; i < c.length; i++) {
+			if(c[i].setColor){
+				c[i].setColor(this.value);
+			}
+		}
+	},
+
+	receiveColor:function (color) {
+		this.setValue(color);
+		this.hideMenu();
+	},
+
+	getColorWidgets:function () {
+		return this.children[0].children;
+	}
 });/* ../ludojs/src/form/reset-button.js */
 /**
  * Special Button used to reset all form fields of component back to it's original state.
@@ -23286,49 +23861,6 @@ ludo.form.ComboField = new Class({
         var valueField = this.els.valueField = new Element('div');
         ludo.dom.addClass(valueField, 'ludo-Filter-Tree-Combo-Value');
         this.getBody().adopt(valueField);
-    }
-});/* ../ludojs/src/form/color.js */
-ludo.form.Color = new Class({
-    Extends:ludo.form.Combo,
-    regex:/^#[0-9A-F]{6}$/i,
-    childLayout:{
-        width:250, height:250
-    },
-
-    getClassChildren:function () {
-        return [
-            {
-                layout:{
-                    'type':'tabs'
-                },
-                cls:'ludo-tabs-in-dropdown',
-                bodyCls:'ludo-tabs-in-dropdown-body',
-                children:[
-                    {
-                        title:'Color boxes',
-                        type:'color.Boxes',
-                        value:this.value,
-                        listeners:{
-                            'setColor' : this.receiveColor.bind(this)
-                        }
-                    },
-                    {
-                        title:'Color Slider',
-                        type:'color.RGBSlider',
-                        value:this.value,
-                        listeners:{
-                            'setColor' : this.receiveColor.bind(this)
-                        }
-
-                    }
-                ]
-            }
-        ];
-    },
-
-    receiveColor:function (color) {
-        this.setValue(color);
-        this.hideMenu();
     }
 });/* ../ludojs/src/form/hidden.js */
 ludo.form.Hidden = new Class({
@@ -25878,250 +26410,7 @@ ludo.form.File = new Class({
 
 	}
 });
-/* ../ludojs/src/form/slider.js */
-/**
- * Slider form component
- * @namespace form
- * @class Slider
- * @extends form.LabelElement
- */
-ludo.form.Slider = new Class({
-    // TODO implement support for min and max, example slider from 0 to 100, min and max from 10 to 90
-    Extends:ludo.form.LabelElement,
-    cssSignature:'ludo-form-slider',
-    type:'form.Slider',
-    fieldTpl:['<table ','cellpadding="0" cellspacing="0" border="0" width="100%">',
-        '<tbody>',
-        '<tr class="input-row">',
-        '<td class="label-cell"><label class="input-label"></label></td>',
-        '<td class="input-cell"></td>',
-        '<td class="suffix-cell" style="display:none"></td>',
-        '<td class="help-cell" style="display:none"></td>',
-        '</tr>',
-        '</tbody>',
-        '</table>'
-    ],
-
-    /* No input element for slider */
-    inputTag:undefined,
-    inputType:undefined,
-
-    /**
-     * Size of slider background
-     * @property sliderSize
-	 * @optional
-     * @private
-     */
-    sliderSize:100,
-
-    /**
-     * Direction of slider. If not explicit set, it will
-     * be set to "horizontal" when width of slide is greater than height of slider,
-     * otherwise it will be set to "vertical".
-     * @property {String} direction
-	 * @type String
-     * @default horizontal
-	 * @optional
-     *
-     */
-    direction:'horizontal',
-
-    /**
-     * Minimum value of slider
-     * @attribute {Number} minValue
-     * @default 1
-     */
-    minValue:1,
-
-    /**
-     * Maximum value of slider
-     * @attribute {Number} maxValue
-     * @default 10
-     */
-    maxValue:10,
-
-    height:undefined,
-
-    /**
-     * Revert x-, or y-axis, i.e. minimum value to the right instead of left or at the top instead of bottom
-     * @attribute {Boolean} reverse
-     * @default false
-     */
-    reverse:false,
-
-
-    ludoConfig:function (config) {
-        this.parent(config);
-        this.setConfigParams(config, ['direction','minValue','maxValue','reverse']);
-    },
-
-    ludoRendered:function () {
-        this.parent();
-        this.moveSliderBackgrounds();
-    },
-
-    moveSliderBackgrounds:function () {
-        var offset = Math.round(this.getHandleSize() / 2);
-        var css = this.getDirection() == 'horizontal' ? ['left','right'] : ['top','bottom'];
-        this.els['bgfirst'].style[css[0]] = offset + 'px';
-        this.els['bglast'].style[css[1]] = offset + 'px';
-    },
-
-    addInput:function () {
-        this.parent();
-
-        var el = this.els.slider = new Element('div');
-        this.els.slider.addEvent('click', this.sliderClick.bind(this));
-
-        ludo.dom.addClass(el, 'ludo-form-slider-container');
-        ludo.dom.addClass(el, 'ludo-form-slider-' + this.getDirection());
-        this.getInputCell().adopt(el);
-
-        this.addSliderBg('first');
-        this.addSliderBg('last');
-
-        this.createSliderHandle();
-    },
-
-    createSliderHandle:function () {
-        this.els.sliderHandle = ludo.dom.create({ renderTo : this.els.slider, cls : 'ludo-form-slider-handle'});
-        this.drag = new ludo.effect.Drag(this.getDragConfig());
-    },
-
-    addSliderBg:function (pos) {
-        this.els['bg' + pos] = ludo.dom.create({ renderTo : this.els.slider, cls : 'ludo-form-slider-bg-' + pos });
-    },
-
-    getDragConfig:function () {
-        return {
-            el:this.els.sliderHandle,
-            fireEffectEvents:false,
-            directions:this.getDirection() == 'horizontal' ? 'X' : 'Y',
-            listeners:{
-                'drag':this.receivePosition.bind(this)
-            },
-            minPos:0,
-            maxPos:this.getSliderSize()
-        };
-    },
-
-    sliderClick:function (e) {
-        if (!e.target.hasClass('ludo-form-slider-handle')) {
-            var pos = this.els.slider.getPosition();
-            var offset = Math.round(this.getHandleSize() / 2);
-            this.receivePosition({
-                x:e.page.x - pos.x - offset,
-                y:e.page.y - pos.y - offset
-            });
-        }
-
-    },
-    receivePosition:function (pos) {
-        this.setValue(this.pixelToValue(this.getDirection() == 'horizontal' ? pos.x : pos.y));
-        /**
-         * Change event
-         * @event change
-         * @param value of form field
-         * @param Component this
-         */
-        this.fireEvent('change', [ this.value, this ]);
-    },
-
-    pixelToValue:function (px) {
-        var min = this.getMinValue();
-        var max = this.getMaxValue();
-
-        var sliderSize = this.getSliderSize();
-        var ret = Math.round(px / sliderSize * (max - min)) + min;
-        if (this.shouldReverseAxis()) {
-            ret = max - ret;
-        }
-
-        return ret;
-    },
-
-    getDirection:function () {
-        if (this.direction === undefined) {
-            var size = this.getBody().getSize();
-            if (size.x >= size.y) {
-                this.direction = 'horizontal';
-            } else {
-                this.direction = 'vertical';
-            }
-        }
-        return this.direction;
-    },
-
-    getMinValue:function () {
-        return this.minValue;
-    },
-
-    getMaxValue:function () {
-        return this.maxValue;
-    },
-
-    setValue:function (value) {
-        if (value > this.getMaxValue()) {
-            value = this.getMaxValue();
-        } else if (value < this.getMinValue()) {
-            value = this.getMinValue();
-        }
-        this.parent(value);
-        this.positionSliderHandle();
-        this.toggleDirtyFlag();
-    },
-
-    resizeDOM:function () {
-        this.parent();
-        if (this.direction == 'horizontal') {
-            this.sliderSize = this.els.slider.offsetWidth;
-        } else {
-            this.sliderSize = this.getBody().offsetHeight - ludo.dom.getMH(this.els.slider);
-            this.els.slider.style.height = this.getHeight() + 'px';
-        }
-        this.sliderSize -= this.getHandleSize();
-
-        this.positionSliderHandle();
-        this.drag.setMaxPos(this.sliderSize);
-    },
-
-    positionSliderHandle:function () {
-        this.els.sliderHandle.style[this.handleCssProperty] = this.getHandlePos() + 'px';
-    },
-
-    getHandlePos:function () {
-        var ret = Math.round((this.value - this.minValue) / (this.maxValue - this.minValue) * this.sliderSize);
-        if (this.shouldReverseAxis()) {
-            ret = this.sliderSize - ret;
-        }
-        return ret;
-    },
-    _shouldReverse:undefined,
-    shouldReverseAxis:function () {
-        if (this._shouldReverse == undefined) {
-            this._shouldReverse = (this.direction == 'horizontal' && this.reverse) || (this.direction == 'vertical' && !this.reverse);
-        }
-        return this._shouldReverse;
-    },
-
-    getSliderSize:function () {
-        return this.sliderSize;
-    },
-
-    getHandleSize:function () {
-        if (this.handleSize === undefined) {
-            var cssProperty = 'height';
-            this.handleCssProperty = 'top';
-            if (this.getDirection() == 'horizontal') {
-                cssProperty = 'width';
-                this.handleCssProperty = 'left';
-            }
-
-            this.handleSize = parseInt(this.els.sliderHandle.getStyle(cssProperty).replace('px', ''));
-        }
-        return this.handleSize;
-    }
-});/* ../ludojs/src/form/search-field.js */
+/* ../ludojs/src/form/search-field.js */
 /**
  * Form field designed to search in dataSource.Collection
  * @namespace form

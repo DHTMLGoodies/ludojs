@@ -13,6 +13,11 @@ load:
   - ../../src/form/select.js
   - ../../src/form/combo.js
   - ../../src/form/date.js
+  - ../../src/form/color.js
+  - ../../src/color/base.js
+  - ../../src/color/boxes.js
+  - ../../src/color/rgb-slider.js
+  - ../../src/color/color.js
   - ../../src/data-source/collection.js
 
 serve:
@@ -33,6 +38,7 @@ test:
   - SelectTest.js
   - DateTest.js
   - CheckboxTest.js
+  - ColorTest.js
 
 plugin:
  - name: "coverage"
