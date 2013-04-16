@@ -4,12 +4,12 @@ ludo.color.RGBSlider = new Class({
         type:'relative'
     },
     value:'#000000',
-    regex:/^#[0-9A-F]{6}/gi,
+    regex:/^\#[0-9A-F]{6}$/gi,
 
     ludoConfig:function (config) {
         this.parent(config);
         this.setConfigParams(config, ['value']);
-        if (this.value && !this.regex.test(this.value)) {
+        if (this.value && !/^\#[0-9A-F]{6}$/gi.test(this.value)) {
             this.value = '#000000';
         }
     },
@@ -20,9 +20,18 @@ ludo.color.RGBSlider = new Class({
         this.child['preview'].child['colorValue'].addEvent('setColor', this.receiveColor.bind(this));
     },
 
-    setColor:function (color) {
-        if (this.regex.test(color)) {
+    show:function(){
+        this.parent();
+        this.updateSliders();
+    },
 
+    setColor:function (color) {
+        if (/^\#[0-9A-F]{6}$/gi.test(color)) {
+            this.value = color;
+            this.updateSliders();
+        }else{
+            console.log(this.regex);
+            console.log('No match ' + color);
         }
     },
 
@@ -107,6 +116,7 @@ ludo.color.RGBSlider = new Class({
     updatePreview:function () {
         var items = ['red', 'green', 'blue'];
         var color = '#';
+
         for (var i = 0; i < items.length; i++) {
             color = color + this.prefixed(this.child[items[i]].getValue().toString(16));
         }
@@ -128,6 +138,17 @@ ludo.color.RGBSlider = new Class({
 
     getColorValue:function (color) {
         return this.colorInstance().rgbObject(this.value)[color.substr(0, 1)];
+    },
+
+    updateSliders:function(){
+        if(!this.child['red'])return;
+
+        var color = this.colorInstance().rgbObject(this.value);
+
+        this.child['red'].setValue(color.r);
+        this.child['green'].setValue(color.g);
+        this.child['blue'].setValue(color.b);
+        this.updatePreview();
     }
 });
 

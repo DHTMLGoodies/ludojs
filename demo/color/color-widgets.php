@@ -1,6 +1,6 @@
 <?php
 $sub = true;
-$pageTitle = 'Deck/Card demo';
+$pageTitle = 'Color widgets';
 require_once("../includes/demo-header.php");
 ?>
 <body>
@@ -18,7 +18,7 @@ require_once("../includes/demo-header.php");
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/color/boxes.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/color/rgb-slider.js"></script>
 <script type="text/javascript">
-    new ludo.Window({
+    var w = new ludo.Window({
         title : 'Color widgets',
         css:{
             'border-top' : 0
