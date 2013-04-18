@@ -1,4 +1,4 @@
-/* Generated Tue Apr 16 14:43:36 CEST 2013 */
+/* Generated Thu Apr 18 17:36:16 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -1143,7 +1143,13 @@ div.ludo-paging-total-pages .ludo-body{
     background-color:transparent;
 }
 
-
+.ludo-grid-empty-text{
+    position:absolute;
+    top:50%;
+    margin-top:-20px;
+    width:100%;
+    text-align:center;
+}
 
 /* ../ludojs/css-source/form/form.css */
 .ludo-form-element div.ludo-body {

@@ -63,6 +63,13 @@ ludo.Core = new Class({
 	 */
 	statefulProperties:undefined,
 
+	/**
+	 * Storage of ludoJS classes this object is depending on
+	 * @property {Object} dependency
+	 * @private
+	 */
+	dependency:{},
+
 	initialize:function (config) {
 		config = config || {};
 		this.lifeCycle(config);
@@ -260,5 +267,18 @@ ludo.Core = new Class({
 	 */
 	saveState:function () {
 		this.fireEvent('state');
+	},
+
+	createDependency:function(key, config){
+		this.dependency[key] = ludo.util.isFunction(config) ? config : ludo._new(config);
+		return this.dependency[key];
+	},
+
+	hasDependency:function(key){
+		return this.dependency[key] ? true : false;
+	},
+
+	getDependency:function(key){
+		return this.dependency[key];
 	}
 });

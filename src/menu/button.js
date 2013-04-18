@@ -173,7 +173,7 @@ ludo.menu.Button = new Class({
             this.menu.renderTo = document.body;
             this.menu.type = this.menu.type || 'View';
             this.menu.hidden = true;
-            this.menu = ludo._new(this.menu);
+            this.menu = this.createDependency('menuForButton', this.menu);
             this.menu._button = this.getEl().id;
             document.body.addEvent('mouseup', this.autoHideMenu.bind(this));
         } else {
@@ -238,7 +238,7 @@ ludo.menu.Button = new Class({
     },
 
     autoHideMenu:function (e) {
-        if (this.menu && this.menu.hidden)return;
+        if (!this.menu || this.menu.hidden)return;
         if (!ludo.dom.isInFamilies(e.target, [this.el.id, this.menu.getEl().id])) {
             this.hideMenu();
             this.hideButton();

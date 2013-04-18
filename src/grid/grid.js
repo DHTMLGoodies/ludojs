@@ -123,10 +123,17 @@ ludo.grid.Grid = new Class({
 	 */
 	rowManager:undefined,
 
+	/**
+	 * Text to show in the center of the grid when there's no data in the data to show
+	 * @config {String} emptyText
+	 * @default "No data"
+	 */
+	emptyText:'No data',
+
 	ludoConfig:function (config) {
 		this.parent(config);
 
-        this.setConfigParams(config, ['headerMenu','columnManager','rowManager','mouseOverEffect']);
+        this.setConfigParams(config, ['headerMenu','columnManager','rowManager','mouseOverEffect','emptyText']);
 
 		if (this.columnManager) {
 			if (!this.columnManager.type)this.columnManager.type = 'grid.ColumnManager';
@@ -587,6 +594,10 @@ ludo.grid.Grid = new Class({
 		this.currentOverRecord = undefined;
 		this.currentData = this.getDataSource().getData();
 
+		if(this.emptyText){
+			this.emptyTextEl().style.display= this.currentData.length > 0 ? 'none' : '';
+		}
+
 		if (Browser.ie) {
 			this.populateDataIE();
 			return;
@@ -615,6 +626,18 @@ ludo.grid.Grid = new Class({
 		this.resizeColumns();
 		this.resizeVerticalScrollbar();
 		this.highlightActiveRecord();
+	},
+
+
+	emptyTextEl:function(){
+		if(this.els.emptyText === undefined){
+			this.els.emptyText = ludo.dom.create({
+				cls : 'ludo-grid-empty-text',
+				html : this.emptyText,
+				renderTo:this.getEl()
+			});
+		}
+		return this.els.emptyText;
 	},
 
 	getColumnCssClass:function (col) {

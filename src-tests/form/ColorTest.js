@@ -6,7 +6,7 @@ TestCase("ColorTest", {
 
 		// when
 		el.setValue('#ffaa22');
-		el.menuButton.showMenu();
+		el.getDependency('menuButton').showMenu();
 		this.showRGBSlider(el);
 
 		// then
@@ -19,7 +19,7 @@ TestCase("ColorTest", {
 
 		// when
 		el.setValue('#ffaa22');
-		el.menuButton.showMenu();
+		el.getDependency('menuButton').showMenu();
 		this.showRGBSlider(el);
 
 
@@ -34,7 +34,7 @@ TestCase("ColorTest", {
 		var el = this.getColorWidget();
 
 		// when
-		el.menuButton.showMenu();
+		el.getDependency('menuButton').showMenu();
 		this.showRGBSlider(el);
 		el.setValue('#ffaa22');
 		el.change();

@@ -9,7 +9,7 @@ ludo.layout.Base = new Class({
 	tabStrip:null,
 	resizables:[],
 	benchmarkTime:false,
-
+	dependency:{},
 	viewport:{
 		top:0, left:0,
 		width:0, height:0,
@@ -19,7 +19,7 @@ ludo.layout.Base = new Class({
 	initialize:function (view) {
         this.id = String.uniqueID();
 		this.view = view;
-		this.onCreate();
+		if(view.getBody())this.onCreate();
 	},
 
 	onCreate:function () {
@@ -238,7 +238,7 @@ ludo.layout.Base = new Class({
 
 	createRenderer:function(){
 		if(this.renderer === undefined){
-			this.renderer = new ludo.layout.Renderer({
+			this.renderer = this.dependency['renderer'] = new ludo.layout.Renderer({
 				view:this.view
 			});
 		}

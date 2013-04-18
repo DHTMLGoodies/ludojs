@@ -48,20 +48,22 @@ ludo.form.Combo = new Class({
         c.cls = c.cls ? c.cls + ' ' + 'form-combo-child' : 'form-combo-child';
 
         this.getInputCell().style.position='relative';
-        this.menuButton = new ludo.menu.Button({
-            renderTo: this.getInputCell(),
-            alwaysVisible:true,
-            region:'ne',
-            autoPosition:false,
-            menu:this.children[0],
-            toggleOnClick:true,
-            listeners:{
-                show:function(){
-                    this.fireEvent('showCombo');
-                }.bind(this)
-            }
-        });
+		this.createDependency('menuButton', new ludo.menu.Button({
+			type:'menu.Button',
+			renderTo: this.getInputCell(),
+			alwaysVisible:true,
+			region:'ne',
+			autoPosition:false,
+			menu:this.children[0],
+			toggleOnClick:true,
+			listeners:{
+				show:function(){
+					this.fireEvent('showCombo');
+				}.bind(this)
+			}
+		}));
     },
+
     autoHide:function(focused){
         if(focused.isButton && focused.isButton())return;
         if(focused !== this && !focused.isChildOf(this.children[0])){

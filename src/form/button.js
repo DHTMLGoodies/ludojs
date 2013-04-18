@@ -154,9 +154,13 @@ ludo.form.Button = new Class({
         el.addEvent('mouseenter', this.mouseOver.bind(this));
         el.addEvent('mouseleave', this.mouseOut.bind(this));
         el.addEvent('mousedown', this.mouseDown.bind(this));
-        document.body.addEvent('mouseup', this.mouseUp.bind(this));
+
+		// TODO need to bound in order to remove event later. Make this easier and more intuitive
+		this.mouseUpBound = this.mouseUp.bind(this);
+        document.body.addEvent('mouseup', this.mouseUpBound);
         if (this.defaultSubmit) {
-            document.id(window).addEvent('keypress', this.keyPress.bind(this));
+			this.keyPressBound = this.keyPress.bind(this);
+            document.id(window).addEvent('keypress', this.keyPressBound);
         }
     },
 
@@ -177,6 +181,12 @@ ludo.form.Button = new Class({
             if(!m.isValid())this.disable();
         }
     },
+
+	dispose:function(){
+		this.parent();
+		document.body.removeEvent('mouseup', this.mouseUpBound);
+		if (this.defaultSubmit) document.id(window).removeEvent('keypress', this.keyPressBound);
+	},
 
     addLabel:function () {
         var txt = this.els.txt = new Element('div');
@@ -279,14 +289,16 @@ ludo.form.Button = new Class({
         }
 
     },
+	isDown:false,
     mouseDown:function () {
         if (!this.isDisabled()) {
+			this.isDown = true;
             this.getBody().addClass('ludo-form-button-down');
             this.fireEvent('mousedown', this);
         }
     },
     mouseUp:function () {
-        if (!this.isDisabled()) {
+        if (this.isDown && !this.isDisabled()) {
             this.getBody().removeClass('ludo-form-button-down');
             this.fireEvent('mouseup', this);
         }

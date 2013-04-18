@@ -32,7 +32,7 @@ ludo.form.Manager = new Class({
 			if (config.model.type === undefined) {
 				config.model.type = 'model.Model';
 			}
-			this.model = ludo._new(config.model);
+			this.model = this.createDependency('model', config.model);
 			if (this.model.url == undefined) {
 				this.model._setUrl(this.getUrl());
 			}
@@ -48,8 +48,8 @@ ludo.form.Manager = new Class({
 				this.fireEvent('servererror', [text, error]);
 			}.bind(this))
 		}
-		if (config.listeners !== undefined) {
-			this.addEvents(config.listeners);
+		if (this.form.listeners !== undefined) {
+			this.addEvents(this.form.listeners);
 		}
 		this.getFormElements();
 	},
@@ -274,7 +274,7 @@ ludo.form.Manager = new Class({
     requestHandler:function(){
         if(this._request === undefined){
             if(!this.form.resource)ludo.util.warn("Warning: form does not have a resource property. Falling back to default: 'Form'");
-            this._request = new ludo.remote.JSON({
+            this._request = this.createDependency('_request',new ludo.remote.JSON({
                 url:this.url,
                 resource : this.form.resource ? this.form.resource : 'Form',
                 method:this.form.method ? this.form.method : 'post',
@@ -321,7 +321,7 @@ ludo.form.Manager = new Class({
                         this.fireEvent('valid', this);
                     }.bind(this)
                 }
-            });
+            }));
         }
         return this._request;
     },

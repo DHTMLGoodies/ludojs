@@ -70,29 +70,51 @@ ludo.util = {
 		}
 		return ret;
 	},
-	
-	disposeView:function(view){
+
+	/**
+	 * Dispose LudoJS components
+	 * @param {Core} view
+	 * @private
+	 */
+	dispose:function(view){
 		if (view.getParent()) {
 			view.getParent().removeChild(view);
 		}
         view.removeEvents();
+
+		this.disposeDependencies(view.dependency);
+
         view.disposeAllChildren();
 
 		for (var name in view.els) {
 			if (view.els.hasOwnProperty(name)) {
 				if (view.els[name] && view.els[name].tagName && name != 'parent') {
 					view.els[name].dispose();
+					if(view.els[name].removeEvents)view.els[name].removeEvents();
 				}
 			}
 		}
-		view.getEl().dispose();
 
 		ludo.CmpMgr.deleteComponent(view);
-		if(view.layoutManager)delete view.layoutManager;
-		delete view.els;
 
+		delete view.els;
 	},
 
+	disposeDependencies:function(deps){
+		for(var key in deps){
+			if(deps.hasOwnProperty(key)){
+				if(deps[key].removeEvents)deps[key].removeEvents();
+				if(deps[key].dispose){
+					deps[key].dispose();
+				}else if(deps[key].dependency && deps[key].dependency.length){
+					ludo.util.disposeDependencies(deps[key].dependency);
+				}
+				delete deps[key];
+			}
+		}
+
+	},
+	
     parseDate:function(date, format){
         if(ludo.util.isString(date)){
             var tokens = format.split(/[^a-z%]/gi);

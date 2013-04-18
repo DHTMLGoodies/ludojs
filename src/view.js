@@ -19,36 +19,36 @@
  @constructor
  @param {Object} config
  @example
- 	new ludo.View({
+ new ludo.View({
  		renderTo:document.body,
  		html : 'Hello'
 	}
  Creates a standard view rendered to the &lt;body> element of your page
 
  @example
-	 ...
-	 children:[{
+ ...
+ children:[{
 	 	html : 'View 1' },
-	 {
-	 	html : 'View 2' }
-	 }]
-	 ...
+ {
+	 html : 'View 2' }
+ }]
+ ...
  adds two views as child of a component
 
  @example
- 	ludo.myApp.View = new Class({
+ ludo.myApp.View = new Class({
  		Extends: ludo.View,
  		type : 'myApp.View',
  		ludoRendered:function(){
  			this.setHtml('My custom component');
 		}
 	}
- 	...
-	...
- 	children:[{
+ ...
+ ...
+ children:[{
 		type : 'myApp.View'
 	}]
- 	...
+ ...
 
  is a simple example of how to extend a view to create your own views and how to use it.
  *
@@ -58,7 +58,7 @@ ludo.View = new Class({
 	type:'View',
 	cType:'View',
 	cls:'',
-    bodyCls:'',
+	bodyCls:'',
 
 	/**
 	 * CSS class added to container of this component
@@ -99,20 +99,20 @@ ludo.View = new Class({
 	 @config addons
 	 @type {Array}
 	 @example
-		 new ludo.View({<br>
+	 new ludo.View({<br>
 		   plugins : [ { type : 'plugins.Sound' }]
 	  	 });
 	 and inside ludo.plugins.Sound:
 	 1) Create reference to view in constructor
 	 @example
-	 	  initialize:function(config){
+	 initialize:function(config){
          ...
          this.view = config.view;
          ...
       }
 
 	 2) Add event
-	 	this.view.addEvent('someEvent', this.playSound.bind(this));
+	 this.view.addEvent('someEvent', this.playSound.bind(this));
 	 Which will cause the plugin to play a sound when "someEvent" is fired by the view.
 	 */
 	addons:[],
@@ -124,7 +124,7 @@ ludo.View = new Class({
 	 @config children
 	 @type Array
 	 @example
-	 	new ludo.Window({
+	 new ludo.Window({
            left : 200, top : 200,
            width : 400, height: 400,
            children : [{
@@ -146,7 +146,7 @@ ludo.View = new Class({
 	 @type Object
 	 @default undefined
 	 @example
-	 	socket:{
+	 socket:{
             url:'http://127.0.0.1:1337',
             emitEvents:['chat','logout']
         }
@@ -251,7 +251,7 @@ ludo.View = new Class({
 	 @type Object
 	 @default undefined
 	 @example
-	 	copyEvents:{
+	 copyEvents:{
            'click' : 'send'
         }
 	 */
@@ -263,7 +263,7 @@ ludo.View = new Class({
 	 @type Object
 	 @default undefined
 	 @example
-	 	form : {
+	 form : {
             url: 'my-submit-url.php',
             method:'post',
             name : 'myForm'
@@ -271,25 +271,23 @@ ludo.View = new Class({
 	 */
 	form:undefined,
 
-	formManager:undefined,
-
 	/**
 	 Layout config object
 	 @property layout
 	 @type {Object|String}
 	 @default undefined
 	 @example
-	 	layout:{
+	 layout:{
 	 		type:'linear',
 	 		orientation:'horizontal'
 	 	}
 	 or shortcut :
 	 @example
-	 	layout:"cols"
+	 layout:"cols"
 	 which is the same as linear horizontal
 
 	 Layout types:
-	 	linear, fill, grid, tab, popup
+	 linear, fill, grid, tab, popup
 
 	 */
 	layout:undefined,
@@ -308,7 +306,7 @@ ludo.View = new Class({
 	 @type String
 	 @default '' (empty string)
 	 @example
-	 	tpl:'Firstname: {firstname}, lastname:{lastname}'
+	 tpl:'Firstname: {firstname}, lastname:{lastname}'
 	 */
 	tpl:'',
 	/**
@@ -320,28 +318,27 @@ ludo.View = new Class({
 	 * @default { type: 'tpl.Parser' }
 	 */
 	tplParserConfig:{ type:'tpl.Parser' },
-	layoutManager:null,
 	initialItemsObject:[],
 	contextMenu:undefined,
 	lifeCycleComplete:false,
 
-    /**
-     Config object for LudoDB integration.
-     @config {Object} ludoDB
-     @example
-        ludoDB:{
+	/**
+	 Config object for LudoDB integration.
+	 @config {Object} ludoDB
+	 @example
+	 ludoDB:{
             'resource' : 'Person',
             'arguments' : 1, // id of person
             'url' : 'router.php' // optional url
         }
 
-     This example assumes that ludoJS properties are defined in the LudoDBModel called "Person".
-     */
-    ludoDB:undefined,
+	 This example assumes that ludoJS properties are defined in the LudoDBModel called "Person".
+	 */
+	ludoDB:undefined,
 
 	lifeCycle:function (config) {
 
-        this._createDOM();
+		this._createDOM();
 		if (!config.children) {
 			config.children = this.children;
 			this.children = [];
@@ -349,9 +346,9 @@ ludo.View = new Class({
 
 		this.ludoConfig(config);
 
-        if(!config.children || !config.children.length){
-            config.children = this.getClassChildren();
-        }
+		if (!config.children || !config.children.length) {
+			config.children = this.getClassChildren();
+		}
 
 		if (this.hidden) {
 			this.unRenderedChildren = config.children;
@@ -360,20 +357,20 @@ ludo.View = new Class({
 		}
 	},
 
-    /**
-     * Return child views of this class.
-     * By default it returns the children property of the class. There may be advantages of defining children
-     * in this method. By defining children in the children property of the class, you don't have access to "this". By returning
-     * children from getClassChildren, you will be able to use "this" as a reference to the class instance.
-     * @method getClassChildren
-     * @return {Array|children}
-     */
-    getClassChildren:function(){
-        return this.children;
-    },
+	/**
+	 * Return child views of this class.
+	 * By default it returns the children property of the class. There may be advantages of defining children
+	 * in this method. By defining children in the children property of the class, you don't have access to "this". By returning
+	 * children from getClassChildren, you will be able to use "this" as a reference to the class instance.
+	 * @method getClassChildren
+	 * @return {Array|children}
+	 */
+	getClassChildren:function () {
+		return this.children;
+	},
 
 	remainingLifeCycle:function (config) {
-		if(this.lifeCycleComplete)return;
+		if (this.lifeCycleComplete)return;
 		if (!config && this.unRenderedChildren) {
 			config = { children:this.unRenderedChildren };
 		}
@@ -392,7 +389,7 @@ ludo.View = new Class({
 		this.ludoCSS();
 		this.ludoEvents();
 
-        this.increaseZIndex();
+		this.increaseZIndex();
 
 		if (this.layout && this.layout.type && this.layout.type == 'tabs') {
 			this.getLayout().prepareView();
@@ -404,9 +401,9 @@ ludo.View = new Class({
 		if (!this.parentComponent) {
 			ludo.dom.clearCache();
 			ludo.dom.clearCache.delay(50, this);
-            var r = this.getLayout().getRenderer();
-            r.resize();
-            r.resizeChildren();
+			var r = this.getLayout().getRenderer();
+			r.resize();
+			r.resizeChildren();
 		}
 	},
 
@@ -418,20 +415,19 @@ ludo.View = new Class({
 	ludoConfig:function (config) {
 		this.parent(config);
 		config.els = config.els || {};
-        if(this.parentComponent)config.renderTo = undefined;
-        var keys = ['css','contextMenu','renderTo','tpl','containerCss','socket','form','addons','title','html','hidden','copyEvents',
-                    'dataSource','onLoadMessage','movable','resizable','closable','minimizable','alwaysInFront',
-                    'parentComponent','cls','bodyCls','objMovable','width','height','model','frame','formConfig',
-                    'overflow','ludoDB'];
+		if (this.parentComponent)config.renderTo = undefined;
+		var keys = ['css', 'contextMenu', 'renderTo', 'tpl', 'containerCss', 'socket', 'form', 'addons', 'title', 'html', 'hidden', 'copyEvents',
+			'dataSource', 'onLoadMessage', 'movable', 'resizable', 'closable', 'minimizable', 'alwaysInFront',
+			'parentComponent', 'cls', 'bodyCls', 'objMovable', 'width', 'height', 'model', 'frame', 'formConfig',
+			'overflow', 'ludoDB'];
 
-        this.setConfigParams(config,keys);
-
+		this.setConfigParams(config, keys);
 
 
 		if (this.socket) {
 			if (!this.socket.type)this.socket.type = 'socket.Socket';
 			this.socket.component = this;
-			this.socket = ludo._new(this.socket);
+			this.socket = this.createDependency(this.socket);
 		}
 
 		if (this.renderTo)this.renderTo = document.id(this.renderTo);
@@ -439,19 +435,21 @@ ludo.View = new Class({
 		this.layout = ludo.layoutFactory.getValidLayoutObject(this, config);
 
 
-        if(this.ludoDB){
-            var f = new ludo.ludoDB.Factory(this.ludoDB);
-            var initialHidden = this.hidden;
-            f.addEvent('load', function(children){
-                this.unRenderedChildren = children.children;
-                this.hidden = initialHidden;
-                if(!this.hidden){
-                    this.show();
-                }
-            }.bind(this));
-            this.hidden = true;
-            f.load();
-        }
+		if (this.ludoDB) {
+			this.ludoDB.type = 'ludoDB.Factory';
+			var f = this.createDependency('ludoDB', new ludo.ludoDB.Factory(this.ludoDB));
+
+			var initialHidden = this.hidden;
+			f.addEvent('load', function (children) {
+				this.unRenderedChildren = children.children;
+				this.hidden = initialHidden;
+				if (!this.hidden) {
+					this.show();
+				}
+			}.bind(this));
+			this.hidden = true;
+			f.load();
+		}
 
 		if (this.copyEvents) {
 			this.createEventCopies();
@@ -465,11 +463,11 @@ ludo.View = new Class({
 	},
 
 	/**
-	  The second life cycle method
-	  This method is typically used when you want to create your own DOM elements.
+	 The second life cycle method
+	 This method is typically used when you want to create your own DOM elements.
 	 @method ludoDOM
 	 @example
-		 ludoDOM : function() {<br>
+	 ludoDOM : function() {<br>
 			 this.parent(); // Always call parent ludoDOM
 			 var myEl = new Element('div');
 			 myEl.set('html', 'My Content');
@@ -489,9 +487,9 @@ ludo.View = new Class({
 			this.contextMenu = undefined;
 		}
 
-		if (this.cls){
-            ludo.dom.addClass(this.getEl(), this.cls);
-        }
+		if (this.cls) {
+			ludo.dom.addClass(this.getEl(), this.cls);
+		}
 		if (this.bodyCls)ludo.dom.addClass(this.getBody(), this.bodyCls);
 		if (this.type)ludo.dom.addClass(this.getEl(), 'ludo-' + (this.type.replace(/\./g, '-').toLowerCase()));
 		if (this.css)this.getBody().setStyles(this.css);
@@ -512,7 +510,7 @@ ludo.View = new Class({
 	 @method ludoEvents
 	 @return void
 	 @example
-		 ludoEvents:function(){
+	 ludoEvents:function(){
 			 this.parent();
 			 this.addEvent('load', this.myMethodOnLoad.bind(this));
 		 }
@@ -520,33 +518,33 @@ ludo.View = new Class({
 	ludoEvents:function () {
 		if (this.dataSource) {
 			this.getDataSource();
-			if(this.onLoadMessage){
+			if (this.onLoadMessage) {
 				this.getLoader();
 			}
 		}
 		/*
-		if (!this.parentComponent && this.renderTo && this.renderTo.tagName.toLowerCase() == 'body') {
-			if (!this.isMovable()) {
-				// document.id(window).addEvent('resize', this.resize.bind(this));
-			}
-		}
-		*/
+		 if (!this.parentComponent && this.renderTo && this.renderTo.tagName.toLowerCase() == 'body') {
+		 if (!this.isMovable()) {
+		 // document.id(window).addEvent('resize', this.resize.bind(this));
+		 }
+		 }
+		 */
 	},
 
-    /**
-     * Returns class used to display messages while remote content is being loaded
-     * @method getLoader
-     * @return {view.Loader}
-     */
-    getLoader:function(){
-        if(this.loader === undefined){
-            this.loader = new ludo.view.Loader({
-                view: this,
-                txt : this.onLoadMessage
-            });
-        }
-        return this.loader;
-    },
+	/**
+	 * Returns class used to display messages while remote content is being loaded
+	 * @method getLoader
+	 * @return {view.Loader}
+	 */
+	getLoader:function () {
+		if (this.loader === undefined) {
+			this.loader = new ludo.view.Loader({
+				view:this,
+				txt:this.onLoadMessage
+			});
+		}
+		return this.loader;
+	},
 
 	/**
 	 * The final life cycle method. When this method is executed, the componenent (including child components)
@@ -557,7 +555,7 @@ ludo.View = new Class({
 		if (!this.layout.height && !this.layout.above && !this.layout.sameHeightAs && !this.layout.alignWith) {
 			this.autoSetHeight();
 		}
-		if(!this.parentComponent){
+		if (!this.parentComponent) {
 			this.getLayout().createRenderer();
 		}
 		/**
@@ -573,14 +571,14 @@ ludo.View = new Class({
 
 		if (this.addons) {
 			for (var i = 0; i < this.addons.length; i++) {
-                this.addons[i].view = this;
-				this.addons[i] = ludo._new(this.addons[i]);
+				this.addons[i].view = this;
+				this.addons[i] = this.createDependency('addOns' + i, this.addons[i]);
 			}
 		}
 	},
 
 	createEventCopies:function () {
-        this.copyEvents = Object.clone(this.copyEvents);
+		this.copyEvents = Object.clone(this.copyEvents);
 		for (var eventName in this.copyEvents) {
 			if (this.copyEvents.hasOwnProperty(eventName)) {
 				this.addEvent(eventName, this.getEventCopyFn(this.copyEvents[eventName]));
@@ -611,8 +609,7 @@ ludo.View = new Class({
 
 	getTplParser:function () {
 		if (!this.tplParser) {
-			var config = this.tplParserConfig;
-			this.tplParser = ludo._new(config);
+			this.tplParser = this.createDependency('tplParser', this.tplParserConfig);
 		}
 		return this.tplParser;
 	},
@@ -621,7 +618,7 @@ ludo.View = new Class({
 		var size = this.getBody().measure(function () {
 			return this.getSize();
 		});
-        this.layout.height = size.y + ludo.dom.getMH(this.getBody()) + ludo.dom.getMBPH(this.getEl());
+		this.layout.height = size.y + ludo.dom.getMH(this.getBody()) + ludo.dom.getMBPH(this.getEl());
 	},
 	/**
 	 * Set HTML of components body element
@@ -635,12 +632,12 @@ ludo.View = new Class({
 
 	setContent:function () {
 		if (this.html) {
-			if(this.children.length){
-                ludo.dom.create({
-                    renderTo:this.getBody(),
-                    html : this.html
-                });
-			}else{
+			if (this.children.length) {
+				ludo.dom.create({
+					renderTo:this.getBody(),
+					html:this.html
+				});
+			} else {
 				this.getBody().innerHTML = this.html;
 			}
 		}
@@ -748,7 +745,7 @@ ludo.View = new Class({
 	 */
 	hide:function () {
 		if (!this.hidden && this.getEl().style.display !== 'none') {
-			this.getEl().style.display='none';
+			this.getEl().style.display = 'none';
 			this.hidden = true;
 			/**
 			 * Fired when a component is hidden using the hide method
@@ -777,15 +774,15 @@ ludo.View = new Class({
 		return this.hidden;
 	},
 
-    /**
-     * Return true if this component is visible
-     * @method isVisible
-     * @return {Boolean}
-     *
-     */
-    isVisible:function () {
-        return !this.hidden;
-    },
+	/**
+	 * Return true if this component is visible
+	 * @method isVisible
+	 * @return {Boolean}
+	 *
+	 */
+	isVisible:function () {
+		return !this.hidden;
+	},
 
 	/**
 	 * Show this component.
@@ -821,14 +818,14 @@ ludo.View = new Class({
 		if (this.parentComponent) {
 			this.resizeParent();
 		} else {
-            this.getLayout().getRenderer().resize();
+			this.getLayout().getRenderer().resize();
 		}
 	},
 
 	resizeParent:function () {
 		var parent = this.getParent();
 		if (parent) {
-			if(parent.children.length > 0)parent.getLayout().resizeChildren();
+			if (parent.children.length > 0)parent.getLayout().resizeChildren();
 		}
 	},
 
@@ -840,12 +837,12 @@ ludo.View = new Class({
 	 * @return {Boolean} success
 	 */
 	showChild:function (key) {
-        var child = this.getChild(key);
-        if(child){
-            child.show();
-            return true;
-        }
-        return false;
+		var child = this.getChild(key);
+		if (child) {
+			child.show();
+			return true;
+		}
+		return false;
 	},
 
 	/**
@@ -854,7 +851,7 @@ ludo.View = new Class({
 	 * @return Array of Child components
 	 */
 	getChildren:function () {
-        return this.children;
+		return this.children;
 	},
 	/**
 	 * Return array of all child components, including grand children
@@ -912,9 +909,9 @@ ludo.View = new Class({
 	 @method resize
 	 @param {Object} config
 	 @example
-	 	component.resize(
-	 		{ width: 200, height:200 }
-		);
+	 component.resize(
+	 { width: 200, height:200 }
+	 );
 	 */
 	resize:function (config) {
 
@@ -928,8 +925,8 @@ ludo.View = new Class({
 				config.height = config.width / this.layout.aspectRatio;
 			}
 			// TODO layout properties should not be set here.
-            this.layout.pixelWidth = config.width;
-            if(!isNaN(this.layout.width))this.layout.width = config.width;
+			this.layout.pixelWidth = config.width;
+			if (!isNaN(this.layout.width))this.layout.width = config.width;
 			var width = config.width - ludo.dom.getMBPW(this.els.container);
 			if (width > 0) {
 				this.els.container.style.width = width + 'px';
@@ -938,9 +935,9 @@ ludo.View = new Class({
 
 		if (config.height && !this.state.isMinimized) {
 			// TODO refactor this part.
-			if (!this.state.isMinimized ) {
+			if (!this.state.isMinimized) {
 				this.layout.pixelHeight = config.height;
-                if(!isNaN(this.layout.height))this.layout.height = config.height;
+				if (!isNaN(this.layout.height))this.layout.height = config.height;
 			}
 			var height = config.height - ludo.dom.getMBPH(this.els.container);
 			if (height > 0) {
@@ -954,14 +951,14 @@ ludo.View = new Class({
 
 		this.resizeDOM();
 
-        if (config.height || config.width) {
+		if (config.height || config.width) {
 			/**
 			 * Event fired when component is resized
 			 * @event resize
 			 */
 			this.fireEvent('resize');
 		}
-		if(this.children.length > 0)this.getLayout().resizeChildren();
+		if (this.children.length > 0)this.getLayout().resizeChildren();
 	},
 	/**
 	 * Returns true component is collapsible
@@ -972,14 +969,14 @@ ludo.View = new Class({
 		return this.layout && this.layout.collapsible ? true : false;
 	},
 
-    isChildOf:function(view){
-        var p = this.parentComponent;
-        while(p){
-            if(p.id === view.id)return true;
-            p = p.parentComponent;
-        }
-        return false;
-    },
+	isChildOf:function (view) {
+		var p = this.parentComponent;
+		while (p) {
+			if (p.id === view.id)return true;
+			p = p.parentComponent;
+		}
+		return false;
+	},
 
 	setPosition:function (pos) {
 		if (pos.left !== undefined && pos.left >= 0) {
@@ -991,14 +988,14 @@ ludo.View = new Class({
 	},
 
 	getLayout:function () {
-		if (!this.layoutManager) {
-			this.layoutManager = ludo.layoutFactory.getManager(this);
+		if (!this.hasDependency('layoutManager')) {
+			this.createDependency('layoutManager', ludo.layoutFactory.getManager(this));
 		}
-		return this.layoutManager;
+		return this.getDependency('layoutManager');
 	},
 
 	resizeChildren:function () {
-		if(this.children.length > 0)this.getLayout().resizeChildren();
+		if (this.children.length > 0)this.getLayout().resizeChildren();
 	},
 
 	isMinimized:function () {
@@ -1008,24 +1005,24 @@ ludo.View = new Class({
 	cachedInnerHeight:undefined,
 	resizeDOM:function () {
 
-		if (this.layout.pixelHeight > 0){
-            var height = this.layout.pixelHeight ? this.layout.pixelHeight - ludo.dom.getMBPH(this.els.container) : this.els.container.style.height.replace('px', '');
-            height -= ludo.dom.getMBPH(this.els.body);
-            if (height <= 0 || isNaN(height)) {
-                return;
-            }
-            this.els.body.style.height = height + 'px';
-            this.cachedInnerHeight = height;
-        }
+		if (this.layout.pixelHeight > 0) {
+			var height = this.layout.pixelHeight ? this.layout.pixelHeight - ludo.dom.getMBPH(this.els.container) : this.els.container.style.height.replace('px', '');
+			height -= ludo.dom.getMBPH(this.els.body);
+			if (height <= 0 || isNaN(height)) {
+				return;
+			}
+			this.els.body.style.height = height + 'px';
+			this.cachedInnerHeight = height;
+		}
 	},
 
 	getInnerHeightOfBody:function () {
-        return this.cachedInnerHeight ? this.cachedInnerHeight : ludo.dom.getInnerHeightOf(this.els.body);
+		return this.cachedInnerHeight ? this.cachedInnerHeight : ludo.dom.getInnerHeightOf(this.els.body);
 	},
 
 	getInnerWidthOfBody:function () {
-        return this.layout.pixelWidth ? this.layout.pixelWidth - ludo.dom.getMBPW(this.els.container) - ludo.dom.getMBPW(this.els.body) : ludo.dom.getInnerWidthOf(this.els.body);
-    },
+		return this.layout.pixelWidth ? this.layout.pixelWidth - ludo.dom.getMBPW(this.els.container) - ludo.dom.getMBPW(this.els.body) : ludo.dom.getInnerWidthOf(this.els.body);
+	},
 
 	/**
 	 * Add child components
@@ -1104,14 +1101,14 @@ ludo.View = new Class({
 	 and call view.cancelDispose in case you don't want to dispose the view.
 	 @method cancelDispose
 	 @example
-	 	function confirmDispose(view){
+	 function confirmDispose(view){
 	 		if(!confirm('Are you sure')){
 	 			view.cancelDispose();
 	 		}
 	 	}
-	 	view.addEvent('beforeDispose', confirmDispose);
+	 view.addEvent('beforeDispose', confirmDispose);
 	 */
-	cancelDispose:function(){
+	cancelDispose:function () {
 		this.disposeCanceled = true;
 	},
 	/**
@@ -1122,9 +1119,9 @@ ludo.View = new Class({
 	dispose:function () {
 		this.disposeCanceled = false;
 		this.fireEvent('beforeDispose', this);
-		if(!this.disposeCanceled){
+		if (!this.disposeCanceled) {
 			this.fireEvent('dispose', this);
-			ludo.util.disposeView(this);
+			ludo.util.dispose(this);
 		}
 	},
 	/**
@@ -1146,32 +1143,34 @@ ludo.View = new Class({
 				if (!this.dataSource.type) {
 					this.dataSource.type = 'dataSource.JSON';
 				}
-				obj = this.dataSourceObj = ludo._new(this.dataSource);
+				obj = this.dataSourceObj = this.createDependency('viewDataSource', this.dataSource);
 			}
 
-            var method = obj.getSourceType() === 'HTML' ? 'setHtml' : 'insertJSON';
-            if (obj.hasData()) {
-                this[method](obj.getData());
-            }
-            obj.addEvent('load',this[method].bind(this));
+			var method = obj.getSourceType() === 'HTML' ? 'setHtml' : 'insertJSON';
+			if (obj.hasData()) {
+				this[method](obj.getData());
+			}
+			obj.addEvent('load', this[method].bind(this));
 		}
 		return this.dataSourceObj;
 	},
 
 	getForm:function () {
-		if (!this.formManager) {
-			this.formManager = new ludo.form.Manager({
-				component:this,
-				form:this.form,
-				model:this.model
-			});
+		if (!this.hasDependency('formManager')) {
+			this.createDependency('formManager',
+				{
+					type:'ludo.form.Manager',
+					component:this,
+					form:this.form,
+					model:this.model
+				});
 		}
-		return this.formManager;
+		return this.getDependency('formManager');
 	},
 
 	getParentFormManager:function () {
 		var parent = this.getParent();
-		return parent ? parent.formManager ? parent.formManager : parent.getParentFormManager() : undefined;
+		return parent ? parent.hasDependency('formManager') ? parent.getDependency('formManager') : parent.getParentFormManager() : undefined;
 	},
 
 	isFormElement:function () {
@@ -1206,16 +1205,16 @@ ludo.View = new Class({
 	 @method submit
 	 @return void
 	 @example
-	 	{
-			 saveForm: 1,
-			 componentId : id of ludo.View,
-			 componentName : name of ludo.View,
-			 data : {
-				 firstname : 'John',
-				 lastname : 'Doe'
-				 formField : 'formValue
-			 }
+	 {
+		 saveForm: 1,
+		 componentId : id of ludo.View,
+		 componentName : name of ludo.View,
+		 data : {
+			 firstname : 'John',
+			 lastname : 'Doe'
+			 formField : 'formValue
 		 }
+	 }
 	 */
 	submit:function () {
 		this.fireEvent('submit', this);
@@ -1258,7 +1257,7 @@ ludo.View = new Class({
 	 @method getCanvas
 	 @return {canvas.Canvas} canvas
 	 @example
-		 var win = new ludo.Window({
+	 var win = new ludo.Window({
 		   id:'myWindow',
 		   left:50, top:50,
 		   width:410, height:490,
@@ -1267,22 +1266,22 @@ ludo.View = new Class({
 			   'background-color':'#FFF'
 		   }
 	   });
-	   // Creating style sheet
-	   var paint = new ludo.canvas.Paint({
+	 // Creating style sheet
+	 var paint = new ludo.canvas.Paint({
 		   css:{
 			   'fill':'#FFFFFF',
 			   'stroke':'#DEF',
 			   'stroke-width':'5'
 		   }
 	   });
-	   var canvas = win.getCanvas();
-	   canvas.adopt(new ludo.canvas.Node('line', { x1:100, y1:100, x2:200, y2:200, "class":paint }));
+	 var canvas = win.getCanvas();
+	 canvas.adopt(new ludo.canvas.Node('line', { x1:100, y1:100, x2:200, y2:200, "class":paint }));
 	 */
-	getCanvas:function(){
-		if(this.canvas === undefined){
-			this.canvas = new ludo.canvas.Canvas({
+	getCanvas:function () {
+		if (this.canvas === undefined) {
+			this.canvas = this.createDependency('canvas', new ludo.canvas.Canvas({
 				renderTo:this
-			});
+			}));
 		}
 		return this.canvas;
 	}

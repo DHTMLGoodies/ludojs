@@ -131,7 +131,7 @@ ludo.FramedView = new Class({
 	getResizer:function () {
 		if (this.resizer === undefined) {
 			var r = this.getLayout().getRenderer();
-			this.resizer = new ludo.effect.Resize({
+			this.resizer = this.createDependency('resizer', new ludo.effect.Resize({
 				component:this,
 				preserveAspectRatio:this.layout.preserveAspectRatio,
 				minWidth:r.getMinWidth(),
@@ -141,7 +141,7 @@ ludo.FramedView = new Class({
 				listeners:{
 					stop:r.setSize.bind(r)
 				}
-			});
+			}));
 			this.resizer.addEvent('stop', this.saveState.bind(this));
 		}
 		return this.resizer;
@@ -190,7 +190,7 @@ ludo.FramedView = new Class({
 
 	getTitleBar:function(){
 		if (this.titleBarObj === undefined) {
-			this.titleBarObj = ludo._new({
+			this.titleBarObj = this.createDependency('titleBar', {
 				type:'view.TitleBar',
 				view:this,
 				listeners:{
@@ -202,14 +202,14 @@ ludo.FramedView = new Class({
 			});
 
 			if (this.isMovable() && !this.getParent()) {
-				this.drag = new ludo.effect.Drag({
+				this.drag = this.createDependency('drag', new ludo.effect.Drag({
 					handle:this.titleBarObj.getEl(),
 					el:this.getEl(),
 					listeners:{
 						start:this.increaseZIndex.bind(this),
 						end:this.stopMove.bind(this)
 					}
-				});
+				}));
 				this.titleBarObj.getEl().style.cursor = 'move';
 			}
 		}
@@ -301,7 +301,7 @@ ludo.FramedView = new Class({
 			ludo.dom.addClass(this.getEl(), 'ludo-component-with-buttonbar');
 			this.buttonBar.renderTo = el;
 			this.buttonBar.component = this;
-			this.buttonBarComponent = new ludo.view.ButtonBar(this.buttonBar);
+			this.buttonBarComponent = this.createDependency('buttonBar', new ludo.view.ButtonBar(this.buttonBar));
 		}
 		return this.els.buttonBar.el;
 	},

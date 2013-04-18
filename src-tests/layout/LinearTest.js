@@ -10,6 +10,20 @@ TestCase("LinearTest", {
 		assertEquals(300, view.child['childOne'].getEl().offsetWidth);
 	},
 
+	"test should set correct height of children": function(){
+		// given
+		var parent = this.getVerticalTwoChildrenWithWeight();
+
+		// when
+		var child = parent.child['weightOf1'];
+		var childTwo = parent.child['weightOf2'];
+
+		// then
+		assertEquals(200, child.getEl().offsetHeight);
+		assertEquals(400, childTwo.getEl().offsetHeight);
+
+	},
+
 	getLayoutWithChildren:function (layout) {
 		return new ludo.View({
 			layout:layout,
@@ -33,7 +47,43 @@ TestCase("LinearTest", {
 				}
 			]
 		});
+	},
+
+	getVerticalTwoChildrenWithWeight:function(){
+		return new ludo.View({
+			layout:{
+				type:'linear',
+				orientation:'vertical'
+			},
+			renderTo:document.body,
+			width:1000,
+			height:1000,
+			children:[
+				{
+					name:'childOne',
+					layout:{
+						height:400
+					}
+				},
+				{
+					name:'weightOf1',
+					layout:{
+						weight:1
+
+					}
+				},
+				{
+					name:'weightOf2',
+					layout:{
+						weight:2
+					}
+				}
+			]
+		});
+
 
 	}
+
+
 
 });

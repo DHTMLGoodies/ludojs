@@ -4,13 +4,24 @@ load:
   - ../../js/ludojs.js
   - ../../src/effect/effect.js
   - ../../src/dom.js
+  - ../../src/core.js
   - ../../src/view.js
+  - ../../src/framed-view.js
+  - ../../src/window.js
+  - ../../src/dialog/dialog.js
   - ../../src/view/loader.js
   - ../../src/notification.js
+  - ../../src/layout/base.js
+  - ../../src/layout/linear.js
+  - ../../src/layout/linear-horizontal.js
+  - ../../src/layout/linear-vertical.js
+  - ../../src/layout/relative.js
+  - ../../src/util.js
 
 test:
   - LoaderTest.js
   - NotificationTest.js
+  - ViewTest.js
 
 plugin:
  - name: "coverage"

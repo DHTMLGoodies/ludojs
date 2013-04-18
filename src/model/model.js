@@ -18,6 +18,8 @@ ludo.model.Model = new Class({
 	Extends:Events,
 	type:'model.Model',
 
+	dependency:{},
+
 	/**
 	 * @attribute {String} model name
 	 * @description Name of model
@@ -236,7 +238,7 @@ ludo.model.Model = new Class({
     _loadRequest:undefined,
     loadRequest:function(){
         if(this._loadRequest === undefined){
-            this._loadRequest = new  ludo.remote.JSON({
+            this._loadRequest = this.dependency['request'] = new  ludo.remote.JSON({
                 url:this.url,
                 resource:this.name,
                 listeners:{
@@ -369,7 +371,7 @@ ludo.model.Model = new Class({
     _saveRequest:undefined,
     saveRequest:function(){
         if(this._saveRequest === undefined){
-            this._saveRequest = new ludo.remote.JSON({
+            this._saveRequest = this.dependency['saveRequest'] = new ludo.remote.JSON({
                 url:this.url,
                 resource:this.name,
                 listeners:{

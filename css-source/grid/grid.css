@@ -238,5 +238,11 @@ div.ludo-paging-total-pages .ludo-body{
     background-color:transparent;
 }
 
-
+.ludo-grid-empty-text{
+    position:absolute;
+    top:50%;
+    margin-top:-20px;
+    width:100%;
+    text-align:center;
+}
 
