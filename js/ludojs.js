@@ -1,4 +1,4 @@
-/* Generated Thu Apr 18 18:10:14 CEST 2013 */
+/* Generated Thu Apr 18 18:25:16 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -17009,7 +17009,7 @@ ludo.grid.Grid = new Class({
 			if (!this.columnManager.type)this.columnManager.type = 'grid.ColumnManager';
 			this.columnManager.stateful = this.stateful;
 			this.columnManager.id = this.columnManager.id || this.id + '_cm';
-			this.columnManager = ludo._new(this.columnManager);
+			this.columnManager = this.createDependency('colManager', this.columnManager);
             this.columnManager.addEvents({
                 'hidecolumn' : this.refreshData.bind(this),
                 'showcolumn' : this.refreshData.bind(this),
@@ -17020,7 +17020,7 @@ ludo.grid.Grid = new Class({
 
 		if (this.rowManager) {
 			if (!this.rowManager.type)this.rowManager.type = 'grid.RowManager';
-			this.rowManager = ludo._new(this.rowManager);
+			this.rowManager = this.createDependency('rowManager', this.rowManager);
 		}
 		if (this.stateful && this.dataSource !== undefined && ludo.util.isObject(this.dataSource)) {
 			this.dataSource.id = this.dataSource.id || this.id + '_ds';
@@ -17051,7 +17051,7 @@ ludo.grid.Grid = new Class({
 		t.adopt(this.els.dataContainer);
 
 		this.els.dataContainer.setStyle('position', 'relative');
-		this.gridHeader = ludo._new({
+		this.gridHeader = this.createDependency('gridHeader', {
 			type:'grid.GridHeader',
 			headerMenu: this.headerMenu,
 			columnManager:this.columnManager,
@@ -17347,19 +17347,19 @@ ludo.grid.Grid = new Class({
 	},
 
 	createScrollbars:function () {
-		this.scrollbar.horizontal = new ludo.Scroller({
+		this.scrollbar.horizontal = this.createDependency('scrollHorizontal', new ludo.Scroller({
 			type:'horizontal',
 			applyTo:this.getBody(),
 			parent:this.getBody()
-		});
+		}));
 		this.scrollbar.horizontal.getEl().inject(this.getBody(), 'after');
 
-		this.scrollbar.vertical = new ludo.Scroller({
+		this.scrollbar.vertical = this.createDependency('scrollVertical', new ludo.Scroller({
 			type:'vertical',
 			applyTo:this.els.dataContainer,
 			parent:this.els.dataContainerTop,
 			mouseWheelSizeCls:'ludo-grid-data-cell'
-		});
+		}));
 		this.getEl().adopt(this.scrollbar.vertical.getEl());
 		this.positionVerticalScrollbar();
 	},
