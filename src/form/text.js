@@ -94,7 +94,7 @@ ludo.form.Text = new Class({
         if(this.regex && ludo.util.isString(this.regex)){
             var tokens = this.regex.split(/\//g);
             var flags = tokens.length > 1 ? tokens.pop() : '';
-            this.regex = new RegExp(tokens.join(''), flags);
+            this.regex = new RegExp(tokens.join('/'), flags);
         }
         this.applyValidatorFns(['minLength','maxLength','regex']);
     },

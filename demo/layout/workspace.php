@@ -33,25 +33,41 @@ new ludo.View({
             listeners:{
                 'click':function (item) {
                     if (item.html === 'New page') {
-                        var page = ludo.get('tabs').addChild({
-                            title:'New page',
-                            type:'FramedView',
-                            html:'Content',
-                            minimizable:false,
+                        new ludo.dialog.Prompt({
+                            title:'Title of new page',
+                            value:'Title of new page',
+                            label:'Title',
                             layout:{
-                                'closable':true
+                                height:120
                             },
-                            containerCss:{
-                                'border':0,
-                                'background-color':'#d1e7ff'
+                            formConfig:{
+                                labelWidth:50
                             },
-                            css:{
-                                'background-color':'#fff',
-                                padding:5,
-                                margin:0
+                            listeners:{
+                                'ok':function (title) {
+                                    var page = ludo.get('tabs').addChild({
+                                        title:title,
+                                        type:'FramedView',
+                                        html:'Content',
+                                        minimizable:false,
+                                        layout:{
+                                            'closable':true
+                                        },
+                                        containerCss:{
+                                            'border':0,
+                                            'background-color':'#d1e7ff'
+                                        },
+                                        css:{
+                                            'background-color':'#fff',
+                                            padding:5,
+                                            margin:0
+                                        }
+                                    });
+                                    page.show();
+                                }
                             }
                         });
-                        page.show();
+
                     }
                     ludo.util.log(item.html);
                 }
