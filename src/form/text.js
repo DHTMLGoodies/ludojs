@@ -91,6 +91,11 @@ ludo.form.Text = new Class({
 		this.parent(config);
         var keys = ['selectOnFocus', 'regex','minLength','maxLength','defaultValue','validateKeyStrokes','ucFirst','ucWords','readonly'];
         this.setConfigParams(config,keys);
+        if(this.regex && ludo.util.isString(this.regex)){
+            var tokens = this.regex.split(/\//g);
+            var flags = tokens.length > 1 ? tokens.pop() : '';
+            this.regex = new RegExp(tokens.join(''), flags);
+        }
         this.applyValidatorFns(['minLength','maxLength','regex']);
     },
 

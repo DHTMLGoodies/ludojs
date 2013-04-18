@@ -1,4 +1,4 @@
-/* Generated Thu Apr 18 18:25:16 CEST 2013 */
+/* Generated Thu Apr 18 21:55:19 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -968,7 +968,7 @@ ludo.Core = new Class({
 	},
 
 	createDependency:function(key, config){
-		this.dependency[key] = ludo.util.isFunction(config) ? config : ludo._new(config);
+		this.dependency[key] = ludo.util.isLudoJSConfig(config) ? ludo._new(config) : config;
 		return this.dependency[key];
 	},
 
@@ -4304,6 +4304,10 @@ ludo.util = {
 		return typeof(obj) === 'function';
 	},
 
+    isLudoJSConfig:function(obj){
+        return obj.initialize===undefined && obj.type;
+    },
+
 	tabletOrMobile:undefined,
 
 	isTabletOrMobile:function () {
@@ -4362,6 +4366,8 @@ ludo.util = {
 			view.getParent().removeChild(view);
 		}
         view.removeEvents();
+
+        console.log('dispose ' + view.type);
 
 		this.disposeDependencies(view.dependency);
 
@@ -4920,7 +4926,7 @@ ludo.View = new Class({
 		if (this.socket) {
 			if (!this.socket.type)this.socket.type = 'socket.Socket';
 			this.socket.component = this;
-			this.socket = this.createDependency(this.socket);
+			this.socket = this.createDependency('socket', this.socket);
 		}
 
 		if (this.renderTo)this.renderTo = document.id(this.renderTo);
@@ -22366,7 +22372,7 @@ ludo.controller.Manager = new Class({
             }
             return;
         }
-        controller = ludo._new(controller);
+        controller = component.createDependency('controller-' + String.uniqueID(), controller);
         this.assignControllerTo(controller,component);
     },
 
@@ -23219,6 +23225,11 @@ ludo.form.Text = new Class({
 		this.parent(config);
         var keys = ['selectOnFocus', 'regex','minLength','maxLength','defaultValue','validateKeyStrokes','ucFirst','ucWords','readonly'];
         this.setConfigParams(config,keys);
+        if(this.regex && ludo.util.isString(this.regex)){
+            var tokens = this.regex.split(/\//g);
+            var flags = tokens.pop();
+            this.regex = new RegExp(tokens.join(''), flags);
+        }
         this.applyValidatorFns(['minLength','maxLength','regex']);
     },
 

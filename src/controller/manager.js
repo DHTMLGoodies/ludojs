@@ -46,7 +46,7 @@ ludo.controller.Manager = new Class({
             }
             return;
         }
-        controller = ludo._new(controller);
+        controller = component.createDependency('controller-' + String.uniqueID(), controller);
         this.assignControllerTo(controller,component);
     },
 

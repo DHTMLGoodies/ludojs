@@ -270,7 +270,7 @@ ludo.Core = new Class({
 	},
 
 	createDependency:function(key, config){
-		this.dependency[key] = ludo.util.isFunction(config) ? config : ludo._new(config);
+		this.dependency[key] = ludo.util.isLudoJSConfig(config) ? ludo._new(config) : config;
 		return this.dependency[key];
 	},
 

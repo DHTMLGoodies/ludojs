@@ -23,6 +23,10 @@ ludo.util = {
 		return typeof(obj) === 'function';
 	},
 
+    isLudoJSConfig:function(obj){
+        return obj.initialize===undefined && obj.type;
+    },
+
 	tabletOrMobile:undefined,
 
 	isTabletOrMobile:function () {
@@ -81,6 +85,8 @@ ludo.util = {
 			view.getParent().removeChild(view);
 		}
         view.removeEvents();
+
+        console.log('dispose ' + view.type);
 
 		this.disposeDependencies(view.dependency);
 

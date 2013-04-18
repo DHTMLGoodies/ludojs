@@ -427,7 +427,7 @@ ludo.View = new Class({
 		if (this.socket) {
 			if (!this.socket.type)this.socket.type = 'socket.Socket';
 			this.socket.component = this;
-			this.socket = this.createDependency(this.socket);
+			this.socket = this.createDependency('socket', this.socket);
 		}
 
 		if (this.renderTo)this.renderTo = document.id(this.renderTo);
