@@ -14,6 +14,8 @@
 
  */
 ludo.remote.Message = new Class({
+	// TODO implement support for messages for more than one resource.
+	// TODO support auto hide
     Extends: ludo.View,
     cls:'ludo-remote-message',
     /**

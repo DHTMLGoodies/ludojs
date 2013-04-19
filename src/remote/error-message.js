@@ -6,5 +6,6 @@
  */
 ludo.remote.ErrorMessage = new Class({
     Extends:ludo.remote.Message,
-    messageTypes:['failure','serverError']
+    messageTypes:['failure','serverError'],
+	bodyCls:'ludo-error-message'
 });

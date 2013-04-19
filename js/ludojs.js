@@ -1,4 +1,4 @@
-/* Generated Fri Apr 19 17:12:38 CEST 2013 */
+/* Generated Fri Apr 19 18:48:32 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -5801,6 +5801,8 @@ ludo.factory.registerClass('View', ludo.View);/* ../ludojs/src/remote/message.js
 
  */
 ludo.remote.Message = new Class({
+	// TODO implement support for messages for more than one resource.
+	// TODO support auto hide
     Extends: ludo.View,
     cls:'ludo-remote-message',
     /**
@@ -5852,7 +5854,8 @@ ludo.remote.Message = new Class({
  */
 ludo.remote.ErrorMessage = new Class({
     Extends:ludo.remote.Message,
-    messageTypes:['failure','serverError']
+    messageTypes:['failure','serverError'],
+	bodyCls:'ludo-error-message'
 });/* ../ludojs/src/ludo-db/factory.js */
 ludo.ludoDB.Factory = new Class({
     Extends:ludo.Core,
@@ -27238,7 +27241,7 @@ ludo.dialog.Dialog = new Class({
 	minimizable:false,
 
 	ludoConfig:function (config) {
-
+		// TODO use buttons instead of buttonConfig and check for string
 		config.buttonConfig = config.buttonConfig || this.buttonConfig;
 		if (config.buttonConfig) {
 			var buttons = config.buttonConfig.replace(/([A-Z])/g, ' $1');
