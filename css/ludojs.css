@@ -1,4 +1,4 @@
-/* Generated Fri Apr 19 23:58:59 CEST 2013 */
+/* Generated Sat Apr 20 0:08:58 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -583,7 +583,13 @@ div.ludo-resize-handle-active {
     z-index: 15500;
     right: 0;
 }
-/* ../ludojs/css-source/layout/tab.css */
+/* ../ludojs/css-source/remote/message.css */
+.ludo-remote-message{
+
+}
+.ludo-remote-error-message{
+    color:#f00;
+}/* ../ludojs/css-source/layout/tab.css */
 .ludo-tab-close{
     background-repeat:no-repeat;
     background-position:center center;

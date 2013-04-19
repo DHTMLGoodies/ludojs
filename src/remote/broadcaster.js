@@ -107,7 +107,7 @@ ludo.remote.Broadcaster = new Class({
      @method addResourceEvent
      @param {String} eventType
      @param {String} resource
-     @param {String} service
+     @param {Array} services
      @param {Function} fn
      @example
      ludo.remoteBroadcaster.addEvent('failure', 'Person', function(response){

@@ -1,4 +1,4 @@
-/* Generated Fri Apr 19 23:58:59 CEST 2013 */
+/* Generated Sat Apr 20 0:08:58 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -1636,7 +1636,7 @@ ludo.remote.Broadcaster = new Class({
      @method addResourceEvent
      @param {String} eventType
      @param {String} resource
-     @param {String} service
+     @param {Array} services
      @param {Function} fn
      @example
      ludo.remoteBroadcaster.addEvent('failure', 'Person', function(response){
@@ -5803,7 +5803,7 @@ ludo.factory.registerClass('View', ludo.View);/* ../ludojs/src/remote/message.js
         type:'remote.Message',
         listenTo:["Person", "City.save"]
     }...
- 
+
  will listen to all services of the "Person" resource and the "save" service of "City".
 
  */

@@ -10,7 +10,7 @@
         type:'remote.Message',
         listenTo:["Person", "City.save"]
     }...
- 
+
  will listen to all services of the "Person" resource and the "save" service of "City".
 
  */
