@@ -6,64 +6,97 @@
  @constructor
  @param {Object} config
  @example
-    children:[{
+ children:[{
         type:'remote.Message',
-        resource:'Person'
+        listenTo:["Person", "City.save"]
     }...
- will show remote messages for all remote requests for for the Person resource.
+ 
+ will listen to all services of the "Person" resource and the "save" service of "City".
 
  */
 ludo.remote.Message = new Class({
-	// TODO implement support for messages for more than one resource.
-	// TODO support auto hide
-    Extends: ludo.View,
+    // TODO support auto hide
+    Extends:ludo.View,
     cls:'ludo-remote-message',
-    /**
-     * Listen to remote messages from this resource
-     * @config {String} resource
-     */
-    resource:undefined,
-    /**
-     * Listen only to remote messages for this service
-     * @config {String} service
-     * @optional
-     */
-    service:undefined,
-    listenTo:undefined,
-    messageTypes:['success','failure','error'],
 
-    ludoConfig:function(config){
+    /**
+     Listen to these resources and events
+     @config {Array|String} listenTo
+     @example
+        listenTo:"Person" // listen to all Person events
+        listenTo:["Person.save","Person.read", "City"] // listen to "save" and "read" service of "Person" and all services of the "City" resource
+     */
+    listenTo:[],
+
+    messageTypes:['success', 'failure', 'error'],
+
+    ludoConfig:function (config) {
         this.parent(config);
-        this.resource = config.resource;
-        this.service = config.service;
+        this.setConfigParams(config, ['listenTo']);
+        if (!ludo.util.isArray(this.listenTo))this.listenTo = [this.listenTo];
     },
 
-    ludoEvents:function(){
+    ludoEvents:function () {
         this.parent();
-        ludo.remoteBroadcaster.addServiceEvent("clear", this.resource, this.service, this.hideMessage.bind(this) );
-        for(var i=0;i<this.messageTypes.length;i++){
-            ludo.remoteBroadcaster.addServiceEvent(this.messageTypes[i], this.resource, this.service, this.showMessage.bind(this));
+        var resources = this.getResources();
+        for (var resourceName in resources) {
+            if (resources.hasOwnProperty(resourceName)) {
+                this.addResourceEvent(resourceName, resources[resourceName]);
+            }
         }
     },
 
-    showMessage:function(response){
-		this.show();
-        if(response.code && response.code !== 200){
+    getResources:function () {
+        var ret = {};
+        var resource, service;
+        for (var i = 0; i < this.listenTo.length; i++) {
+            if (this.listenTo[i].indexOf('.') >= 0) {
+                var tokens = this.listenTo[i].split(/\./g);
+                if (tokens.length === 2) {
+                    service = tokens.pop();
+                    resource = tokens[0];
+                    service = service != '*' ? service : undefined;
+                }
+            } else {
+                resource = this.listenTo[i];
+                service = undefined;
+            }
+
+            if (ret[resource] == undefined) {
+                ret[resource] = [];
+            }
+            if (service && ret[resource].indexOf(service) === -1) {
+                ret[resource].push(service);
+            }
+        }
+        return ret;
+    },
+
+    addResourceEvent:function (resource, service) {
+        ludo.remoteBroadcaster.addServiceEvent("clear", resource, service, this.hideMessage.bind(this));
+        for (var i = 0; i < this.messageTypes.length; i++) {
+            ludo.remoteBroadcaster.addServiceEvent(this.messageTypes[i], resource, service, this.showMessage.bind(this));
+        }
+    },
+
+    showMessage:function (response) {
+        this.show();
+        if (response.code && response.code !== 200) {
             ludo.dom.addClass(this.getEl(), 'ludo-remote-error-message');
-        }else{
+        } else {
             ludo.dom.removeClass(this.getEl(), 'ludo-remote-error-message');
         }
         this.setHtml(response.message);
 
-		/**
-		 * Event fired when message is shown.
-		 * @event showMessage
-		 * @param {remote.Message}
-		 */
-		this.fireEvent('showMessage', this);
+        /**
+         * Event fired when message is shown.
+         * @event showMessage
+         * @param {remote.Message}
+         */
+        this.fireEvent('showMessage', this);
     },
 
-    hideMessage:function(){
+    hideMessage:function () {
         this.setHtml('');
     }
 });

@@ -1,9 +1,38 @@
 TestCase("MessageTest", {
 
+    "test should get correct resources to assign events to": function(){
+        // given
+        var message = new ludo.remote.Message({
+            "listenTo": "Person.*"
+        });
+        // when
+        var resources = message.getResources();
+        // then
+        assertNotUndefined(resources.Person);
+        assertEquals([], resources.Person);
+
+    },
+
+    "test should get correct resources to assign events to when assigning multiple": function(){
+        // given
+        var message = new ludo.remote.Message({
+            "listenTo": ["Person.*","City.read","City.save"]
+        });
+        // when
+        var resources = message.getResources();
+        // then
+        assertNotUndefined(resources.Person);
+        assertEquals([], resources.Person);
+        assertNotUndefined(resources.City);
+        assertEquals(['read','save'], resources.City);
+
+    },
+
+
     "test should be able to display messages when events are broadcasted": function(){
         // given
         var message = new ludo.remote.Message({
-            "resource": "Person"
+            "listenTo": "Person.*"
         });
         ludo.remoteBroadcaster.broadcast(
             this.getRemoteMock({
@@ -15,6 +44,23 @@ TestCase("MessageTest", {
 
         // then
         assertEquals("My message", this.getInnerText(message.getBody()));
+    },
+
+    "test should be able to listen to multiple resources": function(){
+        // given
+        var message = new ludo.remote.Message({
+            "listenTo": ["Person.*","City.*"]
+        });
+        ludo.remoteBroadcaster.broadcast(
+            this.getRemoteMock({
+                "message": "My message 2",
+                "code": 200,
+                "resource": "City"
+            })
+        );
+
+        // then
+        assertEquals("My message 2", this.getInnerText(message.getBody()));
     },
 
     getInnerText:function(el){

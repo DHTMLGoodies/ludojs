@@ -4,7 +4,7 @@
  @namespace remote
  @class Broadcasters
  @example
-    ludo.remoteBroadcaster.addEvent('successMessage', function(response){
+ ludo.remoteBroadcaster.addEvent('successMessage', function(response){
         if(response.resource === 'Person'){
 
         }
@@ -34,7 +34,7 @@ ludo.remote.Broadcaster = new Class({
                 eventNameWithService = this.getEventName('failure', request.getResource(), service);
                 break;
         }
-        if(!eventName){
+        if (!eventName) {
             eventName = this.getEventName('serverError', request.getResource());
             eventNameWithService = this.getEventName('serverError', request.getResource(), service);
         }
@@ -45,18 +45,18 @@ ludo.remote.Broadcaster = new Class({
             "resource":request.getResource(),
             "service":service
         };
-        if(!eventObj.message)eventObj.message = this.getDefaultMessage(eventNameWithService || eventName);
+        if (!eventObj.message)eventObj.message = this.getDefaultMessage(eventNameWithService || eventName);
         this.fireEvent(eventName, eventObj);
-        if(service){
+        if (service) {
             this.fireEvent(eventNameWithService, eventObj);
         }
     },
 
-    getDefaultMessage:function(key){
+    getDefaultMessage:function (key) {
         return this.defaultMessages[key] ? this.defaultMessages[key] : '';
     },
 
-    clear:function(request, service){
+    clear:function (request, service) {
         var eventObj = {
             "message":request.getResponseMessage(),
             "code":request.getResponseCode(),
@@ -67,7 +67,7 @@ ludo.remote.Broadcaster = new Class({
         var eventNameWithService = this.getEventName('clear', eventObj.resource, service);
 
         this.fireEvent(eventName, eventObj);
-        if(service){
+        if (service) {
             this.fireEvent(eventNameWithService, eventObj);
         }
     },
@@ -87,19 +87,19 @@ ludo.remote.Broadcaster = new Class({
      @param {String} resource
      @param {Function} fn
      @example
-        ludo.remoteBroadcaster.addEvent('failure', 'Person', function(response){
+     ludo.remoteBroadcaster.addEvent('failure', 'Person', function(response){
             this.getBody().set('html', response.message');
         }.bind(this));
      The event payload is an object in this format:
      @example
-        {
-            "code": 200,
-            "message": "A message",
-            "resource": "Which resource",
-            "service": "Which service"
-        }
+     {
+         "code": 200,
+         "message": "A message",
+         "resource": "Which resource",
+         "service": "Which service"
+     }
      */
-    addResourceEvent:function(eventType, resource, fn){
+    addResourceEvent:function (eventType, resource, fn) {
         this.addEvent(this.getEventName(eventType, resource), fn);
     },
     /**
@@ -122,8 +122,14 @@ ludo.remote.Broadcaster = new Class({
          "service": "Which service"
      }
      */
-    addServiceEvent:function(eventType,resource,service, fn){
-        this.addEvent(this.getEventName(eventType, resource, service), fn);
+    addServiceEvent:function (eventType, resource, services, fn) {
+        if (!services.length) {
+            this.addEvent(this.getEventName(eventType, resource, undefined), fn);
+        } else {
+            for (var i = 0; i < services.length; i++) {
+                this.addEvent(this.getEventName(eventType, resource, services[i]), fn);
+            }
+        }
     },
 
     /**
@@ -134,10 +140,10 @@ ludo.remote.Broadcaster = new Class({
      @param {String} resource
      @param {String} service
      @example
-        ludo.remoteBroadcaster.setDefaultMessage('You have registered sucessfully', 'success', 'User', 'register');
+     ludo.remoteBroadcaster.setDefaultMessage('You have registered sucessfully', 'success', 'User', 'register');
      */
-    setDefaultMessage:function(message, eventType, resource, service){
-        this.defaultMessages[this.getEventName(eventType,resource,service)] = message;
+    setDefaultMessage:function (message, eventType, resource, service) {
+        this.defaultMessages[this.getEventName(eventType, resource, service)] = message;
 
     }
 });

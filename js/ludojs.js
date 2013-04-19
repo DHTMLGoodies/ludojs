@@ -1,4 +1,4 @@
-/* Generated Fri Apr 19 18:53:55 CEST 2013 */
+/* Generated Fri Apr 19 23:58:59 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -1533,7 +1533,7 @@ ludo.remote.JSON = new Class({
  @namespace remote
  @class Broadcasters
  @example
-    ludo.remoteBroadcaster.addEvent('successMessage', function(response){
+ ludo.remoteBroadcaster.addEvent('successMessage', function(response){
         if(response.resource === 'Person'){
 
         }
@@ -1563,7 +1563,7 @@ ludo.remote.Broadcaster = new Class({
                 eventNameWithService = this.getEventName('failure', request.getResource(), service);
                 break;
         }
-        if(!eventName){
+        if (!eventName) {
             eventName = this.getEventName('serverError', request.getResource());
             eventNameWithService = this.getEventName('serverError', request.getResource(), service);
         }
@@ -1574,18 +1574,18 @@ ludo.remote.Broadcaster = new Class({
             "resource":request.getResource(),
             "service":service
         };
-        if(!eventObj.message)eventObj.message = this.getDefaultMessage(eventNameWithService || eventName);
+        if (!eventObj.message)eventObj.message = this.getDefaultMessage(eventNameWithService || eventName);
         this.fireEvent(eventName, eventObj);
-        if(service){
+        if (service) {
             this.fireEvent(eventNameWithService, eventObj);
         }
     },
 
-    getDefaultMessage:function(key){
+    getDefaultMessage:function (key) {
         return this.defaultMessages[key] ? this.defaultMessages[key] : '';
     },
 
-    clear:function(request, service){
+    clear:function (request, service) {
         var eventObj = {
             "message":request.getResponseMessage(),
             "code":request.getResponseCode(),
@@ -1596,7 +1596,7 @@ ludo.remote.Broadcaster = new Class({
         var eventNameWithService = this.getEventName('clear', eventObj.resource, service);
 
         this.fireEvent(eventName, eventObj);
-        if(service){
+        if (service) {
             this.fireEvent(eventNameWithService, eventObj);
         }
     },
@@ -1616,19 +1616,19 @@ ludo.remote.Broadcaster = new Class({
      @param {String} resource
      @param {Function} fn
      @example
-        ludo.remoteBroadcaster.addEvent('failure', 'Person', function(response){
+     ludo.remoteBroadcaster.addEvent('failure', 'Person', function(response){
             this.getBody().set('html', response.message');
         }.bind(this));
      The event payload is an object in this format:
      @example
-        {
-            "code": 200,
-            "message": "A message",
-            "resource": "Which resource",
-            "service": "Which service"
-        }
+     {
+         "code": 200,
+         "message": "A message",
+         "resource": "Which resource",
+         "service": "Which service"
+     }
      */
-    addResourceEvent:function(eventType, resource, fn){
+    addResourceEvent:function (eventType, resource, fn) {
         this.addEvent(this.getEventName(eventType, resource), fn);
     },
     /**
@@ -1651,8 +1651,14 @@ ludo.remote.Broadcaster = new Class({
          "service": "Which service"
      }
      */
-    addServiceEvent:function(eventType,resource,service, fn){
-        this.addEvent(this.getEventName(eventType, resource, service), fn);
+    addServiceEvent:function (eventType, resource, services, fn) {
+        if (!services.length) {
+            this.addEvent(this.getEventName(eventType, resource, undefined), fn);
+        } else {
+            for (var i = 0; i < services.length; i++) {
+                this.addEvent(this.getEventName(eventType, resource, services[i]), fn);
+            }
+        }
     },
 
     /**
@@ -1663,10 +1669,10 @@ ludo.remote.Broadcaster = new Class({
      @param {String} resource
      @param {String} service
      @example
-        ludo.remoteBroadcaster.setDefaultMessage('You have registered sucessfully', 'success', 'User', 'register');
+     ludo.remoteBroadcaster.setDefaultMessage('You have registered sucessfully', 'success', 'User', 'register');
      */
-    setDefaultMessage:function(message, eventType, resource, service){
-        this.defaultMessages[this.getEventName(eventType,resource,service)] = message;
+    setDefaultMessage:function (message, eventType, resource, service) {
+        this.defaultMessages[this.getEventName(eventType, resource, service)] = message;
 
     }
 });
@@ -5793,64 +5799,97 @@ ludo.factory.registerClass('View', ludo.View);/* ../ludojs/src/remote/message.js
  @constructor
  @param {Object} config
  @example
-    children:[{
+ children:[{
         type:'remote.Message',
-        resource:'Person'
+        listenTo:["Person", "City.save"]
     }...
- will show remote messages for all remote requests for for the Person resource.
+ 
+ will listen to all services of the "Person" resource and the "save" service of "City".
 
  */
 ludo.remote.Message = new Class({
-	// TODO implement support for messages for more than one resource.
-	// TODO support auto hide
-    Extends: ludo.View,
+    // TODO support auto hide
+    Extends:ludo.View,
     cls:'ludo-remote-message',
-    /**
-     * Listen to remote messages from this resource
-     * @config {String} resource
-     */
-    resource:undefined,
-    /**
-     * Listen only to remote messages for this service
-     * @config {String} service
-     * @optional
-     */
-    service:undefined,
-    listenTo:undefined,
-    messageTypes:['success','failure','error'],
 
-    ludoConfig:function(config){
+    /**
+     Listen to these resources and events
+     @config {Array|String} listenTo
+     @example
+        listenTo:"Person" // listen to all Person events
+        listenTo:["Person.save","Person.read", "City"] // listen to "save" and "read" service of "Person" and all services of the "City" resource
+     */
+    listenTo:[],
+
+    messageTypes:['success', 'failure', 'error'],
+
+    ludoConfig:function (config) {
         this.parent(config);
-        this.resource = config.resource;
-        this.service = config.service;
+        this.setConfigParams(config, ['listenTo']);
+        if (!ludo.util.isArray(this.listenTo))this.listenTo = [this.listenTo];
     },
 
-    ludoEvents:function(){
+    ludoEvents:function () {
         this.parent();
-        ludo.remoteBroadcaster.addServiceEvent("clear", this.resource, this.service, this.hideMessage.bind(this) );
-        for(var i=0;i<this.messageTypes.length;i++){
-            ludo.remoteBroadcaster.addServiceEvent(this.messageTypes[i], this.resource, this.service, this.showMessage.bind(this));
+        var resources = this.getResources();
+        for (var resourceName in resources) {
+            if (resources.hasOwnProperty(resourceName)) {
+                this.addResourceEvent(resourceName, resources[resourceName]);
+            }
         }
     },
 
-    showMessage:function(response){
-		this.show();
-        if(response.code && response.code !== 200){
+    getResources:function () {
+        var ret = {};
+        var resource, service;
+        for (var i = 0; i < this.listenTo.length; i++) {
+            if (this.listenTo[i].indexOf('.') >= 0) {
+                var tokens = this.listenTo[i].split(/\./g);
+                if (tokens.length === 2) {
+                    service = tokens.pop();
+                    resource = tokens[0];
+                    service = service != '*' ? service : undefined;
+                }
+            } else {
+                resource = this.listenTo[i];
+                service = undefined;
+            }
+
+            if (ret[resource] == undefined) {
+                ret[resource] = [];
+            }
+            if (service && ret[resource].indexOf(service) === -1) {
+                ret[resource].push(service);
+            }
+        }
+        return ret;
+    },
+
+    addResourceEvent:function (resource, service) {
+        ludo.remoteBroadcaster.addServiceEvent("clear", resource, service, this.hideMessage.bind(this));
+        for (var i = 0; i < this.messageTypes.length; i++) {
+            ludo.remoteBroadcaster.addServiceEvent(this.messageTypes[i], resource, service, this.showMessage.bind(this));
+        }
+    },
+
+    showMessage:function (response) {
+        this.show();
+        if (response.code && response.code !== 200) {
             ludo.dom.addClass(this.getEl(), 'ludo-remote-error-message');
-        }else{
+        } else {
             ludo.dom.removeClass(this.getEl(), 'ludo-remote-error-message');
         }
         this.setHtml(response.message);
 
-		/**
-		 * Event fired when message is shown.
-		 * @event showMessage
-		 * @param {remote.Message}
-		 */
-		this.fireEvent('showMessage', this);
+        /**
+         * Event fired when message is shown.
+         * @event showMessage
+         * @param {remote.Message}
+         */
+        this.fireEvent('showMessage', this);
     },
 
-    hideMessage:function(){
+    hideMessage:function () {
         this.setHtml('');
     }
 });/* ../ludojs/src/remote/error-message.js */
