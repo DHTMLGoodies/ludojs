@@ -56,7 +56,7 @@ ludo.dialog.Dialog = new Class({
 	minimizable:false,
 
 	ludoConfig:function (config) {
-
+		// TODO use buttons instead of buttonConfig and check for string
 		config.buttonConfig = config.buttonConfig || this.buttonConfig;
 		if (config.buttonConfig) {
 			var buttons = config.buttonConfig.replace(/([A-Z])/g, ' $1');
