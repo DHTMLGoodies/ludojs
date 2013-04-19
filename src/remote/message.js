@@ -53,6 +53,8 @@ ludo.remote.Message = new Class({
             ludo.dom.removeClass(this.getEl(), 'ludo-remote-error-message');
         }
         this.setHtml(response.message);
+
+		this.fireEvent('showMessage', this);
     },
 
     hideMessage:function(){

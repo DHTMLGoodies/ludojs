@@ -1,4 +1,4 @@
-/* Generated Fri Apr 19 18:48:32 CEST 2013 */
+/* Generated Fri Apr 19 18:50:08 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -5840,6 +5840,8 @@ ludo.remote.Message = new Class({
             ludo.dom.removeClass(this.getEl(), 'ludo-remote-error-message');
         }
         this.setHtml(response.message);
+
+		this.fireEvent('showMessage', this);
     },
 
     hideMessage:function(){
