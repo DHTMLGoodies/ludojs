@@ -13,6 +13,7 @@ require_once("../includes/demo-header.php");
 <script type="text/javascript">
     var w = new ludo.Window({
         title:'LudoDB Integration',
+        stateful:true,
         layout:{
             'width':500, height:400
         },

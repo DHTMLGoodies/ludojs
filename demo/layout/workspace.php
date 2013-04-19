@@ -1,6 +1,6 @@
 <?php
 $sub = true;
-$pageTitle = 'Workspace sample';
+$pageTitle = 'Workspace example';
 $skin = 'blue';
 require_once("../includes/demo-header.php");
 

@@ -1,4 +1,4 @@
-/* Generated Thu Apr 18 21:55:19 CEST 2013 */
+/* Generated Fri Apr 19 2:21:19 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -4582,7 +4582,7 @@ ludo.View = new Class({
 
 	alwaysInFront:false,
 
-	statefulProperties:['layout'],
+	statefulProperties:['layout','left','top'],
 
 	els:{
 
@@ -23227,8 +23227,8 @@ ludo.form.Text = new Class({
         this.setConfigParams(config,keys);
         if(this.regex && ludo.util.isString(this.regex)){
             var tokens = this.regex.split(/\//g);
-            var flags = tokens.pop();
-            this.regex = new RegExp(tokens.join(''), flags);
+            var flags = tokens.length > 1 ? tokens.pop() : '';
+            this.regex = new RegExp(tokens.join('/'), flags);
         }
         this.applyValidatorFns(['minLength','maxLength','regex']);
     },
