@@ -1,4 +1,4 @@
-/* Generated Fri Apr 19 18:50:08 CEST 2013 */
+/* Generated Fri Apr 19 18:53:55 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -4177,17 +4177,17 @@ ludo.dom = {
 
     // TODO rename to cls
 	addClass:function (el, className) {
-		if (!this.hasClass(el, className)) {
+		if (el && !this.hasClass(el, className)) {
 			el.className = el.className ? el.className + ' ' + className : className;
 		}
 	},
 
 	hasClass:function (el, className) {
-		return el.className ? el.className.split(/\s/g).indexOf(className) > -1 : false;
+		return el && el.className ? el.className.split(/\s/g).indexOf(className) > -1 : false;
 	},
 
 	removeClass:function (el, className) {
-		el.className = el.className.replace(new RegExp('(^|\\s)' + className + '(?:\\s|$)'), '$1');
+		if(el)el.className = el.className.replace(new RegExp('(^|\\s)' + className + '(?:\\s|$)'), '$1');
 	},
 
 	getParent:function (el, selector) {
@@ -5834,6 +5834,7 @@ ludo.remote.Message = new Class({
     },
 
     showMessage:function(response){
+		this.show();
         if(response.code && response.code !== 200){
             ludo.dom.addClass(this.getEl(), 'ludo-remote-error-message');
         }else{
@@ -5841,6 +5842,11 @@ ludo.remote.Message = new Class({
         }
         this.setHtml(response.message);
 
+		/**
+		 * Event fired when message is shown.
+		 * @event showMessage
+		 * @param {remote.Message}
+		 */
 		this.fireEvent('showMessage', this);
     },
 
@@ -5856,8 +5862,7 @@ ludo.remote.Message = new Class({
  */
 ludo.remote.ErrorMessage = new Class({
     Extends:ludo.remote.Message,
-    messageTypes:['failure','serverError'],
-	bodyCls:'ludo-error-message'
+    messageTypes:['failure','serverError']
 });/* ../ludojs/src/ludo-db/factory.js */
 ludo.ludoDB.Factory = new Class({
     Extends:ludo.Core,

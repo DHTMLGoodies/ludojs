@@ -143,17 +143,17 @@ ludo.dom = {
 
     // TODO rename to cls
 	addClass:function (el, className) {
-		if (!this.hasClass(el, className)) {
+		if (el && !this.hasClass(el, className)) {
 			el.className = el.className ? el.className + ' ' + className : className;
 		}
 	},
 
 	hasClass:function (el, className) {
-		return el.className ? el.className.split(/\s/g).indexOf(className) > -1 : false;
+		return el && el.className ? el.className.split(/\s/g).indexOf(className) > -1 : false;
 	},
 
 	removeClass:function (el, className) {
-		el.className = el.className.replace(new RegExp('(^|\\s)' + className + '(?:\\s|$)'), '$1');
+		if(el)el.className = el.className.replace(new RegExp('(^|\\s)' + className + '(?:\\s|$)'), '$1');
 	},
 
 	getParent:function (el, selector) {
