@@ -340,10 +340,11 @@ ludo.grid.Grid = new Class({
 	getDOMCellsForRecord:function (record) {
 		var ret = {};
 		var div, divId;
+
 		var keys = this.columnManager.getLeafKeys();
 		for (var i = 0; i < keys.length; i++) {
 			var col = this.getBody().getElement('#ludo-grid-column-' + keys[i] + '-' + this.uniqueId);
-			divId = 'cell-' + keys[i] + '-' + record.id + '-' + this.uniqueId;
+			divId = 'cell-' + keys[i] + '-' + record.uid + '-' + this.uniqueId;
 			div = col.getElement('#' + divId);
 			if (div) {
 				ret[keys[i]] = div;
@@ -711,7 +712,7 @@ ludo.grid.Grid = new Class({
 			if (renderer) {
 				content = renderer(content, data[i]);
 			}
-			var id = ['cell-' , col , '-' , data[i].id , '-' , this.uniqueId].join('');
+			var id = ['cell-' , col , '-' , data[i].uid , '-' , this.uniqueId].join('');
 			var over = '';
 			if (this.mouseOverEffect) {
 				over = ' onmouseover="ludo.get(\'' + this.id + '\').enterCell(this)"';

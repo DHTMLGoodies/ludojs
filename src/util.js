@@ -86,8 +86,6 @@ ludo.util = {
 		}
         view.removeEvents();
 
-        console.log('dispose ' + view.type);
-
 		this.disposeDependencies(view.dependency);
 
         view.disposeAllChildren();

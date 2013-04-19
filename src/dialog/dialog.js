@@ -123,7 +123,7 @@ ludo.dialog.Dialog = new Class({
 		this.parent();
 		this.hideShim();
 		if (this.autoDispose) {
-			this.dispose.delay(100, this);
+			this.dispose.delay(1000, this);
 		}
 	},
 

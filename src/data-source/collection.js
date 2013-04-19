@@ -306,7 +306,7 @@ ludo.dataSource.Collection = new Class({
 	findRecord:function (search) {
 		if (!this.data)return undefined;
 		if(search['getUID'] !== undefined)search = search.getUID();
-        // TODO uid causes problems when you have a ludo.model.Model without uid. Refactor!
+
 		if(search.uid)search = search.uid;
 		var rec = this.getById(search);
 		if(rec)return rec;
@@ -955,6 +955,7 @@ ludo.dataSource.Collection = new Class({
 		if(this.index[id] !== undefined){
 			return this.index[id];
 		}
+
 		if(this.primaryKey.length===1){
 			return this.index[id];
 		}else{

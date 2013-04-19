@@ -17,7 +17,8 @@ ludo.dialog.Prompt = new Class({
                 {
                     value : 'OK',
                     width : 60,
-                    type:'form.SubmitButton'
+					defaultSubmit:true,
+                    type:'form.Button'
                 },
                 {
                     value : 'Cancel',

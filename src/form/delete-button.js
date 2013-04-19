@@ -6,12 +6,12 @@
  * @class SubmitButton
  * @extends form.Button
  */
-ludo.form.SubmitButton = new Class({
+ludo.form.DeleteButton = new Class({
+	// TODO show shim over applyTo component when delete or submit is in progress
 	Extends:ludo.form.Button,
-	type:'form.SubmitButton',
-	value:'Submit',
+	type:'form.DeleteButton',
+	value:'Delete',
 	component:undefined,
-	disableOnInvalid:true,
 	/**
 	 * Apply submit button to form of this LudoJS component
 	 * @config {String|View} applyTo
@@ -20,26 +20,17 @@ ludo.form.SubmitButton = new Class({
 	applyTo:undefined,
 	ludoConfig:function(config){
 		this.parent(config);
+		// TODO create base class for delete, submit and cancel button
 		this.setConfigParams(config, ['applyTo']);
 	},
 
 	ludoRendered:function () {
 		this.parent();
 		this.component = this.applyTo ? ludo.get(this.applyTo) : this.getParentComponent();
-		var manager = this.component.getForm();
-		if (this.component) {
-			manager.addEvent('valid', this.enable.bind(this));
-			manager.addEvent('invalid', this.disable.bind(this));
-		}
-		if(!manager.isValid()){
-			this.disable();
-		}
 		this.addEvent('click', this.submit.bind(this));
 	},
 
 	submit:function () {
-		if (this.component) {
-			this.component.submit();
-		}
+		// TODO implement delete from form.Manager.
 	}
 });

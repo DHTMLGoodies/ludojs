@@ -15,15 +15,6 @@ ludo.form.Color = new Class({
 				bodyCls:'ludo-tabs-in-dropdown-body',
 				children:[
 					{
-						title:'Color boxes',
-						type:'color.Boxes',
-						value:this.value,
-						listeners:{
-							'setColor':this.receiveColor.bind(this),
-							'render':this.setInitialWidgetValue.bind(this)
-						}
-					},
-					{
 						title:'Color Slider',
 						type:'color.RGBSlider',
 						value:this.value,
@@ -32,13 +23,22 @@ ludo.form.Color = new Class({
 							'render':this.setInitialWidgetValue.bind(this)
 						}
 
+					},
+					{
+						title:'Color boxes',
+						type:'color.Boxes',
+						value:this.value,
+						listeners:{
+							'setColor':this.receiveColor.bind(this),
+							'render':this.setInitialWidgetValue.bind(this)
+						}
 					}
 				]
 			}
 		];
 	},
 
-	setInitialWidgetValue:function(widget){
+	setInitialWidgetValue:function (widget) {
 		widget.setColor(this.value);
 	},
 
@@ -50,7 +50,7 @@ ludo.form.Color = new Class({
 	updateWidgets:function () {
 		var c = this.getColorWidgets();
 		for (var i = 0; i < c.length; i++) {
-			if(c[i].setColor){
+			if (c[i].setColor) {
 				c[i].setColor(this.value);
 			}
 		}

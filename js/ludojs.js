@@ -1,4 +1,4 @@
-/* Generated Fri Apr 19 2:21:19 CEST 2013 */
+/* Generated Fri Apr 19 17:12:38 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -3590,7 +3590,7 @@ ludo.dataSource.JSON = new Class({
 		this.parent();
         this.data = data;
         this.fireEvent('parsedata');
-        this.fireEvent('load', [this.data]);
+        this.fireEvent('load', [this.data, this]);
     },
 
     getPostData:function(){
@@ -4367,8 +4367,6 @@ ludo.util = {
 		}
         view.removeEvents();
 
-        console.log('dispose ' + view.type);
-
 		this.disposeDependencies(view.dependency);
 
         view.disposeAllChildren();
@@ -4582,7 +4580,7 @@ ludo.View = new Class({
 
 	alwaysInFront:false,
 
-	statefulProperties:['layout','left','top'],
+	statefulProperties:['layout'],
 
 	els:{
 
@@ -14318,7 +14316,7 @@ ludo.dataSource.Collection = new Class({
 	findRecord:function (search) {
 		if (!this.data)return undefined;
 		if(search['getUID'] !== undefined)search = search.getUID();
-        // TODO uid causes problems when you have a ludo.model.Model without uid. Refactor!
+
 		if(search.uid)search = search.uid;
 		var rec = this.getById(search);
 		if(rec)return rec;
@@ -14967,6 +14965,7 @@ ludo.dataSource.Collection = new Class({
 		if(this.index[id] !== undefined){
 			return this.index[id];
 		}
+
 		if(this.primaryKey.length===1){
 			return this.index[id];
 		}else{
@@ -17216,10 +17215,11 @@ ludo.grid.Grid = new Class({
 	getDOMCellsForRecord:function (record) {
 		var ret = {};
 		var div, divId;
+
 		var keys = this.columnManager.getLeafKeys();
 		for (var i = 0; i < keys.length; i++) {
 			var col = this.getBody().getElement('#ludo-grid-column-' + keys[i] + '-' + this.uniqueId);
-			divId = 'cell-' + keys[i] + '-' + record.id + '-' + this.uniqueId;
+			divId = 'cell-' + keys[i] + '-' + record.uid + '-' + this.uniqueId;
 			div = col.getElement('#' + divId);
 			if (div) {
 				ret[keys[i]] = div;
@@ -17587,7 +17587,7 @@ ludo.grid.Grid = new Class({
 			if (renderer) {
 				content = renderer(content, data[i]);
 			}
-			var id = ['cell-' , col , '-' , data[i].id , '-' , this.uniqueId].join('');
+			var id = ['cell-' , col , '-' , data[i].uid , '-' , this.uniqueId].join('');
 			var over = '';
 			if (this.mouseOverEffect) {
 				over = ' onmouseover="ludo.get(\'' + this.id + '\').enterCell(this)"';
@@ -23080,10 +23080,20 @@ ludo.form.SubmitButton = new Class({
 	value:'Submit',
 	component:undefined,
 	disableOnInvalid:true,
+	/**
+	 * Apply submit button to form of this LudoJS component
+	 * @config {String|View} applyTo
+	 * @default undefined
+	 */
+	applyTo:undefined,
+	ludoConfig:function(config){
+		this.parent(config);
+		this.setConfigParams(config, ['applyTo']);
+	},
 
 	ludoRendered:function () {
 		this.parent();
-		this.component = this.getParentComponent();
+		this.component = this.applyTo ? ludo.get(this.applyTo) : this.getParentComponent();
 		var manager = this.component.getForm();
 		if (this.component) {
 			manager.addEvent('valid', this.enable.bind(this));
@@ -23120,9 +23130,21 @@ ludo.form.CancelButton = new Class({
 
     component:undefined,
 
+	/**
+	 * Apply cancel button to form of this LudoJS component
+	 * @config {String|View} applyTo
+	 * @default undefined
+	 */
+	applyTo:undefined,
+
+	ludoConfig:function(config){
+		this.parent(config);
+		this.setConfigParams(config, ['applyTo']);
+	},
+
     ludoRendered:function () {
         this.parent();
-        this.component = this.getParentComponent();
+        this.component = this.applyTo ? ludo.get(this.applyTo) : this.getParentComponent();
         this.addEvent('click', this.hideComponent.bind(this));
     },
 
@@ -23523,15 +23545,6 @@ ludo.form.Color = new Class({
 				bodyCls:'ludo-tabs-in-dropdown-body',
 				children:[
 					{
-						title:'Color boxes',
-						type:'color.Boxes',
-						value:this.value,
-						listeners:{
-							'setColor':this.receiveColor.bind(this),
-							'render':this.setInitialWidgetValue.bind(this)
-						}
-					},
-					{
 						title:'Color Slider',
 						type:'color.RGBSlider',
 						value:this.value,
@@ -23540,13 +23553,22 @@ ludo.form.Color = new Class({
 							'render':this.setInitialWidgetValue.bind(this)
 						}
 
+					},
+					{
+						title:'Color boxes',
+						type:'color.Boxes',
+						value:this.value,
+						listeners:{
+							'setColor':this.receiveColor.bind(this),
+							'render':this.setInitialWidgetValue.bind(this)
+						}
 					}
 				]
 			}
 		];
 	},
 
-	setInitialWidgetValue:function(widget){
+	setInitialWidgetValue:function (widget) {
 		widget.setColor(this.value);
 	},
 
@@ -23558,7 +23580,7 @@ ludo.form.Color = new Class({
 	updateWidgets:function () {
 		var c = this.getColorWidgets();
 		for (var i = 0; i < c.length; i++) {
-			if(c[i].setColor){
+			if (c[i].setColor) {
 				c[i].setColor(this.value);
 			}
 		}
@@ -27283,7 +27305,7 @@ ludo.dialog.Dialog = new Class({
 		this.parent();
 		this.hideShim();
 		if (this.autoDispose) {
-			this.dispose.delay(100, this);
+			this.dispose.delay(1000, this);
 		}
 	},
 
@@ -27360,7 +27382,8 @@ ludo.dialog.Confirm = new Class({
                 {
                     value : 'OK',
                     width : 60,
-                    type : 'form.SubmitButton'
+					defaultSubmit:true,
+                    type : 'form.Button'
                 },
                 {
                     value : 'Cancel',
@@ -27438,7 +27461,8 @@ ludo.dialog.Prompt = new Class({
                 {
                     value : 'OK',
                     width : 60,
-                    type:'form.SubmitButton'
+					defaultSubmit:true,
+                    type:'form.Button'
                 },
                 {
                     value : 'Cancel',

@@ -17,9 +17,21 @@ ludo.form.CancelButton = new Class({
 
     component:undefined,
 
+	/**
+	 * Apply cancel button to form of this LudoJS component
+	 * @config {String|View} applyTo
+	 * @default undefined
+	 */
+	applyTo:undefined,
+
+	ludoConfig:function(config){
+		this.parent(config);
+		this.setConfigParams(config, ['applyTo']);
+	},
+
     ludoRendered:function () {
         this.parent();
-        this.component = this.getParentComponent();
+        this.component = this.applyTo ? ludo.get(this.applyTo) : this.getParentComponent();
         this.addEvent('click', this.hideComponent.bind(this));
     },
 
