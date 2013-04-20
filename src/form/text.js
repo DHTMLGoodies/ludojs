@@ -168,7 +168,7 @@ ludo.form.Text = new Class({
 
 	upperCaseWords:function () {
 		if (this.ucFirst || this.ucWords) {
-			var val = this.getFormEl().get('value');
+			var val = this.getValueOfFormEl();
 			if (val.length == 0) {
 				return;
 			}

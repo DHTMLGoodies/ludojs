@@ -239,5 +239,9 @@ ludo.form.Slider = new Class({
             this.handleSize = parseInt(this.els.sliderHandle.getStyle(cssProperty).replace('px', ''));
         }
         return this.handleSize;
+    },
+
+    supportsInlineLabel:function(){
+        return false;
     }
 });

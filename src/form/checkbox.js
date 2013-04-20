@@ -195,5 +195,9 @@ ludo.form.Checkbox = new Class({
                 ludo.dom.removeClass(this.els.radioImageDiv, 'ludo-radio-image-checked');
             }
         }
+    },
+
+    supportsInlineLabel:function(){
+        return false;
     }
 });

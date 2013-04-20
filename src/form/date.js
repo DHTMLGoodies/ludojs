@@ -59,7 +59,8 @@ ludo.form.Date = new Class({
     },
 
     setValue:function(value){
-        value = ludo.util.parseDate(value, this.displayFormat);
+        value = value ? ludo.util.parseDate(value, this.displayFormat) : value;
+        if(value && value.getYear && isNaN(value.getYear()))value = undefined;
         this.parent(value);
     },
 

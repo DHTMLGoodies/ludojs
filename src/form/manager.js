@@ -9,6 +9,7 @@ ludo.form.Manager = new Class({
 	Extends:ludo.Core,
 	component:null,
 	formComponents:[],
+    formComponentId:undefined,
 	fileUploadComponents:[],
 	progressBar:undefined,
 	invalidIds:[],
@@ -25,8 +26,8 @@ ludo.form.Manager = new Class({
 
 		if (config.form)this.form = config.form;
 		if (this.form && this.form.url)this.url = this.form.url;
-
         this.form.resource = this.form.resource || this.form.name || undefined;
+
 		this.id = String.uniqueID();
 		if (config.model !== undefined) {
 			if (config.model.type === undefined) {
@@ -97,7 +98,9 @@ ludo.form.Manager = new Class({
 			this.fileUploadComponents.push(c);
 		}
 		this.formComponents.push(c);
-
+        if(this.form.idField && c.name == this.form.idField){
+            this.formComponentId = c;
+        }
 		c.addEvent('valid', this.onValidFormElement.bind(this));
 		c.addEvent('invalid', this.onInvalidFormElement.bind(this));
 		c.addEvent('dirty', this.onDirtyFormElement.bind(this));
@@ -249,6 +252,52 @@ ludo.form.Manager = new Class({
 			this.save();
 		}
 	},
+
+    deleteRequest:function(){
+        if(this.model){
+            this.model.deleteRequest();
+        }else{
+            var path = this.getDeletePath();
+            var r = new ludo.remote.JSON({
+                resource : path.resource,
+                listeners:{
+                    success : function(req){
+                        /**
+                         * Event fired after successful delete request
+                         * @event deleted
+                         * @param {Object} response from server
+                         * @param {Object} View
+                         */
+                        this.fireEvent('deleted', [req.getResponse(), this.component]);
+                    }.bind(this),
+                    "failure":function (req) {
+                        /**
+                         * Event fired after form submission when success parameter in response is false.
+                         * To add listeners, use <br>
+                         * ludo.View.getForm().addEvent('failure', fn);<br>
+                         * @event deleteFailed
+                         * @param {Object} JSON response from server
+                         * @param {Object} Component
+                         */
+
+                        this.fireEvent('deleteFailed', [req.getResponse(), this.component]);
+                    }.bind(this)
+                }
+            });
+            r.send(path.service, path.argument);
+        }
+    },
+
+    getDeletePath:function(){
+        if(this.formComponentId){
+            return {
+                resource : this.form.resource,
+                service : 'delete',
+                argument : this.formComponentId.getValue()
+            }
+        }
+        return undefined;
+    },
 
 	getUnfinishedFileUploadComponent:function () {
 		for (var i = 0; i < this.fileUploadComponents.length; i++) {

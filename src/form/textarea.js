@@ -32,7 +32,9 @@ ludo.form.Textarea = new Class({
             w = (p.offsetWidth - ludo.dom.getBW(p) - ludo.dom.getPW(p));
         }
 
-        this.els.formEl.setStyle('width', w + 'px');
+        if(this.stretchField)w-=10;
+
+        this.els.formEl.setStyle('width', (w - 10) + 'px');
 
         if (this.layout && this.layout.weight) {
             var height = this.getEl().offsetHeight;

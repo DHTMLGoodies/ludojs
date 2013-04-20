@@ -11,7 +11,6 @@ ludo.form.DeleteButton = new Class({
 	Extends:ludo.form.Button,
 	type:'form.DeleteButton',
 	value:'Delete',
-	component:undefined,
 	/**
 	 * Apply submit button to form of this LudoJS component
 	 * @config {String|View} applyTo
@@ -26,11 +25,13 @@ ludo.form.DeleteButton = new Class({
 
 	ludoRendered:function () {
 		this.parent();
-		this.component = this.applyTo ? ludo.get(this.applyTo) : this.getParentComponent();
+		this.applyTo = this.applyTo ? ludo.get(this.applyTo) : this.getParentComponent();
 		this.addEvent('click', this.submit.bind(this));
 	},
 
 	submit:function () {
-		// TODO implement delete from form.Manager.
+		if(this.applyTo){
+            this.applyTo.deleteRequest();
+        }
 	}
 });

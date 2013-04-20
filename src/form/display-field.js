@@ -43,5 +43,9 @@ ludo.form.DisplayField = new Class({
 
 	getValue:function () {
 		return this.value;
-	}
+	},
+
+    supportsInlineLabel:function(){
+        return false;
+    }
 });

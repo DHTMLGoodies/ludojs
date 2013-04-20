@@ -93,6 +93,11 @@ ludo.form.Select = new Class({
         this.setConfigParams(config, ['emptyItem', 'options', 'valueKey', 'textKey']);
         if (!this.dataSource)this.dataSource = {};
         if (this.dataSource && !this.dataSource.type)this.dataSource.type = 'dataSource.Collection';
+        if(!this.emptyItem && this.inlineLabel){
+            this.emptyItem = {};
+            this.emptyItem[this.textKey] = this.inlineLabel;
+            this.inlineLabel = undefined;
+        }
     },
 
     ludoEvents:function () {
@@ -107,7 +112,6 @@ ludo.form.Select = new Class({
                 this.populate();
             }
             var ds = this.getDataSource();
-            ds.addEvent('change', this.populate.bind(this));
             ds.addEvent('select', this.selectRecord.bind(this));
             ds.addEvent('update', this.populate.bind(this));
             ds.addEvent('delete', this.populate.bind(this));
@@ -125,7 +129,7 @@ ludo.form.Select = new Class({
         var data = this.dataSourceObj.getData() || [];
         this.getFormEl().options.length = 0;
         if (this.emptyItem) {
-            data.splice(0, 0, this.emptyItem);
+            this.addOption(this.emptyItem[ this.valueKey ], this.emptyItem[ this.textKey ]);
         }
         for (var i = 0, count = data.length; i < count; i++) {
             this.addOption(data[i][ this.valueKey ], data[i][ this.textKey ]);

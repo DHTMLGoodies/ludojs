@@ -107,3 +107,7 @@ div.ludo-menu-menu label{
 .input-row textarea{
     overflow-y: auto;
 }
+
+.ludo-form-el-inline-label{
+    color:#777;
+}

@@ -133,6 +133,7 @@ ludo.form.Element = new Class({
         var defaultConfig = this.getInheritedFormConfig();
         this.labelWidth = defaultConfig.labelWidth || this.labelWidth;
         this.fieldWidth = defaultConfig.fieldWidth || this.fieldWidth;
+        this.inlineLabel = defaultConfig.inlineLabel || this.inlineLabel;
 
         var keys = ['label', 'suffix', 'formCss', 'validator', 'stretchField', 'required', 'twin', 'disabled', 'labelWidth', 'fieldWidth',
             'value', 'data'];
@@ -342,7 +343,7 @@ ludo.form.Element = new Class({
     blur:function () {
         this._focus = false;
         this.validate();
-        if (this.getFormEl())this.value = this.getFormEl().get('value');
+        if (this.getFormEl())this.value = this.getValueOfFormEl();
         this.toggleDirtyFlag();
         /**
          * On blur event
@@ -351,6 +352,10 @@ ludo.form.Element = new Class({
          * $param {View} this
          */
         this.fireEvent('blur', [ this.value, this ]);
+    },
+
+    getValueOfFormEl:function(){
+        return this.getFormEl().get('value');
     },
 
     toggleDirtyFlag:function(){
@@ -414,6 +419,8 @@ ludo.form.Element = new Class({
         this.setFormElValue(value);
         this.value = value;
 
+
+
         this.validate();
 
         if (this.wasValid) {
@@ -430,11 +437,14 @@ ludo.form.Element = new Class({
             if (this.stateful)this.fireEvent('state');
             if (this.linkWith)this.updateLinked();
         }
+
+        this.fireEvent('value', value);
     },
 
     setFormElValue:function(value){
         if (this.els.formEl && this.els.formEl.value !== value) {
             this.els.formEl.set('value', value);
+            if(this.inlineLabel)ludo.dom.removeClass(this.els.formEl, 'ludo-form-el-inline-label');
         }
     },
 
@@ -453,7 +463,7 @@ ludo.form.Element = new Class({
      */
     isValid:function () {
         if(this.validators.length === 0)return true;
-        var val = this.getFormEl() ? this.getFormEl().get('value').trim() : this.value;
+        var val = this.getFormEl() ? this.getValueOfFormEl().trim() : this.value;
         for (var i = 0; i < this.validators.length; i++) {
             if (!this.validators[i].fn.apply(this, [val, this[this.validators[i].key]])){
                 return false;

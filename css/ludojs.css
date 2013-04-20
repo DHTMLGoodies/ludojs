@@ -1,4 +1,4 @@
-/* Generated Sat Apr 20 0:08:58 CEST 2013 */
+/* Generated Sat Apr 20 18:35:35 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -1938,6 +1938,10 @@ div.ludo-menu-menu label{
 }
 .input-row textarea{
     overflow-y: auto;
+}
+
+.ludo-form-el-inline-label{
+    color:#777;
 }/* ../ludojs/css-source/form/combo.css */
 .ludo-combo, .ludo-Filter-Tree-Combo-Field {
     padding-left: 3px;

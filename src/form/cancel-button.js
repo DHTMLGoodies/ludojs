@@ -1,5 +1,6 @@
 /**
- * Cancel button. This is a pre-configured ludo.form.Button which will close/hide parent component on click.
+ * Cancel button. This is a pre-configured ludo.form.Button which will close/hide parent view(or view defined in
+ * applyTo) on click.
  * Default value of this button is "Cancel".
  * @namespace form
  * @class CancelButton
@@ -15,10 +16,9 @@ ludo.form.CancelButton = new Class({
      */
     value:'Cancel',
 
-    component:undefined,
-
 	/**
-	 * Apply cancel button to form of this LudoJS component
+	 * Apply cancel button to form of this LudoJS component. If not defined, it
+     * will be applied to parent view.
 	 * @config {String|View} applyTo
 	 * @default undefined
 	 */
@@ -31,13 +31,13 @@ ludo.form.CancelButton = new Class({
 
     ludoRendered:function () {
         this.parent();
-        this.component = this.applyTo ? ludo.get(this.applyTo) : this.getParentComponent();
+        this.applyTo = this.applyTo ? ludo.get(this.applyTo) : this.getParentComponent();
         this.addEvent('click', this.hideComponent.bind(this));
     },
 
     hideComponent:function () {
-        if (this.component) {
-            this.component.hide();
+        if (this.applyTo) {
+            this.applyTo.hide();
         }
     }
 });

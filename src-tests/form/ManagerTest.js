@@ -1,7 +1,7 @@
 TestCase("ManagerTest", {
 
 	 getComponent:function () {
-		var component = new ludo.View({
+		return new ludo.View({
 			layout:'rows',
 			children:[
 				{ type:'form.Text', name:'firstname', 'value':'John' },
@@ -9,7 +9,6 @@ TestCase("ManagerTest", {
 				{ type:'form.Textarea', name:'address', 'value':'Park Avenue' }
 			]
 		});
-		return component;
 	},
 
 	getPanelWithButton:function () {
@@ -86,6 +85,32 @@ TestCase("ManagerTest", {
 		// then
 		assertTrue(manager.formComponents.indexOf(newChild) >= 0);
 	},
+
+    "test should be able to send delete requests": function(){
+        // given
+        var v = new ludo.View({
+            form : {
+                idField : 'id',
+                resource:'Person'
+            },
+            children:[{
+                type:'form.Hidden', name:'id', value:1
+            },{
+                type:'form.Text', name:'firstname', value:'John'
+            }]
+        });
+
+        // when
+        var form = v.getForm();
+        var path = form.getDeletePath();
+
+
+        // then
+        assertEquals('Person', path.resource);
+        assertEquals(1, path.argument);
+        assertEquals('delete', path.service);
+    },
+
 	"test should fire invalid event when form element is invalid":function () {
 		// given
 		var component = new ludo.View({

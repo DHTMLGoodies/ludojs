@@ -59,6 +59,60 @@ TestCase("TextTest", {
 
 	},
 
+    "test should be able to have inline label": function(){
+        // given
+        var el = new ludo.form.Text({
+            label : 'Zip code',
+            inlineLabel : true
+        });
+
+        // then
+        assertEquals('Zip code', el.getFormEl().value);
+    },
+
+    "test should add css class for inline label": function(){
+        // given
+        var el = new ludo.form.Text({
+            label : 'Zip code',
+            inlineLabel : true
+        });
+
+        // then
+        assertTrue(ludo.dom.hasClass(el.getFormEl(), 'ludo-form-el-inline-label'));
+    },
+
+    "test should remove css class for inline label when value is set": function(){
+        // given
+        var el = new ludo.form.Text({
+            label : 'Zip code',
+            inlineLabel : true
+        });
+
+        // when
+        el.setValue('New value');
+
+        // then
+        assertEquals('New value', el.getFormEl().value);
+        assertFalse(ludo.dom.hasClass(el.getFormEl(), 'ludo-form-el-inline-label'));
+
+        // given
+        el = new ludo.form.Date({
+            label : 'Born',
+            inlineLabel : true
+        });
+
+        // when
+        el.setValue(Date.parse('1973-09-06'));
+
+        // then
+        assertEquals('1973-09-06', el.getFormEl().value);
+        assertFalse(ludo.dom.hasClass(el.getFormEl(), 'ludo-form-el-inline-label'));
+    },
+
+    "test should be able to define inlineLabel in parent view": function(){
+
+    },
+
 	"test should not validate when too long":function () {
 		// given
 		var textComponent = this.getFormComponent('Text', { maxLength:5});

@@ -10,10 +10,10 @@ ludo.form.SubmitButton = new Class({
 	Extends:ludo.form.Button,
 	type:'form.SubmitButton',
 	value:'Submit',
-	component:undefined,
 	disableOnInvalid:true,
 	/**
-	 * Apply submit button to form of this LudoJS component
+	 * Apply submit button to form of this LudoJS component. If not defined, it will be applied
+     * to parent view.
 	 * @config {String|View} applyTo
 	 * @default undefined
 	 */
@@ -25,9 +25,9 @@ ludo.form.SubmitButton = new Class({
 
 	ludoRendered:function () {
 		this.parent();
-		this.component = this.applyTo ? ludo.get(this.applyTo) : this.getParentComponent();
-		var manager = this.component.getForm();
-		if (this.component) {
+		this.applyTo = this.applyTo ? ludo.get(this.applyTo) : this.getParentComponent();
+		var manager = this.applyTo.getForm();
+		if (this.applyTo) {
 			manager.addEvent('valid', this.enable.bind(this));
 			manager.addEvent('invalid', this.disable.bind(this));
 		}
@@ -38,8 +38,8 @@ ludo.form.SubmitButton = new Class({
 	},
 
 	submit:function () {
-		if (this.component) {
-			this.component.submit();
+		if (this.applyTo) {
+			this.applyTo.submit();
 		}
 	}
 });

@@ -133,7 +133,7 @@ ludo.util = {
             dateParts['%s'] = dateParts['%s'] || 0;
             return new Date(dateParts['%Y'], dateParts['%m'], dateParts['%d'], dateParts['%h'], dateParts['%i'], dateParts['%s']);
         }
-        return date;
+        return ludo.util.isString(date) ? '' : date;
     },
 
     getDragStartEvent:function () {

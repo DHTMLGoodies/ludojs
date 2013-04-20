@@ -352,6 +352,12 @@ ludo.model.Model = new Class({
         });
 	},
 
+    deleteRequest:function(){
+        if(this.recordId){
+            this.getDeleteRequest().send('delete', this.recordId);
+        }
+    },
+
     getDataToSubmit:function(formData){
         formData = formData || {};
         var data = Object.merge(this.currentRecord);
@@ -430,6 +436,64 @@ ludo.model.Model = new Class({
             });
         }
         return this._saveRequest;
+    },
+
+    _deleteRequest:undefined,
+    getDeleteRequest:function(){
+        if(this._deleteRequest === undefined){
+            this._deleteRequest = this.dependency['deleteRequest'] = new ludo.remote.JSON({
+                url:this.url,
+                resource:this.name,
+                listeners:{
+                    "beforeload": function(request){
+                        this.fireEvent("beforeload", request);
+                    },
+                    "success":function (request) {
+                        var updates = request.getResponseData();
+                        if (updates) {
+                            this.handleModelUpdates(updates);
+                        }
+                        this.fireEvent('success', [request.getResponse(), this]);
+                        /**
+                         * Event fired after model has been deleted
+                         * @event deleted
+                         * @param {Object} JSON response from server
+                         * @param {Object} ludo.model.Model
+                         */
+                        this.fireEvent('deleted', [request.getResponse(), this]);
+                        this.commitFormFields();
+                    }.bind(this),
+                    "failure":function (request) {
+                        /**
+                         * Event fired when success parameter in response from server after saving model was false.
+                         * @event model deleteFailed
+                         * @param {Object} JSON response from server. Error message should be in the "message" property
+                         * @param {Object} ludo.model.Model
+                         *
+                         */
+                        this.fireEvent('deleteFailed', [request.getResponse(), this]);
+                        /**
+                         * Event fired when success parameter in response from server is false
+                         * @event failure
+                         * @param {Object} JSON response from server. Error message should be in the "message" property
+                         * @param {Object} ludo.model.Model
+                         *
+                         */
+                        this.fireEvent('failure', [request.getResponse(), this]);
+                    }.bind(this),
+                    "error":function (request) {
+                        /**
+                         * Server error event. Fired when the server didn't handle the request
+                         * @event servererror
+                         * @param {String} error text
+                         * @param {String} error message
+                         */
+                        this.fireEvent('servererror', [request.getResponseMessage(), request.getResponseCode()]);
+                    }.bind(this)
+                }
+            });
+        }
+        return this._deleteRequest;
     },
 
 	getProgressBarId:function () {

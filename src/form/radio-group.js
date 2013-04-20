@@ -140,5 +140,9 @@ ludo.form.RadioGroup = new Class({
             }
         }
         this.parent(value);
+    },
+
+    supportsInlineLabel:function(){
+        return false;
     }
 });

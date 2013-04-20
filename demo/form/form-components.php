@@ -62,20 +62,22 @@ require_once("../includes/demo-header.php");
         children:[
             {
                 formConfig:{
-                    labelWidth:130
+                    labelWidth:130,
+                    inlineLabel:true
                 },
                 weight:1,
                 layout:'rows',
                 children:[
-                    { type:'form.Text', 'label':'First name', ucWords:true, stretchField:true, name:'firstname', value:'', required:true },
+                    { type:'form.Text', 'label':'First name', inlineLabel:true, ucWords:true, stretchField:true, name:'firstname', value:'', required:true },
                     { type:'form.Text', 'label':'Last name', ucWords:true, stretchField:true, value:'', name:'lastname' },
                     { type:'form.Email', 'label':'E-mail', stretchField:true, name:'email', value:'' },
-                    { type:'form.Textarea', label:'Address', ucFirst:true, stretchField:true, name:'address', value:'', weight:1}
+                    { type:'form.Textarea',  label:'Address', ucFirst:true, stretchField:true, name:'address', value:'', weight:1}
                 ]
             },
             {
                 formConfig:{
-                    labelWidth:130
+                    labelWidth:130,
+                    inlineLabel:true
                 },
                 weight:1,
                 overflow:'hidden',
@@ -86,15 +88,12 @@ require_once("../includes/demo-header.php");
                     { type:'form.Text', name:'city', stretchField:true, 'label':'City', value:'' },
                     { type:'form.Select', name:'country', stretchField:true, 'label':'Country',
                         valueKey:'id', textKey:'name',
-                        emptyItem:{
-                            id:'', name:'Select country'
-                        },
                         dataSource:{
                             resource:'Countries', service:'read', url:'../controller.php'
                         }},
                     { type:'form.Date', name:'birth', id:'birth', stretchField:true, 'label':'Born'},
                     { type:'form.Color', name:'color', id:'color', stretchField:true, 'label':'Favorite color'},
-                    { type:'form.File', name:'picture', label:'Picture', value:'', height:30 },
+                    { type:'form.File', inlineLabel:false, name:'picture', label:'Picture', value:'', height:30 },
                     { type:'form.DisplayField', label:'form.DisplayField', value:'My value',height:30},
                     { type:'form.RadioGroup',
                         id:'gender',

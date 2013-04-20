@@ -425,5 +425,9 @@ ludo.form.File = new Class({
 
 	blur:function () {
 
-	}
+	},
+
+    supportsInlineLabel:function(){
+        return false;
+    }
 });
