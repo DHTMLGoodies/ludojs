@@ -63,12 +63,12 @@ require_once("../includes/demo-header.php");
             {
                 formConfig:{
                     labelWidth:130,
-                    inlineLabel:true
+                    inlineLabel:false
                 },
                 weight:1,
                 layout:'rows',
                 children:[
-                    { type:'form.Text', 'label':'First name', inlineLabel:true, ucWords:true, stretchField:true, name:'firstname', value:'', required:true },
+                    { type:'form.Text', 'label':'First name', ucWords:true, stretchField:true, name:'firstname', value:'', required:true },
                     { type:'form.Text', 'label':'Last name', ucWords:true, stretchField:true, value:'', name:'lastname' },
                     { type:'form.Email', 'label':'E-mail', stretchField:true, name:'email', value:'' },
                     { type:'form.Textarea',  label:'Address', ucFirst:true, stretchField:true, name:'address', value:'', weight:1}
@@ -77,7 +77,7 @@ require_once("../includes/demo-header.php");
             {
                 formConfig:{
                     labelWidth:130,
-                    inlineLabel:true
+                    inlineLabel:false
                 },
                 weight:1,
                 overflow:'hidden',

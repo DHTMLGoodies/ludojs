@@ -1,4 +1,4 @@
-/* Generated Sat Apr 20 18:35:35 CEST 2013 */
+/* Generated Sat Apr 20 23:35:56 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -26572,13 +26572,14 @@ ludo.form.File = new Class({
 			filter:'alpha(opacity=0)'
 		});
 
+        fe.addEvents({
+            'mouseover': btn.mouseOver.bind(btn),
+            'mouseout' : btn.mouseOut.bind(btn),
+            'mousedown' : btn.mouseDown.bind(btn),
+            'mouseup' : btn.mouseUp.bind(btn),
+            'change' : this.selectFile.bind(this)
+        });
 
-		fe.addEvent('mouseover', btn.mouseOver.bind(btn));
-		fe.addEvent('mouseout', btn.mouseOut.bind(btn));
-		fe.addEvent('mousedown', btn.mouseDown.bind(btn));
-		fe.addEvent('mouseup', btn.mouseUp.bind(btn));
-
-		fe.addEvent('change', this.selectFile.bind(this));
 		btn.getEl().adopt(fe);
 
 		this.createIframe();
@@ -26592,9 +26593,13 @@ ludo.form.File = new Class({
 	createFormElementForComponent:function () {
 		var formEl = this.els.form = new Element('form');
 		formEl.target = this.getIframeName();
-		formEl.setProperty('method', 'post');
-		formEl.setProperty('action', this.getUploadUrl());
-		formEl.setProperty('enctype', 'multipart/form-data');
+
+        formEl.setProperties({
+            'method' : 'post',
+            'action' : this.getUploadUrl(),
+            'enctype' : 'multipart/form-data'
+        });
+
 		formEl.setStyles({ margin:0, padding:0, border:0});
 		this.getEl().adopt(formEl);
 		formEl.adopt(this.getBody());
@@ -26698,7 +26703,6 @@ ludo.form.File = new Class({
 		if (!this.hasFileToUpload() || this.accept === undefined) {
 			return true;
 		}
-
 		return this.accept.indexOf(this.getExtension()) >= 0;
 
 	},
@@ -26736,9 +26740,9 @@ ludo.form.File = new Class({
 	displayFileName:function () {
         var ci = this.els.cellInput;
 		ci.set('html', '');
-		ci.removeClass('ludo-input-file-name-new-file');
-		ci.removeClass('ludo-input-file-name-initial');
-		ci.removeClass('ludo-input-file-name-not-uploaded');
+		ludo.dom.removeClass(ci, 'ludo-input-file-name-new-file');
+        ludo.dom.removeClass(ci, 'ludo-input-file-name-initial');
+        ludo.dom.removeClass(ci, 'ludo-input-file-name-not-uploaded');
 		if (this.valueForDisplay) {
 			var span = new Element('span');
 			span.set('html', this.valueForDisplay + ' ');
