@@ -44,7 +44,6 @@ ludo.calendar.Days = new Class({
         }
     },
 
-
     touchStart:function (e) {
         this.touchData = {
             enabled:true,
@@ -192,7 +191,6 @@ ludo.calendar.Days = new Class({
         var el = this.els.monthView = new Element('div');
         el.addEvent('click', this.selectDay.bind(this));
         ludo.dom.addClass(el, 'ludo-calendar-body-days');
-        el.style.height = '100%';
         this.resizeMonthView();
         el.style.position = 'absolute';
 
@@ -261,7 +259,7 @@ ludo.calendar.Days = new Class({
 
     removeClsFromMouseOverDay:function () {
         if (this.els.mouseOverDay) {
-            this.els.mouseOverDay.removeClass('calendar-day-mouse-over');
+            ludo.dom.removeClass(this.els.mouseOverDay, 'calendar-day-mouse-over');
             this.els.mouseOverDay = undefined;
         }
     },

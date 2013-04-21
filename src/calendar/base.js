@@ -14,6 +14,18 @@ ludo.calendar.Base = new Class({
     ludoConfig:function(config){
         this.parent(config);
         this.date = new Date();
+        this.translate();
+    },
+
+    translate:function(){
+        for(var i=0;i<this.months.length;i++){
+            this.months[i] = ludo.language.get(this.months[i]);
+            this.monthsLong[i] = ludo.language.get(this.monthsLong[i]);
+        }
+        for(i=0;i<this.days.length;i++){
+            this.days[i] = ludo.language.get(this.days[i]);
+        }
+        this.headerWeek = ludo.language.get(this.headerWeek);
     },
 
     setDate:function (date) {

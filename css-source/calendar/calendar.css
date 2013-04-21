@@ -2,12 +2,12 @@
      background-color:#555;
      padding-bottom:5px;
      padding-top:5px;
-     height:20;
+     height:20px;;
  }
  .ludo-calendar-month-year-container{
      background-color:#555;
      padding-top:6px;
-     height:20;
+     height:20px;;
  }
  .ludo-calendar-year, .ludo-calendar-month-year {
      color:#FFF;
@@ -131,4 +131,7 @@
 }
 .calendar-day-mouse-over{
     background-color:#eeeee8;
+}
+.ludo-calendar-body-days{
+    height:100%;
 }

@@ -1,4 +1,4 @@
-/* Generated Sun Apr 21 17:36:09 CEST 2013 */
+/* Generated Sun Apr 21 22:46:58 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -18743,6 +18743,18 @@ ludo.calendar.Base = new Class({
     ludoConfig:function(config){
         this.parent(config);
         this.date = new Date();
+        this.translate();
+    },
+
+    translate:function(){
+        for(var i=0;i<this.months.length;i++){
+            this.months[i] = ludo.language.get(this.months[i]);
+            this.monthsLong[i] = ludo.language.get(this.monthsLong[i]);
+        }
+        for(i=0;i<this.days.length;i++){
+            this.days[i] = ludo.language.get(this.days[i]);
+        }
+        this.headerWeek = ludo.language.get(this.headerWeek);
     },
 
     setDate:function (date) {
@@ -18936,7 +18948,6 @@ ludo.calendar.Days = new Class({
         }
     },
 
-
     touchStart:function (e) {
         this.touchData = {
             enabled:true,
@@ -19084,7 +19095,6 @@ ludo.calendar.Days = new Class({
         var el = this.els.monthView = new Element('div');
         el.addEvent('click', this.selectDay.bind(this));
         ludo.dom.addClass(el, 'ludo-calendar-body-days');
-        el.style.height = '100%';
         this.resizeMonthView();
         el.style.position = 'absolute';
 
@@ -19119,10 +19129,7 @@ ludo.calendar.Days = new Class({
                 if (!thisMonthStarted || nextMonthStarted) {
                     cls = cls + ' calendar-day-inactive';
                 } else {
-                    if (this.sundayFirst && (i - 1) % 8 == 0) {
-                        cls = cls + ' calendar-sunday';
-                    }
-                    if (!this.sundayFirst && (i + 1) % 8 == 0) {
+                    if ((this.sundayFirst && (i - 1) % 8 == 0) || (!this.sundayFirst && (i + 1) % 8 == 0)) {
                         cls = cls + ' calendar-sunday';
                     }
                     if (days[i] == selectedDay) {
@@ -19135,9 +19142,7 @@ ludo.calendar.Days = new Class({
                 }
             }
 
-            html.push('<td');
-            html.push(' class="' + cls + '"');
-            html.push('>' + days[i] + '</td>')
+            html.push('<td class="' + cls + '">' + days[i] + '</td>');
         }
 
         html.push('</table>');
@@ -19158,7 +19163,7 @@ ludo.calendar.Days = new Class({
 
     removeClsFromMouseOverDay:function () {
         if (this.els.mouseOverDay) {
-            this.els.mouseOverDay.removeClass('calendar-day-mouse-over');
+            ludo.dom.removeClass(this.els.mouseOverDay, 'calendar-day-mouse-over');
             this.els.mouseOverDay = undefined;
         }
     },
@@ -19460,10 +19465,10 @@ ludo.calendar.MonthSelector = new Class({
         this.renderMonths();
         this.autoResize();
     },
+
     autoResize:function(){
         var height = this.els.monthContainer.offsetHeight;
-        height += ludo.dom.getMH(this.els.monthContainer);
-        height += ludo.dom.getMBPH(this.getBody()) + ludo.dom.getMBPH(this.getEl());
+        height += ludo.dom.getMH(this.els.monthContainer) + ludo.dom.getMBPH(this.getBody()) + ludo.dom.getMBPH(this.getEl());
         this.layout.height = height;
 
     },
@@ -19526,11 +19531,12 @@ ludo.calendar.MonthSelector = new Class({
 
     showTooltip:function(e){
         var el = this.getMonthEl(e.target);
-        this.els.monthTip.setProperty('month', el.getProperty('month'));
+        var tip = this.els.monthTip;
+        tip.setProperty('month', el.getProperty('month'));
         var month = this.months[el.getProperty('month')];
-        this.els.monthTip.set('html', month);
-        this.els.monthTip.style.left = Math.max(0, el.offsetLeft) + 'px';
-        this.els.monthTip.style.display = '';
+        tip.set('html', month);
+        tip.style.left = Math.max(0, el.offsetLeft) + 'px';
+        tip.style.display = '';
     },
 
     hideTooltip:function(){

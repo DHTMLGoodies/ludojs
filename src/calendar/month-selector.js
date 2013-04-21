@@ -15,10 +15,10 @@ ludo.calendar.MonthSelector = new Class({
         this.renderMonths();
         this.autoResize();
     },
+
     autoResize:function(){
         var height = this.els.monthContainer.offsetHeight;
-        height += ludo.dom.getMH(this.els.monthContainer);
-        height += ludo.dom.getMBPH(this.getBody()) + ludo.dom.getMBPH(this.getEl());
+        height += ludo.dom.getMH(this.els.monthContainer) + ludo.dom.getMBPH(this.getBody()) + ludo.dom.getMBPH(this.getEl());
         this.layout.height = height;
 
     },
@@ -81,11 +81,12 @@ ludo.calendar.MonthSelector = new Class({
 
     showTooltip:function(e){
         var el = this.getMonthEl(e.target);
-        this.els.monthTip.setProperty('month', el.getProperty('month'));
+        var tip = this.els.monthTip;
+        tip.setProperty('month', el.getProperty('month'));
         var month = this.months[el.getProperty('month')];
-        this.els.monthTip.set('html', month);
-        this.els.monthTip.style.left = Math.max(0, el.offsetLeft) + 'px';
-        this.els.monthTip.style.display = '';
+        tip.set('html', month);
+        tip.style.left = Math.max(0, el.offsetLeft) + 'px';
+        tip.style.display = '';
     },
 
     hideTooltip:function(){
