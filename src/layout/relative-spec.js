@@ -129,9 +129,51 @@ ludo.layout.RelativeSpec = new Class({
 	 */
 	centerInParent:false,
 	/**
-	 * Center horizontally  inside parent view
-	 * @config {Boolean} centerHorizontal
-	 * @default false
+	 Center horizontally  inside parent view
+	 @config {Boolean} centerHorizontal
+	 @default false
+     @example
+         new ludo.Window({
+            left:600, top:100, height:300, width:300,
+            title:'Sign In',
+            layout:{
+                type:'relative'
+            },
+            css:{
+                'background-color':'#FFF'
+            },
+            children:[
+                {
+                    layout:{
+                        type:'linear',
+                        orientation:'vertical',
+                        centerInParent:true,
+                        width:200,
+                        height:130
+                    },
+                    css:{
+                        border:'1px solid #C0C0C0',
+                        'background-color':'#f5f5f5',
+                        padding:3
+                    },
+                    children:[
+                        {
+                            height:25, html:'Box centered in parent'
+                        },
+                        {
+                            type:'form.Text', label:'Username', name:'username'
+                        },
+                        {
+                            type:'form.Password', label:'Password', name:'password'
+                        },
+                        {
+                            type:'form.Button', value:'Sign In'
+                        }
+                    ]
+
+                }
+            ]
+        });
 	 */
 	centerHorizontal:false,
 
@@ -241,16 +283,20 @@ ludo.layout.RelativeSpec = new Class({
 	alignBottom:undefined,
 
 	/**
-	 * Layout type for child views
-	 * @config type
-	 * @type {String}
+	 If the child has it's own children, the type attribute specifies the layout model for these children.
+	 @config type
+	 @type {String}
+     @example
+        children:[{
+            name:'a', layout:{ type:'menu', orientation:'vertical' }
+        }]
 	 */
 	type:undefined,
 
 	/**
-	  Add resize handles for resize in these directions, possible values: 'up','down','left','right'.
-	  @config resize
-	  @type {String|Array}
+	 Add resize handles for resize in these directions, possible values: 'up','down','left','right'.
+	 @config resize
+	 @type {String|Array}
 	 @example
 	 	layout:{
 			 height:200,
@@ -295,7 +341,7 @@ ludo.layout.RelativeSpec = new Class({
      @example
         children:[
             {
-                name : 'a', width:200,height:20, left:20, top : 20
+                name : 'a', layout:{ width:200,height:20, left:20, top : 20 }
             }
 
         ]
@@ -305,15 +351,47 @@ ludo.layout.RelativeSpec = new Class({
 
     /**
      Render at this y position inside parent
-     @config {Number} left
+     @config {Number} top
      @default undefined,
      @example
         children:[
             {
-                name : 'a', width:200,height:20, left:20, top : 20
+                name : 'a', layout:{ width:200,height:20, left:20, top : 20 }
             }
 
         ]
      */
-    top:undefined
+    top:undefined,
+
+    /**
+     Offset left position with this number of pixels.
+     @config {Number} offsetX
+     @default undefined,
+     @example
+         children:[
+             {
+                 name : 'a', layout:{ alignParentLeft:true, width:200, height:200, top: 0 }
+             },{
+                 name : 'b', layout: { rightOf:'a', alignParentTop:true, offsetX:20, height:200,width:200 }
+             }
+         ]
+     will render child "b" 20 pixels to the right of child "a"
+     */
+    offsetX:undefined,
+
+    /**
+     Offset top position with this number of pixels.
+     @config {Number} offsetY
+     @default undefined,
+     @example
+         children:[
+             {
+                 name : 'a', layout:{ alignParentLeft:true, width:200, height:200, top: 0 }
+             },{
+                 name : 'b', layout: { below:'a', alignParentLeft:true, offsetY:20, height:200,width:200 }
+             }
+         ]
+     will render child "b" 20 pixels below child "a"
+     */
+    offsetY:undefined
 });

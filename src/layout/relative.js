@@ -27,7 +27,7 @@ ludo.layout.Relative = new Class({
 		'sameWidthAs', 'sameHeightAs',
 		'centerInParent', 'centerHorizontal', 'centerVertical',
 		'fillLeft', 'fillRight', 'fillUp', 'fillDown',
-		'absBottom','absWidth','absHeight','absLeft','absTop','absRight'
+		'absBottom','absWidth','absHeight','absLeft','absTop','absRight','offsetX','offsetY'
 	],
     /**
      * Internal child coordinates set during resize
@@ -154,6 +154,14 @@ ludo.layout.Relative = new Class({
 				return function () {
 					c[property] = child.layout[property];
 				}.bind(child);
+            case 'offsetX':
+                return function(){
+                    c.left += child.layout[property];
+                }.bind(child);
+            case 'offsetY':
+                return function(){
+                    c.top += child.layout[property];
+                }.bind(child);
 			case 'width':
 			case 'height':
 				return this.getPropertyFn(child, property);
