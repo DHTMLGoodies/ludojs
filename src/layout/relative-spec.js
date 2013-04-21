@@ -1,5 +1,7 @@
 /**
- Documentation of available options for the Relative layout.
+ Documentation of available options for the Relative layout. The relative layout is a very flexible layout model.
+ It offers you the possibility of positioning and sizing children relative to each other and relative to the parent
+ View. If also offers the possibility of resizing views as in the linear layout.
  @namespace layout
  @class RelativeSpec
  @constructor
@@ -9,19 +11,21 @@
  		renderTo:document.body,
  		width:1000,height:1000,
  		layout:{
- 			type:'relative'
+ 			type:'relative' // children will be positioned relatively
  		},
  		children:[{
  			name : 'a', html : 'View A', layout: { width: 'matchParent', height:100, alignParentBottom:true }
  		},{
- 			name : 'b', html : 'View B', layout: { height:200, above:'a' }
+ 			name : 'b', html : 'View B', layout: { height:200, above:'a' } // reference to child with name "a"
  		}]
 
  	});
  */
 ludo.layout.RelativeSpec = new Class({
 	/**
-	Width of child inside a relative layout
+	Width of child inside a relative layout. The value can be a pixel, percentage value of parent width or
+     the one of the keywords "wrap" or "matchParent". "wrap" will render the child with the width required for
+     it's content. "matchParent" is equivalent to height:"100%"
 	@config width
 	@type {String|Number}
 	@example
@@ -32,7 +36,9 @@ ludo.layout.RelativeSpec = new Class({
 	 */
 	width: undefined,
 	/**
-	height of child inside a relative layout
+	height of child inside a relative layout in pixel value, percent, "wrap" or "matchParent".
+     "wrap" will render the view in the height needed for it's content. "matchParent" is equivalent to
+     height: "100%".
 	@config height
 	@type {String|Number}
 	@example
@@ -55,7 +61,8 @@ ludo.layout.RelativeSpec = new Class({
 	 */
 	above:undefined,
 	/**
-	Render below this sibling View. Reference can be name, id of a view reference.
+	Render below this sibling View. Reference to sibling can be done using name, id or a direct reference
+     to the View.
 	@config {String|View} below
 	@example
 	 	children:[{
@@ -140,10 +147,11 @@ ludo.layout.RelativeSpec = new Class({
 	 @default false
 	 @example
 	 	layout:{
-	 		right:300,
+	 		leftOf:'a',
+	 		sameHeightAs:'a',
 	 		fillLeft:true
 	 	}
-	 will position view at right:300 and set width to parent width - 300.
+	 will render the child left of sibling "a" and it will fill up all remaining
 	 */
 	fillLeft:false,
 	/**
@@ -252,6 +260,60 @@ ludo.layout.RelativeSpec = new Class({
 			 maxHeight:300
 		 }
 	 */
-	resize:undefined
+	resize:undefined,
 
+    /**
+     Render with the same height as this sibling
+     @config {String|View} sameHeightAs
+     @example
+     children:[{
+			name : 'a', html : 'View A', layout: { width: 200, alignParentRight:true, alignParentBottom:true }
+		},{
+			name : 'b', html : 'View B', layout: { leftOf:'a', sameHeightAs:'a', fillLeft:true }
+		}]
+     will render "b" left of "a". It will use all space to the left edge and the height will be the same as for "a"
+     */
+    sameHeightAs:undefined,
+
+    /**
+     Render with the same width as this sibling
+     @config {String|View} sameWidthAs
+     @example
+        children:[{
+			name : 'a', html : 'View A', layout: { width: 200, alignParentRight:true, alignParentTop:true }
+		},{
+			name : 'b', html : 'View B', layout: { below:'a', sameWidthAs:'a', fillDown:true }
+		}]
+     will render "b" left of "a". It will use all space to the left edge and the height will be the same as for "a"
+     */
+    sameWidthAs:undefined,
+
+    /**
+     Render at this x position inside parent
+     @config {Number} left
+     @default undefined,
+     @example
+        children:[
+            {
+                name : 'a', width:200,height:20, left:20, top : 20
+            }
+
+        ]
+     */
+
+    left:undefined,
+
+    /**
+     Render at this y position inside parent
+     @config {Number} left
+     @default undefined,
+     @example
+        children:[
+            {
+                name : 'a', width:200,height:20, left:20, top : 20
+            }
+
+        ]
+     */
+    top:undefined
 });

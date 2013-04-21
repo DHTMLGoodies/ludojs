@@ -1,4 +1,4 @@
-/* Generated Sun Apr 21 22:46:58 CEST 2013 */
+/* Generated Sun Apr 21 22:49:36 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -19433,10 +19433,7 @@ ludo.calendar.Selector = new Class({
     },
 
     getCenterPos:function (domEl) {
-        var bodyWidth = this.getBody().clientWidth;
-        var offset = domEl.offsetLeft;
-        var elWidth = domEl.getSize().x;
-        var left = bodyWidth / 2 - offset - elWidth / 2;
+        var left = (this.getBody().clientWidth / 2) - domEl.offsetLeft - (domEl.offsetWidth / 2);
         return Math.round(left);
     },
 

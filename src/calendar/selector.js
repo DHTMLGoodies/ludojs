@@ -72,11 +72,7 @@ ludo.calendar.Selector = new Class({
     },
 
     getCenterPos:function (domEl) {
-        var bodyWidth = this.getBody().clientWidth;
-        var offset = domEl.offsetLeft;
-        var elWidth = domEl.getSize().x;
-        var left = bodyWidth / 2 - offset - elWidth / 2;
-        return Math.round(left);
+        return Math.round((this.getBody().clientWidth / 2) - domEl.offsetLeft - (domEl.offsetWidth / 2));
     },
 
     setMinDate:function (date) {
