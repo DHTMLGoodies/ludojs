@@ -325,20 +325,15 @@ ludo.form.File = new Class({
 	getExtension:function () {
 		var file = this.getValue();
 		var tokens = file.split(/\./g);
-		var extension = tokens[tokens.length - 1].toLowerCase();
-		return extension.toLowerCase();
+        return tokens.pop().toLowerCase();
 	},
 
 	getUploadUrl:function () {
-		try {
-			return ludo.config.getFileUploadUrl();
-		} catch (e) {
-			var url = this.getUrl();
-			if (!url) {
-				alert('No url defined for file upload, you should define url property or globally set ludo.appConfig.fileupload.url');
-			}
-			return url;
-		}
+        var url = ludo.config.getFileUploadUrl() || this.getUrl();
+        if (!url) {
+            ludo.util.warn('No url defined for file upload. You can define it with the code ludo.config.setFileUploadUrl(url)');
+        }
+		return url;
 	},
 
 	selectFile:function () {
@@ -359,9 +354,12 @@ ludo.form.File = new Class({
         ludo.dom.removeClass(ci, 'ludo-input-file-name-initial');
         ludo.dom.removeClass(ci, 'ludo-input-file-name-not-uploaded');
 		if (this.valueForDisplay) {
-			var span = new Element('span');
-			span.set('html', this.valueForDisplay + ' ');
-			ci.adopt(span);
+
+            var span = ludo.dom.create({
+                tag:'span',
+                html : this.valueForDisplay + ' ',
+                renderTo:ci
+            });
 
 			var deleteLink = new Element('a');
 			deleteLink.addEvent('click', this.removeFile.bind(this));

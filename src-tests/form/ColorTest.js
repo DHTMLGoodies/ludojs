@@ -22,7 +22,7 @@ TestCase("ColorTest", {
 		el.getDependency('menuButton').showMenu();
 		this.showRGBSlider(el);
 
-
+        console.log(el);
 		// then
 		assertEquals(255, this.getSlider(el, 'red').getValue());
 		assertEquals(170, this.getSlider(el, 'green').getValue());
@@ -59,16 +59,14 @@ TestCase("ColorTest", {
 	},
 
 	getSlider:function(el, color){
-		return el.children[0].children[2].child[color];
+		return el.children[0].child['slider'].child[color];
 	},
 
 	getRGBSlider:function(el){
-		return el.children[0].children[2];
+		return el.children[0].child['slider'];
 	},
 
 	showRGBSlider:function(el){
-
-		el.children[0].children[2].show();
+		el.children[0].child['slider'].show();
 	}
-
 });

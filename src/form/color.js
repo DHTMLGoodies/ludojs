@@ -15,7 +15,8 @@ ludo.form.Color = new Class({
 				bodyCls:'ludo-tabs-in-dropdown-body',
 				children:[
 					{
-						title:'Color Slider',
+                        name:'slider',
+						title:ludo.language.get('Color Slider'),
 						type:'color.RGBSlider',
 						value:this.value,
 						listeners:{
@@ -25,8 +26,9 @@ ludo.form.Color = new Class({
 
 					},
 					{
-						title:'Color boxes',
+						title:ludo.language.get('Color boxes'),
 						type:'color.Boxes',
+                        name:'boxes',
 						value:this.value,
 						listeners:{
 							'setColor':this.receiveColor.bind(this),

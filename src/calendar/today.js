@@ -14,11 +14,14 @@ ludo.calendar.Today = new Class({
     css:{
         'margin-top' : 2
     },
-    children : [{ name:'today', type:'form.Button', value : 'Today', layout: { centerInParent:true}}],
 
     ludoRendered:function(){
         this.parent();
         this.child['today'].addEvent('click', this.setToday.bind(this));
+    },
+
+    getClassChildren:function(){
+        return [{ name:'today', type:'form.Button', value : ludo.language.get('Today'), layout: { centerInParent:true}}];
     },
 
     setDate:function(){

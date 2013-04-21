@@ -7,7 +7,7 @@
     ludo.config.setUrl('../router.php'); // to set global url
  */
 ludo._Config = new Class({
-	storage:undefined,
+	storage:{},
 
 	initialize:function () {
 		this.setDefaultValues();

@@ -1,4 +1,4 @@
-/* Generated Sat Apr 20 23:35:56 CEST 2013 */
+/* Generated Sun Apr 21 17:36:09 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -348,16 +348,29 @@ ludo.Effect = new Class({
 
 ludo.EffectObject = new ludo.Effect();/* ../ludojs/src/language/default.js */
 /**
- Words used by ludo JS. You can change words by creating a new ludo.language Object,
+ Words used by ludo JS. You can add your own translations by calling ludo.language.fill()
  @module language
  @type {Object}
  @example
- 	ludo.language = Object.merge(ludo.language,{
- 		... Your own config
+ 	ludo.language.fill({
+ 	    "Ludo JS phrase or word" : "My word",
+ 	    "other phrase" : "my phrase" 	
  	});
  */
 ludo.language = {
-	'columns' : 'Columns'
+	words:{},
+
+    set:function(key, value){
+        this.words[key] = value;
+    },
+
+    get:function(key){
+        return this.words[key] ? this.words[key] : key;
+    },
+
+    fill:function(words){
+        this.words = Object.merge(this.words, words);
+    }
 };/* ../ludojs/src/storage/storage.js */
 ludo.storage.LocalStorage = new Class({
 	supported:false,
@@ -531,7 +544,7 @@ ludo.factory = new ludo.ObjectFactory();/* ../ludojs/src/config.js */
     ludo.config.setUrl('../router.php'); // to set global url
  */
 ludo._Config = new Class({
-	storage:undefined,
+	storage:{},
 
 	initialize:function () {
 		this.setDefaultValues();
@@ -19545,11 +19558,14 @@ ludo.calendar.Today = new Class({
     css:{
         'margin-top' : 2
     },
-    children : [{ name:'today', type:'form.Button', value : 'Today', layout: { centerInParent:true}}],
 
     ludoRendered:function(){
         this.parent();
         this.child['today'].addEvent('click', this.setToday.bind(this));
+    },
+
+    getClassChildren:function(){
+        return [{ name:'today', type:'form.Button', value : ludo.language.get('Today'), layout: { centerInParent:true}}];
     },
 
     setDate:function(){
@@ -23783,7 +23799,8 @@ ludo.form.Color = new Class({
 				bodyCls:'ludo-tabs-in-dropdown-body',
 				children:[
 					{
-						title:'Color Slider',
+                        name:'slider',
+						title:ludo.language.get('Color Slider'),
 						type:'color.RGBSlider',
 						value:this.value,
 						listeners:{
@@ -23793,8 +23810,9 @@ ludo.form.Color = new Class({
 
 					},
 					{
-						title:'Color boxes',
+						title:ludo.language.get('Color boxes'),
 						type:'color.Boxes',
+                        name:'boxes',
 						value:this.value,
 						listeners:{
 							'setColor':this.receiveColor.bind(this),
@@ -26710,20 +26728,15 @@ ludo.form.File = new Class({
 	getExtension:function () {
 		var file = this.getValue();
 		var tokens = file.split(/\./g);
-		var extension = tokens[tokens.length - 1].toLowerCase();
-		return extension.toLowerCase();
+        return tokens.pop().toLowerCase();
 	},
 
 	getUploadUrl:function () {
-		try {
-			return ludo.config.getFileUploadUrl();
-		} catch (e) {
-			var url = this.getUrl();
-			if (!url) {
-				alert('No url defined for file upload, you should define url property or globally set ludo.appConfig.fileupload.url');
-			}
-			return url;
-		}
+        var url = ludo.config.getFileUploadUrl() || this.getUrl();
+        if (!url) {
+            ludo.util.warn('No url defined for file upload. You can define it with the code ludo.config.setFileUploadUrl(url)');
+        }
+		return url;
 	},
 
 	selectFile:function () {
@@ -26744,9 +26757,12 @@ ludo.form.File = new Class({
         ludo.dom.removeClass(ci, 'ludo-input-file-name-initial');
         ludo.dom.removeClass(ci, 'ludo-input-file-name-not-uploaded');
 		if (this.valueForDisplay) {
-			var span = new Element('span');
-			span.set('html', this.valueForDisplay + ' ');
-			ci.adopt(span);
+
+            var span = ludo.dom.create({
+                tag:'span',
+                html : this.valueForDisplay + ' ',
+                renderTo:ci
+            });
 
 			var deleteLink = new Element('a');
 			deleteLink.addEvent('click', this.removeFile.bind(this));
@@ -26797,11 +26813,7 @@ ludo.form.File = new Class({
 	},
 
 	removeFile:function () {
-		if (this.valueForDisplay == this.initialValue) {
-			this.valueForDisplay = '';
-		} else {
-			this.valueForDisplay = this.initialValue;
-		}
+        this.valueForDisplay = this.valueForDisplay === this.initialValue ? '' : this.initialValue;
 		this.value = '';
 		this.displayFileName();
 		this.validate();

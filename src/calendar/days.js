@@ -227,10 +227,7 @@ ludo.calendar.Days = new Class({
                 if (!thisMonthStarted || nextMonthStarted) {
                     cls = cls + ' calendar-day-inactive';
                 } else {
-                    if (this.sundayFirst && (i - 1) % 8 == 0) {
-                        cls = cls + ' calendar-sunday';
-                    }
-                    if (!this.sundayFirst && (i + 1) % 8 == 0) {
+                    if ((this.sundayFirst && (i - 1) % 8 == 0) || (!this.sundayFirst && (i + 1) % 8 == 0)) {
                         cls = cls + ' calendar-sunday';
                     }
                     if (days[i] == selectedDay) {
@@ -243,9 +240,7 @@ ludo.calendar.Days = new Class({
                 }
             }
 
-            html.push('<td');
-            html.push(' class="' + cls + '"');
-            html.push('>' + days[i] + '</td>')
+            html.push('<td class="' + cls + '">' + days[i] + '</td>');
         }
 
         html.push('</table>');
