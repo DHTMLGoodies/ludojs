@@ -1,7 +1,6 @@
 ludo.layout.Card = new Class({
 	Extends:ludo.layout.Base,
 	visibleCard:undefined,
-
 	animate:false,
 	initialAnimate:false,
 	animationDuration:.25,
@@ -429,7 +428,7 @@ ludo.layout.Card = new Class({
 		this.renderNextAndPreviousCard();
 		var animateX = this.shouldAnimateOnXAxis();
 		var parentSize = animateX ? this.view.getEl().offsetWidth : this.view.getEl().offsetHeight;
-		this.touchConfig = {
+		this.touch = {
 			active:true,
 			pos:animateX ? e.page.x : e.page.y,
 			previousCard:this.getPreviousCardOf(this.visibleCard),
@@ -451,22 +450,22 @@ ludo.layout.Card = new Class({
 	},
 
 	touchMove:function (e) {
-		if (this.touchConfig && this.touchConfig.active) {
+		if (this.touch && this.touch.active) {
 			var pos;
 			var key;
-			if (this.touchConfig.animateX) {
-				pos = e.page.x - this.touchConfig.pos;
+			if (this.touch.animateX) {
+				pos = e.page.x - this.touch.pos;
 				key = 'left';
 			} else {
-				pos = e.page.x - this.touchConfig.pos;
+				pos = e.page.x - this.touch.pos;
 				key = 'top'
 			}
 
-			pos = Math.min(pos, this.touchConfig.max);
-			pos = Math.max(pos, (this.touchConfig.min));
+			pos = Math.min(pos, this.touch.max);
+			pos = Math.max(pos, (this.touch.min));
 
 			this.setZIndexOfOtherCards(pos);
-			this.touchConfig.previousPos = pos;
+			this.touch.previousPos = pos;
 			this.visibleCard.els.container.style[key] = pos + 'px';
 			return false;
 		}
@@ -474,33 +473,33 @@ ludo.layout.Card = new Class({
 	},
 
 	setZIndexOfOtherCards:function (pos) {
-		if (pos > 0 && this.touchConfig.previousPos <= 0) {
-			if (this.touchConfig.nextCard) {
-				this.touchConfig.nextCard.getEl().style.zIndex = (this.touchConfig.zIndex - 3);
+		if (pos > 0 && this.touch.previousPos <= 0) {
+			if (this.touch.nextCard) {
+				this.touch.nextCard.getEl().style.zIndex = (this.touch.zIndex - 3);
 			}
-			if (this.touchConfig.previousCard) {
-				this.touchConfig.previousCard.getEl().style.zIndex = this.touchConfig.zIndex - 1;
+			if (this.touch.previousCard) {
+				this.touch.previousCard.getEl().style.zIndex = this.touch.zIndex - 1;
 			}
-		} else if (pos < 0 && this.touchConfig.previousPos >= 0) {
-			if (this.touchConfig.nextCard) {
-				this.touchConfig.nextCard.getEl().style.zIndex = this.touchConfig.zIndex - 1;
+		} else if (pos < 0 && this.touch.previousPos >= 0) {
+			if (this.touch.nextCard) {
+				this.touch.nextCard.getEl().style.zIndex = this.touch.zIndex - 1;
 			}
-			if (this.touchConfig.previousCard) {
-				this.touchConfig.previousCard.getEl().style.zIndex = this.touchConfig.zIndex - 3;
+			if (this.touch.previousCard) {
+				this.touch.previousCard.getEl().style.zIndex = this.touch.zIndex - 3;
 			}
 		}
 	},
 
 	touchEnd:function () {
-		if (this.touchConfig.active) {
-			this.touchConfig.active = false;
-			var pos = this.touchConfig.previousPos;
-			if (pos > 0 && this.touchConfig.max && pos > (this.touchConfig.max / 2)) {
+		if (this.touch.active) {
+			this.touch.active = false;
+			var pos = this.touch.previousPos;
+			if (pos > 0 && this.touch.max && pos > (this.touch.max / 2)) {
 				this.animateToPrevious();
-			} else if (pos < 0 && pos < (this.touchConfig.min / 2)) {
+			} else if (pos < 0 && pos < (this.touch.min / 2)) {
 				this.animateToNext();
 			} else {
-				if (this.touchConfig.animateX) {
+				if (this.touch.animateX) {
 					this.visibleCard.getEl().style.left = '0px';
 				} else {
 					this.visibleCard.getEl().style.top = '0px';
@@ -533,7 +532,7 @@ ludo.layout.Card = new Class({
 	},
 
 	animateToPrevious:function () {
-		if (this.touchConfig.animateX) {
+		if (this.touch.animateX) {
 			this.animateAlongX(ludo.dom.getNumericStyle(this.visibleCard.getEl(), 'left'), this.view.getEl().offsetWidth);
 		} else {
 			this.animateAlongY(ludo.dom.getNumericStyle(this.visibleCard.getEl(), 'top'), this.view.getEl().offsetHeight);
@@ -542,7 +541,7 @@ ludo.layout.Card = new Class({
 	},
 
 	animateToNext:function () {
-		if (this.touchConfig.animateX) {
+		if (this.touch.animateX) {
 			this.animateAlongX(ludo.dom.getNumericStyle(this.visibleCard.getEl(), 'left'), this.view.getEl().offsetWidth * -1);
 		} else {
 			this.animateAlongX(ludo.dom.getNumericStyle(this.visibleCard.getEl(), 'top'), this.view.getEl().offsetHeight * -1);
