@@ -225,13 +225,6 @@ ludo.View = new Class({
 	 * @property array unReneredChildren
 	 */
 	unRenderedChildren:[],
-	/**
-	 * Message to display while getting content from server
-	 * @config onLoadMessage
-	 * @type String
-	 * @default 'Loading content...'
-	 */
-	onLoadMessage:'Loading content...',
 
 	/**
 	 * Draw a frame around the component. This is done by assigning the container to css class
@@ -417,7 +410,7 @@ ludo.View = new Class({
 		config.els = config.els || {};
 		if (this.parentComponent)config.renderTo = undefined;
 		var keys = ['css', 'contextMenu', 'renderTo', 'tpl', 'containerCss', 'socket', 'form', 'addons', 'title', 'html', 'hidden', 'copyEvents',
-			'dataSource', 'onLoadMessage', 'movable', 'resizable', 'closable', 'minimizable', 'alwaysInFront',
+			'dataSource', 'movable', 'resizable', 'closable', 'minimizable', 'alwaysInFront',
 			'parentComponent', 'cls', 'bodyCls', 'objMovable', 'width', 'height', 'model', 'frame', 'formConfig',
 			'overflow', 'ludoDB'];
 
@@ -518,9 +511,6 @@ ludo.View = new Class({
 	ludoEvents:function () {
 		if (this.dataSource) {
 			this.getDataSource();
-			if (this.onLoadMessage) {
-				this.getLoader();
-			}
 		}
 		/*
 		 if (!this.parentComponent && this.renderTo && this.renderTo.tagName.toLowerCase() == 'body') {
@@ -529,21 +519,6 @@ ludo.View = new Class({
 		 }
 		 }
 		 */
-	},
-
-	/**
-	 * Returns class used to display messages while remote content is being loaded
-	 * @method getLoader
-	 * @return {view.Loader}
-	 */
-	getLoader:function () {
-		if (this.loader === undefined) {
-			this.loader = new ludo.view.Loader({
-				view:this,
-				txt:this.onLoadMessage
-			});
-		}
-		return this.loader;
 	},
 
 	/**
@@ -1143,6 +1118,9 @@ ludo.View = new Class({
 				if (!this.dataSource.type) {
 					this.dataSource.type = 'dataSource.JSON';
 				}
+                if(this.dataSource.shim && !this.dataSource.shim.renderTo){
+                    this.dataSource.shim.renderTo = this.getEl()
+                }
 				obj = this.dataSourceObj = this.createDependency('viewDataSource', this.dataSource);
 			}
 

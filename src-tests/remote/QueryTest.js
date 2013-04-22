@@ -127,7 +127,5 @@ TestCase("QueryTest", {
 
 		// then
 		assertEquals(expected, data);
-
-
 	}
 });

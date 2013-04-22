@@ -70,10 +70,17 @@ ludo.dataSource.Base = new Class({
 
 	ludoConfig:function (config) {
         this.parent(config);
-        this.setConfigParams(config,['url','postData','autoload','resource','service','arguments','data']);
+        this.setConfigParams(config,['url','postData','autoload','resource','service','arguments','data','shim']);
 		if(this.arguments && !ludo.util.isArray(this.arguments)){
 			this.arguments = [this.arguments];
 		}
+        if(this.shim){
+            new ludo.dataSource.Shim({
+                renderTo: this.shim.renderTo,
+                dataSource: this,
+                txt : this.shim.txt
+            });
+        }
     },
 
 	ludoEvents:function(){

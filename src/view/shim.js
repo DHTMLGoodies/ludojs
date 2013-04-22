@@ -1,31 +1,23 @@
-// TODO rename this class
-ludo.view.Loader = new Class({
-    Extends:Events,
+/**
+ * Render a shim
+ * @type {Class}
+ */
+ludo.view.Shim = new Class({
     txt:'Loading content...',
-    view:undefined,
     el:undefined,
     shim:undefined,
+    renderTo:undefined,
 
     initialize:function (config) {
-        this.view = config.view;
         if (config.txt)this.txt = config.txt;
-        this.addDataSourceEvents();
-    },
-
-    addDataSourceEvents:function () {
-        var dsConfig = this.view.dataSource;
-        if (dsConfig) {
-            var ds = this.view.getDataSource();
-            ds.addEvent('beforeload', this.show.bind(this));
-            ds.addEvent('load', this.hide.bind(this));
-            if (ds.isLoading())this.show();
-        }
+        this.renderTo = config.renderTo;
+        if(ludo.util.isString(this.renderTo))this.renderTo = ludo.get(this.renderTo).getEl();
     },
 
     getEl:function () {
         if (this.el === undefined) {
             this.el = ludo.dom.create({
-                renderTo:this.view.getEl(),
+                renderTo:this.renderTo,
                 cls:'ludo-component-pleasewait',
                 css:{'display':'none'},
                 html : this.txt
@@ -37,7 +29,7 @@ ludo.view.Loader = new Class({
     getShim:function () {
         if (this.shim === undefined) {
             this.shim = ludo.dom.create({
-                renderTo:this.view.getEl(),
+                renderTo:this.renderTo,
                 cls:'ludo-loader-shim',
                 css:{'display':'none'}
             });
@@ -50,6 +42,7 @@ ludo.view.Loader = new Class({
             this.el.set('html', txt);
         }
         this.css('');
+
     },
 
     hide:function () {
@@ -57,6 +50,6 @@ ludo.view.Loader = new Class({
     },
     css:function (d) {
         this.getShim().style.display = d;
-        this.getEl().style.display = d;
+        this.getEl().style.display = d === '' && this.txt ? '' : 'none';
     }
 });

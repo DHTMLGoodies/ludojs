@@ -1,4 +1,4 @@
-/* Generated Mon Apr 22 15:23:22 CEST 2013 */
+/* Generated Tue Apr 23 1:18:32 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -3469,10 +3469,17 @@ ludo.dataSource.Base = new Class({
 
 	ludoConfig:function (config) {
         this.parent(config);
-        this.setConfigParams(config,['url','postData','autoload','resource','service','arguments','data']);
+        this.setConfigParams(config,['url','postData','autoload','resource','service','arguments','data','shim']);
 		if(this.arguments && !ludo.util.isArray(this.arguments)){
 			this.arguments = [this.arguments];
 		}
+        if(this.shim){
+            new ludo.dataSource.Shim({
+                renderTo: this.shim.renderTo,
+                dataSource: this,
+                txt : this.shim.txt
+            });
+        }
     },
 
 	ludoEvents:function(){
@@ -4452,35 +4459,27 @@ ludo.util = {
     supportsSVG:function(){
         return !!document.createElementNS && !!document.createElementNS('http://www.w3.org/2000/svg', 'svg').createSVGRect;
     }
-};/* ../ludojs/src/view/loader.js */
-// TODO rename this class
-ludo.view.Loader = new Class({
-    Extends:Events,
+};/* ../ludojs/src/view/shim.js */
+/**
+ * Render a shim
+ * @type {Class}
+ */
+ludo.view.Shim = new Class({
     txt:'Loading content...',
-    view:undefined,
     el:undefined,
     shim:undefined,
+    renderTo:undefined,
 
     initialize:function (config) {
-        this.view = config.view;
         if (config.txt)this.txt = config.txt;
-        this.addDataSourceEvents();
-    },
-
-    addDataSourceEvents:function () {
-        var dsConfig = this.view.dataSource;
-        if (dsConfig) {
-            var ds = this.view.getDataSource();
-            ds.addEvent('beforeload', this.show.bind(this));
-            ds.addEvent('load', this.hide.bind(this));
-            if (ds.isLoading())this.show();
-        }
+        this.renderTo = config.renderTo;
+        if(ludo.util.isString(this.renderTo))this.renderTo = ludo.get(this.renderTo).getEl();
     },
 
     getEl:function () {
         if (this.el === undefined) {
             this.el = ludo.dom.create({
-                renderTo:this.view.getEl(),
+                renderTo:this.renderTo,
                 cls:'ludo-component-pleasewait',
                 css:{'display':'none'},
                 html : this.txt
@@ -4492,7 +4491,7 @@ ludo.view.Loader = new Class({
     getShim:function () {
         if (this.shim === undefined) {
             this.shim = ludo.dom.create({
-                renderTo:this.view.getEl(),
+                renderTo:this.renderTo,
                 cls:'ludo-loader-shim',
                 css:{'display':'none'}
             });
@@ -4505,6 +4504,7 @@ ludo.view.Loader = new Class({
             this.el.set('html', txt);
         }
         this.css('');
+
     },
 
     hide:function () {
@@ -4512,7 +4512,23 @@ ludo.view.Loader = new Class({
     },
     css:function (d) {
         this.getShim().style.display = d;
-        this.getEl().style.display = d;
+        this.getEl().style.display = d === '' && this.txt ? '' : 'none';
+    }
+});/* ../ludojs/src/data-source/shim.js */
+ludo.dataSource.Shim = new Class({
+    Extends: ludo.view.Shim,
+
+    initialize:function(config){
+        this.parent(config);
+        this.addDataSourceEvents(config.dataSource);
+    },
+
+    addDataSourceEvents:function (ds) {
+        if (ds) {
+            ds.addEvent('beforeload', this.show.bind(this));
+            ds.addEvent('load', this.hide.bind(this));
+            if (ds.isLoading())this.show();
+        }
     }
 });/* ../ludojs/src/view.js */
 /**
@@ -4742,13 +4758,6 @@ ludo.View = new Class({
 	 * @property array unReneredChildren
 	 */
 	unRenderedChildren:[],
-	/**
-	 * Message to display while getting content from server
-	 * @config onLoadMessage
-	 * @type String
-	 * @default 'Loading content...'
-	 */
-	onLoadMessage:'Loading content...',
 
 	/**
 	 * Draw a frame around the component. This is done by assigning the container to css class
@@ -4934,7 +4943,7 @@ ludo.View = new Class({
 		config.els = config.els || {};
 		if (this.parentComponent)config.renderTo = undefined;
 		var keys = ['css', 'contextMenu', 'renderTo', 'tpl', 'containerCss', 'socket', 'form', 'addons', 'title', 'html', 'hidden', 'copyEvents',
-			'dataSource', 'onLoadMessage', 'movable', 'resizable', 'closable', 'minimizable', 'alwaysInFront',
+			'dataSource', 'movable', 'resizable', 'closable', 'minimizable', 'alwaysInFront',
 			'parentComponent', 'cls', 'bodyCls', 'objMovable', 'width', 'height', 'model', 'frame', 'formConfig',
 			'overflow', 'ludoDB'];
 
@@ -5035,9 +5044,6 @@ ludo.View = new Class({
 	ludoEvents:function () {
 		if (this.dataSource) {
 			this.getDataSource();
-			if (this.onLoadMessage) {
-				this.getLoader();
-			}
 		}
 		/*
 		 if (!this.parentComponent && this.renderTo && this.renderTo.tagName.toLowerCase() == 'body') {
@@ -5046,21 +5052,6 @@ ludo.View = new Class({
 		 }
 		 }
 		 */
-	},
-
-	/**
-	 * Returns class used to display messages while remote content is being loaded
-	 * @method getLoader
-	 * @return {view.Loader}
-	 */
-	getLoader:function () {
-		if (this.loader === undefined) {
-			this.loader = new ludo.view.Loader({
-				view:this,
-				txt:this.onLoadMessage
-			});
-		}
-		return this.loader;
 	},
 
 	/**
@@ -5660,6 +5651,9 @@ ludo.View = new Class({
 				if (!this.dataSource.type) {
 					this.dataSource.type = 'dataSource.JSON';
 				}
+                if(this.dataSource.shim && !this.dataSource.shim.renderTo){
+                    this.dataSource.shim.renderTo = this.getEl()
+                }
 				obj = this.dataSourceObj = this.createDependency('viewDataSource', this.dataSource);
 			}
 

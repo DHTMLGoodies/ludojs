@@ -15,6 +15,7 @@ test:
   - CollectionSearchTest.js
   - CollectionTest.js
   - PagingTest.js
+  - SourceTest.js
 
 plugin:
  - name: "coverage"

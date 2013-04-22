@@ -3,7 +3,7 @@ TestCase("LoaderTests", {
 	"test should be able to create loader": function(){
 		// given
 		var view = new ludo.View();
-		var loader = new ludo.view.Loader({
+		var loader = new ludo.view.Shim({
 			view : 	view,
 			txt : 'Loading content'
 		});
@@ -19,7 +19,7 @@ TestCase("LoaderTests", {
 
 			}
 		});
-		var loader = new ludo.view.Loader({
+		var loader = new ludo.view.Shim({
 			view : 	view,
 			txt : 'Loading content'
 		});
@@ -38,7 +38,7 @@ TestCase("LoaderTests", {
 
 			}
 		});
-		var loader = new ludo.view.Loader({
+		var loader = new ludo.view.Shim({
 			view : 	view,
 			txt : 'Loading content'
 		});

@@ -114,6 +114,9 @@ var w = new ludo.Window({
                     dataSource:{
                         url:'../data-source/grid-data.json',
                         id:'myDataSource',
+                        shim:{
+                            txt : 'Loading content. Please wait'
+                        },
                         paging:{
                             size:12,
                             pageQuery:false,
