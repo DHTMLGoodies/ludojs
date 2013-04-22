@@ -1,4 +1,4 @@
-/* Generated Mon Apr 22 1:02:44 CEST 2013 */
+/* Generated Mon Apr 22 10:41:39 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -6732,7 +6732,7 @@ ludo.effect.Drag = new Class({
 		ludo.dom.addClass(handle, 'ludo-drag');
 
 		handle.addEvent(ludo.util.getDragStartEvent(), this.startDrag.bind(this));
-		handle.setProperty('forId', node.id);
+		handle.setAttribute('forId', node.id);
 		this.els[node.id] = Object.merge(node, {
 			el:document.id(el),
 			handle:handle
@@ -6775,7 +6775,7 @@ ludo.effect.Drag = new Class({
 		}
 		node.id = node.id || node.el.id || 'ludo-' + String.uniqueID();
 		if (!node.el.id)node.el.id = node.id;
-		node.el.setProperty('forId', node.id);
+		node.el.setAttribute('forId', node.id);
 		return node;
 	},
 
@@ -8514,7 +8514,7 @@ ludo.color.RGBSlider = new Class({
             layout:{
                 alignParentTop:below ? false : true,
                 below:below,
-                height:20,
+                height:23,
                 leftOf:name + 'Value',
                 fillLeft:true
             },
@@ -8955,7 +8955,6 @@ ludo.layout.LinearVertical = new Class({
 ludo.layout.Card = new Class({
 	Extends:ludo.layout.Base,
 	visibleCard:undefined,
-
 	animate:false,
 	initialAnimate:false,
 	animationDuration:.25,
@@ -12670,7 +12669,8 @@ ludo.view.TitleBar = new Class({
     },
 
     resizeDOM:function () {
-        this.els.title.style.width = (this.view.width - this.getWidthOfIconAndButtons()) + 'px';
+		var width = (this.view.width - this.getWidthOfIconAndButtons());
+		if(width>0)this.els.title.style.width = width + 'px';
     },
 
     height:undefined,
@@ -15655,15 +15655,16 @@ ludo.Scroller = new Class({
             'overflow':'hidden'
         });
 
+		var overflow = Browser.ie && Browser.version < 9 ? 'scroll' : 'auto';
         if (this.type == 'horizontal') {
             this.els.el.setStyles({
-                'overflow-x':'auto',
+                'overflow-x':overflow,
                 'width':'100%',
                 'height':Browser.ie ? '21px' : '17px'
             });
         } else {
             this.els.el.setStyles({
-                'overflow-y':'auto',
+                'overflow-y':overflow,
                 'height':'100%',
                 'width':Browser.ie ? '21px' : '17px',
                 'right':'0px',

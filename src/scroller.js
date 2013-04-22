@@ -54,15 +54,16 @@ ludo.Scroller = new Class({
             'overflow':'hidden'
         });
 
+		var overflow = Browser.ie && Browser.version < 9 ? 'scroll' : 'auto';
         if (this.type == 'horizontal') {
             this.els.el.setStyles({
-                'overflow-x':'auto',
+                'overflow-x':overflow,
                 'width':'100%',
                 'height':Browser.ie ? '21px' : '17px'
             });
         } else {
             this.els.el.setStyles({
-                'overflow-y':'auto',
+                'overflow-y':overflow,
                 'height':'100%',
                 'width':Browser.ie ? '21px' : '17px',
                 'right':'0px',

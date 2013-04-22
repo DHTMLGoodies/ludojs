@@ -80,7 +80,7 @@ ludo.color.RGBSlider = new Class({
             layout:{
                 alignParentTop:below ? false : true,
                 below:below,
-                height:20,
+                height:23,
                 leftOf:name + 'Value',
                 fillLeft:true
             },

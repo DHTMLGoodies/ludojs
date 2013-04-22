@@ -254,7 +254,7 @@ ludo.effect.Drag = new Class({
 		ludo.dom.addClass(handle, 'ludo-drag');
 
 		handle.addEvent(ludo.util.getDragStartEvent(), this.startDrag.bind(this));
-		handle.setProperty('forId', node.id);
+		handle.setAttribute('forId', node.id);
 		this.els[node.id] = Object.merge(node, {
 			el:document.id(el),
 			handle:handle
@@ -297,7 +297,7 @@ ludo.effect.Drag = new Class({
 		}
 		node.id = node.id || node.el.id || 'ludo-' + String.uniqueID();
 		if (!node.el.id)node.el.id = node.id;
-		node.el.setProperty('forId', node.id);
+		node.el.setAttribute('forId', node.id);
 		return node;
 	},
 

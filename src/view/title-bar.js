@@ -210,7 +210,8 @@ ludo.view.TitleBar = new Class({
     },
 
     resizeDOM:function () {
-        this.els.title.style.width = (this.view.width - this.getWidthOfIconAndButtons()) + 'px';
+		var width = (this.view.width - this.getWidthOfIconAndButtons());
+		if(width>0)this.els.title.style.width = width + 'px';
     },
 
     height:undefined,
