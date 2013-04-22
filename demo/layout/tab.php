@@ -102,7 +102,7 @@ require_once("../includes/demo-header.php");
                             }
                         },
                         dataSource:{
-                            url:'../data-source/grid-data.json',
+                            url:'../resources/grid-data.json',
                             id:'myDataSource',
                             paging:{
                                 size:12,

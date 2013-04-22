@@ -112,7 +112,7 @@ var w = new ludo.Window({
                         }
                     },
                     dataSource:{
-                        url:'../data-source/grid-data.json',
+                        url:'../resources/grid-data.json',
                         id:'myDataSource',
                         shim:{
                             txt : 'Loading content. Please wait'

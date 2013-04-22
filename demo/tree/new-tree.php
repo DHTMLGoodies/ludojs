@@ -5,11 +5,11 @@ require_once("../includes/demo-header.php");
 ?>
 <body>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/form/search-field.js"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/data-source/search-parser.js"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/data-source/collection.js"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/data-source/collection-search.js"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/data-source/tree-collection-search.js"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/data-source/tree-collection.js"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/resources/search-parser.js"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/resources/collection.js"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/resources/collection-search.js"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/resources/tree-collection-search.js"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/resources/tree-collection.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/tree/new-tree.js"></script>
 <link rel="stylesheet" href="<?php echo $prefix; ?>../css/ludojs-ocean.css" type="text/css">
 <style type="text/css">
@@ -28,7 +28,7 @@ require_once("../includes/demo-header.php");
     function newSubFolder() {
 
     }
-    var ds = new ludo.dataSource.TreeCollection({ url:'../data-source/tree-data-source.php', requestId:'getTree','id' : 'myDataSource' });
+    var ds = new ludo.dataSource.TreeCollection({ url:'../resources/tree-data-source.php', requestId:'getTree','id' : 'myDataSource' });
 
     var w = new ludo.Window({
         title:'Tree demo - Random countries and cities (20000 nodes)',

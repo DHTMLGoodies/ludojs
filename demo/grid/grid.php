@@ -5,9 +5,9 @@ require_once("../includes/demo-header.php");
 ?>
 <body>
 <script type="text/javascript" src="../../src/remote/JSON.js"></script>
-<script type="text/javascript" src="../../src/data-source/base.js"></script>
-<script type="text/javascript" src="../../src/data-source/json.js"></script>
-<script type="text/javascript" src="../../src/data-source/collection.js"></script>
+<script type="text/javascript" src="../../src/resources/base.js"></script>
+<script type="text/javascript" src="../../src/resources/json.js"></script>
+<script type="text/javascript" src="../../src/resources/collection.js"></script>
 <script type="text/javascript" class="source-code">
     var w = new ludo.Window({
         left:250, top:50,
@@ -41,7 +41,7 @@ require_once("../includes/demo-header.php");
                     }
                 },
                 dataSource:{
-                    url:'../data-source/grid-data.json',
+                    url:'../resources/grid-data.json',
                     listeners:{
                         select : function(record){
                             console.log(record);

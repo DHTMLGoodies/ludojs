@@ -25,7 +25,7 @@ require_once("includes/demo-header.php");
                     border:0
                 },
                 form:{
-                    url:'data-source/wizard.php',
+                    url:'resources/wizard.php',
                     name:'user-details'
                 },
                 name:'deck',
@@ -48,7 +48,7 @@ require_once("includes/demo-header.php");
                                 },
                                 filterOnServer:false,
                                 dataSource:{
-                                    url:'data-source/auto-complete.php',
+                                    url:'resources/auto-complete.php',
                                     query:{
                                         'getAllCountries':1
                                     }

@@ -43,7 +43,7 @@ new ludo.Window({
             },
             filterOnServer:false,
             dataSource:{
-                url:'data-source/auto-complete.php',
+                url:'resources/auto-complete.php',
                 query : {
                     'getAllCountries' : 1
                 }
@@ -73,7 +73,7 @@ new ludo.Window({
             },
             filterOnServer:true,
             remote:{
-                url:'data-source/auto-complete.php',
+                url:'resources/auto-complete.php',
                 queryParam:'query',
                 queryParamRecord:'getCountry'
             }

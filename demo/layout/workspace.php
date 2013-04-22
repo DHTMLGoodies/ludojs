@@ -167,7 +167,7 @@ new ludo.View({
                     type:'FramedView',
                     dataSource:{
                         type:'dataSource.HTML',
-                        url:'../data-source/articles/front-page.php'
+                        url:'../resources/articles/front-page.php'
                     },
                     minimizable:false,
                     layout:{
@@ -199,7 +199,7 @@ new ludo.View({
                     },
                     dataSource:{
                         type:'dataSource.HTML',
-                        url:'../data-source/articles/article-1.php'
+                        url:'../resources/articles/article-1.php'
                     },
                     layout:{
                         'closable':true

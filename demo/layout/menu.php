@@ -116,7 +116,8 @@ require_once("../includes/demo-header.php");
                         listeners:{
                             'click':function (item) {
                                 if (item.action) {
-                                    ludo.get('mainPanel').getDataSource().loadUrl('../data-source/articles/' + item.action);
+                                    // load content from url into into main panel
+                                    ludo.get('mainPanel').getDataSource().loadUrl('../resources/articles/' + item.action);
                                 }
                             }
                         },
@@ -166,7 +167,7 @@ require_once("../includes/demo-header.php");
                         },
                         dataSource:{
                             type:'dataSource.HTML',
-                            url:'../data-source/articles/front-page.php'
+                            url:'../resources/articles/front-page.php'
                         }
                     },
 

@@ -124,6 +124,12 @@ ludo.dataSource.Base = new Class({
     load:function(){
 
     },
+
+    /**
+     * Load content from a specific url
+     * @method loadUrl
+     * @param url
+     */
     loadUrl:function(url){
         this.url = url;
         this.load();

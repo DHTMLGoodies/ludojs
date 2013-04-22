@@ -8,7 +8,7 @@ require_once("../includes/demo-header.php");
     function newSubFolder() {
 
     }
-    var ds = new ludo.dataSource.JSON({ url:'../data-source/tree-data-source.php', requestId:'getTree','id' : 'myDataSource' });
+    var ds = new ludo.dataSource.JSON({ url:'../resources/tree-data-source.php', requestId:'getTree','id' : 'myDataSource' });
 
     var w = new ludo.Window({
         left:250, top:50,

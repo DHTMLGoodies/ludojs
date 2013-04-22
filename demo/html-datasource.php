@@ -11,10 +11,7 @@ ludo.dataSource.MySource = new Class({
     type: 'dataSource.MySource',
     /** Register dataSource as singleton in order to have only one remote request */
     singleton:true,
-    url : 'data-source/html-dataSource.php',
-    query : {
-        getHtml : 1
-    }
+    url : 'resources/articles/article-1.php'
 });
 
 var win1 = new ludo.Window({
