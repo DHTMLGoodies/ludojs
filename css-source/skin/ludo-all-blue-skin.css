@@ -7,7 +7,7 @@
     margin: 5px;
     border: 1px solid #a6cbf5;
 }
-.ludo-rich-view .ludo-body {
+.ludo-framed-view .ludo-body {
     overflow: hidden;
 }
 
@@ -25,11 +25,11 @@
     margin-bottom: 5px;
 }
 
-.ludo-rich-view .ludo-body div.ludo-body {
+.ludo-framed-view .ludo-body div.ludo-body {
     border: 0;
 }
 
-.ludo-rich-view .ludo-body .ludo-body {
+.ludo-framed-view .ludo-body .ludo-body {
     margin: 0;
 }
 
@@ -37,21 +37,21 @@
     background-color: #d1e7ff;
 }
 
-div.ludo-rich-view-body {
+div.ludo-framed-view-body {
     background-color: #d1e7ff;
 }
 
-div.ludo-rich-view-titlebar {
+div.ludo-framed-view-titlebar {
     background-image: url("../images/blue-skin/bg-title-bar.png");
     border-bottom: 1px solid #a6cbf5;
     background-color: #c6e1ff;
 }
 
-div.ludo-rich-view-titlebar {
+div.ludo-framed-view-titlebar {
     border-bottom: 1px solid #a6cbf5;
 }
 
-div.ludo-rich-view {
+div.ludo-framed-view {
     border: 1px solid #a6cbf5;
 }
 
@@ -59,7 +59,7 @@ div.ludo-rich-view {
     font-size: 11px;
 }
 
-div.ludo-rich-view-titlebar-title {
+div.ludo-framed-view-titlebar-title {
     font-size: 12px;
     color: #354150;
 }
@@ -69,7 +69,7 @@ div.ludo-component-statusbar {
     border-top: 0 solid #AAAAAA;
 }
 
-div.ludo-window, div.ludo-rich-view-shim, div.ludo-dashboard-insertion-marker {
+div.ludo-window, div.ludo-framed-view-shim, div.ludo-dashboard-insertion-marker {
     border-radius: 3px;
 }
 

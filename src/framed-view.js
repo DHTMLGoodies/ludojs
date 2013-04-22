@@ -103,10 +103,10 @@ ludo.FramedView = new Class({
 	ludoDOM:function () {
 		this.parent();
 
-		ludo.dom.addClass(this.els.container, 'ludo-rich-view');
+		ludo.dom.addClass(this.els.container, 'ludo-framed-view');
 
 		if (this.titleBar)this.getTitleBar().getEl().inject(this.getBody(), 'before');
-		ludo.dom.addClass(this.getBody(), 'ludo-rich-view-body');
+		ludo.dom.addClass(this.getBody(), 'ludo-framed-view-body');
 
 		if (!this.getParent() && this.isResizable()) {
 			this.getResizer().addHandle('s');

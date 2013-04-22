@@ -91,7 +91,7 @@ ludo.remote.Message = new Class({
         /**
          * Event fired when message is shown.
          * @event showMessage
-         * @param {remote.Message}
+         * @param {remote.Message} this
          */
         this.fireEvent('showMessage', this);
     },

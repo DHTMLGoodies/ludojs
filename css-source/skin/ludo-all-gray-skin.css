@@ -4,7 +4,7 @@
     line-height: 20px;
 }
 
-.ludo-rich-view .ludo-body {
+.ludo-framed-view .ludo-body {
     margin: 5px;
     border: 1px solid #c6c6c6;
     overflow: hidden;
@@ -24,11 +24,11 @@
     margin-bottom: 5px;
 }
 
-.ludo-rich-view .ludo-body div.ludo-body {
+.ludo-framed-view .ludo-body div.ludo-body {
     border: 0;
 }
 
-.ludo-rich-view .ludo-body .ludo-body {
+.ludo-framed-view .ludo-body .ludo-body {
     margin: 0;
 }
 
@@ -38,20 +38,20 @@
 .ludo-resize-handle{
     background-color: #d7d7d7;
 }
-div.ludo-rich-view-body {
+div.ludo-framed-view-body {
     background-color: #d7d7d7;
 }
 
-div.ludo-rich-view-titlebar {
+div.ludo-framed-view-titlebar {
     border-bottom: 1px solid #c6c6c6;
     background: #c6e1ff url("../images/gray-skin/bg-title-bar.png");
 }
 
-div.ludo-rich-view-titlebar {
+div.ludo-framed-view-titlebar {
     border-bottom: 1px solid #c6c6c6;
 }
 
-div.ludo-rich-view {
+div.ludo-framed-view {
     border: 1px solid #c6c6c6;
 }
 
@@ -59,7 +59,7 @@ div.ludo-rich-view {
     font-size: 11px;
 }
 
-div.ludo-rich-view-titlebar-title {
+div.ludo-framed-view-titlebar-title {
     font-size: 12px;
     color: #354150;
 }
@@ -69,7 +69,7 @@ div.ludo-component-statusbar {
     border-top: 0 solid #AAAAAA;
 }
 
-div.ludo-window, div.ludo-rich-view-shim, div.ludo-dashboard-insertion-marker {
+div.ludo-window, div.ludo-framed-view-shim, div.ludo-dashboard-insertion-marker {
     border-radius: 3px;
 }
 

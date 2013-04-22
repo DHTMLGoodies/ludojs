@@ -53,7 +53,7 @@ google_ad_height = 280;
 </script>
 
 <style type="text/css">
-    .ludo-body, div.ludo-rich-view-body {
+    .ludo-body, div.ludo-framed-view-body {
         background-color: #FFF;
     }
     .default-color-scheme-box{

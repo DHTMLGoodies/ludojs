@@ -140,7 +140,7 @@ ludo.Movable = new Class({
 
     createShim : function() {
         var el = this.els.shim = new Element('div');
-        ludo.dom.addClass(el, 'ludo-rich-view-shim');
+        ludo.dom.addClass(el, 'ludo-framed-view-shim');
         el.setStyle('display','none');
         document.body.adopt(el);
     },

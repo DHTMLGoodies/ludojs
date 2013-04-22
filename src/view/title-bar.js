@@ -21,7 +21,7 @@ ludo.view.TitleBar = new Class({
 
     createDOM:function () {
         var el = this.els.el = new Element('div');
-        ludo.dom.addClass(el, this.view.boldTitle ? 'ludo-rich-view-titlebar' : 'ludo-component-titlebar');
+        ludo.dom.addClass(el, this.view.boldTitle ? 'ludo-framed-view-titlebar' : 'ludo-component-titlebar');
         var left = 0;
         if (this.view.icon) {
             this.createIconDOM();
@@ -37,7 +37,7 @@ ludo.view.TitleBar = new Class({
     createIconDOM:function () {
         this.els.icon = ludo.dom.create({
             renderTo:this.els.el,
-            cls:'ludo-rich-view-titlebar-icon',
+            cls:'ludo-framed-view-titlebar-icon',
             css:{ 'backgroundImage':'url(' + this.view.icon + ')'}
         });
 
@@ -49,7 +49,7 @@ ludo.view.TitleBar = new Class({
 
     createTitleDOM:function () {
         var title = this.els.title = ludo.dom.create({
-            cls : 'ludo-rich-view-titlebar-title',
+            cls : 'ludo-framed-view-titlebar-title',
             renderTo : this.els.el
         });
         this.setTitle(this.view.title);

@@ -2,11 +2,11 @@
     border-radius:0;
     border:1px solid #CCC;
 }
-.ludo-accordion .ludo-rich-view-titlebar{
+.ludo-accordion .ludo-framed-view-titlebar{
     border-bottom:0;
     cursor:pointer;
 }
-.ludo-accordion .ludo-rich-view-titlebar-title{
+.ludo-accordion .ludo-framed-view-titlebar-title{
     margin-left:20px;
     line-height:25px;
 }
@@ -31,6 +31,6 @@
     background-image:none;
 }
 
-.ludo-accordion .ludo-rich-view-titlebar{
+.ludo-accordion .ludo-framed-view-titlebar{
     height:25px;
 }

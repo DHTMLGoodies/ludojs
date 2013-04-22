@@ -77,6 +77,7 @@ ludo.util = {
 
 	/**
 	 * Dispose LudoJS components
+	 * @method dispose
 	 * @param {Core} view
 	 * @private
 	 */

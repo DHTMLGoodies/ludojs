@@ -8,7 +8,7 @@
     margin: 5px;
     border: 1px solid #91C7ED;
 }
-.ludo-rich-view .ludo-body {
+.ludo-framed-view .ludo-body {
     overflow: hidden;
 }
 
@@ -26,11 +26,11 @@
     margin-bottom: 5px;
 }
 
-.ludo-rich-view .ludo-body div.ludo-body {
+.ludo-framed-view .ludo-body div.ludo-body {
     border: 0;
 }
 
-.ludo-rich-view .ludo-body .ludo-body {
+.ludo-framed-view .ludo-body .ludo-body {
     margin: 0;
 }
 
@@ -40,20 +40,20 @@
 .ludo-resize-handle{
     background-color: #B2D5EE;
 }
-div.ludo-rich-view-body {
+div.ludo-framed-view-body {
     background-color: #B2D5EE;
 }
 
-div.ludo-rich-view-titlebar {
+div.ludo-framed-view-titlebar {
     border-bottom: 1px solid #91C7ED;
     background: #B2D5EE;
 }
 
-div.ludo-rich-view-titlebar {
+div.ludo-framed-view-titlebar {
     border-bottom: 1px solid #91C7ED;
 }
 
-div.ludo-rich-view {
+div.ludo-framed-view {
     border: 1px solid #91C7ED;
 }
 
@@ -61,7 +61,7 @@ div.ludo-rich-view {
     font-size: 11px;
 }
 
-div.ludo-rich-view-titlebar-title {
+div.ludo-framed-view-titlebar-title {
     font-size: 12px;
     color: #384350;
 }
@@ -71,7 +71,7 @@ div.ludo-component-statusbar {
     border-top: 0 solid #AAAAAA;
 }
 
-div.ludo-window, div.ludo-rich-view-shim, div.ludo-dashboard-insertion-marker {
+div.ludo-window, div.ludo-framed-view-shim, div.ludo-dashboard-insertion-marker {
     border-radius: 3px;
 }
 
