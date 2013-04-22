@@ -1,4 +1,4 @@
-/* Generated Mon Apr 22 10:41:39 CEST 2013 */
+/* Generated Mon Apr 22 15:23:22 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -4377,6 +4377,7 @@ ludo.util = {
 
 	/**
 	 * Dispose LudoJS components
+	 * @method dispose
 	 * @param {Core} view
 	 * @private
 	 */
@@ -5897,7 +5898,7 @@ ludo.remote.Message = new Class({
         /**
          * Event fired when message is shown.
          * @event showMessage
-         * @param {remote.Message}
+         * @param {remote.Message} this
          */
         this.fireEvent('showMessage', this);
     },
@@ -10087,6 +10088,10 @@ ludo.layout.Relative = new Class({
             if(child.layout.above && child.layout.below){
                 c.height = lm.viewport.height - c.bottom - c.top;
             }
+			if(child.isHidden()){
+				c.width = 0;
+				c.height = 0;
+			}
 			child.resize({
 				width:c.width !== lc.width ? c.width : undefined,
 				height:c.height !== lc.height ? c.height : undefined

@@ -1,4 +1,4 @@
-/* Generated Mon Apr 22 10:41:39 CEST 2013 */
+/* Generated Mon Apr 22 15:23:22 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -861,6 +861,7 @@ div.ludo-tab-strip-top div.ludo-body {
 .ludo-window{
     box-shadow:2px 2px 3px #888;
     position:absolute;
+    left:0;top:0;
 }
 .ludo-window, .ludo-richcomponent, .ludo-framed-view-shim {
     border-radius: 7px 7px 0 0;
