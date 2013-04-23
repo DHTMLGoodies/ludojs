@@ -4,7 +4,7 @@
  @namespace remote
  @class Broadcasters
  @example
- ludo.remoteBroadcaster.addEvent('successMessage', function(response){
+    ludo.remoteBroadcaster.addEvent('successMessage', function(response){
         if(response.resource === 'Person'){
 
         }
@@ -87,17 +87,17 @@ ludo.remote.Broadcaster = new Class({
      @param {String} resource
      @param {Function} fn
      @example
-     ludo.remoteBroadcaster.addEvent('failure', 'Person', function(response){
+        ludo.remoteBroadcaster.addEvent('failure', 'Person', function(response){
             this.getBody().set('html', response.message');
         }.bind(this));
      The event payload is an object in this format:
      @example
-     {
-         "code": 200,
-         "message": "A message",
-         "resource": "Which resource",
-         "service": "Which service"
-     }
+         {
+             "code": 200,
+             "message": "A message",
+             "resource": "Which resource",
+             "service": "Which service"
+         }
      */
     addResourceEvent:function (eventType, resource, fn) {
         this.addEvent(this.getEventName(eventType, resource), fn);
@@ -110,17 +110,17 @@ ludo.remote.Broadcaster = new Class({
      @param {Array} services
      @param {Function} fn
      @example
-     ludo.remoteBroadcaster.addEvent('failure', 'Person', function(response){
+        ludo.remoteBroadcaster.addEvent('failure', 'Person', function(response){
             this.getBody().set('html', response.message');
         }.bind(this));
      The event payload is an object in this format:
      @example
-     {
-         "code": 200,
-         "message": "A message",
-         "resource": "Which resource",
-         "service": "Which service"
-     }
+         {
+             "code": 200,
+             "message": "A message",
+             "resource": "Which resource",
+             "service": "Which service"
+         }
      */
     addServiceEvent:function (eventType, resource, services, fn) {
         if (!services.length) {
@@ -140,7 +140,7 @@ ludo.remote.Broadcaster = new Class({
      @param {String} resource
      @param {String} service
      @example
-     ludo.remoteBroadcaster.setDefaultMessage('You have registered sucessfully', 'success', 'User', 'register');
+        ludo.remoteBroadcaster.setDefaultMessage('You have registered successfully', 'success', 'User', 'register');
      */
     setDefaultMessage:function (message, eventType, resource, service) {
         this.defaultMessages[this.getEventName(eventType, resource, service)] = message;
