@@ -87,6 +87,22 @@ require_once("../includes/demo-header.php");
                                                 }
                                             }
                                         ]
+                                    },
+                                    {
+                                        html:'Select color',
+                                        children:[
+                                            {
+                                                type:'color.RGBSlider',
+                                                containerCss:{
+                                                    'background-color':'#FFF',
+                                                    'border-top':'1px solid #d7d7d7'
+                                                },
+                                                layout:{
+                                                    width:200,
+                                                    height:200
+                                                }
+                                            }
+                                        ]
                                     }
 
                                 ]

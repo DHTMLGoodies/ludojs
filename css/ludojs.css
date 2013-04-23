@@ -1,4 +1,4 @@
-/* Generated Tue Apr 23 2:36:48 CEST 2013 */
+/* Generated Tue Apr 23 2:51:21 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -2012,8 +2012,11 @@ div.ludo-combo-menu .ludo-menu-item-selected {
 div.ludo-tabs-in-dropdown{
     padding:3px;
 }
-.ludo-color-rgb-slider-value {
+div.ludo-color-rgb-slider-value {
     border: 1px solid #000;
+    background-color: #fff;
+}
+div.ludo-color-rgb-slider-value .ludo-body{
     background-color: #fff;
 }
 

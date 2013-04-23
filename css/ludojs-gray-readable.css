@@ -1991,8 +1991,11 @@ div.ludo-combo-menu .ludo-menu-item-selected {
 div.ludo-tabs-in-dropdown{
     padding:3px;
 }
-.ludo-color-rgb-slider-value {
+div.ludo-color-rgb-slider-value {
     border: 1px solid #000;
+    background-color: #fff;
+}
+div.ludo-color-rgb-slider-value .ludo-body{
     background-color: #fff;
 }
 
