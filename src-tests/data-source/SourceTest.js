@@ -12,8 +12,9 @@ TestCase("SourceTest", {
     "test should be able to define shim to show when sending requests":function () {
         // given
         var v = new ludo.View({
+            renderTo:document.body,
             dataSource:{
-                url:'mySource',
+                type:'dataSource.JSON',
                 resource:'TestResource',
                 autoload:false,
                 shim:{
@@ -23,11 +24,11 @@ TestCase("SourceTest", {
         });
 
         // when
-        v.getDataSource().load();
+        v.getDataSource().loadUrl('myPage.php');
         var el = document.getElement('.ludo-loader-shim');
         // then
-        assertNotNull(el);
-        assertEquals('div', el.tagName);
+        assertNotNull(document.body.innerHTML,el);
+        assertEquals( 'div', el.tagName.toLowerCase());
     }
 
 });

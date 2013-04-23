@@ -1,3 +1,4 @@
+// TODO support all kinds of buttons - customizable
 ludo.view.TitleBar = new Class({
     Extends:ludo.Core,
     view:undefined,
