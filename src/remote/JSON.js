@@ -9,9 +9,7 @@
  * @extends Events
  */
 ludo.remote.JSON = new Class({
-    Extends:Events,
-    method:'post',
-    JSON:undefined,
+    Extends:ludo.remote.Base,
 
     /**
      * Name of resource to request, example: "Person"
@@ -26,13 +24,7 @@ ludo.remote.JSON = new Class({
     url:undefined,
 
     initialize:function (config) {
-		config = config || {};
-        if (config.listeners !== undefined) {
-            this.addEvents(config.listeners);
-        }
-        this.method = config.method || this.method;
-        if (config.resource !== undefined) this.resource = config.resource;
-        if (config.url !== undefined) this.url = config.url;
+		this.parent(config);
     },
 
     /**
@@ -103,10 +95,8 @@ ludo.remote.JSON = new Class({
      @param {Object} additionalData
      @optional
      */
-    send:function (service, resourceArguments, serviceArguments, additionalData) {
-        if (resourceArguments && !ludo.util.isArray(resourceArguments))resourceArguments = [resourceArguments];
+    sendToServer:function (service, resourceArguments, serviceArguments, additionalData) {
 
-        ludo.remoteBroadcaster.clear(this, service);
         // TODO escape slashes in resourceArguments and implement replacement in LudoDBRequestHandler
         // TODO the events here should be fired for the components sending the request.
         var req = new Request.JSON({
@@ -115,82 +105,23 @@ ludo.remote.JSON = new Class({
             noCache:true,
             data:this.getDataForRequest(service, resourceArguments, serviceArguments, additionalData),
             onSuccess:function (json) {
-                this.JSON = json;
+                this.remoteData = json;
                 if (json.success || json.success === undefined) {
                     this.fireEvent('success', this);
                 } else {
                     this.fireEvent('failure', this);
                 }
                 this.sendBroadCast(service);
-                this.fireEvent('complete', this);
+				this.onComplete();
             }.bind(this),
             onError:function (text, error) {
-                this.JSON = { "code": 500, "message": error };
+                this.remoteData = { "code": 500, "message": error };
                 this.fireEvent('servererror', this);
                 this.sendBroadCast(service);
-                this.fireEvent('complete', this);
+                this.onComplete();
             }.bind(this)
         });
         req.send();
-    },
-
-    sendBroadCast:function(service){
-        ludo.remoteBroadcaster.broadcast(this, service);
-    },
-    /**
-     * Return url for the request
-     * @method getUrl
-     * @param {String} service
-     * @param {Array} arguments
-     * @return {String}
-     * @private
-     */
-    getUrl:function (service, arguments) {
-        var ret = this.url !== undefined ? this.url : ludo.config.getUrl();
-        if (ludo.config.hasModRewriteUrls()) {
-            ret = ludo.config.getDocumentRoot() + this.getServicePath(service, arguments);
-        }else{
-            ret = this.url !== undefined ? this.url : ludo.config.getUrl();
-        }
-        return ret;
-    },
-    /**
-     * @method getServicePath
-     * @param {String} service
-     * @param {Array} arguments
-     * @return {String}
-     * @private
-     */
-    getServicePath:function (service, arguments) {
-        var parts = [this.resource];
-        if (arguments && arguments.length)parts.push(arguments.join('/'));
-        if (service)parts.push(service);
-        return parts.join('/');
-    },
-    /**
-     * @method getDataForRequest
-     * @param {String} service
-     * @param {Array} arguments
-     * @param {Object} data
-     * @optional
-     * @param {Object} additionalData
-     * @optional
-     * @return {Object}
-     * @private
-     */
-    getDataForRequest:function (service, arguments, data, additionalData) {
-        var ret = {
-            data:data
-        };
-        if(additionalData){
-            if(ludo.util.isObject(additionalData)){
-                ret = Object.merge(additionalData, ret);
-            }
-        }
-        if (!ludo.config.hasModRewriteUrls() && this.resource) {
-            ret.request = this.getServicePath(service, arguments);
-        }
-        return ret;
     },
     /**
      * Return JSON response data from last request.
@@ -198,7 +129,7 @@ ludo.remote.JSON = new Class({
      * @return {Object|undefined}
      */
     getResponseData:function () {
-        return this.JSON.response.data ? this.JSON.response.data : this.JSON.response;
+        return this.remoteData.response.data ? this.remoteData.response.data : this.remoteData.response;
     },
 
     /**
@@ -207,32 +138,7 @@ ludo.remote.JSON = new Class({
      * @return {Object|undefined}
      */
     getResponse:function () {
-        return this.JSON;
-    },
-    /**
-     * Return "code" property of last received server response.
-     * @method getResponseCode
-     * @return {String|undefined}
-     */
-    getResponseCode:function () {
-        return this.JSON && this.JSON.code ? this.JSON.code : undefined;
-    },
-    /**
-     * Return response message
-     * @method getResponseMessage
-     * @return {String|undefined}
-     */
-    getResponseMessage:function () {
-        return this.JSON && this.JSON.message ? this.JSON.message : undefined;
-    },
-
-    /**
-     * Return name of resource
-     * @method getResource
-     * @return {String}
-     */
-    getResource:function(){
-        return this.resource;
+        return this.remoteData;
     },
     /**
      * Set name of resource

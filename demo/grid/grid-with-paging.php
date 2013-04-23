@@ -49,6 +49,9 @@ require_once("../includes/demo-header.php");
                     resource:'GridWithPaging',
                     service:'read',
                     id:'myDataSource',
+                    shim:{
+                        'txt' : 'Loading grid data'
+                    },
                     paging:{
                         size:12,
                         pageQuery:true,

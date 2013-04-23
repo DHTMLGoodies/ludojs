@@ -17,22 +17,7 @@ ludo.dataSource.JSON = new Class({
     load:function () {
         if(!this.url && !this.resource)return;
         this.parent();
-        this.sendRequest(this.service, this.arguments, this.getPostData())
-    },
-
-    /**
-     * Send a new request
-     * @method sendRequest
-     * @param {String} service
-     * @param {Array} arguments
-     * @optional
-     * @param {Object} data
-     * @optional
-     */
-    sendRequest:function(service, arguments, data){
-        this.arguments = arguments;
-        this.beforeLoad();
-        this.requestHandler().send(service, arguments, data);
+        this.sendRequest(this.service, this.arguments, this.getPostData());
     },
 
     _request:undefined,
@@ -41,6 +26,7 @@ ludo.dataSource.JSON = new Class({
             this._request = new ludo.remote.JSON({
                 url:this.url,
                 resource: this.resource,
+				shim:this.shim,
                 listeners:{
                     "beforeload": function(request){
                         this.fireEvent("beforeload", request);
@@ -79,10 +65,6 @@ ludo.dataSource.JSON = new Class({
         this.data = data;
         this.fireEvent('parsedata');
         this.fireEvent('load', [this.data, this]);
-    },
-
-    getPostData:function(){
-        return this.postData;
     }
 });
 

@@ -172,27 +172,6 @@ ludo.Core = new Class({
         return Browser['ie'] ? document.id(document.documentElement) : document.id(window);
 	},
 
-	Request:function (requestId, config) {
-		var req = new Request(this.getRequestConfig(requestId, config));
-		req.send();
-	},
-	getRequestConfig:function (requestId, config) {
-		config.data = config.data || {};
-		config.data.requestId = requestId;
-		return {
-			url:config.url || this.getUrl(),
-			method:'post',
-			noCache:!this.isCacheEnabled(),
-			data:config.data,
-			evalScripts:true,
-			onSuccess:config.onSuccess.bind(this)
-		};
-	},
-
-	isCacheEnabled:function () {
-		return false
-	},
-
 	isConfigObject:function (obj) {
 		return obj.initialize === undefined;
 	},
