@@ -1,70 +1,71 @@
 .ludo-richcomponent .ludo-form_text .ludo-body,
-.ludo-richcomponent .ludo-form_select .ludo-body{
-    margin:3px;
+.ludo-richcomponent .ludo-form_select .ludo-body {
+    margin: 3px;
 }
 
-.ludo-form-autocomplete-suggestion{
-    height:18px;
-    line-height:18px;
-    width : 1000px;
-    cursor:pointer;
-    padding:1px;
-    font-family:arial;
-}
-.ludo-body input{
-    font-size:12px;
-}
-.ludo-form-autocomplete-suggestion-over{
-    background-color:#EEE;
-    color:#000;
+.ludo-form-autocomplete-suggestion {
+    height: 18px;
+    line-height: 18px;
+    width: 1000px;
+    cursor: pointer;
+    padding: 1px;
+    font-family: arial;
 }
 
-.ludo-form-text-autocomplete-container{
-    position:relative;
-    overflow:hidden;
-    height:20px;
-    padding:0px;
-    padding-left:2px;
-    padding-right:2px;
-
-    border:1px solid #CCC;;
-    border-top:1px solid #abadb3;
-    background-color:transparent;
-    background-color:#FFF;
+.ludo-body input {
+    font-size: 12px;
 }
 
-.ludo-form-text-autocomplete{
+.ludo-form-autocomplete-suggestion-over {
+    background-color: #EEE;
+    color: #000;
+}
+
+.ludo-form-text-autocomplete-container {
+    position: relative;
+    overflow: hidden;
+    height: 20px;
+    padding: 0;
+    padding-left: 2px;
+    padding-right: 2px;
+    border: 1px solid #CCC;;
+    border-top: 1px solid #abadb3;
+    background-color: #FFF;
+}
+
+.ludo-form-text-autocomplete {
     /*
     background : url("data:image/gif;base64,R0lGODlhAQABAID/AMDAwAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw%3D%3D") repeat scroll 0 0 transparent;
     */
-    position : absolute;
-    background-clip:border-box;
-    background-origin:padding-box;
-    background-size:auto;
-    left : 0px;
-    border:0px;
-    width : 100%;
-    height:auto;
-    top : 2px;
-    overflow : hidden;
-    z-index : 5;
-    -moz-box-sizing : content-box;
-    background-color:#FFF;
+    position: absolute;
+    background-clip: border-box;
+    /* background-origin: padding-box;*/
+    background-size: auto;
+    left: 0;
+    border: 0;
+    width: 100%;
+    height: auto;
+    top: 2px;
+    overflow: hidden;
+    z-index: 5;
+    -moz-box-sizing: content-box;
+    background-color: #FFF;
     /** cursor:none; */
 }
-.ludo-form-text-autocomplete-suggestion{
-    background-color:#FFF;
+
+.ludo-form-text-autocomplete-suggestion {
+    background-color: #FFF;
 }
 
-.ludo-body textarea{
-    resize : none;
-    font-family:arial;
-    font-size:12px;
+.ludo-body textarea {
+    resize: none;
+    font-family: arial;
+    font-size: 12px;
 }
 
-input.ludo-form-el-invalid{
-    background-image:url('../images/form/form-el-invalid.png');
-    background-position:5px bottom;
+input.ludo-form-el-invalid {
+    background-image: url('../images/form/form-el-invalid.png');
+    background-position: 5px bottom;
     background-repeat: repeat-x;
 }
 
@@ -72,7 +73,7 @@ input.ludo-form-el-invalid{
     color: #555;
     font-family: arial, sans-serif;
     font-size: 12px;
-    font-weight:bold;
+    font-weight: bold;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
@@ -80,34 +81,38 @@ input.ludo-form-el-invalid{
     -ms-user-select: none;
     user-select: none;
 }
-div.ludo-menu-menu label{
-   font-size:11px;
+
+div.ludo-menu-menu label {
+    font-size: 11px;
 }
 
-.ludo-form-text-element input, .ludo-form-text-element textarea{
-    border:0;
-    padding:0;
+.ludo-form-text-element input, .ludo-form-text-element textarea {
+    border: 0;
+    padding: 0;
     outline: none;
 }
-.ludo-form-element select{
-    border:1px solid #ccc;
-}
-.ludo-form-text-element{
-    border:1px solid #ccc;
-    background-color:#FFF;
-    padding:1px;
+
+.ludo-form-element select {
+    border: 1px solid #ccc;
 }
 
-.input-row .input-cell{
-    margin-top:1px;
-    margin-bottom:1px;
-    padding-top:1px;
-    padding-bottom:1px;
+.ludo-form-text-element {
+    border: 1px solid #ccc;
+    background-color: #FFF;
+    padding: 1px;
 }
-.input-row textarea{
+
+.input-row .input-cell {
+    margin-top: 1px;
+    margin-bottom: 1px;
+    padding-top: 1px;
+    padding-bottom: 1px;
+}
+
+.input-row textarea {
     overflow-y: auto;
 }
 
-.ludo-form-el-inline-label{
-    color:#777;
+.ludo-form-el-inline-label {
+    color: #777;
 }
