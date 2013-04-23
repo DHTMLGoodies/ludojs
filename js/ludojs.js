@@ -1,4 +1,4 @@
-/* Generated Tue Apr 23 1:18:32 CEST 2013 */
+/* Generated Tue Apr 23 2:36:48 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -3523,6 +3523,12 @@ ludo.dataSource.Base = new Class({
     load:function(){
 
     },
+
+    /**
+     * Load content from a specific url
+     * @method loadUrl
+     * @param url
+     */
     loadUrl:function(url){
         this.url = url;
         this.load();
@@ -4516,17 +4522,19 @@ ludo.view.Shim = new Class({
     }
 });/* ../ludojs/src/data-source/shim.js */
 ludo.dataSource.Shim = new Class({
-    Extends: ludo.view.Shim,
+    Extends:ludo.view.Shim,
 
-    initialize:function(config){
+    initialize:function (config) {
         this.parent(config);
         this.addDataSourceEvents(config.dataSource);
     },
 
     addDataSourceEvents:function (ds) {
         if (ds) {
-            ds.addEvent('beforeload', this.show.bind(this));
-            ds.addEvent('load', this.hide.bind(this));
+            ds.addEvents({
+                'beforeload':this.show.bind(this),
+                'load':this.hide.bind(this)
+            });
             if (ds.isLoading())this.show();
         }
     }
@@ -12456,6 +12464,7 @@ ludo.view.ButtonBar = new Class({
         return this.component;
     }
 });/* ../ludojs/src/view/title-bar.js */
+// TODO support all kinds of buttons - customizable
 ludo.view.TitleBar = new Class({
     Extends:ludo.Core,
     view:undefined,

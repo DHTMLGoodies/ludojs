@@ -20,7 +20,10 @@ require_once("../includes/demo-header.php");
         },
         dataSource:{
             type:'dataSource.HTML',
-            url : '../resources/articles/with-link.php'
+            url : '../resources/articles/with-link.php',
+            shim:{
+                txt : 'Loading page. Please wait'
+            }
         }
 
     });
