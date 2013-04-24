@@ -33,7 +33,8 @@ require_once("../includes/demo-header.php");
                 type:'View',
                 id:'menuView',
                 css:{
-                    'background-color':'#d7d7d7'
+                    'background-color':'#d7d7d7',
+                    'border-top' : '1px solid #d7d7d7'
                 },
                 children:[
                     {
@@ -46,6 +47,9 @@ require_once("../includes/demo-header.php");
                         },
                         css:{
                           'background-color' : '#FFF'
+                        },
+                        containerCss:{
+                            'border-top' : 0
                         }
                     },
                     {
@@ -58,6 +62,9 @@ require_once("../includes/demo-header.php");
                         },
                         css:{
                           'background-color' : '#FFF'
+                        },
+                        containerCss:{
+                            'border-top' : 0
                         }
                     },
                     {
@@ -67,6 +74,14 @@ require_once("../includes/demo-header.php");
                         html:'I am not collapsible',
                         layout:{
                             weight:1
+                        },
+                        css:{
+                            padding:5,
+                            'background-color' : '#fff'
+                        },
+                        containerCss:{
+                            'border-bottom' : 0,
+                            'border-top' : 0
                         }
                     }
 

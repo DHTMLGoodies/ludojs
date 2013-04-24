@@ -172,7 +172,7 @@
 
 .ludo-grid-movable-shim {
     opacity: 1;
-    filter: null;
+    filter: none;
     background-color: #FFF;
     line-height: 30px;
     font-family: arial, sans-serif;

@@ -78,7 +78,7 @@ ludo.menu.Context = new Class({
 	ludoConfig:function (config) {
 		this.renderTo = document.body;
 		this.parent(config);
-		this.setConfigParams(config, ['selector', 'recordType', 'record', 'component','contextEl']);
+		this.setConfigParams(config, ['selector', 'recordType', 'record', 'applyTo','contextEl']);
 		if (this.recordType)this.record = { type:this.recordType };
 	},
 
@@ -106,7 +106,7 @@ ludo.menu.Context = new Class({
 	},
 
 	/**
-	 * when recordType property is defined, this will return the selected record of parent component,
+	 * when recordType property is defined, this will return the selected record of parent applyTo,
 	 * example: record in a tree
 	 * @method getSelectedRecord
 	 * @return object record
@@ -116,7 +116,6 @@ ludo.menu.Context = new Class({
 	},
 
 	show:function (e) {
-
 		if (this.selector) {
 			var domEl = this.getValidDomElement(e.target);
 			if (!domEl) {
@@ -125,7 +124,7 @@ ludo.menu.Context = new Class({
 			this.fireEvent('selectorclick', domEl);
 		}
 		if (this.record) {
-			var r = this.component.getRecordByDOM(e.target);
+			var r = this.applyTo.getRecordByDOM(e.target);
 			if (!r)return undefined;
 			if (this.isContextMenuFor(r)) {
 				this.selectedRecord = r;

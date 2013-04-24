@@ -1,4 +1,4 @@
-/* Generated Tue Apr 23 13:35:21 CEST 2013 */
+/* Generated Wed Apr 24 2:48:32 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -1605,7 +1605,7 @@ ludo.remote.HTML = new Class({
  @namespace remote
  @class Broadcasters
  @example
- ludo.remoteBroadcaster.addEvent('successMessage', function(response){
+    ludo.remoteBroadcaster.addEvent('successMessage', function(response){
         if(response.resource === 'Person'){
 
         }
@@ -1688,17 +1688,17 @@ ludo.remote.Broadcaster = new Class({
      @param {String} resource
      @param {Function} fn
      @example
-     ludo.remoteBroadcaster.addEvent('failure', 'Person', function(response){
+        ludo.remoteBroadcaster.addEvent('failure', 'Person', function(response){
             this.getBody().set('html', response.message');
         }.bind(this));
      The event payload is an object in this format:
      @example
-     {
-         "code": 200,
-         "message": "A message",
-         "resource": "Which resource",
-         "service": "Which service"
-     }
+         {
+             "code": 200,
+             "message": "A message",
+             "resource": "Which resource",
+             "service": "Which service"
+         }
      */
     addResourceEvent:function (eventType, resource, fn) {
         this.addEvent(this.getEventName(eventType, resource), fn);
@@ -1711,17 +1711,17 @@ ludo.remote.Broadcaster = new Class({
      @param {Array} services
      @param {Function} fn
      @example
-     ludo.remoteBroadcaster.addEvent('failure', 'Person', function(response){
+        ludo.remoteBroadcaster.addEvent('failure', 'Person', function(response){
             this.getBody().set('html', response.message');
         }.bind(this));
      The event payload is an object in this format:
      @example
-     {
-         "code": 200,
-         "message": "A message",
-         "resource": "Which resource",
-         "service": "Which service"
-     }
+         {
+             "code": 200,
+             "message": "A message",
+             "resource": "Which resource",
+             "service": "Which service"
+         }
      */
     addServiceEvent:function (eventType, resource, services, fn) {
         if (!services.length) {
@@ -1741,7 +1741,7 @@ ludo.remote.Broadcaster = new Class({
      @param {String} resource
      @param {String} service
      @example
-     ludo.remoteBroadcaster.setDefaultMessage('You have registered sucessfully', 'success', 'User', 'register');
+        ludo.remoteBroadcaster.setDefaultMessage('You have registered successfully', 'success', 'User', 'register');
      */
     setDefaultMessage:function (message, eventType, resource, service) {
         this.defaultMessages[this.getEventName(eventType, resource, service)] = message;
@@ -5069,7 +5069,7 @@ ludo.View = new Class({
 				this.contextMenu = [this.contextMenu];
 			}
 			for (var i = 0; i < this.contextMenu.length; i++) {
-				this.contextMenu[i].component = this;
+				this.contextMenu[i].applyTo = this;
 				this.contextMenu[i].contextEl = this.isFormElement() ? this.getFormEl() : this.getEl();
 				new ludo.menu.Context(this.contextMenu[i]);
 			}
@@ -5974,6 +5974,39 @@ ludo.remote.ErrorMessage = new Class({
     Extends:ludo.remote.Message,
     messageTypes:['failure','serverError']
 });/* ../ludojs/src/ludo-db/factory.js */
+/**
+ Factory for automatic creation of children from server ludoDB config. This class is used
+ internally by ludoJS when you specify a ludoDB config object in your view configuration.
+ @namespace ludoDB
+ @class Factory
+ @constructor
+ @param {Object} config
+ @example
+    new ludo.Window({
+        title:'LudoDB Integration',
+        stateful:true,
+        layout:{
+            'width':500, height:400
+        },
+        children:[
+            {
+                'layout':{
+                    type:'linear',
+                    orientation:'vertical'
+                },
+                'ludoDB':{ // Creates children of this window automatically based on LudoDB model config
+                    'resource':'LudoJSPerson',
+                    'arguments':1,
+                    'url':'../ludoDB/router.php'
+                }
+            }
+        ],
+        buttons:[
+            { type:'form.SubmitButton', value:'Save' },
+            { type:'form.CancelButton', value:'Cancel' }
+        ]
+    });
+ */
 ludo.ludoDB.Factory = new Class({
     Extends:ludo.Core,
     ludoDBConfig:undefined,
@@ -5984,8 +6017,8 @@ ludo.ludoDB.Factory = new Class({
 
     ludoConfig:function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['url', 'resource','arguments']);
-        if(this.arguments && !ludo.util.isArray(this.arguments)){
+        this.setConfigParams(config, ['url', 'resource', 'arguments']);
+        if (this.arguments && !ludo.util.isArray(this.arguments)) {
             this.arguments = [this.arguments];
         }
         this.ludoDBConfig = config;
@@ -5993,16 +6026,16 @@ ludo.ludoDB.Factory = new Class({
 
     load:function () {
         var arguments = [this.resource];
-        if(this.arguments)arguments.splice(1, 0, this.arguments);
+        if (this.arguments)arguments.splice(1, 0, this.arguments);
         var req = new ludo.remote.JSON({
             resource:'LudoJS',
-            url : this.getUrl()
+            url:this.getUrl()
         });
         req.addEvent('success', this.loadComplete.bind(this));
         req.send('form', arguments);
     },
 
-    loadComplete:function(req){
+    loadComplete:function (req) {
         this.fireEvent('load', req.getResponseData());
     }
 
@@ -6134,11 +6167,13 @@ ludo.color.Color = new Class({
     },
 
     hsvToRGBCode:function (h, s, v) {
-		if(s === undefined){
-			s = h.s;v = h.v;h= h.h;
-		}
+        if (s === undefined) {
+            s = h.s;
+            v = h.v;
+            h = h.h;
+        }
         var rgb = this.hsvToRGB(h, s, v);
-        return this.toRGB(rgb.r,rgb.g,rgb.b);
+        return this.toRGB(rgb.r, rgb.g, rgb.b);
     },
     hsvToRGB:function (h, s, v) {
         if (s === undefined) {
@@ -20587,7 +20622,6 @@ ludo.menu.Item = new Class({
         this.parent();
         ludo.dom.addClass(this.getEl(), 'ludo-menu-item');
 
-
         if (this.isSpacer()) {
             if (this.orientation === 'horizontal') {
                 this.getEl().setStyle('width', 1);
@@ -20611,9 +20645,6 @@ ludo.menu.Item = new Class({
 		    ludo.dom.addClass(el, 'ludo-menu-item-' + this.orientation + '-expand');
 		    this.getEl().adopt(el);
 		}
-
-
-
     },
 
     getLabel:function () {
@@ -20825,7 +20856,7 @@ ludo.menu.Context = new Class({
 	ludoConfig:function (config) {
 		this.renderTo = document.body;
 		this.parent(config);
-		this.setConfigParams(config, ['selector', 'recordType', 'record', 'component','contextEl']);
+		this.setConfigParams(config, ['selector', 'recordType', 'record', 'applyTo','contextEl']);
 		if (this.recordType)this.record = { type:this.recordType };
 	},
 
@@ -20853,7 +20884,7 @@ ludo.menu.Context = new Class({
 	},
 
 	/**
-	 * when recordType property is defined, this will return the selected record of parent component,
+	 * when recordType property is defined, this will return the selected record of parent applyTo,
 	 * example: record in a tree
 	 * @method getSelectedRecord
 	 * @return object record
@@ -20863,7 +20894,6 @@ ludo.menu.Context = new Class({
 	},
 
 	show:function (e) {
-
 		if (this.selector) {
 			var domEl = this.getValidDomElement(e.target);
 			if (!domEl) {
@@ -20872,7 +20902,7 @@ ludo.menu.Context = new Class({
 			this.fireEvent('selectorclick', domEl);
 		}
 		if (this.record) {
-			var r = this.component.getRecordByDOM(e.target);
+			var r = this.applyTo.getRecordByDOM(e.target);
 			if (!r)return undefined;
 			if (this.isContextMenuFor(r)) {
 				this.selectedRecord = r;

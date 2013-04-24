@@ -9,7 +9,7 @@
     width: 1000px;
     cursor: pointer;
     padding: 1px;
-    font-family: arial;
+    font-family: arial, sans-serif;
 }
 
 .ludo-body input {
@@ -59,7 +59,7 @@
 
 .ludo-body textarea {
     resize: none;
-    font-family: arial;
+    font-family: arial, sans-serif;
     font-size: 12px;
 }
 

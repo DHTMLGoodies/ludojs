@@ -125,11 +125,13 @@ ludo.color.Color = new Class({
     },
 
     hsvToRGBCode:function (h, s, v) {
-		if(s === undefined){
-			s = h.s;v = h.v;h= h.h;
-		}
+        if (s === undefined) {
+            s = h.s;
+            v = h.v;
+            h = h.h;
+        }
         var rgb = this.hsvToRGB(h, s, v);
-        return this.toRGB(rgb.r,rgb.g,rgb.b);
+        return this.toRGB(rgb.r, rgb.g, rgb.b);
     },
     hsvToRGB:function (h, s, v) {
         if (s === undefined) {

@@ -100,7 +100,6 @@ ludo.menu.Item = new Class({
         this.parent();
         ludo.dom.addClass(this.getEl(), 'ludo-menu-item');
 
-
         if (this.isSpacer()) {
             if (this.orientation === 'horizontal') {
                 this.getEl().setStyle('width', 1);
@@ -124,9 +123,6 @@ ludo.menu.Item = new Class({
 		    ludo.dom.addClass(el, 'ludo-menu-item-' + this.orientation + '-expand');
 		    this.getEl().adopt(el);
 		}
-
-
-
     },
 
     getLabel:function () {

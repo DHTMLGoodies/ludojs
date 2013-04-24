@@ -37,13 +37,11 @@
 
 }
 
-
 .ludo-form-slider-horizontal .ludo-form-slider-bg-last{
     width:60%;
     top:0;
     right:0;
     height:100%;
-
     background-position:top right;
 }
 
