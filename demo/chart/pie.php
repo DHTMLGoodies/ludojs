@@ -7,7 +7,20 @@ require_once("../includes/demo-header.php");
 
 <script type="text/javascript">
 
-var w = 
+var w = new ludo.Window({
+    layout:{
+        width:500,
+        height:400,
+        left:20,
+        top:20
+    },
+    children:[
+        {
+            type:'chart.Pie'
+        }
+    ]
+
+});
 </script>
 </body>
 </html>
