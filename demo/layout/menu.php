@@ -26,10 +26,10 @@ var w = new ludo.Window({
             title:'Window with menu',
             stateful:true,
             layout:{
-                width:600,
-                height:400,
-                left:50,
-                top:50,
+                width:700,
+                height:450,
+                left:20,
+                top:20,
                 type:'relative'
             },
             css:{
