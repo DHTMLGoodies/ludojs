@@ -1,4 +1,4 @@
-/* Generated Wed Apr 24 2:48:32 CEST 2013 */
+/* Generated Wed Apr 24 22:14:55 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -26,7 +26,7 @@ Owner of ludoJS.com
  */
 window.ludo = {
     form:{ validator:{} },color:{}, dialog:{},remote:{},tree:{},model:{},tpl:{},video:{},storage:{},
-    grid:{}, effect:{},paging:{},calendar:{},layout:{},progress:{},keyboard:{},
+    grid:{}, effect:{},paging:{},calendar:{},layout:{},progress:{},keyboard:{},chart:{},
     dataSource:{},controller:{},card:{},canvas:{},socket:{},menu:{},view:{},audio:{}, ludoDB:{}
 };
 
@@ -7510,7 +7510,12 @@ ludo.form.Element = new Class({
 	 */
 	suffix:'',
 
-    value:'',
+    /**
+     * Initial value
+     * @config {String|Number} value
+     * @default undefined
+     */
+    value:undefined,
 
     onLoadMessage:'',
 

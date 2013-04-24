@@ -19,6 +19,8 @@ test:
   - socket/*.js
   - store/*.js
   - view/*.js
+  - chart/*.js
+  - menu/*.js
 
 serve:
   - ../css/ludojs-blue.css

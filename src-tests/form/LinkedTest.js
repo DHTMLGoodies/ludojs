@@ -9,6 +9,7 @@ TestCase("LinkedTest", {
 		});
 
 	},
+
 	"test_should_set_initial_value_of_linked":function () {
 		// given
 		var win = this.getWindowWithLinkedFormComponents();

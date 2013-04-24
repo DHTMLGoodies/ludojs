@@ -1,4 +1,4 @@
-/* Generated Wed Apr 24 2:48:32 CEST 2013 */
+/* Generated Wed Apr 24 22:14:55 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -748,9 +748,6 @@ div.ludo-tab-strip-top div.ludo-body {
     border-bottom: 0;
 }
 
-
-
-
 /** Tab strip bottom */
 .ludo-tab-strip-bottom .ludo-tab-strip-line {
     top: 0;
@@ -1085,7 +1082,7 @@ div.ludo-tab-strip-top div.ludo-body {
 
 .ludo-grid-movable-shim {
     opacity: 1;
-    filter: null;
+    filter: none;
     background-color: #FFF;
     line-height: 30px;
     font-family: arial, sans-serif;
@@ -1846,7 +1843,7 @@ div.ludo-tree-movable-shim img{
     width: 1000px;
     cursor: pointer;
     padding: 1px;
-    font-family: arial;
+    font-family: arial, sans-serif;
 }
 
 .ludo-body input {
@@ -1896,7 +1893,7 @@ div.ludo-tree-movable-shim img{
 
 .ludo-body textarea {
     resize: none;
-    font-family: arial;
+    font-family: arial, sans-serif;
     font-size: 12px;
 }
 
@@ -2133,10 +2130,8 @@ div.ludo-Filter-Tree-Combo-Field div.ludo-body{
 
 .ludo-radio-image-checked{
     border:2px solid #555;
-    padding:0px;
+    padding:0;
     background-color:#bbd46d;
-
-
 }/* ../ludojs/css-source/form/spinner.css */
 .ludo-spinbox-container{
 	border:1px solid #7F9DB9;
@@ -2222,13 +2217,11 @@ div.ludo-spinbox-arrow-overeffect{
 
 }
 
-
 .ludo-form-slider-horizontal .ludo-form-slider-bg-last{
     width:60%;
     top:0;
     right:0;
     height:100%;
-
     background-position:top right;
 }
 

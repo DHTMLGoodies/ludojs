@@ -19,7 +19,12 @@ ludo.form.Element = new Class({
 	 */
 	suffix:'',
 
-    value:'',
+    /**
+     * Initial value
+     * @config {String|Number} value
+     * @default undefined
+     */
+    value:undefined,
 
     onLoadMessage:'',
 

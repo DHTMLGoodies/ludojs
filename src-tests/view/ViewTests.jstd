@@ -9,7 +9,7 @@ load:
   - ../../src/framed-view.js
   - ../../src/window.js
   - ../../src/dialog/dialog.js
-  - ../../src/view/loader.js
+  - ../../src/view/shim.js
   - ../../src/notification.js
   - ../../src/layout/base.js
   - ../../src/layout/linear.js
