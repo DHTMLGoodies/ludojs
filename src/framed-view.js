@@ -94,7 +94,7 @@ ludo.FramedView = new Class({
             }
         }
 
-        this.setConfigParams(config,['buttonBar','hasMenu','menuConfig','icon',,'titleBar','buttons','boldTitle','minimized']);
+        this.setConfigParams(config,['buttonBar','titleBarButtons', 'hasMenu','menuConfig','icon',,'titleBar','buttons','boldTitle','minimized']);
 		if (this.buttonBar && !this.buttonBar.children) {
 			this.buttonBar = { children:this.buttonBar };
 		}
@@ -192,6 +192,7 @@ ludo.FramedView = new Class({
 		if (this.titleBarObj === undefined) {
 			this.titleBarObj = this.createDependency('titleBar', {
 				type:'view.TitleBar',
+                buttons : this.titleBarButtons,
 				view:this,
 				listeners:{
 					close:this.close.bind(this),

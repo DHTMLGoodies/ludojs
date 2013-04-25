@@ -9,5 +9,4 @@ ludo.chart.DataSource = new Class({
     getChartData:function(){
 
     }
-    
 });

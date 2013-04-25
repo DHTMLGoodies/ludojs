@@ -10,6 +10,7 @@ load:
   - ../../src/window.js
   - ../../src/dialog/dialog.js
   - ../../src/view/shim.js
+  - ../../src/view/title-bar.js
   - ../../src/notification.js
   - ../../src/layout/base.js
   - ../../src/layout/linear.js
@@ -22,6 +23,7 @@ test:
   - LoaderTest.js
   - NotificationTest.js
   - ViewTest.js
+  - TitleBarTest.js
 
 plugin:
  - name: "coverage"

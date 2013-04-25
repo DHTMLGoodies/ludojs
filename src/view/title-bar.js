@@ -12,7 +12,9 @@ ludo.view.TitleBar = new Class({
 
     ludoConfig:function (config) {
         this.parent(config);
-        this.view = config.view;
+
+        this.setConfigParams(config, ['view','buttons']);
+
         this.view.addEvent('setTitle', this.setTitle.bind(this));
         this.view.addEvent('resize', this.resizeDOM.bind(this));
         this.createDOM();
@@ -41,7 +43,6 @@ ludo.view.TitleBar = new Class({
             cls:'ludo-framed-view-titlebar-icon',
             css:{ 'backgroundImage':'url(' + this.view.icon + ')'}
         });
-
     },
 
     setTitle:function (title) {
