@@ -11,7 +11,7 @@ ludo.form.Element = new Class({
 	 * @config {String} label
 	 * @default ''
 	 */
-    label:'',
+    label:undefined,
 	/**
 	 * Label after input field
 	 * @config {String} suffix

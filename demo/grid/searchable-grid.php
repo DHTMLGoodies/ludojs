@@ -41,6 +41,18 @@ var w = new ludo.Window({
         type:'linear',
         orientation:'horizontal'
     },
+
+    titleBar:{
+        buttons: [{
+            type : 'reload',
+            title : 'Reload grid data'
+        },'minimize','close'],
+        listeners:{
+            'reload' : function(){
+                ludo.get('myDataSource').load();
+            }
+        }
+    },
     stateful:true,
     css:{
         'border-bottom':0

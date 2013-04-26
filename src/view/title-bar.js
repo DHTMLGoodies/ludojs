@@ -10,17 +10,28 @@ ludo.view.TitleBar = new Class({
         buttonArray:[]
     },
 
+	toggleStatus:{},
+
     ludoConfig:function (config) {
         this.parent(config);
 
         this.setConfigParams(config, ['view','buttons']);
 
+		if(!this.buttons)this.buttons = this.getDefaultButtons();
+
         this.view.addEvent('setTitle', this.setTitle.bind(this));
         this.view.addEvent('resize', this.resizeDOM.bind(this));
         this.createDOM();
-        this.createEvents();
-        this.setSizeOfButtonContainer.delay(20, this);
+        this.setSizeOfButtonContainer();
     },
+
+	getDefaultButtons:function(){
+		var ret  = [];
+		if(this.view.isMinimizable())ret.push('minimize');
+		if(this.view.isCollapsible())ret.push('collapse');
+		if(this.view.isClosable())ret.push('close');
+		return ret;
+	},
 
     createDOM:function () {
         var el = this.els.el = new Element('div');
@@ -56,23 +67,6 @@ ludo.view.TitleBar = new Class({
         });
         this.setTitle(this.view.title);
     },
-    createEvents:function () {
-        this.addEvent('minimize', this.showMaximize.bind(this));
-        this.addEvent('maximize', this.showMinimize.bind(this));
-    },
-
-    showMaximize:function () {
-        this.toggleMinimize('none', '');
-    },
-
-    showMinimize:function () {
-        this.toggleMinimize('', 'none');
-    },
-
-    toggleMinimize:function (min, max) {
-        this.els.buttons.minimize.style.display = min;
-        this.els.buttons.maximize.style.display = max;
-    },
 
     cancelTextSelection:function () {
         return false;
@@ -96,24 +90,11 @@ ludo.view.TitleBar = new Class({
         });
         re.style.cssText = 'position:absolute;z-index:1;right:0;top:0;width:55%;height:100%;background-repeat:no-repeat;background-position:top right';
 
-        if (this.view.isMinimizable()) {
-            el.appendChild(this.getButton('minimize'));
-            var max = this.getButton('maximize');
-            max.style.display = 'none';
-            el.appendChild(max);
-        }
-        if (this.view.isCollapsible()) {
-            if (this.shouldShowCollapseButton()) {
-                var button = this.getButton('collapse', 'collapse');
-                var direction = this.getCollapseButtonDirection();
-                ludo.dom.addClass(button, 'ludo-title-bar-button-collapse-' + direction);
-                el.appendChild(button);
-            }
-        }
-        if (this.view.isClosable()) {
-            el.appendChild(this.getButton('close', 'close'));
-        }
-        this.addBorderToButtons();
+		for(var i=0;i<this.buttons.length;i++){
+			el.appendChild(this.getButton(this.buttons[i]));
+		}
+
+	    this.addBorderToButtons();
         return el;
     },
 
@@ -126,20 +107,54 @@ ludo.view.TitleBar = new Class({
         this.els.controls.style.width = this.getWidthOfButtons() + 'px';
     },
 
-    getButton:function (buttonType) {
-        var b = this.els.buttons[buttonType] = new Element('div');
+    getButton:function (buttonConfig) {
+		buttonConfig = ludo.util.isString(buttonConfig) ? { type : buttonConfig } : buttonConfig;
+
+        var b = this.els.buttons[buttonConfig.type] = new Element('div');
         b.id = 'b-' + String.uniqueID();
-        b.className = 'ludo-title-bar-button ludo-title-bar-button-' + buttonType;
+        b.className = 'ludo-title-bar-button ludo-title-bar-button-' + buttonConfig.type;
         b.addEvents({
-            'click':this.buttonClick.bind(this),
+            'click':this.getButtonClickFn(buttonConfig.type),
             'mouseenter':this.enterButton.bind(this),
             'mouseleave':this.leaveButton.bind(this)
         });
-        b.setProperty('title', buttonType.capitalize());
-        b.setProperty('buttonType', buttonType);
+        b.setProperty('title', buttonConfig.title ? buttonConfig.title : buttonConfig.type.capitalize());
+        b.setProperty('buttonType', buttonConfig.type);
+
+		if(buttonConfig.type === 'collapse'){
+    		ludo.dom.addClass(b, 'ludo-title-bar-button-collapse-' + this.getCollapseButtonDirection());
+		}
         this.els.buttonArray.push(b);
         return b;
     },
+
+
+	getButtonClickFn:function(type){
+		var buttonConfig = ludo.view.getTitleBarButton(type);
+		var toggle = buttonConfig && buttonConfig.toggle ? buttonConfig.toggle : undefined;
+
+		return function(e){
+			this.leaveButton(e);
+			var event = type;
+			if(toggle){
+				if(this.toggleStatus[type]){
+					event = this.toggleStatus[type];
+					ludo.dom.removeClass(e.target, 'ludo-title-bar-button-' + event);
+					event = this.getNextToggle(toggle, event);
+
+				}
+				ludo.dom.removeClass(e.target, 'ludo-title-bar-button-' + event);
+				this.toggleStatus[type] = event;
+				ludo.dom.addClass(e.target, 'ludo-title-bar-button-' + this.getNextToggle(toggle, event));
+			}
+			this.fireEvent(event);
+		}.bind(this);
+	},
+
+	getNextToggle:function(toggle, current){
+		var ind = toggle.indexOf(current) + 1;
+		return toggle[ind>=toggle.length ? 0 : ind];
+	},
 
     addBorderToButtons:function () {
         var firstFound = false;
@@ -164,19 +179,10 @@ ludo.view.TitleBar = new Class({
         el.removeClass('ludo-title-bar-button-' + el.getProperty('buttonType') + '-over');
     },
 
-    buttonClick:function (e) {
-        var event = e.target.getProperty('buttonType');
-        this.leaveButton(e);
-        this.addBorderToButtons();
-        this.resizeButtonContainer();
-        this.fireEvent(event);
-    },
-
     getWidthOfButtons:function () {
         var ret = 0;
         var els = this.els.buttonArray;
         for (var i = 0, count = els.length; i < count; i++) {
-            if (els[i].style.display == 'none')continue;
             var width = ludo.dom.getNumericStyle(els[i], 'width') + ludo.dom.getBW(els[i]) + ludo.dom.getPW(els[i]) + ludo.dom.getMW(els[i]);
             if (!isNaN(width) && width) {
                 ret += width;
@@ -238,4 +244,16 @@ ludo.view.TitleBar = new Class({
             return parent.children.indexOf(c) === 0 ? 'top' : 'bottom';
         }
     }
+});
+
+ludo.view.registerTitleBarButton = function(name, config){
+	ludo.registry.set('titleBar-' + name, config);
+};
+
+ludo.view.getTitleBarButton = function(name){
+	return ludo.registry.get('titleBar-' + name);
+};
+
+ludo.view.registerTitleBarButton('minimize',{
+	toggle:['minimize','maximize']
 });

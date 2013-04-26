@@ -23,6 +23,7 @@ require_once("../includes/demo-header.php");
 <script type="text/javascript" src="../../src/color/boxes.js"></script>
 <script type="text/javascript" src="../../src/color/rgb-slider.js"></script>
 <script type="text/javascript" src="../../src/form/color.js"></script>
+<script type="text/javascript" src="../../src/view/title-bar.js"></script>
 <style type="text/css">
     .ludo-form-text-element input, .ludo-form-text-element textarea {
         border: 0;

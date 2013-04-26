@@ -26,10 +26,12 @@ ludo.form.LabelElement = new Class({
         this.parent(config);
         this.setConfigParams(config, ['inlineLabel']);
         if(!this.supportsInlineLabel())this.inlineLabel = undefined;
-        if (this.inlineLabel) {
+        /*
+		if (this.inlineLabel) {
             this.inlineLabel = this.label;
             this.label = undefined;
         }
+        */
     },
 
     ludoEvents:function () {
@@ -88,8 +90,8 @@ ludo.form.LabelElement = new Class({
     },
 
     addLabel:function () {
-        if (this.label) {
-            this.getLabelDOM().set('html', this.label + this.labelSuffix);
+        if (this.label !== undefined) {
+			this.getLabelDOM().set('html', this.label ?  this.label + this.labelSuffix : '');
             this.els.label.setProperty('for', this.getFormElId());
         }
         if (this.suffix) {
@@ -104,7 +106,7 @@ ludo.form.LabelElement = new Class({
     },
 
     setWidthOfLabel:function () {
-        if(!this.label){
+        if(this.label === undefined){
             this.getLabelDOM().style.display = 'none';
         }else{
             this.getLabelDOM().parentNode.style.width = this.labelWidth + 'px';
@@ -174,9 +176,9 @@ ludo.form.LabelElement = new Class({
                     width = c.offsetWidth - ludo.dom.getMBPW(this.els.body) - ludo.dom.getPW(c) - ludo.dom.getBW(c);
                 }
             }
-            if (this.label)width -= this.labelWidth;
+            if (this.label !== undefined)width -= this.labelWidth;
             if (this.suffix)width -= this.getSuffixCell().offsetWidth;
-            width -= 10;
+            if(this.inputTag !== 'select') width -= 5;
             if (width > 0 && !isNaN(width)) {
                 this.formFieldWidth = width;
                 this.getFormEl().style.width = width + 'px';

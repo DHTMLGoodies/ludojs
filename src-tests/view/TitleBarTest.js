@@ -38,6 +38,18 @@ TestCase("TitleBarTest", {
         assertEquals('none', v.getEl().style.display);
     },
 
+	"test should have button DOM": function(){
+		// given
+		var v = this.getView();
+		// when
+		var els = v.getEl().getElements('.ludo-title-bar-button');
+
+		// then
+
+		assertEquals('div', v.getEl().getElement('.ludo-title-bar-button-close').tagName.toLowerCase());
+		assertEquals('div', v.getEl().getElement('.ludo-title-bar-button-minimize').tagName.toLowerCase());
+	},
+
     getView:function(){
         return new ludo.FramedView({
             minimizable:true,

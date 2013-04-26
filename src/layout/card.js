@@ -5,7 +5,7 @@ ludo.layout.Card = new Class({
 	initialAnimate:false,
 	animationDuration:.25,
 	animateX:true,
-	touchConfig:{},
+	touch:{},
 
 	onCreate:function () {
 		this.parent();
@@ -510,7 +510,7 @@ ludo.layout.Card = new Class({
 
 	isOnFormElement:function (el) {
 		var tag = el.tagName.toLowerCase();
-		return tag == 'input' || tag == 'textarea';
+		return tag == 'input' || tag == 'textarea'  || tag === 'select';
 	},
 
 	renderNextAndPreviousCard:function () {

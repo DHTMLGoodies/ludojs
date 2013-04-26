@@ -23,6 +23,7 @@ ludo.form.Textarea = new Class({
     },
     resizeDOM:function () {
         this.parent();
+		/*
         var w;
         if (!this.label) {
             w = this.getInnerWidthOfBody();
@@ -35,10 +36,12 @@ ludo.form.Textarea = new Class({
         if(this.stretchField)w-=10;
 
         this.els.formEl.setStyle('width', (w - 10) + 'px');
+        */
 
         if (this.layout && this.layout.weight) {
             var height = this.getEl().offsetHeight;
-            height -= (ludo.dom.getMH(this.getEl()) + ludo.dom.getMBPH(this.getBody()) + ludo.dom.getMH(this.els.formEl.parentNode));
+            height -= (ludo.dom.getMBPH(this.getEl()) + ludo.dom.getMBPH(this.getBody()) + ludo.dom.getMH(this.els.formEl.parentNode));
+			height -=1;
             if (height > 0) {
                 this.els.formEl.style.height = height+'px';
             }

@@ -155,9 +155,6 @@ ludo.form.Select = new Class({
 
     resizeDOM:function () {
         this.parent();
-        if (this.els.formEl) {
-            var p = this.els.formEl.parentNode;
-            this.els.formEl.style.width = (p.offsetWidth - ludo.dom.getBW(p) - ludo.dom.getPW(p)) + 'px';
-        }
+
     }
 });

@@ -49,12 +49,48 @@ ludo.FramedView = new Class({
 	icon:undefined,
 
 	/**
-	 * Show or hide title bar
-	 * @config titleBar
-	 * @type {Boolean}
-	 * @default true
+	 Config object for the title bar
+	 @config titleBar
+	 @type {Object}
+	 @default undefined
+	 @example
+	 	new ludo.Window({
+	 		titleBar:{
+				buttons: [{
+					type : 'reload',
+					title : 'Reload grid data'
+				},'minimize','close'],
+				listeners:{
+					'reload' : function(){
+						ludo.get('myDataSource').load();
+					}
+				}
+			}
+	 	});
+
+	 You can create your own buttons by creating the following css classes:
+	 @example
+		 .ludo-title-bar-button-minimize {
+			 background-image: url('../images/title-bar-btn-minimize.png');
+		 }
+
+		 .ludo-title-bar-button-minimize-over {
+			 background-image: url('../images/title-bar-btn-minimize-over.png');
+		 }
+
+	 Replace "minimize" with the unique name of your button.
+
+	 If you want to create a toggle button like minimize/maximize, you can do that with this code:
+
+	 @example
+		 ludo.view.registerTitleBarButton('minimize',{
+			toggle:['minimize','maximize']
+		 });
+
+
+
 	 */
-	titleBar:true,
+	titleBar:undefined,
 	/**
 	 * Bold title bar. True to give the component a window type title bar, false to give it a smaller title bar
 	 * @attribute boldTitle
@@ -94,7 +130,7 @@ ludo.FramedView = new Class({
             }
         }
 
-        this.setConfigParams(config,['buttonBar','titleBarButtons', 'hasMenu','menuConfig','icon',,'titleBar','buttons','boldTitle','minimized']);
+        this.setConfigParams(config,['buttonBar', 'hasMenu','menuConfig','icon',,'titleBar','buttons','boldTitle','minimized']);
 		if (this.buttonBar && !this.buttonBar.children) {
 			this.buttonBar = { children:this.buttonBar };
 		}
@@ -105,7 +141,9 @@ ludo.FramedView = new Class({
 
 		ludo.dom.addClass(this.els.container, 'ludo-framed-view');
 
-		if (this.titleBar)this.getTitleBar().getEl().inject(this.getBody(), 'before');
+		if(this.hasTitleBar()){
+			this.getTitleBar().getEl().inject(this.getBody(), 'before');
+		}
 		ludo.dom.addClass(this.getBody(), 'ludo-framed-view-body');
 
 		if (!this.getParent() && this.isResizable()) {
@@ -184,22 +222,27 @@ ludo.FramedView = new Class({
 	},
 
 	getHeightOfTitleBar:function () {
-		if (!this.titleBar)return 0;
+		if (!this.hasTitleBar())return 0;
 		return this.titleBarObj.getHeight();
+	},
+
+	hasTitleBar:function(){
+		return true;
 	},
 
 	getTitleBar:function(){
 		if (this.titleBarObj === undefined) {
-			this.titleBarObj = this.createDependency('titleBar', {
-				type:'view.TitleBar',
-                buttons : this.titleBarButtons,
-				view:this,
-				listeners:{
-					close:this.close.bind(this),
-					minimize:this.minimize.bind(this),
-					maximize:this.maximize.bind(this),
-					collapse:this.hide.bind(this)
-				}
+
+			if(!this.titleBar)this.titleBar = {};
+			this.titleBar.view = this;
+			this.titleBar.type = 'view.TitleBar';
+			this.titleBarObj = this.createDependency('titleBar', this.titleBar);
+
+			this.titleBarObj.addEvents({
+				close:this.close.bind(this),
+				minimize:this.minimize.bind(this),
+				maximize:this.maximize.bind(this),
+				collapse:this.hide.bind(this)
 			});
 
 			if (this.isMovable() && !this.getParent()) {

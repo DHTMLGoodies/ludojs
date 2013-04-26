@@ -12,7 +12,6 @@ ludo.card.PreviousButton = new Class({
 	Extends:ludo.card.Button,
 	type:'card.PreviousButton',
 	value:'Previous',
-	disabled:true,
 
 	addButtonEvents:function () {
 		this.addEvent('click', this.showPreviousCard.bind(this));

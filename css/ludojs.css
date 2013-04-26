@@ -1,4 +1,4 @@
-/* Generated Wed Apr 24 22:14:55 CEST 2013 */
+/* Generated Fri Apr 26 18:18:52 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -105,7 +105,6 @@ Owner of ludoJS.com
     overflow: hidden;
     position: relative;
     border-bottom: 1px solid;
-    background-image: url('../images/bg-title-bar-normal.png');
 }
 
 .ludo-component-titlebar .ludo-component-buttonbar {
@@ -153,7 +152,7 @@ Owner of ludoJS.com
     position: relative;
     padding-right: 1px;
     padding-top: 2px;
-    padding-bottom: 0px;
+    padding-bottom: 0;
     margin-left: 5px;
     margin-right: 5px;
     height: 24px;
@@ -174,7 +173,7 @@ Owner of ludoJS.com
 .ludo-component-statusbar-icon {
     position: relative;
     left: 2px;
-    top: 0px;
+    top: 0;
     background-repeat: no-repeat;
     background-position: center center;
     height: 100%;
@@ -266,6 +265,21 @@ Owner of ludoJS.com
 
 .ludo-title-bar-button-minimize-over {
     background-image: url('../images/title-bar-btn-minimize-over.png');
+}
+
+.ludo-title-bar-button-minimize {
+    background-image: url('../images/title-bar-btn-minimize.png');
+}
+
+.ludo-title-bar-button-minimize-over {
+    background-image: url('../images/title-bar-btn-minimize-over.png');
+}
+.ludo-title-bar-button-reload {
+    background-image: url('../images/reload.png');
+}
+
+.ludo-title-bar-button-reload-over {
+    background-image: url('../images/reload-over.png');
 }
 
 .ludo-title-bar-button-maximize {
@@ -379,7 +393,7 @@ div.ludo-content-child-of-fullscreen {
     position: absolute;
     border: 1px solid;
     cursor: pointer;
-    margin: 0px;
+    margin: 0;
 }
 
 .ludo-view-collapsed-cols {
@@ -421,7 +435,7 @@ div.ludo-window, div.ludo-framed-view-shim, div.ludo-dashboard-insertion-marker{
     border-radius:3px;
 }
 div.ludo-FramedView {
-    border-radius: 0px;
+    border-radius: 0;
 }
 
 

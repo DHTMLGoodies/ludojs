@@ -1017,6 +1017,10 @@ ludo.View = new Class({
 	 * Add a child component. The method will returned the created component.
 	 * @method addChild
 	 * @param {Object|View} child. A Child object can be a View or a JSON config object for a new View.
+	 * @param {String} insertAt
+	 * @optional
+	 * @param {String} pos
+	 * @optional
 	 * @return {View} child
 	 */
 	addChild:function (child, insertAt, pos) {
