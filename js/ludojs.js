@@ -1,4 +1,4 @@
-/* Generated Fri Apr 26 18:18:52 CEST 2013 */
+/* Generated Fri Apr 26 18:30:23 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -12925,11 +12925,16 @@ ludo.FramedView = new Class({
 		 ludo.view.registerTitleBarButton('minimize',{
 			toggle:['minimize','maximize']
 		 });
-
-
-
 	 */
 	titleBar:undefined,
+
+	/**
+	 * Don't show the title bar
+	 * @config {Boolean} titleBarHidden
+	 * @default false
+	 */
+	titleBarHidden:false,
+
 	/**
 	 * Bold title bar. True to give the component a window type title bar, false to give it a smaller title bar
 	 * @attribute boldTitle
@@ -12969,7 +12974,7 @@ ludo.FramedView = new Class({
             }
         }
 
-        this.setConfigParams(config,['buttonBar', 'hasMenu','menuConfig','icon',,'titleBar','buttons','boldTitle','minimized']);
+        this.setConfigParams(config,['buttonBar', 'hasMenu','menuConfig','icon','titleBarHidden','titleBar','buttons','boldTitle','minimized']);
 		if (this.buttonBar && !this.buttonBar.children) {
 			this.buttonBar = { children:this.buttonBar };
 		}
@@ -13066,7 +13071,7 @@ ludo.FramedView = new Class({
 	},
 
 	hasTitleBar:function(){
-		return true;
+		return !this.titleBarHidden;
 	},
 
 	getTitleBar:function(){
