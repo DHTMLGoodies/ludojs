@@ -83,7 +83,7 @@ var w = new ludo.Window({
                     weight:1,
                     containerCss:{
                         'border':0,
-                        'border-right':'1px solid #C0C0C0',
+                        'border-right':'0',
                         'border-top':'1px solid #C0C0C0',
                         'border-bottom':'1px solid #C0C0C0'
                     },
