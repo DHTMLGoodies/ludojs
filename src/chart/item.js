@@ -26,7 +26,7 @@ ludo.chart.Item = new Class({
                     'stroke-location':'inside',
                     'fill-opacity':.7,
                     'fill':'#fff',
-                    'stroke':'#f00'
+                    'stroke':'#008'
                 });
             this.chart.getCanvas().adopt(p);
             this.tooltip = new ludo.chart.Tooltip(this, p);

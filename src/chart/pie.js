@@ -14,7 +14,7 @@ ludo.chart.Pie = new Class({
     renderChart:function () {
         var d = this.data = this.getChartData();
         var sum = this.getSum(d);
-        var origo = this.getCanvas().getOrigin();
+        var origo = this.getChartOrigion();
         var radius = Math.min(origo.x, origo.y) * .8;
         var deg = this.startDegree;
 
@@ -62,7 +62,7 @@ ludo.chart.Pie = new Class({
     },
 
     getColor:function(index){
-        return this.color().offsetHue(this.startColor, index * 30);
+        return this.color().offsetHue(this.startColor, index * (360 / this.getChartData().length));
     },
 
     getSum:function (chartData) {

@@ -50,6 +50,11 @@ ludo.chart.Base = new Class({
             this.colorHandler = new ludo.color.Color();
         }
         return this.colorHandler;
+    },
+
+    getChartOrigion:function(){
+        // TODO return center position of chart area, i.e. area excluding label area
+        return this.getCanvas().getOrigin();
     }
 
 });
