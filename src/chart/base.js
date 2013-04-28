@@ -6,7 +6,7 @@ ludo.chart.Base = new Class({
 
     ludoConfig:function(config){
         this.parent(config);
-        this.setConfigParams(config, ['dataProvider','data','tooltip']);
+        this.setConfigParams(config, ['dataProvider','data','tooltip','animate']);
         if(!this.css){
             this.css = { 'background-color' : '#fff' };
         }

@@ -32,6 +32,26 @@ $skin = isset($skin) ? $skin : 'light-gray';
         };
     </script>
     <script type="text/javascript">
+
+        ludo.SourceCodePreview = new Class({
+            Extends: ludo.View,
+            title : 'Source code',
+            bodyCls : 'source-code-preview',
+            css:{
+                'background-color' : '#fff',
+                'padding' : 3
+            },
+            ludoRendered:function(){
+                var el = document.getElement('.source-code');
+                if(el){
+                    this.getBody().innerHTML = el.innerHTML;
+                    new ludo.CodeHighlight(this.getBody());
+                }
+            }
+
+
+        });
+
         var hostname = location.hostname.toLowerCase();
         if (hostname.indexOf('ludojs.com') >= 0) {
             var _gaq = _gaq || [];

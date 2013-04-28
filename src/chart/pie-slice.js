@@ -13,9 +13,7 @@ ludo.chart.PieSlice = new Class({
 
     render:function (config) {
         this.set('d', this.getPath(config));
-
         this.renderingData = config;
-
         if (config.offsetFromOrigo) {
             var c = this.getOffsetFromOrigo(config.offsetFromOrigo);
             this.translate(x, y);
@@ -54,14 +52,20 @@ ludo.chart.PieSlice = new Class({
         var coords = this.getOffsetFromOrigo(7);
 
         if (this.highlighted) {
-        this.engine().effect().flyBack(this.getEl());
+            this.engine().effect().flyBack(this.getEl());
         } else {
             if (this.highlighted) {
                 coords.x *= -1;
                 coords.y *= -1;
             }
             this.engine().effect().fly(this.getEl(), coords.x, coords.y);
+
+            this.fireEvent('highlight', this);
         }
         this.highlighted = !this.highlighted;
+    },
+
+    isHighlighted:function(){
+        return this.highlighted;
     }
 });

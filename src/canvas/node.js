@@ -84,8 +84,9 @@ ludo.canvas.Node = new Class({
 			case 'mouseleave':
 				ludo.canvasEventManager.addMouseLeave(this, fn);
 				break;
-			default:
+            default:
 				this._addEvent(event, this.getDOMEventFn(event, fn), this.el);
+                this.parent(event, fn);
 		}
 	},
 	/**

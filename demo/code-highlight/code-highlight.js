@@ -279,6 +279,7 @@ ludo.CodeHighlight = new Class({
     }
 });
 
+/**
 window.addEvent('domready', function () {
     var els = document.body.getElements('.source-code');
 
@@ -291,4 +292,4 @@ window.addEvent('domready', function () {
     for (i = 0; i < els.length; i++) {
         new ludo.CodeHighlight(els[i]);
     }
-});
+});*/

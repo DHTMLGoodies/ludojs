@@ -18,7 +18,7 @@ require_once("../includes/demo-header.php");
 <script type="text/javascript" src="../../src/chart/tooltip.js"></script>
 <script type="text/javascript" src="../../src/chart/pie-slice.js"></script>
 <script type="text/javascript" src="../../src/chart/data-provider.js"></script>
-<script type="text/javascript">
+<script type="text/javascript" class="source-code">
 
     var provider = new ludo.chart.DataProvider({
 
@@ -31,14 +31,18 @@ require_once("../includes/demo-header.php");
             width:500,
             height:400,
             left:20,
-            top:20
+            top:20,
+            type:'tab'
         },
         css:{
-            'background-color' : '#fff'
+            'background-color' : '#fff',
+            'border-top' : 0
         },
         children:[
             {
+                title : 'Chart',
                 type:'chart.Pie',
+                animate:true,
                 tooltip:{
                     css:{
                         'fill' : '#f2f2f2',
@@ -51,6 +55,9 @@ require_once("../includes/demo-header.php");
                     { label : 'Frode', value : 37 },
                     { label : 'Birgitte', value : 99 }
                 ]
+            },
+            {
+                type : 'SourceCodePreview'
             }
         ]
     });
