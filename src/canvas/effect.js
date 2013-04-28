@@ -57,6 +57,5 @@ ludo.canvas.Effect = new Class({
             steps: steps,
             count : countSteps
         }
-
     }
 });

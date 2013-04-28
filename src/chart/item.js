@@ -21,13 +21,7 @@ ludo.chart.Item = new Class({
         if (this.tooltip === undefined) {
             // TODO configurable Tooltip styles or stylesheet
             // TODO possible to turn tooltip on/off
-            var p = new ludo.canvas.Paint(
-                {
-                    'stroke-location':'inside',
-                    'fill-opacity':.7,
-                    'fill':'#fff',
-                    'stroke':'#008'
-                });
+            var p = new ludo.canvas.Paint(this.chart.getTooltipStyles());
             this.chart.getCanvas().adopt(p);
             this.tooltip = new ludo.chart.Tooltip(this, p);
             this.tooltip.showTooltip(e);

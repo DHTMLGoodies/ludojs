@@ -39,6 +39,12 @@ require_once("../includes/demo-header.php");
         children:[
             {
                 type:'chart.Pie',
+                tooltip:{
+                    css:{
+                        'fill' : '#f2f2f2',
+                        'stroke' : 'red'
+                    }
+                },
                 data : [
                     { label : 'Katrine', value : 100, color: '#000088' },
                     { label : 'Alf Magne', value : 245 },

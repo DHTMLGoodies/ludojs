@@ -6,7 +6,7 @@ ludo.chart.Base = new Class({
 
     ludoConfig:function(config){
         this.parent(config);
-        this.setConfigParams(config, ['dataProvider','data']);
+        this.setConfigParams(config, ['dataProvider','data','tooltip']);
         if(!this.css){
             this.css = { 'background-color' : '#fff' };
         }
@@ -55,6 +55,16 @@ ludo.chart.Base = new Class({
     getChartOrigion:function(){
         // TODO return center position of chart area, i.e. area excluding label area
         return this.getCanvas().getOrigin();
+    },
+
+    getTooltipStyles:function(){
+        var s = this.tooltip && this.tooltip.css ? this.tooltip.css : {};
+        return Object.merge({
+            'stroke-location':'inside',
+            'fill-opacity':.7,
+            'fill':'#fff',
+            'stroke':'#008'
+        }, s);
     }
 
 });
