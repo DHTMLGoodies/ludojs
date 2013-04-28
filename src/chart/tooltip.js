@@ -4,6 +4,7 @@ ludo.chart.Tooltip = new Class({
     item:undefined,
 
     initialize:function (item, paint) {
+        // TODO dynamic sizing
         this.parent({
             x:0, y:0, width:130, height:50, rx:5, ry:5, "class":paint
         }, "Label");
