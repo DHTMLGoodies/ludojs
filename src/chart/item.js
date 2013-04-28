@@ -20,6 +20,7 @@ ludo.chart.Item = new Class({
     createTooltip:function (e) {
         if (this.tooltip === undefined) {
             // TODO configurable Tooltip styles or stylesheet
+            // TODO possible to turn tooltip on/off
             var p = new ludo.canvas.Paint(
                 {
                     'stroke-location':'inside',
