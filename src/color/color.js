@@ -213,6 +213,21 @@ ludo.color.Color = new Class({
         }
 
         return { r:r * 255, g:g * 255, b:b * 255 }
+    },
+
+    /**
+     * Return rgb code after hue has been adjusted by a number of degrees
+     * @method offsetHue
+     * @param color
+     * @param offset
+     * @return {String}
+     */
+    offsetHue:function(color, offset){
+        var hsv = this.toHSV(color);
+        hsv.h += offset;
+        if(hsv.h >= 360) hsv.h -= 360;
+        return this.rgbCode(hsv);
+
     }
 });
 

@@ -1,3 +1,8 @@
+/**
+ * Returns a path SVG element which can be adopted to a canvas.
+ * @namespace canvas
+ * @class Path
+ */
 ludo.canvas.Path = new Class({
 	Extends:ludo.canvas.NamedNode,
 	tagName:'path',
@@ -17,6 +22,12 @@ ludo.canvas.Path = new Class({
 	getValidPointString:function (points) {
 		return points.replace(/([A-Z])/g, '$1 ').trim().replace(/,/g, ' ').replace(/\s+/g, ' ');
 	},
+
+    setPath:function(path){
+        this.pointString = this.getValidPointString(path);
+        this.pointArray = undefined;
+        this.set('d', this.pointString);
+    },
 
 	getPoint:function (index) {
 		if (this.pointArray === undefined)this.buildPointArray();

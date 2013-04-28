@@ -42,7 +42,6 @@ google_ad_height = 280;
     var canvas = win.getCanvas();
 
     var paint = new ludo.canvas.Paint({
-
             'fill':'#999',
             'stroke':'#DEF',
             'stroke-width':'5',

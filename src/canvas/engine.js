@@ -60,11 +60,11 @@ ludo.canvas.Engine = new Class({
 	},
 
 	show:function (el) {
-		el.setAttribute('display', '');
+        this.setStyle(el, 'display','');
 	},
 
 	hide:function (el) {
-		el.setAttribute('display', 'none');
+        this.setStyle(el, 'display','none');
 	},
 
 	moveTo:function (el, x, y) {
@@ -347,7 +347,14 @@ ludo.canvas.Engine = new Class({
 			el.setAttribute('id', String.uniqueID());
 		}
 		return el.getAttribute('id');
-	}
+	},
+
+    effect:function(){
+        if(ludo.canvas.effectObject === undefined){
+            ludo.canvas.effectObject = new ludo.canvas.Effect();
+        }
+        return ludo.canvas.effectObject;
+    }
 
 });
 ludo.canvasEngine = new ludo.canvas.Engine();

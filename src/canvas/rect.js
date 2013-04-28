@@ -9,8 +9,7 @@
  @param {canvas.NodeConfig} config
  @example
 	 var rect = new ludo.canvas.Rect(
- 		{ x:100,y:100, width:200,height:100 },
-	 	{ paint:paintObject }
+ 		{ x:100,y:100, width:200,height:100, "class":paintObject }
  	 );
  */
 ludo.canvas.Rect = new Class({

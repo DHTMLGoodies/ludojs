@@ -1,4 +1,4 @@
-ludo.chart.DataSource = new Class({
+ludo.chart.DataProvider = new Class({
     Extends: ludo.Core,
 
 

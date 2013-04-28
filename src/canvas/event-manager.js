@@ -1,7 +1,7 @@
 ludo.canvas.EventManager = new Class({
 	nodes:{},
 	currentNodeId:undefined,
-
+    currentNodeFn:undefined,
 	addMouseEnter:function (node, fn) {
 		node.addEvent('mouseover', this.getMouseOverFn(fn));
 		node.addEvent('mouseout', this.clearCurrent.bind(this, node));
@@ -18,8 +18,9 @@ ludo.canvas.EventManager = new Class({
 
 	getMouseOverFn:function (fn) {
 		return function (e, node) {
-			if(fn && !this.isInCurrentBranch(node)){
+            if(this.okToEnterAndLeave(fn, node)){
 				this.currentNodeId = node.getEl().id;
+                this.currentNodeFn = fn;
 				fn.call(node, e, node);
 			}
 		}.bind(this)
@@ -27,12 +28,17 @@ ludo.canvas.EventManager = new Class({
 
 	getMouseOutFn:function (fn) {
 		return function (e, node) {
-			if(fn && !this.isInCurrentBranch(node)){
+            if(this.okToEnterAndLeave(fn, node)){
 				this.currentNodeId = undefined;
+                this.currentNodeFn = undefined;
 				fn.call(node, e, node);
 			}
 		}.bind(this)
 	},
+
+    okToEnterAndLeave:function(fn, node){
+        return fn && (!this.isInCurrentBranch(node) || fn != this.currentNodeFn);
+    },
 
 	isInCurrentBranch:function(leaf){
 		if(!this.currentNodeId)return false;

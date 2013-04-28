@@ -1,4 +1,4 @@
-/* Generated Sat Apr 27 15:00:24 CEST 2013 */
+/* Generated Sun Apr 28 4:53:02 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -1826,11 +1826,11 @@ ludo.canvas.Engine = new Class({
 	},
 
 	show:function (el) {
-		el.setAttribute('display', '');
+        this.setStyle(el, 'display','');
 	},
 
 	hide:function (el) {
-		el.setAttribute('display', 'none');
+        this.setStyle(el, 'display','none');
 	},
 
 	moveTo:function (el, x, y) {
@@ -2113,7 +2113,14 @@ ludo.canvas.Engine = new Class({
 			el.setAttribute('id', String.uniqueID());
 		}
 		return el.getAttribute('id');
-	}
+	},
+
+    effect:function(){
+        if(ludo.canvas.effectObject === undefined){
+            ludo.canvas.effectObject = new ludo.canvas.Effect();
+        }
+        return ludo.canvas.effectObject;
+    }
 
 });
 ludo.canvasEngine = new ludo.canvas.Engine();/* ../ludojs/src/canvas/node.js */
@@ -2191,6 +2198,10 @@ ludo.canvas.Node = new Class({
 		return this.el;
 	},
 
+    engine:function(){
+        return ludo.canvasEngine;
+    },
+
 	addEvent:function (event, fn) {
 		switch (event.toLowerCase()) {
 			case 'mouseenter':
@@ -2266,6 +2277,14 @@ ludo.canvas.Node = new Class({
 	getParent:function () {
 		return this.parentNode;
 	},
+
+    show:function(){
+        ludo.canvasEngine.show(this.el);
+    },
+
+    hide:function(){
+        ludo.canvasEngine.hide(this.el);
+    },
 
 	set:function (key, value) {
 		ludo.canvasEngine.set(this.el, key, value);
@@ -2426,7 +2445,28 @@ ludo.canvas.Node = new Class({
 	},
 	setTransformMatrix:function (el, a, b, c, d, e, f) {
 		this.setTransformMatrix(this.el, a, b, c, d, e, f);
-	}
+	},
+
+    getPointAtDegreeOffset:function(from, degrees, size){
+        var radians = this.toRadians(degrees);
+        var x = Math.cos(radians);
+        var y = Math.sin(radians);
+
+        return {
+            x : from.x + (size * x),
+            y : from.y + (size * y)
+        }
+    },
+
+    /**
+     * Degrees to radians method
+     * @method toRad
+     * @param degrees
+     * @return {Number}
+     */
+    toRadians:function(degrees){
+        return degrees * Math.PI / 180;
+    }
 });
 
 
@@ -2623,13 +2663,36 @@ ludo.canvas.Canvas = new Class({
 		this.fireEvent('resize', size);
 	},
 
+    /**
+     * Returns height of canvas
+     * @method getHeight
+     * @return {Number} height
+     */
 	getHeight:function(){
 		return this.height;
 	},
 
+    /**
+     * Returns width of canvas
+     * @method getWidth
+     * @return {Number} width
+     */
 	getWidth:function(){
 		return this.width;
 	},
+
+    /**
+     * Returns center point of canvas as an object with x and y coordinates
+     * @method getOrigo
+     * @return {Object}
+     */
+    getOrigin:function(){
+
+        return {
+            x : this.width / 2,
+            y : this.height / 2
+        };
+    },
 
 	/**
 	 * Update view box size
@@ -6272,6 +6335,21 @@ ludo.color.Color = new Class({
         }
 
         return { r:r * 255, g:g * 255, b:b * 255 }
+    },
+
+    /**
+     * Return rgb code after hue has been adjusted by a number of degrees
+     * @method offsetHue
+     * @param color
+     * @param offset
+     * @return {String}
+     */
+    offsetHue:function(color, offset){
+        var hsv = this.toHSV(color);
+        hsv.h += offset;
+        if(hsv.h >= 360) hsv.h -= 360;
+        return this.rgbCode(hsv);
+
     }
 });
 
@@ -12671,7 +12749,6 @@ ludo.view.TitleBar = new Class({
     },
 
     createEdge:function (pos, parent) {
-
         var el = ludo.dom.create({
             cls:'ludo-title-bar-button-container-' + pos + '-edge',
             renderTo:parent
@@ -28683,6 +28760,7 @@ ludo.canvas.EventManager = new Class({
 	getMouseOverFn:function (fn) {
 		return function (e, node) {
 			if(fn && !this.isInCurrentBranch(node)){
+                console.log('call');
 				this.currentNodeId = node.getEl().id;
 				fn.call(node, e, node);
 			}
@@ -29183,6 +29261,11 @@ ludo.canvas.Ellipse = new Class({
 		}
 	}
 });/* ../ludojs/src/canvas/path.js */
+/**
+ * Returns a path SVG element which can be adopted to a canvas.
+ * @namespace canvas
+ * @class Path
+ */
 ludo.canvas.Path = new Class({
 	Extends:ludo.canvas.NamedNode,
 	tagName:'path',
@@ -29202,6 +29285,12 @@ ludo.canvas.Path = new Class({
 	getValidPointString:function (points) {
 		return points.replace(/([A-Z])/g, '$1 ').trim().replace(/,/g, ' ').replace(/\s+/g, ' ');
 	},
+
+    setPath:function(path){
+        this.pointString = this.getValidPointString(path);
+        this.pointArray = undefined;
+        this.set('d', this.pointString);
+    },
 
 	getPoint:function (index) {
 		if (this.pointArray === undefined)this.buildPointArray();

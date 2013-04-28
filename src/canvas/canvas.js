@@ -76,13 +76,36 @@ ludo.canvas.Canvas = new Class({
 		this.fireEvent('resize', size);
 	},
 
+    /**
+     * Returns height of canvas
+     * @method getHeight
+     * @return {Number} height
+     */
 	getHeight:function(){
 		return this.height;
 	},
 
+    /**
+     * Returns width of canvas
+     * @method getWidth
+     * @return {Number} width
+     */
 	getWidth:function(){
 		return this.width;
 	},
+
+    /**
+     * Returns center point of canvas as an object with x and y coordinates
+     * @method getOrigo
+     * @return {Object}
+     */
+    getOrigin:function(){
+
+        return {
+            x : this.width / 2,
+            y : this.height / 2
+        };
+    },
 
 	/**
 	 * Update view box size

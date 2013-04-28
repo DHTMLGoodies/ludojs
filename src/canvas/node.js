@@ -72,6 +72,10 @@ ludo.canvas.Node = new Class({
 		return this.el;
 	},
 
+    engine:function(){
+        return ludo.canvasEngine;
+    },
+
 	addEvent:function (event, fn) {
 		switch (event.toLowerCase()) {
 			case 'mouseenter':
@@ -147,6 +151,14 @@ ludo.canvas.Node = new Class({
 	getParent:function () {
 		return this.parentNode;
 	},
+
+    show:function(){
+        ludo.canvasEngine.show(this.el);
+    },
+
+    hide:function(){
+        ludo.canvasEngine.hide(this.el);
+    },
 
 	set:function (key, value) {
 		ludo.canvasEngine.set(this.el, key, value);
@@ -307,7 +319,28 @@ ludo.canvas.Node = new Class({
 	},
 	setTransformMatrix:function (el, a, b, c, d, e, f) {
 		this.setTransformMatrix(this.el, a, b, c, d, e, f);
-	}
+	},
+
+    getPointAtDegreeOffset:function(from, degrees, size){
+        var radians = this.toRadians(degrees);
+        var x = Math.cos(radians);
+        var y = Math.sin(radians);
+
+        return {
+            x : from.x + (size * x),
+            y : from.y + (size * y)
+        }
+    },
+
+    /**
+     * Degrees to radians method
+     * @method toRad
+     * @param degrees
+     * @return {Number}
+     */
+    toRadians:function(degrees){
+        return degrees * Math.PI / 180;
+    }
 });
 
 
