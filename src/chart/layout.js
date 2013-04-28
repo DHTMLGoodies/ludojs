@@ -6,5 +6,4 @@
  */
 ludo.chart.Layout = new Class({
     Extends: ludo.layout.Relative
-
 });

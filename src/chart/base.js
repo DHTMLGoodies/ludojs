@@ -8,6 +8,7 @@ ludo.chart.Base = new Class({
     Extends: ludo.View,
 
     // TODO implement layouts for charts (position of labels, chart etc).
+    // TODO items in a chart should be <g> elements
     dataProvider:undefined,
     data:undefined,
 
