@@ -1,4 +1,4 @@
-/* Generated Sun Apr 28 23:47:00 CEST 2013 */
+/* Generated Mon Apr 29 1:39:28 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -6136,9 +6136,17 @@ ludo.chart.DataProvider = new Class({
 
     }
 });/* ../ludojs/src/chart/base.js */
+/**
+ * Base class for charts
+ * @namespace chart
+ * @class Base
+ * @type {Class}
+ */
 ludo.chart.Base = new Class({
     Extends: ludo.View,
 
+    // TODO implement layouts for charts (position of labels, chart etc).
+    // TODO items in a chart should be <g> elements
     dataProvider:undefined,
     data:undefined,
 
@@ -6466,16 +6474,16 @@ ludo.chart.PieSlice = new Class({
     },
 
     highlight:function () {
-        var coords = this.getOffsetFromOrigo(7);
+        var coords = this.getOffsetFromOrigo(10);
 
         if (this.highlighted) {
-            this.engine().effect().flyBack(this.getEl());
+            this.engine().effect().flyBack(this.getEl(),.1);
         } else {
             if (this.highlighted) {
                 coords.x *= -1;
                 coords.y *= -1;
             }
-            this.engine().effect().fly(this.getEl(), coords.x, coords.y);
+            this.engine().effect().fly(this.getEl(), coords.x, coords.y,.1);
 
             this.fireEvent('highlight', this);
         }
@@ -6687,7 +6695,7 @@ ludo.chart.Pie = new Class({
 
 
         this.origo = this.getChartOrigion();
-        this.currentRadius = Math.min(this.origo.x, this.origo.y) * .8;
+        this.currentRadius = Math.min(this.origo.x, this.origo.y) * .9;
 
         if(this.animate && !skipAnimation){
             this.animateSlices();
@@ -6811,6 +6819,7 @@ ludo.chart.Pie = new Class({
             this.styles[index] = new ludo.canvas.Paint({
                 'stroke-location':'inside',
                 'fill':color,
+                'stroke-linejoin' : 'round',
                 'stroke':'#fff',
                 'cursor':'pointer'
             });
@@ -16044,7 +16053,7 @@ ludo.dataSource.Collection = new Class({
 		if(parent)record.parentUid = parent.uid;
 		var pk = this.getPrimaryKeyIndexFor(record);
 		if(pk)this.index[pk] = record;
-		record.uid = ['uid_', String.uniqueID()].join('');
+		if(!record.uid)record.uid = ['uid_', String.uniqueID()].join('');
 		this.index[record.uid] = record;
 	},
 
@@ -17045,16 +17054,33 @@ ludo.grid.GridHeader = new Class({
 			});
 		}
 
-        ret.push({
-            html : 'Sort grid ',
-            children:[{
-                html: 'Ascending'
-            },{
-                html : 'Descending'
-            }]
-        });
+        ret.push(
+            {
+                html: ludo.language.get('Sort ascending'),
+                listeners:{
+                    click:function(){
+                        this.sort('ascending');
+                    }.bind(this)
+                }
+            }
+        );
+        ret.push(
+            {
+                html: ludo.language.get('Sort descending'),
+                listeners:{
+                    click:function(){
+                        this.sort('descending');
+                    }.bind(this)
+                }
+            }
+        );
 		return ret;
 	},
+
+    sort:function(method){
+        this.grid.getDataSource().by(this.currentColumn)[method]().sort();
+        ludo.get(this.getMenuButtonId(this.currentColumn)).hideMenu();
+    },
 
 	getColumnToggleFn:function (column, forColumn) {
 		return function (checked) {
@@ -17075,10 +17101,14 @@ ludo.grid.GridHeader = new Class({
 		return this.getMenuId() + '-' + column;
 	},
 
+    currentColumn:undefined,
 
 	mouseoverHeader:function (e) {
 		var col = this.getColByDOM(e.target);
+
 		if (!this.grid.colResizeHandler.isActive() && !this.grid.isColumnDragActive() && this.columnManager.isSortable(col)) {
+
+            this.currentColumn = col;
 			this.cells[col].addClass('ludo-grid-header-cell-over');
 		}
 	},

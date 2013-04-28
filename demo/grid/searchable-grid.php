@@ -5,6 +5,8 @@ require_once("../includes/demo-header.php");
 ?>
 
 <body>
+<script type="text/javascript" src="../../src/grid/grid.js"></script>
+<script type="text/javascript" src="../../src/data-source/collection.js"></script>
 <style type="text/css">
     .ludo-grid-movable-shim {
         border: 1px solid #000;
@@ -83,9 +85,9 @@ var w = new ludo.Window({
                     weight:1,
                     containerCss:{
                         'border':0,
-                        'border-right':'0',
-                        'border-top':'1px solid #C0C0C0',
-                        'border-bottom':'1px solid #C0C0C0'
+                        'border-right':'1px solid #d7d7d7',
+                        'border-top':'1px solid #d7d7d7',
+                        'border-bottom':'1px solid #d7d7d7'
                     },
                     stateful:false,
                     resizable:false,
@@ -159,7 +161,7 @@ var w = new ludo.Window({
         {
 
             id:'infoPanel',
-            stateful:true,
+            width:250,
             layout:{
                 width:250,
                 resizable:true,
@@ -172,8 +174,8 @@ var w = new ludo.Window({
             title:'Edit record',
             containerCss:{
                 'border':0,
-                'border-left':'1px solid #C0C0C0',
-                'border-bottom':'1px solid #C0C0C0'
+                'border-left':'1px solid #d7d7d7',
+                'border-bottom':'1px solid #d7d7d7'
             },
             model:{
                 id:'myModel',

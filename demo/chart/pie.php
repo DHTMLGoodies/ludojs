@@ -41,7 +41,7 @@ require_once("../includes/demo-header.php");
                 tooltip:{
                     css:{
                         'fill' : '#fff',
-                        'stroke' : '#d7d7d7',
+                        'stroke' : '#c6c6c6',
                         'fill-opacity' :.9
                     }
                 },

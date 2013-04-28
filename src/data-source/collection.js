@@ -857,7 +857,7 @@ ludo.dataSource.Collection = new Class({
 		if(parent)record.parentUid = parent.uid;
 		var pk = this.getPrimaryKeyIndexFor(record);
 		if(pk)this.index[pk] = record;
-		record.uid = ['uid_', String.uniqueID()].join('');
+		if(!record.uid)record.uid = ['uid_', String.uniqueID()].join('');
 		this.index[record.uid] = record;
 	},
 

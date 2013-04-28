@@ -150,6 +150,7 @@ ludo.chart.Pie = new Class({
             this.styles[index] = new ludo.canvas.Paint({
                 'stroke-location':'inside',
                 'fill':color,
+                'stroke-linejoin' : 'round',
                 'stroke':'#fff',
                 'cursor':'pointer'
             });

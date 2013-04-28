@@ -43,16 +43,16 @@ ludo.chart.PieSlice = new Class({
     },
 
     highlight:function () {
-        var coords = this.getOffsetFromOrigo(7);
+        var coords = this.getOffsetFromOrigo(10);
 
         if (this.highlighted) {
-            this.engine().effect().flyBack(this.getEl());
+            this.engine().effect().flyBack(this.getEl(),.1);
         } else {
             if (this.highlighted) {
                 coords.x *= -1;
                 coords.y *= -1;
             }
-            this.engine().effect().fly(this.getEl(), coords.x, coords.y);
+            this.engine().effect().fly(this.getEl(), coords.x, coords.y,.1);
 
             this.fireEvent('highlight', this);
         }
