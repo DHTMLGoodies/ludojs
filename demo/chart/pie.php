@@ -20,11 +20,6 @@ require_once("../includes/demo-header.php");
 <script type="text/javascript" src="../../src/chart/data-provider.js"></script>
 <script type="text/javascript" class="source-code">
 
-    var provider = new ludo.chart.DataProvider({
-
-
-    });
-
     var w = new ludo.Window({
         title : 'Pie chart - development playground',
         layout:{
@@ -54,7 +49,10 @@ require_once("../includes/demo-header.php");
                     { label : 'John', value : 100, color: '#000088' },
                     { label : 'Jane', value : 245 },
                     { label : 'Martin', value : 37 },
-                    { label : 'Mary', value : 99 }
+                    { label : 'Mary', value : 99 },
+                    { label : 'Johnny', value : 127 },
+                    { label : 'Catherine', value : 55 },
+                    { label : 'Tommy', value : 18 }
                 ]
             },
             {

@@ -1,6 +1,13 @@
+/**
+ * Base class for charts
+ * @namespace chart
+ * @class Base
+ * @type {Class}
+ */
 ludo.chart.Base = new Class({
     Extends: ludo.View,
 
+    // TODO implement layouts for charts (position of labels, chart etc).
     dataProvider:undefined,
     data:undefined,
 
