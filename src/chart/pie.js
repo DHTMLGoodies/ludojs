@@ -21,7 +21,10 @@ ludo.chart.Pie = new Class({
     },
 
     renderChart:function (skipAnimation) {
-        this.data = this.getChartData();
+
+        this.parent();
+
+
         this.origo = this.getChartOrigion();
         this.currentRadius = Math.min(this.origo.x, this.origo.y) * .8;
 
@@ -42,8 +45,7 @@ ludo.chart.Pie = new Class({
                 radius:this.currentRadius,
                 startDegree:deg,
                 degrees:sliceDegrees,
-                origo:this.origo,
-                offsetFromOrigo:0
+                origo:this.origo
             });
             deg += sliceDegrees;
         }
@@ -73,7 +75,7 @@ ludo.chart.Pie = new Class({
     },
 
     getAnimationSteps:function () {
-        var sum = this.getSum(this.data);
+        var sum = this.getSum();
         var ret = {
             count:this.animation.fps * this.animation.duration,
             slices:[]
@@ -158,13 +160,5 @@ ludo.chart.Pie = new Class({
 
     getColor:function (index) {
         return this.color().offsetHue(this.startColor, index * (360 / this.getChartData().length));
-    },
-
-    getSum:function (chartData) {
-        var sum = 0;
-        for (var i = 0; i < chartData.length; i++) {
-            sum += chartData[i].value;
-        }
-        return sum;
     }
 });

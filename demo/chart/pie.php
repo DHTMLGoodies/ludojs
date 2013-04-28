@@ -45,8 +45,9 @@ require_once("../includes/demo-header.php");
                 animate:true,
                 tooltip:{
                     css:{
-                        'fill' : '#f2f2f2',
-                        'stroke' : 'red'
+                        'fill' : '#fff',
+                        'stroke' : '#d7d7d7',
+                        'fill-opacity' :.9
                     }
                 },
                 data : [
@@ -61,8 +62,6 @@ require_once("../includes/demo-header.php");
             }
         ]
     });
-
-
 </script>
 </body>
 </html>

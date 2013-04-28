@@ -1,4 +1,4 @@
-/* Generated Sun Apr 28 21:27:18 CEST 2013 */
+/* Generated Sun Apr 28 23:47:00 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -5104,14 +5104,16 @@ ludo.View = new Class({
 		if (this.ludoDB) {
 			this.ludoDB.type = 'ludoDB.Factory';
 			var f = this.createDependency('ludoDB', new ludo.ludoDB.Factory(this.ludoDB));
-
 			var initialHidden = this.hidden;
 			f.addEvent('load', function (children) {
-				this.unRenderedChildren = children.children;
-				this.hidden = initialHidden;
-				if (!this.hidden) {
-					this.show();
-				}
+                if(!this.hidden){
+                    this.addChildren(children.children);
+                }else{
+                    this.unRenderedChildren = children.children;
+                    this.hidden = initialHidden;
+                    this.show();
+                }
+
 			}.bind(this));
 			this.hidden = true;
 			f.load();
@@ -6150,7 +6152,8 @@ ludo.chart.Base = new Class({
 
     ludoRendered:function(){
         this.parent();
-        this.renderChart.delay(100, this);
+        this.renderLabels.delay(30, this);
+        this.renderChart.delay(30, this);
     },
 
     getCanvas:function(){
@@ -6165,8 +6168,12 @@ ludo.chart.Base = new Class({
         this.updateChart();
     },
 
-    renderChart:function(){
+    renderLabels:function(){
 
+    },
+
+    renderChart:function(){
+        this.data = this.getChartData();
     },
 
     updateChart:function(){
@@ -6201,6 +6208,18 @@ ludo.chart.Base = new Class({
             'fill':'#fff',
             'stroke':'#008'
         }, s);
+    },
+
+    getSum:function () {
+        var sum = 0;
+        for (var i = 0; i < this.data.length; i++) {
+            sum += this.data[i].value;
+        }
+        return sum;
+    },
+
+    getPercent:function(item){
+        return item.value / this.getSum() * 100;
     }
 
 });/* ../ludojs/src/canvas/paint.js */
@@ -6418,18 +6437,12 @@ ludo.chart.PieSlice = new Class({
     render:function (config) {
         this.set('d', this.getPath(config));
         this.renderingData = config;
-        if (config.offsetFromOrigo) {
-            var c = this.getOffsetFromOrigo(config.offsetFromOrigo);
-            this.translate(x, y);
-        }
     },
 
     getOffsetFromOrigo:function (offset) {
         var centerRadians = this.toRadians(this.renderingData.startDegree + (this.renderingData.degrees / 2));
-
         var x = Math.cos(centerRadians) * offset;
         var y = Math.sin(centerRadians) * offset;
-
         return { x:x, y:y}
     },
 
@@ -6669,7 +6682,10 @@ ludo.chart.Pie = new Class({
     },
 
     renderChart:function (skipAnimation) {
-        this.data = this.getChartData();
+
+        this.parent();
+
+
         this.origo = this.getChartOrigion();
         this.currentRadius = Math.min(this.origo.x, this.origo.y) * .8;
 
@@ -6690,8 +6706,7 @@ ludo.chart.Pie = new Class({
                 radius:this.currentRadius,
                 startDegree:deg,
                 degrees:sliceDegrees,
-                origo:this.origo,
-                offsetFromOrigo:0
+                origo:this.origo
             });
             deg += sliceDegrees;
         }
@@ -6721,7 +6736,7 @@ ludo.chart.Pie = new Class({
     },
 
     getAnimationSteps:function () {
-        var sum = this.getSum(this.data);
+        var sum = this.getSum();
         var ret = {
             count:this.animation.fps * this.animation.duration,
             slices:[]
@@ -6784,7 +6799,6 @@ ludo.chart.Pie = new Class({
     },
 
     toggleHighlight:function(slice){
-        console.log('toggle');
         if(this.currentHighlighted && slice !== this.currentHighlighted && this.currentHighlighted.isHighlighted()){
             this.currentHighlighted.highlight();
         }
@@ -6807,14 +6821,6 @@ ludo.chart.Pie = new Class({
 
     getColor:function (index) {
         return this.color().offsetHue(this.startColor, index * (360 / this.getChartData().length));
-    },
-
-    getSum:function (chartData) {
-        var sum = 0;
-        for (var i = 0; i < chartData.length; i++) {
-            sum += chartData[i].value;
-        }
-        return sum;
     }
 });/* ../ludojs/src/ludo-db/factory.js */
 /**

@@ -10,15 +10,19 @@ require_once("../includes/demo-header.php");
 <script type="text/javascript" src="../../src/window.js"></script>
 <script type="text/javascript" src="../../src/util.js"></script>
 <script type="text/javascript" src="../../src/ludo-db/factory.js"></script>
-<script type="text/javascript">
+<script type="text/javascript" class="source-code">
     var w = new ludo.Window({
         title:'LudoDB Integration',
         stateful:true,
         layout:{
-            'width':500, height:400
+            'width':500, height:400, left:20,top:20, type:'tabs'
+        },
+        css:{
+            'border-top' : 0
         },
         children:[
             {
+                title : 'LudoDB form',
                 'layout':{
                     type:'linear',
                     orientation:'vertical'
@@ -28,6 +32,8 @@ require_once("../includes/demo-header.php");
                     'arguments':1,
                     'url':'../ludoDB/router.php'
                 }
+            },{
+                type:'SourceCodePreview'
             }
         ],
         buttons:[

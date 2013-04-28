@@ -14,18 +14,12 @@ ludo.chart.PieSlice = new Class({
     render:function (config) {
         this.set('d', this.getPath(config));
         this.renderingData = config;
-        if (config.offsetFromOrigo) {
-            var c = this.getOffsetFromOrigo(config.offsetFromOrigo);
-            this.translate(x, y);
-        }
     },
 
     getOffsetFromOrigo:function (offset) {
         var centerRadians = this.toRadians(this.renderingData.startDegree + (this.renderingData.degrees / 2));
-
         var x = Math.cos(centerRadians) * offset;
         var y = Math.sin(centerRadians) * offset;
-
         return { x:x, y:y}
     },
 

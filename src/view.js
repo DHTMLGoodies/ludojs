@@ -431,14 +431,16 @@ ludo.View = new Class({
 		if (this.ludoDB) {
 			this.ludoDB.type = 'ludoDB.Factory';
 			var f = this.createDependency('ludoDB', new ludo.ludoDB.Factory(this.ludoDB));
-
 			var initialHidden = this.hidden;
 			f.addEvent('load', function (children) {
-				this.unRenderedChildren = children.children;
-				this.hidden = initialHidden;
-				if (!this.hidden) {
-					this.show();
-				}
+                if(!this.hidden){
+                    this.addChildren(children.children);
+                }else{
+                    this.unRenderedChildren = children.children;
+                    this.hidden = initialHidden;
+                    this.show();
+                }
+
 			}.bind(this));
 			this.hidden = true;
 			f.load();

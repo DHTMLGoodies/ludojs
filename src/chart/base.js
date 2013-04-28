@@ -14,7 +14,8 @@ ludo.chart.Base = new Class({
 
     ludoRendered:function(){
         this.parent();
-        this.renderChart.delay(100, this);
+        this.renderLabels.delay(30, this);
+        this.renderChart.delay(30, this);
     },
 
     getCanvas:function(){
@@ -29,8 +30,12 @@ ludo.chart.Base = new Class({
         this.updateChart();
     },
 
-    renderChart:function(){
+    renderLabels:function(){
 
+    },
+
+    renderChart:function(){
+        this.data = this.getChartData();
     },
 
     updateChart:function(){
@@ -65,6 +70,18 @@ ludo.chart.Base = new Class({
             'fill':'#fff',
             'stroke':'#008'
         }, s);
+    },
+
+    getSum:function () {
+        var sum = 0;
+        for (var i = 0; i < this.data.length; i++) {
+            sum += this.data[i].value;
+        }
+        return sum;
+    },
+
+    getPercent:function(item){
+        return item.value / this.getSum() * 100;
     }
 
 });
