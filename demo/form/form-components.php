@@ -47,10 +47,13 @@ require_once("../includes/demo-header.php");
         id:'myWindow',
         title:'Form components',
         layout:{
-            type:'linear',
-            orientation:'horizontal'
+            type:'tabs'
+
         },
-        height:400,
+        css:{
+            'border-top' : 0
+        },
+        height:430,
         width:650,
         left:50,
         top:30,
@@ -61,55 +64,69 @@ require_once("../includes/demo-header.php");
             recordId:100
         },
         children:[
+
             {
-                formConfig:{
-                    labelWidth:130,
-                    inlineLabel:false
+                title:'Form',
+                layout:{
+                    type:'linear',
+                    orientation:'horizontal'
                 },
-                weight:1,
-                layout:'rows',
                 children:[
-                    { type:'form.Text', 'label':'First name', ucWords:true, stretchField:true, name:'firstname', value:'', required:true },
-                    { type:'form.Text', 'label':'Last name', ucWords:true, stretchField:true, value:'', name:'lastname' },
-                    { type:'form.Email', 'label':'E-mail', stretchField:true, name:'email', value:'' },
-                    { type:'form.Textarea',  label:'Address', ucFirst:true, stretchField:true, name:'address', value:'', weight:1}
-                ]
-            },
-            {
-                formConfig:{
-                    labelWidth:130,
-                    inlineLabel:false
-                },
-                weight:1,
-                overflow:'hidden',
-                layout:'rows',
-                children:[
-                    { type:'form.Text', 'label':'Phone', stretchField:true, name:'phone', value:'', required:true },
-                    { type:'form.Text', minLength:4, 'label':'Zip code', stretchField:true, name:'zipcode', value:'' },
-                    { type:'form.Text', name:'city', stretchField:true, 'label':'City', value:'' },
-                    { type:'form.Select', name:'country', stretchField:true, 'label':'Country',
-                        valueKey:'id', textKey:'name',
-                        dataSource:{
-                            resource:'Countries', service:'read', url:'../controller.php'
-                        }},
-                    { type:'form.Date', name:'birth', id:'birth', stretchField:true, 'label':'Born'},
-                    { type:'form.Color', name:'color', id:'color', stretchField:true, 'label':'Favorite color'},
-                    { type:'form.File', inlineLabel:false, name:'picture', label:'Picture', value:'', height:30 },
-                    { type:'form.DisplayField', label:'form.DisplayField', value:'My value',height:30},
-                    { type:'form.RadioGroup',
-                        id:'gender',
-                        name:'gender',
-                        label:'Gender',
-                        options:[
-                            { value:'female', text:'Female' },
-                            { value:'male', text:'Male' }
-                        ],
-                        value:'male'
+                    {
+                        formConfig:{
+                            labelWidth:130,
+                            inlineLabel:false
+                        },
+                        weight:1,
+                        layout:'rows',
+                        children:[
+                            { type:'form.Text', 'label':'First name', ucWords:true, stretchField:true, name:'firstname', value:'', required:true },
+                            { type:'form.Text', 'label':'Last name', ucWords:true, stretchField:true, value:'', name:'lastname' },
+                            { type:'form.Email', 'label':'E-mail', stretchField:true, name:'email', value:'' },
+                            { type:'form.Textarea',  label:'Address', ucFirst:true, stretchField:true, name:'address', value:'', weight:1}
+                        ]
                     },
-                    { type:'form.Slider', id:'mySlider', direction:'horizontal', label:'form.Slider', value:10, minValue:0, maxValue:255 },
-                    { type:'form.Number', label:'form.Number(linked)', minValue:0, maxValue:255, fieldWidth:50, value:10, maxLength:3, suffix:'RGB Color', linkWith:'mySlider'},
-                    { type:'form.Checkbox', label:'I agree', id:"agree"}
-                ]}
+                    {
+                        formConfig:{
+                            labelWidth:130,
+                            inlineLabel:false
+                        },
+                        weight:1,
+                        overflow:'hidden',
+                        layout:'rows',
+                        children:[
+                            { type:'form.Text', 'label':'Phone', stretchField:true, name:'phone', value:'', required:true },
+                            { type:'form.Text', minLength:4, 'label':'Zip code', stretchField:true, name:'zipcode', value:'' },
+                            { type:'form.Text', name:'city', stretchField:true, 'label':'City', value:'' },
+                            { type:'form.Select', name:'country', stretchField:true, 'label':'Country',
+                                valueKey:'id', textKey:'name',
+                                dataSource:{
+                                    resource:'Countries', service:'read', url:'../controller.php'
+                                }},
+                            { type:'form.Date', name:'birth', id:'birth', stretchField:true, 'label':'Born'},
+                            { type:'form.Color', name:'color', id:'color', stretchField:true, 'label':'Favorite color'},
+                            { type:'form.File', inlineLabel:false, name:'picture', label:'Picture', value:'', height:30 },
+                            { type:'form.DisplayField', label:'form.DisplayField', value:'My value',height:30},
+                            { type:'form.RadioGroup',
+                                id:'gender',
+                                name:'gender',
+                                label:'Gender',
+                                options:[
+                                    { value:'female', text:'Female' },
+                                    { value:'male', text:'Male' }
+                                ],
+                                value:'male'
+                            },
+                            { type:'form.Slider', id:'mySlider', direction:'horizontal', label:'form.Slider', value:10, minValue:0, maxValue:255 },
+                            { type:'form.Number', label:'form.Number(linked)', minValue:0, maxValue:255, fieldWidth:50, value:10, maxLength:3, suffix:'RGB Color', linkWith:'mySlider'},
+                            { type:'form.Checkbox', label:'I agree', id:"agree"}
+                        ]}
+                ]
+
+            },{
+                type:'SourceCodePreview'
+            }
+
         ],
 
         buttonBar:{

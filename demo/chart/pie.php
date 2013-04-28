@@ -50,10 +50,10 @@ require_once("../includes/demo-header.php");
                     }
                 },
                 data : [
-                    { label : 'Katrine', value : 100, color: '#000088' },
-                    { label : 'Alf Magne', value : 245 },
-                    { label : 'Frode', value : 37 },
-                    { label : 'Birgitte', value : 99 }
+                    { label : 'John', value : 100, color: '#000088' },
+                    { label : 'Jane', value : 245 },
+                    { label : 'Martin', value : 37 },
+                    { label : 'Mary', value : 99 }
                 ]
             },
             {

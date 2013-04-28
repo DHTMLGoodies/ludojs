@@ -147,7 +147,7 @@ require_once("../includes/demo-header.php");
             },
             { title:'Calendar', type:'calendar.Calendar', name:'title', minDate:'1971-01-01', date:'2012-03-01' },
             {
-                title:'Child B', html:'Content of child B', css:{'background-color':'#FFF'}
+                type:'SourceCodePreview', layout: { 'closable' : false }
             },
             {
                 title:'Child C', html:'Content of child C', css:{'background-color':'#FFF'}

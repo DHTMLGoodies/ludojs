@@ -19,7 +19,7 @@ require_once("../includes/demo-header.php");
         overflow: hidden;
     }
 </style>
-<script type="text/javascript">
+<script type="text/javascript" class="source-code">
 new ludo.View({
     renderTo:document.body,
     layout:{
@@ -246,6 +246,26 @@ new ludo.View({
                             type:'video.YouTube',
                             movieId:'6UJZBLABGsI',
                             html:'Content of child two'
+                        }
+                    ]
+                },
+                {
+                    type:'FramedView',
+                    layout:{
+                        closable:true
+                    },
+                    title:'Source code',
+                    minimizable:false,
+                    containerCss:{
+                        border:0
+                    },
+                    css:{
+                        'overflow-y':'auto',
+                        margin:0
+                    },
+                    children:[
+                        {
+                            type:'SourceCodePreview'
                         }
                     ]
                 }
