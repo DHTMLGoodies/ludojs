@@ -52,8 +52,9 @@ ludo.chart.Pie = new Class({
         if(this.styles[index] === undefined){
             var color = this.data[index].color ? this.data[index].color : this.getColor(index);
             this.styles[index] = new ludo.canvas.Paint({
+                'stroke-location':'inside',
                 'fill' : color,
-                'stroke' : color,
+                'stroke' : '#fff',
                 'cursor' : 'pointer'
             });
             this.getCanvas().adopt(this.styles[index]);

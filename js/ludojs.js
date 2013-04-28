@@ -1,4 +1,4 @@
-/* Generated Sun Apr 28 5:49:34 CEST 2013 */
+/* Generated Sun Apr 28 6:00:27 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -6053,6 +6053,68 @@ ludo.remote.Message = new Class({
 ludo.remote.ErrorMessage = new Class({
     Extends:ludo.remote.Message,
     messageTypes:['failure','serverError']
+});/* ../ludojs/src/canvas/effect.js */
+ludo.canvas.Effect = new Class({
+
+    fps:33,
+
+    fly:function(el, x, y, duration){
+        var start = this.getTranslate(el);
+        this.execute('translate', el, [start.x, start.y],[start.y + x, start.y + y], duration);
+    },
+
+    /**
+     * Animates back to translate(0,0)
+     * @method flyBack
+     * @param el
+     * @param duration
+     */
+    flyBack:function(el, duration){
+        var start = this.getTranslate(el);
+        this.execute('translate', el, [start.x, start.y],[0,0], duration);
+    },
+
+    getTranslate:function(el){
+        var ret = ludo.canvasEngine.getTransformation(el, 'translate');
+        if(!ret)ret = {
+            x:0,y:0
+        };
+        return ret;
+    },
+
+    execute:function(property, el, start, end, duration){
+        duration = duration || .25;
+        var ef = this.getEffectConfig(start, end, duration);
+        this.executeStep(property, el, start, ef.steps, ef.count, 0 );
+    },
+
+    executeStep:function(property, el, current, increments, countSteps, stepIndex){
+        for(var i = 0;i<increments.length;i++){
+            current[i] += increments[i];
+        }
+
+        ludo.canvasEngine.setTransformation(el, property, current.join(' '));
+        stepIndex ++;
+        if(stepIndex < countSteps){
+            this.executeStep.delay(this.fps, this, [
+                property, el, current, increments, countSteps, stepIndex
+            ]);
+        }
+    },
+
+    getEffectConfig:function(start, end, duration){
+        var countSteps = Math.round(duration * this.fps);
+        var steps = [];
+        for(var i=0;i<start.length;i++){
+            steps.push((end[i] - start[i]) / countSteps);
+        }
+
+        return {
+            steps: steps,
+            count : countSteps
+        }
+
+    }
 });/* ../ludojs/src/chart/engine-factory.js */
 ludo.chart.EngineFactory = new Class({
 
@@ -6124,6 +6186,11 @@ ludo.chart.Base = new Class({
             this.colorHandler = new ludo.color.Color();
         }
         return this.colorHandler;
+    },
+
+    getChartOrigion:function(){
+        // TODO return center position of chart area, i.e. area excluding label area
+        return this.getCanvas().getOrigin();
     }
 
 });/* ../ludojs/src/canvas/paint.js */
@@ -6323,7 +6390,7 @@ ludo.chart.Item = new Class({
                     'stroke-location':'inside',
                     'fill-opacity':.7,
                     'fill':'#fff',
-                    'stroke':'#f00'
+                    'stroke':'#008'
                 });
             this.chart.getCanvas().adopt(p);
             this.tooltip = new ludo.chart.Tooltip(this, p);
@@ -6587,7 +6654,7 @@ ludo.chart.Pie = new Class({
     renderChart:function () {
         var d = this.data = this.getChartData();
         var sum = this.getSum(d);
-        var origo = this.getCanvas().getOrigin();
+        var origo = this.getChartOrigion();
         var radius = Math.min(origo.x, origo.y) * .8;
         var deg = this.startDegree;
 
@@ -6625,8 +6692,9 @@ ludo.chart.Pie = new Class({
         if(this.styles[index] === undefined){
             var color = this.data[index].color ? this.data[index].color : this.getColor(index);
             this.styles[index] = new ludo.canvas.Paint({
+                'stroke-location':'inside',
                 'fill' : color,
-                'stroke' : color,
+                'stroke' : '#fff',
                 'cursor' : 'pointer'
             });
             this.getCanvas().adopt(this.styles[index]);
@@ -6635,7 +6703,7 @@ ludo.chart.Pie = new Class({
     },
 
     getColor:function(index){
-        return this.color().offsetHue(this.startColor, index * 30);
+        return this.color().offsetHue(this.startColor, index * (360 / this.getChartData().length));
     },
 
     getSum:function (chartData) {
