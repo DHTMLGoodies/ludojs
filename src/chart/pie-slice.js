@@ -17,7 +17,7 @@ ludo.chart.PieSlice = new Class({
     },
 
     getOffsetFromOrigo:function (offset) {
-        var centerRadians = this.toRadians(this.renderingData.startDegree + (this.renderingData.degrees / 2));
+        var centerRadians = this.toRadians(this.renderingData.startAngle + (this.renderingData.degrees / 2));
         var x = Math.cos(centerRadians) * offset;
         var y = Math.sin(centerRadians) * offset;
         return { x:x, y:y}
@@ -26,8 +26,8 @@ ludo.chart.PieSlice = new Class({
     getPath:function (config) {
         var path = ['M ' + config.origo.x + ' ' + config.origo.y];
 
-        var point1 = this.getPointAtDegreeOffset(config.origo, config.startDegree, config.radius);
-        var point2 = this.getPointAtDegreeOffset(config.origo, config.startDegree + config.degrees, config.radius);
+        var point1 = this.getPointAtDegreeOffset(config.origo, config.startAngle, config.radius);
+        var point2 = this.getPointAtDegreeOffset(config.origo, config.startAngle + config.degrees, config.radius);
         path.push('L ' + point1.x + ' ' + point1.y);
         path.push('M ' + point1.x + ' ' + point1.y);
 

@@ -17,7 +17,7 @@ ludo.chart.Pie = new Class({
 
     ludoConfig:function (config) {
         this.parent(config);
-        this.startDegree = 270;
+        this.startAngle = 270;
     },
 
     renderChart:function (skipAnimation) {
@@ -37,13 +37,13 @@ ludo.chart.Pie = new Class({
     renderSlices:function () {
         var d = this.data;
         var sum = this.getSum(d);
-        var deg = this.startDegree;
+        var deg = this.startAngle;
         for (var i = 0; i < d.length; i++) {
             var slice = this.getSlice(i);
             var sliceDegrees = this.getDegrees(d[i].value, sum);
             slice.render({
                 radius:this.currentRadius,
-                startDegree:deg,
+                startAngle:deg,
                 degrees:sliceDegrees,
                 origo:this.origo
             });
@@ -52,9 +52,7 @@ ludo.chart.Pie = new Class({
     },
 
     animateSlices:function () {
-        var steps = this.getAnimationSteps();
-
-        this.animateStep(0, steps);
+        this.animateStep(0, this.getAnimationSteps());
     },
 
     animateStep:function(currentStep, data){
@@ -62,7 +60,7 @@ ludo.chart.Pie = new Class({
             var slice = this.getSlice(i);
             slice.render({
                 radius:data.slices[i][currentStep].radius,
-                startDegree:data.slices[i][currentStep].start,
+                startAngle:data.slices[i][currentStep].startAngle,
                 degrees:data.slices[i][currentStep].degrees,
                 origo:this.origo,
                 offsetFromOrigo:0
@@ -89,19 +87,17 @@ ludo.chart.Pie = new Class({
         }
         var deg;
         for (var j = 0; j < ret.count; j++) {
-            if(!relative) deg = this.startDegree;
+            if(!relative) deg = this.startAngle;
             for (i = 0; i < this.data.length; i++) {
-                var offset = 0;
                 if(relative && j === 0){
-                    deg = this.sliceData[i].start;
-
+                    deg = this.sliceData[i].startAngle;
                 }
-                if(relative)offset = this.sliceData[i].degrees;
+                var offset = relative ? this.sliceData[i].degrees : 0;
                 if (j === 0) {
                     ret.slices[i].push({
                         radius:relative ? this.sliceData[i].radius : 0,
                         degrees:relative ? this.sliceData[i].degrees : 0,
-                        start:deg
+                        startAngle:deg
                     });
                 }
 
@@ -109,18 +105,18 @@ ludo.chart.Pie = new Class({
                 ret.slices[i].push({
                     radius:relative ? this.currentRadius : this.currentRadius * j / ret.count,
                     degrees:degree,
-                    start : deg
+                    startAngle : deg
                 });
 
                 deg += degree;
             }
         }
-        deg = this.startDegree;
+        deg = this.startAngle;
         for (i = 0; i < this.data.length; i++) {
             var end = {
                 radius:this.currentRadius,
                 degrees:sliceDegrees[i],
-                start : deg
+                startAngle : deg
             };
             this.storeSliceData(i, end);
             ret.slices[i].push(end);
