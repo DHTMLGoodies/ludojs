@@ -47,7 +47,6 @@ require_once("../includes/demo-header.php");
             {
                 title:'Chart',
                 type:'chart.Chart',
-
                 data:[
                     { label:'John', value:100, color:'#000088' },
                     { label:'Jane', value:245 },
