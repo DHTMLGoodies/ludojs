@@ -24,7 +24,6 @@ ludo.chart.Pie = new Class({
 
         this.parent();
 
-
         this.origo = this.getChartOrigion();
         this.currentRadius = Math.min(this.origo.x, this.origo.y) * .9;
 
@@ -34,6 +33,7 @@ ludo.chart.Pie = new Class({
             this.renderSlices();
         }
     },
+
     renderSlices:function () {
         var d = this.data;
         var sum = this.getSum(d);
@@ -74,7 +74,8 @@ ludo.chart.Pie = new Class({
         }
     },
 
-    getAnimationSteps:function () {
+    getAnimationSteps:function (relative) {
+        // TODO cleanup this method
         var sum = this.getSum();
         var ret = {
             count:this.animation.fps * this.animation.duration,
@@ -86,21 +87,27 @@ ludo.chart.Pie = new Class({
             sliceDegrees.push(this.getDegrees(this.data[i].value, sum));
             ret.slices[i] = [];
         }
-
+        var deg;
         for (var j = 0; j < ret.count; j++) {
-            var deg = this.startDegree;
+            if(!relative) deg = this.startDegree;
             for (i = 0; i < this.data.length; i++) {
+                var offset = 0;
+                if(relative && j === 0){
+                    deg = this.sliceData[i].start;
+
+                }
+                if(relative)offset = this.sliceData[i].degrees;
                 if (j === 0) {
                     ret.slices[i].push({
-                        radius:0,
-                        degrees:0,
+                        radius:relative ? this.sliceData[i].radius : 0,
+                        degrees:relative ? this.sliceData[i].degrees : 0,
                         start:deg
                     });
                 }
 
-                var degree = sliceDegrees[i] * j / ret.count;
+                var degree = offset + ((sliceDegrees[i] - offset) * j / ret.count);
                 ret.slices[i].push({
-                    radius:this.currentRadius * j / ret.count,
+                    radius:relative ? this.currentRadius : this.currentRadius * j / ret.count,
                     degrees:degree,
                     start : deg
                 });
@@ -110,15 +117,21 @@ ludo.chart.Pie = new Class({
         }
         deg = this.startDegree;
         for (i = 0; i < this.data.length; i++) {
-            ret.slices[i].push({
+            var end = {
                 radius:this.currentRadius,
                 degrees:sliceDegrees[i],
                 start : deg
-            });
+            };
+            this.storeSliceData(i, end);
+            ret.slices[i].push(end);
             deg += sliceDegrees[i];
         }
 
         return ret;
+    },
+
+    storeSliceData:function(index, data){
+        this.sliceData[index] = data;
     },
 
     resizeChart:function () {
@@ -161,5 +174,16 @@ ludo.chart.Pie = new Class({
 
     getColor:function (index) {
         return this.color().offsetHue(this.startColor, index * (360 / this.getChartData().length));
+    },
+
+    updateChart:function(){
+        // TODO animate from current pos
+        if(this.animate){
+            var steps = this.getAnimationSteps(true);
+            this.animateStep(0, steps);
+        }else{
+            this.renderChart();
+        }
+
     }
 });
