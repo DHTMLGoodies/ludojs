@@ -44,6 +44,8 @@ ludo.layout.Factory = new Class({
 				return 'LinearHorizontal';
 			case 'popup':
 				return 'Popup';
+			case 'canvas':
+				return 'Canvas';
 			case 'rows':
 			case 'row':
 				return 'LinearVertical';

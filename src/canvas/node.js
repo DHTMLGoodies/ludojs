@@ -247,6 +247,14 @@ ludo.canvas.Node = new Class({
 		ludo.canvasEngine.setStyle(this.el, key, value);
 	},
 
+	setStyles:function(styles){
+		for(var key in styles){
+			if(styles.hasOwnProperty(key)){
+				this.setStyle(key, styles[key]);
+			}
+		}
+	},
+
 	/**
 	 * Add css class to SVG node
 	 * @method addClass

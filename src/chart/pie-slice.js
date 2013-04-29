@@ -5,9 +5,8 @@ ludo.chart.PieSlice = new Class({
     tagName:'path',
     highlighted:false,
 
-    initialize:function (chart, css) {
-
-        this.parent(chart, { "class":css });
+    initialize:function (group, css) {
+        this.parent(group, { "class":css });
         this.addEvent('click', this.highlight.bind(this));
     },
 

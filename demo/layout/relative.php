@@ -12,6 +12,7 @@ require_once("../includes/demo-header.php");
         background-color: #FFF;
     }
 </style>
+<script type="text/javascript" src="../../src/layout/relative.js"></script>
 <script type="text/javascript" class="source-code">
     var d = new Date().getTime();
     var w = new ludo.Window({

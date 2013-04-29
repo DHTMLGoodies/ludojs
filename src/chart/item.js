@@ -6,14 +6,12 @@
 ludo.chart.Item = new Class({
     Extends:ludo.canvas.NamedNode,
     tooltip:undefined,
-    chart:undefined,
+    group:undefined,
 
-    initialize:function (chart, config) {
-        // TODO clean access to chart View from all sub views and sub SVG elements.
-        this.chart = chart;
-
+    initialize:function (group, config) {
+        this.group = group;
         this.parent(config);
-        chart.getCanvas().adopt(this);
+		group.adopt(this);
         this.addEvent('mouseenter', this.createTooltip.bind(this));
     },
 
@@ -21,8 +19,8 @@ ludo.chart.Item = new Class({
         if (this.tooltip === undefined) {
             // TODO configurable Tooltip styles or stylesheet
             // TODO possible to turn tooltip on/off
-            var p = new ludo.canvas.Paint(this.chart.getTooltipStyles());
-            this.chart.getCanvas().adopt(p);
+            var p = new ludo.canvas.Paint(this.group.getTooltipStyles());
+            this.group.getCanvas().adopt(p);
             this.tooltip = new ludo.chart.Tooltip(this, p);
             this.tooltip.showTooltip(e);
         }

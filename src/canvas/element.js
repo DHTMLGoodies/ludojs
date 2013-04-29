@@ -12,6 +12,11 @@
  */
 ludo.canvas.Element = new Class({
 	Extends:ludo.Core,
+
+	/**
+	 * Reference to canvas.Node
+	 * @property {canvas.Node} node
+	 */
 	node:undefined,
 
 	/**

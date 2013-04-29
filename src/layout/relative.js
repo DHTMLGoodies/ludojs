@@ -363,6 +363,16 @@ ludo.layout.Relative = new Class({
 				width:c.width !== lc.width ? c.width : undefined,
 				height:c.height !== lc.height ? c.height : undefined
 			});
+
+			if(c['right'] !== undefined && c.width){
+				c.left = lm.viewport.width - c.right - c.width;
+				c['right'] = undefined;
+			}
+			if(c.bottom !== undefined && c.height){
+				c.top = lm.viewport.height - c.bottom - c.height;
+				c.bottom = undefined;
+			}
+
 			for (var i = 0; i < p.length; i++) {
 				var key = p[i];
 				if (c[key] !== undefined){
@@ -403,7 +413,6 @@ ludo.layout.Relative = new Class({
 	positionChild:function (child, property, value) {
 		child.getEl().style[property] = value + 'px';
 		child[property] = value;
-
 	},
     /**
      * Creates empty newChildCoordinates and lastChildCoordinates for a child view

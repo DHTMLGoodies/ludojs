@@ -9,5 +9,4 @@ ludo.canvas.NamedNode = new Class({
 	initialize:function (attributes, text) {
 		this.parent(this.tagName, attributes, text);
 	}
-
 });

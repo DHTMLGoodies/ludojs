@@ -8,7 +8,7 @@ ludo.chart.Tooltip = new Class({
         this.parent({
             x:0, y:0, width:130, height:50, rx:5, ry:5, "class":paint
         }, "Label");
-        item.chart.getCanvas().adopt(this);
+        item.group.getCanvas().adopt(this);
         this.item = item;
         item.addEvent('mouseenter', this.showTooltip.bind(this));
         item.addEvent('mouseleave', this.hideTooltip.bind(this));
@@ -20,7 +20,8 @@ ludo.chart.Tooltip = new Class({
         var translate = { x:0, y:0 };
         this.engine().translate(this.getEl(), 0, 0);
 
-        var pos = this.item.chart.getEl().getPosition();
+        var pos = this.item.group.getChartView().getEl().getPosition();
+
 
         this.set('x', e.page.x - pos.x - 10 - this.getWidth());
         this.set('y', e.page.y - pos.y + 10 - this.getHeight()/2);

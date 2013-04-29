@@ -1,4 +1,4 @@
-/* Generated Mon Apr 29 2:35:14 CEST 2013 */
+/* Generated Mon Apr 29 21:10:02 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -2373,6 +2373,14 @@ ludo.canvas.Node = new Class({
 		ludo.canvasEngine.setStyle(this.el, key, value);
 	},
 
+	setStyles:function(styles){
+		for(var key in styles){
+			if(styles.hasOwnProperty(key)){
+				this.setStyle(key, styles[key]);
+			}
+		}
+	},
+
 	/**
 	 * Add css class to SVG node
 	 * @method addClass
@@ -2486,6 +2494,11 @@ ludo.canvas.Node = new Class({
  */
 ludo.canvas.Element = new Class({
 	Extends:ludo.Core,
+
+	/**
+	 * Reference to canvas.Node
+	 * @property {canvas.Node} node
+	 */
 	node:undefined,
 
 	/**
@@ -3436,6 +3449,8 @@ ludo.layout.Factory = new Class({
 				return 'LinearHorizontal';
 			case 'popup':
 				return 'Popup';
+			case 'canvas':
+				return 'Canvas';
 			case 'rows':
 			case 'row':
 				return 'LinearVertical';
@@ -6117,13 +6132,7 @@ ludo.canvas.Effect = new Class({
             count : countSteps
         }
     }
-});/* ../ludojs/src/chart/engine-factory.js */
-ludo.chart.EngineFactory = new Class({
-
-
-});
-
-ludo.chartEngineFactory = new ludo.chart.EngineFactory();/* ../ludojs/src/chart/data-provider.js */
+});/* ../ludojs/src/chart/data-provider.js */
 ludo.chart.DataProvider = new Class({
     Extends: ludo.Core,
 
@@ -6135,100 +6144,40 @@ ludo.chart.DataProvider = new Class({
     getChartData:function(){
 
     }
-});/* ../ludojs/src/chart/base.js */
-/**
- * Base class for charts
- * @namespace chart
- * @class Base
- * @type {Class}
- */
-ludo.chart.Base = new Class({
-    Extends: ludo.View,
+});/* ../ludojs/src/chart/chart.js */
+ludo.chart.Chart = new Class({
+	Extends: ludo.View,
+	css:{
+		'background-color' : '#fff'
+	},
+	ludoConfig:function(config){
+		this.parent(config);
+		this.layout.type = 'Canvas';
+		this.setConfigParams(config, ['dataProvider','data']);
 
-    // TODO implement layouts for charts (position of labels, chart etc).
-    // TODO items in a chart should be <g> elements
-    dataProvider:undefined,
-    data:undefined,
 
-    ludoConfig:function(config){
-        this.parent(config);
-        this.setConfigParams(config, ['dataProvider','data','tooltip','animate']);
-        if(!this.css){
-            this.css = { 'background-color' : '#fff' };
-        }
-    },
+	},
 
-    ludoRendered:function(){
-        this.parent();
-        this.renderLabels.delay(30, this);
-        this.renderChart.delay(30, this);
-    },
+	ludoRendered:function(){
+		this.parent();
+		this.updateChildren.delay(50, this);
+	},
 
-    getCanvas:function(){
-        var addEvents = !this.canvas;
-        var c = this.parent();
-        if(addEvents)c.addEvent('resize', this.resizeChart.bind(this));
-        return c;
-    },
+	updateChildren:function(){
+		var d = this.getChartData();
+		for(var i=0;i<this.children.length;i++){
+			this.children[i].update(d);
+		}
+	},
 
-    setData:function(data){
-        this.data = data;
-        this.updateChart();
-    },
+	getChartData:function(){
+		return this.dataProvider ? this.dataProvider.getData() : this.data;
+	},
 
-    renderLabels:function(){
-
-    },
-
-    renderChart:function(){
-        this.data = this.getChartData();
-    },
-
-    updateChart:function(){
-
-    },
-
-    resizeChart:function(){
-
-    },
-
-    getChartData:function(){
-        return this.dataProvider ? this.dataProvider.getData() : this.data;
-    },
-
-    color:function(){
-        if(this.colorHandler === undefined){
-            this.colorHandler = new ludo.color.Color();
-        }
-        return this.colorHandler;
-    },
-
-    getChartOrigion:function(){
-        // TODO return center position of chart area, i.e. area excluding label area
-        return this.getCanvas().getOrigin();
-    },
-
-    getTooltipStyles:function(){
-        var s = this.tooltip && this.tooltip.css ? this.tooltip.css : {};
-        return Object.merge({
-            'stroke-location':'inside',
-            'fill-opacity':.7,
-            'fill':'#fff',
-            'stroke':'#008'
-        }, s);
-    },
-
-    getSum:function () {
-        var sum = 0;
-        for (var i = 0; i < this.data.length; i++) {
-            sum += this.data[i].value;
-        }
-        return sum;
-    },
-
-    getPercent:function(item){
-        return item.value / this.getSum() * 100;
-    }
+	setData:function(data){
+		this.data = data;
+		this.updateChildren();
+	}
 
 });/* ../ludojs/src/canvas/paint.js */
 /**
@@ -6397,7 +6346,6 @@ ludo.canvas.NamedNode = new Class({
 	initialize:function (attributes, text) {
 		this.parent(this.tagName, attributes, text);
 	}
-
 });/* ../ludojs/src/chart/item.js */
 /**
  * Base class for fragments/SVG elements used by charts, example slices in a Pie chart or bars in a bar chart.
@@ -6407,14 +6355,12 @@ ludo.canvas.NamedNode = new Class({
 ludo.chart.Item = new Class({
     Extends:ludo.canvas.NamedNode,
     tooltip:undefined,
-    chart:undefined,
+    group:undefined,
 
-    initialize:function (chart, config) {
-        // TODO clean access to chart View from all sub views and sub SVG elements.
-        this.chart = chart;
-
+    initialize:function (group, config) {
+        this.group = group;
         this.parent(config);
-        chart.getCanvas().adopt(this);
+		group.adopt(this);
         this.addEvent('mouseenter', this.createTooltip.bind(this));
     },
 
@@ -6422,12 +6368,77 @@ ludo.chart.Item = new Class({
         if (this.tooltip === undefined) {
             // TODO configurable Tooltip styles or stylesheet
             // TODO possible to turn tooltip on/off
-            var p = new ludo.canvas.Paint(this.chart.getTooltipStyles());
-            this.chart.getCanvas().adopt(p);
+            var p = new ludo.canvas.Paint(this.group.getTooltipStyles());
+            this.group.getCanvas().adopt(p);
             this.tooltip = new ludo.chart.Tooltip(this, p);
             this.tooltip.showTooltip(e);
         }
     }
+});/* ../ludojs/src/chart/group.js */
+ludo.chart.Group = new Class({
+	Extends:ludo.canvas.Element,
+	tag:'g',
+	layout:{},
+	colorHandler:undefined,
+
+	ludoConfig:function (config) {
+		this.parent(config);
+		this.setConfigParams(config, ['layout','containerCss','renderTo','parentComponent','animation']);
+		this.renderTo.adopt(this);
+
+		if(this.containerCss){
+			this.node.setStyles(this.containerCss);
+		}
+	},
+
+	resize:function (coordinates) {
+		if (coordinates.width && coordinates.height){
+			this.width = coordinates.width;
+			this.set('width', coordinates.width + 'px');
+			this.height = coordinates.height;
+			this.set('height', coordinates.height + 'px');
+		}
+	},
+
+	isHidden:function () {
+		return false;
+	},
+
+	getChartOrigin:function () {
+		return {
+			x : this.width / 2,
+			y : this.height /2
+		}
+	},
+
+	update:function(data){
+		this.data = data;
+	},
+
+	getCanvas:function(){
+		return this.parentComponent.getCanvas();
+	},
+
+	getChartView:function(){
+		return this.parentComponent;
+	},
+
+	color:function(){
+		if(this.colorHandler === undefined){
+			this.colorHandler = new ludo.color.Color();
+		}
+		return this.colorHandler;
+	},
+
+	getTooltipStyles:function(){
+		var s = this.tooltip && this.tooltip.css ? this.tooltip.css : {};
+		return Object.merge({
+			'stroke-location':'inside',
+			'fill-opacity':.7,
+			'fill':'#fff',
+			'stroke':'#008'
+		}, s);
+	}
 });/* ../ludojs/src/chart/pie-slice.js */
 ludo.chart.PieSlice = new Class({
     Extends:ludo.chart.Item,
@@ -6436,9 +6447,8 @@ ludo.chart.PieSlice = new Class({
     tagName:'path',
     highlighted:false,
 
-    initialize:function (chart, css) {
-
-        this.parent(chart, { "class":css });
+    initialize:function (group, css) {
+        this.parent(group, { "class":css });
         this.addEvent('click', this.highlight.bind(this));
     },
 
@@ -6448,7 +6458,7 @@ ludo.chart.PieSlice = new Class({
     },
 
     getOffsetFromOrigo:function (offset) {
-        var centerRadians = this.toRadians(this.renderingData.startDegree + (this.renderingData.degrees / 2));
+        var centerRadians = this.toRadians(this.renderingData.startAngle + (this.renderingData.degrees / 2));
         var x = Math.cos(centerRadians) * offset;
         var y = Math.sin(centerRadians) * offset;
         return { x:x, y:y}
@@ -6457,8 +6467,8 @@ ludo.chart.PieSlice = new Class({
     getPath:function (config) {
         var path = ['M ' + config.origo.x + ' ' + config.origo.y];
 
-        var point1 = this.getPointAtDegreeOffset(config.origo, config.startDegree, config.radius);
-        var point2 = this.getPointAtDegreeOffset(config.origo, config.startDegree + config.degrees, config.radius);
+        var point1 = this.getPointAtDegreeOffset(config.origo, config.startAngle, config.radius);
+        var point2 = this.getPointAtDegreeOffset(config.origo, config.startAngle + config.degrees, config.radius);
         path.push('L ' + point1.x + ' ' + point1.y);
         path.push('M ' + point1.x + ' ' + point1.y);
 
@@ -6632,7 +6642,7 @@ ludo.chart.Tooltip = new Class({
         this.parent({
             x:0, y:0, width:130, height:50, rx:5, ry:5, "class":paint
         }, "Label");
-        item.chart.getCanvas().adopt(this);
+        item.group.getCanvas().adopt(this);
         this.item = item;
         item.addEvent('mouseenter', this.showTooltip.bind(this));
         item.addEvent('mouseleave', this.hideTooltip.bind(this));
@@ -6644,7 +6654,8 @@ ludo.chart.Tooltip = new Class({
         var translate = { x:0, y:0 };
         this.engine().translate(this.getEl(), 0, 0);
 
-        var pos = this.item.chart.getEl().getPosition();
+        var pos = this.item.group.getChartView().getEl().getPosition();
+
 
         this.set('x', e.page.x - pos.x - 10 - this.getWidth());
         this.set('y', e.page.y - pos.y + 10 - this.getHeight()/2);
@@ -6668,189 +6679,202 @@ ludo.chart.Tooltip = new Class({
     }
 });/* ../ludojs/src/chart/pie.js */
 ludo.chart.Pie = new Class({
-    Extends:ludo.chart.Base,
-    title:'Chart title',
-    slices:[],
-    data:[],
-    startColor:'#561AD9',
-    styles:[],
-    currentRadius:undefined,
-    animation:{
-        duration:1,
-        fps:33
-    },
+	Extends:ludo.chart.Group,
+	slices:[],
+	data:undefined,
+	startColor:'#561AD9',
+	styles:[],
+	currentRadius:undefined,
+	layout:{
+		type:'svg'
+	},
+	animation:{
+		duration:1,
+		fps:33
+	},
 
-    sliceData:[],
+	rendered:false,
+	sliceData:[],
+	startAngle:270,
 
-    currentHighlighted : undefined,
+	currentHighlighted:undefined,
 
-    ludoConfig:function (config) {
-        this.parent(config);
-        this.startAngle = 270;
-    },
+	ludoConfig:function (config) {
+		this.parent(config);
+		this.setConfigParams(config, ['animate']);
+	},
 
-    renderChart:function (skipAnimation) {
+	renderChart:function (skipAnimation) {
+		if(!this.data)return;
 
-        this.parent();
+		this.origo = this.getChartOrigin();
 
-        this.origo = this.getChartOrigion();
-        this.currentRadius = Math.min(this.origo.x, this.origo.y) * .9;
+		this.currentRadius = Math.min(this.origo.x, this.origo.y) * .9;
+		if (this.animate && !skipAnimation) {
+			this.animateSlices();
+		} else {
+			this.renderSlices();
+		}
+	},
 
-        if(this.animate && !skipAnimation){
-            this.animateSlices();
-        }else{
-            this.renderSlices();
-        }
-    },
+	renderSlices:function () {
+		var d = this.data;
+		var sum = this.getSum(d);
+		var deg = this.startAngle;
+		for (var i = 0; i < d.length; i++) {
+			var slice = this.getSlice(i);
+			var sliceDegrees = this.getDegrees(d[i].value, sum);
+			slice.render({
+				radius:this.currentRadius,
+				startAngle:deg,
+				degrees:sliceDegrees,
+				origo:this.origo
+			});
+			deg += sliceDegrees;
+		}
+	},
 
-    renderSlices:function () {
-        var d = this.data;
-        var sum = this.getSum(d);
-        var deg = this.startAngle;
-        for (var i = 0; i < d.length; i++) {
-            var slice = this.getSlice(i);
-            var sliceDegrees = this.getDegrees(d[i].value, sum);
-            slice.render({
-                radius:this.currentRadius,
-                startAngle:deg,
-                degrees:sliceDegrees,
-                origo:this.origo
-            });
-            deg += sliceDegrees;
-        }
-    },
+	animateSlices:function () {
+		this.animateStep(0, this.getAnimationSteps());
+	},
 
-    animateSlices:function () {
-        this.animateStep(0, this.getAnimationSteps());
-    },
+	animateStep:function (currentStep, data) {
+		for (var i = 0; i < this.data.length; i++) {
+			var slice = this.getSlice(i);
+			slice.render({
+				radius:data.slices[i][currentStep].radius,
+				startAngle:data.slices[i][currentStep].startAngle,
+				degrees:data.slices[i][currentStep].degrees,
+				origo:this.origo,
+				offsetFromOrigo:0
+			});
+		}
 
-    animateStep:function(currentStep, data){
-        for (var i = 0; i < this.data.length; i++) {
-            var slice = this.getSlice(i);
-            slice.render({
-                radius:data.slices[i][currentStep].radius,
-                startAngle:data.slices[i][currentStep].start,
-                degrees:data.slices[i][currentStep].degrees,
-                origo:this.origo,
-                offsetFromOrigo:0
-            });
-        }
+		if (currentStep < data.count) {
+			this.animateStep.delay(this.animation.fps, this, [currentStep + 1, data]);
+		}
+	},
 
-        if(currentStep <= data.count){
-            this.animateStep.delay(this.animation.fps, this, [currentStep+1, data]);
-        }
-    },
+	getAnimationSteps:function (relative) {
+		// TODO cleanup this method
+		var sum = this.getSum();
+		var ret = {
+			count:this.animation.fps * this.animation.duration,
+			slices:[]
+		};
+		var sliceDegrees = [];
 
-    getAnimationSteps:function (relative) {
-        // TODO cleanup this method
-        var sum = this.getSum();
-        var ret = {
-            count:this.animation.fps * this.animation.duration,
-            slices:[]
-        };
-        var sliceDegrees = [];
+		for (var i = 0; i < this.data.length; i++) {
+			sliceDegrees.push(this.getDegrees(this.data[i].value, sum));
+			ret.slices[i] = [];
+		}
+		var deg;
+		for (var j = 0; j < ret.count; j++) {
+			if (!relative) deg = this.startAngle;
+			for (i = 0; i < this.data.length; i++) {
+				if (relative && j === 0) {
+					deg = this.sliceData[i].startAngle;
+				}
+				var offset = relative ? this.sliceData[i].degrees : 0;
 
-        for (var i = 0; i < this.data.length; i++) {
-            sliceDegrees.push(this.getDegrees(this.data[i].value, sum));
-            ret.slices[i] = [];
-        }
-        var deg;
-        for (var j = 0; j < ret.count; j++) {
-            if(!relative) deg = this.startAngle;
-            for (i = 0; i < this.data.length; i++) {
-                if(relative && j === 0){
-                    deg = this.sliceData[i].start;
-                }
-                var offset = relative ? this.sliceData[i].degrees : 0;
-                if (j === 0) {
-                    ret.slices[i].push({
-                        radius:relative ? this.sliceData[i].radius : 0,
-                        degrees:relative ? this.sliceData[i].degrees : 0,
-                        start:deg
-                    });
-                }
+				var degree = offset + ((sliceDegrees[i] - offset) * j / ret.count);
+				ret.slices[i].push({
+					radius:relative ? this.currentRadius : this.currentRadius * j / ret.count,
+					degrees:degree,
+					startAngle:deg
+				});
 
-                var degree = offset + ((sliceDegrees[i] - offset) * j / ret.count);
-                ret.slices[i].push({
-                    radius:relative ? this.currentRadius : this.currentRadius * j / ret.count,
-                    degrees:degree,
-                    start : deg
-                });
+				deg += degree;
+			}
+		}
+		deg = this.startAngle;
+		for (i = 0; i < this.data.length; i++) {
+			var end = {
+				radius:this.currentRadius,
+				degrees:sliceDegrees[i],
+				startAngle:deg
+			};
+			this.storeSliceData(i, end);
+			ret.slices[i].push(end);
+			deg += sliceDegrees[i];
+		}
 
-                deg += degree;
-            }
-        }
-        deg = this.startAngle;
-        for (i = 0; i < this.data.length; i++) {
-            var end = {
-                radius:this.currentRadius,
-                degrees:sliceDegrees[i],
-                start : deg
-            };
-            this.storeSliceData(i, end);
-            ret.slices[i].push(end);
-            deg += sliceDegrees[i];
-        }
+		return ret;
+	},
 
-        return ret;
-    },
+	storeSliceData:function (index, data) {
+		this.sliceData[index] = data;
+	},
 
-    storeSliceData:function(index, data){
-        this.sliceData[index] = data;
-    },
+	resizeChart:function () {
+		this.renderChart(true);
+	},
 
-    resizeChart:function () {
-        this.renderChart(true);
-    },
+	getDegrees:function (value, sum) {
+		return value / sum * 360;
+	},
 
-    getDegrees:function (value, sum) {
-        return value / sum * 360;
-    },
+	getSlice:function (index) {
+		if (this.slices[index] === undefined) {
+			this.slices[index] = new ludo.chart.PieSlice(this, this.getSliceStyle(index));
+			this.slices[index].addEvent('highlight', this.toggleHighlight.bind(this));
+		}
+		return this.slices[index];
+	},
 
-    getSlice:function (index) {
-        if (this.slices[index] === undefined) {
-            this.slices[index] = new ludo.chart.PieSlice(this, this.getPaint(index));
-            this.slices[index].addEvent('highlight', this.toggleHighlight.bind(this));
-        }
-        return this.slices[index];
-    },
+	toggleHighlight:function (slice) {
+		if (this.currentHighlighted && slice !== this.currentHighlighted && this.currentHighlighted.isHighlighted()) {
+			this.currentHighlighted.highlight();
+		}
+		this.currentHighlighted = slice;
+	},
 
-    toggleHighlight:function(slice){
-        if(this.currentHighlighted && slice !== this.currentHighlighted && this.currentHighlighted.isHighlighted()){
-            this.currentHighlighted.highlight();
-        }
-        this.currentHighlighted = slice;
-    },
+	getSliceStyle:function (index) {
+		if (this.styles[index] === undefined) {
+			var color = this.data[index].color ? this.data[index].color : this.getColor(index);
+			this.styles[index] = new ludo.canvas.Paint({
+				'stroke-location':'inside',
+				'fill':color,
+				'stroke-linejoin':'round',
+				'stroke':'#fff',
+				'cursor':'pointer'
+			});
+			this.adopt(this.styles[index]);
+		}
+		return this.styles[index];
+	},
 
-    getPaint:function (index) {
-        if (this.styles[index] === undefined) {
-            var color = this.data[index].color ? this.data[index].color : this.getColor(index);
-            this.styles[index] = new ludo.canvas.Paint({
-                'stroke-location':'inside',
-                'fill':color,
-                'stroke-linejoin' : 'round',
-                'stroke':'#fff',
-                'cursor':'pointer'
-            });
-            this.getCanvas().adopt(this.styles[index]);
-        }
-        return this.styles[index];
-    },
+	getColor:function (index) {
+		return this.color().offsetHue(this.startColor, index * (360 / this.data.length));
+	},
 
-    getColor:function (index) {
-        return this.color().offsetHue(this.startColor, index * (360 / this.getChartData().length));
-    },
+	updateChart:function () {
+		if (this.animate) {
+			var steps = this.getAnimationSteps(true);
+			this.animateStep(0, steps);
+		} else {
+			this.renderChart();
+		}
+	},
 
-    updateChart:function(){
-        // TODO animate from current pos
-        if(this.animate){
-            var steps = this.getAnimationSteps(true);
-            this.animateStep(0, steps);
-        }else{
-            this.renderChart();
-        }
+	update:function(data){
+		this.parent(data);
+		this.renderChart();
+	},
 
-    }
+	getSum:function () {
+		var sum = 0;
+		for (var i = 0; i < this.data.length; i++) {
+			sum += this.data[i].value;
+		}
+		return sum;
+	},
+
+	resize:function(config){
+		this.parent(config);
+		this.renderChart(true);
+	}
+
 });/* ../ludojs/src/ludo-db/factory.js */
 /**
  Factory for automatic creation of children from server ludoDB config. This class is used
@@ -11088,6 +11112,16 @@ ludo.layout.Relative = new Class({
 				width:c.width !== lc.width ? c.width : undefined,
 				height:c.height !== lc.height ? c.height : undefined
 			});
+
+			if(c['right'] !== undefined && c.width){
+				c.left = lm.viewport.width - c.right - c.width;
+				c['right'] = undefined;
+			}
+			if(c.bottom !== undefined && c.height){
+				c.top = lm.viewport.height - c.bottom - c.height;
+				c.bottom = undefined;
+			}
+
 			for (var i = 0; i < p.length; i++) {
 				var key = p[i];
 				if (c[key] !== undefined){
@@ -11128,7 +11162,6 @@ ludo.layout.Relative = new Class({
 	positionChild:function (child, property, value) {
 		child.getEl().style[property] = value + 'px';
 		child[property] = value;
-
 	},
     /**
      * Creates empty newChildCoordinates and lastChildCoordinates for a child view
@@ -11725,6 +11758,71 @@ ludo.layout.Popup = new Class({
 			if(!c[i].isHidden())c[i].getLayout().getRenderer().resize();
 		}
 	}
+});/* ../ludojs/src/layout/canvas.js */
+/**
+ * Layout manager for items in a chart
+ * @namespace chart
+ * @class Layout
+ * @extends layout.Relative
+ */
+ludo.layout.Canvas = new Class({
+	Extends:ludo.layout.Relative,
+
+	addChild:function (child) {
+		child = this.getValidChild(child);
+		child = this.getNewComponent(child);
+
+		this.view.children.push(child);
+		var el = child;
+		this.view.getCanvas().adopt(el);
+
+		this.onNewChild(child);
+		this.addChildEvents(child);
+		/**
+		 * Event fired by layout manager when a new child is added
+		 * @event addChild
+		 * @param {ludo.View} child
+		 * @param {ludo.layout.Base} layout manager
+		 */
+		this.fireEvent('addChild', [child, this]);
+
+
+
+		return child;
+	},
+
+	/**
+	 * Add events to child view
+	 * @method addChildEvents
+	 * @param {ludo.View} child
+	 * @private
+	 */
+	addChildEvents:function (child) {
+		child.addEvent('hide', this.hideChild.bind(this));
+		child.addEvent('show', this.clearTemporaryValues.bind(this));
+
+	},
+
+	/**
+	 * Position child at this coordinates
+	 * @method positionChild
+	 * @param {canvas.Element} child
+	 * @param {String} property
+	 * @param {Number} value
+	 * @private
+	 */
+	positionChild:function (child, property, value) {
+		child[property] = value;
+		this.currentTranslate[property] = value;
+		child['node'].translate(this.currentTranslate.left, this.currentTranslate.top);
+	},
+
+	currentTranslate:{
+		left:0,top:0
+	}
+
+
+
 });/* ../ludojs/src/layout/menu-container.js */
 ludo.layout.MenuContainer = new Class({
     Extends:Events,
