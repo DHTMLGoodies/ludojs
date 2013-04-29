@@ -7,6 +7,7 @@ require_once("../includes/demo-header.php");
 <script type="text/javascript" src="../../src/canvas/canvas.js"></script>
 <script type="text/javascript" src="../../src/canvas/node.js"></script>
 <script type="text/javascript" src="../../src/canvas/named-node.js"></script>
+<script type="text/javascript" src="../../src/color/color.js"></script>
 <script type="text/javascript" src="../../src/chart/group.js"></script>
 <script type="text/javascript" src="../../src/canvas/rect.js"></script>
 <script type="text/javascript" src="../../src/canvas/path.js"></script>
@@ -17,6 +18,7 @@ require_once("../includes/demo-header.php");
 <script type="text/javascript" src="../../src/chart/data-provider.js"></script>
 <script type="text/javascript" src="../../src/chart/chart.js"></script>
 <script type="text/javascript" src="../../src/chart/group.js"></script>
+<script type="text/javascript" src="../../src/chart/chart-base.js"></script>
 <script type="text/javascript" src="../../src/chart/pie.js"></script>
 <script type="text/javascript" src="../../src/chart/item.js"></script>
 <script type="text/javascript" src="../../src/chart/tooltip.js"></script>
@@ -106,11 +108,11 @@ require_once("../includes/demo-header.php");
         cursor:'pointer'
 
     });
-
+    /*
     ludo.get('labels').adopt(paintTwo);
     var circle = new ludo.canvas.Circle({cx:50, cy:50, r:45, "class": paintTwo});
     ludo.get('labels').adopt(circle);
-
+    */
 </script>
 </body>
 </html>

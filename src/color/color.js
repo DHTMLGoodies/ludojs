@@ -227,7 +227,50 @@ ludo.color.Color = new Class({
         hsv.h += offset;
         if(hsv.h >= 360) hsv.h -= 360;
         return this.rgbCode(hsv);
+    },
 
+    /**
+     * Return rgb code after hue has been adjusted by a number of degrees
+     * @method offsetBrightness
+     * @param color
+     * @param offset
+     * @return {String}
+     */
+    offsetBrightness:function(color, offset){
+        var hsv = this.toHSV(color);
+        hsv.v += offset;
+        if(hsv.v > 100) hsv.v = 100;
+        if(hsv.v < 0)hsv.v = 0;
+        return this.rgbCode(hsv);
+    },
+
+    /**
+     * Return rgb code after hue has been adjusted by a number of degrees
+     * @method offsetSaturation
+     * @param color
+     * @param offset
+     * @return {String}
+     */
+    offsetSaturation:function(color, offset){
+        var hsv = this.toHSV(color);
+        hsv.s += offset;
+        if(hsv.s > 100) hsv.s = 100;
+        if(hsv.s < 0)hsv.s = 0;
+        return this.rgbCode(hsv);
+    },
+
+    brighten:function(color, percent){
+        var hsv = this.toHSV(color);
+        color = this.offsetBrightness(color, hsv.v * percent/100);
+        color = this.offsetSaturation(color, hsv.s * percent/100 * -1);
+        return color;
+    },
+
+    darken:function(color, percent){
+        var hsv = this.toHSV(color);
+        color = this.offsetBrightness(color, hsv.v * percent/100 * -1);
+        color = this.offsetSaturation(color, hsv.s * percent/100);
+        return color;
     }
 });
 
