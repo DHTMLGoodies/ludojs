@@ -105,6 +105,7 @@ ludo.form.Manager = new Class({
 		c.addEvent('invalid', this.onInvalidFormElement.bind(this));
 		c.addEvent('dirty', this.onDirtyFormElement.bind(this));
 		c.addEvent('clean', this.onCleanFormElement.bind(this));
+        c.addEvent('change', this.onChangedFormElement.bind(this));
 
 		if (!c.isValid()) {
 			this.invalidIds.push(c.getId());
@@ -150,6 +151,16 @@ ludo.form.Manager = new Class({
 		}
 	},
 
+    onChangedFormElement:function(value, formComponent){
+        /**
+         * Event fired when a form element has been changed
+         * @event change
+         * @param {ludo.form.Manager} form
+         * @param {ludo.form.Element} form element
+         *
+         */
+        this.fireEvent('change',[this, formComponent] )
+    },
 	/**
 	 * One form element is valid. Fire valid event if all form elements are valid
 	 * @method onValidFormElement
@@ -212,9 +223,9 @@ ludo.form.Manager = new Class({
 	isValid:function () {
 		return this.invalidIds.length === 0;
 	},
+    // TODO implement a method returning values as plain array(values only)
 	/**
 	 * @method getValues
-	 * @private
 	 * @description Return array of values of all form elements inside this component. The format is [{name:value},{name:value}]
 	 */
 	getValues:function () {

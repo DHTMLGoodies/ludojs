@@ -542,7 +542,7 @@ ludo.View = new Class({
 		 */
 		this.fireEvent('render', this);
 		this.isRendered = true;
-		if (this.model) {
+		if (this.model || this.form) {
 			this.getForm();
 		}
 

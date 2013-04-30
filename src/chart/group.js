@@ -18,9 +18,11 @@ ludo.chart.Group = new Class({
 		if (coordinates.width && coordinates.height){
 			this.width = coordinates.width;
 			this.set('width', coordinates.width + 'px');
+        }
+        if(coordinates.height){
 			this.height = coordinates.height;
 			this.set('height', coordinates.height + 'px');
-		}
+        }
 	},
 
 	isHidden:function () {

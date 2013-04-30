@@ -1,13 +1,24 @@
 ludo.chart.Chart = new Class({
 	Extends: ludo.View,
 	css:{
-		'background-color' : '#fff'
+
 	},
+
+    /**
+     * Class providing data to the chart
+     * @config {chart.DataProvider} dataProvider
+     * @optional
+     * @default undefined
+     */
+    dataProvider:undefined,
+
 	ludoConfig:function(config){
 		this.parent(config);
 		this.layout.type = 'Canvas';
 		this.setConfigParams(config, ['dataProvider','data']);
+        this.css.backgroundColor = '#fff';
 
+        if(this.dataProvider)this.dataProvider.addEvent('update', this.setData.bind(this));
 
 	},
 
@@ -31,5 +42,4 @@ ludo.chart.Chart = new Class({
 		this.data = data;
 		this.updateChildren();
 	}
-
 });

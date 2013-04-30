@@ -37,7 +37,7 @@ ludo.chart.Item = new Class({
 
     getStyleObj:function(styles){
         var p = new ludo.canvas.Paint(styles);
-        this.group.getCanvas().adopt(p);
+        this.group.getCanvas().adoptDef(p);
         return p;
     },
 

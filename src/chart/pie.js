@@ -23,6 +23,7 @@ ludo.chart.Pie = new Class({
 
         this.origo = this.getChartOrigin();
 
+
         this.currentRadius = Math.min(this.origo.x, this.origo.y) * .9;
         if (this.animate && (forUpdate || !this.rendered)) {
             this.animateSlices();
