@@ -29,8 +29,8 @@ ludo.chart.Item = new Class({
                 stroke : styles.stroke
             },
             over:{
-                fill : this.group.color().brighten(styles.fill, 5),
-                stroke : this.group.color().darken(styles.stroke, 5)
+                fill : this.group.color().brighten(styles.fill, 4),
+                stroke : this.group.color().darken(styles.stroke, 4)
             }
         };
     },
