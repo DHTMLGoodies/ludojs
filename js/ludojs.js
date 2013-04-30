@@ -1,4 +1,4 @@
-/* Generated Tue Apr 30 2:51:38 CEST 2013 */
+/* Generated Tue Apr 30 4:02:52 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -6178,10 +6178,12 @@ ludo.chart.Chart = new Class({
 		this.layout.type = 'Canvas';
 		this.setConfigParams(config, ['dataProvider','data']);
         this.css.backgroundColor = '#fff';
-
-        if(this.dataProvider)this.dataProvider.addEvent('update', this.setData.bind(this));
-
 	},
+
+    ludoEvents:function(){
+        this.parent();
+        if(this.dataProvider)this.dataProvider.addEvent('update', this.setData.bind(this));
+    },
 
 	ludoRendered:function(){
 		this.parent();
@@ -6402,8 +6404,8 @@ ludo.chart.Item = new Class({
                 stroke : styles.stroke
             },
             over:{
-                fill : this.group.color().brighten(styles.fill, 5),
-                stroke : this.group.color().darken(styles.stroke, 5)
+                fill : this.group.color().brighten(styles.fill, 4),
+                stroke : this.group.color().darken(styles.stroke, 4)
             }
         };
     },
@@ -6450,7 +6452,7 @@ ludo.chart.Group = new Class({
 	},
 
 	resize:function (coordinates) {
-		if (coordinates.width && coordinates.height){
+		if (coordinates.width){
 			this.width = coordinates.width;
 			this.set('width', coordinates.width + 'px');
         }
@@ -6598,9 +6600,7 @@ ludo.chart.Tooltip = new Class({
 
     initialize:function (item, paint) {
         // TODO dynamic sizing
-        this.parent({
-            x:0, y:0, width:130, height:50, rx:5, ry:5
-        });
+        this.parent();
 
 
 
@@ -6613,7 +6613,7 @@ ludo.chart.Tooltip = new Class({
 
         var rect = new ludo.canvas.Rect(
             {
-                x:0, y:0, width:130, height:50, rx:5, ry:5, "class":paint
+                x:3, y:3, width:124, height:44, rx:5, ry:5, "class":paint
             }
         );
         rect.setStyle('stroke-location','inside');

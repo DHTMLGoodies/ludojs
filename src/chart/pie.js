@@ -24,6 +24,7 @@ ludo.chart.Pie = new Class({
         this.origo = this.getChartOrigin();
 
 
+
         this.currentRadius = Math.min(this.origo.x, this.origo.y) * .9;
         if (this.animate && (forUpdate || !this.rendered)) {
             this.animateSlices();
@@ -147,7 +148,7 @@ ludo.chart.Pie = new Class({
     },
 
     getColor:function (index) {
-        return this.data[index].color ? this.data[index].color : this.color().offsetHue(this.startColor, index * (360 / this.data.length));
+        return this.data[index].color ? this.data[index].color : this.color().offsetHue(this.startColor, index * (360 / (this.data.length + 1)));
     },
 
     getSum:function () {

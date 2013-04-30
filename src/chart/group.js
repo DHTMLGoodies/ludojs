@@ -15,7 +15,7 @@ ludo.chart.Group = new Class({
 	},
 
 	resize:function (coordinates) {
-		if (coordinates.width && coordinates.height){
+		if (coordinates.width){
 			this.width = coordinates.width;
 			this.set('width', coordinates.width + 'px');
         }
@@ -30,9 +30,10 @@ ludo.chart.Group = new Class({
 	},
 
 	getChartOrigin:function () {
+        var b = this.parentComponent.getBody();
 		return {
-			x : this.width / 2,
-			y : this.height /2
+			x : b.offsetWidth / 2,
+			y : b.offsetHeight /2
 		}
 	},
 

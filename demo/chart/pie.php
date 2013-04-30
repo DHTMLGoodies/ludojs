@@ -32,7 +32,7 @@ require_once("../includes/demo-header.php");
 
     var provider = new ludo.chart.DataProvider({
         data:[
-            { label:'John', value:100, color:'#000088' },
+            { label:'John', value:100 },
             { label:'Jane', value:245 },
             { label:'Martin', value:37 },
             { label:'Mary', value:99 },
