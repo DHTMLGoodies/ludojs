@@ -6,6 +6,7 @@ ludo.chart.Tooltip = new Class({
 
     initialize:function (item, paint) {
         // TODO dynamic sizing
+        // TODO singleton tooltip for entire chart.
         this.parent();
 
 
@@ -72,6 +73,8 @@ ludo.chart.Tooltip = new Class({
         if (!this.pos)return;
         var x = this.pos.initial.x + e.page.x - this.pos.mouse.x;
         var y = this.pos.initial.y + e.page.y - this.pos.mouse.y;
+
+        if(x < 0)x += this.getWidth() + 20;
         this.engine().translate(this.getEl(), x, y);
     }
 });
