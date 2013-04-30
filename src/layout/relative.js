@@ -365,11 +365,11 @@ ludo.layout.Relative = new Class({
 			});
 
 			if(c['right'] !== undefined && c.width){
-				c.left = lm.viewport.width - c.right - c.width;
+				c.left = lm.viewport.absWidth - c.right - c.width;
 				c['right'] = undefined;
 			}
 			if(c.bottom !== undefined && c.height){
-				c.top = lm.viewport.height - c.bottom - c.height;
+				c.top = lm.viewport.absHeight - c.bottom - c.height;
 				c.bottom = undefined;
 			}
 

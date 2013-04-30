@@ -1,4 +1,4 @@
-/* Generated Tue Apr 30 4:02:52 CEST 2013 */
+/* Generated Tue Apr 30 13:41:53 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -6467,9 +6467,10 @@ ludo.chart.Group = new Class({
 	},
 
 	getChartOrigin:function () {
+        var b = this.parentComponent.getBody();
 		return {
-			x : this.width / 2,
-			y : this.height /2
+			x : b.offsetWidth / 2,
+			y : b.offsetHeight /2
 		}
 	},
 
@@ -6600,9 +6601,8 @@ ludo.chart.Tooltip = new Class({
 
     initialize:function (item, paint) {
         // TODO dynamic sizing
+        // TODO singleton tooltip for entire chart.
         this.parent();
-
-
 
         item.group.getCanvas().adopt(this);
         this.item = item;
@@ -6646,7 +6646,7 @@ ludo.chart.Tooltip = new Class({
             translate:translate,
             initial:{
                 x : e.page.x - pos.x - 10 - this.getWidth(),
-                y : e.page.y - pos.y + 10 - this.getHeight()/2
+                y : e.page.y - pos.y - this.getHeight()/2
             }
         };
 
@@ -6654,8 +6654,6 @@ ludo.chart.Tooltip = new Class({
             this.pos.initial.x,
             this.pos.initial.y
         );
-
-
     },
 
     hideTooltip:function () {
@@ -6666,6 +6664,8 @@ ludo.chart.Tooltip = new Class({
         if (!this.pos)return;
         var x = this.pos.initial.x + e.page.x - this.pos.mouse.x;
         var y = this.pos.initial.y + e.page.y - this.pos.mouse.y;
+
+        if(x < 0)x += this.getWidth() + 20;
         this.engine().translate(this.getEl(), x, y);
     }
 });/* ../ludojs/src/chart/pie.js */
@@ -6693,6 +6693,7 @@ ludo.chart.Pie = new Class({
         if (!this.data)return;
 
         this.origo = this.getChartOrigin();
+
 
 
         this.currentRadius = Math.min(this.origo.x, this.origo.y) * .9;
@@ -6818,7 +6819,7 @@ ludo.chart.Pie = new Class({
     },
 
     getColor:function (index) {
-        return this.data[index].color ? this.data[index].color : this.color().offsetHue(this.startColor, index * (360 / this.data.length));
+        return this.data[index].color ? this.data[index].color : this.color().offsetHue(this.startColor, index * (360 / (this.data.length + 1)));
     },
 
     getSum:function () {
@@ -11110,11 +11111,11 @@ ludo.layout.Relative = new Class({
 			});
 
 			if(c['right'] !== undefined && c.width){
-				c.left = lm.viewport.width - c.right - c.width;
+				c.left = lm.viewport.absWidth - c.right - c.width;
 				c['right'] = undefined;
 			}
 			if(c.bottom !== undefined && c.height){
-				c.top = lm.viewport.height - c.bottom - c.height;
+				c.top = lm.viewport.absHeight - c.bottom - c.height;
 				c.bottom = undefined;
 			}
 

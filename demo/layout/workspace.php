@@ -248,26 +248,6 @@ new ludo.View({
                             html:'Content of child two'
                         }
                     ]
-                },
-                {
-                    type:'FramedView',
-                    layout:{
-                        closable:true
-                    },
-                    title:'Source code',
-                    minimizable:false,
-                    containerCss:{
-                        border:0
-                    },
-                    css:{
-                        'overflow-y':'auto',
-                        margin:0
-                    },
-                    children:[
-                        {
-                            type:'SourceCodePreview'
-                        }
-                    ]
                 }
             ]
 

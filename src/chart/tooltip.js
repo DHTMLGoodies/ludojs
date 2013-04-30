@@ -9,8 +9,6 @@ ludo.chart.Tooltip = new Class({
         // TODO singleton tooltip for entire chart.
         this.parent();
 
-
-
         item.group.getCanvas().adopt(this);
         this.item = item;
         item.addEvent('mouseenter', this.showTooltip.bind(this));
@@ -53,7 +51,7 @@ ludo.chart.Tooltip = new Class({
             translate:translate,
             initial:{
                 x : e.page.x - pos.x - 10 - this.getWidth(),
-                y : e.page.y - pos.y + 10 - this.getHeight()/2
+                y : e.page.y - pos.y - this.getHeight()/2
             }
         };
 
@@ -61,8 +59,6 @@ ludo.chart.Tooltip = new Class({
             this.pos.initial.x,
             this.pos.initial.y
         );
-
-
     },
 
     hideTooltip:function () {
