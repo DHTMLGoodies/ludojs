@@ -6,9 +6,7 @@ ludo.chart.Tooltip = new Class({
 
     initialize:function (item, paint) {
         // TODO dynamic sizing
-        this.parent({
-            x:0, y:0, width:130, height:50, rx:5, ry:5
-        });
+        this.parent();
 
 
 
@@ -21,7 +19,7 @@ ludo.chart.Tooltip = new Class({
 
         var rect = new ludo.canvas.Rect(
             {
-                x:0, y:0, width:130, height:50, rx:5, ry:5, "class":paint
+                x:3, y:3, width:124, height:44, rx:5, ry:5, "class":paint
             }
         );
         rect.setStyle('stroke-location','inside');

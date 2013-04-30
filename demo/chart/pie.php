@@ -156,20 +156,20 @@ require_once("../includes/demo-header.php");
             }
         ]
     });
-
-    var paintTwo = new ludo.canvas.Paint({
-        'fill':'orange',
-        'stroke':'#D90000',
-        'stroke-width':'5',
-        'opacity':.8,
-        cursor:'pointer'
-
-    });
     /*
-    ludo.get('labels').adopt(paintTwo);
-    var circle = new ludo.canvas.Circle({cx:50, cy:50, r:45, "class": paintTwo});
-    ludo.get('labels').adopt(circle);
-    */
+       var paintTwo = new ludo.canvas.Paint({
+           'fill':'orange',
+           'stroke':'#D90000',
+           'stroke-width':'5',
+           'opacity':.8,
+           cursor:'pointer'
+
+       });
+
+       ludo.get('labels').adopt(paintTwo);
+       var circle = new ludo.canvas.Circle({cx:50, cy:50, r:45, "class": paintTwo});
+       ludo.get('labels').adopt(circle);
+       */
 </script>
 </body>
 </html>

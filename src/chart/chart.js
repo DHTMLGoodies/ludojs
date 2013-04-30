@@ -17,10 +17,12 @@ ludo.chart.Chart = new Class({
 		this.layout.type = 'Canvas';
 		this.setConfigParams(config, ['dataProvider','data']);
         this.css.backgroundColor = '#fff';
-
-        if(this.dataProvider)this.dataProvider.addEvent('update', this.setData.bind(this));
-
 	},
+
+    ludoEvents:function(){
+        this.parent();
+        if(this.dataProvider)this.dataProvider.addEvent('update', this.setData.bind(this));
+    },
 
 	ludoRendered:function(){
 		this.parent();
