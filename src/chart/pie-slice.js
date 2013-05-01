@@ -9,6 +9,9 @@ ludo.chart.PieSlice = new Class({
     initialize:function (group, styles) {
         this.parent(group, styles);
         this.addEvent('click', this.highlight.bind(this));
+
+        this.addEvent('animate', this.deactivateHighlight.bind(this));
+        this.addEvent('animationComplete', this.restoreHighlight.bind(this));
     },
 
     render:function (config) {
@@ -98,5 +101,19 @@ ludo.chart.PieSlice = new Class({
 
     isHighlighted:function(){
         return this.highlighted;
+    },
+
+    wasHighlighted : false,
+    restoreHighlight:function(){
+        if(this.wasHighlighted){
+            this.highlight();
+        }
+    },
+
+    deactivateHighlight:function(){
+        if(this.highlighted){
+            this.highlight();
+            this.wasHighlighted = true;
+        }
     }
 });

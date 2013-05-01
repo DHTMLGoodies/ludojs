@@ -61,6 +61,7 @@ ludo.chart.Item = new Class({
     },
 
     animate:function (animationConfig) {
+        this.fireEvent('animate', this);
         this.animateStep(animationConfig, 0);
     },
 
@@ -69,6 +70,8 @@ ludo.chart.Item = new Class({
         currentStep++;
         if(currentStep < animationConfig.count){
             this.animateStep.delay(this.group.getAnimationSpec().fps, this, [animationConfig, currentStep ]);
+        }else{
+            this.fireEvent('animationComplete', this);
         }
     },
 
