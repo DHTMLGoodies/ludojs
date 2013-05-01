@@ -107,6 +107,7 @@ ludo.chart.PieSlice = new Class({
     restoreHighlight:function(){
         if(this.wasHighlighted){
             this.highlight();
+            this.wasHighlighted = false;
         }
     },
 
