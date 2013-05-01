@@ -4,7 +4,6 @@ ludo.chart.Chart = new Class({
 
 	},
 
-
     data:undefined,
 
     /**

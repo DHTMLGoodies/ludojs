@@ -18,12 +18,9 @@ ludo.chart.Pie = new Class({
         this.origo = this.getChartOrigin();
 
         this.currentRadius = Math.min(this.origo.x, this.origo.y) * .9;
-        if (this.animate && (forUpdate || !this.rendered)) {
-            this.renderSlices('animate');
-        } else {
-            this.renderSlices('render');
-        }
 
+        var method = this.animate && (forUpdate || !this.rendered) ? 'animate' : 'render';
+        this.renderSlices(method);
         this.rendered = true;
     },
 
