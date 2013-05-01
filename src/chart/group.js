@@ -27,42 +27,5 @@ ludo.chart.Group = new Class({
 
 	isHidden:function () {
 		return false;
-	},
-
-	getChartOrigin:function () {
-        var b = this.parentComponent.getBody();
-		return {
-			x : b.offsetWidth / 2,
-			y : b.offsetHeight /2
-		}
-	},
-
-	update:function(data){
-		this.data = data;
-	},
-
-	getCanvas:function(){
-		return this.parentComponent.getCanvas();
-	},
-
-	getChartView:function(){
-		return this.parentComponent;
-	},
-
-	color:function(){
-		if(this.colorHandler === undefined){
-			this.colorHandler = new ludo.color.Color();
-		}
-		return this.colorHandler;
-	},
-
-	getTooltipStyles:function(){
-		var s = this.tooltip && this.tooltip.css ? this.tooltip.css : {};
-		return Object.merge({
-			'stroke-location':'inside',
-			'fill-opacity':.7,
-			'fill':'#fff',
-			'stroke':'#008'
-		}, s);
 	}
 });

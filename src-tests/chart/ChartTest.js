@@ -36,8 +36,36 @@ TestCase("ChartTest", {
 
 		assertEquals(v.getCanvas(), child.getCanvas());
 
-
 	},
+
+    "test should create data provider automatically": function(){
+        // given
+        var v = this.getCanvasWithTheseChildren([
+            {
+                type:'chart.Group'
+            }
+        ]);
+
+        // then
+        assertNotUndefined(v.getDataProvider());
+    },
+
+    "test should automatically create getChart methods for children": function(){
+        // given
+        var v = this.getCanvasWithTheseChildren([
+            {
+                type:'chart.Group'
+            },
+            {
+                type:'chart.Group'
+            }
+        ]);
+
+        // then
+        assertEquals(v, v.children[0].getChart());
+        assertEquals(v, v.children[1].getChart());
+
+    },
 
 	getCanvasWithTheseChildren:function (children) {
 

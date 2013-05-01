@@ -13,6 +13,7 @@ require_once("../includes/demo-header.php");
 <script type="text/javascript" src="../../src/canvas/path.js"></script>
 <script type="text/javascript" src="../../src/canvas/engine.js"></script>
 <script type="text/javascript" src="../../src/canvas/effect.js"></script>
+<script type="text/javascript" src="../../src/canvas/group.js"></script>
 <script type="text/javascript" src="../../src/canvas/event-manager.js"></script>
 
 <script type="text/javascript" src="../../src/chart/data-provider.js"></script>

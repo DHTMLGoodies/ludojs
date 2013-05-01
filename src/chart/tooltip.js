@@ -44,7 +44,7 @@ ludo.chart.Tooltip = new Class({
         var translate = { x:0, y:0 };
         this.engine().translate(this.getEl(), 0, 0);
 
-        var pos = this.item.group.getChartView().getEl().getPosition();
+        var pos = this.item.group.getChart().getEl().getPosition();
 
         this.pos = {
             mouse:e.page,

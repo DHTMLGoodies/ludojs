@@ -4,6 +4,7 @@ ludo.chart.PieSlice = new Class({
     renderingData:undefined,
     tagName:'path',
     highlighted:false,
+    animationKeys : ['angle', 'radius', 'degrees'],
 
     initialize:function (group, styles) {
         this.parent(group, styles);
@@ -11,22 +12,59 @@ ludo.chart.PieSlice = new Class({
     },
 
     render:function (config) {
+        config.radius = this.group.getRadius();
+        this.storeRenderingData(config);
         this.set('d', this.getPath(config));
-        this.renderingData = config;
+    },
+
+    animate:function(config){
+        this.storeRenderingValue('angle', config.angle);
+        this.parent(this.getAnimationConfig({
+            angle : config.angle,
+            radius : this.group.getRadius(),
+            degrees : config.degrees
+        }));
+        this.storeRenderingData(config);
+    },
+
+    executeAnimation:function(data, step){
+        this.parent(data);
+        var p = this.group.getPrevious(this);
+        if(p){
+            var a = p.getAnimationValues(step);
+            data.angle = a.angle + a.degrees;
+        }
+        this.set('d', this.getPath(data));
+    },
+
+    storeRenderingData:function(config){
+        this.parent({
+            angle : config.angle,
+            radius : this.group.getRadius(),
+            degrees : config.degrees
+        });
+    },
+
+    storeRenderingValue:function(key, value){
+        if(this.renderingData === undefined)this.renderingData = {};
+        this.renderingData[key] = value;
     },
 
     getOffsetFromOrigo:function (offset) {
-        var centerRadians = this.toRadians(this.renderingData.startAngle + (this.renderingData.degrees / 2));
+        var centerRadians = this.toRadians(this.renderingData.angle + (this.renderingData.degrees / 2));
         var x = Math.cos(centerRadians) * offset;
         var y = Math.sin(centerRadians) * offset;
         return { x:x, y:y}
     },
 
     getPath:function (config) {
-        var path = ['M ' + config.origo.x + ' ' + config.origo.y];
+        
+        var origo = this.group.getOrigo();
 
-        var point1 = this.getPointAtDegreeOffset(config.origo, config.startAngle, config.radius);
-        var point2 = this.getPointAtDegreeOffset(config.origo, config.startAngle + config.degrees, config.radius);
+        var path = ['M ' + origo.x + ' ' + origo.y];
+
+        var point1 = this.getPointAtDegreeOffset(origo, config.angle, config.radius);
+        var point2 = this.getPointAtDegreeOffset(origo, config.angle + config.degrees, config.radius);
         path.push('L ' + point1.x + ' ' + point1.y);
         path.push('M ' + point1.x + ' ' + point1.y);
 
@@ -36,7 +74,7 @@ ludo.chart.PieSlice = new Class({
         path.push('1');
 
         path.push(point2.x + ' ' + point2.y);
-        path.push('L ' + config.origo.x + ' ' + config.origo.y);
+        path.push('L ' + origo.x + ' ' + origo.y);
 
         return path.join(' ');
     },
