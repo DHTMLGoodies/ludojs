@@ -61,7 +61,7 @@ ludo.chart.ChartBase = new Class({
         }, s);
     },
 
-    getChartItem:function(key){
+    getChartItem:function(key, type){
         if (this.chartItems[key] === undefined) {
             this.chartItems[key] = this.createDependency('chartItem-'+ key,
                 {
