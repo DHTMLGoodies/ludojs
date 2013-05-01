@@ -30,10 +30,9 @@ ludo.chart.ChartBase = new Class({
     },
 
     getChartOrigin:function () {
-        var b = this.parentComponent.getBody();
         return {
-            x : b.offsetWidth / 2,
-            y : b.offsetHeight /2
+            x : this.width / 2,
+            y : this.height /2
         }
     },
 
