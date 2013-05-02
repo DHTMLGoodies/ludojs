@@ -8,13 +8,14 @@ ludo.canvas.Group = new Class({
     Extends:ludo.canvas.Element,
     tag:'g',
     layout:{},
+
     ludoConfig:function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['layout','containerCss','renderTo','parentComponent']);
+        this.setConfigParams(config, ['layout','css','renderTo','parentComponent']);
         this.renderTo.adopt(this);
 
-        if(this.containerCss){
-            this.node.setStyles(this.containerCss);
+        if(this.css){
+            this.node.setStyles(this.css);
         }
     },
 

@@ -133,8 +133,8 @@ require_once("../includes/demo-header.php");
                             {
                                 name:'labels',
                                 id:'labels',
-                                type:'chart.Group',
-                                containerCss:{
+                                type:'canvas.Group',
+                                css:{
                                     'fill' : '#f00',
                                     'stroke-width' : '1',
                                     'stroke' : '#0f0'

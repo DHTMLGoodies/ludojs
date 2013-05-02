@@ -2,6 +2,7 @@ load:
   - ../../mootools/mootools-core-1.4.5.js
   - ../../mootools/mootools-more-1.4.0.1.js
   - ../../js/ludojs.js
+  - ../../src/canvas/text-box.js
 
 test:
   - DraggingTest.js
@@ -20,6 +21,7 @@ test:
   - PathTest.js
   - FilterTest.js
   - DomMethods.js
+  - TextBoxTest.js
 
 plugin:
  - name: "coverage"
