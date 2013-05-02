@@ -1,14 +1,16 @@
 ludo.canvas.TextBox = new Class({
-	Extends:ludo.canvas.NamedNode,
-	tagName:'text',
+	Extends:ludo.canvas.Group,
+	tag:'g',
 	text:undefined,
 	css:{
 		'line-height':13
 	},
 	presentationAttributes:['x','y','width','height'],
 
-	initialize:function (config) {
-		this.parent(this.getAttributes(config), "");
+	ludoConfig:function (config) {
+		config = config || {};
+		config.attr = this.getAttributes(config);
+		this.parent(config);
 		this.text = config.text;
 		if (config.css)this.css = config.css;
 
@@ -24,7 +26,6 @@ ludo.canvas.TextBox = new Class({
 			}
 		}
 		return ret;
-
 	},
 
 	tagsToInsert:function () {
@@ -36,9 +37,10 @@ ludo.canvas.TextBox = new Class({
 		var ret = [];
 		for (var i = 0; i < tokens.length; i++) {
 			var obj = {
-				tag:'tspan',
+				tag:'text',
 				text:'',
-				properties:undefined
+				properties:undefined,
+				parent:undefined
 			};
 			var pos = this.text.indexOf(tokens[i], index);
 			if (pos > index) {
@@ -50,14 +52,14 @@ ludo.canvas.TextBox = new Class({
 
 		if (index < this.text.length) {
 			ret.push({
-					tag:'tspan',
+					tag:'text',
 					text:this.text.substr(index)
 				}
 			);
 		}
 
 		for(i= 0;i<ret.length;i++){
-			ret[i].properties = this.getProperties(ret[i].text);
+			ret[i] = this.getProperties(ret[i]);
 			ret[i].text = this.stripTags(ret[i].text);
 		}
 
@@ -70,14 +72,15 @@ ludo.canvas.TextBox = new Class({
 		var tags = this.tagsToInsert();
 		for(var i=0;i<tags.length;i++){
 			var n = new ludo.canvas.Node(tags[i].tag, tags[i].properties, tags[i].text);
-
-			this.adopt(n);
+			if(tags[i].parent)tags[i].parent.adopt(n); else this.adopt(n);
 		}
 	},
 
-	getProperties:function (text) {
+	currentDy : 15,
+
+	getProperties:function (item) {
 		var ret = {};
-		var tag = text.match(/<([a-z]+?)>/g);
+		var tag = item.text.match(/<([a-z]+?)>/g);
 		if(tag){
 			switch(tag[0].toLowerCase()){
 				case '<b>':
@@ -85,11 +88,16 @@ ludo.canvas.TextBox = new Class({
 					break;
 				case '<br>':
 					ret['dx'] = 0;
-					ret['dy'] = 15;
+					this.currentDy+=15;
 					break;
 			}
 		}
-		return ret;
+
+		ret['dy'] = this.currentDy;
+
+		item.properties = ret;
+
+		return item;
 	},
 
 	stripTags:function (text) {

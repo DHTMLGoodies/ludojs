@@ -12,7 +12,9 @@ ludo.canvas.Group = new Class({
     ludoConfig:function (config) {
         this.parent(config);
         this.setConfigParams(config, ['layout','css','renderTo','parentComponent']);
-        this.renderTo.adopt(this);
+        if(this.renderTo){
+			this.renderTo.adopt(this);
+		}
 
         if(this.css){
             this.node.setStyles(this.css);

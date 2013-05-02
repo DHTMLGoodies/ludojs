@@ -1,4 +1,4 @@
-/* Generated Thu May 2 15:41:05 CEST 2013 */
+/* Generated Thu May 2 20:40:46 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -6535,13 +6535,16 @@ ludo.canvas.Group = new Class({
     Extends:ludo.canvas.Element,
     tag:'g',
     layout:{},
+
     ludoConfig:function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['layout','containerCss','renderTo','parentComponent']);
-        this.renderTo.adopt(this);
+        this.setConfigParams(config, ['layout','css','renderTo','parentComponent']);
+        if(this.renderTo){
+			this.renderTo.adopt(this);
+		}
 
-        if(this.containerCss){
-            this.node.setStyles(this.containerCss);
+        if(this.css){
+            this.node.setStyles(this.css);
         }
     },
 
