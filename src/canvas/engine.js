@@ -100,7 +100,7 @@ ludo.canvas.Engine = new Class({
 		el.transform.baseVal.getItem(0).setSkewY(degrees);
 	},
 
-	getOrigin:function (el) {
+	getCenter:function (el) {
 		return {
 			x:this.getWidth(el) / 2,
 			y:this.getHeight(el) / 2

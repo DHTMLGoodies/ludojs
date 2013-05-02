@@ -20,8 +20,6 @@ ludo.chart.Item = new Class({
 
         this.addEvent('mouseenter', this.enter.bind(this));
         this.addEvent('mouseleave', this.leave.bind(this));
-
-
     },
 
     setColors:function (styles) {

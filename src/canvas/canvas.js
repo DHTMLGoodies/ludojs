@@ -96,10 +96,10 @@ ludo.canvas.Canvas = new Class({
 
     /**
      * Returns center point of canvas as an object with x and y coordinates
-     * @method getOrigo
+     * @method getCenter
      * @return {Object}
      */
-    getOrigin:function(){
+    getCenter:function(){
 
         return {
             x : this.width / 2,

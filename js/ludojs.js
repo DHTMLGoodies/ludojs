@@ -1,4 +1,4 @@
-/* Generated Tue Apr 30 13:41:53 CEST 2013 */
+/* Generated Thu May 2 15:41:05 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -1866,7 +1866,7 @@ ludo.canvas.Engine = new Class({
 		el.transform.baseVal.getItem(0).setSkewY(degrees);
 	},
 
-	getOrigin:function (el) {
+	getCenter:function (el) {
 		return {
 			x:this.getWidth(el) / 2,
 			y:this.getHeight(el) / 2
@@ -2697,10 +2697,10 @@ ludo.canvas.Canvas = new Class({
 
     /**
      * Returns center point of canvas as an object with x and y coordinates
-     * @method getOrigo
+     * @method getCenter
      * @return {Object}
      */
-    getOrigin:function(){
+    getCenter:function(){
 
         return {
             x : this.width / 2,
@@ -6165,6 +6165,8 @@ ludo.chart.Chart = new Class({
 
 	},
 
+    data:undefined,
+
     /**
      * Class providing data to the chart
      * @config {chart.DataProvider} dataProvider
@@ -6178,11 +6180,20 @@ ludo.chart.Chart = new Class({
 		this.layout.type = 'Canvas';
 		this.setConfigParams(config, ['dataProvider','data']);
         this.css.backgroundColor = '#fff';
+
+        if(!this.dataProvider){
+            this.dataProvider = this.createDependency('dataProvider',
+                {
+                    type : 'chart.DataProvider',
+                    data : this.data
+                }
+            );
+        }
 	},
 
     ludoEvents:function(){
         this.parent();
-        if(this.dataProvider)this.dataProvider.addEvent('update', this.setData.bind(this));
+        this.dataProvider.addEvent('update', this.setData.bind(this));
     },
 
 	ludoRendered:function(){
@@ -6193,7 +6204,7 @@ ludo.chart.Chart = new Class({
 	updateChildren:function(){
 		var d = this.getChartData();
 		for(var i=0;i<this.children.length;i++){
-			this.children[i].update(d);
+			if(this.children[i].update)this.children[i].update(d);
 		}
 	},
 
@@ -6204,7 +6215,11 @@ ludo.chart.Chart = new Class({
 	setData:function(data){
 		this.data = data;
 		this.updateChildren();
-	}
+	},
+
+    getDataProvider:function(){
+        return this.dataProvider;
+    }
 });/* ../ludojs/src/canvas/paint.js */
 /**
  Class for styling of SVG DOM nodes
@@ -6382,35 +6397,35 @@ ludo.chart.Item = new Class({
     Extends:ludo.canvas.NamedNode,
     tooltip:undefined,
     group:undefined,
+    animationConfig:{},
 
     colors:{},
 
-    initialize:function (group, styles) {
-        this.group = group;
+    initialize:function (config) {
+        this.group = config.group;
+        this.setColors(config.styles);
 
-        this.setColors(styles);
+        this.parent({ "class":this.getStyleObj(config.styles)});
+        config.group.adopt(this);
 
-        this.parent({ "class" : this.getStyleObj(styles)});
-		group.adopt(this);
-        this.addEvent('mouseenter', this.createTooltip.bind(this));
         this.addEvent('mouseenter', this.enter.bind(this));
         this.addEvent('mouseleave', this.leave.bind(this));
     },
 
-    setColors:function(styles){
+    setColors:function (styles) {
         this.colors = {
             normal:{
-                fill : styles.fill,
-                stroke : styles.stroke
+                fill:styles.fill,
+                stroke:styles.stroke
             },
             over:{
-                fill : this.group.color().brighten(styles.fill, 4),
-                stroke : this.group.color().darken(styles.stroke, 4)
+                fill:this.group.color().brighten(styles.fill, 4),
+                stroke:this.group.color().darken(styles.stroke, 4)
             }
         };
     },
 
-    getStyleObj:function(styles){
+    getStyleObj:function (styles) {
         var p = new ludo.canvas.Paint(styles);
         this.group.getCanvas().adoptDef(p);
         return p;
@@ -6427,93 +6442,140 @@ ludo.chart.Item = new Class({
         }
     },
 
-    enter:function(){
+    enter:function () {
         this.setStyles(this.colors.over);
     },
 
-    leave:function(){
+    leave:function () {
         this.setStyles(this.colors.normal);
+    },
+
+    animate:function (animationConfig) {
+        this.fireEvent('animate', this);
+        this.animateStep(animationConfig, 0);
+    },
+
+    animateStep:function(animationConfig, currentStep){
+        this.executeAnimation(animationConfig.step[currentStep], currentStep);
+        currentStep++;
+        if(currentStep < animationConfig.count){
+            this.animateStep.delay(this.group.getAnimationSpec().fps, this, [animationConfig, currentStep ]);
+        }else{
+            this.fireEvent('animationComplete', this);
+        }
+    },
+
+    executeAnimation:function(data){
+        this.renderingData = data;
+    },
+
+    getAnimationConfig:function (values) {
+        var animation = this.group.getAnimationSpec();
+        var countSteps = animation.fps * animation.duration;
+        this.animationConfig = {
+            count:countSteps,
+            step:this.getAnimationSteps(countSteps, values)
+        };
+        return this.animationConfig;
+
+    },
+
+    getAnimationSteps:function (steps, values) {
+        var ret = [];
+        var startValues = this.getAnimationStartValues();
+        var increments = this.getAnimationIncrements(steps, values, startValues);
+
+        var k = this.animationKeys;
+        for (var i = 0; i < steps; i++) {
+            var obj = {};
+            for (var j = 0; j < k.length; j++) {
+                startValues[k[j]] += increments[k[j]];
+                obj[k[j]] = startValues[k[j]];
+            }
+            ret.push(obj);
+        }
+        return ret;
+    },
+
+    getAnimationStartValues:function () {
+        var ret = {};
+        var k = this.animationKeys;
+
+        for (var i = 0; i < k.length; i++) {
+            ret[k[i]] = (this.renderingData && this.renderingData[k[i]]) ? this.renderingData[k[i]] : 0
+        }
+        return ret;
+    },
+
+    getAnimationIncrements:function (steps, values, startValues) {
+        var k = this.animationKeys;
+        var ret = {};
+
+        for (var i = 0; i < k.length; i++) {
+            ret[k[i]] = (values[k[i]] - startValues[k[i]]) / steps;
+        }
+        return ret;
+    },
+
+    storeRenderingData:function (data) {
+        this.renderingData = data;
+    },
+
+    getAnimationValues:function(index){
+        return this.animationConfig.step[index];
     }
-});/* ../ludojs/src/chart/group.js */
-ludo.chart.Group = new Class({
-	Extends:ludo.canvas.Element,
-	tag:'g',
-	layout:{},
-	colorHandler:undefined,
+});/* ../ludojs/src/canvas/group.js */
+/**
+ * Special SVG 'g' element which can be positioned and
+ * sized using the layout.Canvas layout model.
+ * @namespace canvas
+ * @class Group
+ */
+ludo.canvas.Group = new Class({
+    Extends:ludo.canvas.Element,
+    tag:'g',
+    layout:{},
+    ludoConfig:function (config) {
+        this.parent(config);
+        this.setConfigParams(config, ['layout','containerCss','renderTo','parentComponent']);
+        this.renderTo.adopt(this);
 
-	ludoConfig:function (config) {
-		this.parent(config);
-		this.setConfigParams(config, ['layout','containerCss','renderTo','parentComponent','animation']);
-		this.renderTo.adopt(this);
+        if(this.containerCss){
+            this.node.setStyles(this.containerCss);
+        }
+    },
 
-		if(this.containerCss){
-			this.node.setStyles(this.containerCss);
-		}
-	},
-
-	resize:function (coordinates) {
-		if (coordinates.width){
-			this.width = coordinates.width;
-			this.set('width', coordinates.width + 'px');
+    resize:function (coordinates) {
+        if (coordinates.width){
+            this.width = coordinates.width;
+            this.set('width', coordinates.width + 'px');
         }
         if(coordinates.height){
-			this.height = coordinates.height;
-			this.set('height', coordinates.height + 'px');
+            this.height = coordinates.height;
+            this.set('height', coordinates.height + 'px');
         }
-	},
+    },
 
-	isHidden:function () {
-		return false;
-	},
-
-	getChartOrigin:function () {
-        var b = this.parentComponent.getBody();
-		return {
-			x : b.offsetWidth / 2,
-			y : b.offsetHeight /2
-		}
-	},
-
-	update:function(data){
-		this.data = data;
-	},
-
-	getCanvas:function(){
-		return this.parentComponent.getCanvas();
-	},
-
-	getChartView:function(){
-		return this.parentComponent;
-	},
-
-	color:function(){
-		if(this.colorHandler === undefined){
-			this.colorHandler = new ludo.color.Color();
-		}
-		return this.colorHandler;
-	},
-
-	getTooltipStyles:function(){
-		var s = this.tooltip && this.tooltip.css ? this.tooltip.css : {};
-		return Object.merge({
-			'stroke-location':'inside',
-			'fill-opacity':.7,
-			'fill':'#fff',
-			'stroke':'#008'
-		}, s);
-	}
+    isHidden:function () {
+        return false;
+    }
 });/* ../ludojs/src/chart/chart-base.js */
 ludo.chart.ChartBase = new Class({
-    Extends: ludo.chart.Group,
+    Extends: ludo.canvas.Group,
     currentHighlighted:undefined,
+    chartItems:[],
+    animation:{
+        duration:1,
+        fps:33
+    },
 
     ludoConfig:function(config){
         this.parent(config);
-        this.setConfigParams(config, ['animate']);
+        this.setConfigParams(config, ['animate','animation']);
     },
 
     update:function(data){
-        this.parent(data);
+        this.data = data;
         this.renderChart(this.rendered);
     },
 
@@ -6527,37 +6589,148 @@ ludo.chart.ChartBase = new Class({
             this.currentHighlighted.highlight();
         }
         this.currentHighlighted = item;
+    },
+
+    getChartOrigin:function () {
+        return {
+            x : this.width / 2,
+            y : this.height /2
+        }
+    },
+
+    getCanvas:function(){
+        return this.parentComponent.getCanvas();
+    },
+
+    getChart:function(){
+        return this.parentComponent;
+    },
+
+    color:function(){
+        if(this.colorHandler === undefined){
+            this.colorHandler = new ludo.color.Color();
+        }
+        return this.colorHandler;
+    },
+
+    getTooltipStyles:function(){
+        var s = this.tooltip && this.tooltip.css ? this.tooltip.css : {};
+        return Object.merge({
+            'stroke-location':'inside',
+            'fill-opacity':.7,
+            'fill':'#fff',
+            'stroke':'#008'
+        }, s);
+    },
+
+    getChartItem:function(key, type){
+        if (this.chartItems[key] === undefined) {
+            this.chartItems[key] = this.createDependency('chartItem-'+ key,
+                {
+                    type : this.itemType,
+                    group : this,
+                    styles : this.getChartItemStyle(key)
+                });
+
+            this.chartItems[key].addEvent('highlight', this.toggleHighlight.bind(this));
+        }
+        return this.chartItems[key];
+    },
+
+    getChartItemStyle:function(key){
+        var color = this.getColor(key);
+        return {
+            'stroke-location':'inside',
+            'fill':color,
+            'stroke-linejoin':'round',
+            'stroke':'#ffffff',
+            'cursor':'pointer'
+        };
+    },
+
+    getColor:function (key) {
+        return this.data[key].color ? this.data[key].color : this.color().offsetHue(this.startColor, key * (360 / (this.data.length + 1)));
+    },
+
+    getAnimationSpec:function(){
+        return this.animation;
+    },
+
+    getPrevious:function(item){
+        var index = this.chartItems.indexOf(item);
+        return index -1 >= 0 ? this.chartItems[index-1] : undefined;
     }
 });/* ../ludojs/src/chart/pie-slice.js */
 ludo.chart.PieSlice = new Class({
     Extends:ludo.chart.Item,
-    origo:undefined,
+    center:undefined,
     renderingData:undefined,
     tagName:'path',
     highlighted:false,
+    animationKeys : ['angle', 'radius', 'degrees'],
 
     initialize:function (group, styles) {
         this.parent(group, styles);
         this.addEvent('click', this.highlight.bind(this));
+
+        this.addEvent('animate', this.deactivateHighlight.bind(this));
+        this.addEvent('animationComplete', this.restoreHighlight.bind(this));
     },
 
     render:function (config) {
+        config.radius = this.group.getRadius();
+        this.storeRenderingData(config);
         this.set('d', this.getPath(config));
-        this.renderingData = config;
     },
 
-    getOffsetFromOrigo:function (offset) {
-        var centerRadians = this.toRadians(this.renderingData.startAngle + (this.renderingData.degrees / 2));
+    animate:function(config){
+        this.storeRenderingValue('angle', config.angle);
+        this.parent(this.getAnimationConfig({
+            angle : config.angle,
+            radius : this.group.getRadius(),
+            degrees : config.degrees
+        }));
+        this.storeRenderingData(config);
+    },
+
+    executeAnimation:function(data, step){
+        this.parent(data);
+        var p = this.group.getPrevious(this);
+        if(p){
+            var a = p.getAnimationValues(step);
+            data.angle = a.angle + a.degrees;
+        }
+        this.set('d', this.getPath(data));
+    },
+
+    storeRenderingData:function(config){
+        this.parent({
+            angle : config.angle,
+            radius : this.group.getRadius(),
+            degrees : config.degrees
+        });
+    },
+
+    storeRenderingValue:function(key, value){
+        if(this.renderingData === undefined)this.renderingData = {};
+        this.renderingData[key] = value;
+    },
+
+    getOffsetFromCenter:function (offset) {
+        var centerRadians = this.toRadians(this.renderingData.angle + (this.renderingData.degrees / 2));
         var x = Math.cos(centerRadians) * offset;
         var y = Math.sin(centerRadians) * offset;
         return { x:x, y:y}
     },
 
     getPath:function (config) {
-        var path = ['M ' + config.origo.x + ' ' + config.origo.y];
+        
+        var center = this.group.getCenter();
 
-        var point1 = this.getPointAtDegreeOffset(config.origo, config.startAngle, config.radius);
-        var point2 = this.getPointAtDegreeOffset(config.origo, config.startAngle + config.degrees, config.radius);
+        var path = ['M ' + center.x + ' ' + center.y];
+
+        var point1 = this.getPointAtDegreeOffset(center, config.angle, config.radius);
+
         path.push('L ' + point1.x + ' ' + point1.y);
         path.push('M ' + point1.x + ' ' + point1.y);
 
@@ -6566,14 +6739,15 @@ ludo.chart.PieSlice = new Class({
         path.push(config.degrees > 180 ? '1' : '0');
         path.push('1');
 
+        var point2 = this.getPointAtDegreeOffset(center, config.angle + config.degrees, config.radius);
         path.push(point2.x + ' ' + point2.y);
-        path.push('L ' + config.origo.x + ' ' + config.origo.y);
+        path.push('L ' + center.x + ' ' + center.y);
 
         return path.join(' ');
     },
 
     highlight:function () {
-        var coords = this.getOffsetFromOrigo(10);
+        var coords = this.getOffsetFromCenter(10);
 
         if (this.highlighted) {
             this.engine().effect().flyBack(this.getEl(),.1);
@@ -6591,6 +6765,21 @@ ludo.chart.PieSlice = new Class({
 
     isHighlighted:function(){
         return this.highlighted;
+    },
+
+    wasHighlighted : false,
+    restoreHighlight:function(){
+        if(this.wasHighlighted){
+            this.highlight();
+            this.wasHighlighted = false;
+        }
+    },
+
+    deactivateHighlight:function(){
+        if(this.highlighted){
+            this.highlight();
+            this.wasHighlighted = true;
+        }
     }
 });/* ../ludojs/src/chart/tooltip.js */
 ludo.chart.Tooltip = new Class({
@@ -6639,7 +6828,7 @@ ludo.chart.Tooltip = new Class({
         var translate = { x:0, y:0 };
         this.engine().translate(this.getEl(), 0, 0);
 
-        var pos = this.item.group.getChartView().getEl().getPosition();
+        var pos = this.item.group.getChart().getEl().getPosition();
 
         this.pos = {
             mouse:e.page,
@@ -6676,150 +6865,51 @@ ludo.chart.Pie = new Class({
     startColor:'#561AD9',
     styles:[],
     currentRadius:undefined,
-    layout:{
-        type:'svg'
-    },
-    animation:{
-        duration:1,
-        fps:33
-    },
 
     rendered:false,
     sliceData:[],
     startAngle:270,
 
+    itemType : 'chart.PieSlice',
 
     renderChart:function (forUpdate) {
         if (!this.data)return;
 
-        this.origo = this.getChartOrigin();
+        this.center = this.getChartOrigin();
 
+        this.currentRadius = Math.min(this.center.x, this.center.y) * .9;
 
-
-        this.currentRadius = Math.min(this.origo.x, this.origo.y) * .9;
-        if (this.animate && (forUpdate || !this.rendered)) {
-            this.animateSlices();
-        } else {
-            this.renderSlices();
-        }
-
+        var method = this.animate && (forUpdate || !this.rendered) ? 'animate' : 'render';
+        this.renderSlices(method);
         this.rendered = true;
     },
 
-    renderSlices:function () {
+    getRadius:function(){
+        return this.currentRadius;
+    },
+
+    getCenter:function(){
+        return this.center;
+    },
+
+    renderSlices:function (method) {
         var d = this.data;
         var sum = this.getSum(d);
         var deg = this.startAngle;
         for (var i = 0; i < d.length; i++) {
-            var slice = this.getSlice(i);
+            var slice = this.getChartItem(i);
             var sliceDegrees = this.getDegrees(d[i].value, sum);
-            slice.render({
-                radius:this.currentRadius,
-                startAngle:deg,
-                degrees:sliceDegrees,
-                origo:this.origo
+            slice[method]({
+                angle : deg,
+                degrees : sliceDegrees
             });
             deg += sliceDegrees;
+            if(deg > 360)deg-=360;
         }
-    },
-
-    animateSlices:function () {
-        this.animateStep(0, this.getAnimationSteps(this.rendered));
-    },
-
-    animateStep:function (currentStep, data) {
-        for (var i = 0; i < this.data.length; i++) {
-            var slice = this.getSlice(i);
-            slice.render({
-                radius:data.slices[i][currentStep].radius,
-                startAngle:data.slices[i][currentStep].startAngle,
-                degrees:data.slices[i][currentStep].degrees,
-                origo:this.origo,
-                offsetFromOrigo:0
-            });
-        }
-
-        if (currentStep < data.count) {
-            this.animateStep.delay(this.animation.fps, this, [currentStep + 1, data]);
-        }
-    },
-
-    getAnimationSteps:function (relative) {
-        // TODO cleanup this method
-        var sum = this.getSum();
-        var ret = {
-            count:this.animation.fps * this.animation.duration,
-            slices:[]
-        };
-        var sliceDegrees = [];
-
-        for (var i = 0; i < this.data.length; i++) {
-            sliceDegrees.push(this.getDegrees(this.data[i].value, sum));
-            ret.slices[i] = [];
-        }
-        var deg;
-        for (var j = 0; j < ret.count; j++) {
-            if (!relative) deg = this.startAngle;
-            for (i = 0; i < this.data.length; i++) {
-                if (relative && j === 0) {
-                    deg = this.sliceData[i].startAngle;
-                }
-                var offset = relative ? this.sliceData[i].degrees : 0;
-
-                var degree = offset + ((sliceDegrees[i] - offset) * j / ret.count);
-                ret.slices[i].push({
-                    radius:relative ? this.currentRadius : this.currentRadius * j / ret.count,
-                    degrees:degree,
-                    startAngle:deg
-                });
-
-                deg += degree;
-            }
-        }
-        deg = this.startAngle;
-        for (i = 0; i < this.data.length; i++) {
-            var end = {
-                radius:this.currentRadius,
-                degrees:sliceDegrees[i],
-                startAngle:deg
-            };
-            this.storeSliceData(i, end);
-            ret.slices[i].push(end);
-            deg += sliceDegrees[i];
-        }
-
-        return ret;
-    },
-
-    storeSliceData:function (index, data) {
-        this.sliceData[index] = data;
     },
 
     getDegrees:function (value, sum) {
         return value / sum * 360;
-    },
-
-    getSlice:function (index) {
-        if (this.slices[index] === undefined) {
-            this.slices[index] = new ludo.chart.PieSlice(this, this.getSliceStyle(index));
-            this.slices[index].addEvent('highlight', this.toggleHighlight.bind(this));
-        }
-        return this.slices[index];
-    },
-
-    getSliceStyle:function (index) {
-        var color = this.getColor(index);
-        return {
-            'stroke-location':'inside',
-            'fill':color,
-            'stroke-linejoin':'round',
-            'stroke':'#ffffff',
-            'cursor':'pointer'
-        };
-    },
-
-    getColor:function (index) {
-        return this.data[index].color ? this.data[index].color : this.color().offsetHue(this.startColor, index * (360 / (this.data.length + 1)));
     },
 
     getSum:function () {
