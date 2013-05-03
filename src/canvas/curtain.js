@@ -4,7 +4,7 @@ ludo.canvas.Curtain = new Class({
 	nodes:{},
 	bb:undefined,
 	animation:undefined,
-	action : undefined,
+	action:undefined,
 
 	initialize:function (node, config) {
 		this.parent('clipPath');
@@ -13,29 +13,44 @@ ludo.canvas.Curtain = new Class({
 		var g = new ludo.canvas.Node('g');
 		g.adopt(this);
 		this.applyTo.getCanvas().appendChild(g.getEl());
-		this.applyTo.applyClipPath(this);
+
 	},
 
 	open:function (direction, duration, fps) {
-		this.setBB();
+		this.onStart();
 		this.action = 'open';
 		this.getAnimation().animate(this.getCoordinates(direction), duration, fps);
+
 	},
 
-	getAnimation:function(){
-		if(this.animation === undefined){
+	close:function (direction, duration, fps) {
+		this.onStart();
+		this.action = 'close';
+		this.getAnimation().animate(this.getCoordinates(direction, true), duration, fps);
+	},
+
+	onStart:function(){
+		this.applyTo.show();
+		this.setBB();
+		this.applyTo.applyClipPath(this);
+	},
+
+	getAnimation:function () {
+		if (this.animation === undefined) {
 			this.animation = this.rect().animation();
 			this.animation.addEvent('finish', this.removeClipPath.bind(this));
 		}
+		this.rect().setProperties(this.bb);
 		return this.animation;
 	},
 
-	setBB:function(){
+	setBB:function () {
 		this.bb = this.applyTo.getBBox();
+
 	},
 
-	removeClipPath:function(){
-		if(this.action === 'close'){
+	removeClipPath:function () {
+		if (this.action === 'close') {
 			this.applyTo.hide();
 		}
 		this.applyTo.remove('clip-path');
@@ -43,47 +58,67 @@ ludo.canvas.Curtain = new Class({
 	},
 
 	getCoordinates:function (direction, close) {
+		var ret;
 
-		switch(direction){
+		if(close){
+			var tokens = this.getDirections(direction);
+			direction = tokens[1]+tokens[0];
+		}
+		switch (direction) {
 			case 'RightLeft':
-				return {
+				ret = {
 					width:{
 						from:0, to:this.bb.width
 					},
-					x: {
-						from: this.bb.width + this.bb.x,
-						to : this.bb.x
+					x:{
+						from:this.bb.width + this.bb.x,
+						to:this.bb.x
 					}
 				};
+				break;
 			case 'TopBottom':
-				return {
+				ret = {
 					height:{
 						from:0, to:this.bb.height
 					}
 				};
+				break;
 			case 'BottomTop':
-				return {
+				ret = {
 					height:{
 						from:0, to:this.bb.height
 					},
 					y:{
-						from: this.bb.height + this.bb.y,
-						to : this.bb.y
+						from:this.bb.height + this.bb.y,
+						to:this.bb.y
 					}
 				};
+				break;
 
 			default:
-				return {
+				ret = {
 					width:{
 						from:0, to:this.bb.width
 					}
 				};
 		}
 
+		if(close){
+			var keys = ['width','height','x','y'];
+			for(var i=0;i<keys.length;i++){
+				if(ret[keys[i]] !== undefined){
+					var f = ret[keys[i]].from;
+					ret[keys[i]].from = ret[keys[i]].to;
+					ret[keys[i]].to = f;
+				}
+			}
+		}
+
+		return ret;
 	},
 
 	getDirections:function (direction) {
-		return direction.replace(/([A-Z])/g, ' $1').trim().toLowerCase().split(/\s/g);
+		return direction.replace(/([A-Z])/g, ' $1').trim().split(/\s/g);
 	},
 
 	rect:function () {
@@ -95,7 +130,6 @@ ludo.canvas.Curtain = new Class({
 			});
 			this.adopt(this.nodes['rect'])
 		}
-
 		return this.nodes['rect'];
 	}
 

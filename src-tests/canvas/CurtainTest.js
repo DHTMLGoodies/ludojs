@@ -1,6 +1,6 @@
 TestCase("CurtainTest", {
 
-	"test should be able to get curtain from node": function(){
+	"test should be able to get curtain from node":function () {
 		// given
 		var rect = this.getRect();
 
@@ -8,7 +8,7 @@ TestCase("CurtainTest", {
 		assertNotUndefined(rect.curtain());
 	},
 
-	"test should be able to get directions to open": function(){
+	"test should be able to get directions to open":function () {
 		// given
 		var rect = this.getRect();
 		var curtain = rect.curtain();
@@ -16,11 +16,11 @@ TestCase("CurtainTest", {
 		// when
 		var dir = curtain.getDirections('LeftRight');
 		// then
-		assertEquals(['left','right'], dir);
+		assertEquals(['left', 'right'], dir);
 		//getDirections
 	},
 
-	"test should be able to open curtain": function(){
+	"test should be able to open curtain":function () {
 		// given
 		var rect = this.getRect();
 		var curtain = rect.curtain();
@@ -32,7 +32,7 @@ TestCase("CurtainTest", {
 		assertEquals(1, curtain.getEl().childNodes.length);
 	},
 
-	"test should get animation coordinates from left right": function(){
+	"test should get animation coordinates from left right":function () {
 		// given
 		var rect = this.getRect();
 		var curtain = rect.curtain();
@@ -48,7 +48,7 @@ TestCase("CurtainTest", {
 	},
 
 
-	"test should get animation coordinates from right to left": function(){
+	"test should get animation coordinates from right to left":function () {
 		// given
 		var rect = this.getRect();
 		var curtain = rect.curtain();
@@ -66,7 +66,7 @@ TestCase("CurtainTest", {
 	},
 
 
-	"test should get animation coordinates from top to bottom": function(){
+	"test should get animation coordinates from top to bottom":function () {
 		// given
 		var rect = this.getRect();
 		var curtain = rect.curtain();
@@ -82,8 +82,7 @@ TestCase("CurtainTest", {
 	},
 
 
-
-	"test should get animation coordinates from bottom to top": function(){
+	"test should get animation coordinates from bottom to top":function () {
 		// given
 		var rect = this.getRect();
 		var curtain = rect.curtain();
@@ -101,14 +100,27 @@ TestCase("CurtainTest", {
 		assertEquals(120, coordinates.y.to);
 	},
 
+	"test should get animation coordinates from left right when closing":function () {
+		// given
+		var rect = this.getRect();
+		var curtain = rect.curtain();
+		curtain.setBB();
 
+		// when
+		var coordinates = curtain.getCoordinates('LeftRight', true);
 
-	getRect:function(){
+		// then
+		assertNotUndefined(coordinates.width);
+		assertEquals(200, coordinates.width.from);
+		assertEquals(0, coordinates.width.to);
+	},
+
+	getRect:function () {
 		var v = new ludo.View({
-			layout:{ width: 500, height:500},
+			layout:{ width:500, height:500},
 			renderTo:document.body
 		});
-		var rect = new ludo.canvas.Rect({ x:100,y:120, width:200,height:300, rx:5, ry:7 });
+		var rect = new ludo.canvas.Rect({ x:100, y:120, width:200, height:300, rx:5, ry:7 });
 		v.getCanvas().adopt(rect);
 		return rect;
 	}

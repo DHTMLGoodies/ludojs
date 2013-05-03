@@ -1,4 +1,4 @@
-/* Generated Fri May 3 17:47:32 CEST 2013 */
+/* Generated Fri May 3 18:07:06 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -1807,9 +1807,18 @@ ludo.canvas.Engine = new Class({
 			el.setAttribute(key, value);
 		}
 	},
-
+	/**
+	 * Remove property from node.
+	 * @method remove
+	 * @param {HTMLElement} el
+	 * @param {String} key
+	 */
 	remove:function(el, key){
-		el.removeAttribute(key);
+		if (key.substring(0, 6) == "xlink:") {
+			el.removeAttributeNS("http://www.w3.org/1999/xlink", key.substring(6));
+		}else{
+			el.removeAttribute(key);
+		}
 	},
 
 	/**
@@ -2301,7 +2310,7 @@ ludo.canvas.Node = new Class({
 	},
 
 	remove:function(key){
-		ludo.canvasEngine.remove(this.el);
+		ludo.canvasEngine.remove(this.el, key);
 	},
 
 	get:function (key) {
@@ -30419,6 +30428,8 @@ ludo.canvas.Curtain = new Class({
 	applyTo:undefined,
 	nodes:{},
 	bb:undefined,
+	animation:undefined,
+	action : undefined,
 
 	initialize:function (node, config) {
 		this.parent('clipPath');
@@ -30432,9 +30443,16 @@ ludo.canvas.Curtain = new Class({
 
 	open:function (direction, duration, fps) {
 		this.setBB();
-		var a = this.rect().animation();
-		a.addEvent('finish', this.removeClipPath.bind(this));
-		this.rect().animate(this.getCoordinates(direction), duration, fps);
+		this.action = 'open';
+		this.getAnimation().animate(this.getCoordinates(direction), duration, fps);
+	},
+
+	getAnimation:function(){
+		if(this.animation === undefined){
+			this.animation = this.rect().animation();
+			this.animation.addEvent('finish', this.removeClipPath.bind(this));
+		}
+		return this.animation;
 	},
 
 	setBB:function(){
@@ -30442,8 +30460,11 @@ ludo.canvas.Curtain = new Class({
 	},
 
 	removeClipPath:function(){
-		console.log('remove clipping');
+		if(this.action === 'close'){
+			this.applyTo.hide();
+		}
 		this.applyTo.remove('clip-path');
+
 	},
 
 	getCoordinates:function (direction, close) {
@@ -30503,4 +30524,82 @@ ludo.canvas.Curtain = new Class({
 		return this.nodes['rect'];
 	}
 
+});/* ../ludojs/src/canvas/animation.js */
+ludo.canvas.Animation = new Class({
+	Extends: Events,
+	fps:33,
+	el:undefined,
+
+	initialize:function(el){
+		this.el = el;
+	},
+
+	animate:function(properties, duration, fps){
+		duration = duration || 1;
+		fps = fps || 33;
+		this.execute(this.getAnimationSteps(properties,duration,fps), 0);
+
+	},
+
+	execute:function(steps, current){
+		var step = steps.values[current];
+
+		if(current < steps.values.length - 1){
+			this.execute.delay(steps.fps, this, [steps, current+1]);
+		}
+
+		for(var i=0;i<step.length;i++){
+			this.el.set(step[i].key, step[i].value);
+		}
+
+		if(current === steps.values.length -1 ){
+			this.fireEvent('finish', this);
+		}
+
+	},
+
+	getAnimationSteps:function(properties, duration, fps){
+
+		var count = duration * fps;
+		var ret = [];
+		var inc = this.getIncrements(properties, duration, fps);
+
+		var currentValues = {};
+
+		for(var key in properties){
+			if(properties.hasOwnProperty(key)){
+				for(var i=0;i<=count;i++){
+					if(!ret[i])ret[i] = [];
+					if(!currentValues[key]){
+						currentValues[key] = properties[key].from;
+					}
+
+					var value = currentValues[key];
+					if(properties[key].units)value += properties[key].units;
+
+					ret[i].push({
+						key:key, value: value
+					});
+
+					currentValues[key] += inc[key];
+				}
+			}
+		}
+
+		return {
+			values : ret,
+			fps : fps
+		};
+	},
+
+	getIncrements:function(properties, duration, fps){
+		var count = duration * fps;
+		var ret = {};
+		for(var key in properties){
+			if(properties.hasOwnProperty(key)){
+				ret[key] = (properties[key].to - properties[key].from) / count;
+			}
+		}
+		return ret;
+	}
 });

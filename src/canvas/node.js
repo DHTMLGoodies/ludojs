@@ -161,6 +161,14 @@ ludo.canvas.Node = new Class({
         ludo.canvasEngine.hide(this.el);
     },
 
+	setProperties:function(p){
+		for(var key in p){
+			if(p.hasOwnProperty(key)){
+				this.set(key, p[key]);
+			}
+		}
+	},
+
 	set:function (key, value) {
 		ludo.canvasEngine.set(this.el, key, value);
 	},
