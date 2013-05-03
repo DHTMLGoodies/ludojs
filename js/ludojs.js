@@ -1,4 +1,4 @@
-/* Generated Thu May 2 20:40:46 CEST 2013 */
+/* Generated Fri May 3 17:47:32 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -1807,6 +1807,11 @@ ludo.canvas.Engine = new Class({
 			el.setAttribute(key, value);
 		}
 	},
+
+	remove:function(el, key){
+		el.removeAttribute(key);
+	},
+
 	/**
 	 * Returns property value of a SVG DOM node
 	 * @method get
@@ -2120,7 +2125,11 @@ ludo.canvas.Engine = new Class({
             ludo.canvas.effectObject = new ludo.canvas.Effect();
         }
         return ludo.canvas.effectObject;
-    }
+    },
+
+	empty:function(el){
+		el.textContent = '';
+	}
 
 });
 ludo.canvasEngine = new ludo.canvas.Engine();/* ../ludojs/src/canvas/node.js */
@@ -2291,6 +2300,10 @@ ludo.canvas.Node = new Class({
 		ludo.canvasEngine.set(this.el, key, value);
 	},
 
+	remove:function(key){
+		ludo.canvasEngine.remove(this.el);
+	},
+
 	get:function (key) {
 		return ludo.canvasEngine.get(this.el, key);
 	},
@@ -2325,8 +2338,18 @@ ludo.canvas.Node = new Class({
 	 * @param {canvas.Node} mask
 	 */
 	applyMask:function (mask) {
-		this.set('filter', mask.getUrl());
+		this.set('mask', mask.getUrl());
 	},
+
+	/**
+	 * Apply clip path to node
+	 * @method applyClipPath
+	 * @param {canvas.Node} clip
+	 */
+	applyClipPath:function(clip){
+		this.set('clip-path', clip.getUrl());
+	},
+
 	/**
 	 Create url reference
 	 @method url
@@ -2475,7 +2498,31 @@ ludo.canvas.Node = new Class({
      */
     toRadians:function(degrees){
         return degrees * Math.PI / 180;
-    }
+	},
+
+	empty:function(){
+		ludo.canvasEngine.empty(this.getEl());
+	},
+
+	_curtain:undefined,
+	curtain:function(config){
+		if(this._curtain === undefined){
+			this._curtain = new ludo.canvas.Curtain(this, config);
+		}
+		return this._curtain;
+	},
+
+	_animation:undefined,
+	animate:function(properties, duration, fps){
+		this.animation().animate(properties,duration,fps);
+	},
+
+	animation:function(){
+		if(this._animation === undefined){
+			this._animation = new ludo.canvas.Animation(this.getEl());
+		}
+		return this._animation;
+	}
 });
 
 
@@ -2592,6 +2639,16 @@ ludo.canvas.Element = new Class({
 	 */
 	adopt:function(node){
 		this.node.adopt(node);
+		return this;
+	},
+
+	/**
+	 * Remove text and child nodes from element
+	 * @method empty
+	 * @return {canvas.Element} this
+	 */
+	empty:function(){
+		this.node.empty();
 		return this;
 	},
 
@@ -6702,6 +6759,7 @@ ludo.chart.PieSlice = new Class({
         if(p){
             var a = p.getAnimationValues(step);
             data.angle = a.angle + a.degrees;
+			data.radius = a.radius;
         }
         this.set('d', this.getPath(data));
     },
@@ -30355,4 +30413,94 @@ ludo.canvas.Filter = new Class({
 ludo.canvas.Mask = new Class({
 	Extends: ludo.canvas.NamedNode,
 	tagName : 'mask'
+});/* ../ludojs/src/canvas/curtain.js */
+ludo.canvas.Curtain = new Class({
+	Extends:ludo.canvas.Node,
+	applyTo:undefined,
+	nodes:{},
+	bb:undefined,
+
+	initialize:function (node, config) {
+		this.parent('clipPath');
+		this.applyTo = node;
+
+		var g = new ludo.canvas.Node('g');
+		g.adopt(this);
+		this.applyTo.getCanvas().appendChild(g.getEl());
+		this.applyTo.applyClipPath(this);
+	},
+
+	open:function (direction, duration, fps) {
+		this.setBB();
+		var a = this.rect().animation();
+		a.addEvent('finish', this.removeClipPath.bind(this));
+		this.rect().animate(this.getCoordinates(direction), duration, fps);
+	},
+
+	setBB:function(){
+		this.bb = this.applyTo.getBBox();
+	},
+
+	removeClipPath:function(){
+		console.log('remove clipping');
+		this.applyTo.remove('clip-path');
+	},
+
+	getCoordinates:function (direction, close) {
+
+		switch(direction){
+			case 'RightLeft':
+				return {
+					width:{
+						from:0, to:this.bb.width
+					},
+					x: {
+						from: this.bb.width + this.bb.x,
+						to : this.bb.x
+					}
+				};
+			case 'TopBottom':
+				return {
+					height:{
+						from:0, to:this.bb.height
+					}
+				};
+			case 'BottomTop':
+				return {
+					height:{
+						from:0, to:this.bb.height
+					},
+					y:{
+						from: this.bb.height + this.bb.y,
+						to : this.bb.y
+					}
+				};
+
+			default:
+				return {
+					width:{
+						from:0, to:this.bb.width
+					}
+				};
+		}
+
+	},
+
+	getDirections:function (direction) {
+		return direction.replace(/([A-Z])/g, ' $1').trim().toLowerCase().split(/\s/g);
+	},
+
+	rect:function () {
+		if (this.nodes['rect'] === undefined) {
+			this.nodes['rect'] = new ludo.canvas.Rect({
+				x:this.bb.x, y:this.bb.y,
+				width:this.bb.width,
+				height:this.bb.height
+			});
+			this.adopt(this.nodes['rect'])
+		}
+
+		return this.nodes['rect'];
+	}
+
 });

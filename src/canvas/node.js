@@ -165,6 +165,10 @@ ludo.canvas.Node = new Class({
 		ludo.canvasEngine.set(this.el, key, value);
 	},
 
+	remove:function(key){
+		ludo.canvasEngine.remove(this.el, key);
+	},
+
 	get:function (key) {
 		return ludo.canvasEngine.get(this.el, key);
 	},
@@ -199,8 +203,18 @@ ludo.canvas.Node = new Class({
 	 * @param {canvas.Node} mask
 	 */
 	applyMask:function (mask) {
-		this.set('filter', mask.getUrl());
+		this.set('mask', mask.getUrl());
 	},
+
+	/**
+	 * Apply clip path to node
+	 * @method applyClipPath
+	 * @param {canvas.Node} clip
+	 */
+	applyClipPath:function(clip){
+		this.set('clip-path', clip.getUrl());
+	},
+
 	/**
 	 Create url reference
 	 @method url
@@ -349,7 +363,31 @@ ludo.canvas.Node = new Class({
      */
     toRadians:function(degrees){
         return degrees * Math.PI / 180;
-    }
+	},
+
+	empty:function(){
+		ludo.canvasEngine.empty(this.getEl());
+	},
+
+	_curtain:undefined,
+	curtain:function(config){
+		if(this._curtain === undefined){
+			this._curtain = new ludo.canvas.Curtain(this, config);
+		}
+		return this._curtain;
+	},
+
+	_animation:undefined,
+	animate:function(properties, duration, fps){
+		this.animation().animate(properties,duration,fps);
+	},
+
+	animation:function(){
+		if(this._animation === undefined){
+			this._animation = new ludo.canvas.Animation(this.getEl());
+		}
+		return this._animation;
+	}
 });
 
 

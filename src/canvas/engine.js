@@ -42,6 +42,20 @@ ludo.canvas.Engine = new Class({
 		}
 	},
 	/**
+	 * Remove property from node.
+	 * @method remove
+	 * @param {HTMLElement} el
+	 * @param {String} key
+	 */
+	remove:function(el, key){
+		if (key.substring(0, 6) == "xlink:") {
+			el.removeAttributeNS("http://www.w3.org/1999/xlink", key.substring(6));
+		}else{
+			el.removeAttribute(key);
+		}
+	},
+
+	/**
 	 * Returns property value of a SVG DOM node
 	 * @method get
 	 * @param {HTMLElement} el
@@ -354,7 +368,11 @@ ludo.canvas.Engine = new Class({
             ludo.canvas.effectObject = new ludo.canvas.Effect();
         }
         return ludo.canvas.effectObject;
-    }
+    },
+
+	empty:function(el){
+		el.textContent = '';
+	}
 
 });
 ludo.canvasEngine = new ludo.canvas.Engine();

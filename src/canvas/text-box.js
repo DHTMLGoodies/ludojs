@@ -5,7 +5,7 @@ ludo.canvas.TextBox = new Class({
 	css:{
 		'line-height':13
 	},
-	presentationAttributes:['x','y','width','height'],
+	presentationAttributes:['x', 'y', 'width', 'height'],
 
 	ludoConfig:function (config) {
 		config = config || {};
@@ -17,11 +17,11 @@ ludo.canvas.TextBox = new Class({
 		this.renderText();
 	},
 
-	getAttributes:function(config){
+	getAttributes:function (config) {
 		var ret = config.attr || {};
 		var p = this.presentationAttributes;
-		for(var i=0;i<p.length;i++){
-			if(config[p[i]] !== undefined){
+		for (var i = 0; i < p.length; i++) {
+			if (config[p[i]] !== undefined) {
 				ret[p[i]] = config[p[i]];
 			}
 		}
@@ -29,79 +29,129 @@ ludo.canvas.TextBox = new Class({
 	},
 
 	tagsToInsert:function () {
+		var texts = this.getTextParts();
+		return this.toTags(texts);
+	},
+
+	getTextParts:function () {
 		var tokens = this.text.match(/(<\/?[a-z]+?>)/gmi);
-
-
 		var index = 0;
 
 		var ret = [];
 		for (var i = 0; i < tokens.length; i++) {
-			var obj = {
-				tag:'text',
-				text:'',
-				properties:undefined,
-				parent:undefined
-			};
-			var pos = this.text.indexOf(tokens[i], index);
+			var pos = this.text.indexOf(tokens[i], index === 0 ? index : index + 1);
 			if (pos > index) {
-				obj.text = this.text.substr(index, pos - index);
+				ret.push(this.text.substr(index, pos - index));
 			}
 			index = pos;
-			ret.push(obj);
 		}
-
 		if (index < this.text.length) {
-			ret.push({
-					tag:'text',
-					text:this.text.substr(index)
-				}
-			);
+			ret.push(this.text.substr(index));
 		}
-
-		for(i= 0;i<ret.length;i++){
-			ret[i] = this.getProperties(ret[i]);
-			ret[i].text = this.stripTags(ret[i].text);
-		}
-
-
 
 		return ret;
 	},
 
-	renderText:function(){
-		var tags = this.tagsToInsert();
-		for(var i=0;i<tags.length;i++){
-			var n = new ludo.canvas.Node(tags[i].tag, tags[i].properties, tags[i].text);
-			if(tags[i].parent)tags[i].parent.adopt(n); else this.adopt(n);
-		}
-	},
+	toTags:function (items) {
+		var ret = [
+			{
+				tag:'text',
+				properties:{ y:this.getYOfLine() }
+			}
+		];
+		var currentParent = ret[0];
 
-	currentDy : 15,
+		for (var i = 0; i < items.length; i++) {
+			var tag = items[i].match(/<([a-z]+?)>/gi);
+			if (tag)tag = tag[0];
 
-	getProperties:function (item) {
-		var ret = {};
-		var tag = item.text.match(/<([a-z]+?)>/g);
-		if(tag){
-			switch(tag[0].toLowerCase()){
+			var obj = {
+				properties:{}
+			};
+
+			switch (tag) {
+				case '<em>':
 				case '<b>':
-					ret['font-weight'] = 'bold';
+					obj.tag = 'tspan';
 					break;
 				case '<br>':
-					ret['dx'] = 0;
-					this.currentDy+=15;
+					obj.tag = 'text';
 					break;
+				default:
+					obj.tag = 'tspan';
+			}
+
+
+			obj = this.assignDefaultProperties(obj, tag);
+
+
+			obj.text = this.stripTags(items[i]);
+			if (obj.tag === 'tspan') {
+				currentParent.children = currentParent.children || [];
+				currentParent.children.push(obj);
+			} else {
+				ret.push(obj);
+			}
+			if (obj.tag === 'text') {
+				obj.properties.y = this.getYOfLine();
+				currentParent = obj;
 			}
 		}
 
-		ret['dy'] = this.currentDy;
-
-		item.properties = ret;
-
-		return item;
+		return ret;
 	},
+
+	assignDefaultProperties:function (obj, tag) {
+		if (tag) {
+			var props = this.getDefaultTagProperties();
+			var p = props[tag];
+			if (p) {
+				for (var key in p) {
+					if (p.hasOwnProperty(key))obj.properties[key] = p[key];
+				}
+			}
+		}
+		return obj;
+
+	},
+
+	currentY:0,
+	getYOfLine:function () {
+		this.currentY += 15;
+		return this.currentY;
+	},
+
+	setText:function(text){
+		this.empty();
+		this.text = text;
+		this.renderText();
+	},
+
+	renderText:function () {
+		this.renderItems(this.tagsToInsert(), this);
+	},
+
+	renderItems:function (items, parent) {
+		for (var i = 0; i < items.length; i++) {
+			var n = new ludo.canvas.Node(items[i].tag, items[i].properties, items[i].text);
+			parent.adopt(n);
+
+			if (items[i].children) {
+				this.renderItems(items[i].children, n);
+			}
+		}
+	},
+
 
 	stripTags:function (text) {
 		return text.replace(/<\/?[^>]+?>/g, '');
+	},
+
+	getDefaultTagProperties:function () {
+		return {
+			'<b>':{ 'font-weight':'bold' },
+			'<em>':{ 'font-style':'italic' }
+		};
 	}
 
 });

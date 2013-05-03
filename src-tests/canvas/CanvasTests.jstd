@@ -2,7 +2,14 @@ load:
   - ../../mootools/mootools-core-1.4.5.js
   - ../../mootools/mootools-more-1.4.0.1.js
   - ../../js/ludojs.js
+  - ../../src/canvas/curtain.js
+  - ../../src/canvas/node.js
+  - ../../src/canvas/named-node.js
+  - ../../src/canvas/element.js
+  - ../../src/canvas/canvas.js
+  - ../../src/canvas/rect.js
   - ../../src/canvas/text-box.js
+  - ../../src/canvas/animation.js
 
 test:
   - DraggingTest.js
@@ -22,6 +29,8 @@ test:
   - FilterTest.js
   - DomMethods.js
   - TextBoxTest.js
+  - CurtainTest.js
+  - AnimationTest.js
 
 plugin:
  - name: "coverage"

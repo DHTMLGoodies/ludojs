@@ -14,6 +14,8 @@ require_once("../includes/demo-header.php");
 <script type="text/javascript" src="../../src/canvas/engine.js"></script>
 <script type="text/javascript" src="../../src/canvas/effect.js"></script>
 <script type="text/javascript" src="../../src/canvas/group.js"></script>
+<script type="text/javascript" src="../../src/canvas/curtain.js"></script>
+<script type="text/javascript" src="../../src/canvas/animation.js"></script>
 <script type="text/javascript" src="../../src/canvas/event-manager.js"></script>
 
 <script type="text/javascript" src="../../src/chart/data-provider.js"></script>
@@ -115,6 +117,7 @@ require_once("../includes/demo-header.php");
                             {
                                 name : 'pie',
                                 type:'chart.Pie',
+                                id:'pie',
                                 animate:true,
                                 layout:{
                                     leftOf:'labels',

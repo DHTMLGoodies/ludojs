@@ -113,6 +113,16 @@ ludo.canvas.Element = new Class({
 		return this;
 	},
 
+	/**
+	 * Remove text and child nodes from element
+	 * @method empty
+	 * @return {canvas.Element} this
+	 */
+	empty:function(){
+		this.node.empty();
+		return this;
+	},
+
 	add:function(tagName, properties, config){
 		return this.node.add(tagName,properties, config);
 	}

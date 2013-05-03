@@ -36,6 +36,7 @@ ludo.chart.PieSlice = new Class({
         if(p){
             var a = p.getAnimationValues(step);
             data.angle = a.angle + a.degrees;
+			data.radius = a.radius;
         }
         this.set('d', this.getPath(data));
     },

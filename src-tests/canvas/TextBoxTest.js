@@ -32,20 +32,38 @@ TestCase("TestBoxTest", {
         // given
         var t = this.getTextBox({
             attr:{ x:100,y:100,width:100,height:100 },
-            text : 'Normal <b>Bold</b> Normal<br>Second line'
+            text : 'Normal <b>Bold</b> Normal<br>Second line<br>Third line'
         });
 
         // when
         var tagsToInsert = t.tagsToInsert();
 
         // then
+		assertEquals(3, tagsToInsert.length);
         assertEquals('text', tagsToInsert[0].tag);
         assertEquals('tspan', tagsToInsert[0].children[0].tag);
-        assertEquals('tspan', tagsToInsert[1].children[0].tag);
-        assertEquals('tspan', tagsToInsert[2].children[0].tag);
-        assertEquals('texgt', tagsToInsert[1].tag);
+        assertEquals('tspan', tagsToInsert[0].children[1].tag);
+        assertEquals('tspan', tagsToInsert[0].children[2].tag);
+        assertEquals('text', tagsToInsert[1].tag);
+        assertEquals('text', tagsToInsert[2].tag);
 
     },
+
+	"test should apply styles": function(){
+        // given
+        var t = this.getTextBox({
+            attr:{ x:100,y:100,width:100,height:100 },
+            text : 'Normal <b>Bold text</b> Normal<br>Second line'
+        });
+
+        // when
+        var tagsToInsert = t.tagsToInsert();
+		var bold = tagsToInsert[0].children[1];
+
+		// then
+		assertEquals('Bold text', bold.text);
+		assertEquals('bold', bold.properties['font-weight']);
+	},
 
 	getTextBox:function(config){
 		return new ludo.canvas.TextBox(config);
