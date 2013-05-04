@@ -1,3 +1,9 @@
+/**
+ * Text box class which handles simple HTML tags
+ * and renders them in SVG format.
+ * @namespace canvsa
+ * @class TextBox
+ */
 ludo.canvas.TextBox = new Class({
 	Extends:ludo.canvas.Group,
 	tag:'g',
