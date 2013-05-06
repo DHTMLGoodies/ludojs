@@ -10,13 +10,13 @@ load:
   - ../../src/canvas/canvas.js
   - ../../src/canvas/engine.js
   - ../../src/chart/chart.js
-  - ../../src/chart/group.js
+  - ../../src/canvas/group.js
   - ../../src/chart/pie.js
   - ../../src/chart/data-provider.js
 
 test:
   - ChartTest.js
-  - PieTest.js
+
 
 plugin:
  - name: "coverage"

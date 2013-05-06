@@ -62,7 +62,6 @@ ludo.canvas.Node = new Class({
 		} else {
 			el = document.createElementNS("http://www.w3.org/2000/svg", el);
 		}
-
 		this.el = el;
 		el.style && (el.style.webkitTapHighlightColor = "rgba(0,0,0,0)");
 		return el;
@@ -75,6 +74,14 @@ ludo.canvas.Node = new Class({
     engine:function(){
         return ludo.canvasEngine;
     },
+
+	addEvents:function(events){
+		for(var key in events){
+			if(events.hasOwnProperty(key)){
+				this.addEvent(key, events[key]);
+			}
+		}
+	},
 
 	addEvent:function (event, fn) {
 		switch (event.toLowerCase()) {
@@ -326,6 +333,21 @@ ludo.canvas.Node = new Class({
 	 */
 	getBBox:function () {
 		return this.el.getBBox();
+	},
+
+	/**
+	 * Returns rectangular size of element, i.e. bounding box width - bounding box x and
+	 * bounding box width - bounding box y. Values are returned as { x : 100, y : 150 }
+	 * where x is width and y is height.
+	 * @method getSize
+	 * @return {Object} size x and y
+	 */
+	getSize:function(){
+		var b = this.getBBox();
+		return {
+			x :b.width - b.x,
+			y :b.height - b.y
+		};
 	},
 
 	/**

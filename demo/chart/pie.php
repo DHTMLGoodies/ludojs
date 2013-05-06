@@ -143,7 +143,7 @@ require_once("../includes/demo-header.php");
                                     'stroke' : '#0f0'
                                 },
                                 layout:{
-                                    width:100,
+                                    width:30,
                                     alignParentTop:true,
                                     alignParentRight:true,
                                     fillDown:true

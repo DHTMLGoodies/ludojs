@@ -1,3 +1,12 @@
+/**
+ Special animation class for SVG elements
+ @namespace canvas
+ @class Curtain
+ @constructor
+ @param {ludo.canvas.Node} node
+ @example
+	node.curtain().open('LeftRight');
+ */
 ludo.canvas.Curtain = new Class({
 	Extends:ludo.canvas.Node,
 	applyTo:undefined,
@@ -6,7 +15,7 @@ ludo.canvas.Curtain = new Class({
 	animation:undefined,
 	action:undefined,
 
-	initialize:function (node, config) {
+	initialize:function (node) {
 		this.parent('clipPath');
 		this.applyTo = node;
 
@@ -16,6 +25,17 @@ ludo.canvas.Curtain = new Class({
 
 	},
 
+	/**
+	 * Open curtains, i.e. show element
+	 * @method open
+	 * @param {String} direction (LeftRight, TopBottom, BottomTop or RightLeft),
+	 * @param {Number} duration in seconds
+	 * @optional
+	 * @default 1
+	 * @param {Number} fps (Frames per second)
+	 * @optional
+	 * @default 33
+	 */
 	open:function (direction, duration, fps) {
 		this.onStart();
 		this.action = 'open';
@@ -23,6 +43,17 @@ ludo.canvas.Curtain = new Class({
 
 	},
 
+	/**
+	 * Close curtains, i.e. hide element
+	 * @method close
+	 * @param {String} direction (LeftRight, TopBottom, BottomTop or RightLeft),
+	 * @param {Number} duration in seconds
+	 * @optional
+	 * @default 1
+	 * @param {Number} fps (Frames per second)
+	 * @optional
+	 * @default 33
+	 */
 	close:function (direction, duration, fps) {
 		this.onStart();
 		this.action = 'close';

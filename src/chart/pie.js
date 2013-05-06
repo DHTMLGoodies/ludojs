@@ -2,17 +2,14 @@ ludo.chart.Pie = new Class({
     Extends:ludo.chart.ChartBase,
     slices:[],
     data:undefined,
-    startColor:'#561AD9',
     styles:[],
     currentRadius:undefined,
-
-    rendered:false,
     sliceData:[],
     startAngle:270,
 
     itemType : 'chart.PieSlice',
 
-    renderChart:function (forUpdate) {
+    render:function (forUpdate) {
         if (!this.data)return;
 
         this.center = this.getChartOrigin();
@@ -21,7 +18,9 @@ ludo.chart.Pie = new Class({
 
         var method = this.animate && (forUpdate || !this.rendered) ? 'animate' : 'render';
         this.renderSlices(method);
-        this.rendered = true;
+
+		this.parent();
+
     },
 
     getRadius:function(){

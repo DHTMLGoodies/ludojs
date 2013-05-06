@@ -3,7 +3,7 @@ ludo.chart.Chart = new Class({
 	css:{
 
 	},
-
+	startColor:'#561AD9',
     data:undefined,
 
     /**
@@ -58,5 +58,9 @@ ludo.chart.Chart = new Class({
 
     getDataProvider:function(){
         return this.dataProvider;
-    }
+    },
+
+	getColor:function (key) {
+		return this.data[key].color ? this.data[key].color : this.color().offsetHue(this.startColor, key * (360 / (this.data.length + 1)));
+	}
 });

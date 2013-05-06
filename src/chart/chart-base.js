@@ -2,24 +2,31 @@ ludo.chart.ChartBase = new Class({
     Extends: ludo.canvas.Group,
     currentHighlighted:undefined,
     chartItems:[],
+	startColor:'#561AD9',
     animation:{
         duration:1,
         fps:33
     },
+	rendered:false,
 
     ludoConfig:function(config){
         this.parent(config);
         this.setConfigParams(config, ['animate','animation']);
     },
 
+	render:function(){
+		if (!this.data)return;
+		this.rendered = true;
+	},
+
     update:function(data){
         this.data = data;
-        this.renderChart(this.rendered);
+        this.render(this.rendered);
     },
 
     resize:function(config){
         this.parent(config);
-        this.renderChart();
+        this.render();
     },
 
     toggleHighlight:function (item) {
@@ -61,7 +68,7 @@ ludo.chart.ChartBase = new Class({
         }, s);
     },
 
-    getChartItem:function(key, type){
+    getChartItem:function(key){
         if (this.chartItems[key] === undefined) {
             this.chartItems[key] = this.createDependency('chartItem-'+ key,
                 {

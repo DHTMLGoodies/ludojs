@@ -16,8 +16,7 @@ TestCase("CurtainTest", {
 		// when
 		var dir = curtain.getDirections('LeftRight');
 		// then
-		assertEquals(['left', 'right'], dir);
-		//getDirections
+		assertEquals(['Left', 'Right'], dir);
 	},
 
 	"test should be able to open curtain":function () {

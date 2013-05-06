@@ -7,6 +7,10 @@ ludo.canvas.NamedNode = new Class({
 	Extends: ludo.canvas.Node,
 
 	initialize:function (attributes, text) {
+		if(attributes.listeners){
+			this.addEvents(attributes.listeners);
+			delete attributes.listeners;
+		}
 		this.parent(this.tagName, attributes, text);
 	}
 });
