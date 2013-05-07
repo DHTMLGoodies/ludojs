@@ -119,8 +119,6 @@ ludo.dataSource.Collection = new Class({
 		this.addEvent('parsedata', this.createIndex.bind(this));
 
 		if(this.data && !this.index)this.createIndex();
-
-
 	},
 
 	/**
@@ -143,7 +141,6 @@ ludo.dataSource.Collection = new Class({
 	 * @method sort
 	 * @return void
 	 */
-
 	sort:function () {
 		if (this.sortedBy.column && this.sortedBy.order) {
 			this.sortBy(this.sortedBy.column, this.sortedBy.order);

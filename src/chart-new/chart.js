@@ -48,7 +48,7 @@ ludo.chart.Chart = new Class({
 	},
 
 	getChartData:function(){
-		return this.dataProvider ? this.dataProvider.getData() : this.data;
+		return this.dataProvider.getData();
 	},
 
 	setData:function(data){

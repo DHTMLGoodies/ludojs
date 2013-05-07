@@ -187,6 +187,23 @@ TestCase("DataProviderTest", {
 		assertEquals(140, p.getValue('mySecondId'));
 	},
 
+	"test should be able to get records as array": function(){
+		// given
+		var p = this.getProvider([
+			{
+				label:'My label', value:100, id:'myId'
+			},
+			{
+				label:'My label 2', value:140, id:'mySecondId'
+			}
+		]);
+
+		// then
+		assertNotUndefined(p.getRecords());
+		assertEquals(2, p.getRecords().length);
+
+	},
+
 	getProvider:function (data) {
 		data = data || [
 			{ label:'John', value:100 },
@@ -201,6 +218,5 @@ TestCase("DataProviderTest", {
 			data:data
 		})
 	}
-
 
 });

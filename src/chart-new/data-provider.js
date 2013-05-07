@@ -2,6 +2,7 @@ ludo.chart.DataProvider = new Class({
 	Extends:ludo.dataSource.Collection,
 	sum:undefined,
 	recordValues:{},
+	records:[],
 
 	get:function (id) {
 		return this.getRecord(id);
@@ -26,6 +27,7 @@ ludo.chart.DataProvider = new Class({
 		this.sum += record.value - (this.recordValues[record.uid] ? this.recordValues[record.uid] : 0);
 		this.parent(record, parent);
 		this.recordValues[record.uid] = record.value;
+		this.createRecord(record);
 	},
 
 
@@ -46,7 +48,7 @@ ludo.chart.DataProvider = new Class({
 
 	getPercentFn:function(record){
 		return function(){
-			return (record.get('value') / record.getCollection().getSum()) * 100;
+			return (record.getValue() / record.getCollection().getSum()) * 100;
 		}.bind(record);
 	},
 
@@ -60,5 +62,17 @@ ludo.chart.DataProvider = new Class({
 		return function(value){
 			record.set('value', parseFloat(value));
 		}
+	},
+
+	createRecord:function(data){
+		var rec = this.parent(data);
+		if(this.records.indexOf(rec) === -1){
+			this.records.push(rec);
+		}
+		return rec;
+	},
+
+	getRecords:function(){
+		return this.records;
 	}
 });
