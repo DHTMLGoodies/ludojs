@@ -25,6 +25,8 @@ require_once("../includes/demo-header.php");
 <script type="text/javascript" src="../../src/chart/item.js"></script>
 <script type="text/javascript" src="../../src/chart/tooltip.js"></script>
 <script type="text/javascript" src="../../src/chart/pie-slice.js"></script>
+<script type="text/javascript" src="../../src/chart/label.js"></script>
+<script type="text/javascript" src="../../src/chart/labels.js"></script>
 <script type="text/javascript" src="../../src/layout/factory.js"></script>
 <script type="text/javascript" src="../../src/layout/relative.js"></script>
 <script type="text/javascript" src="../../src/layout/canvas.js"></script>
@@ -120,10 +122,10 @@ require_once("../includes/demo-header.php");
                                 id:'pie',
                                 animate:true,
                                 layout:{
-                                    leftOf:'labels',
-                                    fillLeft:true,
-                                    top:0,
-                                    fillDown:true
+                                    above:'labels',
+                                    left:0,
+                                    fillRight:true,
+                                    fillUp:true
                                 },
                                 tooltip:{
                                     css:{
@@ -143,10 +145,10 @@ require_once("../includes/demo-header.php");
                                     'stroke' : '#0f0'
                                 },
                                 layout:{
-                                    width:30,
-                                    alignParentTop:true,
-                                    alignParentRight:true,
-                                    fillDown:true
+                                    alignParentBottom:true,
+                                    height:40,
+                                    left:0,
+                                    fillRight:true
                                 }
                             }
                         ]

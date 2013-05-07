@@ -117,6 +117,10 @@ ludo.dataSource.Collection = new Class({
 		}
 
 		this.addEvent('parsedata', this.createIndex.bind(this));
+
+		if(this.data && !this.index)this.createIndex();
+
+
 	},
 
 	/**
@@ -988,13 +992,18 @@ ludo.dataSource.Collection = new Class({
 		var rec = this.findRecord(search);
 		if(rec){
 			var id = rec.uid;
-			if(this.recordObjects[id] === undefined){
-				this.recordObjects[id] = new ludo.dataSource.Record(rec, this);
-				this.addRecordEvents(this.recordObjects[id]);
-			}
-			return this.recordObjects[id];
+			return this.createRecord(rec);
 		}
 		return undefined;
+	},
+
+	createRecord:function(data){
+		var id = data.uid;
+		if(!this.recordObjects[id]){
+			this.recordObjects[id] = new ludo.dataSource.Record(data, this);
+			this.addRecordEvents(this.recordObjects[id]);
+		}
+		return this.recordObjects[id];
 	},
 
 	addRecordEvents:function(record){

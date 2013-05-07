@@ -2,6 +2,8 @@ load:
   - ../../mootools/mootools-core-1.4.5.js
   - ../../mootools/mootools-more-1.4.0.1.js
   - ../../js/ludojs.js
+  - ../../src/data-source/collection.js
+  - ../../src/data-source/record.js
   - ../../src/layout/relative.js
   - ../../src/layout/canvas.js
   - ../../src/canvas/node.js
@@ -11,11 +13,12 @@ load:
   - ../../src/canvas/engine.js
   - ../../src/chart/chart.js
   - ../../src/canvas/group.js
-  - ../../src/chart/pie.js
-  - ../../src/chart/data-provider.js
+
+  - ../../src/chart-new/data-provider.js
 
 test:
   - ChartTest.js
+  - DataProviderTest.js
 
 
 plugin:
