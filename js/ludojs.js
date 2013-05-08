@@ -1,4 +1,4 @@
-/* Generated Fri May 3 18:07:06 CEST 2013 */
+/* Generated Wed May 8 21:42:40 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -981,8 +981,9 @@ ludo.Core = new Class({
 		return this.dependency[key] ? true : false;
 	},
 
-	getDependency:function(key){
-		return this.dependency[key];
+	getDependency:function(key, config){
+		if(this.dependency[key])return this.dependency[key];
+        return this.createDependency(key, config);
 	}
 });/* ../ludojs/src/movable.js */
 ludo.Movable = new Class({
@@ -2206,7 +2207,6 @@ ludo.canvas.Node = new Class({
 		} else {
 			el = document.createElementNS("http://www.w3.org/2000/svg", el);
 		}
-
 		this.el = el;
 		el.style && (el.style.webkitTapHighlightColor = "rgba(0,0,0,0)");
 		return el;
@@ -2219,6 +2219,14 @@ ludo.canvas.Node = new Class({
     engine:function(){
         return ludo.canvasEngine;
     },
+
+	addEvents:function(events){
+		for(var key in events){
+			if(events.hasOwnProperty(key)){
+				this.addEvent(key, events[key]);
+			}
+		}
+	},
 
 	addEvent:function (event, fn) {
 		switch (event.toLowerCase()) {
@@ -2304,6 +2312,14 @@ ludo.canvas.Node = new Class({
     hide:function(){
         ludo.canvasEngine.hide(this.el);
     },
+
+	setProperties:function(p){
+		for(var key in p){
+			if(p.hasOwnProperty(key)){
+				this.set(key, p[key]);
+			}
+		}
+	},
 
 	set:function (key, value) {
 		ludo.canvasEngine.set(this.el, key, value);
@@ -2462,6 +2478,21 @@ ludo.canvas.Node = new Class({
 	 */
 	getBBox:function () {
 		return this.el.getBBox();
+	},
+
+	/**
+	 * Returns rectangular size of element, i.e. bounding box width - bounding box x and
+	 * bounding box width - bounding box y. Values are returned as { x : 100, y : 150 }
+	 * where x is width and y is height.
+	 * @method getSize
+	 * @return {Object} size x and y
+	 */
+	getSize:function(){
+		var b = this.getBBox();
+		return {
+			x :b.width - b.x,
+			y :b.height - b.y
+		};
 	},
 
 	/**
@@ -6230,7 +6261,7 @@ ludo.chart.Chart = new Class({
 	css:{
 
 	},
-
+	startColor:'#561AD9',
     data:undefined,
 
     /**
@@ -6285,7 +6316,11 @@ ludo.chart.Chart = new Class({
 
     getDataProvider:function(){
         return this.dataProvider;
-    }
+    },
+
+	getColor:function (key) {
+		return this.data[key].color ? this.data[key].color : this.color().offsetHue(this.startColor, key * (360 / (this.data.length + 1)));
+	}
 });/* ../ludojs/src/canvas/paint.js */
 /**
  Class for styling of SVG DOM nodes
@@ -6451,6 +6486,10 @@ ludo.canvas.NamedNode = new Class({
 	Extends: ludo.canvas.Node,
 
 	initialize:function (attributes, text) {
+		if(attributes.listeners){
+			this.addEvents(attributes.listeners);
+			delete attributes.listeners;
+		}
 		this.parent(this.tagName, attributes, text);
 	}
 });/* ../ludojs/src/chart/item.js */
@@ -6633,24 +6672,31 @@ ludo.chart.ChartBase = new Class({
     Extends: ludo.canvas.Group,
     currentHighlighted:undefined,
     chartItems:[],
+	startColor:'#561AD9',
     animation:{
         duration:1,
         fps:33
     },
+	rendered:false,
 
     ludoConfig:function(config){
         this.parent(config);
         this.setConfigParams(config, ['animate','animation']);
     },
 
+	render:function(){
+		if (!this.data)return;
+		this.rendered = true;
+	},
+
     update:function(data){
         this.data = data;
-        this.renderChart(this.rendered);
+        this.render(this.rendered);
     },
 
     resize:function(config){
         this.parent(config);
-        this.renderChart();
+        this.render();
     },
 
     toggleHighlight:function (item) {
@@ -6692,7 +6738,7 @@ ludo.chart.ChartBase = new Class({
         }, s);
     },
 
-    getChartItem:function(key, type){
+    getChartItem:function(key){
         if (this.chartItems[key] === undefined) {
             this.chartItems[key] = this.createDependency('chartItem-'+ key,
                 {
@@ -6932,17 +6978,14 @@ ludo.chart.Pie = new Class({
     Extends:ludo.chart.ChartBase,
     slices:[],
     data:undefined,
-    startColor:'#561AD9',
     styles:[],
     currentRadius:undefined,
-
-    rendered:false,
     sliceData:[],
     startAngle:270,
 
     itemType : 'chart.PieSlice',
 
-    renderChart:function (forUpdate) {
+    render:function (forUpdate) {
         if (!this.data)return;
 
         this.center = this.getChartOrigin();
@@ -6951,7 +6994,9 @@ ludo.chart.Pie = new Class({
 
         var method = this.animate && (forUpdate || !this.rendered) ? 'animate' : 'render';
         this.renderSlices(method);
-        this.rendered = true;
+
+		this.parent();
+
     },
 
     getRadius:function(){
@@ -14824,6 +14869,10 @@ ludo.dataSource.Record = new Class({
 		return this.collection.getRecord(this.record.parentUid);
 	},
 
+	getCollection:function(){
+		return this.collection;
+	},
+
 	isRecordObject:function (rec) {
 		return rec['initialize'] !== undefined && rec.record !== undefined;
 	},
@@ -15588,6 +15637,8 @@ ludo.dataSource.Collection = new Class({
 		}
 
 		this.addEvent('parsedata', this.createIndex.bind(this));
+
+		if(this.data && !this.index)this.createIndex();
 	},
 
 	/**
@@ -15610,7 +15661,6 @@ ludo.dataSource.Collection = new Class({
 	 * @method sort
 	 * @return void
 	 */
-
 	sort:function () {
 		if (this.sortedBy.column && this.sortedBy.order) {
 			this.sortBy(this.sortedBy.column, this.sortedBy.order);
@@ -16459,13 +16509,18 @@ ludo.dataSource.Collection = new Class({
 		var rec = this.findRecord(search);
 		if(rec){
 			var id = rec.uid;
-			if(this.recordObjects[id] === undefined){
-				this.recordObjects[id] = new ludo.dataSource.Record(rec, this);
-				this.addRecordEvents(this.recordObjects[id]);
-			}
-			return this.recordObjects[id];
+			return this.createRecord(rec);
 		}
 		return undefined;
+	},
+
+	createRecord:function(data){
+		var id = data.uid;
+		if(!this.recordObjects[id]){
+			this.recordObjects[id] = new ludo.dataSource.Record(data, this);
+			this.addRecordEvents(this.recordObjects[id]);
+		}
+		return this.recordObjects[id];
 	},
 
 	addRecordEvents:function(record){
@@ -30423,44 +30478,90 @@ ludo.canvas.Mask = new Class({
 	Extends: ludo.canvas.NamedNode,
 	tagName : 'mask'
 });/* ../ludojs/src/canvas/curtain.js */
+/**
+ Special animation class for SVG elements
+ @namespace canvas
+ @class Curtain
+ @constructor
+ @param {ludo.canvas.Node} node
+ @example
+	node.curtain().open('LeftRight');
+ */
 ludo.canvas.Curtain = new Class({
 	Extends:ludo.canvas.Node,
 	applyTo:undefined,
 	nodes:{},
 	bb:undefined,
 	animation:undefined,
-	action : undefined,
+	action:undefined,
 
-	initialize:function (node, config) {
+	initialize:function (node) {
 		this.parent('clipPath');
 		this.applyTo = node;
 
 		var g = new ludo.canvas.Node('g');
 		g.adopt(this);
 		this.applyTo.getCanvas().appendChild(g.getEl());
+
+	},
+
+	/**
+	 * Open curtains, i.e. show element
+	 * @method open
+	 * @param {String} direction (LeftRight, TopBottom, BottomTop or RightLeft),
+	 * @param {Number} duration in seconds
+	 * @optional
+	 * @default 1
+	 * @param {Number} fps (Frames per second)
+	 * @optional
+	 * @default 33
+	 */
+	open:function (direction, duration, fps) {
+		this.onStart();
+		this.action = 'open';
+		this.getAnimation().animate(this.getCoordinates(direction), duration, fps);
+
+	},
+
+	/**
+	 * Close curtains, i.e. hide element
+	 * @method close
+	 * @param {String} direction (LeftRight, TopBottom, BottomTop or RightLeft),
+	 * @param {Number} duration in seconds
+	 * @optional
+	 * @default 1
+	 * @param {Number} fps (Frames per second)
+	 * @optional
+	 * @default 33
+	 */
+	close:function (direction, duration, fps) {
+		this.onStart();
+		this.action = 'close';
+		this.getAnimation().animate(this.getCoordinates(direction, true), duration, fps);
+	},
+
+	onStart:function(){
+		this.applyTo.show();
+		this.setBB();
 		this.applyTo.applyClipPath(this);
 	},
 
-	open:function (direction, duration, fps) {
-		this.setBB();
-		this.action = 'open';
-		this.getAnimation().animate(this.getCoordinates(direction), duration, fps);
-	},
-
-	getAnimation:function(){
-		if(this.animation === undefined){
+	getAnimation:function () {
+		if (this.animation === undefined) {
 			this.animation = this.rect().animation();
 			this.animation.addEvent('finish', this.removeClipPath.bind(this));
 		}
+		this.rect().setProperties(this.bb);
 		return this.animation;
 	},
 
-	setBB:function(){
+	setBB:function () {
 		this.bb = this.applyTo.getBBox();
+
 	},
 
-	removeClipPath:function(){
-		if(this.action === 'close'){
+	removeClipPath:function () {
+		if (this.action === 'close') {
 			this.applyTo.hide();
 		}
 		this.applyTo.remove('clip-path');
@@ -30468,47 +30569,67 @@ ludo.canvas.Curtain = new Class({
 	},
 
 	getCoordinates:function (direction, close) {
+		var ret;
 
-		switch(direction){
+		if(close){
+			var tokens = this.getDirections(direction);
+			direction = tokens[1]+tokens[0];
+		}
+		switch (direction) {
 			case 'RightLeft':
-				return {
+				ret = {
 					width:{
 						from:0, to:this.bb.width
 					},
-					x: {
-						from: this.bb.width + this.bb.x,
-						to : this.bb.x
+					x:{
+						from:this.bb.width + this.bb.x,
+						to:this.bb.x
 					}
 				};
+				break;
 			case 'TopBottom':
-				return {
+				ret = {
 					height:{
 						from:0, to:this.bb.height
 					}
 				};
+				break;
 			case 'BottomTop':
-				return {
+				ret = {
 					height:{
 						from:0, to:this.bb.height
 					},
 					y:{
-						from: this.bb.height + this.bb.y,
-						to : this.bb.y
+						from:this.bb.height + this.bb.y,
+						to:this.bb.y
 					}
 				};
+				break;
 
 			default:
-				return {
+				ret = {
 					width:{
 						from:0, to:this.bb.width
 					}
 				};
 		}
 
+		if(close){
+			var keys = ['width','height','x','y'];
+			for(var i=0;i<keys.length;i++){
+				if(ret[keys[i]] !== undefined){
+					var f = ret[keys[i]].from;
+					ret[keys[i]].from = ret[keys[i]].to;
+					ret[keys[i]].to = f;
+				}
+			}
+		}
+
+		return ret;
 	},
 
 	getDirections:function (direction) {
-		return direction.replace(/([A-Z])/g, ' $1').trim().toLowerCase().split(/\s/g);
+		return direction.replace(/([A-Z])/g, ' $1').trim().split(/\s/g);
 	},
 
 	rect:function () {
@@ -30520,7 +30641,6 @@ ludo.canvas.Curtain = new Class({
 			});
 			this.adopt(this.nodes['rect'])
 		}
-
 		return this.nodes['rect'];
 	}
 
@@ -30549,6 +30669,9 @@ ludo.canvas.Animation = new Class({
 		}
 
 		for(var i=0;i<step.length;i++){
+			if(step[i].key === 'width' || step[i].key === 'height' && step[i].value < 0){
+				step[i].value = 0;
+			}
 			this.el.set(step[i].key, step[i].value);
 		}
 

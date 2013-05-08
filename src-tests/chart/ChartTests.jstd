@@ -2,6 +2,7 @@ load:
   - ../../mootools/mootools-core-1.4.5.js
   - ../../mootools/mootools-more-1.4.0.1.js
   - ../../js/ludojs.js
+  - ../../src/color/color.js
   - ../../src/data-source/collection.js
   - ../../src/data-source/record.js
   - ../../src/layout/relative.js
@@ -11,8 +12,7 @@ load:
   - ../../src/canvas/element.js
   - ../../src/canvas/canvas.js
   - ../../src/canvas/engine.js
-  - ../../src/chart/chart.js
-  - ../../src/canvas/group.js
+
 
   - ../../src/chart-new/data-provider.js
 

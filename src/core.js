@@ -257,7 +257,8 @@ ludo.Core = new Class({
 		return this.dependency[key] ? true : false;
 	},
 
-	getDependency:function(key){
-		return this.dependency[key];
+	getDependency:function(key, config){
+		if(this.dependency[key])return this.dependency[key];
+        return this.createDependency(key, config);
 	}
 });

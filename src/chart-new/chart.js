@@ -3,7 +3,7 @@ ludo.chart.Chart = new Class({
 	css:{
 
 	},
-	startColor:'#561AD9',
+
     data:undefined,
 
     /**
