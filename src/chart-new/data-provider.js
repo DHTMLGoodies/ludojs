@@ -1,3 +1,9 @@
+/**
+ * Special data source for charts
+ * @namespace chart
+ * @class DataProvider
+ * @extends dataSource.Collection
+ */
 ludo.chart.DataProvider = new Class({
     Extends:ludo.dataSource.Collection,
     sum:undefined,
@@ -58,6 +64,7 @@ ludo.chart.DataProvider = new Class({
         record.getPercent = this.getPercentFn(record).bind(record);
         record.getValue = this.getGetValueFn(record).bind(record);
         record.setValue = this.getSetValueFn(record).bind(record);
+        record.getStartPercent = this.getStartPercentFn(record).bind(record);
     },
 
     getPercentFn:function (record) {
@@ -76,6 +83,26 @@ ludo.chart.DataProvider = new Class({
         return function (value) {
             record.set('value', parseFloat(value));
         }
+    },
+
+    indexOf:function(record){
+        return this.records.indexOf(record);
+    },
+
+    getStartPercentFn:function(record){
+        return function(){
+            var c = record.getCollection();
+            var i = record.getCollection().indexOf(record) -1;
+            return c.getSumOf(0, i) / c.getSum() * 100;
+        }
+    },
+
+    getSumOf:function(start, end){
+        var ret = 0;
+        for(var i=0;i<=end;i++){
+            ret += this.records[i].getValue();
+        }
+        return ret;
     },
 
     createRecord:function (data) {

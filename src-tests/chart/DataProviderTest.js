@@ -201,8 +201,33 @@ TestCase("DataProviderTest", {
 		// then
 		assertNotUndefined(p.getRecords());
 		assertEquals(2, p.getRecords().length);
-
 	},
+
+    "test should be able to get start percent value of item": function(){
+        // given
+        var p = this.getProvider([
+            {
+                label:'My label', value:100, id:'myId'
+            },
+            {
+                label:'My label 2', value:200, id:'mySecondId'
+            },
+            {
+                label:'My label 2', value:200, id:'myThird'
+            }
+        ]);
+
+        // when
+        var first = p.get('myId');
+        var second = p.get('mySecondId');
+        var third = p.get('myThird');
+
+        // then
+        assertEquals(0, first.getStartPercent());
+        assertEquals(20, second.getStartPercent());
+        assertEquals(60, third.getStartPercent());
+
+    },
 
 	getProvider:function (data) {
 		data = data || [
