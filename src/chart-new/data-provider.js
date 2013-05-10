@@ -110,8 +110,13 @@ ludo.chart.DataProvider = new Class({
         var rec = this.parent(data);
         if (this.records.indexOf(rec) === -1) {
             this.records.push(rec);
+            this.fireEvent('createRecord', rec);
         }
         return rec;
+    },
+
+    hasRecords:function(){
+        return this.records.length > 0;
     },
 
     getRecords:function () {

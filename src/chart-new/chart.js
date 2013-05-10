@@ -22,7 +22,7 @@ ludo.chart.Chart = new Class({
             this.dataProvider = this.createDependency('dataProvider',
                 {
                     type : 'chart.DataProvider',
-                    data : this.data
+                    data : config.data
                 }
             );
         }
@@ -34,14 +34,13 @@ ludo.chart.Chart = new Class({
 	},
 
 	updateChildren:function(){
-		var d = this.getChartData();
 		for(var i=0;i<this.children.length;i++){
-			if(this.children[i].update)this.children[i].update(d);
+			if(this.children[i].update)this.children[i].update();
 		}
 	},
 
-	getChartData:function(){
-		return this.dataProvider.getData();
+	getRecords:function(){
+		return this.dataProvider.getRecords();
 	},
 
     getDataProvider:function(){
