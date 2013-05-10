@@ -4,8 +4,6 @@ ludo.chart.Chart = new Class({
 
 	},
 
-    data:undefined,
-
     /**
      * Class providing data to the chart
      * @config {chart.DataProvider} dataProvider
@@ -17,7 +15,7 @@ ludo.chart.Chart = new Class({
 	ludoConfig:function(config){
 		this.parent(config);
 		this.layout.type = 'Canvas';
-		this.setConfigParams(config, ['dataProvider','data']);
+		this.setConfigParams(config, ['dataProvider']);
         this.css.backgroundColor = '#fff';
 
         if(!this.dataProvider){
@@ -29,11 +27,6 @@ ludo.chart.Chart = new Class({
             );
         }
 	},
-
-    ludoEvents:function(){
-        this.parent();
-        this.dataProvider.addEvent('update', this.setData.bind(this));
-    },
 
 	ludoRendered:function(){
 		this.parent();
@@ -51,16 +44,7 @@ ludo.chart.Chart = new Class({
 		return this.dataProvider.getData();
 	},
 
-	setData:function(data){
-		this.data = data;
-		this.updateChildren();
-	},
-
     getDataProvider:function(){
         return this.dataProvider;
-    },
-
-	getColor:function (key) {
-		return this.data[key].color ? this.data[key].color : this.color().offsetHue(this.startColor, key * (360 / (this.data.length + 1)));
-	}
+    }
 });

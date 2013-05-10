@@ -6,6 +6,7 @@
  */
 ludo.chart.DataProvider = new Class({
     Extends:ludo.dataSource.Collection,
+    type:'chart.DataProvider',
     sum:undefined,
     recordValues:{},
     records:[],

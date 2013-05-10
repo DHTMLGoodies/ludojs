@@ -26,6 +26,7 @@ ludo.form.Manager = new Class({
 
 		if (config.form)this.form = config.form;
 		if (this.form && this.form.url)this.url = this.form.url;
+
         this.form.resource = this.form.resource || this.form.name || undefined;
 
 		this.id = String.uniqueID();
@@ -323,13 +324,15 @@ ludo.form.Manager = new Class({
 	save:function () {
 		if (this.getUrl() || ludo.config.getUrl()) {
 			this.fireEvent('invalid');
-            this.requestHandler().send(this.form.service || 'save', undefined, this.getValues(),
+            this.requestHandler().send(this.form.service || 'save', this.formComponentId ? this.formComponentId.getValue() : undefined, this.getValues(),
                 {
                     "progressBarId":this.getProgressBarId()
                 }
             );
 		}
 	},
+
+
     _request:undefined,
     requestHandler:function(){
         if(this._request === undefined){

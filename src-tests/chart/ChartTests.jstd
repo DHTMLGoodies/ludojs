@@ -14,7 +14,9 @@ load:
   - ../../src/canvas/engine.js
 
 
+  - ../../src/chart-new/chart.js
   - ../../src/chart-new/data-provider.js
+  - ../../src/chart-new/fragment.js
 
 test:
   - ChartTest.js
