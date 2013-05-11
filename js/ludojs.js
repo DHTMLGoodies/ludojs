@@ -1,4 +1,4 @@
-/* Generated Sat May 11 23:23:21 CEST 2013 */
+/* Generated Sat May 11 23:27:19 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -8185,6 +8185,153 @@ ludo.chart.Pie = new Class({
         for(var i=0;i< r.length;i++){
             this.fragments[i].set(radius, r[i].getAngle(), r[i].getDegrees());
         }
+    }
+});/* ../ludojs/src/chart/labels.js */
+ludo.chart.Labels = new Class({
+    Extends:ludo.chart.Base,
+    fragmentType:'chart.Label',
+
+
+    textStyles:undefined,
+    boxStyles:undefined,
+
+    textStylesOver:undefined,
+    boxStylesOver:undefined,
+
+    ludoConfig:function(config){
+        this.parent(config);
+        this.setConfigParams(config, ['textStyles', 'boxStyles', 'textStylesOver','boxStylesOver']);
+    },
+
+    render:function(){
+        this.onResize();
+
+    },
+
+    onResize:function(){
+
+        if(!this.fragments.length){
+            return;
+        }
+        var size = this.getSize();
+        if(size.x > size.y){
+            this.resizeHorizontal();
+        }else{
+            this.resizeVertical();
+        }
+
+    },
+
+    resizeHorizontal:function(){
+        var left = [];
+        var size = this.getSize();
+        var totalWidth = 0;
+        for(var i=0;i<this.fragments.length;i++){
+            var fSize = this.fragments[i].getSize();
+            var width = fSize.x + 10;
+            left.push(totalWidth);
+            totalWidth += width;
+        }
+
+        var offset = (size.x - totalWidth) / 2;
+        var offsetY = (size.y - this.fragments[0].getSize().y) / 2;
+        for(i=0;i<this.fragments.length;i++){
+            this.fragments[i].node().translate(left[i] + offset, offsetY);
+        }
+    },
+
+    resizeVertical:function(){
+        var top = [];
+        var size = this.getSize();
+        var totalHeight = 0;
+        for(var i=0;i<this.fragments.length;i++){
+            var fSize = this.fragments[i].getSize();
+            var height = fSize.y + 3;
+            top.push(totalHeight);
+            totalHeight += height;
+        }
+
+        var offset = (size.y - totalHeight) / 2;
+
+        for(i=0;i<this.fragments.length;i++){
+            this.fragments[i].node().translate(2, top[i] + offset);
+        }
+    }
+});/* ../ludojs/src/chart/label.js */
+ludo.chart.Label = new Class({
+    Extends:ludo.chart.Fragment,
+
+
+
+    createNodes:function () {
+        var g = this.createNode('g');
+
+        this.bg = new ludo.canvas.Rect({
+            x:0, y:0, width:10, height:10
+        });
+        this.bg.setStyle('fill', '#fff');
+        this.bg.setStyle('fill-opacity', '0');
+        g.adopt(this.bg);
+
+        this.colorBox = new ludo.canvas.Rect({
+            x:1, y:1, width:10, height:10
+        });
+        g.adopt(this.colorBox);
+        this.colorBox.setStyles(this.getBoxStyles());
+
+        this.textNode = new ludo.canvas.Text(this.record.getLabel(), {
+            x:15, y:10
+        });
+        this.textNode.setStyles(this.getTextStyles());
+        g.adopt(this.textNode);
+        this.setSize();
+
+        this.bg.set('width', this.size.x);
+        this.bg.set('height', this.size.x);
+    },
+
+    setSize:function () {
+        this.size = this.nodes[0].getSize();
+    },
+
+    getSize:function () {
+        return this.size;
+    },
+
+    node:function () {
+        return this.nodes[0];
+    },
+
+    getBoxStyles:function () {
+        var ret = this.getParent().boxStyles || {};
+        ret.fill = this.record.get('color');
+        return ret;
+    },
+
+    getTextStyles:function () {
+        return this.getParent().textStyles || {
+            'font-size':'13px',
+            'font-weight' : 'normal'
+        };
+    },
+
+    getTextStylesOver:function () {
+        return this.getParent().textStylesOver || { 'font-weight':'bold' };
+    },
+
+    getBoxStylesOver:function(){
+        return this.getParent().boxStylesOver || { 'fill' : this.record.get('color-over') };
+    },
+
+    enter:function () {
+        this.textNode.setStyles(this.getTextStylesOver());
+        this.colorBox.setStyles(this.getBoxStylesOver());
+
+    },
+
+    leave:function () {
+        this.textNode.setStyles(this.getTextStyles());
+        this.colorBox.setStyles(this.getBoxStyles());
     }
 });/* ../ludojs/src/chart/add-on.js */
 ludo.chart.AddOn = new Class({
