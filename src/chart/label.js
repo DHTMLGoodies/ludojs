@@ -56,7 +56,7 @@ ludo.chart.Label = new Class({
         var ret = this.boxStyles || {};
         ret.fill = this.record.get('color');
         ret.stroke = this.record.get('color');
-        if(!ret['stroke-width'])ret['stroke-width'] = 1;
+        if(!ret['stroke-width'])ret['stroke-width'] = 0;
         ret['stroke-location'] = 'outside';
         return ret;
     },
@@ -73,7 +73,7 @@ ludo.chart.Label = new Class({
     },
 
     getBoxStylesOver:function(){
-        return this.boxStylesOver || { 'stroke-width' : 1, 'stroke' : '#000' };
+        return this.boxStylesOver || { 'fill' : this.record.get('color-over') };
     },
 
     enter:function () {

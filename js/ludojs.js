@@ -1,4 +1,4 @@
-/* Generated Sat May 11 20:52:32 CEST 2013 */
+/* Generated Sat May 11 21:00:51 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -7663,7 +7663,7 @@ ludo.chart.DataProvider = new Class({
         for (var i = 0; i < r.length; i++) {
             if (!r[i].get('color')) {
                 r[i].set('color', color);
-                r[i].set('color-over', this.color().brighten(color, 4));
+                r[i].set('color-over', this.color().brighten(color, 6));
                 color = this.color().offsetHue(this.startColor, i * (360 / (r.length + 1)));
             }
         }
