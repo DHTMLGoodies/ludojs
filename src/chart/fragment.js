@@ -8,6 +8,11 @@ ludo.chart.Fragment = new Class({
     ludoConfig:function (config) {
         this.parent(config);
         this.setConfigParams(config, ['record','parentComponent']);
+        this.createNodes();
+    },
+
+    createNodes:function(){
+
     },
 
     ludoEvents:function(){
@@ -24,14 +29,19 @@ ludo.chart.Fragment = new Class({
         return this.parentComponent;
     },
 
-    createNode:function(tagName, properties, text){
-        var node = new ludo.canvas.Node(tagName, properties, text);
+    createNode:function(tagName, properties, text, type){
+        var node;
+
+        node = new ludo.canvas.Node(tagName, properties, text);
+
         this.dependency['node-' + this.nodes.length] = node;
         this.nodes.push(node);
 
         node.addEvent('mouseenter', this.record.enter.bind(this.record));
         node.addEvent('mouseleave', this.record.leave.bind(this.record));
         node.addEvent('click', this.record.click.bind(this.record));
+
+        node.setStyle('cursor','pointer');
 
         this.getParent().adopt(node);
 

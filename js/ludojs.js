@@ -1,4 +1,4 @@
-/* Generated Sat May 11 19:01:43 CEST 2013 */
+/* Generated Sat May 11 20:52:32 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -6457,6 +6457,10 @@ ludo.chart.Record = new Class({
         return this.get('value');
     },
 
+    getLabel:function(){
+        return this.get('label');
+    },
+
     setValue:function(value){
         value = parseFloat(value);
         if(value !== this.get('value')){
@@ -7733,6 +7737,11 @@ ludo.chart.Fragment = new Class({
     ludoConfig:function (config) {
         this.parent(config);
         this.setConfigParams(config, ['record','parentComponent']);
+        this.createNodes();
+    },
+
+    createNodes:function(){
+
     },
 
     ludoEvents:function(){
@@ -7749,14 +7758,19 @@ ludo.chart.Fragment = new Class({
         return this.parentComponent;
     },
 
-    createNode:function(tagName, properties, text){
-        var node = new ludo.canvas.Node(tagName, properties, text);
+    createNode:function(tagName, properties, text, type){
+        var node;
+
+        node = new ludo.canvas.Node(tagName, properties, text);
+
         this.dependency['node-' + this.nodes.length] = node;
         this.nodes.push(node);
 
         node.addEvent('mouseenter', this.record.enter.bind(this.record));
         node.addEvent('mouseleave', this.record.leave.bind(this.record));
         node.addEvent('click', this.record.click.bind(this.record));
+
+        node.setStyle('cursor','pointer');
 
         this.getParent().adopt(node);
 
@@ -7839,6 +7853,13 @@ ludo.canvas.Group = new Class({
         }
     },
 
+    getSize:function(){
+        return {
+            x : this.width,
+            y: this.height
+        }
+    },
+
     isHidden:function () {
         return false;
     }
@@ -7856,9 +7877,9 @@ ludo.chart.Base = new Class({
     focused:undefined,
     animation:{
         duration:1,
-        fps:33,
-        enabled:true
+        fps:33
     },
+
     addOns:undefined,
 
     fragmentMap:{},
@@ -7866,12 +7887,8 @@ ludo.chart.Base = new Class({
     ludoConfig:function (config) {
         this.parent(config);
         this.setConfigParams(config, ['animation']);
-        var dp = this.dataProvider();
-        if (dp.hasRecords()) {
-            this.createFragments();
-        }
 
-        this.render.delay(50, this);
+        this.create.delay(50, this);
     },
 
     ludoEvents:function () {
@@ -7960,12 +7977,19 @@ ludo.chart.Base = new Class({
         this.focused = undefined;
     },
 
+    create:function(){
+
+        if(this.dataProvider().hasRecords()){
+            this.createFragments();
+        }
+        this.render();
+    },
+
     render:function () {
 
     },
 
     update:function (record) {
-        console.log('update');
         this.fireEvent('update', record);
     },
 
@@ -8104,7 +8128,7 @@ ludo.chart.Pie = new Class({
     },
 
     getRadius:function(){
-        return this.parent() * .9;
+        return this.parent() * .85;
     },
 
     animate:function(){
@@ -29533,6 +29557,7 @@ ludo.canvas.NamedNode = new Class({
 	Extends: ludo.canvas.Node,
 
 	initialize:function (attributes, text) {
+        attributes = attributes || {};
 		if(attributes.listeners){
 			this.addEvents(attributes.listeners);
 			delete attributes.listeners;
@@ -30484,6 +30509,19 @@ ludo.canvas.Path = new Class({
             maxX:Math.max.apply(this, x), maxY:Math.max.apply(this, y)
         };
     }
+});/* ../ludojs/src/canvas/text.js */
+ludo.canvas.Text = new Class({
+	Extends: ludo.canvas.NamedNode,
+	tagName : 'text',
+
+	initialize:function(text, attributes){
+		this.parent(attributes, text);
+		this.fireSize();
+	},
+
+	fireSize:function(){
+		this.fireEvent('textSize', this.getSize());
+	}
 });/* ../ludojs/src/canvas/filter.js */
 /**
  Class for SVG filter effects, example Drop Shadow

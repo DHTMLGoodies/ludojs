@@ -32,6 +32,10 @@ ludo.chart.Record = new Class({
         return this.get('value');
     },
 
+    getLabel:function(){
+        return this.get('label');
+    },
+
     setValue:function(value){
         value = parseFloat(value);
         if(value !== this.get('value')){

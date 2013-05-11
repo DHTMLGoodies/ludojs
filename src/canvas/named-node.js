@@ -7,6 +7,7 @@ ludo.canvas.NamedNode = new Class({
 	Extends: ludo.canvas.Node,
 
 	initialize:function (attributes, text) {
+        attributes = attributes || {};
 		if(attributes.listeners){
 			this.addEvents(attributes.listeners);
 			delete attributes.listeners;

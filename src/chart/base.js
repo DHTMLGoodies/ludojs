@@ -11,9 +11,9 @@ ludo.chart.Base = new Class({
     focused:undefined,
     animation:{
         duration:1,
-        fps:33,
-        enabled:true
+        fps:33
     },
+
     addOns:undefined,
 
     fragmentMap:{},
@@ -21,12 +21,8 @@ ludo.chart.Base = new Class({
     ludoConfig:function (config) {
         this.parent(config);
         this.setConfigParams(config, ['animation']);
-        var dp = this.dataProvider();
-        if (dp.hasRecords()) {
-            this.createFragments();
-        }
 
-        this.render.delay(50, this);
+        this.create.delay(50, this);
     },
 
     ludoEvents:function () {
@@ -115,12 +111,19 @@ ludo.chart.Base = new Class({
         this.focused = undefined;
     },
 
+    create:function(){
+
+        if(this.dataProvider().hasRecords()){
+            this.createFragments();
+        }
+        this.render();
+    },
+
     render:function () {
 
     },
 
     update:function (record) {
-        console.log('update');
         this.fireEvent('update', record);
     },
 

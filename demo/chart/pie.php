@@ -26,6 +26,8 @@ require_once("../includes/demo-header.php");
 <script type="text/javascript" src="../../src/chart/pie.js"></script>
 <script type="text/javascript" src="../../src/chart/fragment.js"></script>
 <script type="text/javascript" src="../../src/chart/pie-slice.js"></script>
+<script type="text/javascript" src="../../src/chart/labels.js"></script>
+<script type="text/javascript" src="../../src/chart/label.js"></script>
 <script type="text/javascript" src="../../src/chart/record.js"></script>
 <script type="text/javascript" src="../../src/chart/pie-slice-highlighted.js"></script>
 
@@ -147,12 +149,7 @@ require_once("../includes/demo-header.php");
                             {
                                 name:'labels',
                                 id:'labels',
-                                type:'canvas.Group',
-                                css:{
-                                    'fill' : '#f00',
-                                    'stroke-width' : '1',
-                                    'stroke' : '#0f0'
-                                },
+                                type:'chart.Labels',
                                 layout:{
                                     alignParentBottom:true,
                                     height:40,
