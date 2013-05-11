@@ -45,15 +45,12 @@ ludo.chart.Label = new Class({
     getBoxStyles:function () {
         var ret = this.getParent().boxStyles || {};
         ret.fill = this.record.get('color');
-        ret.stroke = this.record.get('color');
-        if(!ret['stroke-width'])ret['stroke-width'] = 0;
-        ret['stroke-location'] = 'outside';
         return ret;
     },
 
     getTextStyles:function () {
-        return this.getParent().boxStyles || {
-            'font-size':'12px',
+        return this.getParent().textStyles || {
+            'font-size':'13px',
             'font-weight' : 'normal'
         };
     },
