@@ -4,17 +4,19 @@ ludo.chart.Pie = new Class({
     rendered:false,
 
     render:function(){
-
         this.animate();
-
         this.rendered = true;
+    },
+
+    getRadius:function(){
+        return this.parent() * .9;
     },
 
     animate:function(){
         var e = new ludo.canvas.Effect();
         var r = this.getRecords();
 
-        var radius = e.getEffectConfig([0], [this.getRadius() *.9], 1);
+        var radius = e.getEffectConfig([0], [this.getRadius()], 1);
         var degrees = [];
         var currentDegrees = [];
 
@@ -54,7 +56,7 @@ ludo.chart.Pie = new Class({
             return;
         }
         var r = this.getRecords();
-        var radius = this.getRadius() * .9;
+        var radius = this.getRadius();
 
         for(var i=0;i< r.length;i++){
             this.fragments[i].set(radius, r[i].getAngle(), r[i].getDegrees());

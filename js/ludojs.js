@@ -1,4 +1,4 @@
-/* Generated Sat May 11 1:53:24 CEST 2013 */
+/* Generated Sat May 11 16:52:41 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -794,9 +794,31 @@ ludo.Core = new Class({
 	 */
 	dependency:{},
 
+    /**
+     Array of add-ons config objects
+     Add-ons are special components which operates on a view. "parentComponent" is sent
+     to the constructor of all add-ons and can be saved for later reference.
+
+
+     @config addOns
+     @type {Array}
+     @example
+        new ludo.View({<br>
+		   plugins : [ { type : 'plugins.Sound' }]
+	  	 });
+
+     Add event
+     @example
+        this.getParent().addEvent('someEvent', this.playSound.bind(this));
+     Which will cause the plugin to play a sound when "someEvent" is fired by parent component.
+     */
+    addOns:undefined,
+
+    
 	initialize:function (config) {
 		config = config || {};
 		this.lifeCycle(config);
+        this.applyAddOns();
 	},
 
 	lifeCycle:function(config){
@@ -804,9 +826,17 @@ ludo.Core = new Class({
 		this.ludoEvents();
 	},
 
+    applyAddOns:function(){
+        if (this.addOns) {
+            for (var i = 0; i < this.addOns.length; i++) {
+                this.addOns[i].parentComponent = this;
+                this.addOns[i] = this.createDependency('addOns' + i, this.addOns[i]);
+            }
+        }
+    },
+
 	ludoConfig:function(config){
-        var keys = ['url','name','controller','module','submodule','stateful','id','useController'];
-        this.setConfigParams(config, keys);
+        this.setConfigParams(config, ['url','name','controller','module','submodule','stateful','id','useController','addOns']);
         if (this.stateful && this.statefulProperties && this.id) {
             config = this.appendPropertiesFromStore(config);
             this.addEvent('state', this.saveStatefulProperties.bind(this));
@@ -2139,7 +2169,28 @@ ludo.canvas.Engine = new Class({
 
 	empty:function(el){
 		el.textContent = '';
-	}
+	},
+
+    /**
+     * Degrees to radians method
+     * @method toRad
+     * @param degrees
+     * @return {Number}
+     */
+    toRadians:function(degrees){
+        return degrees * Math.PI / 180;
+    },
+
+    getPointAtDegreeOffset:function(from, degrees, size){
+        var radians = ludo.canvasEngine.toRadians(degrees);
+        var x = Math.cos(radians);
+        var y = Math.sin(radians);
+
+        return {
+            x : from.x + (size * x),
+            y : from.y + (size * y)
+        }
+    }
 
 });
 ludo.canvasEngine = new ludo.canvas.Engine();/* ../ludojs/src/canvas/node.js */
@@ -2423,9 +2474,9 @@ ludo.canvas.Node = new Class({
 
 	setStyles:function(styles){
 		for(var key in styles){
-			if(styles.hasOwnProperty(key)){
+			//if(styles.hasOwnProperty(key)){
 				this.setStyle(key, styles[key]);
-			}
+			//}
 		}
 	},
 
@@ -2519,27 +2570,6 @@ ludo.canvas.Node = new Class({
 		this.setTransformMatrix(this.el, a, b, c, d, e, f);
 	},
 
-    getPointAtDegreeOffset:function(from, degrees, size){
-        var radians = this.toRadians(degrees);
-        var x = Math.cos(radians);
-        var y = Math.sin(radians);
-
-        return {
-            x : from.x + (size * x),
-            y : from.y + (size * y)
-        }
-    },
-
-    /**
-     * Degrees to radians method
-     * @method toRad
-     * @param degrees
-     * @return {Number}
-     */
-    toRadians:function(degrees){
-        return degrees * Math.PI / 180;
-	},
-
 	empty:function(){
 		ludo.canvasEngine.empty(this.getEl());
 	},
@@ -2562,7 +2592,15 @@ ludo.canvas.Node = new Class({
 			this._animation = new ludo.canvas.Animation(this.getEl());
 		}
 		return this._animation;
-	}
+	},
+
+    toFront:function(){
+        ludo.canvasEngine.toFront(this.getEl());
+    },
+
+    toBack:function(){
+        ludo.canvasEngine.toBack(this.getEl());
+    }
 });
 
 
@@ -4875,32 +4913,7 @@ ludo.View = new Class({
 	},
 	state:{},
 
-	/**
-	 Array of add-ons config objects
-	 Add-ons are special components which operates on a view. When created, config property
-	 "view" is sent to constructor of the the plugin.
 
-
-	 @config addons
-	 @type {Array}
-	 @example
-	 new ludo.View({<br>
-		   plugins : [ { type : 'plugins.Sound' }]
-	  	 });
-	 and inside ludo.plugins.Sound:
-	 1) Create reference to view in constructor
-	 @example
-	 initialize:function(config){
-         ...
-         this.view = config.view;
-         ...
-      }
-
-	 2) Add event
-	 this.view.addEvent('someEvent', this.playSound.bind(this));
-	 Which will cause the plugin to play a sound when "someEvent" is fired by the view.
-	 */
-	addons:[],
 
 	tagBody:'div',
 	id:null,
@@ -5194,7 +5207,7 @@ ludo.View = new Class({
 		this.parent(config);
 		config.els = config.els || {};
 		if (this.parentComponent)config.renderTo = undefined;
-		var keys = ['css', 'contextMenu', 'renderTo', 'tpl', 'containerCss', 'socket', 'form', 'addons', 'title', 'html', 'hidden', 'copyEvents',
+		var keys = ['css', 'contextMenu', 'renderTo', 'tpl', 'containerCss', 'socket', 'form',, 'title', 'html', 'hidden', 'copyEvents',
 			'dataSource', 'movable', 'resizable', 'closable', 'minimizable', 'alwaysInFront',
 			'parentComponent', 'cls', 'bodyCls', 'objMovable', 'width', 'height', 'model', 'frame', 'formConfig',
 			'overflow', 'ludoDB'];
@@ -5331,12 +5344,7 @@ ludo.View = new Class({
 			this.getForm();
 		}
 
-		if (this.addons) {
-			for (var i = 0; i < this.addons.length; i++) {
-				this.addons[i].view = this;
-				this.addons[i] = this.createDependency('addOns' + i, this.addons[i]);
-			}
-		}
+
 	},
 
 	createEventCopies:function () {
@@ -6706,7 +6714,7 @@ ludo.chart.ChartBase = new Class({
         this.currentHighlighted = item;
     },
 
-    getCenter:function () {
+    getChartOrigin:function () {
         return {
             x : this.width / 2,
             y : this.height /2
@@ -6719,6 +6727,13 @@ ludo.chart.ChartBase = new Class({
 
     getChart:function(){
         return this.parentComponent;
+    },
+
+    color:function(){
+        if(this.colorHandler === undefined){
+            this.colorHandler = new ludo.color.Color();
+        }
+        return this.colorHandler;
     },
 
     getTooltipStyles:function(){
@@ -6754,6 +6769,10 @@ ludo.chart.ChartBase = new Class({
             'stroke':'#ffffff',
             'cursor':'pointer'
         };
+    },
+
+    getColor:function (key) {
+        return this.data[key].color ? this.data[key].color : this.color().offsetHue(this.startColor, key * (360 / (this.data.length + 1)));
     },
 
     getAnimationSpec:function(){
@@ -6822,7 +6841,7 @@ ludo.chart.PieSlice = new Class({
     },
 
     getOffsetFromCenter:function (offset) {
-        var centerRadians = this.toRadians(this.renderingData.angle + (this.renderingData.degrees / 2));
+        var centerRadians = ludo.canvasEngine.toRadians(this.renderingData.angle + (this.renderingData.degrees / 2));
         var x = Math.cos(centerRadians) * offset;
         var y = Math.sin(centerRadians) * offset;
         return { x:x, y:y}
@@ -6834,7 +6853,7 @@ ludo.chart.PieSlice = new Class({
 
         var path = ['M ' + center.x + ' ' + center.y];
 
-        var point1 = this.getPointAtDegreeOffset(center, config.angle, config.radius);
+        var point1 = ludo.canvasEngine.getPointAtDegreeOffset(center, config.angle, config.radius);
 
         path.push('L ' + point1.x + ' ' + point1.y);
         path.push('M ' + point1.x + ' ' + point1.y);
@@ -6844,7 +6863,7 @@ ludo.chart.PieSlice = new Class({
         path.push(config.degrees > 180 ? '1' : '0');
         path.push('1');
 
-        var point2 = this.getPointAtDegreeOffset(center, config.angle + config.degrees, config.radius);
+        var point2 = ludo.canvasEngine.getPointAtDegreeOffset(center, config.angle + config.degrees, config.radius);
         path.push(point2.x + ' ' + point2.y);
         path.push('L ' + center.x + ' ' + center.y);
 
@@ -6857,10 +6876,6 @@ ludo.chart.PieSlice = new Class({
         if (this.highlighted) {
             this.engine().effect().flyBack(this.getEl(),.1);
         } else {
-            if (this.highlighted) {
-                coords.x *= -1;
-                coords.y *= -1;
-            }
             this.engine().effect().fly(this.getEl(), coords.x, coords.y,.1);
 
             this.fireEvent('highlight', this);
@@ -16497,7 +16512,6 @@ ludo.dataSource.Collection = new Class({
 	getRecord:function(search){
 		var rec = this.findRecord(search);
 		if(rec){
-			var id = rec.uid;
 			return this.createRecord(rec);
 		}
 		return undefined;
@@ -16506,11 +16520,15 @@ ludo.dataSource.Collection = new Class({
 	createRecord:function(data){
 		var id = data.uid;
 		if(!this.recordObjects[id]){
-			this.recordObjects[id] = new ludo.dataSource.Record(data, this);
+			this.recordObjects[id] = this.recordInstance(data, this);
 			this.addRecordEvents(this.recordObjects[id]);
 		}
 		return this.recordObjects[id];
 	},
+
+    recordInstance:function(data){
+        return new ludo.dataSource.Record(data, this);
+    },
 
 	addRecordEvents:function(record){
 		record.addEvent('update', this.onRecordUpdate.bind(this));
@@ -30235,98 +30253,100 @@ ludo.canvas.Ellipse = new Class({
  * @class Path
  */
 ludo.canvas.Path = new Class({
-	Extends:ludo.canvas.NamedNode,
-	tagName:'path',
-	pointString:undefined,
-	pointArray:undefined,
-	size:undefined,
-	position:undefined,
+    Extends:ludo.canvas.NamedNode,
+    tagName:'path',
+    pointString:undefined,
+    pointArray:undefined,
+    size:undefined,
+    position:undefined,
 
-	initialize:function (points, properties) {
-		properties = properties || {};
-		points = this.getValidPointString(points);
-		properties.d = points;
-		this.parent(properties);
-		this.pointString = points;
-	},
+    initialize:function (points, properties) {
+        properties = properties || {};
+        if (points) {
+            points = this.getValidPointString(points);
+            properties.d = points;
+        }
+        this.parent(properties);
+        this.pointString = points;
+    },
 
-	getValidPointString:function (points) {
-		return points.replace(/([A-Z])/g, '$1 ').trim().replace(/,/g, ' ').replace(/\s+/g, ' ');
-	},
+    getValidPointString:function (points) {
+        return points.replace(/([A-Z])/g, '$1 ').trim().replace(/,/g, ' ').replace(/\s+/g, ' ');
+    },
 
-    setPath:function(path){
+    setPath:function (path) {
         this.pointString = this.getValidPointString(path);
         this.pointArray = undefined;
         this.set('d', this.pointString);
     },
 
-	getPoint:function (index) {
-		if (this.pointArray === undefined)this.buildPointArray();
-		index *= 3;
-		return {
-			x:this.pointArray[index + 1],
-			y:this.pointArray[index + 2]
-		};
-	},
+    getPoint:function (index) {
+        if (this.pointArray === undefined)this.buildPointArray();
+        index *= 3;
+        return {
+            x:this.pointArray[index + 1],
+            y:this.pointArray[index + 2]
+        };
+    },
 
-	setPoint:function (index, x, y) {
-		if (this.pointArray === undefined)this.buildPointArray();
-		index *= 3;
-		if (index < this.pointArray.length - 3) {
-			this.pointArray[index + 1] = x;
-			this.pointArray[index + 2] = y;
-			this.pointString = this.pointArray.join(' ');
-			this.set('d', this.pointString);
-			this.size = undefined;
-			this.position = undefined;
-		}
-	},
+    setPoint:function (index, x, y) {
+        if (this.pointArray === undefined)this.buildPointArray();
+        index *= 3;
+        if (index < this.pointArray.length - 3) {
+            this.pointArray[index + 1] = x;
+            this.pointArray[index + 2] = y;
+            this.pointString = this.pointArray.join(' ');
+            this.set('d', this.pointString);
+            this.size = undefined;
+            this.position = undefined;
+        }
+    },
 
-	buildPointArray:function () {
-		var points = this.pointString.replace(/,/g, ' ').replace(/\s+/g, ' ');
-		this.pointArray = points.split(/([A-Z\s])/g).erase(" ").erase("");
-	},
-	/**
-	 * Get size of polyline (max X - min X) and (max X - min Y)
-	 * @method getSize
-	 * @return {Object} x and y
-	 */
-	getSize:function(){
-		if(this.size === undefined){
-			var minMax = this.getMinAndMax();
-			this.size = {
-				x : Math.abs(minMax.maxX - minMax.minX),
-				y : Math.abs(minMax.maxY - minMax.minY)
-			};
-		}
-		return this.size;
-	},
+    buildPointArray:function () {
+        var points = this.pointString.replace(/,/g, ' ').replace(/\s+/g, ' ');
+        this.pointArray = points.split(/([A-Z\s])/g).erase(" ").erase("");
+    },
+    /**
+     * Get size of polyline (max X - min X) and (max X - min Y)
+     * @method getSize
+     * @return {Object} x and y
+     */
+    getSize:function () {
+        if (this.size === undefined) {
+            var minMax = this.getMinAndMax();
+            this.size = {
+                x:Math.abs(minMax.maxX - minMax.minX),
+                y:Math.abs(minMax.maxY - minMax.minY)
+            };
+        }
+        return this.size;
+    },
 
-	getPosition:function(){
-		if(this.position === undefined){
-			var minMax = this.getMinAndMax();
-			this.position = {
-				x : minMax.minX,
-				y : minMax.minY
-			};
-		}
-		return this.position;
-	},
+    getPosition:function () {
+        if (this.position === undefined) {
+            var minMax = this.getMinAndMax();
+            this.position = {
+                x:minMax.minX,
+                y:minMax.minY
+            };
+        }
+        return this.position;
+    },
 
-	getMinAndMax:function () {
-		if (this.pointArray === undefined)this.buildPointArray();
-		var p = this.pointArray;
+    getMinAndMax:function () {
+        if (this.pointArray === undefined)this.buildPointArray();
+        var p = this.pointArray;
         var x = [];
         var y = [];
         for (var i = 0; i < p.length - 2; i += 3) {
-            x.push(p[i+1]);
-            y.push(p[i+2]);
+            x.push(p[i + 1]);
+            y.push(p[i + 2]);
         }
         return {
             minX:Math.min.apply(this, x), minY:Math.min.apply(this, y),
             maxX:Math.max.apply(this, x), maxY:Math.max.apply(this, y)
         };
-	}
+    }
 });/* ../ludojs/src/canvas/filter.js */
 /**
  Class for SVG filter effects, example Drop Shadow

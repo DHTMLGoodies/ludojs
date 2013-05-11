@@ -271,6 +271,7 @@ ludo.canvas.Engine = new Class({
 
 		this.tCache[id] = {};
 		var keys = this.getTransformationKeys(el);
+
 		for (var i = 0; i < keys.length; i++) {
 			var values = this.getTransformationValues(el, keys[i]);
 			this.tCache[id][keys[i]] = {
@@ -283,6 +284,7 @@ ludo.canvas.Engine = new Class({
 	getTransformationKeys:function (el) {
 		var ret = [];
 		var t = this.get(el, 'transform') || '';
+
 		var tokens = t.split(/\(/g);
 		for (var i = 0; i < tokens.length-1; i++) {
 			ret.push(tokens[i].replace(/[^a-z]/gi, ''));

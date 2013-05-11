@@ -5,8 +5,6 @@ ludo.chart.PieSlice = new Class({
         this.parent(config);
         var style = this.createStyle(this.getSliceStyle());
         this.createNode('path', { "class":style });
-
-
     },
 
     getSliceStyle:function () {
@@ -66,5 +64,13 @@ ludo.chart.PieSlice = new Class({
     centerOffset:function(offset){
         var angle = this.record.getAngle() + (this.record.getDegrees() / 2 );
         return ludo.canvasEngine.getPointAtDegreeOffset({ x:0, y: 0}, angle, offset);
+    },
+
+    enter:function(){
+        this.nodes[0].setStyle('fill', this.record.get('color-over'));
+    },
+
+    leave:function(){
+        this.nodes[0].setStyle('fill', this.record.get('color'));
     }
 });

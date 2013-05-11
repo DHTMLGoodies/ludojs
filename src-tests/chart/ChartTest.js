@@ -1,5 +1,15 @@
 TestCase("ChartTest", {
 
+    setUp:function(){
+        if(!ludo.chart.CustomAddOn){
+            ludo.chart.CustomAddOn = new Class({
+                Extends: ludo.chart.AddOn,
+                type : 'chart.CustomAddOn'
+
+            });
+        }
+    },
+
     "test should always create data provider": function(){
         // given
         var c = new ludo.chart.Chart({
@@ -89,6 +99,63 @@ TestCase("ChartTest", {
 
         // then
         assertEquals(c.getCanvas(), f.getCanvas());
+
+    },
+
+    "test should be able to apply add ons": function(){
+        // given
+        var c = new ludo.chart.Chart({
+            renderTo:document.body,
+            data : [
+                { label : 'First label', value: 150 },
+                { label : 'Second label', value : 100 }
+            ],
+            children:[{
+                type:'chart.Base',
+                addOns:[
+                    {
+                        type : 'chart.CustomAddOn'
+                    }
+                ]
+            }]
+        });
+
+        // when
+        var addOns = c.children[0].addOns;
+
+        // then
+        assertNotUndefined(addOns);
+        assertEquals(1, addOns.length);
+        assertEquals('chart.CustomAddOn', addOns[0].type);
+        assertEquals(c.children[0], addOns[0].getParent());
+
+    },
+
+    "test should be able to get fragment for a record": function(){
+        // given
+        var c = new ludo.chart.Chart({
+            renderTo:document.body,
+            data : [
+                { label : 'First label', value: 150 },
+                { label : 'Second label', value : 100 }
+            ],
+            children:[{
+                type:'chart.Base'
+            }]
+        });
+
+        // when
+        var record0 = c.getDataProvider().records[1];
+        var record1 = c.getDataProvider().records[1];
+
+        var f0 = c.children[0].getFragmentFor(record0);
+        var f1 = c.children[0].getFragmentFor(record1);
+
+        // then
+        assertEquals(c.children[0].fragments[1], f0);
+        assertEquals(c.children[0].fragments[1], f1);
+
+
 
     }
 });

@@ -70,9 +70,31 @@ ludo.Core = new Class({
 	 */
 	dependency:{},
 
+    /**
+     Array of add-ons config objects
+     Add-ons are special components which operates on a view. "parentComponent" is sent
+     to the constructor of all add-ons and can be saved for later reference.
+
+
+     @config addOns
+     @type {Array}
+     @example
+        new ludo.View({<br>
+		   plugins : [ { type : 'plugins.Sound' }]
+	  	 });
+
+     Add event
+     @example
+        this.getParent().addEvent('someEvent', this.playSound.bind(this));
+     Which will cause the plugin to play a sound when "someEvent" is fired by parent component.
+     */
+    addOns:undefined,
+
+    
 	initialize:function (config) {
 		config = config || {};
 		this.lifeCycle(config);
+        this.applyAddOns();
 	},
 
 	lifeCycle:function(config){
@@ -80,9 +102,17 @@ ludo.Core = new Class({
 		this.ludoEvents();
 	},
 
+    applyAddOns:function(){
+        if (this.addOns) {
+            for (var i = 0; i < this.addOns.length; i++) {
+                this.addOns[i].parentComponent = this;
+                this.addOns[i] = this.createDependency('addOns' + i, this.addOns[i]);
+            }
+        }
+    },
+
 	ludoConfig:function(config){
-        var keys = ['url','name','controller','module','submodule','stateful','id','useController'];
-        this.setConfigParams(config, keys);
+        this.setConfigParams(config, ['url','name','controller','module','submodule','stateful','id','useController','addOns']);
         if (this.stateful && this.statefulProperties && this.id) {
             config = this.appendPropertiesFromStore(config);
             this.addEvent('state', this.saveStatefulProperties.bind(this));

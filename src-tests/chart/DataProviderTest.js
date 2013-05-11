@@ -278,7 +278,7 @@ TestCase("DataProviderTest", {
         // then
         assertEquals(270, first.getAngle());
         assertEquals(270 + (20 * 360 / 100), second.getAngle());
-        assertEquals(270 + (60 * 360 / 100), third.getAngle());
+        assertEquals(270 - 360 + (60 * 360 / 100), third.getAngle());
 
     },
 

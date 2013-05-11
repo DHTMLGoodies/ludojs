@@ -8,10 +8,6 @@ ludo.chart.Fragment = new Class({
     ludoConfig:function (config) {
         this.parent(config);
         this.setConfigParams(config, ['record','parentComponent']);
-
-
-
-
     },
 
     ludoEvents:function(){
@@ -20,6 +16,8 @@ ludo.chart.Fragment = new Class({
 
         this.record.addEvent('focus', this.focus.bind(this));
         this.record.addEvent('blur', this.blur.bind(this));
+        this.record.addEvent('enter', this.enter.bind(this));
+        this.record.addEvent('leave', this.leave.bind(this));
     },
 
     getParent:function(){
@@ -71,6 +69,14 @@ ludo.chart.Fragment = new Class({
     },
 
     blur:function(){
+
+    },
+
+    enter:function(){
+
+    },
+
+    leave:function(){
 
     }
 });

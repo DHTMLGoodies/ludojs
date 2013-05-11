@@ -988,7 +988,6 @@ ludo.dataSource.Collection = new Class({
 	getRecord:function(search){
 		var rec = this.findRecord(search);
 		if(rec){
-			var id = rec.uid;
 			return this.createRecord(rec);
 		}
 		return undefined;
@@ -997,11 +996,15 @@ ludo.dataSource.Collection = new Class({
 	createRecord:function(data){
 		var id = data.uid;
 		if(!this.recordObjects[id]){
-			this.recordObjects[id] = new ludo.dataSource.Record(data, this);
+			this.recordObjects[id] = this.recordInstance(data, this);
 			this.addRecordEvents(this.recordObjects[id]);
 		}
 		return this.recordObjects[id];
 	},
+
+    recordInstance:function(data){
+        return new ludo.dataSource.Record(data, this);
+    },
 
 	addRecordEvents:function(record){
 		record.addEvent('update', this.onRecordUpdate.bind(this));

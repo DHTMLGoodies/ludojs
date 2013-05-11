@@ -90,32 +90,7 @@ ludo.View = new Class({
 	},
 	state:{},
 
-	/**
-	 Array of add-ons config objects
-	 Add-ons are special components which operates on a view. When created, config property
-	 "view" is sent to constructor of the the plugin.
 
-
-	 @config addons
-	 @type {Array}
-	 @example
-	 new ludo.View({<br>
-		   plugins : [ { type : 'plugins.Sound' }]
-	  	 });
-	 and inside ludo.plugins.Sound:
-	 1) Create reference to view in constructor
-	 @example
-	 initialize:function(config){
-         ...
-         this.view = config.view;
-         ...
-      }
-
-	 2) Add event
-	 this.view.addEvent('someEvent', this.playSound.bind(this));
-	 Which will cause the plugin to play a sound when "someEvent" is fired by the view.
-	 */
-	addons:[],
 
 	tagBody:'div',
 	id:null,
@@ -409,7 +384,7 @@ ludo.View = new Class({
 		this.parent(config);
 		config.els = config.els || {};
 		if (this.parentComponent)config.renderTo = undefined;
-		var keys = ['css', 'contextMenu', 'renderTo', 'tpl', 'containerCss', 'socket', 'form', 'addons', 'title', 'html', 'hidden', 'copyEvents',
+		var keys = ['css', 'contextMenu', 'renderTo', 'tpl', 'containerCss', 'socket', 'form',, 'title', 'html', 'hidden', 'copyEvents',
 			'dataSource', 'movable', 'resizable', 'closable', 'minimizable', 'alwaysInFront',
 			'parentComponent', 'cls', 'bodyCls', 'objMovable', 'width', 'height', 'model', 'frame', 'formConfig',
 			'overflow', 'ludoDB'];
@@ -546,12 +521,7 @@ ludo.View = new Class({
 			this.getForm();
 		}
 
-		if (this.addons) {
-			for (var i = 0; i < this.addons.length; i++) {
-				this.addons[i].view = this;
-				this.addons[i] = this.createDependency('addOns' + i, this.addons[i]);
-			}
-		}
+
 	},
 
 	createEventCopies:function () {

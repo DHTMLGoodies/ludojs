@@ -197,6 +197,10 @@ ludo.canvas.Node = new Class({
 	},
 
 	translate:function (x, y) {
+        if(y === undefined){
+            y = x.y;
+            x = x.x;
+        }
 		ludo.canvasEngine.setTransformation(this.el, 'translate', x + ' ' + y);
 	},
 
@@ -396,7 +400,15 @@ ludo.canvas.Node = new Class({
 			this._animation = new ludo.canvas.Animation(this.getEl());
 		}
 		return this._animation;
-	}
+	},
+
+    toFront:function(){
+        ludo.canvasEngine.toFront(this.getEl());
+    },
+
+    toBack:function(){
+        ludo.canvasEngine.toBack(this.getEl());
+    }
 });
 
 
