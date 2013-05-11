@@ -2,6 +2,18 @@ ludo.chart.Labels = new Class({
     Extends:ludo.chart.Base,
     fragmentType:'chart.Label',
 
+
+    textStyles:undefined,
+    boxStyles:undefined,
+
+    textStylesOver:undefined,
+    boxStylesOver:undefined,
+
+    ludoConfig:function(config){
+        this.parent(config);
+        this.setConfigParams(config, ['textStyles', 'boxStyles', 'textStylesOver','boxStylesOver']);
+    },
+
     render:function(){
         this.onResize();
 

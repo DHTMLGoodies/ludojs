@@ -29,7 +29,7 @@ ludo.chart.Fragment = new Class({
         return this.parentComponent;
     },
 
-    createNode:function(tagName, properties, text, type){
+    createNode:function(tagName, properties, text){
         var node;
 
         node = new ludo.canvas.Node(tagName, properties, text);

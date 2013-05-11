@@ -1,17 +1,7 @@
 ludo.chart.Label = new Class({
     Extends:ludo.chart.Fragment,
 
-    textStyles:undefined,
-    boxStyles:undefined,
 
-    textStylesOver:undefined,
-    boxStylesOver:undefined,
-
-    ludoConfig:function (config) {
-        this.parent(config);
-        this.setConfigParams(config, ['textStyles', 'boxStyles', 'textStylesOver','boxStylesOver']);
-
-    },
 
     createNodes:function () {
         var g = this.createNode('g');
@@ -53,7 +43,7 @@ ludo.chart.Label = new Class({
     },
 
     getBoxStyles:function () {
-        var ret = this.boxStyles || {};
+        var ret = this.getParent().boxStyles || {};
         ret.fill = this.record.get('color');
         ret.stroke = this.record.get('color');
         if(!ret['stroke-width'])ret['stroke-width'] = 0;
@@ -62,18 +52,18 @@ ludo.chart.Label = new Class({
     },
 
     getTextStyles:function () {
-        return this.boxStyles || {
+        return this.getParent().boxStyles || {
             'font-size':'12px',
             'font-weight' : 'normal'
         };
     },
 
     getTextStylesOver:function () {
-        return this.textStylesOver || { 'font-weight':'bold' };
+        return this.getParent().textStylesOver || { 'font-weight':'bold' };
     },
 
     getBoxStylesOver:function(){
-        return this.boxStylesOver || { 'fill' : this.record.get('color-over') };
+        return this.getParent().boxStylesOver || { 'fill' : this.record.get('color-over') };
     },
 
     enter:function () {
