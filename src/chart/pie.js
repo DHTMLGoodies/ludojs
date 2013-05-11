@@ -9,7 +9,7 @@ ludo.chart.Pie = new Class({
     },
 
     getRadius:function(){
-        return this.parent() * .85;
+        return this.parent() - 20;
     },
 
     animate:function(){
