@@ -3,8 +3,6 @@ ludo.chart.Chart = new Class({
 	css:{
 
 	},
-	startColor:'#561AD9',
-    data:undefined,
 
     /**
      * Class providing data to the chart
@@ -17,50 +15,35 @@ ludo.chart.Chart = new Class({
 	ludoConfig:function(config){
 		this.parent(config);
 		this.layout.type = 'Canvas';
-		this.setConfigParams(config, ['dataProvider','data']);
+		this.setConfigParams(config, ['dataProvider']);
         this.css.backgroundColor = '#fff';
 
         if(!this.dataProvider){
             this.dataProvider = this.createDependency('dataProvider',
                 {
                     type : 'chart.DataProvider',
-                    data : this.data
+                    data : config.data
                 }
             );
         }
 	},
 
-    ludoEvents:function(){
-        this.parent();
-        this.dataProvider.addEvent('update', this.setData.bind(this));
-    },
-
-	ludoRendered:function(){
-		this.parent();
-		this.updateChildren.delay(50, this);
-	},
-
 	updateChildren:function(){
-		var d = this.getChartData();
 		for(var i=0;i<this.children.length;i++){
-			if(this.children[i].update)this.children[i].update(d);
+			if(this.children[i].update)this.children[i].onResize();
 		}
 	},
 
-	getChartData:function(){
-		return this.dataProvider ? this.dataProvider.getData() : this.data;
-	},
-
-	setData:function(data){
-		this.data = data;
-		this.updateChildren();
+	getRecords:function(){
+		return this.dataProvider.getRecords();
 	},
 
     getDataProvider:function(){
         return this.dataProvider;
     },
 
-	getColor:function (key) {
-		return this.data[key].color ? this.data[key].color : this.color().offsetHue(this.startColor, key * (360 / (this.data.length + 1)));
-	}
+    resize:function(config){
+        this.parent(config);
+        this.updateChildren();
+    }
 });

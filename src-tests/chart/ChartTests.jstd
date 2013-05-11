@@ -16,12 +16,12 @@ load:
   - ../../src/canvas/engine.js
 
 
-  - ../../src/chart-new/add-on.js
-  - ../../src/chart-new/record.js
-  - ../../src/chart-new/base.js
-  - ../../src/chart-new/chart.js
-  - ../../src/chart-new/data-provider.js
-  - ../../src/chart-new/fragment.js
+  - ../../src/chart/add-on.js
+  - ../../src/chart/record.js
+  - ../../src/chart/base.js
+  - ../../src/chart/chart.js
+  - ../../src/chart/data-provider.js
+  - ../../src/chart/fragment.js
 
 test:
   - ChartTest.js

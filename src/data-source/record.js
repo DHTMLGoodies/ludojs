@@ -10,6 +10,13 @@ ludo.dataSource.Record = new Class({
 	record:undefined,
 	collection:undefined,
 
+    /**
+     * Array of events which should fire update event
+     * @property {Array} eventKeys
+     * @default undefined
+     */
+    eventKeys:undefined,
+
 	initialize:function (record, collection) {
 		this.record = record;
 		this.collection = collection;
@@ -25,7 +32,9 @@ ludo.dataSource.Record = new Class({
 	set:function (key, value) {
 		this.fireEvent('beforeUpdate', this.record);
 		this.record[key] = value;
-		this.fireEvent('update', this.record);
+		if(!this.eventKeys || this.eventKeys.indexOf(key) >= 0){
+            this.fireEvent('update', this.record);
+        }
 		return this;
 	},
 

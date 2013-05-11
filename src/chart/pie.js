@@ -1,61 +1,70 @@
 ludo.chart.Pie = new Class({
-    Extends:ludo.chart.ChartBase,
-    slices:[],
-    data:undefined,
-    styles:[],
-    currentRadius:undefined,
-    sliceData:[],
-    startAngle:270,
+    Extends:ludo.chart.Base,
+    fragmentType:'chart.PieSlice',
+    rendered:false,
 
-    itemType : 'chart.PieSlice',
-
-    render:function (forUpdate) {
-        if (!this.data)return;
-
-        this.center = this.getChartOrigin();
-
-        this.currentRadius = Math.min(this.center.x, this.center.y) * .9;
-
-        var method = this.animate && (forUpdate || !this.rendered) ? 'animate' : 'render';
-        this.renderSlices(method);
-
-		this.parent();
-
+    render:function(){
+        this.animate();
+        this.rendered = true;
     },
 
     getRadius:function(){
-        return this.currentRadius;
+        return this.parent() * .9;
     },
 
-    getCenter:function(){
-        return this.center;
+    animate:function(){
+        var e = new ludo.canvas.Effect();
+        var r = this.getRecords();
+
+        var radius = e.getEffectConfig([0], [this.getRadius()], 1);
+        var degrees = [];
+        var currentDegrees = [];
+
+        for(var i=0;i< r.length;i++){
+            degrees.push(e.getEffectConfig([0], [r[i].getDegrees()], 1).steps[0]);
+            currentDegrees.push(0);
+        }
+
+        this.executeAnimation({
+            startAngle:this.dataProvider().startAngle,
+            radius: radius.steps[0],
+            currentRadius:0,
+            degrees: degrees,
+            currentDegrees:currentDegrees,
+            count: radius.count
+        }, 0);
     },
 
-    renderSlices:function (method) {
-        var d = this.data;
-        var sum = this.getSum(d);
-        var deg = this.startAngle;
-        for (var i = 0; i < d.length; i++) {
-            var slice = this.getChartItem(i);
-            var sliceDegrees = this.getDegrees(d[i].value, sum);
-            slice[method]({
-                angle : deg,
-                degrees : sliceDegrees
-            });
-            deg += sliceDegrees;
-            if(deg > 360)deg-=360;
+    executeAnimation:function(config, currentStep){
+        config.currentRadius += config.radius;
+
+        var angle = config.startAngle;
+        for(var i=0;i<config.degrees.length;i++){
+            config.currentDegrees[i] += config.degrees[i];
+            this.fragments[i].set(config.currentRadius, angle, config.currentDegrees[i]);
+            angle += config.currentDegrees[i];
+
+        }
+        if(currentStep < config.count - 1){
+            this.executeAnimation.delay(33, this, [config, currentStep +1]);
         }
     },
 
-    getDegrees:function (value, sum) {
-        return value / sum * 360;
+    update:function(){
+        if(!this.rendered){
+            this.render();
+        }
     },
 
-    getSum:function () {
-        var sum = 0;
-        for (var i = 0; i < this.data.length; i++) {
-            sum += this.data[i].value;
+    onResize:function(){
+        if(!this.rendered){
+            return;
         }
-        return sum;
+        var r = this.getRecords();
+        var radius = this.getRadius();
+
+        for(var i=0;i< r.length;i++){
+            this.fragments[i].set(radius, r[i].getAngle(), r[i].getDegrees());
+        }
     }
 });

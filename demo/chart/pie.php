@@ -18,15 +18,17 @@ require_once("../includes/demo-header.php");
 <script type="text/javascript" src="../../src/canvas/animation.js"></script>
 <script type="text/javascript" src="../../src/canvas/event-manager.js"></script>
 
+<script type="text/javascript" src="../../src/data-source/collection.js"></script>
+<script type="text/javascript" src="../../src/chart/add-on.js"></script>
 <script type="text/javascript" src="../../src/chart/data-provider.js"></script>
 <script type="text/javascript" src="../../src/chart/chart.js"></script>
-<script type="text/javascript" src="../../src/chart/chart-base.js"></script>
+<script type="text/javascript" src="../../src/chart/base.js"></script>
 <script type="text/javascript" src="../../src/chart/pie.js"></script>
-<script type="text/javascript" src="../../src/chart/item.js"></script>
-<script type="text/javascript" src="../../src/chart/tooltip.js"></script>
+<script type="text/javascript" src="../../src/chart/fragment.js"></script>
 <script type="text/javascript" src="../../src/chart/pie-slice.js"></script>
-<script type="text/javascript" src="../../src/chart/label.js"></script>
-<script type="text/javascript" src="../../src/chart/labels.js"></script>
+<script type="text/javascript" src="../../src/chart/record.js"></script>
+<script type="text/javascript" src="../../src/chart/pie-slice-highlighted.js"></script>
+
 <script type="text/javascript" src="../../src/layout/factory.js"></script>
 <script type="text/javascript" src="../../src/layout/relative.js"></script>
 <script type="text/javascript" src="../../src/layout/canvas.js"></script>
@@ -81,13 +83,15 @@ require_once("../includes/demo-header.php");
                                     var data = provider.getData();
                                     var values = manager.getValues();
                                     var i = 0;
+                                    var records = provider.getRecords();
+
                                     for(var key in values){
                                         if(values.hasOwnProperty(key)){
-                                            provider.setValue(i, parseInt(values[key]));
+                                            records[i].setValue(parseInt(values[key]));
                                         }
                                         i++;
                                     }
-                                    provider.update();
+
                                 }
                             }
                         },
@@ -110,7 +114,7 @@ require_once("../includes/demo-header.php");
                             leftOf:'form'
                         },
                         css:{
-                          'border-right' : '1px solid #d7d7d7'
+                            'border-right' : '1px solid #d7d7d7'
                         },
                         type:'chart.Chart',
                         id:'chart',
@@ -133,7 +137,12 @@ require_once("../includes/demo-header.php");
                                         'stroke':'#c6c6c6',
                                         'fill-opacity':.9
                                     }
-                                }
+                                },
+                                addOns:[
+                                    {
+                                        type:'chart.PieSliceHighlighted'
+                                    }
+                                ]
                             },
                             {
                                 name:'labels',
@@ -161,20 +170,6 @@ require_once("../includes/demo-header.php");
             }
         ]
     });
-    /*
-       var paintTwo = new ludo.canvas.Paint({
-           'fill':'orange',
-           'stroke':'#D90000',
-           'stroke-width':'5',
-           'opacity':.8,
-           cursor:'pointer'
-
-       });
-
-       ludo.get('labels').adopt(paintTwo);
-       var circle = new ludo.canvas.Circle({cx:50, cy:50, r:45, "class": paintTwo});
-       ludo.get('labels').adopt(circle);
-       */
 </script>
 </body>
 </html>

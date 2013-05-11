@@ -12,7 +12,7 @@ ludo.chart.Fragment = new Class({
 
     ludoEvents:function(){
         this.parent();
-        this.getParent().addEvent('update', this.update.bind(this));
+        this.getParent().dataProvider().addEvent('update', this.update.bind(this));
 
         this.record.addEvent('focus', this.focus.bind(this));
         this.record.addEvent('blur', this.blur.bind(this));

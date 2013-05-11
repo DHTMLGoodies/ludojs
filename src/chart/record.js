@@ -5,6 +5,7 @@
  */
 ludo.chart.Record = new Class({
     Extends:ludo.dataSource.Record,
+    eventKeys:['value','label'],
 
     getStartPercent:function () {
         var c = this.getCollection();

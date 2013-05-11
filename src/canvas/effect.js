@@ -47,6 +47,8 @@ ludo.canvas.Effect = new Class({
     },
 
     getEffectConfig:function(start, end, duration){
+        if(!ludo.util.isArray(start))start = [start];
+        if(!ludo.util.isArray(end))end = [end];
         var countSteps = Math.round(duration * this.fps);
         var steps = [];
         for(var i=0;i<start.length;i++){

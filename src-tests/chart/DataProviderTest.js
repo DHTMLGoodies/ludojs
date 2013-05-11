@@ -282,6 +282,11 @@ TestCase("DataProviderTest", {
 
     },
 
+    "test should fire change event when value is updated": function(){
+
+
+    },
+
 	getProvider:function (data) {
 		data = data || [
 			{ label:'John', value:100 },

@@ -1,71 +1,35 @@
 ludo.chart.PieSlice = new Class({
-    Extends:ludo.chart.Item,
-    center:undefined,
-    renderingData:undefined,
-    tagName:'path',
-    highlighted:false,
-    animationKeys : ['angle', 'radius', 'degrees'],
+    Extends:ludo.chart.Fragment,
 
-    initialize:function (group, styles) {
-        this.parent(group, styles);
-        this.addEvent('click', this.highlight.bind(this));
-
-        this.addEvent('animate', this.deactivateHighlight.bind(this));
-        this.addEvent('animationComplete', this.restoreHighlight.bind(this));
+    ludoConfig:function (config) {
+        this.parent(config);
+        var style = this.createStyle(this.getSliceStyle());
+        this.createNode('path', { "class":style });
     },
 
-    render:function (config) {
-        config.radius = this.group.getRadius();
-        this.storeRenderingData(config);
-        this.set('d', this.getPath(config));
+    getSliceStyle:function () {
+        return {
+            'stroke-location':'inside',
+            'fill':this.record.get('color'),
+            'stroke-linejoin':'round',
+            'stroke':'#ffffff',
+            'cursor':'pointer'
+        };
     },
 
-    animate:function(config){
-        this.storeRenderingValue('angle', config.angle);
-        this.parent(this.getAnimationConfig({
-            angle : config.angle,
-            radius : this.group.getRadius(),
-            degrees : config.degrees
+    set:function (radius, angle, degrees) {
+        this.nodes[0].set('d', this.getPath({
+            radius:radius, angle:angle, degrees:degrees
         }));
-        this.storeRenderingData(config);
-    },
-
-    executeAnimation:function(data, step){
-        this.parent(data);
-        var p = this.group.getPrevious(this);
-        if(p){
-            var a = p.getAnimationValues(step);
-            data.angle = a.angle + a.degrees;
-			data.radius = a.radius;
-        }
-        this.set('d', this.getPath(data));
-    },
-
-    storeRenderingData:function(config){
-        this.parent({
-            angle : config.angle,
-            radius : this.group.getRadius(),
-            degrees : config.degrees
-        });
-    },
-
-    storeRenderingValue:function(key, value){
-        if(this.renderingData === undefined)this.renderingData = {};
-        this.renderingData[key] = value;
-    },
-
-    getOffsetFromCenter:function (offset) {
-        var centerRadians = ludo.canvasEngine.toRadians(this.renderingData.angle + (this.renderingData.degrees / 2));
-        var x = Math.cos(centerRadians) * offset;
-        var y = Math.sin(centerRadians) * offset;
-        return { x:x, y:y}
     },
 
     getPath:function (config) {
-        
-        var center = this.group.getCenter();
+
+        var center = config.center || this.getParent().getCenter();
 
         var path = ['M ' + center.x + ' ' + center.y];
+
+        if(config.angle > 360) config.angle -= 360;
 
         var point1 = ludo.canvasEngine.getPointAtDegreeOffset(center, config.angle, config.radius);
 
@@ -81,38 +45,72 @@ ludo.chart.PieSlice = new Class({
         path.push(point2.x + ' ' + point2.y);
         path.push('L ' + center.x + ' ' + center.y);
 
+        this.storeRendering(config);
+
         return path.join(' ');
     },
 
-    highlight:function () {
-        var coords = this.getOffsetFromCenter(10);
+    focus:function(){
+        var coords = this.centerOffset(10);
+        this.node().engine().effect().fly(this.node().getEl(), coords.x, coords.y,.1);
+    },
 
-        if (this.highlighted) {
-            this.engine().effect().flyBack(this.getEl(),.1);
-        } else {
-            this.engine().effect().fly(this.getEl(), coords.x, coords.y,.1);
+    blur:function(){
+        this.node().engine().effect().flyBack(this.node().getEl(),.1);
+    },
 
-            this.fireEvent('highlight', this);
+    node:function(){
+        return this.nodes[0];
+    },
+
+    centerOffset:function(offset){
+        var angle = this.record.getAngle() + (this.record.getDegrees() / 2 );
+        return ludo.canvasEngine.getPointAtDegreeOffset({ x:0, y: 0}, angle, offset);
+    },
+
+    enter:function(){
+        this.nodes[0].setStyle('fill', this.record.get('color-over'));
+    },
+
+    leave:function(){
+        this.nodes[0].setStyle('fill', this.record.get('color'));
+    },
+
+    update:function(){
+        var radius = this.getParent().getRadius();
+
+
+        if(Math.round(radius) == Math.round(this.rendering.radius) && this.rendering.angle == this.record.getAngle() && this.rendering.degrees == this.record.getDegrees()){
+            return;
         }
-        this.highlighted = !this.highlighted;
+
+        var e = new ludo.canvas.Effect();
+
+        var config = e.getEffectConfig(
+            [this.rendering.radius,this.rendering.angle, this.rendering.degrees ],
+            [radius, this.record.getAngle(), this.record.getDegrees()],
+            1
+        );
+
+        config.center = this.getParent().getCenter();
+
+        this.executeAnimation(config, 0);
+
     },
 
-    isHighlighted:function(){
-        return this.highlighted;
-    },
+    executeAnimation:function(config, step){
 
-    wasHighlighted : false,
-    restoreHighlight:function(){
-        if(this.wasHighlighted){
-            this.highlight();
-            this.wasHighlighted = false;
-        }
-    },
+        this.nodes[0].set('d', this.getPath(
+            {
+                radius : this.rendering.radius + config.steps[0],
+                angle: this.rendering.angle + config.steps[1],
+                degrees : this.rendering.degrees + config.steps[2],
+                center : config.center
+            }
 
-    deactivateHighlight:function(){
-        if(this.highlighted){
-            this.highlight();
-            this.wasHighlighted = true;
+        ));
+        if(step < config.count -1){
+            this.executeAnimation.delay(33, this, [config, step+1]);
         }
     }
 });

@@ -120,10 +120,15 @@ ludo.chart.Base = new Class({
     },
 
     update:function (record) {
+        console.log('update');
         this.fireEvent('update', record);
     },
 
     getFragmentFor:function(record){
         return this.fragmentMap[record.getUID()];
+    },
+
+    onResize:function(){
+
     }
 });
