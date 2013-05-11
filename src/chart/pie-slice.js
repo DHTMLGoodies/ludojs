@@ -102,7 +102,7 @@ ludo.chart.PieSlice = new Class({
 
         this.nodes[0].set('d', this.getPath(
             {
-                radius : this.rendering.radius + config.steps[0],
+                radius : this.rendering.radius,
                 angle: this.rendering.angle + config.steps[1],
                 degrees : this.rendering.degrees + config.steps[2],
                 center : config.center
