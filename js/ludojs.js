@@ -1,4 +1,4 @@
-/* Generated Sat May 11 21:08:06 CEST 2013 */
+/* Generated Sat May 11 23:02:38 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -7663,7 +7663,7 @@ ludo.chart.DataProvider = new Class({
         for (var i = 0; i < r.length; i++) {
             if (!r[i].get('color')) {
                 r[i].set('color', color);
-                r[i].set('color-over', this.color().brighten(color, 6));
+                r[i].set('color-over', this.color().brighten(color, 7));
                 color = this.color().offsetHue(this.startColor, i * (360 / (r.length + 1)));
             }
         }
@@ -7758,7 +7758,7 @@ ludo.chart.Fragment = new Class({
         return this.parentComponent;
     },
 
-    createNode:function(tagName, properties, text, type){
+    createNode:function(tagName, properties, text){
         var node;
 
         node = new ludo.canvas.Node(tagName, properties, text);
@@ -8128,7 +8128,7 @@ ludo.chart.Pie = new Class({
     },
 
     getRadius:function(){
-        return this.parent() * .85;
+        return this.parent() - 20;
     },
 
     animate:function(){
