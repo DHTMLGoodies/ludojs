@@ -85,6 +85,7 @@ TestCase("DataProviderTest", {
 		assertEquals(270, p.getSum());
 	},
 
+
 	"test should be able to get sum after record has been updated": function(){
 		// given
 		var p = this.getProvider([
@@ -130,6 +131,32 @@ TestCase("DataProviderTest", {
 		rec.set('value', 300);
 		// then
 		assertEquals(50, rec.getPercent());
+	},
+
+	"test should be able to get degrees from record": function(){
+		// given
+		var p = this.getProvider([
+			{
+				label:'My label', value:100, id:'myId'
+			},
+			{
+				label:'My label 2', value:200, id:'mySecondId'
+			},
+			{
+				label:'My label 3', value:100, id:'myThirdId'
+			}
+		]);
+
+		// when
+		var rec = p.get('myId');
+
+		// then
+		assertEquals(25 * 360 / 100, rec.getDegrees());
+
+		// when
+		rec.set('value', 300);
+		// then
+		assertEquals(50 * 360 / 100, rec.getDegrees());
 	},
 
 	"test should assign getValue methods": function(){
@@ -226,6 +253,32 @@ TestCase("DataProviderTest", {
         assertEquals(0, first.getStartPercent());
         assertEquals(20, second.getStartPercent());
         assertEquals(60, third.getStartPercent());
+
+    },
+
+    "test should be able to get start degrees value of item": function(){
+        // given
+        var p = this.getProvider([
+            {
+                label:'My label', value:100, id:'myId'
+            },
+            {
+                label:'My label 2', value:200, id:'mySecondId'
+            },
+            {
+                label:'My label 2', value:200, id:'myThird'
+            }
+        ]);
+
+        // when
+        var first = p.get('myId');
+        var second = p.get('mySecondId');
+        var third = p.get('myThird');
+
+        // then
+        assertEquals(270, first.getAngle());
+        assertEquals(270 + (20 * 360 / 100), second.getAngle());
+        assertEquals(270 + (60 * 360 / 100), third.getAngle());
 
     },
 

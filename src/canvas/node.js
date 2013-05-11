@@ -374,27 +374,6 @@ ludo.canvas.Node = new Class({
 		this.setTransformMatrix(this.el, a, b, c, d, e, f);
 	},
 
-    getPointAtDegreeOffset:function(from, degrees, size){
-        var radians = this.toRadians(degrees);
-        var x = Math.cos(radians);
-        var y = Math.sin(radians);
-
-        return {
-            x : from.x + (size * x),
-            y : from.y + (size * y)
-        }
-    },
-
-    /**
-     * Degrees to radians method
-     * @method toRad
-     * @param degrees
-     * @return {Number}
-     */
-    toRadians:function(degrees){
-        return degrees * Math.PI / 180;
-	},
-
 	empty:function(){
 		ludo.canvasEngine.empty(this.getEl());
 	},

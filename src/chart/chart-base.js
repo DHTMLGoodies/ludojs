@@ -36,7 +36,7 @@ ludo.chart.ChartBase = new Class({
         this.currentHighlighted = item;
     },
 
-    getCenter:function () {
+    getChartOrigin:function () {
         return {
             x : this.width / 2,
             y : this.height /2
@@ -49,6 +49,13 @@ ludo.chart.ChartBase = new Class({
 
     getChart:function(){
         return this.parentComponent;
+    },
+
+    color:function(){
+        if(this.colorHandler === undefined){
+            this.colorHandler = new ludo.color.Color();
+        }
+        return this.colorHandler;
     },
 
     getTooltipStyles:function(){
@@ -84,6 +91,10 @@ ludo.chart.ChartBase = new Class({
             'stroke':'#ffffff',
             'cursor':'pointer'
         };
+    },
+
+    getColor:function (key) {
+        return this.data[key].color ? this.data[key].color : this.color().offsetHue(this.startColor, key * (360 / (this.data.length + 1)));
     },
 
     getAnimationSpec:function(){

@@ -55,7 +55,7 @@ ludo.chart.PieSlice = new Class({
     },
 
     getOffsetFromCenter:function (offset) {
-        var centerRadians = this.toRadians(this.renderingData.angle + (this.renderingData.degrees / 2));
+        var centerRadians = ludo.canvasEngine.toRadians(this.renderingData.angle + (this.renderingData.degrees / 2));
         var x = Math.cos(centerRadians) * offset;
         var y = Math.sin(centerRadians) * offset;
         return { x:x, y:y}
@@ -67,7 +67,7 @@ ludo.chart.PieSlice = new Class({
 
         var path = ['M ' + center.x + ' ' + center.y];
 
-        var point1 = this.getPointAtDegreeOffset(center, config.angle, config.radius);
+        var point1 = ludo.canvasEngine.getPointAtDegreeOffset(center, config.angle, config.radius);
 
         path.push('L ' + point1.x + ' ' + point1.y);
         path.push('M ' + point1.x + ' ' + point1.y);
@@ -77,7 +77,7 @@ ludo.chart.PieSlice = new Class({
         path.push(config.degrees > 180 ? '1' : '0');
         path.push('1');
 
-        var point2 = this.getPointAtDegreeOffset(center, config.angle + config.degrees, config.radius);
+        var point2 = ludo.canvasEngine.getPointAtDegreeOffset(center, config.angle + config.degrees, config.radius);
         path.push(point2.x + ' ' + point2.y);
         path.push('L ' + center.x + ' ' + center.y);
 
@@ -90,10 +90,6 @@ ludo.chart.PieSlice = new Class({
         if (this.highlighted) {
             this.engine().effect().flyBack(this.getEl(),.1);
         } else {
-            if (this.highlighted) {
-                coords.x *= -1;
-                coords.y *= -1;
-            }
             this.engine().effect().fly(this.getEl(), coords.x, coords.y,.1);
 
             this.fireEvent('highlight', this);

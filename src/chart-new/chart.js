@@ -28,11 +28,6 @@ ludo.chart.Chart = new Class({
         }
 	},
 
-	ludoRendered:function(){
-		this.parent();
-		this.updateChildren.delay(50, this);
-	},
-
 	updateChildren:function(){
 		for(var i=0;i<this.children.length;i++){
 			if(this.children[i].update)this.children[i].update();
@@ -45,5 +40,10 @@ ludo.chart.Chart = new Class({
 
     getDataProvider:function(){
         return this.dataProvider;
+    },
+
+    resize:function(config){
+        this.parent(config);
+        this.updateChildren();
     }
 });

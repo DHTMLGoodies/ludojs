@@ -2,19 +2,34 @@ ludo.chart.Base = new Class({
     Extends:ludo.canvas.Group,
     fragments:[],
     fragmentType : 'chart.Fragment',
+    /**
+     * Reference to current highlighted record
+     * @property {dataSource.Record} record
+     * @private
+     */
+    highlighted:undefined,
+    animation:{
+        duration:1,
+        fps:33,
+        enabled:true
+    },
 
     ludoConfig:function(config){
         this.parent(config);
+        this.setConfigParams(config, ['animation']);
         var dp = this.dataProvider();
         if(dp.hasRecords()){
             this.createFragments();
         }
+
+        this.render.delay(50, this);
     },
 
     ludoEvents:function(){
         this.parent();
         var dp = this.dataProvider();
         dp.addEvent('createRecord', this.createFragment.bind(this));
+        dp.addEvent('update', this.update.bind(this));
     },
 
     createFragments:function(){
@@ -25,6 +40,10 @@ ludo.chart.Base = new Class({
     },
 
     createFragment:function (record) {
+
+        record.addEvent('enter', this.enterRecord.bind(this));
+        record.addEvent('leave', this.leaveRecord.bind(this));
+
         var f = this.createDependency('fragment' + this.fragments.length,
             {
                 type:this.fragmentType,
@@ -59,11 +78,32 @@ ludo.chart.Base = new Class({
     },
 
     getRadius:function(){
-        return this.getCenter().x *.9;
+        var c = this.getCenter();
+        return Math.min(c.x, c.y);
     },
 
-    update:function(){
+    enterRecord:function(record){
+        if(this.highlighted){
+            this.highlighted.leave();
+        }
+        this.fireEvent('enterRecord', record);
+        this.highlighted = record;
+    },
 
+    clickRecord:function(record){
+        this.fireEvent('clickRecord', record);
+        this.clicked = record;
+    },
+
+    leaveRecord:function(){
+        this.highlighted = undefined;
+    },
+
+    render:function(){
+
+    },
+
+    update:function(record){
+       this.fireEvent('update', record);
     }
-
 });

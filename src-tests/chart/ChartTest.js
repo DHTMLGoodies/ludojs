@@ -69,5 +69,26 @@ TestCase("ChartTest", {
 
         // then
         assertEquals(c, f.getParent());
+    },
+
+    "test should be able to get reference to canvas from fragment": function(){
+        // given
+        var c = new ludo.chart.Chart({
+            renderTo:document.body,
+            data : [
+                { label : 'First label', value: 150 },
+                { label : 'Second label', value : 100 }
+            ],
+            children:[{
+                type:'chart.Base'
+            }]
+        });
+
+        // when
+        var f = c.children[0].getFragments()[0];
+
+        // then
+        assertEquals(c.getCanvas(), f.getCanvas());
+
     }
 });

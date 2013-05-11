@@ -372,7 +372,28 @@ ludo.canvas.Engine = new Class({
 
 	empty:function(el){
 		el.textContent = '';
-	}
+	},
+
+    /**
+     * Degrees to radians method
+     * @method toRad
+     * @param degrees
+     * @return {Number}
+     */
+    toRadians:function(degrees){
+        return degrees * Math.PI / 180;
+    },
+
+    getPointAtDegreeOffset:function(from, degrees, size){
+        var radians = ludo.canvasEngine.toRadians(degrees);
+        var x = Math.cos(radians);
+        var y = Math.sin(radians);
+
+        return {
+            x : from.x + (size * x),
+            y : from.y + (size * y)
+        }
+    }
 
 });
 ludo.canvasEngine = new ludo.canvas.Engine();

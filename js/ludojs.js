@@ -1,4 +1,4 @@
-/* Generated Wed May 8 21:42:40 CEST 2013 */
+/* Generated Sat May 11 1:53:24 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -6706,7 +6706,7 @@ ludo.chart.ChartBase = new Class({
         this.currentHighlighted = item;
     },
 
-    getChartOrigin:function () {
+    getCenter:function () {
         return {
             x : this.width / 2,
             y : this.height /2
@@ -6719,13 +6719,6 @@ ludo.chart.ChartBase = new Class({
 
     getChart:function(){
         return this.parentComponent;
-    },
-
-    color:function(){
-        if(this.colorHandler === undefined){
-            this.colorHandler = new ludo.color.Color();
-        }
-        return this.colorHandler;
     },
 
     getTooltipStyles:function(){
@@ -6761,10 +6754,6 @@ ludo.chart.ChartBase = new Class({
             'stroke':'#ffffff',
             'cursor':'pointer'
         };
-    },
-
-    getColor:function (key) {
-        return this.data[key].color ? this.data[key].color : this.color().offsetHue(this.startColor, key * (360 / (this.data.length + 1)));
     },
 
     getAnimationSpec:function(){
@@ -24351,6 +24340,7 @@ ludo.form.Manager = new Class({
 
 		if (config.form)this.form = config.form;
 		if (this.form && this.form.url)this.url = this.form.url;
+
         this.form.resource = this.form.resource || this.form.name || undefined;
 
 		this.id = String.uniqueID();
@@ -24648,13 +24638,15 @@ ludo.form.Manager = new Class({
 	save:function () {
 		if (this.getUrl() || ludo.config.getUrl()) {
 			this.fireEvent('invalid');
-            this.requestHandler().send(this.form.service || 'save', undefined, this.getValues(),
+            this.requestHandler().send(this.form.service || 'save', this.formComponentId ? this.formComponentId.getValue() : undefined, this.getValues(),
                 {
                     "progressBarId":this.getProgressBarId()
                 }
             );
 		}
 	},
+
+
     _request:undefined,
     requestHandler:function(){
         if(this._request === undefined){

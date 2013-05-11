@@ -11,6 +11,7 @@ ludo.chart.DataProvider = new Class({
     recordValues:{},
     records:[],
     startColor:'#561AD9',
+    startAngle: 270,
 
     ludoConfig:function (config) {
         this.parent(config);
@@ -66,12 +67,25 @@ ludo.chart.DataProvider = new Class({
         record.getValue = this.getGetValueFn(record).bind(record);
         record.setValue = this.getSetValueFn(record).bind(record);
         record.getStartPercent = this.getStartPercentFn(record).bind(record);
+        record.getDegrees = this.getDegreesFn(record).bind(record);
+        record.getAngle = this.getAngleFn(record).bind(record);
+        record.focus = this.getFocusFn(record).bind(record);
+        record.blur = this.getBlurFn(record).bind(record);
+        record.enter = this.getEventFn(record, 'enter').bind(record);
+        record.leave = this.getEventFn(record, 'leave').bind(record);
+        record.click = this.getClickFn(record).bind(record);
     },
 
     getPercentFn:function (record) {
         return function () {
             return (record.getValue() / record.getCollection().getSum()) * 100;
         }.bind(record);
+    },
+
+    getDegreesFn:function(record){
+        return function(){
+            return record.getPercent() * 360 / 100;
+        }
     },
 
     getGetValueFn:function (record) {
@@ -82,25 +96,67 @@ ludo.chart.DataProvider = new Class({
 
     getSetValueFn:function (record) {
         return function (value) {
-            record.set('value', parseFloat(value));
+            value = parseFloat(value);
+            if(value !== this.get('value')){
+                record.set('value', value);
+
+            }
         }
     },
 
-    indexOf:function(record){
+    indexOf:function (record) {
         return this.records.indexOf(record);
     },
 
-    getStartPercentFn:function(record){
-        return function(){
+    getStartPercentFn:function (record) {
+        return function () {
             var c = record.getCollection();
-            var i = record.getCollection().indexOf(record) -1;
+            var i = record.getCollection().indexOf(record) - 1;
             return c.getSumOf(0, i) / c.getSum() * 100;
         }
     },
 
-    getSumOf:function(start, end){
+    getEventFn:function(record, event){
+        return function () {
+            record.fireEvent(event, record);
+        }
+    },
+
+    getClickFn:function(record){
+        return function(){
+            var clicked = record.get('clicked') ? true : false;
+            record[clicked ? 'blur' : 'focus']();
+        }
+    },
+
+    getFocusFn:function(record){
+        return function(){
+            record.fireEvent('focus', record);
+            record.set('clicked', true);
+        }
+    },
+
+    getBlurFn:function(record){
+        return function(){
+            record.fireEvent('blur', record);
+            record.set('clicked', false);
+        }
+    },
+
+
+
+    getAngleFn:function(record){
+        var s = this.startAngle;
+        return function(){
+            var ret = s + (record.getStartPercent() * 360 / 100);
+            if(ret > 360)ret-=360;
+            return ret;
+        }
+    },
+
+    getSumOf:function (start, end) {
         var ret = 0;
-        for(var i=0;i<=end;i++){
+        for (var i = 0; i <= end; i++) {
             ret += this.records[i].getValue();
         }
         return ret;
@@ -111,11 +167,12 @@ ludo.chart.DataProvider = new Class({
         if (this.records.indexOf(rec) === -1) {
             this.records.push(rec);
             this.fireEvent('createRecord', rec);
+            rec.addEvent('focus', this.focusRecord.bind(this));
         }
         return rec;
     },
 
-    hasRecords:function(){
+    hasRecords:function () {
         return this.records.length > 0;
     },
 
@@ -131,10 +188,15 @@ ludo.chart.DataProvider = new Class({
         var color = this.startColor;
         var r = this.getRecords();
         for (var i = 0; i < r.length; i++) {
-            if(!r[i].get('color')){
+            if (!r[i].get('color')) {
                 r[i].set('color', color);
                 color = this.color().offsetHue(this.startColor, i * (360 / (r.length + 1)));
             }
         }
+    },
+    focused:undefined,
+    focusRecord:function(record){
+        if(this.focused)this.focused.blur();
+        this.focused = record;
     }
 });
