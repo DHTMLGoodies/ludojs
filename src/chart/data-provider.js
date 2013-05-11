@@ -103,7 +103,7 @@ ludo.chart.DataProvider = new Class({
             if (!r[i].get('color')) {
                 r[i].set('color', color);
                 r[i].set('color-over', this.color().brighten(color, 7));
-                color = this.color().offsetHue(this.startColor, i * (360 / (r.length + 1)));
+                color = this.color().offsetHue(this.startColor, (i + 1) * (360 / (r.length + 1)));
             }
         }
     },

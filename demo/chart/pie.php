@@ -54,7 +54,7 @@ require_once("../includes/demo-header.php");
         title:'Pie chart - development playground',
         layout:{
             width:700,
-            height:400,
+            height:500,
             left:20,
             top:20,
             type:'tab'
