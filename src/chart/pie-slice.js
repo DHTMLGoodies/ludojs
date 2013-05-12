@@ -51,7 +51,7 @@ ludo.chart.PieSlice = new Class({
     },
 
     focus:function(){
-        var coords = this.centerOffset(10);
+        var coords = this.centerOffset(this.getParent().getHighlightSize());
         this.node().engine().effect().fly(this.node().getEl(), coords.x, coords.y,.1);
     },
 

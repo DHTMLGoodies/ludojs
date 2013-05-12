@@ -87,7 +87,7 @@ ludo.chart.PieSliceHighlighted = new Class({
 
     focus:function (record) {
         var f = this.getParent().getFragmentFor(record);
-        var coords = f.centerOffset(this.size);
+        var coords = f.centerOffset(this.getParent().getHighlightSize());
         this.node.translate(0,0);
         this.node.engine().effect().fly(this.node.getEl(), coords.x, coords.y,.1);
 

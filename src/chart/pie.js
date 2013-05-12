@@ -144,6 +144,17 @@ ludo.chart.Pie = new Class({
      */
     addOns:[],
 
+    highlightSize:10,
+
+    ludoConfig:function(config){
+        this.parent(config);
+        this.setConfigParams(config, ['highlightSize']);
+    },
+
+    getHighlightSize:function(){
+        return this.highlightSize;
+    },
+
     render:function(){
         this.animate();
         this.rendered = true;

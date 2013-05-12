@@ -97,7 +97,6 @@ ludo.chart.Base = new Class({
 
     leaveRecord:function (record) {
         this.highlighted = undefined;
-
         this.fireEvent('leaveRecord', record);
     },
 
