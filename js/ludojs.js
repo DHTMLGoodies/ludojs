@@ -1,4 +1,4 @@
-/* Generated Sun May 12 17:10:18 CEST 2013 */
+/* Generated Sun May 12 17:17:19 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -8600,9 +8600,9 @@ ludo.chart.PieSliceHighlighted = new Class({
     /**
      * Size of slice
      * @config {Number} size
-     * @default 10
+     * @default 5
      */
-    size : 10,
+    size : 5,
 
     ludoConfig:function (config) {
         this.parent(config);
