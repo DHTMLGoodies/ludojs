@@ -41,12 +41,6 @@ ludo.chart.Base = new Class({
 
     createFragment:function (record) {
 
-        record.addEvent('enter', this.enterRecord.bind(this));
-        record.addEvent('leave', this.leaveRecord.bind(this));
-        record.addEvent('focus', this.focusRecord.bind(this));
-        record.addEvent('blur', this.blurRecord.bind(this));
-
-
         var f = this.createDependency('fragment' + this.fragments.length,
             {
                 type:this.fragmentType,
@@ -85,29 +79,6 @@ ludo.chart.Base = new Class({
     getRadius:function () {
         var c = this.getCenter();
         return Math.min(c.x, c.y);
-    },
-
-    enterRecord:function (record) {
-        if (this.highlighted) {
-            this.highlighted.leave();
-        }
-        this.fireEvent('enterRecord', record);
-        this.highlighted = record;
-    },
-
-    leaveRecord:function (record) {
-        this.highlighted = undefined;
-        this.fireEvent('leaveRecord', record);
-    },
-
-    focusRecord:function(record){
-        this.fireEvent('focusRecord', record);
-        this.focused = record;
-    },
-
-    blurRecord:function(record){
-        this.fireEvent('blurRecord', record);
-        this.focused = undefined;
     },
 
     create:function(){

@@ -12,7 +12,7 @@ ludo.chart.DataProvider = new Class({
     records:[],
     startColor:'#561AD9',
     startAngle: 270,
-
+    highlighted:undefined,
 
     ludoConfig:function (config) {
         this.parent(config);
@@ -79,7 +79,10 @@ ludo.chart.DataProvider = new Class({
         if (this.records.indexOf(rec) === -1) {
             this.records.push(rec);
             this.fireEvent('createRecord', rec);
-            rec.addEvent('focus', this.focusRecord.bind(this));
+            rec.addEvent('focus', this.focus.bind(this));
+            rec.addEvent('blur', this.blur.bind(this));
+            rec.addEvent('enter', this.enter.bind(this));
+            rec.addEvent('leave', this.leave.bind(this));
         }
         return rec;
     },
@@ -108,9 +111,28 @@ ludo.chart.DataProvider = new Class({
         }
     },
     focused:undefined,
-    focusRecord:function(record){
+    focus:function(record){
         if(this.focused)this.focused.blur();
         this.focused = record;
+        this.fireEvent('focus', record);
+    },
+
+    blur:function(record){
+        this.fireEvent('blur', record);
+        this.focused = undefined;
+    },
+
+    enter:function(record){
+        if(this.highlighted){
+            this.highlighted.blur();
+        }
+        this.fireEvent('enter', record);
+        this.highlighted = record;
+    },
+
+    leave:function(record){
+        this.fireEvent('leave', record);
+        this.highlighted = undefined;
     },
 
     recordInstance:function(data){

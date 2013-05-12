@@ -99,7 +99,6 @@ ludo.chart.PieSlice = new Class({
     },
 
     executeAnimation:function(config, step){
-
         this.nodes[0].set('d', this.getPath(
             {
                 radius : this.rendering.radius,

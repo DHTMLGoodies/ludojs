@@ -282,9 +282,29 @@ TestCase("DataProviderTest", {
 
     },
 
-    "test should fire change event when value is updated": function(){
+    "test should fire focus event when record is focused": function(){
+        // given
+        var p = this.getProvider([
+            {
+                label:'My label', value:100, id:'myId'
+            },
+            {
+                label:'My label 2', value:200, id:'mySecondId'
+            },
+            {
+                label:'My label 2', value:200, id:'myThird'
+            }
+        ]);
+        var eventFired = false;
 
+        // when
+        p.addEvent('focus', function(){
+            eventFired = true;
+        });
+        p.get('myId').focus();
 
+        // then
+        assertTrue(eventFired);
     },
 
 	getProvider:function (data) {

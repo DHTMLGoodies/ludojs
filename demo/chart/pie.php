@@ -126,6 +126,7 @@ require_once("../includes/demo-header.php");
                                 name : 'pie',
                                 type:'chart.Pie',
                                 id:'pie',
+                                highlightSize:7,
                                 animate:true,
                                 layout:{
                                     above:'labels',

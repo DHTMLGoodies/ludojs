@@ -56,10 +56,13 @@ ludo.chart.PieSliceHighlighted = new Class({
 
     ludoEvents:function () {
         this.parent();
-        this.getParent().addEvent('enterRecord', this.show.bind(this));
-        this.getParent().addEvent('leaveRecord', this.hide.bind(this));
-        this.getParent().addEvent('focusRecord', this.focus.bind(this));
-        this.getParent().addEvent('blurRecord', this.blur.bind(this));
+        var p = this.getParent().dataProvider();
+        p.addEvents({
+            'enter' : this.show.bind(this),
+            'leave' : this.hide.bind(this),
+            'focus' : this.focus.bind(this),
+            'blur' : this.blur.bind(this)
+        });
     },
 
     show:function (record) {
