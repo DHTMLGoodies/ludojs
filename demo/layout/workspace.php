@@ -248,13 +248,83 @@ new ludo.View({
                             html:'Content of child two'
                         }
                     ]
+                },
+                {
+                    type:'FramedView',
+                    layout:{
+                        closable:true
+                    },
+                    title:'Grid',
+                    containerCss:{
+                        border:0
+                    },
+                    children:[
+                        {
+                            id:'myGrid',
+                            type:'grid.Grid',
+                            weight:1,
+                            containerCss:{
+                                'border':0,
+                                'border-right':'1px solid #d7d7d7',
+                                'border-top':'1px solid #d7d7d7',
+                                'border-bottom':'1px solid #d7d7d7'
+                            },
+                            stateful:false,
+                            resizable:false,
+                            columnManager:{
+                                id:'colManager',
+                                fill:true,
+                                columns:{
+                                    info:{
+                                        heading:'Country and Capital',
+                                        headerAlign:'center',
+                                        columns:{
+                                            'country':{
+                                                heading:'Country',
+                                                removable:false,
+                                                sortable:true,
+                                                movable:true,
+                                                width:200,
+                                                renderer:function (val) {
+                                                    return '<span style="color:blue">' + val + '</span>';
+                                                }
+                                            },
+                                            'capital':{
+                                                heading:'Capital',
+                                                sortable:true,
+                                                removable:true,
+                                                movable:true,
+                                                width:150
+                                            }
+                                        }
+                                    },
+                                    population:{
+                                        heading:'Population',
+                                        movable:true,
+                                        removable:true
+                                    }
+                                }
+                            },
+                            dataSource:{
+                                url:'../resources/grid-data.json',
+                                id:'myDataSource',
+                                shim:{
+                                    txt : 'Loading content. Please wait'
+                                },
+                                paging:{
+                                    size:12,
+                                    pageQuery:false,
+                                    cache:false,
+                                    cacheTimeout:1000
+                                }
+                            }
+
+                        }]
                 }
             ]
 
         }
     ]
-
-
 });
 
 

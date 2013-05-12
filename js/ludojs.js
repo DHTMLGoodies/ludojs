@@ -1,4 +1,4 @@
-/* Generated Sat May 11 23:27:19 CEST 2013 */
+/* Generated Sun May 12 15:11:49 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -8117,6 +8117,142 @@ ludo.chart.PieSlice = new Class({
         }
     }
 });/* ../ludojs/src/chart/pie.js */
+/**
+ Class for pie charts.
+ @namespace chart
+ @class Pie
+ @example
+     // Create data source for the pie chart.
+     var provider = new ludo.chart.DataProvider({
+            data:[
+                { label:'John', value:100 },
+                { label:'Jane', value:245 },
+                { label:'Martin', value:37 },
+                { label:'Mary', value:99 },
+                { label:'Johnny', value:127 },
+                { label:'Catherine', value:55 },
+                { label:'Tommy', value:18 }
+            ]
+        }
+     );
+
+     var w = new ludo.Window({
+            title:'Pie chart',
+            layout:{
+                width:700,
+                height:500,
+                left:20,
+                top:20,
+                type:'tab'
+            },
+            css:{
+                'background-color':'#fff',
+                'border-top':0
+            },
+            children:[
+                {
+                    title:'Chart',
+                    layout:{
+                        type:'relative'
+                    },
+                    children:[
+                        {
+                            name : 'form',
+                            layout:{
+                                alignParentRight:true,
+                                width:200,
+                                fillDown:true,
+                                type:'linear',
+                                orientation:'vertical'
+                            },
+                            form:{
+                                listeners:{
+                                    'change': function(manager){
+                                        var data = provider.getData();
+                                        var values = manager.getValues();
+                                        var i = 0;
+                                        var records = provider.getRecords();
+
+                                        for(var key in values){
+                                            if(values.hasOwnProperty(key)){
+                                                records[i].setValue(parseInt(values[key]));
+                                            }
+                                            i++;
+                                        }
+                                    }
+                                }
+                            },
+                            children:[
+                                { type:'form.Text', minValue:5, required:true, name:'item0', label:'John', value:100, color:'#000088' },
+                                { type:'form.Text', minValue:5, required:true, label:'Jane', value:245 },
+                                { type:'form.Text', minValue:5, required:true, label:'Martin', value:37 },
+                                { type:'form.Text', minValue:5, required:true, label:'Mary', value:99 },
+                                { type:'form.Text', minValue:5, required:true, label:'Johnny', value:127 },
+                                { type:'form.Text', minValue:5, required:true, label:'Catherine', value:55 },
+                                { type:'form.Text', minValue:5, required:true,  label:'Tommy', value:18 }
+                            ]
+                        },
+                        {
+
+                            layout:{
+                                top:0,
+                                fillLeft:true,
+                                fillDown:true,
+                                leftOf:'form'
+                            },
+                            css:{
+                                'border-right' : '1px solid #d7d7d7'
+                            },
+                            type:'chart.Chart',
+                            id:'chart',
+                            dataProvider:provider,
+                            children:[
+                                {
+                                    name : 'pie',
+                                    type:'chart.Pie',
+                                    id:'pie',
+                                    animate:true,
+                                    layout:{
+                                        above:'labels',
+                                        left:0,
+                                        fillRight:true,
+                                        fillUp:true
+                                    },
+                                    tooltip:{
+                                        css:{
+                                            'fill':'#fff',
+                                            'stroke':'#c6c6c6',
+                                            'fill-opacity':.9
+                                        }
+                                    },
+                                    addOns:[
+                                        {
+                                            type:'chart.PieSliceHighlighted'
+                                        }
+                                    ]
+                                },
+                                {
+                                    name:'labels',
+                                    id:'labels',
+                                    type:'chart.Labels',
+                                    layout:{
+                                        alignParentBottom:true,
+                                        height:40,
+                                        left:0,
+                                        fillRight:true
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+                ,
+                {
+                    type:'SourceCodePreview'
+                }
+            ]
+        });
+ */
 ludo.chart.Pie = new Class({
     Extends:ludo.chart.Base,
     fragmentType:'chart.PieSlice',
@@ -8187,15 +8323,65 @@ ludo.chart.Pie = new Class({
         }
     }
 });/* ../ludojs/src/chart/labels.js */
+/**
+ * Class displaying labels for a chart. See
+ * {{#crossLink "chart/Pie"}}{{/crossLink}} for example on how to add labels
+ * to your chart. How labels are displayed(side by side or beneath each other)
+ * depends on the size of the area assigned to the labels. If width is greater
+ * than height, the labels will be displayed vertically. If height is greater
+ * than width, the labels will be rendered vertically.
+ * @namespace chart
+ * @class Labels
+ */
 ludo.chart.Labels = new Class({
     Extends:ludo.chart.Base,
     fragmentType:'chart.Label',
 
-
+    /**
+     Styling options for text
+     @config {Object} textStyles
+     @example
+        textStyles:{
+            'font-size' : '14px',
+            'font-weight' : 'normal'
+        }
+     @default { fill:'#000000', 'font-size' : '13px', 'font-weight' : 'normal' }
+     */
     textStyles:undefined,
+    /**
+     Styling options for text of labels for highlighted chart items.
+     @config {Object} textStylesOver
+     @example
+        textStylesOver:{
+            'fill' : '#000',
+            'font-weight' : 'bold'
+        }
+     @default { 'font-weight': 'bold' }
+
+     */
+    textStylesOver:undefined,
+
+    /**
+     Styling of color box displayed left of text label. The box will always
+     be displayed in the same color as the chart item it's representing.
+     @config {Object} boxStyles
+     @default undefined
+     @example
+        boxStyles:{ 'stroke' : '#000' }
+     */
     boxStyles:undefined,
 
-    textStylesOver:undefined,
+    /**
+     Styling of color box when highlighted. By default fill will be set to a slightly brighter color
+     than the chart item it's representing.
+     @config {Object} boxStylesOver
+     @default undefined
+     @example
+        boxStylesOver:{
+            'stroke-width' : 1,
+            'stroke' : '#000'
+        }
+     */
     boxStylesOver:undefined,
 
     ludoConfig:function(config){
@@ -8205,11 +8391,9 @@ ludo.chart.Labels = new Class({
 
     render:function(){
         this.onResize();
-
     },
 
     onResize:function(){
-
         if(!this.fragments.length){
             return;
         }
@@ -8219,7 +8403,6 @@ ludo.chart.Labels = new Class({
         }else{
             this.resizeVertical();
         }
-
     },
 
     resizeHorizontal:function(){
@@ -8273,14 +8456,16 @@ ludo.chart.Label = new Class({
         this.bg.setStyle('fill-opacity', '0');
         g.adopt(this.bg);
 
-        this.colorBox = new ludo.canvas.Rect({
-            x:1, y:1, width:10, height:10
-        });
+        var colorBoxCoords = this.getCoordinatesForColorBox();
+        this.colorBox = new ludo.canvas.Rect(colorBoxCoords);
         g.adopt(this.colorBox);
+
+
         this.colorBox.setStyles(this.getBoxStyles());
 
+
         this.textNode = new ludo.canvas.Text(this.record.getLabel(), {
-            x:15, y:10
+            x:colorBoxCoords.x + colorBoxCoords.width + 3, y : this.getYForText()
         });
         this.textNode.setStyles(this.getTextStyles());
         g.adopt(this.textNode);
@@ -8288,6 +8473,24 @@ ludo.chart.Label = new Class({
 
         this.bg.set('width', this.size.x);
         this.bg.set('height', this.size.x);
+    },
+
+    getYForText:function(){
+        var t = this.getTextStyles();
+        var fontSize = t['font-size'] ? parseInt(t['font-size']) : 13;
+        return fontSize * .9;
+    },
+
+    getCoordinatesForColorBox:function(){
+        var t = this.getTextStyles();
+        var fontSize = t['font-size'] ? parseInt(t['font-size']) : 13;
+        var size = Math.round(fontSize);
+        return {
+            x : 0,
+            y : fontSize - size,
+            width : size,
+            height: size
+        };
     },
 
     setSize:function () {
@@ -8320,13 +8523,14 @@ ludo.chart.Label = new Class({
     },
 
     getBoxStylesOver:function(){
-        return this.getParent().boxStylesOver || { 'fill' : this.record.get('color-over') };
+        var ret = this.getParent().boxStylesOver || {  };
+        if(!ret['fill'])ret['fill'] = this.record.get('color-over');
+        return ret;
     },
 
     enter:function () {
         this.textNode.setStyles(this.getTextStylesOver());
         this.colorBox.setStyles(this.getBoxStylesOver());
-
     },
 
     leave:function () {
@@ -24468,11 +24672,35 @@ ludo.form.TinyButton = new Class({
     }
 });/* ../ludojs/src/form/manager.js */
 /**
- * Utility class for form Management. Instance of this class is created on demand
- * by ludo.View.getForm().
- * @namespace form
- * @class Manager
- * @extends Core
+ Utility class for form Management. Instance of this class is created on demand
+ by ludo.View.getForm().
+ @namespace form
+ @class Manager
+ @extends Core
+ @constructor
+ @param {Object} config
+ @example
+    var view = new ludo.View({
+        form:{
+            'resource' : 'Person',
+            'idField' : 'id'
+        },
+        children:[
+            { type:'form.Hidden',name:'id' },
+            { type:'form.Text', label:'First name' },
+            {
+                layout:{ type:'linear',orientation:'horizontal',height:25},
+                children:[
+                    { type:'form.SubmitButton', value:'Save' },
+                    { type:'form.ResetButton', value:'Reset form }
+                ]
+            }
+        ]
+    });
+ An instance of this class is created automatically and configured from the "form"
+ config object of the View. You will get access to the instance of this class by calling
+ View.getForm(), example: v.getForm().submit(); for the example above.
+
  */
 ludo.form.Manager = new Class({
 	Extends:ludo.Core,

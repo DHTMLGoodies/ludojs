@@ -1,9 +1,33 @@
 /**
- * Utility class for form Management. Instance of this class is created on demand
- * by ludo.View.getForm().
- * @namespace form
- * @class Manager
- * @extends Core
+ Utility class for form Management. Instance of this class is created on demand
+ by ludo.View.getForm().
+ @namespace form
+ @class Manager
+ @extends Core
+ @constructor
+ @param {Object} config
+ @example
+    var view = new ludo.View({
+        form:{
+            'resource' : 'Person',
+            'idField' : 'id'
+        },
+        children:[
+            { type:'form.Hidden',name:'id' },
+            { type:'form.Text', label:'First name' },
+            {
+                layout:{ type:'linear',orientation:'horizontal',height:25},
+                children:[
+                    { type:'form.SubmitButton', value:'Save' },
+                    { type:'form.ResetButton', value:'Reset form }
+                ]
+            }
+        ]
+    });
+ An instance of this class is created automatically and configured from the "form"
+ config object of the View. You will get access to the instance of this class by calling
+ View.getForm(), example: v.getForm().submit(); for the example above.
+
  */
 ludo.form.Manager = new Class({
 	Extends:ludo.Core,
