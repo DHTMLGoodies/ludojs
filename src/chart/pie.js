@@ -99,13 +99,6 @@
                                         fillRight:true,
                                         fillUp:true
                                     },
-                                    tooltip:{
-                                        css:{
-                                            'fill':'#fff',
-                                            'stroke':'#c6c6c6',
-                                            'fill-opacity':.9
-                                        }
-                                    },
                                     addOns:[
                                         {
                                             type:'chart.PieSliceHighlighted'
@@ -138,6 +131,18 @@ ludo.chart.Pie = new Class({
     Extends:ludo.chart.Base,
     fragmentType:'chart.PieSlice',
     rendered:false,
+
+    /**
+     Array of add-ons for the pie chart
+     @config {Array} addOns
+     @example
+         addOns:[
+             {
+                 type:'chart.PieSliceHighlighted'
+             }
+         ]
+     */
+    addOns:[],
 
     render:function(){
         this.animate();

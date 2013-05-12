@@ -133,16 +133,13 @@ require_once("../includes/demo-header.php");
                                     fillRight:true,
                                     fillUp:true
                                 },
-                                tooltip:{
-                                    css:{
-                                        'fill':'#fff',
-                                        'stroke':'#c6c6c6',
-                                        'fill-opacity':.9
-                                    }
-                                },
                                 addOns:[
                                     {
-                                        type:'chart.PieSliceHighlighted'
+                                        type:'chart.PieSliceHighlighted',
+                                        styles:{
+                                            fill : '#abc'
+                                        },
+                                        size:5
                                     }
                                 ]
                             },

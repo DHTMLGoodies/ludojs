@@ -32,15 +32,17 @@ ludo.chart.Label = new Class({
         this.bg.set('height', this.size.x);
     },
 
-    getYForText:function(){
+    getFontSize:function(){
         var t = this.getTextStyles();
-        var fontSize = t['font-size'] ? parseInt(t['font-size']) : 13;
-        return fontSize * .9;
+        return t['font-size'] ? parseInt(t['font-size']) : 13;
+    },
+
+    getYForText:function(){
+        return Math.floor(this.getFontSize() * .9);
     },
 
     getCoordinatesForColorBox:function(){
-        var t = this.getTextStyles();
-        var fontSize = t['font-size'] ? parseInt(t['font-size']) : 13;
+        var fontSize = this.getFontSize();
         var size = Math.round(fontSize);
         return {
             x : 0,
