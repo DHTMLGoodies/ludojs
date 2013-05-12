@@ -157,7 +157,6 @@ ludo.chart.Pie = new Class({
 
     render:function(){
         this.animate();
-        this.rendered = true;
     },
 
     getRadius:function(){
@@ -176,7 +175,7 @@ ludo.chart.Pie = new Class({
             degrees.push(e.getEffectConfig([0], [r[i].getDegrees()], 1).steps[0]);
             currentDegrees.push(0);
         }
-
+        this.rendered = false;
         this.executeAnimation({
             startAngle:this.dataProvider().startAngle,
             radius: radius.steps[0],
@@ -199,6 +198,8 @@ ludo.chart.Pie = new Class({
         }
         if(currentStep < config.count - 1){
             this.executeAnimation.delay(33, this, [config, currentStep +1]);
+        }else{
+            this.rendered = true;
         }
     },
 

@@ -1,4 +1,4 @@
-/* Generated Sun May 12 16:42:26 CEST 2013 */
+/* Generated Sun May 12 17:10:18 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -7573,7 +7573,7 @@ ludo.chart.DataProvider = new Class({
     records:[],
     startColor:'#561AD9',
     startAngle: 270,
-
+    highlighted:undefined,
 
     ludoConfig:function (config) {
         this.parent(config);
@@ -7640,7 +7640,10 @@ ludo.chart.DataProvider = new Class({
         if (this.records.indexOf(rec) === -1) {
             this.records.push(rec);
             this.fireEvent('createRecord', rec);
-            rec.addEvent('focus', this.focusRecord.bind(this));
+            rec.addEvent('focus', this.focus.bind(this));
+            rec.addEvent('blur', this.blur.bind(this));
+            rec.addEvent('enter', this.enter.bind(this));
+            rec.addEvent('leave', this.leave.bind(this));
         }
         return rec;
     },
@@ -7669,9 +7672,28 @@ ludo.chart.DataProvider = new Class({
         }
     },
     focused:undefined,
-    focusRecord:function(record){
+    focus:function(record){
         if(this.focused)this.focused.blur();
         this.focused = record;
+        this.fireEvent('focus', record);
+    },
+
+    blur:function(record){
+        this.fireEvent('blur', record);
+        this.focused = undefined;
+    },
+
+    enter:function(record){
+        if(this.highlighted){
+            this.highlighted.blur();
+        }
+        this.fireEvent('enter', record);
+        this.highlighted = record;
+    },
+
+    leave:function(record){
+        this.fireEvent('leave', record);
+        this.highlighted = undefined;
     },
 
     recordInstance:function(data){
@@ -7907,12 +7929,6 @@ ludo.chart.Base = new Class({
 
     createFragment:function (record) {
 
-        record.addEvent('enter', this.enterRecord.bind(this));
-        record.addEvent('leave', this.leaveRecord.bind(this));
-        record.addEvent('focus', this.focusRecord.bind(this));
-        record.addEvent('blur', this.blurRecord.bind(this));
-
-
         var f = this.createDependency('fragment' + this.fragments.length,
             {
                 type:this.fragmentType,
@@ -7951,29 +7967,6 @@ ludo.chart.Base = new Class({
     getRadius:function () {
         var c = this.getCenter();
         return Math.min(c.x, c.y);
-    },
-
-    enterRecord:function (record) {
-        if (this.highlighted) {
-            this.highlighted.leave();
-        }
-        this.fireEvent('enterRecord', record);
-        this.highlighted = record;
-    },
-
-    leaveRecord:function (record) {
-        this.highlighted = undefined;
-        this.fireEvent('leaveRecord', record);
-    },
-
-    focusRecord:function(record){
-        this.fireEvent('focusRecord', record);
-        this.focused = record;
-    },
-
-    blurRecord:function(record){
-        this.fireEvent('blurRecord', record);
-        this.focused = undefined;
     },
 
     create:function(){
@@ -8101,7 +8094,6 @@ ludo.chart.PieSlice = new Class({
     },
 
     executeAnimation:function(config, step){
-
         this.nodes[0].set('d', this.getPath(
             {
                 radius : this.rendering.radius,
@@ -8275,7 +8267,6 @@ ludo.chart.Pie = new Class({
 
     render:function(){
         this.animate();
-        this.rendered = true;
     },
 
     getRadius:function(){
@@ -8294,7 +8285,7 @@ ludo.chart.Pie = new Class({
             degrees.push(e.getEffectConfig([0], [r[i].getDegrees()], 1).steps[0]);
             currentDegrees.push(0);
         }
-
+        this.rendered = false;
         this.executeAnimation({
             startAngle:this.dataProvider().startAngle,
             radius: radius.steps[0],
@@ -8317,6 +8308,8 @@ ludo.chart.Pie = new Class({
         }
         if(currentStep < config.count - 1){
             this.executeAnimation.delay(33, this, [config, currentStep +1]);
+        }else{
+            this.rendered = true;
         }
     },
 
@@ -8625,13 +8618,18 @@ ludo.chart.PieSliceHighlighted = new Class({
 
     ludoEvents:function () {
         this.parent();
-        this.getParent().addEvent('enterRecord', this.show.bind(this));
-        this.getParent().addEvent('leaveRecord', this.hide.bind(this));
-        this.getParent().addEvent('focusRecord', this.focus.bind(this));
-        this.getParent().addEvent('blurRecord', this.blur.bind(this));
+        var p = this.getParent().dataProvider();
+        p.addEvents({
+            'enter' : this.show.bind(this),
+            'leave' : this.hide.bind(this),
+            'focus' : this.focus.bind(this),
+            'blur' : this.blur.bind(this)
+        });
     },
 
     show:function (record) {
+        if(!this.getParent().rendered)return;
+
         var f = this.getParent().getFragmentFor(record);
 
         var path = f.getPath({

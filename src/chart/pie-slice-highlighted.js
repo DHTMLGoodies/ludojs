@@ -66,6 +66,8 @@ ludo.chart.PieSliceHighlighted = new Class({
     },
 
     show:function (record) {
+        if(!this.getParent().rendered)return;
+
         var f = this.getParent().getFragmentFor(record);
 
         var path = f.getPath({
