@@ -1,4 +1,4 @@
-/* Generated Sun May 12 15:11:49 CEST 2013 */
+/* Generated Sun May 12 16:42:26 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -7963,7 +7963,6 @@ ludo.chart.Base = new Class({
 
     leaveRecord:function (record) {
         this.highlighted = undefined;
-
         this.fireEvent('leaveRecord', record);
     },
 
@@ -8054,7 +8053,7 @@ ludo.chart.PieSlice = new Class({
     },
 
     focus:function(){
-        var coords = this.centerOffset(10);
+        var coords = this.centerOffset(this.getParent().getHighlightSize());
         this.node().engine().effect().fly(this.node().getEl(), coords.x, coords.y,.1);
     },
 
@@ -8218,13 +8217,6 @@ ludo.chart.PieSlice = new Class({
                                         fillRight:true,
                                         fillUp:true
                                     },
-                                    tooltip:{
-                                        css:{
-                                            'fill':'#fff',
-                                            'stroke':'#c6c6c6',
-                                            'fill-opacity':.9
-                                        }
-                                    },
                                     addOns:[
                                         {
                                             type:'chart.PieSliceHighlighted'
@@ -8257,6 +8249,29 @@ ludo.chart.Pie = new Class({
     Extends:ludo.chart.Base,
     fragmentType:'chart.PieSlice',
     rendered:false,
+
+    /**
+     Array of add-ons for the pie chart
+     @config {Array} addOns
+     @example
+         addOns:[
+             {
+                 type:'chart.PieSliceHighlighted'
+             }
+         ]
+     */
+    addOns:[],
+
+    highlightSize:10,
+
+    ludoConfig:function(config){
+        this.parent(config);
+        this.setConfigParams(config, ['highlightSize']);
+    },
+
+    getHighlightSize:function(){
+        return this.highlightSize;
+    },
 
     render:function(){
         this.animate();
@@ -8411,7 +8426,7 @@ ludo.chart.Labels = new Class({
         var totalWidth = 0;
         for(var i=0;i<this.fragments.length;i++){
             var fSize = this.fragments[i].getSize();
-            var width = fSize.x + 10;
+            var width = fSize.x + 12;
             left.push(totalWidth);
             totalWidth += width;
         }
@@ -8475,15 +8490,17 @@ ludo.chart.Label = new Class({
         this.bg.set('height', this.size.x);
     },
 
-    getYForText:function(){
+    getFontSize:function(){
         var t = this.getTextStyles();
-        var fontSize = t['font-size'] ? parseInt(t['font-size']) : 13;
-        return fontSize * .9;
+        return t['font-size'] ? parseInt(t['font-size']) : 13;
+    },
+
+    getYForText:function(){
+        return Math.floor(this.getFontSize() * .9);
     },
 
     getCoordinatesForColorBox:function(){
-        var t = this.getTextStyles();
-        var fontSize = t['font-size'] ? parseInt(t['font-size']) : 13;
+        var fontSize = this.getFontSize();
         var size = Math.round(fontSize);
         return {
             x : 0,
@@ -8550,18 +8567,55 @@ ludo.chart.AddOn = new Class({
         return this.parentComponent;
     }
 });/* ../ludojs/src/chart/pie-slice-highlighted.js */
+/**
+ Add-on for Pie chart. This add-on highlights slices in a pie chart by showing a larger slice behind
+ current highlighted chart slice.
+ See {{#crossLink "chart/Pie"}}{{/crossLink}} for example of use.
+ @namespace chart
+ @class PieSliceHighlighted
+ @type {Class}
+ @example
+    {
+        type:'pie.Chart',
+        addOns:[
+            {
+                type:'chart.PieSliceHighlighted',
+                size : 5,
+                styles:{
+                    'fill' : '#aabbcc'
+                }
+            }
+        ]
+        ...
+        ...
+    }
+ */
 ludo.chart.PieSliceHighlighted = new Class({
     Extends:ludo.chart.AddOn,
     tagName:'path',
-    styles:{
-        'fill':'#ccc'
-    },
+    /**
+     Styling of slice
+     @config {Object} styles
+     @default { 'fill' : '#ccc' }
+     @example
+        styles:{
+            'fill' : '#f00'
+        }
+     */
+    styles:undefined,
+
+    /**
+     * Size of slice
+     * @config {Number} size
+     * @default 10
+     */
+    size : 10,
 
     ludoConfig:function (config) {
         this.parent(config);
 
-        this.setConfigParams(config, ['styles']);
-        this.styles = Object.clone(this.styles);
+        this.setConfigParams(config, ['styles','size']);
+        this.styles = this.styles || { "fill": "#ccc" };
         this.node = new ludo.canvas.Path();
         this.node.setStyles(this.styles);
 
@@ -8581,7 +8635,7 @@ ludo.chart.PieSliceHighlighted = new Class({
         var f = this.getParent().getFragmentFor(record);
 
         var path = f.getPath({
-            radius:this.getParent().getRadius() + 10,
+            radius:this.getParent().getRadius() + this.size,
             angle:record.getAngle(),
             degrees:record.getDegrees()
         });
@@ -8602,7 +8656,7 @@ ludo.chart.PieSliceHighlighted = new Class({
 
     focus:function (record) {
         var f = this.getParent().getFragmentFor(record);
-        var coords = f.centerOffset(10);
+        var coords = f.centerOffset(this.getParent().getHighlightSize());
         this.node.translate(0,0);
         this.node.engine().effect().fly(this.node.getEl(), coords.x, coords.y,.1);
 

@@ -86,7 +86,7 @@ ludo.chart.Labels = new Class({
         var totalWidth = 0;
         for(var i=0;i<this.fragments.length;i++){
             var fSize = this.fragments[i].getSize();
-            var width = fSize.x + 10;
+            var width = fSize.x + 12;
             left.push(totalWidth);
             totalWidth += width;
         }
