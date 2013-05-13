@@ -73,11 +73,7 @@ ludo.chart.Labels = new Class({
             return;
         }
         var size = this.getSize();
-        if(size.x > size.y){
-            this.resizeHorizontal();
-        }else{
-            this.resizeVertical();
-        }
+		this[size.x > size.y ? 'resizeHorizontal' : 'resizeVertical']();
     },
 
     resizeHorizontal:function(){
