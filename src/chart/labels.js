@@ -2,7 +2,9 @@
  * Class displaying labels for a chart. See
  * {{#crossLink "chart/Pie"}}{{/crossLink}} for example on how to add labels
  * to your chart. How labels are displayed(side by side or beneath each other)
- * depends on the size of the area assigned to the labels. If width is greater
+ * depends on the orientation attribute OR
+ * the size of the area assigned to the labels. You can set orientation to
+ * "vertical" or "horizontal". If orientation is not set and width is greater
  * than height, the labels will be displayed vertically. If height is greater
  * than width, the labels will be rendered vertically.
  * @namespace chart
@@ -59,9 +61,19 @@ ludo.chart.Labels = new Class({
      */
     boxStylesOver:undefined,
 
+    /**
+     * Orientation of labels. If not set, orientation will be set automatically
+     * base on space allocated to the labels. When width is greater than height, the
+     * labels will be displayed horizontally, side by side. Otherwise, they will be
+     * displayed vertically.
+     * @config {String} orientation
+     * @default undefined
+     */
+    orientation:undefined,
+
     ludoConfig:function(config){
         this.parent(config);
-        this.setConfigParams(config, ['textStyles', 'boxStyles', 'textStylesOver','boxStylesOver']);
+        this.setConfigParams(config, ['orientation', 'textStyles', 'boxStyles', 'textStylesOver','boxStylesOver']);
     },
 
     render:function(){
@@ -73,7 +85,7 @@ ludo.chart.Labels = new Class({
             return;
         }
         var size = this.getSize();
-		this[size.x > size.y ? 'resizeHorizontal' : 'resizeVertical']();
+		this[this.orientation === 'horizontal' || size.x > size.y ? 'resizeHorizontal' : 'resizeVertical']();
     },
 
     resizeHorizontal:function(){

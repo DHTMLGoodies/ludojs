@@ -138,7 +138,7 @@ require_once("../includes/demo-header.php");
                                     {
                                         type:'chart.PieSliceHighlighted',
                                         styles:{
-                                            fill : '#abc'
+                                            fill : '#aac'
                                         },
                                         size:5
                                     }
