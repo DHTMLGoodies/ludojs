@@ -17,7 +17,7 @@ ludo.chart.Tooltip = new Class({
 	 * @default { "fill":"#fff", "fill-opacity":.8, "stroke-width" : 1, "stroke-location": "inside" }
 	 */
 	boxStyles:{},
-	
+
 	/**
 	 * Overall styling of text
 	 * @config {Object} textStyles
@@ -104,6 +104,7 @@ ludo.chart.Tooltip = new Class({
 				y:e.page.y - this.offset.y - this.size.y - 5
 			};
 			if(pos.x < 0)pos.x += (this.size.x + 20);
+			if(pos.y < 0)pos.y += (this.size.y + 10);
 			this.node.translate(pos.x, pos.y);
 		}
 	},
@@ -129,7 +130,9 @@ ludo.chart.Tooltip = new Class({
 				val = this.getParent().dataProvider()['method']();
 			}
 
-			if(!isNaN(val))val = Math.round(val);
+			if(!isNaN(val) && val % 1 !== 0){
+				val = val.toFixed(1);
+			}
 
 			ret = ret.replace(match[i], val);
 
