@@ -12,6 +12,7 @@
  */
 ludo.chart.Labels = new Class({
     Extends:ludo.chart.Base,
+    
     fragmentType:'chart.Label',
 
     /**
