@@ -11,7 +11,18 @@ ludo.chart.Tooltip = new Class({
 		x:0,y:0
 	},
 
+	/**
+	 * Styling of box where the tooltip is rendered
+	 * @config {Object} boxStyles
+	 * @default { "fill":"#fff", "fill-opacity":.8, "stroke-width" : 1, "stroke-location": "inside" }
+	 */
 	boxStyles:{},
+	
+	/**
+	 * Overall styling of text
+	 * @config {Object} textStyles
+	 * @default { "fill" : "#000" }
+	 */
 	textStyles:{},
 
 	ludoConfig:function (config) {
