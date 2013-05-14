@@ -146,7 +146,7 @@ require_once("../includes/demo-header.php");
                                     },
                                     {
                                         type:'chart.Tooltip',
-                                        tpl:'<p><b>{label}</b> : {percent}% of {sum}'
+                                        tpl:'<p><b>{label}</b> : {percent}%<br>{value} of {sum}'
                                     }
                                 ]
                             },

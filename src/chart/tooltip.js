@@ -11,9 +11,12 @@ ludo.chart.Tooltip = new Class({
 		x:0,y:0
 	},
 
+	boxStyles:{},
+	textStyles:{},
+
 	ludoConfig:function (config) {
 		this.parent(config);
-		this.setConfigParams(config, ['tpl']);
+		this.setConfigParams(config, ['tpl','boxStyles','textStyles']);
 		this.createDOM();
 
 		this.getParent().addEvents({
@@ -30,15 +33,31 @@ ludo.chart.Tooltip = new Class({
 		this.node.hide();
 		this.node.toFront.delay(50, this.node);
 
-		this.rect = new ludo.canvas.Rect({ x:0, y:0, rx:2, ry:2, 'fill':'#fff', 'stroke-width':1, 'stroke-location':'inside' });
+		this.rect = new ludo.canvas.Rect({ x:0, y:0, rx:2, ry:2 });
+		this.rect.setStyles(this.getBoxStyling());
 		this.node.adopt(this.rect);
 
 		this.textBox = new ludo.canvas.TextBox();
 		this.textBox.getNode().translate(4, 0);
+		this.textBox.getNode().setStyles(this.getTextStyles());
 		this.node.adopt(this.textBox);
-
 	},
 
+	getBoxStyling:function(){
+		var ret = this.boxStyles || {};
+		if(!ret['fill'])ret['fill'] = '#fff';
+		if(!ret['stroke-location'])ret['stroke-location'] = 'inside';
+		if(ret['fill-opacity'] === undefined)ret['fill-opacity'] = .8;
+		if(ret['stroke-width'] === undefined)ret['stroke-width'] = 1;
+		return ret;
+	},
+
+	getTextStyles:function(){
+		var ret = this.textStyles || {};
+		if(!ret['fill'])ret['fill'] = '#000';
+		return ret;
+	},
+	
 	show:function (e) {
 
 		this.node.show();
@@ -93,6 +112,10 @@ ludo.chart.Tooltip = new Class({
 				val = rec[method]();
 			}else{
 				val = rec.get(key);
+			}
+
+			if(val === undefined && this.getParent().dataProvider()['method']){
+				val = this.getParent().dataProvider()['method']();
 			}
 
 			if(!isNaN(val))val = Math.round(val);
