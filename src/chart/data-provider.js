@@ -137,5 +137,9 @@ ludo.chart.DataProvider = new Class({
 
     recordInstance:function(data){
         return new ludo.chart.Record(data, this);
-    }
+    },
+
+	getHighlighted:function(){
+		return this.highlighted;
+	}
 });

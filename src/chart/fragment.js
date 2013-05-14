@@ -45,6 +45,8 @@ ludo.chart.Fragment = new Class({
 
         this.getParent().adopt(node);
 
+		this.relayEvents(node, ['mouseenter','mouseleave']);
+
         return node;
     },
 

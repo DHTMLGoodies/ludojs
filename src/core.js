@@ -290,5 +290,17 @@ ludo.Core = new Class({
 	getDependency:function(key, config){
 		if(this.dependency[key])return this.dependency[key];
         return this.createDependency(key, config);
+	},
+
+	relayEvents:function(obj, events){
+		for(var i=0;i<events.length;i++){
+			obj.addEvent(events[i], this.getRelayFn(events[i]).bind(this));
+		}
+	},
+
+	getRelayFn:function(event){
+		return function(){
+			this.fireEvent.call(this, event, Array.prototype.slice.call(arguments));
+		}.bind(this);
 	}
 });

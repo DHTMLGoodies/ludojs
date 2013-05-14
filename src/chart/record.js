@@ -17,6 +17,10 @@ ludo.chart.Record = new Class({
         return (this.getValue() / this.getCollection().getSum()) * 100;
     },
 
+	getSum:function(){
+		return this.getCollection().getSum();
+	},
+
     getDegrees:function () {
         return this.getPercent() * 360 / 100;
     },

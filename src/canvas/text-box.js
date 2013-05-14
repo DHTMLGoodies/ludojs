@@ -25,7 +25,9 @@ ludo.canvas.TextBox = new Class({
         this.text = config.text;
         if (config.css)this.css = config.css;
 
-        this.renderText();
+        if(this.text){
+			this.renderText();
+		}
     },
 
     getAttributes:function (config) {
@@ -46,6 +48,7 @@ ludo.canvas.TextBox = new Class({
 
     getTextParts:function () {
         var tokens = this.text.match(/(<\/?[a-z]+?>)/gmi);
+		if(!tokens)return [this.text];
         var index = 0;
 
         var ret = [];
@@ -123,6 +126,7 @@ ludo.canvas.TextBox = new Class({
     },
 
     setText:function (text) {
+		this.currentY = 0;
         this.empty();
         this.text = text;
         this.renderText();

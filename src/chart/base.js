@@ -40,7 +40,6 @@ ludo.chart.Base = new Class({
     },
 
     createFragment:function (record) {
-
         var f = this.createDependency('fragment' + this.fragments.length,
             {
                 type:this.fragmentType,
@@ -50,6 +49,9 @@ ludo.chart.Base = new Class({
 
         this.fragmentMap[record.getUID()] = f;
         this.fragments.push(f);
+
+		this.relayEvents(f, ['mouseenter','mouseleave']);
+
         return f;
     },
 
@@ -103,5 +105,9 @@ ludo.chart.Base = new Class({
 
     onResize:function(){
 
-    }
+    },
+
+	getCanvas:function(){
+		return this.parentComponent.getCanvas();
+	}
 });

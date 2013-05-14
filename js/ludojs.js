@@ -1,4 +1,4 @@
-/* Generated Sun May 12 17:17:19 CEST 2013 */
+/* Generated Tue May 14 11:25:44 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -1014,6 +1014,18 @@ ludo.Core = new Class({
 	getDependency:function(key, config){
 		if(this.dependency[key])return this.dependency[key];
         return this.createDependency(key, config);
+	},
+
+	relayEvents:function(obj, events){
+		for(var i=0;i<events.length;i++){
+			obj.addEvent(events[i], this.getRelayFn(events[i]).bind(this));
+		}
+	},
+
+	getRelayFn:function(event){
+		return function(){
+			this.fireEvent.call(this, event, Array.prototype.slice.call(arguments));
+		}.bind(this);
 	}
 });/* ../ludojs/src/movable.js */
 ludo.Movable = new Class({
@@ -6442,6 +6454,10 @@ ludo.chart.Record = new Class({
         return (this.getValue() / this.getCollection().getSum()) * 100;
     },
 
+	getSum:function(){
+		return this.getCollection().getSum();
+	},
+
     getDegrees:function () {
         return this.getPercent() * 360 / 100;
     },
@@ -7698,7 +7714,11 @@ ludo.chart.DataProvider = new Class({
 
     recordInstance:function(data){
         return new ludo.chart.Record(data, this);
-    }
+    },
+
+	getHighlighted:function(){
+		return this.highlighted;
+	}
 });/* ../ludojs/src/chart/chart.js */
 ludo.chart.Chart = new Class({
 	Extends: ludo.View,
@@ -7795,6 +7815,8 @@ ludo.chart.Fragment = new Class({
         node.setStyle('cursor','pointer');
 
         this.getParent().adopt(node);
+
+		this.relayEvents(node, ['mouseenter','mouseleave']);
 
         return node;
     },
@@ -7928,7 +7950,6 @@ ludo.chart.Base = new Class({
     },
 
     createFragment:function (record) {
-
         var f = this.createDependency('fragment' + this.fragments.length,
             {
                 type:this.fragmentType,
@@ -7938,6 +7959,9 @@ ludo.chart.Base = new Class({
 
         this.fragmentMap[record.getUID()] = f;
         this.fragments.push(f);
+
+		this.relayEvents(f, ['mouseenter','mouseleave']);
+
         return f;
     },
 
@@ -7991,7 +8015,11 @@ ludo.chart.Base = new Class({
 
     onResize:function(){
 
-    }
+    },
+
+	getCanvas:function(){
+		return this.parentComponent.getCanvas();
+	}
 });/* ../ludojs/src/chart/pie-slice.js */
 ludo.chart.PieSlice = new Class({
     Extends:ludo.chart.Fragment,
@@ -8335,7 +8363,9 @@ ludo.chart.Pie = new Class({
  * Class displaying labels for a chart. See
  * {{#crossLink "chart/Pie"}}{{/crossLink}} for example on how to add labels
  * to your chart. How labels are displayed(side by side or beneath each other)
- * depends on the size of the area assigned to the labels. If width is greater
+ * depends on the orientation attribute OR
+ * the size of the area assigned to the labels. You can set orientation to
+ * "vertical" or "horizontal". If orientation is not set and width is greater
  * than height, the labels will be displayed vertically. If height is greater
  * than width, the labels will be rendered vertically.
  * @namespace chart
@@ -8343,6 +8373,7 @@ ludo.chart.Pie = new Class({
  */
 ludo.chart.Labels = new Class({
     Extends:ludo.chart.Base,
+    
     fragmentType:'chart.Label',
 
     /**
@@ -8392,9 +8423,19 @@ ludo.chart.Labels = new Class({
      */
     boxStylesOver:undefined,
 
+    /**
+     * Orientation of labels. If not set, orientation will be set automatically
+     * base on space allocated to the labels. When width is greater than height, the
+     * labels will be displayed horizontally, side by side. Otherwise, they will be
+     * displayed vertically.
+     * @config {String} orientation
+     * @default undefined
+     */
+    orientation:undefined,
+
     ludoConfig:function(config){
         this.parent(config);
-        this.setConfigParams(config, ['textStyles', 'boxStyles', 'textStylesOver','boxStylesOver']);
+        this.setConfigParams(config, ['orientation', 'textStyles', 'boxStyles', 'textStylesOver','boxStylesOver']);
     },
 
     render:function(){
@@ -8406,11 +8447,7 @@ ludo.chart.Labels = new Class({
             return;
         }
         var size = this.getSize();
-        if(size.x > size.y){
-            this.resizeHorizontal();
-        }else{
-            this.resizeVertical();
-        }
+		this[this.orientation === 'horizontal' || size.x > size.y ? 'resizeHorizontal' : 'resizeVertical']();
     },
 
     resizeHorizontal:function(){
@@ -8663,7 +8700,580 @@ ludo.chart.PieSliceHighlighted = new Class({
     blur:function(){
         this.node.engine().effect().flyBack(this.node.getEl(),.1);
     }
-});/* ../ludojs/src/ludo-db/factory.js */
+});/* ../ludojs/src/canvas/paint.js */
+/**
+ Class for styling of SVG DOM nodes
+ @namespace canvas
+ @class Paint
+ @constructor
+ @param {Object} config
+ @example
+ 	var canvas = new ludo.canvas.Canvas({
+		renderTo:'myDiv'
+ 	});
+
+ 	var paint = new ludo.canvas.Paint({
+		'stroke-width' : 5,
+		'stroke-opacity' : .5,
+		'stroke-color' : '#DEF'
+	}, { className : 'MyClass' );
+ 	canvas.adoptDef(paint); // Appended to &lt;defs> node
+
+ 	// create node and set "class" to paint
+ 	// alternative methods:
+ 	// paint.applyTo(node); and
+ 	// node.addClass(paint.getClassName());
+	var node = new ludo.canvas.Node('rect', { id:'myId2', 'class' : paint});
+
+ 	canvas.adopt(node);
+
+ 	// Paint object for all &lt;rect> and &lt;circle> tags:
+
+	var gradient = new ludo.canvas.Gradient({
+        id:'myGradient'
+    });
+    canvas.adopt(gradient);
+    gradient.addStop('0%', '#0FF');
+    gradient.addStop('100%', '#FFF', 0);
+    // New paint object applied to all &lt;rect> and &lt;circle> tags.
+ 	var paint = new ludo.canvas.Paint({
+		'stroke-width' : 5,
+		'fill' : gradient,
+		'stroke-opacity' : .5,
+		'stroke-color' : '#DEF'
+	}, { selectors : 'rect, circle' );
+ */
+
+ludo.canvas.Paint = new Class({
+	Extends:ludo.canvas.Node,
+	tagName:'style',
+	css:{},
+	nodes:[],
+	className:undefined,
+	tag:undefined,
+	cssPrefix : undefined,
+
+	mappings:{
+		'color':['stroke-color'],
+		'background-color':['fill-color'],
+		'opacity':['fill-opacity', 'stroke-opacity']
+	},
+
+	initialize:function (css, config) {
+		config = config || {};
+		this.className = config.className || 'css-' + String.uniqueID();
+		this.cssPrefix = config.selectors ? config.selectors : '.' + this.className;
+		if(config.selectors)delete config.selectors;
+		if(config.className)delete config.className;
+		this.parent(this.tagName, config);
+		if (css !== undefined)this.setStyles(css);
+	},
+
+	setStyles:function (styles) {
+		Object.each(styles, function (value, key) {
+			this.setStyleProperty(key, value);
+		}, this);
+		this.updateCssContent();
+	},
+
+	/**
+	 Update a css style
+	 @method setStyle
+	 @param {String} style
+	 @param {String|Number}value
+	 @example
+	 	var paint = new ludo.canvas.Paint({
+	 		css:{
+	 			'stroke-opacity' : 0.5
+	 		}
+	 	});
+	 	canvas.adopt(paint);
+	 	paint.setStyle('stroke-opacity', .2);
+	 */
+	setStyle:function (style, value) {
+		this.setStyleProperty(style, value);
+		this.updateCssContent();
+	},
+
+	updateCssContent:function () {
+		var css = JSON.encode(this.css);
+		css  = css.replace(/"/g,"");
+		css  = css.replace(/,/g,";");
+		this.text(this.cssPrefix + css);
+	},
+
+	setStyleProperty:function (style, value) {
+		value = this.getRealValue(value);
+		if (this.mappings[style]) {
+			this.setMapped(style, value);
+		} else {
+			this.css[style] = value;
+		}
+	},
+
+	setMapped:function (style, value) {
+		for (var i = 0; i < this.mappings[style].length; i++) {
+			var m = this.mappings[style][i];
+			this.css[m] = value;
+		}
+	},
+
+	/**
+	 * Return value of a css style
+	 * @method getStyle
+	 * @param {String} style
+	 * @return {String|Number} value
+	 */
+	getStyle:function (style) {
+		if (this.mappings[style])style = this.mappings[style][0];
+		return this.css[style];
+	},
+
+	getRealValue:function (value) {
+		return value && value.id !== undefined ? 'url(#' + value.id + ')' : value;
+	},
+
+	/**
+	 * Apply css to a SVG node. This is done by adding CSS class to the node
+	 * @method applyTo
+	 * @param {canvas.Node} node
+	 */
+	applyTo:function (node) {
+		ludo.canvasEngine.addClass(node.el ? node.el : node, this.className);
+	},
+
+	/**
+	 * Returns class name of Paint object
+	 * @method getClassName
+	 * @return {String} className
+	 */
+	getClassName:function () {
+		return this.className;
+	},
+
+	getUrl:function(){
+		return this.className;
+	}
+});
+/* ../ludojs/src/canvas/named-node.js */
+/**
+ * Super class for canvas.Circle, canvas.Rect +++
+ * @namespace canvas
+ * @class NamedNode
+ */
+ludo.canvas.NamedNode = new Class({
+	Extends: ludo.canvas.Node,
+
+	initialize:function (attributes, text) {
+        attributes = attributes || {};
+		if(attributes.listeners){
+			this.addEvents(attributes.listeners);
+			delete attributes.listeners;
+		}
+		this.parent(this.tagName, attributes, text);
+	}
+});/* ../ludojs/src/canvas/rect.js */
+/**
+ Class for rect tags. It extends canvas.Node by adding setter and getter methods
+ for x,y, width, height and rounded corners(rx and ry).
+ @namespace canvas
+ @class Rect
+ @extends canvas.Node
+ @constructor
+ @param {Object} coordinates
+ @param {canvas.NodeConfig} config
+ @example
+	 var rect = new ludo.canvas.Rect(
+ 		{ x:100,y:100, width:200,height:100, "class":paintObject }
+ 	 );
+ */
+ludo.canvas.Rect = new Class({
+	Extends: ludo.canvas.NamedNode,
+	tagName : 'rect',
+
+	/**
+	 * Returns value of 'x' attribute. Actual position on canvas may be different due to
+	 * translate transformation. Use {{#crossLink "canvas.Rect/getPosition"}}{{/crossLink}} to
+	 * get actual position on canvas.
+	 * @method getX
+	 * @return {Number} x
+	 */
+	getX:function(){
+		return this.el.x.animVal.value;
+	},
+
+	/**
+	 * Returns value of 'y' attribute.
+	 * @method getY
+	 * @return {Number} y
+	 */
+	getY:function(){
+		return this.el.y.animVal.value;
+	},
+
+	/**
+	 * Returns width of rectangle
+	 * @method getWidth
+	 * @return {Number} width
+	 */
+	getWidth:function(){
+		return this.el.width.animVal.value;
+	},
+
+	/**
+	 * Returns height of rectangle
+	 * @method getWidth
+	 * @return {Number} width
+	 */
+	getHeight:function(){
+		return this.el.height.animVal.value;
+	},
+	/**
+	 * Return x-size of rounded corners
+	 * @method getRx
+	 * @return {Number} rx
+	 */
+	getRx:function(){
+		return this.el.rx.animVal.value;
+	},
+
+	/**
+	 * Return y-size of rounded corners
+	 * @method getRy
+	 * @return {Number} ry
+	 */
+	getRy:function(){
+		return this.el.ry.animVal.value;
+	},
+
+	/**
+	 * Set new x coordinate
+	 * @method setX
+	 * @param {Number} x
+	 */
+	setX:function(x){
+		this.set('x', x);
+	},
+
+	/**
+	 * Set new y coordinate
+	 * @method setY
+	 * @param {Number} y
+	 */
+	setY:function(y){
+		this.set('y', y);
+	},
+
+	/**
+	 * Set new width
+	 * @method setWidth
+	 * @param {Number} width
+	 */
+	setWidth:function(width){
+		this.set('width', width);
+	},
+	/**
+	 * Set new height
+	 * @method setHeight
+	 * @param {Number} height
+	 */
+	setHeight:function(height){
+		this.set('height', height);
+	},
+
+	/**
+	 * Set new width of rounded corners
+	 * @method setRx
+	 * @param {Number} rx
+	 */
+	setRx:function(rx){
+		this.set('rx', rx);
+	},
+
+	/**
+	 * Set new height of rounded corners
+	 * @method setRy
+	 * @param {Number} ry
+	 */
+	setRy:function(ry){
+		this.set('ry', ry);
+	}
+
+
+});/* ../ludojs/src/canvas/text-box.js */
+/**
+ * Text box class which handles simple HTML tags
+ * and renders them in SVG format.
+ * @namespace canvsa
+ * @class TextBox
+ */
+ludo.canvas.TextBox = new Class({
+    Extends:ludo.canvas.Group,
+    tag:'g',
+    text:undefined,
+    css:{
+        'line-height':13
+    },
+    presentationAttributes:['x', 'y', 'width', 'height'],
+    currentY:0,
+
+    tags:{
+        '<br>':'text'
+    },
+
+    ludoConfig:function (config) {
+        config = config || {};
+        config.attr = this.getAttributes(config);
+        this.parent(config);
+        this.text = config.text;
+        if (config.css)this.css = config.css;
+
+        if(this.text){
+			this.renderText();
+		}
+    },
+
+    getAttributes:function (config) {
+        var ret = config.attr || {};
+        var p = this.presentationAttributes;
+        for (var i = 0; i < p.length; i++) {
+            if (config[p[i]] !== undefined) {
+                ret[p[i]] = config[p[i]];
+            }
+        }
+        return ret;
+    },
+
+    tagsToInsert:function () {
+        var texts = this.getTextParts();
+        return this.toTags(texts);
+    },
+
+    getTextParts:function () {
+        var tokens = this.text.match(/(<\/?[a-z]+?>)/gmi);
+		if(!tokens)return [this.text];
+        var index = 0;
+
+        var ret = [];
+        for (var i = 0; i < tokens.length; i++) {
+            var pos = this.text.indexOf(tokens[i], index === 0 ? index : index + 1);
+            if (pos > index) {
+                ret.push(this.text.substr(index, pos - index));
+            }
+            index = pos;
+        }
+        if (index < this.text.length) {
+            ret.push(this.text.substr(index));
+        }
+
+        return ret;
+    },
+
+    toTags:function (items) {
+        var ret = [
+            {
+                tag:'text',
+                properties:{ y:this.getYOfLine() }
+            }
+        ];
+        var currentParent = ret[0];
+
+        for (var i = 0; i < items.length; i++) {
+            var tag = items[i].match(/<([a-z]+?)>/gi);
+            if (tag)tag = tag[0];
+
+            var obj = {
+                properties:{}
+            };
+
+            obj.tag = this.tags[tag] ? this.tags[tag] : 'tspan';
+
+
+            obj = this.assignDefaultProperties(obj, tag);
+
+
+            obj.text = this.stripTags(items[i]);
+            if (obj.tag === 'tspan') {
+                currentParent.children = currentParent.children || [];
+                currentParent.children.push(obj);
+            } else {
+                ret.push(obj);
+            }
+            if (obj.tag === 'text') {
+                obj.properties.y = this.getYOfLine();
+                currentParent = obj;
+            }
+        }
+
+        return ret;
+    },
+
+    assignDefaultProperties:function (obj, tag) {
+        if (tag) {
+            var props = this.getDefaultTagProperties();
+            var p = props[tag];
+            if (p) {
+                for (var key in p) {
+                    if (p.hasOwnProperty(key))obj.properties[key] = p[key];
+                }
+            }
+        }
+        return obj;
+
+    },
+
+
+    getYOfLine:function () {
+        this.currentY += 15;
+        return this.currentY;
+    },
+
+    setText:function (text) {
+		this.currentY = 0;
+        this.empty();
+        this.text = text;
+        this.renderText();
+    },
+
+    renderText:function () {
+        this.renderItems(this.tagsToInsert(), this);
+    },
+
+    renderItems:function (items, parent) {
+        for (var i = 0; i < items.length; i++) {
+            var n = new ludo.canvas.Node(items[i].tag, items[i].properties, items[i].text);
+            parent.adopt(n);
+
+            if (items[i].children) {
+                this.renderItems(items[i].children, n);
+            }
+        }
+    },
+
+
+    stripTags:function (text) {
+        return text.replace(/<\/?[^>]+?>/g, '');
+    },
+
+    getDefaultTagProperties:function () {
+        return {
+            '<b>':{ 'font-weight':'bold' },
+            '<em>':{ 'font-style':'italic' }
+        };
+    }
+
+});/* ../ludojs/src/chart/tooltip.js */
+ludo.chart.Tooltip = new Class({
+	Extends:ludo.chart.AddOn,
+	tpl:'{label}: {value}',
+	shown:false,
+
+	offset:{
+		x:0, y:0
+	},
+
+	size:{
+		x:0,y:0
+	},
+
+	ludoConfig:function (config) {
+		this.parent(config);
+		this.setConfigParams(config, ['tpl']);
+		this.createDOM();
+
+		this.getParent().addEvents({
+			'mouseenter':this.show.bind(this),
+			'mouseleave':this.hide.bind(this)
+		});
+
+		this.getParent().getNode().addEvent('mousemove', this.move.bind(this));
+	},
+
+	createDOM:function () {
+		this.node = new ludo.canvas.Node('g');
+		this.getParent().adopt(this.node);
+		this.node.hide();
+		this.node.toFront.delay(50, this.node);
+
+		this.rect = new ludo.canvas.Rect({ x:0, y:0, rx:2, ry:2, 'fill':'#fff', 'stroke-width':1, 'stroke-location':'inside' });
+		this.node.adopt(this.rect);
+
+		this.textBox = new ludo.canvas.TextBox();
+		this.textBox.getNode().translate(4, 0);
+		this.node.adopt(this.textBox);
+
+	},
+
+	show:function (e) {
+
+		this.node.show();
+		this.shown = true;
+
+		this.offset = this.getParent().getParent().getBody().getPosition();
+
+		this.textBox.setText(this.getParsedHtml());
+
+		this.rect.setStyle('stroke', this.getRecord().get('color'));
+
+		this.size = this.textBox.getNode().getSize();
+		this.size.x +=7;
+		this.size.y +=10;
+		this.rect.set('width', this.size.x);
+		this.rect.set('height', this.size.y);
+
+		this.rect.show();
+
+		this.move(e);
+	},
+
+	hide:function () {
+		this.node.hide();
+		this.rect.hide();
+		this.shown = false;
+	},
+
+	move:function (e) {
+		if (this.shown) {
+			var pos = {
+				x:e.page.x - this.offset.x - this.size.x - 10,
+				y:e.page.y - this.offset.y - this.size.y - 5
+			};
+			if(pos.x < 0)pos.x += (this.size.x + 20);
+			this.node.translate(pos.x, pos.y);
+		}
+	},
+
+	getParsedHtml:function () {
+		var match = this.tpl.match(/\{(.*?)\}/gm);
+		var ret = this.tpl;
+
+		var rec = this.getRecord();
+
+		for(var i=0;i<match.length;i++){
+			var key = match[i].substr(1, match[i].length-2);
+			var method = 'get' + key.substr(0,1).toUpperCase() + key.substr(1);
+
+			var val;
+			if(rec[method] !== undefined){
+				val = rec[method]();
+			}else{
+				val = rec.get(key);
+			}
+
+			if(!isNaN(val))val = Math.round(val);
+
+			ret = ret.replace(match[i], val);
+
+		}
+		return ret;
+	},
+
+	getRecord:function () {
+		return this.getParent().dataProvider().getHighlighted();
+	}
+
+});
+/* ../ludojs/src/ludo-db/factory.js */
 /**
  Factory for automatic creation of children from server ludoDB config. This class is used
  internally by ludoJS when you specify a ludoDB config object in your view configuration.
@@ -29819,178 +30429,6 @@ ludo.video.DailyMotion = new Class({
 	getVideoUrl:function () {
 		return 'http://www.dailymotion.com/swf/' + this.movieId;
 	}
-});/* ../ludojs/src/canvas/paint.js */
-/**
- Class for styling of SVG DOM nodes
- @namespace canvas
- @class Paint
- @constructor
- @param {Object} config
- @example
- 	var canvas = new ludo.canvas.Canvas({
-		renderTo:'myDiv'
- 	});
-
- 	var paint = new ludo.canvas.Paint({
-		'stroke-width' : 5,
-		'stroke-opacity' : .5,
-		'stroke-color' : '#DEF'
-	}, { className : 'MyClass' );
- 	canvas.adoptDef(paint); // Appended to &lt;defs> node
-
- 	// create node and set "class" to paint
- 	// alternative methods:
- 	// paint.applyTo(node); and
- 	// node.addClass(paint.getClassName());
-	var node = new ludo.canvas.Node('rect', { id:'myId2', 'class' : paint});
-
- 	canvas.adopt(node);
-
- 	// Paint object for all &lt;rect> and &lt;circle> tags:
-
-	var gradient = new ludo.canvas.Gradient({
-        id:'myGradient'
-    });
-    canvas.adopt(gradient);
-    gradient.addStop('0%', '#0FF');
-    gradient.addStop('100%', '#FFF', 0);
-    // New paint object applied to all &lt;rect> and &lt;circle> tags.
- 	var paint = new ludo.canvas.Paint({
-		'stroke-width' : 5,
-		'fill' : gradient,
-		'stroke-opacity' : .5,
-		'stroke-color' : '#DEF'
-	}, { selectors : 'rect, circle' );
- */
-
-ludo.canvas.Paint = new Class({
-	Extends:ludo.canvas.Node,
-	tagName:'style',
-	css:{},
-	nodes:[],
-	className:undefined,
-	tag:undefined,
-	cssPrefix : undefined,
-
-	mappings:{
-		'color':['stroke-color'],
-		'background-color':['fill-color'],
-		'opacity':['fill-opacity', 'stroke-opacity']
-	},
-
-	initialize:function (css, config) {
-		config = config || {};
-		this.className = config.className || 'css-' + String.uniqueID();
-		this.cssPrefix = config.selectors ? config.selectors : '.' + this.className;
-		if(config.selectors)delete config.selectors;
-		if(config.className)delete config.className;
-		this.parent(this.tagName, config);
-		if (css !== undefined)this.setStyles(css);
-	},
-
-	setStyles:function (styles) {
-		Object.each(styles, function (value, key) {
-			this.setStyleProperty(key, value);
-		}, this);
-		this.updateCssContent();
-	},
-
-	/**
-	 Update a css style
-	 @method setStyle
-	 @param {String} style
-	 @param {String|Number}value
-	 @example
-	 	var paint = new ludo.canvas.Paint({
-	 		css:{
-	 			'stroke-opacity' : 0.5
-	 		}
-	 	});
-	 	canvas.adopt(paint);
-	 	paint.setStyle('stroke-opacity', .2);
-	 */
-	setStyle:function (style, value) {
-		this.setStyleProperty(style, value);
-		this.updateCssContent();
-	},
-
-	updateCssContent:function () {
-		var css = JSON.encode(this.css);
-		css  = css.replace(/"/g,"");
-		css  = css.replace(/,/g,";");
-		this.text(this.cssPrefix + css);
-	},
-
-	setStyleProperty:function (style, value) {
-		value = this.getRealValue(value);
-		if (this.mappings[style]) {
-			this.setMapped(style, value);
-		} else {
-			this.css[style] = value;
-		}
-	},
-
-	setMapped:function (style, value) {
-		for (var i = 0; i < this.mappings[style].length; i++) {
-			var m = this.mappings[style][i];
-			this.css[m] = value;
-		}
-	},
-
-	/**
-	 * Return value of a css style
-	 * @method getStyle
-	 * @param {String} style
-	 * @return {String|Number} value
-	 */
-	getStyle:function (style) {
-		if (this.mappings[style])style = this.mappings[style][0];
-		return this.css[style];
-	},
-
-	getRealValue:function (value) {
-		return value && value.id !== undefined ? 'url(#' + value.id + ')' : value;
-	},
-
-	/**
-	 * Apply css to a SVG node. This is done by adding CSS class to the node
-	 * @method applyTo
-	 * @param {canvas.Node} node
-	 */
-	applyTo:function (node) {
-		ludo.canvasEngine.addClass(node.el ? node.el : node, this.className);
-	},
-
-	/**
-	 * Returns class name of Paint object
-	 * @method getClassName
-	 * @return {String} className
-	 */
-	getClassName:function () {
-		return this.className;
-	},
-
-	getUrl:function(){
-		return this.className;
-	}
-});
-/* ../ludojs/src/canvas/named-node.js */
-/**
- * Super class for canvas.Circle, canvas.Rect +++
- * @namespace canvas
- * @class NamedNode
- */
-ludo.canvas.NamedNode = new Class({
-	Extends: ludo.canvas.Node,
-
-	initialize:function (attributes, text) {
-        attributes = attributes || {};
-		if(attributes.listeners){
-			this.addEvents(attributes.listeners);
-			delete attributes.listeners;
-		}
-		this.parent(this.tagName, attributes, text);
-	}
 });/* ../ludojs/src/canvas/gradient.js */
 /**
 Class for linear gradients
@@ -30457,134 +30895,6 @@ ludo.canvas.Circle = new Class({
 			y: r*2
 		}
 	}
-});/* ../ludojs/src/canvas/rect.js */
-/**
- Class for rect tags. It extends canvas.Node by adding setter and getter methods
- for x,y, width, height and rounded corners(rx and ry).
- @namespace canvas
- @class Rect
- @extends canvas.Node
- @constructor
- @param {Object} coordinates
- @param {canvas.NodeConfig} config
- @example
-	 var rect = new ludo.canvas.Rect(
- 		{ x:100,y:100, width:200,height:100, "class":paintObject }
- 	 );
- */
-ludo.canvas.Rect = new Class({
-	Extends: ludo.canvas.NamedNode,
-	tagName : 'rect',
-
-	/**
-	 * Returns value of 'x' attribute. Actual position on canvas may be different due to
-	 * translate transformation. Use {{#crossLink "canvas.Rect/getPosition"}}{{/crossLink}} to
-	 * get actual position on canvas.
-	 * @method getX
-	 * @return {Number} x
-	 */
-	getX:function(){
-		return this.el.x.animVal.value;
-	},
-
-	/**
-	 * Returns value of 'y' attribute.
-	 * @method getY
-	 * @return {Number} y
-	 */
-	getY:function(){
-		return this.el.y.animVal.value;
-	},
-
-	/**
-	 * Returns width of rectangle
-	 * @method getWidth
-	 * @return {Number} width
-	 */
-	getWidth:function(){
-		return this.el.width.animVal.value;
-	},
-
-	/**
-	 * Returns height of rectangle
-	 * @method getWidth
-	 * @return {Number} width
-	 */
-	getHeight:function(){
-		return this.el.height.animVal.value;
-	},
-	/**
-	 * Return x-size of rounded corners
-	 * @method getRx
-	 * @return {Number} rx
-	 */
-	getRx:function(){
-		return this.el.rx.animVal.value;
-	},
-
-	/**
-	 * Return y-size of rounded corners
-	 * @method getRy
-	 * @return {Number} ry
-	 */
-	getRy:function(){
-		return this.el.ry.animVal.value;
-	},
-
-	/**
-	 * Set new x coordinate
-	 * @method setX
-	 * @param {Number} x
-	 */
-	setX:function(x){
-		this.set('x', x);
-	},
-
-	/**
-	 * Set new y coordinate
-	 * @method setY
-	 * @param {Number} y
-	 */
-	setY:function(y){
-		this.set('y', y);
-	},
-
-	/**
-	 * Set new width
-	 * @method setWidth
-	 * @param {Number} width
-	 */
-	setWidth:function(width){
-		this.set('width', width);
-	},
-	/**
-	 * Set new height
-	 * @method setHeight
-	 * @param {Number} height
-	 */
-	setHeight:function(height){
-		this.set('height', height);
-	},
-
-	/**
-	 * Set new width of rounded corners
-	 * @method setRx
-	 * @param {Number} rx
-	 */
-	setRx:function(rx){
-		this.set('rx', rx);
-	},
-
-	/**
-	 * Set new height of rounded corners
-	 * @method setRy
-	 * @param {Number} ry
-	 */
-	setRy:function(ry){
-		this.set('ry', ry);
-	}
-
-
 });/* ../ludojs/src/canvas/polyline.js */
 /**
  Class for drawing polylines.

@@ -17,6 +17,7 @@ require_once("../includes/demo-header.php");
 <script type="text/javascript" src="../../src/canvas/curtain.js"></script>
 <script type="text/javascript" src="../../src/canvas/animation.js"></script>
 <script type="text/javascript" src="../../src/canvas/event-manager.js"></script>
+<script type="text/javascript" src="../../src/canvas/text-box.js"></script>
 
 <script type="text/javascript" src="../../src/data-source/collection.js"></script>
 <script type="text/javascript" src="../../src/chart/add-on.js"></script>
@@ -29,6 +30,7 @@ require_once("../includes/demo-header.php");
 <script type="text/javascript" src="../../src/chart/labels.js"></script>
 <script type="text/javascript" src="../../src/chart/label.js"></script>
 <script type="text/javascript" src="../../src/chart/record.js"></script>
+<script type="text/javascript" src="../../src/chart/tooltip.js"></script>
 <script type="text/javascript" src="../../src/chart/pie-slice-highlighted.js"></script>
 
 <script type="text/javascript" src="../../src/layout/factory.js"></script>
@@ -141,6 +143,10 @@ require_once("../includes/demo-header.php");
                                             fill : '#aac'
                                         },
                                         size:5
+                                    },
+                                    {
+                                        type:'chart.Tooltip',
+                                        tpl:'<p><b>{label}</b> : {percent}% of {sum}'
                                     }
                                 ]
                             },

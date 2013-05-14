@@ -22,10 +22,14 @@ load:
   - ../../src/chart/chart.js
   - ../../src/chart/data-provider.js
   - ../../src/chart/fragment.js
+  - ../../src/chart/tooltip.js
+  - ../../src/chart/pie.js
+  - ../../src/chart/pie-slice.js
 
 test:
   - ChartTest.js
   - DataProviderTest.js
+  - TooltipTest.js
 
 
 plugin:
