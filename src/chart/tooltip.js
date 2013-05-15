@@ -119,13 +119,7 @@ ludo.chart.Tooltip = new Class({
 			var key = match[i].substr(1, match[i].length-2);
 			var method = 'get' + key.substr(0,1).toUpperCase() + key.substr(1);
 
-			var val;
-			if(rec[method] !== undefined){
-				val = rec[method]();
-			}else{
-				val = rec.get(key);
-			}
-
+			var val = rec[method] !== undefined ? rec[method]() : rec.get(key);
 			if(val === undefined && this.getParent().dataProvider()['method']){
 				val = this.getParent().dataProvider()['method']();
 			}

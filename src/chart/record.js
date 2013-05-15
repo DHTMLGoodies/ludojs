@@ -9,8 +9,7 @@ ludo.chart.Record = new Class({
 
     getStartPercent:function () {
         var c = this.getCollection();
-        var i = c.indexOf(this) - 1;
-        return c.getSumOf(0, i) / c.getSum() * 100;
+        return c.getSumOf(0, c.indexOf(this) - 1) / c.getSum() * 100;
     },
 
     getPercent:function(){
