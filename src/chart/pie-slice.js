@@ -1,12 +1,10 @@
 ludo.chart.PieSlice = new Class({
     Extends:ludo.chart.Fragment,
 
-    ludoConfig:function (config) {
-        this.parent(config);
+    createNodes:function(){
         var style = this.createStyle(this.getSliceStyle());
         this.createNode('path', { "class":style });
     },
-
     getSliceStyle:function () {
         return {
             'stroke-location':'inside',

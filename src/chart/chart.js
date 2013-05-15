@@ -30,7 +30,7 @@ ludo.chart.Chart = new Class({
 
 	updateChildren:function(){
 		for(var i=0;i<this.children.length;i++){
-			if(this.children[i].update)this.children[i].onResize();
+			if(this.children[i].rendered && this.children[i].update)this.children[i].onResize();
 		}
 	},
 
