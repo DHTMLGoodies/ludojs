@@ -139,9 +139,6 @@ require_once("../includes/demo-header.php");
                                 addOns:[
                                     {
                                         type:'chart.PieSliceHighlighted',
-                                        styles:{
-                                            fill : '#aac'
-                                        },
                                         size:5
                                     },
                                     {

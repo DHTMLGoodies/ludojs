@@ -14,8 +14,9 @@ ludo.card.NextButton = new Class({
 	value:'Next',
 
 	addButtonEvents:function () {
-		if (this.component) {
-			var lm = this.component.getLayout();
+		if (this.applyTo) {
+			var lm = this.applyTo.getLayout();
+
 			lm.addEvent('valid', this.enable.bind(this));
 			lm.addEvent('invalid', this.disable.bind(this));
 			if (!lm.isValid()) {
@@ -36,14 +37,14 @@ ludo.card.NextButton = new Class({
 	},
 
 	enable:function () {
-		if (this.component.getLayout().isValid()) {
+		if (this.applyTo.getLayout().isValid()) {
 			this.parent();
 		}
 	},
 
 	nextCard:function () {
-		if (this.component) {
-			this.component.getLayout().showNextCard();
+		if (this.applyTo) {
+			this.applyTo.getLayout().showNextCard();
 		}
 	}
 });
