@@ -35,7 +35,7 @@ TestCase("GaugeTest", {
         rec.setValue(120);
 
         // when
-        var angle = gauge.fragments[0].getAngle();
+        var angle = gauge.fragments[0].getAngle(120);
 
         // then
         assertEquals(((360 - 40) / 2) + 20, angle);
