@@ -90,5 +90,9 @@ ludo.chart.Fragment = new Class({
 
     leave:function(){
 
+    },
+
+    getRecord:function(){
+        return this.record;
     }
 });
