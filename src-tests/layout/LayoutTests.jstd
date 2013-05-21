@@ -20,7 +20,7 @@ load:
   - ../../src/menu/menu.js
   - ../../src/menu/item.js
   - ../../src/chart/chart.js
-  - ../../src/chart/group.js
+  - ../../src/canvas/group.js
 
 test:
   - GridTest.js

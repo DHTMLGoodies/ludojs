@@ -24,6 +24,7 @@ TestCase("RelativeTest", {
 
 	"test should arrange correctly when nested dependencies":function () {
 		// given
+
 		var view = this.getView([
 			{ name:'c', layout:{ leftOf:'b', width:50 }},
 			{ name:'b', layout:{ leftOf:'a', width:50 }},
@@ -40,13 +41,16 @@ TestCase("RelativeTest", {
 		assertEquals('c', children[2].name);
 		assertEquals('d', children[3].name);
 
-		assertEquals('0px', view.child['a'].getEl().style.right);
-		assertEquals('50px', view.child['b'].getEl().style.right);
-		assertEquals('100px', view.child['c'].getEl().style.right);
-		assertEquals('150px', view.child['d'].getEl().style.right);
-
-
+        // d,c,b,a
+		assertEquals(1000 , this.asNum(view, 'a', 'left') + this.asNum(view,'a','width'));
+		assertEquals(900 , this.asNum(view, 'b', 'left'));
+		assertEquals(850 , this.asNum(view, 'c', 'left'));
+		assertEquals(800 , this.asNum(view, 'd', 'left'));
 	},
+
+    asNum:function(view, name, style){
+        return parseInt(view.child[name].getEl().style[style]);
+    },
 
 	"test should figure out when a child position is depending on a sibling":function () {
 		// given
@@ -100,7 +104,7 @@ TestCase("RelativeTest", {
 		var childA = view.child['a'].getEl();
 
 		// then
-		assertEquals('0px', childA.style.bottom);
+		assertEquals('600px', childA.style.top);
 	},
 
 	"test should position children PARENT TOP correctly":function () {
@@ -173,7 +177,7 @@ TestCase("RelativeTest", {
 		]);
 
 		// then
-		assertEquals('300px', view.child['b'].getEl().style.right);
+		assertEquals('600px', view.child['b'].getEl().style.left);
 	},
 	"test should align child BELOW correctly":function () {
 		// given
@@ -193,7 +197,7 @@ TestCase("RelativeTest", {
 		]);
 
 		// then
-		assertEquals('500px', view.child['b'].getEl().style.bottom);
+		assertEquals('500px', view.child['b'].getEl().style.top);
 	},
 
 	"test should be able to CENTER IN PARENT":function () {
@@ -341,7 +345,7 @@ TestCase("RelativeTest", {
 		]);
 
 		// then
-		assertEquals('600px', view.child['b'].getEl().style.right);
+		assertEquals('300px', view.child['b'].getEl().style.left);
 	},
 
 	"test should be able to ALIGN TOP":function () {
@@ -362,7 +366,7 @@ TestCase("RelativeTest", {
 		]);
 
 		// then
-		assertEquals('600px', view.child['b'].getEl().style.bottom);
+		assertEquals('200px', view.child['b'].getEl().style.top);
 	},
 
 	"test should be able to resize":function () {

@@ -46,9 +46,13 @@ ludo.chart.PieSliceHighlighted = new Class({
         this.parent(config);
 
         this.setConfigParams(config, ['styles','size']);
-        this.styles = this.styles || { "fill": "#ccc" };
+
         this.node = new ludo.canvas.Path();
-        this.node.setStyles(this.styles);
+        if(this.styles){
+            this.node.setStyles(this.styles);
+        }else{
+            this.node.setStyle('fill-opacity' , .3);
+        }
 
         this.getParent().adopt(this.node);
         this.node.toBack();
@@ -76,7 +80,9 @@ ludo.chart.PieSliceHighlighted = new Class({
             degrees:record.getDegrees()
         });
         this.node.set('d', path);
-
+        if(!this.styles){
+            this.node.setStyles({ fill : record.get('color')});
+        }
         if (record.isFocused()) {
             var t = f.nodes[0].getTranslate();
             this.node.translate(t);
@@ -95,7 +101,6 @@ ludo.chart.PieSliceHighlighted = new Class({
         var coords = f.centerOffset(this.getParent().getHighlightSize());
         this.node.translate(0,0);
         this.node.engine().effect().fly(this.node.getEl(), coords.x, coords.y,.1);
-
     },
 
     blur:function(){

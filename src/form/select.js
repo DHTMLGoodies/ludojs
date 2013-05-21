@@ -40,7 +40,9 @@ ludo.form.Select = new Class({
     type:'form.Select',
     labelWidth:100,
     /**
-     First option in the select box, usually with an empty value.
+     First option in the select box, usually with an empty value. You should use the same
+     keys for empty item as for the rest of the options. Value is defined by the valueKey property
+     (default "value"), and text by textKey(default "text").
      @config {Object} emptyItem
      @default undefined
      @example
@@ -125,7 +127,6 @@ ludo.form.Select = new Class({
     },
 
     populate:function () {
-
         var data = this.dataSourceObj.getData() || [];
         this.getFormEl().options.length = 0;
         if (this.emptyItem) {

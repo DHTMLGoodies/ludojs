@@ -154,8 +154,5 @@ TestCase("ChartTest", {
         // then
         assertEquals(c.children[0].fragments[1], f0);
         assertEquals(c.children[0].fragments[1], f1);
-
-
-
     }
 });

@@ -208,6 +208,10 @@ ludo.canvas.Node = new Class({
 		return ludo.canvasEngine.getTransformation(this.el, 'translate');
 	},
 
+    rotate:function(rotation, x, y){
+        ludo.canvasEngine[x !== undefined ? 'rotateAround' : 'rotate'](this.el, rotation, x, y);
+    },
+
 	/**
 	 * Apply filter to node
 	 * @method applyFilter

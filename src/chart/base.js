@@ -18,6 +18,8 @@ ludo.chart.Base = new Class({
 
     fragmentMap:{},
 
+    rendered:false,
+
     ludoConfig:function (config) {
         this.parent(config);
         this.setConfigParams(config, ['animation']);
@@ -72,9 +74,10 @@ ludo.chart.Base = new Class({
     },
 
     getCenter:function () {
+        var size = this.getSize();
         return {
-            x:this.width / 2,
-            y:this.height / 2
+            x:size.x / 2,
+            y:size.y / 2
         }
     },
 
@@ -89,6 +92,7 @@ ludo.chart.Base = new Class({
             this.createFragments();
         }
         this.render();
+        this.rendered = true;
     },
 
     render:function () {
@@ -109,5 +113,10 @@ ludo.chart.Base = new Class({
 
 	getCanvas:function(){
 		return this.parentComponent.getCanvas();
-	}
+	},
+
+    getSquareSize:function(){
+        var size = this.getSize();
+        return Math.min(size.x, size.y);
+    }
 });

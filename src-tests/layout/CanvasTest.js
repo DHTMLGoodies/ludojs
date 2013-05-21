@@ -23,7 +23,7 @@ TestCase("CanvasTest", {
 	"test should render one child correctly":function () {
 		// given
 		var v = this.getCanvasWithTheseChildren([
-			{ type:'chart.Group', layout:{
+			{ type:'canvas.Group', layout:{
 				alignParentLeft:true,
 				alignParentTop:true,
 				width:300,
@@ -35,11 +35,7 @@ TestCase("CanvasTest", {
 		var child = v.children[0];
 
 		// then
-		assertEquals('300px', child.get('width'));
-		assertEquals(0, child.get('x'));
-		assertEquals(0, child.get('y'));
-
-
+		assertEquals('translate(0 0)', child.get('transform'));
 	},
 
 	"test should render children correctly":function () {
@@ -47,7 +43,7 @@ TestCase("CanvasTest", {
 		var v = this.getCanvasWithTheseChildren([
 			{
 				name:'chart',
-				type:'chart.Group',
+				type:'canvas.Group',
 				layout:{
 					top:0,
 					leftOf:'labels',
@@ -57,7 +53,7 @@ TestCase("CanvasTest", {
 			},
 			{
 				name : 'labels',
-				type:'chart.Group',
+				type:'canvas.Group',
 				layout:{
 					alignParentRight:true,
 					top:0,
@@ -68,12 +64,11 @@ TestCase("CanvasTest", {
 		]);
 
 		// then
-		assertEquals(400, v.children[0].get('width'));
-		assertEquals(0, v.children[0].get('x'));
-		assertEquals(0, v.children[0].get('y'));
+		assertEquals('400px', v.children[0].get('width'));
+        assertEquals('translate(0 0)', v.children[0].get('transform'));
 
-		assertEquals(400, v.children[1].get('x'));
-		assertEquals(100, v.children[1].get('width'));
+		assertEquals('translate(400 0)', v.children[1].get('transform'));
+		assertEquals('100px', v.children[1].get('width'));
 	},
 
 	getCanvasWithTwoChildren:function () {
@@ -83,7 +78,7 @@ TestCase("CanvasTest", {
 					type:'chart.Pie'
 				},
 				{
-					type:'chart.Group'
+					type:'canvas.Group'
 				}
 			]
 

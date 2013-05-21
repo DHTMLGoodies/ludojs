@@ -100,9 +100,27 @@ ludo.canvas.Engine = new Class({
 		el.parentNode.appendChild(el);
 	},
 
+    /**
+     * Apply rotation to element
+     * @method rotate
+     * @param {Node} el
+     * @param {Number} rotation
+     */
 	rotate:function (el, rotation) {
 		this.setTransformation(el, 'rotate', rotation);
 	},
+
+    /**
+     * Rotate around a speific point
+     * @method rotateAround
+     * @param {Node} el
+     * @param {Number} rotation
+     * @param {Number} x
+     * @param {Number} y
+     */
+    rotateAround:function(el, rotation, x, y){
+        this.setTransformation(el, 'rotate', rotation + ' ' + x + ' ' + y);
+    },
 
 	skewX:function (el, degrees) {
 		this.getTransformObject(el);

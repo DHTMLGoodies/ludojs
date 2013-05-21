@@ -8,7 +8,6 @@ ludo.card.Button = new Class({
     Extends:ludo.form.Button,
     type:'card.Button',
 
-    component:undefined,
     /**
      * Automatically hide button instead of disabling it. This will happen on
      * first cards for previous buttons and on last card for next and finish buttons.
@@ -28,14 +27,19 @@ ludo.card.Button = new Class({
 
     ludoConfig:function (config) {
         this.parent(config);
-        if (config.autoHide !== undefined)this.autoHide = config.autoHide;
-        if (config.applyTo !== undefined){
-            this.applyTo = ludo.get(config.applyTo);
+        this.setConfigParams(config, ['autoHide', 'applyTo']);
+        if(config.applyTo && !ludo.get(config.applyTo)){
+            this.onCreate.delay(50, this);
         }else{
-            this.applyTo = this.getParentComponent();
+            this.onCreate();
         }
+    },
 
-		if(this.applyTo)this.applyTo.getLayout().registerButton(this);
+    onCreate:function(){
+        this.applyTo = this.applyTo ? ludo.get(this.applyTo) : this.getParentComponent();
+        if(this.applyTo){
+            this.applyTo.getLayout().registerButton(this);
+        }
         this.addButtonEvents();
     },
 
