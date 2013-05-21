@@ -130,6 +130,8 @@ ludo.grid.Grid = new Class({
 	 */
 	emptyText:'No data',
 
+	defaultDS : 'dataSource.Collection',
+
 	ludoConfig:function (config) {
 		this.parent(config);
 
@@ -158,7 +160,7 @@ ludo.grid.Grid = new Class({
 		}
 
 		this.uniqueId = String.uniqueID();
-		if (this.dataSource && !this.dataSource.type)this.dataSource.type = 'dataSource.Collection';
+
 	},
 
 	ludoDOM:function () {

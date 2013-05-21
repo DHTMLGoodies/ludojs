@@ -90,7 +90,7 @@ ludo.View = new Class({
 	},
 	state:{},
 
-
+	defaultDS : 'dataSource.JSON',
 
 	tagBody:'div',
 	id:null,
@@ -391,6 +391,8 @@ ludo.View = new Class({
 
 		this.setConfigParams(config, keys);
 
+
+		if (this.dataSource && !this.dataSource.type)this.dataSource.type = this.defaultDS;
 
 		if (this.socket) {
 			if (!this.socket.type)this.socket.type = 'socket.Socket';
