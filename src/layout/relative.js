@@ -372,6 +372,13 @@ ludo.layout.Relative = new Class({
 				c.top = lm.viewport.absHeight - c.bottom - c.height;
 				c.bottom = undefined;
 			}
+			if(c.bottom !== undefined){
+				var h = lm.viewport.absHeight - c.bottom - (c.top || 0);
+				if(h!= lc.height){
+					child.resize({ height: lm.viewport.absHeight - c.bottom - (c.top || 0) });
+				}
+				c.bottom = undefined;
+			}
 
 			for (var i = 0; i < p.length; i++) {
 				var key = p[i];

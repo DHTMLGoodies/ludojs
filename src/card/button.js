@@ -30,12 +30,12 @@ ludo.card.Button = new Class({
         this.parent(config);
         if (config.autoHide !== undefined)this.autoHide = config.autoHide;
         if (config.applyTo !== undefined){
-            this.component = ludo.get(config.applyTo);
+            this.applyTo = ludo.get(config.applyTo);
         }else{
-            this.component = this.getParentComponent();
+            this.applyTo = this.getParentComponent();
         }
 
-		if(this.component)this.component.getLayout().registerButton(this);
+		if(this.applyTo)this.applyTo.getLayout().registerButton(this);
         this.addButtonEvents();
     },
 

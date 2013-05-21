@@ -1,4 +1,4 @@
-/* Generated Tue May 14 16:58:46 CEST 2013 */
+/* Generated Tue May 21 14:38:06 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -6446,8 +6446,7 @@ ludo.chart.Record = new Class({
 
     getStartPercent:function () {
         var c = this.getCollection();
-        var i = c.indexOf(this) - 1;
-        return c.getSumOf(0, i) / c.getSum() * 100;
+        return c.getSumOf(0, c.indexOf(this) - 1) / c.getSum() * 100;
     },
 
     getPercent:function(){
@@ -9284,13 +9283,7 @@ ludo.chart.Tooltip = new Class({
 			var key = match[i].substr(1, match[i].length-2);
 			var method = 'get' + key.substr(0,1).toUpperCase() + key.substr(1);
 
-			var val;
-			if(rec[method] !== undefined){
-				val = rec[method]();
-			}else{
-				val = rec.get(key);
-			}
-
+			var val = rec[method] !== undefined ? rec[method]() : rec.get(key);
 			if(val === undefined && this.getParent().dataProvider()['method']){
 				val = this.getParent().dataProvider()['method']();
 			}
@@ -13597,6 +13590,13 @@ ludo.layout.Relative = new Class({
 			}
 			if(c.bottom !== undefined && c.height){
 				c.top = lm.viewport.absHeight - c.bottom - c.height;
+				c.bottom = undefined;
+			}
+			if(c.bottom !== undefined){
+				var h = lm.viewport.absHeight - c.bottom - (c.top || 0);
+				if(h!= lc.height){
+					child.resize({ height: lm.viewport.absHeight - c.bottom - (c.top || 0) });
+				}
 				c.bottom = undefined;
 			}
 
@@ -20655,12 +20655,12 @@ ludo.card.Button = new Class({
         this.parent(config);
         if (config.autoHide !== undefined)this.autoHide = config.autoHide;
         if (config.applyTo !== undefined){
-            this.component = ludo.get(config.applyTo);
+            this.applyTo = ludo.get(config.applyTo);
         }else{
-            this.component = this.getParentComponent();
+            this.applyTo = this.getParentComponent();
         }
 
-		if(this.component)this.component.getLayout().registerButton(this);
+		if(this.applyTo)this.applyTo.getLayout().registerButton(this);
         this.addButtonEvents();
     },
 
@@ -20696,9 +20696,9 @@ ludo.card.FinishButton = new Class({
 
     addButtonEvents:function(){
 		var lm;
-        if (this.component) {
-			lm = this.component.getLayout();
-            var fm = this.component.getForm();
+        if (this.applyTo) {
+			lm = this.applyTo.getLayout();
+            var fm = this.applyTo.getForm();
 
             lm.addEvent('valid', this.enable.bind(this));
             lm.addEvent('invalid', this.disable.bind(this));
@@ -20720,7 +20720,7 @@ ludo.card.FinishButton = new Class({
     },
 
     enable:function(){
-        if(this.component.getLayout().isValid()){
+        if(this.applyTo.getLayout().isValid()){
             this.parent();
         }
     },
@@ -20733,8 +20733,8 @@ ludo.card.FinishButton = new Class({
     },
     submitted : false,
     submit:function () {
-        if (this.component) {
-            this.component.submit();
+        if (this.applyTo) {
+            this.applyTo.submit();
         }
     },
 
@@ -20758,8 +20758,8 @@ ludo.card.NextButton = new Class({
 	value:'Next',
 
 	addButtonEvents:function () {
-		if (this.component) {
-			var lm = this.component.getLayout();
+		if (this.applyTo) {
+			var lm = this.applyTo.getLayout();
 			lm.addEvent('valid', this.enable.bind(this));
 			lm.addEvent('invalid', this.disable.bind(this));
 			if (!lm.isValid()) {
@@ -20780,14 +20780,14 @@ ludo.card.NextButton = new Class({
 	},
 
 	enable:function () {
-		if (this.component.getLayout().isValid()) {
+		if (this.applyTo.getLayout().isValid()) {
 			this.parent();
 		}
 	},
 
 	nextCard:function () {
-		if (this.component) {
-			this.component.getLayout().showNextCard();
+		if (this.applyTo) {
+			this.applyTo.getLayout().showNextCard();
 		}
 	}
 });/* ../ludojs/src/card/previous-button.js */
@@ -20808,8 +20808,8 @@ ludo.card.PreviousButton = new Class({
 
 	addButtonEvents:function () {
 		this.addEvent('click', this.showPreviousCard.bind(this));
-		if (this.component) {
-			var lm = this.component.getLayout();
+		if (this.applyTo) {
+			var lm = this.applyTo.getLayout();
 			if (this.autoHide) {
 				if(!lm.isOnFirstCard())this.show(); else this.hide();
 				lm.addEvent('firstcard', this.hide.bind(this));
@@ -20823,8 +20823,8 @@ ludo.card.PreviousButton = new Class({
 	},
 
 	showPreviousCard:function () {
-		if (this.component) {
-			this.component.getLayout().showPreviousCard();
+		if (this.applyTo) {
+			this.applyTo.getLayout().showPreviousCard();
 		}
 	}
 });/* ../ludojs/src/progress/datasource.js */
@@ -29863,66 +29863,70 @@ ludo.paging.NavBar = new Class({
  * @extends View
  */
 ludo.Panel = new Class({
-    Extends : ludo.View,
-    tagBody : 'fieldset',
+	Extends:ludo.View,
+	tagBody:'fieldset',
 
-    ludoDOM : function() {
-        this.parent();
-        this.getEl().addClass('ludo-panel');
-        this.els.legend = new Element('legend');
-        this.els.body.adopt(this.els.legend);
-        this.setTitle(this.title);
-        this.getEl().addClass('ludo-panel');
-    },
+	_createDOM:function () {
+		this.parent();
+		this.getEl().addClass('ludo-panel');
+		this.els.legend = new Element('legend');
+		this.els.body.adopt(this.els.legend);
+		this.getEl().addClass('ludo-panel');
+	},
 
-    ludoRendered : function(){
-        this.parent();
-        this.getBody().setStyle('display','block');
-    },
-    autoSetHeight : function() {
-        this.parent();
-        var sizeLegend = this.els.legend.measure(function(){
-            return this.getSize();
-        });
-        this.layout.height += sizeLegend.y;
+	ludoDOM:function () {
+		this.parent();
+		this.setTitle(this.title);
+	},
 
-    },
+	ludoRendered:function () {
+		this.parent();
+		this.getBody().setStyle('display', 'block');
+	},
+	autoSetHeight:function () {
+		this.parent();
+		var sizeLegend = this.els.legend.measure(function () {
+			return this.getSize();
+		});
+		this.layout.height += sizeLegend.y;
 
-    getInnerHeightOfBody : function(){
-        return this.parent() - this.getHeightOfLegend() - 5;
-    },
+	},
 
-    heightOfLegend : undefined,
-    getHeightOfLegend : function(){
-        if(this.layout.heightOfLegend === undefined){
-            this.layout.heightOfLegend = this.els.legend.offsetHeight;
-        }
-        return this.layout.heightOfLegend;
-    },
+	getInnerHeightOfBody:function () {
+		return this.parent() - this.getHeightOfLegend() - 5;
+	},
 
-    resizeDOM : function(){
-        var height = this.getHeight();
-        if(height == 0){
-            return;
-        }
+	heightOfLegend:undefined,
+	getHeightOfLegend:function () {
+		if (this.layout.heightOfLegend === undefined) {
+			this.layout.heightOfLegend = this.els.legend.offsetHeight;
+		}
+		return this.layout.heightOfLegend;
+	},
+
+	resizeDOM:function () {
+		var height = this.getHeight();
+		if (height == 0) {
+			return;
+		}
 
 		height -= (ludo.dom.getMBPH(this.getBody()) + ludo.dom.getMBPH(this.getEl()));
-        if(height > 0 && !isNaN(height)){
-            this.getBody().style.height = height + 'px';
-        }
-        
-        var width = this.getWidth();
-        width -= (ludo.dom.getMBPW(this.getBody()) + ludo.dom.getMBPW(this.getEl()));
+		if (height > 0 && !isNaN(height)) {
+			this.getBody().style.height = height + 'px';
+		}
 
-        if(width > 0 && !isNaN(width)){
-            this.getBody().style.width = width + 'px';
-        }
-    },
+		var width = this.getWidth();
+		width -= (ludo.dom.getMBPW(this.getBody()) + ludo.dom.getMBPW(this.getEl()));
 
-    setTitle : function(title){
-        this.parent(title);
-        this.els.legend.set('html', title);
-    }
+		if (width > 0 && !isNaN(width)) {
+			this.getBody().style.width = width + 'px';
+		}
+	},
+
+	setTitle:function (title) {
+		this.parent(title);
+		this.els.legend.set('html', title);
+	}
 });/* ../ludojs/src/anchor.js */
 /**
  * Anchor Component

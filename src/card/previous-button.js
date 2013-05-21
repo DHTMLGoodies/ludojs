@@ -15,8 +15,8 @@ ludo.card.PreviousButton = new Class({
 
 	addButtonEvents:function () {
 		this.addEvent('click', this.showPreviousCard.bind(this));
-		if (this.component) {
-			var lm = this.component.getLayout();
+		if (this.applyTo) {
+			var lm = this.applyTo.getLayout();
 			if (this.autoHide) {
 				if(!lm.isOnFirstCard())this.show(); else this.hide();
 				lm.addEvent('firstcard', this.hide.bind(this));
@@ -30,8 +30,8 @@ ludo.card.PreviousButton = new Class({
 	},
 
 	showPreviousCard:function () {
-		if (this.component) {
-			this.component.getLayout().showPreviousCard();
+		if (this.applyTo) {
+			this.applyTo.getLayout().showPreviousCard();
 		}
 	}
 });
