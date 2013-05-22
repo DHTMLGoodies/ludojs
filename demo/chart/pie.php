@@ -4,41 +4,6 @@ $pageTitle = 'Pie Chart - ludoJS';
 require_once("../includes/demo-header.php");
 ?>
 <body>
-<script type="text/javascript" src="../../src/canvas/canvas.js"></script>
-<script type="text/javascript" src="../../src/canvas/node.js"></script>
-<script type="text/javascript" src="../../src/canvas/named-node.js"></script>
-<script type="text/javascript" src="../../src/color/color.js"></script>
-<script type="text/javascript" src="../../src/canvas/group.js"></script>
-<script type="text/javascript" src="../../src/canvas/rect.js"></script>
-<script type="text/javascript" src="../../src/canvas/path.js"></script>
-<script type="text/javascript" src="../../src/canvas/engine.js"></script>
-<script type="text/javascript" src="../../src/canvas/effect.js"></script>
-<script type="text/javascript" src="../../src/canvas/group.js"></script>
-<script type="text/javascript" src="../../src/canvas/curtain.js"></script>
-<script type="text/javascript" src="../../src/canvas/animation.js"></script>
-<script type="text/javascript" src="../../src/canvas/event-manager.js"></script>
-<script type="text/javascript" src="../../src/canvas/text-box.js"></script>
-<script type="text/javascript" src="../../src/canvas/text.js"></script>
-
-<script type="text/javascript" src="../../src/data-source/collection.js"></script>
-<script type="text/javascript" src="../../src/chart/add-on.js"></script>
-<script type="text/javascript" src="../../src/chart/data-provider.js"></script>
-<script type="text/javascript" src="../../src/chart/chart.js"></script>
-<script type="text/javascript" src="../../src/chart/base.js"></script>
-<script type="text/javascript" src="../../src/chart/pie.js"></script>
-<script type="text/javascript" src="../../src/chart/fragment.js"></script>
-<script type="text/javascript" src="../../src/chart/pie-slice.js"></script>
-<script type="text/javascript" src="../../src/chart/labels.js"></script>
-<script type="text/javascript" src="../../src/chart/label.js"></script>
-<script type="text/javascript" src="../../src/chart/record.js"></script>
-<script type="text/javascript" src="../../src/chart/tooltip.js"></script>
-<script type="text/javascript" src="../../src/chart/pie-slice-highlighted.js"></script>
-
-<script type="text/javascript" src="../../src/layout/factory.js"></script>
-<script type="text/javascript" src="../../src/layout/relative.js"></script>
-<script type="text/javascript" src="../../src/layout/canvas.js"></script>
-
-<script type="text/javascript" src="../../src/layout/canvas.js"></script>
 <script type="text/javascript" class="source-code">
 
     var provider = new ludo.chart.DataProvider({
