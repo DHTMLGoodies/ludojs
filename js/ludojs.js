@@ -1,4 +1,4 @@
-/* Generated Tue May 21 14:38:06 CEST 2013 */
+/* Generated Wed May 22 12:29:02 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -1909,9 +1909,27 @@ ludo.canvas.Engine = new Class({
 		el.parentNode.appendChild(el);
 	},
 
+    /**
+     * Apply rotation to element
+     * @method rotate
+     * @param {Node} el
+     * @param {Number} rotation
+     */
 	rotate:function (el, rotation) {
 		this.setTransformation(el, 'rotate', rotation);
 	},
+
+    /**
+     * Rotate around a speific point
+     * @method rotateAround
+     * @param {Node} el
+     * @param {Number} rotation
+     * @param {Number} x
+     * @param {Number} y
+     */
+    rotateAround:function(el, rotation, x, y){
+        this.setTransformation(el, 'rotate', rotation + ' ' + x + ' ' + y);
+    },
 
 	skewX:function (el, degrees) {
 		this.getTransformObject(el);
@@ -2417,6 +2435,10 @@ ludo.canvas.Node = new Class({
 	getTranslate:function () {
 		return ludo.canvasEngine.getTransformation(this.el, 'translate');
 	},
+
+    rotate:function(rotation, x, y){
+        ludo.canvasEngine[x !== undefined ? 'rotateAround' : 'rotate'](this.el, rotation, x, y);
+    },
 
 	/**
 	 * Apply filter to node
@@ -4931,7 +4953,7 @@ ludo.View = new Class({
 	},
 	state:{},
 
-
+	defaultDS : 'dataSource.JSON',
 
 	tagBody:'div',
 	id:null,
@@ -5232,6 +5254,8 @@ ludo.View = new Class({
 
 		this.setConfigParams(config, keys);
 
+
+		if (this.dataSource && !this.dataSource.type)this.dataSource.type = this.defaultDS;
 
 		if (this.socket) {
 			if (!this.socket.type)this.socket.type = 'socket.Socket';
@@ -7751,7 +7775,7 @@ ludo.chart.Chart = new Class({
 
 	updateChildren:function(){
 		for(var i=0;i<this.children.length;i++){
-			if(this.children[i].update)this.children[i].onResize();
+			if(this.children[i].rendered && this.children[i].update)this.children[i].onResize();
 		}
 	},
 
@@ -7860,6 +7884,10 @@ ludo.chart.Fragment = new Class({
 
     leave:function(){
 
+    },
+
+    getRecord:function(){
+        return this.record;
     }
 });/* ../ludojs/src/canvas/group.js */
 /**
@@ -7875,31 +7903,31 @@ ludo.canvas.Group = new Class({
 
     ludoConfig:function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['layout','css','renderTo','parentComponent']);
-        if(this.renderTo){
-			this.renderTo.adopt(this);
-		}
+        this.setConfigParams(config, ['layout', 'css', 'renderTo', 'parentComponent']);
+        if (this.renderTo) {
+            this.renderTo.adopt(this);
+        }
 
-        if(this.css){
+        if (this.css) {
             this.node.setStyles(this.css);
         }
     },
 
     resize:function (coordinates) {
-        if (coordinates.width){
+        if (coordinates.width) {
             this.width = coordinates.width;
             this.set('width', coordinates.width + 'px');
         }
-        if(coordinates.height){
+        if (coordinates.height) {
             this.height = coordinates.height;
             this.set('height', coordinates.height + 'px');
         }
     },
 
-    getSize:function(){
+    getSize:function () {
         return {
-            x : this.width,
-            y: this.height
+            x:this.width || this.renderTo.offsetWidth,
+            y:this.height || this.renderTo.offsetHeight
         }
     },
 
@@ -7926,6 +7954,8 @@ ludo.chart.Base = new Class({
     addOns:undefined,
 
     fragmentMap:{},
+
+    rendered:false,
 
     ludoConfig:function (config) {
         this.parent(config);
@@ -7981,9 +8011,10 @@ ludo.chart.Base = new Class({
     },
 
     getCenter:function () {
+        var size = this.getSize();
         return {
-            x:this.width / 2,
-            y:this.height / 2
+            x:size.x / 2,
+            y:size.y / 2
         }
     },
 
@@ -7998,6 +8029,7 @@ ludo.chart.Base = new Class({
             this.createFragments();
         }
         this.render();
+        this.rendered = true;
     },
 
     render:function () {
@@ -8018,17 +8050,20 @@ ludo.chart.Base = new Class({
 
 	getCanvas:function(){
 		return this.parentComponent.getCanvas();
-	}
+	},
+
+    getSquareSize:function(){
+        var size = this.getSize();
+        return Math.min(size.x, size.y);
+    }
 });/* ../ludojs/src/chart/pie-slice.js */
 ludo.chart.PieSlice = new Class({
     Extends:ludo.chart.Fragment,
 
-    ludoConfig:function (config) {
-        this.parent(config);
+    createNodes:function(){
         var style = this.createStyle(this.getSliceStyle());
         this.createNode('path', { "class":style });
     },
-
     getSliceStyle:function () {
         return {
             'stroke-location':'inside',
@@ -8372,7 +8407,7 @@ ludo.chart.Pie = new Class({
  */
 ludo.chart.Labels = new Class({
     Extends:ludo.chart.Base,
-    
+
     fragmentType:'chart.Label',
 
     /**
@@ -8644,9 +8679,13 @@ ludo.chart.PieSliceHighlighted = new Class({
         this.parent(config);
 
         this.setConfigParams(config, ['styles','size']);
-        this.styles = this.styles || { "fill": "#ccc" };
+
         this.node = new ludo.canvas.Path();
-        this.node.setStyles(this.styles);
+        if(this.styles){
+            this.node.setStyles(this.styles);
+        }else{
+            this.node.setStyle('fill-opacity' , .3);
+        }
 
         this.getParent().adopt(this.node);
         this.node.toBack();
@@ -8674,7 +8713,9 @@ ludo.chart.PieSliceHighlighted = new Class({
             degrees:record.getDegrees()
         });
         this.node.set('d', path);
-
+        if(!this.styles){
+            this.node.setStyles({ fill : record.get('color')});
+        }
         if (record.isFocused()) {
             var t = f.nodes[0].getTranslate();
             this.node.translate(t);
@@ -8693,7 +8734,6 @@ ludo.chart.PieSliceHighlighted = new Class({
         var coords = f.centerOffset(this.getParent().getHighlightSize());
         this.node.translate(0,0);
         this.node.engine().effect().fly(this.node.getEl(), coords.x, coords.y,.1);
-
     },
 
     blur:function(){
@@ -19590,6 +19630,8 @@ ludo.grid.Grid = new Class({
 	 */
 	emptyText:'No data',
 
+	defaultDS : 'dataSource.Collection',
+
 	ludoConfig:function (config) {
 		this.parent(config);
 
@@ -19618,7 +19660,7 @@ ludo.grid.Grid = new Class({
 		}
 
 		this.uniqueId = String.uniqueID();
-		if (this.dataSource && !this.dataSource.type)this.dataSource.type = 'dataSource.Collection';
+
 	},
 
 	ludoDOM:function () {
@@ -20633,7 +20675,6 @@ ludo.card.Button = new Class({
     Extends:ludo.form.Button,
     type:'card.Button',
 
-    component:undefined,
     /**
      * Automatically hide button instead of disabling it. This will happen on
      * first cards for previous buttons and on last card for next and finish buttons.
@@ -20653,14 +20694,19 @@ ludo.card.Button = new Class({
 
     ludoConfig:function (config) {
         this.parent(config);
-        if (config.autoHide !== undefined)this.autoHide = config.autoHide;
-        if (config.applyTo !== undefined){
-            this.applyTo = ludo.get(config.applyTo);
+        this.setConfigParams(config, ['autoHide', 'applyTo']);
+        if(config.applyTo && !ludo.get(config.applyTo)){
+            this.onCreate.delay(50, this);
         }else{
-            this.applyTo = this.getParentComponent();
+            this.onCreate();
         }
+    },
 
-		if(this.applyTo)this.applyTo.getLayout().registerButton(this);
+    onCreate:function(){
+        this.applyTo = this.applyTo ? ludo.get(this.applyTo) : this.getParentComponent();
+        if(this.applyTo){
+            this.applyTo.getLayout().registerButton(this);
+        }
         this.addButtonEvents();
     },
 
@@ -28037,7 +28083,9 @@ ludo.form.Select = new Class({
     type:'form.Select',
     labelWidth:100,
     /**
-     First option in the select box, usually with an empty value.
+     First option in the select box, usually with an empty value. You should use the same
+     keys for empty item as for the rest of the options. Value is defined by the valueKey property
+     (default "value"), and text by textKey(default "text").
      @config {Object} emptyItem
      @default undefined
      @example
@@ -28122,7 +28170,6 @@ ludo.form.Select = new Class({
     },
 
     populate:function () {
-
         var data = this.dataSourceObj.getData() || [];
         this.getFormEl().options.length = 0;
         if (this.emptyItem) {
@@ -31298,7 +31345,9 @@ ludo.canvas.Text = new Class({
 	},
 
 	fireSize:function(){
-		this.fireEvent('textSize', this.getSize());
+		if(this.getEl().parentNode){
+			this.fireEvent('textSize', this.getSize());
+		}
 	}
 });/* ../ludojs/src/canvas/filter.js */
 /**

@@ -18,6 +18,7 @@ require_once("../includes/demo-header.php");
 <script type="text/javascript" src="../../src/canvas/animation.js"></script>
 <script type="text/javascript" src="../../src/canvas/event-manager.js"></script>
 <script type="text/javascript" src="../../src/canvas/text-box.js"></script>
+<script type="text/javascript" src="../../src/canvas/text.js"></script>
 
 <script type="text/javascript" src="../../src/data-source/collection.js"></script>
 <script type="text/javascript" src="../../src/chart/add-on.js"></script>

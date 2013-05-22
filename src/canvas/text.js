@@ -8,6 +8,8 @@ ludo.canvas.Text = new Class({
 	},
 
 	fireSize:function(){
-		this.fireEvent('textSize', this.getSize());
+		if(this.getEl().parentNode){
+			this.fireEvent('textSize', this.getSize());
+		}
 	}
 });
