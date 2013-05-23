@@ -811,6 +811,9 @@ ludo.View = new Class({
 		var ret = [];
 		for (var i = 0; i < this.children.length; i++) {
 			ret.push(this.children[i]);
+			if(!this.children[i].hasChildren){
+				console.log(this.children[i]);
+			}
 			if (this.children[i].hasChildren()) {
 				ret = ret.append(this.children[i].getChildren());
 			}

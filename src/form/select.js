@@ -110,9 +110,7 @@ ludo.form.Select = new Class({
                     this.dataSourceObj.addRecord(this.options[i]);
                 }
             }
-            if (this.dataSourceObj && this.dataSourceObj.hasData()) {
-                this.populate();
-            }
+			this.populate();
             var ds = this.getDataSource();
             ds.addEvent('select', this.selectRecord.bind(this));
             ds.addEvent('update', this.populate.bind(this));

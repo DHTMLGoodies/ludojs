@@ -583,7 +583,8 @@ ludo.tree.Tree = new Class({
         this.selectedRecord = this.recordMap[el.getProperty('id')].record;
         this.fireEvent('click', [this.recordMap[el.getProperty('id')].record, e]);
         this.fireEvent('selectrecord', [this.recordMap[el.getProperty('id')].record, e]);
-        return false;
+
+        return e.target && e.target.tagName.toLowerCase() === 'input' ? undefined : false;
     },
 
     getSelectableDomNode:function (el) {

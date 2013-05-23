@@ -111,6 +111,107 @@ TestCase("TreeTest", {
         assertEquals('div', node.tagName.toLowerCase());
     },
 
+	"test should create data source automatically when not given in config": function(){
+		// given
+		var tree = new ludo.tree.Tree();
+
+		// then
+		assertNotUndefined(tree.dataSource);
+		assertEquals('dataSource.TreeCollection', tree.getDataSource().type);
+
+	},
+
+	"test should be able to add nodes on top level": function(){
+		// given
+		var tree = new ludo.tree.Tree();
+
+		// when
+		tree.getDataSource().addRecord({
+			id:'myId',
+			title : 'My title'
+		});
+		var newRec = tree.getDataSource().getRecord('myId');
+
+		// then
+		assertNotUndefined(tree.getDomByRecord(newRec));
+		assertNotNull(tree.getDomByRecord(newRec));
+	},
+
+	"test should be able to find lazy added nodes": function(){
+		var tree = new ludo.tree.Tree();
+		var rec = tree.getDataSource().addRecord({
+			id:'myId',
+			title : 'My title'
+		});
+
+		rec.addChild({
+			id : 'subId',
+			title : 'Sub item'
+		});
+
+		// when
+		rec = tree.getDataSource().getRecord('subId');
+
+
+
+		// then
+		assertNotUndefined(tree.getDataSource().index['subId']);
+		assertNotUndefined(rec);
+	},
+
+	"test should be able to find lazy added grand child nodes": function(){
+		var tree = new ludo.tree.Tree();
+		var rec = tree.getDataSource().addRecord({
+			id:'myId',
+			title : 'My title'
+		});
+
+		rec.addChild({
+			id : 'subId',
+			title : 'Sub item'
+		});
+
+		var p = tree.getDataSource().getRecord('subId');
+		p.addChild({
+			id : 'grandChild',
+			title : 'Grand child'
+		});
+
+		// when
+		rec = tree.getDataSource().getRecord('grandChild');
+
+
+
+		// then
+		assertNotUndefined(tree.getDataSource().index['grandChild']);
+		assertNotUndefined(rec);
+		assertNotUndefined(tree.getDomByRecord(rec));
+		console.log(tree.getDomByRecord(rec).parentNode);
+		assertEquals('div', tree.getDomByRecord(rec).tagName.toLowerCase());
+	},
+
+	"test should show expand icon when adding first child node": function(){
+		// given
+		var tree = new ludo.tree.Tree();
+		var rec = tree.getDataSource().addRecord({
+			id:'myId',
+			title : 'My title'
+		});
+
+		rec.addChild({
+			id : 'subId',
+			title : 'Sub item'
+		});
+
+		// when
+		var expand = tree.getExpandEl(rec);
+
+		// then
+		assertNotUndefined(expand);
+		assertEquals('', expand.style.display);
+
+	},
+
 	"test should be able to define tpl for nodes": function(){
 		// given
 		var tree = this.getTree({

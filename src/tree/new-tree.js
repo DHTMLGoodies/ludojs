@@ -5,10 +5,14 @@ ludo.tree.Tree = new Class({
     type:'tree.Tree',
 	nodeCache:{},
     renderedRecords: {},
+	tpl : '<span class="ludo-tree-node-spacer"></span> {title}',
+	dataSource:{
+		type:'dataSource.TreeCollection'
+	},
 
 	ludoConfig:function (config) {
 		this.parent(config);
-		if (this.dataSource && !this.dataSource.type)this.dataSource.type = 'dataSource.TreeCollection';
+		if (config.dataSource && !config.dataSource.type)this.dataSource.type = 'dataSource.TreeCollection';
 	},
 
 	ludoEvents:function () {
@@ -17,6 +21,7 @@ ludo.tree.Tree = new Class({
             this.getDataSource().addEvents({
                 'select' : this.selectRecord.bind(this),
                 'deselect' : this.deSelectRecord.bind(this),
+                'add' : this.addRecord.bind(this),
                 'addChild' : this.addChild.bind(this),
                 'dispose' : this.removeChild.bind(this),
                 'removeChild' : this.removeChild.bind(this),
@@ -152,9 +157,7 @@ ludo.tree.Tree = new Class({
 	},
 
 	render:function (data) {
-		var d = new Date().getTime();
 		this.getBody().innerHTML = this.getHtmlForBranch(data);
-		console.log(new Date().getTime() - d);
 	},
 
 	getHtmlForBranch:function (branch) {
@@ -202,22 +205,55 @@ ludo.tree.Tree = new Class({
 		return true;
 	},
 
+
 	getNodeTextFor:function (record) {
-		return ['<span class="ludo-tree-node-spacer"></span>', record.title].join('');
+		var tplFields = this.getTplFields();
+		var ret = this.tpl;
+		for (var i = 0, count = tplFields.length; i < count; i++) {
+			var field = tplFields[i];
+			ret = ret.replace('{' + field + '}', record[field] ? record[field] : this.getDefaultValue(record, field));
+		}
+
+		ret = '<span class="ludo-tree-node-spacer"></span>' + ret;
+
+		return ret;
+	},
+
+	getDefaultValue:function(){
+		return '';
+	},
+
+	getTplFields:function () {
+		if (!this.tplFields) {
+			var tpl = this.tpl;
+			var matches = tpl.match(/{([^}]+)}/g);
+			for (var i = 0; i < matches.length; i++) {
+				matches[i] = matches[i].replace(/[{}]/g, '');
+			}
+			this.tplFields = matches;
+		}
+		return this.tplFields;
+	},
+
+	addRecord:function(record){
+		this.addChild(record);
 	},
 
 	addChild:function (record, parentRecord) {
-		var childContainer = this.getChildContainer(parentRecord);
+		var childContainer = parentRecord ? this.getChildContainer(parentRecord) : this.getBody();
 		if (childContainer) {
 			var node = this.getDomByRecord(record) || this.getNewNodeFor(record);
 			childContainer.appendChild(node);
-			this.cssBranch(parentRecord);
+			this.cssBranch(parentRecord ? parentRecord.children : this.getDataSource().data);
+
+			if(parentRecord)this.getExpandEl(parentRecord).style.display='';
 		}
+
 	},
 
 	getNewNodeFor:function (record) {
 		record = record.getUID ? record.record : record;
-		if (!record.uid)this.indexRecord(record);
+		if (!record.uid)this.getDataSource().indexRecord(record);
 		return ludo.dom.create({
             cls : 'ludo-tree-a-node ludo-tree-node',
             html : this.getHtmlFor(record, false, false),
@@ -225,10 +261,10 @@ ludo.tree.Tree = new Class({
         });
 	},
 
-	cssBranch:function (parentRecord) {
-		var count = parentRecord.children.length;
+	cssBranch:function (nodes) {
+		var count = nodes.length;
 		for (var i = Math.max(0,count-2); i < count; i++) {
-			var node = this.getDomByRecord(parentRecord.children[i]);
+			var node = this.getDomByRecord(nodes[i]);
 			if (node) {
 				if (i < count - 1) {
 					ludo.dom.removeClass(node, 'ludo-tree-node-last-sibling');
@@ -246,7 +282,7 @@ ludo.tree.Tree = new Class({
             this.renderedRecords.splice(this.renderedRecords.indexOf(record.getUID()), 1);
 			if(record.parentUid){
 				var p = this.dataSource.findRecord(record.parentUid);
-				if(p)this.cssBranch(p);
+				if(p)this.cssBranch(p.children);
 			}
 		}
 	}

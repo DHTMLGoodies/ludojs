@@ -1,4 +1,4 @@
-/* Generated Wed May 22 12:29:02 CEST 2013 */
+/* Generated Thu May 23 15:07:39 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -3262,6 +3262,14 @@ ludo.layout.Resizer = new Class({
 	},
 	isHidden:function(){
 		return this.hidden;
+	},
+
+	hasChildren:function(){
+		return false;
+	},
+
+	isFormElement:function(){
+		return false;
 	}
 });/* ../ludojs/src/layout/base.js */
 /**
@@ -5674,6 +5682,9 @@ ludo.View = new Class({
 		var ret = [];
 		for (var i = 0; i < this.children.length; i++) {
 			ret.push(this.children[i]);
+			if(!this.children[i].hasChildren){
+				console.log(this.children[i]);
+			}
 			if (this.children[i].hasChildren()) {
 				ret = ret.append(this.children[i].getChildren());
 			}
@@ -6817,16 +6828,21 @@ ludo.dataSource.Collection = new Class({
 	 * Add a record to data-source
 	 * @method addRecord
 	 * @param record
+	 * @return {Object} record
 	 */
 	addRecord:function (record) {
         this.data = this.data || [];
 		this.data.push(record);
+
+		if(!this.index)this.createIndex();
 		/**
 		 * Event fired when a record is added to the collection
 		 * @event add
 		 * @param {Object} record
 		 */
 		this.fireEvent('add', record);
+
+		return this.createRecord(record);
 	},
 
 	/**
@@ -7391,6 +7407,7 @@ ludo.dataSource.Collection = new Class({
 	},
 
 	indexRecord:function(record, parent){
+		if(!this.index)this.createIndex();
 		if(parent)record.parentUid = parent.uid;
 		var pk = this.getPrimaryKeyIndexFor(record);
 		if(pk)this.index[pk] = record;
@@ -12488,11 +12505,14 @@ ludo.layout.Card = new Class({
 	animationDuration:.25,
 	animateX:true,
 	touch:{},
+	dragging:true,
 
 	onCreate:function () {
 		this.parent();
 		var l = this.view.layout;
+
 		if (l.animate !== undefined)this.animate = l.animate;
+		if (l.dragging !== undefined)this.dragging = l.dragging;
 		if (l.animationDuration !== undefined)this.animationDuration = l.animationDuration;
 		if (l.animateX !== undefined)this.animateX = l.animateX;
 		this.initialAnimate = this.animate;
@@ -12514,7 +12534,7 @@ ludo.layout.Card = new Class({
 			this.visibleCard = child;
 			child.show();
 		}
-		this.addDragEvents(child);
+		if(this.dragging)this.addDragEvents(child);
 	},
 
 	addDragEvents:function (child) {
@@ -24224,7 +24244,8 @@ ludo.tree.Tree = new Class({
         this.selectedRecord = this.recordMap[el.getProperty('id')].record;
         this.fireEvent('click', [this.recordMap[el.getProperty('id')].record, e]);
         this.fireEvent('selectrecord', [this.recordMap[el.getProperty('id')].record, e]);
-        return false;
+
+        return e.target && e.target.tagName.toLowerCase() === 'input' ? undefined : false;
     },
 
     getSelectableDomNode:function (el) {
@@ -28153,9 +28174,7 @@ ludo.form.Select = new Class({
                     this.dataSourceObj.addRecord(this.options[i]);
                 }
             }
-            if (this.dataSourceObj && this.dataSourceObj.hasData()) {
-                this.populate();
-            }
+			this.populate();
             var ds = this.getDataSource();
             ds.addEvent('select', this.selectRecord.bind(this));
             ds.addEvent('update', this.populate.bind(this));

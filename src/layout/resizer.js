@@ -176,5 +176,13 @@ ludo.layout.Resizer = new Class({
 	},
 	isHidden:function(){
 		return this.hidden;
+	},
+
+	hasChildren:function(){
+		return false;
+	},
+
+	isFormElement:function(){
+		return false;
 	}
 });

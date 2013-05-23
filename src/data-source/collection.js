@@ -281,16 +281,21 @@ ludo.dataSource.Collection = new Class({
 	 * Add a record to data-source
 	 * @method addRecord
 	 * @param record
+	 * @return {Object} record
 	 */
 	addRecord:function (record) {
         this.data = this.data || [];
 		this.data.push(record);
+
+		if(!this.index)this.createIndex();
 		/**
 		 * Event fired when a record is added to the collection
 		 * @event add
 		 * @param {Object} record
 		 */
 		this.fireEvent('add', record);
+
+		return this.createRecord(record);
 	},
 
 	/**
@@ -855,6 +860,7 @@ ludo.dataSource.Collection = new Class({
 	},
 
 	indexRecord:function(record, parent){
+		if(!this.index)this.createIndex();
 		if(parent)record.parentUid = parent.uid;
 		var pk = this.getPrimaryKeyIndexFor(record);
 		if(pk)this.index[pk] = record;

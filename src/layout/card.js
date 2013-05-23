@@ -6,11 +6,14 @@ ludo.layout.Card = new Class({
 	animationDuration:.25,
 	animateX:true,
 	touch:{},
+	dragging:true,
 
 	onCreate:function () {
 		this.parent();
 		var l = this.view.layout;
+
 		if (l.animate !== undefined)this.animate = l.animate;
+		if (l.dragging !== undefined)this.dragging = l.dragging;
 		if (l.animationDuration !== undefined)this.animationDuration = l.animationDuration;
 		if (l.animateX !== undefined)this.animateX = l.animateX;
 		this.initialAnimate = this.animate;
@@ -32,7 +35,7 @@ ludo.layout.Card = new Class({
 			this.visibleCard = child;
 			child.show();
 		}
-		this.addDragEvents(child);
+		if(this.dragging)this.addDragEvents(child);
 	},
 
 	addDragEvents:function (child) {
