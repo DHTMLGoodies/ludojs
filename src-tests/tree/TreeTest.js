@@ -186,8 +186,10 @@ TestCase("TreeTest", {
 		assertNotUndefined(tree.getDataSource().index['grandChild']);
 		assertNotUndefined(rec);
 		assertNotUndefined(tree.getDomByRecord(rec));
-		console.log(tree.getDomByRecord(rec).parentNode);
+
 		assertEquals('div', tree.getDomByRecord(rec).tagName.toLowerCase());
+
+
 	},
 
 	"test should show expand icon when adding first child node": function(){

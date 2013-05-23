@@ -42,10 +42,12 @@ ludo.tree.Tree = new Class({
 
 	onClick:function (e) {
 		var record = this.getRecordByDOM(e.target);
+
 		if (record) {
 			if (ludo.dom.hasClass(e.target, 'ludo-tree-node-expand')) {
 				this.expandOrCollapse(record, e.target);
 			} else if(this.isSelectable(record)) {
+
 				this.getDataSource().selectRecord(record);
 			}
 		}
@@ -128,6 +130,7 @@ ludo.tree.Tree = new Class({
     },
 
     areChildrenRendered:function(record){
+		record =  record.getUID ? record.record : record;
         return record.children && record.children.length ? this.isRecordRendered(record.children[0]) : false;
     },
 
@@ -142,9 +145,10 @@ ludo.tree.Tree = new Class({
 
 	getRecordByDOM:function (el) {
 		var b = this.getBody();
-		while (el !== b && (!el.className || el.className.indexOf('ludo-tree-a-node')) === -1) {
+		while (el !== b && (!el.className || el.className.indexOf('ludo-tree-a-node') === -1)) {
 			el = el.parentNode;
 		}
+
 		if (el)return this.getDataSource().getRecord(el.id);
 		return undefined;
 	},
@@ -177,6 +181,7 @@ ludo.tree.Tree = new Class({
 
 	getHtmlFor:function (record, isLast, includeContainer) {
 		var ret = [];
+
         this.renderedRecords[record.uid] = true;
 		if (includeContainer) {
 			ret.push('<div class="ludo-tree-a-node ludo-tree-node');
@@ -245,20 +250,19 @@ ludo.tree.Tree = new Class({
 			var node = this.getDomByRecord(record) || this.getNewNodeFor(record);
 			childContainer.appendChild(node);
 			this.cssBranch(parentRecord ? parentRecord.children : this.getDataSource().data);
-
 			if(parentRecord)this.getExpandEl(parentRecord).style.display='';
 		}
-
 	},
 
 	getNewNodeFor:function (record) {
 		record = record.getUID ? record.record : record;
 		if (!record.uid)this.getDataSource().indexRecord(record);
-		return ludo.dom.create({
+		var node = ludo.dom.create({
             cls : 'ludo-tree-a-node ludo-tree-node',
             html : this.getHtmlFor(record, false, false),
             id : record.uid
         });
+		return node;
 	},
 
 	cssBranch:function (nodes) {
