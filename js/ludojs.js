@@ -1,4 +1,4 @@
-/* Generated Thu May 23 15:07:39 CEST 2013 */
+/* Generated Fri May 24 14:07:10 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -3614,6 +3614,8 @@ ludo.layout.Factory = new Class({
 		if(!view.layout || !view.layout.type)return 'Base';
 
 		switch(view.layout.type.toLowerCase()){
+            case 'slidein':
+                return 'SlideIn';
 			case 'relative':
 				return 'Relative';
 			case 'fill':
@@ -9946,6 +9948,9 @@ ludo.effect.Effect = new Class({
 				change: (to.x - from.x) / stops
 			});
 		}
+
+        console.log(styles[0].change);
+        console.log(stops);
 		if(from.y !== to.y){
 			el.style.top = from.y + 'px';
 			styles.push({
@@ -9986,7 +9991,7 @@ ludo.effect.Effect = new Class({
 	},
 
 	getStops:function(duration){
-		return duration * this.fps;
+		return Math.round(duration * this.fps);
 	},
 
 	execute:function(config){
@@ -10000,7 +10005,7 @@ ludo.effect.Effect = new Class({
 					el.style.filter = ['alpha(opacity=', s.currentValue,')'].join('');
 					break;
 				default:
-					el.style[s.key] = s.currentValue + config.unit;
+					el.style[s.key] = Math.round(s.currentValue) + config.unit;
 			}
 			config.index ++;
 
@@ -14360,6 +14365,76 @@ ludo.layout.Canvas = new Class({
 	}
 
 
+
+});/* ../ludojs/src/layout/slide-in.js */
+ludo.layout.SlideIn = new Class({
+    Extends: ludo.layout.Base,
+    slideEl:undefined,
+
+    onNewChild:function(child){
+        this.parent(child);
+        child.getEl().style.position = 'absolute';
+    },
+
+    resize:function () {
+        var widthOfFirst = this.view.children[0].layout.width;
+
+        this.view.children[0].resize({
+            width : widthOfFirst,
+            height: this.viewport.height
+        });
+
+        this.slideEl.style.width = (this.viewport.absWidth + widthOfFirst) + 'px';
+        this.slideEl.style.left = this.view.layout.active ? 0 : (widthOfFirst * -1) + 'px';
+
+        this.view.children[1].getEl().style.left = widthOfFirst + 'px';
+        this.view.children[1].resize({
+            width : this.viewport.absWidth,
+            height : this.viewport.height
+        })
+
+    },
+
+    show:function(){
+        this.view.layout.active = true;
+        var widthOfFirst = this.view.children[0].layout.width;
+        this.effect().slide(this.slideEl, { x : widthOfFirst * -1}, {x : 0 }, this.getDuration());
+    },
+
+    hide:function(){
+        this.view.layout.active = false;
+        var widthOfFirst = this.view.children[0].layout.width;
+        this.effect().slide(this.slideEl, {x : 0 },{ x : widthOfFirst * -1}, this.getDuration());
+    },
+
+    toggle:function(){
+        this[this.view.layout.active ? 'hide' : 'show']();
+    },
+
+    effect:function(){
+        if(this.effectObject === undefined){
+            this.effectObject= new ludo.effect.Effect
+        }
+        return this.effectObject;
+    },
+
+    getDuration:function(){
+        return this.view.layout.duration || .2;
+    },
+
+    getParentForNewChild:function(){
+        if(!this.slideEl){
+            this.slideEl = ludo.dom.create({
+                tag:'div',
+                renderTo:this.view.getBody(),
+                css:{
+                    height:'100%',
+                    position:'absolute'
+                }
+            })
+        }
+        return this.slideEl;
+    }
 
 });/* ../ludojs/src/layout/menu-container.js */
 ludo.layout.MenuContainer = new Class({
@@ -31713,7 +31788,7 @@ ludo.canvas.Animation = new Class({
 		}
 
 	},
-
+    // TODO this should be available not only to canvas
 	getAnimationSteps:function(properties, duration, fps){
 
 		var count = duration * fps;

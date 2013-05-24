@@ -132,6 +132,9 @@ ludo.effect.Effect = new Class({
 				change: (to.x - from.x) / stops
 			});
 		}
+
+        console.log(styles[0].change);
+        console.log(stops);
 		if(from.y !== to.y){
 			el.style.top = from.y + 'px';
 			styles.push({
@@ -172,7 +175,7 @@ ludo.effect.Effect = new Class({
 	},
 
 	getStops:function(duration){
-		return duration * this.fps;
+		return Math.round(duration * this.fps);
 	},
 
 	execute:function(config){
@@ -186,7 +189,7 @@ ludo.effect.Effect = new Class({
 					el.style.filter = ['alpha(opacity=', s.currentValue,')'].join('');
 					break;
 				default:
-					el.style[s.key] = s.currentValue + config.unit;
+					el.style[s.key] = Math.round(s.currentValue) + config.unit;
 			}
 			config.index ++;
 

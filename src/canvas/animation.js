@@ -33,7 +33,7 @@ ludo.canvas.Animation = new Class({
 		}
 
 	},
-
+    // TODO this should be available not only to canvas
 	getAnimationSteps:function(properties, duration, fps){
 
 		var count = duration * fps;

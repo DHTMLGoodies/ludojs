@@ -16,6 +16,7 @@ load:
   - ../../src/layout/menu-container.js
   - ../../src/layout/renderer.js
   - ../../src/layout/canvas.js
+  - ../../src/layout/slide-in.js
   - ../../src/menu/context.js
   - ../../src/menu/menu.js
   - ../../src/menu/item.js
@@ -36,6 +37,7 @@ test:
   - MenuTest.js
   - CoordinateTest.js
   - CanvasTest.js
+  - SlideInTest.js
 
 serve:
   - ../../css/ludojs-light-gray.css
