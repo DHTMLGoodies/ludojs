@@ -17,7 +17,7 @@ ludo.layout.SlideIn = new Class({
     },
 
     resize:function () {
-        var widthOfFirst = this.view.children[0].layout.width;
+        var widthOfFirst = this.getWidthOfMenu();
 
         this.view.children[0].resize({
             width:widthOfFirst,
@@ -46,7 +46,7 @@ ludo.layout.SlideIn = new Class({
                 this.view.children[0].show();
             }
             this.view.layout.active = true;
-            var widthOfFirst = this.view.children[0].layout.width;
+            var widthOfFirst = this.getWidthOfMenu();
             this.effect().slide(this.slideEl, { x:widthOfFirst * -1}, {x:0 }, this.getDuration());
         }
     },
@@ -59,7 +59,7 @@ ludo.layout.SlideIn = new Class({
     hide:function () {
         if (this.view.layout.active) {
             this.view.layout.active = false;
-            var widthOfFirst = this.view.children[0].layout.width;
+            var widthOfFirst = this.getWidthOfMenu();
             this.effect().slide(this.slideEl, {x:0 }, { x:widthOfFirst * -1}, this.getDuration());
         }
     },
@@ -81,6 +81,22 @@ ludo.layout.SlideIn = new Class({
 
     getDuration:function () {
         return this.view.layout.duration || .15;
+    },
+
+    getWidthOfMenu:function(){
+        var ret = this.view.children[0].layout.width;
+
+        if(isNaN(ret)){
+            switch(ret){
+                case 'matchParent':
+                    return this.viewport.width;
+                default:
+                    return parseInt(ret) * this.viewport.width / 100;
+            }
+
+        }else{
+            return ret;
+        }
     },
 
     getParentForNewChild:function () {
