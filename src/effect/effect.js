@@ -133,8 +133,6 @@ ludo.effect.Effect = new Class({
 			});
 		}
 
-        console.log(styles[0].change);
-        console.log(stops);
 		if(from.y !== to.y){
 			el.style.top = from.y + 'px';
 			styles.push({

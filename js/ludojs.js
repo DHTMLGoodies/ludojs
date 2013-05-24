@@ -1,4 +1,4 @@
-/* Generated Fri May 24 14:07:10 CEST 2013 */
+/* Generated Fri May 24 16:30:00 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -7269,6 +7269,10 @@ ludo.dataSource.Collection = new Class({
 		return keys.join('|');
 	},
 
+    hasData:function(){
+        return this.data && this.data.length > 0;
+    },
+
 	firePageEvents:function (skipState) {
 		if (this.isOnLastPage()) {
 			/**
@@ -9949,8 +9953,6 @@ ludo.effect.Effect = new Class({
 			});
 		}
 
-        console.log(styles[0].change);
-        console.log(stops);
 		if(from.y !== to.y){
 			el.style.top = from.y + 'px';
 			styles.push({
@@ -14368,10 +14370,17 @@ ludo.layout.Canvas = new Class({
 
 });/* ../ludojs/src/layout/slide-in.js */
 ludo.layout.SlideIn = new Class({
-    Extends: ludo.layout.Base,
+    Extends:ludo.layout.Base,
     slideEl:undefined,
 
-    onNewChild:function(child){
+    onCreate:function(){
+        this.view.getBody().style.overflowX = 'hidden';
+    },
+
+    onNewChild:function (child) {
+        if(this.view.children.length === 1){
+            child.hidden = true;
+        }
         this.parent(child);
         child.getEl().style.position = 'absolute';
     },
@@ -14380,8 +14389,8 @@ ludo.layout.SlideIn = new Class({
         var widthOfFirst = this.view.children[0].layout.width;
 
         this.view.children[0].resize({
-            width : widthOfFirst,
-            height: this.viewport.height
+            width:widthOfFirst,
+            height:this.viewport.height
         });
 
         this.slideEl.style.width = (this.viewport.absWidth + widthOfFirst) + 'px';
@@ -14389,41 +14398,45 @@ ludo.layout.SlideIn = new Class({
 
         this.view.children[1].getEl().style.left = widthOfFirst + 'px';
         this.view.children[1].resize({
-            width : this.viewport.absWidth,
-            height : this.viewport.height
+            width:this.viewport.absWidth,
+            height:this.viewport.height
         })
 
     },
 
-    show:function(){
-        this.view.layout.active = true;
-        var widthOfFirst = this.view.children[0].layout.width;
-        this.effect().slide(this.slideEl, { x : widthOfFirst * -1}, {x : 0 }, this.getDuration());
+    show:function () {
+        if (!this.view.layout.active) {
+            this.view.layout.active = true;
+            var widthOfFirst = this.view.children[0].layout.width;
+            this.effect().slide(this.slideEl, { x:widthOfFirst * -1}, {x:0 }, this.getDuration());
+        }
     },
 
-    hide:function(){
-        this.view.layout.active = false;
-        var widthOfFirst = this.view.children[0].layout.width;
-        this.effect().slide(this.slideEl, {x : 0 },{ x : widthOfFirst * -1}, this.getDuration());
+    hide:function () {
+        if (this.view.layout.active) {
+            this.view.layout.active = false;
+            var widthOfFirst = this.view.children[0].layout.width;
+            this.effect().slide(this.slideEl, {x:0 }, { x:widthOfFirst * -1}, this.getDuration());
+        }
     },
 
-    toggle:function(){
+    toggle:function () {
         this[this.view.layout.active ? 'hide' : 'show']();
     },
 
-    effect:function(){
-        if(this.effectObject === undefined){
-            this.effectObject= new ludo.effect.Effect
+    effect:function () {
+        if (this.effectObject === undefined) {
+            this.effectObject = new ludo.effect.Effect
         }
         return this.effectObject;
     },
 
-    getDuration:function(){
-        return this.view.layout.duration || .2;
+    getDuration:function () {
+        return this.view.layout.duration || .15;
     },
 
-    getParentForNewChild:function(){
-        if(!this.slideEl){
+    getParentForNewChild:function () {
+        if (!this.slideEl) {
             this.slideEl = ludo.dom.create({
                 tag:'div',
                 renderTo:this.view.getBody(),
@@ -14431,7 +14444,7 @@ ludo.layout.SlideIn = new Class({
                     height:'100%',
                     position:'absolute'
                 }
-            })
+            });
         }
         return this.slideEl;
     }

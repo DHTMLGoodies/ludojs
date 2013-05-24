@@ -720,6 +720,10 @@ ludo.dataSource.Collection = new Class({
 		return keys.join('|');
 	},
 
+    hasData:function(){
+        return this.data && this.data.length > 0;
+    },
+
 	firePageEvents:function (skipState) {
 		if (this.isOnLastPage()) {
 			/**

@@ -283,11 +283,17 @@ ludo.tree.Tree = new Class({
 		var el = this.getDomByRecord(record);
 		if(el){
 			el.parentNode.removeChild(el);
-            this.renderedRecords.splice(this.renderedRecords.indexOf(record.getUID()), 1);
+
+            delete this.renderedRecords[this.getUID(record)];
+
 			if(record.parentUid){
 				var p = this.dataSource.findRecord(record.parentUid);
 				if(p)this.cssBranch(p.children);
 			}
 		}
-	}
+	},
+
+    getUID:function(record){
+        return record.getUID ? record.getUID() : record.uid;
+    }
 });

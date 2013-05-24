@@ -1,3 +1,8 @@
+/**
+ * Layout where first child slides in from the left on demand
+ * @namespace layout
+ * @class SlideIn
+ */
 ludo.layout.SlideIn = new Class({
     Extends:ludo.layout.Base,
     slideEl:undefined,
@@ -29,15 +34,28 @@ ludo.layout.SlideIn = new Class({
         })
 
     },
-
+    /**
+     Show menu
+     @method show
+     @example
+        view.getLayout().show();
+     */
     show:function () {
         if (!this.view.layout.active) {
+            if(this.view.children[0].hidden){
+                this.view.children[0].show();
+            }
             this.view.layout.active = true;
             var widthOfFirst = this.view.children[0].layout.width;
             this.effect().slide(this.slideEl, { x:widthOfFirst * -1}, {x:0 }, this.getDuration());
         }
     },
-
+    /**
+     hide menu
+     @method hide
+     @example
+        view.getLayout().hide();
+     */
     hide:function () {
         if (this.view.layout.active) {
             this.view.layout.active = false;
@@ -46,6 +64,10 @@ ludo.layout.SlideIn = new Class({
         }
     },
 
+    /**
+     * Toggle between show and hide
+     * @method toggle
+     */
     toggle:function () {
         this[this.view.layout.active ? 'hide' : 'show']();
     },

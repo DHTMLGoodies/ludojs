@@ -41,6 +41,7 @@ require_once("../includes/demo-header.php");
                 },
                 children:[
                     {
+                        hidden:true,
                         html:'Item 1<br>Item 2<br>Item 3',
                         css:{
 
