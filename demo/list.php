@@ -98,7 +98,8 @@ var w = new ludo.Window({
         }
     },
     css:{
-        'border-bottom':0
+        'border-bottom':0,
+        'border-top' : 0
     },
     children:[
         {
