@@ -14,14 +14,22 @@ ludo.paging.PageInput = new Class({
 
     ludoEvents:function(){
         this.parent();
-        var ds = this.getDataSource();
-        if(ds){
-            ds.addEvent('page', this.setPageNumber.bind(this));
-            ds.addEvent('load', this.updateMaxValue.bind(this));
-            this.setPageNumber(ds.getPageNumber());
-            this.addEvent('change', this.updateDataSourcePageNumber.bind(this));
-            this.updateMaxValue();
+        this.dataSourceEvents();
+    },
 
+    dataSourceEvents:function(){
+        if(ludo.get(this.dataSource)){
+            var ds = this.getDataSource();
+            if(ds){
+                ds.addEvent('page', this.setPageNumber.bind(this));
+                ds.addEvent('load', this.updateMaxValue.bind(this));
+                this.setPageNumber(ds.getPageNumber());
+                this.addEvent('change', this.updateDataSourcePageNumber.bind(this));
+                this.updateMaxValue();
+            }
+
+        }else{
+            this.dataSourceEvents.delay(100, this);
         }
     },
     setPageNumber:function(number){

@@ -1,6 +1,6 @@
 <?php
 $sub = false;
-$pageTitle = 'Searchable grid';
+$pageTitle = 'Searchable list';
 require_once("includes/demo-header.php");
 ?>
 
@@ -44,6 +44,37 @@ require_once("includes/demo-header.php");
 <script type="text/javascript" class="source-code skip-copy">
 
 var d = new Date();
+
+var dataSource = new ludo.dataSource.Collection({
+    url:'resources/grid-data.json',
+    id:'myDataSource',
+    shim:{
+        txt : 'Loading content. Please wait'
+    },
+    paging:{
+        size:7,
+        pageQuery:false,
+        cache:false,
+        cacheTimeout:1000
+    },
+    searchConfig:{
+        index:['capital', 'country'],
+        delay:.5
+    },
+    listeners:{
+        select:function (record) {
+            ludo.get('myModel').setUid(record.uid);
+            ludo.get('myModel').setId(record.id);
+            ludo.get('myModel').setCountry(record.country);
+            ludo.get('myModel').setCapital(record.capital);
+            ludo.get('myModel').setPopulation(record.population);
+        },
+        count:function (countRecords) {
+            ludo.get('gridWindowSearchable').setTitle('List - capital and population - Stateful (' + countRecords + ' records)');
+        }
+    }
+});
+
 var w = new ludo.Window({
     id:'gridWindowSearchable',
 
@@ -52,8 +83,7 @@ var w = new ludo.Window({
     layout:{
         left:20, top:20,
         width:790, height:430,
-        type:'linear',
-        orientation:'horizontal'
+        type:'tab'
     },
 
     titleBar:{
@@ -72,123 +102,107 @@ var w = new ludo.Window({
     },
     children:[
         {
+            title : 'List',
             layout:{
                 type:'linear',
-                orientation:'vertical',
-                weight:1
+                orientation:'horizontal'
             },
             children:[
                 {
-                    height:27,
-                    labelWidth:50,
-                    type:'form.Text',
-                    label:'Search',
+                    layout:{
+                        type:'linear',
+                        orientation:'vertical',
+                        weight:1
+                    },
+                    children:[
+                        {
+                            height:27,
+                            labelWidth:50,
+                            type:'form.Text',
+                            label:'Search',
 
-                    listeners:{
-                        key:function (value) {
-                            ludo.get('myDataSource').search(value);
+                            listeners:{
+                                key:function (value) {
+                                    ludo.get('myDataSource').search(value);
+                                }
+                            }
+                        },
+                        {
+                            id:'myList',
+                            type:'List',
+                            tpl: '<div><strong>Country</strong> : {country} <br><strong>Capital</strong>: {capital}</div> ',
+                            weight:1,
+                            css:{
+                                'background-color' : '#fff',
+                                'overflow-y' : 'auto'
+                            },
+                            containerCss:{
+                                'border':0,
+                                'border-right':'1px solid #d7d7d7',
+                                'border-top':'1px solid #d7d7d7',
+                                'border-bottom':'1px solid #d7d7d7'
+                            },
+                            stateful:false,
+                            resizable:false,
+
+                            dataSource:'myDataSource'
+
                         }
-                    }
+                    ]
                 },
                 {
-                    id:'myList',
-                    type:'List',
-                    tpl: '<div><strong>Country</strong> : {country} <br><strong>Capital</strong>: {capital}</div> ',
-                    weight:1,
-                    css:{
-                        'background-color' : '#fff',
-                        'overflow-y' : 'auto'
+
+                    id:'infoPanel',
+                    width:250,
+                    layout:{
+                        width:250,
+                        resizable:true,
+                        minWidth:150,
+                        type:'linear',
+                        orientation:'vertical'
                     },
+
+                    type:'FramedView',
+                    title:'Edit record',
                     containerCss:{
                         'border':0,
-                        'border-right':'1px solid #d7d7d7',
-                        'border-top':'1px solid #d7d7d7',
+                        'border-left':'1px solid #d7d7d7',
                         'border-bottom':'1px solid #d7d7d7'
                     },
-                    stateful:false,
-                    resizable:false,
-
-                    dataSource:{
-                        url:'resources/grid-data.json',
-                        id:'myDataSource',
-                        shim:{
-                            txt : 'Loading content. Please wait'
-                        },
-                        paging:{
-                            size:8,
-                            pageQuery:false,
-                            cache:false,
-                            cacheTimeout:1000
-                        },
-                        searchConfig:{
-                            index:['capital', 'country'],
-                            delay:.5
-                        },
+                    model:{
+                        id:'myModel',
+                        columns:['uid','id', 'country', 'capital', 'population'],
                         listeners:{
-                            select:function (record) {
-                                ludo.get('myModel').setUid(record.uid);
-                                ludo.get('myModel').setId(record.id);
-                                ludo.get('myModel').setCountry(record.country);
-                                ludo.get('myModel').setCapital(record.capital);
-                                ludo.get('myModel').setPopulation(record.population);
-                            },
-                            count:function (countRecords) {
-                                ludo.get('gridWindowSearchable').setTitle('List - capital and population - Stateful (' + countRecords + ' records)');
+                            'update':function (record) {
+                                if (record.id) {
+                                    ludo.get('myDataSource').updateRecord(record, record);
+                                }
                             }
                         }
-                    }
+                    },
+                    children:[
+                        {
+                            label:'Country',
+                            type:'form.Text',
+                            name:'country'
+                        },
+                        {
+                            label:'Capital',
+                            type:'form.Text',
+                            name:'capital'
+                        },
+                        {
+                            label:'Population',
+                            type:'form.Text',
+                            name:'population'
+                        }
 
+                    ]
                 }
             ]
         },
         {
-
-            id:'infoPanel',
-            width:250,
-            layout:{
-                width:250,
-                resizable:true,
-                minWidth:150,
-                type:'linear',
-                orientation:'vertical'
-            },
-
-            type:'FramedView',
-            title:'Edit record',
-            containerCss:{
-                'border':0,
-                'border-left':'1px solid #d7d7d7',
-                'border-bottom':'1px solid #d7d7d7'
-            },
-            model:{
-                id:'myModel',
-                columns:['uid','id', 'country', 'capital', 'population'],
-                listeners:{
-                    'update':function (record) {
-                        if (record.id) {
-                            ludo.get('myDataSource').updateRecord(record, record);
-                        }
-                    }
-                }
-            },
-            children:[
-                {
-                    label:'Country',
-                    type:'form.Text',
-                    name:'country'
-                },
-                {
-                    label:'Capital',
-                    type:'form.Text',
-                    name:'capital'
-                },
-                {
-                    label:'Population',
-                    type:'form.Text',
-                    name:'population'
-                }
-
-            ]
+            type : 'SourceCodePreview'
         }
 
 

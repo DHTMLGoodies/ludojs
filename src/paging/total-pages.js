@@ -34,13 +34,22 @@ ludo.paging.TotalPages = new Class({
 
 	ludoEvents:function () {
 		this.parent();
-		var ds = this.getDataSource();
-		if (ds) {
-			ds.addEvent('load', this.setPageNumber.bind(this));
-			ds.addEvent('pageCount', this.setPageNumber.bind(this));
-			this.setPageNumber(ds.getPageNumber());
-		}
+        this.dataSourceEvents();
 	},
+
+    dataSourceEvents:function(){
+        if(ludo.get(this.dataSource)){
+            var ds = this.getDataSource();
+            if (ds) {
+                ds.addEvent('load', this.setPageNumber.bind(this));
+                ds.addEvent('pageCount', this.setPageNumber.bind(this));
+                this.setPageNumber(ds.getPageNumber());
+            }
+        }else{
+            this.dataSourceEvents.delay(100, this);
+        }
+    },
+
 	setPageNumber:function () {
 		this.setHtml(this.tpl.replace('{pages}', this.getDataSource().getPageCount()));
 	},

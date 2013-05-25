@@ -21,9 +21,15 @@ ludo.paging.Button = new Class({
 
     ludoEvents:function(){
         this.parent();
-        var ds = this.getDataSource();
+        this.dataSourceEvents();
+    },
+
+    dataSourceEvents:function(){
+        var ds = ludo.get(this.dataSource);
         if(ds){
             this.addDataSourceEvents();
+        }else{
+            this.dataSourceEvents.delay(100, this);
         }
     },
 

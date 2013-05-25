@@ -1,4 +1,4 @@
-/* Generated Fri May 24 16:30:00 CEST 2013 */
+/* Generated Sat May 25 18:47:19 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -4363,34 +4363,71 @@ ludo.layout.Renderer = new Class({
 ludo.tpl.Parser = new Class({
     Extends:ludo.Core,
     type:'tpl.Parser',
-    singleton:true,
+    compiledTpl:undefined,
 
     /**
      * Get compiled string
 	 * @method getCompiled
-     * @param {Object} data
+     * @param {Object} records
      * @param {String} tpl
+     * @return {Array} string items
      */
-    getCompiled:function (data, tpl) {
-        var records = data;
+    getCompiled:function (records, tpl) {
         if (!ludo.util.isArray(records)) {
             records = [records];
         }
-        var html = [];
+        var ret = [];
+
+        tpl = this.getCompiledTpl(tpl);
+
         for (var i = 0; i < records.length; i++) {
-            var content = tpl;
-            var prop;
-            for (prop in records[i]) {
-                if (records[i].hasOwnProperty(prop)) {
-                    var value = this.getTplValue(prop, records[i][prop]);
-                    value = value ? value : '';
-                    var reg = new RegExp('{' + prop + '}', 'g');
-                    content = content.replace(reg, value);
+            var content = [];
+            for(var j = 0; j< tpl.length;j++){
+                var k = tpl[j]["key"];
+                if(k) {
+                    content.push(records[i][k] ? records[i][k] : "");
+                }else{
+                    content.push(tpl[j]);
                 }
             }
-            html.push(content);
+            ret.push(content.join(""));
         }
-        return html.join('');
+        return ret;
+    },
+
+    getCompiledTpl:function(tpl){
+        if(!this.compiledTpl){
+            this.compiledTpl = [];
+            var pos = tpl.indexOf('{');
+            var end = 0;
+
+            while(pos >=0 && end != -1){
+                if(pos > end){
+                    var start = end === 0 ? end : end+1;
+                    var len = end === 0 ? pos-end : pos-end-1;
+                    this.compiledTpl.push(tpl.substr(start,len));
+                }
+
+                end = tpl.indexOf('}', pos);
+
+                if(end != -1){
+                    this.compiledTpl.push({
+                        key : tpl.substr(pos, end-pos).replace(/[{}"]/g,"")
+                    });
+                }
+                pos = tpl.indexOf('{', end);
+            }
+
+            if(end != -1 && end < tpl.length){
+                this.compiledTpl.push(tpl.substr(end+1));
+            }
+
+        }
+        return this.compiledTpl;
+    },
+
+    asString:function(data, tpl){
+        return this.getCompiled(data, tpl).join('');
     },
 
     getTplValue:function (key, value) {
@@ -5425,7 +5462,7 @@ ludo.View = new Class({
 	 */
 	insertJSON:function (data) {
 		if (this.tpl) {
-			this.getBody().set('html', this.getTplParser().getCompiled(data, this.tpl));
+			this.getBody().set('html', this.getTplParser().asString(data, this.tpl));
 		}
 	},
 
@@ -14369,6 +14406,11 @@ ludo.layout.Canvas = new Class({
 
 
 });/* ../ludojs/src/layout/slide-in.js */
+/**
+ * Layout where first child slides in from the left on demand
+ * @namespace layout
+ * @class SlideIn
+ */
 ludo.layout.SlideIn = new Class({
     Extends:ludo.layout.Base,
     slideEl:undefined,
@@ -14378,15 +14420,12 @@ ludo.layout.SlideIn = new Class({
     },
 
     onNewChild:function (child) {
-        if(this.view.children.length === 1){
-            child.hidden = true;
-        }
         this.parent(child);
         child.getEl().style.position = 'absolute';
     },
 
     resize:function () {
-        var widthOfFirst = this.view.children[0].layout.width;
+        var widthOfFirst = this.getWidthOfMenu();
 
         this.view.children[0].resize({
             width:widthOfFirst,
@@ -14403,23 +14442,40 @@ ludo.layout.SlideIn = new Class({
         })
 
     },
-
+    /**
+     Show menu
+     @method show
+     @example
+        view.getLayout().show();
+     */
     show:function () {
         if (!this.view.layout.active) {
+            if(this.view.children[0].hidden){
+                this.view.children[0].show();
+            }
             this.view.layout.active = true;
-            var widthOfFirst = this.view.children[0].layout.width;
+            var widthOfFirst = this.getWidthOfMenu();
             this.effect().slide(this.slideEl, { x:widthOfFirst * -1}, {x:0 }, this.getDuration());
         }
     },
-
+    /**
+     hide menu
+     @method hide
+     @example
+        view.getLayout().hide();
+     */
     hide:function () {
         if (this.view.layout.active) {
             this.view.layout.active = false;
-            var widthOfFirst = this.view.children[0].layout.width;
+            var widthOfFirst = this.getWidthOfMenu();
             this.effect().slide(this.slideEl, {x:0 }, { x:widthOfFirst * -1}, this.getDuration());
         }
     },
 
+    /**
+     * Toggle between show and hide
+     * @method toggle
+     */
     toggle:function () {
         this[this.view.layout.active ? 'hide' : 'show']();
     },
@@ -14433,6 +14489,22 @@ ludo.layout.SlideIn = new Class({
 
     getDuration:function () {
         return this.view.layout.duration || .15;
+    },
+
+    getWidthOfMenu:function(){
+        var ret = this.view.children[0].layout.width;
+
+        if(isNaN(ret)){
+            switch(ret){
+                case 'matchParent':
+                    return this.viewport.width;
+                default:
+                    return parseInt(ret) * this.viewport.width / 100;
+            }
+
+        }else{
+            return ret;
+        }
     },
 
     getParentForNewChild:function () {
@@ -15101,6 +15173,129 @@ ludo.layout.CollapseBar = new Class({
 	getViews:function(){
 		return this.views;
 	}
+});/* ../ludojs/src/list.js */
+ludo.List = new Class({
+    Extends:ludo.View,
+    defaultDS:'dataSource.Collection',
+    overflow:'scroll',
+    highlighted:undefined,
+    recordMap:{},
+
+    ludoConfig:function (config) {
+        this.parent(config);
+    },
+
+    ludoEvents:function () {
+        this.parent();
+        this.getBody().addEvent('click', this.onClick.bind(this));
+    },
+
+    ludoRendered:function () {
+        this.parent();
+
+        if (this.dataSource) {
+            if (this.dataSourceObj && this.dataSourceObj.hasData()) {
+                this.populateData();
+            }
+            this.getDataSource().addEvents({
+                'change':this.populate.bind(this),
+                'select':this.select.bind(this),
+                'deselect':this.deselect.bind(this),
+                'update':this.update.bind(this),
+                'delete':this.remove.bind(this)
+            });
+        }
+    },
+
+    populate:function () {
+
+        var d = this.getDataSource().getData();
+
+        var data = this.getTplParser().getCompiled(d, this.tpl);
+        var b = this.getBody();
+        b.innerHTML = '';
+
+        for (var i = 0; i < data.length; i++) {
+            var el = document.id(ludo.dom.create({
+                tag:'div',
+                id : 'list-' + d[i].uid,
+                html:data[i],
+                css:{ "cursor": "pointer" },
+                cls : 'ludo-list-item',
+                renderTo:b
+            }));
+            this.recordMap[d[i].uid] = el.id;
+
+            el.addEvent('mouseenter', this.enter.bind(this));
+            el.addEvent('mouseleave', this.leave.bind(this));
+        }
+
+        var selected = this.getDataSource().getSelectedRecord();
+        if(selected){
+            this.select(selected);
+        }
+    },
+
+    enter:function(e){
+        var el = this.getRecordDOM(e.target);
+        if(el)ludo.dom.addClass(el, 'ludo-list-item-highlighted');
+    },
+
+    leave:function(e){
+        var el = this.getRecordDOM(e.target);
+        if(el)ludo.dom.removeClass(el, 'ludo-list-item-highlighted');
+    },
+
+    getRecordDOM:function(el){
+        if(!ludo.dom.hasClass(el, 'ludo-list-item')){
+            el = el.getParent('.ludo-list-item');
+        }
+        return el;
+    },
+
+    getRecordId:function(el){
+        el = this.getRecordDOM(el);
+        if(el){
+            return el.id.replace('list-', '');
+        }
+        return undefined;
+    },
+
+    getDOMForRecord:function(record){
+        return this.recordMap[record.uid] ? document.id(this.recordMap[record.uid]) : undefined;
+
+    },
+
+    select:function (record) {
+        var el = this.getDOMForRecord(record);
+        if(el)ludo.dom.addClass(el, 'ludo-list-item-selected');
+    },
+
+    deselect:function (record) {
+        var el = this.getDOMForRecord(record);
+        if(el)ludo.dom.removeClass(el, 'ludo-list-item-selected');
+    },
+
+    update:function (record) {
+        var el = this.getDOMForRecord(record);
+        if(el){
+            var content = this.getTplParser().asString(record, this.tpl);
+            el.set('html', content);
+        }
+    },
+
+    remove:function (record) {
+        var el = this.getDOMForRecord(record);
+        if(el){
+            el.dispose();
+            this.recordMap[record.uid] = undefined;
+        }
+    },
+
+    onClick:function (e) {
+        var recId = this.getRecordId(e.target);
+        if(recId)this.getDataSource().getRecord(recId).select();
+    }
 });/* ../ludojs/src/notification.js */
 /**
  Class for providing short messages and feedback in a small popup.
@@ -29682,9 +29877,15 @@ ludo.paging.Button = new Class({
 
     ludoEvents:function(){
         this.parent();
-        var ds = this.getDataSource();
+        this.dataSourceEvents();
+    },
+
+    dataSourceEvents:function(){
+        var ds = ludo.get(this.dataSource);
         if(ds){
             this.addDataSourceEvents();
+        }else{
+            this.dataSourceEvents.delay(100, this);
         }
     },
 
@@ -29858,14 +30059,22 @@ ludo.paging.PageInput = new Class({
 
     ludoEvents:function(){
         this.parent();
-        var ds = this.getDataSource();
-        if(ds){
-            ds.addEvent('page', this.setPageNumber.bind(this));
-            ds.addEvent('load', this.updateMaxValue.bind(this));
-            this.setPageNumber(ds.getPageNumber());
-            this.addEvent('change', this.updateDataSourcePageNumber.bind(this));
-            this.updateMaxValue();
+        this.dataSourceEvents();
+    },
 
+    dataSourceEvents:function(){
+        if(ludo.get(this.dataSource)){
+            var ds = this.getDataSource();
+            if(ds){
+                ds.addEvent('page', this.setPageNumber.bind(this));
+                ds.addEvent('load', this.updateMaxValue.bind(this));
+                this.setPageNumber(ds.getPageNumber());
+                this.addEvent('change', this.updateDataSourcePageNumber.bind(this));
+                this.updateMaxValue();
+            }
+
+        }else{
+            this.dataSourceEvents.delay(100, this);
         }
     },
     setPageNumber:function(number){
@@ -29921,13 +30130,22 @@ ludo.paging.TotalPages = new Class({
 
 	ludoEvents:function () {
 		this.parent();
-		var ds = this.getDataSource();
-		if (ds) {
-			ds.addEvent('load', this.setPageNumber.bind(this));
-			ds.addEvent('pageCount', this.setPageNumber.bind(this));
-			this.setPageNumber(ds.getPageNumber());
-		}
+        this.dataSourceEvents();
 	},
+
+    dataSourceEvents:function(){
+        if(ludo.get(this.dataSource)){
+            var ds = this.getDataSource();
+            if (ds) {
+                ds.addEvent('load', this.setPageNumber.bind(this));
+                ds.addEvent('pageCount', this.setPageNumber.bind(this));
+                this.setPageNumber(ds.getPageNumber());
+            }
+        }else{
+            this.dataSourceEvents.delay(100, this);
+        }
+    },
+
 	setPageNumber:function () {
 		this.setHtml(this.tpl.replace('{pages}', this.getDataSource().getPageCount()));
 	},
