@@ -392,7 +392,7 @@ ludo.View = new Class({
 		this.setConfigParams(config, keys);
 
 
-		if (this.dataSource && !this.dataSource.type)this.dataSource.type = this.defaultDS;
+
 
 		if (this.socket) {
 			if (!this.socket.type)this.socket.type = 'socket.Socket';
@@ -1097,7 +1097,7 @@ ludo.View = new Class({
 				obj = this.dataSourceObj = ludo.get(this.dataSource);
 			} else {
 				if (!this.dataSource.type) {
-					this.dataSource.type = 'dataSource.JSON';
+					this.dataSource.type = this.defaultDS || 'dataSource.JSON';
 				}
                 if(this.dataSource.shim && !this.dataSource.shim.renderTo){
                     this.dataSource.shim.renderTo = this.getEl()

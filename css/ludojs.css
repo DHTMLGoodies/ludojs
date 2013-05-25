@@ -1,4 +1,4 @@
-/* Generated Sat May 25 19:09:26 CEST 2013 */
+/* Generated Sat May 25 21:11:58 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -1678,6 +1678,7 @@ div.ludo-tree-tree div.ludo-body{
     overflow-y:auto;
     overflow-x:hidden;
     background-color:#FFF;
+    padding-left:4px;
 }
 
 .ludo-tree-node{
@@ -1824,6 +1825,7 @@ div.ludo-tree-movable-shim img{
     line-height:16px;
     height:18px;
 }
+
 
 /* ../ludojs/css-source/form/tiny-button.css */
 .ludo-form-tinybutton{

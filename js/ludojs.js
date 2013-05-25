@@ -1,4 +1,4 @@
-/* Generated Sat May 25 19:09:26 CEST 2013 */
+/* Generated Sat May 25 21:11:58 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -5301,7 +5301,7 @@ ludo.View = new Class({
 		this.setConfigParams(config, keys);
 
 
-		if (this.dataSource && !this.dataSource.type)this.dataSource.type = this.defaultDS;
+
 
 		if (this.socket) {
 			if (!this.socket.type)this.socket.type = 'socket.Socket';
@@ -6006,7 +6006,7 @@ ludo.View = new Class({
 				obj = this.dataSourceObj = ludo.get(this.dataSource);
 			} else {
 				if (!this.dataSource.type) {
-					this.dataSource.type = 'dataSource.JSON';
+					this.dataSource.type = this.defaultDS || 'dataSource.JSON';
 				}
                 if(this.dataSource.shim && !this.dataSource.shim.renderTo){
                     this.dataSource.shim.renderTo = this.getEl()
@@ -23949,12 +23949,11 @@ ludo.tree.Tree = new Class({
     renderedRecords: {},
 	tpl : '<span class="ludo-tree-node-spacer"></span> {title}',
 	dataSource:{
-		type:'dataSource.TreeCollection'
 	},
+    defaultDS: 'dataSource.TreeCollection',
 
 	ludoConfig:function (config) {
 		this.parent(config);
-		if (config.dataSource && !config.dataSource.type)this.dataSource.type = 'dataSource.TreeCollection';
 	},
 
 	ludoEvents:function () {

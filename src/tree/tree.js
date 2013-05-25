@@ -7,12 +7,11 @@ ludo.tree.Tree = new Class({
     renderedRecords: {},
 	tpl : '<span class="ludo-tree-node-spacer"></span> {title}',
 	dataSource:{
-		type:'dataSource.TreeCollection'
 	},
+    defaultDS: 'dataSource.TreeCollection',
 
 	ludoConfig:function (config) {
 		this.parent(config);
-		if (config.dataSource && !config.dataSource.type)this.dataSource.type = 'dataSource.TreeCollection';
 	},
 
 	ludoEvents:function () {

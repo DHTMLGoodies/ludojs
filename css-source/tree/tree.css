@@ -2,6 +2,7 @@ div.ludo-tree-tree div.ludo-body{
     overflow-y:auto;
     overflow-x:hidden;
     background-color:#FFF;
+    padding-left:4px;
 }
 
 .ludo-tree-node{
@@ -148,4 +149,5 @@ div.ludo-tree-movable-shim img{
     line-height:16px;
     height:18px;
 }
+
 

@@ -70,7 +70,7 @@ var dataSource = new ludo.dataSource.Collection({
             ludo.get('myModel').setPopulation(record.population);
         },
         count:function (countRecords) {
-            ludo.get('gridWindowSearchable').setTitle('List - capital and population - Stateful (' + countRecords + ' records)');
+            ludo.get('gridWindowSearchable').setTitle('List - capital and population (' + countRecords + ' records)');
         }
     }
 });
@@ -103,7 +103,7 @@ var w = new ludo.Window({
     },
     children:[
         {
-            title : 'List',
+            title : 'List demo',
             layout:{
                 type:'linear',
                 orientation:'horizontal'
