@@ -79,7 +79,6 @@ ludo.util = {
 	 * Dispose LudoJS components
 	 * @method dispose
 	 * @param {Core} view
-	 * @private
 	 */
 	dispose:function(view){
 		if (view.getParent()) {

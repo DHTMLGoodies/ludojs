@@ -12,9 +12,6 @@ TestCase("TooltipTest", {
 
 		// then
 		assertEquals('First label', c.addOns[0].getParsedHtml());
-
-
-
 	},
 
 	getChartWithTooltip:function (tooltipConfig) {

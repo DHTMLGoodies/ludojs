@@ -129,7 +129,6 @@ ludo.chart.Tooltip = new Class({
 			}
 
 			ret = ret.replace(match[i], val);
-
 		}
 		return ret;
 	},

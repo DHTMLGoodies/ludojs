@@ -5,12 +5,12 @@ require_once("../includes/demo-header.php");
 ?>
 <body>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/form/search-field.js"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/resources/search-parser.js"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/resources/collection.js"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/resources/collection-search.js"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/resources/tree-collection-search.js"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/resources/tree-collection.js"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/tree/new-tree.js"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/data-source/search-parser.js"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/data-source/collection.js"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/data-source/collection-search.js"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/data-source/tree-collection-search.js"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/data-source/tree-collection.js"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/tree/tree.js"></script>
 <link rel="stylesheet" href="<?php echo $prefix; ?>../css/ludojs-ocean.css" type="text/css">
 <style type="text/css">
     span.ludo-tree-node-spacer{
