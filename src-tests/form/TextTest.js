@@ -63,7 +63,7 @@ TestCase("TextTest", {
         // given
         var el = new ludo.form.Text({
             label : 'Zip code',
-            inlineLabel : true
+            inlineLabel : 'Zip code'
         });
 
         // then

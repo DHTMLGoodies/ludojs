@@ -21,6 +21,8 @@ test:
   - view/*.js
   - chart/*.js
   - menu/*.js
+  - tpl/*.js
+  - list/*.js
 
 serve:
   - ../css/ludojs-blue.css

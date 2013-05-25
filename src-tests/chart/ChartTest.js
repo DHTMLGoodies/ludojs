@@ -36,6 +36,7 @@ TestCase("ChartTest", {
 
         // then
         assertTrue(c.dataProvider.hasRecords());
+        c.children[0].create();
         assertNotUndefined(c.children[0].getFragments());
         assertEquals(2, c.children[0].getFragments().length);
     },
@@ -52,6 +53,8 @@ TestCase("ChartTest", {
                 type : 'chart.Base'
             }]
         });
+
+        c.children[0].create();
 
         // when
         var fragments = c.children[0].getFragments();
@@ -93,7 +96,7 @@ TestCase("ChartTest", {
                 type:'chart.Base'
             }]
         });
-
+        c.children[0].create();
         // when
         var f = c.children[0].getFragments()[0];
 

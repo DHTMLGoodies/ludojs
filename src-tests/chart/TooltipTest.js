@@ -8,7 +8,7 @@ TestCase("TooltipTest", {
 
 		// when
 		c.dataProvider().records[0].enter();
-		c.fireEvent('mouseenter');
+		c.fireEvent('mouseenter', { page : {x:0,y:0}});
 
 		// then
 		assertEquals('First label', c.addOns[0].getParsedHtml());
