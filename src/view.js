@@ -552,7 +552,7 @@ ludo.View = new Class({
 	 */
 	insertJSON:function (data) {
 		if (this.tpl) {
-			this.getBody().set('html', this.getTplParser().getCompiled(data, this.tpl));
+			this.getBody().set('html', this.getTplParser().asString(data, this.tpl));
 		}
 	},
 

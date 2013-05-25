@@ -206,7 +206,7 @@ ludo.tree.Tree = new Class({
 		return ret.join('');
 	},
 
-	isSelectable:function (record) {
+	isSelectable:function () {
 		return true;
 	},
 
@@ -257,12 +257,11 @@ ludo.tree.Tree = new Class({
 	getNewNodeFor:function (record) {
 		record = record.getUID ? record.record : record;
 		if (!record.uid)this.getDataSource().indexRecord(record);
-		var node = ludo.dom.create({
+		return ludo.dom.create({
             cls : 'ludo-tree-a-node ludo-tree-node',
             html : this.getHtmlFor(record, false, false),
             id : record.uid
         });
-		return node;
 	},
 
 	cssBranch:function (nodes) {

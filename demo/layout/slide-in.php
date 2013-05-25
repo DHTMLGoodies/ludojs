@@ -47,16 +47,7 @@ require_once("../includes/demo-header.php");
                             width:200,
                             fillDown:true,
                             type:'Menu',
-                            orientation:'vertical',
-                            resize:['right']
-                        },
-                        listeners:{
-                            'click':function (item) {
-                                if (item.action) {
-                                    // load content from url into into main panel
-                                    ludo.get('mainPanel').getDataSource().loadUrl('../resources/articles/' + item.action);
-                                }
-                            }
+                            orientation:'vertical'
                         },
                         containerCss:{
                             border:0,
@@ -75,10 +66,40 @@ require_once("../includes/demo-header.php");
                         ]
                     },
                     {
-                        html:'Main view',
-                        css:{
-                            'background-color':'#fff'
+
+                        type:'grid.Grid',
+                        weight:1,
+                        columnManager:{
+                            columns:{
+                                'country':{
+                                    heading:'Country',
+                                    sortable:true,
+                                    movable:true,
+                                    renderer:function (val) {
+                                        return '<span style="color:blue">' + val + '</span>';
+                                    }
+                                },
+                                'capital':{
+                                    heading:'Capital',
+                                    sortable:true,
+                                    movable:true
+                                },
+                                population:{
+                                    heading:'Population',
+                                    movable:true
+                                }
+                            }
+                        },
+                        dataSource:{
+                            url:'../resources/grid-data.json',
+                            listeners:{
+                                select : function(record){
+                                    ludo.util.log(record);
+                                }
+                            }
+
                         }
+
                     }
                 ]
             }
