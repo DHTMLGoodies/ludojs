@@ -76,7 +76,7 @@ ludo.calendar.YearSelector = new Class({
         }
         else if (year < median) {
             this.insertYearsBefore(median - year);
-        } else if (year > median) {
+        } else {
             this.insertYearsAfter(year - median);
         }
 
@@ -107,9 +107,10 @@ ludo.calendar.YearSelector = new Class({
 
     getDomElForCurrentYear:function () {
         var year = this.date.get('year');
-        for (var i = 0; i < this.els.options.length; i++) {
-            if (this.els.options[i].getProperty('year') == year) {
-                return this.els.options[i];
+        var o = this.els.options;
+        for (var i = 0; i < o.length; i++) {
+            if (o[i].getProperty('year') == year) {
+                return o[i];
             }
         }
 		return undefined;

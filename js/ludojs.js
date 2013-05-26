@@ -1,4 +1,4 @@
-/* Generated Sun May 26 5:02:48 CEST 2013 */
+/* Generated Sun May 26 23:23:41 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -21716,7 +21716,7 @@ ludo.calendar.Days = new Class({
      * @property object value
      */
     value:undefined,
-    touchData:{
+    touch:{
         enabled:false
     },
 
@@ -21740,7 +21740,7 @@ ludo.calendar.Days = new Class({
     },
 
     touchStart:function (e) {
-        this.touchData = {
+        this.touch = {
             enabled:true,
             x1:e.page.x, x2:e.page.x,
             y1:e.page.y, y2:e.page.y
@@ -21752,12 +21752,12 @@ ludo.calendar.Days = new Class({
         return undefined;
     },
     touchMove:function (e) {
-        if (this.touchData.enabled) {
-            this.touchData.x2 = e.page.x;
-            this.touchData.y2 = e.page.y;
+        if (this.touch.enabled) {
+            this.touch.x2 = e.page.x;
+            this.touch.y2 = e.page.y;
 
-            var left = this.touchData.x2 - this.touchData.x1;
-            var top = this.touchData.y2 - this.touchData.y1;
+            var left = this.touch.x2 - this.touch.x1;
+            var top = this.touch.y2 - this.touch.y1;
 
             if (Math.abs(left) > Math.abs(top)) {
                 if (left > 100)left = 100;
@@ -21775,27 +21775,19 @@ ludo.calendar.Days = new Class({
         return undefined;
     },
     touchEnd:function () {
-        if (this.touchData.enabled) {
-            this.touchData.enabled = false;
-            var diffX = this.touchData.x2 - this.touchData.x1;
-            var diffY = this.touchData.y2 - this.touchData.y1;
+        if (this.touch.enabled) {
+            this.touch.enabled = false;
+            var diffX = this.touch.x2 - this.touch.x1;
+            var diffY = this.touch.y2 - this.touch.y1;
 
             var absX = Math.abs(diffX);
             var absY = Math.abs(diffY);
 
             if (absX > 100 || absY > 100) {
                 if (absX > absY) {
-                    if (diffX > 0) {
-                        this.date.decrement('month', 1);
-                    } else {
-                        this.date.increment('month', 1);
-                    }
+                    this.data[diffX > 0 ? 'decrement' : 'increment']('month', 1);
                 } else {
-                    if (diffY > 0) {
-                        this.date.decrement('year', 1);
-                    } else {
-                        this.date.increment('year', 1);
-                    }
+                    this.data[diffY > 0 ? 'decrement' : 'increment']('year', 1);
                 }
                 this.sendSetDateEvent();
                 this.showMonth();
@@ -21832,9 +21824,7 @@ ludo.calendar.Days = new Class({
         var h = this.els.daysHeader;
         var size = b.getSize();
 
-        var height = size.y - ludo.dom.getBH(b) - ludo.dom.getPH(b);
-        height -= h.getSize().y;
-        height += ludo.dom.getMH(h);
+        var height = size.y - ludo.dom.getBH(b) - ludo.dom.getPH(b) - h.offsetHeight + ludo.dom.getMH(h);
 
         var c = this.els.daysContainer;
         height -= (ludo.dom.getMH(c) + ludo.dom.getPH(c) + ludo.dom.getBH(c));
@@ -21898,11 +21888,11 @@ ludo.calendar.Days = new Class({
         var cls = '';
 
         var selectedDay = 0;
-        if (this.isDisplayingMonthForCurrentValue()) {
+        if (this.isValueMonth()) {
             selectedDay = this.value.get('date');
         }
         var today = 0;
-        if (this.isDisplayingTodaysMonth()) {
+        if (this.isOnTodaysMonth()) {
             today = new Date().get('date');
         }
         var thisMonthStarted = false;
@@ -21959,11 +21949,11 @@ ludo.calendar.Days = new Class({
         }
     },
 
-    isDisplayingMonthForCurrentValue:function () {
+    isValueMonth:function () {
         return this.value ? this.value.get('month') == this.date.get('month') && this.value.get('year') == this.date.get('year') : false;
     },
 
-    isDisplayingTodaysMonth:function () {
+    isOnTodaysMonth:function () {
         var today = new Date();
         return today.get('month') == this.date.get('month') && today.get('year') == this.date.get('year');
     },
@@ -22022,11 +22012,11 @@ ludo.calendar.Days = new Class({
 
     selectDay:function (e) {
         var el = e.target;
-        if (!el.hasClass('calendar-day')) {
+        if (!ludo.dom.hasClass(el, 'calendar-day')) {
             el = el.getParent('.calendar-day');
             if (!el)return;
         }
-        if (el.hasClass('calendar-day-inactive')) {
+        if (ludo.dom.hasClass(el, 'calendar-day-inactive')) {
             return;
         }
         this.removeClsFromSelectedDay();
@@ -22038,14 +22028,14 @@ ludo.calendar.Days = new Class({
     },
 
     removeClsFromSelectedDay:function () {
-        if (this.els.monthView && this.isDisplayingMonthForCurrentValue()) {
+        if (this.els.monthView && this.isValueMonth()) {
             var el = this.els.monthView.getElement('.calendar-day-' + this.value.get('date'));
-            if (el)el.removeClass('calendar-day-selected');
+            if (el)ludo.dom.removeClass(el, 'calendar-day-selected');
         }
     },
 
     addClsForSelectedDay:function () {
-        if (this.els.monthView && this.isDisplayingMonthForCurrentValue()) {
+        if (this.els.monthView && this.isValueMonth()) {
             var el = this.els.monthView.getElement('.calendar-day-' + this.value.get('date'));
             if (el)ludo.dom.addClass(el, 'calendar-day-selected');
         }
@@ -22058,9 +22048,7 @@ ludo.calendar.Days = new Class({
     getNextWeek:function () {
         var ret = this.week;
         this.week++;
-        if (this.week > 50 && this.date.get('month') == 0) {
-            this.week = 1;
-        } else if (this.week > 53) {
+        if (this.week > 53 || (this.week > 50 && this.date.get('month') == 0)) {
             this.week = 1;
         }
         return ret;
@@ -22448,7 +22436,7 @@ ludo.calendar.YearSelector = new Class({
         }
         else if (year < median) {
             this.insertYearsBefore(median - year);
-        } else if (year > median) {
+        } else {
             this.insertYearsAfter(year - median);
         }
 
@@ -22479,9 +22467,10 @@ ludo.calendar.YearSelector = new Class({
 
     getDomElForCurrentYear:function () {
         var year = this.date.get('year');
-        for (var i = 0; i < this.els.options.length; i++) {
-            if (this.els.options[i].getProperty('year') == year) {
-                return this.els.options[i];
+        var o = this.els.options;
+        for (var i = 0; i < o.length; i++) {
+            if (o[i].getProperty('year') == year) {
+                return o[i];
             }
         }
 		return undefined;
@@ -22645,7 +22634,7 @@ ludo.model.Model = new Class({
 	type:'model.Model',
 
 	dependency:{},
-
+    // TODO perhaps remove model and use form manager only.
 	/**
 	 * @attribute {String} model name
 	 * @description Name of model
@@ -24729,12 +24718,7 @@ ludo.form.TinyButton = new Class({
 
     ludoConfig:function (config) {
         if(config.width == undefined){
-            if(config.value){
-                config.width = config.value.length*10;
-            }else{
-                config.width = 20;
-            }
-            config.width = Math.max(config.width, 20);
+            config.width = Math.max(config.value ? config.value.length*10 : 20, 20);
         }
         this.parent(config);
     },
