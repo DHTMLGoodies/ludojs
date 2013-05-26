@@ -126,11 +126,13 @@ ludo.form.Manager = new Class({
         if(this.form.idField && c.name == this.form.idField){
             this.formComponentId = c;
         }
-		c.addEvent('valid', this.onValidFormElement.bind(this));
-		c.addEvent('invalid', this.onInvalidFormElement.bind(this));
-		c.addEvent('dirty', this.onDirtyFormElement.bind(this));
-		c.addEvent('clean', this.onCleanFormElement.bind(this));
-        c.addEvent('change', this.onChangedFormElement.bind(this));
+        c.addEvents({
+            'valid' :  this.onValid.bind(this),
+            'invalid' : this.onInvalid.bind(this),
+            'dirty' : this.onDirty.bind(this),
+            'clean' : this.onClean.bind(this),
+            'change' : this.onChange.bind(this)
+        });
 
 		if (!c.isValid()) {
 			this.invalidIds.push(c.getId());
@@ -151,7 +153,7 @@ ludo.form.Manager = new Class({
 		}
 	},
 
-	onDirtyFormElement:function (value, formComponent) {
+	onDirty:function (value, formComponent) {
 		var elId = formComponent.getId();
 		if (this.dirtyIds.indexOf(elId) == -1) {
 			this.dirtyIds.push(elId);
@@ -164,7 +166,7 @@ ludo.form.Manager = new Class({
 		this.fireEvent('dirty', formComponent);
 	},
 
-	onCleanFormElement:function (value, formComponent) {
+	onClean:function (value, formComponent) {
 		this.dirtyIds.erase(formComponent.getId());
 
 		if (this.dirtyIds.length === 0) {
@@ -176,7 +178,7 @@ ludo.form.Manager = new Class({
 		}
 	},
 
-    onChangedFormElement:function(value, formComponent){
+    onChange:function(value, formComponent){
         /**
          * Event fired when a form element has been changed
          * @event change
@@ -188,12 +190,12 @@ ludo.form.Manager = new Class({
     },
 	/**
 	 * One form element is valid. Fire valid event if all form elements are valid
-	 * @method onValidFormElement
+	 * @method onValid
 	 * @private
 	 * @param {String} value
 	 * @param {object } formComponent
 	 */
-	onValidFormElement:function (value, formComponent) {
+	onValid:function (value, formComponent) {
 		this.invalidIds.erase(formComponent.getId());
 		if (this.invalidIds.length == 0) {
 			/**
@@ -209,12 +211,12 @@ ludo.form.Manager = new Class({
 	/**
 	 * Set component invalid when a form element inside it is invalid
 	 *
-	 * @method onInvalidFormElement
+	 * @method onInvalid
 	 * @private
 	 * @param {String} value
 	 * @param {Object} formComponent
 	 */
-	onInvalidFormElement:function (value, formComponent) {
+	onInvalid:function (value, formComponent) {
 		var elId = formComponent.getId();
 		if (this.invalidIds.indexOf(elId) == -1) {
 			this.invalidIds.push(elId);

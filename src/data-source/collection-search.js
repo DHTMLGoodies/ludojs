@@ -335,7 +335,6 @@ ludo.dataSource.CollectionSearch = new Class({
 	},
 
 	createSearchIndex:function () {
-
 		this.indexBranch(this.getDataFromSource());
 		this.searchIndexCreated = true;
 	},
@@ -384,7 +383,8 @@ ludo.dataSource.CollectionSearch = new Class({
 		return this.searchResult ? this.searchResult.length : 0;
 	},
 
+    // TODO fix this method
 	searchToString:function () {
-		return this.hasData() ? this.searchTokens[0] : '';
+		return this.hasData() ? '' : '';
 	}
 });

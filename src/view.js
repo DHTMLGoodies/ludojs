@@ -19,36 +19,36 @@
  @constructor
  @param {Object} config
  @example
- new ludo.View({
+    new ludo.View({
  		renderTo:document.body,
  		html : 'Hello'
 	}
  Creates a standard view rendered to the &lt;body> element of your page
 
  @example
- ...
- children:[{
-	 	html : 'View 1' },
- {
-	 html : 'View 2' }
- }]
- ...
+     ...
+     children:[{
+            html : 'View 1' },
+     {
+         html : 'View 2' }
+     }]
+     ...
  adds two views as child of a component
 
  @example
- ludo.myApp.View = new Class({
+    ludo.myApp.View = new Class({
  		Extends: ludo.View,
  		type : 'myApp.View',
  		ludoRendered:function(){
  			this.setHtml('My custom component');
 		}
 	}
- ...
- ...
- children:[{
+    ...
+    ...
+    children:[{
 		type : 'myApp.View'
 	}]
- ...
+     ...
 
  is a simple example of how to extend a view to create your own views and how to use it.
  *
@@ -99,7 +99,7 @@ ludo.View = new Class({
 	 @config children
 	 @type Array
 	 @example
-	 new ludo.Window({
+	    new ludo.Window({
            left : 200, top : 200,
            width : 400, height: 400,
            children : [{
@@ -121,7 +121,7 @@ ludo.View = new Class({
 	 @type Object
 	 @default undefined
 	 @example
-	 socket:{
+	    socket:{
             url:'http://127.0.0.1:1337',
             emitEvents:['chat','logout']
         }
@@ -219,7 +219,7 @@ ludo.View = new Class({
 	 @type Object
 	 @default undefined
 	 @example
-	 copyEvents:{
+	    copyEvents:{
            'click' : 'send'
         }
 	 */
@@ -259,6 +259,7 @@ ludo.View = new Class({
 
 	 */
 	layout:undefined,
+
 
 	/**
 	 Template for JSON compiler.
@@ -1057,7 +1058,7 @@ ludo.View = new Class({
 	 and call view.cancelDispose in case you don't want to dispose the view.
 	 @method cancelDispose
 	 @example
-	 function confirmDispose(view){
+	    function confirmDispose(view){
 	 		if(!confirm('Are you sure')){
 	 			view.cancelDispose();
 	 		}
@@ -1097,7 +1098,7 @@ ludo.View = new Class({
 				obj = this.dataSourceObj = ludo.get(this.dataSource);
 			} else {
 				if (!this.dataSource.type) {
-					this.dataSource.type = this.defaultDS || 'dataSource.JSON';
+					this.dataSource.type = this.defaultDS;
 				}
                 if(this.dataSource.shim && !this.dataSource.shim.renderTo){
                     this.dataSource.shim.renderTo = this.getEl()
@@ -1164,7 +1165,7 @@ ludo.View = new Class({
 	 @method submit
 	 @return void
 	 @example
-	 {
+	    {
 		 saveForm: 1,
 		 componentId : id of ludo.View,
 		 componentName : name of ludo.View,
@@ -1173,7 +1174,7 @@ ludo.View = new Class({
 			 lastname : 'Doe'
 			 formField : 'formValue
 		 }
-	 }
+	    }
 	 */
 	submit:function () {
 		this.fireEvent('submit', this);
@@ -1216,7 +1217,7 @@ ludo.View = new Class({
 	 @method getCanvas
 	 @return {canvas.Canvas} canvas
 	 @example
-	 var win = new ludo.Window({
+	    var win = new ludo.Window({
 		   id:'myWindow',
 		   left:50, top:50,
 		   width:410, height:490,
@@ -1225,16 +1226,16 @@ ludo.View = new Class({
 			   'background-color':'#FFF'
 		   }
 	   });
-	 // Creating style sheet
-	 var paint = new ludo.canvas.Paint({
+	    // Creating style sheet
+	    var paint = new ludo.canvas.Paint({
 		   css:{
 			   'fill':'#FFFFFF',
 			   'stroke':'#DEF',
 			   'stroke-width':'5'
 		   }
 	   });
-	 var canvas = win.getCanvas();
-	 canvas.adopt(new ludo.canvas.Node('line', { x1:100, y1:100, x2:200, y2:200, "class":paint }));
+	    var canvas = win.getCanvas();
+	    canvas.adopt(new ludo.canvas.Node('line', { x1:100, y1:100, x2:200, y2:200, "class":paint }));
 	 */
 	getCanvas:function () {
 		if (this.canvas === undefined) {

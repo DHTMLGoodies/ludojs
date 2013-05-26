@@ -6,7 +6,7 @@
  @namespace model
  @class Model
  @example
- model:{
+    model:{
 	 type:'model.Model',
 	 name:'user',
 	 columns:['firstname', 'lastname', 'email','timezone','locale'],
@@ -19,7 +19,7 @@ ludo.model.Model = new Class({
 	type:'model.Model',
 
 	dependency:{},
-
+    // TODO perhaps remove model and use form manager only.
 	/**
 	 * @attribute {String} model name
 	 * @description Name of model
@@ -32,7 +32,7 @@ ludo.model.Model = new Class({
 	 @type Array
 	 @default undefined
 	 @example
-	 ['firstname','lastname', { name:'age', defaultValue:20 }]
+	    ['firstname','lastname', { name:'age', defaultValue:20 }]
 	 */
 	columns:undefined,
 	columnKeys:[],
@@ -204,7 +204,7 @@ ludo.model.Model = new Class({
 
 	 Example of query:
 	 @example
-	 request:{
+	    request:{
 	 		"request": "Person/100/read"
 	 	}
 	 Example of expected response
@@ -323,7 +323,7 @@ ludo.model.Model = new Class({
 	 @method save
 	 @param {Object} formData
 	 Save model data to server. The server request will look like this:
-	 @example
+    @example
 		 {
 		 	   "request": "Person/100/save",
 			   "data": { "id:100","firstname":"Jane","lastname":"Doe" }

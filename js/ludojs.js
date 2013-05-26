@@ -1,4 +1,4 @@
-/* Generated Sat May 25 21:11:58 CEST 2013 */
+/* Generated Sun May 26 5:02:48 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -4574,7 +4574,6 @@ ludo.dom = {
 	isInFamily:function (el, id) {
 		if (el.id === id)return true;
 		return el.getParent('#' + id);
-
 	},
 
     // TODO rename to cls
@@ -4617,6 +4616,7 @@ ludo.dom = {
 	},
 
 	getInnerWidthOf:function (el) {
+
 		if (el.style.width && el.style.width.indexOf('%') == -1) {
 			return ludo.dom.getNumericStyle(el, 'width');
 		}
@@ -4692,10 +4692,6 @@ ludo.util = {
 
 	isObject:function (obj) {
 		return typeof(obj) == 'object';
-	},
-
-	isBool:function (obj) {
-		return typeof(obj) == 'boolean';
 	},
 
 	isString:function (obj) {
@@ -4832,7 +4828,7 @@ ludo.util = {
     },
 
     supportsSVG:function(){
-        return !!document.createElementNS && !!document.createElementNS('http://www.w3.org/2000/svg', 'svg').createSVGRect;
+        return !!document.createElementNS && !!document.createElementNS('http://www.w3.org/2000/svg', 'svg')['createSVGRect'];
     }
 };/* ../ludojs/src/view/shim.js */
 /**
@@ -4928,36 +4924,36 @@ ludo.remote.Shim = new Class({
  @constructor
  @param {Object} config
  @example
- new ludo.View({
+    new ludo.View({
  		renderTo:document.body,
  		html : 'Hello'
 	}
  Creates a standard view rendered to the &lt;body> element of your page
 
  @example
- ...
- children:[{
-	 	html : 'View 1' },
- {
-	 html : 'View 2' }
- }]
- ...
+     ...
+     children:[{
+            html : 'View 1' },
+     {
+         html : 'View 2' }
+     }]
+     ...
  adds two views as child of a component
 
  @example
- ludo.myApp.View = new Class({
+    ludo.myApp.View = new Class({
  		Extends: ludo.View,
  		type : 'myApp.View',
  		ludoRendered:function(){
  			this.setHtml('My custom component');
 		}
 	}
- ...
- ...
- children:[{
+    ...
+    ...
+    children:[{
 		type : 'myApp.View'
 	}]
- ...
+     ...
 
  is a simple example of how to extend a view to create your own views and how to use it.
  *
@@ -5008,7 +5004,7 @@ ludo.View = new Class({
 	 @config children
 	 @type Array
 	 @example
-	 new ludo.Window({
+	    new ludo.Window({
            left : 200, top : 200,
            width : 400, height: 400,
            children : [{
@@ -5030,7 +5026,7 @@ ludo.View = new Class({
 	 @type Object
 	 @default undefined
 	 @example
-	 socket:{
+	    socket:{
             url:'http://127.0.0.1:1337',
             emitEvents:['chat','logout']
         }
@@ -5128,7 +5124,7 @@ ludo.View = new Class({
 	 @type Object
 	 @default undefined
 	 @example
-	 copyEvents:{
+	    copyEvents:{
            'click' : 'send'
         }
 	 */
@@ -5168,6 +5164,7 @@ ludo.View = new Class({
 
 	 */
 	layout:undefined,
+
 
 	/**
 	 Template for JSON compiler.
@@ -5966,7 +5963,7 @@ ludo.View = new Class({
 	 and call view.cancelDispose in case you don't want to dispose the view.
 	 @method cancelDispose
 	 @example
-	 function confirmDispose(view){
+	    function confirmDispose(view){
 	 		if(!confirm('Are you sure')){
 	 			view.cancelDispose();
 	 		}
@@ -6006,7 +6003,7 @@ ludo.View = new Class({
 				obj = this.dataSourceObj = ludo.get(this.dataSource);
 			} else {
 				if (!this.dataSource.type) {
-					this.dataSource.type = this.defaultDS || 'dataSource.JSON';
+					this.dataSource.type = this.defaultDS;
 				}
                 if(this.dataSource.shim && !this.dataSource.shim.renderTo){
                     this.dataSource.shim.renderTo = this.getEl()
@@ -6073,7 +6070,7 @@ ludo.View = new Class({
 	 @method submit
 	 @return void
 	 @example
-	 {
+	    {
 		 saveForm: 1,
 		 componentId : id of ludo.View,
 		 componentName : name of ludo.View,
@@ -6082,7 +6079,7 @@ ludo.View = new Class({
 			 lastname : 'Doe'
 			 formField : 'formValue
 		 }
-	 }
+	    }
 	 */
 	submit:function () {
 		this.fireEvent('submit', this);
@@ -6125,7 +6122,7 @@ ludo.View = new Class({
 	 @method getCanvas
 	 @return {canvas.Canvas} canvas
 	 @example
-	 var win = new ludo.Window({
+	    var win = new ludo.Window({
 		   id:'myWindow',
 		   left:50, top:50,
 		   width:410, height:490,
@@ -6134,16 +6131,16 @@ ludo.View = new Class({
 			   'background-color':'#FFF'
 		   }
 	   });
-	 // Creating style sheet
-	 var paint = new ludo.canvas.Paint({
+	    // Creating style sheet
+	    var paint = new ludo.canvas.Paint({
 		   css:{
 			   'fill':'#FFFFFF',
 			   'stroke':'#DEF',
 			   'stroke-width':'5'
 		   }
 	   });
-	 var canvas = win.getCanvas();
-	 canvas.adopt(new ludo.canvas.Node('line', { x1:100, y1:100, x2:200, y2:200, "class":paint }));
+	    var canvas = win.getCanvas();
+	    canvas.adopt(new ludo.canvas.Node('line', { x1:100, y1:100, x2:200, y2:200, "class":paint }));
 	 */
 	getCanvas:function () {
 		if (this.canvas === undefined) {
@@ -17914,7 +17911,6 @@ ludo.dataSource.CollectionSearch = new Class({
 	},
 
 	createSearchIndex:function () {
-
 		this.indexBranch(this.getDataFromSource());
 		this.searchIndexCreated = true;
 	},
@@ -17963,8 +17959,9 @@ ludo.dataSource.CollectionSearch = new Class({
 		return this.searchResult ? this.searchResult.length : 0;
 	},
 
+    // TODO fix this method
 	searchToString:function () {
-		return this.hasData() ? this.searchTokens[0] : '';
+		return this.hasData() ? '' : '';
 	}
 });/* ../ludojs/src/effect/drop-point.js */
 /**
@@ -22635,7 +22632,7 @@ ludo.calendar.MonthYearSelector = new Class({
  @namespace model
  @class Model
  @example
- model:{
+    model:{
 	 type:'model.Model',
 	 name:'user',
 	 columns:['firstname', 'lastname', 'email','timezone','locale'],
@@ -22661,7 +22658,7 @@ ludo.model.Model = new Class({
 	 @type Array
 	 @default undefined
 	 @example
-	 ['firstname','lastname', { name:'age', defaultValue:20 }]
+	    ['firstname','lastname', { name:'age', defaultValue:20 }]
 	 */
 	columns:undefined,
 	columnKeys:[],
@@ -22833,7 +22830,7 @@ ludo.model.Model = new Class({
 
 	 Example of query:
 	 @example
-	 request:{
+	    request:{
 	 		"request": "Person/100/read"
 	 	}
 	 Example of expected response
@@ -22952,7 +22949,7 @@ ludo.model.Model = new Class({
 	 @method save
 	 @param {Object} formData
 	 Save model data to server. The server request will look like this:
-	 @example
+    @example
 		 {
 		 	   "request": "Person/100/save",
 			   "data": { "id:100","firstname":"Jane","lastname":"Doe" }
@@ -24883,11 +24880,13 @@ ludo.form.Manager = new Class({
         if(this.form.idField && c.name == this.form.idField){
             this.formComponentId = c;
         }
-		c.addEvent('valid', this.onValidFormElement.bind(this));
-		c.addEvent('invalid', this.onInvalidFormElement.bind(this));
-		c.addEvent('dirty', this.onDirtyFormElement.bind(this));
-		c.addEvent('clean', this.onCleanFormElement.bind(this));
-        c.addEvent('change', this.onChangedFormElement.bind(this));
+        c.addEvents({
+            'valid' :  this.onValid.bind(this),
+            'invalid' : this.onInvalid.bind(this),
+            'dirty' : this.onDirty.bind(this),
+            'clean' : this.onClean.bind(this),
+            'change' : this.onChange.bind(this)
+        });
 
 		if (!c.isValid()) {
 			this.invalidIds.push(c.getId());
@@ -24908,7 +24907,7 @@ ludo.form.Manager = new Class({
 		}
 	},
 
-	onDirtyFormElement:function (value, formComponent) {
+	onDirty:function (value, formComponent) {
 		var elId = formComponent.getId();
 		if (this.dirtyIds.indexOf(elId) == -1) {
 			this.dirtyIds.push(elId);
@@ -24921,7 +24920,7 @@ ludo.form.Manager = new Class({
 		this.fireEvent('dirty', formComponent);
 	},
 
-	onCleanFormElement:function (value, formComponent) {
+	onClean:function (value, formComponent) {
 		this.dirtyIds.erase(formComponent.getId());
 
 		if (this.dirtyIds.length === 0) {
@@ -24933,7 +24932,7 @@ ludo.form.Manager = new Class({
 		}
 	},
 
-    onChangedFormElement:function(value, formComponent){
+    onChange:function(value, formComponent){
         /**
          * Event fired when a form element has been changed
          * @event change
@@ -24945,12 +24944,12 @@ ludo.form.Manager = new Class({
     },
 	/**
 	 * One form element is valid. Fire valid event if all form elements are valid
-	 * @method onValidFormElement
+	 * @method onValid
 	 * @private
 	 * @param {String} value
 	 * @param {object } formComponent
 	 */
-	onValidFormElement:function (value, formComponent) {
+	onValid:function (value, formComponent) {
 		this.invalidIds.erase(formComponent.getId());
 		if (this.invalidIds.length == 0) {
 			/**
@@ -24966,12 +24965,12 @@ ludo.form.Manager = new Class({
 	/**
 	 * Set component invalid when a form element inside it is invalid
 	 *
-	 * @method onInvalidFormElement
+	 * @method onInvalid
 	 * @private
 	 * @param {String} value
 	 * @param {Object} formComponent
 	 */
-	onInvalidFormElement:function (value, formComponent) {
+	onInvalid:function (value, formComponent) {
 		var elId = formComponent.getId();
 		if (this.invalidIds.indexOf(elId) == -1) {
 			this.invalidIds.push(elId);

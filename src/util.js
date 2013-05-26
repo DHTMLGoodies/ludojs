@@ -11,10 +11,6 @@ ludo.util = {
 		return typeof(obj) == 'object';
 	},
 
-	isBool:function (obj) {
-		return typeof(obj) == 'boolean';
-	},
-
 	isString:function (obj) {
 		return typeof(obj) == 'string';
 	},
@@ -149,6 +145,6 @@ ludo.util = {
     },
 
     supportsSVG:function(){
-        return !!document.createElementNS && !!document.createElementNS('http://www.w3.org/2000/svg', 'svg').createSVGRect;
+        return !!document.createElementNS && !!document.createElementNS('http://www.w3.org/2000/svg', 'svg')['createSVGRect'];
     }
 };

@@ -138,7 +138,6 @@ ludo.dom = {
 	isInFamily:function (el, id) {
 		if (el.id === id)return true;
 		return el.getParent('#' + id);
-
 	},
 
     // TODO rename to cls
@@ -181,6 +180,7 @@ ludo.dom = {
 	},
 
 	getInnerWidthOf:function (el) {
+
 		if (el.style.width && el.style.width.indexOf('%') == -1) {
 			return ludo.dom.getNumericStyle(el, 'width');
 		}
