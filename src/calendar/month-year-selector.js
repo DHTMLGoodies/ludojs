@@ -87,7 +87,6 @@ ludo.calendar.MonthYearSelector = new Class({
     },
 
     addAndRemoveOptions:function () {
-
         var min = this.date.clone().decrement('month', this.offsetOptions);
         var max = this.date.clone().increment('month', this.offsetOptions);
         if(max < this.minDisplayed || min > this.maxDisplayed){

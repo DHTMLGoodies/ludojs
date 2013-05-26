@@ -1,4 +1,4 @@
-/* Generated Sun May 26 23:23:41 CEST 2013 */
+/* Generated Sun May 26 23:29:29 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -22251,7 +22251,8 @@ ludo.calendar.MonthSelector = new Class({
         var el = this.els.monthTip = new Element('div');
         el.setStyles({
             'position' : 'absolute',
-            display:'none'
+            display:'none',
+            'z-index' : 100000
         });
         ludo.dom.addClass(el, 'ludo-calendar-month-tip');
         ludo.dom.addClass(el, 'ludo-calendar-month');
