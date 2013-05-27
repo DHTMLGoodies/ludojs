@@ -192,27 +192,27 @@ div.ludo-resize-handle-over{
 div.ludo-container-frame{
     border:1px solid #000 !important;
 }
-.ludo-form-button-bg-left{
+.ludo-form-button-m-bg-left{
     background-image:url('../images/gray-skin/button-bg.png');
 }
 
-.ludo-form-button-bg-right{
+.ludo-form-button-m-bg-right{
     background-image:url('../images/gray-skin/button-bg.png');
 }
 
-.ludo-form-button-over .ludo-form-button-bg-left{
+.ludo-form-button-over .ludo-form-button-m-bg-left{
     background-image:url('../images/gray-skin/button-bg-over.png');
 }
 
-.ludo-form-button-over .ludo-form-button-bg-right{
+.ludo-form-button-over .ludo-form-button-m-bg-right{
     background-image:url('../images/gray-skin/button-bg-over.png');
 }
 
-.ludo-form-button-down .ludo-form-button-bg-left{
+.ludo-form-button-down .ludo-form-button-m-bg-left{
     background-image:url('../images/gray-skin/button-bg-down.png');
 }
 
-.ludo-form-button-down .ludo-form-button-bg-right{
+.ludo-form-button-down .ludo-form-button-m-bg-right{
     background-image:url('../images/gray-skin/button-bg-down.png');
 }
 

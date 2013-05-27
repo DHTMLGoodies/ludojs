@@ -22,8 +22,10 @@ require_once("../includes/demo-header.php");
             {
                 type:'form.Button',
                 value:'Toggle Menu',
+                size:'l',
+                icon:'../../images/form/menu-icon-large.png',
                 layout:{
-                    height:30
+                    height:50
                 },
                 listeners:{
                     'click':function () {

@@ -102,6 +102,26 @@ ludo.form.Button = new Class({
 
     active:false,
 
+	/**
+	 * Size,i.e height of button. Possible values 's', 'm' and 'l' (small,medium, large)
+	 * @config {String} size
+	 * @default 'm'
+	 */
+	size : 'm',
+
+	iconWidths:{
+		's' : 13,
+		'm' : 25,
+		'l' : 46
+	},
+
+	heights:{
+		's' : 13,
+		'm' : 25,
+		'l' : 45
+	},
+
+
     ludoConfig:function (config) {
 		this.parent(config);
 
@@ -110,7 +130,7 @@ ludo.form.Button = new Class({
         this.layout.width = this.layout.width || Math.max(len * 10, 80);
 
 
-        this.setConfigParams(config, ['menu','icon','toggle','disableOnInvalid','defaultSubmit','disabled','selected']);
+        this.setConfigParams(config, ['size','menu','icon','toggle','disableOnInvalid','defaultSubmit','disabled','selected']);
 
         if (config.toggleGroup !== undefined) {
             if (ludo.util.type(config.toggleGroup) === 'String') {
@@ -130,6 +150,8 @@ ludo.form.Button = new Class({
         this.parent();
 
         this.getEl().style.display = this.isHidden() ? 'none' : 'block';
+
+		this.getEl().addClass('ludo-form-button-' + this.size);
 
         this.addLeftEdge();
         this.addRightEdge();
@@ -194,7 +216,7 @@ ludo.form.Button = new Class({
         txt.setStyles({
             'width':'100%',
             'position':'absolute',
-            'left':this.icon ? '25px' : '0px',
+            'left':this.icon ? this.iconWidths[this.size] + 'px' : '0px',
             'text-align':this.icon ? 'left' : 'center',
             'z-index':7
         });
@@ -206,7 +228,7 @@ ludo.form.Button = new Class({
         var el = this.els.icon = new Element('div');
         el.setStyles({
             position:'absolute',
-            width:'25px',
+            width:this.iconWidths[this.size],
             'z-index':8,
             left:0,
             top:0,
@@ -229,6 +251,7 @@ ludo.form.Button = new Class({
     addLeftEdge:function () {
         var bg = this.els.buttonLeftludo = new Element('div');
         ludo.dom.addClass(bg, 'ludo-form-button-bg-left');
+        ludo.dom.addClass(bg, 'ludo-form-button-' + this.size +'-bg-left');
         bg.setStyles({
             position:'absolute',
             'left':0,
@@ -240,6 +263,7 @@ ludo.form.Button = new Class({
     addRightEdge:function () {
         var bg = new Element('div');
         ludo.dom.addClass(bg, 'ludo-form-button-bg-right');
+        ludo.dom.addClass(bg, 'ludo-form-button-' + this.size + '-bg-right');
         bg.setStyles({
             position:'absolute',
             'right':0,
@@ -346,7 +370,7 @@ ludo.form.Button = new Class({
     },
     resizeDOM:function () {
         // TODO refactor - buttons too tall in relative layout
-        this.getBody().style.height = '25px';
+        this.getBody().style.height = this.heights[this.size] + 'px';
         /* No DOM resize for buttons */
     },
 
