@@ -1,4 +1,4 @@
-/* Generated Mon May 27 13:13:06 CEST 2013 */
+/* Generated Mon May 27 13:39:08 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -20427,13 +20427,13 @@ ludo.form.Button = new Class({
 	size : 'm',
 
 	iconWidths:{
-		's' : 13,
+		's' : 15,
 		'm' : 25,
-		'l' : 46
+		'l' : 44
 	},
 
 	heights:{
-		's' : 13,
+		's' : 15,
 		'm' : 25,
 		'l' : 45
 	},

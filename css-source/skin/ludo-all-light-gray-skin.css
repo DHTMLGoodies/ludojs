@@ -361,19 +361,19 @@ div.ludo-menu-vertical {
     background-image: url(../images/light-gray-skin/expand-menu-horizontal.png);
 }
 
-.ludo-form-button-s .ludo-form-button-m-bg-left, .ludo-form-button-s .ludo-form-button-m-bg-right {
+.ludo-form-button-s .ludo-form-button-s-bg-left, .ludo-form-button-s .ludo-form-button-s-bg-right {
     background-image: url('../images/light-gray-skin/tiny-button.png');
 }
 
-.ludo-form-button-s .ludo-form-button-over .ludo-form-button-m-bg-left, .ludo-form-button-s .ludo-form-button-over .ludo-form-button-m-bg-right {
+.ludo-form-button-s .ludo-form-button-over .ludo-form-button-s-bg-left, .ludo-form-button-s .ludo-form-button-over .ludo-form-button-s-bg-right {
     background-image: url('../images/light-gray-skin/tiny-button-over.png');
 }
 
-.ludo-form-button-s .ludo-form-button-down .ludo-form-button-m-bg-left, .ludo-form-button-s .ludo-form-button-down .ludo-form-button-m-bg-right {
+.ludo-form-button-s .ludo-form-button-down .ludo-form-button-s-bg-left, .ludo-form-button-s .ludo-form-button-down .ludo-form-button-s-bg-right {
     background-image: url('../images/light-gray-skin/tiny-button-down.png');
 }
 
-.ludo-form-button-s .ludo-form-button-disabled .ludo-form-button-m-bg-left, .ludo-form-button-s .ludo-form-button-disabled .ludo-form-button-m-bg-right {
+.ludo-form-button-s .ludo-form-button-disabled .ludo-form-button-s-bg-left, .ludo-form-button-s .ludo-form-button-disabled .ludo-form-button-s-bg-right {
     background-image: url('../images/light-gray-skin/tiny-button-disabled.png');
 }
 
