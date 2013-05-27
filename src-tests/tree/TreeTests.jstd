@@ -5,7 +5,7 @@ load:
   - ../../src/data-source/*.js
   - ../../src/data-source/collection.js
   - ../../src/data-source/tree-collection.js
-  - ../../src/tree/new-tree.js
+  - ../../src/tree/tree.js
 
 test:
   - TreeTest.js

@@ -152,9 +152,7 @@ div.ludo-resize-handle-
 div.ludo-container-frame {
     border: 1px solid #c6c6c6 !important;
 }
-div.ludo-form-button{
-    height:24px;
-}
+
 
 .ludo-form-button-m-bg-right, .ludo-form-button-m-bg-left {
     background-image: url('../images/button/button-bg-light.png');

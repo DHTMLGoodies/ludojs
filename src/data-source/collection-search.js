@@ -339,19 +339,26 @@ ludo.dataSource.CollectionSearch = new Class({
 		this.searchIndexCreated = true;
 	},
 
-    indexBranch:function(data){
+    indexBranch:function(data, parents){
+		parents = parents || [];
         var keys = this.getSearchIndexKeys();
+
         var index;
         for (var i = 0; i < data.length; i++) {
             index = [];
             for (var j = 0; j < keys.length; j++) {
-                if (data[i][keys[j]]) {
+                if (data[i][keys[j]] !== undefined) {
                     index.push((data[i][keys[j]] + '').toLowerCase());
                 }
             }
             data[i].searchIndex = index.join(' ');
+
+			for(j=0;j<parents.length;j++){
+				parents[j].searchIndex = [parents[j].searchIndex, data[i].searchIndex].join(' ');
+
+			}
             if(data[i].children){
-                this.indexBranch(data[i].children);
+                this.indexBranch(data[i].children, parents.concat(data[i]));
             }
         }
     },
@@ -360,13 +367,15 @@ ludo.dataSource.CollectionSearch = new Class({
 		if (this.index !== undefined) {
 			return this.index;
 		}
+		var reservedKeys = ['children','searchIndex', 'uid'];
+
 		var data = this.getDataFromSource();
 		if (data.length > 0) {
 			var record = Object.clone(data[0]);
 			var ret = [];
 			for (var key in record) {
 				if (record.hasOwnProperty(key)) {
-					ret.push(key);
+					if(reservedKeys.indexOf(key) === -1)ret.push(key);
 				}
 			}
 			return ret;

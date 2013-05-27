@@ -1838,27 +1838,7 @@ div.ludo-tree-movable-shim img{
 }
 
 
-/* ../ludojs/css-source/form/tiny-button.css */
-.ludo-form-button-s{
-    padding-left:1px;
-    padding-right:1px;
-}
-.ludo-form-button-s .ludo-form-button-m-bg-left, .ludo-form-button-s .ludo-form-button-m-bg-right{
-    background-image:url('../images/tiny-button.png');
-}
-.ludo-form-button-s .ludo-form-button-over .ludo-form-button-m-bg-left, .ludo-form-button-s .ludo-form-button-over .ludo-form-button-m-bg-right{
-    background-image:url('../images/tiny-button-over.png');
-}
-.ludo-form-button-s .ludo-form-button-down .ludo-form-button-m-bg-left, .ludo-form-button-s .ludo-form-button-down .ludo-form-button-m-bg-right{
-    background-image:url('../images/tiny-button-down.png');
-}
-.ludo-form-button-s .ludo-form-button-disabled .ludo-form-button-m-bg-left, .ludo-form-button-s .ludo-form-button-disabled .ludo-form-button-m-bg-right{
-    background-image:url('../images/tiny-button-disabled.png');
-}
-.ludo-form-tiny-button .ludo-form-button-value{
-    line-height:15px;
-    font-size:11px;
-}/* ../ludojs/css-source/form/text.css */
+/* ../ludojs/css-source/form/text.css */
 .ludo-richcomponent .ludo-form_text .ludo-body,
 .ludo-richcomponent .ludo-form_select .ludo-body {
     margin: 3px;
@@ -2479,9 +2459,7 @@ div.ludo-resize-handle-
 div.ludo-container-frame {
     border: 1px solid #c6c6c6 !important;
 }
-div.ludo-form-button{
-    height:24px;
-}
+
 
 .ludo-form-button-m-bg-right, .ludo-form-button-m-bg-left {
     background-image: url('../images/button/button-bg-light.png');

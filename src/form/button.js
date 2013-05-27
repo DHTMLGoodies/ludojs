@@ -215,6 +215,7 @@ ludo.form.Button = new Class({
         ludo.dom.addClass(txt, 'ludo-form-button-value');
         txt.setStyles({
             'width':'100%',
+			'height' : this.heights[this.size] - 2,
             'position':'absolute',
             'left':this.icon ? this.iconWidths[this.size] + 'px' : '0px',
             'text-align':this.icon ? 'left' : 'center',

@@ -74,9 +74,10 @@ ludo.form.Select = new Class({
     /**
      * Config of dataSource.Collection object used to populate the select box from external data
      * @config {Object|ludo.dataSource.Collection} dataSource
-     * @default undefined
+     * @default {}
      */
-    dataSource:undefined,
+	dataSource:{},
+
     /**
      Array of options used to populate the select box
      @config {Array} options
@@ -90,11 +91,11 @@ ludo.form.Select = new Class({
      */
     options:undefined,
 
+	defaultDS:'dataSource.Collection',
+
     ludoConfig:function (config) {
         this.parent(config);
         this.setConfigParams(config, ['emptyItem', 'options', 'valueKey', 'textKey']);
-        if (!this.dataSource)this.dataSource = {};
-        if (this.dataSource && !this.dataSource.type)this.dataSource.type = 'dataSource.Collection';
         if(!this.emptyItem && this.inlineLabel){
             this.emptyItem = {};
             this.emptyItem[this.textKey] = this.inlineLabel;
@@ -136,6 +137,7 @@ ludo.form.Select = new Class({
 
         if (this.value) {
             this.setValue(this.value);
+			this.setFormElValue(this.value);
         }
     },
 

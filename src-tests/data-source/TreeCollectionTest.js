@@ -139,6 +139,26 @@ TestCase("TreeCollection", {
 		assertEquals(4, parent.getChildren().length);
 	},
 
+	"test should be able to search for child records": function(){
+		// given
+		var c = this.getCollection();
+		var matches = [];
+
+		// when
+		c.getSearcher().addEvent('match', function(record){
+			matches.push(record.id);
+		});
+
+		// when
+		c.getSearcher().search('grand child');
+
+		// then
+		assertTrue('Grand child not found', matches.indexOf('grandchild') >=0);
+		assertTrue('child not found', matches.indexOf('child') >=0);
+		assertTrue('parent not found', matches.indexOf('parent') >=0);
+		assertEquals(3, matches.length);
+	},
+
 	getCollection:function (config) {
 		if (ludo.MyDataSource3 === undefined) {
 			var d = this.getData();
@@ -168,7 +188,20 @@ TestCase("TreeCollection", {
 
 			]},
 			{id:3, "country":"Russia", "capital":"Moscow", "population":"10,126,424"},
-			{id:'no', "country":"Norway", "capital":"Oslo", "population":"A few"}
+			{id:'no', "country":"Norway", "capital":"Oslo", "population":"A few"},
+			{id:'parent', country:'parent',
+				children:[
+					{
+						id:'child', country:'child',
+						children:[
+							{
+								id:'grandchild',
+								country:'Grand child'
+							}
+						]
+					}
+				]
+			}
 		]};
 	}
 });

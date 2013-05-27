@@ -1,4 +1,4 @@
-/* Generated Mon May 27 13:39:08 CEST 2013 */
+/* Generated Mon May 27 19:01:49 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -3803,6 +3803,11 @@ ludo.dataSource.Base = new Class({
 
 	inLoadMode:false,
 
+	/**
+	 *
+	 */
+	shim:undefined,
+
 	ludoConfig:function (config) {
 		this.parent(config);
 		this.setConfigParams(config, ['url', 'postData', 'autoload', 'resource', 'service', 'arguments', 'data', 'shim']);
@@ -4853,7 +4858,7 @@ ludo.view.Shim = new Class({
                 renderTo:this.renderTo,
                 cls:'ludo-component-pleasewait',
                 css:{'display':'none'},
-                html : this.txt
+                html : this.getTextForShim()
             });
         }
         return this.el;
@@ -4872,11 +4877,16 @@ ludo.view.Shim = new Class({
 
     show:function (txt) {
         if (txt !== undefined) {
-            this.el.set('html', txt);
-        }
+            this.getEl().set('html', txt);
+        }else{
+			this.getEl().set('html', this.getTextForShim());
+		}
         this.css('');
-
     },
+
+	getTextForShim:function(){
+		return ludo.util.isFunction(this.txt) ? this.txt.call() : this.txt;
+	},
 
     hide:function () {
         this.css('none');
@@ -7475,6 +7485,13 @@ ludo.dataSource.Collection = new Class({
 	 */
 	search:function (search) {
 		this.getSearcher().search(search);
+	},
+
+
+	remoteSearch:function(search){
+		this.postData = this.postData || {};
+		this.postData.search = search;
+		this.load();
 	},
 
 	afterSearch:function(){
@@ -14400,6 +14417,122 @@ ludo.layout.Canvas = new Class({
 
 
 
+});/* ../ludojs/src/layout/slide-in.js */
+/**
+ * Layout where first child slides in from the left on demand
+ * @namespace layout
+ * @class SlideIn
+ */
+ludo.layout.SlideIn = new Class({
+    Extends:ludo.layout.Base,
+    slideEl:undefined,
+
+    onCreate:function(){
+        this.view.getBody().style.overflowX = 'hidden';
+    },
+
+    onNewChild:function (child) {
+        this.parent(child);
+        child.getEl().style.position = 'absolute';
+    },
+
+    resize:function () {
+        var widthOfFirst = this.getWidthOfMenu();
+
+        this.view.children[0].resize({
+            width:widthOfFirst,
+            height:this.viewport.height
+        });
+
+        this.slideEl.style.width = (this.viewport.absWidth + widthOfFirst) + 'px';
+        this.slideEl.style.left = this.view.layout.active ? 0 : (widthOfFirst * -1) + 'px';
+
+        this.view.children[1].getEl().style.left = widthOfFirst + 'px';
+        this.view.children[1].resize({
+            width:this.viewport.absWidth,
+            height:this.viewport.height
+        })
+
+    },
+    /**
+     Show menu
+     @method show
+     @example
+        view.getLayout().show();
+     */
+    show:function () {
+        if (!this.view.layout.active) {
+            if(this.view.children[0].hidden){
+                this.view.children[0].show();
+            }
+            this.view.layout.active = true;
+            var widthOfFirst = this.getWidthOfMenu();
+            this.effect().slide(this.slideEl, { x:widthOfFirst * -1}, {x:0 }, this.getDuration());
+        }
+    },
+    /**
+     hide menu
+     @method hide
+     @example
+        view.getLayout().hide();
+     */
+    hide:function () {
+        if (this.view.layout.active) {
+            this.view.layout.active = false;
+            var widthOfFirst = this.getWidthOfMenu();
+            this.effect().slide(this.slideEl, {x:0 }, { x:widthOfFirst * -1}, this.getDuration());
+        }
+    },
+
+    /**
+     * Toggle between show and hide
+     * @method toggle
+     */
+    toggle:function () {
+        this[this.view.layout.active ? 'hide' : 'show']();
+    },
+
+    effect:function () {
+        if (this.effectObject === undefined) {
+            this.effectObject = new ludo.effect.Effect
+        }
+        return this.effectObject;
+    },
+
+    getDuration:function () {
+        return this.view.layout.duration || .15;
+    },
+
+    getWidthOfMenu:function(){
+        var ret = this.view.children[0].layout.width;
+
+        if(isNaN(ret)){
+            switch(ret){
+                case 'matchParent':
+                    return this.viewport.width;
+                default:
+                    return parseInt(ret) * this.viewport.width / 100;
+            }
+
+        }else{
+            return ret;
+        }
+    },
+
+    getParentForNewChild:function () {
+        if (!this.slideEl) {
+            this.slideEl = ludo.dom.create({
+                tag:'div',
+                renderTo:this.view.getBody(),
+                css:{
+                    height:'100%',
+                    position:'absolute'
+                }
+            });
+        }
+        return this.slideEl;
+    }
+
 });/* ../ludojs/src/layout/menu-container.js */
 ludo.layout.MenuContainer = new Class({
     Extends:Events,
@@ -15052,6 +15185,129 @@ ludo.layout.CollapseBar = new Class({
 	getViews:function(){
 		return this.views;
 	}
+});/* ../ludojs/src/list.js */
+ludo.List = new Class({
+    Extends:ludo.View,
+    defaultDS:'dataSource.Collection',
+    overflow:'scroll',
+    highlighted:undefined,
+    recordMap:{},
+
+    ludoConfig:function (config) {
+        this.parent(config);
+    },
+
+    ludoEvents:function () {
+        this.parent();
+        this.getBody().addEvent('click', this.onClick.bind(this));
+    },
+
+    ludoRendered:function () {
+        this.parent();
+
+        if (this.dataSource) {
+            if (this.dataSourceObj && this.dataSourceObj.hasData()) {
+                this.populateData();
+            }
+            this.getDataSource().addEvents({
+                'change':this.populate.bind(this),
+                'select':this.select.bind(this),
+                'deselect':this.deselect.bind(this),
+                'update':this.update.bind(this),
+                'delete':this.remove.bind(this)
+            });
+        }
+    },
+
+    populate:function () {
+
+        var d = this.getDataSource().getData();
+
+        var data = this.getTplParser().getCompiled(d, this.tpl);
+        var b = this.getBody();
+        b.innerHTML = '';
+
+        for (var i = 0; i < data.length; i++) {
+            var el = document.id(ludo.dom.create({
+                tag:'div',
+                id : 'list-' + d[i].uid,
+                html:data[i],
+                css:{ "cursor": "pointer" },
+                cls : 'ludo-list-item',
+                renderTo:b
+            }));
+            this.recordMap[d[i].uid] = el.id;
+
+            el.addEvent('mouseenter', this.enter.bind(this));
+            el.addEvent('mouseleave', this.leave.bind(this));
+        }
+
+        var selected = this.getDataSource().getSelectedRecord();
+        if(selected){
+            this.select(selected);
+        }
+    },
+
+    enter:function(e){
+        var el = this.getRecordDOM(e.target);
+        if(el)ludo.dom.addClass(el, 'ludo-list-item-highlighted');
+    },
+
+    leave:function(e){
+        var el = this.getRecordDOM(e.target);
+        if(el)ludo.dom.removeClass(el, 'ludo-list-item-highlighted');
+    },
+
+    getRecordDOM:function(el){
+        if(!ludo.dom.hasClass(el, 'ludo-list-item')){
+            el = el.getParent('.ludo-list-item');
+        }
+        return el;
+    },
+
+    getRecordId:function(el){
+        el = this.getRecordDOM(el);
+        if(el){
+            return el.id.replace('list-', '');
+        }
+        return undefined;
+    },
+
+    getDOMForRecord:function(record){
+        return this.recordMap[record.uid] ? document.id(this.recordMap[record.uid]) : undefined;
+
+    },
+
+    select:function (record) {
+        var el = this.getDOMForRecord(record);
+        if(el)ludo.dom.addClass(el, 'ludo-list-item-selected');
+    },
+
+    deselect:function (record) {
+        var el = this.getDOMForRecord(record);
+        if(el)ludo.dom.removeClass(el, 'ludo-list-item-selected');
+    },
+
+    update:function (record) {
+        var el = this.getDOMForRecord(record);
+        if(el){
+            var content = this.getTplParser().asString(record, this.tpl);
+            el.set('html', content);
+        }
+    },
+
+    remove:function (record) {
+        var el = this.getDOMForRecord(record);
+        if(el){
+            el.dispose();
+            this.recordMap[record.uid] = undefined;
+        }
+    },
+
+    onClick:function (e) {
+        var recId = this.getRecordId(e.target);
+        if(recId)this.getDataSource().getRecord(recId).select();
+    }
 });/* ../ludojs/src/notification.js */
 /**
  Class for providing short messages and feedback in a small popup.
@@ -17676,19 +17932,26 @@ ludo.dataSource.CollectionSearch = new Class({
 		this.searchIndexCreated = true;
 	},
 
-    indexBranch:function(data){
+    indexBranch:function(data, parents){
+		parents = parents || [];
         var keys = this.getSearchIndexKeys();
+
         var index;
         for (var i = 0; i < data.length; i++) {
             index = [];
             for (var j = 0; j < keys.length; j++) {
-                if (data[i][keys[j]]) {
+                if (data[i][keys[j]] !== undefined) {
                     index.push((data[i][keys[j]] + '').toLowerCase());
                 }
             }
             data[i].searchIndex = index.join(' ');
+
+			for(j=0;j<parents.length;j++){
+				parents[j].searchIndex = [parents[j].searchIndex, data[i].searchIndex].join(' ');
+
+			}
             if(data[i].children){
-                this.indexBranch(data[i].children);
+                this.indexBranch(data[i].children, parents.concat(data[i]));
             }
         }
     },
@@ -17697,13 +17960,15 @@ ludo.dataSource.CollectionSearch = new Class({
 		if (this.index !== undefined) {
 			return this.index;
 		}
+		var reservedKeys = ['children','searchIndex', 'uid'];
+
 		var data = this.getDataFromSource();
 		if (data.length > 0) {
 			var record = Object.clone(data[0]);
 			var ret = [];
 			for (var key in record) {
 				if (record.hasOwnProperty(key)) {
-					ret.push(key);
+					if(reservedKeys.indexOf(key) === -1)ret.push(key);
 				}
 			}
 			return ret;
@@ -20532,6 +20797,7 @@ ludo.form.Button = new Class({
         ludo.dom.addClass(txt, 'ludo-form-button-value');
         txt.setStyles({
             'width':'100%',
+			'height' : this.heights[this.size] - 2,
             'position':'absolute',
             'left':this.icon ? this.iconWidths[this.size] + 'px' : '0px',
             'text-align':this.icon ? 'left' : 'center',
@@ -23710,14 +23976,51 @@ ludo.menu.Button = new Class({
         }
     }
 });/* ../ludojs/src/tree/tree.js */
-// TODO define child custom child key
-// TODO should not have to have an "id" property
+/**
+ * Tree widget
+ * @namespace tree
+ * @class Tree
+ */
 ludo.tree.Tree = new Class({
 	Extends:ludo.View,
     type:'tree.Tree',
 	nodeCache:{},
     renderedRecords: {},
+	/**
+	 String template for nodes in the tree
+	 @config {String|Object}
+	 @example
+	 	tpl : '{title}
+	 or as an object:
+	 @example
+	 	tpl:{
+	 		tplKey : 'type',
+	 		city : 'City : {city}',
+	 		country : 'Country : {country}
+	 	}
+	 When using an object, "tplKey" is a reference to a common property of all objects, example "type". When type
+	 for a node is "city", it will use the city : 'City : {city}' tpl. When it's "country", it will use the "country" tpl.
+	 @example
+	 	[
+			{ id:1, "country":"Japan", "type":"country", "capital":"Tokyo", "population":"13,185,502",
+				children:[
+					{ id:11, city:'Kobe', "type":"city" },
+					{ id:12, city:'Kyoto', "type":"city" },
+					{ id:13, city:'Sapporo', "type":"city"},
+					{ id:14, city:'Sendai', "type":"city"},
+					{ id:15, city:'Kawasaki', "type":"city"}
+				]},
+			{id:2, "country":"South Korea", "capital":"Seoul", "population":"10,464,051", "type":"country",
+				children:[
+					{ id:21, city:'Seoul', "type":"city" }
+
+				]},
+			{id:3, "country":"Russia", "capital":"Moscow", "population":"10,126,424", "type":"country"},
+		]
+	 is an example of a data structure for this tpl.
+	 */
 	tpl : '<span class="ludo-tree-node-spacer"></span> {title}',
+	tplKey:undefined,
 	dataSource:{
 	},
     defaultDS: 'dataSource.TreeCollection',
@@ -23923,8 +24226,10 @@ ludo.tree.Tree = new Class({
 
 
 	getNodeTextFor:function (record) {
-		var tplFields = this.getTplFields();
-		var ret = this.tpl;
+		var tplFields = this.getTplFields(record);
+
+		var ret = this.getTpl(record);
+
 		for (var i = 0, count = tplFields.length; i < count; i++) {
 			var field = tplFields[i];
 			ret = ret.replace('{' + field + '}', record[field] ? record[field] : this.getDefaultValue(record, field));
@@ -23939,16 +24244,37 @@ ludo.tree.Tree = new Class({
 		return '';
 	},
 
-	getTplFields:function () {
+	tpls:undefined,
+
+	getTpl:function(record){
+		return this.tpl['tplKey'] ? this.tpl[record[this.tplKey]] : this.tpl;
+	},
+
+	getTplFields:function (record) {
 		if (!this.tplFields) {
-			var tpl = this.tpl;
-			var matches = tpl.match(/{([^}]+)}/g);
-			for (var i = 0; i < matches.length; i++) {
-				matches[i] = matches[i].replace(/[{}]/g, '');
+			if(ludo.util.isString(this.tpl)){
+				this.tplFields = this.getTplMatches(this.tpl);
+			}else{
+				this.tplFields = {};
+				var tpl = Object.clone(this.tpl);
+				this.tplKey = tpl.tplKey;
+				for(var key in tpl){
+					if(tpl.hasOwnProperty(key)){
+						if(key != 'tplKey')this.tplFields[key] = this.getTplMatches(tpl[key]);
+					}
+				}
 			}
-			this.tplFields = matches;
+
 		}
-		return this.tplFields;
+		return this.tplKey ? this.tplFields[record[this.tplKey]] : this.tplFields;
+	},
+
+	getTplMatches:function(tpl){
+		var matches = tpl.match(/{([^}]+)}/g);
+		for (var i = 0; i < matches.length; i++) {
+			matches[i] = matches[i].replace(/[{}]/g, '');
+		}
+		return matches;
 	},
 
 	addRecord:function(record){
@@ -24005,334 +24331,6 @@ ludo.tree.Tree = new Class({
 
     getUID:function(record){
         return record.getUID ? record.getUID() : record.uid;
-    }
-});/* ../ludojs/src/tree/modifications.js */
-/**
- * This class stores modified records in a tree
- * @namespace tree
- * @class Modifications
- */
-ludo.tree.Modifications = new Class({
-
-    modifications:[],
-    tree:undefined,
-
-    initialize:function(config){
-        this.tree = config.tree;
-    },
-
-    getModifications:function () {
-        return this.modifications;
-    },
-
-    storeUpdatedRecord:function (record) {
-        var obj = {
-            record:this.getRecordClone(record),
-            action:'update'
-        };
-        this.modifications.push(obj);
-    },
-
-    storeRemovedRecord:function (record, parentRecord) {
-        var obj = {
-            record:this.getRecordClone(record),
-            parent:this.getRecordClone(parentRecord),
-            action:'remove'
-        };
-        this.modifications.push(obj);
-    },
-
-    storeAddedRecord:function (record, referenceRecord, position) {
-        var obj = {
-            record:this.getRecordClone(record),
-            action:'add'
-        };
-        if (position == 'sibling') {
-            obj.sibling = this.getRecordClone(referenceRecord);
-            obj.parent = this.getRecordClone(this.tree.getParentRecord(record))
-        } else {
-            obj.parent = this.getRecordClone(referenceRecord);
-        }
-        this.modifications.push(obj);
-    },
-
-    getRecordClone:function (record) {
-        var ret = Object.clone(record);
-        ret.children = undefined;
-        return ret;
-    },
-
-    clearDirtyStorage:function(){
-        this.modifications = [];
-    }
-
-});/* ../ludojs/src/tree/drag-drop.js */
-ludo.tree.DragDrop = new Class({
-    Extends : ludo.Movable,
-    delay : 0.5,
-    dropConfigs : {},
-    dropPositionValidator : undefined,
-    dropValidator : undefined,
-
-    initialize : function(config) {
-        this.parent(config);
-
-        config = config || {};
-        if(config.dropValidator !== undefined){
-            this.dropValidator = config.dropValidator;
-        }
-        if(config.dropPositionValidator !== undefined){
-            this.dropPositionValidator = config.dropPositionValidator;
-        }
-
-        ludo.dom.addClass(this.els.shim, 'ludo-tree-movable-shim');
-        ludo.dom.addClass(this.els.insertionMarker, 'ludo-tree-insertion-marker');
-        document.body.adopt(this.els.insertionMarker);
-
-    },
-
-    hideSourceAndShowShim : function() {
-        this.parent();
-        this.els.shim.set('html', this.dragProperties.el.get('html'));
-        this.els.shim.set('html', this.getSourceRecord().title);
-    },
-
-    resizeShim : function(){
-
-    },
-
-    mouseOverTarget : function(e) {
-        if(this.dragProperties.mode == 'move'){
-            var el = this.getTargetElementFromEvent(e);
-            var success = true;
-            if(this.dropValidator !== undefined){
-                success = this.dropValidator.call(this,this.getSourceRecord(), this.records[el.id]);
-            }
-            if(success){
-                this.dragProperties.jsObjects.target.item = el;
-            }else{
-                this.dragProperties.jsObjects.target.item = undefined;
-            }
-        }
-    },
-
-    mouseMoveOnTarget : function(e){
-        if(this.dragProperties.jsObjects.target.item){
-            this.dragProperties.jsObjects.target.pos = this.getInjectionPos(e);
-            this.placeInsertionMarker();
-        }
-
-    },
-
-    getInjectionPos : function(e){
-        if(!this.dragProperties.jsObjects.target.item){
-            return undefined;
-        }
-
-        if(this.dropPositionValidator){
-            var pos = this.dropPositionValidator.call(this, this.getSourceRecord(), this.getTargetRecord());
-            if(pos){
-                return pos;
-            }
-        }
-        
-        var dropConfig = this.getDropConfig();
-        if(dropConfig.children !== undefined && !dropConfig.children){
-            return 'sibling';
-        }
-        if(dropConfig.siblings !== undefined && !dropConfig.siblings){
-            return 'child';
-        }
-
-        var elCoordinates = this.getDOMCoordinatesFromCache(this.dragProperties.jsObjects.target.item);
-        if(e.page.x <= elCoordinates.left+20){
-            return 'sibling';
-        }
-        return 'child';
-    },
-
-    setHeightOfInsertionMarker : function(){
-
-    },
-
-    startMove : function(e){
-        this.parent(e);
-        this.positionShimAtMouseCursor(e);
-        return false;
-
-    },
-
-    mouseMove : function(e) {
-        if(this.dragProperties.mode == 'move'){
-            this.positionShimAtMouseCursor(e);
-            return false;
-        }
-		return undefined;
-    },
-
-    positionShimAtMouseCursor : function(e){
-        this.els.shim.setStyles({
-            left : e.page.x,
-            top : e.page.y + 20
-        });
-    },
-
-    addTarget : function(obj){
-        this.parent(obj);
-        if(obj.config){
-            this.dropConfigs[obj.el.id] = obj.config;
-        }
-    },
-
-
-    stopMove : function(e){
-        if(this.dragProperties.mode){
-            this.posCache = {};
-            var sourceComponent = this.getSourceComponent();
-            var targetView = this.getTargetView();
-
-            if(sourceComponent && targetView){
-                            
-                var sourceRecord = this.getSourceRecord();
-                sourceRecord = Object.clone(sourceRecord);
-
-                sourceComponent.fireEvent('remove', this.getSourceRecord());
-                var eventObj = {
-                    record : sourceRecord,
-                    targetRecord : this.getTargetRecord(),
-                    pos : this.getTargetPosition()
-                };
-                targetView.fireEvent('add', eventObj  );
-            }
-
-        }
-        this.parent(e);
-    },
-
-    placeInsertionMarker : function() {
-        if(this.dragProperties.mode && this.dragProperties.jsObjects.target.item){
-            if(this.dragProperties.jsObjects.target.pos == 'sibling'){
-                ludo.dom.addClass(this.els.insertionMarker, 'ludo-tree-insertion-marker-sibling');
-            }else{
-                this.els.insertionMarker.removeClass('ludo-tree-insertion-marker-sibling');
-            }
-
-            var coords = this.getDOMCoordinatesFromCache(this.dragProperties.jsObjects.target.item);
-            this.els.insertionMarker.setStyles({
-                left : coords.left,
-                top : coords.top + coords.height,
-                display : ''
-            });
-        }
-    },
-
-    createInsertionMarker : function() {
-        var el = this.els.insertionMarker = new Element('div');
-        el.setStyle('display','none');
-        document.body.adopt(el);
-    },
-
-
-    posCache : {},
-    getDOMCoordinatesFromCache : function(el){
-        if(!this.posCache[el.id]){
-            this.posCache[el.id] = el.getFirst().getCoordinates();
-        }
-        return this.posCache[el.id];
-    },
-    
-    getDropConfig : function() {
-        var config = this.dropConfigs[this.dragProperties.jsObjects.target.item.id];
-        return config ? config : {};
-
-    }
-});/* ../ludojs/src/tree/filter.js */
-/**
- * @namespace tree
- * @class Filter
- */
-
-ludo.tree.Filter = new Class({
-    data : [],
-    component : null,
-    timeStamp:0,
-    currentSearchValue:'',
-
-    initialize : function(config) {
-        this.data = config.data;
-        this.component = config.component;
-    },
-
-    setData : function(data){
-        this.data = data;
-        this.prepareDataForSearch();
-    },
-
-    filter : function(searchString){
-        searchString = searchString.toLowerCase();
-        this.filterRecords(searchString, this.data);
-    },
-
-    filterRecords : function(searchString, records){
-
-        for(var i=0;i<records.length;i++){
-            if(!searchString || this.hasRecordMatch(searchString, records[i])){
-                if(!searchString){
-                    this.component.showNode(records[i]);
-
-                    this.component.showBranch(records[i]);
-                }
-            }else if(this.hasBranchMatch(searchString, records[i])){
-                this.component.showNode(records[i]);
-                this.component.expandButNotLoad(records[i]);
-                if(records[i].children && records[i].children.length){
-                    this.filterRecords(searchString, records[i].children);
-                }
-            }else{
-                this.component.hideNode(records[i]);
-            }
-        }
-    },
-
-    hasRecordMatch : function(searchString, record){
-        return record.text.indexOf(searchString)>=0;
-    },
-
-    hasBranchMatch : function(searchString, record){
-        return record.branchText.indexOf(searchString)>=0;
-    },
-
-    prepareDataForSearch : function(){
-        for(var i=0;i<this.data.length;i++){
-            this.data[i].branchText = this.data[i].text = this.getSearchText(this.data[i]);
-            if(this.data[i].children){
-                this.setBranchText(this.data[i].children, [this.data[i]]);
-            }
-        }
-    },
-
-    setBranchText : function(children, parentNodes){
-        for(var i=0;i<children.length;i++){
-            children[i].branchText = '';
-            var filterText = this.getSearchText(children[i]);
-            children[i].branchText = filterText;
-            children[i].text = filterText;
-
-            for(var j=0;j<parentNodes.length;j++){
-				parentNodes[j].branchText = [parentNodes[j].branchText, filterText].join('');
-            }
-
-            if(children[i].children){
-                this.setBranchText(children[i].children, parentNodes.concat([children[i]]));
-            }
-        }
-    },
-
-    getSearchText  :function(record){
-        if(record && record.title){
-            return record.title.toLowerCase();
-        }
-        return '';
     }
 });/* ../ludojs/src/data-source/html.js */
 /**
@@ -24459,31 +24457,26 @@ ludo.dataSource.TreeCollection = new Class({
  @extends Core
  */
 ludo.dataSource.TreeCollectionSearch = new Class({
-    Extends:ludo.dataSource.CollectionSearch,
-    performSearch:function () {
-        var s = new Date().getTime();
-        this.performSearchIn(this.getDataFromSource());
-        console.log('Time used: ' + (new Date().getTime() - s));
-    },
+	Extends:ludo.dataSource.CollectionSearch,
+	performSearch:function () {
+		this.performSearchIn(this.getDataFromSource());
+	},
 
-    performSearchIn:function(data){
-        var matchesFound = false;
-        for (var i = 0; i < data.length; i++) {
-            if (this.isMatchingSearch(data[i])) {
-                this.searchResult.push(data[i]);
-                this.fireEvent('match', data[i]);
-                matchesFound = true;
-            }else{
-                if(data[i].children){
-                    matchesFound = this.performSearchIn(data[i].children);
-                }
-                if(!matchesFound){
-                    this.fireEvent('mismatch', data[i]);
-                }
-            }
-        }
-        return matchesFound;
-    }
+	performSearchIn:function (data) {
+		var matchesFound = false;
+		for (var i = 0; i < data.length; i++) {
+			if (this.isMatchingSearch(data[i])) {
+				this.searchResult.push(data[i]);
+				this.fireEvent('match', data[i]);
+				if (data[i].children) {
+					this.performSearchIn(data[i].children);
+				}
+			} else {
+				this.fireEvent('mismatch', data[i]);
+			}
+		}
+		return matchesFound;
+	}
 });/* ../ludojs/src/controller/manager.js */
 /**
  * This class connects view modules and controllers
@@ -24815,37 +24808,6 @@ ludo.form.ToggleGroup = new Class({
 
     getValue:function(){
         return this.activeButton.getValue();
-    }
-});/* ../ludojs/src/form/tiny-button.js */
-/**
- * Small button
- * @namespace form
- * @class TinbyButton
- */
-ludo.form.TinyButton = new Class({
-    Extends: ludo.form.Button,
-    type:'form.TinyButton',
-    width:20,
-    buttonHeight:15,
-
-    ludoConfig:function (config) {
-        if(config.width == undefined){
-            config.width = Math.max(config.value ? config.value.length*10 : 20, 20);
-        }
-        this.parent(config);
-    },
-
-    ludoDOM:function () {
-        this.parent();
-        this.getEl().addClass('ludo-form-button-s');
-        this.getBody().addClass('ludo-form-tiny-button');
-        this.getBody().setStyle('padding-left', 0);
-        this.els.txt.style.height = '15px';
-    },
-
-    addIcon:function(){
-        this.parent();
-        this.els.icon.style.width = '100%';
     }
 });/* ../ludojs/src/form/manager.js */
 /**
@@ -27551,9 +27513,10 @@ ludo.form.Select = new Class({
     /**
      * Config of dataSource.Collection object used to populate the select box from external data
      * @config {Object|ludo.dataSource.Collection} dataSource
-     * @default undefined
+     * @default {}
      */
-    dataSource:undefined,
+	dataSource:{},
+
     /**
      Array of options used to populate the select box
      @config {Array} options
@@ -27567,11 +27530,11 @@ ludo.form.Select = new Class({
      */
     options:undefined,
 
+	defaultDS:'dataSource.Collection',
+
     ludoConfig:function (config) {
         this.parent(config);
         this.setConfigParams(config, ['emptyItem', 'options', 'valueKey', 'textKey']);
-        if (!this.dataSource)this.dataSource = {};
-        if (this.dataSource && !this.dataSource.type)this.dataSource.type = 'dataSource.Collection';
         if(!this.emptyItem && this.inlineLabel){
             this.emptyItem = {};
             this.emptyItem[this.textKey] = this.inlineLabel;
@@ -27613,6 +27576,7 @@ ludo.form.Select = new Class({
 
         if (this.value) {
             this.setValue(this.value);
+			this.setFormElValue(this.value);
         }
     },
 
@@ -28862,15 +28826,31 @@ ludo.form.SearchField = new Class({
 	 */
 	searchFn:undefined,
 
+	remote:false,
+
 	ludoConfig:function (config) {
 		this.parent(config);
-        this.setConfigParams(config, ['searchIn','delay','searchFn']);
-        if(ludo.util.isString(this.searchIn))this.searchIn = ludo.get(this.searchIn);
+        this.setConfigParams(config, ['searchIn','delay','searchFn','remote']);
+
 		if (this.searchFn !== undefined)this.searchFn = this.searchFn.bind(this);
 		this.addEvent('key', this.queue.bind(this));
+
+		this.setDataSource();
+	},
+
+	setDataSource:function(){
+		if(ludo.util.isString(this.searchIn)){
+			var s = ludo.get(this.searchIn);
+			if(!s){
+				this.setDataSource.delay(100, this);
+			}else{
+				this.searchIn = ludo.get(this.searchIn);
+			}
+		}
 	},
 
 	queue:function (value) {
+		this.value = value;
 		if (this.delay === 0) {
 			this.search();
 		} else {
@@ -28881,6 +28861,7 @@ ludo.form.SearchField = new Class({
 
 	execute:function (value) {
 		if (value !== this.lastValue)return undefined;
+		this.lastValue = undefined;
 		return this.search();
 	},
 
@@ -28889,7 +28870,13 @@ ludo.form.SearchField = new Class({
 	 * @method search
 	 */
 	search:function () {
-		return this.searchIn.getSearcher().search(this.searchFn ? this.searchFn : this.getValue());
+		if(this.remote){
+			this.searchIn.remoteSearch(this.getValue());
+			return undefined;
+		}
+		else {
+			return this.searchIn.getSearcher().search(this.searchFn ? this.searchFn : this.getValue());
+		}
 	}
 });/* ../ludojs/src/form/validator/base.js */
 /**

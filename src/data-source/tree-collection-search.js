@@ -6,29 +6,24 @@
  @extends Core
  */
 ludo.dataSource.TreeCollectionSearch = new Class({
-    Extends:ludo.dataSource.CollectionSearch,
-    performSearch:function () {
-        var s = new Date().getTime();
-        this.performSearchIn(this.getDataFromSource());
-        console.log('Time used: ' + (new Date().getTime() - s));
-    },
+	Extends:ludo.dataSource.CollectionSearch,
+	performSearch:function () {
+		this.performSearchIn(this.getDataFromSource());
+	},
 
-    performSearchIn:function(data){
-        var matchesFound = false;
-        for (var i = 0; i < data.length; i++) {
-            if (this.isMatchingSearch(data[i])) {
-                this.searchResult.push(data[i]);
-                this.fireEvent('match', data[i]);
-                matchesFound = true;
-            }else{
-                if(data[i].children){
-                    matchesFound = this.performSearchIn(data[i].children);
-                }
-                if(!matchesFound){
-                    this.fireEvent('mismatch', data[i]);
-                }
-            }
-        }
-        return matchesFound;
-    }
+	performSearchIn:function (data) {
+		var matchesFound = false;
+		for (var i = 0; i < data.length; i++) {
+			if (this.isMatchingSearch(data[i])) {
+				this.searchResult.push(data[i]);
+				this.fireEvent('match', data[i]);
+				if (data[i].children) {
+					this.performSearchIn(data[i].children);
+				}
+			} else {
+				this.fireEvent('mismatch', data[i]);
+			}
+		}
+		return matchesFound;
+	}
 });

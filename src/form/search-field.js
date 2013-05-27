@@ -36,15 +36,31 @@ ludo.form.SearchField = new Class({
 	 */
 	searchFn:undefined,
 
+	remote:false,
+
 	ludoConfig:function (config) {
 		this.parent(config);
-        this.setConfigParams(config, ['searchIn','delay','searchFn']);
-        if(ludo.util.isString(this.searchIn))this.searchIn = ludo.get(this.searchIn);
+        this.setConfigParams(config, ['searchIn','delay','searchFn','remote']);
+
 		if (this.searchFn !== undefined)this.searchFn = this.searchFn.bind(this);
 		this.addEvent('key', this.queue.bind(this));
+
+		this.setDataSource();
+	},
+
+	setDataSource:function(){
+		if(ludo.util.isString(this.searchIn)){
+			var s = ludo.get(this.searchIn);
+			if(!s){
+				this.setDataSource.delay(100, this);
+			}else{
+				this.searchIn = ludo.get(this.searchIn);
+			}
+		}
 	},
 
 	queue:function (value) {
+		this.value = value;
 		if (this.delay === 0) {
 			this.search();
 		} else {
@@ -55,6 +71,7 @@ ludo.form.SearchField = new Class({
 
 	execute:function (value) {
 		if (value !== this.lastValue)return undefined;
+		this.lastValue = undefined;
 		return this.search();
 	},
 
@@ -63,6 +80,12 @@ ludo.form.SearchField = new Class({
 	 * @method search
 	 */
 	search:function () {
-		return this.searchIn.getSearcher().search(this.searchFn ? this.searchFn : this.getValue());
+		if(this.remote){
+			this.searchIn.remoteSearch(this.getValue());
+			return undefined;
+		}
+		else {
+			return this.searchIn.getSearcher().search(this.searchFn ? this.searchFn : this.getValue());
+		}
 	}
 });

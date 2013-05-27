@@ -895,6 +895,13 @@ ludo.dataSource.Collection = new Class({
 		this.getSearcher().search(search);
 	},
 
+
+	remoteSearch:function(search){
+		this.postData = this.postData || {};
+		this.postData.search = search;
+		this.load();
+	},
+
 	afterSearch:function(){
 		var searcher = this.getSearcher();
 		this.fireEvent('count', searcher.hasData() ? searcher.getCount() : this.getCount());

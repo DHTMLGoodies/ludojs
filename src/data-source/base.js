@@ -68,6 +68,30 @@ ludo.dataSource.Base = new Class({
 
 	inLoadMode:false,
 
+	/**
+	 Config of shim to show when content is being loaded form server. This config
+	 object supports two properties, "renderTo" and "txt". renderTo is optional
+	 and specifies where to render the shim. Default is inside body of parent
+	 view.
+	 "txt" specifies which text to display inside the shim. "txt" can be
+	 either a string or a function returning a string.
+	 @config {Object} shim
+	 @example
+	 	shim:{
+			renderTo:ludo.get('myView').getBody(),
+			txt : 'Loading content. Please wait'
+	 	}
+	 renderTo is optional. Example where "txt" is defined as function:
+	 @example
+	 	shim:{
+	 		"txt": function(){
+	 			var val = ludo.get('searchField).getValue();
+	 			return val.length ? 'Searching for ' + val : 'Searching';
+	 		}
+	 	}
+	 */
+	shim:undefined,
+
 	ludoConfig:function (config) {
 		this.parent(config);
 		this.setConfigParams(config, ['url', 'postData', 'autoload', 'resource', 'service', 'arguments', 'data', 'shim']);

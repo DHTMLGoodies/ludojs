@@ -1,11 +1,48 @@
-// TODO define child custom child key
-// TODO should not have to have an "id" property
+/**
+ * Tree widget
+ * @namespace tree
+ * @class Tree
+ */
 ludo.tree.Tree = new Class({
 	Extends:ludo.View,
     type:'tree.Tree',
 	nodeCache:{},
     renderedRecords: {},
+	/**
+	 String template for nodes in the tree
+	 @config {String|Object}
+	 @example
+	 	tpl : '{title}
+	 or as an object:
+	 @example
+	 	tpl:{
+	 		tplKey : 'type',
+	 		city : 'City : {city}',
+	 		country : 'Country : {country}
+	 	}
+	 When using an object, "tplKey" is a reference to a common property of all objects, example "type". When type
+	 for a node is "city", it will use the city : 'City : {city}' tpl. When it's "country", it will use the "country" tpl.
+	 @example
+	 	[
+			{ id:1, "country":"Japan", "type":"country", "capital":"Tokyo", "population":"13,185,502",
+				children:[
+					{ id:11, city:'Kobe', "type":"city" },
+					{ id:12, city:'Kyoto', "type":"city" },
+					{ id:13, city:'Sapporo', "type":"city"},
+					{ id:14, city:'Sendai', "type":"city"},
+					{ id:15, city:'Kawasaki', "type":"city"}
+				]},
+			{id:2, "country":"South Korea", "capital":"Seoul", "population":"10,464,051", "type":"country",
+				children:[
+					{ id:21, city:'Seoul', "type":"city" }
+
+				]},
+			{id:3, "country":"Russia", "capital":"Moscow", "population":"10,126,424", "type":"country"},
+		]
+	 is an example of a data structure for this tpl.
+	 */
 	tpl : '<span class="ludo-tree-node-spacer"></span> {title}',
+	tplKey:undefined,
 	dataSource:{
 	},
     defaultDS: 'dataSource.TreeCollection',
@@ -211,8 +248,10 @@ ludo.tree.Tree = new Class({
 
 
 	getNodeTextFor:function (record) {
-		var tplFields = this.getTplFields();
-		var ret = this.tpl;
+		var tplFields = this.getTplFields(record);
+
+		var ret = this.getTpl(record);
+
 		for (var i = 0, count = tplFields.length; i < count; i++) {
 			var field = tplFields[i];
 			ret = ret.replace('{' + field + '}', record[field] ? record[field] : this.getDefaultValue(record, field));
@@ -227,16 +266,37 @@ ludo.tree.Tree = new Class({
 		return '';
 	},
 
-	getTplFields:function () {
+	tpls:undefined,
+
+	getTpl:function(record){
+		return this.tpl['tplKey'] ? this.tpl[record[this.tplKey]] : this.tpl;
+	},
+
+	getTplFields:function (record) {
 		if (!this.tplFields) {
-			var tpl = this.tpl;
-			var matches = tpl.match(/{([^}]+)}/g);
-			for (var i = 0; i < matches.length; i++) {
-				matches[i] = matches[i].replace(/[{}]/g, '');
+			if(ludo.util.isString(this.tpl)){
+				this.tplFields = this.getTplMatches(this.tpl);
+			}else{
+				this.tplFields = {};
+				var tpl = Object.clone(this.tpl);
+				this.tplKey = tpl.tplKey;
+				for(var key in tpl){
+					if(tpl.hasOwnProperty(key)){
+						if(key != 'tplKey')this.tplFields[key] = this.getTplMatches(tpl[key]);
+					}
+				}
 			}
-			this.tplFields = matches;
+
 		}
-		return this.tplFields;
+		return this.tplKey ? this.tplFields[record[this.tplKey]] : this.tplFields;
+	},
+
+	getTplMatches:function(tpl){
+		var matches = tpl.match(/{([^}]+)}/g);
+		for (var i = 0; i < matches.length; i++) {
+			matches[i] = matches[i].replace(/[{}]/g, '');
+		}
+		return matches;
 	},
 
 	addRecord:function(record){
