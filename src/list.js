@@ -1,5 +1,5 @@
 ludo.List = new Class({
-    Extends:ludo.View,
+    Extends:ludo.CollectionView,
     defaultDS:'dataSource.Collection',
     overflow:'scroll',
     highlighted:undefined,

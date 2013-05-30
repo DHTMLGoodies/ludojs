@@ -1,4 +1,4 @@
-/* Generated Thu May 30 16:38:44 CEST 2013 */
+/* Generated Thu May 30 16:44:54 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -15278,7 +15278,7 @@ ludo.CollectionView = new Class({
 
 });/* ../ludojs/src/list.js */
 ludo.List = new Class({
-    Extends:ludo.View,
+    Extends:ludo.CollectionView,
     defaultDS:'dataSource.Collection',
     overflow:'scroll',
     highlighted:undefined,
