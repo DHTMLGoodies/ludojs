@@ -4,7 +4,7 @@
  * @class Tree
  */
 ludo.tree.Tree = new Class({
-	Extends:ludo.View,
+	Extends:ludo.CollectionView,
     type:'tree.Tree',
 	nodeCache:{},
     renderedRecords: {},
@@ -47,9 +47,7 @@ ludo.tree.Tree = new Class({
 	},
     defaultDS: 'dataSource.TreeCollection',
 
-	ludoConfig:function (config) {
-		this.parent(config);
-	},
+
 
 	ludoEvents:function () {
 		this.parent();
@@ -64,6 +62,8 @@ ludo.tree.Tree = new Class({
                 'show' : this.showRecord.bind(this),
                 'hide' : this.hideRecord.bind(this)
             });
+
+
 		}
 	},
 
@@ -192,12 +192,14 @@ ludo.tree.Tree = new Class({
 	insertJSON:function () {
 		this.nodeCache = {};
 		this.renderedRecords = {};
-		this.getBody().set('html', '');
-		this.render(this.getDataSource().getData());
+		this.nodeContainer().innerHTML = '';
+		this.render();
 	},
 
-	render:function (data) {
-		this.getBody().innerHTML = this.getHtmlForBranch(data);
+	render:function () {
+		this.parent();
+		var data = this.getDataSource().getData();
+		this.nodeContainer().innerHTML = this.getHtmlForBranch(data);
 	},
 
 	getHtmlForBranch:function (branch) {

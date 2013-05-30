@@ -7,16 +7,24 @@
  */
 ludo.dataSource.TreeCollectionSearch = new Class({
 	Extends:ludo.dataSource.CollectionSearch,
+	matchesFound : false,
+
 	performSearch:function () {
+		this.matchesFound = false;
 		this.performSearchIn(this.getDataFromSource());
+		if(!this.matchesFound){
+			this.fireEvent('noMatches');
+		}else{
+			this.fireEvent('matches');
+		}
 	},
 
 	performSearchIn:function (data) {
-		var matchesFound = false;
 		for (var i = 0; i < data.length; i++) {
 			if (this.isMatchingSearch(data[i])) {
 				this.searchResult.push(data[i]);
 				this.fireEvent('match', data[i]);
+				this.matchesFound = true;
 				if (data[i].children) {
 					this.performSearchIn(data[i].children);
 				}
@@ -24,6 +32,5 @@ ludo.dataSource.TreeCollectionSearch = new Class({
 				this.fireEvent('mismatch', data[i]);
 			}
 		}
-		return matchesFound;
 	}
 });

@@ -19,10 +19,10 @@ ludo.List = new Class({
 
         if (this.dataSource) {
             if (this.dataSourceObj && this.dataSourceObj.hasData()) {
-                this.populateData();
+                this.render();
             }
             this.getDataSource().addEvents({
-                'change':this.populate.bind(this),
+                'change':this.render.bind(this),
                 'select':this.select.bind(this),
                 'deselect':this.deselect.bind(this),
                 'update':this.update.bind(this),
@@ -31,12 +31,12 @@ ludo.List = new Class({
         }
     },
 
-    populate:function () {
+    render:function () {
 
         var d = this.getDataSource().getData();
 
         var data = this.getTplParser().getCompiled(d, this.tpl);
-        var b = this.getBody();
+        var b = this.nodeContainer();
         b.innerHTML = '';
 
         for (var i = 0; i < data.length; i++) {

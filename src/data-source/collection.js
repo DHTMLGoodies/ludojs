@@ -840,7 +840,8 @@ ludo.dataSource.Collection = new Class({
 		if (this.paging && json.response && json.response.rows)this.paging.rows = json.response.rows;
 		this.parent(data, json);
 
-		this.fireEvent('count', this.data.length);
+		this.fireEvent('count', this.paging && this.paging.rows ? this.paging.rows : this.data.length);
+
 		if (this.shouldSortAfterLoad()) {
 			this.sort();
 		} else {
@@ -899,6 +900,7 @@ ludo.dataSource.Collection = new Class({
 	remoteSearch:function(search){
 		this.postData = this.postData || {};
 		this.postData.search = search;
+		this.toPage(1);
 		this.load();
 	},
 

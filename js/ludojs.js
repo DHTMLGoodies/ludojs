@@ -1,4 +1,4 @@
-/* Generated Mon May 27 19:01:49 CEST 2013 */
+/* Generated Thu May 30 16:38:44 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -3804,7 +3804,26 @@ ludo.dataSource.Base = new Class({
 	inLoadMode:false,
 
 	/**
-	 *
+	 Config of shim to show when content is being loaded form server. This config
+	 object supports two properties, "renderTo" and "txt". renderTo is optional
+	 and specifies where to render the shim. Default is inside body of parent
+	 view.
+	 "txt" specifies which text to display inside the shim. "txt" can be
+	 either a string or a function returning a string.
+	 @config {Object} shim
+	 @example
+	 	shim:{
+			renderTo:ludo.get('myView').getBody(),
+			txt : 'Loading content. Please wait'
+	 	}
+	 renderTo is optional. Example where "txt" is defined as function:
+	 @example
+	 	shim:{
+	 		"txt": function(){
+	 			var val = ludo.get('searchField).getValue();
+	 			return val.length ? 'Searching for ' + val : 'Searching';
+	 		}
+	 	}
 	 */
 	shim:undefined,
 
@@ -7432,7 +7451,8 @@ ludo.dataSource.Collection = new Class({
 		if (this.paging && json.response && json.response.rows)this.paging.rows = json.response.rows;
 		this.parent(data, json);
 
-		this.fireEvent('count', this.data.length);
+		this.fireEvent('count', this.paging && this.paging.rows ? this.paging.rows : this.data.length);
+
 		if (this.shouldSortAfterLoad()) {
 			this.sort();
 		} else {
@@ -7491,6 +7511,7 @@ ludo.dataSource.Collection = new Class({
 	remoteSearch:function(search){
 		this.postData = this.postData || {};
 		this.postData.search = search;
+		this.toPage(1);
 		this.load();
 	},
 
@@ -14461,7 +14482,7 @@ ludo.layout.SlideIn = new Class({
         view.getLayout().show();
      */
     show:function () {
-        if (!this.view.layout.active) {
+        if (!this.isMenuOpen()) {
             if(this.view.children[0].hidden){
                 this.view.children[0].show();
             }
@@ -14477,12 +14498,16 @@ ludo.layout.SlideIn = new Class({
         view.getLayout().hide();
      */
     hide:function () {
-        if (this.view.layout.active) {
+        if (this.isMenuOpen()) {
             this.view.layout.active = false;
             var widthOfFirst = this.getWidthOfMenu();
             this.effect().slide(this.slideEl, {x:0 }, { x:widthOfFirst * -1}, this.getDuration());
         }
     },
+
+	isMenuOpen:function(){
+		return this.view.layout.active;
+	},
 
     /**
      * Toggle between show and hide
@@ -15185,6 +15210,72 @@ ludo.layout.CollapseBar = new Class({
 	getViews:function(){
 		return this.views;
 	}
+});/* ../ludojs/src/collection-view.js */
+ludo.CollectionView = new Class({
+	Extends: ludo.View,
+	/**
+	 * Text to display when the tree has no data, i.e. when there's no data in data source or when filter returned no data.
+	 */
+	emptyText:undefined,
+
+	ludoConfig:function (config) {
+		this.parent(config);
+		this.setConfigParams(config, ['emptyText']);
+	},
+
+	ludoEvents:function(){
+		this.parent();
+		this.getDataSource().getSearcher().addEvents({
+			'matches' : this.hideEmptyText.bind(this),
+			'noMatches' : this.showEmptyText.bind(this)
+		});
+	},
+
+	hideEmptyText:function(){
+		if(this.emptyText)this.emptyEl().style.display = 'none';
+		this._emptyEl.innerHTML = this.getEmptyText();
+	},
+
+	showEmptyText:function(){
+		if(this.emptyText)this.emptyEl().style.display = '';
+		this._emptyEl.innerHTML = this.getEmptyText();
+	},
+
+	emptyEl:function(){
+		if(this._emptyEl === undefined){
+			this._emptyEl = ludo.dom.create({
+				tag : 'div',
+				renderTo:this.getBody(),
+				cls : 'ludo-empty-text',
+				css:{
+					position : 'absolute'
+				},
+				html : this.getEmptyText()
+			})
+		}
+		return this._emptyEl;
+	},
+
+	getEmptyText:function(){
+		return ludo.util.isFunction(this.emptyText) ? this.emptyText.call() : this.emptyText;
+	},
+
+	_nodeContainer:undefined,
+
+	nodeContainer:function(){
+		if(this._nodeContainer === undefined){
+			this._nodeContainer = ludo.dom.create({
+				tag : 'div',
+				renderTo : this.getBody()
+			});
+		}
+		return this._nodeContainer;
+	},
+
+	render:function(){
+		this[this.getDataSource().hasData() ? 'hideEmptyText' : 'showEmptyText']();
+	}
+
 });/* ../ludojs/src/list.js */
 ludo.List = new Class({
     Extends:ludo.View,
@@ -15207,10 +15298,10 @@ ludo.List = new Class({
 
         if (this.dataSource) {
             if (this.dataSourceObj && this.dataSourceObj.hasData()) {
-                this.populateData();
+                this.render();
             }
             this.getDataSource().addEvents({
-                'change':this.populate.bind(this),
+                'change':this.render.bind(this),
                 'select':this.select.bind(this),
                 'deselect':this.deselect.bind(this),
                 'update':this.update.bind(this),
@@ -15219,12 +15310,12 @@ ludo.List = new Class({
         }
     },
 
-    populate:function () {
+    render:function () {
 
         var d = this.getDataSource().getData();
 
         var data = this.getTplParser().getCompiled(d, this.tpl);
-        var b = this.getBody();
+        var b = this.nodeContainer();
         b.innerHTML = '';
 
         for (var i = 0; i < data.length; i++) {
@@ -23982,7 +24073,7 @@ ludo.menu.Button = new Class({
  * @class Tree
  */
 ludo.tree.Tree = new Class({
-	Extends:ludo.View,
+	Extends:ludo.CollectionView,
     type:'tree.Tree',
 	nodeCache:{},
     renderedRecords: {},
@@ -24025,9 +24116,7 @@ ludo.tree.Tree = new Class({
 	},
     defaultDS: 'dataSource.TreeCollection',
 
-	ludoConfig:function (config) {
-		this.parent(config);
-	},
+
 
 	ludoEvents:function () {
 		this.parent();
@@ -24042,6 +24131,8 @@ ludo.tree.Tree = new Class({
                 'show' : this.showRecord.bind(this),
                 'hide' : this.hideRecord.bind(this)
             });
+
+
 		}
 	},
 
@@ -24170,12 +24261,14 @@ ludo.tree.Tree = new Class({
 	insertJSON:function () {
 		this.nodeCache = {};
 		this.renderedRecords = {};
-		this.getBody().set('html', '');
-		this.render(this.getDataSource().getData());
+		this.nodeContainer().innerHTML = '';
+		this.render();
 	},
 
-	render:function (data) {
-		this.getBody().innerHTML = this.getHtmlForBranch(data);
+	render:function () {
+		this.parent();
+		var data = this.getDataSource().getData();
+		this.nodeContainer().innerHTML = this.getHtmlForBranch(data);
 	},
 
 	getHtmlForBranch:function (branch) {
@@ -24458,16 +24551,24 @@ ludo.dataSource.TreeCollection = new Class({
  */
 ludo.dataSource.TreeCollectionSearch = new Class({
 	Extends:ludo.dataSource.CollectionSearch,
+	matchesFound : false,
+
 	performSearch:function () {
+		this.matchesFound = false;
 		this.performSearchIn(this.getDataFromSource());
+		if(!this.matchesFound){
+			this.fireEvent('noMatches');
+		}else{
+			this.fireEvent('matches');
+		}
 	},
 
 	performSearchIn:function (data) {
-		var matchesFound = false;
 		for (var i = 0; i < data.length; i++) {
 			if (this.isMatchingSearch(data[i])) {
 				this.searchResult.push(data[i]);
 				this.fireEvent('match', data[i]);
+				this.matchesFound = true;
 				if (data[i].children) {
 					this.performSearchIn(data[i].children);
 				}
@@ -24475,7 +24576,6 @@ ludo.dataSource.TreeCollectionSearch = new Class({
 				this.fireEvent('mismatch', data[i]);
 			}
 		}
-		return matchesFound;
 	}
 });/* ../ludojs/src/controller/manager.js */
 /**

@@ -41,7 +41,7 @@ ludo.layout.SlideIn = new Class({
         view.getLayout().show();
      */
     show:function () {
-        if (!this.view.layout.active) {
+        if (!this.isMenuOpen()) {
             if(this.view.children[0].hidden){
                 this.view.children[0].show();
             }
@@ -57,12 +57,16 @@ ludo.layout.SlideIn = new Class({
         view.getLayout().hide();
      */
     hide:function () {
-        if (this.view.layout.active) {
+        if (this.isMenuOpen()) {
             this.view.layout.active = false;
             var widthOfFirst = this.getWidthOfMenu();
             this.effect().slide(this.slideEl, {x:0 }, { x:widthOfFirst * -1}, this.getDuration());
         }
     },
+
+	isMenuOpen:function(){
+		return this.view.layout.active;
+	},
 
     /**
      * Toggle between show and hide
