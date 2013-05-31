@@ -18,7 +18,7 @@ ludo.view.Shim = new Class({
         if (this.el === undefined) {
             this.el = ludo.dom.create({
                 renderTo:this.renderTo,
-                cls:'ludo-component-pleasewait',
+                cls:'ludo-shim-loading',
                 css:{'display':'none'},
                 html : this.getTextForShim()
             });
@@ -39,15 +39,28 @@ ludo.view.Shim = new Class({
 
     show:function (txt) {
         if (txt !== undefined) {
-            this.getEl().set('html', txt);
+            this.getEl().set('html', this.getText(txt));
         }else{
 			this.getEl().set('html', this.getTextForShim());
 		}
         this.css('');
+		this.resizeShim();
     },
 
+	resizeShim:function(){
+		var span = document.id(this.el).getElement('span');
+		var width = (span.offsetWidth + 5);
+		this.el.style.width = width + 'px';
+		this.el.style.marginLeft = (Math.round(width/2) * -1) + 'px';
+
+	},
+
 	getTextForShim:function(){
-		return ludo.util.isFunction(this.txt) ? this.txt.call() : this.txt;
+		return this.getText(this.txt);
+	},
+
+	getText:function(txt){
+		return '<span>' + (ludo.util.isFunction(txt) ? txt.call() : txt ? txt : '') + '</span>';
 	},
 
     hide:function () {

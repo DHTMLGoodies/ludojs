@@ -106,7 +106,7 @@ require_once("../includes/demo-header.php");
                             id:'myDataSource',
                             paging:{
                                 size:12,
-                                pageQuery:false,
+                                remotePaging:false,
                                 cache:false,
                                 cacheTimeout:1000
                             },

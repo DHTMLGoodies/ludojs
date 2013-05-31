@@ -313,7 +313,7 @@ new ludo.View({
                                 },
                                 paging:{
                                     size:12,
-                                    pageQuery:false,
+                                    remotePaging:false,
                                     cache:false,
                                     cacheTimeout:1000
                                 }

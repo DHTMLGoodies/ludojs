@@ -1,4 +1,4 @@
-/* Generated Fri May 31 17:06:05 CEST 2013 */
+/* Generated Fri May 31 18:38:20 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -4875,7 +4875,7 @@ ludo.view.Shim = new Class({
         if (this.el === undefined) {
             this.el = ludo.dom.create({
                 renderTo:this.renderTo,
-                cls:'ludo-component-pleasewait',
+                cls:'ludo-shim-loading',
                 css:{'display':'none'},
                 html : this.getTextForShim()
             });
@@ -4896,15 +4896,28 @@ ludo.view.Shim = new Class({
 
     show:function (txt) {
         if (txt !== undefined) {
-            this.getEl().set('html', txt);
+            this.getEl().set('html', this.getText(txt));
         }else{
 			this.getEl().set('html', this.getTextForShim());
 		}
         this.css('');
+		this.resizeShim();
     },
 
+	resizeShim:function(){
+		var span = document.id(this.el).getElement('span');
+		var width = (span.offsetWidth + 5);
+		this.el.style.width = width + 'px';
+		this.el.style.marginLeft = (Math.round(width/2) * -1) + 'px';
+
+	},
+
 	getTextForShim:function(){
-		return ludo.util.isFunction(this.txt) ? this.txt.call() : this.txt;
+		return this.getText(this.txt);
+	},
+
+	getText:function(txt){
+		return '<span>' + (ludo.util.isFunction(txt) ? txt.call() : txt ? txt : '') + '</span>';
 	},
 
     hide:function () {
@@ -6622,7 +6635,7 @@ ludo.chart.Record = new Class({
 		id:'myDataSource',
 		paging:{
 			size:12,
-			pageQuery:false,
+			remotePaging:false,
 			cache:false,
 			cacheTimeout:1000
 		},
@@ -6673,7 +6686,7 @@ ludo.dataSource.Collection = new Class({
 	 @example
 	 	paging:{
 		 	size:10, // Number of rows per page
-		  	pageQuery:true, // Load only records per page from server, i.e. new request per page
+		  	remotePaging:true, // Load only records per page from server, i.e. new request per page
 		  	cache : true, // Store pages in cache, i.e no request if data for page is in cache,
 		  	cacheTimeout:30 // Optional time in second before cache is considered out of date, i.e. new server request
 		}
@@ -6733,7 +6746,7 @@ ludo.dataSource.Collection = new Class({
 	},
 
 	hasRemoteSearch:function(){
-		return this.paging && this.paging.pageQuery;
+		return this.paging && this.paging.remotePaging;
 	},
 
 	/**
@@ -6748,7 +6761,7 @@ ludo.dataSource.Collection = new Class({
 	},
 
 	isCacheEnabled:function () {
-		return this.paging && this.paging['pageQuery'] && this.paging.cache;
+		return this.paging && this.paging['remotePaging'] && this.paging.cache;
 	},
 
 	/**
@@ -6867,7 +6880,7 @@ ludo.dataSource.Collection = new Class({
 	},
 
 	shouldSortOnServer:function () {
-		return this.paging && this.paging.pageQuery;
+		return this.paging && this.paging.remotePaging;
 	},
 
 	getSortFnFor:function (column, order) {
@@ -7231,8 +7244,8 @@ ludo.dataSource.Collection = new Class({
 	},
 	/**
 	 * When paging is enabled, go to previous page.
-	 * fire nextPage event
-	 * @method nextPage
+	 * fire previousPage event
+	 * @method previousPage
 	 */
 	previousPage:function () {
 		if (!this.paging || this.isOnFirstPage())return;
@@ -7259,6 +7272,10 @@ ludo.dataSource.Collection = new Class({
 		this.onPageChange('nextPage');
 	},
 
+	/**
+	 * Go to last page
+	 * @method lastPage
+	 */
 	lastPage:function () {
 		if (!this.paging || this.isOnLastPage())return;
 		var count = this.getCount();
@@ -7282,11 +7299,11 @@ ludo.dataSource.Collection = new Class({
 	},
 
 	isOnLastPage:function () {
-		return this.paging.size + this.paging.offset > this.getCount();
+		return this.paging.size + this.paging.offset >= this.getCount();
 	},
 
 	onPageChange:function (event) {
-		if (this.paging['pageQuery']) {
+		if (this.paging['remotePaging']) {
 			this.loadOrGetFromCache();
 		}
 		this.fireEvent('change');
@@ -7393,6 +7410,16 @@ ludo.dataSource.Collection = new Class({
 		return false;
 	},
 
+	setPageSize:function(size){
+		if(this.paging){
+			this.dataCache = {};
+			this.paging.size = parseInt(size);
+			this.paging.offset = 0;
+
+			this.onPageChange('toPage');
+		}
+	},
+
 	/**
 	 * True if on given page
 	 * @method isOnPage
@@ -7428,7 +7455,7 @@ ludo.dataSource.Collection = new Class({
 			}
 			return this.searcher.getData();
 		}
-		if (!this.paging || this.paging.pageQuery) {
+		if (!this.paging || this.paging.remotePaging) {
 			return this.parent();
 		}
 		return this.getDataForPage(this.data);
@@ -7488,7 +7515,7 @@ ludo.dataSource.Collection = new Class({
 	},
 
 	shouldSortAfterLoad:function(){
-		if(this.paging && this.paging.pageQuery)return false;
+		if(this.paging && this.paging.remotePaging)return false;
 		return this.sortedBy !== undefined && this.sortedBy.column && this.sortedBy.order;
 	},
 
@@ -19969,7 +19996,7 @@ ludo.grid.RowManager = new Class({
 			  id:'myDataSource',
 			  paging:{
 				  size:12,
-				  pageQuery:false,
+				  remotePaging:false,
 				  cache:false,
 				  cacheTimeout:1000
 			  },
@@ -28937,6 +28964,8 @@ ludo.form.SearchField = new Class({
 
 	remote:false,
 
+	lastSearch:undefined,
+
 	ludoConfig:function (config) {
 		this.parent(config);
         this.setConfigParams(config, ['searchIn','delay','searchFn','remote']);
@@ -28969,8 +28998,8 @@ ludo.form.SearchField = new Class({
 	},
 
 	execute:function (value) {
-		if (value !== this.lastValue)return undefined;
-		this.lastValue = undefined;
+		if (value != this.lastValue || value == this.lastSearch)return undefined;
+		this.lastSearch =  this.getValue();
 		return this.search();
 	},
 
@@ -29453,6 +29482,42 @@ ludo.paging.NavBar = new Class({
 	insertJSON:function(){
 
 	}
+});/* ../ludojs/src/paging/page-size.js */
+/**
+ * Select box for setting page size of a Collection
+ * @namespace paging
+ * @class PageSize
+ */
+ludo.paging.PageSize = new Class({
+	Extends: ludo.form.Select,
+
+	options:[
+		{ value : 10, text : '10' },
+		{ value : 25, text : '25' },
+		{ value : 50, text : '50' },
+		{ value : 100, text : '100' }
+	],
+
+	label : 'Page size',
+	applyTo:undefined,
+
+	ludoConfig:function(config){
+		this.applyTo = ludo.get(config.dataSource || this.applyTo);
+		config.dataSource = undefined;
+		this.parent(config);
+	},
+
+	ludoEvents:function(){
+		this.parent();
+		this.addEvent('change', this.setPageSize.bind(this));
+	},
+
+	setPageSize:function(){
+		if(this.applyTo){
+			this.applyTo.setPageSize(this.getValue());
+		}
+	}
+
 });/* ../ludojs/src/panel.js */
 /**
  * A Panel

@@ -38,6 +38,8 @@ ludo.form.SearchField = new Class({
 
 	remote:false,
 
+	lastSearch:undefined,
+
 	ludoConfig:function (config) {
 		this.parent(config);
         this.setConfigParams(config, ['searchIn','delay','searchFn','remote']);
@@ -70,8 +72,8 @@ ludo.form.SearchField = new Class({
 	},
 
 	execute:function (value) {
-		if (value !== this.lastValue)return undefined;
-		this.lastValue = undefined;
+		if (value != this.lastValue || value == this.lastSearch)return undefined;
+		this.lastSearch =  this.getValue();
 		return this.search();
 	},
 

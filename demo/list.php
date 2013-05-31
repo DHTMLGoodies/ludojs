@@ -53,7 +53,7 @@ var dataSource = new ludo.dataSource.Collection({
     },
     paging:{
         size:7,
-        pageQuery:false,
+        remotePaging:false,
         cache:false,
         cacheTimeout:1000
     },

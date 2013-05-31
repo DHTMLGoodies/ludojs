@@ -11,7 +11,7 @@
 		id:'myDataSource',
 		paging:{
 			size:12,
-			pageQuery:false,
+			remotePaging:false,
 			cache:false,
 			cacheTimeout:1000
 		},
@@ -62,7 +62,7 @@ ludo.dataSource.Collection = new Class({
 	 @example
 	 	paging:{
 		 	size:10, // Number of rows per page
-		  	pageQuery:true, // Load only records per page from server, i.e. new request per page
+		  	remotePaging:true, // Load only records per page from server, i.e. new request per page
 		  	cache : true, // Store pages in cache, i.e no request if data for page is in cache,
 		  	cacheTimeout:30 // Optional time in second before cache is considered out of date, i.e. new server request
 		}
@@ -122,7 +122,7 @@ ludo.dataSource.Collection = new Class({
 	},
 
 	hasRemoteSearch:function(){
-		return this.paging && this.paging.pageQuery;
+		return this.paging && this.paging.remotePaging;
 	},
 
 	/**
@@ -137,7 +137,7 @@ ludo.dataSource.Collection = new Class({
 	},
 
 	isCacheEnabled:function () {
-		return this.paging && this.paging['pageQuery'] && this.paging.cache;
+		return this.paging && this.paging['remotePaging'] && this.paging.cache;
 	},
 
 	/**
@@ -256,7 +256,7 @@ ludo.dataSource.Collection = new Class({
 	},
 
 	shouldSortOnServer:function () {
-		return this.paging && this.paging.pageQuery;
+		return this.paging && this.paging.remotePaging;
 	},
 
 	getSortFnFor:function (column, order) {
@@ -620,8 +620,8 @@ ludo.dataSource.Collection = new Class({
 	},
 	/**
 	 * When paging is enabled, go to previous page.
-	 * fire nextPage event
-	 * @method nextPage
+	 * fire previousPage event
+	 * @method previousPage
 	 */
 	previousPage:function () {
 		if (!this.paging || this.isOnFirstPage())return;
@@ -648,6 +648,10 @@ ludo.dataSource.Collection = new Class({
 		this.onPageChange('nextPage');
 	},
 
+	/**
+	 * Go to last page
+	 * @method lastPage
+	 */
 	lastPage:function () {
 		if (!this.paging || this.isOnLastPage())return;
 		var count = this.getCount();
@@ -671,11 +675,11 @@ ludo.dataSource.Collection = new Class({
 	},
 
 	isOnLastPage:function () {
-		return this.paging.size + this.paging.offset > this.getCount();
+		return this.paging.size + this.paging.offset >= this.getCount();
 	},
 
 	onPageChange:function (event) {
-		if (this.paging['pageQuery']) {
+		if (this.paging['remotePaging']) {
 			this.loadOrGetFromCache();
 		}
 		this.fireEvent('change');
@@ -782,6 +786,16 @@ ludo.dataSource.Collection = new Class({
 		return false;
 	},
 
+	setPageSize:function(size){
+		if(this.paging){
+			this.dataCache = {};
+			this.paging.size = parseInt(size);
+			this.paging.offset = 0;
+
+			this.onPageChange('toPage');
+		}
+	},
+
 	/**
 	 * True if on given page
 	 * @method isOnPage
@@ -817,7 +831,7 @@ ludo.dataSource.Collection = new Class({
 			}
 			return this.searcher.getData();
 		}
-		if (!this.paging || this.paging.pageQuery) {
+		if (!this.paging || this.paging.remotePaging) {
 			return this.parent();
 		}
 		return this.getDataForPage(this.data);
@@ -877,7 +891,7 @@ ludo.dataSource.Collection = new Class({
 	},
 
 	shouldSortAfterLoad:function(){
-		if(this.paging && this.paging.pageQuery)return false;
+		if(this.paging && this.paging.remotePaging)return false;
 		return this.sortedBy !== undefined && this.sortedBy.column && this.sortedBy.order;
 	},
 

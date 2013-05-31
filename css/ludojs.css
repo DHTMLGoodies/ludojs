@@ -1,4 +1,4 @@
-/* Generated Fri May 31 17:06:05 CEST 2013 */
+/* Generated Fri May 31 18:38:19 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -30,7 +30,7 @@ Owner of ludoJS.com
 *
 *
 */
-.ludo-component-pleasewait {
+.ludo-shim-loading {
     position: absolute;
     left: 50%;
     top: 50%;
@@ -50,6 +50,9 @@ Owner of ludoJS.com
     z-index: 100;
     background-color: #FFF;
     font-size:11px;
+}
+.ludo-shim-loading span{
+    white-space:nowrap;
 }
 .ludo-loader-shim{
     position:absolute;

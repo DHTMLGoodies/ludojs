@@ -111,7 +111,7 @@ TestCase("PagingTest", {
 		var c = this.getCollection({
 			paging:{
 				size:10,
-				pageQuery:true
+				remotePaging:true
 			}
 		});
 
@@ -141,7 +141,7 @@ TestCase("PagingTest", {
 		var c = this.getCollection({
 			paging:{
 				size:10,
-				pageQuery:true
+				remotePaging:true
 			}
 		});
 		c.sortBy('country', 'asc');
@@ -159,7 +159,7 @@ TestCase("PagingTest", {
 		var c = this.getCollection({
 			paging:{
 				size:10,
-				pageQuery:true
+				remotePaging:true
 			}
 		});
 		var eventFired = false;
@@ -392,7 +392,7 @@ TestCase("PagingTest", {
 			paging:{
 				size:10,
 				cache:true,
-				pageQuery:true
+				remotePaging:true
 			}
 		});
 
@@ -410,7 +410,7 @@ TestCase("PagingTest", {
 		var c = this.getCollection({
 			paging:{
 				size:10,
-				pageQuery:false
+				remotePaging:false
 			}
 		});
 
@@ -426,7 +426,7 @@ TestCase("PagingTest", {
 		var c = this.getCollection({
 			paging:{
 				size:10,
-				pageQuery:false
+				remotePaging:false
 			},
 			searchConfig:{
 

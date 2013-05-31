@@ -54,7 +54,7 @@ require_once("../includes/demo-header.php");
                     },
                     paging:{
                         size:12,
-                        pageQuery:true,
+                        remotePaging:true,
                         cache:true,
                         cacheTimeout:1000
                     },
