@@ -265,7 +265,7 @@ ludo.layout.Menu = new Class({
 
 	autoHideMenus:function (e) {
 		if (this.active || this.alwaysActive) {
-			if (e.target.className.indexOf('ludo-menu-item') === -1 && !e.target.getParent('.ludo-menu')) {
+			if (e.target.className && e.target.className.indexOf && e.target.className.indexOf('ludo-menu-item') === -1 && !e.target.getParent('.ludo-menu')) {
 				this.hideAllMenus();
 				if (this.view.layout.orientation === 'horizontal') {
 					this.active = false;

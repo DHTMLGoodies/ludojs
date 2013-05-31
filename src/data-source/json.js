@@ -62,9 +62,14 @@ ludo.dataSource.JSON = new Class({
 
     loadComplete:function (data) {
 		this.parent();
-        this.data = data;
+		var firstLoad = !this.data;
+		this.data = data;
         this.fireEvent('parsedata');
         this.fireEvent('load', [this.data, this]);
+
+		if(firstLoad){
+			this.fireEvent('firstLoad', [this.data, this]);
+		}
     }
 });
 

@@ -189,6 +189,23 @@ TestCase("CollectionTest", {
 		assertEquals('Norway', record.country);
 	},
 
+	"test should be able to find record by multiple keys": function(){
+		// given
+		var c = this.getCollection({
+			primaryKey : ['capital','id']
+		});
+
+		// when
+		var record = c.findRecord({
+			capital:'Canberra',
+			id : 1000
+		});
+
+		// then
+		assertNotUndefined(record);
+		assertEquals('Australia', record.country);
+	},
+
 	"test should be able to select a record":function () {
 		// given
 		var c = this.getCollection({
@@ -744,7 +761,7 @@ TestCase("CollectionTest", {
 			{"country":"New Zealand", "capital":"Wellington", "population":"381,900"},
 			{"country":"Albania", "capital":"Tirana", "population":"763,634"},
 			{"country":"South Sudan", "capital":"Juba", "population":"372,410"},
-			{"country":"Australia", "capital":"Canberra", "population":"354,644"},
+			{"country":"Australia", "capital":"Canberra", "population":"354,644","id" : 1000},
 			{"country":"Costa Rica", "capital":"San Jos\u00e9", "population":"328,195"},
 			{"country":"Qatar", "capital":"Al-Doha", "population":"303,429"},
 			{"country":"India", "capital":"New Delhi", "population":"292,300"},

@@ -47,7 +47,41 @@ ludo.tree.Tree = new Class({
 	},
     defaultDS: 'dataSource.TreeCollection',
 
+	/**
+	 Default values when not present in node.
+	 @config {Object} defaults
+	 @default undefined
+	 @example
+	 	defaults:{
+	 		"database" : {
+	 			"icon" : "image.gif"
+	 		}
+	 	}
+	 where "database" refers to the record attribute with name defined in categoryKey property of tree(default "type" ).
+	 */
+	defaults:undefined,
 
+	/**
+	 * Key used to defined nodes inside categories. This key is used for default values and node config
+	 */
+	categoryKey : 'type',
+
+	/**
+	 Config of tree node categories
+	 @config {Object} categoryConfig
+	 @example
+	 	categoryConfig:{
+	 		"database":{
+	 			"selectable" : false
+	 		}
+	 	}
+	 */
+	categoryConfig:undefined,
+
+	ludoConfig:function(config){
+		this.parent(config);
+		this.setConfigParams(config, ['defaults','categoryConfig','categoryKey']);
+	},
 
 	ludoEvents:function () {
 		this.parent();
@@ -96,6 +130,7 @@ ludo.tree.Tree = new Class({
 
 	selectRecord:function (record) {
         if(!record.getPlainRecord)record = this.getDataSource().getRecord(record);
+		if(!record)return;
         if(!this.isRecordRendered(record))this.showRecord(record);
 		var el = this.getDomElement(record, '.ludo-tree-node-plain');
 		if (el)ludo.dom.addClass(el, 'ludo-tree-selected-node');
@@ -242,7 +277,12 @@ ludo.tree.Tree = new Class({
 		return ret.join('');
 	},
 
-	isSelectable:function () {
+	isSelectable:function (record) {
+		if(this.categoryConfig){
+			record = record.getUID ? record.getData() : record;
+			var config = this.categoryConfig[record[this.categoryKey]];
+			return config && config.selectable !== undefined ? config.selectable : true
+		}
 		return true;
 	},
 
@@ -262,8 +302,13 @@ ludo.tree.Tree = new Class({
 		return ret;
 	},
 
-	getDefaultValue:function(){
-		return '';
+	getDefaultValue:function(record, field){
+		if(this.defaults){
+			var key = this.categoryKey;
+			return record[key] && this.defaults && this.defaults[record[key]] ? this.defaults[record[key]][field] : '';
+		}
+		return "";
+
 	},
 
 	tpls:undefined,

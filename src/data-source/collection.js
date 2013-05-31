@@ -100,9 +100,16 @@ ludo.dataSource.Collection = new Class({
 
 	uidMap:{},
 
+	/**
+	 * Reference to record to select by default once data has been loaded
+	 * @config {Object|String} selected
+	 * @default undefined
+	 */
+	selected:undefined,
+
 	ludoConfig:function (config) {
 		this.parent(config);
-        this.setConfigParams(config, ['searchConfig','sortFn','primaryKey','sortedBy','paging']);
+        this.setConfigParams(config, ['searchConfig','sortFn','primaryKey','sortedBy','paging','selected']);
 
 		if (this.primaryKey && !ludo.util.isArray(this.primaryKey))this.primaryKey = [this.primaryKey];
 		if (this.paging) {
@@ -118,11 +125,20 @@ ludo.dataSource.Collection = new Class({
 
 		this.addEvent('parsedata', this.createIndex.bind(this));
 
+
+		if(this.selected){
+			this.addEvent('firstLoad', this.setInitialSelected.bind(this));
+		}
+
 		if(this.data && !this.index)this.createIndex();
 	},
 
 	hasRemoteSearch:function(){
 		return this.paging && this.paging.remotePaging;
+	},
+
+	setInitialSelected:function(){
+		this.selectRecord(this.selected);
 	},
 
 	/**
