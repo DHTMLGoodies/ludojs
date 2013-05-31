@@ -77,13 +77,11 @@ ludo.tree.Tree = new Class({
 	},
 
 	onClick:function (e) {
-		if(e.target.tagName.toLowerCase() !== 'span')return;
 		var record = this.getRecordByDOM(e.target);
 		if (record) {
 			if (ludo.dom.hasClass(e.target, 'ludo-tree-node-expand')) {
 				this.expandOrCollapse(record, e.target);
-			} else if(this.isSelectable(record)) {
-
+			} else if(e.target.tagName.toLowerCase() === 'span' && this.isSelectable(record)) {
 				this.getDataSource().selectRecord(record);
 			}
 		}
