@@ -12,19 +12,20 @@ ludo.CollectionView = new Class({
 
 	ludoEvents:function(){
 		this.parent();
-		this.getDataSource().getSearcher().addEvents({
-			'matches' : this.hideEmptyText.bind(this),
-			'noMatches' : this.showEmptyText.bind(this)
-		});
+		if(this.emptyText && !this.getDataSource().hasRemoteSearch()){
+			this.getDataSource().getSearcher().addEvents({
+				'matches' : this.hideEmptyText.bind(this),
+				'noMatches' : this.showEmptyText.bind(this)
+			});
+		}
 	},
 
 	hideEmptyText:function(){
-		if(this.emptyText)this.emptyEl().style.display = 'none';
-		this._emptyEl.innerHTML = this.getEmptyText();
+		this.emptyEl().style.display = 'none';
 	},
 
 	showEmptyText:function(){
-		if(this.emptyText)this.emptyEl().style.display = '';
+		this.emptyEl().style.display = '';
 		this._emptyEl.innerHTML = this.getEmptyText();
 	},
 
@@ -60,7 +61,12 @@ ludo.CollectionView = new Class({
 	},
 
 	render:function(){
-		this[this.getDataSource().hasData() ? 'hideEmptyText' : 'showEmptyText']();
-	}
+		if(this.emptyText){
+			this[this.getDataSource().hasData() ? 'hideEmptyText' : 'showEmptyText']();
+		}
+	},
 
+	insertJSON:function(){
+
+	}
 });

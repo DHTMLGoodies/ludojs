@@ -42,9 +42,11 @@ ludo.dataSource.CollectionSearch = new Class({
 
 	ludoEvents:function () {
 		this.parent();
-		this.dataSource.addEvent('beforeload', this.clearSearchIndex.bind(this));
-		this.dataSource.addEvent('beforeload', this.deleteSearch.bind(this));
-		this.dataSource.addEvent('update', this.clearSearchIndex.bind(this));
+		if(!this.dataSource.hasRemoteSearch()){
+			this.dataSource.addEvent('beforeload', this.clearSearchIndex.bind(this));
+			this.dataSource.addEvent('beforeload', this.deleteSearch.bind(this));
+			this.dataSource.addEvent('update', this.clearSearchIndex.bind(this));
+		}
 	},
 	/**
 	 * execute a text search

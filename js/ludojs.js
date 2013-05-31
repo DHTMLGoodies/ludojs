@@ -1,4 +1,4 @@
-/* Generated Thu May 30 16:44:54 CEST 2013 */
+/* Generated Fri May 31 17:00:50 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -6732,6 +6732,10 @@ ludo.dataSource.Collection = new Class({
 		if(this.data && !this.index)this.createIndex();
 	},
 
+	hasRemoteSearch:function(){
+		return this.paging && this.paging.pageQuery;
+	},
+
 	/**
 	 * Returns 1) If search is specified: number of records in search result, or 2) number of records in entire collection.
 	 * @method getCount
@@ -7451,8 +7455,7 @@ ludo.dataSource.Collection = new Class({
 		if (this.paging && json.response && json.response.rows)this.paging.rows = json.response.rows;
 		this.parent(data, json);
 
-		this.fireEvent('count', this.paging && this.paging.rows ? this.paging.rows : this.data.length);
-
+		this.fireEvent('count', this.getCount());
 		if (this.shouldSortAfterLoad()) {
 			this.sort();
 		} else {
@@ -15225,19 +15228,20 @@ ludo.CollectionView = new Class({
 
 	ludoEvents:function(){
 		this.parent();
-		this.getDataSource().getSearcher().addEvents({
-			'matches' : this.hideEmptyText.bind(this),
-			'noMatches' : this.showEmptyText.bind(this)
-		});
+		if(this.emptyText && !this.getDataSource().hasRemoteSearch()){
+			this.getDataSource().getSearcher().addEvents({
+				'matches' : this.hideEmptyText.bind(this),
+				'noMatches' : this.showEmptyText.bind(this)
+			});
+		}
 	},
 
 	hideEmptyText:function(){
-		if(this.emptyText)this.emptyEl().style.display = 'none';
-		this._emptyEl.innerHTML = this.getEmptyText();
+		this.emptyEl().style.display = 'none';
 	},
 
 	showEmptyText:function(){
-		if(this.emptyText)this.emptyEl().style.display = '';
+		this.emptyEl().style.display = '';
 		this._emptyEl.innerHTML = this.getEmptyText();
 	},
 
@@ -15273,9 +15277,14 @@ ludo.CollectionView = new Class({
 	},
 
 	render:function(){
-		this[this.getDataSource().hasData() ? 'hideEmptyText' : 'showEmptyText']();
-	}
+		if(this.emptyText){
+			this[this.getDataSource().hasData() ? 'hideEmptyText' : 'showEmptyText']();
+		}
+	},
 
+	insertJSON:function(){
+
+	}
 });/* ../ludojs/src/list.js */
 ludo.List = new Class({
     Extends:ludo.CollectionView,
@@ -15311,7 +15320,7 @@ ludo.List = new Class({
     },
 
     render:function () {
-
+		this.parent();
         var d = this.getDataSource().getData();
 
         var data = this.getTplParser().getCompiled(d, this.tpl);
@@ -17405,7 +17414,7 @@ ludo.Window = new Class({
         var bodySize = document.body.getSize();
         var x = Math.round((bodySize.x / 2) - (this.getWidth() / 2));
         var y = Math.round((bodySize.y / 2) - (this.getHeight() / 2));
-        this.setXY(x,y);
+        this.setXY(x,Math.max(0,y));
     },
 
     /**
@@ -17726,9 +17735,11 @@ ludo.dataSource.CollectionSearch = new Class({
 
 	ludoEvents:function () {
 		this.parent();
-		this.dataSource.addEvent('beforeload', this.clearSearchIndex.bind(this));
-		this.dataSource.addEvent('beforeload', this.deleteSearch.bind(this));
-		this.dataSource.addEvent('update', this.clearSearchIndex.bind(this));
+		if(!this.dataSource.hasRemoteSearch()){
+			this.dataSource.addEvent('beforeload', this.clearSearchIndex.bind(this));
+			this.dataSource.addEvent('beforeload', this.deleteSearch.bind(this));
+			this.dataSource.addEvent('update', this.clearSearchIndex.bind(this));
+		}
 	},
 	/**
 	 * execute a text search
@@ -24146,8 +24157,8 @@ ludo.tree.Tree = new Class({
 	},
 
 	onClick:function (e) {
+		if(e.target.tagName.toLowerCase() !== 'span')return;
 		var record = this.getRecordByDOM(e.target);
-
 		if (record) {
 			if (ludo.dom.hasClass(e.target, 'ludo-tree-node-expand')) {
 				this.expandOrCollapse(record, e.target);

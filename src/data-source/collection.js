@@ -121,6 +121,10 @@ ludo.dataSource.Collection = new Class({
 		if(this.data && !this.index)this.createIndex();
 	},
 
+	hasRemoteSearch:function(){
+		return this.paging && this.paging.pageQuery;
+	},
+
 	/**
 	 * Returns 1) If search is specified: number of records in search result, or 2) number of records in entire collection.
 	 * @method getCount
@@ -840,8 +844,7 @@ ludo.dataSource.Collection = new Class({
 		if (this.paging && json.response && json.response.rows)this.paging.rows = json.response.rows;
 		this.parent(data, json);
 
-		this.fireEvent('count', this.paging && this.paging.rows ? this.paging.rows : this.data.length);
-
+		this.fireEvent('count', this.getCount());
 		if (this.shouldSortAfterLoad()) {
 			this.sort();
 		} else {

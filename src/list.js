@@ -32,7 +32,7 @@ ludo.List = new Class({
     },
 
     render:function () {
-
+		this.parent();
         var d = this.getDataSource().getData();
 
         var data = this.getTplParser().getCompiled(d, this.tpl);

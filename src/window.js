@@ -196,7 +196,7 @@ ludo.Window = new Class({
         var bodySize = document.body.getSize();
         var x = Math.round((bodySize.x / 2) - (this.getWidth() / 2));
         var y = Math.round((bodySize.y / 2) - (this.getHeight() / 2));
-        this.setXY(x,y);
+        this.setXY(x,Math.max(0,y));
     },
 
     /**
