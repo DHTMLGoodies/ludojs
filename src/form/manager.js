@@ -346,7 +346,7 @@ ludo.form.Manager = new Class({
 	 * @param {String|undefined} id
 	 */
 	read:function(id){
-		this.currentId = id;
+		this.currentIdToBeSet = id;
 		this.readHandler().sendToServer('read', id);
 	},
 
@@ -361,6 +361,7 @@ ludo.form.Manager = new Class({
 				service : 'read',
 				listeners:{
 					"success":function (request) {
+						this.currentId = this.currentIdToBeSet;
 						this.currentData = request.getResponseData();
 						this.fill(this.currentData);
 						/**

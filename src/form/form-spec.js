@@ -1,6 +1,8 @@
 /**
- * Specification of available properties for the "form" config property of views.
- * You cannot create instances of this class.
+ * This document describes the available "form" config properties of ludo.View.
+ *
+ * You cannot create instances of ludo.form.FormSpec.
+ *
  * @namespace form
  * @class FormSpec
  */

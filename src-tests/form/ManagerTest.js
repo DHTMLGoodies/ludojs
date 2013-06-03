@@ -93,12 +93,10 @@ TestCase("ManagerTest", {
 		var v = new ludo.View({
 			form:{
 				idField:'id',
-				resource:'Person'
+				resource:'Person',
+				arguments:1
 			},
 			children:[
-				{
-					type:'form.Hidden', name:'id', value:1
-				},
 				{
 					type:'form.Text', name:'firstname', value:'John'
 				}
@@ -107,6 +105,7 @@ TestCase("ManagerTest", {
 
 		// when
 		var form = v.getForm();
+		v.getForm().currentId = 1;
 		var path = form.getDeletePath();
 
 
