@@ -181,15 +181,6 @@ ludo.View = new Class({
 	formConfig:undefined,
 
 	/**
-	 * When a model is specified, the submit() method will submit the model to the server
-	 * Updates made to the model will also be reflected to form elements inside this component where
-	 * modelKey is set to a column of the model
-	 * @config {Object} model - object of type ludo.model.Model
-	 * @default undefined
-	 */
-	model:undefined,
-
-	/**
 	 * @property boolean isRendered
 	 * @description Property set to true when component and it's children are rendered.
 	 */
@@ -265,8 +256,7 @@ ludo.View = new Class({
 	 Template for JSON compiler.
 	 Curly braces {} are used to specify keys in the JSON object. The compiler will replace {key} with JSON.key<br>
 	 The compiled string will be inserted as html of the body element.<br>
-	 The template will be compiled automatically when you're loading JSON remotely, and when you're using a
-	 ludo.model.Model. If JSON is an array of object, the template will be applied to each object, example:
+	 The template will be compiled automatically when you're loading JSON remotely. If JSON is an array of object, the template will be applied to each object, example:
 	 JSON : [ { firstname : 'Jane', lastname : 'Doe' }, { firstname : 'John', lastname: 'Doe' }] <br>
 	 tpl : '&lt;div>{lastname}, {firstname}&lt;/div><br>
 	 will produce this result:<br><br>
@@ -306,7 +296,6 @@ ludo.View = new Class({
 	ludoDB:undefined,
 
 	lifeCycle:function (config) {
-
 		this._createDOM();
 		if (!config.children) {
 			config.children = this.children;
@@ -387,7 +376,7 @@ ludo.View = new Class({
 		if (this.parentComponent)config.renderTo = undefined;
 		var keys = ['css', 'contextMenu', 'renderTo', 'tpl', 'containerCss', 'socket', 'form',, 'title', 'html', 'hidden', 'copyEvents',
 			'dataSource', 'movable', 'resizable', 'closable', 'minimizable', 'alwaysInFront',
-			'parentComponent', 'cls', 'bodyCls', 'objMovable', 'width', 'height', 'model', 'frame', 'formConfig',
+			'parentComponent', 'cls', 'bodyCls', 'objMovable', 'width', 'height', 'frame', 'formConfig',
 			'overflow', 'ludoDB'];
 
 		this.setConfigParams(config, keys);
@@ -520,7 +509,7 @@ ludo.View = new Class({
 		 */
 		this.fireEvent('render', this);
 		this.isRendered = true;
-		if (this.model || this.form) {
+		if (this.form) {
 			this.getForm();
 		}
 
@@ -545,8 +534,7 @@ ludo.View = new Class({
 	/**
 	 * Insert JSON into components body
 	 * Body of Component will be updated with compiled JSON from ludo.tpl.Parser.
-	 * This method will be called automatically when you're using a ludo.model.Model or a
-	 * JSON data-source
+	 * This method will be called automatically when you're using a JSON data-source
 	 * @method insertJSON
 	 * @param {Object} data
 	 * @return void
@@ -1121,8 +1109,7 @@ ludo.View = new Class({
 				{
 					type:'ludo.form.Manager',
 					component:this,
-					form:this.form,
-					model:this.model
+					form:this.form
 				});
 		}
 		return this.getDependency('formManager');
@@ -1190,14 +1177,6 @@ ludo.View = new Class({
 		this.getForm().reset();
 	},
 
-	/**
-	 * Returns reference to ludo.model.Model object
-	 * @method getModel
-	 * @return {model.Model} model
-	 */
-	getModel:function () {
-		return this.getForm().getModel();
-	},
 	getHeightOfButtonBar:function () {
 		return 0;
 	},

@@ -3,7 +3,11 @@ ludo.form.Hidden = new Class({
     type : 'form.Hidden',
     labelWidth : 0,
     defaultValue : '',
-    hidden: true,
+    hidden: false,
+
+	containerCss:{
+		display : 'none'
+	},
 
     ludoDOM : function() {
         this.parent();

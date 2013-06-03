@@ -7,13 +7,13 @@
  @constructor
  @param {Object} config
  @example
-    var view = new ludo.View({
+ 	var view = new ludo.View({
         form:{
             'resource' : 'Person',
-            'idField' : 'id'
+            autoLoad:true,
+            arguments:1
         },
         children:[
-            { type:'form.Hidden',name:'id' },
             { type:'form.Text', label:'First name' },
             {
                 layout:{ type:'linear',orientation:'horizontal',height:25},
@@ -33,7 +33,7 @@ ludo.form.Manager = new Class({
 	Extends:ludo.Core,
 	component:null,
 	formComponents:[],
-    formComponentId:undefined,
+	map:{},
 	fileUploadComponents:[],
 	progressBar:undefined,
 	invalidIds:[],
@@ -41,43 +41,29 @@ ludo.form.Manager = new Class({
 	form:{
 		method:'post'
 	},
+	currentData:undefined,
+	service:undefined,
 
-    service:undefined,
-	model:undefined,
+	currentId:undefined,
 
 	ludoConfig:function (config) {
 		this.component = config.component;
-
-		if (config.form)this.form = config.form;
+		config.form = config.form || {};
+		this.form = config.form;
 		if (this.form && this.form.url)this.url = this.form.url;
 
-        this.form.resource = this.form.resource || this.form.name || undefined;
+		this.form.resource = this.form.resource || this.form.name || undefined;
 
 		this.id = String.uniqueID();
-		if (config.model !== undefined) {
-			if (config.model.type === undefined) {
-				config.model.type = 'model.Model';
-			}
-			this.model = this.createDependency('model', config.model);
-			if (this.model.url == undefined) {
-				this.model._setUrl(this.getUrl());
-			}
-            this.model.addEvent('beforePopulate', this.clear.bind(this));
-			this.model.addEvent('success', function (json) {
-				this.fireEvent('success', json);
-				this.fireEvent('clean');
-			}.bind(this));
-			this.model.addEvent('failure', function (json) {
-				this.fireEvent('failure', json);
-			}.bind(this));
-			this.model.addEvent('servererror', function (text, error) {
-				this.fireEvent('servererror', [text, error]);
-			}.bind(this))
-		}
+
 		if (this.form.listeners !== undefined) {
 			this.addEvents(this.form.listeners);
 		}
 		this.getFormElements();
+
+		if(config.form.autoLoad){
+			this.read(config.form.arguments);
+		}
 	},
 
 	/**
@@ -99,14 +85,9 @@ ludo.form.Manager = new Class({
 			c = children[i];
 			if (c['getProgressBarId'] !== undefined) {
 				this.registerProgressBar(c);
-				if (this.model) {
-					this.model.registerProgressBar(c);
-				}
 			}
 			else if (c.isFormElement()) {
 				this.registerFormElement(c);
-			} else if (c.tpl && this.model) {
-				this.model.registerView(c);
 			}
 		}
 
@@ -119,20 +100,24 @@ ludo.form.Manager = new Class({
 			return;
 		}
 
+		this.map[c.name] = c;
+
+		if(this.currentData && this.currentData[c.name]){
+			c.setValue(this.currentData[c.name]);
+		}
+
 		if (c.isFileUploadComponent) {
 			this.fileUploadComponents.push(c);
 		}
 		this.formComponents.push(c);
-        if(this.form.idField && c.name == this.form.idField){
-            this.formComponentId = c;
-        }
-        c.addEvents({
-            'valid' :  this.onValid.bind(this),
-            'invalid' : this.onInvalid.bind(this),
-            'dirty' : this.onDirty.bind(this),
-            'clean' : this.onClean.bind(this),
-            'change' : this.onChange.bind(this)
-        });
+
+		c.addEvents({
+			'valid':this.onValid.bind(this),
+			'invalid':this.onInvalid.bind(this),
+			'dirty':this.onDirty.bind(this),
+			'clean':this.onClean.bind(this),
+			'change':this.onChange.bind(this)
+		});
 
 		if (!c.isValid()) {
 			this.invalidIds.push(c.getId());
@@ -141,10 +126,16 @@ ludo.form.Manager = new Class({
 		if (c.isDirty()) {
 			this.dirtyIds.push(c.getId());
 		}
+	},
 
-		if (this.model) {
-			this.model.registerFormComponent(c);
+	set:function(key, value){
+		if(this.map[key]){
+			this.map[key].setValue(value);
 		}
+	},
+
+	get:function(key){
+		return this.map[key] ? this.map[key].getValue() : undefined;
 	},
 
 	registerProgressBar:function (component) {
@@ -178,16 +169,16 @@ ludo.form.Manager = new Class({
 		}
 	},
 
-    onChange:function(value, formComponent){
-        /**
-         * Event fired when a form element has been changed
-         * @event change
-         * @param {ludo.form.Manager} form
-         * @param {ludo.form.Element} form element
-         *
-         */
-        this.fireEvent('change',[this, formComponent] )
-    },
+	onChange:function (value, formComponent) {
+		/**
+		 * Event fired when a form element has been changed
+		 * @event change
+		 * @param {ludo.form.Manager} form
+		 * @param {ludo.form.Element} form element
+		 *
+		 */
+		this.fireEvent('change', [this, formComponent])
+	},
 	/**
 	 * One form element is valid. Fire valid event if all form elements are valid
 	 * @method onValid
@@ -250,7 +241,7 @@ ludo.form.Manager = new Class({
 	isValid:function () {
 		return this.invalidIds.length === 0;
 	},
-    // TODO implement a method returning values as plain array(values only)
+	// TODO implement a method returning values as plain array(values only)
 	/**
 	 * @method getValues
 	 * @description Return array of values of all form elements inside this component. The format is [{name:value},{name:value}]
@@ -283,59 +274,50 @@ ludo.form.Manager = new Class({
 		}
 
 		this.fireEvent('beforesubmit');
-		if (this.model) {
-			this.model.save(this.getValues());
-		}
-		else {
-			this.save();
-		}
+		this.save();
 	},
 
-    deleteRequest:function(){
-        if(this.model){
-            this.model.deleteRequest();
-        }else{
-            var path = this.getDeletePath();
-            var r = new ludo.remote.JSON({
-                resource : path.resource,
-                listeners:{
-                    success : function(req){
-                        /**
-                         * Event fired after successful delete request
-                         * @event deleted
-                         * @param {Object} response from server
-                         * @param {Object} View
-                         */
-                        this.fireEvent('deleted', [req.getResponse(), this.component]);
-                    }.bind(this),
-                    "failure":function (req) {
-                        /**
-                         * Event fired after form submission when success parameter in response is false.
-                         * To add listeners, use <br>
-                         * ludo.View.getForm().addEvent('failure', fn);<br>
-                         * @event deleteFailed
-                         * @param {Object} JSON response from server
-                         * @param {Object} Component
-                         */
+	deleteRequest:function () {
+		var path = this.getDeletePath();
+		var r = new ludo.remote.JSON({
+			resource:path.resource,
+			listeners:{
+				success:function (req) {
+					/**
+					 * Event fired after successful delete request
+					 * @event deleted
+					 * @param {Object} response from server
+					 * @param {Object} View
+					 */
+					this.fireEvent('deleted', [req.getResponse(), this.component]);
+				}.bind(this),
+				"failure":function (req) {
+					/**
+					 * Event fired after form submission when success parameter in response is false.
+					 * To add listeners, use <br>
+					 * ludo.View.getForm().addEvent('failure', fn);<br>
+					 * @event deleteFailed
+					 * @param {Object} JSON response from server
+					 * @param {Object} Component
+					 */
 
-                        this.fireEvent('deleteFailed', [req.getResponse(), this.component]);
-                    }.bind(this)
-                }
-            });
-            r.send(path.service, path.argument);
-        }
-    },
+					this.fireEvent('deleteFailed', [req.getResponse(), this.component]);
+				}.bind(this)
+			}
+		});
+		r.send(path.service, path.argument);
+	},
 
-    getDeletePath:function(){
-        if(this.formComponentId){
-            return {
-                resource : this.form.resource,
-                service : 'delete',
-                argument : this.formComponentId.getValue()
-            }
-        }
-        return undefined;
-    },
+	getDeletePath:function () {
+		if (this.currentId) {
+			return {
+				resource:this.form.resource,
+				service:'delete',
+				argument:this.currentId
+			}
+		}
+		return undefined;
+	},
 
 	getUnfinishedFileUploadComponent:function () {
 		for (var i = 0; i < this.fileUploadComponents.length; i++) {
@@ -350,70 +332,130 @@ ludo.form.Manager = new Class({
 	save:function () {
 		if (this.getUrl() || ludo.config.getUrl()) {
 			this.fireEvent('invalid');
-            this.requestHandler().send(this.form.service || 'save', this.formComponentId ? this.formComponentId.getValue() : undefined, this.getValues(),
-                {
-                    "progressBarId":this.getProgressBarId()
-                }
-            );
+			this.requestHandler().send(this.form.service || 'save', this.currentId, this.getValues(),
+				{
+					"progressBarId":this.getProgressBarId()
+				}
+			);
 		}
 	},
 
+	/**
+	 * Read form values from the server
+	 * @method read
+	 * @param {String|undefined} id
+	 */
+	read:function(id){
+		this.currentId = id;
+		this.readHandler().sendToServer('read', id);
+	},
 
-    _request:undefined,
-    requestHandler:function(){
-        if(this._request === undefined){
-            if(!this.form.resource)ludo.util.warn("Warning: form does not have a resource property. Falling back to default: 'Form'");
-            this._request = this.createDependency('_request',new ludo.remote.JSON({
-                url:this.url,
-                resource : this.form.resource ? this.form.resource : 'Form',
-                method:this.form.method ? this.form.method : 'post',
-                listeners:{
-                    "success":function (request) {
-                        this.commitFormElements();
-                        /**
-                         * Event fired after a form has been saved successfully.
-                         * To add listeners, use <br>
-                         * ludo.View.getForm().addEvent('success', fn);
-                         * @event success
-                         * @param {Object} JSON response from server
-                         */
-                        this.fireEvent('success', [request.getResponse(), this.component]);
-                        if(this.isValid()){
-                            this.fireEvent('valid');
-                        }
-                        this.fireEvent('clean');
-                    }.bind(this),
-                    "failure":function (request) {
-                        if(this.isValid()){
-                            this.fireEvent('valid');
-                        }
+	_readHandler:undefined,
 
-                        /**
-                         * Event fired after form submission when success parameter in response is false.
-                         * To add listeners, use <br>
-                         * ludo.View.getForm().addEvent('failure', fn);<br>
-                         * @event failure
-                         * @param {Object} JSON response from server
-                         * @param {Object} Component
-                         */
+	readHandler:function(){
+		if(this._readHandler === undefined){
+			this._readHandler = this.getDependency('readHandler', new ludo.remote.JSON({
+				url:this.url,
+				resource:this.form.resource ? this.form.resource : 'Form',
+				method:this.form.method ? this.form.method : 'post',
+				service : 'read',
+				listeners:{
+					"success":function (request) {
+						this.currentData = request.getResponseData();
+						this.fill(this.currentData);
+						/**
+						 * Event fired after data for the form has been read successfully
+						 * To add listeners, use <br>
+						 * ludo.View.getForm().addEvent('success', fn);
+						 * @event read
+						 * @param {Object} JSON response from server
+						 */
+						this.fireEvent('read', [request.getResponse(), this.component]);
+						if (this.isValid()) {
+							this.fireEvent('valid');
+						}
+						this.fireEvent('clean');
+					}.bind(this),
+					"failure":function (request) {
+						this.fireEvent('failure', [request.getResponse(), this.component]);
+					}.bind(this),
+					"error":function (request) {
+						this.fireEvent('servererror', [request.getResponseMessage(), request.getResponseCode()]);
+						this.fireEvent('valid', this);
+					}.bind(this)
+				}
+			}));
+		}
+		return this._readHandler;
+	},
 
-                        this.fireEvent('failure', [request.getResponse(), this.component]);
-                    }.bind(this),
-                    "error":function (request) {
-                        /**
-                         * Server error event. Fired when the server didn't handle the request
-                         * @event servererror
-                         * @param {String} error text
-                         * @param {String} error message
-                         */
-                        this.fireEvent('servererror', [request.getResponseMessage(), request.getResponseCode()]);
-                        this.fireEvent('valid', this);
-                    }.bind(this)
-                }
-            }));
-        }
-        return this._request;
-    },
+	fill:function(data){
+		for(var key in this.map){
+			if(this.map.hasOwnProperty(key)){
+				if(data[key] !== undefined){
+					this.map[key].setValue(data[key]);
+				}else{
+					this.map[key].reset();
+				}
+			}
+		}
+	},
+
+	_request:undefined,
+	requestHandler:function () {
+		if (this._request === undefined) {
+			if (!this.form.resource)ludo.util.warn("Warning: form does not have a resource property. Falling back to default: 'Form'");
+			this._request = this.createDependency('_request', new ludo.remote.JSON({
+				url:this.url,
+				resource:this.form.resource ? this.form.resource : 'Form',
+				method:this.form.method ? this.form.method : 'post',
+				listeners:{
+					"success":function (request) {
+						this.commitFormElements();
+						/**
+						 * Event fired after a form has been saved successfully.
+						 * To add listeners, use <br>
+						 * ludo.View.getForm().addEvent('success', fn);
+						 * @event success
+						 * @param {Object} JSON response from server
+						 */
+						this.fireEvent('success', [request.getResponse(), this.component]);
+						if (this.isValid()) {
+							this.fireEvent('valid');
+						}
+						this.fireEvent('clean');
+					}.bind(this),
+					"failure":function (request) {
+						if (this.isValid()) {
+							this.fireEvent('valid');
+						}
+
+						/**
+						 * Event fired after form submission when success parameter in response is false.
+						 * To add listeners, use <br>
+						 * ludo.View.getForm().addEvent('failure', fn);<br>
+						 * @event failure
+						 * @param {Object} JSON response from server
+						 * @param {Object} Component
+						 */
+
+						this.fireEvent('failure', [request.getResponse(), this.component]);
+					}.bind(this),
+					"error":function (request) {
+						/**
+						 * Server error event. Fired when the server didn't handle the request
+						 * @event servererror
+						 * @param {String} error text
+						 * @param {String} error message
+						 */
+						this.fireEvent('servererror', [request.getResponseMessage(), request.getResponseCode()]);
+						this.fireEvent('valid', this);
+					}.bind(this)
+				}
+			}));
+		}
+		return this._request;
+	},
 
 	getProgressBarId:function () {
 		return this.progressBar ? this.progressBar.getProgressBarId() : undefined;
@@ -450,14 +492,5 @@ ludo.form.Manager = new Class({
 	 */
 	isDirty:function () {
 		return this.dirtyIds.length > 0;
-	},
-
-	/**
-	 * Returns reference to ludo.model.Model object
-	 * @method getModel
-	 * @private
-	 */
-	getModel:function () {
-		return this.model;
 	}
 });

@@ -11,6 +11,7 @@ require_once("../includes/demo-header.php");
 <script type="text/javascript" src="../../src/form/text.js"></script>
 <script type="text/javascript" src="../../src/form/select.js"></script>
 <script type="text/javascript" src="../../src/form/checkbox.js"></script>
+<script type="text/javascript" src="../../src/form/manager.js"></script>
 <script type="text/javascript" src="../../src/form/radio-group.js"></script>
 <script type="text/javascript" src="../../src/model/model.js"></script>
 <script type="text/javascript" src="../../src/layout/renderer.js"></script>
@@ -57,14 +58,12 @@ require_once("../includes/demo-header.php");
         width:650,
         left:50,
         top:30,
-        model:{
-            id:'userModel',
-            columns:["firstname","lastname","address","email","phone","zipcode","city", "birth","country","gender"],
-            name:'User',
-            recordId:100
+        form:{
+            resource : 'User',
+            autoLoad:true,
+            arguments : 100
         },
         children:[
-
             {
                 title:'Form',
                 layout:{

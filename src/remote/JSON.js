@@ -97,6 +97,7 @@ ludo.remote.JSON = new Class({
      */
     sendToServer:function (service, resourceArguments, serviceArguments, additionalData) {
 
+		if(resourceArguments && !ludo.util.isArray(resourceArguments))resourceArguments = [resourceArguments];
         // TODO escape slashes in resourceArguments and implement replacement in LudoDBRequestHandler
         // TODO the events here should be fired for the components sending the request.
         var req = new Request.JSON({

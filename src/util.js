@@ -19,6 +19,10 @@ ludo.util = {
 		return typeof(obj) === 'function';
 	},
 
+	argsToArray:function(arguments){
+		return Array.prototype.slice.call(arguments);
+	},
+
     isLudoJSConfig:function(obj){
         return obj.initialize===undefined && obj.type;
     },

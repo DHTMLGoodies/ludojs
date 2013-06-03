@@ -12,7 +12,8 @@ ludo.form.FormSpec = new Class({
      @example
         new ludo.View({
             form:{
-                "idField" : "id",
+                autoLoad:true,
+                arguments:100,
                 "resource": "Player"
             },
             children:[
@@ -38,13 +39,11 @@ ludo.form.FormSpec = new Class({
      @example
      new ludo.View({
             form:{
-                "idField" : "id",
-                "resource": "User"
+                "resource": "User",
+                "autoLoad" : true,
+                "arguments" : 100
             },
             children:[
-                {
-                     type: "form.Hidden", name:"id"
-                },
                 {
                     type:"form.Text", name:"firstname"
                 },
@@ -63,7 +62,6 @@ ludo.form.FormSpec = new Class({
      @example
      new ludo.View({
             form:{
-                "idField" : "id",
                 "resource": "User",
                 listeners:{
                     "saved": function(){
@@ -73,9 +71,6 @@ ludo.form.FormSpec = new Class({
             },
             children:[
                 {
-                     type: "form.Hidden", name:"id"
-                },
-                {
                     type:"form.Text", name:"firstname"
                 },
                 {
@@ -84,7 +79,28 @@ ludo.form.FormSpec = new Class({
             ]
         });
      */
-    listeners:undefined
+    listeners:undefined,
+
+	/**
+	 * Autoload data from server on creation
+	 * @config {Boolean} autoLoad
+	 * @default false
+	 */
+	autoLoad:false,
+
+	/**
+	 Arguments sent to server when autoLoad is set to true
+	 @config {String|Number} arguments
+	 @example
+	 	form:{
+	 		url:'controller.php',
+	 		resource:'Person',
+	 		arguments:100,
+	 		autoLoad:true
+	 	}
+	 will send request 'Person/100/read' to controller.php.
+	 */
+	arguments:undefined
 
 
 });

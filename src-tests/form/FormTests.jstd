@@ -2,6 +2,7 @@ load:
   - ../../mootools/mootools-core-1.4.5.js
   - ../../mootools/mootools-more-1.4.0.1.js
   - ../../js/ludojs.js
+  - ../../src/form/manager.js
   - ../../src/form/element.js
   - ../../src/form/label-element.js
   - ../../src/form/text.js
@@ -18,6 +19,7 @@ load:
   - ../../src/color/boxes.js
   - ../../src/color/rgb-slider.js
   - ../../src/color/color.js
+  - ../../src/util.js
   - ../../src/data-source/collection.js
 
 serve:

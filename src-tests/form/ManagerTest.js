@@ -1,6 +1,6 @@
 TestCase("ManagerTest", {
 
-	 getComponent:function () {
+	getComponent:function () {
 		return new ludo.View({
 			layout:'rows',
 			children:[
@@ -33,7 +33,7 @@ TestCase("ManagerTest", {
 
 	"test should be able to create form Manager Dynamically":function () {
 		// given
-		var cmp =  this.getComponent();
+		var cmp = this.getComponent();
 		// when
 		var manager = cmp.getForm();
 		// then
@@ -43,7 +43,7 @@ TestCase("ManagerTest", {
 
 	"test should Get Values Of All Form Elements":function () {
 		// given
-		var cmp =  this.getComponent();
+		var cmp = this.getComponent();
 		var manager = cmp.getForm();
 		// when
 		cmp.child['firstname'].setValue('Jane');
@@ -58,7 +58,7 @@ TestCase("ManagerTest", {
 	},
 	"test should be able to reset form elements":function () {
 		// given
-		var cmp =  this.getComponent();
+		var cmp = this.getComponent();
 		var manager = cmp.getForm();
 		// when
 		cmp.child['firstname'].setValue('Jane');
@@ -72,9 +72,11 @@ TestCase("ManagerTest", {
 		assertEquals('Doe', values['lastname']);
 		assertEquals('Park Avenue', values['address']);
 	},
+
+
 	"test should be able to register lazy form elements":function () {
 		// given
-		var cmp =  this.getComponent();
+		var cmp = this.getComponent();
 		var manager = cmp.getForm();
 
 		// when
@@ -86,35 +88,38 @@ TestCase("ManagerTest", {
 		assertTrue(manager.formComponents.indexOf(newChild) >= 0);
 	},
 
-    "test should be able to send delete requests": function(){
-        // given
-        var v = new ludo.View({
-            form : {
-                idField : 'id',
-                resource:'Person'
-            },
-            children:[{
-                type:'form.Hidden', name:'id', value:1
-            },{
-                type:'form.Text', name:'firstname', value:'John'
-            }]
-        });
+	"test should be able to send delete requests":function () {
+		// given
+		var v = new ludo.View({
+			form:{
+				idField:'id',
+				resource:'Person'
+			},
+			children:[
+				{
+					type:'form.Hidden', name:'id', value:1
+				},
+				{
+					type:'form.Text', name:'firstname', value:'John'
+				}
+			]
+		});
 
-        // when
-        var form = v.getForm();
-        var path = form.getDeletePath();
+		// when
+		var form = v.getForm();
+		var path = form.getDeletePath();
 
 
-        // then
-        assertEquals('Person', path.resource);
-        assertEquals(1, path.argument);
-        assertEquals('delete', path.service);
-    },
+		// then
+		assertEquals('Person', path.resource);
+		assertEquals(1, path.argument);
+		assertEquals('delete', path.service);
+	},
 
 	"test should fire invalid event when form element is invalid":function () {
 		// given
 		var component = new ludo.View({
-            renderTo:document.body,
+			renderTo:document.body,
 			layout:'rows',
 			children:[
 				{ type:'form.Text', name:'firstname', 'value':'a', minLength:5 },
@@ -149,10 +154,75 @@ TestCase("ManagerTest", {
 
 		// then
 		assertTrue(mgr.component.isRendered);
-        mgr.getFormElements();
+		mgr.getFormElements();
 
 		assertEquals('Wrong child count', 2, mgr.component.getAllChildren().length);
 		assertEquals(2, mgr.formComponents.length);
-	}
+	},
 
+
+	"test should be able to update value from form manager":function () {
+		// given
+		var v = this.getView();
+
+		// when
+		v.getForm().set('firstname', 'Alf');
+
+		// then
+		assertEquals('Alf', v.child['firstname'].getValue());
+	},
+
+	"test should be able to get value from form manager": function(){
+		// given
+		var v = this.getView();
+
+		// then
+		assertEquals('Doe', v.getForm().get('lastname'));
+	},
+
+	"test should be able to read values from server" : function(){
+		// given
+		var v = this.getView();
+
+		// when
+		v.getForm().read(1);
+		v.getForm().readHandler().fireEvent('success', this.getReadResponseMock());
+
+		// then
+		assertEquals('Jonathan', v.child['firstname'].getValue());
+
+
+
+	},
+
+	getReadResponseMock:function(){
+		if(ludo.ResponseMock == undefined){
+			ludo.ResponseMock = new Class({
+				Extends: ludo.remote.JSON,
+				getResponse:function(){
+
+				},
+				getResponseData:function(){
+					return {
+						'firstname'  : 'Jonathan',
+						'lastname' : 'Johnson'
+					};
+				}
+			});
+		}
+
+		return new ludo.ResponseMock();
+	},
+
+	getView:function () {
+		return new ludo.View({
+			renderTo:document.body,
+			layout:'rows',
+			children:[
+				{ type:'form.Text', name:'firstname', 'value':'a', minLength:5 },
+				{ type:'form.Text', name:'lastname', 'value':'Doe' },
+				{ type:'form.Textarea', name:'address', 'value':'Park Avenue' }
+			]
+		});
+	}
 });
