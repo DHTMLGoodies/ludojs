@@ -286,6 +286,34 @@ TestCase("CollectionTest", {
 		assertEquals('Eritrea', previous.country);
 	},
 
+	"test should not return records when a match is not found": function(){
+		var c = new ludo.dataSource.Collection();
+
+		c.addRecord({
+			id : 100,
+			title : 'My title'
+		});
+
+		// when
+		var found = c.findRecord(101);
+
+
+		// then
+		assertUndefined(found, found);
+	},
+
+	"test should get record by id if it does not exists": function(){
+		var c = new ludo.dataSource.Collection();
+
+		c.addRecord({
+			id : 100,
+			title : 'My title'
+		});
+
+		// then
+		assertUndefined(c.getById(101));
+	},
+
 	"test should be able to find multiple records":function () {
 		// given
 		var c = this.getCollection();

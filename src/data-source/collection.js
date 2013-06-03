@@ -336,8 +336,11 @@ ludo.dataSource.Collection = new Class({
 		if(search.uid)search = search.uid;
 		var rec = this.getById(search);
 		if(rec)return rec;
+
+		var searchMethod = ludo.util.isObject(search) ? 'isRecordMatchingSearch' : 'hasMatchInPrimaryKey';
+
 		for (var i = 0; i < this.data.length; i++) {
-			if (this.isRecordMatchingSearch(this.data[i], search)) {
+			if (this[searchMethod](this.data[i], search)) {
 				return this.data[i];
 			}
 		}
@@ -353,6 +356,15 @@ ludo.dataSource.Collection = new Class({
 			}
 		}
 		return true;
+	},
+
+	hasMatchInPrimaryKey:function(record, search){
+		if(this.primaryKey){
+			for(var j=0;j<this.primaryKey.length;j++){
+				if(record[this.primaryKey[j]]  === search)return true;
+			}
+		}
+		return false;
 	},
 
 	/**
