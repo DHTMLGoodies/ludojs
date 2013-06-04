@@ -2,7 +2,7 @@ ludo.form.Color = new Class({
 	Extends:ludo.form.Combo,
 	regex:/^#[0-9A-F]{6}$/i,
 	childLayout:{
-		width:250, height:250
+		width:290, height:250
 	},
 
 	getClassChildren:function () {
@@ -14,6 +14,26 @@ ludo.form.Color = new Class({
 				cls:'ludo-tabs-in-dropdown',
 				bodyCls:'ludo-tabs-in-dropdown-body',
 				children:[
+
+					{
+						title:ludo.language.get('RGB'),
+						type:'color.RgbColors',
+						name:'rgbColors',
+						value:this.value,
+						listeners:{
+							'setColor':this.receiveColor.bind(this),
+							'render':this.setInitialWidgetValue.bind(this)
+						}
+					},{
+						title:ludo.language.get('Named Colors'),
+						type:'color.NamedColors',
+						name:'boxes',
+						value:this.value,
+						listeners:{
+							'setColor':this.receiveColor.bind(this),
+							'render':this.setInitialWidgetValue.bind(this)
+						}
+					},
 					{
                         name:'slider',
 						title:ludo.language.get('Color Slider'),
@@ -24,16 +44,6 @@ ludo.form.Color = new Class({
 							'render':this.setInitialWidgetValue.bind(this)
 						}
 
-					},
-					{
-						title:ludo.language.get('Color boxes'),
-						type:'color.Boxes',
-                        name:'boxes',
-						value:this.value,
-						listeners:{
-							'setColor':this.receiveColor.bind(this),
-							'render':this.setInitialWidgetValue.bind(this)
-						}
 					}
 				]
 			}

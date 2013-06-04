@@ -882,8 +882,8 @@ ludo.dataSource.Collection = new Class({
 
 	loadComplete:function (data, json) {
 		// TODO refactor this
-		if (this.paging && json.rows)this.paging.rows = json.rows;
-		if (this.paging && json.response && json.response.rows)this.paging.rows = json.response.rows;
+		if (this.paging && json.rows !==undefined)this.paging.rows = json.rows;
+		if (this.paging && json.response && json.response.rows !==undefined)this.paging.rows = json.response.rows;
 		this.parent(data, json);
 
 		this.fireEvent('count', this.getCount());

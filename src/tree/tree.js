@@ -246,7 +246,8 @@ ludo.tree.Tree = new Class({
     renderChildrenOf:function(record){
         var p = this.getChildContainer(record);
         if(p){
-            p.innerHTML = this.getHtmlForBranch(record.getChildren());
+			var c = record.getChildren();
+            if(c)p.innerHTML = this.getHtmlForBranch(c);
         }
     },
 
