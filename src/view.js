@@ -381,9 +381,6 @@ ludo.View = new Class({
 
 		this.setConfigParams(config, keys);
 
-
-
-
 		if (this.socket) {
 			if (!this.socket.type)this.socket.type = 'socket.Socket';
 			this.socket.component = this;
@@ -1038,36 +1035,14 @@ ludo.View = new Class({
 			this.children[i].dispose();
 		}
 	},
-	disposeCanceled:false,
 	/**
-	 Cancel dispose of view. A good example of where this is useful is in
-	 a tab layout where the 'x' icons might dispose children. If you want to
-	 have some validation before view is disposed, you can add event to beforeDispose
-	 and call view.cancelDispose in case you don't want to dispose the view.
-	 @method cancelDispose
-	 @example
-	    function confirmDispose(view){
-	 		if(!confirm('Are you sure')){
-	 			view.cancelDispose();
-	 		}
-	 	}
-	 view.addEvent('beforeDispose', confirmDispose);
-	 */
-	cancelDispose:function () {
-		this.disposeCanceled = true;
-	},
-	/**
-	 * Hide and destroy component
+	 * Hide and dispose view
 	 * @method dispose
 	 * @return void
 	 */
 	dispose:function () {
-		this.disposeCanceled = false;
-		this.fireEvent('beforeDispose', this);
-		if (!this.disposeCanceled) {
-			this.fireEvent('dispose', this);
-			ludo.util.dispose(this);
-		}
+        this.fireEvent('dispose', this);
+        ludo.util.dispose(this);
 	},
 	/**
 	 * Returns title of Component.
@@ -1108,16 +1083,16 @@ ludo.View = new Class({
 			this.createDependency('formManager',
 				{
 					type:'ludo.form.Manager',
-					component:this,
+					view:this,
 					form:this.form
 				});
 		}
 		return this.getDependency('formManager');
 	},
 
-	getParentFormManager:function () {
+	getParentForm:function () {
 		var parent = this.getParent();
-		return parent ? parent.hasDependency('formManager') ? parent.getDependency('formManager') : parent.getParentFormManager() : undefined;
+		return parent ? parent.hasDependency('formManager') ? parent.getDependency('formManager') : parent.getParentForm() : undefined;
 	},
 
 	isFormElement:function () {

@@ -4,27 +4,6 @@ $pageTitle = 'Example of ludo form components';
 require_once("../includes/demo-header.php");
 ?>
 <body>
-<script type="text/javascript" src="../../src/form/element.js"></script>
-<script type="text/javascript" src="../../src/form/combo.js"></script>
-<script type="text/javascript" src="../../src/menu/button.js"></script>
-<script type="text/javascript" src="../../src/form/label-element.js"></script>
-<script type="text/javascript" src="../../src/form/text.js"></script>
-<script type="text/javascript" src="../../src/form/select.js"></script>
-<script type="text/javascript" src="../../src/form/checkbox.js"></script>
-<script type="text/javascript" src="../../src/form/manager.js"></script>
-<script type="text/javascript" src="../../src/form/radio-group.js"></script>
-<script type="text/javascript" src="../../src/model/model.js"></script>
-<script type="text/javascript" src="../../src/layout/renderer.js"></script>
-<script type="text/javascript" src="../../src/layout/factory.js"></script>
-<script type="text/javascript" src="../../src/layout/linear-horizontal.js"></script>
-<script type="text/javascript" src="../../src/layout/linear-vertical.js"></script>
-<script type="text/javascript" src="../../src/view/button-bar.js"></script>
-<script type="text/javascript" src="../../src/color/base.js"></script>
-<script type="text/javascript" src="../../src/color/color.js"></script>
-<script type="text/javascript" src="../../src/color/boxes.js"></script>
-<script type="text/javascript" src="../../src/color/rgb-slider.js"></script>
-<script type="text/javascript" src="../../src/form/color.js"></script>
-<script type="text/javascript" src="../../src/view/title-bar.js"></script>
 <style type="text/css">
     .ludo-form-text-element input, .ludo-form-text-element textarea {
         border: 0;
@@ -39,9 +18,6 @@ require_once("../includes/demo-header.php");
     }
 
 </style>
-<script type="text/javascript" src="../../src/form/slider.js"></script>
-<script type="text/javascript" src="../../src/form/date.js"></script>
-<script type="text/javascript" src="../../src/form/textarea.js"></script>
 <script type="text/javascript" class="source-code">
 
     var w = new ludo.Window({

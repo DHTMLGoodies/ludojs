@@ -88,6 +88,31 @@ TestCase("ManagerTest", {
 		assertTrue(manager.formComponents.indexOf(newChild) >= 0);
 	},
 
+    "test should be able to store config params": function(){
+        // given
+        var v = new ludo.View({
+            form:{
+                resource:'Person',
+                url : 'tester.php',
+                autoLoad:true,
+                arguments:1
+            },
+            children:[
+                {
+                    type:'form.Text', name:'firstname', value:'John'
+                }
+            ]
+        });
+
+        // when
+        var f = v.getForm();
+
+        // then
+        assertEquals('Person', f.resource);
+        assertEquals('tester.php', f.url);
+        assertTrue(f.autoLoad);
+    },
+
 	"test should be able to send delete requests":function () {
 		// given
 		var v = new ludo.View({
@@ -152,10 +177,10 @@ TestCase("ManagerTest", {
 		var mgr = cmp.getForm();
 
 		// then
-		assertTrue(mgr.component.isRendered);
+		assertTrue(mgr.view.isRendered);
 		mgr.getFormElements();
 
-		assertEquals('Wrong child count', 2, mgr.component.getAllChildren().length);
+		assertEquals('Wrong child count', 2, mgr.view.getAllChildren().length);
 		assertEquals(2, mgr.formComponents.length);
 	},
 
@@ -190,9 +215,67 @@ TestCase("ManagerTest", {
 		// then
 		assertEquals('Jonathan', v.child['firstname'].getValue());
 
-
-
 	},
+
+    "test should be able to cache records": function(){
+        // given
+        var v = new ludo.View({
+            renderTo:document.body,
+            form:{
+                cache:true
+            },
+            layout:'rows',
+            children:[
+                { type:'form.Text', name:'firstname', 'value':'a', minLength:5 },
+                { type:'form.Text', name:'lastname', 'value':'Doe' },
+                { type:'form.Textarea', name:'address', 'value':'Park Avenue' }
+            ]
+        });
+
+        // when
+        v.getForm().storeCache(1, {
+            'firstname' : 'Amanda',
+            'lastname' : 'Larsen'
+        });
+        v.getForm().read(1);
+
+        // then
+        assertTrue('Cache not enabled', v.getForm().cache);
+        assertTrue('Is not in cache', v.getForm().isInCache(1));
+        assertEquals('Amanda', v.child['firstname'].getValue());
+
+    },
+
+    "test should update cache when a form element is updated": function(){
+        // given
+        var v = new ludo.View({
+            renderTo:document.body,
+            form:{
+                cache:true
+            },
+            layout:'rows',
+            children:[
+                { type:'form.Text', name:'firstname', 'value':'a', minLength:5 },
+                { type:'form.Text', name:'lastname', 'value':'Doe' },
+                { type:'form.Textarea', name:'address', 'value':'Park Avenue' }
+            ]
+        });
+
+        // when
+        v.getForm().storeCache(1, {
+            'firstname' : 'Amanda',
+            'lastname' : 'Larsen'
+        });
+        v.getForm().read(1);
+
+        v.child['firstname'].setValue('Anton');
+
+        var cached = v.getForm().getCached(1);
+
+        // then
+        assertEquals('Anton', cached.firstname);
+
+    },
 
 	getReadResponseMock:function(){
 		if(ludo.ResponseMock == undefined){
@@ -213,9 +296,10 @@ TestCase("ManagerTest", {
 		return new ludo.ResponseMock();
 	},
 
-	getView:function () {
+	getView:function (formConfig) {
 		return new ludo.View({
 			renderTo:document.body,
+            form:formConfig,
 			layout:'rows',
 			children:[
 				{ type:'form.Text', name:'firstname', 'value':'a', minLength:5 },

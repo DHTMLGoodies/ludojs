@@ -5,7 +5,7 @@
  */
 ludo.form.TinyButton = new Class({
     Extends: ludo.form.Button,
-    type:'form.TinyButton',
+    type:'form.Button', size : 's',
     width:20,
     buttonHeight:15,
 

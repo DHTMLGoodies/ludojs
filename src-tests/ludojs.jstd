@@ -14,7 +14,6 @@ test:
   - grid/*.js
   - layout/*.js
   - misc/*.js
-  - model/*.js
   - remote/*.js
   - socket/*.js
   - store/*.js

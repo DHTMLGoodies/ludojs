@@ -274,6 +274,15 @@ ludo.tree.Tree = new Class({
 		ret.push('</div>');
 
 		if (includeContainer)ret.push('</div>');
+
+        /**
+         * Event fired when a node is created
+         * @event createNode
+         * @param {String} id of DOM node
+         * @param {Object} record
+         * @param {tree.Tree} tree
+         */
+        this.fireEvent('createNode', [record.uid, record, this]);
 		return ret.join('');
 	},
 
@@ -285,7 +294,6 @@ ludo.tree.Tree = new Class({
 		}
 		return true;
 	},
-
 
 	getNodeTextFor:function (record) {
 		var tplFields = this.getTplFields(record);

@@ -96,8 +96,6 @@ ludo.layout.Factory = new Class({
 		}
 		
         ret.type = ret.type || 'Base';
-
-
 		return ret;
 	},
 

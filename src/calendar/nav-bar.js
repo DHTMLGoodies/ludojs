@@ -13,11 +13,11 @@ ludo.calendar.NavBar = new Class({
     cls:'ludo-calendar-info-panel',
 
     children:[
-        { type:'form.TinyButton', value:'<<', name:'previousyear', width:25},
-        { type:'form.TinyButton', value:'<', name:'previous', width:25},
+        { type:'form.Button', size:'s', value:'<<', name:'previousyear', width:25},
+        { type:'form.Button', size : 's', value:'<', name:'previous', width:25},
         { weight:1, name:'info', type:'calendar.MonthYearSelector' },
-        { type:'form.TinyButton', name:'next', value:'>', width:25 },
-        { type:'form.TinyButton', name:'nextyear', value:'>>', width:25 }
+        { type:'form.Button', size : 's', name:'next', value:'>', width:25 },
+        { type:'form.Button', size : 's', name:'nextyear', value:'>>', width:25 }
     ],
 
     ludoRendered:function () {

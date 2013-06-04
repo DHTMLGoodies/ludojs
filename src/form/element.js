@@ -223,9 +223,9 @@ ludo.form.Element = new Class({
 			if(this.value !== undefined)this.els.formEl.set('value', this.value)
 		}
         if (this.linkWith) {
-            this.setLinkWithOfOther();
+            this.createBackLink();
         }
-		var parentFormManager = this.getParentFormManager();
+		var parentFormManager = this.getParentForm();
 	    if (parentFormManager) {
 			parentFormManager.registerFormElement(this);
 		}
@@ -513,15 +513,6 @@ ludo.form.Element = new Class({
     },
 
     /**
-     * Returns initial value sent to constructor
-     * @method getInitialValue
-     * @return string initial value
-     */
-    getInitialValue:function () {
-        return this.initialValue;
-    },
-
-    /**
      * Reset / Roll back to last committed value. It could be the value stored by last commit method call
      * or if the original value/default value of this field.
      * @method reset
@@ -585,7 +576,7 @@ ludo.form.Element = new Class({
         this.addEvent('valueChange', this.updateLinked.bind(this));
     },
 
-    setLinkWithOfOther:function (attempts) {
+    createBackLink:function (attempts) {
         attempts = attempts || 0;
         var cmp = this.getLinkWith();
         if (cmp && !cmp.linkWith) {
@@ -596,7 +587,7 @@ ludo.form.Element = new Class({
             cmp.setLinkWith(this);
         } else {
             if (attempts < 100) {
-                this.setLinkWithOfOther.delay(50, this, attempts + 1);
+                this.createBackLink.delay(50, this, attempts + 1);
             }
         }
     },

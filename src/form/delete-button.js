@@ -31,7 +31,7 @@ ludo.form.DeleteButton = new Class({
 
 	submit:function () {
 		if(this.applyTo){
-            this.applyTo.deleteRequest();
+            this.applyTo.deleteRecord();
         }
 	}
 });
