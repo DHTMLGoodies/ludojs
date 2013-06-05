@@ -1,4 +1,4 @@
-/* Generated Wed Jun 5 20:53:35 CEST 2013 */
+/* Generated Wed Jun 5 21:06:14 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -47,7 +47,7 @@ Owner of ludoJS.com
     border-radius: 5px;
     webkit-border-radius: 5px;
     -moz-border-radius: 5px;
-    z-index: 100;
+    z-index: 40000;
     background-color: #FFF;
     font-size:11px;
 }
