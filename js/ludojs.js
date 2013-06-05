@@ -1,4 +1,4 @@
-/* Generated Wed Jun 5 13:29:10 CEST 2013 */
+/* Generated Wed Jun 5 16:09:31 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -20269,9 +20269,8 @@ ludo.grid.Grid = new Class({
 			/**
 			 * Click on record
 			 * @event click
-			 * @param Record clicked record
-			 * @param Component this
-			 * @param {Number} index of record
+			 * @param {Object} Record clicked record
+			 * @param {String} column
 			 */
 			this.fireEvent('click', [record, this.getColumnByDom(e.target)]);
 		}
@@ -20387,9 +20386,8 @@ ludo.grid.Grid = new Class({
 			/**
 			 * Double click on record
 			 * @event dblclick
-			 * @param Record clicked record
-			 * @param Component this
-			 * @param {Number} index of record
+			 * @param {Object} Record clicked record
+			 * @param {String} column
 			 */
 			this.fireEvent('dblclick', [record, this.getColumnByDom(e.target)]);
 		}
