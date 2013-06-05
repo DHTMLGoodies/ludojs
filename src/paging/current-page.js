@@ -1,5 +1,5 @@
 /**
- Displays number of pages in a data source
+ Displays current page number shown in a collection
  @class paging.TotalPages
  @extends View
  @constructor
@@ -15,9 +15,9 @@
  }
  where 'myDataSource' is the id of a dataSource.Collection object used by a view.
  */
-ludo.paging.TotalPages = new Class({
+ludo.paging.CurrentPage = new Class({
 	Extends:ludo.View,
-	type:'grid.paging.TotalPages',
+	type:'grid.paging.CurrentPage',
 	width:25,
 	onLoadMessage:'',
 	/**
@@ -25,12 +25,12 @@ ludo.paging.TotalPages = new Class({
 	 * @attribute {String} tpl
 	 * @default '/{pages}'
 	 */
-	tpl:'/{pages}',
+	tpl:'{page}',
 
 	ludoDOM:function () {
 		this.parent();
 		this.getEl().addClass('ludo-paging-text');
-		this.getEl().addClass('ludo-paging-total-pages');
+		this.getEl().addClass('ludo-paging-current-page');
 	},
 
 	ludoEvents:function () {
@@ -42,8 +42,7 @@ ludo.paging.TotalPages = new Class({
         if(ludo.get(this.dataSource)){
             var ds = this.getDataSource();
             if (ds) {
-                ds.addEvent('load', this.setPageNumber.bind(this));
-                ds.addEvent('pageCount', this.setPageNumber.bind(this));
+                ds.addEvent('page', this.setPageNumber.bind(this));
                 this.setPageNumber(ds.getPageNumber());
             }
         }else{
@@ -52,7 +51,7 @@ ludo.paging.TotalPages = new Class({
     },
 
 	setPageNumber:function () {
-		this.setHtml(this.tpl.replace('{pages}', this.getDataSource().getPageCount()));
+		this.setHtml(this.tpl.replace('{page}', this.getDataSource().getPageNumber()));
 	},
 
 	insertJSON:function () {

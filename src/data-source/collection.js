@@ -683,7 +683,9 @@ ludo.dataSource.Collection = new Class({
 	lastPage:function () {
 		if (!this.paging || this.isOnLastPage())return;
 		var count = this.getCount();
-		this.paging.offset = count - count % this.paging.size;
+		var decr = count % this.paging.size;
+		if(decr === 0) decr = this.paging.size;
+		this.paging.offset = count - decr;
 		this.onPageChange('lastPage');
 	},
 
@@ -941,7 +943,11 @@ ludo.dataSource.Collection = new Class({
 		this.getSearcher().search(search);
 	},
 
-
+	/**
+	 * Executes a remote search for records with the given data
+	 * @method remoteSearch
+	 * @param {String|Object} search
+	 */
 	remoteSearch:function(search){
 		this.postData = this.postData || {};
 		this.postData.search = search;

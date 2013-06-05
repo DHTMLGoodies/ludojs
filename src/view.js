@@ -1077,6 +1077,16 @@ ludo.View = new Class({
 		}
 		return this.dataSourceObj;
 	},
+	_shim:undefined,
+	shim:function(){
+		if(this._shim === undefined){
+			this._shim = new ludo.view.Shim({
+				txt : '',
+				renderTo:this.getEl()
+			});
+		}
+		return this._shim;
+	},
 
 	getForm:function () {
 		if (!this.hasDependency('formManager')) {

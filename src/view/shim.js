@@ -11,13 +11,13 @@ ludo.view.Shim = new Class({
     initialize:function (config) {
         if (config.txt)this.txt = config.txt;
         this.renderTo = config.renderTo;
-        if(ludo.util.isString(this.renderTo))this.renderTo = ludo.get(this.renderTo).getEl();
+
     },
 
     getEl:function () {
         if (this.el === undefined) {
             this.el = ludo.dom.create({
-                renderTo:this.renderTo,
+                renderTo:this.getRenderTo(),
                 cls:'ludo-shim-loading',
                 css:{'display':'none'},
                 html : this.getTextForShim()
@@ -28,14 +28,25 @@ ludo.view.Shim = new Class({
 
     getShim:function () {
         if (this.shim === undefined) {
+			if(ludo.util.isString(this.renderTo))this.renderTo = ludo.get(this.renderTo).getEl();
             this.shim = ludo.dom.create({
-                renderTo:this.renderTo,
+                renderTo:this.getRenderTo(),
                 cls:'ludo-loader-shim',
                 css:{'display':'none'}
             });
         }
         return this.shim;
     },
+
+	getRenderTo:function(){
+
+		if(ludo.util.isString(this.renderTo)){
+			var view = ludo.get(this.renderTo);
+			if(!view)return undefined;
+			this.renderTo = ludo.get(this.renderTo).getEl();
+		}
+		return this.renderTo;
+	},
 
     show:function (txt) {
         if (txt !== undefined) {
