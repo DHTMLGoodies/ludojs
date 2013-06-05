@@ -268,9 +268,8 @@ ludo.grid.Grid = new Class({
 			/**
 			 * Click on record
 			 * @event click
-			 * @param Record clicked record
-			 * @param Component this
-			 * @param {Number} index of record
+			 * @param {Object} Record clicked record
+			 * @param {String} column
 			 */
 			this.fireEvent('click', [record, this.getColumnByDom(e.target)]);
 		}
