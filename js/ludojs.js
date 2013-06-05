@@ -1,4 +1,4 @@
-/* Generated Wed Jun 5 13:29:10 CEST 2013 */
+/* Generated Wed Jun 5 20:52:19 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -12349,78 +12349,6 @@ ludo.color.Boxes = new Class({
             this.fireEvent('setColor', e.target.getAttribute('rgbColor'));
         }
     }
-});/* ../ludojs/src/color/named-colors.js */
-ludo.color.NamedColors = new Class({
-	Extends: ludo.color.Boxes,
-	colors:['grayScale','namedColors'],
-	namedColors:[
-		['AliceBlue','#F0F8FF'],['AntiqueWhite','#FAEBD7'],['Aqua','#00FFFF'],['Aquamarine','#7FFFD4'],
-		['Azure','#F0FFFF'],['Beige','#F5F5DC'],['Bisque','#FFE4C4'],['Black','#000000'],['BlanchedAlmond','#FFEBCD'],
-		['Blue','#0000FF'],['BlueViolet','#8A2BE2'],['Brown','#A52A2A'],['BurlyWood','#DEB887'],['CadetBlue','#5F9EA0'],
-		['Chartreuse','#7FFF00'],['Chocolate','#D2691E'],['Coral','#FF7F50'],['CornflowerBlue','#6495ED'],
-		['Cornsilk','#FFF8DC'],['Crimson','#DC143C'],['Cyan','#00FFFF'],['DarkBlue','#00008B'],['DarkCyan','#008B8B'],
-		['DarkGoldenRod','#B8860B'],['DarkGray','#A9A9A9'],['DarkGreen','#006400'],['DarkKhaki','#BDB76B'],
-		['DarkMagenta','#8B008B'],['DarkOliveGreen','#556B2F'],['Darkorange','#FF8C00'],['DarkOrchid','#9932CC'],
-		['DarkRed','#8B0000'],['DarkSalmon','#E9967A'],['DarkSeaGreen','#8FBC8F'],['DarkSlateBlue','#483D8B'],
-		['DarkSlateGray','#2F4F4F'],['DarkTurquoise','#00CED1'],['DarkViolet','#9400D3'],['DeepPink','#FF1493'],
-		['DeepSkyBlue','#00BFFF'],['DimGray','#696969'],['DimGrey','#696969'],['DodgerBlue','#1E90FF'],
-		['FireBrick','#B22222'],['FloralWhite','#FFFAF0'],['ForestGreen','#228B22'],['Fuchsia','#FF00FF'],
-		['Gainsboro','#DCDCDC'],['GhostWhite','#F8F8FF'],['Gold','#FFD700'],['GoldenRod','#DAA520'],['Gray','#808080'],
-		['Green','#008000'],['GreenYellow','#ADFF2F'],['HoneyDew','#F0FFF0'],['HotPink','#FF69B4'],['IndianRed','#CD5C5C'],
-		['Indigo','#4B0082'],['Ivory','#FFFFF0'],['Khaki','#F0E68C'],['Lavender','#E6E6FA'],['LavenderBlush','#FFF0F5'],
-		['LawnGreen','#7CFC00'],['LemonChiffon','#FFFACD'],['LightBlue','#ADD8E6'],['LightCoral','#F08080'],
-		['LightCyan','#E0FFFF'],['LightGoldenRodYellow','#FAFAD2'],['LightGray','#D3D3D3'],['LightGreen','#90EE90'],
-		['LightPink','#FFB6C1'],['LightSalmon','#FFA07A'],['LightSeaGreen','#20B2AA'],['LightSkyBlue','#87CEFA'],
-		['LightSlateGray','#778899'],['LightSteelBlue','#B0C4DE'],['LightYellow','#FFFFE0'],['Lime','#00FF00'],
-		['LimeGreen','#32CD32'],['Linen','#FAF0E6'],['Magenta','#FF00FF'],['Maroon','#800000'],['MediumAquaMarine','#66CDAA'],
-		['MediumBlue','#0000CD'],['MediumOrchid','#BA55D3'],['MediumPurple','#9370DB'],['MediumSeaGreen','#3CB371'],
-		['MediumSlateBlue','#7B68EE'],['MediumSpringGreen','#00FA9A'],['MediumTurquoise','#48D1CC'],['MediumVioletRed','#C71585'],
-		['MidnightBlue','#191970'],['MintCream','#F5FFFA'],['MistyRose','#FFE4E1'],['Moccasin','#FFE4B5'],['NavajoWhite','#FFDEAD'],
-		['Navy','#000080'],['OldLace','#FDF5E6'],['Olive','#808000'],['OliveDrab','#6B8E23'],['Orange','#FFA500'],
-		['OrangeRed','#FF4500'],['Orchid','#DA70D6'],['PaleGoldenRod','#EEE8AA'],['PaleGreen','#98FB98'],['PaleTurquoise','#AFEEEE'],
-		['PaleVioletRed','#DB7093'],['PapayaWhip','#FFEFD5'],['PeachPuff','#FFDAB9'],['Peru','#CD853F'],['Pink','#FFC0CB'],
-		['Plum','#DDA0DD'],['PowderBlue','#B0E0E6'],['Purple','#800080'],['Red','#FF0000'],['RosyBrown','#BC8F8F'],
-		['RoyalBlue','#4169E1'],['SaddleBrown','#8B4513'],['Salmon','#FA8072'],['SandyBrown','#F4A460'],['SeaGreen','#2E8B57'],
-		['SeaShell','#FFF5EE'],['Sienna','#A0522D'],['Silver','#C0C0C0'],['SkyBlue','#87CEEB'],['SlateBlue','#6A5ACD'],
-		['SlateGray','#708090'],['Snow','#FFFAFA'],['SpringGreen','#00FF7F'],['SteelBlue','#4682B4'],['Tan','#D2B48C'],
-		['Teal','#008080'],['Thistle','#D8BFD8'],['Tomato','#FF6347'],['Turquoise','#40E0D0'],['Violet','#EE82EE'],
-		['Wheat','#F5DEB3'],['White','#FFFFFF'],['WhiteSmoke','#F5F5F5'],['Yellow','#FFFF00'],['YellowGreen','#9ACD32']
-	]
-
-});/* ../ludojs/src/color/rgb-colors.js */
-ludo.color.RgbColors = new Class({
-	Extends: ludo.color.Boxes,
-	colors:['rgb','grayScale'],
-
-	getColorsIn:function(category){
-
-		switch(category){
-			case 'rgb':
-				var ret = [];
-				for(var r = 15;r>=0;r-=3){
-					for(var g = 0;g<16;g+=3){
-						for(var b = 0;b<16;b+=3){
-							ret.push(this.getColorFrom(r,g,b));
-						}
-					}
-				}
-
-				return ret;
-			default:
-				return this.parent(category);
-		}
-
-	},
-
-	getColorFrom:function(r,g,b){
-		return '#' + this.getHexColor(r) + this.getHexColor(g) + this.getHexColor(b);
-	},
-
-	getHexColor:function(color){
-		color = color.toString(16).toUpperCase();
-		return color + color;
-	}
-
 });/* ../ludojs/src/layout/linear.js */
 /**
  * Abstract base class for linear layouts
@@ -20387,9 +20315,8 @@ ludo.grid.Grid = new Class({
 			/**
 			 * Double click on record
 			 * @event dblclick
-			 * @param Record clicked record
-			 * @param Component this
-			 * @param {Number} index of record
+			 * @param {Object} Record clicked record
+			 * @param {String} column
 			 */
 			this.fireEvent('dblclick', [record, this.getColumnByDom(e.target)]);
 		}
@@ -23755,9 +23682,14 @@ ludo.tree.Tree = new Class({
 		if (record) {
 			if(e.target.tagName.toLowerCase() === 'span' && this.isSelectable(record)) {
 				this.getDataSource().selectRecord(record);
-			}else{
-				this.expandOrCollapse(record, e.target);
-			}
+            }
+            if(ludo.dom.hasClass(e.target, 'ludo-tree-node-expand')){
+                this.expandOrCollapse(record, e.target);
+            }else{
+                this.expand(record, e.target);
+
+            }
+
 		}
 	},
 
@@ -23788,12 +23720,13 @@ ludo.tree.Tree = new Class({
 	},
 
 	expandOrCollapse:function (record, el) {
+        el = this.getExpandEl(record);
         var method = ludo.dom.hasClass(el, 'ludo-tree-node-collapse') ? 'collapse' : 'expand';
         this[method](record,el);
 	},
 
 	expand:function (record, el) {
-		el = el || this.getExpandEl(record);
+		el = this.getExpandEl(record);
         if(!this.areChildrenRendered(record)){
             this.renderChildrenOf(record);
         }
@@ -23802,7 +23735,7 @@ ludo.tree.Tree = new Class({
 	},
 
 	collapse:function (record, el) {
-		el = el || this.getExpandEl();
+		el = this.getExpandEl(record);
 		ludo.dom.removeClass(el, 'ludo-tree-node-collapse');
 		this.getCachedNode(record, 'children', 'child-container-').style.display = 'none';
 	},
@@ -29079,66 +29012,6 @@ ludo.paging.PageInput = new Class({
     },
 
 	insertJSON:function(){
-
-	}
-});/* ../ludojs/src/paging/current-page.js */
-/**
- Displays current page number shown in a collection
- @class paging.TotalPages
- @extends View
- @constructor
- @param {Object} config
- @example
- children:[
- ...
- {
-			  type:'paging.TotalPages',
-			  dataSource:'myDataSource'
-		  }
- ...
- }
- where 'myDataSource' is the id of a dataSource.Collection object used by a view.
- */
-ludo.paging.CurrentPage = new Class({
-	Extends:ludo.View,
-	type:'grid.paging.CurrentPage',
-	width:25,
-	onLoadMessage:'',
-	/**
-	 * Text template for view. {pages} is replaced by number of pages in data source.
-	 * @attribute {String} tpl
-	 * @default '/{pages}'
-	 */
-	tpl:'{page}',
-
-	ludoDOM:function () {
-		this.parent();
-		this.getEl().addClass('ludo-paging-text');
-		this.getEl().addClass('ludo-paging-current-page');
-	},
-
-	ludoEvents:function () {
-		this.parent();
-        this.dataSourceEvents();
-	},
-
-    dataSourceEvents:function(){
-        if(ludo.get(this.dataSource)){
-            var ds = this.getDataSource();
-            if (ds) {
-                ds.addEvent('page', this.setPageNumber.bind(this));
-                this.setPageNumber(ds.getPageNumber());
-            }
-        }else{
-            this.dataSourceEvents.delay(100, this);
-        }
-    },
-
-	setPageNumber:function () {
-		this.setHtml(this.tpl.replace('{page}', this.getDataSource().getPageNumber()));
-	},
-
-	insertJSON:function () {
 
 	}
 });/* ../ludojs/src/paging/total-pages.js */

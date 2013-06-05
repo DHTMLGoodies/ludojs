@@ -115,9 +115,14 @@ ludo.tree.Tree = new Class({
 		if (record) {
 			if(e.target.tagName.toLowerCase() === 'span' && this.isSelectable(record)) {
 				this.getDataSource().selectRecord(record);
-			}else{
-				this.expandOrCollapse(record, e.target);
-			}
+            }
+            if(ludo.dom.hasClass(e.target, 'ludo-tree-node-expand')){
+                this.expandOrCollapse(record, e.target);
+            }else{
+                this.expand(record, e.target);
+
+            }
+
 		}
 	},
 
@@ -148,12 +153,13 @@ ludo.tree.Tree = new Class({
 	},
 
 	expandOrCollapse:function (record, el) {
+        el = this.getExpandEl(record);
         var method = ludo.dom.hasClass(el, 'ludo-tree-node-collapse') ? 'collapse' : 'expand';
         this[method](record,el);
 	},
 
 	expand:function (record, el) {
-		el = el || this.getExpandEl(record);
+		el = this.getExpandEl(record);
         if(!this.areChildrenRendered(record)){
             this.renderChildrenOf(record);
         }
@@ -162,7 +168,7 @@ ludo.tree.Tree = new Class({
 	},
 
 	collapse:function (record, el) {
-		el = el || this.getExpandEl();
+		el = this.getExpandEl(record);
 		ludo.dom.removeClass(el, 'ludo-tree-node-collapse');
 		this.getCachedNode(record, 'children', 'child-container-').style.display = 'none';
 	},
