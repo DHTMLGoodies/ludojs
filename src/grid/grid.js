@@ -272,8 +272,19 @@ ludo.grid.Grid = new Class({
 			 * @param Component this
 			 * @param {Number} index of record
 			 */
-			this.fireEvent('click', record);
+			this.fireEvent('click', [record, this.getColumnByDom(e.target)]);
 		}
+	},
+
+	getColumnByDom:function(el){
+		el = document.id(el);
+		if (!el.hasClass('ludo-grid-data-cell')) {
+			el = el.getParent('.ludo-grid-data-cell');
+		}
+		if(el){
+			return el.getProperty('col');
+		}
+		return undefined;
 	},
 
 	setSelectedRecord:function (record) {
@@ -375,11 +386,10 @@ ludo.grid.Grid = new Class({
 			/**
 			 * Double click on record
 			 * @event dblclick
-			 * @param Record clicked record
-			 * @param Component this
-			 * @param {Number} index of record
+			 * @param {Object} Record clicked record
+			 * @param {String} column
 			 */
-			this.fireEvent('dblclick', record);
+			this.fireEvent('dblclick', [record, this.getColumnByDom(e.target)]);
 		}
 	},
 
@@ -724,7 +734,7 @@ ludo.grid.Grid = new Class({
 				rowCls = rowRenderer(data[i]);
 				if (rowCls)rowCls = ' ' + rowCls;
 			}
-			ret.push('<div id="' + id + '" ' + over + ' class="ludo-grid-data-cell ' + (rowClasses[i % 2]) + rowCls + '" uid="' + data[i].uid + '"><span class="ludo-grid-data-cell-text">' + content + '</span></div>');
+			ret.push('<div id="' + id + '" ' + over + ' col="' + col + '" class="ludo-grid-data-cell ' + (rowClasses[i % 2]) + rowCls + '" uid="' + data[i].uid + '"><span class="ludo-grid-data-cell-text">' + content + '</span></div>');
 		}
 
 		return ret.join('');

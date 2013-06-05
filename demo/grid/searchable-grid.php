@@ -85,7 +85,7 @@ var w = new ludo.Window({
                     weight:1,
                     containerCss:{
                         'border':0,
-                        'border-right':'1px solid #d7d7d7',
+                        'border-right':'0',
                         'border-top':'1px solid #d7d7d7',
                         'border-bottom':'1px solid #d7d7d7'
                     },
@@ -142,13 +142,6 @@ var w = new ludo.Window({
                             delay:.5
                         },
                         listeners:{
-                            select:function (record) {
-                                ludo.get('myModel').setUid(record.uid);
-                                ludo.get('myModel').setId(record.id);
-                                ludo.get('myModel').setCountry(record.country);
-                                ludo.get('myModel').setCapital(record.capital);
-                                ludo.get('myModel').setPopulation(record.population);
-                            },
                             count:function (countRecords) {
                                 ludo.get('gridWindowSearchable').setTitle('Grid - capital and population - Stateful (' + countRecords + ' records)');
                             }
@@ -156,55 +149,6 @@ var w = new ludo.Window({
                     }
 
                 }
-            ]
-        },
-        {
-
-            id:'infoPanel',
-            width:250,
-            layout:{
-                width:250,
-                resizable:true,
-                minWidth:150,
-                type:'linear',
-                orientation:'vertical'
-            },
-
-            type:'FramedView',
-            title:'Edit record',
-            containerCss:{
-                'border':0,
-                'border-left':'1px solid #d7d7d7',
-                'border-bottom':'1px solid #d7d7d7'
-            },
-            model:{
-                id:'myModel',
-                columns:['uid','id', 'country', 'capital', 'population'],
-                listeners:{
-                    'update':function (record) {
-                        if (record.id) {
-                            ludo.get('myDataSource').updateRecord(record, record);
-                        }
-                    }
-                }
-            },
-            children:[
-                {
-                    label:'Country',
-                    type:'form.Text',
-                    name:'country'
-                },
-                {
-                    label:'Capital',
-                    type:'form.Text',
-                    name:'capital'
-                },
-                {
-                    label:'Population',
-                    type:'form.Text',
-                    name:'population'
-                }
-
             ]
         }
 

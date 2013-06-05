@@ -1,4 +1,4 @@
-/* Generated Tue Jun 4 14:05:01 CEST 2013 */
+/* Generated Wed Jun 5 13:29:10 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -53,6 +53,8 @@ Owner of ludoJS.com
 }
 .ludo-shim-loading span{
     white-space:nowrap;
+    font-size:12px;
+    line-height: 30px;
 }
 .ludo-loader-shim{
     position:absolute;
@@ -1155,12 +1157,19 @@ div.ludo-grid-movable-insertion-marker-bottom {
 .ludo-form-button-disabled.ludo-paging-first .ludo-form-button-value{
     background-image:url('../images/grid/first-disabled.png');
 }
-div.ludo-paging-total-pages{
+div.ludo-paging-text{
     margin-top:5px;
 }
-div.ludo-paging-total-pages .ludo-body{
+
+div.ludo-paging-text .ludo-body{
     font-size:12px;
 }
+
+div.ludo-paging-current-page .ludo-body{
+    text-align:right;
+}
+
+
 .ludo-grid-resize-handle {
     background-color:transparent;
 }

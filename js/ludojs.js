@@ -1,4 +1,4 @@
-/* Generated Tue Jun 4 14:05:01 CEST 2013 */
+/* Generated Wed Jun 5 13:29:10 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -4876,13 +4876,13 @@ ludo.view.Shim = new Class({
     initialize:function (config) {
         if (config.txt)this.txt = config.txt;
         this.renderTo = config.renderTo;
-        if(ludo.util.isString(this.renderTo))this.renderTo = ludo.get(this.renderTo).getEl();
+
     },
 
     getEl:function () {
         if (this.el === undefined) {
             this.el = ludo.dom.create({
-                renderTo:this.renderTo,
+                renderTo:this.getRenderTo(),
                 cls:'ludo-shim-loading',
                 css:{'display':'none'},
                 html : this.getTextForShim()
@@ -4893,14 +4893,25 @@ ludo.view.Shim = new Class({
 
     getShim:function () {
         if (this.shim === undefined) {
+			if(ludo.util.isString(this.renderTo))this.renderTo = ludo.get(this.renderTo).getEl();
             this.shim = ludo.dom.create({
-                renderTo:this.renderTo,
+                renderTo:this.getRenderTo(),
                 cls:'ludo-loader-shim',
                 css:{'display':'none'}
             });
         }
         return this.shim;
     },
+
+	getRenderTo:function(){
+
+		if(ludo.util.isString(this.renderTo)){
+			var view = ludo.get(this.renderTo);
+			if(!view)return undefined;
+			this.renderTo = ludo.get(this.renderTo).getEl();
+		}
+		return this.renderTo;
+	},
 
     show:function (txt) {
         if (txt !== undefined) {
@@ -6031,6 +6042,16 @@ ludo.View = new Class({
 			obj.addEvent('load', this[method].bind(this));
 		}
 		return this.dataSourceObj;
+	},
+	_shim:undefined,
+	shim:function(){
+		if(this._shim === undefined){
+			this._shim = new ludo.view.Shim({
+				txt : '',
+				renderTo:this.getEl()
+			});
+		}
+		return this._shim;
 	},
 
 	getForm:function () {
@@ -7269,7 +7290,9 @@ ludo.dataSource.Collection = new Class({
 	lastPage:function () {
 		if (!this.paging || this.isOnLastPage())return;
 		var count = this.getCount();
-		this.paging.offset = count - count % this.paging.size;
+		var decr = count % this.paging.size;
+		if(decr === 0) decr = this.paging.size;
+		this.paging.offset = count - decr;
 		this.onPageChange('lastPage');
 	},
 
@@ -7527,7 +7550,11 @@ ludo.dataSource.Collection = new Class({
 		this.getSearcher().search(search);
 	},
 
-
+	/**
+	 * Executes a remote search for records with the given data
+	 * @method remoteSearch
+	 * @param {String|Object} search
+	 */
 	remoteSearch:function(search){
 		this.postData = this.postData || {};
 		this.postData.search = search;
@@ -20246,8 +20273,19 @@ ludo.grid.Grid = new Class({
 			 * @param Component this
 			 * @param {Number} index of record
 			 */
-			this.fireEvent('click', record);
+			this.fireEvent('click', [record, this.getColumnByDom(e.target)]);
 		}
+	},
+
+	getColumnByDom:function(el){
+		el = document.id(el);
+		if (!el.hasClass('ludo-grid-data-cell')) {
+			el = el.getParent('.ludo-grid-data-cell');
+		}
+		if(el){
+			return el.getProperty('col');
+		}
+		return undefined;
 	},
 
 	setSelectedRecord:function (record) {
@@ -20353,7 +20391,7 @@ ludo.grid.Grid = new Class({
 			 * @param Component this
 			 * @param {Number} index of record
 			 */
-			this.fireEvent('dblclick', record);
+			this.fireEvent('dblclick', [record, this.getColumnByDom(e.target)]);
 		}
 	},
 
@@ -20698,7 +20736,7 @@ ludo.grid.Grid = new Class({
 				rowCls = rowRenderer(data[i]);
 				if (rowCls)rowCls = ' ' + rowCls;
 			}
-			ret.push('<div id="' + id + '" ' + over + ' class="ludo-grid-data-cell ' + (rowClasses[i % 2]) + rowCls + '" uid="' + data[i].uid + '"><span class="ludo-grid-data-cell-text">' + content + '</span></div>');
+			ret.push('<div id="' + id + '" ' + over + ' col="' + col + '" class="ludo-grid-data-cell ' + (rowClasses[i % 2]) + rowCls + '" uid="' + data[i].uid + '"><span class="ludo-grid-data-cell-text">' + content + '</span></div>');
 		}
 
 		return ret.join('');
@@ -29043,6 +29081,66 @@ ludo.paging.PageInput = new Class({
 	insertJSON:function(){
 
 	}
+});/* ../ludojs/src/paging/current-page.js */
+/**
+ Displays current page number shown in a collection
+ @class paging.TotalPages
+ @extends View
+ @constructor
+ @param {Object} config
+ @example
+ children:[
+ ...
+ {
+			  type:'paging.TotalPages',
+			  dataSource:'myDataSource'
+		  }
+ ...
+ }
+ where 'myDataSource' is the id of a dataSource.Collection object used by a view.
+ */
+ludo.paging.CurrentPage = new Class({
+	Extends:ludo.View,
+	type:'grid.paging.CurrentPage',
+	width:25,
+	onLoadMessage:'',
+	/**
+	 * Text template for view. {pages} is replaced by number of pages in data source.
+	 * @attribute {String} tpl
+	 * @default '/{pages}'
+	 */
+	tpl:'{page}',
+
+	ludoDOM:function () {
+		this.parent();
+		this.getEl().addClass('ludo-paging-text');
+		this.getEl().addClass('ludo-paging-current-page');
+	},
+
+	ludoEvents:function () {
+		this.parent();
+        this.dataSourceEvents();
+	},
+
+    dataSourceEvents:function(){
+        if(ludo.get(this.dataSource)){
+            var ds = this.getDataSource();
+            if (ds) {
+                ds.addEvent('page', this.setPageNumber.bind(this));
+                this.setPageNumber(ds.getPageNumber());
+            }
+        }else{
+            this.dataSourceEvents.delay(100, this);
+        }
+    },
+
+	setPageNumber:function () {
+		this.setHtml(this.tpl.replace('{page}', this.getDataSource().getPageNumber()));
+	},
+
+	insertJSON:function () {
+
+	}
 });/* ../ludojs/src/paging/total-pages.js */
 /**
  Displays number of pages in a data source
@@ -29075,6 +29173,7 @@ ludo.paging.TotalPages = new Class({
 
 	ludoDOM:function () {
 		this.parent();
+		this.getEl().addClass('ludo-paging-text');
 		this.getEl().addClass('ludo-paging-total-pages');
 	},
 
