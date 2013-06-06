@@ -611,7 +611,7 @@ ludo.grid.Grid = new Class({
 			this.emptyTextEl().style.display= this.currentData.length > 0 ? 'none' : '';
 		}
 
-		if (Browser.ie) {
+		if (Browser['ie']) {
 			this.populateDataIE();
 			return;
 		}
@@ -757,8 +757,5 @@ ludo.grid.Grid = new Class({
 
 	getSelectedRecord:function () {
 		return this.getDataSource().getSelectedRecord();
-	},
-	getColumnManager:function () {
-		return this.columnManager;
 	}
 });
