@@ -725,11 +725,7 @@ ludo.grid.Grid = new Class({
 				content = renderer(content, data[i]);
 			}
 			var id = ['cell-' , col , '-' , data[i].uid , '-' , this.uniqueId].join('');
-			var over = '';
-			if (this.mouseOverEffect) {
-				over = ' onmouseover="ludo.get(\'' + this.id + '\').enterCell(this)"';
-			}
-
+			var over = this.mouseOverEffect ? ' onmouseover="ludo.get(\'' + this.id + '\').enterCell(this)"' : '';
 			if (rowRenderer) {
 				rowCls = rowRenderer(data[i]);
 				if (rowCls)rowCls = ' ' + rowCls;
