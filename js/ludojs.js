@@ -1,4 +1,4 @@
-/* Generated Mon Jun 10 18:11:19 CEST 2013 */
+/* Generated Tue Jun 11 0:56:29 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -12349,6 +12349,40 @@ ludo.color.Boxes = new Class({
             this.fireEvent('setColor', e.target.getAttribute('rgbColor'));
         }
     }
+});/* ../ludojs/src/color/rgb-colors.js */
+ludo.color.RgbColors = new Class({
+	Extends: ludo.color.Boxes,
+	colors:['rgb','grayScale'],
+
+	getColorsIn:function(category){
+
+		switch(category){
+			case 'rgb':
+				var ret = [];
+				for(var r = 15;r>=0;r-=3){
+					for(var g = 0;g<16;g+=3){
+						for(var b = 0;b<16;b+=3){
+							ret.push(this.getColorFrom(r,g,b));
+						}
+					}
+				}
+
+				return ret;
+			default:
+				return this.parent(category);
+		}
+
+	},
+
+	getColorFrom:function(r,g,b){
+		return '#' + this.getHexColor(r) + this.getHexColor(g) + this.getHexColor(b);
+	},
+
+	getHexColor:function(color){
+		color = color.toString(16).toUpperCase();
+		return color + color;
+	}
+
 });/* ../ludojs/src/color/named-colors.js */
 ludo.color.NamedColors = new Class({
 	Extends: ludo.color.Boxes,
@@ -12386,40 +12420,6 @@ ludo.color.NamedColors = new Class({
 		['Teal','#008080'],['Thistle','#D8BFD8'],['Tomato','#FF6347'],['Turquoise','#40E0D0'],['Violet','#EE82EE'],
 		['Wheat','#F5DEB3'],['White','#FFFFFF'],['WhiteSmoke','#F5F5F5'],['Yellow','#FFFF00'],['YellowGreen','#9ACD32']
 	]
-
-});/* ../ludojs/src/color/rgb-colors.js */
-ludo.color.RgbColors = new Class({
-	Extends: ludo.color.Boxes,
-	colors:['rgb','grayScale'],
-
-	getColorsIn:function(category){
-
-		switch(category){
-			case 'rgb':
-				var ret = [];
-				for(var r = 15;r>=0;r-=3){
-					for(var g = 0;g<16;g+=3){
-						for(var b = 0;b<16;b+=3){
-							ret.push(this.getColorFrom(r,g,b));
-						}
-					}
-				}
-
-				return ret;
-			default:
-				return this.parent(category);
-		}
-
-	},
-
-	getColorFrom:function(r,g,b){
-		return '#' + this.getHexColor(r) + this.getHexColor(g) + this.getHexColor(b);
-	},
-
-	getHexColor:function(color){
-		color = color.toString(16).toUpperCase();
-		return color + color;
-	}
 
 });/* ../ludojs/src/layout/linear.js */
 /**
@@ -15584,7 +15584,6 @@ ludo.Notification = new Class({
 	hide:function () {
 		if (this.hideEffect) {
 			var effect = new ludo.effect.Effect();
-			console.log(this.getEndEffectFn());
 			effect[this.getEndEffectFn()](
 				this.getEl(),
 				this.effectDuration,
@@ -15615,6 +15614,8 @@ ludo.Notification = new Class({
 		switch (this.showEffect) {
 			case 'fade':
 				return 'fadeIn';
+			case 'slide':
+				return 'slideIn';
 			default:
 				return this.showEffect;
 		}
@@ -15624,6 +15625,8 @@ ludo.Notification = new Class({
 		switch (this.hideEffect) {
 			case 'fade':
 				return 'fadeOut';
+			case 'slide':
+				return 'slideOut';
 			default:
 				return this.hideEffect;
 		}
@@ -25498,6 +25501,8 @@ ludo.form.Combo = new Class({
 				}.bind(this)
 			}
 		}));
+
+        this.children[0].addEvent('show', this.focus.bind(this));
     },
 
     autoHide:function(focused){
@@ -29079,66 +29084,6 @@ ludo.paging.PageInput = new Class({
 	insertJSON:function(){
 
 	}
-});/* ../ludojs/src/paging/current-page.js */
-/**
- Displays current page number shown in a collection
- @class paging.TotalPages
- @extends View
- @constructor
- @param {Object} config
- @example
- children:[
- ...
- {
-			  type:'paging.TotalPages',
-			  dataSource:'myDataSource'
-		  }
- ...
- }
- where 'myDataSource' is the id of a dataSource.Collection object used by a view.
- */
-ludo.paging.CurrentPage = new Class({
-	Extends:ludo.View,
-	type:'grid.paging.CurrentPage',
-	width:25,
-	onLoadMessage:'',
-	/**
-	 * Text template for view. {pages} is replaced by number of pages in data source.
-	 * @attribute {String} tpl
-	 * @default '/{pages}'
-	 */
-	tpl:'{page}',
-
-	ludoDOM:function () {
-		this.parent();
-		this.getEl().addClass('ludo-paging-text');
-		this.getEl().addClass('ludo-paging-current-page');
-	},
-
-	ludoEvents:function () {
-		this.parent();
-        this.dataSourceEvents();
-	},
-
-    dataSourceEvents:function(){
-        if(ludo.get(this.dataSource)){
-            var ds = this.getDataSource();
-            if (ds) {
-                ds.addEvent('page', this.setPageNumber.bind(this));
-                this.setPageNumber(ds.getPageNumber());
-            }
-        }else{
-            this.dataSourceEvents.delay(100, this);
-        }
-    },
-
-	setPageNumber:function () {
-		this.setHtml(this.tpl.replace('{page}', this.getDataSource().getPageNumber()));
-	},
-
-	insertJSON:function () {
-
-	}
 });/* ../ludojs/src/paging/total-pages.js */
 /**
  Displays number of pages in a data source
@@ -29195,6 +29140,66 @@ ludo.paging.TotalPages = new Class({
 
 	setPageNumber:function () {
 		this.setHtml(this.tpl.replace('{pages}', this.getDataSource().getPageCount()));
+	},
+
+	insertJSON:function () {
+
+	}
+});/* ../ludojs/src/paging/current-page.js */
+/**
+ Displays current page number shown in a collection
+ @class paging.TotalPages
+ @extends View
+ @constructor
+ @param {Object} config
+ @example
+ children:[
+ ...
+ {
+			  type:'paging.TotalPages',
+			  dataSource:'myDataSource'
+		  }
+ ...
+ }
+ where 'myDataSource' is the id of a dataSource.Collection object used by a view.
+ */
+ludo.paging.CurrentPage = new Class({
+	Extends:ludo.View,
+	type:'grid.paging.CurrentPage',
+	width:25,
+	onLoadMessage:'',
+	/**
+	 * Text template for view. {pages} is replaced by number of pages in data source.
+	 * @attribute {String} tpl
+	 * @default '/{pages}'
+	 */
+	tpl:'{page}',
+
+	ludoDOM:function () {
+		this.parent();
+		this.getEl().addClass('ludo-paging-text');
+		this.getEl().addClass('ludo-paging-current-page');
+	},
+
+	ludoEvents:function () {
+		this.parent();
+        this.dataSourceEvents();
+	},
+
+    dataSourceEvents:function(){
+        if(ludo.get(this.dataSource)){
+            var ds = this.getDataSource();
+            if (ds) {
+                ds.addEvent('page', this.setPageNumber.bind(this));
+                this.setPageNumber(ds.getPageNumber());
+            }
+        }else{
+            this.dataSourceEvents.delay(100, this);
+        }
+    },
+
+	setPageNumber:function () {
+		this.setHtml(this.tpl.replace('{page}', this.getDataSource().getPageNumber()));
 	},
 
 	insertJSON:function () {

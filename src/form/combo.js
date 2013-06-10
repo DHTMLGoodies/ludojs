@@ -62,6 +62,8 @@ ludo.form.Combo = new Class({
 				}.bind(this)
 			}
 		}));
+
+        this.children[0].addEvent('show', this.focus.bind(this));
     },
 
     autoHide:function(focused){
