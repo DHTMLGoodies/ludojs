@@ -1492,6 +1492,7 @@ div.ludo-form-button-disabled .ludo-form-button-m-bg-right {
      color:#999;
  }
  .ludo-calendar-info-panel{
+     padding-top:2px;
      background-color:#555;
  }
  .ludo-calendar-month-info{

@@ -1,4 +1,4 @@
-/* Generated Tue Jun 11 0:56:29 CEST 2013 */
+/* Generated Tue Jun 11 1:17:25 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
