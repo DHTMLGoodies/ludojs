@@ -120,9 +120,7 @@ ludo.tree.Tree = new Class({
                 this.expandOrCollapse(record, e.target);
             }else{
                 this.expand(record, e.target);
-
             }
-
 		}
 	},
 

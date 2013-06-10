@@ -110,6 +110,8 @@ ludo.Notification = new Class({
 	},
 
 	show:function () {
+		this.parent();
+
 		if (this.showEffect) {
 			var effect = new ludo.effect.Effect();
 			effect[this.getStartEffectFn()](
@@ -119,13 +121,15 @@ ludo.Notification = new Class({
 				this.getLayout().getRenderer().getPosition()
 			);
 		}
-		this.parent();
+
 	},
 
 	getStartEffectFn:function () {
 		switch (this.showEffect) {
 			case 'fade':
 				return 'fadeIn';
+			case 'slide':
+				return 'slideIn';
 			default:
 				return this.showEffect;
 		}
@@ -135,6 +139,8 @@ ludo.Notification = new Class({
 		switch (this.hideEffect) {
 			case 'fade':
 				return 'fadeOut';
+			case 'slide':
+				return 'slideOut';
 			default:
 				return this.hideEffect;
 		}
