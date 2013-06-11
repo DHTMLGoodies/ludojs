@@ -49,7 +49,8 @@ class User extends LudoDBModel implements LudoDBService
             array("firstname" => "Angie", "lastname" => "Olsen", "address" => "Aloha road 21", "country" => 187, "gender" =>"f"),
             array("firstname" => "Clint", "lastname" => "Westwood", "address" => "Park road 3", "country" => 187, "gender" =>"m"),
             array("firstname" => "Alf", "lastname" => "Kalleland", "address" => "Park avenue 22", "country" => 131, "gender" =>"m"),
-        )
+        ),
+        "indexes" => array("country")
     );
 
 
@@ -57,6 +58,9 @@ class User extends LudoDBModel implements LudoDBService
         return array("read","save");
     }
 
+    public function save(){
+        // Disabling save for the online LudoJS.com demo.
+    }
 
 
     public function validateServiceData($service, $data){
@@ -69,13 +73,8 @@ class User extends LudoDBModel implements LudoDBService
     }
 
     public function validateArguments($service, $arguments){
-        switch($service){
-            case "read":
-                return !empty($arguments) && count($arguments) === 1 && is_numeric($arguments[0]);
-            case "save":
-                return empty($arguments) || (count($arguments) === 1 && is_numeric($arguments[0]));
-            default:
-                return false;
-        }
+
+        if(!empty($arguments) && count($arguments) == 1 && is_numeric($arguments[0])) return true;
+        return $service === 'save' && empty($arguments);
     }
 }
