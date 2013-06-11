@@ -393,7 +393,10 @@ ludo.form.Manager = new Class({
 		this.fireEvent('beforesubmit');
 		this.save();
 	},
-
+    /**
+     * Send delete request to the server
+     * @method deleteRecord
+     */
 	deleteRecord:function () {
 		var path = this.getDeletePath();
 		var r = new ludo.remote.JSON({
@@ -547,6 +550,7 @@ ludo.form.Manager = new Class({
 			if(this.map.hasOwnProperty(key)){
 				if(data[key] !== undefined){
 					this.map[key].setValue(data[key]);
+                    this.map[key].commit();
 				}else{
 					this.map[key].reset();
 				}

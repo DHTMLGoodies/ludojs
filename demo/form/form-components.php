@@ -73,7 +73,7 @@ require_once("../includes/demo-header.php");
                             { type:'form.Text', 'label':'Phone', stretchField:true, name:'phone', value:'', required:true },
                             { type:'form.Text', minLength:4, 'label':'Zip code', stretchField:true, name:'zipcode', value:'' },
                             { type:'form.Text', name:'city', stretchField:true, 'label':'City', value:'' },
-                            { type:'form.Select', name:'country', stretchField:true, 'label':'Country',
+                            { type:'form.Select', name:'country', id:'country', stretchField:true, 'label':'Country',
                                 valueKey:'id', textKey:'name',
                                 dataSource:{
                                     resource:'Countries', service:'read', url:'../controller.php'

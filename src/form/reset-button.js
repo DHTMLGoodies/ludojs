@@ -14,14 +14,19 @@ ludo.form.ResetButton = new Class({
      * @default 'Reset'
      */
     value:'Reset',
+    // TODO create parent class for ResetButton, DeleteButton etc.
+    applyTo:undefined,
 
-    component:undefined,
-
+    ludoConfig:function(config){
+        this.parent(config);
+        this.setConfigParams(config, ['applyTo']);
+    },
+    
     ludoRendered:function () {
         this.parent();
-        this.component = this.getParentComponent();
-        var manager = this.component.getForm();
-        if (this.component) {
+        this.applyTo = this.applyTo ? ludo.get(this.applyTo) : this.getParentComponent();
+        var manager = this.applyTo.getForm();
+        if (this.applyTo) {
             manager.addEvent('dirty', this.enable.bind(this));
             manager.addEvent('clean', this.disable.bind(this));
         }
@@ -33,8 +38,8 @@ ludo.form.ResetButton = new Class({
     },
 
     reset:function () {
-        if (this.component) {
-            this.component.getForm().reset();
+        if (this.applyTo) {
+            this.applyTo.getForm().reset();
         }
     }
 });

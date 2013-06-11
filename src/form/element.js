@@ -539,6 +539,10 @@ ludo.form.Element = new Class({
      * @return void
      */
     commit:function () {
+        if(!this.isReady){
+            this.commit.delay(100, this);
+            return;
+        }
         this.initialValue = this.value;
     },
     /**

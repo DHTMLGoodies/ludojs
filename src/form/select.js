@@ -156,6 +156,5 @@ ludo.form.Select = new Class({
 
     resizeDOM:function () {
         this.parent();
-
     }
 });

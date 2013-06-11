@@ -1,4 +1,4 @@
-/* Generated Tue Jun 11 3:15:12 CEST 2013 */
+/* Generated Tue Jun 11 3:44:47 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -6055,6 +6055,26 @@ ludo.View = new Class({
 		return this._shim;
 	},
 
+    /**
+     Returns {{#crossLink "form.Manager"}}{{/crossLink}} for this view.  The form manager
+     gives you access to form methods like save, deleteRecord, reset etc
+     @method getForm     *
+     @return {form.Manager}
+     @example
+        view.getForm().reset();
+
+     to reset all form fields
+
+     @example
+        view.getForm().save();
+
+     to submit the form
+
+     @example
+        view.getForm().read(1);
+
+     to send a read request to the server for record with id 1.
+     */
 	getForm:function () {
 		if (!this.hasDependency('formManager')) {
 			this.createDependency('formManager',
@@ -11547,6 +11567,10 @@ ludo.form.Element = new Class({
      * @return void
      */
     commit:function () {
+        if(!this.isReady){
+            this.commit.delay(100, this);
+            return;
+        }
         this.initialValue = this.value;
     },
     /**
@@ -24825,7 +24849,10 @@ ludo.form.Manager = new Class({
 		this.fireEvent('beforesubmit');
 		this.save();
 	},
-
+    /**
+     * Send delete request to the server
+     * @method deleteRecord
+     */
 	deleteRecord:function () {
 		var path = this.getDeletePath();
 		var r = new ludo.remote.JSON({
@@ -24979,6 +25006,7 @@ ludo.form.Manager = new Class({
 			if(this.map.hasOwnProperty(key)){
 				if(data[key] !== undefined){
 					this.map[key].setValue(data[key]);
+                    this.map[key].commit();
 				}else{
 					this.map[key].reset();
 				}
@@ -25639,14 +25667,19 @@ ludo.form.ResetButton = new Class({
      * @default 'Reset'
      */
     value:'Reset',
+    // TODO create parent class for ResetButton, DeleteButton etc.
+    applyTo:undefined,
 
-    component:undefined,
-
+    ludoConfig:function(config){
+        this.parent(config);
+        this.setConfigParams(config, ['applyTo']);
+    },
+    
     ludoRendered:function () {
         this.parent();
-        this.component = this.getParentComponent();
-        var manager = this.component.getForm();
-        if (this.component) {
+        this.applyTo = this.applyTo ? ludo.get(this.applyTo) : this.getParentComponent();
+        var manager = this.applyTo.getForm();
+        if (this.applyTo) {
             manager.addEvent('dirty', this.enable.bind(this));
             manager.addEvent('clean', this.disable.bind(this));
         }
@@ -25658,8 +25691,8 @@ ludo.form.ResetButton = new Class({
     },
 
     reset:function () {
-        if (this.component) {
-            this.component.getForm().reset();
+        if (this.applyTo) {
+            this.applyTo.getForm().reset();
         }
     }
 });/* ../ludojs/src/form/combo-tree.js */
@@ -27417,7 +27450,6 @@ ludo.form.Select = new Class({
 
     resizeDOM:function () {
         this.parent();
-
     }
 });/* ../ludojs/src/form/filter-text.js */
 /**
