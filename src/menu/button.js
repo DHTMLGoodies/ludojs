@@ -156,6 +156,7 @@ ludo.menu.Button = new Class({
     },
 
     hideMenu:function () {
+        if(this.menu.hidden)return;
         if (this.menu.hide !== undefined){
             if(this.menu.getLayout().hideAllMenus)this.menu.getLayout().hideAllMenus();
             this.menu.hide();

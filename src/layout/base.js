@@ -233,6 +233,7 @@ ludo.layout.Base = new Class({
      * @param {Object} c
      */
 	updateViewport:function (c) {
+
 		this.viewport[c.key] = c.value;
 	},
 

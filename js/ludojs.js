@@ -1,4 +1,4 @@
-/* Generated Tue Jun 11 2:11:57 CEST 2013 */
+/* Generated Tue Jun 11 3:15:12 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -3508,6 +3508,7 @@ ludo.layout.Base = new Class({
      * @param {Object} c
      */
 	updateViewport:function (c) {
+
 		this.viewport[c.key] = c.value;
 	},
 
@@ -14153,6 +14154,7 @@ ludo.layout.Tab = new Class({
 		this.parent();
         ludo.dom.addClass(this.view.getEl(), 'ludo-layout-tab');
 		this.addChild(this.getTabStrip());
+
 		this.updateViewport(this.tabStrip.getChangedViewport());
 	},
 
@@ -23439,6 +23441,7 @@ ludo.menu.Button = new Class({
     },
 
     hideMenu:function () {
+        if(this.menu.hidden)return;
         if (this.menu.hide !== undefined){
             if(this.menu.getLayout().hideAllMenus)this.menu.getLayout().hideAllMenus();
             this.menu.hide();
