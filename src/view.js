@@ -1088,6 +1088,26 @@ ludo.View = new Class({
 		return this._shim;
 	},
 
+    /**
+     Returns {{#crossLink "form.Manager"}}{{/crossLink}} for this view.  The form manager
+     gives you access to form methods like save, deleteRecord, reset etc
+     @method getForm     *
+     @return {form.Manager}
+     @example
+        view.getForm().reset();
+
+     to reset all form fields
+
+     @example
+        view.getForm().save();
+
+     to submit the form
+
+     @example
+        view.getForm().read(1);
+
+     to send a read request to the server for record with id 1.
+     */
 	getForm:function () {
 		if (!this.hasDependency('formManager')) {
 			this.createDependency('formManager',

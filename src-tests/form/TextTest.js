@@ -348,5 +348,19 @@ TestCase("TextTest", {
 		assertTrue('Is not valid', el.isValid());
 		assertFalse(el.getEl().hasClass('ludo-form-el-invalid'));
 
-	}
+	},
+
+    "test should be able to reset form field": function(){
+        // given
+        var el = new ludo.form.Text({
+           renderTo:document.body
+        });
+        el.setValue('My value');
+        // when
+        el.reset();
+
+        // then
+        assertEquals('', el.getValue());
+        assertEquals('', el.getFormEl().value);
+    }
 });
