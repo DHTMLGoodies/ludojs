@@ -8,6 +8,18 @@
 
 require_once __DIR__."/autoload.php";
 ini_set('display_errors','on');
+
+if(file_exists("connect.php")){
+    require("connect.php");
+
+    $user = new User();
+    if(!$user->exists()){
+        $util = new LudoDBUtility();
+        $util->dropAndCreate(array("Country","User"));
+    }
+}
+
+
 $handler = new LudoDBRequestHandler();
 $request = array(
     "request" => $_POST['request'],

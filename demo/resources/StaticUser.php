@@ -5,7 +5,7 @@
  * Date: 12.02.13
  * Time: 20:26
  */
-class User implements LudoDBService
+class StaticUser implements LudoDBService
 {
     private $id;
 

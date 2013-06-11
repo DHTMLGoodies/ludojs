@@ -398,6 +398,11 @@ ludo.form.Manager = new Class({
      * @method deleteRecord
      */
 	deleteRecord:function () {
+		/**
+		 * Event fired before delete request is sent to server
+		 * @event delete
+		 */
+		this.fireEvent('beforeDelete');
 		var path = this.getDeletePath();
 		var r = new ludo.remote.JSON({
 			resource:path.resource,
@@ -452,6 +457,7 @@ ludo.form.Manager = new Class({
 	save:function () {
 		if (this.getUrl() || ludo.config.getUrl()) {
 			this.fireEvent('invalid');
+			this.fireEvent('beforeSave');
 			this.requestHandler().send('save', this.currentId, this.getValues(),
 				{
 					"progressBarId":this.getProgressBarId()
@@ -470,6 +476,7 @@ ludo.form.Manager = new Class({
             this.currentId = id;
             this.fill(this.getCached(id));
         }else{
+			this.fireEvent('beforeRead');
             this.currentIdToBeSet = id;
 		    this.readHandler().sendToServer('read', id);
 
@@ -573,9 +580,13 @@ ludo.form.Manager = new Class({
 						 * Event fired after a form has been saved successfully.
 						 * To add listeners, use <br>
 						 * ludo.View.getForm().addEvent('success', fn);
-						 * @event success
+						 * @event saved
 						 * @param {Object} JSON response from server
 						 */
+						this.fireEvent('saved', [request.getResponse(), this.view]);
+
+						this.setCurrentId(request.getResponseData());
+
 						this.fireEvent('success', [request.getResponse(), this.view]);
 						if (this.isValid()) {
 							this.fireEvent('valid');
@@ -614,6 +625,16 @@ ludo.form.Manager = new Class({
 		return this._request;
 	},
 
+	setCurrentId:function(data){
+
+		if(!isNaN(data)){
+			this.currentId = data;
+		}
+		if(ludo.util.isObject(data)){
+			this.currentId = data.id;
+		}
+	},
+
 	getProgressBarId:function () {
 		return this.progressBar ? this.progressBar.getProgressBarId() : undefined;
 	},
@@ -633,10 +654,21 @@ ludo.form.Manager = new Class({
 		this.fireEvent('reset');
 	},
 
+	newRecord:function(){
+		/**
+		 * Event fired when newRecord is called, i.e. when the form is cleared and currentId unset.
+		 * @event new
+		 */
+		this.fireEvent('new');
+		this.currentId = undefined;
+		this.clear();
+	},
+
 	clear:function () {
 		for (var i = 0; i < this.formComponents.length; i++) {
 			this.formComponents[i].clear();
 		}
+
 		this.dirtyIds = [];
 		this.fireEvent('clean');
 		this.fireEvent('clear');

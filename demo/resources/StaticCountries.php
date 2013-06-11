@@ -5,7 +5,7 @@
  * Date: 12.03.13
  * Time: 14:18
  */
-class Countries implements LudoDBService
+class StaticCountries implements LudoDBService
 {
     public function getValidServices()
     {

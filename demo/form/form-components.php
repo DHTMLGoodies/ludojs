@@ -35,7 +35,7 @@ require_once("../includes/demo-header.php");
         left:50,
         top:30,
         form:{
-            resource : 'User',
+            resource : 'StaticUser',
             autoLoad:true,
             arguments : 100
         },
@@ -76,7 +76,7 @@ require_once("../includes/demo-header.php");
                             { type:'form.Select', name:'country', id:'country', stretchField:true, 'label':'Country',
                                 valueKey:'id', textKey:'name',
                                 dataSource:{
-                                    resource:'Countries', service:'read', url:'../controller.php'
+                                    resource:'StaticCountries', service:'read', url:'../controller.php'
                                 }},
                             { type:'form.Date', name:'birth', id:'birth', stretchField:true, 'label':'Born'},
                             { type:'form.Color', name:'color', id:'color', stretchField:true, 'label':'Favorite color'},

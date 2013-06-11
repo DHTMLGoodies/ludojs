@@ -26,12 +26,6 @@ ludo.form.LabelElement = new Class({
         this.parent(config);
         this.setConfigParams(config, ['inlineLabel']);
         if(!this.supportsInlineLabel())this.inlineLabel = undefined;
-        /*
-		if (this.inlineLabel) {
-            this.inlineLabel = this.label;
-            this.label = undefined;
-        }
-        */
     },
 
     ludoEvents:function () {
@@ -65,12 +59,23 @@ ludo.form.LabelElement = new Class({
     },
 
     setInlineLabel:function () {
+		if(!this.inlineLabel)return;
         var el = this.getFormEl();
         if (el.get('value').length === 0) {
             ludo.dom.addClass(el, 'ludo-form-el-inline-label');
             el.set('value', this.inlineLabel);
         }
     },
+
+	clear:function(){
+		this.parent();
+		this.setInlineLabel();
+	},
+
+	reset:function(){
+		this.parent();
+		this.setInlineLabel();
+	},
 
     clearInlineLabel:function () {
         var el = this.getFormEl();
