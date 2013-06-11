@@ -1108,59 +1108,6 @@ ludo.View = new Class({
 	isFormElement:function () {
 		return false;
 	},
-	/**
-	 * Return values of all child form components, including childrens children.
-	 * @method getValues
-	 * @return Array of Objects, example: [ {name:value},{name:value}]
-	 */
-	getValues:function () {
-		return this.getForm().getValues();
-	},
-	/**
-	 * Returns true if all form components inside this component are valid(including childrens children)
-	 * @method isFormValid
-	 * @return {Boolean} valid
-	 */
-	isFormValid:function () {
-		return this.getForm().isValid();
-	},
-	/**
-	 Submit form to server. This method will call the submit method of ludo.form.Manager.
-	 It will send data to the server in this format:
-	 A submission will on success commit all form elements, i.e. set the dirty flag to
-	 false by updating initialValue to current value.
-	 On success, a "submit" event will be fired with server response as first argument
-	 and component as second argument.
-
-	 On failure a "submitfail" event will be fired with the same arguments as for "submit"
-
-	 @method submit
-	 @return void
-	 @example
-	    {
-		 saveForm: 1,
-		 componentId : id of ludo.View,
-		 componentName : name of ludo.View,
-		 data : {
-			 firstname : 'John',
-			 lastname : 'Doe'
-			 formField : 'formValue
-		 }
-	    }
-	 */
-	submit:function () {
-		this.fireEvent('submit', this);
-		this.getForm().submit();
-	},
-	/**
-	 * Reset all form elements of this component(including children's children) back to it's
-	 * initial or commited value
-	 * @method reset
-	 * @return void
-	 */
-	reset:function () {
-		this.getForm().reset();
-	},
 
 	getHeightOfButtonBar:function () {
 		return 0;

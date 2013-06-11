@@ -296,7 +296,7 @@ ludo.layout.Card = new Class({
 	 */
 	isValid:function () {
 		if (this.visibleCard) {
-			return this.visibleCard.isFormValid();
+			return this.visibleCard.getForm().isValid();
 		}
 		return true;
 	},
@@ -422,7 +422,7 @@ ludo.layout.Card = new Class({
 	touchStart:function (e) {
 		if (this.isOnFormElement(e.target))return undefined;
 		var isFirstCard = this.isFirstCard(this.visibleCard);
-		var isValid = this.visibleCard.isFormValid();
+		var isValid = this.visibleCard.getForm().isValid();
 		if (!isValid && isFirstCard) {
 			return undefined;
 		}

@@ -1,4 +1,4 @@
-/* Generated Tue Jun 11 1:55:15 CEST 2013 */
+/* Generated Tue Jun 11 2:11:57 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -6073,59 +6073,6 @@ ludo.View = new Class({
 
 	isFormElement:function () {
 		return false;
-	},
-	/**
-	 * Return values of all child form components, including childrens children.
-	 * @method getValues
-	 * @return Array of Objects, example: [ {name:value},{name:value}]
-	 */
-	getValues:function () {
-		return this.getForm().getValues();
-	},
-	/**
-	 * Returns true if all form components inside this component are valid(including childrens children)
-	 * @method isFormValid
-	 * @return {Boolean} valid
-	 */
-	isFormValid:function () {
-		return this.getForm().isValid();
-	},
-	/**
-	 Submit form to server. This method will call the submit method of ludo.form.Manager.
-	 It will send data to the server in this format:
-	 A submission will on success commit all form elements, i.e. set the dirty flag to
-	 false by updating initialValue to current value.
-	 On success, a "submit" event will be fired with server response as first argument
-	 and component as second argument.
-
-	 On failure a "submitfail" event will be fired with the same arguments as for "submit"
-
-	 @method submit
-	 @return void
-	 @example
-	    {
-		 saveForm: 1,
-		 componentId : id of ludo.View,
-		 componentName : name of ludo.View,
-		 data : {
-			 firstname : 'John',
-			 lastname : 'Doe'
-			 formField : 'formValue
-		 }
-	    }
-	 */
-	submit:function () {
-		this.fireEvent('submit', this);
-		this.getForm().submit();
-	},
-	/**
-	 * Reset all form elements of this component(including children's children) back to it's
-	 * initial or commited value
-	 * @method reset
-	 * @return void
-	 */
-	reset:function () {
-		this.getForm().reset();
 	},
 
 	getHeightOfButtonBar:function () {
@@ -12950,7 +12897,7 @@ ludo.layout.Card = new Class({
 	 */
 	isValid:function () {
 		if (this.visibleCard) {
-			return this.visibleCard.isFormValid();
+			return this.visibleCard.getForm().isValid();
 		}
 		return true;
 	},
@@ -13076,7 +13023,7 @@ ludo.layout.Card = new Class({
 	touchStart:function (e) {
 		if (this.isOnFormElement(e.target))return undefined;
 		var isFirstCard = this.isFirstCard(this.visibleCard);
-		var isValid = this.visibleCard.isFormValid();
+		var isValid = this.visibleCard.getForm().isValid();
 		if (!isValid && isFirstCard) {
 			return undefined;
 		}
@@ -21314,7 +21261,7 @@ ludo.card.FinishButton = new Class({
     submitted : false,
     submit:function () {
         if (this.applyTo) {
-            this.applyTo.submit();
+            this.applyTo.getForm().submit();
         }
     },
 
@@ -25170,7 +25117,7 @@ ludo.form.SubmitButton = new Class({
 
 	submit:function () {
 		if (this.applyTo) {
-			this.applyTo.submit();
+			this.applyTo.getForm().submit();
 		}
 	}
 });/* ../ludojs/src/form/cancel-button.js */
@@ -25709,7 +25656,7 @@ ludo.form.ResetButton = new Class({
 
     reset:function () {
         if (this.component) {
-            this.component.reset();
+            this.component.getForm().reset();
         }
     }
 });/* ../ludojs/src/form/combo-tree.js */
@@ -29760,48 +29707,6 @@ ludo.dialog.Prompt = new Class({
         }
     }
 
-});/* ../ludojs/src/dialog/form.js */
-ludo.dialog.Form = new Class({
-    Extends: ludo.dialog.Dialog,
-    type : 'dialog.Form',
-    input : undefined,
-    elements : [],
-    labelWidth : 150,
-
-    ludoConfig : function(config){
-        if(!config.buttons && !config.buttonConfig && !config.buttonBar){
-            config.buttons = [
-                {
-                    value : 'OK',
-                    width : 60
-                },
-                {
-                    value : 'Cancel',
-                    width : 60
-                }
-            ]
-        }
-        this.setConfigParams(config, 'labelWidth','elements');
-        this.parent(config);
-    },
-
-    ludoRendered : function(){
-        this.parent();
-        this.formCmp = this.addChild({
-            type : 'form.Form',
-            elements : this.elements
-        });
-        this.elements = undefined;
-    },
-
-    getValues : function(){
-        return this.formCmp.getValues();
-    },
-
-    buttonClick : function(value){
-        this.fireEvent(value.toLowerCase(), [this.getValues()]);
-        this.hide();
-    }
 });/* ../ludojs/src/video/video.js */
 /**
  Base class for Video Player components

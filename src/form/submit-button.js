@@ -39,7 +39,7 @@ ludo.form.SubmitButton = new Class({
 
 	submit:function () {
 		if (this.applyTo) {
-			this.applyTo.submit();
+			this.applyTo.getForm().submit();
 		}
 	}
 });

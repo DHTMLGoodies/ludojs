@@ -34,7 +34,7 @@ ludo.form.ResetButton = new Class({
 
     reset:function () {
         if (this.component) {
-            this.component.reset();
+            this.component.getForm().reset();
         }
     }
 });

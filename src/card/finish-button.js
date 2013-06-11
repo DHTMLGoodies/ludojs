@@ -56,7 +56,7 @@ ludo.card.FinishButton = new Class({
     submitted : false,
     submit:function () {
         if (this.applyTo) {
-            this.applyTo.submit();
+            this.applyTo.getForm().submit();
         }
     },
 
