@@ -5,7 +5,7 @@
  * Date: 11.06.13
  * Time: 15:32
  */
-class Countries extends LudoDBCollection implements LudoDBService
+class LudoJSCountries extends LudoDBCollection implements LudoDBService
 {
     protected $config = array(
         "sql" => "select * from country order by name"

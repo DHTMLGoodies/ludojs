@@ -27,7 +27,7 @@ require_once("../includes/demo-header.php");
                 resizable:true,
                 dataSource:{
                     url:'../controller.php',
-                    resource:'Users',
+                    resource:'LudoJSUsers',
                     service:'read',
                     listeners:{
                         "select":function (record) {
@@ -69,7 +69,7 @@ require_once("../includes/demo-header.php");
                     orientation:'vertical'
                 },
                 form:{
-                    'resource':'User',
+                    'resource':'LudoJSUser',
                     listeners:{
                         'beforeRead':function () {
                             ludo.get('formView').shim().show('Loading record');
@@ -96,7 +96,7 @@ require_once("../includes/demo-header.php");
                     {
                         type:'form.Select',
                         dataSource:{
-                            'resource':'Countries',
+                            'resource':'LudoJSCountries',
                             'service':'read'
                         },
                         valueKey:'id',

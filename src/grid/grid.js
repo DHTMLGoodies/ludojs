@@ -756,5 +756,9 @@ ludo.grid.Grid = new Class({
 
 	getSelectedRecord:function () {
 		return this.getDataSource().getSelectedRecord();
+	},
+
+	getColumnManager:function(){
+		return this.columnManager;
 	}
 });

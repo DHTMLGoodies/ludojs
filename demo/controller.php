@@ -12,17 +12,13 @@ ini_set('display_errors','on');
 if(file_exists("connect.php")){
     require("connect.php");
 
-    $user = new User();
+    $user = new LudoJSUser();
     if(!$user->exists()){
         $util = new LudoDBUtility();
-        $util->dropAndCreate(array("Country","User"));
+        $util->dropAndCreate(array("LudoJSCountry","LudoJSUser"));
     }
 }
 
 
 $handler = new LudoDBRequestHandler();
-$request = array(
-    "request" => $_POST['request'],
-    "data" => isset($_POST['data']) ? $_POST['data'] : null
-);
-echo $handler->handle($request);
+echo $handler->handle($_POST['request'], isset($_POST['data']) ? $_POST['data'] : null);
