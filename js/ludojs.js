@@ -1,4 +1,4 @@
-/* Generated Wed Jun 12 19:08:57 CEST 2013 */
+/* Generated Wed Jun 12 19:25:12 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -24942,6 +24942,7 @@ ludo.form.Manager = new Class({
 		 * @event delete
 		 */
 		this.fireEvent('beforeDelete');
+		this.beforeRequest();
 		var path = this.getDeletePath();
 		var r = new ludo.remote.JSON({
 			resource:path.resource,
@@ -24954,7 +24955,7 @@ ludo.form.Manager = new Class({
 					 * @param {Object} View
 					 */
 					this.fireEvent('deleted', [req.getResponse(), this.view]);
-					this.completeRequest();
+					this.afterRequest();
 				}.bind(this),
 				"failure":function (req) {
 					/**
@@ -24967,7 +24968,7 @@ ludo.form.Manager = new Class({
 					 */
 
 					this.fireEvent('deleteFailed', [req.getResponse(), this.view]);
-					this.completeRequest();
+					this.afterRequest();
 				}.bind(this)
 			}
 		});
@@ -24999,6 +25000,7 @@ ludo.form.Manager = new Class({
 		if (this.getUrl() || ludo.config.getUrl()) {
 			this.fireEvent('invalid');
 			this.fireEvent('beforeSave');
+			this.beforeRequest();
 			this.requestHandler().send('save', this.currentId, this.getValues(),
 				{
 					"progressBarId":this.getProgressBarId()
@@ -25018,6 +25020,7 @@ ludo.form.Manager = new Class({
             this.fill(this.getCached(id));
         }else{
 			this.fireEvent('beforeRead');
+			this.beforeRequest();
             this.currentIdToBeSet = id;
 		    this.readHandler().sendToServer('read', id);
 
@@ -25080,17 +25083,17 @@ ludo.form.Manager = new Class({
 						}
 						this.fireEvent('clean');
 
-						this.completeRequest();
+						this.afterRequest();
 
 					}.bind(this),
 					"failure":function (request) {
 						this.fireEvent('failure', [request.getResponse(), this.view]);
-						this.completeRequest();
+						this.afterRequest();
 					}.bind(this),
 					"error":function (request) {
 						this.fireEvent('servererror', [request.getResponseMessage(), request.getResponseCode()]);
 						this.fireEvent('valid', this);
-						this.completeRequest();
+						this.afterRequest();
 					}.bind(this)
 				}
 			}));
@@ -25139,7 +25142,7 @@ ludo.form.Manager = new Class({
 						}
 						this.fireEvent('clean');
 
-						this.completeRequest();
+						this.afterRequest();
 
 					}.bind(this),
 					"failure":function (request) {
@@ -25158,7 +25161,7 @@ ludo.form.Manager = new Class({
 
 						this.fireEvent('failure', [request.getResponse(), this.view]);
 
-						this.completeRequest();
+						this.afterRequest();
 					}.bind(this),
 					"error":function (request) {
 						/**
@@ -25170,7 +25173,7 @@ ludo.form.Manager = new Class({
 						this.fireEvent('servererror', [request.getResponseMessage(), request.getResponseCode()]);
 						this.fireEvent('valid', this);
 
-						this.completeRequest();
+						this.afterRequest();
 					}.bind(this)
 				}
 			}));
@@ -25178,14 +25181,22 @@ ludo.form.Manager = new Class({
 		return this._request;
 	},
 
-	completeRequest:function(){
+	afterRequest:function(){
 		/**
-		 * Event fired after a server request has been completed, with or without failures
+		 * Event fired after read, save and delete requests has been completed with or without failures
 		 * @event requestComplete
 		 */
-		this.fireEvent('requestComplete');
+		this.fireEvent('afterRequest');
 	},
 
+	beforeRequest:function(){
+		/**
+		 * Event fired before read, save and delete request
+		 * @event requestComplete
+		 */
+		this.fireEvent('beforeRequest');
+	},
+	
 	setCurrentId:function(data){
 
 		if(!isNaN(data)){
