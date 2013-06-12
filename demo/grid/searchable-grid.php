@@ -91,39 +91,38 @@ var w = new ludo.Window({
                     },
                     stateful:false,
                     resizable:false,
-                    columnManager:{
-                        id:'colManager',
-                        fill:true,
-                        columns:{
-                            info:{
-                                heading:'Country and Capital',
-                                headerAlign:'center',
-                                columns:{
-                                    'country':{
-                                        heading:'Country',
-                                        removable:false,
-                                        sortable:true,
-                                        movable:true,
-                                        width:200,
-                                        renderer:function (val) {
-                                            return '<span style="color:blue">' + val + '</span>';
-                                        }
-                                    },
-                                    'capital':{
-                                        heading:'Capital',
-                                        sortable:true,
-                                        removable:true,
-                                        movable:true,
-                                        width:150
+
+                    fill:true,
+                    columns:{
+                        info:{
+                            heading:'Country and Capital',
+                            headerAlign:'center',
+                            columns:{
+                                'country':{
+                                    heading:'Country',
+                                    removable:false,
+                                    sortable:true,
+                                    movable:true,
+                                    width:200,
+                                    renderer:function (val) {
+                                        return '<span style="color:blue">' + val + '</span>';
                                     }
+                                },
+                                'capital':{
+                                    heading:'Capital',
+                                    sortable:true,
+                                    removable:true,
+                                    movable:true,
+                                    width:150
                                 }
-                            },
-                            population:{
-                                heading:'Population',
-                                movable:true,
-                                removable:true
                             }
+                        },
+                        population:{
+                            heading:'Population',
+                            movable:true,
+                            removable:true
                         }
+
                     },
                     dataSource:{
                         url:'../resources/grid-data.json',

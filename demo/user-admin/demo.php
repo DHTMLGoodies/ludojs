@@ -35,24 +35,23 @@ require_once("../includes/demo-header.php");
                         }
                     }
                 },
-                columnManager:{
-                    columns:{
-                        'firstname':{
-                            heading:'Firstname',
-                            sortable:true,
-                            movable:true
-                        },
-                        'lastname':{
-                            heading:'Lastname',
-                            sortable:true,
-                            movable:true
-                        },
-                        country_name:{
-                            heading:'Country',
-                            movable:true
-                        }
+                columns:{
+                    'firstname':{
+                        heading:'Firstname',
+                        sortable:true,
+                        movable:true
+                    },
+                    'lastname':{
+                        heading:'Lastname',
+                        sortable:true,
+                        movable:true
+                    },
+                    country_name:{
+                        heading:'Country',
+                        movable:true
                     }
                 }
+
             },
             {
                 type:'FramedView',

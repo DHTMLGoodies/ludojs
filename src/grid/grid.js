@@ -110,12 +110,67 @@ ludo.grid.Grid = new Class({
 	 */
 	mouseOverEffect:true,
 
-	/**
-	 * Column manager config object
-	 * @config {grid.ColumnManager} columnManager
-	 * @default undefined
-	 */
 	columnManager:undefined,
+
+	/**
+	 Column config
+	 @config {Object} columns
+	 @example
+	 	columns:{
+			 'country':{
+				 heading:'Country',
+				 sortable:true,
+				 movable:true,
+				 renderer:function (val) {
+					 return '<span style="color:blue">' + val + '</span>';
+				 }
+			 },
+			 'capital':{
+				 heading:'Capital',
+				 sortable:true,
+				 movable:true
+			 },
+			 population:{
+				 heading:'Population',
+				 movable:true
+			 }
+		 }
+	 or nested:
+
+	 	columns:{
+			 info:{
+				 heading:'Country and Capital',
+				 headerAlign:'center',
+				 columns:{
+					 'country':{
+						 heading:'Country',
+						 removable:false,
+						 sortable:true,
+						 movable:true,
+						 width:200,
+						 renderer:function (val) {
+							 return '<span style="color:blue">' + val + '</span>';
+						 }
+					 },
+					 'capital':{
+						 heading:'Capital',
+						 sortable:true,
+						 removable:true,
+						 movable:true,
+						 width:150
+					 }
+				 }
+			 },
+			 population:{
+				 heading:'Population',
+				 movable:true,
+				 removable:true
+			 }
+		 }
+
+	 */
+	columns:undefined,
+
 	/**
 	 * Row manager config object
 	 * @config {grid.RowManager} rowManager
@@ -135,8 +190,18 @@ ludo.grid.Grid = new Class({
 	ludoConfig:function (config) {
 		this.parent(config);
 
-        this.setConfigParams(config, ['headerMenu','columnManager','rowManager','mouseOverEffect','emptyText']);
+        this.setConfigParams(config, ['columns','fill','headerMenu','columnManager','rowManager','mouseOverEffect','emptyText']);
 
+		if(this.columnManager){
+			ludo.util.warn('Deprecated columnManager used, use columns instead');
+		}
+
+		if(!this.columnManager){
+			this.columnManager = {
+				columns : this.columns,
+				fill: this.fill
+			};
+		}
 		if (this.columnManager) {
 			if (!this.columnManager.type)this.columnManager.type = 'grid.ColumnManager';
 			this.columnManager.stateful = this.stateful;

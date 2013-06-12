@@ -107,8 +107,6 @@ ludo.form.ComboTree = new Class({
     },
 
     ludoDOM:function () {
-
-
         if (this.label) {
             this.addChild({
                 html:'<label>' + this.label + ':</label>',
@@ -147,7 +145,7 @@ ludo.form.ComboTree = new Class({
         this.treePanel.addEvent('beforeresize', this.setBusy.bind(this));
         this.treePanel.addEvent('afterresize', this.setNotBusy.bind(this));
 
-        this.treePanel.children[0].addEvent('selectrecord', this.receiveSelectedRecord.bind(this));
+        this.treePanel.children[0].getDataSource().addEvent('select', this.receiveSelectedRecord.bind(this));
 
         this.parent();
 
@@ -308,9 +306,10 @@ ludo.form.ComboTree = new Class({
     },
 
     receiveSelectedRecord:function (record) {
-        this.setValue(record.id);
-        this.setViewValue(record.title);
-        this.fireEvent('selectrecord', [this, record]);
+
+        this.setValue(record.get('id'));
+        this.setViewValue(record.get('title'));
+        this.fireEvent('selectrecord', [this, record.getData()]);
         this.hideTree.delay(100, this);
     },
 
