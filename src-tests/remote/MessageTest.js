@@ -46,6 +46,24 @@ TestCase("MessageTest", {
         assertEquals("My message", this.getInnerText(message.getBody()));
     },
 
+
+	"test should be able to define listen to user slashes": function(){
+     // given
+     var message = new ludo.remote.Message({
+         "listenTo": "Person/*"
+     });
+     ludo.remoteBroadcaster.broadcast(
+         this.getRemoteMock({
+             "message": "My message",
+             "code": 200,
+             "resource": "Person"
+         })
+     );
+
+     // then
+     assertEquals("My message", this.getInnerText(message.getBody()));
+ },
+
     "test should be able to listen to multiple resources": function(){
         // given
         var message = new ludo.remote.Message({

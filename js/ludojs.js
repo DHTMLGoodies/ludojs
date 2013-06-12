@@ -1,4 +1,4 @@
-/* Generated Wed Jun 12 18:50:52 CEST 2013 */
+/* Generated Wed Jun 12 19:08:57 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -6154,7 +6154,7 @@ ludo.factory.registerClass('View', ludo.View);/* ../ludojs/src/remote/message.js
  @constructor
  @param {Object} config
  @example
- children:[{
+ 	children:[{
         type:'remote.Message',
         listenTo:["Person", "City.save"]
     }...
@@ -6182,7 +6182,15 @@ ludo.remote.Message = new Class({
         this.parent(config);
         this.setConfigParams(config, ['listenTo']);
         if (!ludo.util.isArray(this.listenTo))this.listenTo = [this.listenTo];
+		this.validateListenTo();
+
     },
+
+	validateListenTo:function(){
+		for(var i=0;i<this.listenTo.length;i++){
+			this.listenTo[i] = this.listenTo[i].replace(/\//g,'.');
+		}
+	},
 
     ludoEvents:function () {
         this.parent();

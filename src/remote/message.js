@@ -6,7 +6,7 @@
  @constructor
  @param {Object} config
  @example
- children:[{
+ 	children:[{
         type:'remote.Message',
         listenTo:["Person", "City.save"]
     }...
@@ -34,7 +34,15 @@ ludo.remote.Message = new Class({
         this.parent(config);
         this.setConfigParams(config, ['listenTo']);
         if (!ludo.util.isArray(this.listenTo))this.listenTo = [this.listenTo];
+		this.validateListenTo();
+
     },
+
+	validateListenTo:function(){
+		for(var i=0;i<this.listenTo.length;i++){
+			this.listenTo[i] = this.listenTo[i].replace(/\//g,'.');
+		}
+	},
 
     ludoEvents:function () {
         this.parent();
