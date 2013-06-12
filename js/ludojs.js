@@ -1,4 +1,4 @@
-/* Generated Wed Jun 12 16:55:00 CEST 2013 */
+/* Generated Wed Jun 12 18:50:52 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -16811,6 +16811,7 @@ ludo.FramedView = new Class({
 		minWidth:100,
 		minHeight:100
 	},
+
 	minimized:false,
 
 	/**
@@ -16823,10 +16824,10 @@ ludo.FramedView = new Class({
 	movable:false,
 	/**
 	 * Is component minimizable. When set to true, a minimize button will appear on the title bar of the component
-	 * @attribute minimizable
-	 * @type {Boolean}
+	 * @config {Boolean} minimizable
+	 * @default false
 	 */
-	minimizable:true,
+	minimizable:false,
 
 	resizable:false,
 	/**
@@ -24945,6 +24946,7 @@ ludo.form.Manager = new Class({
 					 * @param {Object} View
 					 */
 					this.fireEvent('deleted', [req.getResponse(), this.view]);
+					this.completeRequest();
 				}.bind(this),
 				"failure":function (req) {
 					/**
@@ -24957,6 +24959,7 @@ ludo.form.Manager = new Class({
 					 */
 
 					this.fireEvent('deleteFailed', [req.getResponse(), this.view]);
+					this.completeRequest();
 				}.bind(this)
 			}
 		});
@@ -25068,13 +25071,18 @@ ludo.form.Manager = new Class({
 							this.fireEvent('valid');
 						}
 						this.fireEvent('clean');
+
+						this.completeRequest();
+
 					}.bind(this),
 					"failure":function (request) {
 						this.fireEvent('failure', [request.getResponse(), this.view]);
+						this.completeRequest();
 					}.bind(this),
 					"error":function (request) {
 						this.fireEvent('servererror', [request.getResponseMessage(), request.getResponseCode()]);
 						this.fireEvent('valid', this);
+						this.completeRequest();
 					}.bind(this)
 				}
 			}));
@@ -25122,6 +25130,9 @@ ludo.form.Manager = new Class({
 							this.fireEvent('valid');
 						}
 						this.fireEvent('clean');
+
+						this.completeRequest();
+
 					}.bind(this),
 					"failure":function (request) {
 						if (this.isValid()) {
@@ -25138,6 +25149,8 @@ ludo.form.Manager = new Class({
 						 */
 
 						this.fireEvent('failure', [request.getResponse(), this.view]);
+
+						this.completeRequest();
 					}.bind(this),
 					"error":function (request) {
 						/**
@@ -25148,11 +25161,21 @@ ludo.form.Manager = new Class({
 						 */
 						this.fireEvent('servererror', [request.getResponseMessage(), request.getResponseCode()]);
 						this.fireEvent('valid', this);
+
+						this.completeRequest();
 					}.bind(this)
 				}
 			}));
 		}
 		return this._request;
+	},
+
+	completeRequest:function(){
+		/**
+		 * Event fired after a server request has been completed, with or without failures
+		 * @event requestComplete
+		 */
+		this.fireEvent('requestComplete');
 	},
 
 	setCurrentId:function(data){
@@ -25913,8 +25936,6 @@ ludo.form.ComboTree = new Class({
     },
 
     ludoDOM:function () {
-
-
         if (this.label) {
             this.addChild({
                 html:'<label>' + this.label + ':</label>',
@@ -25953,7 +25974,7 @@ ludo.form.ComboTree = new Class({
         this.treePanel.addEvent('beforeresize', this.setBusy.bind(this));
         this.treePanel.addEvent('afterresize', this.setNotBusy.bind(this));
 
-        this.treePanel.children[0].addEvent('selectrecord', this.receiveSelectedRecord.bind(this));
+        this.treePanel.children[0].getDataSource().addEvent('select', this.receiveSelectedRecord.bind(this));
 
         this.parent();
 
@@ -26114,9 +26135,10 @@ ludo.form.ComboTree = new Class({
     },
 
     receiveSelectedRecord:function (record) {
-        this.setValue(record.id);
-        this.setViewValue(record.title);
-        this.fireEvent('selectrecord', [this, record]);
+
+        this.setValue(record.get('id'));
+        this.setViewValue(record.get('title'));
+        this.fireEvent('selectrecord', [this, record.getData()]);
         this.hideTree.delay(100, this);
     },
 

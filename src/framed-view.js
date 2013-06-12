@@ -11,6 +11,7 @@ ludo.FramedView = new Class({
 		minWidth:100,
 		minHeight:100
 	},
+
 	minimized:false,
 
 	/**
@@ -23,10 +24,10 @@ ludo.FramedView = new Class({
 	movable:false,
 	/**
 	 * Is component minimizable. When set to true, a minimize button will appear on the title bar of the component
-	 * @attribute minimizable
-	 * @type {Boolean}
+	 * @config {Boolean} minimizable
+	 * @default false
 	 */
-	minimizable:true,
+	minimizable:false,
 
 	resizable:false,
 	/**
