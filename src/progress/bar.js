@@ -57,8 +57,7 @@ ludo.progress.Bar = new Class({
         var percent = this.els.percent = new Element('div');
         ludo.dom.addClass(percent, 'ludo-Progress-Bar-Percent');
         this.els.progressBg.adopt(percent);
-    },
-
+	},
 
     resizeDOM:function () {
         this.parent();
@@ -111,7 +110,6 @@ ludo.progress.Bar = new Class({
             width: [this.currentPercent, percent]
         });
         this.currentPercent = percent;
-        //this.els.progress.style.width = size + 'px';
         this.els.percent.innerHTML = percent + '%';
     },
 

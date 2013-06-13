@@ -2,10 +2,12 @@ load:
   - ../../mootools/mootools-core-1.4.5.js
   - ../../mootools/mootools-more-1.4.0.1.js
   - ../../js/ludojs.js
-  - ../../src/model/*.js
+  - ../../src/progress/base.js
+  - ../../src/progress/bar.js
+  - ../../src/progress/datasource.js
 
 test:
-  - ModelTest.js
+  - ProgressBarTest.js
 
 plugin:
  - name: "coverage"

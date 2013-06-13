@@ -81,6 +81,24 @@ TestCase("RemoteBroadcasterTest", {
         assertEquals("Default message", message);
     },
 
+	"test should be easy to assign events to broadcaster": function(){
+		// given
+		var b = ludo.remoteBroadcaster;
+		var eventFired = false;
+		b.withResource('Person').withService('read').on('success', function(){
+			eventFired = true;
+		});
+        // when
+        b.broadcast(this.getRemoteMock({
+            resource:'Person',
+            code:200,
+            "message":""
+        }),"read");
+
+		// then
+		assertTrue(eventFired);
+	},
+
     "test should be able to set default message on specific services": function(){
         // given
         var b = ludo.remoteBroadcaster;
@@ -89,7 +107,6 @@ TestCase("RemoteBroadcasterTest", {
         b.addResourceEvent('success', 'Person', function(payload){
             message = payload.message;
         });
-
 
         // when
         b.broadcast(this.getRemoteMock({

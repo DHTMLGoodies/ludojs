@@ -10,41 +10,23 @@ ludo.card.ProgressBar = new Class({
     hidden:false,
 	applyTo:undefined,
 
-    ludoConfig:function(config){
-        this.parent(config);
-		if(config.applyTo!==undefined)this.applyTo = config.applyTo;
-        this.component = this.getParentComponent();
-		if(this.component)this.component.getLayout().registerButton(this);
-    },
-
     ludoEvents:function(){
         this.parent();
-        this.component.getLayout().addEvent('showcard', this.setCardPercent.bind(this))
+        if(this.applyTo){
+			this.applyTo.getLayout().registerButton(this);
+			this.applyTo.getLayout().addEvent('showcard', this.setCardPercent.bind(this))
+		}
     },
 
     ludoRendered:function(){
         this.parent();
-        this.setCardPercent();
+		if(this.applyTo){
+			this.setCardPercent();
+		}
     },
 
     setCardPercent:function(){
-        this.setPercent(this.component.getLayout().getPercentCompleted());
-    },
-
-    getParentComponent:function () {
-		if(this.applyTo)return ludo.get(this.applyTo);
-        var cmp = this.getParent();
-        if (cmp.type.indexOf('ButtonBar') >= 0) {
-            cmp = cmp.getView();
-        }
-        if (!cmp.layout || cmp.layout.type!=='card') {
-            for (var i = 0; i < cmp.children.length; i++) {
-                if (cmp.children[i].layout.type === 'card') {
-                    return cmp.children[i];
-                }
-            }
-        }
-        return cmp;
+        this.setPercent(this.applyTo.getLayout().getPercentCompleted());
     },
 
     getProgressBarId:function(){

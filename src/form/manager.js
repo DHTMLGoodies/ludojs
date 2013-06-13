@@ -374,23 +374,11 @@ ludo.form.Manager = new Class({
 	},
 
 	/**
-	 * Submit form to server. The ludo.View.submit() method calls this
+	 * Submit form to server
 	 * @method submit
 	 * @private
 	 */
 	submit:function () {
-		/**
-		 * Event fired before form is submitted
-		 * @event startSubmit
-		 */
-
-		var el;
-		if (el = this.getUnfinishedFileUploadComponent()) {
-			el.upload();
-			return;
-		}
-
-		this.fireEvent('beforesubmit');
 		this.save();
 	},
     /**
@@ -450,7 +438,7 @@ ludo.form.Manager = new Class({
 	getUnfinishedFileUploadComponent:function () {
 		for (var i = 0; i < this.fileUploadComponents.length; i++) {
 			if (this.fileUploadComponents[i].hasFileToUpload()) {
-				this.fileUploadComponents[i].addEvent('submit', this.submit.bind(this));
+				this.fileUploadComponents[i].addEvent('submit', this.save.bind(this));
 				return this.fileUploadComponents[i];
 			}
 		}
@@ -459,6 +447,12 @@ ludo.form.Manager = new Class({
 
 	save:function () {
 		if (this.getUrl() || ludo.config.getUrl()) {
+			var el;
+			if (el = this.getUnfinishedFileUploadComponent()) {
+				el.upload();
+				return;
+			}
+
 			this.fireEvent('invalid');
 			this.fireEvent('beforeSave');
 			this.beforeRequest();

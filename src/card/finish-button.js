@@ -27,7 +27,7 @@ ludo.card.FinishButton = new Class({
             lm.addEvent('lastcard', this.show.bind(this));
             lm.addEvent('notlastcard', this.hide.bind(this));
 
-            fm.addEvent('beforesubmit', this.disable.bind(this));
+            fm.addEvent('beforeSave', this.disable.bind(this));
             fm.addEvent('success', this.setSubmitted.bind(this));
 
             if(!lm.isValid()){

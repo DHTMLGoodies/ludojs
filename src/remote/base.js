@@ -99,7 +99,7 @@ ludo.remote.Base = new Class({
 	 * @return {String|undefined}
 	 */
 	getResponseCode:function () {
-		return this.remoteData && this.remoteData.code ? this.remoteData.code : undefined;
+		return this.remoteData && this.remoteData.code ? this.remoteData.code : 0;
 	},
 	/**
 	 * Return response message

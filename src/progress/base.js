@@ -6,7 +6,7 @@
  */
 ludo.progress.Base = new Class({
     Extends:ludo.View,
-    component:undefined,
+	applyTo:undefined,
     pollFrequence:1,
     url:undefined,
     onLoadMessage:'',
@@ -18,19 +18,21 @@ ludo.progress.Base = new Class({
 
     ludoConfig:function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['component','pollFrequence','hideOnFinish']);
+        this.setConfigParams(config, ['applyTo','pollFrequence','hideOnFinish']);
 
-        if (!this.component) {
-            this.component = this.getParent();
+        if (!this.applyTo) {
+            this.applyTo = this.getParent();
         }
+		this.applyTo = ludo.get(this.applyTo);
+
         this.dataSource = {
             url:this.getUrl(),
             type:'progress.DataSource',
             pollFrequence:this.pollFrequence,
-            component:this.component
+            component:this.applyTo
         };
 
-        this.component.getForm().addEvent('beforesubmit', this.show.bind(this));
+        this.applyTo.getForm().addEvent('beforeSave', this.show.bind(this));
 
         this.getDataSource().addEvent('load', this.insertJSON.bind(this));
         this.getDataSource().addEvent('start', this.start.bind(this));

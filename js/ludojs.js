@@ -1,4 +1,4 @@
-/* Generated Thu Jun 13 13:18:38 CEST 2013 */
+/* Generated Thu Jun 13 16:59:07 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -21341,7 +21341,7 @@ ludo.card.FinishButton = new Class({
             lm.addEvent('lastcard', this.show.bind(this));
             lm.addEvent('notlastcard', this.hide.bind(this));
 
-            fm.addEvent('beforesubmit', this.disable.bind(this));
+            fm.addEvent('beforeSave', this.disable.bind(this));
             fm.addEvent('success', this.setSubmitted.bind(this));
 
             if(!lm.isValid()){
@@ -21489,7 +21489,7 @@ ludo.progress.DataSource = new Class({
         this.parent(config);
         if(config.pollFrequence)this.pollFrequence = config.pollFrequence;
         this.component = config.component;
-        this.component.getForm().addEvent('beforesubmit', this.startProgress.bind(this));
+        this.component.getForm().addEvent('beforeSave', this.startProgress.bind(this));
     },
 
     startProgress:function(){
@@ -21511,16 +21511,14 @@ ludo.progress.DataSource = new Class({
     },
 
     getNewProgressBarId:function(){
-        this.progressId = undefined;
-        return this.getProgressId();
+        this.progressId = this.progressId = 'ludo-progress-' + String.uniqueID();
+        return this.progressId;
     },
 
     getProgressId:function(){
         if(!this.progressId){
-            this.progressId = 'ludo-progress-' + String.uniqueID();
-            this.setPostParam('progressBarId', this.getProgressId());
+            this.setPostParam('progressBarId', this.getNewProgressBarId());
         }
-
         return this.progressId;
     },
 
@@ -21548,7 +21546,7 @@ ludo.progress.DataSource = new Class({
  */
 ludo.progress.Base = new Class({
     Extends:ludo.View,
-    component:undefined,
+	applyTo:undefined,
     pollFrequence:1,
     url:undefined,
     onLoadMessage:'',
@@ -21560,19 +21558,21 @@ ludo.progress.Base = new Class({
 
     ludoConfig:function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['component','pollFrequence','hideOnFinish']);
+        this.setConfigParams(config, ['applyTo','pollFrequence','hideOnFinish']);
 
-        if (!this.component) {
-            this.component = this.getParent();
+        if (!this.applyTo) {
+            this.applyTo = this.getParent();
         }
+		this.applyTo = ludo.get(this.applyTo);
+
         this.dataSource = {
             url:this.getUrl(),
             type:'progress.DataSource',
             pollFrequence:this.pollFrequence,
-            component:this.component
+            component:this.applyTo
         };
 
-        this.component.getForm().addEvent('beforesubmit', this.show.bind(this));
+        this.applyTo.getForm().addEvent('beforeSave', this.show.bind(this));
 
         this.getDataSource().addEvent('load', this.insertJSON.bind(this));
         this.getDataSource().addEvent('start', this.start.bind(this));
@@ -21677,8 +21677,7 @@ ludo.progress.Bar = new Class({
         var percent = this.els.percent = new Element('div');
         ludo.dom.addClass(percent, 'ludo-Progress-Bar-Percent');
         this.els.progressBg.adopt(percent);
-    },
-
+	},
 
     resizeDOM:function () {
         this.parent();
@@ -21731,7 +21730,6 @@ ludo.progress.Bar = new Class({
             width: [this.currentPercent, percent]
         });
         this.currentPercent = percent;
-        //this.els.progress.style.width = size + 'px';
         this.els.percent.innerHTML = percent + '%';
     },
 
@@ -21769,41 +21767,23 @@ ludo.card.ProgressBar = new Class({
     hidden:false,
 	applyTo:undefined,
 
-    ludoConfig:function(config){
-        this.parent(config);
-		if(config.applyTo!==undefined)this.applyTo = config.applyTo;
-        this.component = this.getParentComponent();
-		if(this.component)this.component.getLayout().registerButton(this);
-    },
-
     ludoEvents:function(){
         this.parent();
-        this.component.getLayout().addEvent('showcard', this.setCardPercent.bind(this))
+        if(this.applyTo){
+			this.applyTo.getLayout().registerButton(this);
+			this.applyTo.getLayout().addEvent('showcard', this.setCardPercent.bind(this))
+		}
     },
 
     ludoRendered:function(){
         this.parent();
-        this.setCardPercent();
+		if(this.applyTo){
+			this.setCardPercent();
+		}
     },
 
     setCardPercent:function(){
-        this.setPercent(this.component.getLayout().getPercentCompleted());
-    },
-
-    getParentComponent:function () {
-		if(this.applyTo)return ludo.get(this.applyTo);
-        var cmp = this.getParent();
-        if (cmp.type.indexOf('ButtonBar') >= 0) {
-            cmp = cmp.getView();
-        }
-        if (!cmp.layout || cmp.layout.type!=='card') {
-            for (var i = 0; i < cmp.children.length; i++) {
-                if (cmp.children[i].layout.type === 'card') {
-                    return cmp.children[i];
-                }
-            }
-        }
-        return cmp;
+        this.setPercent(this.applyTo.getLayout().getPercentCompleted());
     },
 
     getProgressBarId:function(){
@@ -24913,23 +24893,11 @@ ludo.form.Manager = new Class({
 	},
 
 	/**
-	 * Submit form to server. The ludo.View.submit() method calls this
+	 * Submit form to server
 	 * @method submit
 	 * @private
 	 */
 	submit:function () {
-		/**
-		 * Event fired before form is submitted
-		 * @event startSubmit
-		 */
-
-		var el;
-		if (el = this.getUnfinishedFileUploadComponent()) {
-			el.upload();
-			return;
-		}
-
-		this.fireEvent('beforesubmit');
 		this.save();
 	},
     /**
@@ -24989,7 +24957,7 @@ ludo.form.Manager = new Class({
 	getUnfinishedFileUploadComponent:function () {
 		for (var i = 0; i < this.fileUploadComponents.length; i++) {
 			if (this.fileUploadComponents[i].hasFileToUpload()) {
-				this.fileUploadComponents[i].addEvent('submit', this.submit.bind(this));
+				this.fileUploadComponents[i].addEvent('submit', this.save.bind(this));
 				return this.fileUploadComponents[i];
 			}
 		}
@@ -24998,6 +24966,12 @@ ludo.form.Manager = new Class({
 
 	save:function () {
 		if (this.getUrl() || ludo.config.getUrl()) {
+			var el;
+			if (el = this.getUnfinishedFileUploadComponent()) {
+				el.upload();
+				return;
+			}
+
 			this.fireEvent('invalid');
 			this.fireEvent('beforeSave');
 			this.beforeRequest();

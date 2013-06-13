@@ -22,6 +22,7 @@ test:
   - menu/*.js
   - tpl/*.js
   - list/*.js
+  - progress/*.js
 
 serve:
   - ../css/ludojs-blue.css

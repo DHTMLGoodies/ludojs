@@ -23,7 +23,7 @@ ludo.progress.DataSource = new Class({
         this.parent(config);
         if(config.pollFrequence)this.pollFrequence = config.pollFrequence;
         this.component = config.component;
-        this.component.getForm().addEvent('beforesubmit', this.startProgress.bind(this));
+        this.component.getForm().addEvent('beforeSave', this.startProgress.bind(this));
     },
 
     startProgress:function(){
@@ -45,16 +45,14 @@ ludo.progress.DataSource = new Class({
     },
 
     getNewProgressBarId:function(){
-        this.progressId = undefined;
-        return this.getProgressId();
+        this.progressId = this.progressId = 'ludo-progress-' + String.uniqueID();
+        return this.progressId;
     },
 
     getProgressId:function(){
         if(!this.progressId){
-            this.progressId = 'ludo-progress-' + String.uniqueID();
-            this.setPostParam('progressBarId', this.getProgressId());
+            this.setPostParam('progressBarId', this.getNewProgressBarId());
         }
-
         return this.progressId;
     },
 

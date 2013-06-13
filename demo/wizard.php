@@ -14,6 +14,7 @@ require_once("includes/demo-header.php");
         children:[
             {
                 type:'View',
+                id:'wizardView',
                 layout:{
                     type:'card',
                     animate:true
@@ -76,7 +77,7 @@ require_once("includes/demo-header.php");
         buttonBar:{
             align:'left', children:[
                 {
-                    type:'card.ProgressBar', weight:1
+                    type:'card.ProgressBar', weight:1, applyTo:'wizardView'
                 },
                 {
                     type:'card.PreviousButton'

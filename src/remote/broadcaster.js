@@ -2,13 +2,11 @@
  Singleton class responsible for broadcasting messages from remote requests.
  Instance of this class is available in ludo.remoteBroadcaster
  @namespace remote
- @class Broadcasters
+ @class Broadcaster
  @example
-    ludo.remoteBroadcaster.addEvent('successMessage', function(response){
-        if(response.resource === 'Person'){
-
-        }
-    });
+    ludo.remoteBroadcaster.withResource('Person').withService('read').on('success', function(){
+		// Do something
+	});
  */
 ludo.remote.Broadcaster = new Class({
     Extends:Events,
@@ -23,18 +21,25 @@ ludo.remote.Broadcaster = new Class({
     broadcast:function (request, service) {
         var code = request.getResponseCode();
 
-        var eventName, eventNameWithService;
+
+		var type, eventNameWithService;
         switch (code) {
+			case 0:
+				type = 'start';
+				break;
             case 200:
-                eventName = this.getEventName('success', request.getResource());
-                eventNameWithService = this.getEventName('success', request.getResource(), service);
+				type = 'success';
                 break;
             default:
-                eventName = this.getEventName('failure', request.getResource());
-                eventNameWithService = this.getEventName('failure', request.getResource(), service);
+				type = 'failure';
                 break;
         }
-        if (!eventName) {
+
+		var eventName = this.getEventName(type, request.getResource());
+
+		if(eventName){
+			eventNameWithService = this.getEventName(type, request.getResource(), service);
+		}else{
             eventName = this.getEventName('serverError', request.getResource());
             eventNameWithService = this.getEventName('serverError', request.getResource(), service);
         }
@@ -110,7 +115,7 @@ ludo.remote.Broadcaster = new Class({
      @param {Array} services
      @param {Function} fn
      @example
-        ludo.remoteBroadcaster.addEvent('failure', 'Person', function(response){
+        ludo.remoteBroadcaster.addEvent('failure', 'Person', ['save'], function(response){
             this.getBody().set('html', response.message');
         }.bind(this));
      The event payload is an object in this format:
@@ -144,8 +149,58 @@ ludo.remote.Broadcaster = new Class({
      */
     setDefaultMessage:function (message, eventType, resource, service) {
         this.defaultMessages[this.getEventName(eventType, resource, service)] = message;
+    },
 
-    }
+	eventObjToBuild :{},
+
+	/**
+	 Chained method for adding broadcaster events.
+	 @method withResource
+	 @param {String} resource
+	 @return {remote.Broadcaster}
+	 @example
+	 	ludo.remoteBroadcaster.withResource('Person').withService('read').on('success', function(){
+	 		alert('Save success');
+	 	});
+	 */
+	withResource:function(resource){
+		this.eventObjToBuild = {
+			resource : resource
+		};
+		return this;
+	},
+	/**
+	 Chained method for adding broadcaster events.
+	 @method withService
+	 @param {String} service
+	 @return {remote.Broadcaster}
+	 @example
+	 	ludo.remoteBroadcaster.withResource('Person').withService('read').on('success', function(){
+	 		alert('Save success');
+	 	});
+	 */
+	withService:function(service){
+		if(this.eventObjToBuild.service === undefined){
+			this.eventObjToBuild.service = [];
+		}
+		this.eventObjToBuild.service.push(service);
+		return this;
+	},
+	/**
+	 Chained method for adding broadcaster events.
+	 @method on
+	 @param {String} eventName
+	 @param {Function} fn
+	 @return {remote.Broadcaster}
+	 @example
+	 	ludo.remoteBroadcaster.withResource('Person').withService('read').on('success', function(){
+	 		alert('Save success');
+	 	}).on('start', function(){ alert('About to save') });
+	 */
+	on:function(eventName, fn){
+		this.addServiceEvent(eventName, this.eventObjToBuild.resource, this.eventObjToBuild.service, fn);
+		return this;
+	}
 });
 
 ludo.remoteBroadcaster = new ludo.remote.Broadcaster();
