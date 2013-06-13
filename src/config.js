@@ -94,7 +94,7 @@ ludo._Config = new Class({
      * @param {String} root
      */
 	setDocumentRoot:function (root) {
-		this.storage.documentRoot = root;
+		this.storage.documentRoot = root === '.' ? '' : root;
 	},
     /**
      * @method getDocumentRoot

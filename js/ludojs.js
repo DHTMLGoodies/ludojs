@@ -1,4 +1,4 @@
-/* Generated Wed Jun 12 19:25:12 CEST 2013 */
+/* Generated Thu Jun 13 13:18:38 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -644,7 +644,7 @@ ludo._Config = new Class({
      * @param {String} root
      */
 	setDocumentRoot:function (root) {
-		this.storage.documentRoot = root;
+		this.storage.documentRoot = root === '.' ? '' : root;
 	},
     /**
      * @method getDocumentRoot
