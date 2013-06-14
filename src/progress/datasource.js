@@ -12,6 +12,8 @@ ludo.progress.DataSource = new Class({
     progressId:undefined,
     stopped : false,
     pollFrequence : 1,
+    resource:'LudoDBProgress',
+
     /**
      * Reference to parent component
      * @property object Component
@@ -22,8 +24,8 @@ ludo.progress.DataSource = new Class({
     ludoConfig:function(config){
         this.parent(config);
         if(config.pollFrequence)this.pollFrequence = config.pollFrequence;
-        this.component = config.component;
-        this.component.getForm().addEvent('beforeSave', this.startProgress.bind(this));
+        //this.component = config.component;
+        //this.component.getForm().addEvent('beforeSave', this.startProgress.bind(this));
     },
 
     startProgress:function(){

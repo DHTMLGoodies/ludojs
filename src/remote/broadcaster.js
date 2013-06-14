@@ -155,6 +155,22 @@ ludo.remote.Broadcaster = new Class({
     },
 
 	eventObjToBuild :{},
+    /**
+     Chained method for adding broadcaster events.
+     @method withResourceService
+     @param {String} resourceAndService
+     @return {remote.Broadcaster}
+     @example
+     ludo.remoteBroadcaster.withResourceService('Person/save').on('success', function(){
+	 		alert('Save success');
+	 	});
+     */
+    withResourceService:function(resourceAndService){
+        var tokens = resourceAndService.split(/\//g);
+        this.withResource(tokens[0]);
+        if(tokens.length == 2)this.withService(tokens[1]);
+        return this;
+    },
 
 	/**
 	 Chained method for adding broadcaster events.
@@ -162,7 +178,7 @@ ludo.remote.Broadcaster = new Class({
 	 @param {String} resource
 	 @return {remote.Broadcaster}
 	 @example
-	 	ludo.remoteBroadcaster.withResource('Person').withService('read').on('success', function(){
+	 	ludo.remoteBroadcaster.withResource('Person').withService('save').on('success', function(){
 	 		alert('Save success');
 	 	});
 	 */
@@ -178,7 +194,8 @@ ludo.remote.Broadcaster = new Class({
 	 @param {String} service
 	 @return {remote.Broadcaster}
 	 @example
-	 	ludo.remoteBroadcaster.withResource('Person').withService('read').on('success', function(){
+	 	ludo.remoteBroadcaster.withResource('Person').withService('read').
+            withService('save').on('success', function(){
 	 		alert('Save success');
 	 	});
 	 */

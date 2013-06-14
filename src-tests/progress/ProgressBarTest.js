@@ -1,40 +1,75 @@
 TestCase("ProgressBarTest", {
 
-	"test resource should be LudoDBProgress":function () {
+    "test should initial be hidden": function(){
+        // given
+        var bar = new ludo.progress.Bar({
+            renderTo:document.body
+        });
 
+        // then
+        assertTrue(bar.isHidden());
+    },
+
+	"test resource should be LudoDBProgress":function () {
+        // given
+        var bar = new ludo.progress.Bar({
+            renderTo:document.body
+        });
+
+        // then
+        assertEquals('LudoDBProgress', bar.getDataSource().resource);
 	},
+
+    "test data source should inherit url": function(){
+        // given
+        var bar = new ludo.progress.Bar({
+            renderTo:document.body,
+            url : 'index.php'
+        });
+
+        // then
+        assertEquals('index.php', bar.getDataSource().url);
+
+    },
 
 	"test should be able to define start listener":function () {
 		// given
+        var bar = new ludo.progress.Bar({
+            renderTo:document.body,
+            listenTo:'Person/save'
+        });
+        var req = this.getRemoteMock('Person');
+        req.send('save');
+
+        // then
+        assertFalse(bar.isHidden());
+
 	},
 
-	getRemoteMock:function (config) {
-		var resource = config.resource;
-		var code = config.code;
-		var message = config.message;
+	getRemoteMock:function (resource) {
 
-		if (window.RemoteMockBr === undefined) {
-			window.RemoteMockBr = new Class({
+		if (window.JSONMock === undefined) {
+			window.JSONMock = new Class({
+                Extends: ludo.remote.JSON,
 				code:undefined,
 				message:undefined,
 				resource:undefined,
-				initialize:function (resource, code, message) {
-					this.resource = resource;
-					this.code = code;
-					this.message = message;
-				},
-				getResponseMessage:function () {
-					return this.message;
-				},
-				getResponseCode:function () {
-					return this.code;
-				},
-				getResource:function () {
-					return this.resource;
-				}
+                eventToFire:'success',
+
+                sendToServer:function (service) {
+
+                    this.fireEvent('start', this);
+                    this.fireEvent(this.eventToFire, this);
+
+                    this.sendBroadCast(service);
+
+                    this.remoteData = { "code": 200, "message": 'Message' };
+                }
 			})
 		}
 
-		return new RemoteMockBr(resource, code, message);
+		return new window.JSONMock({
+            resource : resource
+        });
 	}
 });

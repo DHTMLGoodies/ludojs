@@ -1,4 +1,4 @@
-/* Generated Thu Jun 13 18:09:14 CEST 2013 */
+/* Generated Sat Jun 15 1:06:44 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -1661,7 +1661,11 @@ ludo.remote.HTML = new Class({
 });/* ../ludojs/src/remote/broadcaster.js */
 /**
  Singleton class responsible for broadcasting messages from remote requests.
- Instance of this class is available in ludo.remoteBroadcaster
+ Instance of this class is available in ludo.remoteBroadcaster.
+
+ The broadcaster can fire four events:
+ start, success, failure and serverError. The example below show you how
+ to add listeners to these events.
  @namespace remote
  @class Broadcaster
  @example
@@ -1681,7 +1685,6 @@ ludo.remote.Broadcaster = new Class({
      */
     broadcast:function (request, service) {
         var code = request.getResponseCode();
-
 
 		var type, eventNameWithService;
         switch (code) {
@@ -1813,6 +1816,13 @@ ludo.remote.Broadcaster = new Class({
     },
 
 	eventObjToBuild :{},
+
+    withResourceService:function(what){
+        var tokens = what.split(/\//g);
+        if(tokens.length === 1)tokens.push('*');
+        this.withResource(tokens[0]).withService(tokens[1]);
+        return this;
+    },
 
 	/**
 	 Chained method for adding broadcaster events.
@@ -21536,6 +21546,8 @@ ludo.progress.DataSource = new Class({
     progressId:undefined,
     stopped : false,
     pollFrequence : 1,
+    resource:'LudoDBProgress',
+
     /**
      * Reference to parent component
      * @property object Component
@@ -21546,8 +21558,8 @@ ludo.progress.DataSource = new Class({
     ludoConfig:function(config){
         this.parent(config);
         if(config.pollFrequence)this.pollFrequence = config.pollFrequence;
-        this.component = config.component;
-        this.component.getForm().addEvent('beforeSave', this.startProgress.bind(this));
+        //this.component = config.component;
+        //this.component.getForm().addEvent('beforeSave', this.startProgress.bind(this));
     },
 
     startProgress:function(){
@@ -21616,21 +21628,24 @@ ludo.progress.Base = new Class({
 
     ludoConfig:function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['applyTo','pollFrequence','hideOnFinish']);
-
-        if (!this.applyTo) {
-            this.applyTo = this.getParent();
-        }
-		this.applyTo = ludo.get(this.applyTo);
+        this.setConfigParams(config, ['listenTo', 'pollFrequence','hideOnFinish']);
 
         this.dataSource = {
-            url:this.getUrl(),
+            url:config.url,
             type:'progress.DataSource',
-            pollFrequence:this.pollFrequence,
-            component:this.applyTo
+            pollFrequence:this.pollFrequence
         };
 
-        this.applyTo.getForm().addEvent('beforeSave', this.show.bind(this));
+        if(this.listenTo){
+            var tokens = this.listenTo.split(/\//g);
+            var b = ludo.remoteBroadcaster;
+            b.withResource(tokens[0]);
+
+            if(tokens.length === 2){
+                b.withService(tokens[1]);
+            }
+            b.on('start', this.show.bind(this));
+        }
 
         this.getDataSource().addEvent('load', this.insertJSON.bind(this));
         this.getDataSource().addEvent('start', this.start.bind(this));

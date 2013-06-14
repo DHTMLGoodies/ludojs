@@ -18,21 +18,17 @@ ludo.progress.Base = new Class({
 
     ludoConfig:function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['applyTo','pollFrequence','hideOnFinish']);
-
-        if (!this.applyTo) {
-            this.applyTo = this.getParent();
-        }
-		this.applyTo = ludo.get(this.applyTo);
+        this.setConfigParams(config, ['listenTo', 'pollFrequence','hideOnFinish']);
 
         this.dataSource = {
-            url:this.getUrl(),
+            url:config.url,
             type:'progress.DataSource',
-            pollFrequence:this.pollFrequence,
-            component:this.applyTo
+            pollFrequence:this.pollFrequence
         };
 
-        this.applyTo.getForm().addEvent('beforeSave', this.show.bind(this));
+        if(this.listenTo){
+            ludo.remoteBroadcaster.withResourceService(this.listenTo).on('start', this.show.bind(this));
+        }
 
         this.getDataSource().addEvent('load', this.insertJSON.bind(this));
         this.getDataSource().addEvent('start', this.start.bind(this));
