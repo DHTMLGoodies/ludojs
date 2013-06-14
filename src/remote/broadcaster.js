@@ -1,6 +1,10 @@
 /**
  Singleton class responsible for broadcasting messages from remote requests.
- Instance of this class is available in ludo.remoteBroadcaster
+ Instance of this class is available in ludo.remoteBroadcaster.
+
+ The broadcaster can fire four events:
+ start, success, failure and serverError. The example below show you how
+ to add listeners to these events.
  @namespace remote
  @class Broadcaster
  @example
@@ -20,7 +24,6 @@ ludo.remote.Broadcaster = new Class({
      */
     broadcast:function (request, service) {
         var code = request.getResponseCode();
-
 
 		var type, eventNameWithService;
         switch (code) {
