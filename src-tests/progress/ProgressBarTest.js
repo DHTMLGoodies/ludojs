@@ -1,5 +1,18 @@
 TestCase("ProgressBarTest", {
 
+
+    setUp:function(){
+        if(window.ludo.progress.DataSourceMock === undefined){
+            ludo.progress.DataSourceMock = new Class({
+                Extends: ludo.progress.DataSource,
+                type:'progress.DataSourceMock',
+                load:function(){
+
+                }
+            });
+        }
+    },
+
     "test should initial be hidden": function(){
         // given
         var bar = new ludo.progress.Bar({
@@ -20,12 +33,16 @@ TestCase("ProgressBarTest", {
         assertEquals('LudoDBProgress', bar.getDataSource().resource);
 	},
 
-    "test data source should inherit url": function(){
+    "te2st data source should inherit url": function(){
         // given
         var bar = new ludo.progress.Bar({
             renderTo:document.body,
-            url : 'index.php'
+            dataSource:{
+                url:'index.php'
+            }
         });
+
+        console.log(bar.dataSource);
 
         // then
         assertEquals('index.php', bar.getDataSource().url);
@@ -43,11 +60,38 @@ TestCase("ProgressBarTest", {
 
         // then
         assertFalse(bar.isHidden());
-
 	},
 
-	getRemoteMock:function (resource) {
+    "test should send request to LudoDBProgress on start": function(){
+        // given
+        var bar = new ludo.progress.Bar({
+            renderTo:document.body,
+            listenTo:'Person/save',
+            dataSource:{
+                type : 'progress.DataSourceMock'
+            }
+        });
 
+        var eventFired = false;
+
+        bar.getDataSource().addEvent('start', function(){
+            eventFired = true;
+        });
+        assertEquals('progress.DataSourceMock', bar.getDataSource().type);
+
+        // when
+        var req = this.getRemoteMock('Person');
+        req.send('save');
+
+        // then
+        assertTrue(eventFired);
+    },
+
+    "test progress bar id should be sent with listenTo request": function(){
+
+    },
+
+	getRemoteMock:function (resource) {
 		if (window.JSONMock === undefined) {
 			window.JSONMock = new Class({
                 Extends: ludo.remote.JSON,

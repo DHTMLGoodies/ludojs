@@ -1,4 +1,4 @@
-/* Generated Sat Jun 15 1:06:44 CEST 2013 */
+/* Generated Sat Jun 15 15:44:47 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -1558,7 +1558,7 @@ ludo.remote.JSON = new Class({
         // TODO the events here should be fired for the components sending the request.
 
 		this.fireEvent('start', this);
-
+        this.sendBroadCast(service);
         var req = new Request.JSON({
             url:this.getUrl(service, resourceArguments),
             method:this.method,
@@ -1701,6 +1701,8 @@ ludo.remote.Broadcaster = new Class({
 
 		var eventName = this.getEventName(type, request.getResource());
 
+        console.log(code);
+
 		if(eventName){
 			eventNameWithService = this.getEventName(type, request.getResource(), service);
 		}else{
@@ -1816,11 +1818,20 @@ ludo.remote.Broadcaster = new Class({
     },
 
 	eventObjToBuild :{},
-
-    withResourceService:function(what){
-        var tokens = what.split(/\//g);
-        if(tokens.length === 1)tokens.push('*');
-        this.withResource(tokens[0]).withService(tokens[1]);
+    /**
+     Chained method for adding broadcaster events.
+     @method withResourceService
+     @param {String} resourceAndService
+     @return {remote.Broadcaster}
+     @example
+     ludo.remoteBroadcaster.withResourceService('Person/save').on('success', function(){
+	 		alert('Save success');
+	 	});
+     */
+    withResourceService:function(resourceAndService){
+        var tokens = resourceAndService.split(/\//g);
+        this.withResource(tokens[0]);
+        if(tokens.length == 2)this.withService(tokens[1]);
         return this;
     },
 
@@ -1830,7 +1841,7 @@ ludo.remote.Broadcaster = new Class({
 	 @param {String} resource
 	 @return {remote.Broadcaster}
 	 @example
-	 	ludo.remoteBroadcaster.withResource('Person').withService('read').on('success', function(){
+	 	ludo.remoteBroadcaster.withResource('Person').withService('save').on('success', function(){
 	 		alert('Save success');
 	 	});
 	 */
@@ -1846,7 +1857,8 @@ ludo.remote.Broadcaster = new Class({
 	 @param {String} service
 	 @return {remote.Broadcaster}
 	 @example
-	 	ludo.remoteBroadcaster.withResource('Person').withService('read').on('success', function(){
+	 	ludo.remoteBroadcaster.withResource('Person').withService('read').
+            withService('save').on('success', function(){
 	 		alert('Save success');
 	 	});
 	 */
@@ -21552,17 +21564,21 @@ ludo.progress.DataSource = new Class({
      * Reference to parent component
      * @property object Component
      */
-    component:undefined,
+    applyTo:undefined,
     requestId:'getProgress',
 
     ludoConfig:function(config){
         this.parent(config);
+
         if(config.pollFrequence)this.pollFrequence = config.pollFrequence;
-        //this.component = config.component;
-        //this.component.getForm().addEvent('beforeSave', this.startProgress.bind(this));
+
+        if(config.listenTo){
+            ludo.remoteBroadcaster.withResourceService(config.listenTo).on('start', this.startProgress.bind(this));
+        }
     },
 
     startProgress:function(){
+        console.log('starting');
         this.stopped = false;
         this.fireEvent('start');
         this.load.delay(1000, this);
@@ -21626,36 +21642,30 @@ ludo.progress.Base = new Class({
      */
     hideOnFinish:true,
 
+    defaultDS:'progress.DataSource',
+
     ludoConfig:function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['listenTo', 'pollFrequence','hideOnFinish']);
+        this.setConfigParams(config, ['applyTo','listenTo', 'pollFrequence','hideOnFinish']);
 
-        this.dataSource = {
-            url:config.url,
-            type:'progress.DataSource',
-            pollFrequence:this.pollFrequence
-        };
+        if(this.applyTo)this.applyTo = ludo.get(this.applyTo);
+        this.dataSource = this.dataSource || {};
+        this.dataSource.pollFrequence = this.pollFrequence;
+        this.dataSource.listenTo = this.listenTo;
 
         if(this.listenTo){
-            var tokens = this.listenTo.split(/\//g);
-            var b = ludo.remoteBroadcaster;
-            b.withResource(tokens[0]);
-
-            if(tokens.length === 2){
-                b.withService(tokens[1]);
-            }
-            b.on('start', this.show.bind(this));
+            ludo.remoteBroadcaster.withResourceService(this.listenTo).on('start', this.show.bind(this));
         }
 
-        this.getDataSource().addEvent('load', this.insertJSON.bind(this));
-        this.getDataSource().addEvent('start', this.start.bind(this));
-        if (this.hideOnFinish) {
-            this.getDataSource().addEvent('finish', this.hideAfterDelay.bind(this));
-        }
-        this.getDataSource().addEvent('finish', this.finishEvent.bind(this));
+        this.getDataSource().addEvents({
+            'load' : this.insertJSON.bind(this),
+            'star' : this.start.bind(this),
+            'finish' : this.finishEvent.bind(this)
+        });
     },
 
     start:function(){
+        this.fireEvent('start');
         this.insertJSON({text:'',percent:0});
     },
 
@@ -21683,12 +21693,19 @@ ludo.progress.Base = new Class({
     },
 
     finishEvent:function(){
+
+        if (this.hideOnFinish) {
+            this.hideAfterDelay();
+        }
+
         /**
          * Event fired when progress bar is finished
          * @event render
          * @param Component this
          */
         this.fireEvent('finish');
+
+
     }
 });/* ../ludojs/src/progress/bar.js */
 /**
@@ -25330,18 +25347,27 @@ ludo.form.SubmitButton = new Class({
 	ludoRendered:function () {
 		this.parent();
 		this.applyTo = this.applyTo ? ludo.get(this.applyTo) : this.getParentComponent();
-		var form = this.applyTo.getForm();
+
 		if (this.applyTo) {
+            var form = this.applyTo.getForm();
 			form.addEvent('valid', this.enable.bind(this));
 			form.addEvent('invalid', this.disable.bind(this));
 			form.addEvent('clean', this.disable.bind(this));
 			form.addEvent('dirty', this.enable.bind(this));
+
+            this.checkValidity.delay(100, this);
 		}
-		if(!form.isValid()){
-			this.disable();
-		}
+
 		this.addEvent('click', this.submit.bind(this));
 	},
+
+    checkValidity:function(){
+        if(this.applyTo.getForm().isValid()){
+            this.enable();
+        }else{
+            this.disable();
+        }
+    },
 
 	submit:function () {
 		if (this.applyTo) {

@@ -26,18 +26,27 @@ ludo.form.SubmitButton = new Class({
 	ludoRendered:function () {
 		this.parent();
 		this.applyTo = this.applyTo ? ludo.get(this.applyTo) : this.getParentComponent();
-		var form = this.applyTo.getForm();
+
 		if (this.applyTo) {
+            var form = this.applyTo.getForm();
 			form.addEvent('valid', this.enable.bind(this));
 			form.addEvent('invalid', this.disable.bind(this));
 			form.addEvent('clean', this.disable.bind(this));
 			form.addEvent('dirty', this.enable.bind(this));
+
+            this.checkValidity.delay(100, this);
 		}
-		if(!form.isValid()){
-			this.disable();
-		}
+
 		this.addEvent('click', this.submit.bind(this));
 	},
+
+    checkValidity:function(){
+        if(this.applyTo.getForm().isValid()){
+            this.enable();
+        }else{
+            this.disable();
+        }
+    },
 
 	submit:function () {
 		if (this.applyTo) {

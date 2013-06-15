@@ -18,17 +18,21 @@ ludo.progress.DataSource = new Class({
      * Reference to parent component
      * @property object Component
      */
-    component:undefined,
+    applyTo:undefined,
     requestId:'getProgress',
 
     ludoConfig:function(config){
         this.parent(config);
+
         if(config.pollFrequence)this.pollFrequence = config.pollFrequence;
-        //this.component = config.component;
-        //this.component.getForm().addEvent('beforeSave', this.startProgress.bind(this));
+
+        if(config.listenTo){
+            ludo.remoteBroadcaster.withResourceService(config.listenTo).on('start', this.startProgress.bind(this));
+        }
     },
 
     startProgress:function(){
+        console.log('starting');
         this.stopped = false;
         this.fireEvent('start');
         this.load.delay(1000, this);

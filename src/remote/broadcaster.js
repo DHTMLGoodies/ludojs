@@ -51,7 +51,8 @@ ludo.remote.Broadcaster = new Class({
             "message":request.getResponseMessage(),
             "code":request.getResponseCode(),
             "resource":request.getResource(),
-            "service":service
+            "service":service,
+            "type": type
         };
         if (!eventObj.message)eventObj.message = this.getDefaultMessage(eventNameWithService || eventName);
         this.fireEvent(eventName, eventObj);
@@ -209,16 +210,24 @@ ludo.remote.Broadcaster = new Class({
 	/**
 	 Chained method for adding broadcaster events.
 	 @method on
-	 @param {String} eventName
+	 @param {String|Array} events
 	 @param {Function} fn
 	 @return {remote.Broadcaster}
 	 @example
 	 	ludo.remoteBroadcaster.withResource('Person').withService('read').on('success', function(){
 	 		alert('Save success');
 	 	}).on('start', function(){ alert('About to save') });
+     Example with array:
+
+        ludo.remoteBroadcaster.withResource('Person').withService('read').on('success', function(){
+	 		alert('Save success');
+	 	}).on(['start','success'], function(){ alert('Remote event') });
 	 */
-	on:function(eventName, fn){
-		this.addServiceEvent(eventName, this.eventObjToBuild.resource, this.eventObjToBuild.service, fn);
+	on:function(events, fn){
+        if(!ludo.util.isArray(events))events = [events];
+        for(var i=0;i<events.length;i++){
+		    this.addServiceEvent(events[i], this.eventObjToBuild.resource, this.eventObjToBuild.service, fn);
+        }
 		return this;
 	}
 });

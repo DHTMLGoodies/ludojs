@@ -16,29 +16,30 @@ ludo.progress.Base = new Class({
      */
     hideOnFinish:true,
 
+    defaultDS:'progress.DataSource',
+
     ludoConfig:function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['listenTo', 'pollFrequence','hideOnFinish']);
+        this.setConfigParams(config, ['applyTo','listenTo', 'pollFrequence','hideOnFinish']);
 
-        this.dataSource = {
-            url:config.url,
-            type:'progress.DataSource',
-            pollFrequence:this.pollFrequence
-        };
+        if(this.applyTo)this.applyTo = ludo.get(this.applyTo);
+        this.dataSource = this.dataSource || {};
+        this.dataSource.pollFrequence = this.pollFrequence;
+        this.dataSource.listenTo = this.listenTo;
 
         if(this.listenTo){
             ludo.remoteBroadcaster.withResourceService(this.listenTo).on('start', this.show.bind(this));
         }
 
-        this.getDataSource().addEvent('load', this.insertJSON.bind(this));
-        this.getDataSource().addEvent('start', this.start.bind(this));
-        if (this.hideOnFinish) {
-            this.getDataSource().addEvent('finish', this.hideAfterDelay.bind(this));
-        }
-        this.getDataSource().addEvent('finish', this.finishEvent.bind(this));
+        this.getDataSource().addEvents({
+            'load' : this.insertJSON.bind(this),
+            'star' : this.start.bind(this),
+            'finish' : this.finishEvent.bind(this)
+        });
     },
 
     start:function(){
+        this.fireEvent('start');
         this.insertJSON({text:'',percent:0});
     },
 
@@ -66,11 +67,18 @@ ludo.progress.Base = new Class({
     },
 
     finishEvent:function(){
+
+        if (this.hideOnFinish) {
+            this.hideAfterDelay();
+        }
+
         /**
          * Event fired when progress bar is finished
          * @event render
          * @param Component this
          */
         this.fireEvent('finish');
+
+
     }
 });

@@ -33,6 +33,10 @@ require_once("includes/demo-header.php");
                 children:[
                     {
                         name:'personalia',
+                        layout:{
+                            type:'linear',
+                            orientation:'vertical'
+                        },
                         children:[
                             { type:'form.Text', name:'firstname', label:'Firstname', required:true},
                             { type:'form.Text', name:'lastname', label:'Lastname', required:true},
