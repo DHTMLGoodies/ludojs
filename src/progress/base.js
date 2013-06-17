@@ -33,7 +33,7 @@ ludo.progress.Base = new Class({
 
         this.getDataSource().addEvents({
             'load' : this.insertJSON.bind(this),
-            'star' : this.start.bind(this),
+            'start' : this.start.bind(this),
             'finish' : this.finishEvent.bind(this)
         });
     },

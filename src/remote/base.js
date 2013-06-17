@@ -27,6 +27,9 @@ ludo.remote.Base = new Class({
 	},
 
 	send:function (service, resourceArguments, serviceArguments, additionalData) {
+
+		this.remoteData = undefined;
+
 		if (resourceArguments && !ludo.util.isArray(resourceArguments))resourceArguments = [resourceArguments];
 		ludo.remoteBroadcaster.clear(this, service);
 
@@ -91,6 +94,12 @@ ludo.remote.Base = new Class({
 		if (!ludo.config.hasModRewriteUrls() && this.resource) {
 			ret.request = this.getServicePath(service, arguments);
 		}
+
+		var injected = ludo.remoteInject.get(this.resource, service);
+		if(injected){
+			ret.data = ret.data ? Object.merge(ret.data, injected) : injected;
+		}
+
 		return ret;
 	},
 	/**

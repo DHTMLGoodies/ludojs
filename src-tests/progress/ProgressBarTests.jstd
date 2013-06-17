@@ -5,6 +5,9 @@ load:
   - ../../src/progress/base.js
   - ../../src/progress/bar.js
   - ../../src/progress/datasource.js
+  - ../../src/remote/base.js
+  - ../../src/remote/JSON.js
+  - ../../src/remote/inject.js
 
 test:
   - ProgressBarTest.js

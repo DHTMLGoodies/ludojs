@@ -12,39 +12,40 @@ ludo.progress.DataSource = new Class({
     progressId:undefined,
     stopped : false,
     pollFrequence : 1,
-    resource:'LudoDBProgress',
 
-    /**
-     * Reference to parent component
-     * @property object Component
-     */
-    applyTo:undefined,
-    requestId:'getProgress',
+    resource:'LudoDBProgress',
+    service:'read',
+	listenTo:undefined,
 
     ludoConfig:function(config){
         this.parent(config);
 
-        if(config.pollFrequence)this.pollFrequence = config.pollFrequence;
+		this.setConfigParams(config, ['pollFrequence','listenTo']);
 
-        if(config.listenTo){
-            ludo.remoteBroadcaster.withResourceService(config.listenTo).on('start', this.startProgress.bind(this));
+        if(this.listenTo){
+            ludo.remoteBroadcaster.withResourceService(this.listenTo).on('start', this.startProgress.bind(this));
         }
     },
 
     startProgress:function(){
-        console.log('starting');
+		this.inject();
         this.stopped = false;
         this.fireEvent('start');
         this.load.delay(1000, this);
     },
 
-    loadComplete:function (json) {
-        this.fireEvent('load', json);
+	inject:function(){
+		ludo.remoteInject.add(this.listenTo, {
+			LudoDBProgressID : this.getNewProgressBarId()
+		});
+	},
 
-        if(json.data.percent<100 && !this.stopped){
+    loadComplete:function (data) {
+        this.fireEvent('load', data);
+        if(data.percent<100 && !this.stopped){
             this.load.delay(this.pollFrequence * 1000, this);
         }else{
-            if(json.data.percent>=100){
+            if(data.percent>=100){
                 this.finish();
             }
         }
@@ -52,13 +53,11 @@ ludo.progress.DataSource = new Class({
 
     getNewProgressBarId:function(){
         this.progressId = this.progressId = 'ludo-progress-' + String.uniqueID();
+		this.arguments = this.progressId;
         return this.progressId;
     },
 
     getProgressId:function(){
-        if(!this.progressId){
-            this.setPostParam('progressBarId', this.getNewProgressBarId());
-        }
         return this.progressId;
     },
 
@@ -76,5 +75,6 @@ ludo.progress.DataSource = new Class({
         this.stopped = true;
         this.progressId = undefined;
         this.fireEvent('finish');
+		this.inject();
     }
 });

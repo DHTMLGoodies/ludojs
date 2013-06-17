@@ -106,9 +106,14 @@ ludo.progress.Bar = new Class({
 
     setPercent:function (percent) {
         if(percent == this.currentPercent)return;
-        this.getFx().start({
-            width: [this.currentPercent, percent]
-        });
+		if(percent === 0 && this.currentPercent === 100){
+			this.els.progress.style.width = '0px';
+		}else{
+			this.getFx().start({
+			   width: [this.currentPercent, percent]
+		    });
+		}
+
         this.currentPercent = percent;
         this.els.percent.innerHTML = percent + '%';
     },

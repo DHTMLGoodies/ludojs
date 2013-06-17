@@ -45,9 +45,9 @@ ludo.remote.JSON = new Class({
      Will trigger the following data to be sent to controller.php:
 
      @example
-     {
-         request:"Person/1/load"
-     }
+		 {
+			 request:"Person/1/load"
+		 }
      If you have the mod_rewrite module enabled and activated on your web server, you may use code like this:
      @example
 	 	ludo.config.enableModRewriteUrls();
@@ -133,6 +133,7 @@ ludo.remote.JSON = new Class({
      * @return {Object|undefined}
      */
     getResponseData:function () {
+		if(!this.remoteData.response)return undefined;
         return this.remoteData.response.data ? this.remoteData.response.data : this.remoteData.response;
     },
 

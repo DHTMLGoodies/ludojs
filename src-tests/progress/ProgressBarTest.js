@@ -31,6 +31,7 @@ TestCase("ProgressBarTest", {
 
         // then
         assertEquals('LudoDBProgress', bar.getDataSource().resource);
+        assertEquals('read', bar.getDataSource().service);
 	},
 
     "te2st data source should inherit url": function(){
@@ -41,8 +42,6 @@ TestCase("ProgressBarTest", {
                 url:'index.php'
             }
         });
-
-        console.log(bar.dataSource);
 
         // then
         assertEquals('index.php', bar.getDataSource().url);
@@ -88,6 +87,40 @@ TestCase("ProgressBarTest", {
     },
 
     "test progress bar id should be sent with listenTo request": function(){
+       // given
+        new ludo.progress.Bar({
+            renderTo:document.body,
+            listenTo:'Person/save',
+            dataSource:{
+                type : 'progress.DataSourceMock'
+            }
+        });
+		var r = this.getRemoteMock('Person');
+
+		// when
+		var data = r.getDataForRequest('save');
+
+		// then
+		assertNotUndefined(JSON.encode(data), data['LudoDBProgressID']);
+
+    },
+
+    "test progress bar id should ONLY be sent with listenTo request": function(){
+       // given
+        new ludo.progress.Bar({
+            renderTo:document.body,
+            listenTo:'Person/save',
+            dataSource:{
+                type : 'progress.DataSourceMock'
+            }
+        });
+		var r = this.getRemoteMock('Person');
+
+		// when
+		var data = r.getDataForRequest('read');
+
+		// then
+		assertUndefined(JSON.encode(data), data['_progressId']);
 
     },
 
