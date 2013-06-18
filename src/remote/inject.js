@@ -1,11 +1,22 @@
 /**
  * Class for injecting data to specific resource/service requests
- * @type {Class}
+ * @namespace {remote}
+ * @class Inject
  */
 ludo.remote.Inject = new Class({
 
 	data:{},
 
+	/**
+	 Add data to be posted with the next request.
+	 @method add
+	 @param resourceService
+	 @param data
+	 @example
+	 	ludo.remoteInject.add('Person/save', {
+	 		'customParam' : 'customValue'
+	 	});
+	 */
 	add:function(resourceService, data){
 		var tokens = resourceService.split(/\//g);
 		var resource = tokens[0];
