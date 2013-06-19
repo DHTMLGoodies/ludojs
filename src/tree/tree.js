@@ -63,6 +63,8 @@ ludo.tree.Tree = new Class({
 
 	/**
 	 * Key used to defined nodes inside categories. This key is used for default values and node config
+	 * @config {String} categoryKey
+	 * @default "type"
 	 */
 	categoryKey : 'type',
 
