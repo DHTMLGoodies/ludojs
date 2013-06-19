@@ -12,7 +12,6 @@ ludo.view.Shim = new Class({
     initialize:function (config) {
         if (config.txt)this.txt = config.txt;
         this.renderTo = config.renderTo;
-
     },
 
     getEl:function () {
@@ -21,7 +20,7 @@ ludo.view.Shim = new Class({
                 renderTo:this.getRenderTo(),
                 cls:'ludo-shim-loading',
                 css:{'display':'none'},
-                html : this.getTextForShim()
+                html : this.getText(this.txt)
             });
         }
         return this.el;
@@ -40,7 +39,6 @@ ludo.view.Shim = new Class({
     },
 
 	getRenderTo:function(){
-
 		if(ludo.util.isString(this.renderTo)){
 			var view = ludo.get(this.renderTo);
 			if(!view)return undefined;
@@ -53,7 +51,7 @@ ludo.view.Shim = new Class({
         if (txt !== undefined) {
             this.getEl().set('html', this.getText(txt));
         }else{
-			this.getEl().set('html', this.getTextForShim());
+			this.getEl().set('html', this.getText(this.txt));
 		}
         this.css('');
 		this.resizeShim();
@@ -65,10 +63,6 @@ ludo.view.Shim = new Class({
 		this.el.style.width = width + 'px';
 		this.el.style.marginLeft = (Math.round(width/2) * -1) + 'px';
 
-	},
-
-	getTextForShim:function(){
-		return this.getText(this.txt);
 	},
 
 	getText:function(txt){
