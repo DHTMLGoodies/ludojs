@@ -1,6 +1,7 @@
 /**
  * Render a shim
- * @type {Class}
+ * @namespace view
+ * @class Shim
  */
 ludo.view.Shim = new Class({
     txt:'Loading content...',
