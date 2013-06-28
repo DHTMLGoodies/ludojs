@@ -48,11 +48,7 @@ ludo.view.Shim = new Class({
 	},
 
     show:function (txt) {
-        if (txt !== undefined) {
-            this.getEl().set('html', this.getText(txt));
-        }else{
-			this.getEl().set('html', this.getText(this.txt));
-		}
+		this.getEl().set('html', this.getText(txt ? txt : this.txt));
         this.css('');
 		this.resizeShim();
     },
