@@ -1,4 +1,4 @@
-/* Generated Mon Jun 17 16:06:36 CEST 2013 */
+/* Generated Tue Jul 2 16:30:59 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -1331,12 +1331,23 @@ ludo.Movable = new Class({
 });/* ../ludojs/src/remote/inject.js */
 /**
  * Class for injecting data to specific resource/service requests
- * @type {Class}
+ * @namespace {remote}
+ * @class Inject
  */
 ludo.remote.Inject = new Class({
 
 	data:{},
 
+	/**
+	 Add data to be posted with the next request.
+	 @method add
+	 @param resourceService
+	 @param data
+	 @example
+	 	ludo.remoteInject.add('Person/save', {
+	 		'customParam' : 'customValue'
+	 	});
+	 */
 	add:function(resourceService, data){
 		var tokens = resourceService.split(/\//g);
 		var resource = tokens[0];
@@ -4994,7 +5005,8 @@ ludo.util = {
 };/* ../ludojs/src/view/shim.js */
 /**
  * Render a shim
- * @type {Class}
+ * @namespace view
+ * @class Shim
  */
 ludo.view.Shim = new Class({
     txt:'Loading content...',
@@ -5005,7 +5017,6 @@ ludo.view.Shim = new Class({
     initialize:function (config) {
         if (config.txt)this.txt = config.txt;
         this.renderTo = config.renderTo;
-
     },
 
     getEl:function () {
@@ -5014,7 +5025,7 @@ ludo.view.Shim = new Class({
                 renderTo:this.getRenderTo(),
                 cls:'ludo-shim-loading',
                 css:{'display':'none'},
-                html : this.getTextForShim()
+                html : this.getText(this.txt)
             });
         }
         return this.el;
@@ -5033,7 +5044,6 @@ ludo.view.Shim = new Class({
     },
 
 	getRenderTo:function(){
-
 		if(ludo.util.isString(this.renderTo)){
 			var view = ludo.get(this.renderTo);
 			if(!view)return undefined;
@@ -5043,11 +5053,7 @@ ludo.view.Shim = new Class({
 	},
 
     show:function (txt) {
-        if (txt !== undefined) {
-            this.getEl().set('html', this.getText(txt));
-        }else{
-			this.getEl().set('html', this.getTextForShim());
-		}
+		this.getEl().set('html', this.getText(txt ? txt : this.txt));
         this.css('');
 		this.resizeShim();
     },
@@ -5058,10 +5064,6 @@ ludo.view.Shim = new Class({
 		this.el.style.width = width + 'px';
 		this.el.style.marginLeft = (Math.round(width/2) * -1) + 'px';
 
-	},
-
-	getTextForShim:function(){
-		return this.getText(this.txt);
 	},
 
 	getText:function(txt){
@@ -15403,10 +15405,16 @@ ludo.layout.CollapseBar = new Class({
 		return this.views;
 	}
 });/* ../ludojs/src/collection-view.js */
+/**
+ * Base class for List and tree.Tree
+ * @class CollectionView
+ */
 ludo.CollectionView = new Class({
 	Extends: ludo.View,
 	/**
-	 * Text to display when the tree has no data, i.e. when there's no data in data source or when filter returned no data.
+	 * Text to display when the tree or list has no data, i.e. when there's no data in data source or when filter returned no data.
+	 * @config {String} emptyText
+	 * @default undefined
 	 */
 	emptyText:undefined,
 
@@ -23880,6 +23888,8 @@ ludo.tree.Tree = new Class({
 
 	/**
 	 * Key used to defined nodes inside categories. This key is used for default values and node config
+	 * @config {String} categoryKey
+	 * @default "type"
 	 */
 	categoryKey : 'type',
 
