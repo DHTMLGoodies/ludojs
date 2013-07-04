@@ -253,3 +253,6 @@ div.ludo-paging-current-page .ludo-body{
     text-align:center;
 }
 
+.input-cell input {
+    height: 15px;
+}

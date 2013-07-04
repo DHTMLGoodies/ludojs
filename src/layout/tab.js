@@ -38,7 +38,7 @@ ludo.layout.Tab = new Class({
 	addChildEvents:function(child){
 		if(!this.isTabStrip(child)){
 			child.addEvent('show', this.showTab.bind(this));
-			child.addEvent('beforeDispose', this.onChildDispose.bind(this));
+			child.addEvent('dispose', this.onChildDispose.bind(this));
 		}
 	},
 

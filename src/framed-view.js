@@ -137,9 +137,26 @@ ludo.FramedView = new Class({
         }
 
         this.setConfigParams(config,['buttonBar', 'hasMenu','menuConfig','icon','titleBarHidden','titleBar','buttons','boldTitle','minimized']);
-		if (this.buttonBar && !this.buttonBar.children) {
-			this.buttonBar = { children:this.buttonBar };
-		}
+
+	},
+
+	/**
+	 * Return config of title bar using a method instead of config object. Useful when you need to refer to "this"
+	 * @method getTitleBarConfig
+	 * @return {Object|undefined}
+	 */
+	getTitleBarConfig:function(){
+		return undefined;
+	},
+
+	/**
+	 * Return button bar config using a method instead of using buttonBar config object. Useful when you need to refer to
+	 * "this"
+	 * @method getButtonBarConfig
+	 * @return {Object|undefined}
+	 */
+	getButtonBarConfig:function(){
+		return undefined;
 	},
 
 	ludoDOM:function () {
@@ -160,6 +177,13 @@ ludo.FramedView = new Class({
 
 	ludoRendered:function () {
         // TODO create button bar after view is rendered.
+
+		if(!this.titleBar)this.titleBar = this.getTitleBarConfig();
+		if(!this.buttonBar)this.buttonBar = this.getButtonBarConfig();
+		if (this.buttonBar && !this.buttonBar.children) {
+			this.buttonBar = { children:this.buttonBar };
+		}
+
         if (this.buttonBar) {
             this.getButtonBar()
         } else {

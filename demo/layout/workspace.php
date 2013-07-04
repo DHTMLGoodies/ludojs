@@ -10,6 +10,7 @@ require_once("../includes/demo-header.php");
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/tab-strip.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/relative.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/tab.js"></script>
+<script type="text/javascript" src="js/CustomGrid.js"></script>
 <style type="text/css">
     body, html {
         margin: 0;
@@ -18,8 +19,41 @@ require_once("../includes/demo-header.php");
         height: 100%;
         overflow: hidden;
     }
+
+    .input-cell input {
+        height: 15px;
+    }
+
 </style>
 <script type="text/javascript" class="source-code">
+
+
+function newTab(tagId, title, type, subTitle){
+    var page = ludo.get('tabs').addChild({
+   		title:title,
+     	id:tagId,
+   		closable:true,
+   		type:type ? type : 'FramedView',
+   		minimizable:true,
+   		layout:{
+   			'closable':true,
+   			title:subTitle || ''
+   		},
+   		containerCss:{
+   			'border':0,
+               margin:0,padding:0,
+   			'background-color':'#d1e7ff'
+   		},
+   		css:{
+   			'background-color':'#fff',
+   			'padding':0,
+   			'margin':0
+   		}
+   	});
+   	page.show();
+
+}
+
 new ludo.View({
     renderTo:document.body,
     layout:{
@@ -103,7 +137,17 @@ new ludo.View({
                     },
                         'New page']
                 },
-                '|', 'View', '|',
+                '|', {
+                    html:'View',
+                    children:[{
+                        html : 'Grid',
+                        listeners:{
+                            'click' : function(){
+                                newTab('customGrid', 'Custom Grid', 'myApp.CustomGrid');
+                            }
+                        }
+                    }]
+                }, '|',
                 'Navigate', '|'
             ]
 
@@ -265,9 +309,9 @@ new ludo.View({
                             weight:1,
                             containerCss:{
                                 'border':0,
-                                'border-right':'1px solid #d7d7d7',
-                                'border-top':'1px solid #d7d7d7',
-                                'border-bottom':'1px solid #d7d7d7'
+                                'border-right':'1px solid #EBF0F5',
+                                'border-top':'1px solid #EBF0F5',
+                                'border-bottom':'1px solid #EBF0F5'
                             },
                             stateful:false,
                             resizable:false,

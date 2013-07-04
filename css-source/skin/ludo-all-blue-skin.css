@@ -594,10 +594,10 @@ form.ComboTree
 
 .ludo-grid-Grid div.ludo-active-record {
     font-weight: bold;
-    background-color: #d1e7ff;
+    background-color: #f5f5f5;
 
-    border-top:1px solid #d1e7ff;
-    border-bottom:1px solid #d1e7ff;
+    border-top:1px solid #f5f5f5;
+    border-bottom:1px solid #f5f5f5;
 }
 
 .ludo-grid-Grid .ludo-menu-button-active{

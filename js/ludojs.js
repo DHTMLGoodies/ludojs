@@ -1,4 +1,4 @@
-/* Generated Wed Jul 3 12:56:17 CEST 2013 */
+/* Generated Thu Jul 4 17:20:04 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -6152,6 +6152,7 @@ ludo.View = new Class({
 	 * @return void
 	 */
 	dispose:function () {
+
         this.fireEvent('dispose', this);
         ludo.util.dispose(this);
 	},
@@ -14366,7 +14367,7 @@ ludo.layout.Tab = new Class({
 	addChildEvents:function(child){
 		if(!this.isTabStrip(child)){
 			child.addEvent('show', this.showTab.bind(this));
-			child.addEvent('beforeDispose', this.onChildDispose.bind(this));
+			child.addEvent('dispose', this.onChildDispose.bind(this));
 		}
 	},
 
@@ -16618,9 +16619,10 @@ ludo.view.ButtonBar = new Class({
     cls:'ludo-component-button-container',
     overflow:'hidden',
     component:undefined,
+	buttonBarCss:undefined,
 
     ludoConfig:function (config) {
-        this.setConfigParams(config, ['align','component']);
+        this.setConfigParams(config, ['align','component','buttonBarCss']);
         config.children = this.getValidChildren(config.children);
         if (this.align == 'right') {
             config.children = this.getItemsWithSpacer(config.children);
@@ -16630,6 +16632,7 @@ ludo.view.ButtonBar = new Class({
                 config.children[0].containerCss['margin-left'] = 2
             }
         }
+
         this.parent(config);
     },
     ludoDOM:function () {
@@ -16640,6 +16643,11 @@ ludo.view.ButtonBar = new Class({
     ludoRendered:function () {
         this.parent();
 		this.component.addEvent('resize', this.resizeRenderer.bind(this));
+
+		if(this.buttonBarCss){
+			this.getEl().parentNode.setStyles(this.buttonBarCss);
+		}
+
     },
 
 	resizeRenderer:function(){
@@ -17095,9 +17103,26 @@ ludo.FramedView = new Class({
         }
 
         this.setConfigParams(config,['buttonBar', 'hasMenu','menuConfig','icon','titleBarHidden','titleBar','buttons','boldTitle','minimized']);
-		if (this.buttonBar && !this.buttonBar.children) {
-			this.buttonBar = { children:this.buttonBar };
-		}
+
+	},
+
+	/**
+	 * Return config of title bar using a method instead of config object. Useful when you need to refer to "this"
+	 * @method getTitleBarConfig
+	 * @return {Object|undefined}
+	 */
+	getTitleBarConfig:function(){
+		return undefined;
+	},
+
+	/**
+	 * Return button bar config using a method instead of using buttonBar config object. Useful when you need to refer to
+	 * "this"
+	 * @method getButtonBarConfig
+	 * @return {Object|undefined}
+	 */
+	getButtonBarConfig:function(){
+		return undefined;
 	},
 
 	ludoDOM:function () {
@@ -17118,6 +17143,13 @@ ludo.FramedView = new Class({
 
 	ludoRendered:function () {
         // TODO create button bar after view is rendered.
+
+		if(!this.titleBar)this.titleBar = this.getTitleBarConfig();
+		if(!this.buttonBar)this.buttonBar = this.getButtonBarConfig();
+		if (this.buttonBar && !this.buttonBar.children) {
+			this.buttonBar = { children:this.buttonBar };
+		}
+
         if (this.buttonBar) {
             this.getButtonBar()
         } else {

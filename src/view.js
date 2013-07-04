@@ -1041,6 +1041,7 @@ ludo.View = new Class({
 	 * @return void
 	 */
 	dispose:function () {
+
         this.fireEvent('dispose', this);
         ludo.util.dispose(this);
 	},

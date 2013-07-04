@@ -1161,7 +1161,9 @@ div.ludo-paging-current-page .ludo-body{
     text-align:center;
 }
 
-/* ../ludojs/css-source/form/form.css */
+.input-cell input {
+    height: 15px;
+}/* ../ludojs/css-source/form/form.css */
 .ludo-form-element div.ludo-body {
     padding: 2px;
 }

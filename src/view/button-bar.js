@@ -17,9 +17,10 @@ ludo.view.ButtonBar = new Class({
     cls:'ludo-component-button-container',
     overflow:'hidden',
     component:undefined,
+	buttonBarCss:undefined,
 
     ludoConfig:function (config) {
-        this.setConfigParams(config, ['align','component']);
+        this.setConfigParams(config, ['align','component','buttonBarCss']);
         config.children = this.getValidChildren(config.children);
         if (this.align == 'right') {
             config.children = this.getItemsWithSpacer(config.children);
@@ -29,6 +30,7 @@ ludo.view.ButtonBar = new Class({
                 config.children[0].containerCss['margin-left'] = 2
             }
         }
+
         this.parent(config);
     },
     ludoDOM:function () {
@@ -39,6 +41,11 @@ ludo.view.ButtonBar = new Class({
     ludoRendered:function () {
         this.parent();
 		this.component.addEvent('resize', this.resizeRenderer.bind(this));
+
+		if(this.buttonBarCss){
+			this.getEl().parentNode.setStyles(this.buttonBarCss);
+		}
+
     },
 
 	resizeRenderer:function(){

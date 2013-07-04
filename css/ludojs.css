@@ -1,4 +1,4 @@
-/* Generated Wed Jul 3 12:56:17 CEST 2013 */
+/* Generated Thu Jul 4 17:20:04 CEST 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -1182,7 +1182,9 @@ div.ludo-paging-current-page .ludo-body{
     text-align:center;
 }
 
-/* ../ludojs/css-source/form/form.css */
+.input-cell input {
+    height: 15px;
+}/* ../ludojs/css-source/form/form.css */
 .ludo-form-element div.ludo-body {
     padding: 2px;
 }
