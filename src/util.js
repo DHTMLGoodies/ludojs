@@ -1,26 +1,34 @@
 ludo.util = {
-	type:function (o) {
-		return !!o && Object.prototype.toString.call(o).match(/(\w+)\]/)[1];
-	},
+
+	types:{},
 
 	isArray:function (obj) {
-		return typeof(obj) == 'object' && (obj instanceof Array);
+		return  ludo.util.type(obj) == 'array';
 	},
 
 	isObject:function (obj) {
-		return typeof(obj) == 'object';
+		return ludo.util.type(obj) === 'object';
 	},
 
 	isString:function (obj) {
-		return typeof(obj) == 'string';
+		return ludo.util.type(obj) === 'string';
 	},
 
 	isFunction:function (obj) {
-		return typeof(obj) === 'function';
+		return ludo.util.type(obj) === 'function';
 	},
 
 	argsToArray:function(arguments){
 		return Array.prototype.slice.call(arguments);
+	},
+
+	type: function( obj ) {
+		if ( obj == null ) {
+			return String( obj );
+		}
+		return typeof obj === "object" || typeof obj === "function" ?
+			ludo.util.types[ ludo.util.types.toString.call(obj) ] || "object" :
+			typeof obj;
 	},
 
     isLudoJSConfig:function(obj){
@@ -152,3 +160,8 @@ ludo.util = {
         return !!document.createElementNS && !!document.createElementNS('http://www.w3.org/2000/svg', 'svg')['createSVGRect'];
     }
 };
+
+var ludoUtilTypes = "Boolean Number String Function Array Date RegExp Object Error".split(" ");
+for(var i=0;i<ludoUtilTypes.length;i++){
+	ludo.util.types[ "[object " + ludoUtilTypes[i] + "]" ] = ludoUtilTypes[i].toLowerCase();
+}

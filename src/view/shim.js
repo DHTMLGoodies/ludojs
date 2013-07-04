@@ -48,7 +48,7 @@ ludo.view.Shim = new Class({
 	},
 
     show:function (txt) {
-		this.getEl().set('html', this.getText(txt ? txt : this.txt));
+		this.getEl().innerHTML = this.getText(( txt && !ludo.util.isObject(txt) ) ? txt : this.txt);
         this.css('');
 		this.resizeShim();
     },
@@ -58,11 +58,11 @@ ludo.view.Shim = new Class({
 		var width = (span.offsetWidth + 5);
 		this.el.style.width = width + 'px';
 		this.el.style.marginLeft = (Math.round(width/2) * -1) + 'px';
-
 	},
 
 	getText:function(txt){
-		return '<span>' + (ludo.util.isFunction(txt) ? txt.call() : txt ? txt : '') + '</span>';
+		txt = ludo.util.isFunction(txt) ? txt.call() : txt ? txt : '';
+		return '<span>' + txt + '</span>';
 	},
 
     hide:function () {

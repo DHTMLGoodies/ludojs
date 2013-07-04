@@ -23,6 +23,7 @@ test:
   - tpl/*.js
   - list/*.js
   - progress/*.js
+  - util/*.js
 
 serve:
   - ../css/ludojs-blue.css
