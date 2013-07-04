@@ -178,7 +178,7 @@ ludo.FramedView = new Class({
 	ludoRendered:function () {
         // TODO create button bar after view is rendered.
 
-		if(!this.titleBar)this.titleBar = this.getTitleBarConfig();
+
 		if(!this.buttonBar)this.buttonBar = this.getButtonBarConfig();
 		if (this.buttonBar && !this.buttonBar.children) {
 			this.buttonBar = { children:this.buttonBar };
@@ -263,7 +263,7 @@ ludo.FramedView = new Class({
 	getTitleBar:function(){
 		if (this.titleBarObj === undefined) {
 
-			if(!this.titleBar)this.titleBar = {};
+			if(!this.titleBar)this.titleBar = this.getTitleBarConfig() || {};
 			this.titleBar.view = this;
 			this.titleBar.type = 'view.TitleBar';
 			this.titleBarObj = this.createDependency('titleBar', this.titleBar);

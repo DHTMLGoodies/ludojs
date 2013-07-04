@@ -28,8 +28,8 @@ myApp.CustomGrid = new Class({
 			],
 			listeners:{
 				'reload':function () {
-					ludo.get('myDataSource').load();
-				}
+					this.child['grid'].getDataSource().load();
+				}.bind(this)
 			}
 		};
 	},
@@ -48,8 +48,8 @@ myApp.CustomGrid = new Class({
 
 				listeners:{
 					key:function (value) {
-						ludo.get('myDataSource').search(value);
-					}
+						this.child['grid'].getDataSource().search(value);
+					}.bind(this)
 				}
 			},
 			{
