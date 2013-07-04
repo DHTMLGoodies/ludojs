@@ -34,7 +34,6 @@ function newTab(tagId, title, type, subTitle){
      	id:tagId,
    		closable:true,
    		type:type ? type : 'FramedView',
-   		minimizable:true,
    		layout:{
    			'closable':true,
    			title:subTitle || ''
@@ -51,7 +50,6 @@ function newTab(tagId, title, type, subTitle){
    		}
    	});
    	page.show();
-
 }
 
 new ludo.View({

@@ -5,6 +5,8 @@ myApp.CustomGrid = new Class({
 	id:'gridWindowSearchable',
 	title:'Grid - capital and population',
 
+	gridUrl : '../resources/grid-data.json',
+
 	layout:{
 		width:'100%',
 		height:'100%',
@@ -99,7 +101,7 @@ myApp.CustomGrid = new Class({
 
 				},
 				dataSource:{
-					url:'../resources/grid-data.json',
+					url:this.gridUrl,
 					id:'myDataSource',
 					shim:{
 						txt:'Loading content. Please wait'
