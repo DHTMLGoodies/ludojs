@@ -1,4 +1,4 @@
-/* Generated Thu Jul 4 17:26:14 CEST 2013 */
+/* Generated Fri Nov 29 12:52:03 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -394,7 +394,7 @@ ludo.storage.LocalStorage = new Class({
 	save:function(key,value){
 		if(!this.supported)return;
 		var type = 'simple';
-		if(ludo.util.isObject(value)){
+		if(ludo.util.isObject(value) || ludo.util.isArray(value)){
 			value = JSON.encode(value);
 			type = 'object';
 		}

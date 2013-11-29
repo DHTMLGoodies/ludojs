@@ -7,7 +7,7 @@ ludo.storage.LocalStorage = new Class({
 	save:function(key,value){
 		if(!this.supported)return;
 		var type = 'simple';
-		if(ludo.util.isObject(value)){
+		if(ludo.util.isObject(value) || ludo.util.isArray(value)){
 			value = JSON.encode(value);
 			type = 'object';
 		}
