@@ -1,4 +1,4 @@
-/* Generated Fri Nov 29 12:52:03 CET 2013 */
+/* Generated Mon Dec 16 14:05:00 CET 2013 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -4729,7 +4729,7 @@ ludo.dom = {
 	getNumericStyle:function (el, style) {
 		if (!el || !style || !el.getStyle)return 0;
 		var val = el.getStyle(style);
-		return val ? parseInt(val) : 0;
+		return val && val!='thin' && val!='auto' && val!='medium' ? parseInt(val) : 0;
 	},
 
 	isInFamilies:function (el, ids) {
