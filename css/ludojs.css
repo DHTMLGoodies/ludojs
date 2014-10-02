@@ -1,8 +1,8 @@
-/* Generated Mon Dec 16 14:05:00 CET 2013 */
+/* Generated Thu Oct 2 14:58:06 CEST 2014 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
-Copyright (C) 2012-2013  ludoJS.com, Alf Magne Kalleland
+Copyright (C) 2012-2014  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
 License as published by the Free Software Foundation; either
@@ -16,7 +16,7 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 ludoJS.com., hereby disclaims all copyright interest in this script
 written by Alf Magne Kalleland.
-Alf Magne Kalleland, 2013
+Alf Magne Kalleland, 2014
 Owner of ludoJS.com
 ************************************************************************************************************/
 /* ../ludojs/css-source/view.css */
@@ -1221,6 +1221,12 @@ div.ludo-form-button-m{
 }
 
 div.ludo-form-button-l{
+    height: 35px;
+    font-size:14px;
+    line-height:30px;
+}
+
+div.ludo-form-button-xl{
     height: 45px;
     font-size:14px;
     line-height:40px;
@@ -1308,6 +1314,10 @@ div.ludo-form-button-disabled .ludo-form-button-m-bg-right {
 }
 
 .ludo-form-button-l .ludo-form-button-value{
+    font-size:16px;
+    line-height:34px;
+}
+.ludo-form-button-xl .ludo-form-button-value{
     font-size:16px;
     line-height:44px;
 }

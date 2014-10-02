@@ -112,13 +112,15 @@ ludo.form.Button = new Class({
 	iconWidths:{
 		's' : 15,
 		'm' : 25,
-		'l' : 44
+        'l' : 34,
+		'xl' : 44
 	},
 
 	heights:{
 		's' : 15,
 		'm' : 25,
-		'l' : 45
+        'l' : 35,
+		'xl' : 45
 	},
 
 

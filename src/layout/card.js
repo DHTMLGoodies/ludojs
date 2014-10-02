@@ -502,11 +502,7 @@ ludo.layout.Card = new Class({
 			} else if (pos < 0 && pos < (this.touch.min / 2)) {
 				this.animateToNext();
 			} else {
-				if (this.touch.animateX) {
-					this.visibleCard.getEl().style.left = '0px';
-				} else {
-					this.visibleCard.getEl().style.top = '0px';
-				}
+				this.visibleCard.getEl().style[this.touch.animateX ? 'left' : 'top'] = '0px';
 			}
 		}
 	},

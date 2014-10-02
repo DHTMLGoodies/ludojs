@@ -1,8 +1,8 @@
-/* Generated Mon Dec 16 14:05:00 CET 2013 */
+/* Generated Thu Oct 2 14:58:06 CEST 2014 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
-Copyright (C) 2012-2013  ludoJS.com, Alf Magne Kalleland
+Copyright (C) 2012-2014  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
 License as published by the Free Software Foundation; either
@@ -16,7 +16,7 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 ludoJS.com., hereby disclaims all copyright interest in this script
 written by Alf Magne Kalleland.
-Alf Magne Kalleland, 2013
+Alf Magne Kalleland, 2014
 Owner of ludoJS.com
 ************************************************************************************************************/
 /* ../ludojs/src/ludo.js */
@@ -13286,11 +13286,7 @@ ludo.layout.Card = new Class({
 			} else if (pos < 0 && pos < (this.touch.min / 2)) {
 				this.animateToNext();
 			} else {
-				if (this.touch.animateX) {
-					this.visibleCard.getEl().style.left = '0px';
-				} else {
-					this.visibleCard.getEl().style.top = '0px';
-				}
+				this.visibleCard.getEl().style[this.touch.animateX ? 'left' : 'top'] = '0px';
 			}
 		}
 	},
@@ -21117,13 +21113,15 @@ ludo.form.Button = new Class({
 	iconWidths:{
 		's' : 15,
 		'm' : 25,
-		'l' : 44
+        'l' : 34,
+		'xl' : 44
 	},
 
 	heights:{
 		's' : 15,
 		'm' : 25,
-		'l' : 45
+        'l' : 35,
+		'xl' : 45
 	},
 
 
@@ -24785,6 +24783,7 @@ ludo.form.Manager = new Class({
         });
      */
     resource:undefined,
+    service:undefined,
     method:undefined,
     url:undefined,
 	currentId:undefined,
@@ -24871,7 +24870,7 @@ ludo.form.Manager = new Class({
 		this.view = config.view;
 		config.form = config.form || {};
 
-        this.setConfigParams(config.form, ['resource','method', 'url','autoLoad','cache']);
+        this.setConfigParams(config.form, ['resource','method', 'url','autoLoad','cache','service']);
 
 		this.id = String.uniqueID();
 
@@ -25174,7 +25173,7 @@ ludo.form.Manager = new Class({
 			this.fireEvent('invalid');
 			this.fireEvent('beforeSave');
 			this.beforeRequest();
-			this.requestHandler().send('save', this.currentId, this.getValues(),
+			this.requestHandler().send(this.service ? this.service : 'save', this.currentId, this.getValues(),
 				{
 					"progressBarId":this.getProgressBarId()
 				}
