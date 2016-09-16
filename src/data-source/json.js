@@ -60,6 +60,15 @@ ludo.dataSource.JSON = new Class({
         return this._request;
     },
 
+    /**
+     * Update data source with new date and trigger events "parseData",
+     * @param {Array} data
+     */
+    setData:function(data){
+        this.loadComplete(data);
+    },
+
+
     loadComplete:function (data) {
 		this.parent();
 		var firstLoad = !this.data;

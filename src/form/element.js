@@ -231,6 +231,15 @@ ludo.form.Element = new Class({
 		}
 		this.validate();
     },
+
+    /**
+     * Enable or disable form element
+     * @param {Boolean} enabled
+     */
+    setEnabled:function(enabled){
+        if(enabled)this.enable(); else this.disable();
+    },
+
     /**
      * Disable form element
      * @method disable

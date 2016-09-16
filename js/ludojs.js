@@ -1,8 +1,8 @@
-/* Generated Thu Oct 2 15:03:10 CEST 2014 */
+/* Generated Fri Sep 16 16:48:25 CEST 2016 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
-Copyright (C) 2012-2014  ludoJS.com, Alf Magne Kalleland
+Copyright (C) 2012-2016  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
 License as published by the Free Software Foundation; either
@@ -16,7 +16,7 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 ludoJS.com., hereby disclaims all copyright interest in this script
 written by Alf Magne Kalleland.
-Alf Magne Kalleland, 2014
+Alf Magne Kalleland, 2016
 Owner of ludoJS.com
 ************************************************************************************************************/
 /* ../ludojs/src/ludo.js */
@@ -4011,6 +4011,7 @@ ludo.dataSource.Base = new Class({
 		return this.data;
 	},
 
+
 	setPostParam:function (param, value) {
 		this.postData[param] = value;
 	},
@@ -4117,6 +4118,15 @@ ludo.dataSource.JSON = new Class({
         }
         return this._request;
     },
+
+    /**
+     * Update data source with new date and trigger events "parseData",
+     * @param data
+     */
+    setData:function(data){
+        this.loadComplete(data);
+    },
+
 
     loadComplete:function (data) {
 		this.parent();
@@ -11412,6 +11422,15 @@ ludo.form.Element = new Class({
 		}
 		this.validate();
     },
+
+    /**
+     * Enable or disable form element
+     * @param bool enabled
+     */
+    setEnabled:function(enabled){
+        if(enabled)this.enable(); else this.disable();
+    },
+
     /**
      * Disable form element
      * @method disable

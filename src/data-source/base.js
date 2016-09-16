@@ -137,6 +137,7 @@ ludo.dataSource.Base = new Class({
 		return this.data;
 	},
 
+
 	setPostParam:function (param, value) {
 		this.postData[param] = value;
 	},
