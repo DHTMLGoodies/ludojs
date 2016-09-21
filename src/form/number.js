@@ -81,7 +81,7 @@ ludo.form.Number = new Class({
     },
 
     blur:function(){
-        var value = this.getFormEl().value;
+        var value = this.getFormEl().val();
         if(!this.isValid(value)){
             if (this.minValue!==undefined && parseInt(value) < this.minValue) {
                 value = this.minValue;

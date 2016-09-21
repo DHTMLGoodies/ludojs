@@ -326,6 +326,7 @@ ludo.form.Element = new Class({
     },
 
     focus:function () {
+
         this._focus = true;
         this.clearInvalid();
         /**
@@ -412,7 +413,7 @@ ludo.form.Element = new Class({
      * @return string
      */
     getValue:function () {
-        return this.els.formEl ? this.els.formEl.get('value') : this.value;
+        return this.els.formEl ? this.els.formEl.val() : this.value;
     },
     /**
      * Set new value

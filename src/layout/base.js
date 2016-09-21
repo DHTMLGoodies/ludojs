@@ -40,20 +40,21 @@ ludo.layout.Base = new Class({
         child = this.getValidChild(child);
 		child = this.getNewComponent(child);
 		var parentEl = this.getParentForNewChild();
+		parentEl = $(parentEl);
 		if (insertAt) {
 			var children = [];
 			for (var i = 0; i < this.view.children.length; i++) {
 				if (pos == 'after') {
 					children.push(this.view.children[i]);
-					parentEl.adopt(this.view.children[i].getEl());
+					parentEl.append(this.view.children[i].getEl());
 				}
 				if (this.view.children[i].getId() == insertAt.getId()) {
 					children.push(child);
-					parentEl.adopt(child.getEl());
+					parentEl.append(child.getEl());
 				}
 				if (pos == 'before') {
 					children.push(this.view.children[i]);
-					parentEl.adopt(this.view.children[i].getEl());
+					parentEl.append(this.view.children[i].getEl());
 				}
 			}
 			this.view.children = children;
@@ -80,7 +81,7 @@ ludo.layout.Base = new Class({
      * @protected
      */
 	getParentForNewChild:function(){
-		return this.view.els.body;
+		return $(this.view.els.body);
 	},
 
 	layoutProperties:['collapsible', 'collapsed'],

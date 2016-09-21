@@ -78,7 +78,7 @@ ludo.layout.Renderer = new Class({
 								el = val.getEl();
 								val.addEvent('resize', this.clearFn.bind(this));
 							} else {
-								el = document.id(val);
+								el = $(val);
 							}
 						}
 						if (el)this.view.layout[key] = el; else this.view.layout[key] = undefined;
@@ -127,6 +127,7 @@ ludo.layout.Renderer = new Class({
 
 	getFnFor:function (option, value) {
 		var c = this.coordinates;
+
 
 		switch (option) {
 
@@ -178,51 +179,52 @@ ludo.layout.Renderer = new Class({
                 }.bind(this);
 			case 'rightOf':
 				return function () {
-					c.left = value.getPosition().x + value.offsetWidth;
+					c.left = value.position().left + value.width();
 				};
 			case 'leftOf':
 				return function () {
-                    c.left = value.getPosition().x - c.width;
+                    c.left = value.position().left - c.width;
 				};
 			case 'leftOrRightOf':
 				return function () {
-					var x = value.getPosition().x - c.width;
+					var x = value.position().left - c.width;
 					if (x - c.width < 0) {
-						x += (value.offsetWidth + c.width);
+						x += (value.width() + c.width);
 					}
 					c.left = x;
 				};
 			case 'rightOrLeftOf' :
 				return function (view, renderer) {
-					var val = value.getPosition().x + value.offsetWidth;
+					var val = value.position().left + value.width();
 					if (val + c.width > renderer.viewport.width) {
-						val -= (value.offsetWidth + c.width);
+						val -= (value.width() + c.width);
 					}
 					c.left = val;
 				};
 			case 'above':
 				return function (view, renderer) {
-                    c.bottom = renderer.viewport.height - value.getPosition().y;
+                    c.bottom = renderer.viewport.height - value.position().top;
 				};
 			case 'below':
 				return function () {
-					c.top = value.getPosition().y + value.offsetHeight;
+					c.top = value.position().top + value.height();
 				};
 			case 'alignLeft':
 				return function () {
-					c.left = value.getPosition().x;
+					c.left = value.position().left;
 				};
 			case 'alignTop':
 				return function () {
-					c.top = value.getPosition().y;
+					c.top = value.position().top;
 				};
 			case 'alignRight':
 				return function () {
-					c.left = value.getPosition().x + value.offsetWidth - c.width;
+
+					c.left = value.position().left + value.width() - c.width;
 				};
 			case 'alignBottom':
 				return function () {
-					c.top = value.getPosition().y + value.offsetHeight - c.height;
+					c.top = value.position().top + value.height() - c.height;
 				};
 			case 'offsetX' :
 				return function () {
@@ -234,7 +236,7 @@ ludo.layout.Renderer = new Class({
 				};
 			case 'sameHeightAs':
 				return function () {
-					c.height = value.offsetHeight;
+					c.height = value.height();
 				};
 			case 'offsetWidth' :
 				return function () {
@@ -246,21 +248,21 @@ ludo.layout.Renderer = new Class({
 				};
 			case 'centerIn':
 				return function () {
-					var pos = value.getPosition();
-					c.top = (pos.y + value.offsetHeight) / 2 - (c.height / 2);
-					c.left = (pos.x + value.offsetWidth) / 2 - (c.width / 2);
+					var pos = value.position();
+					c.top = (pos.y + value.height()) / 2 - (c.height / 2);
+					c.left = (pos.x + value.width()) / 2 - (c.width / 2);
 				};
 			case 'centerHorizontalIn':
 				return function () {
-					c.left = (value.getPosition().x + value.offsetWidth) / 2 - (c.width / 2);
+					c.left = (value.position().left + value.width()) / 2 - (c.width / 2);
 				};
 			case 'centerVerticalIn':
 				return function () {
-					c.top = (value.getPosition().y + value.offsetHeight) / 2 - (c.height / 2);
+					c.top = (value.position().top + value.height()) / 2 - (c.height / 2);
 				};
 			case 'sameWidthAs':
 				return function () {
-					c.width = value.offsetWidth;
+					c.width = value.width();
 				};
 			case 'x':
 			case 'left':
@@ -275,7 +277,7 @@ ludo.layout.Renderer = new Class({
 			case 'fitVerticalViewPort':
 				return function (view, renderer) {
 					if (c.height) {
-						var pos = c.top !== undefined ? c.top : view.getEl().getPosition().y;
+						var pos = c.top !== undefined ? c.top : view.getEl().position().top;
 						if (pos + c.height > renderer.viewport.height - 2) {
 							c.top = renderer.viewport.height - c.height - 2;
 						}
@@ -364,7 +366,7 @@ ludo.layout.Renderer = new Class({
 		this.resize();
 	},
 
-	getPosition:function () {
+	position:function () {
 		return {
 			x:this.coordinates.left,
 			y:this.coordinates.top

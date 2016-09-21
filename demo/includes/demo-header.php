@@ -42,6 +42,7 @@ $skin = isset($skin) ? $skin : 'light-gray';
     <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/slide-in.js"></script>
     <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/fill.js"></script>
     <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/factory.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/popup.js"></script>
 
 
     <script type="text/javascript" src="<?php echo $prefix; ?>../src/effect/effect.js"></script>
@@ -69,6 +70,8 @@ $skin = isset($skin) ? $skin : 'light-gray';
     <script type="text/javascript" src="<?php echo $prefix; ?>../src/form/number.js"></script>
     <script type="text/javascript" src="<?php echo $prefix; ?>../src/form/spinner.js"></script>
     <script type="text/javascript" src="<?php echo $prefix; ?>../src/form/filter-text.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/form/email.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/form/password.js"></script>
 
     <script type="text/javascript" src="<?php echo $prefix; ?>../src/remote/base.js"></script>
     <script type="text/javascript" src="<?php echo $prefix; ?>../src/remote/json.js"></script>

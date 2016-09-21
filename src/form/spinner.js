@@ -221,15 +221,17 @@ ludo.form.Spinner = new Class({
         }
     },
     _arrowMode:function () {
+
         if (this.mode.name) {
-            switch (this.mode.modeElement) {
-                case this.els.upArrow:
+            switch (this.mode.mode) {
+                case "up":
                     this.incrementBy(1, this.mode.shiftKey);
                     break;
-                case this.els.downArrow:
+                case "down":
                     this.incrementBy(-1, this.mode.shiftKey);
                     break;
                 default:
+
             }
             this.mode.timeout = Math.max(Math.round(this.mode.timeout * 0.8), 15);
             setTimeout(this._arrowMode.bind(this), this.mode.timeout);
@@ -246,24 +248,27 @@ ludo.form.Spinner = new Class({
     },
     _arrowMouseDown:function (e) {
         ludo.dom.addClass(e.target, 'ludo-spinbox-arrow-downeffect');
+        var m = $(e.target).hasClass("ludo-spinbox-arrow-up") ? "up":"down";
         this._startMode({
             name:'mousedown',
+            mode: m,
             modeElement:e.target,
             shiftKey:e.shift,
             timeout:400
         });
     },
     _arrowMouseUp:function (e) {
-        e.target.removeClass('ludo-spinbox-arrow-downeffect');
+        $(e.target).removeClass('ludo-spinbox-arrow-downeffect');
     },
     _arrowMouseOver:function (e) {
-        ludo.dom.addClass(e.target, 'ludo-spinbox-arrow-overeffect');
+        $(e.target).addClass('ludo-spinbox-arrow-overeffect');
     },
     _arrowMouseOut:function (e) {
-        e.target.removeClass('ludo-spinbox-arrow-overeffect');
+        $(e.target).removeClass('ludo-spinbox-arrow-overeffect');
     },
     incrementBy:function (value, shiftKey) {
         value = value * (shiftKey ? this.shiftIncrement : this.increment);
+
         this.setSpinnerValue(parseInt(this.getValue()) + value);
     },
     validateSpinnerValue:function (value) {
@@ -274,7 +279,7 @@ ludo.form.Spinner = new Class({
     },
     setSpinnerValue:function (value) {
         this.value = this.validateSpinnerValue(value).toFixed(this.decimals);
-        this.getFormEl().value = this.value;
+        this.getFormEl().val(this.value);
         /**
          * Change event fired when value is changed
          * @event change

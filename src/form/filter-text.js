@@ -2,6 +2,7 @@
  * @namespace form
  * @class FilterText
  * @extends form.Text
+ * TODO this class is not working properly loading data from server. fix later
  */
 ludo.form.FilterText = new Class({
     Extends:ludo.form.Text,
@@ -219,10 +220,12 @@ ludo.form.FilterText = new Class({
     },
 
     autoHideFilter:function (e) {
-        if (e.target.id && e.target.id == this.getFormEl().id) {
+        var t = $(e.target);
+        var id = t.attr("id");
+        if (id && id == this.getFormEl().attr("id")) {
             return;
         }
-        if (e.target.hasClass('ludo-filter-text-options') || e.target.getParent('.ludo-filter-text-options')) {
+        if (t.hasClass('ludo-filter-text-options') || t.parent('.ludo-filter-text-options')) {
             return;
         }
         this.filterComponent.hide();
@@ -232,7 +235,7 @@ ludo.form.FilterText = new Class({
         if (e && e.key) {
             if (e.key == 'up' || e.key == 'down' || e.key == 'enter' || e.key == 'esc' || e.key == 'tab')return;
         }
-        this.getHiddenInput().set('value', this.getFormEl().value);
+        this.getHiddenInput().val(this.getFormEl().value);
         this.filterData(this.getFormEl().value);
     },
 
@@ -433,7 +436,7 @@ ludo.form.FilterText = new Class({
 
     resizeDOM:function () {
         this.parent();
-        this.els.inputContainer.style.width = this.getFormEl().style.width;
+        this.els.inputContainer.css('width', this.getFormEl().width());
     },
 
     populate:function (data) {
@@ -441,11 +444,6 @@ ludo.form.FilterText = new Class({
         for (var i = 0; i < data.length; i++) {
             this.data[i].searchString = this.data[i][this.displayField].toLowerCase();
         }
-    },
-
-    focus:function () {
-        this.parent();
-        this.getFormEl().focus();
     }
 });
 

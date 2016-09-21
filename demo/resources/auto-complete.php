@@ -218,7 +218,6 @@ if (isset($_POST['query'])) {
 }
 
 if (isset($_POST['getAllCountries'])) {
-    require_once("../../jsonwrapper/jsonwrapper.php");
     $data = array('success' => true, 'message' => '', 'data' => $countries);
     echo utf8_encode(json_encode($data));
 }

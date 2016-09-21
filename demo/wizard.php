@@ -54,7 +54,7 @@ require_once("includes/demo-header.php");
                                 filterOnServer:false,
                                 dataSource:{
                                     url:'resources/auto-complete.php',
-                                    query:{
+                                    postData:{
                                         'getAllCountries':1
                                     }
                                 }
