@@ -8,12 +8,12 @@ ludo.layout.SlideIn = new Class({
     slideEl:undefined,
 
     onCreate:function(){
-        this.view.getBody().style.overflowX = 'hidden';
+        this.view.getBody().css('overflowX', 'hidden');
     },
 
     onNewChild:function (child) {
         this.parent(child);
-        child.getEl().style.position = 'absolute';
+        child.getEl().css('position', 'absolute');
     },
 
     resize:function () {

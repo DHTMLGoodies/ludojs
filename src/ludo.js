@@ -39,7 +39,7 @@ ludo.CmpMgrClass = new Class({
     availableButtons:undefined,
 
     initialize:function () {
-        document.id(document.documentElement).addEvent('keypress', this.autoSubmit.bind(this));
+        $(document.documentElement).on('keypress', this.autoSubmit.bind(this));
     },
 
     autoSubmit:function (e) {

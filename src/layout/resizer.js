@@ -18,7 +18,7 @@ ludo.layout.Resizer = new Class({
 	},
 
 	createDOM:function(renderTo){
-		this.el = new Element('div');
+		this.el = $('<div>');
 		this.el.addEvent('mouseenter', this.enterResizer.bind(this));
 		this.el.addEvent('mouseleave', this.leaveResizer.bind(this));
 		ludo.dom.addClass(this.el, 'ludo-resize-handle');
@@ -139,7 +139,7 @@ ludo.layout.Resizer = new Class({
 
 	hide:function(){
 		this.hidden = true;
-		this.el.style.display = 'none';
+		this.el.css('display', 'none');
 	},
 
 	getWidth:function(){

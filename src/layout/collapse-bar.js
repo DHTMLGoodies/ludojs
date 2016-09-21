@@ -78,7 +78,7 @@ ludo.layout.CollapseBar = new Class({
 	},
 
 	addButton:function(view){
-		var button = this.buttons[view.id] = new Element('div');
+		var button = this.buttons[view.id] = $('<div>');
 		button.id = 'button-' + view.id;
 		button.addEvent('mouseenter', this.enterButton.bind(this));
 		button.addEvent('mouseleave', this.leaveButton.bind(this));

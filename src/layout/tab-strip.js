@@ -58,7 +58,7 @@ ludo.layout.TabStrip = new Class({
     },
 
     addCloseButton:function (node, child) {
-        var el = new Element('div');
+        var el = $('<div>');
         el.className = 'ludo-tab-close ludo-tab-close-' + this.tabPos;
         el.addEvent('mouseenter', this.enterCloseButton.bind(this));
         el.addEvent('mouseleave', this.leaveCloseButton.bind(this));
@@ -129,7 +129,7 @@ ludo.layout.TabStrip = new Class({
     },
 
     getPlainTabFor:function (child) {
-        var el = new Element('div');
+        var el = $('<div>');
         this.getBody().adopt(el);
         el.className = 'ludo-tab-strip-tab ludo-tab-strip-tab-' + this.tabPos;
         el.innerHTML = '<div class="ludo-tab-strip-tab-bg-first"></div><div class="ludo-tab-strip-tab-bg-last"></div>';
@@ -140,7 +140,7 @@ ludo.layout.TabStrip = new Class({
     },
 
     getSVGTabFor:function (child) {
-        var el = new Element('div');
+        var el = $('<div>');
         this.getBody().adopt(el);
         el.innerHTML = '<div class="ludo-tab-strip-tab-bg-first"></div><div class="ludo-tab-strip-tab-bg-last">';
         var svgEl = document.createElement('div');

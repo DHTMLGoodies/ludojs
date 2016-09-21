@@ -365,7 +365,7 @@ ludo.tree.Tree = new Class({
         };
 
         if (!this.els.nodes[id]) {
-            var el = this.els.nodes[id] = new Element('div');
+            var el = this.els.nodes[id] = $('<div>');
             el.className = 'ludo-tree-node';
 
             var nodeText = [];
@@ -399,10 +399,10 @@ ludo.tree.Tree = new Class({
             }
 
             if (record['leaf'] || !record.children || record.children.length == 0) {
-                this.els.expand[id].style.display = 'none';
+                this.els.expand[id].css('display', 'none');
             }
 
-            var container = this.els.childContainers[id] = new Element('div');
+            var container = this.els.childContainers[id] = $('<div>');
             container.className = 'ludo-tree-node-container';
             el.appendChild(container);
 
@@ -705,8 +705,8 @@ ludo.tree.Tree = new Class({
 
     getNewExpandDOMElement:function (record, id) {
         id = id || this.getUniqueRecordId(record);
-        var el = this.els.expand[id] = new Element('div');
-        el.style.position = 'absolute';
+        var el = this.els.expand[id] = $('<div>');
+        el.css('position', 'absolute');
         el.className = 'ludo-tree-node-expand';
         el.setProperty('record', id);
         return el;
@@ -830,14 +830,14 @@ ludo.tree.Tree = new Class({
     showHideExpandElement:function (record, id) {
         id = id || this.getUniqueRecordId(record);
         if (this.isRootNode(record)) {
-            this.els.expand[id].style.display = 'none';
+            this.els.expand[id].css('display', 'none');
             return;
         }
         if (this.shouldLoadChildrenRemotely(record)) {
             this.els.expand[id].style.display = '';
         }
         else if (record['leaf'] || !record.children || record.children.length == 0) {
-            this.els.expand[id].style.display = 'none';
+            this.els.expand[id].css('display', 'none');
         } else {
             this.els.expand[id].style.display = '';
         }
@@ -909,7 +909,7 @@ ludo.tree.Tree = new Class({
     hideNode:function (record) {
         var id = record.unique || this.getUniqueRecordId(record);
         if (this.hiddenNodes[id])return;
-        this.els.nodes[id].style.display = 'none';
+        this.els.nodes[id].css('display', 'none');
         this.hiddenNodes[id] = true;
     },
 

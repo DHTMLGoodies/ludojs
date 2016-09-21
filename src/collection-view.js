@@ -27,11 +27,11 @@ ludo.CollectionView = new Class({
 	},
 
 	hideEmptyText:function(){
-		this.emptyEl().style.display = 'none';
+		this.emptyEl().css('display', 'none');
 	},
 
 	showEmptyText:function(){
-		this.emptyEl().style.display = '';
+		this.emptyEl().css('display',  '');
 		this._emptyEl.innerHTML = this.getEmptyText();
 	},
 

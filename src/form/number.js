@@ -66,9 +66,9 @@ ludo.form.Number = new Class({
     ludoEvents:function () {
         this.parent();
         if (!this.disableWheel) {
-            this.getFormEl().addEvent('mousewheel', this._mouseWheel.bind(this));
+            this.getFormEl().on('mousewheel', this._mouseWheel.bind(this));
         }
-        this.getFormEl().addEvent('keydown', this.keyIncrement.bind(this));
+        this.getFormEl().on('keydown', this.keyIncrement.bind(this));
     },
 
     keyIncrement:function(e){

@@ -42,7 +42,7 @@ ludo.grid.ColumnMove = new Class({
 	},
 
 	hideMarker:function(){
-		this.getMarker().style.display='none';
+		this.getMarker().css('display', 'none');
 	},
 
 	showMarkerAt:function(cell, pos){

@@ -107,10 +107,10 @@ ludo.form.Text = new Class({
 		}
         this.addEvent('blur', this.validate.bind(this));
 		if (this.validateKeyStrokes) {
-			el.addEvent('keydown', this.validateKey.bind(this));
+			el.on('keydown', this.validateKey.bind(this));
 		}
-        ludo.dom.addClass(el.parentNode, 'ludo-form-text-element');
-		el.addEvent('keyup', this.sendKeyEvent.bind(this));
+		el.parent().addClass('ludo-form-text-element');
+		el.on('keyup', this.sendKeyEvent.bind(this));
 
         if (this.selectOnFocus) {
             el.addEvent('focus', this.selectText.bind(this));

@@ -34,7 +34,7 @@ ludo.grid.GridHeader = new Class({
 	},
 
 	createDOM:function () {
-		this.el = new Element('div');
+		this.el = $('<div>');
 		ludo.dom.addClass(this.el, 'ludo-header');
 		ludo.dom.addClass(this.el, 'testing');
 		this.el.inject(this.grid.getBody().getFirst(), 'before');
@@ -81,7 +81,7 @@ ludo.grid.GridHeader = new Class({
 		var hiddenColumns = this.columnManager.getHiddenColumns();
 		for (var i = 0; i < hiddenColumns.length; i++) {
 			if (this.cellExists(hiddenColumns[i])) {
-				this.cells[hiddenColumns[i]].style.display = 'none';
+				this.cells[hiddenColumns[i]].css('display', 'none');
 			}
 		}
 	},
@@ -92,7 +92,7 @@ ludo.grid.GridHeader = new Class({
 
 	measureCellHeight:function () {
 		if(this.grid.isHidden())return;
-		var el = new Element('div');
+		var el = $('<div>');
 		ludo.dom.addClass(el, 'ludo-grid-header-cell');
 		this.grid.getBody().adopt(el);
 		this.cellHeight = el.getSize().y + ludo.dom.getMH(el);
@@ -110,7 +110,7 @@ ludo.grid.GridHeader = new Class({
 		if (this.cells[col]) {
 			return this.cells[col];
 		}
-		var el = this.cells[col] = new Element('div');
+		var el = this.cells[col] = $('<div>');
 		el.setProperty('col', col);
 		ludo.dom.addClass(el, 'ludo-grid-header-cell');
 		ludo.dom.addClass(el, 'ludo-header-' + this.columnManager.getHeaderAlignmentOf(col));
@@ -155,10 +155,10 @@ ludo.grid.GridHeader = new Class({
 	cellBg:{},
 
 	createTopAndBottomBackgrounds:function (col) {
-		var top = new Element('div');
+		var top = $('<div>');
 		ludo.dom.addClass(top, 'ludo-grid-header-cell-top');
 		this.cells[col].adopt(top);
-		var bottom = new Element('div');
+		var bottom = $('<div>');
 		ludo.dom.addClass(bottom, 'ludo-grid-header-cell-bottom');
 		this.cells[col].adopt(bottom);
 		this.cellBg[col] = {
@@ -295,7 +295,7 @@ ludo.grid.GridHeader = new Class({
 	},
 
 	addDOMForDropTargets:function (parent, column) {
-		var left = new Element('div');
+		var left = $('<div>');
 		left.setStyles({
 			position:'absolute',
 			'z-index':15,
@@ -304,7 +304,7 @@ ludo.grid.GridHeader = new Class({
 		});
 
 		parent.adopt(left);
-		var right = new Element('div');
+		var right = $('<div>');
 		right.setStyles({
 			position:'absolute',
 			'z-index':15,

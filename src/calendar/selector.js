@@ -33,7 +33,7 @@ ludo.calendar.Selector = new Class({
     },
 
     createOptionsContainer:function () {
-        var el = this.els.calendarContainer = new Element('div');
+        var el = this.els.calendarContainer = $('<div>');
         el.addClass(this.calCls);
         el.setStyles({
             position:'absolute', width:'3000px', left:0, top:0
@@ -62,7 +62,7 @@ ludo.calendar.Selector = new Class({
     },
 
     centerDom:function (domEl) {
-        domEl.getParent().style.marginLeft = this.getCenterPos(domEl) + 'px';
+        domEl.getParent().css('marginLeft',  this.getCenterPos(domEl) + 'px');
     },
 
     animateDomToCenter:function (domEl) {

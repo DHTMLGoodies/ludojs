@@ -2,6 +2,10 @@ ludo.util = {
 
 	types:{},
 
+	isIe:function(){
+		return navigator.appName == 'Microsoft Internet Explorer';
+	},
+
 	isArray:function (obj) {
 		return  ludo.util.type(obj) == 'array';
 	},
@@ -53,7 +57,7 @@ ludo.util = {
 	},
 
 	isAndroid:function () {
-		return Browser.Platform['android'] ? true : false;
+		return navigator.platform.indexOf('android') >= 0;
 	},
 
 	cancelEvent:function () {

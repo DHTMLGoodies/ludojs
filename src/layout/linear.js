@@ -8,7 +8,7 @@ ludo.layout.Linear = new Class({
 
     onCreate:function(){
         // TODO refactor this.
-        this.view.getBody().style.overflow='hidden';
+        this.view.getBody().css('overflow', 'hidden');
         this.parent();
     },
 

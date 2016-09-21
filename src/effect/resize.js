@@ -119,16 +119,16 @@ ludo.effect.Resize = new Class({
     },
 
     setDisplayPropertyOfEl:function () {
-        var display = this.getEl().getStyle('display');
+        var display = this.getEl().css('display');
         if (display !== 'absolute' && display !== 'relative') {
 			if(Browser['ie'] && Browser.version < 9)return;
-            this.getEl().style.display = 'relative';
+            this.getEl().css('display', 'relative');
         }
     },
 
     addDragEvents:function () {
-        document.body.addEvent(ludo.util.getDragEndEvent(), this.stopResize.bind(this));
-        document.body.addEvent(ludo.util.getDragMoveEvent(), this.resize.bind(this));
+        $(document.body).on(ludo.util.getDragEndEvent(), this.stopResize.bind(this));
+        $(document.body).on(ludo.util.getDragMoveEvent(), this.resize.bind(this));
     },
 
     /**
@@ -146,19 +146,19 @@ ludo.effect.Resize = new Class({
      */
 
     addHandle:function (region, cssClass) {
-        var el = this.els.handle[region] = new Element('div');
+        var el = this.els.handle[region] = $('<div>');
         ludo.dom.addClass(el, 'ludo-component-resize-el');
         el.addClass(this.getCssFor(region));
         if (cssClass)el.addClass(cssClass);
-        el.set('html', '<span></span>');
-        el.style.cursor = region + '-resize';
-        el.setProperty('region', region);
-        el.addEvent(ludo.util.getDragStartEvent(), this.startResize.bind(this));
-        this.els.applyTo.adopt(el);
+        el.html('<span></span>');
+        el.css('cursor', region + '-resize');
+        el.attr('region', region);
+        el.on(ludo.util.getDragStartEvent(), this.startResize.bind(this));
+        this.els.applyTo.append(el)
     },
 
     startResize:function (e) {
-        var region = e.target.getProperty('region');
+        var region = $(e.target).attr('region');
         /**
          * Fired when starting resize
          * @event start
@@ -171,8 +171,8 @@ ludo.effect.Resize = new Class({
         this.dragProperties = {
             active:true,
             region:region,
-            start:{ x:e.page.x, y:e.page.y },
-            current:{x:e.page.x, y:e.page.y },
+            start:{ x:e.pageX, y:e.pageY },
+            current:{x:e.pageX, y:e.pageY },
             el:this.getShimCoordinates(),
             minWidth:this.minWidth,
             maxWidth:this.maxWidth,
@@ -213,7 +213,7 @@ ludo.effect.Resize = new Class({
         if (this.maxHeight !== undefined)maxWidth = this.maxHeight * ratio;
         if (this.minHeight !== undefined)minWidth = this.minHeight * ratio;
 
-        var coords = this.getEl().getPosition();
+        var coords = this.getEl().position();
         var absMaxWidth = this.getBodyWidth() - coords.x;
         var absMaxHeight = this.getBodyHeight() - coords.y;
 
@@ -279,11 +279,11 @@ ludo.effect.Resize = new Class({
     },
 
     setBodyCursor:function () {
-        document.body.style.cursor = this.dragProperties.region + '-resize';
+        $(document.body).css('cursor', this.dragProperties.region + '-resize');
     },
 
     revertBodyCursor:function () {
-        document.body.style.cursor = 'default';
+        $(document.body).css('cursor', 'default');
     },
 
     resize:function (e) {
@@ -298,15 +298,15 @@ ludo.effect.Resize = new Class({
             this.fireEvent('resize', coordinates);
 
             if (this.useShim) {
-                this.els.shim.setStyles(coordinates);
+                this.els.shim.css(coordinates);
             } else {
-                this.getEl().setStyles(coordinates);
+                this.getEl().css(coordinates);
             }
         }
     },
 
     getCurrentCoordinates:function (e) {
-        var ret = {x:e.page.x, y:e.page.y };
+        var ret = {x:e.pageX, y:e.pageY };
         var d = this.dragProperties;
         if(d.preserveAspectRatio && d.region.length === 2)return ret;
         if (d.minX !== undefined && ret.x < d.minX)ret.x = d.minX;
@@ -472,7 +472,7 @@ ludo.effect.Resize = new Class({
     showShim:function () {
         var shim = this.getShim();
         var coords = this.getShimCoordinates();
-        shim.setStyles({
+        shim.css({
             display:'',
             left:coords.left,
             top:coords.top,
@@ -482,11 +482,15 @@ ludo.effect.Resize = new Class({
     },
 
     hideShim:function () {
-        this.getShim().style.display = 'none';
+        this.getShim().css('display', 'none');
     },
 
     getShimCoordinates:function () {
-        var coords = this.getEl().getCoordinates();
+        var el = this.getEl();
+        var coords = el.position();
+        coords.width = el.width();
+        coords.height = el.height();
+
         if (this.useShim) {
             var shim = this.getShim();
             coords.width -= ludo.dom.getBW(shim);
@@ -497,13 +501,13 @@ ludo.effect.Resize = new Class({
 
     getShim:function () {
         if (!this.els.shim) {
-            var el = this.els.shim = new Element('div');
+            var el = this.els.shim = $('<div>');
             ludo.dom.addClass(el, 'ludo-shim-resize');
-            el.setStyles({
+            el.css({
                 position:'absolute',
                 'z-index':50000
             });
-            document.body.adopt(el);
+            $(document.body).append(el);
         }
 
         return this.els.shim;
@@ -522,14 +526,14 @@ ludo.effect.Resize = new Class({
     setHandleDisplay:function (display) {
         for (var key in this.els.handle) {
             if (this.els.handle.hasOwnProperty(key)) {
-                this.els.handle[key].style.display = display;
+                this.els.handle[key].css('display', display);
             }
         }
     },
 
     getAspectRatio:function () {
         if (this.aspectRatio === undefined) {
-            var size = this.getEl().getSize();
+            var size = ludo.dom.size(this.getEl());
             this.aspectRatio = size.x / size.y;
         }
         return this.aspectRatio;
@@ -543,7 +547,7 @@ ludo.effect.Resize = new Class({
     },
 
     getScalingFactors:function () {
-        var size = this.getEl().getSize();
+        var size = ludo.dom.size(this.getEl());
         return {
             xFactor:size.x / size.y,
             yFactor:size.y / size.x,

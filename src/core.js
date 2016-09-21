@@ -199,7 +199,7 @@ ludo.Core = new Class({
 	},
 
 	getEventEl:function () {
-        return Browser['ie'] ? document.id(document.documentElement) : document.id(window);
+        return Browser['ie'] ? $(document.documentElement) : $(window);
 	},
 
 	isConfigObject:function (obj) {

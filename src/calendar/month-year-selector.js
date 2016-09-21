@@ -35,7 +35,7 @@ ludo.calendar.MonthYearSelector = new Class({
     getDomForAMonth:function (monthFromCurrent) {
         var d = this.date.clone().increment('month', monthFromCurrent);
         var txt = this.months[d.get('month')];
-        var el = new Element('div');
+        var el = $('<div>');
 
         el.setProperties({
             'year' : d.get('year'), 'month' : d.get('month')

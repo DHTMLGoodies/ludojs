@@ -118,7 +118,7 @@ ludo.color.RGBSlider = new Class({
         for (var i = 0; i < items.length; i++) {
             color = color + this.prefixed(parseInt(this.child[items[i]].getValue()).toString(16));
         }
-        this.child['preview'].getBody().style.backgroundColor = color;
+        this.child['preview'].getBody().css('backgroundColor',  color);
         this.child['preview'].child['colorValue'].setColor(color);
 
     },

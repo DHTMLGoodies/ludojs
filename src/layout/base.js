@@ -27,7 +27,7 @@ ludo.layout.Base = new Class({
 			this.addCollapseBars();
 		}
 	},
-    /**
+    /**f
     * Method executed when adding new child view to a layout
      * @method addChild
      * @param {ludo.View} child
@@ -60,7 +60,7 @@ ludo.layout.Base = new Class({
 		} else {
 			this.view.children.push(child);
             var el = child.getEl();
-            parentEl.appendChild(el);
+            parentEl.append(el);
 		}
 
 		this.onNewChild(child);

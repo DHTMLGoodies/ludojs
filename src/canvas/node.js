@@ -63,7 +63,7 @@ ludo.canvas.Node = new Class({
 			el = document.createElementNS("http://www.w3.org/2000/svg", el);
 		}
 		this.el = el;
-		el.style && (el.style.webkitTapHighlightColor = "rgba(0,0,0,0)");
+		el.style && (el.css('webkitTapHighlightColor',  "rgba(0,0,0,0)"));
 		return el;
 	},
 

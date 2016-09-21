@@ -21,7 +21,7 @@ ludo.layout.Popup = new Class({
 		if (!child.isHidden()) {
 			this.setVisibleChild(child);
 		}
-		child.getEl().style.position = 'absolute';
+		child.getEl().css('position', 'absolute');
 		child.addEvent('show', this.setVisibleChild.bind(this));
 		this.parent(child);
 	},

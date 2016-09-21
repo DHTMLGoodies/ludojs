@@ -22,37 +22,37 @@ ludo.video.Video = new Class({
 
 	setContent:function () {
 		var el = this.els.body;
-		var obj = new Element('object');
-		obj.setProperties({
+		var obj = $('<object>');
+		obj.attr({
 			'width':'100%',
 			'height':'100%'
 		});
-		el.adopt(obj);
+		el.append(obj);
 
-		var param = new Element('param');
-		param.setProperties({
+		var param = $('<param>');
+		param.attr({
 			'name':'movie',
 			'value':this.getUrl()
 		});
-		obj.adopt(param);
+		obj.append(param);
 
-		var param2 = new Element('param');
-		param2.setProperties({
+		var param2 = $('<param>');
+		param2.attr({
 			'name':'wmode',
 			'value':'transparent'
 		});
-		obj.adopt(param2);
+		obj.append(param2);
 
-		var embed = this.els.embed = new Element('embed');
-		embed.setProperties({
+		var embed = this.els.embed = $('<embed>');
+		embed.attr({
 			'src':this.getVideoUrl(),
 			'type':'application/x-shockwave-flash',
 			'wmode':'transparent',
 			'width':'100%',
 			'height':'100%'
 		});
-		obj.adopt(embed);
-		el.setStyle('overflow', 'hidden');
+		obj.append(embed);
+		el.css('overflow', 'hidden');
 		return el;
 	},
 	/**
@@ -63,6 +63,6 @@ ludo.video.Video = new Class({
 	 */
 	loadMovie:function (movieId) {
 		this.movieId = movieId;
-		this.els.embed.setProperty('src', this.getVideoUrl());
+		this.els.embed.attr('src', this.getVideoUrl());
 	}
 });

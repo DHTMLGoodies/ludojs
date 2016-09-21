@@ -151,7 +151,7 @@ ludo.Notification = new Class({
 	},
 
 	onHideComplete:function () {
-		this.getEl().style.display = 'none';
+		this.getEl().css('display', 'none');
 		this.fireEvent('hide', this);
 	}
 });

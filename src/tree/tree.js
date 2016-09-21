@@ -105,7 +105,7 @@ ludo.tree.Tree = new Class({
 
 	ludoDOM:function () {
 		this.parent();
-		this.getBody().style.overflowY = 'auto';
+		this.getBody().css('overflowY', 'auto');
         this.getBody().addEvents({
             'click' : this.onClick.bind(this),
             'dblclick' : this.onDblClick.bind(this)
@@ -170,7 +170,7 @@ ludo.tree.Tree = new Class({
 	collapse:function (record, el) {
 		el = this.getExpandEl(record);
 		ludo.dom.removeClass(el, 'ludo-tree-node-collapse');
-		this.getCachedNode(record, 'children', 'child-container-').style.display = 'none';
+		this.getCachedNode(record, 'children', 'child-container-').css('display', 'none');
 	},
 
 	getExpandEl:function (record) {
@@ -183,7 +183,7 @@ ludo.tree.Tree = new Class({
 
 	hideRecord:function (record) {
         if(this.isRecordRendered(record)){
-            this.getCachedNode(record, 'node', '').style.display = 'none';
+            this.getCachedNode(record, 'node', '').css('display', 'none');
         }
 	},
 

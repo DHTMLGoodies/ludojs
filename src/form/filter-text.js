@@ -96,12 +96,12 @@ ludo.form.FilterText = new Class({
 
         var size = ludo.dom.getNumericStyle(this.els.formEl, 'width') + ludo.dom.getPW(this.els.formEl) + ludo.dom.getBW(this.els.formEl) + ludo.dom.getMW(this.els.formEl);
 
-        var container = this.els.inputContainer = new Element('div');
-        cell.adopt(container);
-        container.adopt(this.els.formEl);
+        var container = this.els.inputContainer = $('<div>');
+        cell.append(container);
+        container.append(this.els.formEl);
         ludo.dom.addClass(container, 'ludo-form-text-autocomplete-container');
         if (!isNaN(size)) {
-            container.setStyles({
+            container.css({
                 'width':size
             });
         }
@@ -110,23 +110,23 @@ ludo.form.FilterText = new Class({
         this.createHiddenInput();
 
         this.getFormEl().addClass('ludo-form-text-autocomplete');
-        this.getFormEl().setProperty('autocomplete', 'off');
+        this.getFormEl().attr('autocomplete', 'off');
 
-        this.getFormEl().setStyles({
+        this.getFormEl().css({
             'background-color':'transparent',
             'z-index':100
         });
 
-        var el = this.els.autoComplete = new Element('input');
+        var el = this.els.autoComplete = $('<input>');
         ludo.dom.addClass(el, 'ludo-form-text-autocomplete');
         el.disabled = true;
-        el.style.zIndex = 99;
-        el.style.color = 'silver';
-        el.style.cursor = 'none';
-        this.els.inputContainer.adopt(el);
+        el.css('zIndex', 99);
+        el.css('color', 'silver');
+        el.css('cursor', 'none');
+        this.els.inputContainer.append(el);
 
-        this.els.formElDiv = new Element('div');
-        this.els.hiddenEl = new Element('div');
+        this.els.formElDiv = $('<div>');
+        this.els.hiddenEl = $('<div>');
         this.setRecord(this.getEmptyItem());
     },
 
@@ -138,10 +138,9 @@ ludo.form.FilterText = new Class({
     },
 
     createHiddenInput:function () {
-        var hiddenInput = this.els.hiddenInput = new Element('input');
-        hiddenInput.type = 'hidden';
-        hiddenInput.value = this.value;
-        this.getEl().adopt(hiddenInput);
+        var hiddenInput = this.els.hiddenInput = $('<input type="hidden">');
+        hiddenInput.val(this.value);
+        this.getEl().append(hiddenInput);
     },
 
     getHiddenInput:function () {
@@ -169,19 +168,19 @@ ludo.form.FilterText = new Class({
     },
 
     createFilterComponent:function () {
-        this.getFormEl().addEvent('keyup', this.filter.bind(this));
-        this.getFormEl().addEvent('keydown', this.filterKeyEvents.bind(this));
-        this.getFormEl().addEvent('focus', this.hideFilter.bind(this));
+        this.getFormEl().on('keyup', this.filter.bind(this));
+        this.getFormEl().on('keydown', this.filterKeyEvents.bind(this));
+        this.getFormEl().on('focus', this.hideFilter.bind(this));
 
-        this.getEventEl().addEvent('mousedown', this.autoHideFilter.bind(this));
-        this.getFormEl().addEvent('blur', this.chooseSelectedRecord.bind(this));
+        this.getEventEl().on('mousedown', this.autoHideFilter.bind(this));
+        this.getFormEl().on('blur', this.chooseSelectedRecord.bind(this));
         if (this.getParent()) {
             this.getParent().addEvent('startmove', this.hideFilter.bind(this));
         }
 
         this.filterComponent = new ludo.form.TextFilterContainer({
             formComponent:this,
-            width:this.getFormEl().getSize().x,
+            width:this.getFormEl().width(),
             height:300,
             maxDisplayed:this.maxDisplayed
         });
@@ -301,10 +300,10 @@ ludo.form.FilterText = new Class({
             if (this.isEmptyRecord(record)) {
                 realValue = '';
             }
-            this.getFormEl().set('value', realValue);
+            this.getFormEl().val(realValue);
 
-            this.els.autoComplete.set('value', record[this.displayField]);
-            this.getHiddenInput().set('value', record[this.idField]);
+            this.els.autoComplete.val(record[this.displayField]);
+            this.getHiddenInput().val(record[this.idField]);
         }
     },
 
@@ -485,7 +484,7 @@ ludo.form.TextFilterContainer = new Class({
             height:this.layout.height
         });
 
-        this.getBody().setStyle('overflow', 'hidden');
+        this.getBody().css('overflow', 'hidden');
         this.getBody().addClass('ludo-filter-text-options');
     },
 
@@ -515,11 +514,11 @@ ludo.form.TextFilterContainer = new Class({
         var len = Math.min(records.length, this.maxDisplayed);
 
         for (var i = 0; i < len; i++) {
-            var div = this.els.recordNodes[i] = new Element('div');
-            div.setProperty('recordIndex', i);
+            var div = this.els.recordNodes[i] = $('<div>');
+            div.attr('recordIndex', i);
             div.className = 'ludo-form-autocomplete-suggestion';
             div.set('html', records[i][this.formComponent.displayField]);
-            this.getBody().adopt(div);
+            this.getBody().append(div);
             div.addEvent('click', this.setRecord.bind(this));
             div.addEvent('mouseenter', this.mouseEnterRecord.bind(this));
             div.addEvent('mouseleave', this.mouseLeaveRecord.bind(this));

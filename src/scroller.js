@@ -33,7 +33,7 @@ ludo.Scroller = new Class({
     },
 
     determineMouseWheelSize:function (cls) {
-        var el = new Element('div');
+        var el = $('<div>');
         el.addClass(cls);
         el.setStyle('visibility', 'hidden');
         document.body.adopt(el);
@@ -45,7 +45,7 @@ ludo.Scroller = new Class({
     },
 
     createElements:function () {
-        this.els.el = new Element('div');
+        this.els.el = $('<div>');
         ludo.dom.addClass(this.els.el, 'ludo-scroller');
         ludo.dom.addClass(this.els.el, 'ludo-scroller-' + this.type);
         this.els.el.setStyles({
@@ -74,7 +74,7 @@ ludo.Scroller = new Class({
 
         this.els.el.addEvent('scroll', this.performScroll.bind(this));
 
-        this.els.elInner = new Element('div');
+        this.els.elInner = $('<div>');
         this.els.elInner.setStyle('position', 'relative');
         this.els.elInner.set('html', '&nbsp;');
 
@@ -205,6 +205,6 @@ ludo.Scroller = new Class({
     hide:function () {
         this.active = false;
         this.scrollTo(0);
-        this.els.el.style.display='none';
+        this.els.el.css('display', 'none');
     }
 });

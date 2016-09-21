@@ -18,8 +18,9 @@ ludo.form.Textarea = new Class({
 
     ludoRendered:function(){
         this.parent();
-        this.els.formEl.style.paddingRight = 0;
-        this.els.formEl.style.paddingTop = 0;
+        this.els.formEl.css({
+            paddingRight:0,paddingTop:0
+        });
     },
     resizeDOM:function () {
         this.parent();

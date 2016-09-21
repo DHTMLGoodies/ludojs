@@ -42,7 +42,7 @@ ludo.form.LabelElement = new Class({
 
     ludoDOM:function () {
         this.parent();
-        this.getBody().set('html', this.fieldTpl.join(''));
+        this.getBody().html(this.fieldTpl.join(''));
         this.addInput();
         this.addLabel();
         this.setWidthOfLabel();
@@ -90,14 +90,14 @@ ludo.form.LabelElement = new Class({
     },
 
     getValueOfFormEl:function () {
-        var val = this.getFormEl().get('value');
+        var val = this.getFormEl().val();
         return this.inlineLabel && this.inlineLabel === val ? '' : val;
     },
 
     addLabel:function () {
         if (this.label !== undefined) {
-			this.getLabelDOM().set('html', this.label ?  this.label + this.labelSuffix : '');
-            this.els.label.setProperty('for', this.getFormElId());
+			this.getLabelDOM().html(this.label ?  this.label + this.labelSuffix : '');
+            this.els.label.attr('for', this.getFormElId());
         }
         if (this.suffix) {
             var s = this.getSuffixCell();
@@ -105,16 +105,16 @@ ludo.form.LabelElement = new Class({
             var label = s.getElement('label');
             if (label) {
                 label.set('html', this.suffix);
-                label.setProperty('for', this.getFormElId());
+                label.attr('for', this.getFormElId());
             }
         }
     },
 
     setWidthOfLabel:function () {
         if(this.label === undefined){
-            this.getLabelDOM().style.display = 'none';
+            this.getLabelDOM().css('display', 'none');
         }else{
-            this.getLabelDOM().parentNode.style.width = this.labelWidth + 'px';
+            this.getLabelDOM().parent().css('width', this.labelWidth);
         }
     },
 
@@ -126,21 +126,21 @@ ludo.form.LabelElement = new Class({
         if (!this.inputTag) {
             return;
         }
-        this.els.formEl = new Element(this.inputTag);
+        this.els.formEl =$('<' + this.inputTag + '>');
 
         if (this.inputType) {
-            this.els.formEl.setProperty('type', this.inputType);
+            this.els.formEl.attr('type', this.inputType);
         }
         if (this.maxLength) {
-            this.els.formEl.setProperty('maxlength', this.maxLength);
+            this.els.formEl.attr('maxlength', this.maxLength);
         }
         if (this.readonly) {
-            this.els.formEl.setProperty('readonly', true);
+            this.els.formEl.attr('readonly', true);
         }
-        this.getInputCell().adopt(this.els.formEl);
+        this.getInputCell().append(this.els.formEl);
         if (this.fieldWidth) {
-            this.els.formEl.style.width = this.fieldWidth + 'px';
-            this.getInputCell().parentNode.style.width = (this.fieldWidth + ludo.dom.getMBPW(this.els.formEl)) + 'px';
+            this.els.formEl.css('width', this.fieldWidth);
+            this.getInputCell().parent().css('width', (this.fieldWidth + ludo.dom.getMBPW(this.els.formEl)));
         }
         this.els.formEl.id = this.getFormElId();
     },
@@ -159,7 +159,7 @@ ludo.form.LabelElement = new Class({
 
     getCell:function (selector, cacheKey) {
         if (!this.els[cacheKey]) {
-            this.els[cacheKey] = this.getBody().getElement(selector);
+            this.els[cacheKey] = this.getBody().find(selector + ":first");
         }
         return this.els[cacheKey];
     },
@@ -186,7 +186,7 @@ ludo.form.LabelElement = new Class({
             if(this.inputTag !== 'select') width -= 5;
             if (width > 0 && !isNaN(width)) {
                 this.formFieldWidth = width;
-                this.getFormEl().style.width = width + 'px';
+                this.getFormEl().css('width', width);
             }
         }
     }

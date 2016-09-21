@@ -14,7 +14,7 @@ ludo.effect.DraggableNode = new Class({
 	 @optional
 	 @example
 	 	var dragDrop = new ludo.effect.Drag();
-	 	var el = new Element('div');
+	 	var el = $('<div>');
 	 	dragDrop.add({
 	 		id: 'myId',
 			el : el
@@ -23,7 +23,7 @@ ludo.effect.DraggableNode = new Class({
 	 Or you can use this code which does the same:
 	 @example
 	 	var dragDrop = new ludo.effect.Drag();
-	 	var el = new Element('div');
+	 	var el = $('<div>');
 	 	el.id = 'myId';
 	 	dragDrop.add(el);
 	 	var ref = dragDrop.getById('myId');

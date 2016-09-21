@@ -8,7 +8,7 @@ ludo.color.Boxes = new Class({
 
     ludoDOM:function(){
         this.parent();
-        this.getBody().style.overflowY = 'auto';
+        this.getBody().css('overflowY', 'auto');
     },
 
     ludoEvents:function(){

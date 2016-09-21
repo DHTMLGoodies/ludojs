@@ -89,12 +89,12 @@ ludo.form.Slider = new Class({
     addInput:function () {
         this.parent();
 
-        var el = this.els.slider = new Element('div');
+        var el = this.els.slider = $('<div>');
         this.els.slider.addEvent('click', this.sliderClick.bind(this));
 
         ludo.dom.addClass(el, 'ludo-form-slider-container');
         ludo.dom.addClass(el, 'ludo-form-slider-' + this.getDirection());
-        this.getInputCell().adopt(el);
+        this.getInputCell().append(el);
 
         this.addSliderBg('first');
         this.addSliderBg('last');

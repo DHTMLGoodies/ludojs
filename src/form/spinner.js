@@ -56,7 +56,7 @@ ludo.form.Spinner = new Class({
         if (!this.fieldWidth) {
             this.getFormEl().setStyle('width', (this.maxValue + '').length * 15);
         }
-        this._setStyles();
+        this._css();
         this._createEvents();
         this._clearMode();
         this.setSpinnerValue(this.value);
@@ -66,7 +66,7 @@ ludo.form.Spinner = new Class({
     createSpinnerElements:function () {
         this.createSpinnerContainer();
         var input = this.getFormEl();
-        input.setProperty('maxlength', (this.maxValue + '').length);
+        input.attr('maxlength', (this.maxValue + '').length);
         ludo.dom.addClass(input, 'ludo-spinbox-input');
 
         var p = this.els.spinnerContainer;
@@ -98,8 +98,8 @@ ludo.form.Spinner = new Class({
     },
 
     createSpinnerContainer:function () {
-        var el = this.els.spinnerContainer = ludo.dom.create({ renderTo:this.getFormEl().getParent(), cls:'ludo-spinbox-container'});
-        el.adopt(this.getFormEl());
+        var el = this.els.spinnerContainer = ludo.dom.create({ renderTo:this.getFormEl().parent(), cls:'ludo-spinbox-container'});
+        el.append(this.getFormEl());
     },
 
     _createContainer:function (config) {
@@ -108,46 +108,46 @@ ludo.form.Spinner = new Class({
             cls:''
         }, config);
 
-        var el = new Element(config.tag);
+        var el = $('<' + config.tag + '>');
         el.addClass(config.cls);
 
         if (config.renderTo) {
-            config.renderTo.adopt(el);
+            config.renderTo.append(el);
         }
         return el;
     },
 
-    _setStyles:function () {
-        this.els.spinnerContainer.style.position = 'relative';
-        this.getFormEl().setStyles({
+    _css:function () {
+        this.els.spinnerContainer.css('position', 'relative');
+        this.getFormEl().css({
             border:'0px'
         });
-        this.els.arrowsContainer.setStyles({
+        this.els.arrowsContainer.css({
             position:'absolute',
             top:'0px',
             height:'100%',
             right:'0px'
         });
-        this.els.upArrow.setStyles({
+        this.els.upArrow.css({
             'position':'absolute',
             'background-repeat':'no-repeat',
             'background-position':'center center',
             'height':' 50%',
             'top':'0px'
         });
-        this.els.downArrow.setStyles({
+        this.els.downArrow.css({
             'position':'absolute',
             'background-repeat':'no-repeat',
             'background-position':'center center',
             'height':'50%',
             'bottom':'0px'
         });
-        this.els.arrowSeparator.setStyles({
+        this.els.arrowSeparator.css({
             'position':'absolute',
             'top':'50%'
         });
 
-        this.els.spinnerContainer.style.width = this.fieldWidth + 'px';
+        this.els.spinnerContainer.css('width', this.fieldWidth);
     },
     _initNudge:function (e) {
         this._startMode({
@@ -183,41 +183,41 @@ ludo.form.Spinner = new Class({
         }
     },
     _setContainerSize:function () {
-        var width = this.getFormEl().getSize().x;
+        var width = this.getFormEl().width();
         if (!width)return;
 
         if (this.stretchField) {
             width -= 11;
         }
         width++;
-        this.els.spinnerContainer.style.width = width + 'px';
+        this.els.spinnerContainer.width(width);
     },
     _createEvents:function () {
         if (!this.disableWheel) {
-            this.getFormEl().addEvent('mousewheel', this._mouseWheel.bind(this));
+            this.getFormEl().on('mousewheel', this._mouseWheel.bind(this));
         }
-        this.getFormEl().addEvent('keydown', this._validateKeyStroke.bind(this));
-        this.els.upArrow.addEvent('mouseover', this._arrowMouseOver.bind(this));
-        this.els.upArrow.addEvent('mouseout', this._arrowMouseOut.bind(this));
-        this.els.upArrow.addEvent('mousedown', this._arrowMouseDown.bind(this));
-        this.els.upArrow.addEvent('mouseup', this._arrowMouseUp.bind(this));
+        this.getFormEl().on('keydown', this._validateKeyStroke.bind(this));
+        this.els.upArrow.on('mouseover', this._arrowMouseOver.bind(this));
+        this.els.upArrow.on('mouseout', this._arrowMouseOut.bind(this));
+        this.els.upArrow.on('mousedown', this._arrowMouseDown.bind(this));
+        this.els.upArrow.on('mouseup', this._arrowMouseUp.bind(this));
 
-        this.els.downArrow.addEvent('mouseover', this._arrowMouseOver.bind(this));
-        this.els.downArrow.addEvent('mouseout', this._arrowMouseOut.bind(this));
-        this.els.downArrow.addEvent('mousedown', this._arrowMouseDown.bind(this));
-        this.els.downArrow.addEvent('mouseup', this._arrowMouseUp.bind(this));
+        this.els.downArrow.on('mouseover', this._arrowMouseOver.bind(this));
+        this.els.downArrow.on('mouseout', this._arrowMouseOut.bind(this));
+        this.els.downArrow.on('mousedown', this._arrowMouseDown.bind(this));
+        this.els.downArrow.on('mouseup', this._arrowMouseUp.bind(this));
 
-        Window.getDocument().addEvent('mouseup', this._clearMode.bind(this));
+        $(document.documentElement).on('mouseup', this._clearMode.bind(this));
 
         if (this.els.label) {
-            this.els.label.setStyle('cursor', 'w-resize');
-            document.id(this.els.label).addEvents({
+            this.els.label.css('cursor', 'w-resize');
+            $(this.els.label).on({
                 'mousedown':this._initNudge.bind(this),
                 'selectstart':function () {
                     return false;
                 }
             });
-            Window.getDocument().addEvent('mousemove', this._nudge.bind(this));
+            $(document.documentElement).on('mousemove', this._nudge.bind(this));
         }
     },
     _arrowMode:function () {

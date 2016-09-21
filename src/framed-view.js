@@ -165,7 +165,7 @@ ludo.FramedView = new Class({
 		ludo.dom.addClass(this.els.container, 'ludo-framed-view');
 
 		if(this.hasTitleBar()){
-			this.getTitleBar().getEl().inject(this.getBody(), 'before');
+			this.getTitleBar().getEl().insertBefore(this.getBody());
 		}
 		ludo.dom.addClass(this.getBody(), 'ludo-framed-view-body');
 
@@ -228,7 +228,7 @@ ludo.FramedView = new Class({
 		var height = this.getHeight();
 		height -= (ludo.dom.getMBPH(this.els.container) + ludo.dom.getMBPH(this.els.body) +  this.getHeightOfTitleAndButtonBar());
         if(height >= 0){
-            this.els.body.style.height = height + 'px';
+            this.els.body.css('height', height);
             this.cachedInnerHeight = height;
 
             if (this.buttonBarComponent) {
@@ -248,7 +248,7 @@ ludo.FramedView = new Class({
 
 	getHeightOfButtonBar:function () {
 		if (!this.buttonBar)return 0;
-        return this.els.buttonBar.el.offsetHeight + ludo.dom.getMH(this.els.buttonBar.el);
+        return this.els.buttonBar.el.outerHeight();
 	},
 
 	getHeightOfTitleBar:function () {
@@ -284,7 +284,7 @@ ludo.FramedView = new Class({
 						end:this.stopMove.bind(this)
 					}
 				}));
-				this.titleBarObj.getEl().style.cursor = 'move';
+				this.titleBarObj.getEl().css('cursor', 'move');
 			}
 		}
 		return this.titleBarObj;
@@ -314,7 +314,7 @@ ludo.FramedView = new Class({
             this.resize({
                 height:this.layout.height
             });
-            this.els.body.style.visibility = 'visible';
+            this.els.body.css('visibility', 'visible');
             this.showResizeHandles();
             /**
              * Fired when a component is maximized
@@ -348,7 +348,7 @@ ludo.FramedView = new Class({
             var height = this.layout.height;
             var newHeight = this.getHeightOfTitleBar();
             this.els.container.setStyle('height', this.getHeightOfTitleBar());
-            this.els.body.style.visibility = 'hidden';
+            this.els.body.css('visibility', 'hidden');
             this.hideResizeHandles();
 
             this.layout.height = height;

@@ -35,7 +35,7 @@ ludo.view.TitleBar = new Class({
     },
 
     createDOM:function () {
-        var el = this.els.el = new Element('div');
+        var el = this.els.el = $('<div>');
         ludo.dom.addClass(el, this.view.boldTitle ? 'ludo-framed-view-titlebar' : 'ludo-component-titlebar');
         var left = 0;
         if (this.view.icon) {
@@ -43,10 +43,10 @@ ludo.view.TitleBar = new Class({
             left += ludo.dom.getNumericStyle(el, 'width');
         }
         this.createTitleDOM();
-        el.adopt(this.getButtonContainer());
+        el.append(this.getButtonContainer());
         this.resizeButtonContainer.delay(20, this);
-        this.els.title.style.left = left + 'px';
-        el.addEvent('selectstart', ludo.util.cancelEvent);
+        this.els.title.css('left', left);
+        el.on('selectstart', ludo.util.cancelEvent);
     },
 
     createIconDOM:function () {
@@ -58,7 +58,7 @@ ludo.view.TitleBar = new Class({
     },
 
     setTitle:function (title) {
-        this.els.title.innerHTML = title;
+        this.els.title.html(title);
     },
 
     createTitleDOM:function () {
@@ -77,13 +77,13 @@ ludo.view.TitleBar = new Class({
         var el = this.els.controls = ludo.dom.create({
             cls:'ludo-title-bar-button-container'
         });
-        el.style.cursor = 'default';
+        el.css('cursor', 'default');
 
         this.createEdge('left', el);
         this.createEdge('right', el);
 
         for (var i = 0; i < this.buttons.length; i++) {
-            el.appendChild(this.getButton(this.buttons[i]));
+            el.append(this.getButton(this.buttons[i]));
         }
 
         this.addBorderToButtons();
@@ -95,7 +95,7 @@ ludo.view.TitleBar = new Class({
             cls:'ludo-title-bar-button-container-' + pos + '-edge',
             renderTo:parent
         });
-        el.style.cssText = 'position:absolute;z-index:1;' + pos + ':0;top:0;width:55%;height:100%;background-repeat:no-repeat;background-position:top ' + pos;
+        el.attr("style", 'position:absolute;z-index:1;' + pos + ':0;top:0;width:55%;height:100%;background-repeat:no-repeat;background-position:top ' + pos);
         return el;
 
     },
@@ -106,25 +106,25 @@ ludo.view.TitleBar = new Class({
     },
 
     resizeButtonContainer:function () {
-        this.els.controls.style.width = this.getWidthOfButtons() + 'px';
+        this.els.controls.css('width', this.getWidthOfButtons());
     },
 
     getButton:function (buttonConfig) {
         buttonConfig = ludo.util.isString(buttonConfig) ? { type:buttonConfig } : buttonConfig;
 
-        var b = this.els.buttons[buttonConfig.type] = new Element('div');
+        var b = this.els.buttons[buttonConfig.type] = $('<div>');
         b.id = 'b-' + String.uniqueID();
-        b.className = 'ludo-title-bar-button ludo-title-bar-button-' + buttonConfig.type;
-        b.addEvents({
+        b.attr("class", 'ludo-title-bar-button ludo-title-bar-button-' + buttonConfig.type);
+        b.on({
             'click':this.getButtonClickFn(buttonConfig.type),
             'mouseenter':this.enterButton.bind(this),
             'mouseleave':this.leaveButton.bind(this)
         });
-        b.setProperty('title', buttonConfig.title ? buttonConfig.title : buttonConfig.type.capitalize());
-        b.setProperty('buttonType', buttonConfig.type);
+        b.attr('title', buttonConfig.title ? buttonConfig.title : buttonConfig.type.capitalize());
+        b.attr('buttonType', buttonConfig.type);
 
         if (buttonConfig.type === 'collapse') {
-            ludo.dom.addClass(b, 'ludo-title-bar-button-collapse-' + this.getCollapseButtonDirection());
+            b.addClass('ludo-title-bar-button-collapse-' + this.getCollapseButtonDirection());
         }
         this.els.buttonArray.push(b);
         return b;
@@ -182,8 +182,8 @@ ludo.view.TitleBar = new Class({
         var ret = 0;
         var els = this.els.buttonArray;
         for (var i = 0, count = els.length; i < count; i++) {
-            var width = ludo.dom.getNumericStyle(els[i], 'width') + ludo.dom.getBW(els[i]) + ludo.dom.getPW(els[i]) + ludo.dom.getMW(els[i]);
-            if (!isNaN(width) && width) {
+            var width = els[i].outerWidth();
+            if (width) {
                 ret += width;
             } else {
                 ret += els[i].offsetWidth;
@@ -199,11 +199,11 @@ ludo.view.TitleBar = new Class({
     setSizeOfButtonContainer:function () {
         if (this.els.controls) {
             var width = this.getWidthOfButtons();
-            this.els.controls.style.width = width + 'px';
-            this.els.controls.style.display = width > 0 ? '' : 'none';
+            this.els.controls.css('width',  width + 'px');
+            this.els.controls.css('display',  width > 0 ? '' : 'none');
         }
         if (this.icon) {
-            this.els.title.setStyle('left', document.id(this.els.icon).getStyle('width'));
+            this.els.title.css('left', $(this.els.icon).css('width'));
         }
     },
 
@@ -214,15 +214,16 @@ ludo.view.TitleBar = new Class({
 
     resizeDOM:function () {
         var width = (this.view.width - this.getWidthOfIconAndButtons());
-        if (width > 0)this.els.title.style.width = width + 'px';
+        if (width > 0)this.els.title.css('width', width);
     },
 
     height:undefined,
     getHeight:function () {
         if (this.height === undefined) {
             var el = this.els.el;
-            this.height = ludo.dom.getNumericStyle(el, 'height');
-            this.height += ludo.dom.getMH(el) + ludo.dom.getBH(el) + ludo.dom.getPH(el);
+            this.height = el.outerHeight();
+
+            // this.height += ludo.dom.getMH(el) + ludo.dom.getBH(el) + ludo.dom.getPH(el);
         }
         return this.height;
     },

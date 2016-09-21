@@ -61,11 +61,11 @@ ludo.form.Checkbox = new Class({
         var radio;
         if (Browser.ie && parseInt(Browser.version) < 9) {
             radio = document.createElement('<input type="' + this.inputType + '" name="' + this.getName() + '" value="' + this.value + '" id="' + id + '">');
-            this.getInputCell().adopt(radio);
+            this.getInputCell().append(radio);
             this.els.formEl = document.id(radio);
         } else {
             radio = this.els.formEl = new Element('input');
-            this.getInputCell().adopt(radio);
+            this.getInputCell().append(radio);
             radio.setProperties({
                 'type':this.inputType,
                 'name':this.getName(),
@@ -84,8 +84,8 @@ ludo.form.Checkbox = new Class({
     },
 
     addRadioImage:function () {
-        var div = this.els.radioImageDiv = new Element('div');
-        var radioDivInner = new Element('div');
+        var div = this.els.radioImageDiv = $('<div>');
+        var radioDivInner = $('<div>');
         ludo.dom.addClass(radioDivInner, 'ludo-radio-image-inner');
         radioDivInner.setStyles({
             'width':'100%',
@@ -93,10 +93,10 @@ ludo.form.Checkbox = new Class({
             'background' : 'url(' + this.image + ') no-repeat center center'
         });
 
-        div.adopt(radioDivInner);
+        div.append(radioDivInner);
         ludo.dom.addClass(div, 'ludo-radio-image');
         div.addEvent('click', this.clickOnImage.bind(this));
-        this.getImageCell().adopt(div);
+        this.getImageCell().append(div);
         this.getBody().getElement('.checkbox-image-row').style.display = '';
     },
 
@@ -170,7 +170,7 @@ ludo.form.Checkbox = new Class({
 
     setCheckedProperty:function(checked){
         if(checked){
-            this.getFormEl().setProperty('checked', '1');
+            this.getFormEl().attr('checked', '1');
         }else{
             this.getFormEl().removeProperty('checked');
         }

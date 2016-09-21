@@ -113,13 +113,13 @@ ludo.Window = new Class({
     },
 
     hideBody:function () {
-        this.getBody().style.display = 'none';
-        this.els.buttonBar.el.style.display = 'none';
+        this.getBody().css('display', 'none');
+        if(this.els.buttonBar)this.els.buttonBar.el.css('display', 'none');
     },
 
     showBody:function () {
-        this.getBody().style.display = '';
-        this.els.buttonBar.el.style.display = '';
+        this.getBody().css('display', '');
+        if(this.els.buttonBar)this.els.buttonBar.el.css('display', '');
     },
 
     ludoRendered:function () {
@@ -156,14 +156,14 @@ ludo.Window = new Class({
     },
 
     focusFirstFormField:function () {
-        var els = this.getBody().getElements('input');
+        var els = this.getBody().children('input');
         for (var i = 0, count = els.length; i < count; i++) {
             if (els[i].type && els[i].type.toLowerCase() === 'text') {
                 els[i].focus();
                 return;
             }
         }
-        var el = this.getBody().getElement('textarea');
+        var el = this.getBody().find('textarea');
         if (el) {
             el.focus();
         }

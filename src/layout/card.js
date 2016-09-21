@@ -29,7 +29,7 @@ ludo.layout.Card = new Class({
 	},
 	onNewChild:function (child) {
 		this.parent(child);
-		child.getEl().style.position = 'absolute';
+		child.getEl().css('position', 'absolute');
 		child.addEvent('show', this.setVisibleCard.bind(this));
 		if (this.shouldSetCardVisible(child)) {
 			this.visibleCard = child;
@@ -39,9 +39,9 @@ ludo.layout.Card = new Class({
 	},
 
 	addDragEvents:function (child) {
-        child.getBody().addEvent(ludo.util.getDragStartEvent(), this.touchStart.bind(this));
-        child.getEventEl().addEvent(ludo.util.getDragMoveEvent(), this.touchMove.bind(this));
-        child.getEventEl().addEvent(ludo.util.getDragEndEvent(), this.touchEnd.bind(this));
+        child.getBody().on(ludo.util.getDragStartEvent(), this.touchStart.bind(this));
+        child.getEventEl().on(ludo.util.getDragMoveEvent(), this.touchMove.bind(this));
+        child.getEventEl().on(ludo.util.getDragEndEvent(), this.touchEnd.bind(this));
 	},
 
 	resize:function () {

@@ -15,7 +15,7 @@ ludo.form.Form = new Class({
         this.getBody().dispose();
 
         this.els.body = new Element('form');
-        this.getEl().adopt(this.els.body);
+        this.getEl().append(this.els.body);
 
         this.getEl().setStyles({
             padding:0,

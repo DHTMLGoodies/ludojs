@@ -139,14 +139,14 @@ ludo.Movable = new Class({
     },
 
     createShim : function() {
-        var el = this.els.shim = new Element('div');
+        var el = this.els.shim = $('<div>');
         ludo.dom.addClass(el, 'ludo-framed-view-shim');
         el.setStyle('display','none');
         document.body.adopt(el);
     },
 
     createInsertionMarker : function() {
-        var el = this.els.insertionMarker = new Element('div');
+        var el = this.els.insertionMarker = $('<div>');
         el.setStyle('display','none');
         document.body.adopt(el);
     },

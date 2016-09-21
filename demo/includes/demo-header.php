@@ -20,7 +20,89 @@ $skin = isset($skin) ? $skin : 'light-gray';
         height:100%;
     }
     </style>
-    <script type="text/javascript" src="<?php echo $prefix; ?>../js/ludojs<?php echo isset($_GET['fullSource']) ? "" : "-minified"; ?>.js"></script>
+    <!--<script type="text/javascript" src="<?php echo $prefix; ?>../js/ludojs<?php echo isset($_GET['fullSource']) ? "" : "-minified"; ?>.js"></script>-->
+
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/ludo.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/util.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/registry.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/object-factory.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/config.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/dom.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/core.js"></script>
+
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/base.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/linear.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/grid.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/card.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/linear-horizontal.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/linear-vertical.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/relative.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/resizer.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/renderer.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/slide-in.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/fill.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/factory.js"></script>
+
+
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/effect/effect.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/effect/drag.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/effect/resize.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/effect.js"></script>
+
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/tpl/parser.js"></script>
+
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/view.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/view/shim.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/framed-view.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/window.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/video/video.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/video/you-tube.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/view/title-bar.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/view/button-bar.js"></script>
+
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/form/manager.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/form/element.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/form/label-element.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/form/button.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/form/text.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/form/textarea.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/form/number.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/form/spinner.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/form/filter-text.js"></script>
+
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/remote/base.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/remote/json.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/remote/broadcaster.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/remote/shim.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/remote/inject.js"></script>
+
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/form/validator/base.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/form/validator/fns.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/form/validator/md5.js"></script>
+
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/data-source/base.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/data-source/json.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/data-source/collection.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/data-source/collection-search.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/data-source/html.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/data-source/record.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/data-source/tree-collection.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/data-source/tree-collection-search.js"></script>
+
+
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/progress/base.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/progress/bar.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/progress/datasource.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/progress/text.js"></script>
+
+
+
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/card/button.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/card/finish-button.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/card/next-button.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/card/previous-button.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/card/progress-bar.js"></script>
+
 
     <script type="text/javascript" src="<?php echo $prefix; ?>code-highlight/code-highlight.js"></script>
     <link rel="stylesheet" href="<?php echo $prefix; ?>../css/ludojs-<?php echo $skin; ?>.css" type="text/css">

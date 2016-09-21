@@ -231,7 +231,7 @@ ludo.layout.Menu = new Class({
 		this.hideMenus();
 		this.clearHighlightedPath();
 		if (this.view.layout.isContext) {
-			this.view.getEl().style.display = 'none';
+			this.view.getEl().css('display', 'none');
 		}
 		this.shownMenus = [];
 	},

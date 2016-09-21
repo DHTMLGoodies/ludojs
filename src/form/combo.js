@@ -47,7 +47,7 @@ ludo.form.Combo = new Class({
         c.alwaysInFront = true;
         c.cls = c.cls ? c.cls + ' ' + 'form-combo-child' : 'form-combo-child';
 
-        this.getInputCell().style.position='relative';
+        this.getInputCell().css('position', 'relative');
 		this.createDependency('menuButton', new ludo.menu.Button({
 			type:'menu.Button',
 			renderTo: this.getInputCell(),

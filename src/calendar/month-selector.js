@@ -23,7 +23,7 @@ ludo.calendar.MonthSelector = new Class({
 
     },
     createMonthTooltip:function(){
-        var el = this.els.monthTip = new Element('div');
+        var el = this.els.monthTip = $('<div>');
         el.setStyles({
             'position' : 'absolute',
             display:'none'
@@ -35,7 +35,7 @@ ludo.calendar.MonthSelector = new Class({
     },
 
     createMonthContainer:function(){
-        var el = this.els.monthContainer = new Element('div');
+        var el = this.els.monthContainer = $('<div>');
         ludo.dom.addClass(el, 'ludo-calendar-month-container');
         el.setStyles({
             position:'absolute', width : '3000px', left:0,top:0
@@ -49,7 +49,7 @@ ludo.calendar.MonthSelector = new Class({
         var month = this.date.get('month');
 
         for(var i=0;i<this.months.length;i++){
-            var el = new Element('div');
+            var el = $('<div>');
             ludo.dom.addClass(el, 'ludo-calendar-month');
             el.setProperty('month', i);
             this.els.monthContainer.adopt(el);
@@ -85,12 +85,12 @@ ludo.calendar.MonthSelector = new Class({
         tip.setProperty('month', el.getProperty('month'));
         var month = this.months[el.getProperty('month')];
         tip.set('html', month);
-        tip.style.left = Math.max(0, el.offsetLeft) + 'px';
-        tip.style.display = '';
+        tip.css('left',  Math.max(0, el.offsetLeft) + 'px');
+        tip.css('display',  '');
     },
 
     hideTooltip:function(){
-        this.els.monthTip.style.display='none';
+        this.els.monthTip.css('display', 'none');
     },
 
     getMonthEl:function(dom){

@@ -43,7 +43,7 @@ ludo.grid.SelectionGrid = new Class({
         if (this.els.selection) {
             this.els.selection.dispose();
         }
-        var el = this.els.selection = new Element('div');
+        var el = this.els.selection = $('<div>');
         el.setStyles({
             position:'absolute',
             border:'3px solid #000',
@@ -52,7 +52,7 @@ ludo.grid.SelectionGrid = new Class({
             'z-index':900
         });
 
-        var elInner = new Element('div');
+        var elInner = $('<div>');
         elInner.setStyles({
             'position':'absolute',
             'background-color':'#0CF',

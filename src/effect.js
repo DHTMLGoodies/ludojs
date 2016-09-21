@@ -3,7 +3,7 @@ ludo.Effect = new Class({
 	inProgress:false,
 
 	initialize:function(){
-		if(Browser['ie']){
+		if(ludo.util.isIe()){
 			document.id(document.documentElement).addEvent('selectstart', this.cancelSelection.bind(this));
 		}
 	},
@@ -30,7 +30,7 @@ ludo.Effect = new Class({
 	},
 
 	enableSelection:function(){
-		document.body.removeClass('ludo-unselectable');
+		$(document.body).removeClass('ludo-unselectable');
 	},
 
 	cancelSelection:function(){

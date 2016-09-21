@@ -169,7 +169,7 @@ ludo.effect.Effect = new Class({
 	},
 
 	show:function(el){
-		if(el.style.visibility==='hidden')el.style.visibility='visible';
+		if(el.style.visibility==='hidden')el.css('visibility', 'visible');
 	},
 
 	getStops:function(duration){

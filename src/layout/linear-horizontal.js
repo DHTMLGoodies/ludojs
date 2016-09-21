@@ -65,7 +65,7 @@ ludo.layout.LinearHorizontal = new Class({
 
 	onNewChild:function (child) {
 		this.parent(child);
-		child.getEl().style.position = 'absolute';
+		child.getEl().css('position', 'absolute');
 
 		if (this.isResizable(child)) {
 			var isLastSibling = this.isLastSibling(child);

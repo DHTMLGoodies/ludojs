@@ -151,7 +151,7 @@ ludo.form.Button = new Class({
     ludoDOM:function () {
         this.parent();
 
-        this.getEl().style.display = this.isHidden() ? 'none' : 'block';
+        this.getEl().css('display', this.isHidden() ? 'none' : 'block');
 
 		this.getEl().addClass('ludo-form-button-' + this.size);
 
@@ -166,25 +166,25 @@ ludo.form.Button = new Class({
 
         var b = this.getBody();
 
-        b.setStyle('padding-left', 0);
-        this.getEl().addEvent('selectstart', ludo.util.cancelEvent);
+        b.css('padding-left', 0);
+        this.getEl().on('selectstart', ludo.util.cancelEvent);
     },
 
     ludoEvents:function () {
         this.parent();
         var el = this.getBody();
 
-        el.addEvent('click', this.click.bind(this));
-        el.addEvent('mouseenter', this.mouseOver.bind(this));
-        el.addEvent('mouseleave', this.mouseOut.bind(this));
-        el.addEvent('mousedown', this.mouseDown.bind(this));
+        el.on('click', this.click.bind(this));
+        el.on('mouseenter', this.mouseOver.bind(this));
+        el.on('mouseleave', this.mouseOut.bind(this));
+        el.on('mousedown', this.mouseDown.bind(this));
 
 		// TODO need to bound in order to remove event later. Make this easier and more intuitive
 		this.mouseUpBound = this.mouseUp.bind(this);
-        document.body.addEvent('mouseup', this.mouseUpBound);
+        $(document.body).on('mouseup', this.mouseUpBound);
         if (this.defaultSubmit) {
 			this.keyPressBound = this.keyPress.bind(this);
-            document.id(window).addEvent('keypress', this.keyPressBound);
+            $(window).addEvent('keypress', this.keyPressBound);
         }
     },
 
@@ -213,9 +213,9 @@ ludo.form.Button = new Class({
 	},
 
     addLabel:function () {
-        var txt = this.els.txt = new Element('div');
+        var txt = this.els.txt = $('<div>');
         ludo.dom.addClass(txt, 'ludo-form-button-value');
-        txt.setStyles({
+        txt.css({
             'width':'100%',
 			'height' : this.heights[this.size] - 2,
             'position':'absolute',
@@ -223,13 +223,13 @@ ludo.form.Button = new Class({
             'text-align':this.icon ? 'left' : 'center',
             'z-index':7
         });
-        txt.set('html', this.value);
-        this.getBody().adopt(txt);
+        txt.html(this.value);
+        this.getBody().append(txt);
     },
 
     addIcon:function () {
-        var el = this.els.icon = new Element('div');
-        el.setStyles({
+        var el = this.els.icon = $('<div>');
+        el.css({
             position:'absolute',
             width:this.iconWidths[this.size],
             'z-index':8,
@@ -252,27 +252,27 @@ ludo.form.Button = new Class({
     },
 
     addLeftEdge:function () {
-        var bg = this.els.buttonLeftludo = new Element('div');
+        var bg = this.els.buttonLeftludo = $('<div>');
         ludo.dom.addClass(bg, 'ludo-form-button-bg-left');
         ludo.dom.addClass(bg, 'ludo-form-button-' + this.size +'-bg-left');
-        bg.setStyles({
+        bg.css({
             position:'absolute',
             'left':0,
             'z-index':5
         });
-        this.getBody().adopt(bg);
+        this.getBody().append(bg);
     },
 
     addRightEdge:function () {
-        var bg = new Element('div');
+        var bg = $('<div>');
         ludo.dom.addClass(bg, 'ludo-form-button-bg-right');
         ludo.dom.addClass(bg, 'ludo-form-button-' + this.size + '-bg-right');
-        bg.setStyles({
+        bg.css({
             position:'absolute',
             'right':0,
             'z-index':6
         });
-        this.getBody().adopt(bg);
+        this.getBody().append(bg);
     },
 
     disable:function () {
@@ -373,7 +373,7 @@ ludo.form.Button = new Class({
     },
     resizeDOM:function () {
         // TODO refactor - buttons too tall in relative layout
-        this.getBody().style.height = this.heights[this.size] + 'px';
+        this.getBody().css('height', this.heights[this.size]);
         /* No DOM resize for buttons */
     },
 

@@ -138,7 +138,7 @@ ludo.layout.MenuContainer = new Class({
     },
 
     hide:function () {
-        this.getEl().style.display = 'none';
+        this.getEl().css('display', 'none');
         this.fireEvent('hide', this);
     },
     renderer:undefined,

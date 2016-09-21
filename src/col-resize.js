@@ -18,14 +18,14 @@ ludo.ColResize = new Class({
     },
 
     setPos:function (index, pos) {
-        this.resizeHandles[index].setStyle('left', pos);
+        this.resizeHandles[index].css('left', pos);
     },
 
     hideHandle:function (index) {
-        this.resizeHandles[index].style.display = 'none';
+        this.resizeHandles[index].css('display', 'none');
     },
     showHandle:function (index) {
-        this.resizeHandles[index].style.display = '';
+        this.resizeHandles[index].css('display', '');
     },
 
     hideAllHandles:function () {
@@ -45,7 +45,7 @@ ludo.ColResize = new Class({
 
     getHandle:function (key, isVisible) {
 
-        var el = new Element('div');
+        var el = $('<div>');
         ludo.dom.addClass(el, 'ludo-column-resize-handle');
         el.setStyles({
             'top':0,

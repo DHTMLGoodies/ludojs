@@ -61,11 +61,12 @@ ludo.dom = {
 	 * @param {Object} el
 	 */
 	getMH:function (el) {
-		if (!el.id)el.id = 'el-' + String.uniqueID();
-		if (ludo.dom.cache.MH[el.id] === undefined) {
-			ludo.dom.cache.MH[el.id] = ludo.dom.getNumericStyle(el, 'margin-top') + ludo.dom.getNumericStyle(el, 'margin-bottom')
+		this.addId(el);
+		var id = el.attr("id");
+		if (ludo.dom.cache.MH[id] === undefined) {
+			ludo.dom.cache.MH[id] = ludo.dom.getNumericStyle(el, 'margin-top') + ludo.dom.getNumericStyle(el, 'margin-bottom')
 		}
-		return ludo.dom.cache.MH[el.id];
+		return ludo.dom.cache.MH[id];
 
 	},
 	/**
@@ -76,11 +77,12 @@ ludo.dom = {
 	 * @param {Object} el
 	 */
 	getBH:function (el) {
-		if (!el.id)el.id = 'el-' + String.uniqueID();
-		if (ludo.dom.cache.BH[el.id] === undefined) {
-			ludo.dom.cache.BH[el.id] = ludo.dom.getNumericStyle(el, 'border-top-width') + ludo.dom.getNumericStyle(el, 'border-bottom-width');
+		this.addId(el);
+		var id = el.attr("id");
+		if (ludo.dom.cache.BH[id] === undefined) {
+			ludo.dom.cache.BH[id] = ludo.dom.getNumericStyle(el, 'border-top-width') + ludo.dom.getNumericStyle(el, 'border-bottom-width');
 		}
-		return ludo.dom.cache.BH[el.id];
+		return ludo.dom.cache.BH[id];
 	},
 	/**
 	 * Return Padding height (top and bottom) of DOM element
@@ -90,17 +92,22 @@ ludo.dom = {
 	 * @param {Object} el DOMElement or id of DOMElement
 	 */
 	getPH:function (el) {
-		if (!el.id)el.id = 'el-' + String.uniqueID();
-		if (ludo.dom.cache.PH[el.id] === undefined) {
-			ludo.dom.cache.PH[el.id] = ludo.dom.getNumericStyle(el, 'padding-top') + ludo.dom.getNumericStyle(el, 'padding-bottom');
+		this.addId(el);
+		var id = el.attr("id");
+		if (ludo.dom.cache.PH[id] === undefined) {
+			ludo.dom.cache.PH[id] = ludo.dom.getNumericStyle(el, 'padding-top') + ludo.dom.getNumericStyle(el, 'padding-bottom');
 		}
-		return ludo.dom.cache.PH[el.id];
+		return ludo.dom.cache.PH[id];
 	},
 	getMBPW:function (el) {
 		return ludo.dom.getPW(el) + ludo.dom.getMW(el) + ludo.dom.getBW(el);
 	},
 	getMBPH:function (el) {
 		return ludo.dom.getPH(el) + ludo.dom.getMH(el) + ludo.dom.getBH(el);
+	},
+
+	addId:function(el){
+		if(!el.attr("id"))el.attr("id", String.uniqueID());
 	},
 
 	/**
@@ -123,8 +130,9 @@ ludo.dom = {
 	 * @param {String} style
 	 */
 	getNumericStyle:function (el, style) {
-		if (!el || !style || !el.getStyle)return 0;
-		var val = el.getStyle(style);
+
+		if (!el || !style || !el.css)return 0;
+		var val = el.css(style);
 		return val && val!='thin' && val!='auto' && val!='medium' ? parseInt(val) : 0;
 	},
 
@@ -143,16 +151,24 @@ ludo.dom = {
     // TODO rename to cls
 	addClass:function (el, className) {
 		if (el && !this.hasClass(el, className)) {
-			el.className = el.className ? el.className + ' ' + className : className;
+			if(el.attr != undefined){
+				var cls = el.attr("class");
+				if(!cls)cls = '';
+				el.attr("class", cls  + ' ' + className);
+			}else{
+				el.className = el.className ? el.className + ' ' + className : className;
+
+			}
 		}
 	},
 
 	hasClass:function (el, className) {
-		return el && el.className ? el.className.split(/\s/g).indexOf(className) > -1 : false;
+		var search = el.attr != undefined ? el.attr("class") : el.className;
+		return el && search ? search.split(/\s/g).indexOf(className) > -1 : false;
 	},
 
 	removeClass:function (el, className) {
-		if(el)el.className = el.className.replace(new RegExp('(^|\\s)' + className + '(?:\\s|$)'), '$1');
+		el.removeClass("className");
 	},
 
 	getParent:function (el, selector) {
@@ -179,12 +195,20 @@ ludo.dom = {
 		}
 	},
 
-	getInnerWidthOf:function (el) {
+	size:function(el){
+		return {
+			x: el.width(), y: el.height()
+		}
+	},
 
+	getInnerWidthOf:function (el) {
+		return el.width();
+		/*
 		if (el.style.width && el.style.width.indexOf('%') == -1) {
 			return ludo.dom.getNumericStyle(el, 'width');
 		}
 		return el.offsetWidth - ludo.dom.getPW(el) - ludo.dom.getBW(el);
+		*/
 	},
 
 	getInnerHeightOf:function (el) {
@@ -202,10 +226,10 @@ ludo.dom = {
 
 		var el = view.getEl();
 		var b = view.getBody();
-		b.style.position = 'absolute';
+		b.css('position', 'absolute');
 
 		var width = b.offsetWidth;
-		b.style.position = 'relative';
+		b.css('position', 'relative');
 		var height = b.offsetHeight;
 
 		return {
@@ -229,18 +253,14 @@ ludo.dom = {
 	},
 
     create:function(node){
-        var el = document.createElement(node.tag || 'div');
-        if(node.cls)ludo.dom.addClass(el, node.cls);
-        if(node.renderTo)node.renderTo.appendChild(el);
+        var el = $('<' + (node.tag || 'div') + '>');
+        if(node.cls)el.addClass(node.cls);
+        if(node.renderTo)node.renderTo.append(el);
         if(node.css){
-            for(var key in node.css){
-                if(node.css.hasOwnProperty(key)){
-                    el.style[key] = node.css[key];
-                }
-            }
-        }
-        if(node.id)el.id = node.id;
-        if(node.html)el.innerHTML = node.html;
+			el.css(node.css);
+          }
+        if(node.id)el.attr("id", node.id);
+        if(node.html)el.html(node.html);
         return el;
 
     }

@@ -44,7 +44,7 @@ ludo.layout.Relative = new Class({
 
 	onCreate:function () {
 		this.parent();
-		this.view.getBody().style.position = 'relative';
+		this.view.getBody().css('position', 'relative');
 	},
 
 	resize:function () {
@@ -729,7 +729,7 @@ ludo.layout.Relative = new Class({
      */
 	onNewChild:function (child) {
 		this.parent(child);
-		child.getEl().style.position = 'absolute';
+		child.getEl().css('position', 'absolute');
         var l = child.layout;
 		if (l.centerInParent !== undefined) {
 			l.centerHorizontal = undefined;

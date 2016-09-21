@@ -7,13 +7,13 @@
  @param {Object} config
  @example
  	var dd = new ludo.effect.DragDrop();
- 	var el = new Element('div');
+ 	var el = $('<div>');
  	dd.addDropTarget({
  		id:'myDropPoint',
  		el:el,
  		name:'John Doe'
 	});
- 	var el = new Element('div');
+ 	var el = $('<div>');
 	dd.addDropTarget({
 		id:'myDropPoint',
 		el:el,

@@ -355,19 +355,19 @@ ludo.form.ComboField = new Class({
 
     ludoDOM:function () {
         this.parent();
-        var el = new Element('div');
+        var el = $('<div>');
         ludo.dom.addClass(el, 'ludo-Filter-Tree-Field-Arrow');
-        this.getBody().adopt(el);
+        this.getBody().append(el);
 
-        var left = new Element('div');
+        var left = $('<div>');
         ludo.dom.addClass(left, 'ludo-Filter-Tree-Bg-Left');
-        this.getBody().adopt(left);
-        var right = new Element('div');
+        this.getBody().append(left);
+        var right = $('<div>');
         ludo.dom.addClass(right, 'ludo-Filter-Tree-Bg-Right');
-        this.getBody().adopt(right);
+        this.getBody().append(right);
 
-        var valueField = this.els.valueField = new Element('div');
+        var valueField = this.els.valueField = $('<div>');
         ludo.dom.addClass(valueField, 'ludo-Filter-Tree-Combo-Value');
-        this.getBody().adopt(valueField);
+        this.getBody().append(valueField);
     }
 });

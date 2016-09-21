@@ -73,7 +73,7 @@ ludo.tree.FilterTree = new Class({
 
 		this.resize.delay(100, this);
 
-		var hiddenEl = this.els.hiddenEl = new Element('div');
+		var hiddenEl = this.els.hiddenEl = $('<div>');
 		hiddenEl.id = 'el-' + String.uniqueID();
 		hiddenEl.setStyles({
 			position:'absolute',

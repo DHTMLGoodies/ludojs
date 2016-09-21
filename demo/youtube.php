@@ -5,8 +5,10 @@ require_once("includes/demo-header.php");
 <body>
 <script type="text/javascript" class="source-code">
 var win = new ludo.Window({
+    id:'videowin',
     left:100, top:50,
     hideBodyOnMove:true,
+    renderTo:document.body,
     title:'YouTube Video',
     layout:{
         aspectRatio:1.6,

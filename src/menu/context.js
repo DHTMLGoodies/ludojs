@@ -84,7 +84,7 @@ ludo.menu.Context = new Class({
 
 	ludoDOM:function () {
 		this.parent();
-		this.getEl().style.position = 'absolute';
+		this.getEl().css('position', 'absolute');
 	},
 	ludoEvents:function () {
 		this.parent();

@@ -8,7 +8,7 @@ ludo.layout.MenuHorizontal = new Class({
     },
 
     onNewChild:function (child) {
-        child.getEl().style.position = 'absolute';
+        child.getEl().css('position', 'absolute');
         this.parent(child);
     },
 

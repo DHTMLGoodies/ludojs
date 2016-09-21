@@ -55,7 +55,7 @@ ludo.layout.LinearVertical = new Class({
 				if(tm > 0){
 					config.top = tm;
 				}
-				if(this.view.children[i].getEl().style.position === 'absolute'){
+				if(this.view.children[i].getEl().css('position') === 'absolute'){
 					tm += this.view.children[i].getHeight();
 				}
 

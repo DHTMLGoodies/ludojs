@@ -204,12 +204,12 @@ ludo.form.Element = new Class({
 
         var formEl = this.getFormEl();
         if (formEl) {
-            formEl.addEvent('keydown', this.keyDown.bind(this));
-            formEl.addEvent('keypress', this.keyPress.bind(this));
-            formEl.addEvent('keyup', this.keyUp.bind(this));
-            formEl.addEvent('focus', this.focus.bind(this));
-            formEl.addEvent('change', this.change.bind(this));
-            formEl.addEvent('blur', this.blur.bind(this));
+            formEl.on('keydown', this.keyDown.bind(this));
+            formEl.on('keypress', this.keyPress.bind(this));
+            formEl.on('keyup', this.keyUp.bind(this));
+            formEl.on('focus', this.focus.bind(this));
+            formEl.on('change', this.change.bind(this));
+            formEl.on('blur', this.blur.bind(this));
         }
     },
 
@@ -219,8 +219,8 @@ ludo.form.Element = new Class({
         if (this.disabled)this.disable();
 
 		if(this.els.formEl){
-			this.els.formEl.setProperty('name', this.getName());
-			if(this.value !== undefined)this.els.formEl.set('value', this.value)
+			this.els.formEl.attr('name', this.getName());
+			if(this.value !== undefined)this.els.formEl.val(this.value)
 		}
         if (this.linkWith) {
             this.createBackLink();
@@ -246,7 +246,7 @@ ludo.form.Element = new Class({
      * @return void
      */
     disable:function () {
-        this.getFormEl().setProperty('disabled', '1');
+        this.getFormEl().attr('disabled', '1');
         ludo.dom.addClass(this.els.label, 'ludo-form-label-disabled');
     },
     /**
@@ -272,13 +272,13 @@ ludo.form.Element = new Class({
         ludo.dom.addClass(this.getEl(), 'ludo-form-element');
         if (this.els.formEl) {
             if (this.fieldWidth) {
-                this.els.formEl.style.width = (this.fieldWidth - ludo.dom.getPW(this.els.formEl) - ludo.dom.getBW(this.els.formEl)) + 'px';
+                this.els.formEl.css('width', (this.fieldWidth - ludo.dom.getPW(this.els.formEl) - ludo.dom.getBW(this.els.formEl)));
             }
 
             this.els.formEl.id = this.elementId;
 
             if (this.formCss) {
-                this.els.formEl.setStyles(this.formCss);
+                this.els.formEl.css(this.formCss);
             }
         }
     },
@@ -369,7 +369,7 @@ ludo.form.Element = new Class({
     },
 
     getValueOfFormEl:function(){
-        return this.getFormEl().get('value');
+        return this.getFormEl().val();
     },
 
     toggleDirtyFlag:function(){
@@ -477,6 +477,7 @@ ludo.form.Element = new Class({
      */
     isValid:function () {
         if(this.validators.length === 0)return true;
+
         var val = this.getFormEl() ? this.getValueOfFormEl().trim() : this.value;
         for (var i = 0; i < this.validators.length; i++) {
             if (!this.validators[i].fn.apply(this, [val, this[this.validators[i].key]])){

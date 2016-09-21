@@ -233,7 +233,7 @@ ludo.grid.Grid = new Class({
 		ludo.dom.addClass(this.getEl(), 'ludo-grid-Grid');
 
 		var b = this.getBody();
-		var t = this.els.dataContainerTop = new Element('div');
+		var t = this.els.dataContainerTop = $('<div>');
 
 		ludo.dom.addClass(t, 'ludo-grid-data-container');
 		t.setStyles({
@@ -244,7 +244,7 @@ ludo.grid.Grid = new Class({
 		b.adopt(t);
 		b.setStyle('overflow', 'visible');
 
-		this.els.dataContainer = new Element('div');
+		this.els.dataContainer = $('<div>');
 		t.adopt(this.els.dataContainer);
 
 		this.els.dataContainer.setStyle('position', 'relative');
@@ -736,7 +736,7 @@ ludo.grid.Grid = new Class({
 
 		for (var i = 0; i < keys.length; i++) {
 			if (this.columnManager.isHidden(keys[i])) {
-				this.els.dataColumns[keys[i]].style.display='none';
+				this.els.dataColumns[keys[i]].css('display', 'none');
 			} else {
 				this.els.dataColumns[keys[i]].style.display='';
 				this.els.dataColumns[keys[i]].innerHTML = this.getHtmlTextForColumn(keys[i]);

@@ -46,7 +46,7 @@ ludo.layout.Resizable = new Class({
         this.el.style.display = '';
     },
     hide:function () {
-        this.el.style.display = 'none';
+        this.el.css('display', 'none');
     },
     alignWith:function (cmp) {
         if (this.type === 'row') {
@@ -56,7 +56,7 @@ ludo.layout.Resizable = new Class({
     },
 
     createDOM:function () {
-        this.el = new Element('div');
+        this.el = $('<div>');
         ludo.dom.addClass(this.el, 'ludo-resize-handle');
         ludo.dom.addClass(this.el, 'ludo-resize-handle-' + this.type);
         var styles = {

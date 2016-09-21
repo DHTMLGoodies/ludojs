@@ -86,9 +86,9 @@ ludo.layout.TextBox = new Class({
 	},
 
 	getStyles:function () {
-		var node = new Element('div');
+		var node = $('<div>');
 		node.className = this.className;
-		node.style.display = 'none';
+		node.css('display', 'none');
 		document.body.adopt(node);
 
 		var lh = node.getStyle('line-height').replace(/[^0-9]/g, '');

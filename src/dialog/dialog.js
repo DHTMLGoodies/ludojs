@@ -84,7 +84,7 @@ ludo.dialog.Dialog = new Class({
                 cls : 'ludo-dialog-shim',
                 renderTo:document.body
             });
-            el.style.display='none';
+            el.css('display', 'none');
         }
         return this.els.shim;
     },
@@ -130,22 +130,23 @@ ludo.dialog.Dialog = new Class({
 	showShim:function () {
         this.center();
 		if (this.isModal()) {
-            var s = this.getShim().style;
-            s.display='';
-            s.zIndex = this.getEl().getStyle('z-index') - 1;
+			this.getShim().css({
+				display:'',
+				'z-index' : this.getEl().css('z-index') -1
+			});
 			this.resizeShim();
 		}
 	},
 
 	resizeShim:function () {
 		var size = document.body.getSize();
-        this.getShim().style.width = size.x + 'px';
-        this.getShim().style.height = size.y + 'px';
+        this.getShim().css('width',  size.x);
+        this.getShim().css('height',  size.y + 'px');
 	},
 
 	hideShim:function () {
 		if (this.isModal()) {
-            this.getShim().style.display='none';
+            this.getShim().css('display', 'none');
 		}
 	},
 

@@ -16,9 +16,9 @@ ludo.form.RadioGroup = new Class({
     ludoDOM : function() {
         this.parent();
         var table = new Element('table');
-        this.getInputCell().adopt(table);
+        this.getInputCell().append(table);
         var tbody = this.els.tBody = new Element('tbody');
-        table.adopt(tbody);
+        table.append(tbody);
 
     },
 
@@ -26,11 +26,11 @@ ludo.form.RadioGroup = new Class({
         var data = this.dataSource ? this.getDataSource().getData() || [] : [];
         var row = new Element('tr');
         this.els.tBody.innerHTML = '';
-        this.els.tBody.adopt(row);
+        this.els.tBody.append(row);
         this.disposeCheckboxes();
         for(var i=0;i<data.length;i++){
             var cell = new Element('td');
-            row.adopt(cell);
+            row.append(cell);
 
             var radio = new ludo.form.Checkbox({
                 inputType : 'radio',
@@ -43,7 +43,7 @@ ludo.form.RadioGroup = new Class({
                 }
             });
             this.checkboxes.push(radio);
-            cell.adopt(radio.getEl());
+            cell.append(radio.getEl());
         }
 
         if (this.value) {

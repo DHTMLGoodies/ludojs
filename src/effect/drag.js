@@ -202,8 +202,8 @@ ludo.effect.Drag = new Class({
 
 	ludoEvents:function () {
 		this.parent();
-		this.getEventEl().addEvent(ludo.util.getDragMoveEvent(), this.drag.bind(this));
-		this.getEventEl().addEvent(ludo.util.getDragEndEvent(), this.endDrag.bind(this));
+		this.getEventEl().on(ludo.util.getDragMoveEvent(), this.drag.bind(this));
+		this.getEventEl().on(ludo.util.getDragEndEvent(), this.endDrag.bind(this));
 		if (this.useShim) {
 			this.addEvent('start', this.showShim.bind(this));
 			if(this.autoHideShim)this.addEvent('end', this.hideShim.bind(this));
@@ -245,18 +245,18 @@ ludo.effect.Drag = new Class({
 	 */
 	add:function (node) {
 		node = this.getValidNode(node);
-		var el = document.id(node.el);
+		var el = $(node.el);
 		this.setPositioning(el);
 
-        var handle = node.handle ? document.id(node.handle) : el;
+        var handle = node.handle ? $(node.handle) : el;
 
 		handle.id = handle.id || 'ludo-' + String.uniqueID();
 		ludo.dom.addClass(handle, 'ludo-drag');
 
-		handle.addEvent(ludo.util.getDragStartEvent(), this.startDrag.bind(this));
-		handle.setAttribute('forId', node.id);
+		handle.on(ludo.util.getDragStartEvent(), this.startDrag.bind(this));
+		handle.attr('forId', node.id);
 		this.els[node.id] = Object.merge(node, {
-			el:document.id(el),
+			el:$(el),
 			handle:handle
 		});
 		return this.els[node.id];
@@ -270,8 +270,8 @@ ludo.effect.Drag = new Class({
 	 */
 	remove:function(id){
 		if(this.els[id]!==undefined){
-			var el = document.id(this.els[id].handle);
-			el.removeEvent(ludo.util.getDragStartEvent(), this.startDrag.bind(this));
+			var el = $("#" + this.els[id].handle);
+			el.off(ludo.util.getDragStartEvent(), this.startDrag.bind(this));
 			this.els[id] = undefined;
 			return true;
 		}
@@ -293,11 +293,12 @@ ludo.effect.Drag = new Class({
 			};
 		}
 		if(typeof node.el === 'string'){
-			node.el = document.id(node.el);
+			if(node.el.substr(0,1) != "#")node.el = "#" + node.el;
+			node.el = $(node.el);
 		}
 		node.id = node.id || node.el.id || 'ludo-' + String.uniqueID();
 		if (!node.el.id)node.el.id = node.id;
-		node.el.setAttribute('forId', node.id);
+		node.el.attr('forId', node.id);
 		return node;
 	},
 
@@ -307,11 +308,11 @@ ludo.effect.Drag = new Class({
 
 	setPositioning:function(el){
 		if (!this.useShim){
-			el.style.position = 'absolute';
+			el.css('position', 'absolute');
 		}else{
-            var pos = el.getStyle('position');
+            var pos = el.css('position');
 			if(!pos || (pos!='relative' && pos!='absolute')){
-				el.style.position = 'relative';
+				el.css('position', 'relative');
 			}
 		}
 	},
@@ -321,11 +322,11 @@ ludo.effect.Drag = new Class({
 	},
 
 	getIdByEvent:function (e) {
-		var el = e.target;
+		var el = $(e.target);
 		if (!el.hasClass('ludo-drag')) {
 			el = el.getParent('.ludo-drag');
 		}
-		return el.getProperty('forId');
+		return el.attr('forId');
 	},
 
 	/**
@@ -356,7 +357,8 @@ ludo.effect.Drag = new Class({
 	},
 
 	getPositionOf:function(el){
-		return el.getPosition();
+
+		return $(el).position();
 	},
 
 	setDragCoordinates:function(){
@@ -377,8 +379,9 @@ ludo.effect.Drag = new Class({
             pos = parent ? el.getPosition(parent) : this.getPositionOf(el);
 		}
 
-		var x = pos.x;
-		var y = pos.y;
+
+		var x = pos.left;
+		var y = pos.top;
 		this.dragProcess = {
 			active:true,
 			dragged:id,
@@ -388,9 +391,10 @@ ludo.effect.Drag = new Class({
 			elY:y,
 			width:size.x,
 			height:size.y,
-			mouseX:e.page.x,
-			mouseY:e.page.y
+			mouseX:e.pageX,
+			mouseY:e.pageY
 		};
+
 
 		this.dragProcess.el = this.getShimOrEl();
 		/**
@@ -447,7 +451,7 @@ ludo.effect.Drag = new Class({
 	 @method cancelDrag
 	 @example
 	 	// Here, dd is a {{#crossLink "effect.Drag"}}{{/crossLink}} object
-	 	dd.addEvent('before', function(draggable, dd, pos){
+	 	dd.on('before', function(draggable, dd, pos){
 	 		if(pos.x > 1000 || pos.y > 500){
 	 			dd.cancelDrag();
 			}
@@ -456,7 +460,7 @@ ludo.effect.Drag = new Class({
 	 is greater than 1000 or if the y position is greater than 500. Another more
 	 useful example is this:
 	 @example
-		 dd.addEvent('before', function(draggable, dd){
+		 dd.on('before', function(draggable, dd){
 		 	if(!this.isDraggable(draggable)){
 		 		dd.cancelDrag()
 		 	}
@@ -500,11 +504,16 @@ ludo.effect.Drag = new Class({
 			};
 			if (this.dragProcess.dragX) {
 				pos.x = this.getXDrag(e);
+
 			}
+
+
 
 			if (this.dragProcess.dragY) {
 				pos.y = this.getYDrag(e);
 			}
+
+
 
 			this.move(pos);
 
@@ -525,11 +534,11 @@ ludo.effect.Drag = new Class({
 	move:function (pos) {
 		if (pos.x !== undefined) {
 			this.dragProcess.currentX = pos.x;
-			this.dragProcess.el.style.left = pos.x + this.unit;
+			this.dragProcess.el.css('left',  pos.x + this.unit);
 		}
 		if (pos.y !== undefined) {
 			this.dragProcess.currentY = pos.y;
-			this.dragProcess.el.style.top = pos.y + this.unit;
+			this.dragProcess.el.css('top',  pos.y + this.unit);
 		}
 	},
 
@@ -552,10 +561,11 @@ ludo.effect.Drag = new Class({
 
 	getXDrag:function (e) {
 		var posX;
+
 		if(this.mouseXOffset){
-			posX = e.page.x + this.mouseXOffset;
+			posX = e.pageX + this.mouseXOffset;
 		}else{
-			posX = e.page.x - this.dragProcess.mouseX + this.dragProcess.elX;
+			posX = e.pageX - this.dragProcess.mouseX + this.dragProcess.elX;
 		}
 
 		if (posX < this.dragProcess.minX) {
@@ -570,9 +580,9 @@ ludo.effect.Drag = new Class({
 	getYDrag:function (e) {
 		var posY;
 		if(this.mouseYOffset){
-			posY = e.page.y + this.mouseYOffset;
+			posY = e.pageY + this.mouseYOffset;
 		}else{
-			posY = e.page.y - this.dragProcess.mouseY + this.dragProcess.elY;
+			posY = e.pageY - this.dragProcess.mouseY + this.dragProcess.elY;
 		}
 
 		if (posY < this.dragProcess.minY) {
@@ -750,7 +760,7 @@ ludo.effect.Drag = new Class({
 	 */
 	getShim:function () {
 		if (this.shim === undefined) {
-			this.shim = new Element('div');
+			this.shim = $('<div>');
 			ludo.dom.addClass(this.shim, 'ludo-shim');
 			this.shim.setStyles({
 				position:'absolute',
@@ -818,7 +828,7 @@ ludo.effect.Drag = new Class({
 	 * @method hideShim
 	 */
 	hideShim:function () {
-		this.getShim().style.display = 'none';
+		this.getShim().css('display', 'none');
 	},
 
 	/**

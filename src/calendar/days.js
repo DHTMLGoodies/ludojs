@@ -67,13 +67,13 @@ ludo.calendar.Days = new Class({
             if (Math.abs(left) > Math.abs(top)) {
                 if (left > 100)left = 100;
                 if (left < -100) left = -100;
-                this.els.monthView.style.left = left + 'px';
-                this.els.monthView.style.top = '0px';
+                this.els.monthView.css('left',  left + 'px');
+                this.els.monthView.css('top',  '0px');
             } else {
                 if (top > 100)top = 100;
                 if (top < -100) top = -100;
-                this.els.monthView.style.top = top + 'px';
-                this.els.monthView.style.left = '0px';
+                this.els.monthView.css('top',  top + 'px');
+                this.els.monthView.css('left',  '0px');
             }
             return false;
         }
@@ -97,13 +97,13 @@ ludo.calendar.Days = new Class({
                 this.sendSetDateEvent();
                 this.showMonth();
             }
-            this.els.monthView.style.left = '0';
-            this.els.monthView.style.top = '0';
+            this.els.monthView.css('left',  '0');
+            this.els.monthView.css('top',  '0');
         }
 
     },
     createCalendarHeader:function () {
-        var el = this.els.daysHeader = new Element('div');
+        var el = this.els.daysHeader = $('<div>');
         ludo.dom.addClass(el, 'ludo-calendar-header');
         this.getBody().adopt(el);
 
@@ -133,7 +133,7 @@ ludo.calendar.Days = new Class({
 
         var c = this.els.daysContainer;
         height -= (ludo.dom.getMH(c) + ludo.dom.getPH(c) + ludo.dom.getBH(c));
-        c.style.height = height + 'px';
+        c.css('height',  height + 'px');
     },
 
     getColGroup:function () {
@@ -160,17 +160,17 @@ ludo.calendar.Days = new Class({
     },
 
     createCalendarView:function () {
-        var el = this.els.daysContainer = new Element('div');
+        var el = this.els.daysContainer = $('<div>');
         ludo.dom.addClass(el, 'ludo-calendar-container-days');
-        el.setStyles({
+        el.css({
             position:'relative',
             width:'100%',
             overflow:'hidden',
             left:0,
             top:0
         });
-        el.addEvent('mousemove', this.mouseOverDays.bind(this));
-        el.addEvent('mouseleave', this.removeClsFromMouseOverDay.bind(this));
+        el.on('mousemove', this.mouseOverDays.bind(this));
+        el.on('mouseleave', this.removeClsFromMouseOverDay.bind(this));
         this.getBody().adopt(el);
     },
     showMonth:function () {
@@ -178,11 +178,11 @@ ludo.calendar.Days = new Class({
             this.els.monthView.dispose();
         }
 
-        var el = this.els.monthView = new Element('div');
+        var el = this.els.monthView = $('<div>');
         el.addEvent('click', this.selectDay.bind(this));
         ludo.dom.addClass(el, 'ludo-calendar-body-days');
         this.resizeMonthView();
-        el.style.position = 'absolute';
+        el.css('position', 'absolute');
 
         this.els.daysContainer.adopt(el);
 
@@ -263,7 +263,7 @@ ludo.calendar.Days = new Class({
         return today.get('month') == this.date.get('month') && today.get('year') == this.date.get('year');
     },
     resizeMonthView:function () {
-        this.els.monthView.style.width = '100%';
+        this.els.monthView.css('width',  '100%');
     },
 
     getDaysForView:function () {

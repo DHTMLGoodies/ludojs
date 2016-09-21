@@ -103,13 +103,17 @@ ludo.remote.JSON = new Class({
 
 		this.fireEvent('start', this);
         this.sendBroadCast(service);
-        var req = new Request.JSON({
+
+        $.ajax({
             url:this.getUrl(service, resourceArguments),
             method:this.method,
-            noCache:true,
+            cache:false,
+            dataType:'json',
             data:this.getDataForRequest(service, resourceArguments, serviceArguments, additionalData),
-            onSuccess:function (json) {
+            success:function (json) {
                 this.remoteData = json;
+                console.log("success");
+                console.log(json);
                 if (json.success || json.success === undefined) {
                     this.fireEvent('success', this);
                 } else {
@@ -118,14 +122,13 @@ ludo.remote.JSON = new Class({
                 this.sendBroadCast(service);
 				this.onComplete();
             }.bind(this),
-            onError:function (text, error) {
+            fail:function (text, error) {
                 this.remoteData = { "code": 500, "message": error };
                 this.fireEvent('servererror', this);
                 this.sendBroadCast(service);
                 this.onComplete();
             }.bind(this)
         });
-        req.send();
     },
     /**
      * Return JSON response data from last request.

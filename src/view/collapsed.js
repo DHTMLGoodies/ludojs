@@ -12,15 +12,15 @@ ludo.view.Collapsed = new Class({
 
     createDOM:function () {
 		var cls = this.component.layout.collapsible == 'left' || this.component.layout.collapsible == 'right' ? 'cols' : 'rows';
-        var el = this.el = new Element('div');
-        el.style.display = 'none';
-        el.style.margin = this.component.getEl().style.margin;
+        var el = this.el = $('<div>');
+        el.css('display', 'none');
+        el.css('margin',  this.component.getEl().css('margin'));
         el.addEvent('mouseenter', this.mouseEnterCollapsed.bind(this));
         el.addEvent('mouseleave', this.mouseLeavesCollapsed.bind(this));
         el.addEvent('click', this.expand.bind(this));
         ludo.dom.addClass(el, 'ludo-view-collapsed');
         ludo.dom.addClass(el, 'ludo-view-collapsed-' +cls);
-        var title = this.titleEl = new Element('div');
+        var title = this.titleEl = $('<div>');
         ludo.dom.addClass(title, 'ludo-view-collapsed-title');
         ludo.dom.addClass(title, 'ludo-view-collapsed-title-' + cls);
         title.set('html', '<span>' + this.component.title + '</span>');
@@ -51,8 +51,8 @@ ludo.view.Collapsed = new Class({
 		c.adopt(text);
 		text.text(this.component.title);
 		text.set('transform', this.getTransform(270, text.el));
-		this.titleEl.style.display='none';
-		this.el.style.display='none';
+		this.titleEl.css('display', 'none');
+		this.el.css('display', 'none');
 	},
 
 	getTransform:function(rotation, el){
@@ -71,12 +71,12 @@ ludo.view.Collapsed = new Class({
     },
 
     show:function () {
-        this.el.style.display = '';
+        this.el.css('display',  '');
         this.resize();
     },
 
     hide:function(){
-        this.el.style.display = 'none';
+        this.el.css('display', 'none');
     },
 
     mouseEnterCollapsed:function () {

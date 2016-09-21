@@ -56,8 +56,8 @@ ludo.view.Shim = new Class({
 	resizeShim:function(){
 		var span = document.id(this.el).getElement('span');
 		var width = (span.offsetWidth + 5);
-		this.el.style.width = width + 'px';
-		this.el.style.marginLeft = (Math.round(width/2) * -1) + 'px';
+		this.el.css('width',  width + 'px');
+		this.el.css('marginLeft',  (Math.round(width/2) * -1) + 'px');
 	},
 
 	getText:function(txt){
@@ -69,7 +69,7 @@ ludo.view.Shim = new Class({
         this.css('none');
     },
     css:function (d) {
-        this.getShim().style.display = d;
-        this.getEl().style.display = d === '' && this.txt ? '' : 'none';
+        this.getShim().css('display',  d);
+        this.getEl().css('display',  d === '' && this.txt ? '' : 'none');
     }
 });
