@@ -1,4 +1,4 @@
-/* Generated Fri Sep 16 16:48:25 CEST 2016 */
+/* Generated Wed Sep 21 13:31:34 CEST 2016 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -30,7 +30,7 @@ window.ludo = {
     dataSource:{},controller:{},card:{},canvas:{},socket:{},menu:{},view:{},audio:{}, ludoDB:{}
 };
 
-if (Browser['ie']) {
+if (navigator.appName == 'Microsoft Internet Explorer'){
     try {
         document.execCommand("BackgroundImageCache", false, true);
     } catch (e) { }
@@ -4121,7 +4121,7 @@ ludo.dataSource.JSON = new Class({
 
     /**
      * Update data source with new date and trigger events "parseData",
-     * @param data
+     * @param {Array} data
      */
     setData:function(data){
         this.loadComplete(data);
@@ -7068,6 +7068,7 @@ ludo.dataSource.Collection = new Class({
 	 * @return {Object|undefined} record
 	 */
 	findRecord:function (search) {
+
 		if (!this.data)return undefined;
 		if(search['getUID'] !== undefined)search = search.getUID();
 
@@ -7076,6 +7077,7 @@ ludo.dataSource.Collection = new Class({
 		if(rec)return rec;
 
 		var searchMethod = ludo.util.isObject(search) ? 'isRecordMatchingSearch' : 'hasMatchInPrimaryKey';
+
 
 		for (var i = 0; i < this.data.length; i++) {
 			if (this[searchMethod](this.data[i], search)) {
@@ -11425,7 +11427,7 @@ ludo.form.Element = new Class({
 
     /**
      * Enable or disable form element
-     * @param bool enabled
+     * @param {Boolean} enabled
      */
     setEnabled:function(enabled){
         if(enabled)this.enable(); else this.disable();
@@ -20381,7 +20383,7 @@ ludo.grid.Grid = new Class({
 	ludoConfig:function (config) {
 		this.parent(config);
 
-        this.setConfigParams(config, ['columns','fill','headerMenu','columnManager','rowManager','mouseOverEffect','emptyText']);
+        this.setConfigParams(config, ['columns','fill','headerMenu','columnManager','rowManager','mouseOverEffect','emptyText','highlightRecord']);
 
 		if(this.columnManager){
 			ludo.util.warn('Deprecated columnManager used, use columns instead');

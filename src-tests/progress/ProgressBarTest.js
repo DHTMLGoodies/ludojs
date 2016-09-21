@@ -101,7 +101,7 @@ TestCase("ProgressBarTest", {
 		var data = r.getDataForRequest('save');
 
 		// then
-		assertNotUndefined(JSON.encode(data), data['LudoDBProgressID']);
+		assertNotUndefined(JSON.encode(data), data.data['LudoDBProgressID']);
 
     },
 

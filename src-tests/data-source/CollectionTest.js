@@ -901,7 +901,7 @@ TestCase("CollectionTest", {
 			{"country":"Last", "capital":"Zzzz", "population":"955,629"}
 		]};
 		for (var i = 0; i < data.data.length; i++) {
-			data.data[i].id = (i + 1);
+			if(data.data[i].id== undefined) data.data[i].id = (i + 1);
 		}
 		return data;
 	}

@@ -123,9 +123,8 @@ TestCase("TransformationTest", {
 	"test should be able to have cache of transformation values": function(){
 		// given
 		var node = new ludo.canvas.Node('rect', {
-
 				'transform':'rotate(20) skewX(40) translate(20 40)'
-					});
+		});
 
 		// when
 		ludo.canvasEngine.buildTransformationCache(node.getEl());

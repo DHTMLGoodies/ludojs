@@ -8,7 +8,7 @@ window.ludo = {
     dataSource:{},controller:{},card:{},canvas:{},socket:{},menu:{},view:{},audio:{}, ludoDB:{}
 };
 
-if (Browser['ie']) {
+if (navigator.appName == 'Microsoft Internet Explorer'){
     try {
         document.execCommand("BackgroundImageCache", false, true);
     } catch (e) { }

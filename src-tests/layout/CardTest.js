@@ -896,6 +896,7 @@ TestCase("CardLayout", {
 		var deck = this.getDeckWithProgressBar();
 		var bar = deck.getLayout().getButton('progress-bar');
 
+		assertNotUndefined(bar);
 		assertFalse(bar.isHidden())
 	},
 	"test parent of progress bar should be deck":function () {

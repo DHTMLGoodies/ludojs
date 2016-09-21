@@ -330,6 +330,7 @@ ludo.dataSource.Collection = new Class({
 	 * @return {Object|undefined} record
 	 */
 	findRecord:function (search) {
+
 		if (!this.data)return undefined;
 		if(search['getUID'] !== undefined)search = search.getUID();
 
@@ -338,6 +339,7 @@ ludo.dataSource.Collection = new Class({
 		if(rec)return rec;
 
 		var searchMethod = ludo.util.isObject(search) ? 'isRecordMatchingSearch' : 'hasMatchInPrimaryKey';
+
 
 		for (var i = 0; i < this.data.length; i++) {
 			if (this[searchMethod](this.data[i], search)) {
