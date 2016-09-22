@@ -45,13 +45,14 @@ ludo.layout.TabStrip = new Class({
             node = this.getSVGTabFor(child);
         }
 
-        node.addEvent('click', child.show.bind(child, false));
-        this.getBody().adopt(node);
+        node.on('click', child.show.bind(child, false));
+        this.getBody().append(node);
         if (child.layout.closable) {
             this.addCloseButton(node, child);
         }
-        node.style[this.getPosAttribute()] = this.currentPos + 'px';
-        node.className = 'ludo-tab-strip-tab ludo-tab-strip-tab-' + this.tabPos;
+        node.css(this.getPosAttribute(), this.currentPos);
+        node.addClass("ludo-tab-strip-tab");
+        node.addClass('ludo-tab-strip-tab-' + this.tabPos);
         this.tabs[child.getId()] = node;
         this.increaseCurrentPos(node);
         if (!child.isHidden())this.activateTabFor(child);
@@ -60,25 +61,25 @@ ludo.layout.TabStrip = new Class({
     addCloseButton:function (node, child) {
         var el = $('<div>');
         el.className = 'ludo-tab-close ludo-tab-close-' + this.tabPos;
-        el.addEvent('mouseenter', this.enterCloseButton.bind(this));
-        el.addEvent('mouseleave', this.leaveCloseButton.bind(this));
+        el.on('mouseenter', this.enterCloseButton.bind(this));
+        el.on('mouseleave', this.leaveCloseButton.bind(this));
         el.id = 'tab-close-' + child.id;
-        el.addEvent('click', this.removeChild.bind(this));
-        node.appendChild(el);
+        el.on('click', this.removeChild.bind(this));
+        node.append(el);
         var p;
         switch (this.tabPos) {
             case 'top':
             case 'bottom':
-                p = node.getStyle('padding-right');
-                node.style.paddingRight = (parseInt(p) + el.offsetWidth) + 'px';
+                p = node.css('padding-right');
+                node.css('paddingRight', (parseInt(p) + el.width()));
                 break;
             case 'right':
-                p = node.getStyle('padding-right');
-                node.style.paddingBottom = (parseInt(p) + el.offsetHeight) + 'px';
+                p = node.css('padding-right');
+                node.css('paddingBottom', (parseInt(p) + el.height()));
                 break;
             case 'left':
-                p = node.getStyle('padding-right');
-                node.style.paddingTop = (parseInt(p) + el.offsetHeight) + 'px';
+                p = node.css('padding-right');
+                node.css('paddingTop',(parseInt(p) + el.height()));
                 break;
         }
     },
@@ -96,11 +97,11 @@ ludo.layout.TabStrip = new Class({
     },
 
     enterCloseButton:function (e) {
-        e.target.addClass('ludo-tab-close-' + this.tabPos + '-over');
+        $(e.target).addClass('ludo-tab-close-' + this.tabPos + '-over');
     },
 
     leaveCloseButton:function (e) {
-        e.target.removeClass('ludo-tab-close-' + this.tabPos + '-over');
+        $(e.target).removeClass('ludo-tab-close-' + this.tabPos + '-over');
     },
 
     getPosAttribute:function () {
@@ -121,18 +122,18 @@ ludo.layout.TabStrip = new Class({
 
     increaseCurrentPos:function (node) {
         if (this.tabPos === 'top' || this.tabPos === 'bottom') {
-            this.currentPos += node.offsetWidth + ludo.dom.getMW(node);
+            this.currentPos += node.outerWidth() + ludo.dom.getMW(node);
         } else {
-            this.currentPos += node.offsetHeight + ludo.dom.getMH(node);
+            this.currentPos += node.outerHeight() + ludo.dom.getMH(node);
         }
         this.currentPos--;
     },
 
     getPlainTabFor:function (child) {
         var el = $('<div>');
-        this.getBody().adopt(el);
+        this.getBody().append(el);
         el.className = 'ludo-tab-strip-tab ludo-tab-strip-tab-' + this.tabPos;
-        el.innerHTML = '<div class="ludo-tab-strip-tab-bg-first"></div><div class="ludo-tab-strip-tab-bg-last"></div>';
+        el.html('<div class="ludo-tab-strip-tab-bg-first"></div><div class="ludo-tab-strip-tab-bg-last"></div>');
         ludo.dom.create({
             tag:'span',html : this.getTitleFor(child),renderTo:el
         });
@@ -141,10 +142,10 @@ ludo.layout.TabStrip = new Class({
 
     getSVGTabFor:function (child) {
         var el = $('<div>');
-        this.getBody().adopt(el);
-        el.innerHTML = '<div class="ludo-tab-strip-tab-bg-first"></div><div class="ludo-tab-strip-tab-bg-last">';
-        var svgEl = document.createElement('div');
-        el.adopt(svgEl);
+        this.getBody().append(el);
+        el.html('<div class="ludo-tab-strip-tab-bg-first"></div><div class="ludo-tab-strip-tab-bg-last">');
+        var svgEl = $('<div>');
+        el.append(svgEl);
         var box = new ludo.layout.TextBox({
             renderTo:svgEl,
             width:100, height:100,
@@ -153,8 +154,9 @@ ludo.layout.TabStrip = new Class({
             rotation:this.getRotation()
         });
         var size = box.getSize();
-        svgEl.style.width = size.x + 'px';
-        svgEl.style.height = size.y + 'px';
+        svgEl.css({
+            'width':size.x, height: size.y
+        });
 
         return el;
     },
@@ -185,24 +187,24 @@ ludo.layout.TabStrip = new Class({
 
     activateTabFor:function (child) {
         if (this.activeTab !== undefined) {
-            ludo.dom.removeClass(this.activeTab, 'ludo-tab-strip-tab-active');
+            this.activeTab.removeClass('ludo-tab-strip-tab-active');
         }
         if (this.tabs[child.id] !== undefined) {
-            ludo.dom.addClass(this.tabs[child.id], 'ludo-tab-strip-tab-active');
+            this.tabs[child.id].addClass('ludo-tab-strip-tab-active');
             this.activeTab = this.tabs[child.id];
-            this.activeTab.style.zIndex = this.currentZIndex;
+            this.activeTab.css('zIndex', this.currentZIndex);
             this.currentZIndex++;
         }
     },
 
     ludoDOM:function () {
         this.parent();
-        ludo.dom.addClass(this.getEl(), 'ludo-tab-strip');
-        ludo.dom.addClass(this.getEl(), 'ludo-tab-strip-' + this.tabPos);
+        this.getEl().addClass('ludo-tab-strip');
+        this.getEl().addClass('ludo-tab-strip-' + this.tabPos);
 
-        var el = document.createElement('div');
-        ludo.dom.addClass(el, 'ludo-tab-strip-line');
-        this.getBody().adopt(el);
+        var el = $('<div>');
+        el.addClass('ludo-tab-strip-line');
+        this.getBody().append(el);
     },
 
     getTabFor:function (child) {
@@ -212,9 +214,9 @@ ludo.layout.TabStrip = new Class({
     getChangedViewport:function () {
         var value;
         if (this.tabPos === 'top' || this.tabPos === 'bottom') {
-            value = this.getEl().offsetHeight + ludo.dom.getMH(this.getEl());
+            value = this.getEl().height() + ludo.dom.getMH(this.getEl());
         } else {
-            value = this.getEl().offsetWidth + ludo.dom.getMW(this.getEl());
+            value = this.getEl().width() + ludo.dom.getMW(this.getEl());
         }
         return {
             key:this.tabPos, value:value

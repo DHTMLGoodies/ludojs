@@ -31,7 +31,7 @@ ludo.calendar.MonthSelector = new Class({
         ludo.dom.addClass(el, 'ludo-calendar-month-tip');
         ludo.dom.addClass(el, 'ludo-calendar-month');
         el.addEvent('click', this.clickMonth.bind(this));
-        this.els.monthContainer.adopt(el);
+        this.els.monthContainer.append(el);
     },
 
     createMonthContainer:function(){
@@ -40,11 +40,11 @@ ludo.calendar.MonthSelector = new Class({
         el.setStyles({
             position:'absolute', width : '3000px', left:0,top:0
         });
-        this.getBody().adopt(el);
+        this.getBody().append(el);
     },
 
     renderMonths:function(){
-        this.els.monthContainer.set('html', '');
+        this.els.monthContainer.html( '');
         this.createMonthTooltip();
         var month = this.date.get('month');
 
@@ -52,11 +52,11 @@ ludo.calendar.MonthSelector = new Class({
             var el = $('<div>');
             ludo.dom.addClass(el, 'ludo-calendar-month');
             el.setProperty('month', i);
-            this.els.monthContainer.adopt(el);
+            this.els.monthContainer.append(el);
 
             if(i==month){
                 ludo.dom.addClass(el, 'ludo-calendar-month-selected');
-                el.set('html', '<span>' + this.months[i] + '</span>');
+                el.html( '<span>' + this.months[i] + '</span>');
                 el.addEvent('mouseenter', this.hideTooltip.bind(this));
             }else{
                 el.addEvent('mouseenter', this.showTooltip.bind(this));
@@ -70,7 +70,7 @@ ludo.calendar.MonthSelector = new Class({
 
     clickMonth:function(e){
         var el = this.getMonthEl(e.target);
-        this.setMonth(el.getProperty('month'));
+        this.setMonth(el.attr('month'));
         this.sendSetDateEvent();
     },
 
@@ -82,9 +82,9 @@ ludo.calendar.MonthSelector = new Class({
     showTooltip:function(e){
         var el = this.getMonthEl(e.target);
         var tip = this.els.monthTip;
-        tip.setProperty('month', el.getProperty('month'));
-        var month = this.months[el.getProperty('month')];
-        tip.set('html', month);
+        tip.setProperty('month', el.attr('month'));
+        var month = this.months[el.attr('month')];
+        tip.html( month);
         tip.css('left',  Math.max(0, el.offsetLeft) + 'px');
         tip.css('display',  '');
     },

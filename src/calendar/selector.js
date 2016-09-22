@@ -25,9 +25,7 @@ ludo.calendar.Selector = new Class({
     ludoRendered:function () {
         this.parent();
         this.createOptionsContainer();
-        this.fx = new Fx.Tween(this.els.calendarContainer, {
-            duration:200
-        });
+
         this.renderOptions();
         this.autoResize();
     },
@@ -35,13 +33,13 @@ ludo.calendar.Selector = new Class({
     createOptionsContainer:function () {
         var el = this.els.calendarContainer = $('<div>');
         el.addClass(this.calCls);
-        el.setStyles({
+        el.css({
             position:'absolute', width:'3000px', left:0, top:0
         });
-        this.getBody().adopt(el);
+        this.getBody().append(el);
     },
     autoResize:function () {
-        var height = this.els.calendarContainer.getSize().y;
+        var height = this.els.calendarContainer.height();
         height += ludo.dom.getMH(this.els.calendarContainer);
         this.layout.height = height + ludo.dom.getMBPH(this.getBody()) + ludo.dom.getMBPH(this.getEl());
 
@@ -56,18 +54,22 @@ ludo.calendar.Selector = new Class({
 
     removeOptions:function () {
         for (var i = 0; i < this.els.options.length; i++) {
-            this.els.options[i].dispose();
+            this.els.options[i].remove();
         }
         this.els.options = [];
     },
 
     centerDom:function (domEl) {
-        domEl.getParent().css('marginLeft',  this.getCenterPos(domEl) + 'px');
+        domEl.parent().css('marginLeft',  this.getCenterPos(domEl) + 'px');
     },
 
     animateDomToCenter:function (domEl) {
-        if(domEl && domEl.getParent()){
-            this.fx.start('margin-left', domEl.getParent().style.marginLeft, this.getCenterPos(domEl));
+        if(domEl && $(domEl).parent()){
+            this.els.calendarContainer.animate(
+            { 'margin-left' : this.getCenterPos(domEl)},
+                200
+            );
+            // this.fx.start('margin-left', domEl.getParent().style.marginLeft, this.getCenterPos(domEl));
         }
     },
 

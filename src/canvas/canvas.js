@@ -38,9 +38,9 @@ ludo.canvas.Canvas = new Class({
 				this.view.addEvent('resize', this.fitParent.bind(this));
 				this.renderTo = this.view.getBody();
 			}else{
-				this.renderTo = document.id(this.renderTo);
+				this.renderTo = $(this.renderTo);
 			}
-			this.renderTo.adopt(this.getEl());
+			this.renderTo.append(this.getEl());
 			this.setInitialSize(config);
 		}
 	},

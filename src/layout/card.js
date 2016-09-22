@@ -368,19 +368,19 @@ ludo.layout.Card = new Class({
 	},
 
 	animateFromRight:function () {
-		this.animateAlongX(this.visibleCard.getParent().getBody().offsetWidth, 0);
+		this.animateAlongX(this.visibleCard.getParent().getBody().width(), 0);
 	},
 
 	animateFromLeft:function () {
-		this.animateAlongX(this.visibleCard.getParent().getBody().offsetWidth * -1, 0);
+		this.animateAlongX(this.visibleCard.getParent().getBody().width() * -1, 0);
 	},
 
 	animateFromTop:function () {
-		this.animateAlongY(this.visibleCard.getParent().getBody().offsetHeight * -1, 0);
+		this.animateAlongY(this.visibleCard.getParent().getBody().height() * -1, 0);
 	},
 
 	animateFromBottom:function () {
-		this.animateAlongY(this.visibleCard.getParent().getBody().offsetHeight, 0);
+		this.animateAlongY(this.visibleCard.getParent().getBody().height(), 0);
 	},
 
 	animateAlongX:function (from, to) {
@@ -430,7 +430,7 @@ ludo.layout.Card = new Class({
 		var isLastCard = this.isLastCard(this.visibleCard);
 		this.renderNextAndPreviousCard();
 		var animateX = this.shouldAnimateOnXAxis();
-		var parentSize = animateX ? this.view.getEl().offsetWidth : this.view.getEl().offsetHeight;
+		var parentSize = animateX ? this.view.getEl().width() : this.view.getEl().height();
 		this.touch = {
 			active:true,
 			pos:animateX ? e.page.x : e.page.y,
@@ -532,18 +532,18 @@ ludo.layout.Card = new Class({
 
 	animateToPrevious:function () {
 		if (this.touch.animateX) {
-			this.animateAlongX(ludo.dom.getNumericStyle(this.visibleCard.getEl(), 'left'), this.view.getEl().offsetWidth);
+			this.animateAlongX(ludo.dom.getNumericStyle(this.visibleCard.getEl(), 'left'), this.view.getEl().width());
 		} else {
-			this.animateAlongY(ludo.dom.getNumericStyle(this.visibleCard.getEl(), 'top'), this.view.getEl().offsetHeight);
+			this.animateAlongY(ludo.dom.getNumericStyle(this.visibleCard.getEl(), 'top'), this.view.getEl().height());
 		}
 		this.showPreviousCard.delay(this.getAnimationDuration(), this, true);
 	},
 
 	animateToNext:function () {
 		if (this.touch.animateX) {
-			this.animateAlongX(ludo.dom.getNumericStyle(this.visibleCard.getEl(), 'left'), this.view.getEl().offsetWidth * -1);
+			this.animateAlongX(ludo.dom.getNumericStyle(this.visibleCard.getEl(), 'left'), this.view.getEl().width() * -1);
 		} else {
-			this.animateAlongX(ludo.dom.getNumericStyle(this.visibleCard.getEl(), 'top'), this.view.getEl().offsetHeight * -1);
+			this.animateAlongX(ludo.dom.getNumericStyle(this.visibleCard.getEl(), 'top'), this.view.getEl().height() * -1);
 		}
 		this.showNextCard.delay(this.getAnimationDuration(), this, true);
 	}

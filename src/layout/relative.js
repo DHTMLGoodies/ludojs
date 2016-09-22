@@ -403,8 +403,8 @@ ludo.layout.Relative = new Class({
 		var el = child.getEl();
 		if (lc.left === undefined) lc.left = el.offsetLeft > 0 ? el.offsetLeft : 0;
 		if (lc.top === undefined) lc.top = el.offsetTop > 0 ? el.offsetTop : 0;
-		if (lc.width === undefined) lc.width = el.offsetWidth;
-		if (lc.height === undefined) lc.height = el.offsetHeight;
+		if (lc.width === undefined) lc.width = el.width();
+		if (lc.height === undefined) lc.height = el.height();
 		if (lc.right === undefined) lc.right = this.viewport.width - lc.left - lc.width;
 		if (lc.bottom === undefined) lc.bottom = this.viewport.height - lc.top - lc.height;
 	},
@@ -570,10 +570,10 @@ ludo.layout.Relative = new Class({
 	beforeResize:function(resize, child){
 		if(resize.orientation === 'horizontal'){
 			resize.setMinWidth(child.layout.minWidth || 10);
-			resize.setMaxWidth(child.layout.maxWidth || this.view.getBody().offsetWidth);
+			resize.setMaxWidth(child.layout.maxWidth || this.view.getBody().width());
 		}else{
 			resize.setMinHeight(child.layout.minHeight || 10);
-			resize.setMaxHeight(child.layout.maxHeight || this.view.getBody().offsetHeight);
+			resize.setMaxHeight(child.layout.maxHeight || this.view.getBody().height());
 		}
 	},
     /**

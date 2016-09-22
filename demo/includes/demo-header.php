@@ -11,6 +11,7 @@ $skin = isset($skin) ? $skin : 'light-gray';
 
     <script type="text/javascript" src="<?php echo $prefix; ?>../jquery/jquery-3.1.0.min.js"></script>
     <script type="text/javascript" src="<?php echo $prefix; ?>../mootools/mootools-core-1.6.0.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../mootools/mootools-More-1.6.0.js"></script>
     <link rel="icon" type="image/gif" href="<?php echo $prefix; ?>../images/favicon.png" />
     <style type="text/css">
     body{
@@ -31,8 +32,19 @@ $skin = isset($skin) ? $skin : 'light-gray';
     <script type="text/javascript" src="<?php echo $prefix; ?>../src/core.js"></script>
     <script type="text/javascript" src="<?php echo $prefix; ?>../src/view.js"></script>
 
+
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/engine.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/node.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/named-node.js"></script>
     <script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/element.js"></script>
     <script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/canvas.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/filter.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/gradient.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/mask.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/polyline.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/polygon.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/paint.js"></script>
+
 
     <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/base.js"></script>
     <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/linear.js"></script>
@@ -55,6 +67,9 @@ $skin = isset($skin) ? $skin : 'light-gray';
     <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/menu-vertical.js"></script>
     <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/menu-container.js"></script>
     <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/collapse-bar.js"></script>
+
+
+
 
 
     <script type="text/javascript" src="<?php echo $prefix; ?>../src/effect/effect.js"></script>
@@ -121,6 +136,16 @@ $skin = isset($skin) ? $skin : 'light-gray';
 
     <script type="text/javascript" src="<?php echo $prefix; ?>../src/notification.js"></script>
 
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/calendar/base.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/calendar/calendar.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/calendar/selector.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/calendar/year-selector.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/calendar/month-year-selector.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/calendar/month-selector.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/calendar/days.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/calendar/nav-bar.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/calendar/today.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/language/default.js"></script>
 
     <script type="text/javascript" src="<?php echo $prefix; ?>code-highlight/code-highlight.js"></script>
     <link rel="stylesheet" href="<?php echo $prefix; ?>../css/ludojs-<?php echo $skin; ?>.css" type="text/css">

@@ -19,7 +19,7 @@ ludo.calendar.MonthYearSelector = new Class({
         this.els.activeOption = undefined;
         for (var i = this.offsetOptions*-1; i <= this.offsetOptions; i++) {
             var el = this.getDomForAMonth(i);
-            this.els.calendarContainer.adopt(el);
+            this.els.calendarContainer.append(el);
             this.els.options.push(el);
         }
         this.setMinAndMaxDisplayed();
@@ -37,7 +37,7 @@ ludo.calendar.MonthYearSelector = new Class({
         var txt = this.months[d.get('month')];
         var el = $('<div>');
 
-        el.setProperties({
+        el.attr({
             'year' : d.get('year'), 'month' : d.get('month')
         });
         ludo.dom.addClass(el, 'ludo-calendar-month-year');
@@ -45,8 +45,8 @@ ludo.calendar.MonthYearSelector = new Class({
             ludo.dom.addClass(el, 'ludo-calendar-month-year-selected');
             this.els.activeOption = el;
         }
-        el.set('html', '<span>' + txt + '</span>');
-        el.addEvent('click', this.clickMonth.bind(this));
+        el.html('<span>' + txt + '</span>');
+        el.on('click', this.clickMonth.bind(this));
         return el;
     },
 
@@ -54,7 +54,7 @@ ludo.calendar.MonthYearSelector = new Class({
         var el = e.target;
         if (!el.hasClass('ludo-calendar-month-year'))el = el.getParent('.ludo-calendar-month-year');
 
-        this.setMonthAndYear(el.getProperty('month'), el.getProperty('year'));
+        this.setMonthAndYear(el.attr('month'), el.attr('year'));
         this.sendSetDateEvent();
     },
 
@@ -73,7 +73,7 @@ ludo.calendar.MonthYearSelector = new Class({
         this.addAndRemoveOptions();
         if (this.els.activeOption) {
             this.centerDom(this.els.activeOption);
-            this.els.activeOption.set('html', this.months[this.els.activeOption.getProperty('month')]);
+            this.els.activeOption.html( this.months[this.els.activeOption.attr('month')]);
             this.els.activeOption.removeClass('ludo-calendar-month-year-selected');
         }
         this.els.activeOption = this.getNewActiveOption();
@@ -83,7 +83,7 @@ ludo.calendar.MonthYearSelector = new Class({
 
     populateActiveMonth:function() {
         ludo.dom.addClass(this.els.activeOption, 'ludo-calendar-month-year-selected');
-        this.els.activeOption.set('html', this.months[this.date.get('month')] + ', ' + this.date.get('year'));
+        this.els.activeOption.html( this.months[this.date.get('month')] + ', ' + this.date.get('year'));
     },
 
     addAndRemoveOptions:function () {
@@ -106,9 +106,9 @@ ludo.calendar.MonthYearSelector = new Class({
         for (var i = 0; i<count;i++) {
             var monthsFromCurrent = i - this.offsetOptions;
             var el = this.getDomForAMonth(monthsFromCurrent);
-            el.inject(this.els.options[0], 'before');
+            el.insertBefore(this.els.options[0]);
             els.push(el);
-            this.els.options[this.els.options.length - 1].dispose();
+            this.els.options[this.els.options.length - 1].remove();
             this.els.options.length--;
         }
         this.els.options = els.append(this.els.options);
@@ -117,9 +117,9 @@ ludo.calendar.MonthYearSelector = new Class({
         for (var i = count; i > 0; i--) {
             var monthsFromCurrent = this.offsetOptions - i + 1;
             var el = this.getDomForAMonth(monthsFromCurrent);
-            this.els.calendarContainer.adopt(el);
+            this.els.calendarContainer.append(el);
             this.els.options.push(el);
-            this.els.options[i - 1].dispose();
+            this.els.options[i - 1].remove();
         }
         this.els.options = this.els.options.slice(count);
     },
@@ -127,7 +127,7 @@ ludo.calendar.MonthYearSelector = new Class({
     getNewActiveOption:function () {
         var year = this.date.get('year'), month = this.date.get('month');
         for (var i = 0; i < this.els.options.length; i++) {
-            if (this.els.options[i].getProperty('year') == year && this.els.options[i].getProperty('month') == month) {
+            if (this.els.options[i].attr('year') == year && this.els.options[i].attr('month') == month) {
                 return this.els.options[i];
             }
         }

@@ -79,10 +79,10 @@ ludo.layout.Menu = new Class({
 		if (this.parentForNewChild === undefined) {
 			var isTop = !this.hasMenuLayout(this.view.parentComponent);
 			var p = isTop ? this.parent() : this.getMenuContainer().getBody();
-			ludo.dom.addClass(p.parentNode, 'ludo-menu');
+			p.parentNode.addClass('ludo-menu');
 			ludo.dom.addClass(p.parentNode, 'ludo-menu-' + this.view.layout.orientation);
 
-			if (isTop && !this.view.layout.isContext)ludo.dom.addClass(p.parentNode, 'ludo-menu-top');
+			if (isTop && !this.view.layout.isContext)p.parentNode.addClass('ludo-menu-top');
 			this.parentForNewChild = p;
 
 			if (isTop) {
@@ -248,7 +248,7 @@ ludo.layout.Menu = new Class({
 		var items = child.getParentMenuItems();
 		this.clearHighlightedPath(items);
 		for (var i = 0; i < items.length; i++) {
-			ludo.dom.addClass(items[i].getEl(), 'ludo-menu-item-active');
+			items[i].getEl().addClass('ludo-menu-item-active');
 		}
 		this.highlightedItems = items;
 	},

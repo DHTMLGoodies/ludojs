@@ -147,7 +147,7 @@ ludo.effect.Resize = new Class({
 
     addHandle:function (region, cssClass) {
         var el = this.els.handle[region] = $('<div>');
-        ludo.dom.addClass(el, 'ludo-component-resize-el');
+        el.addClass('ludo-component-resize-el');
         el.addClass(this.getCssFor(region));
         if (cssClass)el.addClass(cssClass);
         el.html('<span></span>');

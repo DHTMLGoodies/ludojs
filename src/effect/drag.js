@@ -324,7 +324,7 @@ ludo.effect.Drag = new Class({
 	getIdByEvent:function (e) {
 		var el = $(e.target);
 		if (!el.hasClass('ludo-drag')) {
-			el = el.getParent('.ludo-drag');
+			el = el.closest('.ludo-drag');
 		}
 		return el.attr('forId');
 	},

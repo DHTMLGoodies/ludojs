@@ -37,7 +37,7 @@ ludo.layout.Resizer = new Class({
 	enterResizer:function(){
 		if(!this.isActive){
 			this.el.css('z-index', parseInt(this.el.css('z-index')) + 1);
-			ludo.dom.addClass(this.el, 'ludo-resize-handle-active');
+			this.el.addClass('ludo-resize-handle-active');
 		}
 	},
 
@@ -60,7 +60,7 @@ ludo.layout.Resizer = new Class({
 		this.dd.setMinX(30);
 		this.isActive = true;
 		ludo.dom.removeClass(this.el, 'ludo-resize-handle-active');
-		ludo.dom.addClass(this.el, 'ludo-resize-handle-active');
+		this.el.addClass('ludo-resize-handle-active');
 		this.fireEvent('before', [this, this.view]);
 		this.fireEvent('startResize');
 	},
@@ -68,7 +68,7 @@ ludo.layout.Resizer = new Class({
 	setMinWidth:function(x){
 		if(this.pos === 'left'){
 			var el = this.view.getEl();
-			this.dd.setMaxX(el.offsetLeft + el.offsetWidth - x);
+			this.dd.setMaxX(el.offsetLeft + el.width() - x);
 		}else{
 			this.dd.setMinX(this.view.getEl().offsetLeft + x);
 		}
@@ -83,14 +83,14 @@ ludo.layout.Resizer = new Class({
 			if(this.layout.affectedSibling){
 				pos = this.layout.affectedSibling.getEl().offsetLeft + 10;
 			}
-			this.dd.setMinX(Math.max(pos, el.offsetLeft + el.offsetWidth - x));
+			this.dd.setMinX(Math.max(pos, el.offsetLeft + el.width() - x));
 		}
 	},
 
 	setMinHeight:function(y){
 		if(this.pos === 'above'){
 			var el = this.view.getEl();
-			this.dd.setMaxY(el.offsetTop + el.offsetHeight - y);
+			this.dd.setMaxY(el.offsetTop + el.height() - y);
 		}else{
 			this.dd.setMinY(this.view.getEl().offsetTop + y);
 		}
@@ -106,7 +106,7 @@ ludo.layout.Resizer = new Class({
 			if(this.layout.affectedSibling){
 				pos = this.layout.affectedSibling.getEl().offsetTop + 10;
 			}
-			this.dd.setMinY(Math.max(pos, el.offsetTop + el.offsetHeight - y));
+			this.dd.setMinY(Math.max(pos, el.offsetTop + el.height() - y));
 		}
 	},
 
@@ -154,11 +154,9 @@ ludo.layout.Resizer = new Class({
 	},
 
 	resize:function(config){
-
 		this.el.css({
 			left:'', top:'',right:'',bottom:''
 		});
-
 
 		if(config.width !== undefined && config.width > 0)this.el.css('width', config.width);
 		if(config.height !== undefined && config.height > 0)this.el.css('height', (config.height - ludo.dom.getMBPH(this.el)));

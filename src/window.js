@@ -124,7 +124,7 @@ ludo.Window = new Class({
 
     ludoRendered:function () {
         this.parent();
-        ludo.dom.addClass(this.getEl(), 'ludo-window');
+        this.getEl().addClass('ludo-window');
         this.focusFirstFormField();
         this.fireEvent('activate', this);
     },

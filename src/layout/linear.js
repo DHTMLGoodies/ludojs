@@ -41,10 +41,10 @@ ludo.layout.Linear = new Class({
 	beforeResize:function (resize, child) {
 		if (resize.orientation === 'horizontal') {
 			resize.setMinWidth(child.layout.minWidth || 10);
-			resize.setMaxWidth(child.layout.maxWidth || this.view.getBody().offsetWidth);
+			resize.setMaxWidth(child.layout.maxWidth || this.view.getBody().width());
 		} else {
 			resize.setMinHeight(child.layout.minHeight || 10);
-			resize.setMaxHeight(child.layout.maxHeight || this.view.getBody().offsetHeight);
+			resize.setMaxHeight(child.layout.maxHeight || this.view.getBody().height());
 		}
 	},
 

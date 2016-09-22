@@ -57,7 +57,7 @@ ludo.layout.Resizable = new Class({
 
     createDOM:function () {
         this.el = $('<div>');
-        ludo.dom.addClass(this.el, 'ludo-resize-handle');
+        this.el.addClass('ludo-resize-handle');
         ludo.dom.addClass(this.el, 'ludo-resize-handle-' + this.type);
         var styles = {
             'position':'absolute',
@@ -125,7 +125,7 @@ ludo.layout.Resizable = new Class({
 
     startResize:function (e) {
 		ludo.EffectObject.start();
-        ludo.dom.addClass(this.el, 'ludo-resize-handle-active');
+        this.el.addClass('ludo-resize-handle-active');
         var offset = this.getHandleOffset();
         this.resizeProperties = {
             'min':this.getMinPosOfResizeHandle() - offset,
@@ -174,7 +174,7 @@ ludo.layout.Resizable = new Class({
 
     mouseOverResizeHandle:function (e) {
         if (!this.isResizeActive()) {
-            ludo.dom.addClass(e.target, 'ludo-resize-handle-over');
+            e.target.addClass('ludo-resize-handle-over');
         }
     },
 

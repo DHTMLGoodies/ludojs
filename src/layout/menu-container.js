@@ -66,11 +66,11 @@ ludo.layout.MenuContainer = new Class({
 
         ludo.dom.addClass(this.el, 'ludo-menu-vertical-' + this.getSubMenuVAlign());
         if(this.getSubMenuHAlign().indexOf('left') === 0){
-            ludo.dom.addClass(this.el, 'ludo-menu-vertical-to-left');
+            this.el.addClass('ludo-menu-vertical-to-left');
         }
 
 		if(this.getParentLayoutOrientation() === 'horizontal' && this.getSubMenuVAlign().indexOf('above') === 0){
-            ludo.dom.addClass(this.lm.view.parentComponent.getEl(), 'ludo-menu-horizontal-up');
+            this.lm.view.parentComponent.getEl().addClass('ludo-menu-horizontal-up');
         }
 
         this.body = ludo.dom.create({

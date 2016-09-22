@@ -150,6 +150,8 @@ ludo.dom = {
 
     // TODO rename to cls
 	addClass:function (el, className) {
+		console.info("Use of deprecated ludo.dom.addClass");
+		console.trace();
 		if (el && !this.hasClass(el, className)) {
 			if(el.attr != undefined){
 				var cls = el.attr("class");

@@ -22,7 +22,7 @@ ludo.calendar.YearSelector = new Class({
         var year = this.date.get('year');
         for (var i = year - this.offsetOptions; i < year + this.offsetOptions; i++) {
             var el = this.getDomForAYear(i);
-            this.els.calendarContainer.adopt(el);
+            this.els.calendarContainer.append(el);
             this.els.options.push(el);
         }
         this.setMinAndMaxDisplayed();
@@ -35,7 +35,7 @@ ludo.calendar.YearSelector = new Class({
 
     getDomForAYear:function (year) {
         var el = $('<div>');
-        el.set('html', '<span>' + year + '</span>');
+        el.html( '<span>' + year + '</span>');
         el.setProperty('year', year);
         ludo.dom.addClass(el, 'ludo-calendar-year');
         if (year == this.date.get('year')) {
@@ -49,7 +49,7 @@ ludo.calendar.YearSelector = new Class({
     clickYear:function (e) {
         var el = e.target;
         if (!el.hasClass('ludo-calendar-year'))el = el.getParent('.ludo-calendar-year');
-        this.date.set('year', el.getProperty('year'));
+        this.date.set('year', el.attr('year'));
         this.setDate(this.date);
         this.sendSetDateEvent();
     },
@@ -98,7 +98,7 @@ ludo.calendar.YearSelector = new Class({
         for (var i = 1; i <= count; i++) {
             var year = this.maxDisplayedYear + i;
             var el = this.getDomForAYear(year);
-            this.els.calendarContainer.adopt(el);
+            this.els.calendarContainer.append(el);
             this.els.options.push(el);
             this.els.options[i - 1].dispose();
         }
@@ -109,7 +109,7 @@ ludo.calendar.YearSelector = new Class({
         var year = this.date.get('year');
         var o = this.els.options;
         for (var i = 0; i < o.length; i++) {
-            if (o[i].getProperty('year') == year) {
+            if (o[i].attr('year') == year) {
                 return o[i];
             }
         }

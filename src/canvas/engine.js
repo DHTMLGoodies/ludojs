@@ -417,3 +417,4 @@ ludo.canvas.Engine = new Class({
 
 });
 ludo.canvasEngine = new ludo.canvas.Engine();
+

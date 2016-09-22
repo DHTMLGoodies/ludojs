@@ -48,9 +48,9 @@ ludo.layout.TextBox = new Class({
 		s.fontSize = '12px';
 		s.fontWeight = 'normal';
 		s.filter = "progid:DXImageTransform.Microsoft.Matrix(" + this.getIE8Transformation() + ", sizingMethod='auto expand')";
-		s.height = span.offsetHeight + 'px';
-		this.size.x = span.offsetWidth;
-		this.size.y = span.offsetHeight;
+		s.height = span.height() + 'px';
+		this.size.x = span.width();
+		this.size.y = span.height();
 		if (this.rotation === 90) {
 			s.right = '0px';
 		}
@@ -89,25 +89,25 @@ ludo.layout.TextBox = new Class({
 		var node = $('<div>');
 		node.className = this.className;
 		node.css('display', 'none');
-		document.body.adopt(node);
+		$(document.body).append(node);
 
-		var lh = node.getStyle('line-height').replace(/[^0-9]/g, '');
+		var lh = node.css('line-height').replace(/[^0-9]/g, '');
 		if (!lh) {
-			lh = node.getStyle('font-size');
+			lh = node.css('font-size');
 		}
 
 		var ret = {
-			'font-size':node.getStyle('font-size'),
-			'font-family':node.getStyle('font-family'),
-			'font-weight':node.getStyle('font-weight'),
-			'font-style':node.getStyle('font-style'),
+			'font-size':node.css('font-size'),
+			'font-family':node.css('font-family'),
+			'font-weight':node.css('font-weight'),
+			'font-style':node.css('font-style'),
 			'line-height':lh,
-			'fill':node.getStyle('color'),
+			'fill':node.css('color'),
 			'stroke':'none',
 			'stroke-opacity':0
 		};
 		ret['line-height'] = ret['line-height'] || ret['font-size'];
-		document.body.removeChild(node);
+		node.remove();
 		return ret;
 	},
 	storeSize:function () {

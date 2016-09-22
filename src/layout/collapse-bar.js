@@ -15,7 +15,7 @@ ludo.layout.CollapseBar = new Class({
 
 	ludoDOM:function(){
 		this.parent();
-		ludo.dom.addClass(this.getEl(), 'ludo-collapse-bar');
+		this.getEl().addClass('ludo-collapse-bar');
 		ludo.dom.addClass(this.getEl(), 'ludo-collapse-bar-' + this.orientation);
 		ludo.dom.addClass(this.getEl(), 'ludo-collapse-bar-' + this.position);
 	},

@@ -324,8 +324,8 @@ ludo.layout.Renderer = new Class({
 	setViewport:function () {
 		var el = this.view.getEl().parentNode;
 		if (!el)return;
-		this.viewport.width = el.offsetWidth - ludo.dom.getPW(el) - ludo.dom.getBW(el);
-		this.viewport.height = el.offsetHeight - ludo.dom.getPH(el) - ludo.dom.getBH(el);
+		this.viewport.width = el.width() - ludo.dom.getPW(el) - ludo.dom.getBW(el);
+		this.viewport.height = el.height() - ludo.dom.getPH(el) - ludo.dom.getBH(el);
 	},
 
 	getMinWidth:function () {

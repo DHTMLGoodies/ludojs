@@ -162,12 +162,12 @@ ludo.FramedView = new Class({
 	ludoDOM:function () {
 		this.parent();
 
-		ludo.dom.addClass(this.els.container, 'ludo-framed-view');
+		this.els.container.addClass('ludo-framed-view');
 
 		if(this.hasTitleBar()){
 			this.getTitleBar().getEl().insertBefore(this.getBody());
 		}
-		ludo.dom.addClass(this.getBody(), 'ludo-framed-view-body');
+		this.getBody().addClass('ludo-framed-view-body');
 
 		if (!this.getParent() && this.isResizable()) {
 			this.getResizer().addHandle('s');
@@ -187,7 +187,7 @@ ludo.FramedView = new Class({
         if (this.buttonBar) {
             this.getButtonBar()
         } else {
-            ludo.dom.addClass(this.els.container, 'ludo-component-no-buttonbar')
+			this.els.container.addClass('ludo-component-no-buttonbar')
         }
 		this.parent();
 		if (this.minimized) {

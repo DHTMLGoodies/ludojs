@@ -5,7 +5,7 @@ ludo.layout.Tab = new Class({
 
 	onCreate:function () {
 		this.parent();
-        ludo.dom.addClass(this.view.getEl(), 'ludo-layout-tab');
+        this.view.getEl().addClass('ludo-layout-tab');
 		this.addChild(this.getTabStrip());
 
 		this.updateViewport(this.tabStrip.getChangedViewport());
