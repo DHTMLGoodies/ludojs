@@ -418,7 +418,7 @@ ludo.layout.Relative = new Class({
      * @private
      */
 	positionChild:function (child, property, value) {
-		child.getEl().style[property] = value + 'px';
+		child.getEl().css(property, value); // style[property] = value + 'px';
 		child[property] = value;
 	},
     /**

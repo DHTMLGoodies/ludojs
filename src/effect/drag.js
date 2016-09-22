@@ -289,7 +289,7 @@ ludo.effect.Drag = new Class({
 	getValidNode:function(node){
 		if (!this.isElConfigObject(node)) {
 			node = {
-				el:document.id(node)
+				el:$(node)
 			};
 		}
 		if(typeof node.el === 'string'){

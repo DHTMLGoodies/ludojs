@@ -19,28 +19,31 @@ ludo.layout.Resizer = new Class({
 
 	createDOM:function(renderTo){
 		this.el = $('<div>');
-		this.el.addEvent('mouseenter', this.enterResizer.bind(this));
-		this.el.addEvent('mouseleave', this.leaveResizer.bind(this));
-		ludo.dom.addClass(this.el, 'ludo-resize-handle');
-		ludo.dom.addClass(this.el, 'ludo-resize-handle-' + ((this.orientation === 'horizontal') ? 'col' : 'row'));
-		ludo.dom.addClass(this.el, 'ludo-layout-resize-' + ((this.orientation === 'horizontal') ? 'col' : 'row'));
-		this.el.style.cursor = this.orientation === 'horizontal' ? 'w-resize' : 's-resize';
-		this.el.style.zIndex = 100000;
+		this.el.on('mouseenter', this.enterResizer.bind(this));
+		this.el.on('mouseleave', this.leaveResizer.bind(this));
+		this.el.addClass("ludo-resize-handle");
+		this.el.addClass('ludo-resize-handle-' + ((this.orientation === 'horizontal') ? 'col' : 'row'));
+		this.el.addClass('ludo-layout-resize-' + ((this.orientation === 'horizontal') ? 'col' : 'row'));
 
-		renderTo.appendChild(this.el);
+		this.el.css({
+			cursor: (this.orientation == 'horizontal' ? 'w-resize' : 's-resize'),
+			zIndex : 100000
+		});
+
+		renderTo.append(this.el);
 
 	},
 
 	enterResizer:function(){
 		if(!this.isActive){
-			this.el.style.zIndex = parseInt(this.el.style.zIndex) + 1;
+			this.el.css('z-index', parseInt(this.el.css('z-index')) + 1);
 			ludo.dom.addClass(this.el, 'ludo-resize-handle-active');
 		}
 	},
 
 	leaveResizer:function(){
 		if(!this.isActive){
-			this.el.style.zIndex = parseInt(this.el.style.zIndex) - 1;
+			this.el.css('z-index', parseInt(this.el.css('z-index')) - 1);
 			ludo.dom.removeClass(this.el, 'ludo-resize-handle-active');
 		}
 	},
@@ -151,18 +154,18 @@ ludo.layout.Resizer = new Class({
 	},
 
 	resize:function(config){
-		this.el.style.left = '';
-		this.el.style.top = '';
-		this.el.style.right = '';
-		this.el.style.bottom = '';
+
+		this.el.css({
+			left:'', top:'',right:'',bottom:''
+		});
 
 
-		if(config.width !== undefined && config.width > 0)this.el.style.width = config.width + 'px';
-		if(config.height !== undefined && config.height > 0)this.el.style.height = (config.height - ludo.dom.getMBPH(this.el)) + 'px';
-		if(config.left !== undefined)this.el.style.left = config.left + 'px';
-		if(config.top !== undefined)this.el.style.top = config.top + 'px';
-		if(config.bottom !== undefined)this.el.style.bottom = config.bottom + 'px';
-		if(config.right !== undefined)this.el.style.right = config.right + 'px';
+		if(config.width !== undefined && config.width > 0)this.el.css('width', config.width);
+		if(config.height !== undefined && config.height > 0)this.el.css('height', (config.height - ludo.dom.getMBPH(this.el)));
+		if(config.left !== undefined)this.el.css('left', config.left);
+		if(config.top !== undefined)this.el.css('top', config.top);
+		if(config.bottom !== undefined)this.el.css('bottom', config.bottom);
+		if(config.right !== undefined)this.el.css('right', config.right);
 	},
 
 	getParent:function(){
