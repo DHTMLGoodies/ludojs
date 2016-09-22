@@ -32,12 +32,12 @@ ludo.effect.Effect = new Class({
 		config.el = document.id(config.el);
 		config.duration = config.duration || .2;
 		if(config.from == undefined){
-			config.from = config.el.getPosition();
+			config.from = config.el.position();
 		}
 		var fx = this.getFx(config.el, config.duration, config.onComplete);
 		fx.start({
-			left : [config.from.x, config.to.x],
-			top : [config.from.y, config.to.y]
+			left : [config.from.left, config.to.left],
+			top : [config.from.top, config.to.top]
 		});
 	},
 
@@ -106,8 +106,8 @@ ludo.effect.Effect = new Class({
 	slideIn:function(el, duration, callback, to){
 		to = to || el.getPosition();
 		var from = {
-			x: to.x,
-			y : el.parentNode.offsetWidth + el.offsetHeight
+			x: to.left,
+			y : el.parent().width() + el.height()
 		};
 		this.slide(el,from, to, duration, callback);
 	},
@@ -115,8 +115,8 @@ ludo.effect.Effect = new Class({
 	slideOut:function(el, duration, callback, from){
 		from = from || el.getPosition();
 		var to = {
-			x: from.x,
-			y : el.parentNode.offsetHeight + el.offsetHeight
+			x: from.left,
+			y : el.parent().height() + el.height()
 		};
 		this.slide(el, from, to, duration, callback);
 	},
@@ -124,21 +124,21 @@ ludo.effect.Effect = new Class({
 	slide:function(el, from, to, duration, callback){
 		var stops = this.getStops(duration);
 		var styles = [];
-		if(from.x !== to.x){
-			el.style.left = from.x + 'px';
+		if(from.left !== to.left){
+			el.css('left', from.left);
 			styles.push({
 				key : 'left',
-				currentValue:from.x,
-				change: (to.x - from.x) / stops
+				currentValue:from.left,
+				change: (to.left - from.left) / stops
 			});
 		}
 
-		if(from.y !== to.y){
-			el.style.top = from.y + 'px';
+		if(from.top !== to.top){
+			el.style.top = from.top + 'px';
 			styles.push({
 				key : 'top',
-				currentValue:from.y,
-				change: (to.y - from.y) / stops
+				currentValue:from.top,
+				change: (to.top - from.top) / stops
 			});
 		}
 		this.execute({
@@ -169,7 +169,7 @@ ludo.effect.Effect = new Class({
 	},
 
 	show:function(el){
-		if(el.style.visibility==='hidden')el.css('visibility', 'visible');
+		if(el.css("visibility") ==='hidden')el.css('visibility', 'visible');
 	},
 
 	getStops:function(duration){
@@ -178,16 +178,17 @@ ludo.effect.Effect = new Class({
 
 	execute:function(config){
 		var el = config.el;
+
 		for(var i=0;i<config.styles.length;i++){
 			var s = config.styles[i];
 			s.currentValue += s.change;
+
 			switch(s.key){
 				case 'opacity':
-					el.style.opacity = (s.currentValue / 100);
-					el.style.filter = ['alpha(opacity=', s.currentValue,')'].join('');
+					el.css("opacity", s.currentValue / 100);
 					break;
 				default:
-					el.style[s.key] = Math.round(s.currentValue) + config.unit;
+					el.css(s.key, Math.round(s.currentValue) + config.unit);
 			}
 			config.index ++;
 

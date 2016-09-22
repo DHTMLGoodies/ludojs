@@ -538,7 +538,7 @@ ludo.View = new Class({
 	 */
 	insertJSON:function (data) {
 		if (this.tpl) {
-			this.getBody().set('html', this.getTplParser().asString(data, this.tpl));
+			this.getBody().html(this.getTplParser().asString(data, this.tpl));
 		}
 	},
 
@@ -561,7 +561,8 @@ ludo.View = new Class({
 	 * @type string
 	 */
 	setHtml:function (html) {
-		this.getBody().set('html', html);
+
+		this.getBody().html(html);
 	},
 
 	setContent:function () {
@@ -572,7 +573,7 @@ ludo.View = new Class({
 					html:this.html
 				});
 			} else {
-				this.getBody().innerHTML = this.html;
+				this.getBody().html(this.html);
 			}
 		}
 	},

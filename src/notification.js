@@ -61,7 +61,7 @@ ludo.Notification = new Class({
 
 	ludoConfig:function (config) {
 		config.renderTo = config.renderTo || document.body;
-
+		
         this.setConfigParams(config, ['autoDispose','showEffect','hideEffect','effect','effectDuration','duration']);
 		this.showEffect = this.showEffect || this.effect;
 		this.hideEffect = this.hideEffect || this.effect;
@@ -102,7 +102,7 @@ ludo.Notification = new Class({
 				this.getEl(),
 				this.effectDuration,
 				this.onHideComplete.bind(this),
-				this.getLayout().getRenderer().getPosition()
+				this.getLayout().getRenderer().position()
 			);
 		} else {
 			this.parent();
@@ -118,7 +118,7 @@ ludo.Notification = new Class({
 				this.getEl(),
 				this.effectDuration,
 				this.autoHide.bind(this),
-				this.getLayout().getRenderer().getPosition()
+				this.getLayout().getRenderer().position()
 			);
 		}
 

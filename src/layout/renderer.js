@@ -249,8 +249,8 @@ ludo.layout.Renderer = new Class({
 			case 'centerIn':
 				return function () {
 					var pos = value.position();
-					c.top = (pos.y + value.height()) / 2 - (c.height / 2);
-					c.left = (pos.x + value.width()) / 2 - (c.width / 2);
+					c.top = (pos.top + value.height()) / 2 - (c.h / 2);
+					c.left = (pos.left + value.width()) / 2 - (c.width / 2);
 				};
 			case 'centerHorizontalIn':
 				return function () {

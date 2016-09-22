@@ -29,6 +29,10 @@ $skin = isset($skin) ? $skin : 'light-gray';
     <script type="text/javascript" src="<?php echo $prefix; ?>../src/config.js"></script>
     <script type="text/javascript" src="<?php echo $prefix; ?>../src/dom.js"></script>
     <script type="text/javascript" src="<?php echo $prefix; ?>../src/core.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/view.js"></script>
+
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/element.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/canvas.js"></script>
 
     <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/base.js"></script>
     <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/linear.js"></script>
@@ -43,6 +47,14 @@ $skin = isset($skin) ? $skin : 'light-gray';
     <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/fill.js"></script>
     <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/factory.js"></script>
     <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/popup.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/canvas.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/tab.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/tab-strip.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/text-box.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/menu.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/menu-vertical.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/menu-container.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/collapse-bar.js"></script>
 
 
     <script type="text/javascript" src="<?php echo $prefix; ?>../src/effect/effect.js"></script>
@@ -52,7 +64,7 @@ $skin = isset($skin) ? $skin : 'light-gray';
 
     <script type="text/javascript" src="<?php echo $prefix; ?>../src/tpl/parser.js"></script>
 
-    <script type="text/javascript" src="<?php echo $prefix; ?>../src/view.js"></script>
+
     <script type="text/javascript" src="<?php echo $prefix; ?>../src/view/shim.js"></script>
     <script type="text/javascript" src="<?php echo $prefix; ?>../src/framed-view.js"></script>
     <script type="text/javascript" src="<?php echo $prefix; ?>../src/window.js"></script>
@@ -105,6 +117,9 @@ $skin = isset($skin) ? $skin : 'light-gray';
     <script type="text/javascript" src="<?php echo $prefix; ?>../src/card/next-button.js"></script>
     <script type="text/javascript" src="<?php echo $prefix; ?>../src/card/previous-button.js"></script>
     <script type="text/javascript" src="<?php echo $prefix; ?>../src/card/progress-bar.js"></script>
+
+
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/notification.js"></script>
 
 
     <script type="text/javascript" src="<?php echo $prefix; ?>code-highlight/code-highlight.js"></script>

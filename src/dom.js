@@ -228,9 +228,10 @@ ludo.dom = {
 		var b = view.getBody();
 		b.css('position', 'absolute');
 
-		var width = b.offsetWidth;
+		var width = b.width();
 		b.css('position', 'relative');
-		var height = b.offsetHeight;
+		var height = b.height();
+		
 
 		return {
 			x:width + ludo.dom.getMBPW(b) + ludo.dom.getMBPW(el),
