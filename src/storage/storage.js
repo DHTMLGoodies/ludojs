@@ -8,7 +8,7 @@ ludo.storage.LocalStorage = new Class({
 		if(!this.supported)return;
 		var type = 'simple';
 		if(ludo.util.isObject(value) || ludo.util.isArray(value)){
-			value = JSON.encode(value);
+			value = JSON.stringify(value);
 			type = 'object';
 		}
 		localStorage[key] = value;
@@ -19,7 +19,7 @@ ludo.storage.LocalStorage = new Class({
 		if(!this.supported)return undefined;
 		var type = this.getType(key);
 		if(type==='object'){
-			return JSON.decode(localStorage[key]);
+			return JSON.parse(localStorage[key]);
 		}
 		return localStorage[key];
 	},

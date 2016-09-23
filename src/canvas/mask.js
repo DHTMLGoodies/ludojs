@@ -6,7 +6,7 @@
  @param {Object} properties
  @example
 	 var mask = new ludo.canvas.Mask({ id : 'Mask' });
-	 canvas.adoptDef(mask); // canvas is a ludo.canvas.Canvas object
+	 canvas.appendDef(mask); // canvas is a ludo.canvas.Canvas object
 
 	 var gr = new ludo.canvas.Gradient({
 		 id:'gradient'

@@ -52,7 +52,7 @@ ludo.chart.Fragment = new Class({
 
     createStyle:function(styles){
         var p = new ludo.canvas.Paint(styles);
-        this.getCanvas().adoptDef(p);
+        this.getCanvas().appendDef(p);
         return p;
     },
 

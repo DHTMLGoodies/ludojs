@@ -20,15 +20,15 @@ ludo.colorPicker.Picker = new Class({
 		this.colorRect = new ludo.canvas.Rect({
 			x:0, y:0, width:'100%', height:'100%', fill:'#F00'
 		});
-		canvas.adopt(this.colorRect);
+		canvas.append(this.colorRect);
 
 		var rect = new ludo.canvas.Rect({ x:0, y:0, width:'100%', height:'100%', fill:this.getLeftRightGradient(), mask:this.maskTB});
-		canvas.adopt(rect);
+		canvas.append(rect);
 
 		this.rect = new ludo.canvas.Rect({ x:0, y:0, width:'100%', height:'100%', fill:this.getLeftRightGradient(), mask:this.maskLR});
-		this.rect.setStyle('cursor', 'crosshair');
-		canvas.adopt(this.rect);
-		this.rect.addEvent('click', this.receiveClick.bind(this));
+		this.rect.css('cursor', 'crosshair');
+		canvas.append(this.rect);
+		this.rect.on('click', this.receiveClick.bind(this));
 
 		this.createCircle();
 
@@ -36,48 +36,48 @@ ludo.colorPicker.Picker = new Class({
 
 	createCircle:function(){
 		this.circle = new ludo.canvas.Circle({ cx : 100, cy:100, r: 5 });
-		this.circle.setStyle('stroke', '#FFF');
-		this.circle.setStyle('fill', 'none');
-		this.getCanvas().adopt(this.circle);
+		this.circle.css('stroke', '#FFF');
+		this.circle.css('fill', 'none');
+		this.getCanvas().append(this.circle);
 	},
 	getLeftRightGradient:function () {
 		var gradient = new ludo.canvas.Gradient({x1:'0%', y1:'0%', x2:'100%', y2:'0%'});
 		gradient.addStop('0%', '#000', 1);
 		gradient.addStop('100%', '#FFF', 1);
-		this.getCanvas().adoptDef(gradient);
+		this.getCanvas().appendDef(gradient);
 		return gradient;
 	},
 
 	addLeftRightMask:function () {
 		this.maskLR = new ludo.canvas.Mask();
-		this.getCanvas().adoptDef(this.maskLR);
+		this.getCanvas().appendDef(this.maskLR);
 		var gradient = new ludo.canvas.Gradient({x1:'0%', y1:'0%', x2:'100%', y2:'0%'});
 		gradient.addStop('0%', '#FFF', 1);
 		gradient.addStop('100%', '#FFF', 0);
-		this.getCanvas().adoptDef(gradient);
+		this.getCanvas().appendDef(gradient);
 		var rect = new ludo.canvas.Rect({ x:0, y:0, width:'100%', height:'100%', fill:gradient});
-		this.maskLR.adopt(rect);
+		this.maskLR.append(rect);
 
 	},
 	addTopBottomMask:function () {
 		this.maskTB = new ludo.canvas.Mask();
-		this.getCanvas().adoptDef(this.maskTB);
+		this.getCanvas().appendDef(this.maskTB);
 		var gradient = new ludo.canvas.Gradient({x1:'0%', y1:'0%', x2:'0%', y2:'100%'});
 		gradient.addStop('0%', '#FFF', 0);
 		gradient.addStop('100%', '#FFF', 1);
-		this.getCanvas().adoptDef(gradient);
+		this.getCanvas().appendDef(gradient);
 		var rect = new ludo.canvas.Rect({ x:0, y:0, width:'100%', height:'100%', fill:gradient});
-		this.maskTB.adopt(rect);
+		this.maskTB.append(rect);
 	},
 
 	receiveClick:function (e) {
-		var b = this.getBody();
 		var bodyPos = this.getBodyPos();
 		var pos = {
-			x:e.page.x - bodyPos.x,
-			y:e.page.y - bodyPos.y
+			x:e.pageX - bodyPos.left,
+			y:e.pageY - bodyPos.top
 		};
 		var size = this.getBodySize();
+
 		var s = (size.y - pos.y) / size.y * 100;
 		this.positionCircleBySaturation(s);
 		s = Math.min(100, Math.round(s));
@@ -94,25 +94,26 @@ ludo.colorPicker.Picker = new Class({
 
 	getBodyPos:function(){
 		var b = this.getBody();
-		var pos = b.getPosition();
-		pos.x += ludo.dom.getBW(b)/2;
-		pos.y += ludo.dom.getBH(b)/2;
+
+		var pos = $(b).offset();
+		pos.left += ludo.dom.getBW(b)/2;
+		pos.top += ludo.dom.getBH(b)/2;
 		return pos;
 	},
 
 	getBodySize:function(){
 		var b = this.getBody();
 		return {
-			x:b.offsetWidth- ludo.dom.getBW(b) - ludo.dom.getPW(b),
-			y:b.offsetHeight - ludo.dom.getBH(b) - ludo.dom.getPH(b)
+			x:b.width()- ludo.dom.getBW(b) - ludo.dom.getPW(b),
+			y:b.height() - ludo.dom.getBH(b) - ludo.dom.getPH(b)
 		};
 	},
 
 	updateCircleStyleByBrightness:function(v){
 		if(v > 50){
-			this.circle.setStyle('stroke', '#000');
+			this.circle.css('stroke', '#000');
 		}else{
-			this.circle.setStyle('stroke', '#FFF');
+			this.circle.css('stroke', '#FFF');
 		}
 	},
 

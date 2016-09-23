@@ -56,12 +56,12 @@ ludo.canvas.Canvas = new Class({
 			this.height = config.height;
 		} else {
 			this.fitParent();
-			this.renderTo.addEvent('resize', this.fitParent.bind(this));
+			this.renderTo.on('resize', this.fitParent.bind(this));
 		}
 	},
 
 	fitParent:function(){
-		var size = this.renderTo.getSize();
+		var size = { x: this.renderTo.width(), y: this.renderTo.height() };
 		if(size.x === 0 || size.y === 0)return;
 		size.x -= (ludo.dom.getPW(this.renderTo) + ludo.dom.getBW(this.renderTo));
 		size.y -= (ludo.dom.getPH(this.renderTo) + ludo.dom.getBH(this.renderTo));
@@ -69,8 +69,8 @@ ludo.canvas.Canvas = new Class({
 		this.set('height', size.y);
 		this.setViewBox(size.x, size.y);
 
-		this.node.setStyle('width', size.x + 'px');
-		this.node.setStyle('height', size.y + 'px');
+		this.node.css('width', size.x + 'px');
+		this.node.css('height', size.y + 'px');
 		this.width = size.x;
 		this.height = size.y;
 		this.fireEvent('resize', size);
@@ -148,11 +148,11 @@ ludo.canvas.Canvas = new Class({
 
 	/**
 	 * Adopt node into &lt;defs> tag of canvas
-	 * @method adoptDef
+	 * @method appendDef
 	 * @param {canvas.Node|canvas.Element} node
 	 * @return {canvas.Node} defs Node
 	 */
-	adoptDef:function(node){
+	appendDef:function(node){
 		return this.getDefs().append(node);
 	}
 });

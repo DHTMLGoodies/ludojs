@@ -78,12 +78,13 @@ ludo.canvas.Node = new Class({
 	addEvents:function(events){
 		for(var key in events){
 			if(events.hasOwnProperty(key)){
-				this.addEvent(key, events[key]);
+				this.on(key, events[key]);
 			}
 		}
 	},
 
-	addEvent:function (event, fn) {
+	on:function (event, fn) {
+
 		switch (event.toLowerCase()) {
 			case 'mouseenter':
 				ludo.canvasEventManager.addMouseEnter(this, fn);
@@ -93,7 +94,7 @@ ludo.canvas.Node = new Class({
 				break;
             default:
 				this._addEvent(event, this.getDOMEventFn(event, fn), this.el);
-                this.parent(event, fn);
+                this.addEvent(event, fn);
 		}
 	},
 	/**
@@ -127,14 +128,10 @@ ludo.canvas.Node = new Class({
 			target = target['correspondingUseElement'] || target;
 			e = {
 				target:target,
-				page:{
-					x:(e.pageX != null) ? e.pageX : e.clientX + document.scrollLeft,
-					y:(e.pageY != null) ? e.pageY : e.clientY + document.scrollTop
-				},
-				client:{
-					x:(e.pageX != null) ? e.pageX - window.pageXOffset : e.clientX,
-					y:(e.pageY != null) ? e.pageY - window.pageYOffset : e.clientY
-				},
+				pageX: (e.pageX != null) ? e.pageX : e.clientX + document.scrollLeft,
+				pageY: (e.pageY != null) ? e.pageY : e.clientY + document.scrollTop,
+				clientX:(e.pageX != null) ? e.pageX - window.pageXOffset : e.clientX,
+				clientY:(e.pageY != null) ? e.pageY - window.pageYOffset : e.clientY,
 				event:e
 			};
 			if (fn) {
@@ -145,18 +142,18 @@ ludo.canvas.Node = new Class({
 	},
 
 	/**
-	 * Adopt a new node
-	 * @method adopt
+	 * append a new node
+	 * @method append
 	 * @param {canvas.Element|canvas.Node} node node
 	 * @return {canvas.Node} parent
 	 */
-	adopt:function (node) {
+	append:function (node) {
 		this.el.appendChild(node.getEl());
 		node.parentNode = this;
 		return this;
 	},
 
-	getParent:function () {
+	parent:function () {
 		return this.parentNode;
 	},
 
@@ -280,14 +277,18 @@ ludo.canvas.Node = new Class({
 		return node;
 	},
 
-	setStyle:function (key, value) {
-		ludo.canvasEngine.setStyle(this.el, key, value);
+	css:function (key, value) {
+		if($.isPlainObject(key)){
+			this.setStyles(key);
+		}else{
+			ludo.canvasEngine.css(this.el, key, value);
+		}
 	},
 
 	setStyles:function(styles){
 		for(var key in styles){
 			if(styles.hasOwnProperty(key)){
-				this.setStyle(key, styles[key]);
+				ludo.canvasEngine.css(this.el, key, value);
 			}
 		}
 	},

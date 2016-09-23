@@ -370,16 +370,15 @@ ludo.effect.Drag = new Class({
 		var id = this.getIdByEvent(e);
 
 		var el = this.getById(id).el;
+
 		var size = this.getSizeOf(el);
 		var pos;
 		if(this.useShim){
 			pos = el.position();
 		}else{
 			var parent = this.getPositionedParent(el);
-			var parentPos = parent? parent.position() : { left:0, top: 0};
-            pos = el.position();
-			el.left -= parentPos.left;
-			el.top -= parentPos.top;
+            pos = parent? el.getPosition(parent) : this.getPositionOf(el)
+
 		}
 
 
@@ -510,12 +509,9 @@ ludo.effect.Drag = new Class({
 
 			}
 
-
-
 			if (this.dragProcess.dragY) {
 				pos.y = this.getYDrag(e);
 			}
-
 
 
 			this.move(pos);

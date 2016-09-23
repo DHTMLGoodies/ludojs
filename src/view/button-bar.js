@@ -11,7 +11,11 @@ ludo.view.ButtonBar = new Class({
     layout:{
         type:'linear',
 		orientation:'horizontal',
-		width:'matchParent'
+		width:'matchParent',
+        height:'matchParent'
+    },
+    containerCss:{
+        height:'100%'
     },
     align:'right',
     cls:'ludo-component-button-container',
@@ -43,7 +47,7 @@ ludo.view.ButtonBar = new Class({
 		this.component.addEvent('resize', this.resizeRenderer.bind(this));
 
 		if(this.buttonBarCss){
-			this.getEl().parentNode.setStyles(this.buttonBarCss);
+			this.getEl().parent().css(this.buttonBarCss);
 		}
 
     },
@@ -87,15 +91,7 @@ ludo.view.ButtonBar = new Class({
             containerCss:{ 'background-color':'transparent' },
             css:{ 'background-color':'transparent'}
         });
-        /*
-        for (var i = children.length; i > 0; i--) {
-            children[i] = children[i - 1];
-        }
-        children[0] = {
-            layout: { weight:1 },
-            containerCss:{ 'background-color':'transparent' },
-            css:{ 'background-color':'transparent'}
-        };*/
+
         return children;
     },
     /**

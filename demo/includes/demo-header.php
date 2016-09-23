@@ -44,6 +44,10 @@ $skin = isset($skin) ? $skin : 'light-gray';
     <script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/polyline.js"></script>
     <script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/polygon.js"></script>
     <script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/paint.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/stop.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/rect.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/circle.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/path.js"></script>
 
 
     <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/base.js"></script>
@@ -180,6 +184,16 @@ $skin = isset($skin) ? $skin : 'light-gray';
     <script type="text/javascript" src="<?php echo $prefix; ?>../src/paging/page-size.js"></script>
     <script type="text/javascript" src="<?php echo $prefix; ?>../src/paging/current-page.js"></script>
     <script type="text/javascript" src="<?php echo $prefix; ?>../src/paging/total-pages.js"></script>
+
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/controller/controller.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/controller/manager.js"></script>
+
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/color/base.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/color/boxes.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/color/color.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/color/named-colors.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/color/rgb-colors.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/color/rgb-slider.js"></script>
 
     <script type="text/javascript" src="<?php echo $prefix; ?>code-highlight/code-highlight.js"></script>
     

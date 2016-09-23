@@ -14,7 +14,7 @@
 		'stroke-opacity' : .5,
 		'stroke-color' : '#DEF'
 	}, { className : 'MyClass' );
- 	canvas.adoptDef(paint); // Appended to &lt;defs> node
+ 	canvas.appendDef(paint); // Appended to &lt;defs> node
 
  	// create node and set "class" to paint
  	// alternative methods:

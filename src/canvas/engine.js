@@ -74,11 +74,11 @@ ludo.canvas.Engine = new Class({
 	},
 
 	show:function (el) {
-        this.setStyle(el, 'display','');
+        this.css(el, 'display','');
 	},
 
 	hide:function (el) {
-        this.setStyle(el, 'display','none');
+        this.css(el, 'display','none');
 	},
 
 	moveTo:function (el, x, y) {
@@ -330,7 +330,7 @@ ludo.canvas.Engine = new Class({
 		this.tCacheStrings[id] = this.tCacheStrings[id].trim();
 	},
 
-	setStyle:function(el, key, value){
+	css:function(el, key, value){
 		el.style[String.camelCase(key)] = value;
 	},
 

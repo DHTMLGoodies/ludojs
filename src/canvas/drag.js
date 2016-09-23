@@ -51,7 +51,7 @@ ludo.canvas.Drag = new Class({
 		this.els[id] = Object.merge(node, {
 			handle:node.handle
 		});
-		this.els[id].handle.addEvent(ludo.util.getDragStartEvent(), this.startDrag.bind(this));
+		this.els[id].handle.on(ludo.util.getDragStartEvent(), this.startDrag.bind(this));
 		return this.els[id];
 	},
 
@@ -87,6 +87,7 @@ ludo.canvas.Drag = new Class({
     transformationExists:false,
     startDrag:function(e){
         this.parent(e);
+
         this.transformationExists = this.hasTransformation();
     },
 
@@ -108,6 +109,7 @@ ludo.canvas.Drag = new Class({
 			x:this.dragProcess.startTranslate.x,
 			y:this.dragProcess.startTranslate.y
 		};
+
 
 		if (pos.x !== undefined) {
 			translate.x = pos.x;
@@ -138,6 +140,7 @@ ludo.canvas.Drag = new Class({
     },
 
 	getPositionOf:function (node) {
-		return node.getTransformation('translate') || {x:0, y:0}
+		var ret =  node.getTransformation('translate') || {x:0, y:0}
+		return { left:ret.x, top: ret.y };
 	}
 });

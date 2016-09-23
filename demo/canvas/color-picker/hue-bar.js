@@ -18,7 +18,7 @@ ludo.colorPicker.HueBar = new Class({
         var c = this.getCanvas();
 		this.currentBarHeight = c.get('height');
 		c.addEvent('resize', this.positionSlider.bind(this));
-		c.node.setStyle('width', '50px');
+		c.node.css('width', '50px');
         this.hueBar = new ludo.canvas.Rect({
             x:'30%',
             width:'40%',
@@ -26,29 +26,29 @@ ludo.colorPicker.HueBar = new Class({
             height:this.barHeight + '%',
             fill:this.getGradient()
         });
-        this.hueBar.setStyle('cursor', 'pointer');
+        this.hueBar.css('cursor', 'pointer');
 		this.hueBar.addEvent('click', this.barClick.bind(this));
-        c.adopt(this.hueBar);
+        c.append(this.hueBar);
 
 		this.createSlider();
     },
 	dd:undefined,
 	createSlider:function(){
 		this.slider = new ludo.canvas.Node('g', { x: 0, width:'100%', height:10, y: 0 });
-		this.slider.setStyle('cursor', 'pointer');
+		this.slider.css('cursor', 'pointer');
 
 		var symbol = new ludo.canvas.Node('symbol');
-		this.getCanvas().adoptDef(symbol);
+		this.getCanvas().appendDef(symbol);
 		var p = new ludo.canvas.Path('M 5 0 L 10 0 L 15 5 L 10 10 L 5 10 Z', { fill:'#FFF', stroke : '#555', 'stroke-width' :1});
-		symbol.adopt(p);
+		symbol.append(p);
 
 		var u = new ludo.canvas.Node('use');
 		u.href(symbol);
-		this.slider.adopt(u);
+		this.slider.append(u);
 		var u2 = new ludo.canvas.Node('use', { x : '-100%', 'transform' : 'scale(-1,1)'});
 		u2.href(symbol);
-		this.slider.adopt(u2);
-		this.getCanvas().adopt(this.slider);
+		this.slider.append(u2);
+		this.getCanvas().append(this.slider);
 
 		this.makeSliderDragable();
 	},
@@ -97,7 +97,7 @@ ludo.colorPicker.HueBar = new Class({
             var color = this.colorObj.rgbCode(this.colorObj.hsvToRGB(i, 100, 100));
             gradient.addStop(prs + '%', color, 1);
         }
-        this.getCanvas().adoptDef(gradient);
+        this.getCanvas().appendDef(gradient);
         return gradient;
     },
 

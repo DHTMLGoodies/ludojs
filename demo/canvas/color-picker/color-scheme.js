@@ -22,28 +22,24 @@ ludo.colorPicker.ColorScheme = new Class({
 	ludoRendered:function(){
 		this.parent();
 		this.colorObj = new ludo.color.Color();
-		this.getBody().innerHTML = '<div class="default-color-scheme-box">Generate color scheme using the buttons below</div>';
+		this.getBody().html('<div class="default-color-scheme-box">Generate color scheme using the buttons below</div>');
 		if(this.colors !== undefined){
 			this.renderColorBoxes(this.colors);
 		}
 	},
 
 	createDefaultColorBoxes:function(){
-		this.getBody().innerHTML = '';
-		var c = document.createElement('div');
-		this.getBody().adopt(c);
+		this.getBody().html('');
+		var c = $('<div>');
+		this.getBody().append(c);
 
-		c.style.height = '100%';
-		c.style.width = '2000px';
+		c.css('height', '100%');
+		c.css('width', '2000px');
 		for(var i=0;i<9;i++){
-			var box = this.colorBoxes[i] =  new Element('div');
-			ludo.dom.addClass(box, 'color-scheme-box');
-			box.style.position = 'relative';
-			box.style.cssFloat = 'left';
-			box.style.display='none';
-			box.style.cursor = 'pointer';
-			box.addEvent('click', this.boxClick.bind(this));
-			c.adopt(box);
+			var box = this.colorBoxes[i] =  $('<div class="color-scheme-box" style="position:relative;float:left;display:none;cursor:pointer"></div>');
+
+			box.on('click', this.boxClick.bind(this));
+			c.append(box);
 		}
 	},
 
@@ -73,10 +69,10 @@ ludo.colorPicker.ColorScheme = new Class({
 
 	showBoxes:function(howMany){
 		for(var i=0;i<howMany;i++){
-			this.colorBoxes[i].style.display = '';
+			this.colorBoxes[i].css('display', '');
 		}
 		for(i=howMany;i<this.colorBoxes.length;i++){
-			this.colorBoxes[i].style.display = 'none';
+			this.colorBoxes[i].css('display','none');
 		}
 		currentColorCount = howMany;
 	},
@@ -87,7 +83,7 @@ ludo.colorPicker.ColorScheme = new Class({
 		}
 		if(colors.length !== this.currentColorCount)this.showBoxes(colors.length);
 		for(var i=colors.length-1;i>=0;i--){
-			this.colorBoxes[i].style.backgroundColor = colors[i];
+			this.colorBoxes[i].css('backgroundColor', colors[i]);
 			this.colorBoxes[i].title = colors[i];
 
 		}

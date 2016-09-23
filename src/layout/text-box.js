@@ -76,7 +76,7 @@ ludo.layout.TextBox = new Class({
     createStyles: function () {
         this.styles = this.getStyles();
         var p = this.paint = new ludo.canvas.Paint(this.styles);
-        this.adoptDef(p);
+        this.appendDef(p);
     },
 
     renderText: function () {
