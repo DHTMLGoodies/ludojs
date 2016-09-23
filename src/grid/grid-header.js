@@ -63,7 +63,7 @@ ludo.grid.GridHeader = new Class({
 					var spacing = (j==columns.length-1) ? this.spacing.width - 1 : this.spacing.width;
 					cell.css('width', width - spacing);
 					cell.css('height', height);
-					cell.css('line-height', height);
+					cell.css('line-height', height + 'px');
 
 					this.resizeCellBackgrounds(columns[j]);
 
@@ -116,9 +116,11 @@ ludo.grid.GridHeader = new Class({
 		el.addClass('ludo-grid-header-cell');
 		el.addClass('ludo-header-' + this.columnManager.getHeaderAlignmentOf(col));
 
-        ludo.dom.create({
-            tag:'span', cls : 'ludo-cell-text', renderTo:el, html : this.columnManager.getHeadingFor(col)
-        });
+
+		var span = $('<span class="ludo-cell-text">' + this.columnManager.getHeadingFor(col) + '</span>');
+		el.append(span);
+
+
 
 		this.createTopAndBottomBackgrounds(col);
 		this.addDOMForDropTargets(el, col);
@@ -271,9 +273,10 @@ ludo.grid.GridHeader = new Class({
 	},
 
 	getColByDOM:function (el) {
-		var ret = el.getProperty('col');
+		el = $(el);
+		var ret = el.attr('col');
 		if (!ret && ret != '0') {
-			ret = el.getParent().getProperty('col');
+			ret = el.parent().attr('col');
 		}
 		return ret;
 	},
@@ -350,8 +353,8 @@ ludo.grid.GridHeader = new Class({
 
 	setColumnTextOnMove:function (shim, dd) {
 		var column = dd.getDragged().column;
-		shim.set('html', this.columnManager.getHeadingFor(column));
-		shim.css('line-height', shim.style.height);
+		shim.html( this.columnManager.getHeadingFor(column));
+		shim.css('line-height', shim.css('height'));
 	},
 
 	validateMove:function (dragged, dd) {

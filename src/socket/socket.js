@@ -43,7 +43,7 @@
 		  appendMessage:function (msg) {
 			  var html = this.getBody().get('html');
 			  html = html + '>' + msg.message + '<br>';
-			  this.getBody().set('html', html);
+			  this.getBody().html( html);
 		  }
 	  });
 

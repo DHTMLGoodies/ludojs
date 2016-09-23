@@ -349,7 +349,7 @@ ludo.form.File = new Class({
 
 	displayFileName:function () {
         var ci = this.els.cellInput;
-		ci.set('html', '');
+		ci.html( '');
 		ludo.dom.removeClass(ci, 'ludo-input-file-name-new-file');
         ludo.dom.removeClass(ci, 'ludo-input-file-name-initial');
         ludo.dom.removeClass(ci, 'ludo-input-file-name-not-uploaded');
@@ -374,7 +374,7 @@ ludo.form.File = new Class({
 			if (!this.fileUploadComplete) {
 				ci.addClass('ludo-input-file-name-not-uploaded');
 			}
-			deleteLink.set('html', html);
+			deleteLink.html( html);
 			ci.append(deleteLink);
 		}
 	},

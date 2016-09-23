@@ -97,7 +97,7 @@ ludo.remote.Broadcaster = new Class({
      @param {Function} fn
      @example
         ludo.remoteBroadcaster.addEvent('failure', 'Person', function(response){
-            this.getBody().set('html', response.message');
+            this.getBody().html( response.message');
         }.bind(this));
      The event payload is an object in this format:
      @example
@@ -120,7 +120,7 @@ ludo.remote.Broadcaster = new Class({
      @param {Function} fn
      @example
         ludo.remoteBroadcaster.addEvent('failure', 'Person', ['save'], function(response){
-            this.getBody().set('html', response.message');
+            this.getBody().html( response.message');
         }.bind(this));
      The event payload is an object in this format:
      @example

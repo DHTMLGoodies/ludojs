@@ -837,7 +837,7 @@ ludo.effect.Drag = new Class({
 	 * @param {String} text
 	 */
 	setShimText:function (text) {
-		this.getShim().set('html', text);
+		this.getShim().html( text);
 	},
 
 	/**

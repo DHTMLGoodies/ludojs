@@ -170,7 +170,7 @@ ludo.Scroller = new Class({
     scrollTo:function (val) {
         var css = this.type === 'horizontal' ? 'left' : 'top';
         for (var i = 0; i < this.els.applyTo.length; i++) {
-            this.els.applyTo[i].style[css] = (val * -1) + 'px';
+            this.els.applyTo[i].css(css, (val * -1));
         }
         this.fireEvent('scroll', this);
     },
@@ -188,8 +188,8 @@ ludo.Scroller = new Class({
     },
 
     shouldShowScrollbar:function () {
-        var css = this.type === 'horizontal' ? 'x' : 'y';
-        var size = this.getParentEl().getSize()[css];
+        var css = this.type === 'horizontal' ? 'width' : 'height';
+        var size = this.getParentEl()[css]();
         return this.currentSize > size && size > 0;
     },
 

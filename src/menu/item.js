@@ -203,7 +203,7 @@ ludo.menu.Item = new Class({
         if (this.icon.indexOf('.') >= 0) {
             el.setStyle('background-image', 'url(' + this.icon + ')');
         } else {
-            el.set('html', this.icon);
+            el.html( this.icon);
         }
         this.getEl().append(el);
     },

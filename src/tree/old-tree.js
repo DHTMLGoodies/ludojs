@@ -168,7 +168,7 @@ ludo.tree.Tree = new Class({
 
     clearView:function () {
         this.els.nodes = [];
-        this.getBody().set('html', '');
+        this.getBody().html( '');
         this.getModificationManager().clearDirtyStorage();
     },
 
@@ -567,7 +567,7 @@ ludo.tree.Tree = new Class({
         var id = this.getUniqueRecordId(record);
         if (this.els.nodes[id]) {
             var textEl = this.els.nodes[id].getElements('span')[0];
-            textEl.set('html', this.getNodeText(record));
+            textEl.html( this.getNodeText(record));
         }
     },
 

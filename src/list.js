@@ -104,7 +104,7 @@ ludo.List = new Class({
         var el = this.getDOMForRecord(record);
         if(el){
             var content = this.getTplParser().asString(record, this.tpl);
-            el.set('html', content);
+            el.html( content);
         }
     },
 

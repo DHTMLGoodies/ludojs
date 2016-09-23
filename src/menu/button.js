@@ -6,8 +6,8 @@
  @extends Core
  */
 ludo.menu.Button = new Class({
-    Extends:ludo.Core,
-    width:15,
+    Extends: ludo.Core,
+    width: 15,
     // TODO refactor this class
     /**
      * Render button to this element
@@ -15,7 +15,7 @@ ludo.menu.Button = new Class({
      * @type {String}|DOMElement
      * @default undefined
      */
-    renderTo:undefined,
+    renderTo: undefined,
 
     /**
      * Button always visible. When false, it will be visible when mouse enters
@@ -24,7 +24,7 @@ ludo.menu.Button = new Class({
      * @type {Boolean}
      * default false
      */
-    alwaysVisible:false,
+    alwaysVisible: false,
 
     /**
      * Position button in this region. Valid values : 'nw','ne','sw' and 'se'
@@ -32,9 +32,9 @@ ludo.menu.Button = new Class({
      * @type String
      * @default 'ne'
      */
-    region:'ne',
+    region: 'ne',
 
-    el:undefined,
+    el: undefined,
 
     /**
      * Configuration object for the object to show on click on button
@@ -42,39 +42,39 @@ ludo.menu.Button = new Class({
      * @type {View}
      * @default undefined
      */
-    menu:undefined,
+    menu: undefined,
 
-    menuCreated:false,
+    menuCreated: false,
 
-    autoPosition:true,
+    autoPosition: true,
 
-    toggleOnClick:false,
+    toggleOnClick: false,
 
-    ludoConfig:function (config) {
+    ludoConfig: function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['alwaysVisible', 'region', 'renderTo', 'menu', 'autoPosition','toggleOnClick']);
+        this.setConfigParams(config, ['alwaysVisible', 'region', 'renderTo', 'menu', 'autoPosition', 'toggleOnClick']);
     },
 
-    ludoEvents:function () {
+    ludoEvents: function () {
         this.parent();
         this.ludoDOM();
         this.createButtonEvents();
     },
 
-    ludoDOM:function () {
+    ludoDOM: function () {
         var el = this.el = $('<div>');
         el.id = 'ludo-menu-button-' + String.uniqueID();
         el.addClass('ludo-menu-button');
         $(this.renderTo).append(el);
         el.css({
-            position:'absolute',
-            height:'100%'
+            position: 'absolute',
+            height: '100%'
         });
         this.createButtonEl();
         this.positionButton();
     },
 
-    createButtonEvents:function () {
+    createButtonEvents: function () {
         this.buttonEl.on('click', this.toggle.bind(this));
         ludo.EffectObject.addEvent('start', this.hideMenu.bind(this));
 
@@ -91,28 +91,28 @@ ludo.menu.Button = new Class({
         }
     },
 
-    enterButton:function(){
+    enterButton: function () {
         this.el.addClass('ludo-menu-button-over');
     },
-    leaveButton:function(){
+    leaveButton: function () {
         this.el.removeClass('ludo-menu-button-over');
     },
-    toggle:function(e){
+    toggle: function (e) {
         e.stop();
-        if(this.toggleOnClick && this.menuCreated){
+        if (this.toggleOnClick && this.menuCreated) {
             this.menu[this.menu.isHidden() ? 'show' : 'hide']();
-        }else{
+        } else {
             this.showMenu();
         }
     },
 
-    createButtonEl:function () {
+    createButtonEl: function () {
         var el = this.buttonEl = $('<div>');
         el.addClass('ludo-menu-button-arrow');
         this.getEl().append(el);
     },
 
-    positionButton:function () {
+    positionButton: function () {
         var e = this.getEl();
         var r = this.region;
         if (r == 'ne' || r == 'se')e.css('right', 0);
@@ -121,11 +121,11 @@ ludo.menu.Button = new Class({
         if (r == 'ne' || r == 'nw')e.css('top', 0);
     },
 
-    getEl:function () {
+    getEl: function () {
         return this.el;
     },
 
-    showMenu:function () {
+    showMenu: function () {
         if (!this.menuCreated) {
             this.createMenuView();
         }
@@ -151,20 +151,20 @@ ludo.menu.Button = new Class({
 	 		}
 	 	});
      */
-    cancelShow:function () {
+    cancelShow: function () {
         this.okToShowButton = false;
     },
 
-    hideMenu:function () {
-        if(this.menu.hidden)return;
-        if (this.menu.hide !== undefined){
-            if(this.menu.getLayout().hideAllMenus)this.menu.getLayout().hideAllMenus();
+    hideMenu: function () {
+        if (this.menu.hidden)return;
+        if (this.menu.hide !== undefined) {
+            if (this.menu.getLayout().hideAllMenus)this.menu.getLayout().hideAllMenus();
             this.menu.hide();
         }
         this.hide();
     },
 
-    createMenuView:function () {
+    createMenuView: function () {
         if (this.menu.id) {
             var menu = ludo.get(this.menu.id);
             if (menu)this.menu = menu;
@@ -187,25 +187,25 @@ ludo.menu.Button = new Class({
         this.menu.getEl().addClass('ludo-menu-button-menu');
     },
 
-    positionMenu:function () {
+    positionMenu: function () {
         if (this.autoPosition) {
             var pos = this.el.getCoordinates();
             this.menu.resize({
-                left:pos.left,
-                top:pos.top + pos.height
+                left: pos.left,
+                top: pos.top + pos.height
             });
         }
     },
 
-    showIf:function () {
+    showIf: function () {
         if (this.menu._button === this.id) {
             this.show();
         }
     },
 
-    okToShowButton:false,
+    okToShowButton: false,
 
-    show:function () {
+    show: function () {
         this.okToShowButton = true;
         /**
          * Event fired before button is shown. You can use this event and call
@@ -216,12 +216,12 @@ ludo.menu.Button = new Class({
         this.fireEvent('beforeShow', this);
 
         if (this.okToShowButton) {
-            this.buttonEl.style.display = '';
+            this.buttonEl.css('display', '');
             this.el.addClass('ludo-menu-button-active');
         }
     },
 
-    hide:function () {
+    hide: function () {
         if (this.menu === undefined || this.menu.isHidden === undefined || this.menu.isHidden()) {
             this.hideButton();
         } else if (this.menu._button !== this.id) {
@@ -229,16 +229,16 @@ ludo.menu.Button = new Class({
         }
     },
 
-    hideButton:function () {
+    hideButton: function () {
         if (this.alwaysVisible)return;
         this.buttonEl.css('display', 'none');
         ludo.dom.removeClass(this.el, 'ludo-menu-button-active');
     },
-    getMenuView:function () {
+    getMenuView: function () {
         return this.menu;
     },
 
-    autoHideMenu:function (e) {
+    autoHideMenu: function (e) {
         if (!this.menu || this.menu.hidden)return;
         if (!ludo.dom.isInFamilies(e.target, [this.el.id, this.menu.getEl().id])) {
             this.hideMenu();

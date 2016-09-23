@@ -23,7 +23,7 @@ ludo.view.Collapsed = new Class({
         var title = this.titleEl = $('<div>');
         title.addClass('ludo-view-collapsed-title');
         ludo.dom.addClass(title, 'ludo-view-collapsed-title-' + cls);
-        title.set('html', '<span>' + this.component.title + '</span>');
+        title.html( '<span>' + this.component.title + '</span>');
         el.append(title);
 
 		this.renderTitle.delay(100, this);

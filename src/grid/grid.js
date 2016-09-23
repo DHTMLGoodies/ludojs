@@ -275,13 +275,13 @@ ludo.grid.Grid = new Class({
             });
             this.getDataSource().addEvent('select', this.selectDOMForRecord.bind(this));
 		}
-        this.getBody().addEvents({
-            'selectstart' : ludo.util.cancelEvent,
-            'click' : this.cellClick.bind(this),
-            'dblclick' : this.cellDoubleClick.bind(this)
-        });
+		this.getBody().on('selectstart', ludo.util.cancelEvent);
+		this.getBody().on('click', this.cellClick.bind(this));
+		this.getBody().on('dblclick', this.cellDoubleClick.bind(this));
+
+
 		if (this.mouseOverEffect) {
-			this.els.dataContainer.addEvent('mouseleave', this.mouseLeavesGrid.bind(this));
+			this.els.dataContainer.on('mouseleave', this.mouseLeavesGrid.bind(this));
 		}
 	},
 
@@ -400,7 +400,7 @@ ludo.grid.Grid = new Class({
 				} else {
 					content = record[key];
 				}
-				cells[key].getElement('span').set('html', content);
+				cells[key].getElement('span').html( content);
 			}
 		}
 	},
@@ -420,9 +420,9 @@ ludo.grid.Grid = new Class({
 
 		var keys = this.columnManager.getLeafKeys();
 		for (var i = 0; i < keys.length; i++) {
-			var col = this.getBody().getElement('#ludo-grid-column-' + keys[i] + '-' + this.uniqueId);
+			var col = this.getBody().find('#ludo-grid-column-' + keys[i] + '-' + this.uniqueId);
 			divId = 'cell-' + keys[i] + '-' + record.uid + '-' + this.uniqueId;
-			div = col.getElement('#' + divId);
+			div = col.find('#' + divId);
 			if (div) {
 				ret[keys[i]] = div;
 			}
@@ -458,12 +458,12 @@ ludo.grid.Grid = new Class({
 	},
 
 	getRecordByDOM:function (el) {
-		el = document.id(el);
+		el = $(el);
 		if (!el.hasClass('ludo-grid-data-cell')) {
-			el = el.getParent('.ludo-grid-data-cell');
+			el = el.parent('.ludo-grid-data-cell');
 		}
 		if (el && el.hasClass('ludo-grid-data-cell')) {
-			var uid = el.getProperty('uid');
+			var uid = el.attr('uid');
 			return this.getDataSource().findRecord({uid:uid});
 		}
 		return undefined;
@@ -492,9 +492,9 @@ ludo.grid.Grid = new Class({
 	onColumnMove:function (source, target, pos) {
 
 		if (pos == 'before') {
-			this.els.dataColumns[source].inject(this.els.dataColumns[target], 'before');
+			this.els.dataColumns[source].insertBefore(this.els.dataColumns[target]);
 		} else {
-			this.els.dataColumns[source].inject(this.els.dataColumns[target], 'after');
+			this.els.dataColumns[source].insertAfter(this.els.dataColumns[target]);
 		}
 		this.cssColumns();
 		this.resizeColumns();
@@ -539,10 +539,10 @@ ludo.grid.Grid = new Class({
 		if (height < 0) {
 			return;
 		}
-		this.els.body.style.height = height + 'px';
+		this.els.body.css('height', height);
 		this.cachedInnerHeight = height;
 
-		var contentHeight = this.getBody().offsetHeight;
+		var contentHeight = this.getBody().height();
 		if (contentHeight == 0) {
 			this.resizeDOM.delay(100, this);
 			return;
@@ -627,8 +627,8 @@ ludo.grid.Grid = new Class({
 			} else {
 				var width = this.columnManager.getWidthOf(columns[i]);
                 var bw = ludo.dom.getBW(this.els.dataColumns[columns[i]]) - (i===columns.length-1) ? 1 : 0;
-                this.els.dataColumns[columns[i]].style.left = leftPos + 'px';
-                this.els.dataColumns[columns[i]].style.width = (width - ludo.dom.getPW(this.els.dataColumns[columns[i]]) - bw) + 'px';
+                this.els.dataColumns[columns[i]].css('left', leftPos);
+                this.els.dataColumns[columns[i]].css('width', (width - ludo.dom.getPW(this.els.dataColumns[columns[i]]) - bw));
 
 				this.columnManager.setLeft(columns[i], leftPos);
 
@@ -655,7 +655,7 @@ ludo.grid.Grid = new Class({
 			this.columnManager.clearStretchedWidths();
 
 			var totalWidth = this.columnManager.getTotalWidth();
-			var viewSize = this.getBody().getCoordinates().width - ludo.dom.getPW(this.getBody()) - ludo.dom.getBW(this.getBody());
+			var viewSize = this.getBody().width() - ludo.dom.getPW(this.getBody()) - ludo.dom.getBW(this.getBody());
 			var restSize = viewSize - totalWidth;
 			if (restSize <= 0) {
 				return;
@@ -672,7 +672,7 @@ ludo.grid.Grid = new Class({
 		this.currentData = this.getDataSource().getData();
 
 		if(this.emptyText){
-			this.emptyTextEl().style.display= this.currentData.length > 0 ? 'none' : '';
+			this.emptyTextEl().css('display', this.currentData.length > 0 ? 'none' : '');
 		}
 
 		if (Browser['ie']) {
@@ -690,13 +690,14 @@ ludo.grid.Grid = new Class({
 			}
 		}
 
-		this.els.dataContainer.set('html', contentHtml.join(''));
+		this.els.dataContainer.html(contentHtml.join(''));
 
-		var columns = this.els.dataContainer.getChildren('.ludo-grid-data-column');
+		var columns = this.els.dataContainer.find('.ludo-grid-data-column');
 		this.els.dataColumns = {};
 		var count;
 		for (i = 0, count = columns.length; i < count; i++) {
-			this.els.dataColumns[columns[i].getProperty('col')] = columns[i];
+
+			this.els.dataColumns[$(columns[i]).attr('col')] = $(columns[i]);
 		}
 
 		this.fireEvent('renderdata', [this, this]);
@@ -729,7 +730,7 @@ ludo.grid.Grid = new Class({
 	},
 
 	populateDataIE:function () {
-		this.els.dataContainer.set('html', '');
+		this.els.dataContainer.html( '');
 		this.createDataColumnElements();
 		this.resizeColumns();
 		var keys = this.columnManager.getLeafKeys();

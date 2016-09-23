@@ -66,21 +66,21 @@ ludo.ColResize = new Class({
     },
 
     startColResize:function (e) {
-        var columnName = e.target.getProperty('col-reference');
+        var columnName = $(e.target).attr('col-reference');
         this.fireEvent('startresize', columnName);
-        e.target.addClass('ludo-resize-handle-active');
+        $(e.target).addClass('ludo-resize-handle-active');
         var offset = this.getLeftOffsetOfColResizeHandle();
 
         var r = this.resizeProperties;
         r.min = this.getMinPos() - offset;
         r.max = this.getMaxPos() - offset;
 
-        r.mouseX = this.resizeProperties.currentX = e.page.x;
-        r.elX = parseInt(e.target.getStyle('left').replace('px', ''));
+        r.mouseX = this.resizeProperties.currentX = e.pageX;
+        r.elX = parseInt($(e.target).css('left').replace('px', ''));
         r.currentX = this.resizeProperties.elX;
 
         r.active = true;
-        r.el = e.target;
+        r.el = $(e.target);
         r.index = columnName;
 
         return false;
@@ -102,10 +102,12 @@ ludo.ColResize = new Class({
     },
 
     moveColResizeHandle:function (e) {
+
         if (this.resizeProperties.active) {
-            var pos = this.resizeProperties.elX - this.resizeProperties.mouseX + e.page.x;
+            var pos = this.resizeProperties.elX - this.resizeProperties.mouseX + e.pageX;
             pos = Math.max(pos, this.resizeProperties.min);
             pos = Math.min(pos, this.resizeProperties.max);
+
             this.resizeProperties.el.css('left', pos);
 
             this.resizeProperties.currentX = pos;
@@ -141,10 +143,10 @@ ludo.ColResize = new Class({
     },
 
     mouseOverResizeHandle:function (e) {
-        e.target.addClass('ludo-grid-resize-handle-over');
+        $(e.target).addClass('ludo-grid-resize-handle-over');
     },
     mouseOutResizeHandle:function (e) {
-        e.target.removeClass('ludo-grid-resize-handle-over');
+        $(e.target).removeClass('ludo-grid-resize-handle-over');
     },
 
     isActive:function(){

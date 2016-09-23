@@ -297,7 +297,7 @@ ludo.form.Button = new Class({
 
     setValue:function (value) {
         this.value = value;
-        this.els.txt.set('html', value);
+        this.els.txt.html( value);
     },
     getValue:function () {
         return this.value;

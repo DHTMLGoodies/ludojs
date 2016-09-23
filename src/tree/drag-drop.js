@@ -24,8 +24,8 @@ ludo.tree.DragDrop = new Class({
 
     hideSourceAndShowShim : function() {
         this.parent();
-        this.els.shim.set('html', this.dragProperties.el.get('html'));
-        this.els.shim.set('html', this.getSourceRecord().title);
+        this.els.shim.html( this.dragProperties.el.get('html'));
+        this.els.shim.html( this.getSourceRecord().title);
     },
 
     resizeShim : function(){

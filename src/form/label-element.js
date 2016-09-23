@@ -104,7 +104,7 @@ ludo.form.LabelElement = new Class({
             s.style.display = '';
             var label = s.getElement('label');
             if (label) {
-                label.set('html', this.suffix);
+                label.html( this.suffix);
                 label.attr('for', this.getFormElId());
             }
         }

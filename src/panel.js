@@ -67,6 +67,6 @@ ludo.Panel = new Class({
 
 	setTitle:function (title) {
 		this.parent(title);
-		this.els.legend.set('html', title);
+		this.els.legend.html( title);
 	}
 });

@@ -350,7 +350,7 @@ ludo.form.ComboField = new Class({
     },
 
     setViewValue:function (value) {
-        this.els.valueField.set('html', value);
+        this.els.valueField.html( value);
     },
 
     ludoDOM:function () {
