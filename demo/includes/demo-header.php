@@ -101,6 +101,7 @@ $skin = isset($skin) ? $skin : 'light-gray';
     <script type="text/javascript" src="<?php echo $prefix; ?>../src/form/email.js"></script>
     <script type="text/javascript" src="<?php echo $prefix; ?>../src/form/password.js"></script>
     <script type="text/javascript" src="<?php echo $prefix; ?>../src/form/checkbox.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/form/select.js"></script>
 
     <script type="text/javascript" src="<?php echo $prefix; ?>../src/remote/base.js"></script>
     <script type="text/javascript" src="<?php echo $prefix; ?>../src/remote/json.js"></script>
@@ -116,6 +117,7 @@ $skin = isset($skin) ? $skin : 'light-gray';
     <script type="text/javascript" src="<?php echo $prefix; ?>../src/data-source/json.js"></script>
     <script type="text/javascript" src="<?php echo $prefix; ?>../src/data-source/collection.js"></script>
     <script type="text/javascript" src="<?php echo $prefix; ?>../src/data-source/collection-search.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/data-source/search-parser.js"></script>
     <script type="text/javascript" src="<?php echo $prefix; ?>../src/data-source/html.js"></script>
     <script type="text/javascript" src="<?php echo $prefix; ?>../src/data-source/record.js"></script>
     <script type="text/javascript" src="<?php echo $prefix; ?>../src/data-source/tree-collection.js"></script>
@@ -167,6 +169,17 @@ $skin = isset($skin) ? $skin : 'light-gray';
 
     <script type="text/javascript" src="<?php echo $prefix; ?>../src/scroller.js"></script>
     <script type="text/javascript" src="<?php echo $prefix; ?>../src/col-resize.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/storage/storage.js"></script>
+
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/paging/button.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/paging/first.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/paging/next.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/paging/previous.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/paging/last.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/paging/page-input.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/paging/page-size.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/paging/current-page.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/paging/total-pages.js"></script>
 
     <script type="text/javascript" src="<?php echo $prefix; ?>code-highlight/code-highlight.js"></script>
     

@@ -250,7 +250,7 @@ ludo.grid.ColumnManager = new Class({
 	getChildCount:function (groupId) {
 		var group = this.getColumn(groupId);
 		if (group.columns !== undefined) {
-			return Object.getLength(group.columns);
+			return ludo.util.lengthOfObject(group.columns);
 		}
 		return 0;
 	},

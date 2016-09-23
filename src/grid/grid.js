@@ -341,12 +341,12 @@ ludo.grid.Grid = new Class({
 	},
 
 	getColumnByDom:function(el){
-		el = document.id(el);
+		el = $(el);
 		if (!el.hasClass('ludo-grid-data-cell')) {
-			el = el.getParent('.ludo-grid-data-cell');
+			el = el.closest('.ludo-grid-data-cell');
 		}
 		if(el){
-			return el.getProperty('col');
+			return el.attr('col');
 		}
 		return undefined;
 	},

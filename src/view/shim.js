@@ -16,12 +16,8 @@ ludo.view.Shim = new Class({
 
     getEl:function () {
         if (this.el === undefined) {
-            this.el = ludo.dom.create({
-                renderTo:this.getRenderTo(),
-                cls:'ludo-shim-loading',
-                css:{'display':'none'},
-                html : this.getText(this.txt)
-            });
+            this.el = $('<div class="ludo-shim-loading" style="display:none">' + this.getText(this.txt) + "</div>");
+            this.getRenderTo().append(this.el);
         }
         return this.el;
     },
@@ -29,11 +25,9 @@ ludo.view.Shim = new Class({
     getShim:function () {
         if (this.shim === undefined) {
 			if(ludo.util.isString(this.renderTo))this.renderTo = ludo.get(this.renderTo).getEl();
-            this.shim = ludo.dom.create({
-                renderTo:this.getRenderTo(),
-                cls:'ludo-loader-shim',
-                css:{'display':'none'}
-            });
+            this.shim = $('<div class="ludo-loader-shim" style="display:none"></div>');
+            this.getRenderTo().append(this.shim);
+
         }
         return this.shim;
     },
@@ -54,8 +48,8 @@ ludo.view.Shim = new Class({
     },
 
 	resizeShim:function(){
-		var span = document.id(this.el).getElement('span');
-		var width = (span.offsetWidth + 5);
+		var span = $(this.el).find('span');
+		var width = (span.width() + 5);
 		this.el.css('width',  width + 'px');
 		this.el.css('marginLeft',  (Math.round(width/2) * -1) + 'px');
 	},

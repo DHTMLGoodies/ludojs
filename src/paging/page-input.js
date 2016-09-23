@@ -34,7 +34,7 @@ ludo.paging.PageInput = new Class({
     },
     setPageNumber:function(number){
         this.value = number;
-        this.els.formEl.set('value', number);
+        this.els.formEl.val(number);
     },
 
     updateDataSourcePageNumber:function(){

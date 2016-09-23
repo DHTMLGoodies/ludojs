@@ -162,7 +162,16 @@ ludo.util = {
 
     supportsSVG:function(){
         return !!document.createElementNS && !!document.createElementNS('http://www.w3.org/2000/svg', 'svg')['createSVGRect'];
-    }
+    },
+
+	lengthOfObject:function(obj){
+		if(obj.keys != undefined)return obj.keys().length;
+		var l = 0;
+		for(var key in obj){
+			if(obj.hasOwnProperty(key))l++;
+		}
+		return l;
+	}
 };
 
 var ludoUtilTypes = "Boolean Number String Function Array Date RegExp Object Error".split(" ");

@@ -155,17 +155,17 @@ ludo.dom = {
 		console.trace();
 		if (el && !this.hasClass(el, className)) {
 			if(el.attr != undefined){
-				var cls = el.attr("class");
-				if(!cls)cls = '';
-				el.attr("class", cls  + ' ' + className);
+				el.addClass(className);
 			}else{
 				el.className = el.className ? el.className + ' ' + className : className;
-
 			}
 		}
 	},
 
 	hasClass:function (el, className) {
+		console.info("use of deprecated ludo.dom.hasClass");
+		console.trace();
+		if(el.attr != undefined)return el.hasClass(className);
 		var search = el.attr != undefined ? el.attr("class") : el.className;
 		return el && search ? search.split(/\s/g).indexOf(className) > -1 : false;
 	},
