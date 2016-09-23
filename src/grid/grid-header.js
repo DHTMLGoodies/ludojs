@@ -35,12 +35,13 @@ ludo.grid.GridHeader = new Class({
 
 	createDOM:function () {
 		this.el = $('<div>');
-		ludo.dom.addClass(this.el, 'ludo-header');
-		ludo.dom.addClass(this.el, 'testing');
-		this.el.inject(this.grid.getBody().getFirst(), 'before');
+		this.el.addClass('ludo-header');
+		this.el.addClass('testing');
+		this.el.insertBefore(this.grid.getBody().first());
+	//	this.el.inject(this.grid.getBody().getFirst(), 'before');
 
 		var countRows = this.columnManager.getCountRows();
-		this.el.setStyle('height', this.cellHeight * countRows + ludo.dom.getMBPH(this.el));
+		this.el.css('height', this.cellHeight * countRows + ludo.dom.getMBPH(this.el));
 		this.renderColumns();
 	},
 
@@ -55,20 +56,20 @@ ludo.grid.GridHeader = new Class({
 				if (i == this.columnManager.getStartRowOf(columns[j])) {
 
 					var cell = this.getCell(columns[j]);
-					cell.setStyle('display', '');
-					cell.setStyle('left', left);
-					cell.setStyle('top', i * this.cellHeight);
+					cell.css('display', '');
+					cell.css('left', left);
+					cell.css('top', i * this.cellHeight);
 					var height = (this.columnManager.getRowSpanOf(columns[j]) * this.cellHeight) - this.spacing.height;
 					var spacing = (j==columns.length-1) ? this.spacing.width - 1 : this.spacing.width;
-					cell.setStyle('width', width - spacing);
-					cell.setStyle('height', height);
-					cell.setStyle('line-height', height);
+					cell.css('width', width - spacing);
+					cell.css('height', height);
+					cell.css('line-height', height);
 
 					this.resizeCellBackgrounds(columns[j]);
 
 					cell.removeClass('last-header-cell');
 					if (j == columns.length - 1) {
-						ludo.dom.addClass(cell, 'last-header-cell');
+						cell.addClass('last-header-cell');
 					}
 				}
 				left += width;
@@ -93,15 +94,15 @@ ludo.grid.GridHeader = new Class({
 	measureCellHeight:function () {
 		if(this.grid.isHidden())return;
 		var el = $('<div>');
-		ludo.dom.addClass(el, 'ludo-grid-header-cell');
-		this.grid.getBody().adopt(el);
-		this.cellHeight = el.getSize().y + ludo.dom.getMH(el);
+		el.addClass('ludo-grid-header-cell');
+		this.grid.getBody().append(el);
+		this.cellHeight = el.height() + ludo.dom.getMH(el);
 
 		this.spacing = {
 			width:ludo.dom.getMBPW(el),
 			height:ludo.dom.getMBPH(el)
 		};
-		el.dispose();
+		el.remove();
 	},
 
 	menuButtons:{},
@@ -111,9 +112,9 @@ ludo.grid.GridHeader = new Class({
 			return this.cells[col];
 		}
 		var el = this.cells[col] = $('<div>');
-		el.setProperty('col', col);
-		ludo.dom.addClass(el, 'ludo-grid-header-cell');
-		ludo.dom.addClass(el, 'ludo-header-' + this.columnManager.getHeaderAlignmentOf(col));
+		el.attr('col', col);
+		el.addClass('ludo-grid-header-cell');
+		el.addClass('ludo-header-' + this.columnManager.getHeaderAlignmentOf(col));
 
         ludo.dom.create({
             tag:'span', cls : 'ludo-cell-text', renderTo:el, html : this.columnManager.getHeadingFor(col)
@@ -123,10 +124,10 @@ ludo.grid.GridHeader = new Class({
 		this.addDOMForDropTargets(el, col);
 
 		if (this.columnManager.isSortable(col)) {
-			el.addEvent('click', this.sortByDOM.bind(this));
+			el.on('click', this.sortByDOM.bind(this));
 		}
-		el.addEvent('mouseover', this.mouseoverHeader.bind(this));
-		el.addEvent('mouseout', this.mouseoutHeader.bind(this));
+		el.on('mouseover', this.mouseoverHeader.bind(this));
+		el.on('mouseout', this.mouseoutHeader.bind(this));
 
 		if (this.headerMenu) {
 			this.menuButtons[col] = new ludo.menu.Button({
@@ -138,7 +139,7 @@ ludo.grid.GridHeader = new Class({
 				}
 			});
 		}
-		this.el.adopt(el);
+		this.el.append(el);
 
 		this.getMovable().add({
 			el:el,
@@ -156,11 +157,11 @@ ludo.grid.GridHeader = new Class({
 
 	createTopAndBottomBackgrounds:function (col) {
 		var top = $('<div>');
-		ludo.dom.addClass(top, 'ludo-grid-header-cell-top');
-		this.cells[col].adopt(top);
+		top.addClass('ludo-grid-header-cell-top');
+		this.cells[col].append(top);
 		var bottom = $('<div>');
-		ludo.dom.addClass(bottom, 'ludo-grid-header-cell-bottom');
-		this.cells[col].adopt(bottom);
+		bottom.addClass('ludo-grid-header-cell-bottom');
+		this.cells[col].append(bottom);
 		this.cellBg[col] = {
 			top:top,
 			bottom:bottom
@@ -170,9 +171,9 @@ ludo.grid.GridHeader = new Class({
 	resizeCellBackgrounds:function (col) {
 		var totalHeight = (this.columnManager.getRowSpanOf(col) * this.cellHeight) -  this.spacing.height;
 		var height = Math.round(totalHeight) / 2;
-		this.cellBg[col].top.setStyle('height', height);
+		this.cellBg[col].top.css('height', height);
 		height = totalHeight - height;
-		this.cellBg[col].bottom.setStyle('height', height);
+		this.cellBg[col].bottom.css('height', height);
 	},
 
 	getMenu:function (col) {
@@ -296,22 +297,22 @@ ludo.grid.GridHeader = new Class({
 
 	addDOMForDropTargets:function (parent, column) {
 		var left = $('<div>');
-		left.setStyles({
+		left.css({
 			position:'absolute',
 			'z-index':15,
 			left:'0px', top:'0px',
 			width:'50%', height:'100%'
 		});
 
-		parent.adopt(left);
+		parent.append(left);
 		var right = $('<div>');
-		right.setStyles({
+		right.css({
 			position:'absolute',
 			'z-index':15,
 			right:'0px', top:'0px',
 			width:'50%', height:'100%'
 		});
-		parent.adopt(right);
+		parent.append(right);
 
 		this.getMovable().addDropTarget({
 			el:left,
@@ -350,7 +351,7 @@ ludo.grid.GridHeader = new Class({
 	setColumnTextOnMove:function (shim, dd) {
 		var column = dd.getDragged().column;
 		shim.set('html', this.columnManager.getHeadingFor(column));
-		shim.setStyle('line-height', shim.style.height);
+		shim.css('line-height', shim.style.height);
 	},
 
 	validateMove:function (dragged, dd) {

@@ -62,7 +62,7 @@ ludo.List = new Class({
 
     enter:function(e){
         var el = this.getRecordDOM(e.target);
-        if(el)ludo.dom.addClass(el, 'ludo-list-item-highlighted');
+        if(el)el.addClass('ludo-list-item-highlighted');
     },
 
     leave:function(e){
@@ -92,7 +92,7 @@ ludo.List = new Class({
 
     select:function (record) {
         var el = this.getDOMForRecord(record);
-        if(el)ludo.dom.addClass(el, 'ludo-list-item-selected');
+        if(el)el.addClass('ludo-list-item-selected');
     },
 
     deselect:function (record) {

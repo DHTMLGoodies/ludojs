@@ -247,7 +247,7 @@ ludo.form.Element = new Class({
      */
     disable:function () {
         this.getFormEl().attr('disabled', '1');
-        ludo.dom.addClass(this.els.label, 'ludo-form-label-disabled');
+        this.els.label.addClass('ludo-form-label-disabled');
     },
     /**
      * Enable form element
@@ -269,7 +269,7 @@ ludo.form.Element = new Class({
 
     ludoCSS:function () {
         this.parent();
-        ludo.dom.addClass(this.getEl(), 'ludo-form-element');
+        this.getEl().addClass('ludo-form-element');
         if (this.els.formEl) {
             if (this.fieldWidth) {
                 this.els.formEl.css('width', (this.fieldWidth - ludo.dom.getPW(this.els.formEl) - ludo.dom.getBW(this.els.formEl)));
@@ -567,7 +567,7 @@ ludo.form.Element = new Class({
 
     setDirty:function () {
         this.dirtyFlag = true;
-        ludo.dom.addClass(this.getEl(), 'ludo-form-el-dirty');
+        this.getEl().addClass('ludo-form-el-dirty');
     },
 
     setClean:function () {

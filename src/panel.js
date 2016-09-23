@@ -12,7 +12,7 @@ ludo.Panel = new Class({
 		this.parent();
 		this.getEl().addClass('ludo-panel');
 		this.els.legend = new Element('legend');
-		this.els.body.adopt(this.els.legend);
+		this.els.body.append(this.els.legend);
 		this.getEl().addClass('ludo-panel');
 	},
 

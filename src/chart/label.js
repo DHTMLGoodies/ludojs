@@ -11,11 +11,11 @@ ludo.chart.Label = new Class({
         });
         this.bg.setStyle('fill', '#fff');
         this.bg.setStyle('fill-opacity', '0');
-        g.adopt(this.bg);
+        g.append(this.bg);
 
         var colorBoxCoords = this.getCoordinatesForColorBox();
         this.colorBox = new ludo.canvas.Rect(colorBoxCoords);
-        g.adopt(this.colorBox);
+        g.append(this.colorBox);
 
 
         this.colorBox.setStyles(this.getBoxStyles());
@@ -25,7 +25,7 @@ ludo.chart.Label = new Class({
             x:colorBoxCoords.x + colorBoxCoords.width + 3, y : this.getYForText()
         });
         this.textNode.setStyles(this.getTextStyles());
-        g.adopt(this.textNode);
+        g.append(this.textNode);
         this.setSize();
 
         this.bg.set('width', this.size.x);

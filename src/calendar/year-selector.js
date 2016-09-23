@@ -37,9 +37,9 @@ ludo.calendar.YearSelector = new Class({
         var el = $('<div>');
         el.html( '<span>' + year + '</span>');
         el.setProperty('year', year);
-        ludo.dom.addClass(el, 'ludo-calendar-year');
+        el.addClass('ludo-calendar-year');
         if (year == this.date.get('year')) {
-            ludo.dom.addClass(el, 'ludo-calendar-year-selected');
+            el.addClass('ludo-calendar-year-selected');
             this.els.activeOption = el;
         }
         el.addEvent('click', this.clickYear.bind(this));
@@ -63,7 +63,7 @@ ludo.calendar.YearSelector = new Class({
         }
         this.els.activeOption = this.getDomElForCurrentYear();
         if (this.els.activeOption) {
-            ludo.dom.addClass(this.els.activeOption, 'ludo-calendar-year-selected');
+            this.els.activeOption.addClass('ludo-calendar-year-selected');
             this.animateDomToCenter.delay(20, this, this.els.activeOption);
         }
     },

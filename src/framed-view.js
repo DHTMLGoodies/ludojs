@@ -372,7 +372,7 @@ ludo.FramedView = new Class({
                 cls : 'ludo-component-buttonbar'
             });
 
-			ludo.dom.addClass(this.getEl(), 'ludo-component-with-buttonbar');
+			this.getEl().addClass('ludo-component-with-buttonbar');
 			this.buttonBar.renderTo = el;
 			this.buttonBar.component = this;
 			this.buttonBarComponent = this.createDependency('buttonBar', new ludo.view.ButtonBar(this.buttonBar));

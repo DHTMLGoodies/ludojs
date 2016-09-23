@@ -83,7 +83,7 @@ ludo.layout.CollapseBar = new Class({
 		button.addEvent('mouseenter', this.enterButton.bind(this));
 		button.addEvent('mouseleave', this.leaveButton.bind(this));
 		button.addEvent('click', this.toggleView.bind(this));
-		this.getBody().adopt(button);
+		this.getBody().append(button);
 		button.innerHTML = '<div class="collapse-bar-button-bg-first"></div><div class="collapse-bar-button-bg-last"></div>';
 		button.className = 'collapse-bar-button collapse-bar-button-' + this.position;
 

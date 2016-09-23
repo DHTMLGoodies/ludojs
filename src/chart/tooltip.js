@@ -40,18 +40,18 @@ ludo.chart.Tooltip = new Class({
 
 	createDOM:function () {
 		this.node = new ludo.canvas.Node('g');
-		this.getParent().adopt(this.node);
+		this.getParent().append(this.node);
 		this.node.hide();
 		this.node.toFront.delay(50, this.node);
 
 		this.rect = new ludo.canvas.Rect({ x:0, y:0, rx:2, ry:2 });
 		this.rect.setStyles(this.getBoxStyling());
-		this.node.adopt(this.rect);
+		this.node.append(this.rect);
 
 		this.textBox = new ludo.canvas.TextBox();
 		this.textBox.getNode().translate(4, 0);
 		this.textBox.getNode().setStyles(this.getTextStyles());
-		this.node.adopt(this.textBox);
+		this.node.append(this.textBox);
 	},
 
 	getBoxStyling:function(){

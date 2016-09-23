@@ -13,8 +13,8 @@ ludo.ColResize = new Class({
     },
 
     createEvents:function () {
-        this.getEventEl().addEvent(ludo.util.getDragMoveEvent(), this.moveColResizeHandle.bind(this));
-        this.getEventEl().addEvent(ludo.util.getDragEndEvent(), this.stopColResize.bind(this));
+        this.getEventEl().on(ludo.util.getDragMoveEvent(), this.moveColResizeHandle.bind(this));
+        this.getEventEl().on(ludo.util.getDragEndEvent(), this.stopColResize.bind(this));
     },
 
     setPos:function (index, pos) {
@@ -46,8 +46,8 @@ ludo.ColResize = new Class({
     getHandle:function (key, isVisible) {
 
         var el = $('<div>');
-        ludo.dom.addClass(el, 'ludo-column-resize-handle');
-        el.setStyles({
+        el.addClass('ludo-column-resize-handle');
+        el.css({
             'top':0,
             'position':'absolute',
             'height':'100%',
@@ -55,11 +55,11 @@ ludo.ColResize = new Class({
             'z-index':15000,
             display:isVisible ? '' : 'none'
         });
-        el.setProperty('col-reference', key);
-        el.addEvent(ludo.util.getDragStartEvent(), this.startColResize.bind(this));
+        el.attr('col-reference', key);
+        el.on(ludo.util.getDragStartEvent(), this.startColResize.bind(this));
         if (!ludo.util.isTabletOrMobile()) {
-            el.addEvent('mouseenter', this.mouseOverResizeHandle.bind(this));
-            el.addEvent('mouseleave', this.mouseOutResizeHandle.bind(this));
+            el.on('mouseenter', this.mouseOverResizeHandle.bind(this));
+            el.on('mouseleave', this.mouseOutResizeHandle.bind(this));
         }
         this.resizeHandles[key] = el;
         return el;
@@ -68,7 +68,7 @@ ludo.ColResize = new Class({
     startColResize:function (e) {
         var columnName = e.target.getProperty('col-reference');
         this.fireEvent('startresize', columnName);
-        ludo.dom.addClass(e.target, 'ludo-resize-handle-active');
+        e.target.addClass('ludo-resize-handle-active');
         var offset = this.getLeftOffsetOfColResizeHandle();
 
         var r = this.resizeProperties;
@@ -106,7 +106,7 @@ ludo.ColResize = new Class({
             var pos = this.resizeProperties.elX - this.resizeProperties.mouseX + e.page.x;
             pos = Math.max(pos, this.resizeProperties.min);
             pos = Math.min(pos, this.resizeProperties.max);
-            this.resizeProperties.el.setStyle('left', pos);
+            this.resizeProperties.el.css('left', pos);
 
             this.resizeProperties.currentX = pos;
             return false;
@@ -141,7 +141,7 @@ ludo.ColResize = new Class({
     },
 
     mouseOverResizeHandle:function (e) {
-        ludo.dom.addClass(e.target, 'ludo-grid-resize-handle-over');
+        e.target.addClass('ludo-grid-resize-handle-over');
     },
     mouseOutResizeHandle:function (e) {
         e.target.removeClass('ludo-grid-resize-handle-over');

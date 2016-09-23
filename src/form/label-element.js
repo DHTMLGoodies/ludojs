@@ -62,7 +62,7 @@ ludo.form.LabelElement = new Class({
 		if(!this.inlineLabel)return;
         var el = this.getFormEl();
         if (el.get('value').length === 0) {
-            ludo.dom.addClass(el, 'ludo-form-el-inline-label');
+            el.addClass('ludo-form-el-inline-label');
             el.set('value', this.inlineLabel);
         }
     },

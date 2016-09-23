@@ -13,10 +13,10 @@
 	 });
 	 gr.addStop('0%', 'white', 0);
 	 gr.addStop('100%', 'white', 1);
- 	 canvas.adopt(gr);
+ 	 canvas.append(gr);
 
 	 var rect2 = new ludo.canvas.Rect({ x:0,y:0, width:500,height:500, fill:gr });
-	 mask.adopt(rect2); // Append rect to mask
+	 mask.append(rect2); // Append rect to mask
 	 // create ellipsis with reference to mask
  	 var ellipse = new ludo.canvas.Ellipse({ cx:100, cy:125, rx:50, ry:70,mask:mask });
 

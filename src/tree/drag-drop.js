@@ -16,9 +16,9 @@ ludo.tree.DragDrop = new Class({
             this.dropPositionValidator = config.dropPositionValidator;
         }
 
-        ludo.dom.addClass(this.els.shim, 'ludo-tree-movable-shim');
-        ludo.dom.addClass(this.els.insertionMarker, 'ludo-tree-insertion-marker');
-        document.body.adopt(this.els.insertionMarker);
+        this.els.shim.addClass('ludo-tree-movable-shim');
+        this.els.insertionMarker.addClass('ludo-tree-insertion-marker');
+        document.body.append(this.els.insertionMarker);
 
     },
 
@@ -143,7 +143,7 @@ ludo.tree.DragDrop = new Class({
     placeInsertionMarker : function() {
         if(this.dragProperties.mode && this.dragProperties.jsObjects.target.item){
             if(this.dragProperties.jsObjects.target.pos == 'sibling'){
-                ludo.dom.addClass(this.els.insertionMarker, 'ludo-tree-insertion-marker-sibling');
+                this.els.insertionMarker.addClass('ludo-tree-insertion-marker-sibling');
             }else{
                 this.els.insertionMarker.removeClass('ludo-tree-insertion-marker-sibling');
             }
@@ -160,7 +160,7 @@ ludo.tree.DragDrop = new Class({
     createInsertionMarker : function() {
         var el = this.els.insertionMarker = $('<div>');
         el.setStyle('display','none');
-        document.body.adopt(el);
+        document.body.append(el);
     },
 
 

@@ -69,7 +69,7 @@ ludo.canvas.Filter = new Class({
 			var keys = this.effectNodes[effect];
 			for(var i=0;i<keys.length;i++){
 				n[keys[i]] = new ludo.canvas.Node(keys[i]);
-				this.adopt(n[keys[i]]);
+				this.append(n[keys[i]]);
 			}
 			this.addFeMergeNode('SourceGraphic');
 			this.addFeMergeNode(effect);
@@ -92,7 +92,7 @@ ludo.canvas.Filter = new Class({
 	getMergeTag:function () {
 		if (this.mergeTag === undefined) {
 			this.mergeTag = new ludo.canvas.Node('feMerge');
-			this.adopt(this.mergeTag);
+			this.append(this.mergeTag);
 
 		}
 		return this.mergeTag;
@@ -107,7 +107,7 @@ ludo.canvas.Filter = new Class({
 	addFeMergeNode:function (key) {
 		if (this.mergeTags[key] === undefined) {
 			this.mergeTags[key] = new ludo.canvas.Node('feMergeNode', { "in":key });
-			this.getMergeTag().adopt(this.mergeTags[key]);
+			this.getMergeTag().append(this.mergeTags[key]);
 			this.updateMergeTag();
 		}
 		return this.mergeTags[key];

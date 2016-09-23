@@ -367,12 +367,12 @@ ludo.form.File = new Class({
 			var html = this.labelRemove;
 			if (this.valueForDisplay == this.initialValue) {
 				html = this.labelDelete;
-				ludo.dom.addClass(ci, 'ludo-input-file-name-initial');
+				ci.addClass('ludo-input-file-name-initial');
 			} else {
-				ludo.dom.addClass(ci, 'ludo-input-file-name-new-file');
+				ci.addClass('ludo-input-file-name-new-file');
 			}
 			if (!this.fileUploadComplete) {
-				ludo.dom.addClass(ci, 'ludo-input-file-name-not-uploaded');
+				ci.addClass('ludo-input-file-name-not-uploaded');
 			}
 			deleteLink.set('html', html);
 			ci.append(deleteLink);

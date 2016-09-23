@@ -22,14 +22,14 @@
  	// node.addClass(paint.getClassName());
 	var node = new ludo.canvas.Node('rect', { id:'myId2', 'class' : paint});
 
- 	canvas.adopt(node);
+ 	canvas.append(node);
 
  	// Paint object for all &lt;rect> and &lt;circle> tags:
 
 	var gradient = new ludo.canvas.Gradient({
         id:'myGradient'
     });
-    canvas.adopt(gradient);
+    canvas.append(gradient);
     gradient.addStop('0%', '#0FF');
     gradient.addStop('100%', '#FFF', 0);
     // New paint object applied to all &lt;rect> and &lt;circle> tags.
@@ -84,7 +84,7 @@ ludo.canvas.Paint = new Class({
 	 			'stroke-opacity' : 0.5
 	 		}
 	 	});
-	 	canvas.adopt(paint);
+	 	canvas.append(paint);
 	 	paint.setStyle('stroke-opacity', .2);
 	 */
 	setStyle:function (style, value) {

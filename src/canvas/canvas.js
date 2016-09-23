@@ -126,10 +126,10 @@ ludo.canvas.Canvas = new Class({
 	},
 
 	createTitle:function(){
-		this.adopt(new ludo.canvas.Node('title',{}, this.title ));
+		this.append(new ludo.canvas.Node('title',{}, this.title ));
 	},
 	createDescription:function(){
-		this.adopt(new ludo.canvas.Node('desc', {}, this.description ));
+		this.append(new ludo.canvas.Node('desc', {}, this.description ));
 	},
 	defsNode:undefined,
 
@@ -141,7 +141,7 @@ ludo.canvas.Canvas = new Class({
 	getDefs:function(){
 		if(this.defsNode === undefined){
 			this.defsNode = new ludo.canvas.Node('defs');
-			this.adopt(this.defsNode);
+			this.append(this.defsNode);
 		}
 		return this.defsNode;
 	},
@@ -153,6 +153,6 @@ ludo.canvas.Canvas = new Class({
 	 * @return {canvas.Node} defs Node
 	 */
 	adoptDef:function(node){
-		return this.getDefs().adopt(node);
+		return this.getDefs().append(node);
 	}
 });

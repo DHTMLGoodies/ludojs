@@ -23,7 +23,7 @@ ludo.chart.Gauge = new Class({
             'stroke-width':2,
             'stroke-location':'inside'
         });
-        this.adopt(this.circle);
+        this.append(this.circle);
         this.circle.toBack();
     },
 

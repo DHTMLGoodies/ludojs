@@ -9,13 +9,13 @@ ludo.chart.Needle = new Class({
             'line-join' : 'round'
         });
         this.path = new ludo.canvas.Path();
-        node.adopt(this.path);
+        node.append(this.path);
 
         var circle = new ludo.canvas.Circle({
             cx:0,cy:0,r:5, fill : '#000'
         });
 
-        node.adopt(circle);
+        node.append(circle);
         this.resize();
     },
 

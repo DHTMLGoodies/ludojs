@@ -391,11 +391,11 @@ ludo.tree.Tree = new Class({
                 this.els.childContainers[this.getUniqueRecordId(parentRecord)].appendChild(el);
             } else {
                 this.getBody().appendChild(el);
-                ludo.dom.addClass(el, 'ludo-tree-node-root');
+                el.addClass('ludo-tree-node-root');
             }
 
             if (isLastChild) {
-                ludo.dom.addClass(el, 'ludo-tree-node-last-sibling');
+                el.addClass('ludo-tree-node-last-sibling');
             }
 
             if (record['leaf'] || !record.children || record.children.length == 0) {
@@ -537,7 +537,7 @@ ludo.tree.Tree = new Class({
             }
             domNode = this.getDomNode(this.getLastChildRecord(parentRecord));
             if (domNode) {
-                ludo.dom.addClass(domNode, 'ludo-tree-node-last-sibling')
+                domNode.addClass('ludo-tree-node-last-sibling')
             }
         }
     },
@@ -605,7 +605,7 @@ ludo.tree.Tree = new Class({
         if (this.selectedNode && this.selectedNode.tagName) {
             this.selectedNode.removeClass('ludo-tree-selected-node');
         }
-        ludo.dom.addClass(node, 'ludo-tree-selected-node');
+        node.addClass('ludo-tree-selected-node');
         this.selectedNode = node;
     },
 

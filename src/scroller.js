@@ -19,7 +19,7 @@ ludo.Scroller = new Class({
             this.setApplyTo(config.applyTo);
 
         }
-        this.renderTo = config.parent ? document.id(config.parent) : null;
+        this.renderTo = config.parent ? $(config.parent) : null;
         if (config.mouseWheelSizeCls) {
             this.determineMouseWheelSize(config.mouseWheelSizeCls);
         }
@@ -35,20 +35,20 @@ ludo.Scroller = new Class({
     determineMouseWheelSize:function (cls) {
         var el = $('<div>');
         el.addClass(cls);
-        el.setStyle('visibility', 'hidden');
-        document.body.adopt(el);
-        this.wheelSize = el.getSize().y;
+        el.css('visibility', 'hidden');
+        $(document.body).append(el);
+        this.wheelSize = el.height();
         if (!this.wheelSize) {
             this.wheelSize = 25;
         }
-        el.destroy();
+        el.remove();
     },
 
     createElements:function () {
         this.els.el = $('<div>');
-        ludo.dom.addClass(this.els.el, 'ludo-scroller');
-        ludo.dom.addClass(this.els.el, 'ludo-scroller-' + this.type);
-        this.els.el.setStyles({
+        this.els.el.addClass('ludo-scroller');
+        this.els.el.addClass('ludo-scroller-' + this.type);
+        this.els.el.css({
             'position':'relative',
             'z-index':1000,
             'overflow':'hidden'
@@ -56,13 +56,13 @@ ludo.Scroller = new Class({
 
 		var overflow = Browser.ie && Browser.version < 9 ? 'scroll' : 'auto';
         if (this.type == 'horizontal') {
-            this.els.el.setStyles({
+            this.els.el.css({
                 'overflow-x':overflow,
                 'width':'100%',
                 'height':Browser.ie ? '21px' : '17px'
             });
         } else {
-            this.els.el.setStyles({
+            this.els.el.css({
                 'overflow-y':overflow,
                 'height':'100%',
                 'width':Browser.ie ? '21px' : '17px',
@@ -72,34 +72,34 @@ ludo.Scroller = new Class({
             });
         }
 
-        this.els.el.addEvent('scroll', this.performScroll.bind(this));
+        this.els.el.on('scroll', this.performScroll.bind(this));
 
         this.els.elInner = $('<div>');
-        this.els.elInner.setStyle('position', 'relative');
-        this.els.elInner.set('html', '&nbsp;');
+        this.els.elInner.css('position', 'relative');
+        this.els.elInner.html('&nbsp;');
 
-        this.els.el.adopt(this.els.elInner);
+        this.els.el.append(this.els.elInner);
     },
 
     createEvents:function () {
-        this.els.elInner.addEvent('resize', this.toggle.bind(this));
+        this.els.elInner.on('resize', this.toggle.bind(this));
         if (this.type == 'vertical') {
             for (var i = 0; i < this.els.applyTo.length; i++) {
-                this.els.applyTo[i].addEvent('mousewheel', this.eventScroll.bind(this));
+                this.els.applyTo[i].on('mousewheel', this.eventScroll.bind(this));
             }
         }
-        document.id(window).addEvent('resize', this.resize.bind(this));
+        $(window).on('resize', this.resize.bind(this));
     },
 
     resize:function () {
         if (this.type == 'horizontal') {
-            this.els.el.setStyle('width', this.renderTo.offsetWidth);
+            this.els.el.css('width', this.renderTo.offsetWidth);
         } else {
             var size = this.renderTo.offsetHeight;
             if (size == 0) {
                 return;
             }
-            this.els.el.setStyle('height', size);
+            this.els.el.css('height', size);
         }
 
         this.toggle();
@@ -112,7 +112,7 @@ ludo.Scroller = new Class({
     setContentSize:function (size) {
         if (this.type == 'horizontal') {
             this.currentSize = size || this.getWidthOfScrollableElements();
-            this.els.elInner.setStyle('width', this.currentSize);
+            this.els.elInner.css('width', this.currentSize);
         } else {
             this.currentSize = size || this.getHeightOfScrollableElements();
             if (this.currentSize <= 0) {
@@ -121,7 +121,7 @@ ludo.Scroller = new Class({
                     this.currentSize = el[0].getSize().y;
                 }
             }
-            this.els.elInner.setStyle('height', this.currentSize);
+            this.els.elInner.css('height', this.currentSize);
         }
 
         if (this.currentSize <= 0) {

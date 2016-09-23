@@ -40,8 +40,8 @@ ludo.Movable = new Class({
         this.createElements();
         this.id = String.uniqueID();
 
-        document.body.addEvent('mouseup', this.stopMove.bind(this));
-        document.body.addEvent('mousemove', this.mouseMove.bind(this));
+        $(document.body).on('mouseup', this.stopMove.bind(this));
+        $(document.body).on('mousemove', this.mouseMove.bind(this));
     },
 
 
@@ -70,7 +70,7 @@ ludo.Movable = new Class({
             this.components[el.id] = component;
         }
         this.sources[el.id] = obj.el || obj.component;
-        ludo.dom.addClass(el, 'ludo-movable');
+        el.addClass('ludo-movable');
         if(handle){
             var handleObj = el.getElements(handle)[0];
             try{
@@ -78,7 +78,7 @@ ludo.Movable = new Class({
             }catch(e){
                 ludo.util.log(obj);
             }
-            ludo.dom.addClass(handleObj, 'ludo-movable-handle');
+            handleObj.addClass('ludo-movable-handle');
             handleObj.setStyle('cursor','move');
         }else{
             el.addEvent('mousedown', this.startMove.bind(this));
@@ -104,7 +104,7 @@ ludo.Movable = new Class({
         }
         el.addEvent('mousemove', this.mouseMoveOnTarget.bind(this));
         el.addEvent('mouseover', this.mouseOverTarget.bind(this));
-        ludo.dom.addClass(el, 'ludo-movable-target');
+        el.addClass('ludo-movable-target');
     },
 
     mouseOverTarget : function() {
@@ -140,15 +140,15 @@ ludo.Movable = new Class({
 
     createShim : function() {
         var el = this.els.shim = $('<div>');
-        ludo.dom.addClass(el, 'ludo-framed-view-shim');
+        el.addClass('ludo-framed-view-shim');
         el.setStyle('display','none');
-        document.body.adopt(el);
+        document.body.append(el);
     },
 
     createInsertionMarker : function() {
         var el = this.els.insertionMarker = $('<div>');
         el.setStyle('display','none');
-        document.body.adopt(el);
+        document.body.append(el);
     },
 
     stopMove : function() {

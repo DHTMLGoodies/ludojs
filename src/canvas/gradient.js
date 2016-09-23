@@ -31,7 +31,7 @@ ludo.canvas.Gradient = new Class({
 		 });
 		 gradient.addStop('0%', 'red');
 		 gradient.addStop('100%', '#FFF', 1);
-	 	 canvas.adopt(gradient);
+	 	 canvas.append(gradient);
 	 */
 	addStop:function (offset, stopColor, stopOpacity) {
 		var attr = {
@@ -43,7 +43,7 @@ ludo.canvas.Gradient = new Class({
 			attr['stop-opacity'] = stopOpacity
 		}
 		var stopTag = new ludo.canvas.Stop(attr);
-		this.adopt(stopTag);
+		this.append(stopTag);
 		this.stopTags.push(stopTag);
 		return stopTag;
 	},

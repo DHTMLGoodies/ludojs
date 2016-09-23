@@ -139,7 +139,7 @@ ludo.canvas.TextBox = new Class({
     renderItems:function (items, parent) {
         for (var i = 0; i < items.length; i++) {
             var n = new ludo.canvas.Node(items[i].tag, items[i].properties, items[i].text);
-            parent.adopt(n);
+            parent.append(n);
 
             if (items[i].children) {
                 this.renderItems(items[i].children, n);

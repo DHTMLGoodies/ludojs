@@ -109,7 +109,7 @@ ludo.canvas.Element = new Class({
 	 * @return {canvas.Element} parent
 	 */
 	adopt:function(node){
-		this.node.adopt(node);
+		this.node.append(node);
 		return this;
 	},
 

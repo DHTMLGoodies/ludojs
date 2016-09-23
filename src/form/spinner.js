@@ -67,7 +67,7 @@ ludo.form.Spinner = new Class({
         this.createSpinnerContainer();
         var input = this.getFormEl();
         input.attr('maxlength', (this.maxValue + '').length);
-        ludo.dom.addClass(input, 'ludo-spinbox-input');
+        input.addClass('ludo-spinbox-input');
 
         var p = this.els.spinnerContainer;
         this.els.arrowsContainer = this._createContainer({
@@ -247,7 +247,7 @@ ludo.form.Spinner = new Class({
         }
     },
     _arrowMouseDown:function (e) {
-        ludo.dom.addClass(e.target, 'ludo-spinbox-arrow-downeffect');
+        e.target.addClass('ludo-spinbox-arrow-downeffect');
         var m = $(e.target).hasClass("ludo-spinbox-arrow-up") ? "up":"down";
         this._startMode({
             name:'mousedown',

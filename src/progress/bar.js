@@ -26,36 +26,36 @@ ludo.progress.Bar = new Class({
     },
     createBackgroundForProgressBar:function () {
         var el = this.els.progressBg = $('<div>');
-        ludo.dom.addClass(el, 'ludo-Progress-Bar-Bg');
+        el.addClass('ludo-Progress-Bar-Bg');
         this.getBody().append(el);
 
         var left = this.els.progressBgRight = $('<div>');
-        ludo.dom.addClass(left, 'ludo-Progress-Bar-Bg-Left');
+        left.addClass('ludo-Progress-Bar-Bg-Left');
         el.append(left);
 
         var right = this.els.progressBgRight = $('<div>');
-        ludo.dom.addClass(right, 'ludo-Progress-Bar-Bg-Right');
+        right.addClass('ludo-Progress-Bar-Bg-Right');
         el.append(right);
     },
 
     createMovablePartOfProgressBar:function () {
         var el = this.els.progress = $('<div>');
-        ludo.dom.addClass(el, 'ludo-Progress-Bar');
+        el.addClass('ludo-Progress-Bar');
         this.els.progressBg.append(el);
         this.els.progress.css('width', '0px');
 
         var left = this.els.progressLeft = $('<div>');
-        ludo.dom.addClass(left, 'ludo-Progress-Bar-Left');
+        left.addClass('ludo-Progress-Bar-Left');
         el.append(left);
 
         var right = this.els.progressRight = $('<div>');
-        ludo.dom.addClass(right, 'ludo-Progress-Bar-Right');
+        right.addClass('ludo-Progress-Bar-Right');
         el.append(right);
     },
 
     createTextElement:function () {
         var percent = this.els.percent = $('<div>');
-        ludo.dom.addClass(percent, 'ludo-Progress-Bar-Percent');
+        percent.addClass('ludo-Progress-Bar-Percent');
         this.els.progressBg.append(percent);
 	},
 

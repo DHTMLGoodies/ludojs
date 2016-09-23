@@ -214,7 +214,7 @@ ludo.form.Button = new Class({
 
     addLabel:function () {
         var txt = this.els.txt = $('<div>');
-        ludo.dom.addClass(txt, 'ludo-form-button-value');
+        txt.addClass('ludo-form-button-value');
         txt.css({
             'width':'100%',
 			'height' : this.heights[this.size] - 2,
@@ -253,8 +253,8 @@ ludo.form.Button = new Class({
 
     addLeftEdge:function () {
         var bg = this.els.buttonLeftludo = $('<div>');
-        ludo.dom.addClass(bg, 'ludo-form-button-bg-left');
-        ludo.dom.addClass(bg, 'ludo-form-button-' + this.size +'-bg-left');
+        bg.addClass('ludo-form-button-bg-left');
+        bg.addClass('ludo-form-button-' + this.size +'-bg-left');
         bg.css({
             position:'absolute',
             'left':0,
@@ -265,8 +265,8 @@ ludo.form.Button = new Class({
 
     addRightEdge:function () {
         var bg = $('<div>');
-        ludo.dom.addClass(bg, 'ludo-form-button-bg-right');
-        ludo.dom.addClass(bg, 'ludo-form-button-' + this.size + '-bg-right');
+        bg.addClass('ludo-form-button-bg-right');
+        bg.addClass('ludo-form-button-' + this.size + '-bg-right');
         bg.css({
             position:'absolute',
             'right':0,
@@ -278,7 +278,7 @@ ludo.form.Button = new Class({
     disable:function () {
         this.disabled = true;
         if (this.els.body) {
-            ludo.dom.addClass(this.els.body, 'ludo-form-button-disabled');
+            this.els.body.addClass('ludo-form-button-disabled');
             this.els.body.removeClass('ludo-form-button-over');
             this.els.body.removeClass('ludo-form-button-down');
         }

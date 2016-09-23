@@ -20,7 +20,7 @@ ludo.canvas.Curtain = new Class({
 		this.applyTo = node;
 
 		var g = new ludo.canvas.Node('g');
-		g.adopt(this);
+		g.append(this);
 		this.applyTo.getCanvas().appendChild(g.getEl());
 
 	},
@@ -159,7 +159,7 @@ ludo.canvas.Curtain = new Class({
 				width:this.bb.width,
 				height:this.bb.height
 			});
-			this.adopt(this.nodes['rect'])
+			this.append(this.nodes['rect'])
 		}
 		return this.nodes['rect'];
 	}

@@ -18,13 +18,13 @@ ludo.view.Collapsed = new Class({
         el.addEvent('mouseenter', this.mouseEnterCollapsed.bind(this));
         el.addEvent('mouseleave', this.mouseLeavesCollapsed.bind(this));
         el.addEvent('click', this.expand.bind(this));
-        ludo.dom.addClass(el, 'ludo-view-collapsed');
+        el.addClass('ludo-view-collapsed');
         ludo.dom.addClass(el, 'ludo-view-collapsed-' +cls);
         var title = this.titleEl = $('<div>');
-        ludo.dom.addClass(title, 'ludo-view-collapsed-title');
+        title.addClass('ludo-view-collapsed-title');
         ludo.dom.addClass(title, 'ludo-view-collapsed-title-' + cls);
         title.set('html', '<span>' + this.component.title + '</span>');
-        el.adopt(title);
+        el.append(title);
 
 		this.renderTitle.delay(100, this);
     },
@@ -43,12 +43,12 @@ ludo.view.Collapsed = new Class({
 			'font-weight' : this.titleEl.getStyle('font-weight'),
 			'fill' : this.titleEl.getStyle('color')
 		});
-		c.adopt(paint);
+		c.append(paint);
 		var x = 4;
 		var y = 4;
 
 		var text = new ludo.canvas.Node('text', { x : x, y: y, height:12, "class": paint});
-		c.adopt(text);
+		c.append(text);
 		text.text(this.component.title);
 		text.set('transform', this.getTransform(270, text.el));
 		this.titleEl.css('display', 'none');
@@ -80,7 +80,7 @@ ludo.view.Collapsed = new Class({
     },
 
     mouseEnterCollapsed:function () {
-        ludo.dom.addClass(this.el, 'ludo-view-collapsed-over');
+        this.el.addClass('ludo-view-collapsed-over');
     },
 
     mouseLeavesCollapsed:function () {

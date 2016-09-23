@@ -170,7 +170,9 @@ ludo.dom = {
 	},
 
 	removeClass:function (el, className) {
-		el.removeClass("className");
+		console.info("use of deprecated ludo.dom.removeClass");
+		console.trace();
+		el.removeClass(className);
 	},
 
 	getParent:function (el, selector) {

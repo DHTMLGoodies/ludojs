@@ -40,9 +40,9 @@ ludo.calendar.MonthYearSelector = new Class({
         el.attr({
             'year' : d.get('year'), 'month' : d.get('month')
         });
-        ludo.dom.addClass(el, 'ludo-calendar-month-year');
+        el.addClass('ludo-calendar-month-year');
         if (monthFromCurrent == 0) {
-            ludo.dom.addClass(el, 'ludo-calendar-month-year-selected');
+            el.addClass('ludo-calendar-month-year-selected');
             this.els.activeOption = el;
         }
         el.html('<span>' + txt + '</span>');
@@ -82,7 +82,7 @@ ludo.calendar.MonthYearSelector = new Class({
     },
 
     populateActiveMonth:function() {
-        ludo.dom.addClass(this.els.activeOption, 'ludo-calendar-month-year-selected');
+        this.els.activeOption.addClass('ludo-calendar-month-year-selected');
         this.els.activeOption.html( this.months[this.date.get('month')] + ', ' + this.date.get('year'));
     },
 

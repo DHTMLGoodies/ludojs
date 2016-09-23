@@ -63,9 +63,9 @@ ludo.grid.SelectionGrid = new Class({
             'width':3000,
             'height':3000
         });
-        el.adopt(elInner);
+        el.append(elInner);
 
-        this.getGridDataEl().adopt(el);
+        this.getGridDataEl().append(el);
     },
 
     resizeDOM:function () {

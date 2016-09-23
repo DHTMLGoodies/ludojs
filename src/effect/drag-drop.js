@@ -73,13 +73,13 @@ ludo.effect.DragDrop = new Class({
 	 */
 	addDropTarget:function (node) {
 		node = this.getValidNode(node);
-		ludo.dom.addClass(node.el, 'ludo-drop');
-		node.el.addEvent('mouseenter', this.enterDropTarget.bind(this));
-		node.el.addEvent('mouseleave', this.leaveDropTarget.bind(this));
+		node.el.addClass('ludo-drop');
+		node.el.on('mouseenter', this.enterDropTarget.bind(this));
+		node.el.on('mouseleave', this.leaveDropTarget.bind(this));
 
 		var captureRegions = node.captureRegions !== undefined ? node.captureRegions : this.captureRegions;
 		if (captureRegions) {
-			node.el.addEvent('mousemove', this.captureRegion.bind(this));
+			node.el.on('mousemove', this.captureRegion.bind(this));
 		}
 
 		node = this.els[node.id] = Object.merge(node, {

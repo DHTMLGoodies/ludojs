@@ -276,7 +276,7 @@ ludo.canvas.Node = new Class({
 	 */
 	add:function (tagName, properties, text) {
 		var node = new ludo.canvas.Node(tagName, properties, text);
-		this.adopt(node);
+		this.append(node);
 		return node;
 	},
 
@@ -307,7 +307,7 @@ ludo.canvas.Node = new Class({
 	 @return {Boolean}
 	 @example
 	 var node = new ludo.canvas.Node('rect', { id:'myId2'});
-	 ludo.dom.addClass(node, 'myClass');
+	 node.addClass('myClass');
 	 alert(node.hasClass('myClass'));
 	 */
 	hasClass:function (className) {
@@ -319,8 +319,8 @@ ludo.canvas.Node = new Class({
 	 @param {String} className
 	 @example
 	 var node = new ludo.canvas.Node('rect', { id:'myId2'});
-	 ludo.dom.addClass(node, 'myClass');
-	 ludo.dom.addClass(node, 'secondClass');
+	 node.addClass('myClass');
+	 node.addClass('secondClass');
 	 node.removeClass('myClass');
 	 */
 	removeClass:function (className) {

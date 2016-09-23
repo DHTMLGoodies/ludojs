@@ -90,7 +90,7 @@ ludo.remote.Message = new Class({
     showMessage:function (response) {
         this.show();
         if (response.code && response.code !== 200) {
-            ludo.dom.addClass(this.getEl(), 'ludo-remote-error-message');
+            this.getEl().addClass('ludo-remote-error-message');
         } else {
             ludo.dom.removeClass(this.getEl(), 'ludo-remote-error-message');
         }

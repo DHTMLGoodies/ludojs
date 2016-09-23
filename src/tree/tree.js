@@ -138,7 +138,7 @@ ludo.tree.Tree = new Class({
 		if(!record)return;
         if(!this.isRecordRendered(record))this.showRecord(record);
 		var el = this.getDomElement(record, '.ludo-tree-node-plain');
-		if (el)ludo.dom.addClass(el, 'ludo-tree-selected-node');
+		if (el)el.addClass('ludo-tree-selected-node');
 	},
 
 	deSelectRecord:function (record) {
@@ -163,7 +163,7 @@ ludo.tree.Tree = new Class({
         if(!this.areChildrenRendered(record)){
             this.renderChildrenOf(record);
         }
-		ludo.dom.addClass(el, 'ludo-tree-node-collapse');
+		el.addClass('ludo-tree-node-collapse');
 		this.getCachedNode(record, 'children', 'child-container-').style.display = '';
 	},
 
@@ -391,7 +391,7 @@ ludo.tree.Tree = new Class({
 				if (i < count - 1) {
 					ludo.dom.removeClass(node, 'ludo-tree-node-last-sibling');
 				} else {
-					ludo.dom.addClass(node, 'ludo-tree-node-last-sibling');
+					node.addClass('ludo-tree-node-last-sibling');
 				}
 			}
 		}

@@ -13,7 +13,7 @@ ludo.layout.Canvas = new Class({
 
 		this.view.children.push(child);
 		var el = child;
-		this.view.getCanvas().adopt(el);
+		this.view.getCanvas().append(el);
 
 		this.onNewChild(child);
 		this.addChildEvents(child);

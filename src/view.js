@@ -1167,7 +1167,7 @@ ludo.View = new Class({
 		   }
 	   });
 	    var canvas = win.getCanvas();
-	    canvas.adopt(new ludo.canvas.Node('line', { x1:100, y1:100, x2:200, y2:200, "class":paint }));
+	    canvas.append(new ludo.canvas.Node('line', { x1:100, y1:100, x2:200, y2:200, "class":paint }));
 	 */
 	getCanvas:function () {
 		if (this.canvas === undefined) {

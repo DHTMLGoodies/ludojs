@@ -83,7 +83,7 @@ ludo.layout.Resizable = new Class({
 
         this.addResizeEvents();
 
-        this.component.getParent().getBody().adopt(this.el);
+        this.component.getParent().getBody().append(this.el);
 
         if (this.cls) {
             this.el.addClass(this.cls);

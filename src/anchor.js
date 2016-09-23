@@ -15,11 +15,11 @@ ludo.Anchor = new Class({
     ludoDOM:function () {
         this.parent();
         this.els.anchor = new Element('a');
-        ludo.dom.addClass(this.els.anchor, 'ludo-anchor-text');
+        this.els.anchor.addClass('ludo-anchor-text');
         this.els.anchor.set('html', this.html);
         this.els.anchor.setProperty('href', '#');
         this.els.anchor.addEvent('click', this.anchorClick.bind(this));
-        this.getBody().adopt(this.els.anchor);
+        this.getBody().append(this.els.anchor);
     },
 
     ludoEvents:function () {

@@ -28,15 +28,15 @@ ludo.calendar.MonthSelector = new Class({
             'position' : 'absolute',
             display:'none'
         });
-        ludo.dom.addClass(el, 'ludo-calendar-month-tip');
-        ludo.dom.addClass(el, 'ludo-calendar-month');
+        el.addClass('ludo-calendar-month-tip');
+        el.addClass('ludo-calendar-month');
         el.addEvent('click', this.clickMonth.bind(this));
         this.els.monthContainer.append(el);
     },
 
     createMonthContainer:function(){
         var el = this.els.monthContainer = $('<div>');
-        ludo.dom.addClass(el, 'ludo-calendar-month-container');
+        el.addClass('ludo-calendar-month-container');
         el.setStyles({
             position:'absolute', width : '3000px', left:0,top:0
         });
@@ -50,18 +50,18 @@ ludo.calendar.MonthSelector = new Class({
 
         for(var i=0;i<this.months.length;i++){
             var el = $('<div>');
-            ludo.dom.addClass(el, 'ludo-calendar-month');
+            el.addClass('ludo-calendar-month');
             el.setProperty('month', i);
             this.els.monthContainer.append(el);
 
             if(i==month){
-                ludo.dom.addClass(el, 'ludo-calendar-month-selected');
+                el.addClass('ludo-calendar-month-selected');
                 el.html( '<span>' + this.months[i] + '</span>');
                 el.addEvent('mouseenter', this.hideTooltip.bind(this));
             }else{
                 el.addEvent('mouseenter', this.showTooltip.bind(this));
                 el.setProperty('title', this.months[i]);
-                ludo.dom.addClass(el, 'ludo-calendar-month-inactive');
+                el.addClass('ludo-calendar-month-inactive');
             }
             el.addEvent('click', this.clickMonth.bind(this));
         }

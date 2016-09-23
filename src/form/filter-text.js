@@ -100,7 +100,7 @@ ludo.form.FilterText = new Class({
         var container = this.els.inputContainer = $('<div>');
         cell.append(container);
         container.append(this.els.formEl);
-        ludo.dom.addClass(container, 'ludo-form-text-autocomplete-container');
+        container.addClass('ludo-form-text-autocomplete-container');
         if (!isNaN(size)) {
             container.css({
                 'width':size
@@ -119,7 +119,7 @@ ludo.form.FilterText = new Class({
         });
 
         var el = this.els.autoComplete = $('<input>');
-        ludo.dom.addClass(el, 'ludo-form-text-autocomplete');
+        el.addClass('ludo-form-text-autocomplete');
         el.disabled = true;
         el.css('zIndex', 99);
         el.css('color', 'silver');
@@ -577,7 +577,7 @@ ludo.form.TextFilterContainer = new Class({
             this.highlightedRecord.removeClass('ludo-form-autocomplete-suggestion-over')
         }
         this.highlightedRecord = this.els.recordNodes[recordIndex];
-        ludo.dom.addClass(this.highlightedRecord, 'ludo-form-autocomplete-suggestion-over')
+        this.highlightedRecord.addClass('ludo-form-autocomplete-suggestion-over')
     },
 
     getSelectedRecord:function () {

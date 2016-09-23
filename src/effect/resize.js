@@ -502,7 +502,7 @@ ludo.effect.Resize = new Class({
     getShim:function () {
         if (!this.els.shim) {
             var el = this.els.shim = $('<div>');
-            ludo.dom.addClass(el, 'ludo-shim-resize');
+            el.addClass('ludo-shim-resize');
             el.css({
                 position:'absolute',
                 'z-index':50000

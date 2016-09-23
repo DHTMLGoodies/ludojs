@@ -4,10 +4,7 @@ $pageTitle = 'Grid demo';
 require_once("../includes/demo-header.php");
 ?>
 <body>
-<script type="text/javascript" src="../../src/remote/JSON.js"></script>
-<script type="text/javascript" src="../../src/resources/base.js"></script>
-<script type="text/javascript" src="../../src/resources/json.js"></script>
-<script type="text/javascript" src="../../src/resources/collection.js"></script>
+
 <script type="text/javascript" class="source-code">
     var w = new ludo.Window({
         left:250, top:50,

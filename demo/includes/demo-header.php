@@ -74,6 +74,7 @@ $skin = isset($skin) ? $skin : 'light-gray';
 
     <script type="text/javascript" src="<?php echo $prefix; ?>../src/effect/effect.js"></script>
     <script type="text/javascript" src="<?php echo $prefix; ?>../src/effect/drag.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/effect/drag-drop.js"></script>
     <script type="text/javascript" src="<?php echo $prefix; ?>../src/effect/resize.js"></script>
     <script type="text/javascript" src="<?php echo $prefix; ?>../src/effect.js"></script>
 
@@ -147,6 +148,25 @@ $skin = isset($skin) ? $skin : 'light-gray';
     <script type="text/javascript" src="<?php echo $prefix; ?>../src/calendar/today.js"></script>
     <script type="text/javascript" src="<?php echo $prefix; ?>../src/language/default.js"></script>
 
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/menu/button.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/menu/menu.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/menu/item.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/menu/menu-item.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/menu/drop-down.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/menu/context.js"></script>
+
+
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/grid/grid.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/grid/grid-header.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/grid/menu.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/grid/column-manager.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/grid/row-manager.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/grid/column-move.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/grid/column.js"></script>
+
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/scroller.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/col-resize.js"></script>
+
     <script type="text/javascript" src="<?php echo $prefix; ?>code-highlight/code-highlight.js"></script>
     <link rel="stylesheet" href="<?php echo $prefix; ?>../css/ludojs-<?php echo $skin; ?>.css" type="text/css">
     <script type="text/javascript">
@@ -167,9 +187,9 @@ $skin = isset($skin) ? $skin : 'light-gray';
                 'padding' : 3
             },
             ludoRendered:function(){
-                var el = document.getElement('.source-code');
+                var el = $(document.body).find('.source-code');
                 if(el){
-                    this.getBody().innerHTML = el.innerHTML;
+                    this.getBody().html(el.html());
                     new ludo.CodeHighlight(this.getBody());
                 }
             }

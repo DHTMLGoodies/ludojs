@@ -230,24 +230,24 @@ ludo.grid.Grid = new Class({
 
 	ludoDOM:function () {
 		this.parent();
-		ludo.dom.addClass(this.getEl(), 'ludo-grid-Grid');
+		this.getEl().addClass('ludo-grid-Grid');
 
 		var b = this.getBody();
 		var t = this.els.dataContainerTop = $('<div>');
 
-		ludo.dom.addClass(t, 'ludo-grid-data-container');
-		t.setStyles({
+		t.addClass('ludo-grid-data-container');
+		t.css({
 			'overflow':ludo.util.isTabletOrMobile() ? 'auto' : 'hidden',
 			'position':'relative'
 		});
 
-		b.adopt(t);
-		b.setStyle('overflow', 'visible');
+		b.append(t);
+		b.css('overflow', 'visible');
 
 		this.els.dataContainer = $('<div>');
-		t.adopt(this.els.dataContainer);
+		t.append(this.els.dataContainer);
 
-		this.els.dataContainer.setStyle('position', 'relative');
+		this.els.dataContainer.css('position', 'relative');
 		this.gridHeader = this.createDependency('gridHeader', {
 			type:'grid.GridHeader',
 			headerMenu: this.headerMenu,
@@ -290,13 +290,13 @@ ludo.grid.Grid = new Class({
 		this.ifStretchHideLastResizeHandles();
 
 		if (this.highlightRecord) {
-			this.els.dataContainer.setStyle('cursor', 'pointer');
+			this.els.dataContainer.css('cursor', 'pointer');
 		}
 
 		this.positionVerticalScrollbar.delay(100, this);
 
 		if (this.getParent()) {
-			this.getParent().getBody().setStyles({
+			this.getParent().getBody().css({
 				'padding':0
 			});
 			ludo.dom.clearCache();
@@ -547,7 +547,7 @@ ludo.grid.Grid = new Class({
 			this.resizeDOM.delay(100, this);
 			return;
 		}
-		this.els.dataContainerTop.setStyle('height', contentHeight - this.gridHeader.getHeight());
+		this.els.dataContainerTop.css('height', contentHeight - this.gridHeader.getHeight());
 
 		this.scrollbar.vertical.resize();
 		this.scrollbar.horizontal.resize();
@@ -559,7 +559,7 @@ ludo.grid.Grid = new Class({
 			applyTo:this.getBody(),
 			parent:this.getBody()
 		}));
-		this.scrollbar.horizontal.getEl().inject(this.getBody(), 'after');
+		this.scrollbar.horizontal.getEl().insertBefore(this.getBody());
 
 		this.scrollbar.vertical = this.createDependency('scrollVertical', new ludo.Scroller({
 			type:'vertical',
@@ -567,7 +567,7 @@ ludo.grid.Grid = new Class({
 			parent:this.els.dataContainerTop,
 			mouseWheelSizeCls:'ludo-grid-data-cell'
 		}));
-		this.getEl().adopt(this.scrollbar.vertical.getEl());
+		this.getEl().append(this.scrollbar.vertical.getEl());
 		this.positionVerticalScrollbar();
 	},
 
@@ -577,7 +577,7 @@ ludo.grid.Grid = new Class({
 			this.positionVerticalScrollbar.delay(100, this);
 			return;
 		}
-		this.scrollbar.vertical.getEl().setStyle('top', top);
+		this.scrollbar.vertical.getEl().css('top', top);
 	},
 
 	sortBy:function (key) {
@@ -595,8 +595,8 @@ ludo.grid.Grid = new Class({
 		var keys = this.columnManager.getLeafKeys();
 		for (var i = 0; i < keys.length; i++) {
 			var el = this.colResizeHandler.getHandle(keys[i], this.columnManager.isResizable(keys[i]));
-			this.getBody().adopt(el);
-			ludo.dom.addClass(el, 'ludo-grid-resize-handle');
+			this.getBody().append(el);
+			el.addClass('ludo-grid-resize-handle');
 		}
 	},
 
@@ -608,7 +608,7 @@ ludo.grid.Grid = new Class({
 	},
 
 	mouseOverResizeHandle:function (e) {
-		ludo.dom.addClass(e.target, 'ludo-grid-resize-handle-over');
+		e.target.addClass('ludo-grid-resize-handle-over');
 	},
 	mouseOutResizeHandle:function (e) {
 		e.target.removeClass('ludo-grid-resize-handle-over');
@@ -644,7 +644,7 @@ ludo.grid.Grid = new Class({
 		}
 
 		var totalWidth = this.columnManager.getTotalWidth();
-		this.els.dataContainerTop.setStyle('width', totalWidth);
+		this.els.dataContainerTop.css('width', totalWidth);
 		this.scrollbar.horizontal.setContentSize(totalWidth);
 
 	},
@@ -755,7 +755,7 @@ ludo.grid.Grid = new Class({
 		if (height === 0) {
 			this.resizeVerticalScrollbar.delay(300, this);
 		} else {
-			this.els.dataContainer.setStyle('height', height);
+			this.els.dataContainer.css('height', height);
 			this.scrollbar.vertical.setContentSize();
 		}
 	},
@@ -764,8 +764,11 @@ ludo.grid.Grid = new Class({
 		this.els.dataColumns = {};
 		var keys = this.columnManager.getLeafKeys();
 		for (var i = 0; i < keys.length; i++) {
-            var el = ludo.dom.create({ cls : 'ludo-grid-data-column', renderTo : this.els.dataContainer});
-			el.setAttribute('col', keys[i]);
+			var el = $('<div>');
+			this.els.dataContainer.append(el);
+			el.addClass('ludo-grid-data-column');
+			
+			el.attr('col', keys[i]);
 			ludo.dom.addClass(el, this.getColumnCssClass(i));
 			el.id = 'ludo-grid-column-' + keys[i] + '-' + this.uniqueId;
 			this.els.dataColumns[keys[i]] = el;

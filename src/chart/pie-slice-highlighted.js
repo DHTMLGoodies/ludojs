@@ -54,7 +54,7 @@ ludo.chart.PieSliceHighlighted = new Class({
             this.node.setStyle('fill-opacity' , .3);
         }
 
-        this.getParent().adopt(this.node);
+        this.getParent().append(this.node);
         this.node.toBack();
     },
 

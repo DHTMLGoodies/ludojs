@@ -20,7 +20,7 @@
 	  }
 	});
  	var circle = new ludo.canvas.Circle({cx:280, cy:280, r:85}, { paint:paintThree });
-    canvas.adopt(circle);
+    canvas.append(circle);
 
  	var drag = new ludo.canvas.Drag();
  	drag.add(circle);

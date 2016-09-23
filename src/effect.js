@@ -26,7 +26,7 @@ ludo.Effect = new Class({
 	},
 
 	disableSelection:function(){
-		ludo.dom.addClass(document.body, 'ludo-unselectable');
+		$(document.body).addClass("ludo-unselectable");
 	},
 
 	enableSelection:function(){

@@ -92,7 +92,7 @@ ludo.form.Slider = new Class({
         var el = this.els.slider = $('<div>');
         this.els.slider.addEvent('click', this.sliderClick.bind(this));
 
-        ludo.dom.addClass(el, 'ludo-form-slider-container');
+        el.addClass('ludo-form-slider-container');
         ludo.dom.addClass(el, 'ludo-form-slider-' + this.getDirection());
         this.getInputCell().append(el);
 

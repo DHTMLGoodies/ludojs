@@ -98,7 +98,7 @@ ludo.menu.Item = new Class({
 
     ludoDOM:function () {
         this.parent();
-        ludo.dom.addClass(this.getEl(), 'ludo-menu-item');
+        this.getEl().addClass('ludo-menu-item');
 
         if (this.isSpacer()) {
             if (this.orientation === 'horizontal') {
@@ -119,9 +119,9 @@ ludo.menu.Item = new Class({
 
 		if(this.children.length){
 			var el = this.els.expand = $('<div>');
-		    ludo.dom.addClass(el, 'ludo-menu-item-expand');
-		    ludo.dom.addClass(el, 'ludo-menu-item-' + this.orientation + '-expand');
-		    this.getEl().adopt(el);
+		    el.addClass('ludo-menu-item-expand');
+		    el.addClass('-expand');
+		    this.getEl().append(el);
 		}
     },
 
@@ -144,7 +144,7 @@ ludo.menu.Item = new Class({
         if (this.disabled) {
             return;
         }
-        ludo.dom.addClass(this.getEl(), 'ludo-menu-item-down');
+        this.getEl().addClass('ludo-menu-item-down');
         this.fireEvent('click', this);
         if (this.fire)this.fireEvent(this.fire, this);
     },
@@ -152,7 +152,7 @@ ludo.menu.Item = new Class({
 
 
     select:function () {
-        ludo.dom.addClass(this.getEl(), 'ludo-menu-item-selected');
+        this.getEl().addClass('ludo-menu-item-selected');
     },
 
     deselect:function () {
@@ -166,7 +166,7 @@ ludo.menu.Item = new Class({
      */
     disable:function () {
         this.disabled = true;
-        ludo.dom.addClass(this.getEl(), 'ludo-menu-item-disabled');
+        this.getEl().addClass('ludo-menu-item-disabled');
     },
 
     /**
@@ -190,7 +190,7 @@ ludo.menu.Item = new Class({
 
     createIcon:function () {
         var el = this.els.icon = $('<div>');
-        ludo.dom.addClass(el, 'ludo-menu-item-icon');
+        el.addClass('ludo-menu-item-icon');
         el.setStyles({
             'background-position':'center center',
             'background-repeat':'no-repeat',
@@ -205,12 +205,12 @@ ludo.menu.Item = new Class({
         } else {
             el.set('html', this.icon);
         }
-        this.getEl().adopt(el);
+        this.getEl().append(el);
     },
 
     mouseOver:function () {
         if (!this.disabled) {
-            ludo.dom.addClass(this.getEl(), 'ludo-menu-item-over');
+            this.getEl().addClass('ludo-menu-item-over');
         }
         this.fireEvent('enterMenuItem', this);
     },

@@ -86,7 +86,7 @@ ludo.form.Checkbox = new Class({
     addRadioImage:function () {
         var div = this.els.radioImageDiv = $('<div>');
         var radioDivInner = $('<div>');
-        ludo.dom.addClass(radioDivInner, 'ludo-radio-image-inner');
+        radioDivInner.addClass('ludo-radio-image-inner');
         radioDivInner.setStyles({
             'width':'100%',
             'height':'100%',
@@ -94,7 +94,7 @@ ludo.form.Checkbox = new Class({
         });
 
         div.append(radioDivInner);
-        ludo.dom.addClass(div, 'ludo-radio-image');
+        div.addClass('ludo-radio-image');
         div.addEvent('click', this.clickOnImage.bind(this));
         this.getImageCell().append(div);
         this.getBody().getElement('.checkbox-image-row').style.display = '';
@@ -190,7 +190,7 @@ ludo.form.Checkbox = new Class({
     toggleImage:function () {
         if (this.els.radioImageDiv) {
             if (this.isChecked()) {
-                ludo.dom.addClass(this.els.radioImageDiv, 'ludo-radio-image-checked');
+                this.els.radioImageDiv.addClass('ludo-radio-image-checked');
             } else {
                 ludo.dom.removeClass(this.els.radioImageDiv, 'ludo-radio-image-checked');
             }

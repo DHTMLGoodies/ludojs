@@ -13,10 +13,10 @@ ludo.audio.Audio = new Class({
         var el;
         if (this.html5) {
             el = this.bgSound = document.createElement('audio');
-            document.body.adopt(el);
+            document.body.append(el);
         } else {
             el = this.bgSound = new Element('bgsound');
-            document.body.adopt(el);
+            document.body.append(el);
             el.setProperty('loop', '1');
             el.setProperty('autostart', 'true');
 

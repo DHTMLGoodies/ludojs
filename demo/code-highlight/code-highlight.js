@@ -47,14 +47,11 @@ ludo.CodeHighlight = new Class({
 
 		this.previewEl.addClass('source-code-preview');
 
-        this.previewEl.setStyles({
+        this.previewEl.css({
             position:'relative',
             overflow:'auto'
         });
-        if(!this.previewEl.style.height && !this.previewEl.hasClass('ah')){
-           // this.previewEl.setStyle('height', 300);
-          //  this.previewEl.setStyle('margin', 5);
-        }
+
 
         this.previewEl.id = 'preview-' + Math.random();
 
@@ -64,10 +61,12 @@ ludo.CodeHighlight = new Class({
         for (var i = 0, len = blocks.length; i < len; i++) {
             this.highlightBlock(blocks[i], this.previewEl);
         }
-		var c = document.createElement('div');
+		var c = $('<div>');
 		c.className='source-code-preview-container';
-		this.previewEl.parentNode.insertBefore(c, this.previewEl);
-		c.appendChild(this.previewEl);
+        c.insertBefore(this.previewEl);
+
+		// this.previewEl.parentNode.insertBefore(c, this.previewEl);
+		c.append(this.previewEl);
     },
 
     createCopyToClipBoardAnchor:function () {
@@ -132,11 +131,11 @@ ludo.CodeHighlight = new Class({
     },*/
 
     highlightBlock:function (domEl, previewEl) {
-        var html = domEl.get('html');
+        var html = domEl.html();
         html = html.replace(/</g,'&lt');
-        previewEl.setStyle('white-space', 'pre');
-        previewEl.setStyle('font-family', 'courier');
-        previewEl.setStyle('font-size', '12px');
+        previewEl.css('white-space', 'pre');
+        previewEl.css('font-family', 'courier');
+        previewEl.css('font-size', '12px');
         html = this.stripTabulators(html);
         html = html.trim();
         html = this.highlightComments(html);
@@ -150,7 +149,7 @@ ludo.CodeHighlight = new Class({
         html = this.highlightClassDeclarations(html);
         html = this.insertComments(html);
 
-        previewEl.set('html', html);
+        previewEl.html(html);
     },
 
     stripTabulators:function (html) {

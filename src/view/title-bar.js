@@ -36,7 +36,7 @@ ludo.view.TitleBar = new Class({
 
     createDOM:function () {
         var el = this.els.el = $('<div>');
-        ludo.dom.addClass(el, this.view.boldTitle ? 'ludo-framed-view-titlebar' : 'ludo-component-titlebar');
+        el.addClass(this.view.boldTitle ? 'ludo-framed-view-titlebar' : 'ludo-component-titlebar');
         var left = 0;
         if (this.view.icon) {
             this.createIconDOM();
@@ -170,7 +170,7 @@ ludo.view.TitleBar = new Class({
     enterButton:function (e) {
         var el = e.target;
         var type = el.getProperty('buttonType');
-        ludo.dom.addClass(el, 'ludo-title-bar-button-' + type + '-over');
+        el.addClass('-over');
     },
 
     leaveButton:function (e) {

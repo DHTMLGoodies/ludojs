@@ -251,7 +251,7 @@ ludo.effect.Drag = new Class({
         var handle = node.handle ? $(node.handle) : el;
 
 		handle.id = handle.id || 'ludo-' + String.uniqueID();
-		ludo.dom.addClass(handle, 'ludo-drag');
+		handle.addClass("ludo-drag");
 
 		handle.on(ludo.util.getDragStartEvent(), this.startDrag.bind(this));
 		handle.attr('forId', node.id);
@@ -761,13 +761,13 @@ ludo.effect.Drag = new Class({
 	getShim:function () {
 		if (this.shim === undefined) {
 			this.shim = $('<div>');
-			ludo.dom.addClass(this.shim, 'ludo-shim');
+			this.shim.addClass('ludo-shim');
 			this.shim.setStyles({
 				position:'absolute',
 				'z-index':50000,
 				display:'none'
 			});
-			document.body.adopt(this.shim);
+			document.body.append(this.shim);
 
 			if (this.shimCls) {
 				for (var i = 0; i < this.shimCls.length; i++) {

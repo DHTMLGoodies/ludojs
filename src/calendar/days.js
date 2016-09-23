@@ -104,7 +104,7 @@ ludo.calendar.Days = new Class({
     },
     createCalendarHeader:function () {
         var el = this.els.daysHeader = $('<div>');
-        ludo.dom.addClass(el, 'ludo-calendar-header');
+        el.addClass('ludo-calendar-header');
         this.getBody().append(el);
 
         var html = ['<table ', 'cellpadding="0" cellspacing="0" border="0" width="100%">'];
@@ -161,7 +161,7 @@ ludo.calendar.Days = new Class({
 
     createCalendarView:function () {
         var el = this.els.daysContainer = $('<div>');
-        ludo.dom.addClass(el, 'ludo-calendar-container-days');
+        el.addClass('ludo-calendar-container-days');
         el.css({
             position:'relative',
             width:'100%',
@@ -180,7 +180,7 @@ ludo.calendar.Days = new Class({
 
         var el = this.els.monthView = $('<div>');
         el.on('click', this.selectDay.bind(this));
-        ludo.dom.addClass(el, 'ludo-calendar-body-days');
+        el.addClass('ludo-calendar-body-days');
         this.resizeMonthView();
         el.css('position', 'absolute');
 
@@ -243,13 +243,13 @@ ludo.calendar.Days = new Class({
         if (!el.hasClass('calendar-day') || el.hasClass('calendar-day-inactive')) {
             return;
         }
-        ludo.dom.addClass(el, 'calendar-day-mouse-over');
+        el.addClass('calendar-day-mouse-over');
         this.els.mouseOverDay = el;
     },
 
     removeClsFromMouseOverDay:function () {
         if (this.els.mouseOverDay) {
-            ludo.dom.removeClass(this.els.mouseOverDay, 'calendar-day-mouse-over');
+            this.els.mouseOverDay.removeClass('calendar-day-mouse-over');
             this.els.mouseOverDay = undefined;
         }
     },
@@ -326,7 +326,7 @@ ludo.calendar.Days = new Class({
         }
         this.removeClsFromSelectedDay();
 
-        ludo.dom.addClass(el, 'calendar-day-selected');
+        el.addClass('calendar-day-selected');
         this.value = this.date.clone();
         this.value.set('date', el.get('html'));
         this.fireEvent('change', [this.value, this]);
@@ -334,15 +334,15 @@ ludo.calendar.Days = new Class({
 
     removeClsFromSelectedDay:function () {
         if (this.els.monthView && this.isValueMonth()) {
-            var el = this.els.monthView.getElement('.calendar-day-' + this.value.get('date'));
-            if (el)ludo.dom.removeClass(el, 'calendar-day-selected');
+            var el = this.els.monthView.find('.calendar-day-' + this.value.get('date'));
+            if (el)el.removeClass('calendar-day-selected');
         }
     },
 
     addClsForSelectedDay:function () {
         if (this.els.monthView && this.isValueMonth()) {
-            var el = this.els.monthView.find('.calendar-day-' + this.value.get('date') + " :first");
-            if (el)ludo.dom.addClass(el, 'calendar-day-selected');
+            var el = this.els.monthView.find('.calendar-day-' + this.value.get('date'));
+            if (el)el.addClass('calendar-day-selected');
         }
     },
 
