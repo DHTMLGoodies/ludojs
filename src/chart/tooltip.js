@@ -30,6 +30,7 @@ ludo.chart.Tooltip = new Class({
 		this.setConfigParams(config, ['tpl','boxStyles','textStyles']);
 		this.createDOM();
 
+		console.log(this.getParent());
 		this.getParent().addEvents({
 			'mouseenter':this.show.bind(this),
 			'mouseleave':this.hide.bind(this)
@@ -70,6 +71,9 @@ ludo.chart.Tooltip = new Class({
 	},
 	
 	show:function (e) {
+
+		console.log("show");
+		
 
 		this.node.show();
 		this.shown = true;

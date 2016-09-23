@@ -517,9 +517,9 @@ ludo.form.TextFilterContainer = new Class({
             div.className = 'ludo-form-autocomplete-suggestion';
             div.html( records[i][this.formComponent.displayField]);
             this.getBody().append(div);
-            div.addEvent('click', this.setRecord.bind(this));
-            div.addEvent('mouseenter', this.mouseEnterRecord.bind(this));
-            div.addEvent('mouseleave', this.mouseLeaveRecord.bind(this));
+            div.on('click', this.setRecord.bind(this));
+            div.mouseenter(this.mouseEnterRecord.bind(this));
+            div.mouseleave(this.mouseLeaveRecord.bind(this));
         }
 
         this.autoResize.delay(30, this, len);

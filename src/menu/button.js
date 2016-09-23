@@ -78,8 +78,8 @@ ludo.menu.Button = new Class({
         this.buttonEl.on('click', this.toggle.bind(this));
         ludo.EffectObject.addEvent('start', this.hideMenu.bind(this));
 
-        this.buttonEl.on('mouseenter', this.enterButton.bind(this));
-        this.buttonEl.on('mouseleave', this.leaveButton.bind(this));
+        this.buttonEl.mouseenter(this.enterButton.bind(this));
+        this.buttonEl.mouseleave(this.leaveButton.bind(this));
 
         if (!this.alwaysVisible) {
             var el = $(this.renderTo);

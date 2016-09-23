@@ -15,8 +15,8 @@ ludo.view.Collapsed = new Class({
         var el = this.el = $('<div>');
         el.css('display', 'none');
         el.css('margin',  this.component.getEl().css('margin'));
-        el.addEvent('mouseenter', this.mouseEnterCollapsed.bind(this));
-        el.addEvent('mouseleave', this.mouseLeavesCollapsed.bind(this));
+        el.mouseenter(this.mouseEnterCollapsed.bind(this));
+        el.mouseleave(this.mouseLeavesCollapsed.bind(this));
         el.addEvent('click', this.expand.bind(this));
         el.addClass('ludo-view-collapsed');
         ludo.dom.addClass(el, 'ludo-view-collapsed-' +cls);

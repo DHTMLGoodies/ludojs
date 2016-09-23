@@ -49,9 +49,9 @@ ludo.chart.PieSliceHighlighted = new Class({
 
         this.node = new ludo.canvas.Path();
         if(this.styles){
-            this.node.setStyles(this.styles);
+            this.node.css(this.styles);
         }else{
-            this.node.setStyle('fill-opacity' , .3);
+            this.node.css('fill-opacity' , .3);
         }
 
         this.getParent().append(this.node);

@@ -57,9 +57,9 @@ ludo.calendar.MonthSelector = new Class({
             if(i==month){
                 el.addClass('ludo-calendar-month-selected');
                 el.html( '<span>' + this.months[i] + '</span>');
-                el.addEvent('mouseenter', this.hideTooltip.bind(this));
+                el.mouseenter(this.hideTooltip.bind(this));
             }else{
-                el.addEvent('mouseenter', this.showTooltip.bind(this));
+                el.mouseenter(this.showTooltip.bind(this));
                 el.setProperty('title', this.months[i]);
                 el.addClass('ludo-calendar-month-inactive');
             }

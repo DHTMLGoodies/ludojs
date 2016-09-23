@@ -2,14 +2,15 @@ ludo.canvas.EventManager = new Class({
 	nodes:{},
 	currentNodeId:undefined,
     currentNodeFn:undefined,
+
 	addMouseEnter:function (node, fn) {
-		node.addEvent('mouseover', this.getMouseOverFn(fn));
-		node.addEvent('mouseout', this.clearCurrent.bind(this, node));
+		node.on('mouseover', this.getMouseOverFn(fn));
+		node.on('mouseout', this.clearCurrent.bind(this, node));
 	},
 
 	addMouseLeave:function(node, fn){
-		node.addEvent('mouseout', this.getMouseOutFn(fn));
-		node.addEvent('mouseout', this.clearCurrent.bind(this, node));
+		node.on('mouseout', this.getMouseOutFn(fn));
+		node.on('mouseout', this.clearCurrent.bind(this, node));
 	},
 
 	clearCurrent:function(node){

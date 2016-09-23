@@ -9,8 +9,8 @@ ludo.chart.Label = new Class({
         this.bg = new ludo.canvas.Rect({
             x:0, y:0, width:10, height:10
         });
-        this.bg.setStyle('fill', '#fff');
-        this.bg.setStyle('fill-opacity', '0');
+        this.bg.css('fill', '#fff');
+        this.bg.css('fill-opacity', '0');
         g.append(this.bg);
 
         var colorBoxCoords = this.getCoordinatesForColorBox();

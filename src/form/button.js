@@ -175,8 +175,8 @@ ludo.form.Button = new Class({
         var el = this.getBody();
 
         el.on('click', this.click.bind(this));
-        el.on('mouseenter', this.mouseOver.bind(this));
-        el.on('mouseleave', this.mouseOut.bind(this));
+        el.mouseenter(this.mouseOver.bind(this));
+        el.mouseleave(this.mouseOut.bind(this));
         el.on('mousedown', this.mouseDown.bind(this));
 
 		// TODO need to bound in order to remove event later. Make this easier and more intuitive

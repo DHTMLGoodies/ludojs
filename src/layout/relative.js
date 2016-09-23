@@ -729,7 +729,9 @@ ludo.layout.Relative = new Class({
      */
 	onNewChild:function (child) {
 		this.parent(child);
-		child.getEl().css('position', 'absolute');
+		if(child.getEl().css != undefined){
+			child.getEl().css('position', 'absolute');
+		}
         var l = child.layout;
 		if (l.centerInParent !== undefined) {
 			l.centerHorizontal = undefined;

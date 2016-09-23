@@ -17,7 +17,7 @@ ludo.canvas.Group = new Class({
         }
 
         if (this.css) {
-            this.node.setStyles(this.css);
+            this.node.css(this.css);
         }
     },
 
@@ -34,8 +34,8 @@ ludo.canvas.Group = new Class({
 
     getSize:function () {
         return {
-            x:this.width || this.renderTo.offsetWidth,
-            y:this.height || this.renderTo.offsetHeight
+            x:this.width || this.renderTo.width(),
+            y:this.height || this.renderTo.height()
         }
     },
 

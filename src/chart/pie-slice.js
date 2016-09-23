@@ -24,7 +24,7 @@ ludo.chart.PieSlice = new Class({
     getPath:function (config) {
 
         var center = config.center || this.getParent().getCenter();
-
+        
         var path = ['M ' + center.x + ' ' + center.y];
 
         if(config.angle > 360) config.angle -= 360;
@@ -67,11 +67,11 @@ ludo.chart.PieSlice = new Class({
     },
 
     enter:function(){
-        this.nodes[0].setStyle('fill', this.record.get('color-over'));
+        this.nodes[0].css('fill', this.record.get('color-over'));
     },
 
     leave:function(){
-        this.nodes[0].setStyle('fill', this.record.get('color'));
+        this.nodes[0].css('fill', this.record.get('color'));
     },
 
     update:function(){

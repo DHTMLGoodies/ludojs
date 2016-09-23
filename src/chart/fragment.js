@@ -37,11 +37,17 @@ ludo.chart.Fragment = new Class({
         this.dependency['node-' + this.nodes.length] = node;
         this.nodes.push(node);
 
-        node.addEvent('mouseenter', this.record.enter.bind(this.record));
-        node.addEvent('mouseleave', this.record.leave.bind(this.record));
-        node.addEvent('click', this.record.click.bind(this.record));
+        if(node.mouseenter != undefined){
+            node.mouseenter(this.record.enter.bind(this.record));
+            node.mouseleave(this.record.leave.bind(this.record));
+        }else{
+            node.on('mouseenter', this.record.enter.bind(this.record));
+            node.on('mouseleave', this.record.leave.bind(this.record));
 
-        node.setStyle('cursor','pointer');
+        }
+        node.on('click', this.record.click.bind(this.record));
+
+        node.css('cursor','pointer');
 
         this.getParent().append(node);
 

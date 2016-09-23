@@ -52,7 +52,7 @@ ludo.chart.Base = new Class({
         this.fragmentMap[record.getUID()] = f;
         this.fragments.push(f);
 
-		this.relayEvents(f, ['mouseenter','mouseleave']);
+		//this.relayEvents(f, ['mouseenter','mouseleave']);
 
         return f;
     },
@@ -75,6 +75,7 @@ ludo.chart.Base = new Class({
 
     getCenter:function () {
         var size = this.getSize();
+        
         return {
             x:size.x / 2,
             y:size.y / 2

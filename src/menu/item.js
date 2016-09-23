@@ -80,11 +80,9 @@ ludo.menu.Item = new Class({
     ludoEvents:function () {
         this.parent();
         if (!this.isSpacer()) {
-            this.getEl().addEvents({
-                'click' : this.click.bind(this),
-                'mouseenter' : this.mouseOver.bind(this),
-                'mouseleave' : this.mouseOut.bind(this)
-            });
+            this.getEl().on("click", this.click.bind(this));
+            this.mouseenter(this.mouseOver.bind(this));
+            this.mouseleave(this.mouseOut.bind(this));
         }
     },
 

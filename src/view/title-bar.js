@@ -114,11 +114,11 @@ ludo.view.TitleBar = new Class({
         var b = this.els.buttons[buttonConfig.type] = $('<div>');
         b.id = 'b-' + String.uniqueID();
         b.attr("class", 'ludo-title-bar-button ludo-title-bar-button-' + buttonConfig.type);
-        b.on({
-            'click':this.getButtonClickFn(buttonConfig.type),
-            'mouseenter':this.enterButton.bind(this),
-            'mouseleave':this.leaveButton.bind(this)
-        });
+
+        b.on("click", this.getButtonClickFn(buttonConfig.type));
+        b.mouseenter(this.enterButton.bind(this));
+        b.mouseleave(this.leaveButton.bind(this));
+
         b.attr('title', buttonConfig.title ? buttonConfig.title : buttonConfig.type.capitalize());
         b.attr('buttonType', buttonConfig.type);
 
