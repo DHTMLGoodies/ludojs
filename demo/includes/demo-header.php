@@ -100,6 +100,7 @@ $skin = isset($skin) ? $skin : 'light-gray';
     <script type="text/javascript" src="<?php echo $prefix; ?>../src/form/filter-text.js"></script>
     <script type="text/javascript" src="<?php echo $prefix; ?>../src/form/email.js"></script>
     <script type="text/javascript" src="<?php echo $prefix; ?>../src/form/password.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../src/form/checkbox.js"></script>
 
     <script type="text/javascript" src="<?php echo $prefix; ?>../src/remote/base.js"></script>
     <script type="text/javascript" src="<?php echo $prefix; ?>../src/remote/json.js"></script>

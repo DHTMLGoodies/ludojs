@@ -64,18 +64,13 @@ ludo.form.Checkbox = new Class({
             this.getInputCell().append(radio);
             this.els.formEl = document.id(radio);
         } else {
-            radio = this.els.formEl = new Element('input');
+            radio = this.els.formEl = $('<input type="' + this.inputType + '" id="' + id + '" value="' + this.value + '" name="' + this.getName() + '">');
             this.getInputCell().append(radio);
-            radio.setProperties({
-                'type':this.inputType,
-                'name':this.getName(),
-                'value':this.value,
-                'id':id
-            });
+
         }
-        this.els.formEl.addEvent('click', this.toggleImage.bind(this));
+        this.els.formEl.on('click', this.toggleImage.bind(this));
         if(this.inputType === 'checkbox'){
-            this.els.formEl.addEvent('click', this.valueChange.bind(this));
+            this.els.formEl.on('click', this.valueChange.bind(this));
         }
         if (this.checked) {
             this.getFormEl().checked = true;

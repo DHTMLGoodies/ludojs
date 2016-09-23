@@ -189,10 +189,11 @@ ludo.menu.Button = new Class({
 
     positionMenu: function () {
         if (this.autoPosition) {
-            var pos = this.el.getCoordinates();
+
+            var pos = this.el.offset();
             this.menu.resize({
                 left: pos.left,
-                top: pos.top + pos.height
+                top: pos.top + this.el.height()
             });
         }
     },

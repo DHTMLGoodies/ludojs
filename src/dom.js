@@ -144,8 +144,9 @@ ludo.dom = {
 	},
 
 	isInFamily:function (el, id) {
-		if (el.id === id)return true;
-		return el.getParent('#' + id);
+		el = $(el);
+		if (el.attr("id") === id)return true;
+		return el.parent('#' + id);
 	},
 
     // TODO rename to cls

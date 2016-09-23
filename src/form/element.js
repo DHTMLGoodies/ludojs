@@ -459,7 +459,7 @@ ludo.form.Element = new Class({
     setFormElValue:function(value){
         if (this.els.formEl && this.els.formEl.value !== value) {
             this.els.formEl.set('value', value);
-            if(this.inlineLabel)ludo.dom.removeClass(this.els.formEl, 'ludo-form-el-inline-label');
+            if(this.inlineLabel)this.els.formEl.removeClass('ludo-form-el-inline-label');
         }
     },
 
@@ -489,7 +489,7 @@ ludo.form.Element = new Class({
     },
 
     clearInvalid:function () {
-        ludo.dom.removeClass(this.getEl(), 'ludo-form-el-invalid');
+        this.getEl().removeClass('ludo-form-el-invalid');
     },
 
     wasValid:true,

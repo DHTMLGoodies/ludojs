@@ -47,7 +47,7 @@ ludo.layout.Menu = new Class({
 		}
 
 		if (this.view.id === this.getTopMenuComponent().id) {
-			document.id(document.documentElement).addEvent('click', this.autoHideMenus.bind(this));
+			$(document.documentElement).on('click', this.autoHideMenus.bind(this));
 			ludo.EffectObject.addEvent('start', this.hideAllMenus.bind(this));
 		}
 	},
@@ -79,10 +79,10 @@ ludo.layout.Menu = new Class({
 		if (this.parentForNewChild === undefined) {
 			var isTop = !this.hasMenuLayout(this.view.parentComponent);
 			var p = isTop ? this.parent() : this.getMenuContainer().getBody();
-			p.parentNode.addClass('ludo-menu');
-			ludo.dom.addClass(p.parentNode, 'ludo-menu-' + this.view.layout.orientation);
+			p.parent().addClass('ludo-menu');
+			p.parent().addClass('ludo-menu-' + this.view.layout.orientation);
 
-			if (isTop && !this.view.layout.isContext)p.parentNode.addClass('ludo-menu-top');
+			if (isTop && !this.view.layout.isContext)p.parent().addClass('ludo-menu-top');
 			this.parentForNewChild = p;
 
 			if (isTop) {
@@ -120,7 +120,7 @@ ludo.layout.Menu = new Class({
 		var topLm = topMenu.getLayout();
 
 		if (child.mouseOver === undefined) {
-			child.getEl().addEvent('mouseenter', function () {
+			child.getEl().on('mouseenter', function () {
 				this.mouseOver();
 			}.bind(child));
 			child.mouseOver = function () {
@@ -265,7 +265,9 @@ ludo.layout.Menu = new Class({
 
 	autoHideMenus:function (e) {
 		if (this.active || this.alwaysActive) {
-			if (e.target.className && e.target.className.indexOf && e.target.className.indexOf('ludo-menu-item') === -1 && !e.target.getParent('.ludo-menu')) {
+			var cls = $(e.target).attr("class");
+			var parent = $(e.target).closest('.ludo-menu');
+			if (cls && cls.indexOf && cls.indexOf('ludo-menu-item') === -1 && !parent) {
 				this.hideAllMenus();
 				if (this.view.layout.orientation === 'horizontal') {
 					this.active = false;
