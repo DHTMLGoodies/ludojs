@@ -258,9 +258,11 @@ ludo.dom = {
 	},
 
     create:function(node){
+		console.info("use of deprecated ludo.dom.create");
+		console.trace();
         var el = $('<' + (node.tag || 'div') + '>');
         if(node.cls)el.addClass(node.cls);
-        if(node.renderTo)node.renderTo.append(el);
+        if(node.renderTo)$(node.renderTo).append(el);
         if(node.css){
 			el.css(node.css);
           }

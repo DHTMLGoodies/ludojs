@@ -62,10 +62,10 @@ ludo.view.TitleBar = new Class({
     },
 
     createTitleDOM:function () {
-        var title = this.els.title = ludo.dom.create({
-            cls:'ludo-framed-view-titlebar-title',
-            renderTo:this.els.el
-        });
+
+        this.els.title = $('<div class="ludo-framed-view-titlebar-title"></div>');
+        this.els.el.append(this.els.title);
+
         this.setTitle(this.view.title);
     },
 
@@ -74,10 +74,10 @@ ludo.view.TitleBar = new Class({
     },
 
     getButtonContainer:function () {
-        var el = this.els.controls = ludo.dom.create({
-            cls:'ludo-title-bar-button-container'
-        });
-        el.css('cursor', 'default');
+
+
+        var el = this.els.controls = $('<div class="ludo-title-bar-button-container"></div>');
+        el.css('cursor.default');
 
         this.createEdge('left', el);
         this.createEdge('right', el);
@@ -91,10 +91,9 @@ ludo.view.TitleBar = new Class({
     },
 
     createEdge:function (pos, parent) {
-        var el = ludo.dom.create({
-            cls:'ludo-title-bar-button-container-' + pos + '-edge',
-            renderTo:parent
-        });
+        var el = $('<div class="ludo-title-bar-button-container-' + pos + '-edge"></div>');
+        parent.append(el);
+
         el.attr("style", 'position:absolute;z-index:1;' + pos + ':0;top:0;width:55%;height:100%;background-repeat:no-repeat;background-position:top ' + pos);
         return el;
 
@@ -186,7 +185,7 @@ ludo.view.TitleBar = new Class({
             if (width) {
                 ret += width;
             } else {
-                ret += els[i].offsetWidth;
+                ret += els[i].width();
             }
         }
         return ret ? ret : els.length * 10;
@@ -208,8 +207,8 @@ ludo.view.TitleBar = new Class({
     },
 
     getWidthOfIconAndButtons:function () {
-        var ret = this.view.icon ? this.els.icon.offsetWidth : 0;
-        return ret + this.els.controls.offsetWidth;
+        var ret = this.view.icon ? this.els.icon.width() : 0;
+        return ret + this.els.controls.width();
     },
 
     resizeDOM:function () {

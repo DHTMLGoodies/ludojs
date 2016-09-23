@@ -361,7 +361,7 @@ ludo.FramedView = new Class({
 	},
 
 	getHtml:function () {
-		return this.els.body.get('html');
+		return this.els.body.html();
 	},
 
 	getButtonBar:function () {

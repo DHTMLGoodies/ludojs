@@ -709,11 +709,9 @@ ludo.grid.Grid = new Class({
 
 	emptyTextEl:function(){
 		if(this.els.emptyText === undefined){
-			this.els.emptyText = ludo.dom.create({
-				cls : 'ludo-grid-empty-text',
-				html : this.emptyText,
-				renderTo:this.getEl()
-			});
+			this.els.emptyText = $('<div class="ludo-grid-empty-text">' + this.emptyText + '</div>');
+			this.getEl().append(this.els.emptyText);
+
 		}
 		return this.els.emptyText;
 	},

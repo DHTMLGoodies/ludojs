@@ -389,7 +389,7 @@ ludo.grid.GridHeader = new Class({
 		var keys = this.columnManager.getLeafKeys();
 		for (var i = 0; i < keys.length; i++) {
 			if (this.cells[keys[i]] !== undefined) {
-				var el = this.cells[keys[i]].getElements('span')[0];
+				var el = this.cells[keys[i]].find('span');
 				el.removeClass('ludo-cell-text-sort-asc');
 				el.removeClass('ludo-cell-text-sort-desc');
 			}
@@ -399,7 +399,7 @@ ludo.grid.GridHeader = new Class({
 	updateSortArrow:function (sortedBy) {
 		this.clearSortClassNameFromHeaders();
 		if (this.cells[sortedBy.column]) {
-            this.cells[sortedBy.column].getElements('span')[0].addClass('ludo-cell-text-sort-' + sortedBy.order);
+            this.cells[sortedBy.column].find('span').addClass('ludo-cell-text-sort-' + sortedBy.order);
 		}
 	}
 });

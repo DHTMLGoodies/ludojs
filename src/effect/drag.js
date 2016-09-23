@@ -373,10 +373,13 @@ ludo.effect.Drag = new Class({
 		var size = this.getSizeOf(el);
 		var pos;
 		if(this.useShim){
-			pos = el.getPosition();
+			pos = el.position();
 		}else{
 			var parent = this.getPositionedParent(el);
-            pos = parent ? el.getPosition(parent) : this.getPositionOf(el);
+			var parentPos = parent? parent.position() : { left:0, top: 0};
+            pos = el.position();
+			el.left -= parentPos.left;
+			el.top -= parentPos.top;
 		}
 
 
@@ -762,12 +765,12 @@ ludo.effect.Drag = new Class({
 		if (this.shim === undefined) {
 			this.shim = $('<div>');
 			this.shim.addClass('ludo-shim');
-			this.shim.setStyles({
+			this.shim.css({
 				position:'absolute',
 				'z-index':50000,
 				display:'none'
 			});
-			document.body.append(this.shim);
+			$(document.body).append(this.shim);
 
 			if (this.shimCls) {
 				for (var i = 0; i < this.shimCls.length; i++) {
@@ -789,7 +792,7 @@ ludo.effect.Drag = new Class({
 	 * @method showShim
 	 */
 	showShim:function () {
-		this.getShim().setStyles({
+		this.getShim().css({
 			display:'',
 			left:this.getShimX(),
 			top:this.getShimY(),

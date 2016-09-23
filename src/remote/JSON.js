@@ -110,9 +110,6 @@ ludo.remote.JSON = new Class({
             payload = payload.data;
         }
 
-        console.log(payload);
-
-
         $.ajax({
             url:this.getUrl(service, resourceArguments),
             method:this.method,

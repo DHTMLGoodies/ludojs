@@ -98,7 +98,7 @@ ludo.menu.Button = new Class({
         this.el.removeClass('ludo-menu-button-over');
     },
     toggle: function (e) {
-        e.stop();
+        e.stopPropagation();
         if (this.toggleOnClick && this.menuCreated) {
             this.menu[this.menu.isHidden() ? 'show' : 'hide']();
         } else {

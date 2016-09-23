@@ -168,6 +168,8 @@ $skin = isset($skin) ? $skin : 'light-gray';
     <script type="text/javascript" src="<?php echo $prefix; ?>../src/col-resize.js"></script>
 
     <script type="text/javascript" src="<?php echo $prefix; ?>code-highlight/code-highlight.js"></script>
+    
+    
     <link rel="stylesheet" href="<?php echo $prefix; ?>../css/ludojs-<?php echo $skin; ?>.css" type="text/css">
     <script type="text/javascript">
         ludo.appConfig = {
