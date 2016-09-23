@@ -371,7 +371,7 @@ ludo.grid.Grid = new Class({
 		var cells = this.getDOMCellsForRecord(record);
 		for (var key in cells) {
 			if (cells.hasOwnProperty(key)) {
-				ludo.dom.addClass(cells[key], cls);
+				cells[key].addClass(cls);
 			}
 		}
 	},
@@ -608,10 +608,10 @@ ludo.grid.Grid = new Class({
 	},
 
 	mouseOverResizeHandle:function (e) {
-		e.target.addClass('ludo-grid-resize-handle-over');
+		$(e.target).addClass('ludo-grid-resize-handle-over');
 	},
 	mouseOutResizeHandle:function (e) {
-		e.target.removeClass('ludo-grid-resize-handle-over');
+		$(e.target).removeClass('ludo-grid-resize-handle-over');
 	},
 
 	resizeColumns:function () {
@@ -770,7 +770,7 @@ ludo.grid.Grid = new Class({
 			el.addClass('ludo-grid-data-column');
 			
 			el.attr('col', keys[i]);
-			ludo.dom.addClass(el, this.getColumnCssClass(i));
+			el.addClass(this.getColumnCssClass(i));
 			el.id = 'ludo-grid-column-' + keys[i] + '-' + this.uniqueId;
 			this.els.dataColumns[keys[i]] = el;
 		}

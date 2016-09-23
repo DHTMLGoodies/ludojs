@@ -232,7 +232,7 @@ ludo.menu.Button = new Class({
     hideButton: function () {
         if (this.alwaysVisible)return;
         this.buttonEl.css('display', 'none');
-        ludo.dom.removeClass(this.el, 'ludo-menu-button-active');
+        this.el.removeClass('ludo-menu-button-active');
     },
     getMenuView: function () {
         return this.menu;
