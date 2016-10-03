@@ -195,7 +195,7 @@ ludo.tree.Tree = new Class({
             this.expand(record.getParent());
             this.showRecord(record.getParent());
         }
-		this.getCachedNode(record, 'node', '').style.display = '';
+		this.getCachedNode(record, 'node', '').css('display', '');
 	},
 
 	getDomByRecord:function (record) {

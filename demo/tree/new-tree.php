@@ -33,7 +33,8 @@ require_once("../includes/demo-header.php");
     var w = new ludo.Window({
         title:'Tree demo - Random countries and cities (20000 nodes)',
         layout:{
-            type:'rows',
+            type:'linear',
+            orientation:'vertical',
             width:500, height:370,
             x:250,y:50
         },

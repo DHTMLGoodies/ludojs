@@ -551,8 +551,8 @@ ludo.View = new Class({
 
 	autoSetHeight:function () {
 		// Todo replaced mootols measure
-		var size = this.getBody().height();
-		this.layout.height = size.y + ludo.dom.getMH(this.getBody()) + ludo.dom.getMBPH(this.getEl());
+		var size = this.getBody().outerHeight(true);
+		this.layout.height = size + ludo.dom.getMBPH(this.getEl());
 	},
 	/**
 	 * Set HTML of components body element
@@ -1071,7 +1071,7 @@ ludo.View = new Class({
 			}
 
 			var method = obj.getSourceType() === 'HTML' ? 'setHtml' : 'insertJSON';
-			
+
 			if (obj.hasData()) {
 				this[method](obj.getData());
 			}
