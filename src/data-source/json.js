@@ -70,6 +70,7 @@ ludo.dataSource.JSON = new Class({
 
 
     loadComplete:function (data) {
+        
 		this.parent();
 		var firstLoad = !this.data;
 		this.data = data;

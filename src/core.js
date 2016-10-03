@@ -294,10 +294,7 @@ ludo.Core = new Class({
 
 	relayEvents:function(obj, events){
 		for(var i=0;i<events.length;i++){
-			if(events[i] == "mouseenter"){
-				console.log(obj);
-			}
-			obj.addEvent(events[i], this.getRelayFn(events[i]).bind(this));
+			obj.on(events[i], this.getRelayFn(events[i]).bind(this));
 		}
 	},
 

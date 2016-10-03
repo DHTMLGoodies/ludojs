@@ -30,13 +30,14 @@ ludo.chart.Tooltip = new Class({
 		this.setConfigParams(config, ['tpl','boxStyles','textStyles']);
 		this.createDOM();
 
-		console.log(this.getParent());
 		this.getParent().addEvents({
 			'mouseenter':this.show.bind(this),
 			'mouseleave':this.hide.bind(this)
 		});
 
-		this.getParent().getNode().addEvent('mousemove', this.move.bind(this));
+		this.getParent().getNode().on("mouseenter", this.show.bind(this));
+		this.getParent().getNode().on("mouseleave", this.hide.bind(this));
+		this.getParent().getNode().on('mousemove', this.move.bind(this));
 	},
 
 	createDOM:function () {
@@ -46,12 +47,13 @@ ludo.chart.Tooltip = new Class({
 		this.node.toFront.delay(50, this.node);
 
 		this.rect = new ludo.canvas.Rect({ x:0, y:0, rx:2, ry:2 });
-		this.rect.setStyles(this.getBoxStyling());
+		this.rect.css(this.getBoxStyling());
+
 		this.node.append(this.rect);
 
 		this.textBox = new ludo.canvas.TextBox();
 		this.textBox.getNode().translate(4, 0);
-		this.textBox.getNode().setStyles(this.getTextStyles());
+		this.textBox.getNode().css(this.getTextStyles());
 		this.node.append(this.textBox);
 	},
 
@@ -72,17 +74,20 @@ ludo.chart.Tooltip = new Class({
 	
 	show:function (e) {
 
-		console.log("show");
-		
+		var rec = this.getRecord();
+		if(rec == undefined){
+			this.hide();
+			return;
+		}
 
 		this.node.show();
 		this.shown = true;
 
-		this.offset = this.getParent().getParent().getBody().getPosition();
+		this.offset = this.getParent().getParent().getBody().position();
 
 		this.textBox.setText(this.getParsedHtml());
 
-		this.rect.setStyle('stroke', this.getRecord().get('color'));
+		this.rect.css('stroke', this.getRecord().get('color'));
 
 		this.size = this.textBox.getNode().getSize();
 		this.size.x +=7;
@@ -104,8 +109,8 @@ ludo.chart.Tooltip = new Class({
 	move:function (e) {
 		if (this.shown) {
 			var pos = {
-				x:e.page.x - this.offset.x - this.size.x - 10,
-				y:e.page.y - this.offset.y - this.size.y - 5
+				x:e.pageX - this.offset.left - this.size.x - 10,
+				y:e.pageY - this.offset.top - this.size.y - 5
 			};
 			if(pos.x < 0)pos.x += (this.size.x + 20);
 			if(pos.y < 0)pos.y += (this.size.y + 10);
@@ -124,7 +129,9 @@ ludo.chart.Tooltip = new Class({
 			var method = 'get' + key.substr(0,1).toUpperCase() + key.substr(1);
 
 			var val = rec[method] !== undefined ? rec[method]() : rec.get(key);
-			if(val === undefined && this.getParent().dataProvider()['method']){
+
+			var provider = this.getParent().dataProvider();
+			if(val === undefined && provider && provider['method']){
 				val = this.getParent().dataProvider()['method']();
 			}
 

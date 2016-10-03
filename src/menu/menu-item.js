@@ -89,8 +89,8 @@ ludo.menu.Item = new Class({
         this.parent();
         if (!this.isSpacer()) {
             this.getEl().on('click', this.click.bind(this));
-            this.mouseenter(this.mouseOver.bind(this));
-            this.gmouseleave(this.mouseOut.bind(this));
+            this.getEl().mouseenter(this.mouseOver.bind(this));
+            this.getEl().mouseleave(this.mouseOut.bind(this));
         }
     },
 

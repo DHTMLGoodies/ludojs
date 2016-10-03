@@ -278,10 +278,11 @@ ludo.canvas.Node = new Class({
 	},
 
 	css:function (key, value) {
-		if($.isPlainObject(key)){
-			this.setStyles(key);
-		}else{
+		if($.type(key) == "string"){
 			ludo.canvasEngine.css(this.el, key, value);
+		}else{
+			console.log(key);
+			this.setStyles(key);
 		}
 	},
 

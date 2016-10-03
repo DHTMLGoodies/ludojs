@@ -88,9 +88,9 @@ ludo.menu.Context = new Class({
 	},
 	ludoEvents:function () {
 		this.parent();
-		document.id(document.documentElement).addEvent('click', this.hideAfterDelay.bind(this));
+		$(document.documentElement).on('click', this.hideAfterDelay.bind(this));
 		if(this.contextEl){
-			document.id(this.contextEl).addEvent('contextmenu', this.show.bind(this));
+			$(this.contextEl).on('contextmenu', this.show.bind(this));
 		}
 	},
 

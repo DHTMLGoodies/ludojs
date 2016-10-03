@@ -106,10 +106,10 @@ ludo.tree.Tree = new Class({
 	ludoDOM:function () {
 		this.parent();
 		this.getBody().css('overflowY', 'auto');
-        this.getBody().addEvents({
-            'click' : this.onClick.bind(this),
-            'dblclick' : this.onDblClick.bind(this)
-        });
+		this.getBody().on("click", this.onClick.bind(this));
+		this.getBody().on("dblclick", this.onDblClick.bind(this));
+
+
 	},
 
 	onClick:function (e) {
@@ -118,7 +118,7 @@ ludo.tree.Tree = new Class({
 			if(e.target.tagName.toLowerCase() === 'span' && this.isSelectable(record)) {
 				this.getDataSource().selectRecord(record);
             }
-            if(ludo.dom.hasClass(e.target, 'ludo-tree-node-expand')){
+            if($(e.target).hasClass('ludo-tree-node-expand')){
                 this.expandOrCollapse(record, e.target);
             }else{
                 this.expand(record, e.target);
@@ -148,23 +148,25 @@ ludo.tree.Tree = new Class({
 
 	getDomElement:function (record, cls) {
 		var el = this.getDomByRecord(record);
-		if (el)return document.id(el).getFirst(cls);
+		if (el)return $(el).find(cls).first();
 		return undefined;
 	},
 
 	expandOrCollapse:function (record, el) {
         el = this.getExpandEl(record);
-        var method = ludo.dom.hasClass(el, 'ludo-tree-node-collapse') ? 'collapse' : 'expand';
+        var method = el.hasClass('ludo-tree-node-collapse') ? 'collapse' : 'expand';
         this[method](record,el);
 	},
 
 	expand:function (record, el) {
 		el = this.getExpandEl(record);
+
         if(!this.areChildrenRendered(record)){
+
             this.renderChildrenOf(record);
         }
 		el.addClass('ludo-tree-node-collapse');
-		this.getCachedNode(record, 'children', 'child-container-').style.display = '';
+		this.getCachedNode(record, 'children', 'child-container-').css('display', '');
 	},
 
 	collapse:function (record, el) {
@@ -213,7 +215,7 @@ ludo.tree.Tree = new Class({
 		if (this.nodeCache[cacheKey] === undefined)this.nodeCache[cacheKey] = {};
 		var uid = record.getUID ? record.getUID() : record.uid;
 		if (!this.nodeCache[cacheKey][uid]) {
-			this.nodeCache[cacheKey][uid] = this.getBody().getElementById(idPrefix + uid)
+			this.nodeCache[cacheKey][uid] = this.getBody().find("#" + idPrefix + uid);
 		}
 		return this.nodeCache[cacheKey][uid];
 	},
@@ -229,16 +231,18 @@ ludo.tree.Tree = new Class({
 	},
 
 	insertJSON:function () {
+
 		this.nodeCache = {};
 		this.renderedRecords = {};
-		this.nodeContainer().innerHTML = '';
+		this.nodeContainer().html('');
 		this.render();
 	},
 
 	render:function () {
 		this.parent();
 		var data = this.getDataSource().getData();
-		this.nodeContainer().innerHTML = this.getHtmlForBranch(data);
+
+		this.nodeContainer().html(this.getHtmlForBranch(data));
 	},
 
 	getHtmlForBranch:function (branch) {
@@ -253,7 +257,7 @@ ludo.tree.Tree = new Class({
         var p = this.getChildContainer(record);
         if(p){
 			var c = record.getChildren();
-            if(c)p.innerHTML = this.getHtmlForBranch(c);
+            if(c)p.html(this.getHtmlForBranch(c));
         }
     },
 

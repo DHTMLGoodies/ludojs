@@ -96,6 +96,8 @@
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/form/password.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/form/checkbox.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/form/select.js"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/form/submit-button.js"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/form/cancel-button.js"></script>
 
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/remote/base.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/remote/json.js"></script>
@@ -200,6 +202,12 @@
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/chart/chart.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/chart/pie.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/chart/labels.js"></script>
+
+
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/movable.js"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/collection-view.js"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/tree/tree.js"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/tree/drag-drop.js"></script>
 
 <script type="text/javascript" src="<?php echo $prefix; ?>code-highlight/code-highlight.js"></script>
     

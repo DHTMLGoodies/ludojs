@@ -58,10 +58,9 @@ ludo.CollectionView = new Class({
 
 	nodeContainer:function(){
 		if(this._nodeContainer === undefined){
-			this._nodeContainer = ludo.dom.create({
-				tag : 'div',
-				renderTo : this.getBody()
-			});
+			this._nodeContainer = $('<div>');
+			this.getBody().append(this._nodeContainer);
+	
 		}
 		return this._nodeContainer;
 	},

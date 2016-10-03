@@ -1071,6 +1071,7 @@ ludo.View = new Class({
 			}
 
 			var method = obj.getSourceType() === 'HTML' ? 'setHtml' : 'insertJSON';
+			
 			if (obj.hasData()) {
 				this[method](obj.getData());
 			}

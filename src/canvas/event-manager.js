@@ -23,6 +23,7 @@ ludo.canvas.EventManager = new Class({
 				this.currentNodeId = node.getEl().id;
                 this.currentNodeFn = fn;
 				fn.call(node, e, node);
+			}else{
 			}
 		}.bind(this)
 	},
