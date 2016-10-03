@@ -29,10 +29,12 @@ require_once("../includes/demo-header.php");
             tabPos:'left'
         },
         children:[
-            { type:'color.Boxes', title:'Color boxes' },
+            { type:'color.RgbColors', title:'Color boxes' },
+            { type:'color.NamedColors', title:'Named Colors' },
             { type:'color.RGBSlider', title : 'RGB slider',value:'#dd55cc' }
         ]
-    })
+    });
+    w.showCentered();
 </script>
 
 

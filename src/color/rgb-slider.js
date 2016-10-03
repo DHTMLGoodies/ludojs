@@ -165,12 +165,12 @@ ludo.color.RGBSliderValue = new Class({
 
     ludoEvents:function () {
         this.parent();
-        this.getBody().addEvent('click', this.sendColor.bind(this));
+        this.getBody().on('click', this.sendColor.bind(this));
     },
 
     setColor:function (color) {
         this.color = color;
-        this.getBody().innerHTML = color.toUpperCase();
+        this.getBody().html(color.toUpperCase());
     },
 
     sendColor:function () {

@@ -98,6 +98,7 @@
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/form/select.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/form/submit-button.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/form/cancel-button.js"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/form/slider.js"></script>
 
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/remote/base.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/remote/json.js"></script>

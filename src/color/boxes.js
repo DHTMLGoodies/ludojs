@@ -13,7 +13,7 @@ ludo.color.Boxes = new Class({
 
     ludoEvents:function(){
         this.parent();
-        this.getBody().addEvent('click', this.clickOnColorBox.bind(this));
+        this.getBody().on('click', this.clickOnColorBox.bind(this));
     },
 
     ludoRendered:function(){
@@ -35,7 +35,7 @@ ludo.color.Boxes = new Class({
                 html.push('</div>');
             }
         }
-        this.getBody().innerHTML = html.join('');
+        this.getBody().html(html.join(''));
 
     },
 
@@ -72,7 +72,7 @@ ludo.color.Boxes = new Class({
     },
 
     clickOnColorBox:function(e){
-        if(e.target.hasClass('ludo-color-box')){
+        if($(e.target).hasClass('ludo-color-box')){
             this.fireEvent('setColor', e.target.getAttribute('rgbColor'));
         }
     }

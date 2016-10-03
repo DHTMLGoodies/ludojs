@@ -82,18 +82,18 @@ ludo.form.Slider = new Class({
     moveSliderBackgrounds:function () {
         var offset = Math.round(this.getHandleSize() / 2);
         var css = this.getDirection() == 'horizontal' ? ['left','right'] : ['top','bottom'];
-        this.els['bgfirst'].style[css[0]] = offset + 'px';
-        this.els['bglast'].style[css[1]] = offset + 'px';
+        this.els['bgfirst'].css(css[0], offset + 'px');
+        this.els['bglast'].css(css[1], offset + 'px');
     },
 
     addInput:function () {
         this.parent();
 
         var el = this.els.slider = $('<div>');
-        this.els.slider.addEvent('click', this.sliderClick.bind(this));
+        this.els.slider.on('click', this.sliderClick.bind(this));
 
         el.addClass('ludo-form-slider-container');
-        ludo.dom.addClass(el, 'ludo-form-slider-' + this.getDirection());
+        el.addClass('ludo-form-slider-' + this.getDirection());
         this.getInputCell().append(el);
 
         this.addSliderBg('first');
@@ -103,12 +103,14 @@ ludo.form.Slider = new Class({
     },
 
     createSliderHandle:function () {
-        this.els.sliderHandle = ludo.dom.create({ renderTo : this.els.slider, cls : 'ludo-form-slider-handle'});
+        this.els.sliderHandle = $('<div class="ludo-form-slider-handle"></div>');
+        this.els.slider.append(this.els.sliderHandle);
         this.drag = new ludo.effect.Drag(this.getDragConfig());
     },
 
     addSliderBg:function (pos) {
-        this.els['bg' + pos] = ludo.dom.create({ renderTo : this.els.slider, cls : 'ludo-form-slider-bg-' + pos });
+        this.els['bg' + pos] = $('<div class="ludo-form-slider-bg-' + pos + '"></div>');
+        this.els.slider.append(this.els['bg' + pos])
     },
 
     getDragConfig:function () {
@@ -125,12 +127,12 @@ ludo.form.Slider = new Class({
     },
 
     sliderClick:function (e) {
-        if (!e.target.hasClass('ludo-form-slider-handle')) {
-            var pos = this.els.slider.getPosition();
+        if (!$(e.target).hasClass('ludo-form-slider-handle')) {
+            var pos = this.els.slider.position();
             var offset = Math.round(this.getHandleSize() / 2);
             this.receivePosition({
-                x:e.page.x - pos.x - offset,
-                y:e.page.y - pos.y - offset
+                x:e.pageX - pos.left - offset,
+                y:e.pageY - pos.top - offset
             });
         }
 
@@ -193,10 +195,10 @@ ludo.form.Slider = new Class({
     resizeDOM:function () {
         this.parent();
         if (this.direction == 'horizontal') {
-            this.sliderSize = this.els.slider.offsetWidth;
+            this.sliderSize = this.els.slider.width();
         } else {
-            this.sliderSize = this.getBody().offsetHeight - ludo.dom.getMH(this.els.slider);
-            this.els.slider.style.height = this.getHeight() + 'px';
+            this.sliderSize = this.getBody().height() - ludo.dom.getMH(this.els.slider);
+            this.els.slider.css('height',  this.getHeight() + 'px');
         }
         this.sliderSize -= this.getHandleSize();
 
@@ -205,7 +207,7 @@ ludo.form.Slider = new Class({
     },
 
     positionSliderHandle:function () {
-        this.els.sliderHandle.style[this.handleCssProperty] = this.getHandlePos() + 'px';
+        this.els.sliderHandle.css(this.handleCssProperty, this.getHandlePos() + 'px');
     },
 
     getHandlePos:function () {
@@ -236,7 +238,7 @@ ludo.form.Slider = new Class({
                 this.handleCssProperty = 'left';
             }
 
-            this.handleSize = parseInt(this.els.sliderHandle.getStyle(cssProperty).replace('px', ''));
+            this.handleSize = parseInt(this.els.sliderHandle.css(cssProperty).replace('px', ''));
         }
         return this.handleSize;
     },
