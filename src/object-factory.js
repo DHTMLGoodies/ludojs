@@ -93,6 +93,9 @@ ludo.ObjectFactory = new Class({
 	},
 
 	getInNamespace:function(ns, config){
+		if(jQuery.type(config) == "string"){
+			console.trace();
+		}
 		var type = config.type.split(/\./g);
 		if(type[0] === ns)type.shift();
 		var obj = window[ns];

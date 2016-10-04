@@ -157,7 +157,7 @@ ludo.form.File = new Class({
 	ludoRendered:function () {
 		this.parent();
 
-		var cell = new Element('td');
+		var cell = $('<td>');
 		cell.width = this.buttonWidth;
 		cell.css('textAlign', 'right');
 		this.getInputRow().append(cell);
@@ -175,7 +175,7 @@ ludo.form.File = new Class({
 		});
 
 		var fe = this.getFormEl();
-		fe.setStyles({
+		fe.css({
 			opacity:0,
 			'-moz-opacity':0,
 			height:'100%',
@@ -187,13 +187,13 @@ ludo.form.File = new Class({
 			filter:'alpha(opacity=0)'
 		});
 
-        fe.addEvents({
-            'mouseover': btn.mouseOver.bind(btn),
-            'mouseout' : btn.mouseOut.bind(btn),
-            'mousedown' : btn.mouseDown.bind(btn),
-            'mouseup' : btn.mouseUp.bind(btn),
-            'change' : this.selectFile.bind(this)
-        });
+		fe.on('mouseover', btn.mouseOver.bind(btn));
+		fe.on('mouseout', btn.mouseOut.bind(btn));
+		fe.on('mousedown', btn.mouseDown.bind(btn));
+		fe.on('mouseup', btn.mouseUp.bind(btn));
+		fe.on('change', this.selectFile.bind(this));
+
+
 
 		btn.getEl().append(fe);
 
@@ -206,16 +206,9 @@ ludo.form.File = new Class({
 	},
 
 	createFormElementForComponent:function () {
-		var formEl = this.els.form = new Element('form');
-		formEl.target = this.getIframeName();
+		var formEl = this.els.form = $('<form method="post action="' + this.getUploadUrl() + '" enctype="multipart/form-data" target="' + this.getIframeName() + '">');
 
-        formEl.setProperties({
-            'method' : 'post',
-            'action' : this.getUploadUrl(),
-            'enctype' : 'multipart/form-data'
-        });
-
-		formEl.setStyles({ margin:0, padding:0, border:0});
+		formEl.css({ margin:0, padding:0, border:0});
 		this.getEl().append(formEl);
 		formEl.append(this.getBody());
 
@@ -229,23 +222,21 @@ ludo.form.File = new Class({
     },
 
 	addElToForm:function(name,value){
-		var el = new Element('input');
-		el.type = 'hidden';
-		el.name = name;
-		el.value = value;
+		var el =$('<input type="hidden" name="' + name + '">');
+		el.val(value);
 		this.els.form.append(el);
 	},
 
 	createIframe:function () {
-		var el = this.els.iframe = new Element('iframe');
-		el.name = this.iframeName = this.getIframeName();
-		el.setStyles({
+		this.iframeName = this.getIframeName();
+		var el = this.els.iframe = $('<iframe name="' + this.iframeName + '">');
+		el.css({
 			width:1, height:1,
 			visibility:'hidden',
 			position:'absolute'
 		});
 		this.getEl().append(el);
-		el.addEvent('load', this.onUploadComplete.bind(this));
+		el.on('load', this.onUploadComplete.bind(this));
 
 	},
 
@@ -255,9 +246,7 @@ ludo.form.File = new Class({
 
 	onUploadComplete:function () {
 		this.fileUploadComplete = true;
-
 		if (window.frames[this.iframeName].location.href.indexOf('http:') == -1) {
-
 			return;
 		}
 		try {

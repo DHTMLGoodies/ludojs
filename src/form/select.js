@@ -127,7 +127,8 @@ ludo.form.Select = new Class({
 
     populate:function () {
         var data = this.dataSourceObj.getData() || [];
-        this.getFormEl().options.length = 0;
+
+        this.getFormEl().find('option').remove();
         if (this.emptyItem) {
             this.addOption(this.emptyItem[ this.valueKey ], this.emptyItem[ this.textKey ]);
         }

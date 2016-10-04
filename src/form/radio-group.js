@@ -15,21 +15,21 @@ ludo.form.RadioGroup = new Class({
 
     ludoDOM : function() {
         this.parent();
-        var table = new Element('table');
+        var table = $('<table>');
         this.getInputCell().append(table);
-        var tbody = this.els.tBody = new Element('tbody');
+        var tbody = this.els.tBody = $('<tbody>');
         table.append(tbody);
 
     },
 
     populate : function(){
         var data = this.dataSource ? this.getDataSource().getData() || [] : [];
-        var row = new Element('tr');
-        this.els.tBody.innerHTML = '';
+        var row = $('<tr>');
+        this.els.tBody.html('');
         this.els.tBody.append(row);
         this.disposeCheckboxes();
         for(var i=0;i<data.length;i++){
-            var cell = new Element('td');
+            var cell = $('<td>');
             row.append(cell);
 
             var radio = new ludo.form.Checkbox({

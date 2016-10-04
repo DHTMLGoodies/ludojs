@@ -122,6 +122,16 @@ ludo.effect.Effect = new Class({
 	},
 
 	slide:function(el, from, to, duration, callback){
+		if(from.x != undefined && from.left == undefined){
+			console.warn("Use of property x in slide");
+			console.trace();
+			from.left = from.x;
+		}
+		if(to.x != undefined && to.left == undefined){
+			console.warn("Use of property x in slide");
+			console.trace();
+			to.left = to.x;
+		}
 		var stops = this.getStops(duration);
 		var styles = [];
 		if(from.left !== to.left){
@@ -141,6 +151,7 @@ ludo.effect.Effect = new Class({
 				change: (to.top - from.top) / stops
 			});
 		}
+
 		this.execute({
 			el:el,
 			index:0,

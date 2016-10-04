@@ -135,7 +135,7 @@ ludo.form.Button = new Class({
         this.setConfigParams(config, ['size','menu','icon','toggle','disableOnInvalid','defaultSubmit','disabled','selected']);
 
         if (config.toggleGroup !== undefined) {
-            if (ludo.util.type(config.toggleGroup) === 'String') {
+            if (ludo.util.type(config.toggleGroup) === 'string') {
                 config.toggleGroup = {
                     type:'form.ToggleGroup',
                     id:'toggleGroup-' + config.toggleGroup
@@ -240,7 +240,8 @@ ludo.form.Button = new Class({
             'background-repeat':'no-repeat',
             'background-position':'center center'
         });
-        el.inject(this.els.txt, 'before');
+        el.insertBefore(this.els.txt);
+
     },
 
     setIcon:function(src){
@@ -304,6 +305,7 @@ ludo.form.Button = new Class({
     },
 
     mouseOver:function () {
+
         if (!this.isDisabled()) {
             this.getBody().addClass('ludo-form-button-over');
             this.fireEvent('mouseover', this);

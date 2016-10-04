@@ -75,8 +75,8 @@ ludo.effect.DragDrop = new Class({
 		node = this.getValidNode(node);
 		node.el.addClass('ludo-drop');
 		if(node.el.mouseenter != undefined){
-			node.mouseenter(this.enterDropTarget.bind(this));
-			node.mouseleave(this.leaveDropTarget.bind(this));
+			node.el.mouseenter(this.enterDropTarget.bind(this));
+			node.el.mouseleave(this.leaveDropTarget.bind(this));
 
 		}else{
 			node.el.on('mouseenter', this.enterDropTarget.bind(this));

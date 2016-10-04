@@ -113,6 +113,16 @@ ludo.Core = new Class({
 
 	ludoConfig:function(config){
         this.setConfigParams(config, ['url','name','controller','module','submodule','stateful','id','useController','addOns']);
+
+		// TODO new code 2016 - custom functions
+		if(config != undefined){
+			for(var key in config){
+				if(config.hasOwnProperty(key) && $.type(config[key]) == "function"){
+					this[key] = config[key].bind(this);
+				}
+			}
+		}
+
         if (this.stateful && this.statefulProperties && this.id) {
             config = this.appendPropertiesFromStore(config);
             this.addEvent('state', this.saveStatefulProperties.bind(this));

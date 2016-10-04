@@ -24,10 +24,10 @@ ludo.layout.SlideIn = new Class({
             height:this.viewport.height
         });
 
-        this.slideEl.style.width = (this.viewport.absWidth + widthOfFirst) + 'px';
-        this.slideEl.style.left = this.view.layout.active ? 0 : (widthOfFirst * -1) + 'px';
+        this.slideEl.css('width', (this.viewport.absWidth + widthOfFirst) + 'px');
+        this.slideEl.css('left', this.view.layout.active ? 0 : (widthOfFirst * -1) + 'px');
 
-        this.view.children[1].getEl().style.left = widthOfFirst + 'px';
+        this.view.children[1].getEl().css('left', widthOfFirst + 'px');
         this.view.children[1].resize({
             width:this.viewport.absWidth,
             height:this.viewport.height
@@ -47,7 +47,8 @@ ludo.layout.SlideIn = new Class({
             }
             this.view.layout.active = true;
             var widthOfFirst = this.getWidthOfMenu();
-            this.effect().slide(this.slideEl, { x:widthOfFirst * -1}, {x:0 }, this.getDuration());
+         
+            this.effect().slide(this.slideEl, { left:widthOfFirst * -1}, {left:0 }, this.getDuration());
         }
     },
     /**
@@ -60,7 +61,7 @@ ludo.layout.SlideIn = new Class({
         if (this.isMenuOpen()) {
             this.view.layout.active = false;
             var widthOfFirst = this.getWidthOfMenu();
-            this.effect().slide(this.slideEl, {x:0 }, { x:widthOfFirst * -1}, this.getDuration());
+            this.effect().slide(this.slideEl, {left:0 }, { left:widthOfFirst * -1}, this.getDuration());
         }
     },
 
@@ -105,14 +106,9 @@ ludo.layout.SlideIn = new Class({
 
     getParentForNewChild:function () {
         if (!this.slideEl) {
-            this.slideEl = ludo.dom.create({
-                tag:'div',
-                renderTo:this.view.getBody(),
-                css:{
-                    height:'100%',
-                    position:'absolute'
-                }
-            });
+            this.slideEl = $('<div style="height:100%;position:absolute"></div>');
+            this.view.getBody().append(this.slideEl);
+
         }
         return this.slideEl;
     }

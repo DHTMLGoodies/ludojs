@@ -8,26 +8,28 @@ ludo.remote.HTML = new Class({
 	HTML:undefined,
 
 	sendToServer:function (service, resourceArguments, serviceArguments, additionalData) {
-		var req = new Request({
+		$.ajax({
+			dataType: "html",
+			method: this.method,
 			url:this.getUrl(service, resourceArguments),
-			method:this.method,
-			noCache:true,
-			evalScripts:true,
+			async:true,
+			cache:false,
 			data:this.getDataForRequest(service, resourceArguments, serviceArguments, additionalData),
-			onSuccess:function (html) {
+			success:function(html){
 				this.remoteData = html;
 				this.fireEvent('success', this);
 				this.sendBroadCast(service);
 				this.onComplete();
 			}.bind(this),
-			onError:function (text, error) {
+
+			error:function(xhr, text, error){
 				this.remoteData = { "code":500, "message":error };
 				this.fireEvent('servererror', this);
 				this.sendBroadCast(service);
 				this.onComplete();
 			}.bind(this)
+
 		});
-		req.send();
 	},
 	/**
 	 * Return JSON response data from last request.

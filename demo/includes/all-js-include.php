@@ -99,12 +99,21 @@
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/form/submit-button.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/form/cancel-button.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/form/slider.js"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/form/toggle-group.js"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/form/reset-button.js"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/form/combo.js"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/form/date.js"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/form/color.js"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/form/file.js"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/form/display-field.js"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/form/radio-group.js"></script>
 
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/remote/base.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/remote/json.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/remote/broadcaster.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/remote/shim.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/remote/inject.js"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/remote/html.js"></script>
 
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/form/validator/base.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/form/validator/fns.js"></script>

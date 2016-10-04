@@ -311,7 +311,6 @@ ludo.layout.Base = new Class({
 	},
 
 	getHeightOf:function (child) {
-		console.log(child.layout);
 		return child.layout.height;
 	}
 });

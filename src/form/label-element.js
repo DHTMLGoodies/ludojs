@@ -101,8 +101,8 @@ ludo.form.LabelElement = new Class({
         }
         if (this.suffix) {
             var s = this.getSuffixCell();
-            s.style.display = '';
-            var label = s.getElement('label');
+            s.css('display', '');
+            var label = s.find('label').first();
             if (label) {
                 label.html( this.suffix);
                 label.attr('for', this.getFormElId());

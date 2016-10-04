@@ -71,27 +71,27 @@ require_once("../includes/demo-header.php");
 
                         type:'grid.Grid',
                         weight:1,
-                        columnManager:{
-                            columns:{
-                                'country':{
-                                    heading:'Country',
-                                    sortable:true,
-                                    movable:true,
-                                    renderer:function (val) {
-                                        return '<span style="color:blue">' + val + '</span>';
-                                    }
-                                },
-                                'capital':{
-                                    heading:'Capital',
-                                    sortable:true,
-                                    movable:true
-                                },
-                                population:{
-                                    heading:'Population',
-                                    movable:true
+
+                        columns:{
+                            'country':{
+                                heading:'Country',
+                                sortable:true,
+                                movable:true,
+                                renderer:function (val) {
+                                    return '<span style="color:blue">' + val + '</span>';
                                 }
+                            },
+                            'capital':{
+                                heading:'Capital',
+                                sortable:true,
+                                movable:true
+                            },
+                            population:{
+                                heading:'Population',
+                                movable:true
                             }
                         },
+
                         dataSource:{
                             url:'../resources/grid-data.json',
                             listeners:{

@@ -116,7 +116,7 @@ ludo.form.Checkbox = new Class({
      * @return {Boolean} checked
      */
     isChecked:function () {
-        return this.getFormEl().getProperty('checked');
+        return this.getFormEl().attr('checked');
     },
     /**
      * Set checkbox to checked
