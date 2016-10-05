@@ -44,7 +44,7 @@ ludo.layout.Resizer = new Class({
 	leaveResizer:function(){
 		if(!this.isActive){
 			this.el.css('z-index', parseInt(this.el.css('z-index')) - 1);
-			ludo.dom.removeClass(this.el, 'ludo-resize-handle-active');
+			this.el.removeClass('ludo-resize-handle-active');
 		}
 	},
 	createDragable:function(){
@@ -59,7 +59,7 @@ ludo.layout.Resizer = new Class({
 	beforeDrag:function(){
 		this.dd.setMinX(30);
 		this.isActive = true;
-		ludo.dom.removeClass(this.el, 'ludo-resize-handle-active');
+		this.el.removeClass( 'ludo-resize-handle-active');
 		this.el.addClass('ludo-resize-handle-active');
 		this.fireEvent('before', [this, this.view]);
 		this.fireEvent('startResize');
@@ -111,8 +111,8 @@ ludo.layout.Resizer = new Class({
 	},
 
 	endDrag:function(dragged, dd){
-		ludo.dom.removeClass(this.el, 'ludo-resize-handle-over');
-		ludo.dom.removeClass(this.el, 'ludo-resize-handle-active');
+		this.el.removeClass( 'ludo-resize-handle-over');
+		this.el.removeClass( 'ludo-resize-handle-active');
 		var change = this.orientation === 'horizontal' ? dd.getDraggedX() : dd.getDraggedY();
 		if(this.pos === 'left' || this.pos === 'above'){
 			change *= -1;

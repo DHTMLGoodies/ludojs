@@ -100,7 +100,7 @@ TestCase("ButtonTest", {
 	},
 
 	getIconOf:function (button) {
-		var style = button.els.icon.getStyle('background-image');
+		var style = button.els.icon.css('background-image');
 		style = style.replace(/.*?\(([^\)]+?)\).*/g, '$1');
 		style = style.replace(/[^a-z0-9\.]/g, '');
 		return style;

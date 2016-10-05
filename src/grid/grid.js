@@ -737,8 +737,8 @@ ludo.grid.Grid = new Class({
 			if (this.columnManager.isHidden(keys[i])) {
 				this.els.dataColumns[keys[i]].css('display', 'none');
 			} else {
-				this.els.dataColumns[keys[i]].style.display='';
-				this.els.dataColumns[keys[i]].innerHTML = this.getHtmlTextForColumn(keys[i]);
+				this.els.dataColumns[keys[i]].css('display', '');
+				this.els.dataColumns[keys[i]].html(this.getHtmlTextForColumn(keys[i]));
 			}
 		}
 		this.resizeVerticalScrollbar();

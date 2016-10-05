@@ -16,8 +16,8 @@ ludo.layout.CollapseBar = new Class({
 	ludoDOM:function(){
 		this.parent();
 		this.getEl().addClass('ludo-collapse-bar');
-		ludo.dom.addClass(this.getEl(), 'ludo-collapse-bar-' + this.orientation);
-		ludo.dom.addClass(this.getEl(), 'ludo-collapse-bar-' + this.position);
+		this.getEl().addClass('ludo-collapse-bar-' + this.orientation);
+		this.getEl().addClass('ludo-collapse-bar-' + this.position);
 	},
 
 	setLayout:function(){
@@ -79,13 +79,13 @@ ludo.layout.CollapseBar = new Class({
 
 	addButton:function(view){
 		var button = this.buttons[view.id] = $('<div>');
-		button.id = 'button-' + view.id;
-		button.addEvent('mouseenter', this.enterButton.bind(this));
-		button.addEvent('mouseleave', this.leaveButton.bind(this));
-		button.addEvent('click', this.toggleView.bind(this));
+		button.attr("id", 'button-' + view.id);
+		button.mouseenter(this.enterButton.bind(this));
+		button.mouseleave(this.leaveButton.bind(this));
+		button.on('click', this.toggleView.bind(this));
 		this.getBody().append(button);
-		button.innerHTML = '<div class="collapse-bar-button-bg-first"></div><div class="collapse-bar-button-bg-last"></div>';
-		button.className = 'collapse-bar-button collapse-bar-button-' + this.position;
+		button.html('<div class="collapse-bar-button-bg-first"></div><div class="collapse-bar-button-bg-last"></div>');
+		button.addClass('collapse-bar-button collapse-bar-button-' + this.position);
 
 		var svgNode = new ludo.layout.TextBox({
 			renderTo:button,
@@ -95,14 +95,16 @@ ludo.layout.CollapseBar = new Class({
 		});
 
 		var size = svgNode.getSize();
-		button.style.width = size.x + 'px';
-		button.style.height = size.y + 'px';
+		button.css({
+			width: size.x + 'px',
+			height : size.y + 'px'
+		});
 
 		if(this.position === 'top' || this.position === 'bottom'){
-			button.style.left = this.currentPos + 'px';
+			button.css('left', this.currentPos + 'px');
 			this.currentPos += size.x + ludo.dom.getMBPW(button);
 		}else{
-			button.style.top = this.currentPos + 'px';
+			button.css('top',  this.currentPos + 'px');
 			this.currentPos += size.y  + ludo.dom.getMBPH(button);
 		}
 
@@ -124,8 +126,10 @@ ludo.layout.CollapseBar = new Class({
 
 	toggleView:function(e){
 		var button = this.getButtonByDom(e.target);
-		var id = button.id.replace('button-', '');
+		var id = button.attr("id").replace('button-', '');
+
 		var view = ludo.get(id);
+
 		if(view.isHidden())view.show();else view.hide();
 	},
 
@@ -138,6 +142,7 @@ ludo.layout.CollapseBar = new Class({
 	},
 
 	activateButton:function(view){
+
 		if(view.getParent().isHidden())view.getParent().show();
 		this.buttons[view.id].addClass('collapse-bar-button-active');
 
@@ -164,12 +169,14 @@ ludo.layout.CollapseBar = new Class({
 	deactivateButton:function(view){
 		this.buttons[view.id].removeClass('collapse-bar-button-active');
 		this.toggleParent.delay(50, this, view);
-
 	},
 
 	getButtonByDom:function(el){
-		while(el.tagName.toLowerCase() === 'svg' || el.tagName.toLowerCase() === 'text' || !ludo.dom.hasClass(el, 'collapse-bar-button')){
-			el = el.parentNode;
+		el = $(el);
+		var tag = el.prop("tagName").toLowerCase();
+		while(tag === 'svg' || tag === 'text' || !el.hasClass('collapse-bar-button')){
+			el = el.parent();
+			tag = el.prop("tagName").toLowerCase();
 		}
 		return el;
 	},

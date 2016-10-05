@@ -42,7 +42,7 @@ ludo.view.Shim = new Class({
 	},
 
     show:function (txt) {
-		this.getEl().innerHTML = this.getText(( txt && !ludo.util.isObject(txt) ) ? txt : this.txt);
+		this.getEl().html(this.getText(( txt && !ludo.util.isObject(txt) ) ? txt : this.txt));
         this.css('');
 		this.resizeShim();
     },

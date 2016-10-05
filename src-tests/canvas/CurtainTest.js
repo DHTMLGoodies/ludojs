@@ -120,7 +120,7 @@ TestCase("CurtainTest", {
 			renderTo:document.body
 		});
 		var rect = new ludo.canvas.Rect({ x:100, y:120, width:200, height:300, rx:5, ry:7 });
-		v.getCanvas().adopt(rect);
+		v.getCanvas().append(rect);
 		return rect;
 	}
 

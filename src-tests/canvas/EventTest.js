@@ -12,7 +12,7 @@ TestCase("EventTest", {
 				x1:10,y1:10,x2:100,y2:100
 			}
 		});
-		rect.adopt(line);
+		rect.append(line);
 
 		ludo.canvasEventManager.currentNodeId = rect.getEl().id;
 		// then

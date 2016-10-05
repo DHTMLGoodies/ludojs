@@ -381,7 +381,7 @@ ludo.tree.Tree = new Class({
 
             nodeText.push('<div style="position:absolute" class="ludo-tree-node-expand" id="' + id + '"></div>');
 
-            el.innerHTML = nodeText.join('');
+            el.html(nodeText.join(''));
 			if(!this.els.expand)this.els.expand = {};
 			if(!this.els.childContainers)this.els.childContainers = {};
             this.els.expand[id] = el.getElement('.ludo-tree-node-expand');

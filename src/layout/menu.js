@@ -258,7 +258,7 @@ ludo.layout.Menu = new Class({
 		var items = this.highlightedItems;
 		for (var i = 0; i < items.length; i++) {
 			if (except.indexOf(items[i]) === -1) {
-				ludo.dom.removeClass(items[i].getEl(), 'ludo-menu-item-active');
+				items[i].getEl().removeClass('ludo-menu-item-active');
 			}
 		}
 	},

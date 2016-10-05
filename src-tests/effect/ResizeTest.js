@@ -101,33 +101,31 @@ TestCase("ResizeTest", {
 	
 	hasSameStyle:function(window, resize, property) {
 	    if (property === 'width') {
-	        return window.getEl().getSize().x == resize.els.shim.getSize().x;
+	        return window.getEl().width() == resize.els.shim.width();
 	    }
 	    if (property === 'height') {
-	        return window.getEl().getSize().y == resize.els.shim.getSize().y;
+	        return window.getEl().height() == resize.els.shim.height();
 	    }
-	    return window.getEl().getStyle(property) == resize.els.shim.getStyle(property);
+	    return window.getEl().css(property) == resize.els.shim.css(property);
 	}
 	
 	,
-	"test should return only needed coordinates during resize":function() {
+	"test should return only needed coordinastes during resize":function() {
 	    // given
 	    var resize = this.getResize_x300_y300_w500_h400();
 	    var e = this.getEventMock('e', {
-	        page:{
-	            x:100, y:100
-	        }
+			pageX:100, pageY:100
 	    });
 	    resize.startResize(e);
-	    e.page.x = 150;
-	    e.page.y = 120;
+	    e.pageX = 150;
+	    e.pageY = 120;
 	
 	    // then
 	    assertEquals('e', resize.dragProperties.region);
-	    assertNotUndefined('width is undefined', resize.getCoordinates().width);
-	    assertUndefined('left is not undefined', resize.getCoordinates().left);
-	    assertUndefined('height is not undefined', resize.getCoordinates().height);
-	    assertUndefined('top is not undefined', resize.getCoordinates().top);
+	    assertNotUndefined('width is undefined', resize.width());
+	    assertUndefined('left is not undefined', resize.offset().left);
+	    assertUndefined('height is not undefined', resize.height());
+	    assertUndefined('top is not undefined', resize.offset().top);
 	
 	
 	}
@@ -137,17 +135,15 @@ TestCase("ResizeTest", {
 	    // given
 	    var resize = this.getResize_x300_y300_w500_h400();
 	    var e = this.getEventMock('e', {
-	        page:{
-	            x:100, y:100
-	        }
+			pageX:100, pageY:100
 	    });
 	    resize.startResize(e);
 	    var size = resize.els.shim.getSize();
 	
 	
 	    // when
-	    e.page.x = 150;
-	    e.page.y = 180;
+	    e.pageX = 150;
+	    e.pageY = 180;
 	    resize.resize(e);
 	    var newSize = resize.els.shim.getSize();
 	
@@ -164,18 +160,14 @@ TestCase("ResizeTest", {
 	    // given
 	    var resize = this.getResize_x300_y300_w500_h400();
 	    var e = this.getEventMock('se', {
-	        page:{
-	            x:100, y:100
-	        }
+			pageX:100, pageY:100
 	    });
 	    resize.startResize(e);
 	
 	    var size = resize.els.shim.getSize();
 	
 	    e = this.getEventMock('se', {
-	        page:{
-	            x:150, y:180
-	        }
+			pageX:150, pageY:180
 	    });
 	    // when
 	    resize.resize(e);
@@ -190,16 +182,14 @@ TestCase("ResizeTest", {
 	    // given
 	    var resize = this.getResize_x300_y300_w500_h400();
 	    var e = this.getEventMock('n', {
-	        page:{
-	            x:100, y:100
-	        }
+			pageX:100, pageY:100
 	    });
 	    resize.startResize(e);
 	    var coords = resize.els.shim.getCoordinates();
 	
 	    // when
-	    e.page.x = 150;
-	    e.page.y = 180;
+	    e.pageX = 150;
+	    e.pageY = 180;
 	    resize.resize(e);
 	
 	    var newCoords = resize.els.shim.getCoordinates();
@@ -214,16 +204,14 @@ TestCase("ResizeTest", {
 	    // given
 	    var resize = this.getResize_x300_y300_w500_h400();
 	    var e = this.getEventMock('w', {
-	        page:{
-	            x:100, y:100
-	        }
+			pageX:100, pageY:100
 	    });
 	    resize.startResize(e);
 	    var coords = resize.els.shim.getCoordinates();
 	
 	    // when
-	    e.page.x = 70;
-	    e.page.y = 180;
+	    e.pageX = 70;
+	    e.pageY = 180;
 	    resize.resize(e);
 	
 	    var newCoords = resize.els.shim.getCoordinates();
@@ -245,15 +233,13 @@ TestCase("ResizeTest", {
 	
 	    // when
 	    var e = this.getEventMock('w', {
-	        page:{
-	            x:100, y:100
-	        }
+			pageX:100, pageY:100
 	    });
 	    resize.startResize(e);
 	
 	    // then
 	    assertNotUndefined(resize.maxWidth);
-	    assertEquals(resize.component.getEl().getPosition().x - 100, resize.getDragMinX());
+	    assertEquals(resize.component.getEl().offset().left - 100, resize.getDragMinX());
 	}
 	
 	,
@@ -265,15 +251,13 @@ TestCase("ResizeTest", {
 	
 	    // when
 	    var e = this.getEventMock('e', {
-	        page:{
-	            x:100, y:100
-	        }
+			pageX:100, pageY:100
 	    });
 	    resize.startResize(e);
 	
 	    // then
 	    assertNotUndefined(resize.minWidth);
-	    assertEquals(resize.component.getEl().getPosition().x + resize.component.getWidth() - 100, resize.getDragMinX());
+	    assertEquals(resize.component.getEl().offset().left + resize.component.getWidth() - 100, resize.getDragMinX());
 	}
 	
 	,
@@ -285,14 +269,12 @@ TestCase("ResizeTest", {
 	
 	    // when
 	    var e = this.getEventMock('w', {
-	        page:{
-	            x:100, y:100
-	        }
+			pageX:100, pageY:100
 	    });
 	    resize.startResize(e);
 	
 	    // then
-	    assertEquals(resize.component.getEl().getPosition().x + 100, resize.getDragMaxX());
+	    assertEquals(resize.component.getEl().offset().left + 100, resize.getDragMaxX());
 	}
 	
 	,
@@ -304,14 +286,12 @@ TestCase("ResizeTest", {
 	
 	    // when
 	    var e = this.getEventMock('e', {
-	        page:{
-	            x:100, y:100
-	        }
+			pageX:100, pageY:100
 	    });
 	    resize.startResize(e);
 	
 	    // then
-	    assertEquals(resize.component.getEl().getPosition().x + resize.component.getWidth() + 100, resize.getDragMaxX());
+	    assertEquals(resize.component.getEl().offset().left + resize.component.getWidth() + 100, resize.getDragMaxX());
 	}
 	
 	
@@ -324,15 +304,13 @@ TestCase("ResizeTest", {
 	
 	    // when
 	    var e = this.getEventMock('n', {
-	        page:{
-	            x:100, y:100
-	        }
+			pageX:100, pageY:100
 	    });
 	    resize.startResize(e);
 	
 	    // then
 	    assertNotUndefined(resize.maxHeight);
-	    assertEquals(resize.component.getEl().getPosition().y - 100, resize.getDragMinY());
+	    assertEquals(resize.component.getEl().offset().top - 100, resize.getDragMinY());
 	}
 	
 	,
@@ -344,15 +322,13 @@ TestCase("ResizeTest", {
 	
 	    // when
 	    var e = this.getEventMock('s', {
-	        page:{
-	            x:100, y:100
-	        }
+			pageX:100, pageY:100
 	    });
 	    resize.startResize(e);
 	
 	    // then
 	    assertNotUndefined(resize.minHeight);
-	    assertEquals(resize.component.getEl().getPosition().y + resize.component.getHeight() - 100, resize.getDragMinY());
+	    assertEquals(resize.component.getEl().offset().top + resize.component.getHeight() - 100, resize.getDragMinY());
 	}
 	
 	,
@@ -364,14 +340,12 @@ TestCase("ResizeTest", {
 	
 	    // when
 	    var e = this.getEventMock('n', {
-	        page:{
-	            x:100, y:100
-	        }
+			pageX:100, pageY:100
 	    });
 	    resize.startResize(e);
 	
 	    // then
-	    assertEquals(resize.component.getEl().getPosition().y + 100, resize.getDragMaxY());
+	    assertEquals(resize.component.getEl().offset().top + 100, resize.getDragMaxY());
 	}
 	
 	,
@@ -383,14 +357,12 @@ TestCase("ResizeTest", {
 	
 	    // when
 	    var e = this.getEventMock('s', {
-	        page:{
-	            x:100, y:100
-	        }
+			pageX:100, pageY:100
 	    });
 	    resize.startResize(e);
 	
 	    // then
-	    assertEquals(resize.component.getEl().getPosition().y + resize.component.getHeight() + 100, resize.getDragMaxY());
+	    assertEquals(resize.component.getEl().offset().top + resize.component.getHeight() + 100, resize.getDragMaxY());
 	}
 	
 	
@@ -401,16 +373,14 @@ TestCase("ResizeTest", {
 	        maxWidth:600
 	    });
 	    var e = this.getEventMock('w', {
-	        page:{
-	            x:300, y:300
-	        }
+			pageX:300, pageY:300
 	    });
 	    resize.startResize(e);
 	    var coords = resize.els.shim.getCoordinates();
 	
 	    // when
-	    e.page.x = 170;
-	    e.page.y = 180;
+	    e.pageX = 170;
+	    e.pageY = 180;
 	
 	    resize.resize(e);
 	
@@ -432,14 +402,12 @@ TestCase("ResizeTest", {
 	        useShim:false
 	    });
 	    var e = this.getEventMock('e', {
-	        page:{
-	            x:300, y:300
-	        }
+			pageX:800, pageY:300
 	    });
 	    resize.startResize(e);
 	
 	    // when
-	    e.page.x += 50;
+	    e.pageX += 50;
 	    resize.resize(e);
 	    resize.stopResize(e);
 	    var coordinates = resize.getEl().getCoordinates();
@@ -458,9 +426,7 @@ TestCase("ResizeTest", {
 	        maxHeight:480
 	    });
 	    var e = this.getEventMock('e', {
-	        page:{
-	            x:800, y:300
-	        }
+			pageX:800, pageY:300
 	    });
 	
 	    // when
@@ -478,9 +444,7 @@ TestCase("ResizeTest", {
 	        minHeight:320
 	    });
 	    var e = this.getEventMock('e', {
-	        page:{
-	            x:800, y:300
-	        }
+			pageX:800, pageY:300
 	    });
 	
 	    // when
@@ -498,9 +462,7 @@ TestCase("ResizeTest", {
 	        maxWidth:600
 	    });
 	    var e = this.getEventMock('s', {
-	        page:{
-	            x:800, y:300
-	        }
+			pageX:800, pageY:300
 	    });
 	
 	    // when
@@ -537,14 +499,12 @@ TestCase("ResizeTest", {
 	        preserveAspectRatio:true
 	    });
 	    var e = this.getEventMock('e', {
-	        page:{
-	            x:300, y:300
-	        }
+			pageX:300, pageY:300
 	    });
 	    resize.startResize(e);
 	
 	    // when
-	    e.page.x += 100;
+	    e.pageX += 100;
 	    resize.resize(e);
 	    var coordinates = resize.getCoordinates();
 	
@@ -566,14 +526,12 @@ TestCase("ResizeTest", {
 	        preserveAspectRatio:true
 	    });
 	    var e = this.getEventMock('w', {
-	        page:{
-	            x:300, y:300
-	        }
+			pageX:300, pageY:300
 	    });
 	    resize.startResize(e);
 	
 	    // when
-	    e.page.x -= 100;
+	    e.pageX -= 100;
 	    resize.resize(e);
 	    var coordinates = resize.getCoordinates();
 	
@@ -594,14 +552,12 @@ TestCase("ResizeTest", {
 	        preserveAspectRatio:true
 	    });
 	    var e = this.getEventMock('s', {
-	        page:{
-	            x:300, y:300
-	        }
+			pageX:300, pageY:300
 	    });
 	    resize.startResize(e);
 	
 	    // when
-	    e.page.y += 100;
+	    e.pageY += 100;
 	    resize.resize(e);
 	    var coordinates = resize.getCoordinates();
 	
@@ -618,14 +574,12 @@ TestCase("ResizeTest", {
 	        preserveAspectRatio:true
 	    });
 	    var e = this.getEventMock('n', {
-	        page:{
-	            x:300, y:300
-	        }
+			pageX:300, pageY:300
 	    });
 	    resize.startResize(e);
 	
 	    // when
-	    e.page.y -= 100;
+	    e.pageY -= 100;
 	    resize.resize(e);
 	    var coordinates = resize.getCoordinates();
 	
@@ -644,14 +598,12 @@ TestCase("ResizeTest", {
 	        preserveAspectRatio:true
 	    });
 	    var e = this.getEventMock('se', {
-	        page:{
-	            x:800, y:700
-	        }
+			pageX:800, pageY:700
 	    });
 	    resize.startResize(e);
 	
 	    // when
-	    e.page.x = 300;
+	    e.pageX = 300;
 	    resize.resize(e);
 	
 	    var expectedArea = (400+500);
@@ -660,16 +612,16 @@ TestCase("ResizeTest", {
 	    assertEquals('sc1', 30, Math.floor(resize.getScaleFactor() *100));
 	
 	    // when
-	    e.page.x = 300 + 250;
-	    e.page.y = 300 + 200;
+	    e.pageX = 300 + 250;
+	    e.pageY = 300 + 200;
 	    resize.resize(e);
 	
 	    // then
 	    assertEquals('sc2', 47, Math.floor(resize.getScaleFactor() *100));
 	
 	    // when
-	    e.page.x = 800;
-	    e.page.y = 700;
+	    e.pageX = 800;
+	    e.pageY = 700;
 	    resize.resize(e);
 	    assertEquals(1, resize.getScaleFactor());
 	}
@@ -681,41 +633,44 @@ TestCase("ResizeTest", {
 	        preserveAspectRatio:true
 	    });
 	    var e = this.getEventMock('ne', {
-	        page:{
-	            x:800, y:300
-	        }
+			pageX:800, pageY:300
 	    });
 	    resize.startResize(e);
 	
 	    // when
-	    e.page.x = 900;
+	    e.pageX = 900;
 	    resize.resize(e);
 	
 	    // then
 	    assertEquals('sc1', 113, Math.floor(resize.getScaleFactor() *100));
 	    // when
-	    e.page.x = 1200;
+	    e.pageX = 1200;
 	    resize.resize(e);
 	
 	    // then
 	    assertEquals('sc1', 155, Math.floor(resize.getScaleFactor() *100));
-	    var shimSize = resize.getShim().getSize();
+	    var shimSize = this.getSize(resize.getShim());
 	    assertEquals(Math.round(500*resize.getScaleFactor()), shimSize.x);
 	    // when
-	    e.page.x = 900;
-	    e.page.y = 400;
+	    e.pageX = 900;
+	    e.pageY = 400;
 	    resize.resize(e);
 	
 	    // then
 	    assertEquals('sc2', 105, Math.floor(resize.getScaleFactor() *100));
 	
 	    // when
-	    e.page.x = 800;
-	    e.page.y = 300;
+	    e.pageX = 800;
+	    e.pageY = 300;
 	    resize.resize(e);
 	    assertEquals(1, resize.getScaleFactor());
-	}
+	},
 	
+	getSize:function(el){
+		return {
+			x:el.width(), y: el.height()		
+		}
+	}
 	,
 	"test should find relative drag size north west":function(){
 	    // given
@@ -723,22 +678,20 @@ TestCase("ResizeTest", {
 	        preserveAspectRatio:true
 	    });
 	    var e = this.getEventMock('nw', {
-	        page:{
-	            x:300, y:300
-	        }
+	        pageX:300, pageY:300
 	    });
 	    resize.startResize(e);
 	
 	    // when
-	    e.page.x = 400;
+	    e.pageX = 400;
 	    resize.resize(e);
 	
 	    // then
 	    assertEquals('sc1', 86, Math.floor(resize.getScaleFactor() *100));
 	
 	    // when
-	    e.page.x = 200;
-	    e.page.y = 300;
+	    e.pageX = 200;
+	    e.pageY = 300;
 	    resize.resize(e);
 	
 	    // then
@@ -796,8 +749,8 @@ TestCase("ResizeTest", {
 	    if (properties.page === undefined) {
 	        properties.page = { x:0, y:0};
 	    }
-	    var el = new Element('div');
-	    el.setProperty('region', region);
+	    var el = $('<div>');
+	    el.attr('region', region);
 	    return Object.merge(properties, {
 	        target:el
 	    });

@@ -25,10 +25,10 @@ TestCase("SourceTest", {
 
         // when
         v.getDataSource().loadUrl('myPage.php');
-        var el = document.getElement('.ludo-loader-shim');
+        var el = $(document.body).find('.ludo-loader-shim').first();
         // then
         assertNotNull(document.body.innerHTML,el);
-        assertEquals( 'div', el.tagName.toLowerCase());
+        assertEquals( 'div', el.prop("tagName").toLowerCase());
     }
 
 });

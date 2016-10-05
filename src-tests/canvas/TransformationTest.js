@@ -168,7 +168,7 @@ TestCase("TransformationTest", {
 		node.translate(50,100);
 
 		// then
-		assertEquals('translate(50 100)', node.el.get('transform'));
+		assertEquals('translate(50 100)', node.get('transform'));
 	},
 
 	"test should be able to use scale method": function(){
@@ -181,7 +181,7 @@ TestCase("TransformationTest", {
 		node.scale(50,100);
 
 		// then
-		assertEquals('scale(50 100)', node.el.get('transform'));
+		assertEquals('scale(50 100)', node.get('transform'));
 	},
 	"test should be able to apply multiple transformations": function(){
 		// given
@@ -192,7 +192,7 @@ TestCase("TransformationTest", {
 		// when
 		node.scale(2);
 		node.translate(20,20);
-		var realValue = node.el.get('transform');
+		var realValue = node.get('transform');
 		// then
 		assertTrue(realValue, realValue.indexOf('scale') >=0);
 		assertTrue(realValue, realValue.indexOf('translate') >=0);

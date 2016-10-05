@@ -250,7 +250,7 @@ ludo.form.File = new Class({
 			return;
 		}
 		try {
-			var json = JSON.decode(window.frames[this.iframeName].document.body.innerHTML);
+			var json = JSON.parse(window.frames[this.iframeName].document.body.innerHTML);
 			if (json.success) {
 				this.value = json.response;
 				/**
@@ -339,9 +339,9 @@ ludo.form.File = new Class({
 	displayFileName:function () {
         var ci = this.els.cellInput;
 		ci.html( '');
-		ludo.dom.removeClass(ci, 'ludo-input-file-name-new-file');
-        ludo.dom.removeClass(ci, 'ludo-input-file-name-initial');
-        ludo.dom.removeClass(ci, 'ludo-input-file-name-not-uploaded');
+		ci.removeClass('ludo-input-file-name-new-file');
+		ci.removeClass('ludo-input-file-name-initial');
+		ci.removeClass('ludo-input-file-name-not-uploaded');
 		if (this.valueForDisplay) {
 
             var span = ludo.dom.create({

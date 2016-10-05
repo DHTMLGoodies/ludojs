@@ -29,16 +29,24 @@ ludo.effect.Effect = new Class({
 	 Which will first move "myDiv" to position 500x300 on the screen, then to 600x50.
 	 */
 	fly:function(config){
-		config.el = document.id(config.el);
+		config.el = $(config.el);
 		config.duration = config.duration || .2;
 		if(config.from == undefined){
 			config.from = config.el.position();
 		}
-		var fx = this.getFx(config.el, config.duration, config.onComplete);
-		fx.start({
-			left : [config.from.left, config.to.left],
-			top : [config.from.top, config.to.top]
-		});
+		var fns = [this.animationComplete.bind(this)];
+		if(config.onComplete)fns.push(config.onComplete);
+
+		var callback = function(){
+			for(var i=0;i<fns.length;i++){
+				fns[i].call();
+			}
+		};
+		$(config.el).animate({
+			left: config.to.x,
+			top: config.to.y
+		}, config.duration * 1000, callback);
+
 	},
 
 	/**
@@ -66,14 +74,6 @@ ludo.effect.Effect = new Class({
 		});
 	},
 
-	getFx:function (el, duration, onComplete) {
-		duration*=1000;
-		var fx = new Fx.Morph(el, {
-			duration:duration
-		});
-		fx.addEvent('complete', this.animationComplete.bind(this, [onComplete, el]));
-		return fx;
-	},
 
 	animationComplete:function(onComplete, el){
 		/**
@@ -81,6 +81,7 @@ ludo.effect.Effect = new Class({
 		 * @event animationComplete
 		 * @param {effect.Drag} this
 		 */
+
 		this.fireEvent('animationComplete', this);
 
 		if(onComplete !== undefined){

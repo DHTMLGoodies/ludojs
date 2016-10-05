@@ -57,7 +57,7 @@ TestCase("TplTest",{
 
 
         // then
-        assertTrue(new Date().getTime() - start < 15);
+        assertTrue(new Date().getTime() - start < 35);
     },
 
     getData:function () {

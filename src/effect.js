@@ -4,7 +4,7 @@ ludo.Effect = new Class({
 
 	initialize:function(){
 		if(ludo.util.isIe()){
-			document.id(document.documentElement).addEvent('selectstart', this.cancelSelection.bind(this));
+			$(document.documentElement).on('selectstart', this.cancelSelection.bind(this));
 		}
 	},
 

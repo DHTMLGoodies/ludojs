@@ -25,7 +25,12 @@ ludo.canvas.Animation = new Class({
 			if(step[i].key === 'width' || step[i].key === 'height' && step[i].value < 0){
 				step[i].value = 0;
 			}
-			this.el.set(step[i].key, step[i].value);
+			if(this.el.set == undefined){
+				ludo.canvasEngine.set(this.el, step[i].key, step[i].value);
+			}else{
+				this.el.set(step[i].key, step[i].value);
+
+			}
 		}
 
 		if(current === steps.values.length -1 ){

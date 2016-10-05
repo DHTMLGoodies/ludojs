@@ -13,7 +13,7 @@ TestCase("FileTest", {
 			name:'uploadField'
 		});
 		// then
-		assertEquals('uploadField', field.getFormEl().getProperty('name'));
+		assertEquals('uploadField', field.getFormEl().attr('name'));
 	}
 
 });

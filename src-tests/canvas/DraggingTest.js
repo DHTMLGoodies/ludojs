@@ -46,7 +46,7 @@ TestCase("DraggingTest", {
 		// given
 		var canvas = this.getCanvas();
 		var circle = new ludo.canvas.Node('circle', {'cx' : 100, cy:100, r: 50 } );
-		canvas.adopt(circle);
+		canvas.append(circle);
 		var dd = this.getDD();
 		dd.add(circle);
 
@@ -54,17 +54,15 @@ TestCase("DraggingTest", {
 		assertEquals('Initial value wrong', '100', circle.get('cy'));
 
 		var e = {
-			page:{
-				x:70,
-				y:70
-			},
+			pageX:70,
+			pageY:70,
 			target:circle.getEl()
 		};
 
 		dd.startDrag(e);
 
-		e.page.x = 80;
-		e.page.y = 90;
+		e.pageX = 80;
+		e.pageY = 90;
 		dd.drag(e);
 
 		// then
@@ -78,26 +76,24 @@ TestCase("DraggingTest", {
 		// given
 		var canvas = this.getCanvas();
 		var circle = new ludo.canvas.Node('circle', {'cx' : 100, cy:100, r: 50 } );
-		canvas.adopt(circle);
+		canvas.append(circle);
 		var dd = this.getDD();
 		dd.add(circle);
 
 		var e = {
-			page:{
-				x:70,
-				y:70
-			},
+			pageX:70,
+			pageY:70,
 			target:circle.getEl()
 		};
 
 		dd.startDrag(e);
 
 		// when
-		e.page.x = 80;
-		e.page.y = 90;
+		e.pageX = 80;
+		e.pageY = 90;
 		dd.drag(e);
-		e.page.x = 90;
-		e.page.y = 100;
+		e.pageX = 90;
+		e.pageY = 100;
 		dd.drag(e);
 
 		// then
@@ -108,29 +104,27 @@ TestCase("DraggingTest", {
 		// given
 		var canvas = this.getCanvas();
 		var circle = new ludo.canvas.Node('circle', { attr: {'cx' : 100, cy:100, r: 50} } );
-		canvas.adopt(circle);
+		canvas.append(circle);
 		var dd = this.getDD();
 		dd.add(circle);
 
 		var e = {
-			page:{
-				x:70,
-				y:70
-			},
+			pageX:70,
+			pageY:70,
 			target:circle.getEl()
 		};
 
 		dd.startDrag(e);
 
 		// when
-		e.page.x = 80;
-		e.page.y = 90;
+		e.pageX = 80;
+		e.pageY = 90;
 		dd.drag(e);
 		dd.endDrag();
 		dd.startDrag(e);
 
-		e.page.x = 90;
-		e.page.y = 100;
+		e.pageX = 90;
+		e.pageY = 100;
 		dd.drag(e);
 
 		// then
@@ -141,15 +135,13 @@ TestCase("DraggingTest", {
 		// given
 		var canvas = this.getCanvas();
 		var circle = new ludo.canvas.Node('circle', { attr: {'cx' : 100, cy:100, r: 50} } );
-		canvas.adopt(circle);
+		canvas.append(circle);
 		var dd = this.getDD();
 		dd.add(circle);
 
 		var e = {
-			page:{
-				x:70,
-				y:70
-			},
+			pageX:70,
+			pageY:70,
 			target:circle.getEl()
 		};
 		dd.startDrag(e);
@@ -174,10 +166,8 @@ TestCase("DraggingTest", {
 
 		// when
 		var e = {
-			page:{
-				x:70,
-				y:70
-			},
+			pageX:70,
+			pageY:70,
 			target:node.getEl().getElementsByTagName('use')[0]
 		};
 		dd.startDrag(e);
@@ -192,19 +182,19 @@ TestCase("DraggingTest", {
 			renderTo:document.body
 		});
 		var slider = new ludo.canvas.Node('g', { x: 0, width:'100%', height:10, y: 0 });
-		slider.setStyle('cursor', 'pointer');
+		slider.css('cursor', 'pointer');
 		var symbol = new ludo.canvas.Node('symbol');
-		canvas.adoptDef(symbol);
+		canvas.appendDef(symbol);
 		var p = new ludo.canvas.Path('M 5 0 L 10 0 L 15 5 L 10 10 L 5 10 Z', { fill:'white', stroke : 'black'});
-		symbol.adopt(p);
+		symbol.append(p);
 
 		var u = new ludo.canvas.Node('use');
 		u.href(symbol);
-		slider.adopt(u);
+		slider.append(u);
 		var u2 = new ludo.canvas.Node('use', { x : '-100%', 'transform' : 'scale(-1,1)'});
 		u2.href(symbol);
-		slider.adopt(u2);
-		canvas.adopt(slider);
+		slider.append(u2);
+		canvas.append(slider);
 		return slider;
 	},
 	assertInTransform:function(el, what){

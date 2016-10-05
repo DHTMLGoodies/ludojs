@@ -33,8 +33,8 @@ ludo.form.LabelElement = new Class({
         if (this.inlineLabel) {
             var el = this.getFormEl();
             if (el) {
-                el.addEvent('blur', this.setInlineLabel.bind(this));
-                el.addEvent('focus', this.clearInlineLabel.bind(this));
+                el.on('blur', this.setInlineLabel.bind(this));
+                el.on('focus', this.clearInlineLabel.bind(this));
                 this.addEvent('value', this.clearInlineLabelCls.bind(this));
             }
         }
@@ -81,12 +81,12 @@ ludo.form.LabelElement = new Class({
         var el = this.getFormEl();
         if (el.get('value') === this.inlineLabel) {
             el.set('value', '');
-            ludo.dom.removeClass(this.getFormEl(), 'ludo-form-el-inline-label');
+            this.getFormEl().removeClass('ludo-form-el-inline-label');
         }
     },
 
     clearInlineLabelCls:function(){
-        ludo.dom.removeClass(this.getFormEl(), 'ludo-form-el-inline-label');
+        this.getFormEl().removeClass('ludo-form-el-inline-label');
     },
 
     getValueOfFormEl:function () {

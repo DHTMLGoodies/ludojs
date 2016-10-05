@@ -1,17 +1,12 @@
 TestCase("CanvasTest", {
 
 	getParentNode:function () {
-		if (!document.id('canvasParent')) {
-			var el = new Element('div');
-			el.id = 'canvasParent';
-			el.setStyles({
-				width:400,
-				height:500,
-				position:'relative'
-			});
-			document.body.adopt(el);
+
+		if (!document.getElementById('canvasParent')) {
+			var el = $('<div id="canvasParent" style="width:400px;height:500px;position:relative"></div>');
+			$(document.body).append(el);
 		}
-		return document.id('canvasParent');
+		return $('#canvasParent');
 	},
 
 	"test should have default properties":function () {
@@ -91,8 +86,20 @@ TestCase("CanvasTest", {
 		});
 
 		// then
-		assertEquals('title', canvas.getEl().getElement('title').tagName);
-		assertTrue(canvas.getEl().getElement('title').textContent.indexOf('My Canvas') >= 0);
+
+		try{
+			var children = canvas.getEl().getElementsByTagName('title');
+
+			assertEquals(1, children.length);
+
+			assertEquals('title', children[0].tagName);
+			assertTrue(children[0].textContent.indexOf('My Canvas') >= 0);
+		}catch(e){
+			console.trace();
+			console.error(e);
+		}
+
+
 	},
 
 	"test should be able to have description":function () {
@@ -102,8 +109,8 @@ TestCase("CanvasTest", {
 		});
 
 		// then
-		assertEquals('desc', canvas.getEl().getElement('desc').tagName);
-		assertTrue(canvas.getEl().getElement('desc').textContent.indexOf('Description') >= 0);
+		assertEquals('desc', canvas.getEl().getElementsByTagName('desc')[0].tagName);
+		assertTrue( canvas.getEl().getElementsByTagName('desc')[0].textContent.indexOf('Description') >= 0);
 	},
 
 	"test should be able to apply paint object":function () {
@@ -131,7 +138,7 @@ TestCase("CanvasTest", {
 			renderTo:w
 		});
 		// then
-		assertEquals(w.getBody(), canvas.getEl().parentNode);
+		assertEquals(w.getBody(), $(canvas.getEl().parentNode));
 	},
 
 	"test should be able to create canvas by calling view.getCanvas":function(){
@@ -167,7 +174,7 @@ TestCase("CanvasTest", {
 
 		// when
 		var filter = new ludo.canvas.Filter();
-		c.adoptDef(filter);
+		c.appendDef(filter);
 
 		// then
 		assertEquals('defs', filter.el.parentNode.tagName);

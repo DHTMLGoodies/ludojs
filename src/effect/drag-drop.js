@@ -46,7 +46,7 @@ ludo.effect.DragDrop = new Class({
 		if (!el.hasClass('ludo-drop')) {
 			el = el.getParent('.ludo-drop');
 		}
-		return el.getProperty('forId');
+		return el.attr('forId');
 	},
 
 	/**
@@ -197,6 +197,11 @@ ludo.effect.DragDrop = new Class({
 
 	getDropPointCoordinates:function () {
 		if (this.currentDropPoint) {
+			var el = this.currentDropPoint.el;
+			var ret = el.position();
+			ret.width = el.width();
+			ret.height = el.height();
+			return ret;
 			return this.currentDropPoint.el.getCoordinates();
 		}
 		return undefined;
@@ -210,7 +215,7 @@ ludo.effect.DragDrop = new Class({
 	captureRegion:function (e) {
 		if (this.isActive() && this.onValidDropPoint && this.shouldCaptureRegionsFor(this.currentDropPoint)) {
 			var midPoint = this.midPoint;
-			if (e.page.y < midPoint.y && this.previousRegions.v !== 'n') {
+			if (e.pageY < midPoint.y && this.previousRegions.v !== 'n') {
 				/**
 				 Enter north region of a drop point
 				 @event north
@@ -221,7 +226,7 @@ ludo.effect.DragDrop = new Class({
 				 */
 				this.fireEvent('north', this.getDropEventArguments(e));
 				this.previousRegions.v = 'n';
-			} else if (e.page.y >= midPoint.y && this.previousRegions.v !== 's') {
+			} else if (e.pageY >= midPoint.y && this.previousRegions.v !== 's') {
 				/**
 				 Enter south region of a drop point
 				 @event south
@@ -233,7 +238,7 @@ ludo.effect.DragDrop = new Class({
 				this.fireEvent('south', this.getDropEventArguments(e));
 				this.previousRegions.v = 's';
 			}
-			if (e.page.x < midPoint.x && this.previousRegions.h !== 'w') {
+			if (e.pageX < midPoint.x && this.previousRegions.h !== 'w') {
 				/**
 				 Enter west region of a drop point
 				 @event west
@@ -244,7 +249,7 @@ ludo.effect.DragDrop = new Class({
 				 */
 				this.fireEvent('west', this.getDropEventArguments(e));
 				this.previousRegions.h = 'w';
-			} else if (e.page.x >= midPoint.x && this.previousRegions.h !== 'e') {
+			} else if (e.pageX >= midPoint.x && this.previousRegions.h !== 'e') {
 				/**
 				 Enter east region of a drop point
 				 @event east

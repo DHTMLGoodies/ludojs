@@ -15,23 +15,23 @@ TestCase("DragDropTest", {
 
 	getEl:function (id) {
 		id = id || String.uniqueID();
-		var el = new Element('div');
-		document.body.adopt(el);
-		el.setStyles({
+		var el = $('<div>');
+		$(document.body).append(el);
+		el.css({
 			width:200,
 			height:100,
 			left:100,
 			top:200
 		});
-		var span = new Element('span');
-		el.adopt(span);
-		el.id = id;
+		var span = $('<span>');
+		el.append(span);
+		el.attr("id", id);
 		return el;
 	},
 	"test should be able to drag":function () {
 		// given
 		var el = this.getEl();
-		el.setStyles({
+		el.css({
 			left:100,
 			top:200
 		});
@@ -39,29 +39,23 @@ TestCase("DragDropTest", {
 		var c = new DragDropMock();
 		c.add({
 			el:el,
-			handle:el.getElement('span')
+			handle:el.find('span').first()
 		});
-		var span = el.getElement('span');
+		var span = el.find('span').first();
 
 		// when
 		c.startDrag({
-			page:{
-				x:100,
-				y:100
-			},
+			pageX:100, pageY:100,
 			target:span
 		});
 
 		c.drag({
-			page:{
-				x:50,
-				y:50
-			}
+			pageX:50, pageY:50
 		});
 
 		// then
-		assertEquals('50px', el.getStyle('left'));
-		assertEquals('150px', el.getStyle('top'));
+		assertEquals('50px', el.css('left'));
+		assertEquals('150px', el.css('top'));
 	},
 	"test should be able to have dragged below mouse cursor":function () {
 		// given
@@ -71,29 +65,23 @@ TestCase("DragDropTest", {
 		});
 		c.add({
 			el:el,
-			handle:el.getElement('span')
+			handle:el.find('span').first()
 		});
-		var span = el.getElement('span');
+		var span = el.find('span').first();
 
 		// when
 		c.startDrag({
-			page:{
-				x:100,
-				y:100
-			},
+			pageX:100,pageY:100,
 			target:span
 		});
 
 		c.drag({
-			page:{
-				x:50,
-				y:50
-			}
+			pageX:50,pageY:50,
 		});
 
 		// then
-		assertEquals('50px', el.getStyle('left'));
-		assertEquals('55px', el.getStyle('top'));
+		assertEquals('50px', el.css('left'));
+		assertEquals('55px', el.css('top'));
 
 	},
 	"test should fire before drag event":function () {
@@ -115,10 +103,7 @@ TestCase("DragDropTest", {
 
 		// when
 		c.startDrag({
-			page:{
-				x:100,
-				y:100
-			},
+			pageX:100,pageY:100,
 			target:el
 		});
 
@@ -139,10 +124,7 @@ TestCase("DragDropTest", {
 
 		// when
 		c.startDrag({
-			page:{
-				x:100,
-				y:100
-			},
+			pageX:100,pageY:100,
 			target:el
 		});
 
@@ -160,7 +142,7 @@ TestCase("DragDropTest", {
 		c.setShimText('Content');
 
 		// then
-		assertEquals('Content', c.getShim().get('html'));
+		assertEquals('Content', c.getShim().html());
 
 	},
 	"test should be able to specify shim cls":function () {
@@ -190,7 +172,7 @@ TestCase("DragDropTest", {
 
 		// given
 		el = this.getEl();
-		el.id = 'SecondId';
+		el.attr("id",'SecondId');
 
 		// when
 		c.add(el);
@@ -214,10 +196,7 @@ TestCase("DragDropTest", {
 
 		// when
 		c.startDrag({
-			page:{
-				x:100,
-				y:100
-			},
+			pageX:100,pageY:100,
 			target:el
 		});
 
@@ -237,6 +216,7 @@ TestCase("DragDropTest", {
 		c.addDropTarget(this.getEl('dropPoint'));
 
 		// then
+		assertNotUndefined(document.getElementById('dropPoint'));
 		assertNotUndefined(c.getById('dropPoint'));
 	},
 	"test should send correct arguments for drop events":function () {
@@ -254,10 +234,7 @@ TestCase("DragDropTest", {
 		});
 		// when
 		c.startDrag({
-			page:{
-				x:100,
-				y:100
-			},
+			pageX:100,pageY:100,
 			target:draggable
 		});
 
@@ -278,6 +255,8 @@ TestCase("DragDropTest", {
 		var eventFired = false;
 
 		c.add(draggable);
+		console.log(JSON.stringify(draggable));
+		console.log(JSON.stringify(dropPoint));
 		c.addDropTarget(dropPoint);
 
 		c.addEvent('invalidDropTarget', function () {
@@ -290,10 +269,7 @@ TestCase("DragDropTest", {
 
 		// when
 		c.startDrag({
-			page:{
-				x:100,
-				y:100
-			},
+			pageX:100,pageY:100,
 			target:draggable
 		});
 
@@ -303,7 +279,7 @@ TestCase("DragDropTest", {
 
 		// then
 		assertTrue(eventFired);
-		assertEquals('dropPoint', c.getCurrentDropPoint().el.id);
+		assertEquals('dropPoint', c.getCurrentDropPoint().el.attr("id"));
 
 	},
 	"test should fire drop event on mouseup on valid drop point":function () {
@@ -322,10 +298,7 @@ TestCase("DragDropTest", {
 
 		// when
 		c.startDrag({
-			page:{
-				x:100,
-				y:100
-			},
+			pageX:100,pageY:100,
 			target:draggable
 		});
 
@@ -358,10 +331,7 @@ TestCase("DragDropTest", {
 
 		// when
 		c.startDrag({
-			page:{
-				x:100,
-				y:100
-			},
+			pageX:100,pageY:100,
 			target:draggable
 		});
 
@@ -377,8 +347,8 @@ TestCase("DragDropTest", {
 	"test should be able to add elements without any id":function () {
 		// given
 		var c = new DragDropMock();
-		var draggable = new Element('div');
-		document.body.adopt(draggable);
+		var draggable =$('<div>');
+		$(document.body).append(draggable);
 
 		c.add({
 			el:draggable
@@ -386,17 +356,12 @@ TestCase("DragDropTest", {
 
 		// when
 		c.startDrag({
-			page:{
-				x:100,
-				y:100
-			},
+			pageX:100,pageY:100,
 			target:draggable
 		});
 
 		c.drag({
-			page:{
-				x:120, y:120
-			}
+			pageX:120,pageY:120,
 		});
 
 
@@ -409,38 +374,35 @@ TestCase("DragDropTest", {
 
 		var c = new DragDropMock();
 
-		var parent = new Element('div');
-		parent.setStyles({
+		var parent =$('<div>');
+		parent.css({
 			left:200,
 			top:50,
 			position:'absolute',
 			width:1000,
 			height:1000
 		});
-		document.body.adopt(parent);
+		$(document.body).append(parent);
 
-		var child = new Element('div');
+		var child =$('<div>');
 
 		// when
-		var el = new Element('div');
-		el.setStyles({
+		var el =$('<div>');
+		el.css({
 			top:50,
 			left:50,
 			width:200, height:200
 		});
-		parent.adopt(el);
+		parent.append(el);
 
 		c.add(el);
 
 		// then
-		assertEquals('Initial x', 100, el.getPosition().y);
-		assertEquals('Initial y', 250, el.getPosition().x);
+		assertEquals('Initial x', 100, el.offset().top);
+		assertEquals('Initial y', 250, el.offset().left);
 
 		var drag = {
-			page:{
-				x:100,
-				y:100
-			},
+			pageX:100,pageY:100,
 			target:el
 		};
 		// when
@@ -448,17 +410,17 @@ TestCase("DragDropTest", {
 		c.drag(drag);
 
 		// then
-		assertEquals('first x', 100, el.getPosition().y);
-		assertEquals('first y', 250, el.getPosition().x);
+		assertEquals('first x', 100, el.offset().top);
+		assertEquals('first y', 250, el.offset().left);
 
 		// when
-		drag.page.x = 200;
-		drag.page.y = 200;
+		drag.pageX = 200;
+		drag.pageY = 200;
 		c.drag(drag);
 
 		// then
-		assertEquals(200, el.getPosition().y);
-		assertEquals(350, el.getPosition().x);
+		assertEquals(200, el.offset().top);
+		assertEquals(350, el.offset().left);
 
 
 	},
@@ -467,39 +429,36 @@ TestCase("DragDropTest", {
 		document.body.innerHTML = '';
 		var c = new DragDropMock();
 
-		var parent = new Element('div');
-		parent.setStyles({
+		var parent =$('<div>');
+		parent.css({
 			left:200,
 			top:50,
 			position:'absolute',
 			width:1000,
 			height:1000
 		});
-		document.body.adopt(parent);
+		$(document.body).append(parent);
 
-		var child = new Element('div');
-		parent.adopt(child);
+		var child =$('<div>');
+		parent.append(child);
 
 		// when
-		var el = new Element('div');
-		el.setStyles({
+		var el =$('<div>');
+		el.css({
 			top:50,
 			left:50,
 			width:200, height:200
 		});
-		child.adopt(el);
+		child.append(el);
 
 		c.add(el);
 
 		// then
-		assertEquals('Initial x', 100, el.getPosition().y);
-		assertEquals('Initial y', 250, el.getPosition().x);
+		assertEquals('Initial x', 100, el.offset().top);
+		assertEquals('Initial y', 250, el.offset().left);
 
 		var drag = {
-			page:{
-				x:100,
-				y:100
-			},
+			pageX:100, pageY:100,
 			target:el
 		};
 		// when
@@ -507,58 +466,55 @@ TestCase("DragDropTest", {
 		c.drag(drag);
 
 		// then
-		assertEquals('first x', 100, el.getPosition().y);
-		assertEquals('first y', 250, el.getPosition().x);
+		assertEquals('first x', 100, el.offset().top);
+		assertEquals('first y', 250, el.offset().left);
 
 		// when
-		drag.page.x = 200;
-		drag.page.y = 200;
+		drag.pageX = 200;
+		drag.pageY = 200;
 		c.drag(drag);
 
 		// then
-		assertEquals(200, el.getPosition().y);
-		assertEquals(350, el.getPosition().x);
+		assertEquals(200, el.offset().top);
+		assertEquals(350, el.offset().left);
 	},
 	"test should position relative nodes correctly":function () {
 		// given
-		document.body.setStyles({
+		$(document.body).css({
 			margin:0, padding:0
 		});
 		var c = new DragDropMock();
 
-		var parent = new Element('div');
-		parent.setStyles({
+		var parent = $('<div>');
+		parent.css({
 			left:200,
 			top:50,
 			position:'relative',
 			width:1000,
 			height:1000
 		});
-		document.body.adopt(parent);
+		$(document.body).append(parent);
 
-		var child = new Element('div');
-		parent.adopt(child);
+		var child =$('<div>');
+		parent.append(child);
 
 		// when
-		var el = new Element('div');
-		el.setStyles({
+		var el =$('<div>');
+		el.css({
 			position:'relative',
 			width:200, height:200
 		});
-		child.adopt(el);
+		child.append(el);
 
 		c.add(el);
 
 		// then
 
-		assertEquals('Initial x', 50, el.getPosition().y);
-		assertEquals('Initial y', 200, el.getPosition().x);
+		assertEquals('Initial x', 50, el.offset().top);
+		assertEquals('Initial y', 200, el.offset().left);
 
 		var drag = {
-			page:{
-				x:150,
-				y:150
-			},
+			pageX:150,pageY:150,
 			target:el
 		};
 		// when
@@ -566,17 +522,17 @@ TestCase("DragDropTest", {
 		c.drag(drag);
 
 		// then
-		assertEquals('first x', 50, el.getPosition().y);
-		assertEquals('first y', 200, el.getPosition().x);
+		assertEquals('first x', 50, el.offset().top);
+		assertEquals('first y', 200, el.offset().left);
 
 		// when
-		drag.page.x = 250;
-		drag.page.y = 250;
+		drag.pageX = 250;
+		drag.pageY = 250;
 		c.drag(drag);
 
 		// then
-		assertEquals(150, el.getPosition().y);
-		assertEquals(300, el.getPosition().x);
+		assertEquals(150, el.offset().top);
+		assertEquals(300, el.offset().left);
 	},
 	"test should be able to capture regions":function () {
 		// given
@@ -633,7 +589,7 @@ TestCase("DragDropTest", {
 		});
 		var draggable = this.getEl('draggable');
 		var dropPoint = this.getEl('dropPoint');
-		dropPoint.setStyles({
+		dropPoint.css({
 			position:'absolute'
 		});
 		c.add(draggable);
@@ -641,7 +597,7 @@ TestCase("DragDropTest", {
 
 		// when
 		var e = {
-			page:{x:0, y:0},
+			pageX:0,pageY:0,
 			target:draggable
 		};
 		c.startDrag(e);
@@ -664,15 +620,17 @@ TestCase("DragDropTest", {
 		c.addEvent('south', function () {
 			southFired = true;
 		});
-		var pos = dropPoint.getPosition();
-		var size = dropPoint.getSize();
+		var pos = dropPoint.offset();
+		pos.x = pos.left; pos.y = pos.top;
+
+		var size = { x : dropPoint.width(), y: dropPoint.height() };
 
 		c.enterDropTarget({
-			page:{x:pos.x, y:pos.y},
+			pageX:pos.x, pageY:pos.y,
 			target:dropPoint
 		});
 		c.captureRegion({
-			page:{x:pos.x, y:pos.y},
+			pageX:pos.x, pageY:pos.y,
 			target:dropPoint
 		});
 
@@ -692,7 +650,7 @@ TestCase("DragDropTest", {
 			target:dropPoint
 		});
 		c.captureRegion({
-			page:{x:pos.x, y:pos.y},
+			pageX:pos.x, pageY:pos.y,
 			target:dropPoint
 		});
 		// then
@@ -703,7 +661,7 @@ TestCase("DragDropTest", {
 
 		// when
 		c.captureRegion({
-			page:{x:pos.x + size.x, y:pos.y + size.y},
+			pageX: pos.x + size.x, pageY:pos.y + size.y,
 			target:dropPoint
 		});
 

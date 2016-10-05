@@ -62,6 +62,7 @@ ludo.canvas.Engine = new Class({
 	 * @param {String} key
 	 */
 	get:function (el, key) {
+
 		if (key.substring(0, 6) == "xlink:") {
 			return el.getAttributeNS("http://www.w3.org/1999/xlink", key.substring(6));
 		} else {

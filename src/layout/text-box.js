@@ -31,7 +31,7 @@ ludo.layout.TextBox = new Class({
 
     createIE8Box: function () {
         var span = document.createElement('span');
-        document.id(this.renderTo).appendChild(span);
+        $(this.renderTo).append($(span));
         span.innerHTML = this.text;
         this.setIE8Transformation(span);
         return span;

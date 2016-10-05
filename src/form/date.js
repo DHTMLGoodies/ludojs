@@ -67,7 +67,7 @@ ludo.form.Date = new Class({
     setFormElValue:function(value){
         if (this.els.formEl && this.els.formEl.value !== value) {
             value = value ? ludo.util.isString(value) ? value : value.format(this.displayFormat) : '';
-            this.els.formEl.set('value', value);
+            this.els.formEl.val(value);
         }
         this.children[0].hide();
     },

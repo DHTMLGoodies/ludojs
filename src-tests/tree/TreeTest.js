@@ -226,13 +226,13 @@ TestCase("TreeTest", {
 		var node = tree.getDomByRecord(tree.getDataSource().getRecord(1));
 
 		// then
-		assertTrue(node.innerHTML.indexOf('Country : Japan') >= 0);
+		assertTrue(node.html().indexOf('Country : Japan') >= 0);
 		// when
 		tree.showRecord(tree.getDataSource().getRecord(11));
 		node = tree.getDomByRecord(tree.getDataSource().getRecord(11));
 
 		// then
-		assertTrue(node.innerHTML.indexOf('City : Kobe') >= 0);
+		assertTrue(node.html().indexOf('City : Kobe') >= 0);
 
 	},
 

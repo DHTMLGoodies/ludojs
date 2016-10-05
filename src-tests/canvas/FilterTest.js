@@ -29,12 +29,12 @@ TestCase("FilterTest", {
 
 	"test should be able to add drop shadow":function () {
 		var canvas = new ludo.canvas.Canvas();
-		document.body.adopt(canvas.getEl());
+		$(document.body).append(canvas.getEl());
 		var filter = new ludo.canvas.Filter({ id:'myFilter'});
 		filter.setDropShadow({
 			x:2, y:2, deviation : 3
 		});
-		canvas.adoptDef(filter);
+		canvas.appendDef(filter);
 
 		this.assertHasNode(filter, 'feGaussianBlur');
 		this.assertProperty(filter, 'feGaussianBlur', 'in', 'SourceAlpha');

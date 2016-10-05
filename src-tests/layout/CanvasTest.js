@@ -1,4 +1,4 @@
-TestCase("CanvasTest", {
+TestCase("LayoutCanvasTest", {
 
 	"test should get correct layout manager":function () {
 		// given

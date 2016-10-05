@@ -1,5 +1,6 @@
 load:
-  - ../mootools/mootools-core-1.6.0.js
+  - ../mootools/Mootools-Core-1.6.0.js
+  - ../mootools/Mootools-More-1.6.0.js
   - ../jquery/jquery-3.1.0.min.js
   - ../js/ludojs.js
 

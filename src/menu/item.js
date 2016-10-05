@@ -81,14 +81,14 @@ ludo.menu.Item = new Class({
         this.parent();
         if (!this.isSpacer()) {
             this.getEl().on("click", this.click.bind(this));
-            this.mouseenter(this.mouseOver.bind(this));
-            this.mouseleave(this.mouseOut.bind(this));
+            this.getEl().mouseenter(this.mouseOver.bind(this));
+            this.getEl().mouseleave(this.mouseOut.bind(this));
         }
     },
 
     resizeDOM:function(){
         this.parent();
-        this.getBody().style.lineHeight = this.cachedInnerHeight + 'px';
+        this.getBody().css('lineHeight', this.cachedInnerHeight + 'px');
     },
 	resizeParent:function(){
 
@@ -100,12 +100,12 @@ ludo.menu.Item = new Class({
 
         if (this.isSpacer()) {
             if (this.orientation === 'horizontal') {
-                this.getEl().setStyle('width', 1);
+                this.getEl().css('width', 1);
             }
-            ludo.dom.addClass(this.getEl(), 'ludo-menu-item-spacer-' + this.orientation);
+            this.getEl().addClass('ludo-menu-item-spacer-' + this.orientation);
         }
 
-        ludo.dom.addClass(this.getEl(), 'ludo-menu-item-' + this.orientation);
+        this.getEl().addClass('ludo-menu-item-' + this.orientation);
 
         if (this.icon) {
             this.createIcon();

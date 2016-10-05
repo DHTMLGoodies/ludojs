@@ -249,7 +249,7 @@ ludo.form.Button = new Class({
             this.addIcon();
         }
         this.icon = src;
-        this.els.icon.setStyle('background-image', 'url(' + src + ')');
+        this.els.icon.css('background-image', 'url(' + src + ')');
     },
 
     addLeftEdge:function () {

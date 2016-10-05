@@ -256,7 +256,7 @@ ludo.form.Element = new Class({
      */
     enable:function () {
         this.getFormEl().removeProperty('disabled');
-        ludo.dom.removeClass(this.els.label, 'ludo-form-label-disabled');
+        this.els.label.removeClass('ludo-form-label-disabled');
     },
 
     getInheritedFormConfig:function () {

@@ -167,7 +167,7 @@ ludo.form.Checkbox = new Class({
         if(checked){
             this.getFormEl().attr('checked', '1');
         }else{
-            this.getFormEl().removeProperty('checked');
+            this.getFormEl().removeAttr('checked');
         }
     },
 
@@ -187,7 +187,7 @@ ludo.form.Checkbox = new Class({
             if (this.isChecked()) {
                 this.els.radioImageDiv.addClass('ludo-radio-image-checked');
             } else {
-                ludo.dom.removeClass(this.els.radioImageDiv, 'ludo-radio-image-checked');
+                this.els.radioImageDiv.removeClass('ludo-radio-image-checked');
             }
         }
     },

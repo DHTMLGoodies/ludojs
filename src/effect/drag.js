@@ -206,7 +206,9 @@ ludo.effect.Drag = new Class({
 		this.getEventEl().on(ludo.util.getDragEndEvent(), this.endDrag.bind(this));
 		if (this.useShim) {
 			this.addEvent('start', this.showShim.bind(this));
-			if(this.autoHideShim)this.addEvent('end', this.hideShim.bind(this));
+			if(this.autoHideShim){
+				this.addEvent('end', this.hideShim.bind(this));
+			}
 		}
 	},
 
@@ -296,8 +298,8 @@ ludo.effect.Drag = new Class({
 			if(node.el.substr(0,1) != "#")node.el = "#" + node.el;
 			node.el = $(node.el);
 		}
-		node.id = node.id || node.el.id || 'ludo-' + String.uniqueID();
-		if (!node.el.id)node.el.id = node.id;
+		node.id = node.id || node.el.attr("id") || 'ludo-' + String.uniqueID();
+		if (!node.el.attr("id"))node.el.attr("id", node.id);
 		node.el.attr('forId', node.id);
 		return node;
 	},
@@ -353,7 +355,7 @@ ludo.effect.Drag = new Class({
 	},
 
 	getSizeOf:function(el){
-		return el.getSize !== undefined ? el.getSize() : { x: 0, y: 0 };
+		return el.outerWidth !== undefined ? { x: el.outerWidth(), y: el.outerHeight() } : { x: 0, y: 0 };
 	},
 
 	getPositionOf:function(el){
@@ -378,9 +380,7 @@ ludo.effect.Drag = new Class({
 		}else{
 			var parent = this.getPositionedParent(el);
             pos = parent? el.getPosition(parent) : this.getPositionOf(el)
-
 		}
-
 
 		var x = pos.left;
 		var y = pos.top;
@@ -438,6 +438,7 @@ ludo.effect.Drag = new Class({
 	},
 
 	getPositionedParent:function(el){
+
 		var parent = el.parentNode;
 		while(parent){
 			var pos = parent.getStyle('position');
@@ -878,6 +879,7 @@ ludo.effect.Drag = new Class({
 	},
 
 	flyBackComplete:function(){
+
 		/**
 		 * Event fired after flyBack animation is complete
 		 * @event flyBack
@@ -888,6 +890,7 @@ ludo.effect.Drag = new Class({
 	},
 
 	flyToShimComplete:function(){
+
 		/**
 		 * Event fired after flyToShim animation is complete
 		 * @event flyBack

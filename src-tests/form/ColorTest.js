@@ -1,4 +1,4 @@
-TestCase("ColorTest", {
+TestCase("ColorTestForm", {
 
 	"test should update value on widgets": function(){
 		// given

@@ -167,14 +167,14 @@ ludo.view.TitleBar = new Class({
     },
 
     enterButton:function (e) {
-        var el = e.target;
-        var type = el.getProperty('buttonType');
-        el.addClass('-over');
+        var el = $(e.target);
+        var type = el.attr('buttonType');
+        el.addClass('ludo-title-bar-button-' + type + '-over');
     },
 
     leaveButton:function (e) {
-        var el = e.target;
-        el.removeClass('ludo-title-bar-button-' + el.getProperty('buttonType') + '-over');
+        var el = $(e.target);
+        el.removeClass('ludo-title-bar-button-' + el.attr('buttonType') + '-over');
     },
 
     getWidthOfButtons:function () {

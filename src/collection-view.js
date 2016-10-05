@@ -32,7 +32,7 @@ ludo.CollectionView = new Class({
 
 	showEmptyText:function(){
 		this.emptyEl().css('display',  '');
-		this._emptyEl.innerHTML = this.getEmptyText();
+		this._emptyEl.html(this.getEmptyText());
 	},
 
 	emptyEl:function(){

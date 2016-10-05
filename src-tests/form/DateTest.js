@@ -78,7 +78,7 @@ TestCase("DateTest", {
         // then
         assertUndefined(d.value);
         assertUndefined(d.getValue());
-        assertEquals('', d.getFormEl().value);
+        assertEquals('', d.getFormEl().val());
 
     },
 

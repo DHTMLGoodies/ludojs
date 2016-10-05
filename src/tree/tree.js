@@ -143,7 +143,7 @@ ludo.tree.Tree = new Class({
 
 	deSelectRecord:function (record) {
 		var el = this.getDomElement(record, '.ludo-tree-node-plain');
-		if (el)ludo.dom.removeClass(el, 'ludo-tree-selected-node');
+		if (el)el.removeClass('ludo-tree-selected-node');
 	},
 
 	getDomElement:function (record, cls) {
@@ -171,7 +171,7 @@ ludo.tree.Tree = new Class({
 
 	collapse:function (record, el) {
 		el = this.getExpandEl(record);
-		ludo.dom.removeClass(el, 'ludo-tree-node-collapse');
+		el.removeClass('ludo-tree-node-collapse');
 		this.getCachedNode(record, 'children', 'child-container-').css('display', 'none');
 	},
 
@@ -393,7 +393,7 @@ ludo.tree.Tree = new Class({
 			var node = this.getDomByRecord(nodes[i]);
 			if (node) {
 				if (i < count - 1) {
-					ludo.dom.removeClass(node, 'ludo-tree-node-last-sibling');
+					node.removeClass('ludo-tree-node-last-sibling');
 				} else {
 					node.addClass('ludo-tree-node-last-sibling');
 				}

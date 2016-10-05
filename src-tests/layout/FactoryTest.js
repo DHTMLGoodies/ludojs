@@ -1,4 +1,4 @@
-TestCase("FactoryTest", {
+TestCase("LayoutFactoryTest", {
 
 	"test should return valid layout object": function(){
 		// given
@@ -12,7 +12,4 @@ TestCase("FactoryTest", {
 		assertEquals(1, layout.weight);
 
 	}
-
-
-
 });

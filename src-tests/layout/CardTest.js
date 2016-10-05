@@ -461,7 +461,7 @@ TestCase("CardLayout", {
 		card1.show();
 
 		// then
-		assertEquals('absolute', card1.getEl().getStyle('position'));
+		assertEquals('absolute', card1.getEl().css('position'));
 
 	},
 	"test should be able to show specific card":function () {

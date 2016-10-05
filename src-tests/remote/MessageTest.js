@@ -82,7 +82,7 @@ TestCase("MessageTest", {
     },
 
     getInnerText:function(el){
-        return el.innerHTML.replace(/<\/[^>]+?>/g,'');
+        return el.html().replace(/<\/[^>]+?>/g,'');
     },
 
     getRemoteMock:function(config){

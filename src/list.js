@@ -37,7 +37,7 @@ ludo.List = new Class({
 
         var data = this.getTplParser().getCompiled(d, this.tpl);
         var b = this.nodeContainer();
-        b.innerHTML = '';
+        b.html('');
 
         for (var i = 0; i < data.length; i++) {
             var el = document.id(ludo.dom.create({
@@ -67,12 +67,13 @@ ludo.List = new Class({
 
     leave:function(e){
         var el = this.getRecordDOM(e.target);
-        if(el)ludo.dom.removeClass(el, 'ludo-list-item-highlighted');
+        if(el)el.removeClass('ludo-list-item-highlighted');
     },
 
     getRecordDOM:function(el){
-        if(!ludo.dom.hasClass(el, 'ludo-list-item')){
-            el = el.getParent('.ludo-list-item');
+        el = $(el);
+        if(!el.hasClass('ludo-list-item')){
+            el = el.closest('.ludo-list-item');
         }
         return el;
     },

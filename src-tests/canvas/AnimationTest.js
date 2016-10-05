@@ -51,8 +51,8 @@ TestCase("AnimationTest", {
 		);
 
 		// then
-		assertEquals(JSON.encode(steps), '10%', steps.values[0][0].value);
-		assertEquals(JSON.encode(steps), 'x', steps.values[0][0].key);
+		assertEquals(JSON.stringify(steps), '10%', steps.values[0][0].value);
+		assertEquals(JSON.stringify(steps), 'x', steps.values[0][0].key);
 		assertEquals(20, steps.values[0][1].value);
 		assertEquals('y', steps.values[0][1].key);
 
@@ -79,8 +79,8 @@ TestCase("AnimationTest", {
 		var i = steps.values.length-1;
 		
 		// then
-		assertEquals(JSON.encode(steps.values[i]), '110%', steps.values[i][0].value);
-		assertEquals(JSON.encode(steps.values[i]), 'x', steps.values[i][0].key);
+		assertEquals(JSON.stringify(steps.values[i]), '110%', steps.values[i][0].value);
+		assertEquals(JSON.stringify(steps.values[i]), 'x', steps.values[i][0].key);
 		assertEquals(70, steps.values[i][1].value);
 		assertEquals('y', steps.values[i][1].key);
 
@@ -106,7 +106,7 @@ TestCase("AnimationTest", {
 			renderTo:document.body
 		});
 		var rect = new ludo.canvas.Rect({ x:100,y:120, width:200,height:300, rx:5, ry:7 });
-		v.getCanvas().adopt(rect);
+		v.getCanvas().append(rect);
 		return rect;
 	}
 

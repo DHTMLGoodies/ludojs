@@ -149,10 +149,8 @@ ludo.form.Select = new Class({
      * @param {String} text
      */
     addOption:function (value, text) {
-        var option = new Element('option');
-        option.set('value', value);
-        option.set('text', text);
-        this.getFormEl().appendChild(option);
+        var option = $('<option value="' + value + '">' + text + '</option>');
+        this.getFormEl().append(option);
     },
 
     resizeDOM:function () {

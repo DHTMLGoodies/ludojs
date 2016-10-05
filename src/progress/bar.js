@@ -115,7 +115,7 @@ ludo.progress.Bar = new Class({
 		}
 
         this.currentPercent = percent;
-        this.els.percent.innerHTML = percent + '%';
+        this.els.percent.html(percent + '%');
     },
 
     getCurrentPercent:function () {

@@ -138,8 +138,11 @@ ludo.menu.Context = new Class({
 		if (!this.getParent()) {
 			var el = this.getEl();
 			var pos = this.getXAndYPos(e);
-			el.style.left = pos.x + 'px';
-			el.style.top = pos.y + 'px';
+			el.css({
+				left : pos.x + 'px',
+				top : pos.y + 'px'
+			});
+
 		}
 		return false;
 	},
@@ -154,12 +157,14 @@ ludo.menu.Context = new Class({
 
 	getXAndYPos:function (e) {
 		var ret = {
-			x:e.page.x,
-			y:e.page.y
+			x:e.pageX,
+			y:e.pageY
 		};
 		var clientWidth = document.body.clientWidth;
 		var clientHeight = document.body.clientHeight;
-		var size = this.getEl().getSize();
+		var size = {
+			x: this.getEl().width(), y: this.getEl().height()
+		};
 		var x = ret.x + size.x;
 		var y = ret.y + size.y;
 
@@ -177,6 +182,7 @@ ludo.menu.Context = new Class({
 	},
 
 	getValidDomElement:function (el) {
+		el = $(el);
 		if (!this.selector) {
 			return true;
 		}
@@ -184,7 +190,7 @@ ludo.menu.Context = new Class({
 		if (el.hasClass(selector) || el.id == selector) {
 			return el;
 		}
-		var parent = el.getParent(this.selector);
+		var parent = el.closest(this.selector);
 		if (parent) {
 			return parent;
 		}
