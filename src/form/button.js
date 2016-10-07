@@ -208,7 +208,7 @@ ludo.form.Button = new Class({
 
 	dispose:function(){
 		this.parent();
-		document.body.removeEvent('mouseup', this.mouseUpBound);
+		$(document.body).off('mouseup', this.mouseUpBound);
 		if (this.defaultSubmit) document.id(window).removeEvent('keypress', this.keyPressBound);
 	},
 

@@ -105,7 +105,7 @@ ludo.form.Checkbox = new Class({
 
     clickOnImage:function () {
         if (this.inputType === 'checkbox') {
-            this.setChecked(!this.getFormEl().checked)
+            this.setChecked(!this.isChecked());
         } else {
             this.check();
         }
@@ -116,7 +116,7 @@ ludo.form.Checkbox = new Class({
      * @return {Boolean} checked
      */
     isChecked:function () {
-        return this.getFormEl().attr('checked');
+        return this.getFormEl().attr('checked') ? true : false;
     },
     /**
      * Set checkbox to checked
@@ -148,7 +148,7 @@ ludo.form.Checkbox = new Class({
     },
 
     getValue:function () {
-        return this.isChecked() ? this.getFormEl().get('value') : '';
+        return this.isChecked() ? this.getFormEl().val() : '';
     },
     /**
      * Set checkbox to checked or unchecked

@@ -11,6 +11,20 @@ TestCase("CheckboxTest", {
         assertFalse(v.child['cb'].isChecked());
     },
 
+    "test should change checked attribute when calling checked method": function(){
+
+        // given
+        var v = this.getViewWithCheckbox();
+
+        // when
+        v.child['cb'].check();
+
+        // then
+
+        assertEquals('checked', v.child['cb'].getFormEl().attr("checked"));
+        assertTrue(v.child['cb'].isChecked());
+    },
+
     "test should set dirty on change": function(){
         // given
         var v = this.getViewWithCheckbox();
@@ -19,6 +33,7 @@ TestCase("CheckboxTest", {
         v.child['cb'].check();
 
         // then
+        assertTrue(v.child['cb'].isChecked());
         assertTrue(v.child['cb'].isDirty());
     },
 

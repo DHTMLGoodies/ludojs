@@ -9,7 +9,7 @@ TestCase("Menu", {
                     }
                 }.bind(this),
                 selectorclick:function (el) {
-                    this.setContextMenuMove(el);
+
                 }.bind(this)
             },
             selector:'notation-chess-move',
@@ -32,7 +32,7 @@ TestCase("Menu", {
             page:{x:100,y:100},target:document.body
         });
         // then
-        assertEquals(document.body, c.renderTo);
+        assertEquals($(document.body).attr("id"), c.renderTo.attr("id"));
     }
 
 });

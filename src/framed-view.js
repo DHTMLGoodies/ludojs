@@ -347,7 +347,7 @@ ludo.FramedView = new Class({
 		if (!this.hidden) {
             var height = this.layout.height;
             var newHeight = this.getHeightOfTitleBar();
-            this.els.container.setStyle('height', this.getHeightOfTitleBar());
+            this.els.container.css('height', this.getHeightOfTitleBar());
             this.els.body.css('visibility', 'hidden');
             this.hideResizeHandles();
 

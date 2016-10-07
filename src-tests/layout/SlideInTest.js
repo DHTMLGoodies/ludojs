@@ -8,8 +8,8 @@ TestCase("SlideIn", {
         var child = v.children[1];
 
         // then
-        assertEquals(1000, child.getEl().offsetWidth);
-        assertEquals(500, child.getEl().offsetHeight);
+        assertEquals(1000, child.getEl().width());
+        assertEquals(500, child.getEl().height());
     },
 
     "test body should have left set to minus width of first child": function(){
@@ -17,8 +17,8 @@ TestCase("SlideIn", {
         var v = this.getView();
 
         // then
-        assertEquals('-300px', v.getLayout().slideEl.style.left);
-        assertEquals('hidden', v.getBody().style.overflowX);
+        assertEquals('-300px', v.getLayout().slideEl.css("left"));
+        assertEquals('hidden', v.getBody().css("overflowX"));
     },
 
 
@@ -27,8 +27,8 @@ TestCase("SlideIn", {
         var v = this.getView();
 
         // then
-        assertEquals('absolute', v.children[0].getEl().style.position);
-        assertEquals('absolute', v.children[1].getEl().style.position);
+        assertEquals('absolute', v.children[0].getEl().css("position"));
+        assertEquals('absolute', v.children[1].getEl().css("position"));
 
     },
 

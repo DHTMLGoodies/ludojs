@@ -3,6 +3,11 @@ load:
   - ../mootools/Mootools-More-1.6.0.js
   - ../jquery/jquery-3.1.0.min.js
   - ../js/ludojs.js
+  - ../src/assets.js
+  - ../src/layout/renderer.js
+  - ../src/chart/gauge.js
+  - ../src/layout/card.js
+  - ../src/card/progress-bar.js
 
 test:
   - canvas/*.js

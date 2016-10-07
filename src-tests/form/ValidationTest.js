@@ -88,7 +88,7 @@ TestCase("ValidationTest", {
 		cmp.setValue(50);
 
 		// then
-        assertEquals('50', cmp.getFormEl().get('value').trim());
+        assertEquals('50', cmp.getFormEl().val().trim());
        //assertEquals(4, cmp.validators.length);
 
         assertEquals('regex', cmp.validators[0].key);
@@ -198,7 +198,7 @@ TestCase("ValidationTest", {
 		});
 
 		// when
-		el.getFormEl().value = 'Invalid';
+		el.getFormEl().val('Invalid');
 		el.change();
 
 		// then

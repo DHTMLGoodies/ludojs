@@ -18,6 +18,12 @@ ludo.layout.TabStrip = new Class({
         this.lm.addEvent('addChild', this.registerChild.bind(this));
         this.lm.addEvent('showChild', this.activateTabFor.bind(this));
         this.lm.addEvent('removeChild', this.removeTabFor.bind(this));
+        this.addEvent('resize', this.resizeTabs.bind(this));
+    },
+
+    ludoRendered:function(){
+        this.parent();
+        this.resizeTabs();
     },
 
     registerChild:function (child) {
@@ -31,7 +37,7 @@ ludo.layout.TabStrip = new Class({
         for (var key in this.tabs) {
             if (this.tabs.hasOwnProperty(key)) {
                 var node = this.tabs[key];
-                node.style[this.getPosAttribute()] = this.currentPos + 'px';
+                node.css(this.getPosAttribute(), this.currentPos + 'px');
                 this.increaseCurrentPos(node);
             }
         }
@@ -91,7 +97,7 @@ ludo.layout.TabStrip = new Class({
     },
 
     removeTabFor:function (child) {
-        this.tabs[child.getId()].dispose();
+        this.tabs[child.getId()].remove();
         delete this.tabs[child.getId()];
         this.resizeTabs();
     },

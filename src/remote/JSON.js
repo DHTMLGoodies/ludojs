@@ -8,6 +8,11 @@
  * @class JSON
  * @extends Events
  */
+
+/**
+ * TODO 2016
+ * Refactor data source. Create a method which has to be implemented. 
+ */
 ludo.remote.JSON = new Class({
     Extends:ludo.remote.Base,
 
@@ -118,8 +123,7 @@ ludo.remote.JSON = new Class({
             data:payload,
             success:function (json) {
                 this.remoteData = json;
-    
-                if (json.success || json.success === undefined) {
+                if ($.type(json) != "array" || json.success || json.success === undefined) {
                     this.fireEvent('success', this);
                 } else {
                     this.fireEvent('failure', this);
@@ -142,8 +146,11 @@ ludo.remote.JSON = new Class({
      * @return {Object|undefined}
      */
     getResponseData:function () {
-		if(!this.remoteData.response)return undefined;
-        return this.remoteData.response.data ? this.remoteData.response.data : this.remoteData.response;
+        if(this.remoteData && $.type(this.remoteData) == "array") return this.remoteData;
+		if(!this.remoteData.response && !this.remoteData.data){
+            return undefined;
+        }
+        return this.remoteData.data ? this.remoteData.data : this.remoteData.response.data ? this.remoteData.response.data : this.remoteData.response;
     },
 
     /**

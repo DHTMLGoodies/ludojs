@@ -31,6 +31,8 @@ TestCase("GaugeTest", {
         });
 
 
+        assertNotUndefined(gauge.fragments[0]);
+        
         var rec = gauge.fragments[0].getRecord();
         rec.setValue(120);
 

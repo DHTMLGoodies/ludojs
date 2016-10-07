@@ -165,7 +165,7 @@ ludo.form.FilterText = new Class({
     },
 
     setAutoCompleteRecord:function (record) {
-        this.els.autoComplete.set('value', record[this.displayField]);
+        this.els.autoComplete.val(record[this.displayField]);
     },
 
     createFilterComponent:function () {
@@ -387,7 +387,7 @@ ludo.form.FilterText = new Class({
         var suggestedRecord = this.getSuggestedRecord(records);
         if (suggestedRecord) {
             this.selectedRecord = suggestedRecord;
-            this.els.autoComplete.set('value', suggestedRecord[this.displayField]);
+            this.els.autoComplete.val(suggestedRecord[this.displayField]);
         } else {
             this.clearSelectedRecord();
         }
@@ -407,7 +407,7 @@ ludo.form.FilterText = new Class({
     },
 
     clearSelectedRecord:function () {
-        this.els.autoComplete.set('value', '');
+        this.els.autoComplete.val('');
         this.selectedRecord = undefined;
     },
 

@@ -403,8 +403,8 @@ ludo.layout.Relative = new Class({
 		var el = child.getEl();
 		if (lc.left === undefined) lc.left = el.offsetLeft > 0 ? el.offsetLeft : 0;
 		if (lc.top === undefined) lc.top = el.offsetTop > 0 ? el.offsetTop : 0;
-		if (lc.width === undefined) lc.width = el.width();
-		if (lc.height === undefined) lc.height = el.height();
+		if (lc.width === undefined) lc.width = el.width != undefined ? el.width() : el.offsetWidth;
+		if (lc.height === undefined) lc.height = el.height != undefined ? el.height() : el.offsetHeight;
 		if (lc.right === undefined) lc.right = this.viewport.width - lc.left - lc.width;
 		if (lc.bottom === undefined) lc.bottom = this.viewport.height - lc.top - lc.height;
 	},

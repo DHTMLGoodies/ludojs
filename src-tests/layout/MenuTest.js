@@ -101,8 +101,8 @@ TestCase("MenuTest", {
         var grandChild = cmp.child['b'].child['ba'];
 
         // then
-        assertEquals(cmp.child['b'].getLayout().getMenuContainer().getBody(), grandChild.getEl().parent());
-        assertEquals(cmp.getBody(), child.getEl().parent());
+        assertEquals(cmp.child['b'].getLayout().getMenuContainer().getBody().attr("id"), grandChild.getEl().parent().attr("id"));
+        assertEquals(cmp.getBody().attr("id"), child.getEl().parent().attr("id"));
     },
 
     "test width of horizontal menu items should be wrap":function () {
@@ -139,7 +139,7 @@ TestCase("MenuTest", {
         c.child['b'].mouseOver();
 
         // then
-        assertEquals('', c.child['b'].child['ba'].getMenuContainer().getEl().css('display'));
+        assertEquals('block', c.child['b'].child['ba'].getMenuContainer().getEl().css('display'));
 
     },
 
@@ -163,7 +163,7 @@ TestCase("MenuTest", {
         var child = c.child['b'];
 
         // then
-        assertEquals(c.getBody(), child.getEl().parent());
+        assertEquals(c.getBody().attr("id"), child.getEl().parent().attr("id"));
     },
 
     "test should assign css class to menu containers":function () {
@@ -227,7 +227,7 @@ TestCase("MenuTest", {
 
         // when
         c.child['b'].click();
-        assertEquals('', c.child['b'].child['ba'].getMenuContainer().getEl().css('display'));
+        assertEquals('block', c.child['b'].child['ba'].getMenuContainer().getEl().css('display'));
         c.child['b'].child['bb'].click();
 
 
@@ -421,8 +421,8 @@ TestCase("MenuTest", {
 
 
         // then
-        assertEquals('', c.child['b'].child['ba'].getMenuContainer().getEl().css('display'));
-        assertEquals('', c.child['b'].child['ba'].child['baa'].getMenuContainer().getEl().css('display'));
+        assertEquals('block', c.child['b'].child['ba'].getMenuContainer().getEl().css('display'));
+        assertEquals('block', c.child['b'].child['ba'].child['baa'].getMenuContainer().getEl().css('display'));
 
     },
 

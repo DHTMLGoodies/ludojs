@@ -134,7 +134,7 @@ ludo.menu.Item = new Class({
     ludoRendered:function () {
         this.parent();
         if (this.isSpacer()) {
-            this.getBody().setStyle('visibility', 'hidden');
+            this.getBody().css('visibility', 'hidden');
         }
     },
 
@@ -187,9 +187,8 @@ ludo.menu.Item = new Class({
     },
 
     createIcon:function () {
-        var el = this.els.icon = $('<div>');
-        el.addClass('ludo-menu-item-icon');
-        el.setStyles({
+        var el = this.els.icon = $('<div class="ludo-menu-item-icon">');
+        el.css({
             'background-position':'center center',
             'background-repeat':'no-repeat',
             'position':'absolute',
@@ -199,7 +198,7 @@ ludo.menu.Item = new Class({
             'height':'100%'
         });
         if (this.icon.indexOf('.') >= 0) {
-            el.setStyle('background-image', 'url(' + this.icon + ')');
+            el.css('background-image', 'url(' + this.icon + ')');
         } else {
             el.html( this.icon);
         }

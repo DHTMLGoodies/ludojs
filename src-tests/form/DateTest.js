@@ -103,7 +103,7 @@ TestCase("DateTest", {
     },
 
     changeByForm:function(picker, date){
-        picker.els.formEl.value = date;
+        picker.els.formEl.val(date);
         picker.change();
     }
 });

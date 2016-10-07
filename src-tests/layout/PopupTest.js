@@ -14,7 +14,7 @@ TestCase("PopupTest", {
 		var view = this.getViewWithChild();
 
 		// then
-		assertEquals(document.body, view.child['a'].getEl().parentNode);
+		assertEquals($(document.body).attr("id"), view.child['a'].getEl().parent().attr("id"));
 
 	},
 
@@ -40,7 +40,7 @@ TestCase("PopupTest", {
 		var view = this.getViewWithChild();
 
 		// then
-		assertEquals('absolute', view.child['a'].getEl().style.position);
+		assertEquals('absolute', view.child['a'].getEl().css("position"));
 	},
 
 	"test should be able to toggle":function () {

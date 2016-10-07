@@ -37,7 +37,7 @@ TestCase("ResizeTest", {
 	
 	    // then
 	    assertNotUndefined(resize.els.handle.e);
-	    assertEquals(resize.component.getEl(), resize.els.handle.e.parentNode);
+	    assertEquals(resize.component.getEl().attr("id"), resize.els.handle.e.parent().attr("id"));
 	}
 	
 	
@@ -119,13 +119,15 @@ TestCase("ResizeTest", {
 	    resize.startResize(e);
 	    e.pageX = 150;
 	    e.pageY = 120;
-	
+
+		var coords = resize.getCoordinates();
+
 	    // then
 	    assertEquals('e', resize.dragProperties.region);
-	    assertNotUndefined('width is undefined', resize.width());
-	    assertUndefined('left is not undefined', resize.offset().left);
-	    assertUndefined('height is not undefined', resize.height());
-	    assertUndefined('top is not undefined', resize.offset().top);
+		assertNotUndefined('width is undefined', resize.getCoordinates().width);
+		assertUndefined('left is not undefined', resize.getCoordinates().left);
+		assertUndefined('height is not undefined', resize.getCoordinates().height);
+		assertUndefined('top is not undefined', resize.getCoordinates().top);
 	
 	
 	}
@@ -138,14 +140,17 @@ TestCase("ResizeTest", {
 			pageX:100, pageY:100
 	    });
 	    resize.startResize(e);
-	    var size = resize.els.shim.getSize();
+
+		var size = {
+			x : resize.els.shim.width(), y: resize.els.shim.height()
+		};
 	
 	
 	    // when
 	    e.pageX = 150;
 	    e.pageY = 180;
 	    resize.resize(e);
-	    var newSize = resize.els.shim.getSize();
+	    var newSize = this.size(resize.els.shim);
 	
 	    // then
 	    var d = resize.dragProperties;
@@ -153,8 +158,11 @@ TestCase("ResizeTest", {
 	    assertEquals(80, d.current.y - d.start.y);
 	    assertEquals(size.x + 50, newSize.x);
 	    assertEquals(size.y, newSize.y);
+	},
+
+	size:function(el){
+		return { x : el.width(), y: el.height() };
 	}
-	
 	,
 	"test should move shim when resizing sout east":function() {
 	    // given
@@ -163,15 +171,17 @@ TestCase("ResizeTest", {
 			pageX:100, pageY:100
 	    });
 	    resize.startResize(e);
-	
-	    var size = resize.els.shim.getSize();
+
+		var size = {
+			x : resize.els.shim.width(), y: resize.els.shim.height()
+		};
 	
 	    e = this.getEventMock('se', {
 			pageX:150, pageY:180
 	    });
 	    // when
 	    resize.resize(e);
-	    var newSize = resize.els.shim.getSize();
+	    var newSize = this.size(resize.els.shim);
 	    // then
 	    assertEquals(size.x + 50, newSize.x);
 	    assertEquals(size.y + 80, newSize.y);
@@ -185,19 +195,27 @@ TestCase("ResizeTest", {
 			pageX:100, pageY:100
 	    });
 	    resize.startResize(e);
-	    var coords = resize.els.shim.getCoordinates();
-	
+
+		var coords = this.coordinates(resize.els.shim);
+
 	    // when
 	    e.pageX = 150;
 	    e.pageY = 180;
 	    resize.resize(e);
 	
-	    var newCoords = resize.els.shim.getCoordinates();
+	    var newCoords = this.coordinates(resize.els.shim);
 	    // then
 	    assertEquals(coords.left, newCoords.left);
 	    assertEquals(coords.top + 80, newCoords.top);
 	    assertEquals(coords.height - 80, newCoords.height);
-	}
+	},
+
+	coordinates:function(el){
+		var coords = el.offset();
+		coords.width = el.width();
+		coords.height = el.height();
+		return coords;
+	}	
 	
 	,
 	"test should move shim when resizing west":function() {
@@ -207,14 +225,13 @@ TestCase("ResizeTest", {
 			pageX:100, pageY:100
 	    });
 	    resize.startResize(e);
-	    var coords = resize.els.shim.getCoordinates();
-	
+		var coords = this.coordinates(resize.els.shim);
 	    // when
 	    e.pageX = 70;
 	    e.pageY = 180;
 	    resize.resize(e);
 	
-	    var newCoords = resize.els.shim.getCoordinates();
+	    var newCoords = this.coordinates(resize.els.shim);
 	    // then
 	    var d = resize.dragProperties;
 	    assertEquals(-30, d.current.x - d.start.x);
@@ -376,7 +393,7 @@ TestCase("ResizeTest", {
 			pageX:300, pageY:300
 	    });
 	    resize.startResize(e);
-	    var coords = resize.els.shim.getCoordinates();
+	    var coords = this.coordinates(resize.els.shim);
 	
 	    // when
 	    e.pageX = 170;
@@ -384,7 +401,7 @@ TestCase("ResizeTest", {
 	
 	    resize.resize(e);
 	
-	    var newCoords = resize.els.shim.getCoordinates();
+	    var newCoords = this.coordinates(resize.els.shim);
 	    // then
 	
 	    assertUndefined(resize.getDragMinY());
@@ -410,7 +427,7 @@ TestCase("ResizeTest", {
 	    e.pageX += 50;
 	    resize.resize(e);
 	    resize.stopResize(e);
-	    var coordinates = resize.getEl().getCoordinates();
+	    var coordinates = this.coordinates(resize.getEl());
 	    // then
 	
 	    assertUndefined(resize.els.shim);
@@ -433,7 +450,7 @@ TestCase("ResizeTest", {
 	    resize.startResize(e);
 	
 	    // then
-	    assertEquals(900, resize.getDragMaxX());
+	    assertEquals("Wrong max X " + JSON.stringify(resize.dragProperties), 900, resize.getDragMaxX());
 	}
 	
 	,
@@ -650,7 +667,7 @@ TestCase("ResizeTest", {
 	    // then
 	    assertEquals('sc1', 155, Math.floor(resize.getScaleFactor() *100));
 	    var shimSize = this.getSize(resize.getShim());
-	    assertEquals(Math.round(500*resize.getScaleFactor()), shimSize.x);
+	    assertEquals(Math.round(500*resize.getScaleFactor()), Math.round(shimSize.x));
 	    // when
 	    e.pageX = 900;
 	    e.pageY = 400;
@@ -746,8 +763,11 @@ TestCase("ResizeTest", {
 
 	getEventMock:function(region, properties) {
 	    properties = properties || {};
-	    if (properties.page === undefined) {
-	        properties.page = { x:0, y:0};
+	    if (properties.pageX === undefined) {
+	        properties.pageX = 0;
+	    }
+	    if (properties.pageY === undefined) {
+	        properties.pageY = 0;
 	    }
 	    var el = $('<div>');
 	    el.attr('region', region);

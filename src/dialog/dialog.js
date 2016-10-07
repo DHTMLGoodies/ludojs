@@ -92,7 +92,7 @@ ludo.dialog.Dialog = new Class({
 	ludoEvents:function () {
 		this.parent();
 		if (this.isModal()) {
-			this.getEventEl().addEvent('resize', this.resizeShim.bind(this));
+			this.getEventEl().on('resize', this.resizeShim.bind(this));
 		}
 	},
 
@@ -139,7 +139,8 @@ ludo.dialog.Dialog = new Class({
 	},
 
 	resizeShim:function () {
-		var size = document.body.getSize();
+		var b = $(document.body);
+		var size = { x: b.width(), y: b.height() };
         this.getShim().css('width',  size.x);
         this.getShim().css('height',  size.y + 'px');
 	},

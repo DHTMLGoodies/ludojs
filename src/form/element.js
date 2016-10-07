@@ -339,7 +339,7 @@ ludo.form.Element = new Class({
     },
     change:function () {
         if (this.els.formEl) {
-            this.setValue(this.els.formEl.get('value'));
+            this.setValue(this.els.formEl.val());
         }
         /**
          * On change event. This event is fired when value is changed manually
@@ -457,7 +457,7 @@ ludo.form.Element = new Class({
     },
 
     setFormElValue:function(value){
-        if (this.els.formEl && this.els.formEl.value !== value) {
+        if (this.els.formEl && this.els.formEl.val() !== value) {
             this.els.formEl.val(value);
             if(this.inlineLabel)this.els.formEl.removeClass('ludo-form-el-inline-label');
         }

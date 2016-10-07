@@ -7,7 +7,7 @@ TestCase("LinearTest", {
 		});
 
 		// then
-		assertEquals(300, view.child['childOne'].getEl().offsetWidth);
+		assertEquals(300, view.child['childOne'].getEl().width());
 	},
 
 	"test should set correct height of children": function(){
@@ -19,8 +19,8 @@ TestCase("LinearTest", {
 		var childTwo = parent.child['weightOf2'];
 
 		// then
-		assertEquals(200, child.getEl().offsetHeight);
-		assertEquals(400, childTwo.getEl().offsetHeight);
+		assertEquals(200, child.getEl().height());
+		assertEquals(400, childTwo.getEl().height());
 
 	},
 

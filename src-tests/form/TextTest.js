@@ -67,7 +67,7 @@ TestCase("TextTest", {
         });
 
         // then
-        assertEquals('Zip code', el.getFormEl().value);
+        assertEquals('Zip code', el.getFormEl().val());
     },
 
     "test should add css class for inline label": function(){
@@ -78,7 +78,7 @@ TestCase("TextTest", {
         });
 
         // then
-        assertTrue(ludo.dom.hasClass(el.getFormEl(), 'ludo-form-el-inline-label'));
+        assertTrue(el.getFormEl().hasClass('ludo-form-el-inline-label'));
     },
 
     "test should remove css class for inline label when value is set": function(){
@@ -92,7 +92,7 @@ TestCase("TextTest", {
         el.setValue('New value');
 
         // then
-        assertEquals('New value', el.getFormEl().value);
+        assertEquals('New value', el.getFormEl().val());
         assertFalse(ludo.dom.hasClass(el.getFormEl(), 'ludo-form-el-inline-label'));
 
         // given
@@ -105,7 +105,7 @@ TestCase("TextTest", {
         el.setValue(Date.parse('1973-09-06'));
 
         // then
-        assertEquals('1973-09-06', el.getFormEl().value);
+        assertEquals('1973-09-06', el.getFormEl().val());
         assertFalse(ludo.dom.hasClass(el.getFormEl(), 'ludo-form-el-inline-label'));
     },
 
@@ -309,7 +309,7 @@ TestCase("TextTest", {
 		view.addEvent('valueChange', function(){
 			changeEventFired = true;
 		});
-		view.getFormEl().value = 'New value';
+		view.getFormEl().val('New value');
 		view.change();
 
 		// then
@@ -361,6 +361,6 @@ TestCase("TextTest", {
 
         // then
         assertEquals('', el.getValue());
-        assertEquals('', el.getFormEl().value);
+        assertEquals('', el.getFormEl().val());
     }
 });

@@ -95,8 +95,7 @@ TestCase("CanvasTest", {
 			assertEquals('title', children[0].tagName);
 			assertTrue(children[0].textContent.indexOf('My Canvas') >= 0);
 		}catch(e){
-			console.trace();
-			console.error(e);
+
 		}
 
 
@@ -138,7 +137,7 @@ TestCase("CanvasTest", {
 			renderTo:w
 		});
 		// then
-		assertEquals(w.getBody(), $(canvas.getEl().parentNode));
+		assertEquals(w.getBody().attr("id"), ludo.canvasEngine.get(canvas.getEl().parentNode, "id"));
 	},
 
 	"test should be able to create canvas by calling view.getCanvas":function(){

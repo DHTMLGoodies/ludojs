@@ -98,7 +98,8 @@ ludo.form.Spinner = new Class({
     },
 
     createSpinnerContainer:function () {
-        var el = this.els.spinnerContainer = ludo.dom.create({ renderTo:this.getFormEl().parent(), cls:'ludo-spinbox-container'});
+        var el = this.els.spinnerContainer = $('<div class="ludo.spinbox-container"></div>');
+        this.getFormEl().parent().append(el);
         el.append(this.getFormEl());
     },
 

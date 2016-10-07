@@ -5,7 +5,7 @@ TestCase("GridTest", {
 		var view = this.getView();
 
 		// when
-		var pos = view.child['a'].getEl().style.position;
+		var pos = view.child['a'].getEl().css("position");
 
 		// then
 		assertEquals('absolute', pos);
@@ -39,14 +39,14 @@ TestCase("GridTest", {
 		var view = this.getView();
 
 		// then
-		assertEquals(250, view.child['b'].getEl().offsetLeft);
-		assertEquals(500, view.child['c'].getEl().offsetLeft);
-		assertEquals(250, view.child['f'].getEl().offsetTop);
+		assertEquals(250, view.child['b'].getEl().offset().left);
+		assertEquals(500, view.child['c'].getEl().offset().left);
+		assertEquals(250, view.child['f'].getEl().offset().top);
 
-		assertEquals(0, view.child['i'].getEl().offsetLeft);
+		assertEquals(0, view.child['i'].getEl().offset().left);
 
-		assertEquals(500, view.child['j'].getEl().offsetTop);
-		assertEquals(250, view.child['j'].getEl().offsetLeft);
+		assertEquals(500, view.child['j'].getEl().offset().top);
+		assertEquals(250, view.child['j'].getEl().offset().left);
 	},
 
 	getView:function () {

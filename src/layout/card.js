@@ -31,6 +31,7 @@ ludo.layout.Card = new Class({
 		this.parent(child);
 		child.getEl().css('position', 'absolute');
 		child.addEvent('show', this.setVisibleCard.bind(this));
+		child.applyTo = this.view;
 		if (this.shouldSetCardVisible(child)) {
 			this.visibleCard = child;
 			child.show();

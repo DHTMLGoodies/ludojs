@@ -78,7 +78,7 @@ TestCase("Renderer", {
 		});
 
 		// then
-		assertEquals('300px', v2.getEl().style.left);
+		assertEquals('300px', v2.getEl().css('left'));
 
 	},
 
@@ -100,7 +100,7 @@ TestCase("Renderer", {
 		var el = document.createElement('div');
 		el.style.width = '500px';
 		el.style.height = '600px';
-		document.body.adopt(el);
+		document.body.appendChild(el);
 
 		// when
 		var v = new ludo.View({
@@ -111,13 +111,14 @@ TestCase("Renderer", {
 			renderTo:el
 		});
 
-		assertNotUndefined(v.getEl().parentNode);
+		assertNotUndefined(v.getEl().parent());
+		assertNotUndefined(v.getEl().parent().prop("tagName"));
 
 		// then
 		assertEquals('500', v.getLayout().renderer.coordinates.width);
 		assertEquals('600', v.getLayout().renderer.coordinates.height);
-		assertEquals(500, v.getEl().offsetWidth);
-		assertEquals(600, v.getEl().offsetHeight);
+		assertEquals(500, v.getEl().width());
+		assertEquals(600, v.getEl().height());
 
 	},
 
@@ -128,7 +129,7 @@ TestCase("Renderer", {
 		el.style.left = '0';
 		el.style.position = 'absolute';
 		el.style.height = '600px';
-		document.body.adopt(el);
+		document.body.appendChild(el);
 
 		var v = new ludo.View({
 			renderTo:document.body,
@@ -140,15 +141,15 @@ TestCase("Renderer", {
 		});
 
 		// then
-		assertEquals(250, v.getEl().offsetTop);
-		assertEquals(150, v.getEl().offsetLeft);
+		assertEquals(250, v.getEl().offset().top);
+		assertEquals(150, v.getEl().offset().left);
 	},
 
 	getViewInParent:function () {
 		var el = document.createElement('div');
 		el.style.width = '500px';
 		el.style.height = '600px';
-		document.body.adopt(el);
+		$(document.body).append(el);
 
 		// when
 		return new ludo.View({

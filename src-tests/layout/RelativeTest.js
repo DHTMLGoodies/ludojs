@@ -49,7 +49,7 @@ TestCase("RelativeTest", {
 	},
 
     asNum:function(view, name, style){
-        return parseInt(view.child[name].getEl().style[style]);
+        return parseInt(view.child[name].getEl().css(style));
     },
 
 	"test should figure out when a child position is depending on a sibling":function () {
@@ -104,7 +104,7 @@ TestCase("RelativeTest", {
 		var childA = view.child['a'].getEl();
 
 		// then
-		assertEquals('600px', childA.style.top);
+		assertEquals('600px', childA.css('top'));
 	},
 
 	"test should position children PARENT TOP correctly":function () {
@@ -117,7 +117,7 @@ TestCase("RelativeTest", {
 		var childA = view.child['a'].getEl();
 
 		// then
-		assertEquals('0px', childA.style.top);
+		assertEquals('0px', childA.css('top'));
 	},
 
 	"test should position children PARENT LEFT correctly":function () {
@@ -130,7 +130,7 @@ TestCase("RelativeTest", {
 		var childA = view.child['a'].getEl();
 
 		// then
-		assertEquals('0px', childA.style.left);
+		assertEquals('0px', childA.css('left'));
 	},
 
 	"test should position children PARENT RIGHT correctly":function () {
@@ -143,7 +143,7 @@ TestCase("RelativeTest", {
 		var childA = view.child['a'].getEl();
 
 		// then
-		assertEquals('0px', childA.style.right);
+		assertEquals('0px', childA.css('right'));
 	},
 
 	"test should set width and height of child correctly":function () {
@@ -153,7 +153,7 @@ TestCase("RelativeTest", {
 		]);
 
 		// then
-		assertEquals('500px', view.child['a'].getEl().style.height);
+		assertEquals('500px', view.child['a'].getEl().css('height'));
 
 	},
 
@@ -165,7 +165,7 @@ TestCase("RelativeTest", {
 		]);
 
 		// then
-		assertEquals('300px', view.child['b'].getEl().style.left);
+		assertEquals('300px', view.child['b'].getEl().css('left'));
 
 	},
 
@@ -177,7 +177,7 @@ TestCase("RelativeTest", {
 		]);
 
 		// then
-		assertEquals('600px', view.child['b'].getEl().style.left);
+		assertEquals('600px', view.child['b'].getEl().css('left'));
 	},
 	"test should align child BELOW correctly":function () {
 		// given
@@ -187,7 +187,7 @@ TestCase("RelativeTest", {
 		]);
 
 		// then
-		assertEquals('500px', view.child['b'].getEl().style.top);
+		assertEquals('500px', view.child['b'].getEl().css('top'));
 	},
 	"test should align child ABOVE correctly":function () {
 		// given
@@ -197,7 +197,7 @@ TestCase("RelativeTest", {
 		]);
 
 		// then
-		assertEquals('500px', view.child['b'].getEl().style.top);
+		assertEquals('500px', view.child['b'].getEl().css('top'));
 	},
 
 	"test should be able to CENTER IN PARENT":function () {
@@ -210,8 +210,8 @@ TestCase("RelativeTest", {
 		var childEl = view.child['a'].getEl();
 
 		// then
-		assertEquals('250px', childEl.style.top);
-		assertEquals('300px', childEl.style.left);
+		assertEquals('250px', childEl.css('top'));
+		assertEquals('300px', childEl.css('left'));
 	},
 
 	"test should be able to CENTER HORIZONTAL IN PARENT":function () {
@@ -224,7 +224,7 @@ TestCase("RelativeTest", {
 		var childEl = view.child['a'].getEl();
 
 		// then
-		assertEquals('300px', childEl.style.left);
+		assertEquals('300px', childEl.css('left'));
 	},
 
 	"test should be able to CENTER VERTICAL IN PARENT":function () {
@@ -237,7 +237,7 @@ TestCase("RelativeTest", {
 		var childEl = view.child['a'].getEl();
 
 		// then
-		assertEquals('250px', childEl.style.top);
+		assertEquals('250px', childEl.css('top'));
 	},
 
 	"test should be able to have width set to match_parent":function () {
@@ -250,7 +250,7 @@ TestCase("RelativeTest", {
 		var childEl = view.child['a'].getEl();
 
 		// then
-		assertEquals('1000px', childEl.style.width);
+		assertEquals('1000px', childEl.css('width'));
 	},
 
 	"test should be able to have percentage size":function () {
@@ -263,7 +263,7 @@ TestCase("RelativeTest", {
 		var childEl = view.child['a'].getEl();
 
 		// then
-		assertEquals('400px', childEl.style.width);
+		assertEquals('400px', childEl.css('width'));
 
 	},
 
@@ -277,7 +277,7 @@ TestCase("RelativeTest", {
 		var childEl = view.child['a'].getEl();
 
 		// then
-		assertEquals('1100px', childEl.style.height);
+		assertEquals('1100px', childEl.css('height'));
 
 	},
 
@@ -289,7 +289,7 @@ TestCase("RelativeTest", {
 		]);
 
 		// then
-		assertEquals('700px', view.child['b'].getEl().style.width);
+		assertEquals('700px', view.child['b'].getEl().css('width'));
 
 	},
 
@@ -301,7 +301,7 @@ TestCase("RelativeTest", {
 		]);
 
 		// then
-		assertEquals('600px', view.child['b'].getEl().style.width);
+		assertEquals('600px', view.child['b'].getEl().css('width'));
 	},
 
 	"test should be able to fill up":function () {
@@ -312,7 +312,7 @@ TestCase("RelativeTest", {
 		]);
 
 		// then
-		assertEquals('600px', view.child['b'].getEl().style.height);
+		assertEquals('600px', view.child['b'].getEl().css('height'));
 	},
 
 	"test should be able to fill down":function () {
@@ -323,7 +323,7 @@ TestCase("RelativeTest", {
 		]);
 
 		// then
-		assertEquals('500px', view.child['b'].getEl().style.height);
+		assertEquals('500px', view.child['b'].getEl().css('height'));
 	},
 
 	"test should be able to ALIGN LEFT":function () {
@@ -334,7 +334,7 @@ TestCase("RelativeTest", {
 		]);
 
 		// then
-		assertEquals('600px', view.child['b'].getEl().style.left);
+		assertEquals('600px', view.child['b'].getEl().css('left'));
 	},
 
 	"test should be able to ALIGN RIGHT":function () {
@@ -345,7 +345,7 @@ TestCase("RelativeTest", {
 		]);
 
 		// then
-		assertEquals('300px', view.child['b'].getEl().style.left);
+		assertEquals('300px', view.child['b'].getEl().css('left'));
 	},
 
 	"test should be able to ALIGN TOP":function () {
@@ -356,7 +356,7 @@ TestCase("RelativeTest", {
 		]);
 
 		// then
-		assertEquals('600px', view.child['b'].getEl().style.top);
+		assertEquals('600px', view.child['b'].getEl().css('top'));
 	},
 	"test should be able to ALIGN BOTTOM":function () {
 		// given
@@ -366,7 +366,7 @@ TestCase("RelativeTest", {
 		]);
 
 		// then
-		assertEquals('200px', view.child['b'].getEl().style.top);
+		assertEquals('200px', view.child['b'].getEl().css('top'));
 	},
 
 	"test should be able to resize":function () {
@@ -430,7 +430,7 @@ TestCase("RelativeTest", {
 
 		// then
 		assertEquals(0, a.layout.width);
-		assertEquals('0px', b.getEl().style.left);
+		assertEquals('0px', b.getEl().css('left'));
 	},
 
 	"test should update layout when child is shown":function () {
@@ -448,7 +448,7 @@ TestCase("RelativeTest", {
 
 		// then
 		assertEquals(400, a.layout.width);
-		assertEquals('400px', b.getEl().style.left);
+		assertEquals('400px', b.getEl().css('left'));
 
 	},
 
@@ -465,7 +465,7 @@ TestCase("RelativeTest", {
 
 		// then
 		assertEquals(0, a.layout.width);
-		assertEquals('0px', b.getEl().style.left);
+		assertEquals('0px', b.getEl().css('left'));
 
 	},
 
@@ -480,7 +480,7 @@ TestCase("RelativeTest", {
 		var b1 = view.child['b1'];
 
 		// then
-		assertEquals('0px', b1.getEl().style.top);
+		assertEquals('0px', b1.getEl().css('top'));
 	},
 
 	"test should render at below when below ref initial hidden is shown":function () {
@@ -495,7 +495,7 @@ TestCase("RelativeTest", {
 		view.child['a1'].show();
 
 		// then
-		assertEquals('500px', b1.getEl().style.top);
+		assertEquals('500px', b1.getEl().css('top'));
 	},
 
 	getView:function (children) {
@@ -506,7 +506,7 @@ TestCase("RelativeTest", {
 			renderTo:document.body,
 			children:children
 		});
-		view.getBody().style.position = 'relative';
+		view.getBody().css('position', 'relative');
 		return view;
 	},
 

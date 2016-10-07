@@ -5,11 +5,11 @@ TestCase("CompabilityTest", {
 		var view = this.getView('cols');
 
 		// then
-		assertEquals(300, view.child['childOne'].getEl().offsetWidth);
-		assertEquals(200, view.child['childTwo'].getEl().offsetWidth);
-		assertEquals(300, view.child['childTwo'].getEl().offsetLeft);
-		assertEquals(200, view.child['childThree'].getEl().offsetWidth);
-		assertEquals(400, view.child['childFour'].getEl().offsetWidth);
+		assertEquals(300, view.child['childOne'].getEl().width());
+		assertEquals(200, view.child['childTwo'].getEl().width());
+		assertEquals(300, view.child['childTwo'].getEl().offset().left);
+		assertEquals(200, view.child['childThree'].getEl().width());
+		assertEquals(400, view.child['childFour'].getEl().width());
 
 	},
 
@@ -27,10 +27,10 @@ TestCase("CompabilityTest", {
 		var view = this.getView('rows');
 
 		// then
-		assertEquals(300, view.child['childOne'].getEl().offsetHeight);
-		assertEquals(200, view.child['childTwo'].getEl().offsetHeight);
-		assertEquals(200, view.child['childThree'].getEl().offsetHeight);
-		assertEquals(400, view.child['childFour'].getEl().offsetHeight);
+		assertEquals(300, view.child['childOne'].getEl().height());
+		assertEquals(200, view.child['childTwo'].getEl().height());
+		assertEquals(200, view.child['childThree'].getEl().height());
+		assertEquals(400, view.child['childFour'].getEl().height());
 
 	},
 

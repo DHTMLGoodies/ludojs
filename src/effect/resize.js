@@ -158,6 +158,7 @@ ludo.effect.Resize = new Class({
     },
 
     startResize:function (e) {
+
         var region = $(e.target).attr('region');
         /**
          * Fired when starting resize
@@ -169,11 +170,12 @@ ludo.effect.Resize = new Class({
 		ludo.EffectObject.start();
 
         this.dragProperties = {
+            a:1,
             active:true,
             region:region,
             start:{ x:e.pageX, y:e.pageY },
             current:{x:e.pageX, y:e.pageY },
-            el:this.getShimCoordinates(),
+            el: this.getShimCoordinates(),
             minWidth:this.minWidth,
             maxWidth:this.maxWidth,
             minHeight:this.minHeight,
@@ -213,9 +215,12 @@ ludo.effect.Resize = new Class({
         if (this.maxHeight !== undefined)maxWidth = this.maxHeight * ratio;
         if (this.minHeight !== undefined)minWidth = this.minHeight * ratio;
 
-        var coords = this.getEl().position();
-        var absMaxWidth = this.getBodyWidth() - coords.x;
-        var absMaxHeight = this.getBodyHeight() - coords.y;
+        var coords = this.getEl().offset();
+        var absMaxWidth = this.getBodyWidth() - coords.left;
+        var absMaxHeight = this.getBodyHeight() - coords.top;
+
+
+        console.log(JSON.stringify(coords));
 
         d.minWidth = Math.max(minWidth || 0, this.minWidth || 0);
         d.maxWidth = Math.min(maxWidth || absMaxWidth, this.maxWidth || absMaxWidth);
@@ -266,6 +271,7 @@ ludo.effect.Resize = new Class({
     },
 
     getDragMaxY:function () {
+
         var ret, d = this.dragProperties, r = d.region;
         if (d.minHeight !== undefined && this.yRegions[0].indexOf(r) >= 0) {
             ret = d.el.top + d.el.height - d.minHeight;
@@ -487,7 +493,7 @@ ludo.effect.Resize = new Class({
 
     getShimCoordinates:function () {
         var el = this.getEl();
-        var coords = el.position();
+        var coords = el.offset();
         coords.width = el.width();
         coords.height = el.height();
 
@@ -533,21 +539,20 @@ ludo.effect.Resize = new Class({
 
     getAspectRatio:function () {
         if (this.aspectRatio === undefined) {
-            var size = ludo.dom.size(this.getEl());
-            this.aspectRatio = size.x / size.y;
+            this.aspectRatio = this.getEl().width() / this.getEl().height();
         }
         return this.aspectRatio;
     },
 
     getBodyWidth:function () {
-        return document.documentElement.offsetWidth;
+        return $(document.documentElement).width();
     },
     getBodyHeight:function () {
-        return document.documentElement.offsetHeight;
+        return $(document.documentElement).height();
     },
 
     getScalingFactors:function () {
-        var size = ludo.dom.size(this.getEl());
+        var size = { x: this.getEl().width(), y: this.getEl().height() };
         return {
             xFactor:size.x / size.y,
             yFactor:size.y / size.x,

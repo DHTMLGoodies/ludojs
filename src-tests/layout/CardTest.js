@@ -131,8 +131,12 @@ TestCase("CardLayout", {
 	},
 
 	getDeckWithProgressBar:function (animate) {
+
+		var id = String.uniqueID();;
+
 		return new ludo.FramedView({
 			animate:animate,
+			id:id,
 			layout:{
 				type:'card'
 			},
@@ -148,16 +152,16 @@ TestCase("CardLayout", {
 			},
 			buttonBar:[
 				{
-					type:'card.ProgressBar', name:'progress-bar'
+					type:'card.ProgressBar', name:'progress-bar', applyTo:id
 				},
 				{
-					type:'card.PreviousButton', name:'previousButton'
+					type:'card.PreviousButton', name:'previousButton', applyTo:id
 				},
 				{
-					type:'card.NextButton', name:'nextButton'
+					type:'card.NextButton', name:'nextButton', applyTo:id
 				},
 				{
-					type:'card.FinishButton', name:'finishButton'
+					type:'card.FinishButton', name:'finishButton', applyTo:id
 				}
 			]
 		});
@@ -887,14 +891,14 @@ TestCase("CardLayout", {
 		var button = deck.getLayout().getButton('finishButton');
 		// when
 		assertFalse(button.isDisabled());
-		deck.submit();
+		deck.getForm().save();
 		// then
 		assertTrue(button.isDisabled());
 	},
 	"test should be able to have progress bar":function () {
 		// given
 		var deck = this.getDeckWithProgressBar();
-		var bar = deck.getLayout().getButton('progress-bar');
+		var bar = deck.getButton('progress-bar');
 
 		assertNotUndefined(bar);
 		assertFalse(bar.isHidden())
@@ -903,32 +907,36 @@ TestCase("CardLayout", {
 		// given
 		var deck = this.getDeckWithProgressBar();
 		// when
-		var bar = deck.getLayout().getButton('progress-bar');
+		var bar = deck.getButton('progress-bar');
 		// then
-		assertEquals('card', bar.component.layout.type);
+		assertNotUndefined(bar.getParent());
+		assertNotUndefined(bar.getParent().component);
+		assertEquals('card', bar.getParent().component.layout.type);
 	},
 	"test should move progress bar when going to next card":function () {
 		// given
 		var deck = this.getDeckWithProgressBar();
-		var bar = deck.getLayout().getButton('progress-bar');
+		var progressBar = deck.getButton('progress-bar');
 
 		// when
 		deck.getLayout().showCard('card2');
 
 		// then
-		assertEquals(40, bar.getCurrentPercent());
+		assertNotUndefined(progressBar);
+		assertEquals(40, progressBar.getCurrentPercent());
 		// when
 		deck.getLayout().showCard('lastcard');
 
 		// then
-		assertEquals(100, bar.getCurrentPercent());
+		assertEquals(100, progressBar.getCurrentPercent());
 	},
 	"test progress bar should set initial percent":function () {
 		// given
 		var deck = this.getDeckWithProgressBar();
 		// when
-		var bar = deck.getLayout().getButton('progress-bar');
+		var bar = deck.getButton('progress-bar');
 		// then
+		assertNotUndefined(bar);
 		assertEquals(20, bar.getCurrentPercent());
 	},
 	"test next button should initial be disabled when first card contains invalid form":function () {

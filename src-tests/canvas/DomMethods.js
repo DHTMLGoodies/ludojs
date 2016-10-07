@@ -23,7 +23,7 @@ TestCase("DomMethods", {
 			'getTotalLength',
 			'getPointAtLength', // Nearest <svg> element
 			'getPathSegAtLength',
-			'pathSegList',
+			// 'pathSegList',
 			'transform',
 			'getBBox',
 			'compareDocumentPosition'

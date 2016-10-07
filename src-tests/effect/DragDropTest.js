@@ -255,8 +255,6 @@ TestCase("DragDropTest", {
 		var eventFired = false;
 
 		c.add(draggable);
-		console.log(JSON.stringify(draggable));
-		console.log(JSON.stringify(dropPoint));
 		c.addDropTarget(dropPoint);
 
 		c.addEvent('invalidDropTarget', function () {

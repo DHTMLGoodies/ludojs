@@ -5,7 +5,7 @@ TestCase("Notification", {
 		});
 
 		// then
-		assertEquals(document.body, n.layout.centerIn);
+		assertEquals($(document.body).attr("id"), n.layout.centerIn.attr("id"));
 
 	}
 

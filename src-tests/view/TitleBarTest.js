@@ -9,7 +9,7 @@ TestCase("TitleBarTest", {
         var titleBarHeight = v.getHeightOfTitleBar();
 
         // then
-        assertEquals(titleBarHeight + 'px', v.getEl().style.height);
+        assertEquals(titleBarHeight + 'px', v.getEl().css('height'));
 
     },
 
@@ -23,7 +23,7 @@ TestCase("TitleBarTest", {
         var titleBarHeight = v.getHeightOfTitleBar();
 
         // then
-        assertEquals('300px', v.getEl().style.height);
+        assertEquals('300px', v.getEl().css('height'));
 
     },
 
@@ -35,19 +35,18 @@ TestCase("TitleBarTest", {
         v.getTitleBar().fireEvent('close');
 
         // then
-        assertEquals('none', v.getEl().style.display);
+        assertEquals('none', v.getEl().css('display'));
     },
 
 	"test should have button DOM": function(){
 		// given
 		var v = this.getView();
 		// when
-		var els = v.getEl().getElements('.ludo-title-bar-button');
 
 		// then
 
-		assertEquals('div', v.getEl().getElement('.ludo-title-bar-button-close').tagName.toLowerCase());
-		assertEquals('div', v.getEl().getElement('.ludo-title-bar-button-minimize').tagName.toLowerCase());
+		assertEquals('div', v.getEl().find('.ludo-title-bar-button-close').first().prop("tagName").toLowerCase());
+		assertEquals('div', v.getEl().find('.ludo-title-bar-button-minimize').first().prop("tagName").toLowerCase());
 	},
 
     getView:function(){

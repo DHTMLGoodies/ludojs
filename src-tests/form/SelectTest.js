@@ -71,7 +71,7 @@ TestCase("SelectTest", {
     },
 
     getOptions:function(s){
-        return s.getFormEl().getElements('option');
+        return s.getFormEl().find('option');
     }
 
 });

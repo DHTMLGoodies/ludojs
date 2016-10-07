@@ -7,29 +7,29 @@
  */
 ludo.card.ProgressBar = new Class({
     Extends: ludo.progress.Bar,
-    hidden:false,
-	applyTo:undefined,
+    hidden: false,
+    applyTo: undefined,
 
-    ludoEvents:function(){
+    ludoEvents: function () {
         this.parent();
-        if(this.applyTo){
-			this.applyTo.getLayout().registerButton(this);
-			this.applyTo.getLayout().addEvent('showcard', this.setCardPercent.bind(this))
-		}
+        if (this.applyTo) {
+            this.applyTo.getLayout().registerButton(this);
+            this.applyTo.getLayout().addEvent('showcard', this.setCardPercent.bind(this))
+        }
     },
 
-    ludoRendered:function(){
+    ludoRendered: function () {
         this.parent();
-		if(this.applyTo){
-			this.setCardPercent();
-		}
+        if (this.applyTo) {
+            this.setCardPercent();
+        }
     },
 
-    setCardPercent:function(){
+    setCardPercent: function () {
         this.setPercent(this.applyTo.getLayout().getPercentCompleted());
     },
 
-    getProgressBarId:function(){
+    getProgressBarId: function () {
         return undefined;
     }
 });

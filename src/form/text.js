@@ -183,11 +183,11 @@ ludo.form.Text = new Class({
                         tokens[i] = tokens[i].substr(0, 1).toUpperCase() + tokens[i].substr(1);
                     }
                 }
-                this.getFormEl().set('value', tokens.join(' '));
+                this.getFormEl().val(tokens.join(' '));
             }
             else {
                 val = val.substr(0, 1).toUpperCase() + val.substr(1);
-                this.getFormEl().set('value', val);
+                this.getFormEl().val(val);
             }
         }
     },

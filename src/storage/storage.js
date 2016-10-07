@@ -15,6 +15,7 @@ ludo.storage.LocalStorage = new Class({
 		localStorage[this.getTypeKey(key)] = type;
 	},
 
+	/** TODO (2016) Implement support for default value */
 	get:function(key){
 		if(!this.supported)return undefined;
 		var type = this.getType(key);

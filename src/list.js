@@ -11,7 +11,7 @@ ludo.List = new Class({
 
     ludoEvents:function () {
         this.parent();
-        this.getBody().addEvent('click', this.onClick.bind(this));
+        this.getBody().on('click', this.onClick.bind(this));
     },
 
     ludoRendered:function () {
@@ -40,18 +40,13 @@ ludo.List = new Class({
         b.html('');
 
         for (var i = 0; i < data.length; i++) {
-            var el = document.id(ludo.dom.create({
-                tag:'div',
-                id : 'list-' + d[i].uid,
-                html:data[i],
-                css:{ "cursor": "pointer" },
-                cls : 'ludo-list-item',
-                renderTo:b
-            }));
-            this.recordMap[d[i].uid] = el.id;
+            var id = 'list-' + d[i].uid;
+            var el = $('<div class="ludo-list-item" style="cursor:pointer" id="' + id + '">' + data[i] + '</div>');
+            b.append(el);
+            this.recordMap[d[i].uid] = id;
 
-            el.addEvent('mouseenter', this.enter.bind(this));
-            el.addEvent('mouseleave', this.leave.bind(this));
+            el.mouseenter(this.enter.bind(this));
+            el.mouseleave(this.leave.bind(this));
         }
 
         var selected = this.getDataSource().getSelectedRecord();
@@ -81,7 +76,7 @@ ludo.List = new Class({
     getRecordId:function(el){
         el = this.getRecordDOM(el);
         if(el){
-            return el.id.replace('list-', '');
+            return el.attr("id").replace('list-', '');
         }
         return undefined;
     },
@@ -118,7 +113,7 @@ ludo.List = new Class({
     },
 
     onClick:function (e) {
-        var recId = this.getRecordId(e.target);
+        var recId = this.getRecordId($(e.target));
         if(recId)this.getDataSource().getRecord(recId).select();
     }
 });

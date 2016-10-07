@@ -22,11 +22,28 @@ TestCase("ColorTestForm", {
 		el.getDependency('menuButton').showMenu();
 		this.showRGBSlider(el);
 
-        console.log(el);
 		// then
 		assertEquals(255, this.getSlider(el, 'red').getValue());
 		assertEquals(170, this.getSlider(el, 'green').getValue());
 		assertEquals(34, this.getSlider(el, 'blue').getValue());
+	},
+
+	"test should fire event on change": function(){
+		// given
+		var el = this.getColorWidget();
+
+		var triggered = false;
+
+		el.addEvent('change', function(){
+			triggered = true
+		});
+
+		el.setValue('#ffaa22');
+		el.change();
+
+		assertTrue(triggered);
+
+
 	},
 
 	"test should update widgets when value is changed after widgets has been opened": function(){
@@ -35,12 +52,16 @@ TestCase("ColorTestForm", {
 
 		// when
 		el.getDependency('menuButton').showMenu();
-		this.showRGBSlider(el);
+
+		el.children[0].child['slider'].show();
 		el.setValue('#ffaa22');
+
+		assertEquals('#ffaa22', el.value);
 		el.change();
+		assertEquals('#ffaa22', el.value);
 
 		// then
-		assertEquals('#ffaa22', this.getRGBSlider(el).value);
+		assertEquals('#ffaa22', el.children[0].child['slider'].value);
 		assertEquals(255, this.getSlider(el, 'red').getValue());
 		assertEquals(170, this.getSlider(el, 'green').getValue());
 		assertEquals(34, this.getSlider(el, 'blue').getValue());
