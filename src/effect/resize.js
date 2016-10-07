@@ -219,9 +219,6 @@ ludo.effect.Resize = new Class({
         var absMaxWidth = this.getBodyWidth() - coords.left;
         var absMaxHeight = this.getBodyHeight() - coords.top;
 
-
-        console.log(JSON.stringify(coords));
-
         d.minWidth = Math.max(minWidth || 0, this.minWidth || 0);
         d.maxWidth = Math.min(maxWidth || absMaxWidth, this.maxWidth || absMaxWidth);
         d.minHeight = Math.max(minHeight || 0, this.minHeight || 0);

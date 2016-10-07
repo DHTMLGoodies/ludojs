@@ -1,5 +1,11 @@
 TestCase("SocketTest", {
 
+
+	"setUp": function(){
+		document.head.innerHTML = '';
+		ludo.socket.libLoaded = undefined;
+	},
+
 	"test should be able to defined socket events":function () {
 		// given
 		var c = new ludo.View({
@@ -76,7 +82,7 @@ TestCase("SocketTest", {
 		var index1 = document.documentElement.innerHTML.indexOf(url);
 		var index2 = document.documentElement.innerHTML.indexOf(url, index1 + url.length);
 
-		assertEquals(-1, index2);
+		assertEquals(document.documentElement.innerHTML.substring(index1), -1, index2);
 	},
 	"test should find parent component":function () {
 		// given

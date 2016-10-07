@@ -8,6 +8,7 @@ load:
   - ../src/chart/gauge.js
   - ../src/layout/card.js
   - ../src/card/progress-bar.js
+  - ../src/socket/socket.js
 
 test:
   - canvas/*.js
