@@ -150,19 +150,7 @@ ludo.form.FilterText = new Class({
         }
         return null;
     },
-    /**
-     * Return value of text field. On standard text fields the visible value will be returned. Otherwise the id of selected record will be returned
-     * @method getValue
-     * @return string value
-     */
-    getValue:function () {
-        var hiddenInput = this.getHiddenInput();
 
-        if (hiddenInput) {
-            return hiddenInput.get('value');
-        }
-        return this.parent();
-    },
 
     setAutoCompleteRecord:function (record) {
         this.els.autoComplete.val(record[this.displayField]);
@@ -247,6 +235,24 @@ ludo.form.FilterText = new Class({
         this.filter();
     },
 
+    getValue:function(){
+        console.warn("Use of deprecated getValue");
+        console.warn();
+    },
+    /**
+     * Return value of text field. On standard text fields the visible value will be returned. Otherwise the id of selected record will be returned
+     * @method getValue
+     * @return string value
+     */
+    _get:function () {
+        var hiddenInput = this.getHiddenInput();
+
+        if (hiddenInput) {
+            return hiddenInput.get('value');
+        }
+        return this.parent();
+    },
+
     /**
      * If record is part of data collection in memory(config.data or remotely loaded records), it will be shown,
      * if remote.url is set it will search for request to the server for the record. The query will look like this:
@@ -255,7 +261,7 @@ ludo.form.FilterText = new Class({
      * @method setValue
      * @param {String} value
      */
-    setValue:function (value) {
+    _set:function (value) {
         if (this.remote.url) {
             var obj = {};
             obj[this.idField] = value;
@@ -264,6 +270,8 @@ ludo.form.FilterText = new Class({
             this.parent(value);
         }
     },
+    
+    
 
     setRecord:function (record) {
         this.selectedRecord = record;

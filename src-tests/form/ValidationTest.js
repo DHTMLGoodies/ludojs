@@ -21,7 +21,7 @@ TestCase("ValidationTest", {
 		var cmp = this.getFormComponent('Text', { minLength:5});
 
 		// when
-		cmp.setValue('');
+		cmp.val('');
 
 		// then
         assertEquals(1, cmp.validators.length);
@@ -33,7 +33,7 @@ TestCase("ValidationTest", {
 		var cmp = this.getFormComponent('Text', { maxLength:5});
 
 		// when
-		cmp.setValue('San Fransisco');
+		cmp.val('San Fransisco');
 
 		// then
         assertEquals('maxLength', cmp.validators[0].key);
@@ -48,7 +48,7 @@ TestCase("ValidationTest", {
 		}});
 
 		// when
-		cmp.setValue('Invalid value');
+		cmp.val('Invalid value');
         
 		// then
         assertEquals(1, cmp.validators.length);
@@ -62,7 +62,7 @@ TestCase("ValidationTest", {
 		}});
 
 		// when
-		cmp.setValue('Valid value');
+		cmp.val('Valid value');
 
 		// then
 		assertTrue(cmp.isValid());
@@ -73,7 +73,7 @@ TestCase("ValidationTest", {
 		var cmp = this.getFormComponent('Number', { minValue:100, maxValue:255 });
 
 		// when
-		cmp.setValue(333);
+		cmp.val(333);
 
 		// then
 		assertFalse(cmp.isValid());
@@ -85,7 +85,7 @@ TestCase("ValidationTest", {
 		var cmp = this.getFormComponent('Number', { minValue:100, maxValue:255 });
 
 		// when
-		cmp.setValue(50);
+		cmp.val(50);
 
 		// then
         assertEquals('50', cmp.getFormEl().val().trim());
@@ -103,7 +103,7 @@ TestCase("ValidationTest", {
 		var cmp = this.getFormComponent('Number', { minValue:100, maxValue:255 });
 
 		// when
-		cmp.setValue(150);
+		cmp.val(150);
 
 		// then
         assertEquals(3, cmp.validators.length);
@@ -115,13 +115,13 @@ TestCase("ValidationTest", {
 		var cmp = this.getFormComponent('Text', { regex:'[a-z]', regexFlags:'g' });
 
 		// when
-		cmp.setValue('INVALID');
+		cmp.val('INVALID');
 
 		// then
 		assertFalse(cmp.isValid());
 
 		// when
-		cmp.setValue('123');
+		cmp.val('123');
 
 		// then
 		assertFalse(cmp.isValid());
@@ -133,13 +133,13 @@ TestCase("ValidationTest", {
         var cmp = this.getFormComponent('Email', { });
 
         // when
-        cmp.setValue('alf.magne.kalleland@gmail.com');
+        cmp.val('alf.magne.kalleland@gmail.com');
 
         // then
         assertTrue(cmp.isValid());
 
         // when
-        cmp.setValue('invalid@v');
+        cmp.val('invalid@v');
 
         // then
         assertFalse(cmp.isValid());
@@ -150,13 +150,13 @@ TestCase("ValidationTest", {
 		var cmp = this.getFormComponent('Text', { regex:/[a-z0-9\s]/ });
 
 		// when
-		cmp.setValue('valid expression');
+		cmp.val('valid expression');
 
 		// then
 		assertTrue(cmp.isValid());
 
 		// when
-		cmp.setValue('123');
+		cmp.val('123');
 
 		// then
 		assertTrue(cmp.isValid());
@@ -212,7 +212,7 @@ TestCase("ValidationTest", {
         var cmp = this.getFormComponent('Number', { value:100, minValue:50, maxValue:255});
 
         // when
-        cmp.setValue('20');
+        cmp.val('20');
 
         // then
         assertFalse(cmp.isValid());
@@ -223,7 +223,7 @@ TestCase("ValidationTest", {
         var cmp = this.getFormComponent('Number', { value:100, minValue:50, maxValue:255});
 
         // when
-        cmp.setValue('300');
+        cmp.val('300');
 
         // then
         assertFalse(cmp.isValid());
@@ -235,7 +235,7 @@ TestCase("ValidationTest", {
         // then
         assertFalse(cmp.isValid());
         // when
-        cmp.setValue('20');
+        cmp.val('20');
 
 
         // then

@@ -116,7 +116,7 @@ ludo.color.RGBSlider = new Class({
         var color = '#';
 
         for (var i = 0; i < items.length; i++) {
-            color = color + this.prefixed(parseInt(this.child[items[i]].getValue()).toString(16));
+            color = color + this.prefixed(parseInt(this.child[items[i]].val()).toString(16));
         }
         this.child['preview'].getBody().css('backgroundColor',  color);
         this.child['preview'].child['colorValue'].setColor(color);
@@ -144,9 +144,9 @@ ludo.color.RGBSlider = new Class({
 
         var color = this.colorInstance().rgbObject(this.value);
 
-        this.child['red'].setValue(color.r);
-        this.child['green'].setValue(color.g);
-        this.child['blue'].setValue(color.b);
+        this.child['red'].val(color.r);
+        this.child['green'].val(color.g);
+        this.child['blue'].val(color.b);
         this.updatePreview();
     }
 });

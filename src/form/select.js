@@ -121,7 +121,7 @@ ludo.form.Select = new Class({
     },
 
     selectRecord:function (record) {
-        this.setValue(record[this.valueKey]);
+        this._set(record[this.valueKey]);
         this.toggleDirtyFlag();
     },
 
@@ -137,7 +137,7 @@ ludo.form.Select = new Class({
         }
 
         if (this.value) {
-            this.setValue(this.value);
+            this._set(this.value);
 			this.setFormElValue(this.value);
         }
     },

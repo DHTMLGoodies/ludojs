@@ -32,7 +32,13 @@ ludo.form.Password = new Class({
 		if (config.md5 !== undefined)this.md5 = config.md5;
 	},
 
-	getValue:function () {
+	getValue:function(){
+		console.warn("Use of deprecated getValue");
+		console.trace();
+		return this._get();
+	},
+
+	_get:function () {
 		var val = this.parent();
 		if (val.length && this.md5) {
 			return faultylabs.MD5(val);
@@ -41,6 +47,6 @@ ludo.form.Password = new Class({
 	},
 
 	reset:function () {
-		this.setValue('');
+		this._set('');
 	}
 });

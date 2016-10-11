@@ -46,8 +46,8 @@ TestCase("ManagerTest", {
 		var cmp = this.getComponent();
 		var manager = cmp.getForm();
 		// when
-		cmp.child['firstname'].setValue('Jane');
-		cmp.child['address'].setValue('Park Avenue 5');
+		cmp.child['firstname'].val('Jane');
+		cmp.child['address'].val('Park Avenue 5');
 
 		var values = manager.getValues();
 
@@ -61,9 +61,9 @@ TestCase("ManagerTest", {
 		var cmp = this.getComponent();
 		var manager = cmp.getForm();
 		// when
-		cmp.child['firstname'].setValue('Jane');
-		cmp.child['lastname'].setValue('Johnson');
-		cmp.child['address'].setValue('Park Avenue 5');
+		cmp.child['firstname'].val('Jane');
+		cmp.child['lastname'].val('Johnson');
+		cmp.child['address'].val('Park Avenue 5');
 
 		manager.reset();
 		var values = manager.getValues();
@@ -163,7 +163,7 @@ TestCase("ManagerTest", {
 			eventFired = true;
 		});
 
-		firstname.setValue('ab');
+		firstname.val('ab');
 		assertFalse('component should be invalid', component.child['firstname'].isValid());
 		assertTrue('Form element not registered', mgr.formComponents.indexOf(firstname) >= 0);
 		// then
@@ -193,7 +193,7 @@ TestCase("ManagerTest", {
 		v.getForm().set('firstname', 'Alf');
 
 		// then
-		assertEquals('Alf', v.child['firstname'].getValue());
+		assertEquals('Alf', v.child['firstname'].val());
 	},
 
 	"test should be able to get value from form manager": function(){
@@ -213,7 +213,7 @@ TestCase("ManagerTest", {
 		v.getForm().readHandler().fireEvent('success', this.getReadResponseMock());
 
 		// then
-		assertEquals('Jonathan', v.child['firstname'].getValue());
+		assertEquals('Jonathan', v.child['firstname'].val());
 
 	},
 
@@ -242,7 +242,7 @@ TestCase("ManagerTest", {
         // then
         assertTrue('Cache not enabled', v.getForm().cache);
         assertTrue('Is not in cache', v.getForm().isInCache(1));
-        assertEquals('Amanda', v.child['firstname'].getValue());
+        assertEquals('Amanda', v.child['firstname'].val());
 
     },
 
@@ -268,7 +268,7 @@ TestCase("ManagerTest", {
         });
         v.getForm().read(1);
 
-        v.child['firstname'].setValue('Anton');
+        v.child['firstname'].val('Anton');
 
         var cached = v.getForm().getCached(1);
 

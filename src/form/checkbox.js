@@ -147,7 +147,13 @@ ludo.form.Checkbox = new Class({
 
     },
 
-    getValue:function () {
+    getValue:function(){
+        console.warn("Use of deprecated getValue");
+        console.trace();
+        return this.isChecked() ? this.getFormEl().val() : '';
+    },
+
+    _get:function () {
         return this.isChecked() ? this.getFormEl().val() : '';
     },
     /**
@@ -157,8 +163,8 @@ ludo.form.Checkbox = new Class({
      */
     setChecked:function (checked) {
         this.setCheckedProperty(checked);
-        this.fireEvent('change', [this.getValue(), this]);
-        this.value = this.getValue();
+        this.fireEvent('change', [this._get(), this]);
+        this.value = this._get();
         this.toggleImage();
         this.toggleDirtyFlag();
     },
@@ -172,13 +178,13 @@ ludo.form.Checkbox = new Class({
     },
 
     valueChange:function(){
-        this.value = this.isChecked() ? this.getFormEl().get('value') : '';
+        this.value = this.isChecked() ? this.getFormEl().val() : '';
         this.toggleDirtyFlag();
     },
 
     reset:function(){
         this.setCheckedProperty(this.initialValue ? true : false);
-        this.fireEvent('valueChange', [this.getValue(), this]);
+        this.fireEvent('valueChange', [this._get(), this]);
         this.toggleImage();
     },
 

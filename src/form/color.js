@@ -69,7 +69,7 @@ ludo.form.Color = new Class({
 	},
 
 	receiveColor:function (color) {
-		this.setValue(color);
+		this.val(color);
 		this.hideMenu();
 	},
 

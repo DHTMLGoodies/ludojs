@@ -89,7 +89,7 @@ ludo.form.Number = new Class({
             if (this.maxValue!==undefined && parseInt(value) > this.maxValue) {
                 value = this.maxValue;
             }
-            this.setValue(value);
+            this._set(value);
         }
         this.parent();
     },
@@ -110,7 +110,7 @@ ludo.form.Number = new Class({
         if(this.maxValue && value > this.maxValue)value = this.maxValue;
         if(this.minValue !== undefined && value < this.minValue)value = this.minValue;
         if(this.isValid(value)){
-            this.setValue(value);
+            this._set(value);
 			this.fireEvent('change', [ value, this ]);
         }
     }

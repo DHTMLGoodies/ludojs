@@ -340,7 +340,7 @@ ludo.form.Element = new Class({
     },
     change:function () {
         if (this.els.formEl) {
-            this.setValue(this.els.formEl.val());
+            this.val(this.els.formEl.val());
         }
         /**
          * On change event. This event is fired when value is changed manually
@@ -353,7 +353,7 @@ ludo.form.Element = new Class({
          * @param {String|Boolean|Object|Number} value
          * $param {View} this
          */
-        if (this.wasValid)this.fireEvent('change', [ this.getValue(), this ]);
+        if (this.wasValid)this.fireEvent('change', [ this._get(), this ]);
     },
 
     blur:function () {
@@ -414,15 +414,24 @@ ludo.form.Element = new Class({
      * @return string
      */
     getValue:function () {
+        console.warn("Use of deprecated getValue");
+        console.trace();
         return this.els.formEl ? this.els.formEl.val() : this.value;
     },
-    /**
-     * Set new value
-     * @method setValue
-     * @param value
-     * @return void
-     */
-    setValue:function (value) {
+
+
+    val:function(val){
+        if(arguments.length == 0){
+            return this._get();
+        }
+        this._set(val);
+    },
+
+    _get:function(){
+        return this.els.formEl ? this.els.formEl.val() : this.value;
+    },
+
+    _set:function(value){
         if (!this.isReady) {
             if(value)this.setValue.delay(50, this, value);
             return;
@@ -449,7 +458,50 @@ ludo.form.Element = new Class({
              * @param {Object|String|Number} value
              * @param {form.Element} form component
              */
-            this.fireEvent('valueChange', [this.getValue(), this]);
+            this.fireEvent('valueChange', [this._get(), this]);
+            if (this.stateful)this.fireEvent('state');
+            if (this.linkWith)this.updateLinked();
+        }
+
+        this.fireEvent('value', value);
+    },
+
+    /**
+     * Set new value
+     * @method setValue
+     * @param value
+     * @return void
+     */
+    setValue:function (value) {
+        console.warn("Use of deprecated setValue");
+        console.trace();
+        if (!this.isReady) {
+            if(value)this.val.delay(50, this, value);
+            return;
+        }
+
+        if (value == this.value) {
+            return;
+        }
+
+        this.setFormElValue(value);
+        this.value = value;
+
+
+
+        this.validate();
+
+        if (this.wasValid) {
+            /**
+             * This event is fired whenever current value is changed, either
+             * manually by user or by calling setValue. When the value is changed
+             * manually by user via GUI, the "change" event is fired first, then
+             * "valueChange" afterwards.
+             * @event valueChange
+             * @param {Object|String|Number} value
+             * @param {form.Element} form component
+             */
+            this.fireEvent('valueChange', [this._get(), this]);
             if (this.stateful)this.fireEvent('state');
             if (this.linkWith)this.updateLinked();
         }
@@ -531,7 +583,7 @@ ludo.form.Element = new Class({
      * @return void
      */
     reset:function () {
-        this.setValue(this.initialValue);
+        this._set(this.initialValue);
     },
 
     /**
@@ -540,7 +592,7 @@ ludo.form.Element = new Class({
      * @return void
      */
     clear:function () {
-        this.setValue(this.constructorValue);
+        this._set(this.constructorValue);
     },
 
     /**
@@ -583,7 +635,7 @@ ludo.form.Element = new Class({
     updateLinked:function () {
         var cmp = this.getLinkWith();
         if (cmp && cmp.value !== this.value) {
-            cmp.setValue(this.value);
+            cmp._set(this.value);
         }
     },
 
@@ -598,7 +650,7 @@ ludo.form.Element = new Class({
         if (cmp && !cmp.linkWith) {
             if (this.value === undefined){
 				this.initialValue = this.constructorValue = cmp.value;
-				this.setValue(cmp.value);
+				this._set(cmp.value);
 			}
             cmp.setLinkWith(this);
         } else {

@@ -7,7 +7,7 @@ TestCase("DateTest", {
         });
 
         // then
-        assertEquals('1973-09-06', d.getValue());
+        assertEquals('1973-09-06', d.val());
 
     },
 
@@ -28,7 +28,7 @@ TestCase("DateTest", {
         this.changeByForm(d, '06.09.1973');
 
         // then
-        assertEquals('1973-09-06', d.getValue());
+        assertEquals('1973-09-06', d.val());
 
     },
 
@@ -41,10 +41,10 @@ TestCase("DateTest", {
         var d = this.getDatePicker();
 
         // when
-        d.children[0].setValue(Date.parse('1973-09-06'));
+        d.children[0].val(Date.parse('1973-09-06'));
 
         // then
-        assertEquals('1973-09-06', d.getValue());
+        assertEquals('1973-09-06', d.val());
     },
 
     "test should set form to dirty when picking value from date picker": function(){
@@ -52,7 +52,7 @@ TestCase("DateTest", {
         var d = this.getDatePicker();
 
         // when
-        d.children[0].setValue(Date.parse('1973-09-06'));
+        d.children[0].val(Date.parse('1973-09-06'));
 
         // then
         assertTrue(d.isDirty());
@@ -68,16 +68,16 @@ TestCase("DateTest", {
 
         // then
         assertUndefined(d.value);
-        assertUndefined(d.getValue());
+        assertUndefined(d.val());
 
         // when
-        d.children[0].setValue(Date.parse('2011-02-02'));
-        assertEquals('2011-02-02', d.getValue());
+        d.children[0].val(Date.parse('2011-02-02'));
+        assertEquals('2011-02-02', d.val());
         view.getForm().reset();
 
         // then
         assertUndefined(d.value);
-        assertUndefined(d.getValue());
+        assertUndefined(d.val());
         assertEquals('', d.getFormEl().val());
 
     },

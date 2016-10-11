@@ -312,7 +312,7 @@ ludo.form.File = new Class({
 	},
 
 	getExtension:function () {
-		var file = this.getValue();
+		var file = this._get();
 		var tokens = file.split(/\./g);
         return tokens.pop().toLowerCase();
 	},
@@ -380,6 +380,13 @@ ludo.form.File = new Class({
 	},
 
 	getValue:function () {
+		console.warn("Use of deprecated getValue");
+		console.trace();
+		return this.value;
+	},
+
+
+	_get:function(){
 		return this.value;
 	},
 	/**
@@ -388,6 +395,23 @@ ludo.form.File = new Class({
 	 * @param {Object} value
 	 */
 	setValue:function (value) {
+		console.warn("Use of deprecated setValue");
+		this.valueForDisplay = value;
+		this.displayFileName();
+		this.validate();
+	},
+
+	/**
+	 * "set" is readonly for file inputs. It will update the displayed file name, not the file input it's self.
+	 * Method without arguments returns the file input value
+	 * @method val
+	 * @param {Object} value
+	 */
+	val:function(value){
+		if(arguments.length == 0){
+			return this._get();
+		}
+
 		this.valueForDisplay = value;
 		this.displayFileName();
 		this.validate();

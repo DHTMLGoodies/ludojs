@@ -29,7 +29,7 @@ ludo.paging.PageSize = new Class({
 
 	setPageSize:function(){
 		if(this.applyTo){
-			this.applyTo.setPageSize(this.getValue());
+			this.applyTo.setPageSize(this.val());
 		}
 	}
 

@@ -85,12 +85,22 @@ ludo.calendar.Calendar = new Class({
     getDate : function(){
         return this.value;
     },
+
+    val:function(date, sentByComponent){
+        if(arguments.length == 0){
+            return this.value.format(this.inputFormat);
+        }
+        this.value = Date.parse(date);
+        this.fireEvent('change', [this.value, this]);
+    },
     /**
      * Returns selected date
      * @method getValue
      * @return {String} selected date
      */
     getValue:function(){
+        console.warn("Use of deprecated calendar.getValue");
+        console.trace();
         return this.value.format(this.inputFormat);
     },
     /**
@@ -99,6 +109,8 @@ ludo.calendar.Calendar = new Class({
      * @param {Date} date
      */
     setValue:function(date){
+        console.warn("Use of deprecated calendar.setValue");
+        console.trace();
         this.value = Date.parse(date);
         this.fireEvent('change', [this.value, this]);
     },

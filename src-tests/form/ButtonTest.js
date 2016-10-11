@@ -66,7 +66,7 @@ TestCase("ButtonTest", {
 		var fn = cmp.child['firstname'];
 
         // when
-		fn.setValue('a');
+		fn.val('a');
         mgr.getFormElements();
 
         // then

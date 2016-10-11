@@ -205,7 +205,7 @@ ludo.form.Manager = new Class({
 		this.map[c.name] = c;
 
 		if(this.record && this.record[c.name]){
-			c.setValue(this.record[c.name]);
+			c.val(this.record[c.name]);
 		}
 
         if(this.cache && this.updateCacheOnChange){
@@ -242,7 +242,7 @@ ludo.form.Manager = new Class({
      */
 	set:function(key, value){
 		if(this.map[key]){
-			this.map[key].setValue(value);
+			this.map[key].val(value);
 		}
 	},
 
@@ -253,7 +253,7 @@ ludo.form.Manager = new Class({
      * @return {String|Number|Object}
      */
 	get:function(key){
-		return this.map[key] ? this.map[key].getValue() : undefined;
+		return this.map[key] ? this.map[key].val() : undefined;
 	},
 
 	registerProgressBar:function (view) {
@@ -368,7 +368,7 @@ ludo.form.Manager = new Class({
 		var ret = {};
 		for (var i = 0; i < this.formComponents.length; i++) {
 			var el = this.formComponents[i];
-			ret[el.getName()] = el.getValue();
+			ret[el.getName()] = el.val();
 		}
 
 		return ret;
@@ -561,7 +561,7 @@ ludo.form.Manager = new Class({
 		for(var key in this.map){
 			if(this.map.hasOwnProperty(key)){
 				if(data[key] !== undefined){
-					this.map[key].setValue(data[key]);
+					this.map[key].val(data[key]);
                     this.map[key].commit();
 				}else{
 					this.map[key].reset();

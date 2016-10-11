@@ -78,9 +78,9 @@ TestCase("SliderTest", {
         });
 
         // when
-        slider.setValue(15);
+        slider.val(15);
         // then
-        assertEquals(10, parseInt(slider.getValue()));
+        assertEquals(10, parseInt(slider.val()));
 
     },
     "test should choose min value when set value is less than min": function () {
@@ -91,9 +91,9 @@ TestCase("SliderTest", {
         });
 
         // when
-        slider.setValue(2);
+        slider.val(2);
         // then
-        assertEquals(5, parseInt(slider.getValue()));
+        assertEquals(5, parseInt(slider.val()));
     },
     "test should move slider handle when setting value": function () {
         // given
@@ -105,7 +105,7 @@ TestCase("SliderTest", {
         slider.sliderSize = 200;
 
         // when
-        slider.setValue(3);
+        slider.val(3);
 
         // then
         assertTrue('Pos was ' + this.getHandlePosition(slider), this.getHandlePosition(slider) > 0);
@@ -148,18 +148,18 @@ TestCase("SliderTest", {
         slider.handleSize = 5;
 
         // when
-        slider.setValue(0);
+        slider.val(0);
 
         // then
         assertEquals(200, this.getHandlePosition(slider));
 
         // when
-        slider.setValue(1);
+        slider.val(1);
         // then
         assertEquals(180, this.getHandlePosition(slider));
 
         // when
-        slider.setValue(10);
+        slider.val(10);
         // then
         assertEquals(0, this.getHandlePosition(slider));
     },
@@ -176,18 +176,18 @@ TestCase("SliderTest", {
         slider.handleSize = 5;
 
         // when
-        slider.setValue(2);
+        slider.val(2);
 
         // then
         assertEquals(0, this.getHandlePosition(slider));
 
         // when
-        slider.setValue(3);
+        slider.val(3);
         // then
         assertEquals(20, this.getHandlePosition(slider));
 
         // when
-        slider.setValue(12);
+        slider.val(12);
         // then
         assertEquals(200, this.getHandlePosition(slider));
     },
@@ -218,18 +218,18 @@ TestCase("SliderTest", {
         slider.handleSize = 5;
 
         // when
-        slider.setValue(12);
+        slider.val(12);
 
         // then
         assertEquals(0, this.getHandlePosition(slider));
 
         // when
-        slider.setValue(11);
+        slider.val(11);
         // then
         assertEquals(20, this.getHandlePosition(slider));
 
         // when
-        slider.setValue(2);
+        slider.val(2);
         // then
         assertEquals(200, this.getHandlePosition(slider));
 
@@ -242,7 +242,7 @@ TestCase("SliderTest", {
             maxValue: 99
         });
         slider.sliderSize = 200;
-        slider.setValue(2);
+        slider.val(2);
         var pos = slider.els.slider.position();
         // when
         var e = {
@@ -255,7 +255,7 @@ TestCase("SliderTest", {
         slider.sliderClick(e);
 
         // then
-        assertEquals(50, slider.getValue());
+        assertEquals(50, slider.val());
     }
 
 

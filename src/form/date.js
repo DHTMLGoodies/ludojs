@@ -46,7 +46,7 @@ ludo.form.Date = new Class({
 
         this.parent(child);
         this.children[0].addEvent('change', function(date){
-            this.setValue(ludo.util.parseDate(date, this.inputFormat));
+            this._set(ludo.util.parseDate(date, this.inputFormat));
             this.blur();
         }.bind(this));
     },
@@ -59,19 +59,36 @@ ludo.form.Date = new Class({
     },
 
     setValue:function(value){
+        console.warn("Use of deprecated setValue");
+        console.trace();
         value = value ? ludo.util.parseDate(value, this.displayFormat) : value;
         if(value && value.getYear && isNaN(value.getYear()))value = undefined;
         this.parent(value);
     },
+    getValue:function(){
+        console.warn("Use of deprecated getValue");
+        console.trace();
+        return this.value ? ludo.util.parseDate(this.value, this.displayFormat).format(this.inputFormat) : undefined;
+    },
 
+    val:function(value){
+        if(arguments.length == 0){
+            return this.value ? ludo.util.parseDate(this.value, this.displayFormat).format(this.inputFormat) : undefined;
+        }  
+        this._set(value);
+    },
+    
+    _set:function(value){
+        value = value ? ludo.util.parseDate(value, this.displayFormat) : value;
+        if(value && value.getYear && isNaN(value.getYear()))value = undefined;
+        this.parent(value);
+    },
+    
     setFormElValue:function(value){
         if (this.els.formEl && this.els.formEl.val() !== value) {
             value = value ? ludo.util.isString(value) ? value : value.format(this.displayFormat) : '';
             this.els.formEl.val(value);
         }
         this.children[0].hide();
-    },
-    getValue:function(){
-        return this.value ? ludo.util.parseDate(this.value, this.displayFormat).format(this.inputFormat) : undefined;
     }
 });

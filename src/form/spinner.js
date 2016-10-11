@@ -1,4 +1,5 @@
 // TODO this class should be rewritten
+/* Create spinner with buttons on each side */
 /**
  * Special form component used for Numbers. It will display control buttons
  * to the right of the input fields and you will be able to increment and decrement by
@@ -53,8 +54,9 @@ ludo.form.Spinner = new Class({
     ludoRendered:function () {
         this.parent();
         this.createSpinnerElements();
+
         if (!this.fieldWidth) {
-            this.getFormEl().setStyle('width', (this.maxValue + '').length * 15);
+            this.getFormEl().css('width', (this.maxValue + '').length * 15);
         }
         this._css();
         this._createEvents();
@@ -155,7 +157,7 @@ ludo.form.Spinner = new Class({
             name:'nudge',
             x:e.page.x,
             initValue:parseInt(this.getValue()),
-            labelWidth:this.els.label.getSize().x
+            labelWidth:this.els.label.width()
         });
         return false;
     },
@@ -248,7 +250,7 @@ ludo.form.Spinner = new Class({
         }
     },
     _arrowMouseDown:function (e) {
-        e.target.addClass('ludo-spinbox-arrow-downeffect');
+        $(e.target).addClass('ludo-spinbox-arrow-downeffect');
         var m = $(e.target).hasClass("ludo-spinbox-arrow-up") ? "up":"down";
         this._startMode({
             name:'mousedown',
@@ -269,8 +271,8 @@ ludo.form.Spinner = new Class({
     },
     incrementBy:function (value, shiftKey) {
         value = value * (shiftKey ? this.shiftIncrement : this.increment);
-
-        this.setSpinnerValue(parseInt(this.getValue()) + value);
+            console.log(value);
+        this.setSpinnerValue(parseInt(this._get()) + value);
     },
     validateSpinnerValue:function (value) {
         value = value || 0;

@@ -82,7 +82,7 @@ ludo.form.Form = new Class({
         var ret = {};
         for(var i=0;i<this.formComponents.length;i++){
             var cmp = this.formComponents[i];
-            ret[cmp.getName()] = cmp.getValue();
+            ret[cmp.getName()] = cmp._get();
         }
         return ret;
     },

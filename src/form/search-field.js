@@ -73,7 +73,7 @@ ludo.form.SearchField = new Class({
 
 	execute:function (value) {
 		if (value != this.lastValue || value == this.lastSearch)return undefined;
-		this.lastSearch =  this.getValue();
+		this.lastSearch =  this._get();
 		return this.search();
 	},
 
@@ -83,11 +83,11 @@ ludo.form.SearchField = new Class({
 	 */
 	search:function () {
 		if(this.remote){
-			this.searchIn.remoteSearch(this.getValue());
+			this.searchIn.remoteSearch(this._get());
 			return undefined;
 		}
 		else {
-			return this.searchIn.getSearcher().search(this.searchFn ? this.searchFn : this.getValue());
+			return this.searchIn.getSearcher().search(this.searchFn ? this.searchFn : this._get());
 		}
 	}
 });

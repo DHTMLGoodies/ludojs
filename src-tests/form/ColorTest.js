@@ -5,7 +5,7 @@ TestCase("ColorTestForm", {
 		var el = this.getColorWidget();
 
 		// when
-		el.setValue('#ffaa22');
+		el.val('#ffaa22');
 		el.getDependency('menuButton').showMenu();
 		this.showRGBSlider(el);
 
@@ -18,14 +18,14 @@ TestCase("ColorTestForm", {
 		var el = this.getColorWidget();
 
 		// when
-		el.setValue('#ffaa22');
+		el.val('#ffaa22');
 		el.getDependency('menuButton').showMenu();
 		this.showRGBSlider(el);
 
 		// then
-		assertEquals(255, this.getSlider(el, 'red').getValue());
-		assertEquals(170, this.getSlider(el, 'green').getValue());
-		assertEquals(34, this.getSlider(el, 'blue').getValue());
+		assertEquals(255, this.getSlider(el, 'red').val());
+		assertEquals(170, this.getSlider(el, 'green').val());
+		assertEquals(34, this.getSlider(el, 'blue').val());
 	},
 
 	"test should fire event on change": function(){
@@ -38,7 +38,7 @@ TestCase("ColorTestForm", {
 			triggered = true
 		});
 
-		el.setValue('#ffaa22');
+		el.val('#ffaa22');
 		el.change();
 
 		assertTrue(triggered);
@@ -54,7 +54,7 @@ TestCase("ColorTestForm", {
 		el.getDependency('menuButton').showMenu();
 
 		el.children[0].child['slider'].show();
-		el.setValue('#ffaa22');
+		el.val('#ffaa22');
 
 		assertEquals('#ffaa22', el.value);
 		el.change();
@@ -62,9 +62,9 @@ TestCase("ColorTestForm", {
 
 		// then
 		assertEquals('#ffaa22', el.children[0].child['slider'].value);
-		assertEquals(255, this.getSlider(el, 'red').getValue());
-		assertEquals(170, this.getSlider(el, 'green').getValue());
-		assertEquals(34, this.getSlider(el, 'blue').getValue());
+		assertEquals(255, this.getSlider(el, 'red').val());
+		assertEquals(170, this.getSlider(el, 'green').val());
+		assertEquals(34, this.getSlider(el, 'blue').val());
 	},
 
 

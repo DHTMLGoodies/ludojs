@@ -78,7 +78,7 @@ ludo.view.ButtonBar = new Class({
     getButton:function (key) {
         var c = this.children;
         for (var i = 0; i < c.length; i++) {
-            if(c[i].id == key || c[i].name == key || (c[i].getValue && c[i].getValue().toLowerCase() == key.toLowerCase())){
+            if(c[i].id == key || c[i].name == key || (c[i].val && c[i].val().toLowerCase() == key.toLowerCase())){
                 return c[i];
             }
         }

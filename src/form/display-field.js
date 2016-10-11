@@ -20,6 +20,19 @@ ludo.form.DisplayField = new Class({
 	 */
 	tpl:'',
 	setValue:function (value) {
+		console.warn("Use of deprecated setValue");
+		console.trace();
+		if (!value) {
+			this.getFormEl().html( '');
+			return;
+		}
+		this.setTextContent(value);
+	},
+
+	val:function(value){
+		if(arguments.length == 0){
+			return this._get();
+		}
 		if (!value) {
 			this.getFormEl().html( '');
 			return;

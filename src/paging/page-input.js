@@ -38,7 +38,7 @@ ludo.paging.PageInput = new Class({
     },
 
     updateDataSourcePageNumber:function(){
-        this.getDataSource().toPage(this.getValue());
+        this.getDataSource().toPage(this.val());
     },
 
     updateMaxValue:function(){

@@ -47,7 +47,7 @@ ludo.form.RadioGroup = new Class({
         }
 
         if (this.value) {
-            this.setValue(this.value);
+            this._set(this.value);
         }
     },
 
@@ -109,7 +109,7 @@ ludo.form.RadioGroup = new Class({
     getValue : function() {
         var radio = this.getCheckedRadio();
         if(radio){
-            return radio.getValue();
+            return radio._get();
         }
         return undefined;
     },
@@ -128,11 +128,18 @@ ludo.form.RadioGroup = new Class({
     },
     /**
      * The radio button with the chose value will be checked
-     * @method setvalue
+     * @method val
      * @param {String} value
-     * @return void
+     * @return void|string
      */
-    setValue : function(value){
+    val : function(value){
+        if(arguments.length == 0){
+            return this._get();
+        }
+        this._set(value);
+    },
+
+    _set:function(value){
         // TODO reset in form-components.php is not working for radio group
         for(var i=0;i<this.checkboxes.length;i++){
             if(this.checkboxes[i].getFormEl().get('value') == value){

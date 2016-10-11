@@ -15,7 +15,7 @@ TestCase("LinkedTest", {
 		var win = this.getWindowWithLinkedFormComponents();
 
 		// then
-		assertEquals(10, parseInt(win.child['number'].getValue()));
+		assertEquals(10, parseInt(win.child['number'].val()));
 	},
 	"test_should_fire_change_event_in_linked_element_when_value_is_changed":function () {
 		// given
@@ -25,7 +25,7 @@ TestCase("LinkedTest", {
 			eventFired = true;
 		});
 		// when
-		win.child['number'].setValue(5);
+		win.child['number'].val(5);
 
 		// then
 		assertTrue(eventFired);
@@ -38,7 +38,7 @@ TestCase("LinkedTest", {
 			eventFired = true;
 		});
 		// when
-		win.child['slider'].setValue(5);
+		win.child['slider'].val(5);
 
 		// then
 		assertTrue(eventFired);

@@ -297,10 +297,23 @@ ludo.form.Button = new Class({
     },
 
     setValue:function (value) {
+        console.warn("Use of deprecated setValue");
+        console.trace();
         this.value = value;
         this.els.txt.html( value);
     },
+
+    val:function (value) {
+        if(arguments.length != 0){
+            this.value = value;
+            this.els.txt.html( value);
+        }else{
+            return this.value;
+        }
+    },
     getValue:function () {
+        console.warn("Use of deprecated button.getValue");
+        console.trace();
         return this.value;
     },
 
@@ -351,7 +364,7 @@ ludo.form.Button = new Class({
              * @param {String} value, i.e. label of button
              * @param Component this
              */
-            this.fireEvent('click', [this.getValue(), this]);
+            this.fireEvent('click', [this._get(), this]);
 
             if (this.toggle) {
                 if (!this.active) {
@@ -407,7 +420,7 @@ ludo.form.Button = new Class({
          * @param {String} value, i.e. label of button
          * @param Component this
          */
-        this.fireEvent('on', [this.getValue(), this]);
+        this.fireEvent('on', [this._get(), this]);
         this.getBody().addClass('ludo-form-button-pressed');
     },
 
@@ -419,7 +432,7 @@ ludo.form.Button = new Class({
          * @param {String} value, i.e. label of button
          * @param Component this
          */
-        this.fireEvent('off', [this.getValue(), this]);
+        this.fireEvent('off', [this._get(), this]);
         this.getBody().removeClass('ludo-form-button-pressed');
     },
 

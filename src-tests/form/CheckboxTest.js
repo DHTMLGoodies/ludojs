@@ -46,7 +46,7 @@ TestCase("CheckboxTest", {
         v.child['cb'].setChecked(false);
 
         // then
-        assertFalse(v.child['cb'].isDirty());
+        assertFalse("Values: [" + v.child['cb'].value + ',' + v.child['cb'].initialValue + "]", v.child['cb'].isDirty());
     },
 
     getViewWithCheckbox:function(config){

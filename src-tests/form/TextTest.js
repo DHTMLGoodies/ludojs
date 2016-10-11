@@ -36,7 +36,7 @@ TestCase("TextTest", {
 		var textComponent = this.getFormComponent('Text', { minLength:5});
 
 		// when
-		textComponent.setValue('Hi');
+		textComponent.val('Hi');
 
 		// then
 		assertFalse(textComponent.isValid());
@@ -53,7 +53,7 @@ TestCase("TextTest", {
 		textComponent.addEvent('invalid', function () {
 			eventFired = true;
 		});
-		textComponent.setValue('Alf Magne');
+		textComponent.val('Alf Magne');
 		// then
 		assertTrue(eventFired);
 
@@ -89,7 +89,7 @@ TestCase("TextTest", {
         });
 
         // when
-        el.setValue('New value');
+        el.val('New value');
 
         // then
         assertEquals('New value', el.getFormEl().val());
@@ -102,7 +102,7 @@ TestCase("TextTest", {
         });
 
         // when
-        el.setValue(Date.parse('1973-09-06'));
+        el.val(Date.parse('1973-09-06'));
 
         // then
         assertEquals('1973-09-06', el.getFormEl().val());
@@ -118,7 +118,7 @@ TestCase("TextTest", {
 		var textComponent = this.getFormComponent('Text', { maxLength:5});
 
 		// when
-		textComponent.setValue('Hello there');
+		textComponent.val('Hello there');
 
 		// then
 		assertFalse(textComponent.isValid());
@@ -130,7 +130,7 @@ TestCase("TextTest", {
 		var t2 = this.getFormComponent('Textarea', { twin:'t1', id:'t2' });
 
 		// when
-		t1.setValue('John');
+		t1.val('John');
 
 		// then
 		assertFalse('t1 is invalid', t1.isValid());
@@ -143,11 +143,11 @@ TestCase("TextTest", {
 		var c2 = this.getFormComponent('Textarea', { id:'c2' });
 
 		// when
-		c1.setValue('John');
+		c1.val('John');
 
 		// then
 
-		assertEquals('John', c2.getValue());
+		assertEquals('John', c2.val());
 
 	},
 
@@ -157,11 +157,11 @@ TestCase("TextTest", {
 		var d2 = ludo.get('d2');
 
 		// when
-		d1.setValue('Jane');
+		d1.val('Jane');
 
 		// then
-		assertEquals('d1 is incorrect', 'Jane', d1.getValue());
-		assertEquals('Jane', d2.getValue());
+		assertEquals('d1 is incorrect', 'Jane', d1.val());
+		assertEquals('Jane', d2.val());
 
 	},
 	"test should be able to update linked element":function () {
@@ -170,10 +170,10 @@ TestCase("TextTest", {
 		var d2 = ludo.get('d2');
 
 		// when
-		d2.setValue('John');
+		d2.val('John');
 
 		// then
-		assertEquals('John', d1.getValue());
+		assertEquals('John', d1.val());
 	},
 	"test should not validate if not matching validator":function () {
 		// given
@@ -185,7 +185,7 @@ TestCase("TextTest", {
 		});
 
 		// when
-		component.setValue('Invalid value');
+		component.val('Invalid value');
 
 		// then
 		assertFalse(component.isValid());
@@ -195,7 +195,7 @@ TestCase("TextTest", {
 		var field = this.getFormComponent('Text', { value:'John', required:1});
 
 		// then
-		assertEquals('John', field.getValue());
+		assertEquals('John', field.val());
 	},
 	"test should validate if matching validator":function () {
 		// given
@@ -207,7 +207,7 @@ TestCase("TextTest", {
 		});
 
 		// when
-		component.setValue('Alf');
+		component.val('Alf');
 
 		// then
 		assertTrue(component.isValid());
@@ -240,19 +240,19 @@ TestCase("TextTest", {
 		});
 
 		// then
-		assertEquals(expected, el.getValue());
+		assertEquals(expected, el.val());
 
 		// when
-		el.setValue('John');
+		el.val('John');
 		// then
-		assertEquals(expected, el.getValue());
+		assertEquals(expected, el.val());
 
 
 		// when
 		el.getFormEl().value = 'John';
 		el.blur();
 
-		assertEquals(expected, el.getValue());
+		assertEquals(expected, el.val());
 
 	},
 
@@ -287,7 +287,7 @@ TestCase("TextTest", {
 		view.addEvent('change', function(){
 			eventFired = true;
 		});
-		view.setValue('New value');
+		view.val('New value');
 
 		// then
 		assertFalse(eventFired);
@@ -355,12 +355,12 @@ TestCase("TextTest", {
         var el = new ludo.form.Text({
            renderTo:document.body
         });
-        el.setValue('My value');
+        el.val('My value');
         // when
         el.reset();
 
         // then
-        assertEquals('', el.getValue());
+        assertEquals('', el.val());
         assertEquals('', el.getFormEl().val());
     }
 });

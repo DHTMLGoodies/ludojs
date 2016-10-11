@@ -237,14 +237,14 @@ ludo.form.ComboTree = new Class({
         }
         this.treePanel.show();
 
-        var val = this.input.getValue();
+        var val = this.input._get();
         if (val == this.currentSearchValue) {
             return;
         }
         var d = new Date();
         this.timeStamp = d.getTime();
 
-        this.filterAfterDelay(this.input.getValue());
+        this.filterAfterDelay(this.input._get());
         this.currentSearchValue = val;
     },
 
@@ -255,8 +255,8 @@ ludo.form.ComboTree = new Class({
             return;
         }
         this.timeStamp = d.getTime();
-        if (val == this.input.getValue()) {
-            this.treePanel.children[0].filter(this.input.getValue());
+        if (val == this.input._get()) {
+            this.treePanel.children[0].filter(this.input.val());
         }
     },
 
@@ -278,7 +278,7 @@ ludo.form.ComboTree = new Class({
     },
 
     setViewValue:function (value) {
-        this.input.setValue(value);
+        this.input.val(value);
         this.viewField.setViewValue(value);
     },
 
@@ -307,10 +307,22 @@ ludo.form.ComboTree = new Class({
 
     receiveSelectedRecord:function (record) {
 
-        this.setValue(record.get('id'));
+        this.val(record.get('id'));
         this.setViewValue(record.get('title'));
         this.fireEvent('selectrecord', [this, record.getData()]);
         this.hideTree.delay(100, this);
+    },
+
+    /**
+     * No arguments = Return id of selected record
+     * @method getValue
+     * @return {String} id (tree.selectedRecord.id);
+     */
+    val:function(value){
+        if(arguments.length == 0){
+            return this.value;
+        }
+        this.parent(value);
     },
 
     /**
@@ -319,6 +331,8 @@ ludo.form.ComboTree = new Class({
      * @return {String} id (tree.selectedRecord.id);
      */
     getValue:function () {
+        console.warn("Use of deprecated getValue");
+        console.trace();
         return this.value;
     },
 

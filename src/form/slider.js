@@ -138,7 +138,7 @@ ludo.form.Slider = new Class({
 
     },
     receivePosition:function (pos) {
-        this.setValue(this.pixelToValue(this.getDirection() == 'horizontal' ? pos.x : pos.y));
+        this._set(this.pixelToValue(this.getDirection() == 'horizontal' ? pos.x : pos.y));
         /**
          * Change event
          * @event change
@@ -180,8 +180,12 @@ ludo.form.Slider = new Class({
     getMaxValue:function () {
         return this.maxValue;
     },
+    setValue:function(value){
+        console.warn("Use of deprecated setValue");
+        console.trace();
+    },
 
-    setValue:function (value) {
+    _set:function (value) {
         if (value > this.getMaxValue()) {
             value = this.getMaxValue();
         } else if (value < this.getMinValue()) {

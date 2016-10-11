@@ -437,7 +437,7 @@ ludo.FramedView = new Class({
 			return this.buttonBarComponent.getButton(key);
 		}
 		for (var i = 0; i < this.buttons.length; i++) {
-			if (this.buttons[i].getId() === key || this.buttons[i].getValue() == key || this.buttons[i].getName() == key) {
+			if (this.buttons[i].getId() === key || this.buttons[i].val() == key || this.buttons[i].getName() == key) {
 				return this.buttons[i];
 			}
 		}
