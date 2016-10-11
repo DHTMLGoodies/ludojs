@@ -95,6 +95,7 @@ ludo.progress.Bar = new Class({
     },
 
     setProgressBarWidth:function (width) {
+
         if (isNaN(width)) {
             return;
         }
@@ -110,7 +111,7 @@ ludo.progress.Bar = new Class({
 			this.els.progress.css('width',  '0px');
 		}else{
             this.els.progress.animate({
-                width : this.currentPercent + "%"
+                width : percent + "%"
             }, 100);
 		}
 
@@ -128,15 +129,5 @@ ludo.progress.Bar = new Class({
             this.setPercent(this.currentPercent);
             this.animate.delay(50, this);
         }
-    },
-
-    getFx:function () {
-        if (this.fx === undefined) {
-            this.fx = new Fx.Morph(this.els.progress, {
-                duration:100,
-                unit : '%'
-            });
-        }
-        return this.fx;
     }
 });

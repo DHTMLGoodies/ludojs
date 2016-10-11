@@ -140,6 +140,7 @@ ludo.form.Element = new Class({
         this.fieldWidth = defaultConfig.fieldWidth || this.fieldWidth;
         this.inlineLabel = defaultConfig.inlineLabel || this.inlineLabel;
 
+        // TODO change disabled to enabled
         var keys = ['label', 'suffix', 'formCss', 'validator', 'stretchField', 'required', 'twin', 'disabled', 'labelWidth', 'fieldWidth',
             'value', 'data'];
         this.setConfigParams(config, keys);

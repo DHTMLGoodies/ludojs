@@ -3,7 +3,7 @@ ludo.storage.LocalStorage = new Class({
 	initialize:function(){
 		this.supported = typeof(Storage)!=="undefined";
 	},
-
+	// TODO rename to save
 	save:function(key,value){
 		if(!this.supported)return;
 		var type = 'simple';

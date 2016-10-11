@@ -761,7 +761,7 @@ ludo.dataSource.Collection = new Class({
 	},
 
     hasData:function(){
-        return this.data && this.data.length > 0;
+        return this.data != undefined && this.data.length > 0;
     },
 
 	firePageEvents:function (skipState) {

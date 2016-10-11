@@ -127,6 +127,7 @@ ludo.Core = new Class({
             config = this.appendPropertiesFromStore(config);
             this.addEvent('state', this.saveStatefulProperties.bind(this));
         }
+		// TODO support this.listeners
 		if (config.listeners !== undefined)this.addEvents(config.listeners);
 		if (this.controller !== undefined)ludo.controllerManager.assignSpecificControllerFor(this.controller, this);
         if (this.module || this.useController)ludo.controllerManager.registerComponent(this);

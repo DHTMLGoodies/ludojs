@@ -1,3 +1,4 @@
+/* TODO should be able to update tab title when view title is changed */
 ludo.layout.TabStrip = new Class({
     Extends:ludo.View,
     type:'layout.TabStrip',
@@ -66,9 +67,9 @@ ludo.layout.TabStrip = new Class({
 
     addCloseButton:function (node, child) {
         var el = $('<div>');
-        el.className = 'ludo-tab-close ludo-tab-close-' + this.tabPos;
-        el.on('mouseenter', this.enterCloseButton.bind(this));
-        el.on('mouseleave', this.leaveCloseButton.bind(this));
+        el.addClass('ludo-tab-close ludo-tab-close-' + this.tabPos);
+        el.mouseenter(this.enterCloseButton.bind(this));
+        el.mouseleave(this.leaveCloseButton.bind(this));
         el.id = 'tab-close-' + child.id;
         el.on('click', this.removeChild.bind(this));
         node.append(el);
