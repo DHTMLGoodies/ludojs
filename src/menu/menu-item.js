@@ -79,8 +79,8 @@ ludo.menu.Item = new Class({
         if (config.html === '|') {
             this.spacer = true;
         }
-        if (this.label && !this.html) {
-            this.html = this.label;
+        if (this.label && !this._html) {
+            this._html = this.label;
         }
         this.parent(config);
     },

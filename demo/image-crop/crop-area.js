@@ -1,5 +1,5 @@
 ludo.crop.CropArea = new Class({
-    Extends:ludo.svg.Base,
+    Extends:ludo.canvas.Node,
     type:'crop.CropArea',
     useController:true,
     tag : 'path',

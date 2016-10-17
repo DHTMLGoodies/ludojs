@@ -25,7 +25,7 @@ TestCase("SearchFieldTest", {
 		});
 
 		// when
-		searchField.setValue('John');
+		searchField.val('John');
 		searchField.search();
 		// then
 		assertEquals(1, collection.getCount());
@@ -44,7 +44,7 @@ TestCase("SearchFieldTest", {
 		});
 
 		// when
-		searchField.setValue('John');
+		searchField.val('John');
 		searchField.search();
 
 		// then

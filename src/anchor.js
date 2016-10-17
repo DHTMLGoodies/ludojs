@@ -16,7 +16,7 @@ ludo.Anchor = new Class({
         this.parent();
         this.els.anchor = new Element('a');
         this.els.anchor.addClass('ludo-anchor-text');
-        this.els.anchor.html( this.html);
+        this.els.anchor.html( this._html);
         this.els.anchor.setProperty('href', '#');
         this.els.anchor.addEvent('click', this.anchorClick.bind(this));
         this.getBody().append(this.els.anchor);

@@ -75,12 +75,11 @@ ludo.Core = new Class({
      Add-ons are special components which operates on a view. "parentComponent" is sent
      to the constructor of all add-ons and can be saved for later reference.
 
-
      @config addOns
      @type {Array}
      @example
         new ludo.View({<br>
-		   plugins : [ { type : 'plugins.Sound' }]
+		   addOns : [ { type : 'plugins.Sound' }]
 	  	 });
 
      Add event

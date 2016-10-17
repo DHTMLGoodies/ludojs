@@ -25,14 +25,6 @@ ludo.Accordion = new Class({
 		this.getEl().addClass('ludo-accordion');
 	},
 	ludoRendered:function () {
-		this.fx = new Fx.Morph(this.getEl(), {
-			duration:100
-		});
-		this.fxContent = new Fx.Morph(this.getBody(), {
-			duration:100
-		});
-		this.fx.addEvent('complete', this.animationComplete.bind(this));
-
         this.getTitleBar().getEl().addEvent('click', this.toggleExpandCollapse.bind(this));
 		this.parent();
 	},
@@ -50,12 +42,16 @@ ludo.Accordion = new Class({
 		this.state.isMinimized = false;
 
         this.showResizeHandles();
-		this.fx.start({
+
+		this.getEl().animate({
 			'height':[this.getHeightOfTitleBar(), this.heightBeforeMinimize]
-		});
-		this.fxContent.start({
-			'margin-top':[this.getBody().getStyle('margin-top'), 0]
-		});
+		}, 100, this.animationComplete.bind(this));
+
+
+		this.getBody().animate({
+			'margin-top':[this.getBody().css('margin-top'), 0]
+		}, 100);
+
 		this.fireEvent('maximize', this);
 	},
 	/**
@@ -65,18 +61,21 @@ ludo.Accordion = new Class({
 	 */
 	minimize:function () {
 		if (this.slideInProgress)return;
-		this.heightBeforeMinimize = this.getEl().offsetHeight - ludo.dom.getBH(this.getEl()) - ludo.dom.getPH(this.getEl());
+		this.heightBeforeMinimize = this.getEl().height() - ludo.dom.getBH(this.getEl()) - ludo.dom.getPH(this.getEl());
 		this.slideInProgress = true;
 
 		this.state.isMinimized = true;
 		this.hideResizeHandles();
         var h = this.getHeightOfTitleBar();
-		this.fx.start({
+
+		this.getEl().animate({
 			'height':[this.heightBeforeMinimize, h]
-		});
-		this.fxContent.start({
+		},100, this.animationComplete.bind(this));
+
+		this.getBody().animate({
 			'margin-top':[ 0, (this.heightBeforeMinimize - h) * -1 ]
-		});
+		}, 100);
+
         this.fireEvent('minimize', [this, { height: h }]);
 	},
 

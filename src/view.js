@@ -40,7 +40,7 @@
  		Extends: ludo.View,
  		type : 'myApp.View',
  		ludoRendered:function(){
- 			this.setHtml('My custom component');
+ 			this.html('My custom component');
 		}
 	}
     ...
@@ -91,9 +91,9 @@ ludo.View = new Class({
 	state:{},
 
 	defaultDS : 'dataSource.JSON',
-
 	tagBody:'div',
 	id:null,
+
 	/**
 	 Array of Config objects for dynamically created children
 	 @config children
@@ -148,7 +148,7 @@ ludo.View = new Class({
 	 * @config {String} html
 	 * @default ''
 	 */
-	html:'',
+	_html:'',
 
 	/**
 	 * Set this property to true if you want to initally hide the component. You can use
@@ -202,19 +202,6 @@ ludo.View = new Class({
 	 */
 	frame:false,
 
-	/**
-	 Create copies of events, example:
-	 This will fire a "send" event for every "click" event.
-
-	 @config copyEvents
-	 @type Object
-	 @default undefined
-	 @example
-	    copyEvents:{
-           'click' : 'send'
-        }
-	 */
-	copyEvents:undefined,
 	/**
 	 Form object, used for form submission. Example
 
@@ -280,20 +267,6 @@ ludo.View = new Class({
 	initialItemsObject:[],
 	contextMenu:undefined,
 	lifeCycleComplete:false,
-
-	/**
-	 Config object for LudoDB integration.
-	 @config {Object} ludoDB
-	 @example
-	 ludoDB:{
-            'resource' : 'Person',
-            'arguments' : 1, // id of person
-            'url' : 'router.php' // optional url
-        }
-
-	 This example assumes that ludoJS properties are defined in the LudoDBModel called "Person".
-	 */
-	ludoDB:undefined,
 
 	lifeCycle:function (config) {
 		this._createDOM();
@@ -374,10 +347,10 @@ ludo.View = new Class({
 		this.parent(config);
 		config.els = config.els || {};
 		if (this.parentComponent)config.renderTo = undefined;
-		var keys = ['css', 'contextMenu', 'renderTo', 'tpl', 'containerCss', 'socket', 'form',, 'title', 'html', 'hidden', 'copyEvents',
+		var keys = ['css', 'contextMenu', 'renderTo', 'tpl', 'containerCss', 'socket', 'form', 'title', 'html', 'hidden',
 			'dataSource', 'movable', 'resizable', 'closable', 'minimizable', 'alwaysInFront',
 			'parentComponent', 'cls', 'bodyCls', 'objMovable', 'width', 'height', 'frame', 'formConfig',
-			'overflow', 'ludoDB'];
+			'overflow'];
 
 		this.setConfigParams(config, keys);
 
@@ -391,28 +364,6 @@ ludo.View = new Class({
 
 		this.layout = ludo.layoutFactory.getValidLayoutObject(this, config);
 
-
-		if (this.ludoDB) {
-			this.ludoDB.type = 'ludoDB.Factory';
-			var f = this.createDependency('ludoDB', new ludo.ludoDB.Factory(this.ludoDB));
-			var initialHidden = this.hidden;
-			f.addEvent('load', function (children) {
-                if(!this.hidden){
-                    this.addChildren(children.children);
-                }else{
-                    this.unRenderedChildren = children.children;
-                    this.hidden = initialHidden;
-                    this.show();
-                }
-
-			}.bind(this));
-			this.hidden = true;
-			f.load();
-		}
-
-		if (this.copyEvents) {
-			this.createEventCopies();
-		}
 		this.insertDOMContainer();
 	},
 
@@ -478,13 +429,6 @@ ludo.View = new Class({
 		if (this.dataSource) {
 			this.getDataSource();
 		}
-		/*
-		 if (!this.parentComponent && this.renderTo && this.renderTo.tagName.toLowerCase() == 'body') {
-		 if (!this.isMovable()) {
-		 // document.id(window).addEvent('resize', this.resize.bind(this));
-		 }
-		 }
-		 */
 	},
 
 	/**
@@ -513,21 +457,6 @@ ludo.View = new Class({
 
 	},
 
-	createEventCopies:function () {
-		this.copyEvents = Object.clone(this.copyEvents);
-		for (var eventName in this.copyEvents) {
-			if (this.copyEvents.hasOwnProperty(eventName)) {
-				this.addEvent(eventName, this.getEventCopyFn(this.copyEvents[eventName]));
-			}
-		}
-	},
-
-	getEventCopyFn:function (eventName) {
-		return function () {
-			this.fireEvent.call(this, eventName, Array.prototype.slice.call(arguments));
-		}.bind(this)
-	},
-
 	/**
 	 * Insert JSON into components body
 	 * Body of Component will be updated with compiled JSON from ludo.tpl.Parser.
@@ -550,37 +479,40 @@ ludo.View = new Class({
 	},
 
 	autoSetHeight:function () {
-		// Todo replaced mootols measure
 		var size = this.getBody().outerHeight(true);
 		this.layout.height = size + ludo.dom.getMBPH(this.getEl());
 	},
+
 	/**
-	 * Set HTML of components body element
-	 * @method setHtml
+	 * Set HTML
+	 * @method html
 	 * @param html
 	 * @type string
-	 */
-	setHtml:function (html) {
+	 * @example
+	 var view = new ludo.View({
+	 	renderTo:document.body,
+	 	layout:{ width:500,height:500 }
+	 });
+	 view.html('<h1>Heading</h1><p>Paragraph</p>');
+     */
 
-	
+	html:function(html){
 		this.getBody().html(html);
 	},
 
-
-	html:function(html){
-
+	setHtml:function (html) {
+		console.warn("Use of deprecated setHTML");
+		console.trace();
+		this.getBody().html(html);
 	},
 
-
 	setContent:function () {
-		if (this.html) {
+		if (this._html) {
 			if (this.children.length) {
-				ludo.dom.create({
-					renderTo:this.getBody(),
-					html:this.html
-				});
+				var el = $('<div>' + this._html + '</div>');
+				this.getBody().append(el);
 			} else {
-				this.getBody().html(this.html);
+				this.getBody().html(this._html);
 			}
 		}
 	},
@@ -626,7 +558,7 @@ ludo.View = new Class({
 		this.els.container.addClass('ludo-view-container');
 		this.els.body.addClass('ludo-body');
 
-		this.els.container.id = this.getId();
+		this.els.container.attr("id", this.getId());
 
 		this.els.body.css('height','100%');
 		if (this.overflow == 'hidden') {
@@ -1074,7 +1006,7 @@ ludo.View = new Class({
 				obj = this.dataSourceObj = this.createDependency('viewDataSource', this.dataSource);
 			}
 
-			var method = obj.getSourceType() === 'HTML' ? 'setHtml' : 'insertJSON';
+			var method = obj.getSourceType() === 'HTML' ? 'html' : 'insertJSON';
 
 			if (obj.hasData()) {
 				this[method](obj.getData());

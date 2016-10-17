@@ -49,13 +49,14 @@ TestCase("ManagerTest", {
 		cmp.child['firstname'].val('Jane');
 		cmp.child['address'].val('Park Avenue 5');
 
-		var values = manager.getValues();
+		var values = manager.values();
 
 		// then
 		assertEquals('Jane', values['firstname']);
 		assertEquals('Doe', values['lastname']);
 		assertEquals('Park Avenue 5', values['address']);
 	},
+
 	"test should be able to reset form elements":function () {
 		// given
 		var cmp = this.getComponent();
@@ -66,7 +67,7 @@ TestCase("ManagerTest", {
 		cmp.child['address'].val('Park Avenue 5');
 
 		manager.reset();
-		var values = manager.getValues();
+		var values = manager.values();
 		// then
 		assertEquals('John', values['firstname']);
 		assertEquals('Doe', values['lastname']);
@@ -108,37 +109,9 @@ TestCase("ManagerTest", {
         var f = v.getForm();
 
         // then
-        assertEquals('Person', f.resource);
         assertEquals('tester.php', f.url);
         assertTrue(f.autoLoad);
     },
-
-	"test should be able to send delete requests":function () {
-		// given
-		var v = new ludo.View({
-			form:{
-				idField:'id',
-				resource:'Person',
-				arguments:1
-			},
-			children:[
-				{
-					type:'form.Text', name:'firstname', value:'John'
-				}
-			]
-		});
-
-		// when
-		var form = v.getForm();
-		v.getForm().currentId = 1;
-		var path = form.getDeletePath();
-
-
-		// then
-		assertEquals('Person', path.resource);
-		assertEquals(1, path.argument);
-		assertEquals('delete', path.service);
-	},
 
 	"test should fire invalid event when form element is invalid":function () {
 		// given
@@ -203,79 +176,6 @@ TestCase("ManagerTest", {
 		// then
 		assertEquals('Doe', v.getForm().get('lastname'));
 	},
-
-	"test should be able to read values from server" : function(){
-		// given
-		var v = this.getView();
-
-		// when
-		v.getForm().read(1);
-		v.getForm().readHandler().fireEvent('success', this.getReadResponseMock());
-
-		// then
-		assertEquals('Jonathan', v.child['firstname'].val());
-
-	},
-
-    "test should be able to cache records": function(){
-        // given
-        var v = new ludo.View({
-            renderTo:document.body,
-            form:{
-                cache:true
-            },
-            layout:'rows',
-            children:[
-                { type:'form.Text', name:'firstname', 'value':'a', minLength:5 },
-                { type:'form.Text', name:'lastname', 'value':'Doe' },
-                { type:'form.Textarea', name:'address', 'value':'Park Avenue' }
-            ]
-        });
-
-        // when
-        v.getForm().storeCache(1, {
-            'firstname' : 'Amanda',
-            'lastname' : 'Larsen'
-        });
-        v.getForm().read(1);
-
-        // then
-        assertTrue('Cache not enabled', v.getForm().cache);
-        assertTrue('Is not in cache', v.getForm().isInCache(1));
-        assertEquals('Amanda', v.child['firstname'].val());
-
-    },
-
-    "test should update cache when a form element is updated": function(){
-        // given
-        var v = new ludo.View({
-            renderTo:document.body,
-            form:{
-                cache:true
-            },
-            layout:'rows',
-            children:[
-                { type:'form.Text', name:'firstname', 'value':'a', minLength:5 },
-                { type:'form.Text', name:'lastname', 'value':'Doe' },
-                { type:'form.Textarea', name:'address', 'value':'Park Avenue' }
-            ]
-        });
-
-        // when
-        v.getForm().storeCache(1, {
-            'firstname' : 'Amanda',
-            'lastname' : 'Larsen'
-        });
-        v.getForm().read(1);
-
-        v.child['firstname'].val('Anton');
-
-        var cached = v.getForm().getCached(1);
-
-        // then
-        assertEquals('Anton', cached.firstname);
-
-    },
 
 	getReadResponseMock:function(){
 		if(ludo.ResponseMock == undefined){

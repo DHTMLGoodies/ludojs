@@ -379,14 +379,14 @@ TestCase("CardLayout", {
 		card1.show();
 
 		// when
-		button.fireEvent('click', [button.getValue(), button]);
+		button.fireEvent('click', [button.val(), button]);
 
 		// then
 		assertEquals('card2', deck.getLayout().getVisibleCard().getName());
 		assertFalse(card2.isHidden());
 
 		// when
-		button.fireEvent('click', [button.getValue(), button]);
+		button.fireEvent('click', [button.val(), button]);
 
 		// then
 		assertEquals('card3', deck.getLayout().getVisibleCard().getName());
@@ -394,7 +394,7 @@ TestCase("CardLayout", {
 
 
 		// when
-		button.fireEvent('click', [button.getValue(), button]);
+		button.fireEvent('click', [button.val(), button]);
 
 		// then
 		assertEquals('card4', deck.getLayout().getVisibleCard().getName());
@@ -764,7 +764,7 @@ TestCase("CardLayout", {
 
 		// when
 		var card = deck.child['cardForm'];
-		card.child['requiredText'].setValue('Hello');
+		card.child['requiredText'].val('Hello');
 
 
 		// then

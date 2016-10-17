@@ -132,7 +132,6 @@ ludo.remote.JSON = new Class({
 				this.onComplete();
             }.bind(this),
             fail:function (text, error) {
-                console.log("error");
                 this.remoteData = { "code": 500, "message": error };
                 this.fireEvent('servererror', this);
                 this.sendBroadCast(service);

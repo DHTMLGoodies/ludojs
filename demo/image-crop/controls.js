@@ -28,15 +28,15 @@ ludo.crop.Controls = new Class({
     },
 
     setCoordinates:function (image) {
-        this.child['x'].setValue(0);
-        this.child['y'].setValue(0);
-        this.child['width'].setValue(image.width);
-        this.child['height'].setValue(image.height);
+        this.child['x'].val(0);
+        this.child['y'].val(0);
+        this.child['width'].val(image.width);
+        this.child['height'].val(image.height);
     },
 
     receiveCoordinateFromController:function(coordinate){
-        if(this.child[coordinate.name].getValue() != coordinate.value){
-            this.child[coordinate.name].setValue(coordinate.value);
+        if(this.child[coordinate.name].val() != coordinate.value){
+            this.child[coordinate.name].val(coordinate.value);
         }
     }
 });

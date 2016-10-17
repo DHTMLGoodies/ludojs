@@ -1,5 +1,5 @@
 /**
- * A component rendered to document.body and filling up entire screen
+ * A view rendered to document.body with a width and height of 100%
  * @class Application
  * @extends FramedView
  */
@@ -32,7 +32,7 @@ ludo.Application = new Class({
             padding:0,
             border:0
         };
-        document.body.setStyles(styles);
-        document.id(document.documentElement).setStyles(styles);
+        $(document.body).css(styles);
+        $(document.documentElement).css(styles);
     }
 });

@@ -12,7 +12,7 @@ ludo.crop.Controller = new Class({
 
     },
 
-    addComponent:function (component) {
+    addView:function (component) {
         switch (component.type) {
             case 'crop.Crop':
                 component.addEvent('loadimage', this.loadImage.bind(this));

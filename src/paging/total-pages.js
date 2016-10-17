@@ -52,7 +52,7 @@ ludo.paging.TotalPages = new Class({
     },
 
 	setPageNumber:function () {
-		this.setHtml(this.tpl.replace('{pages}', this.getDataSource().getPageCount()));
+		this.html(this.tpl.replace('{pages}', this.getDataSource().getPageCount()));
 	},
 
 	insertJSON:function () {

@@ -1,6 +1,6 @@
 /**
- Class for form Management. Instance of this class is created on demand
- by ludo.View.getForm(). Configuration is done via view.form config property.
+ Class for form Management. This is a convenient class used for easy access and manipulation of form elements. You get an instance
+ of this class by calling view.getForm().
  @namespace form
  @class Manager
  @extends Core
@@ -9,12 +9,11 @@
  @example
  	var view = new ludo.View({
         form:{
-            'resource' : 'Person',
-            autoLoad:true,
             arguments:1
         },
         children:[
-            { type:'form.Text', label:'First name' },
+            { type:'form.Text', label:'First name', name:'firstname' },
+            { type:'form.Text', label:'Last name', name:'lastname' },
             {
                 layout:{ type:'linear',orientation:'horizontal',height:25},
                 children:[
@@ -24,6 +23,14 @@
             }
         ]
     });
+
+ 	// Set name using the form manager
+ 	view.getForm().val("firstname", "John");
+ 	view.getForm().val("lastname", "Doe");
+
+    // Return form values as JSON { "firstname": "John", "lastname": "Doe" }
+ 	var json = view.getForm().values();
+
  An instance of this class is created automatically and configured from the "form"
  config object of the View. You will get access to the instance of this class by calling
  View.getForm(), example: v.getForm().submit(); for the example above.
@@ -42,32 +49,6 @@ ludo.form.Manager = new Class({
 		method:'post'
 	},
 
-	record:undefined,
-    /**
-     Name of server side resource(example a class) which handles form data.
-     Example: "User" when you have a form representing the details of a
-     user.
-     @config {String} resource
-     @default undefined
-     @example
-        new ludo.View({
-            form:{
-                "resource": "User",
-                "autoLoad" : true,
-                "arguments" : 100
-            },
-            children:[
-                {
-                    type:"form.Text", name:"firstname"
-                },
-                {
-                    type:"form.Text", name:"lastname"
-                }
-            ]
-        });
-     */
-    resource:undefined,
-    service:undefined,
     method:undefined,
     url:undefined,
 	currentId:undefined,
@@ -89,9 +70,6 @@ ludo.form.Manager = new Class({
                 listeners:{
                     "saved": function(){
                         new ludo.Notification({ html : 'Your changes has been saved' });
-                    },
-                    "read": function(){
-                        // Record has been successfully read from the server.
                     }
                 }
             },
@@ -106,34 +84,6 @@ ludo.form.Manager = new Class({
         });
      */
     listeners:undefined,
-
-    cacheStorage:{},
-    /**
-     Enable caching of read records
-     @config {Boolean} cache
-     @default false
-     @example
-        new ludo.View({
-            form:{
-                cache:true,
-                cacheTimeout : 5
-            }
-        )
-     */
-    cache:false,
-    /**
-     Time in minutes before a cached record is considered expired
-     @config {Number} cacheTimeout
-     @default undefined
-     */
-    cacheTimeout : undefined,
-
-    /**
-     * Update cached record when form value is modified
-     * @config {Boolean} updateCacheOnChange
-     * @default true
-     */
-    updateCacheOnChange :true,
 
     /**
      Read arguments sent when autoLoad is set to true
@@ -154,7 +104,7 @@ ludo.form.Manager = new Class({
 		this.view = config.view;
 		config.form = config.form || {};
 
-        this.setConfigParams(config.form, ['resource','method', 'url','autoLoad','cache','service']);
+        this.setConfigParams(config.form, ['method', 'url','autoLoad']);
 
 		this.id = String.uniqueID();
 
@@ -208,10 +158,6 @@ ludo.form.Manager = new Class({
 			c.val(this.record[c.name]);
 		}
 
-        if(this.cache && this.updateCacheOnChange){
-            c.addEvent('valueChange', this.updateCache.bind(this));
-        }
-
 		if (c.isFileUploadComponent) {
 			this.fileUploadComponents.push(c);
 		}
@@ -234,6 +180,11 @@ ludo.form.Manager = new Class({
 		}
 	},
 
+	populate:function(json) {
+		$.each(json, this.set.bind(this));
+	},
+
+
     /**
      * Set value of a form element
      * @method set
@@ -244,6 +195,40 @@ ludo.form.Manager = new Class({
 		if(this.map[key]){
 			this.map[key].val(value);
 		}
+	},
+
+	/**
+	 * @method val
+	 * Set OR get value of form component.
+	 * Called with two arguments(key and value), a value will be set. Called with one argument(key), value will be returned.
+	 *
+	 * @param key
+	 * @param value
+     */
+	val:function(key, value){
+		if(arguments.length == 2){
+			this.set(key, value);
+		}
+
+		return this.get(key);
+	},
+
+	/**
+	 * Returns values of all form elements in JSON format.
+	 * This method can be called on all views. It will return a JSON containing key-value pairs for all the views form elements(nested, i.e. children, grand children etc)
+	 *
+	 * @method values
+	 *
+	 * @returns {{}}
+     */
+	values:function(){
+		var ret = {};
+		for (var i = 0; i < this.formComponents.length; i++) {
+			var el = this.formComponents[i];
+			ret[el.getName()] = el.val();
+		}
+
+		return ret;
 	},
 
     /**
@@ -359,20 +344,6 @@ ludo.form.Manager = new Class({
 	isValid:function () {
 		return this.invalidIds.length === 0;
 	},
-	// TODO implement a method returning values as plain array(values only)
-	/**
-	 * @method getValues
-	 * @description Return array of values of all form elements inside this view. The format is [{name:value},{name:value}]
-	 */
-	getValues:function () {
-		var ret = {};
-		for (var i = 0; i < this.formComponents.length; i++) {
-			var el = this.formComponents[i];
-			ret[el.getName()] = el.val();
-		}
-
-		return ret;
-	},
 
 	/**
 	 * Submit form to server
@@ -381,59 +352,6 @@ ludo.form.Manager = new Class({
 	 */
 	submit:function () {
 		this.save();
-	},
-    /**
-     * Send delete request to the server
-     * @method deleteRecord
-     */
-	deleteRecord:function () {
-		/**
-		 * Event fired before delete request is sent to server
-		 * @event delete
-		 */
-		this.fireEvent('beforeDelete');
-		this.beforeRequest();
-		var path = this.getDeletePath();
-		var r = new ludo.remote.JSON({
-			resource:path.resource,
-			listeners:{
-				success:function (req) {
-					/**
-					 * Event fired after successful delete request
-					 * @event deleted
-					 * @param {Object} response from server
-					 * @param {Object} View
-					 */
-					this.fireEvent('deleted', [req.getResponse(), this.view]);
-					this.afterRequest();
-				}.bind(this),
-				"failure":function (req) {
-					/**
-					 * Event fired after form submission when success parameter in response is false.
-					 * To add listeners, use <br>
-					 * ludo.View.getForm().addEvent('failure', fn);<br>
-					 * @event deleteFailed
-					 * @param {Object} JSON response from server
-					 * @param {Object} Component
-					 */
-
-					this.fireEvent('deleteFailed', [req.getResponse(), this.view]);
-					this.afterRequest();
-				}.bind(this)
-			}
-		});
-		r.send(path.service, path.argument);
-	},
-
-	getDeletePath:function () {
-		if (this.currentId) {
-			return {
-				resource:this.resource,
-				service:'delete',
-				argument:this.currentId
-			}
-		}
-		return undefined;
 	},
 
 	getUnfinishedFileUploadComponent:function () {
@@ -457,7 +375,7 @@ ludo.form.Manager = new Class({
 			this.fireEvent('invalid');
 			this.fireEvent('beforeSave');
 			this.beforeRequest();
-			this.requestHandler().send(this.service ? this.service : 'save', this.currentId, this.getValues(),
+			this.requestHandler().send('save', this.currentId, this.getValues(),
 				{
 					"progressBarId":this.getProgressBarId()
 				}
@@ -471,43 +389,11 @@ ludo.form.Manager = new Class({
 	 * @param {String|undefined} id
 	 */
 	read:function(id){
-        if(this.isInCache(id)){
-            this.currentId = id;
-            this.fill(this.getCached(id));
-        }else{
-			this.fireEvent('beforeRead');
-			this.beforeRequest();
-            this.currentIdToBeSet = id;
-		    this.readHandler().sendToServer('read', id);
-
-        }
+		this.fireEvent('beforeRead');
+		this.beforeRequest();
+		this.currentIdToBeSet = id;
+		this.readHandler().sendToServer('read', id);
 	},
-
-    getCached:function(id){
-        return this.cacheStorage[id] ? this.cacheStorage[id].data : undefined;
-    },
-
-    updateCache:function(value, view){
-        if(this.cacheStorage[this.currentId]){
-            this.cacheStorage[this.currentId].data[view.getName()] = value;
-        }
-    },
-
-    storeCache:function(id, data){
-        this.cacheStorage[id] = {
-            data : Object.clone(data),
-            time : new Date().getTime()
-        }
-    },
-
-    isInCache:function(id){
-        if(this.cache && this.cacheStorage[id]){
-            if(!this.cacheTimeout || this.cacheStorage[id].time + (this.cacheTimeout * 1000 * 60) < new Date().getTime()){
-                return true;
-            }
-        }
-        return false;
-    },
 
 	_readHandler:undefined,
 
@@ -515,16 +401,11 @@ ludo.form.Manager = new Class({
 		if(this._readHandler === undefined){
 			this._readHandler = this.getDependency('readHandler', new ludo.remote.JSON({
 				url:this.url,
-				resource:this.resource ? this.resource : 'Form',
 				method:this.method ? this.method : 'post',
 				service : 'read',
 				listeners:{
 					"success":function (request) {
 						this.currentId = this.currentIdToBeSet;
-						this.record = request.getResponseData();
-                        if(this.cache){
-                            this.storeCache(this.currentId, this.record);
-                        }
 						this.fill(this.record);
 						/**
 						 * Event fired after data for the form has been read successfully
@@ -576,7 +457,6 @@ ludo.form.Manager = new Class({
 			if (!this.resource)ludo.util.warn("Warning: form does not have a resource property. Falling back to default: 'Form'");
 			this._request = this.createDependency('_request', new ludo.remote.JSON({
 				url:this.url,
-				resource:this.resource ? this.resource : 'Form',
 				method:this.method ? this.method : 'post',
 				listeners:{
 					"success":function (request) {

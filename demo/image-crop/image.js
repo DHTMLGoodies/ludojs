@@ -1,5 +1,5 @@
 ludo.crop.Image = new Class({
-    Extends:ludo.svg.Base,
+    Extends:ludo.canvas.Node,
     type:'crop.Image',
     useController:true,
     tag:'image',

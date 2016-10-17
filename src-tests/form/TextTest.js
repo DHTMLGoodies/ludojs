@@ -93,7 +93,7 @@ TestCase("TextTest", {
 
         // then
         assertEquals('New value', el.getFormEl().val());
-        assertFalse(ludo.dom.hasClass(el.getFormEl(), 'ludo-form-el-inline-label'));
+        assertFalse(el.getFormEl().hasClass('ludo-form-el-inline-label'));
 
         // given
         el = new ludo.form.Date({
@@ -106,7 +106,7 @@ TestCase("TextTest", {
 
         // then
         assertEquals('1973-09-06', el.getFormEl().val());
-        assertFalse(ludo.dom.hasClass(el.getFormEl(), 'ludo-form-el-inline-label'));
+        assertFalse(el.getFormEl().hasClass('ludo-form-el-inline-label'));
     },
 
     "test should be able to define inlineLabel in parent view": function(){

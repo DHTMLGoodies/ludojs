@@ -94,7 +94,7 @@ ludo.remote.Message = new Class({
         } else {
             this.getEl().removeClass('ludo-remote-error-message');
         }
-        this.setHtml(response.message);
+        this.html(response.message);
 
         /**
          * Event fired when message is shown.
@@ -105,6 +105,6 @@ ludo.remote.Message = new Class({
     },
 
     hideMessage:function () {
-        this.setHtml('');
+        this.html('');
     }
 });

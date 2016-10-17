@@ -82,8 +82,8 @@ ludo.canvas.Element = new Class({
 		return this.engine.get(this.getEl(), key);
 	},
 
-	setHtml:function (html) {
-		this.engine.setHtml(this.getEl(), html);
+	html:function (html) {
+		this.engine.html(this.getEl(), html);
 	},
 
 	rotate:function (degrees) {

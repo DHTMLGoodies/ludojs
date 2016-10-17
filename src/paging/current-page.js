@@ -51,7 +51,7 @@ ludo.paging.CurrentPage = new Class({
     },
 
 	setPageNumber:function () {
-		this.setHtml(this.tpl.replace('{page}', this.getDataSource().getPageNumber()));
+		this.html(this.tpl.replace('{page}', this.getDataSource().getPageNumber()));
 	},
 
 	insertJSON:function () {

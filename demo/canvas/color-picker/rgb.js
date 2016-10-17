@@ -73,14 +73,14 @@ ludo.colorPicker.RGB = new Class({
     },
 
     setRGB:function (color) {
-        this.child['rgb'].setValue(color);
+        this.child['rgb'].val(color);
     },
 
     setValue:function (property, value) {
         if (value != this.currentColor[property]) {
 			value = Math.round(value);
             this.currentColor[property] = value;
-            this.child[property].setValue(value);
+            this.child[property].val(value);
         }
     }
 });

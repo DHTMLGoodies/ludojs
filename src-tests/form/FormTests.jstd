@@ -44,6 +44,7 @@ test:
   - DateTest.js
   - CheckboxTest.js
   - ColorTest.js
+  - GeneralFormTests.js
 
 plugin:
  - name: "coverage"

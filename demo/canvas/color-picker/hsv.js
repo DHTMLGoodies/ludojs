@@ -54,18 +54,18 @@ ludo.colorPicker.HSV = new Class({
 		}
 	},
 	addControllerEvents:function () {
-		this.controller.addEvent('setHSVValue', this.setValue.bind(this));
+		this.controller.addEvent('setHSVValue', this.val.bind(this));
 	},
 
 	fireColorEvent:function () {
 		var color = this.colorObj.rgbCode(this.currentColor);
 		this.fireEvent('setColor', color);
 	},
-	setValue:function (property, value) {
+	val:function (property, value) {
 		value = Math.round(value);
 		if (value !== this.currentColor[property]) {
 			this.currentColor[property] = value;
-			this.child[property].setValue(value);
+			this.child[property].val(value);
 
 		}
 	}

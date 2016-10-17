@@ -1,5 +1,5 @@
 ludo.crop.Canvas = new Class({
-    Extends:ludo.svg.Component,
+    Extends:ludo.canvas.Canvas,
     type:'crop.Canvas',
     useController:true,
     svg:{

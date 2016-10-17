@@ -1,5 +1,5 @@
 ludo.crop.Handle = new Class({
-    Extends:ludo.svg.Base,
+    Extends:ludo.canvas.Node,
     type:'crop.Handle',
     tag:'rect',
     useController:true,
