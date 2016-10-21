@@ -2,7 +2,7 @@
  * Layout manager for items in a chart
  * @namespace chart
  * @class Layout
- * @extends layout.Relative
+ * @augments layout.Relative
  */
 ludo.layout.Canvas = new Class({
 	Extends:ludo.layout.Relative,
@@ -32,7 +32,7 @@ ludo.layout.Canvas = new Class({
 
 	/**
 	 * Add events to child view
-	 * @method addChildEvents
+	 * @function addChildEvents
 	 * @param {ludo.View} child
 	 * @private
 	 */
@@ -44,7 +44,7 @@ ludo.layout.Canvas = new Class({
 
 	/**
 	 * Position child at this coordinates
-	 * @method positionChild
+	 * @function positionChild
 	 * @param {canvas.Element} child
 	 * @param {String} property
 	 * @param {Number} value

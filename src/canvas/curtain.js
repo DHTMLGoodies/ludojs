@@ -27,7 +27,7 @@ ludo.canvas.Curtain = new Class({
 
 	/**
 	 * Open curtains, i.e. show element
-	 * @method open
+	 * @function open
 	 * @param {String} direction (LeftRight, TopBottom, BottomTop or RightLeft),
 	 * @param {Number} duration in seconds
 	 * @optional
@@ -45,7 +45,7 @@ ludo.canvas.Curtain = new Class({
 
 	/**
 	 * Close curtains, i.e. hide element
-	 * @method close
+	 * @function close
 	 * @param {String} direction (LeftRight, TopBottom, BottomTop or RightLeft),
 	 * @param {Number} duration in seconds
 	 * @optional

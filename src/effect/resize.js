@@ -3,7 +3,7 @@
  * @module effect
  * @class Resize
  * @namespace effect
- * @extends Core
+ * @augments Core
  */
 ludo.effect.Resize = new Class({
     Extends:ludo.Core,
@@ -139,7 +139,7 @@ ludo.effect.Resize = new Class({
 	 * the resized DOM element.
      *
      * Second parameter cssClass is optional.
-     * @method addHandle
+     * @function addHandle
      * @param {String} region
      * @param {String} cssClass
      * @return void
@@ -201,7 +201,7 @@ ludo.effect.Resize = new Class({
 
     /**
      * Set min and max width/height based on aspect ratio
-     * @method setMinAndMax
+     * @function setMinAndMax
      * @private
      */
     setMinAndMax:function () {
@@ -322,7 +322,7 @@ ludo.effect.Resize = new Class({
     /**
      * Returns coordinates for current drag operation,
      * example: {left:100,top:100,width:500,height:400}
-     * @method getCoordinates
+     * @function getCoordinates
      * @return {Object}
      */
     getCoordinates:function () {

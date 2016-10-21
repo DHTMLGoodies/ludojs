@@ -9,7 +9,7 @@ ludo.canvas.Effect = new Class({
 
     /**
      * Animates back to translate(0,0)
-     * @method flyBack
+     * @function flyBack
      * @param el
      * @param duration
      */

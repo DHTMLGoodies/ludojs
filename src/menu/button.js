@@ -3,7 +3,7 @@
  below it.
  @namespace menu
  @class Button
- @extends Core
+ @augments Core
  */
 ludo.menu.Button = new Class({
     Extends: ludo.Core,
@@ -12,7 +12,7 @@ ludo.menu.Button = new Class({
     /**
      * Render button to this element
      * @attribute renderTo
-     * @type {String}|DOMElement
+     * @type {String|DOMElement}
      * @default undefined
      */
     renderTo: undefined,
@@ -143,7 +143,7 @@ ludo.menu.Button = new Class({
 
     /**
      This method should be called from function added as event handler to "beforeShow"
-     @method cancelShow
+     @function cancelShow
      @example
      button.addEvent('beforeShow', function(button){
 	 		if(!this.isOkToShowButton()){

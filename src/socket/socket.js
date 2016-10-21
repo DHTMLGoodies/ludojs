@@ -4,7 +4,7 @@
  {{#crossLink "View/getSocket"}}{{/crossLink}}
  @namespace socket
  @class Socket
- @extends Core
+ @augments Core
  @constructor
  @param {Object} config
  @example
@@ -194,7 +194,7 @@ ludo.socket.Socket = new Class({
 
 	/**
 	Add socket event
-	@method on
+	@function on
 	@param {String} event
 	@param {Function} fn
 	@example
@@ -211,7 +211,7 @@ ludo.socket.Socket = new Class({
 	},
 	/**
 	Emit socket event
-	@method emit
+	@function emit
 	@param {String} event
 	@param {Object} query
 	@example

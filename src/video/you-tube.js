@@ -2,7 +2,7 @@
  YouTube video player component
  @namespace video
  @class YouTube
- @extends video.Video
+ @augments video.Video
  @constructor
  @param {Object} config
  @example

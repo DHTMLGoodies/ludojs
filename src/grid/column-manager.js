@@ -3,7 +3,7 @@
  sending a "columnManager" config object to the constructor of a grid.Grid view.
  @namespace grid
  @class ColumnManager
- @extends Core
+ @augments Core
  @constructor
  @param {Object} config
  @example
@@ -140,7 +140,7 @@ ludo.grid.ColumnManager = new Class({
 
 	/**
 	 Returns object of visible columns, example:
-	 @method getVisibleColumns
+	 @function getVisibleColumns
 	 @return {Object} visible columns
      @example
         {
@@ -218,7 +218,7 @@ ludo.grid.ColumnManager = new Class({
 
 	/**
 	 * Returns true if column with given id is in a group.
-	 * @method isInAGroup
+	 * @function isInAGroup
 	 * @param {String} column
 	 * @return {Boolean} is in a group
 	 */
@@ -228,7 +228,7 @@ ludo.grid.ColumnManager = new Class({
 
 	/**
 	 * Returns id of parent group
-	 * @method getGroupIdOf
+	 * @function getGroupIdOf
 	 * @param {String} column
 	 * @return {String} group id
 	 */
@@ -238,7 +238,7 @@ ludo.grid.ColumnManager = new Class({
 
 	/**
 	 * Returns parent group object for a column
-	 * @method getGroupFor
+	 * @function getGroupFor
 	 * @param {String} column
 	 * @return {grid.Column|undefined} parent
 	 */
@@ -285,7 +285,7 @@ ludo.grid.ColumnManager = new Class({
 	},
 	/**
 	 * Returns true if column with given id is resizable
-	 * @method isResizable
+	 * @function isResizable
 	 * @param {String} column
 	 * @return {Boolean}
 	 */
@@ -395,7 +395,7 @@ ludo.grid.ColumnManager = new Class({
 
 	/**
 	 * Insert a column before given column
-	 * @method insertColumnBefore
+	 * @function insertColumnBefore
 	 * @param {String} column id
 	 * @param {String} before column id
 	 */
@@ -404,7 +404,7 @@ ludo.grid.ColumnManager = new Class({
 	},
 	/**
 	 * Insert a column after given column
-	 * @method insertColumnAfter
+	 * @function insertColumnAfter
 	 * @param {String} column id
 	 * @param {String} after column id
 	 */
@@ -470,7 +470,7 @@ ludo.grid.ColumnManager = new Class({
 	},
 
 	/**
-	 * @method insertIntoSameGroupAs
+	 * @function insertIntoSameGroupAs
 	 * @param {String} column
 	 * @param {String} as
 	 * @private
@@ -495,7 +495,7 @@ ludo.grid.ColumnManager = new Class({
 
 	/**
 	 * Remove column from a group
-	 * @method removeFromGroup
+	 * @function removeFromGroup
 	 * @param {String} column
 	 * @return {Boolean} success
 	 */
@@ -596,7 +596,7 @@ ludo.grid.ColumnManager = new Class({
 
 	/**
 	 * Return array of column keys for a header row, 0 is first row
-	 * @method getColumnsInRow
+	 * @function getColumnsInRow
 	 * @param {Number} rowNumber
 	 * @return {Array} columns
 	 */

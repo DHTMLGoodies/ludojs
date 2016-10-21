@@ -2,7 +2,7 @@
 Class for linear gradients
 @namespace canvas
 @class Gradient
-@extends canvas.NamedNode
+@augments canvas.NamedNode
 @constructor
 @param {Object} config
 @example
@@ -20,7 +20,7 @@ ludo.canvas.Gradient = new Class({
 
 	/**
 	 Add stop point
-	 @method addStop
+	 @function addStop
 	 @param {String} offset
 	 @param {String} stopColor
 	 @param {Number|undefined} stopOpacity
@@ -50,7 +50,7 @@ ludo.canvas.Gradient = new Class({
 
 	/**
 	 * Get stop node by index
-	 * @method getStop
+	 * @function getStop
 	 * @param {Number} index
 	 * @return {canvas.Stop} stop
 	 */

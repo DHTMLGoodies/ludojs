@@ -1,8 +1,8 @@
 /**
  * Form field designed to search in dataSource.Collection
- * @namespace form
+ * @namespace ludo.form
  * @class SearchField
- * @extends form.Text
+ * @augments ludo.form.Text
  */
 ludo.form.SearchField = new Class({
 	Extends:ludo.form.Text,
@@ -79,7 +79,7 @@ ludo.form.SearchField = new Class({
 
 	/**
 	 * Executes search in data source
-	 * @method search
+	 * @function search
 	 */
 	search:function () {
 		if(this.remote){

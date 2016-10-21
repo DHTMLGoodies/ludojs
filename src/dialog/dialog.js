@@ -2,7 +2,7 @@
  * Basic dialog class and base class for all other dialogs
  * @namespace dialog
  * @class dialog.Dialog
- * @extends Window
+ * @augments Window
  */
 ludo.dialog.Dialog = new Class({
 	Extends:ludo.Window,
@@ -157,7 +157,8 @@ ludo.dialog.Dialog = new Class({
 		 * The name of the button is lowercase version of button value with white space removed
 		 * Example: for a button with value "OK", an "ok" event will be sent.
 		 *
-		 * @event <lowercase button value>
+		 * Name of event is value of button in lowercase
+		 * @event buttonvalue
 		 * @param {Object} ludo.View (Parent component of button)
 		 */
 		this.fireEvent(button.getValue().replace(/\s/g, '').toLowerCase(), this);

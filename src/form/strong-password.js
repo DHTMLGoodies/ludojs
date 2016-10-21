@@ -6,9 +6,9 @@
  contain at least 8 characters in length
  not limited in length
  
- @namespace form
+ @namespace ludo.form
  @class Password
- @extends form.Text
+ @augments ludo.form.Text
  @constructor
  @description Form component for passwords.
  @param {Object} config

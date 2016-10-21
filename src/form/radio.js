@@ -1,8 +1,8 @@
 /**
  * Radio button
- * @namespace form
+ * @namespace ludo.form
  * @class Radio
- * @extends form.Checkbox
+ * @augments ludo.form.Checkbox
  */
 ludo.form.Radio = new Class({
     Extends:ludo.form.Checkbox,

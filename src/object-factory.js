@@ -9,7 +9,7 @@ ludo.ObjectFactory = new Class({
 
 	/**
 	 Creates an instance of a class by "type" attribute
-	 @method create
+	 @function create
 	 @param {Object|ludo.Core} config
 	 @return {ludo.Core} object
 	 */
@@ -36,7 +36,7 @@ ludo.ObjectFactory = new Class({
 	 register a namespace by calling ludo.factory.registerNamespace('MyApp'). However, if you have a lot of
 	 classes, it will increase performance by registering your classes. ludoJS will then know it instantly
 	 and doesn't have to traverse the name space tree to find it.
-	 @method registerClass
+	 @function registerClass
 	 @param {String} typeName
 	 @param {ludo.Core} classReference
 	 @example
@@ -66,7 +66,7 @@ ludo.ObjectFactory = new Class({
 	 This methods makes ludoJS aware of the namespace and register a global variable
 	 window[ns] for it if it does not exists. It makes it possible for ludoJS to find
 	 classes by type attribute.
-	 @method ludo.factory.createNamespace
+	 @function ludo.factory.createNamespace
 	 @param {String} ns
 	 @example
 	 	ludo.factory.createNamespace('MyApp');

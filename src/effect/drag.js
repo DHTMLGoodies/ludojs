@@ -1,8 +1,8 @@
 /**
-@namespace effect
-@class Drag
-@extends effect.Effect
-@description Class for dragging DOM elements.
+ * Class for dragging DOM elements.
+@namespace ludo.effect
+@class ludo.effect.Drag
+@augments ludo.effect.Effect
 @constructor
 @param {Object} config
 @example
@@ -171,8 +171,8 @@ ludo.effect.Drag = new Class({
 
 	/**
 	 * While dragging, always show dragged element this amount of pixels below mouse cursor.
-	 * @config mouseYOffset
-	 * @type {Number} pixels
+	 * @param mouseYOffset
+	 * @type {Number}
 	 * @default undefined
 	 */
 	mouseYOffset:undefined,
@@ -180,7 +180,7 @@ ludo.effect.Drag = new Class({
 	/**
 	 * While dragging, always show dragged element this amount of pixels right of mouse cursor.
 	 * @config mouseXOffset
-	 * @type {Number} pixels
+	 * @type {Number}
 	 * @default undefined
 	 */
 	mouseXOffset:undefined,
@@ -214,7 +214,7 @@ ludo.effect.Drag = new Class({
 
 	/**
 	 Add draggable object
-	 @method add
+	 @function add
 	 @param {effect.DraggableNode|String|HTMLDivElement} node
 	 @return {effect.DraggableNode}
 	 @example
@@ -266,7 +266,7 @@ ludo.effect.Drag = new Class({
 
 	/**
 	 * Remove node
-	 * @method remove
+	 * @function remove
 	 * @param {String} id
 	 * @return {Boolean} success
 	 */
@@ -334,7 +334,7 @@ ludo.effect.Drag = new Class({
 	/**
 	 * Returns reference to dragged object, i.e. object added in constructor or
 	 * by use of add method
-	 * @method getDragged
+	 * @function getDragged
 	 * @return {Object}
 	 */
 	getDragged:function(){
@@ -343,7 +343,7 @@ ludo.effect.Drag = new Class({
 
 	/**
 	 * Returns reference to draggable DOM node
-	 * @method getEl
+	 * @function getEl
 	 * @return {Object} DOMNode
 	 */
 	getEl:function () {
@@ -451,7 +451,7 @@ ludo.effect.Drag = new Class({
 	/**
 	 Cancel drag. This method is designed to be called from an event handler
 	 attached to the "beforeDrag" event.
-	 @method cancelDrag
+	 @function cancelDrag
 	 @example
 	 	// Here, dd is a {{#crossLink "effect.Drag"}}{{/crossLink}} object
 	 	dd.on('before', function(draggable, dd, pos){
@@ -544,7 +544,7 @@ ludo.effect.Drag = new Class({
 
 	/**
 	 * Return current x pos
-	 * @method getX
+	 * @function getX
 	 * @return {Number} x
 	 */
 	getX:function(){
@@ -552,7 +552,7 @@ ludo.effect.Drag = new Class({
 	},
 	/**
 	 * Return current y pos
-	 * @method getY
+	 * @function getY
 	 * @return {Number} y
 	 */
 	getY:function(){
@@ -620,7 +620,7 @@ ludo.effect.Drag = new Class({
 
 	/**
 	 * Set new max X pos
-	 * @method setMaxX
+	 * @function setMaxX
 	 * @param {Number} x
 	 */
 	setMaxX:function (x) {
@@ -628,7 +628,7 @@ ludo.effect.Drag = new Class({
 	},
 	/**
 	 * Set new min X pos
-	 * @method setMinX
+	 * @function setMinX
 	 * @param {Number} x
 	 */
 	setMinX:function (x) {
@@ -636,7 +636,7 @@ ludo.effect.Drag = new Class({
 	},
 	/**
 	 * Set new min Y pos
-	 * @method setMinY
+	 * @function setMinY
 	 * @param {Number} y
 	 */
 	setMinY:function (y) {
@@ -644,7 +644,7 @@ ludo.effect.Drag = new Class({
 	},
 	/**
 	 * Set new max Y pos
-	 * @method setMaxY
+	 * @function setMaxY
 	 * @param {Number} y
 	 */
 	setMaxY:function (y) {
@@ -652,7 +652,7 @@ ludo.effect.Drag = new Class({
 	},
 	/**
 	 * Set new min pos
-	 * @method setMinPos
+	 * @function setMinPos
 	 * @param {Number} pos
 	 */
 	setMinPos:function (pos) {
@@ -660,7 +660,7 @@ ludo.effect.Drag = new Class({
 	},
 	/**
 	 * Set new max pos
-	 * @method setMaxPos
+	 * @function setMaxPos
 	 * @param {Number} pos
 	 */
 	setMaxPos:function (pos) {
@@ -691,7 +691,7 @@ ludo.effect.Drag = new Class({
 	},
 	/**
 	 * Return amount dragged in x direction
-	 * @method getDraggedX
+	 * @function getDraggedX
 	 * @return {Number} x
 	 */
 	getDraggedX:function(){
@@ -699,7 +699,7 @@ ludo.effect.Drag = new Class({
 	},
 	/**
 	 * Return amount dragged in y direction
-	 * @method getDraggedY
+	 * @function getDraggedY
 	 * @return {Number} y
 	 */
 	getDraggedY:function(){
@@ -720,7 +720,7 @@ ludo.effect.Drag = new Class({
 
 	/**
 	 * Returns width of dragged element
-	 * @method getHeight
+	 * @function getHeight
 	 * @return {Number}
 	 */
 	getWidth:function () {
@@ -729,7 +729,7 @@ ludo.effect.Drag = new Class({
 
 	/**
 	 * Returns height of dragged element
-	 * @method getHeight
+	 * @function getHeight
 	 * @return {Number}
 	 */
 	getHeight:function () {
@@ -737,7 +737,7 @@ ludo.effect.Drag = new Class({
 	},
 	/**
 	 * Returns current left position of dragged
-	 * @method getLeft
+	 * @function getLeft
 	 * @return {Number}
 	 */
 	getLeft:function () {
@@ -746,7 +746,7 @@ ludo.effect.Drag = new Class({
 
 	/**
 	 * Returns current top/y position of dragged.
-	 * @method getTop
+	 * @function getTop
 	 * @return {Number}
 	 */
 	getTop:function () {
@@ -755,7 +755,7 @@ ludo.effect.Drag = new Class({
 
 	/**
 	 * Returns reference to DOM element of shim
-	 * @method getShim
+	 * @function getShim
 	 * @return {HTMLDivElement} shim
 	 */
 	getShim:function () {
@@ -786,7 +786,7 @@ ludo.effect.Drag = new Class({
 
 	/**
 	 * Show shim
-	 * @method showShim
+	 * @function showShim
 	 */
 	showShim:function () {
 		this.getShim().css({
@@ -825,7 +825,7 @@ ludo.effect.Drag = new Class({
 
 	/**
 	 * Hide shim
-	 * @method hideShim
+	 * @function hideShim
 	 */
 	hideShim:function () {
 		this.getShim().css('display', 'none');
@@ -833,7 +833,7 @@ ludo.effect.Drag = new Class({
 
 	/**
 	 * Set text content of shim
-	 * @method setShimText
+	 * @function setShimText
 	 * @param {String} text
 	 */
 	setShimText:function (text) {
@@ -842,7 +842,7 @@ ludo.effect.Drag = new Class({
 
 	/**
 	 * Fly/Slide dragged element back to it's original position
-	 * @method flyBack
+	 * @function flyBack
 	 */
 	flyBack:function (duration) {
 		this.fly({
@@ -857,7 +857,7 @@ ludo.effect.Drag = new Class({
 	/**
 	 * Fly/Slide dragged element to position of shim. This will only
 	 * work when useShim is set to true.
-	 * @method flyToShim
+	 * @function flyToShim
 	 * @param {Number} duration in seconds(default = .2)
 	 */
 	flyToShim:function(duration){

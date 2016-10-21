@@ -1,6 +1,6 @@
 /**
  * @class Accordion
- * @extends FramedView
+ * @augments FramedView
  * @description Accordion component
  */
 ludo.Accordion = new Class({
@@ -33,7 +33,7 @@ ludo.Accordion = new Class({
 	},
 	/**
 	 * Maximize accordion component
-	 * @method maximmize
+	 * @function maximmize
 	 * @return void
 	 */
 	maximize:function () {
@@ -56,7 +56,7 @@ ludo.Accordion = new Class({
 	},
 	/**
 	 * Minimize accordion component
-	 * @method minimize
+	 * @function minimize
 	 * @return void
 	 */
 	minimize:function () {

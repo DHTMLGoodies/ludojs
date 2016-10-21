@@ -3,7 +3,7 @@
  for radius, center x and center y.
  @namespace canvas
  @class Circle
- @extends canvas.Node
+ @augments canvas.Node
  @constructor
  @param {Object} coordinates
  @param {canvas.NodeConfig} config
@@ -19,7 +19,7 @@ ludo.canvas.Circle = new Class({
 
 	/**
 	 * Set new radius
-	 * @method setRadius
+	 * @function setRadius
 	 * @param {Number} radius
 	 */
 	setRadius:function (radius) {
@@ -28,7 +28,7 @@ ludo.canvas.Circle = new Class({
 
 	/**
 	 * Return curent radius
-	 * @method getRadius
+	 * @function getRadius
 	 * @return {String|Number} radius
 	 */
 	getRadius:function () {
@@ -37,7 +37,7 @@ ludo.canvas.Circle = new Class({
 
 	/**
 	 * Set new center X
-	 * @method setCx
+	 * @function setCx
 	 * @param {Number} x
 	 */
 	setCx:function (x) {
@@ -45,7 +45,7 @@ ludo.canvas.Circle = new Class({
 	},
 	/**
 	 * Return current center X
-	 * @method getX
+	 * @function getX
 	 * @return {String|Number} cx
 	 */
 	getCx:function () {
@@ -54,7 +54,7 @@ ludo.canvas.Circle = new Class({
 
 	/**
 	 * Set new center Y
-	 * @method setCy
+	 * @function setCy
 	 * @param {Number} y
 	 */
 	setCy:function (y) {
@@ -62,7 +62,7 @@ ludo.canvas.Circle = new Class({
 	},
 	/**
 	 * Return current center Y
-	 * @method getCy
+	 * @function getCy
 	 * @return {String|Number} cy
 	 */
 	getCy:function () {
@@ -71,7 +71,7 @@ ludo.canvas.Circle = new Class({
 
 	/**
 	 * Return position on canvas
-	 * @method getPosition()
+	 * @function getPosition()
 	 * @return {Object} x and y
 	 */
 	getPosition:function(){

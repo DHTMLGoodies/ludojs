@@ -18,7 +18,7 @@ TestCase("ColorTest", {
         var c = new ludo.color.Color();
 
         // when
-        var color = c.rgbCode({ r:0,g:0,b:0});
+        var color = c.rgbCode({r:0,g:0,b:0});
         // then
         assertEquals('#000000', color);
 
@@ -85,6 +85,31 @@ TestCase("ColorTest", {
 
         // then
         assertEquals('#ff0000', color.toLowerCase());
+    },
+
+    "test should be able to brighten a color": function(){
+        var c = new ludo.color.Color();
+
+        var color = '#669900';
+
+        var brighter = c.brighten(color, 10);
+
+        assertEquals('#76A811', brighter);
+    },
+
+
+    "test should be able to darken a color" : function(){
+        // given
+        var c = new ludo.color.Color();
+        var color = '#BBBBBB';
+
+        // when
+        var darker = c.darken(color, 10);
+
+        // then
+        assertEquals('#A8A8A8', darker);
+
+
     }
 
 });

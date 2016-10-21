@@ -78,7 +78,7 @@ ludo.canvas.Canvas = new Class({
 
     /**
      * Returns height of canvas
-     * @method getHeight
+     * @function getHeight
      * @return {Number} height
      */
 	getHeight:function(){
@@ -87,7 +87,7 @@ ludo.canvas.Canvas = new Class({
 
     /**
      * Returns width of canvas
-     * @method getWidth
+     * @function getWidth
      * @return {Number} width
      */
 	getWidth:function(){
@@ -96,7 +96,7 @@ ludo.canvas.Canvas = new Class({
 
     /**
      * Returns center point of canvas as an object with x and y coordinates
-     * @method getCenter
+     * @function getCenter
      * @return {Object}
      */
     getCenter:function(){
@@ -109,7 +109,7 @@ ludo.canvas.Canvas = new Class({
 
 	/**
 	 * Update view box size
-	 * @method setViewBox
+	 * @function setViewBox
 	 * @param width
 	 * @type {Number}
 	 * @param height
@@ -135,7 +135,7 @@ ludo.canvas.Canvas = new Class({
 
 	/**
 	 * Returns reference to &lt;defs> node
-	 * @method getDefs
+	 * @function getDefs
 	 * @return {canvas.Node} defs node
 	 */
 	getDefs:function(){
@@ -148,7 +148,7 @@ ludo.canvas.Canvas = new Class({
 
 	/**
 	 * Adopt node into &lt;defs> tag of canvas
-	 * @method appendDef
+	 * @function appendDef
 	 * @param {canvas.Node|canvas.Element} node
 	 * @return {canvas.Node} defs Node
 	 */

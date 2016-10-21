@@ -1,9 +1,9 @@
 /**
- * @namespace form
+ * @namespace ludo.form
  * @class ComboTree
  * @description A "combo" where you select value from a tree. id of clicked tree node will be set as
  * value.
- * @extends form.Element
+ * @augments ludo.form.Element
  */
 ludo.form.ComboTree = new Class({
     Extends:ludo.form.Element,
@@ -315,7 +315,7 @@ ludo.form.ComboTree = new Class({
 
     /**
      * No arguments = Return id of selected record
-     * @method getValue
+     * @function getValue
      * @return {String} id (tree.selectedRecord.id);
      */
     val:function(value){
@@ -327,7 +327,7 @@ ludo.form.ComboTree = new Class({
 
     /**
      * Return id of selected record
-     * @method getValue
+     * @function getValue
      * @return {String} id (tree.selectedRecord.id);
      */
     getValue:function () {
@@ -338,7 +338,7 @@ ludo.form.ComboTree = new Class({
 
     /**
      * Return selected record
-     * @method getSelectedRecord
+     * @function getSelectedRecord
      * @return object record
      */
     getSelectedRecord:function () {

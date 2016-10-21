@@ -13,7 +13,7 @@ ludo.dom = {
 	 * Return Margin width (left and right) of DOM element
 	 * Once retrieved, it will be cached for later lookup. Cache
 	 * can be cleared by calling clearCacheStyles
-	 * @method getMW
+	 * @function getMW
 	 * @param {Object} el
 	 */
 	getMW:function (el) {
@@ -28,7 +28,7 @@ ludo.dom = {
 	 * Return Border width (left and right) of DOM element
 	 * Once retrieved, it will be cached for later lookup. Cache
 	 * can be cleared by calling clearCacheStyles
-	 * @method getBW
+	 * @function getBW
 	 * @param {Object} el DOMElement or id of DOMElement
 	 */
 	getBW:function (el) {
@@ -42,7 +42,7 @@ ludo.dom = {
 	 * Return Padding Width (left and right) of DOM element
 	 * Once retrieved, it will be cached for later lookup. Cache
 	 * can be cleared by calling clearCacheStyles
-	 * @method getPW
+	 * @function getPW
 	 * @param {Object} el
 	 */
 	getPW:function (el) {
@@ -57,7 +57,7 @@ ludo.dom = {
 	 * Return Margin height (top and bottom) of DOM element
 	 * Once retrieved, it will be cached for later lookup. Cache
 	 * can be cleared by calling clearCacheStyles
-	 * @method getMH
+	 * @function getMH
 	 * @param {Object} el
 	 */
 	getMH:function (el) {
@@ -73,7 +73,7 @@ ludo.dom = {
 	 * Return Border height (top and bottom) of DOM element
 	 * Once retrieved, it will be cached for later lookup. Cache
 	 * can be cleared by calling clearCacheStyles
-	 * @method getBH
+	 * @function getBH
 	 * @param {Object} el
 	 */
 	getBH:function (el) {
@@ -88,7 +88,7 @@ ludo.dom = {
 	 * Return Padding height (top and bottom) of DOM element
 	 * Once retrieved, it will be cached for later lookup. Cache
 	 * can be cleared by calling clearCacheStyles
-	 * @method getPH
+	 * @function getPH
 	 * @param {Object} el DOMElement or id of DOMElement
 	 */
 	getPH:function (el) {
@@ -111,7 +111,7 @@ ludo.dom = {
 	},
 
 	/**
-	 * @method clearCacheStyles
+	 * @function clearCacheStyles
 	 * Clear cached padding,border and margins.
 	 */
 	clearCache:function () {
@@ -124,7 +124,7 @@ ludo.dom = {
 
 	/**
 	 * Return numeric style value,
-	 * @method getNumericStyle
+	 * @function getNumericStyle
 	 * @private
 	 * @param {Object} el
 	 * @param {String} style
@@ -246,7 +246,7 @@ ludo.dom = {
 
 	/**
 	 * Return measured width of a View
-	 * @method getMeasuredWidth
+	 * @function getMeasuredWidth
 	 * @param {ludo.View} view
 	 * @return {Number}
 	 */

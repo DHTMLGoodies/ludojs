@@ -1,8 +1,8 @@
 /**
- * @namespace form
+ * @namespace ludo.form
  * @class Email
  * @description A customized text field with automatic validation of e-mail addresses
- * @extends form.Text
+ * @augments ludo.form.Text
  */
 ludo.form.Email = new Class({
     Extends:ludo.form.Text,

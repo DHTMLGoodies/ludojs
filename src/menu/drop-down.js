@@ -1,7 +1,7 @@
 /**
  * @namespace menu
  * @class DropDown
- * @extends menu.Menu
+ * @augments menu.Menu
  *
  */
 ludo.menu.DropDown = new Class({

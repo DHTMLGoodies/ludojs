@@ -1,7 +1,8 @@
 /**
  * Base class for data sources
  * @namespace dataSource
- * @class Base
+ * @class ludo.dataSource.Base
+ * @augments ludo.Core
  */
 ludo.dataSource.Base = new Class({
 	Extends:ludo.Core,
@@ -16,14 +17,15 @@ ludo.dataSource.Base = new Class({
 	/**
 	 * Remote url. If not set, global url will be used
 	 * @attribute url
-	 * @type String
+	 * @type {String}
 	 * @optional
 	 */
 	url:undefined,
 	/**
 	 * Remote postData sent with request, example:
 	 * postData: { getUsers: 1 }
-	 * @attribute object postData
+	 * @attribute postData
+	 * @type {Object}
 	 */
 	postData:{},
 
@@ -108,7 +110,7 @@ ludo.dataSource.Base = new Class({
 
 	/**
 	 * Send a new request
-	 * @method sendRequest
+	 * @function sendRequest
 	 * @param {String} service
 	 * @param {Array} arguments
 	 * @optional
@@ -122,7 +124,7 @@ ludo.dataSource.Base = new Class({
 	},
 	/**
 	 * Has data loaded from server
-	 * @method hasData
+	 * @function hasData
 	 * @return {Boolean}
 	 */
 	hasData:function () {
@@ -130,7 +132,7 @@ ludo.dataSource.Base = new Class({
 	},
 	/**
 	 * Return data loaded from server
-	 * @method getData
+	 * @function getData
 	 * @return object data from server, example: { success:true, data:[]}
 	 */
 	getData:function () {
@@ -144,7 +146,7 @@ ludo.dataSource.Base = new Class({
 
 	/**
 	 * Return data-source type(HTML or JSON)
-	 * @method getSourceType
+	 * @function getSourceType
 	 * @return string source type
 	 */
 	getSourceType:function () {
@@ -162,12 +164,12 @@ ludo.dataSource.Base = new Class({
 
 	/**
 	 * Load content from a specific url
-	 * @method loadUrl
+	 * @function loadUrl
 	 * @param url
 	 */
 	loadUrl:function (url) {
 		this.url = url;
-		delete this._request;
+		this._request = undefined;
 		this.load();
 	},
 

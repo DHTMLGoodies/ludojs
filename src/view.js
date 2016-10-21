@@ -1,56 +1,48 @@
 /**
- ludoJS View
- Basic view class in ludoJS. All other views inherits properties from this class. It can be
- used at it is or used as ancestor for new modules.<br><br>
- The View class is also default type when adding children without a specified "type" attribute. <br><br>
- When a Component is created it executes the following life cycle methods. If you extend a component, do not
- override MooTools constructor method initialize(). Instead, extend one or more of the lifeCycle method
- below:
- <br><br>
- <b>ludoConfig(config)</b> - This is where config properties are being parsed. At this point, the DOM
- container and DOM body has been created but not inserted into the page.<br>
- <b>ludoDOM()</b> - The main DOM of the component has been created<br>
- <b>ludoCSS()</b> - A method used to apply CSS styling to DOM elements.<br>
- <b>ludoEvents()</b> - The place to add events<br>
- <b>ludoRendered</b> - The component is fully rendered<br>
-
- @class View
- @extends Core
- @constructor
+ A basic ludoJS view. When rendered on a Web page, a View is made out of two &lt;div> elements, one parent and one child(called body).
+ @example {@lang XML}
+ <!--  A basic rendered ludoJS view -->
+ <div class="ludo-view-container">
+ 	<div class="ludo-body"></div>
+ </div>
+ @namespace ludo
+ @class ludo.View
+ @augments ludo.Core
  @param {Object} config
- @example
+ @param {String} config.bodyCls Additional css classes to assign to the body &lt;div>, example: bodyCls: "classname1 classname2"
+ @param {Array} config.children An array of config objects for the child views. Example: children:[{ html: "child 1", layout:{ height: 100 }}, { html: "Child 2", layout: { height:200 } }]. See <a href="../demo/view/children.php" onclick="var w = window.open(this.href);return false">Demo</a>
+ @param {String} config.cls Additional css classes to assign to the views &lt;div>, example: cls: "classname1 classname2"
+ @param {Object} config.containerCss Specific css rules to apply to the View, @example: containerCss:{ border: '1px solid #ddd' } for a gray border
+ @param {Object} config.css Specific css rules to apply to the View's body &lt;div, @example: css:{ 'background-color': '#EEEEEE' } for a light gray background
+ @param {Object} config.dataSource A config object for the data source.
+ @param {Object} config.formConfig Default form properties for child form views. Example: formConfig:{labelWidth:100}. Then we don't have to specify labelWidth:100 for all the child form views.
+ @param {Boolean} config.hidden When true, the View will be initially hidden. For performance reasons initially hidden Views will not be rendered until View.show() is called.
+ @param {String} config.html Static HTML to show inside the View's body &lt;div>
+ @param {String} config.id Id of view. When set, you can easily get access to the View by calling ludo.get("&lt;idOfView>").
+ @param {Object} config.layout An object describing the layout for this view and basic layout rules for child views
+ @param {String} config.name When set, you can access it by calling parentView.child["&lt;childName>"]
+ @param {String} config.title Title of this view. If the view is a child in tab layout, the title will be displayed on the Tab
+ @param {String} config.tpl A template for string when inserting JSON Content(the insertJSON method), example: "name:{firstname} {lastname}<br>"
+ // TODO describe data sources
+ @example {@lang Javascript}
+	// Example 1: View render to &lt;body> tag
     new ludo.View({
  		renderTo:document.body,
  		html : 'Hello'
 	}
- Creates a standard view rendered to the &lt;body> element of your page
 
- @example
-     ...
-     children:[{
-            html : 'View 1' },
-     {
-         html : 'View 2' }
-     }]
-     ...
- adds two views as child of a component
-
- @example
-    ludo.myApp.View = new Class({
+	// Example 2: Creating custom View
+ 	myApp = {};
+    myApp.View = new Class({
  		Extends: ludo.View,
  		type : 'myApp.View',
  		ludoRendered:function(){
  			this.html('My custom component');
 		}
 	}
-    ...
-    ...
     children:[{
 		type : 'myApp.View'
 	}]
-     ...
-
- is a simple example of how to extend a view to create your own views and how to use it.
  *
  */
 ludo.View = new Class({
@@ -59,30 +51,12 @@ ludo.View = new Class({
 	cType:'View',
 	cls:'',
 	bodyCls:'',
-
-	/**
-	 * CSS class added to container of this component
-	 * @property string cssSignature
-	 * @private
-	 * @default undefined
-	 */
 	cssSignature:undefined,
-
-
 	closable:true,
 	minimizable:false,
 	movable:false,
-	/**
-	 * if set to true and this component is a child of a component with "rows" or "cols" layout, resize
-	 * handles will be created for it and it will be resizable. Please notice that components with
-	 * stretch set to true are not resizable.
-	 * @config resizable
-	 * @type {Boolean}
-	 */
 	resizable:false,
-
 	alwaysInFront:false,
-
 	statefulProperties:['layout'],
 
 	els:{
@@ -93,177 +67,50 @@ ludo.View = new Class({
 	defaultDS : 'dataSource.JSON',
 	tagBody:'div',
 	id:null,
-
-	/**
-	 Array of Config objects for dynamically created children
-	 @config children
-	 @type Array
-	 @example
-	    new ludo.Window({
-           left : 200, top : 200,
-           width : 400, height: 400,
-           children : [{
-               type : 'View',
-               html : 'This is my sub component'
-           }]
-        });
-	 */
 	children:[],
-
 	child:{},
-
 	dataSource:undefined,
-
-	/**
-	 @description Configuration object for socket.Socket, Example:
-	 A reference to the socket can be retrieved by this.getSocket()
-	 @config socket
-	 @type Object
-	 @default undefined
-	 @example
-	    socket:{
-            url:'http://127.0.0.1:1337',
-            emitEvents:['chat','logout']
-        }
-	 */
 	socket:undefined,
-
 	parentComponent:null,
 	objMovable:null,
-	/**
-	 * Width of component
-	 * @config {Number} width
-	 */
 	width:undefined,
-	/**
-	 * Height of component
-	 * @config {Number} height
-	 */
 	height:undefined,
-
 	overflow:undefined,
-
-	/**
-	 * Static HTML content for the view.
-	 * @config {String} html
-	 * @default ''
-	 */
 	_html:'',
 
-	/**
-	 * Set this property to true if you want to initally hide the component. You can use
-	 * method show to show the component again.
-	 * @config {Boolean} hidden
-	 * @default true
-	 */
 	hidden:false,
 
-	/**
-	 * CSS styles of body element of component
-	 * example: { padding : '2px', margin: '2px' }
-	 * @config {Object} css
-	 * @default undefined
-	 */
 	css:undefined,
-	/**
-	 * CSS styles of component container
-	 * example: { padding : '2px', margin: '2px' }
-	 * @config {Object} containerCss
-	 * @default undefined
-	 */
 	containerCss:undefined,
-	/**
-	 * Form config for child elements, example { labelWidth : 200, stretchField:true }, which
-	 * will be applied to all child form elemetns if no labelWidth is defined in their config
-	 * @config {Object} formConfig
-	 * @default undefined
-	 */
 	formConfig:undefined,
-
-	/**
-	 * @property boolean isRendered
-	 * @description Property set to true when component and it's children are rendered.
-	 */
 	isRendered:false,
-
-	/**
-	 * Array of unrendered children
-	 * @property array unReneredChildren
-	 */
 	unRenderedChildren:[],
 
 	/**
 	 * Draw a frame around the component. This is done by assigning the container to css class
 	 * ludo-container-frame and body element to ludo-body-frame. You can also customize layout
 	 * by specifying css and|or containerCss
-	 * @config frame
+	 * @property frame
 	 * @type {Boolean}
 	 * @default false
 	 */
 	frame:false,
 
-	/**
-	 Form object, used for form submission. Example
-
-	 @config form
-	 @type Object
-	 @default undefined
-	 @example
-	 form : {
-            url: 'my-submit-url.php',
-            method:'post',
-            name : 'myForm'
-        }
-	 */
 	form:undefined,
 
-	/**
-	 Layout config object
-	 @property layout
-	 @type {Object|String}
-	 @default undefined
-	 @example
-	 layout:{
-	 		type:'linear',
-	 		orientation:'horizontal'
-	 	}
-	 or shortcut :
-	 @example
-	 layout:"cols"
-	 which is the same as linear horizontal
-
-	 Layout types:
-	 linear, fill, grid, tab, popup
-
-	 */
 	layout:undefined,
 
-
-	/**
-	 Template for JSON compiler.
-	 Curly braces {} are used to specify keys in the JSON object. The compiler will replace {key} with JSON.key<br>
-	 The compiled string will be inserted as html of the body element.<br>
-	 The template will be compiled automatically when you're loading JSON remotely. If JSON is an array of object, the template will be applied to each object, example:
-	 JSON : [ { firstname : 'Jane', lastname : 'Doe' }, { firstname : 'John', lastname: 'Doe' }] <br>
-	 tpl : '&lt;div>{lastname}, {firstname}&lt;/div><br>
-	 will produce this result:<br><br>
-	 &lt;div>Doe, Jane&lt;/div>&lt;div>Doe, John&lt;/div>
-	 @property tpl
-	 @type String
-	 @default '' (empty string)
-	 @example
-	 tpl:'Firstname: {firstname}, lastname:{lastname}'
-	 */
 	tpl:'',
 	/**
-	 * Default config for ludo.tpl.Parser. ludo.tpl.Parser is a JSON compiler which
-	 * converts given tpl into a string. If you want to create your own
-	 * parser, extend ludo.tpl.Parser and change value of tplParserConfig to the name
+	 * Default config for ludo.tpl.Parser. ludo.tpl.Parser is a JSON parser which
+	 * converts uses the template defined in tpl and converts JSON into a String.
+	 * If you want to create your own parser, extend ludo.tpl.Parser and change value of JSONParser to the name
 	 * of your class
-	 * @config object tplParserConfig
+	 * @property object JSONParser
+	 * @memberof ludo.View.prototype
 	 * @default { type: 'tpl.Parser' }
 	 */
-	tplParserConfig:{ type:'tpl.Parser' },
+	JSONParser:{ type:'tpl.Parser' },
 	initialItemsObject:[],
 	contextMenu:undefined,
 	lifeCycleComplete:false,
@@ -293,7 +140,8 @@ ludo.View = new Class({
 	 * By default it returns the children property of the class. There may be advantages of defining children
 	 * in this method. By defining children in the children property of the class, you don't have access to "this". By returning
 	 * children from getClassChildren, you will be able to use "this" as a reference to the class instance.
-	 * @method getClassChildren
+	 * @function getClassChildren
+	 * @memberof ludo.View.prototype
 	 * @return {Array|children}
 	 */
 	getClassChildren:function () {
@@ -336,22 +184,30 @@ ludo.View = new Class({
 			r.resize();
 			r.resizeChildren();
 		}
+
+		/**
+		 * Event fired when component has been rendered
+		 * @event render
+		 * @param Component this
+		 */
+		this.fireEvent('render', this);
+		
 	},
 
 	/**
 	 * First life cycle step when creating and object
-	 * @method ludoConfig
+	 * @function ludoConfig
 	 * @param {Object} config
 	 */
 	ludoConfig:function (config) {
 		this.parent(config);
 		config.els = config.els || {};
 		if (this.parentComponent)config.renderTo = undefined;
-		var keys = ['css', 'contextMenu', 'renderTo', 'tpl', 'containerCss', 'socket', 'form', 'title', 'html', 'hidden',
+		var keys = ['css', 'contextMenu', 'renderTo', 'tpl', 'containerCss', 'socket', 'form', 'title', 'hidden',
 			'dataSource', 'movable', 'resizable', 'closable', 'minimizable', 'alwaysInFront',
 			'parentComponent', 'cls', 'bodyCls', 'objMovable', 'width', 'height', 'frame', 'formConfig',
 			'overflow'];
-
+		if(config.html != undefined)this._html = config.html;
 		this.setConfigParams(config, keys);
 
 		if (this.socket) {
@@ -375,7 +231,8 @@ ludo.View = new Class({
 	/**
 	 The second life cycle method
 	 This method is typically used when you want to create your own DOM elements.
-	 @method ludoDOM
+	 @memberof ludo.View.prototype
+	 @function ludoDOM
 	 @example
 	 ludoDOM : function() {<br>
 			 this.parent(); // Always call parent ludoDOM
@@ -404,6 +261,7 @@ ludo.View = new Class({
 		if (this.type)this.getEl().addClass('ludo-' + (this.type.replace(/\./g, '-').toLowerCase()));
 		if (this.css)this.getBody().css(this.css);
 		if (this.containerCss)this.getEl().css(this.containerCss);
+
 		if (this.frame) {
 			this.getEl().addClass('ludo-container-frame');
 			this.getBody().addClass('ludo-body-frame');
@@ -417,7 +275,7 @@ ludo.View = new Class({
 	/**
 	 The third life cycle method
 	 This is the place where you add custom events
-	 @method ludoEvents
+	 @function ludoEvents
 	 @return void
 	 @example
 	 ludoEvents:function(){
@@ -432,9 +290,11 @@ ludo.View = new Class({
 	},
 
 	/**
-	 * The final life cycle method. When this method is executed, the componenent (including child components)
+	 * The final life cycle method. When this method is executed, the view (including child views)
 	 * are fully rendered.
-	 * @method ludoRendered
+	 * @memberof ludo.View.prototype
+	 * @function ludoRendered
+	 * @fires 'render'
 	 */
 	ludoRendered:function () {
 		if (!this.layout.height && !this.layout.above && !this.layout.sameHeightAs && !this.layout.alignWith) {
@@ -443,29 +303,30 @@ ludo.View = new Class({
 		if (!this.parentComponent) {
 			this.getLayout().createRenderer();
 		}
-		/**
-		 * Event fired when component has been rendered
-		 * @event render
-		 * @param Component this
-		 */
-		this.fireEvent('render', this);
+
 		this.isRendered = true;
 		if (this.form) {
 			this.getForm();
 		}
-
-
 	},
 
+
 	/**
-	 * Insert JSON into components body
-	 * Body of Component will be updated with compiled JSON from ludo.tpl.Parser.
+	 * Parse and insert JSON into the view
+	 * The JSON will be sent to the JSON parser(defined in JSONParser) and
 	 * This method will be called automatically when you're using a JSON data-source
-	 * @method insertJSON
-	 * @param {Object} data
+	 * @function insertJSON
+	 * @param {Object} json
 	 * @return void
 	 */
+	JSON:function(json){
+		if (this.tpl) {
+			this.getBody().html(this.getTplParser().asString(json, this.tpl));
+		}
+	},
+
 	insertJSON:function (data) {
+		console.warn("Use of deprecated insertJOSN");
 		if (this.tpl) {
 			this.getBody().html(this.getTplParser().asString(data, this.tpl));
 		}
@@ -473,7 +334,7 @@ ludo.View = new Class({
 
 	getTplParser:function () {
 		if (!this.tplParser) {
-			this.tplParser = this.createDependency('tplParser', this.tplParserConfig);
+			this.tplParser = this.createDependency('tplParser', this.JSONParser);
 		}
 		return this.tplParser;
 	},
@@ -485,7 +346,7 @@ ludo.View = new Class({
 
 	/**
 	 * Set HTML
-	 * @method html
+	 * @function html
 	 * @param html
 	 * @type string
 	 * @example
@@ -520,7 +381,7 @@ ludo.View = new Class({
 	/**
 	 * Load content from the server. This method will send an Ajax request to the server
 	 * using the properties specified in the remote object or data-source
-	 * @method load
+	 * @function load
 	 * @return void
 	 */
 	load:function () {
@@ -537,7 +398,7 @@ ludo.View = new Class({
 	},
 	/**
 	 * Get reference to parent component
-	 * @method getParent
+	 * @function getParent
 	 * @return {Object} component | null
 	 */
 	getParent:function () {
@@ -595,26 +456,28 @@ ludo.View = new Class({
 	},
 
 	/**
-	 * Return reference to components DOM container. A component consists of one container and inside it a
+	 * Return reference to components DOM container. A view has two &lt;div> elements, one parent and a child. getEl()
+	 * returns the parent, getBody() returns the child.
 	 * DOM "body" element
-	 * @method getEl()
+	 * @function getEl()
 	 * @return {Object} DOMElement
 	 */
 	getEl:function () {
 		return this.els.container ? this.els.container : null;
 	},
 	/**
-	 * Return reference to the "body" DOM element. A component consists of one container and inside it a
-	 * DOM "body" element
-	 * @method getBody()
+	 * Return reference to the "body" div HTML Element.
+	 * @memberof ludo.view.prototype
+	 * @function getBody
 	 * @return {Object} DOMElement
 	 */
 	getBody:function () {
 		return this.els.body;
 	},
 	/**
-	 * Hide this component
-	 * @method hide
+	 * Hides the view
+	 * @function hide
+	 * @memberof ludo.view.prototype
 	 * @return void
 	 */
 	hide:function () {
@@ -632,7 +495,7 @@ ludo.View = new Class({
 	},
 	/**
 	 * Hide component after n seconds
-	 * @method hideAfterDelay
+	 * @function hideAfterDelay
 	 * @param {number} seconds
 	 * @default 1
 	 */
@@ -641,7 +504,8 @@ ludo.View = new Class({
 	},
 	/**
 	 * Is this component hidden?
-	 * @method isHidden
+	 * @memberof ludo.View.prototype
+	 * @function isHidden
 	 * @return {Boolean}
 	 */
 	isHidden:function () {
@@ -650,7 +514,7 @@ ludo.View = new Class({
 
 	/**
 	 * Return true if this component is visible
-	 * @method isVisible
+	 * @function isVisible
 	 * @return {Boolean}
 	 *
 	 */
@@ -659,8 +523,9 @@ ludo.View = new Class({
 	},
 
 	/**
-	 * Show this component.
-	 * @method show
+	 * Make the view visible
+	 * @memberof ludo.View.prototype
+	 * @function show
 	 * @param {Boolean} skipEvents
 	 * @return void
 	 */
@@ -706,7 +571,7 @@ ludo.View = new Class({
 	/**
 	 * Call show() method of a child component
 	 * key must be id or name of child
-	 * @method showChild
+	 * @function showChild
 	 * @param {String} key
 	 * @return {Boolean} success
 	 */
@@ -720,16 +585,18 @@ ludo.View = new Class({
 	},
 
 	/**
-	 * Return Array reference to direct direct child components.
-	 * @method getChildren
+	 * Return Array of direct child views.
+	 * @memberof ludo.View.prototype
+	 * @function getChildren
 	 * @return Array of Child components
 	 */
 	getChildren:function () {
 		return this.children;
 	},
 	/**
-	 * Return array of all child components, including grand children
-	 * @method getAllChildren
+	 * Return Array of child views, recursive.
+	 * @memberof ludo.View.prototype
+	 * @function getAllChildren
 	 * @return Array of sub components
 	 */
 	getAllChildren:function () {
@@ -744,7 +611,8 @@ ludo.View = new Class({
 	},
 	/**
 	 * Returns true if this component contain any children
-	 * @method hasChildren
+	 * @memberof ludo.View.prototype
+	 * @function hasChildren
 	 * @return {Boolean}
 	 */
 	hasChildren:function () {
@@ -753,7 +621,8 @@ ludo.View = new Class({
 
 	/**
 	 * Set new title
-	 * @method setTitle
+	 * @memberof ludo.View.prototype
+	 * @function setTitle
 	 * @param {String} title
 	 */
 	setTitle:function (title) {
@@ -762,7 +631,8 @@ ludo.View = new Class({
 
 	/**
 	 * Returns total width of component including padding, borders and margins
-	 * @method getWidth
+	 * @memberof ludo.View.prototype
+	 * @function getWidth
 	 * @return {Number} width
 	 */
 	getWidth:function () {
@@ -771,7 +641,8 @@ ludo.View = new Class({
 
 	/**
 	 * Get current height of component
-	 * @method getHeight
+	 * @memberof ludo.View.prototype
+	 * @function getHeight
 	 * @return {Number}
 	 */
 	getHeight:function () {
@@ -779,11 +650,12 @@ ludo.View = new Class({
 	},
 
 	/**
-	 Resize Component and it's children. Example:
-	 @method resize
+	 Resize View and it's children. Example:
+	 @function resize
+	 @memberof ludo.View.prototype
 	 @param {Object} config
 	 @example
-	 component.resize(
+	 view.resize(
 	 { width: 200, height:200 }
 	 );
 	 */
@@ -836,7 +708,7 @@ ludo.View = new Class({
 	},
 	/**
 	 * Returns true component is collapsible
-	 * @method isCollapsible
+	 * @function isCollapsible
 	 * @return {Boolean}
 	 */
 	isCollapsible:function () {
@@ -901,7 +773,8 @@ ludo.View = new Class({
 	/**
 	 * Add child components
 	 * Only param is an array of child objects. A Child object can be a component or a JSON object describing the component.
-	 * @method addChildren
+	 * @function addChildren
+	 * @memberof ludo.View.prototype
 	 * @param {Array} children
 	 * @return {Array} of new children
 	 */
@@ -914,7 +787,8 @@ ludo.View = new Class({
 	},
 	/**
 	 * Add a child component. The method will returned the created component.
-	 * @method addChild
+	 * @memberof ludo.View.prototype
+	 * @function addChild
 	 * @param {Object|View} child. A Child object can be a View or a JSON config object for a new View.
 	 * @param {String} insertAt
 	 * @optional
@@ -943,9 +817,10 @@ ludo.View = new Class({
 		return this.minimizable;
 	},
 	/**
-	 * Get child by name or id
-	 * @method getChild
-	 * @param {String} childName
+	 * Get child view by name or id
+	 * @memberof ludo.View.prototype
+	 * @function getChild
+	 * @param {String} childName id or name of child view
 	 *
 	 */
 	getChild:function (childName) {
@@ -963,7 +838,7 @@ ludo.View = new Class({
 	},
 	/**
 	 * Remove all children
-	 * @method disposeAllChildren
+	 * @function disposeAllChildren
 	 * @return void
 	 */
 	disposeAllChildren:function () {
@@ -972,18 +847,27 @@ ludo.View = new Class({
 		}
 	},
 	/**
-	 * Hide and dispose view
-	 * @method dispose
+	 * Hide and removes the view view
+	 * @memberof ludo.View.prototype
+	 * @function remove
 	 * @return void
 	 */
-	dispose:function () {
+	remove:function(){
+		this.fireEvent('dispose', this);
+		ludo.util.dispose(this);
+	},
 
+
+	dispose:function () {
+		console.warn("Use of deprecated dispose");
+		console.trace();
         this.fireEvent('dispose', this);
         ludo.util.dispose(this);
 	},
 	/**
-	 * Returns title of Component.
-	 * @method getTitle
+	 * Returns title
+	 * @function getTitle
+	 * @memberOf ludo.View.prototype
 	 * @return string
 	 */
 	getTitle:function () {
@@ -991,6 +875,13 @@ ludo.View = new Class({
 	},
 
 	dataSourceObj:undefined,
+
+	/**
+	 * @funtion getDataSource
+	 * @memberOf ludo.View.prototype
+	 * Returns object of type ludo.dataSource.*
+	 * @returns {undefined|*}
+     */
 	getDataSource:function () {
 		if (!this.dataSourceObj && this.dataSource) {
 			var obj;
@@ -1027,10 +918,10 @@ ludo.View = new Class({
 	},
 
     /**
-     Returns {{#crossLink "form.Manager"}}{{/crossLink}} for this view.  The form manager
-     gives you access to form methods like save, deleteRecord, reset etc
-     @method getForm     *
-     @return {form.Manager}
+     Returns {@link ludo.form.Manager"} for this view.
+     @function getForm     *
+     @return {ludo.form.Manager}
+	 @memberof ludo.View.prototype
      @example
         view.getForm().reset();
 
@@ -1071,11 +962,6 @@ ludo.View = new Class({
 		return 0;
 	},
 
-	/**
-	 * Return socket for NodeJS communication
-	 * @method getSocket
-	 * @return {socket.Socket} socket
-	 */
 	getSocket:function () {
 		return this.socket;
 	},
@@ -1083,7 +969,8 @@ ludo.View = new Class({
 	canvas:undefined,
 	/**
 	 Returns drawable Canvas/SVG
-	 @method getCanvas
+	 @function getCanvas
+	 @memberof ludo.View.prototype
 	 @return {canvas.Canvas} canvas
 	 @example
 	    var win = new ludo.Window({
@@ -1095,7 +982,7 @@ ludo.View = new Class({
 			   'background-color':'#FFF'
 		   }
 	   });
-	    // Creating style sheet
+	    // Creating line style
 	    var paint = new ludo.canvas.Paint({
 		   css:{
 			   'fill':'#FFFFFF',
@@ -1103,6 +990,7 @@ ludo.View = new Class({
 			   'stroke-width':'5'
 		   }
 	   });
+	 	// Get reference to canvas
 	    var canvas = win.getCanvas();
 	    canvas.append(new ludo.canvas.Node('line', { x1:100, y1:100, x2:200, y2:200, "class":paint }));
 	 */

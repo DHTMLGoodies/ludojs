@@ -127,10 +127,10 @@ TestCase("ControllerTest", {
 		// then
 		assertEquals(controller.getId(), assignedController.getId());
 		// given
-		var c1 = this.getComponent('module1', 'submodule');
+		c1 = this.getComponent('module1', 'submodule');
 
 		// when
-		var assignedController = ludo.controllerManager.getControllerFor(c1);
+		assignedController = ludo.controllerManager.getControllerFor(c1);
 
 		// then
 		assertEquals(controller.getId(), assignedController.getId());
@@ -149,7 +149,7 @@ TestCase("ControllerTest", {
 	},
 	"test should be able to set controller based on config id":function () {
 		// given
-		var controller = this.getController(['module1']);
+		this.getController(['module1']);
 		var controller2 = this.getController(['module1'], 'controller1');
 
 		var c1 = this.getComponent('module1', undefined, { controller:'controller1'});

@@ -6,7 +6,7 @@
  * the service on the server. Example: For Person with id equals 1, save these data.
  * @namespace remote
  * @class JSON
- * @extends Events
+ * @augments Events
  */
 
 /**
@@ -34,7 +34,7 @@ ludo.remote.JSON = new Class({
 
     /**
      Send request to the server
-     @method send
+     @function send
      @param {String} service
      @param {Array} resourceArguments
      @optional
@@ -141,7 +141,7 @@ ludo.remote.JSON = new Class({
     },
     /**
      * Return JSON response data from last request.
-     * @method getResponseData
+     * @function getResponseData
      * @return {Object|undefined}
      */
     getResponseData:function () {
@@ -154,7 +154,7 @@ ludo.remote.JSON = new Class({
 
     /**
      * Return entire server response of last request.
-     * @method getResponse
+     * @function getResponse
      * @return {Object|undefined}
      */
     getResponse:function () {
@@ -162,7 +162,7 @@ ludo.remote.JSON = new Class({
     },
     /**
      * Set name of resource
-     * @method setResource
+     * @function setResource
      * @param {String} resource
      */
     setResource:function(resource){

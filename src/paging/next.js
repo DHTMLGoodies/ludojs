@@ -2,7 +2,7 @@
  Button used to navigate to next page in a dataSource.Collection
  @namespace paging
  @class Next
- @extends paging.Button
+ @augments paging.Button
  @constructor
  @param {Object} config
  @example
@@ -30,7 +30,7 @@ ludo.paging.Next = new Class({
 
 	/**
 	 * Calls nextPage() method of data source
-	 * @method nextPage
+	 * @function nextPage
 	 */
 	nextPage:function () {
 		this.getDataSource().nextPage();

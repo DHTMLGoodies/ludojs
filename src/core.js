@@ -8,8 +8,7 @@ ludo.Core = new Class({
 	id:undefined,
 	/**
 	 * NB. The config properties listed below are sent to the constructor when creating the component
-	 * @attribute name
-	 * @type string
+	 * @attribute {string} name
 	 * When creating children dynamically using config objects(see children) below, you can access a child
 	 * by component.child[name] if a name is passed in the config object.
 	 */
@@ -171,7 +170,7 @@ ludo.Core = new Class({
 
 	/**
 	 Return id of component
-	 @method getId
+	 @function getId
 	 @return String id
 	 */
 	getId:function () {
@@ -179,7 +178,7 @@ ludo.Core = new Class({
 	},
 	/**
 	 Get name of component and form element
-	 @method getName
+	 @function getName
 	 @return String name
 	 */
 	getName:function () {
@@ -189,7 +188,7 @@ ludo.Core = new Class({
     // TODO refactor this to use only this.url or global url.
 	/**
 	 * Get url for component
-	 * @method getUrl
+	 * @function getUrl
 	 * @return {String|undefined} url
 	 */
 	getUrl:function () {
@@ -221,7 +220,7 @@ ludo.Core = new Class({
 	/**
 	 * Returns component type minus class name, example:
 	 * type: calendar.View will return "calendar"
-	 * @method getNamespace
+	 * @function getNamespace
 	 * @return {String} namespace
 	 */
 	getNamespace:function () {
@@ -252,7 +251,7 @@ ludo.Core = new Class({
 
 	/**
 	 Add events to controller
-	 @method addControllerEvents
+	 @function addControllerEvents
 	 @return void
 	 @example
 	 this.controller.addEvent('eventname', this.methodName.bind(this));
@@ -275,7 +274,7 @@ ludo.Core = new Class({
 	/**
 	 Save state for stateful components and views. States are stored in localStorage which
 	 is supported by all major browsers(IE from version 8).
-	 @method saveState
+	 @function saveState
 	 @return void
 	 @example
 	 	myComponent.saveState();

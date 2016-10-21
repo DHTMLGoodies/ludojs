@@ -30,7 +30,7 @@
  *
  * @namespace controller
  * @class controller.Controller
- * @extends Core
+ * @augments Core
  */
 
 ludo.controller.Controller = new Class({

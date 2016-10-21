@@ -29,6 +29,11 @@ TestCase("SourceTest", {
         // then
         assertNotNull(document.body.innerHTML,el);
         assertEquals( 'div', el.prop("tagName").toLowerCase());
+    },
+
+    "test should be able to add custom function ": function(){
+
+        
     }
 
 });

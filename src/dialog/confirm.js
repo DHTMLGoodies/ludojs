@@ -2,7 +2,7 @@
   Standard confirm dialog with default "OK" and "Cancel" buttons
   @namespace dialog
   @class Confirm
-  @extends Dialog
+  @augments Dialog
   @constructor
   @param {Object} config
   @example

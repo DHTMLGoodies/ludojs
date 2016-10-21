@@ -2,7 +2,7 @@
  Class for drawing ellipses.
  @namespace canvas
  @class Ellipse
- @extends canvas.NamedNode
+ @augments canvas.NamedNode
  @constructor
  @param {Object} coordinates
  @param {canvas.NodeConfig} config
@@ -15,7 +15,7 @@ ludo.canvas.Ellipse = new Class({
 
 	/**
 	 * Set new x-radius
-	 * @method setRadiusX
+	 * @function setRadiusX
 	 * @param {Number} radius
 	 */
 	setRadiusX:function (radius) {
@@ -24,7 +24,7 @@ ludo.canvas.Ellipse = new Class({
 
 	/**
 	 * Set new y-radius
-	 * @method setRadiusY
+	 * @function setRadiusY
 	 * @param {Number} radius
 	 */
 	setRadiusY:function (radius) {
@@ -33,7 +33,7 @@ ludo.canvas.Ellipse = new Class({
 
 	/**
 	 * Return curent radius
-	 * @method getRadiusX
+	 * @function getRadiusX
 	 * @return {String|Number} x-radius
 	 */
 	getRadiusX:function () {
@@ -42,7 +42,7 @@ ludo.canvas.Ellipse = new Class({
 
 	/**
 	 * Return curent y-radius
-	 * @method getRadiusY
+	 * @function getRadiusY
 	 * @return {String|Number} y-radius
 	 */
 	getRadiusY:function () {
@@ -51,7 +51,7 @@ ludo.canvas.Ellipse = new Class({
 
 	/**
 	 * Set new center X
-	 * @method setCx
+	 * @function setCx
 	 * @param {Number} x
 	 */
 	setCx:function (x) {
@@ -59,7 +59,7 @@ ludo.canvas.Ellipse = new Class({
 	},
 	/**
 	 * Return current center X
-	 * @method getX
+	 * @function getX
 	 * @return {String|Number} cx
 	 */
 	getCx:function () {
@@ -68,7 +68,7 @@ ludo.canvas.Ellipse = new Class({
 
 	/**
 	 * Set new center Y
-	 * @method setCy
+	 * @function setCy
 	 * @param {Number} y
 	 */
 	setCy:function (y) {
@@ -76,7 +76,7 @@ ludo.canvas.Ellipse = new Class({
 	},
 	/**
 	 * Return current center Y
-	 * @method getCy
+	 * @function getCy
 	 * @return {String|Number} cy
 	 */
 	getCy:function () {
@@ -85,7 +85,7 @@ ludo.canvas.Ellipse = new Class({
 
 	/**
 	 * Return position on canvas
-	 * @method getPosition()
+	 * @function getPosition()
 	 * @return {Object} x and y
 	 */
 	getPosition:function () {
@@ -98,7 +98,7 @@ ludo.canvas.Ellipse = new Class({
 
 	/**
 	 Return size of ellipse
-	 @method getSize
+	 @function getSize
 	 @return {Object} x and y
 	 @example
 	 	var ellipse = new ludo.canvas.Ellipse({ cx:500, cy:425, rx:250, ry:200 });

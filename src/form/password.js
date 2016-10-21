@@ -1,9 +1,9 @@
 // TODO indicate strength of password
 /**
  Password field
- @namespace form
+ @namespace ludo.form
  @class Password
- @extends form.Text
+ @augments ludo.form.Text
  @constructor
  @description Form component for passwords.
  @param {Object} config

@@ -1,8 +1,8 @@
 /**
- * @namespace form
+ * @namespace ludo.form
  * @class Text
  * @description Form input text
- * @extends form.LabelElement
+ * @augments ludo.form.LabelElement
  *
  */
 ludo.form.Text = new Class({
@@ -136,7 +136,7 @@ ludo.form.Text = new Class({
     },
     /**
      * Return width of input field in pixels.
-     * @method getFieldWidth
+     * @function getFieldWidth
      * @return {Number} width
      */
     getFieldWidth: function () {
@@ -144,7 +144,7 @@ ludo.form.Text = new Class({
     },
     /**
      * Focus form element
-     * @method focus
+     * @function focus
      * @return void
      */
     focus: function () {

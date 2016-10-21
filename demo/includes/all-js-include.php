@@ -107,6 +107,8 @@
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/form/file.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/form/display-field.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/form/radio-group.js"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/form/on-off-switch.js"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/form/seekbar"></script>
 
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/remote/base.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/remote/json.js"></script>

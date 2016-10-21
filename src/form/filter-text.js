@@ -1,7 +1,7 @@
 /**
- * @namespace form
+ * @namespace ludo.form
  * @class FilterText
- * @extends form.Text
+ * @augments ludo.form.Text
  * TODO this class is not working properly loading data from server. fix later
  */
 ludo.form.FilterText = new Class({
@@ -241,7 +241,7 @@ ludo.form.FilterText = new Class({
     },
     /**
      * Return value of text field. On standard text fields the visible value will be returned. Otherwise the id of selected record will be returned
-     * @method getValue
+     * @function getValue
      * @return string value
      */
     _get:function () {
@@ -258,7 +258,7 @@ ludo.form.FilterText = new Class({
      * if remote.url is set it will search for request to the server for the record. The query will look like this:
      * { getRecord : { id: 100 } } and it expects response from server in this format:
      *  { success: true, data : { id: 100, title: 'John Doe' } }
-     * @method setValue
+     * @function setValue
      * @param {String} value
      */
     _set:function (value) {

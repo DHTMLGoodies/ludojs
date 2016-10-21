@@ -33,7 +33,7 @@ ludo.remote.HTML = new Class({
 	},
 	/**
 	 * Return JSON response data from last request.
-	 * @method getResponseData
+	 * @function getResponseData
 	 * @return {Object|undefined}
 	 */
 	getResponseData:function () {
@@ -42,7 +42,7 @@ ludo.remote.HTML = new Class({
 
 	/**
 	 * Return entire server response of last request.
-	 * @method getResponse
+	 * @function getResponse
 	 * @return {Object|undefined}
 	 */
 	getResponse:function () {

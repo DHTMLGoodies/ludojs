@@ -1,10 +1,10 @@
 /**
- * @namespace form
+ * @namespace ludo.form
  * @class RadioGroup
  * @description class for a group of radio buttons. Config for the radio buttons should be passed to the
  * constructor or loaded remotely. Here's an example of format:
  * [{ value: 1, text : 'my radio', image: 'images/my-radio-image.png' }]
- * @extends form.Select
+ * @augments ludo.form.Select
  */
 ludo.form.RadioGroup = new Class({
     Extends: ludo.form.Select,
@@ -103,7 +103,7 @@ ludo.form.RadioGroup = new Class({
     },
     /**
      * Get value of selected radio input
-     * @method getValue
+     * @function getValue
      * @return String value
      */
     getValue : function() {
@@ -115,7 +115,7 @@ ludo.form.RadioGroup = new Class({
     },
     /**
      * Return reference to selected radio button component
-     * @method getCheckedRadio
+     * @function getCheckedRadio
      * @return {Object} ludo.form.Radio component
      */
     getCheckedRadio : function() {
@@ -128,7 +128,7 @@ ludo.form.RadioGroup = new Class({
     },
     /**
      * The radio button with the chose value will be checked
-     * @method val
+     * @function val
      * @param {String} value
      * @return void|string
      */

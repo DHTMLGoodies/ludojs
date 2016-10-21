@@ -2,7 +2,7 @@
  * Data source for progress bars
  * @namespace progress
  * @class DataSource
- * @extends dataSource.JSON
+ * @augments dataSource.JSON
  */
 ludo.progress.DataSource = new Class({
     Extends:ludo.dataSource.JSON,

@@ -1,7 +1,7 @@
 /**
  Displays current page number shown in a collection
  @class paging.TotalPages
- @extends View
+ @augments View
  @constructor
  @param {Object} config
  @example

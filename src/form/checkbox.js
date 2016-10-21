@@ -1,8 +1,7 @@
 /**
  * Class for checkbox form elements
- * @namespace form
- * @class Checkbox
- * @extends form.LabelElement
+ * @class ludo.form.Checkbox
+ * @augments ludo.form.LabelElement
  */
 ludo.form.Checkbox = new Class({
     Extends:ludo.form.LabelElement,
@@ -112,7 +111,7 @@ ludo.form.Checkbox = new Class({
     },
     /**
      * Return true if checkbox is checked, false otherwise
-     * @method isChecked
+     * @function isChecked
      * @return {Boolean} checked
      */
     isChecked:function () {
@@ -120,7 +119,7 @@ ludo.form.Checkbox = new Class({
     },
     /**
      * Set checkbox to checked
-     * @method check
+     * @function check
      * @return void
      */
     check:function () {
@@ -130,7 +129,7 @@ ludo.form.Checkbox = new Class({
     },
     /**
      * Uncheck checkbox
-     * @method uncheck
+     * @function uncheck
      * @return void
      */
     uncheck:function () {
@@ -158,7 +157,7 @@ ludo.form.Checkbox = new Class({
     },
     /**
      * Set checkbox to checked or unchecked
-     * @method setChecked
+     * @function setChecked
      * @param {Boolean} checked
      */
     setChecked:function (checked) {

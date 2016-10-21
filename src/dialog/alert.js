@@ -1,7 +1,7 @@
 /**
  @namespace dialog
  @class Alert
- @extends Dialog
+ @augments Dialog
  @description Alert dialog. This component has by default one button "OK" and will fire an
  "ok" event when this button is clicked
  @constructor

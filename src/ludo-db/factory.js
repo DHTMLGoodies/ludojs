@@ -4,8 +4,10 @@
  @namespace ludoDB
  @class Factory
  @constructor
- @param {Object} config
- @example
+ @param config
+ @type {Object}
+ @augments ludo.Core
+ @example {@lang Javascript}
     new ludo.Window({
         title:'LudoDB Integration',
         stateful:true,

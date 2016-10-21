@@ -1,8 +1,8 @@
 /**
  * Base class for all form elements with label
- * @namespace form
+ * @namespace ludo.form
  * @class LabelElement
- * @extends form.Element
+ * @augments ludo.form.Element
  */
 ludo.form.LabelElement = new Class({
     Extends:ludo.form.Element,
@@ -20,11 +20,17 @@ ludo.form.LabelElement = new Class({
         '</table>'
     ],
 
+    /**
+     * Suffix after the label. Default is ":" (colon)
+     * @memberof ludo.form.LabelElement.prototype
+     * @default ":"
+     * @property {string} labelSuffix
+     */
     labelSuffix:':',
 
     ludoConfig:function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['inlineLabel']);
+        this.setConfigParams(config, ['inlineLabel','labelSuffix']);
         if(!this.supportsInlineLabel())this.inlineLabel = undefined;
     },
 

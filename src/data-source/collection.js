@@ -2,7 +2,7 @@
  Data source collection
  @namespace dataSource
  @class Collection
- @extends dataSource.JSON
+ @augments dataSource.JSON
  @constructor
  @param {Object} config
  @example
@@ -143,7 +143,7 @@ ludo.dataSource.Collection = new Class({
 
 	/**
 	 * Returns 1) If search is specified: number of records in search result, or 2) number of records in entire collection.
-	 * @method getCount
+	 * @function getCount
 	 * @return {Number} count
 	 */
 	getCount:function () {
@@ -158,7 +158,7 @@ ludo.dataSource.Collection = new Class({
 
 	/**
 	 * Resort data-source
-	 * @method sort
+	 * @function sort
 	 * @return void
 	 */
 	sort:function () {
@@ -169,7 +169,7 @@ ludo.dataSource.Collection = new Class({
 
 	/**
 	 Set sorted by column
-	 @method by
+	 @function by
 	 @param {String} column
 	 @return {dataSource.Collection} this
 	 @example
@@ -185,7 +185,7 @@ ludo.dataSource.Collection = new Class({
 	},
 	/**
 	 Set sort order to ascending
-	 @method ascending
+	 @function ascending
 	 @return {dataSource.Collection} this
 	 @example
 	 	collection.by('country').ascending().sort();
@@ -196,7 +196,7 @@ ludo.dataSource.Collection = new Class({
 	},
 	/**
 	 Set sort order to descending
-	 @method descending
+	 @function descending
 	 @return {dataSource.Collection} this
 	 @example
 	 	collection.by('country').descending().sort();
@@ -210,7 +210,7 @@ ludo.dataSource.Collection = new Class({
 	 Sort by column and order
 
 	 The second argument(order) is optional
-	 @method sortBy
+	 @function sortBy
 	 @param {String} column
 	 @param {String} order
      @optional
@@ -256,7 +256,7 @@ ludo.dataSource.Collection = new Class({
 
 	/**
 	 * Return current sorted by column
-	 * @method getSortedBy
+	 * @function getSortedBy
 	 * @return {String} column
 	 */
 	getSortedBy:function () {
@@ -264,7 +264,7 @@ ludo.dataSource.Collection = new Class({
 	},
 	/**
 	 * Return current sort order (asc|desc)
-	 * @method getSortOrder
+	 * @function getSortOrder
 	 * @return {String} order
 	 */
 	getSortOrder:function () {
@@ -299,7 +299,7 @@ ludo.dataSource.Collection = new Class({
 
 	/**
 	 * Add a record to data-source
-	 * @method addRecord
+	 * @function addRecord
 	 * @param record
 	 * @return {Object} record
 	 */
@@ -325,7 +325,7 @@ ludo.dataSource.Collection = new Class({
 	 *
 	 * collection.find({ capital : 'Oslo' });
 	 *
-	 * @method findRecord
+	 * @function findRecord
 	 * @param {Object} search
 	 * @return {Object|undefined} record
 	 */
@@ -372,7 +372,7 @@ ludo.dataSource.Collection = new Class({
 	/**
 	 * Find specific records, example:
 	 * var records = collection.findRecords({ country:'Norway'});
-	 * @method findRecords
+	 * @function findRecords
 	 * @param {Object} search
 	 * @return {Array} records
 	 */
@@ -392,7 +392,7 @@ ludo.dataSource.Collection = new Class({
 
 	/**
 	 * Select a specific record
-	 * @method selectRecord
+	 * @function selectRecord
 	 * @param {Object} search
 	 * @return {Object|undefined} record
 	 */
@@ -408,7 +408,7 @@ ludo.dataSource.Collection = new Class({
 
 	/**
 	 * Select a collection of records
-	 * @method selectRecords
+	 * @function selectRecords
 	 * @param {Object} search
 	 * @return {Array} records
 	 */
@@ -422,7 +422,7 @@ ludo.dataSource.Collection = new Class({
 
 	/**
 	 * Select a specific record by index
-	 * @method selectRecordIndex
+	 * @function selectRecordIndex
 	 * @param {number} index
 	 */
 	selectRecordIndex:function (index) {
@@ -449,7 +449,7 @@ ludo.dataSource.Collection = new Class({
 
 	/**
 	 * Select previous record. If no record is currently selected, first record will be selected
-	 * @method previous
+	 * @function previous
 	 * @return {Object} record
 	 */
 	previous:function () {
@@ -462,7 +462,7 @@ ludo.dataSource.Collection = new Class({
 
 	/**
 	 * Returns previous record of given record
-	 * @method getPreviousOf
+	 * @function getPreviousOf
 	 * @param {Object} record
 	 * @return {Object} previous record
 	 */
@@ -478,7 +478,7 @@ ludo.dataSource.Collection = new Class({
 
 	/**
 	 * Select next record. If no record is currently selected, first record will be selected
-	 * @method next
+	 * @function next
 	 * @return {Object} record
 	 */
 	next:function () {
@@ -490,7 +490,7 @@ ludo.dataSource.Collection = new Class({
 	},
 	/**
 	 * Returns next record of given record.
-	 * @method getNextOf
+	 * @function getNextOf
 	 * @param {Object} record
 	 * @return {Object} next record
 	 */
@@ -531,7 +531,7 @@ ludo.dataSource.Collection = new Class({
 
 	/**
 	 * Return selected record
-	 * @method getSelectedRecord
+	 * @function getSelectedRecord
 	 * @return {Object|undefined} record
 	 */
 	getSelectedRecord:function () {
@@ -540,7 +540,7 @@ ludo.dataSource.Collection = new Class({
 
 	/**
 	 * Return selected records
-	 * @method getSelectedRecords
+	 * @function getSelectedRecords
 	 * @return {Array} records
 	 */
 	getSelectedRecords:function () {
@@ -549,7 +549,7 @@ ludo.dataSource.Collection = new Class({
 
 	/**
 	 Delete records matching search,
-	 @method deleteRecords
+	 @function deleteRecords
 	 @param {Object} search
 	 @example
 	 	grid.getDataSource().deleteRecords({ country: 'Norway' });
@@ -566,7 +566,7 @@ ludo.dataSource.Collection = new Class({
 	/**
 	 Delete a single record. Deletes first match when
 	 multiple matches found.
-	 @method deleteRecord
+	 @function deleteRecord
 	 @param {Object} search
 	 @example
 	 	grid.getDataSource().deleteRecord({ country: 'Norway' });
@@ -588,7 +588,7 @@ ludo.dataSource.Collection = new Class({
 
 	/**
 	 Select records from current selected record to record matching search,
-	 @method selectTo
+	 @function selectTo
 	 @param {Object} search
 	 @example
 	 	collection.selectRecord({ country: 'Norway' });
@@ -623,7 +623,7 @@ ludo.dataSource.Collection = new Class({
 
 	/**
 	 * Update a record
-	 * @method updateRecord
+	 * @function updateRecord
 	 * @param {Object} search
 	 * @param {Object} updates
 	 * @return {dataSource.Record} record
@@ -651,7 +651,7 @@ ludo.dataSource.Collection = new Class({
 	/**
 	 * When paging is enabled, go to previous page.
 	 * fire previousPage event
-	 * @method previousPage
+	 * @function previousPage
 	 */
 	previousPage:function () {
 		if (!this.paging || this.isOnFirstPage())return;
@@ -666,7 +666,7 @@ ludo.dataSource.Collection = new Class({
 	/**
 	 * When paging is enabled, go to next page
 	 * fire nextPage event
-	 * @method nextPage
+	 * @function nextPage
 	 */
 	nextPage:function () {
 		if (!this.paging || this.isOnLastPage())return;
@@ -680,7 +680,7 @@ ludo.dataSource.Collection = new Class({
 
 	/**
 	 * Go to last page
-	 * @method lastPage
+	 * @function lastPage
 	 */
 	lastPage:function () {
 		if (!this.paging || this.isOnLastPage())return;
@@ -801,7 +801,7 @@ ludo.dataSource.Collection = new Class({
 
 	/**
 	 * Go to a specific page
-	 * @method toPage
+	 * @function toPage
 	 * @param {Number} pageNumber
 	 * @return {Boolean} success
 	 */
@@ -830,7 +830,7 @@ ludo.dataSource.Collection = new Class({
 
 	/**
 	 * True if on given page
-	 * @method isOnPage
+	 * @function isOnPage
 	 * @param {Number} pageNumber
 	 * @return {Boolean}
 	 */
@@ -840,7 +840,7 @@ ludo.dataSource.Collection = new Class({
 
 	/**
 	 * Return current page number
-	 * @method getPageNumber
+	 * @function getPageNumber
 	 * @return {Number} page
 	 */
 	getPageNumber:function () {
@@ -849,7 +849,7 @@ ludo.dataSource.Collection = new Class({
 
 	/**
 	 * Return number of pages
-	 * @method getPageCount
+	 * @function getPageCount
 	 * @return {Number}
 	 */
 	getPageCount:function () {
@@ -932,7 +932,7 @@ ludo.dataSource.Collection = new Class({
 	 get a reference to the {{#crossLink "dataSource.CollectionSearch"}}{{/crossLink}} object and
 	 use the available {{#crossLink "dataSource.CollectionSearch"}}{{/crossLink}} methods to add
 	 multiple search terms.
-	 @method Search
+	 @function Search
 	 @param {String} search
 	 @example
 	 	ludo.get('myCollection').search('New York');
@@ -947,7 +947,7 @@ ludo.dataSource.Collection = new Class({
 
 	/**
 	 * Executes a remote search for records with the given data
-	 * @method remoteSearch
+	 * @function remoteSearch
 	 * @param {String|Object} search
 	 */
 	remoteSearch:function(search){
@@ -972,7 +972,7 @@ ludo.dataSource.Collection = new Class({
 	/**
 	 * Returns a {{#crossLink "dataSource.CollectionSearch"}}{{/crossLink}} object which
 	 * you can use to filter a collection.
-	 * @method getSearcher
+	 * @function getSearcher
 	 * @return {dataSource.CollectionSearch}
 	 */
 	getSearcher:function () {
@@ -1001,7 +1001,7 @@ ludo.dataSource.Collection = new Class({
 	 gives you quick access to a record by it's id. The method returns a reference to the
 	 actual record. You can use Object.clone(record) to create a copy of it in case you
 	 want to update the record but not make those changes to the collection.
-	 @method getById
+	 @function getById
 	 @param {String|Number|Object} id
 	 @return {Object} record
 	 @example
@@ -1047,7 +1047,7 @@ ludo.dataSource.Collection = new Class({
 	 If you want to update a record, you should
 	 first get a reference to {{#crossLink "dataSource.Record"}}{{/crossLink}} and then call one
 	 of it's methods.
-	 @method getRecord
+	 @function getRecord
 	 @param {String|Object} search
 	 @return {dataSource.Record|undefined}
 	 @example

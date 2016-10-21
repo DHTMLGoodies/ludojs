@@ -4,7 +4,7 @@
  You can customize which views to show by using the children constructor property.
  @namespace paging
  @class NavBar
- @extends View
+ @augments View
  @constructor
  @param {Object} config
  @example

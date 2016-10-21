@@ -4,7 +4,7 @@
  of notification can be configured using the layout object.
 
  @class Notification
- @extends View
+ @augments View
  @constructor
  @param {Object} config
  @example

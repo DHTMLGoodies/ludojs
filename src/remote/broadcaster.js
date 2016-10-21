@@ -17,7 +17,7 @@ ludo.remote.Broadcaster = new Class({
 
     defaultMessages:{},
     /**
-     * @method broadcast
+     * @function broadcast
      * @param {ludo.remote.JSON} request
      * @param {String} service
      * @private
@@ -91,7 +91,7 @@ ludo.remote.Broadcaster = new Class({
      Listen to events from remote requests. EventType is either
      success, failure or serverError. resource is a name of resource
      specified in the request.
-     @method addResourceEvent
+     @function addResourceEvent
      @param {String} eventType
      @param {String} resource
      @param {Function} fn
@@ -113,7 +113,7 @@ ludo.remote.Broadcaster = new Class({
     },
     /**
      Listen to remote events from a specific service only.
-     @method addResourceEvent
+     @function addResourceEvent
      @param {String} eventType
      @param {String} resource
      @param {Array} services
@@ -143,7 +143,7 @@ ludo.remote.Broadcaster = new Class({
 
     /**
      Specify default response messages for resource service
-     @method setDefaultMessage
+     @function setDefaultMessage
      @param {String} message
      @param {String} eventType
      @param {String} resource
@@ -158,7 +158,7 @@ ludo.remote.Broadcaster = new Class({
 	eventObjToBuild :{},
     /**
      Chained method for adding broadcaster events.
-     @method withResourceService
+     @function withResourceService
      @param {String} resourceAndService
      @return {remote.Broadcaster}
      @example
@@ -175,7 +175,7 @@ ludo.remote.Broadcaster = new Class({
 
 	/**
 	 Chained method for adding broadcaster events.
-	 @method withResource
+	 @function withResource
 	 @param {String} resource
 	 @return {remote.Broadcaster}
 	 @example
@@ -191,7 +191,7 @@ ludo.remote.Broadcaster = new Class({
 	},
 	/**
 	 Chained method for adding broadcaster events.
-	 @method withService
+	 @function withService
 	 @param {String} service
 	 @return {remote.Broadcaster}
 	 @example
@@ -209,7 +209,7 @@ ludo.remote.Broadcaster = new Class({
 	},
 	/**
 	 Chained method for adding broadcaster events.
-	 @method on
+	 @function on
 	 @param {String|Array} events
 	 @param {Function} fn
 	 @return {remote.Broadcaster}

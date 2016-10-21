@@ -1,9 +1,9 @@
 /**
  * Special Button used to reset all form fields of component back to it's original state.
  * This button will automatically be disabled when the form is "clean", and disabled when it's "dirty".
- * @namespace form
+ * @namespace ludo.form
  * @class ResetButton
- * @extends form.Button
+ * @augments ludo.form.Button
  */
 ludo.form.ResetButton = new Class({
     Extends:ludo.form.Button,

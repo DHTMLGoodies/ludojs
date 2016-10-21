@@ -4,7 +4,7 @@
  * class and
  * @namespace tpl
  * @class Parser
- * @extends Core
+ * @augments Core
  */
 ludo.tpl.Parser = new Class({
     Extends:ludo.Core,
@@ -13,7 +13,7 @@ ludo.tpl.Parser = new Class({
 
     /**
      * Get compiled string
-	 * @method getCompiled
+	 * @function getCompiled
      * @param {Object} records
      * @param {String} tpl
      * @return {Array} string items

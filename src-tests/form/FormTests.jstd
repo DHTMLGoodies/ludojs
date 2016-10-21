@@ -17,6 +17,7 @@ load:
   - ../../src/form/combo.js
   - ../../src/form/date.js
   - ../../src/form/color.js
+  - ../../src/form/on-off-switch.js
   - ../../src/color/base.js
   - ../../src/color/boxes.js
   - ../../src/color/rgb-slider.js
@@ -45,6 +46,7 @@ test:
   - CheckboxTest.js
   - ColorTest.js
   - GeneralFormTests.js
+  - OnOffSwitchTest.js
 
 plugin:
  - name: "coverage"

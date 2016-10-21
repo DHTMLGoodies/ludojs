@@ -2,7 +2,7 @@
  * Show error messages from remote requests
  * @namespace remote
  * @class ErrorMessage
- * @extends ludo.remote.Message
+ * @augments ludo.remote.Message
  */
 ludo.remote.ErrorMessage = new Class({
     Extends:ludo.remote.Message,

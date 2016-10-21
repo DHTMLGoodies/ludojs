@@ -1,8 +1,8 @@
 /**
- * @namespace form
- * @class Element
- * @extends View
- * @description Super class for form components.
+ * Super class for form components.
+ * @namespace ludo.form
+ * @class ludo.form.Element
+ * @augments ludo.View
  */
 ludo.form.Element = new Class({
     Extends:ludo.View,
@@ -52,7 +52,9 @@ ludo.form.Element = new Class({
     /**
      * Custom CSS rules to apply to input element
      * @attribute formCss
-     * @type Object, example: { border : '1px solid #000' }
+     * @type Object
+     * @example:  {@lang Javascript}
+     * { border : '1px solid #000' }
      * @default undefined
      */
     formCss:undefined,
@@ -243,7 +245,7 @@ ludo.form.Element = new Class({
 
     /**
      * Disable form element
-     * @method disable
+     * @function disable
      * @return void
      */
     disable:function () {
@@ -252,7 +254,7 @@ ludo.form.Element = new Class({
     },
     /**
      * Enable form element
-     * @method enable
+     * @function enable
      * @return void
      */
     enable:function () {
@@ -410,7 +412,7 @@ ludo.form.Element = new Class({
     },
     /**
      * Return current value
-     * @method getValue
+     * @function getValue
      * @return string
      */
     getValue:function () {
@@ -432,6 +434,9 @@ ludo.form.Element = new Class({
     },
 
     _set:function(value){
+
+        
+
         if (!this.isReady) {
             if(value)this.setValue.delay(50, this, value);
             return;
@@ -468,7 +473,7 @@ ludo.form.Element = new Class({
 
     /**
      * Set new value
-     * @method setValue
+     * @function setValue
      * @param value
      * @return void
      */
@@ -518,7 +523,7 @@ ludo.form.Element = new Class({
 
     /**
      * Get reference to input element
-     * @method getFormEl
+     * @function getFormEl
      * @return DOMElement
      */
     getFormEl:function () {
@@ -526,7 +531,7 @@ ludo.form.Element = new Class({
     },
     /**
      * Returns true when value of form element is valid, i.e. larger than minValue, matching regex etc.
-     * @method isValid
+     * @function isValid
      * @return {Boolean} valid
      */
     isValid:function () {
@@ -579,7 +584,8 @@ ludo.form.Element = new Class({
     /**
      * Reset / Roll back to last committed value. It could be the value stored by last commit method call
      * or if the original value/default value of this field.
-     * @method reset
+     * @function reset
+     * @memberof ludo.form.Element.prototype
      * @return void
      */
     reset:function () {
@@ -588,8 +594,8 @@ ludo.form.Element = new Class({
 
     /**
      * Reset value back to the original value sent(constructor value)
-     * @method clear
-     * @return void
+     * @function clear
+     * @memberof ludo.form.Element.prototype
      */
     clear:function () {
         this._set(this.constructorValue);
@@ -599,8 +605,8 @@ ludo.form.Element = new Class({
      * Update initial value to current value. These actions will always trigger a commit<br>
      * - Form or Model submission
      * - Fetching new record for a ludo.model.Model
-     * @method commit
-     * @return void
+     * @function commit
+     * @memberOf ludo.form.Element.prototype
      */
     commit:function () {
         if(!this.isReady){
@@ -611,7 +617,7 @@ ludo.form.Element = new Class({
     },
     /**
      * Returns true if current value is different from original value
-     * @method isDirty
+     * @function isDirty
      * @return {Boolean} isDirty
      */
     isDirty:function () {

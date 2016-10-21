@@ -8,7 +8,7 @@
  * A canvas element contains methods for transformations and other
  * @namespace canvas
  * @class Element
- * @extends ludo.Core
+ * @augments ludo.Core
  */
 ludo.canvas.Element = new Class({
 	Extends:ludo.Core,
@@ -52,7 +52,7 @@ ludo.canvas.Element = new Class({
 
 	/**
 	 * Return canvas node for this element
-	 * @method getNode
+	 * @function getNode
 	 * @return {canvas.Node} node
 	 */
 	getNode:function(){
@@ -69,7 +69,7 @@ ludo.canvas.Element = new Class({
 
 	/**
 	 Returns value of an attribute
-	 @method get
+	 @function get
 	 @param key
 	 @return {String} value
 	 @example
@@ -104,7 +104,7 @@ ludo.canvas.Element = new Class({
 
 	/**
 	 * Adopt element or node
-	 * @method adopt
+	 * @function adopt
 	 * @param {canvas.Element|canvas.Node} node
 	 * @return {canvas.Element} parent
 	 */
@@ -115,7 +115,7 @@ ludo.canvas.Element = new Class({
 
 	/**
 	 * Remove text and child nodes from element
-	 * @method empty
+	 * @function empty
 	 * @return {canvas.Element} this
 	 */
 	empty:function(){

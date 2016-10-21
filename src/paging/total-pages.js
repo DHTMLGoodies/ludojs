@@ -1,7 +1,7 @@
 /**
  Displays number of pages in a data source
  @class paging.TotalPages
- @extends View
+ @augments View
  @constructor
  @param {Object} config
  @example

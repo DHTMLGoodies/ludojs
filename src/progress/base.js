@@ -2,7 +2,7 @@
  * Super class for all progress bar views
  * @namespace progress
  * @class Base
- * @extends View
+ * @augments View
  */
 ludo.progress.Base = new Class({
     Extends:ludo.View,
@@ -60,7 +60,7 @@ ludo.progress.Base = new Class({
     },
     /**
      * Finish progress bar manually
-     * @method finish
+     * @function finish
      */
     finish:function () {
         this.getDataSource().finish();
@@ -78,7 +78,6 @@ ludo.progress.Base = new Class({
          * @param Component this
          */
         this.fireEvent('finish');
-
-
+        
     }
 });

@@ -2,7 +2,7 @@
  * Menu class
  * @namespace menu
  * @class Menu
- * @extends View
+ * @augments View
  */
 ludo.menu.Menu = new Class({
     Extends : ludo.View,

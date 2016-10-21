@@ -2,9 +2,9 @@
  * Cancel button. This is a pre-configured ludo.form.Button which will close/hide parent view(or view defined in
  * applyTo) on click.
  * Default value of this button is "Cancel".
- * @namespace form
+ * @namespace ludo.form
  * @class CancelButton
- * @extends form.Button
+ * @augments ludo.form.Button
  */
 ludo.form.CancelButton = new Class({
     Extends:ludo.form.Button,

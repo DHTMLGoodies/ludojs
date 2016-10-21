@@ -2,7 +2,7 @@
  Class for drawing polygons.
  @namespace canvas
  @class Polygon
- @extends canvas.Polyline
+ @augments canvas.Polyline
  @constructor
  @param {String} points
  @param {canvas.NodeConfig} config

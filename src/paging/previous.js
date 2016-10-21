@@ -2,7 +2,7 @@
  Button used to navigate to previous page in a dataSource.Collection
  @namespace paging
  @class Last
- @extends paging.Button
+ @augments paging.Button
  @constructor
  @param {Object} config
  @example

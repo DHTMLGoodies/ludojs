@@ -3,7 +3,7 @@
  * This class will soon be replaced by a new Tree widget.
  * @namespace tree
  * @class Tree
- * @extends View
+ * @augments View
  * @deprecated
  */
 ludo.tree.Tree = new Class({
@@ -212,7 +212,7 @@ ludo.tree.Tree = new Class({
     },
     /**
      * Method called by ludo.tree.
-	 * @method addRecord
+	 * @function addRecord
      * @param {Object} obj
      */
     addRecord:function (obj) {
@@ -521,7 +521,7 @@ ludo.tree.Tree = new Class({
     },
     /**
      * Update CSS of branch after moving or removing a record from the tree(Drag and Drop)
-     * @method setNewCssForDomNodes
+     * @function setNewCssForDomNodes
      * @param {Object} record
      * @private
      */
@@ -623,7 +623,7 @@ ludo.tree.Tree = new Class({
     },
 	/**
 	Return record fields/columns for the node template, example ['title','description'] from {title} {description}
-	@method getTplFields
+	@function getTplFields
 	@param {Object} record
 	@return array
 	@private
@@ -759,7 +759,7 @@ ludo.tree.Tree = new Class({
         }
     },
     /**
-     * @method expandAll
+     * @function expandAll
      * @description expand entire tree or branch from parentRecord
      * @param {Object} parentRecord (optional)
      */
@@ -769,7 +769,7 @@ ludo.tree.Tree = new Class({
 
     /**
      * Expand a record
-     * @method expandSome
+     * @function expandSome
      * @param {Object} parentRecord (optional - if not set, tree will be expanded from root)
      * @param {Number} depth How deep to expand, 1 will only expand direct children
      */

@@ -100,7 +100,7 @@ ludo.canvas.Node = new Class({
 	/**
 	 * Add event to DOM element
 	 * el is optional, default this.el
-	 * @method _addEvent
+	 * @function _addEvent
 	 * @param {String} ev
 	 * @param {Function} fn
 	 * @param {Object} el
@@ -143,7 +143,7 @@ ludo.canvas.Node = new Class({
 
 	/**
 	 * append a new node
-	 * @method append
+	 * @function append
 	 * @param {canvas.Element|canvas.Node} node node
 	 * @return {canvas.Node} parent
 	 */
@@ -211,7 +211,7 @@ ludo.canvas.Node = new Class({
 
 	/**
 	 * Apply filter to node
-	 * @method applyFilter
+	 * @function applyFilter
 	 * @param {canvas.Filter} filter
 	 */
 	applyFilter:function (filter) {
@@ -219,7 +219,7 @@ ludo.canvas.Node = new Class({
 	},
 	/**
 	 * Apply mask to node
-	 * @method addMask
+	 * @function addMask
 	 * @param {canvas.Node} mask
 	 */
 	applyMask:function (mask) {
@@ -228,7 +228,7 @@ ludo.canvas.Node = new Class({
 
 	/**
 	 * Apply clip path to node
-	 * @method applyClipPath
+	 * @function applyClipPath
 	 * @param {canvas.Node} clip
 	 */
 	applyClipPath:function(clip){
@@ -237,7 +237,7 @@ ludo.canvas.Node = new Class({
 
 	/**
 	 Create url reference
-	 @method url
+	 @function url
 	 @param {String} key
 	 @param {canvas.Node|String} to
 	 @example
@@ -253,7 +253,7 @@ ludo.canvas.Node = new Class({
 	},
 	/**
 	 * Update text content of node
-	 * @method text
+	 * @function text
 	 * @param {String} text
 	 */
 	text:function (text) {
@@ -261,7 +261,7 @@ ludo.canvas.Node = new Class({
 	},
 	/**
 	 Adds a new child DOM node
-	 @method add
+	 @function add
 	 @param {String} tagName
 	 @param {Object} properties
 	 @param {String} text content
@@ -295,7 +295,7 @@ ludo.canvas.Node = new Class({
 
 	/**
 	 * Add css class to SVG node
-	 * @method addClass
+	 * @function addClass
 	 * @param {String} className
 	 */
 	addClass:function (className) {
@@ -303,7 +303,7 @@ ludo.canvas.Node = new Class({
 	},
 	/**
 	 Returns true if svg node has given css class name
-	 @method hasClass
+	 @function hasClass
 	 @param {String} className
 	 @return {Boolean}
 	 @example
@@ -316,7 +316,7 @@ ludo.canvas.Node = new Class({
 	},
 	/**
 	 Remove css class name from css Node
-	 @method removeClass
+	 @function removeClass
 	 @param {String} className
 	 @example
 	 var node = new ludo.canvas.Node('rect', { id:'myId2'});
@@ -337,7 +337,7 @@ ludo.canvas.Node = new Class({
 	},
 	/**
 	 * Returns bounding box of el as an object with x,y, width and height.
-	 * @method getBBox
+	 * @function getBBox
 	 * @return {Object}
 	 */
 	getBBox:function () {
@@ -348,7 +348,7 @@ ludo.canvas.Node = new Class({
 	 * Returns rectangular size of element, i.e. bounding box width - bounding box x and
 	 * bounding box width - bounding box y. Values are returned as { x : 100, y : 150 }
 	 * where x is width and y is height.
-	 * @method getSize
+	 * @function getSize
 	 * @return {Object} size x and y
 	 */
 	getSize:function(){
@@ -361,7 +361,7 @@ ludo.canvas.Node = new Class({
 
 	/**
 	 * The nearest ancestor 'svg' element. Null if the given element is the outermost svg element.
-	 * @method getCanvas
+	 * @function getCanvas
 	 * @return {ludo.canvas.Node.el} svg
 	 */
 	getCanvas:function () {
@@ -369,7 +369,7 @@ ludo.canvas.Node = new Class({
 	},
 	/**
 	 * The element which established the current viewport. Often, the nearest ancestor ‘svg’ element. Null if the given element is the outermost svg element
-	 * @method getViewPort
+	 * @function getViewPort
 	 * @return {ludo.canvas.Node.el} svg
 	 */
 	getViewPort:function () {

@@ -1,8 +1,8 @@
 /**
  Select box (&lt;select>)
- @namespace form
+ @namespace ludo.form
  @class Select
- @extends form.Element
+ @augments ludo.form.Element
  @constructor
  @param {Object} config
  @example
@@ -144,7 +144,7 @@ ludo.form.Select = new Class({
 
     /**
      * Add new option element
-     * @method addOption
+     * @function addOption
      * @param {String} value
      * @param {String} text
      */

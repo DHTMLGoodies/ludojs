@@ -1,5 +1,4 @@
 ludo.util = {
-
 	types:{},
 
 	isIe:function(){
@@ -87,11 +86,7 @@ ludo.util = {
 		return ret;
 	},
 
-	/**
-	 * Dispose LudoJS components
-	 * @method dispose
-	 * @param {Core} view
-	 */
+
 	dispose:function(view){
 		if (view.getParent()) {
 			view.getParent().removeChild(view);
@@ -113,7 +108,7 @@ ludo.util = {
 
 		ludo.CmpMgr.deleteComponent(view);
 
-		delete view.els;
+		view.els = undefined;
 	},
 
 	disposeDependencies:function(deps){
@@ -125,7 +120,7 @@ ludo.util = {
 				}else if(deps[key].dependency && deps[key].dependency.length){
 					ludo.util.disposeDependencies(deps[key].dependency);
 				}
-				delete deps[key];
+				deps[key] = undefined;
 			}
 		}
 

@@ -1,7 +1,7 @@
 /**
- * Rich Component
- * @class FramedView
- * @extends View
+ * View with title bar
+ * @class ludo.FramedView
+ * @augments ludo.View
  */
 ludo.FramedView = new Class({
 	Extends:ludo.View,
@@ -16,24 +16,26 @@ ludo.FramedView = new Class({
 
 	/**
 	 * Title of component. A title is only useful for FramedView's or when the component is collapsible.
-	 * @attribute {String} title
+	 * @param {String} title
 	 */
 	title:'',
 
 
 	movable:false,
 	/**
-	 * Is component minimizable. When set to true, a minimize button will appear on the title bar of the component
-	 * @config {Boolean} minimizable
+	 * Is view minimizable. When set to true, a minimize button will appear on the title bar of the component
+	 * @param {Boolean} minimizable
+	 * @memberof ludo.FramedView
 	 * @default false
 	 */
 	minimizable:false,
 
 	resizable:false,
 	/**
-	 * Is component closable. When set to true, a close button will appear on the title bar of the component
+	 * When set to true, a close button will appear on the title bar of the component.
 	 * @attribute closable
 	 * @type {Boolean}
+	 * @memberof ludo.FramedView
 	 * @default false
 	 */
 	closable:false,
@@ -45,6 +47,7 @@ ludo.FramedView = new Class({
 	/**
 	 * Path to icon to be placed on the title bar
 	 * @config {String} icon
+	 * @memberof ludo.FramedView
      * @default undefined
 	 */
 	icon:undefined,
@@ -100,6 +103,7 @@ ludo.FramedView = new Class({
 	/**
 	 * Bold title bar. True to give the component a window type title bar, false to give it a smaller title bar
 	 * @attribute boldTitle
+	 * @memberof ludo.FramedView
 	 * @type {Boolean}
 	 * @default true
 	 */
@@ -110,6 +114,7 @@ ludo.FramedView = new Class({
 	/**
 	 Button bar object. Components to be placed on the button bar.
 	 @attribute buttonBar
+	 @memberof ludo.FramedView
 	 @type Object
 	 @example
 	 	buttonBar : {
@@ -142,7 +147,7 @@ ludo.FramedView = new Class({
 
 	/**
 	 * Return config of title bar using a method instead of config object. Useful when you need to refer to "this"
-	 * @method getTitleBarConfig
+	 * @function getTitleBarConfig
 	 * @return {Object|undefined}
 	 */
 	getTitleBarConfig:function(){
@@ -152,7 +157,7 @@ ludo.FramedView = new Class({
 	/**
 	 * Return button bar config using a method instead of using buttonBar config object. Useful when you need to refer to
 	 * "this"
-	 * @method getButtonBarConfig
+	 * @function getButtonBarConfig
 	 * @return {Object|undefined}
 	 */
 	getButtonBarConfig:function(){
@@ -216,7 +221,7 @@ ludo.FramedView = new Class({
 	},
 	/**
 	 * Set new title
-	 * @method setTitle
+	 * @function setTitle
 	 * @param {String} title
 	 */
 	setTitle:function (title) {
@@ -305,7 +310,7 @@ ludo.FramedView = new Class({
 
 	/**
 	 * Maximize component
-	 * @method maximize
+	 * @function maximize
 	 * @return void
 	 */
 	maximize:function () {
@@ -339,7 +344,7 @@ ludo.FramedView = new Class({
 
 	/**
 	 * Minimize component
-	 * @method minimize
+	 * @function minimize
 	 * @return void
 	 */
 	minimize:function () {
@@ -384,7 +389,7 @@ ludo.FramedView = new Class({
 	},
 	/**
 	 * Hide a button on the button bar
-	 * @method hideButton
+	 * @function hideButton
 	 * @param id of button
 	 * @return {Boolean} success
 	 */
@@ -393,7 +398,7 @@ ludo.FramedView = new Class({
 	},
 	/**
 	 * Show a button on the button bar
-	 * @method showButton
+	 * @function showButton
 	 * @param id of button
 	 * @return {Boolean} success
 	 */
@@ -406,7 +411,7 @@ ludo.FramedView = new Class({
 	},
 	/**
 	 * Disable a button on the button bar
-	 * @method disableButton
+	 * @function disableButton
 	 * @param id
 	 * @return {Boolean} success
 	 */
@@ -415,7 +420,7 @@ ludo.FramedView = new Class({
 	},
 	/**
 	 * Enable a button on the button bar
-	 * @method enableButton
+	 * @function enableButton
 	 * @param id
 	 * @return {Boolean} success
 	 */
@@ -445,7 +450,7 @@ ludo.FramedView = new Class({
 	},
 	/**
 	 * Is component resizable
-	 * @method isResizable
+	 * @function isResizable
 	 * @return {Boolean}
 	 */
 	isResizable:function () {

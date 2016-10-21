@@ -2,7 +2,7 @@
  * Progress bar class
  * @namespace progress
  * @class Bar
- * @extends progress.Base
+ * @augments progress.Base
  */
 ludo.progress.Bar = new Class({
     Extends:ludo.progress.Base,
@@ -39,8 +39,7 @@ ludo.progress.Bar = new Class({
     },
 
     createMovablePartOfProgressBar:function () {
-        var el = this.els.progress = $('<div>');
-        el.addClass('ludo-Progress-Bar');
+        var el = this.els.progress = $('<div class="ludo-Progress-Bar">');
         this.els.progressBg.append(el);
         this.els.progress.css('width', '0px');
 

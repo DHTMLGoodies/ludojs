@@ -12,9 +12,9 @@
 
  A PHP implementation of the PHP code of this can be obtained by contacting post[at]dhtmlgoodies.com.
 
- @namespace form
+ @namespace ludo.form
  @class File
- @extends form.Element
+ @augments ludo.form.Element
  @constructor
  @param {Object} config
  @example
@@ -391,7 +391,7 @@ ludo.form.File = new Class({
 	},
 	/**
 	 * setValue for file inputs is display only. File inputs are readonly
-	 * @method setValue
+	 * @function setValue
 	 * @param {Object} value
 	 */
 	setValue:function (value) {
@@ -404,7 +404,7 @@ ludo.form.File = new Class({
 	/**
 	 * "set" is readonly for file inputs. It will update the displayed file name, not the file input it's self.
 	 * Method without arguments returns the file input value
-	 * @method val
+	 * @function val
 	 * @param {Object} value
 	 */
 	val:function(value){

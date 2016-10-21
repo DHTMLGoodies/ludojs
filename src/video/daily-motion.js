@@ -2,7 +2,7 @@
  DailyMotion video player component
  @namespace video
  @class DailyMotion
- @extends video.Video
+ @augments video.Video
  */
 ludo.video.DailyMotion = new Class({
 	Extends:ludo.video.Video,

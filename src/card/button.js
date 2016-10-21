@@ -2,7 +2,7 @@
  * Special Button for card.Deck component
  * @namespace card
  * @class Button
- * @extends form.Button
+ * @augments form.Button
  */
 ludo.card.Button = new Class({
     Extends:ludo.form.Button,

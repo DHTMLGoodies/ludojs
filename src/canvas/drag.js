@@ -2,7 +2,7 @@
  Class for dragging {{#crossLink "canvas/Node"}}{{/crossLink}} elements.
  @namespace canvas
  @class Drag
- @extends effect.Drag
+ @augments effect.Drag
  @constructor
  @param {Object} config, see {{#crossLink "effect/Drag"}}{{/crossLink}}
  @example
@@ -39,7 +39,7 @@ ludo.canvas.Drag = new Class({
 
 	/**
 	 * Add node
-	 * @method add
+	 * @function add
 	 * @param {ludo.effect.DraggableNode} node
 	 * @return {effect.DraggableNode} added node
 	 */

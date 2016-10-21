@@ -1,7 +1,7 @@
 /**
  * @namespace calendar
- * @class Calendar
- * @extends calendar.Base
+ * @class ludo.calendar.Calendar
+ * @augments ludo.calendar.Base
  * @type {Class}
  */
 ludo.calendar.Calendar = new Class({
@@ -59,7 +59,7 @@ ludo.calendar.Calendar = new Class({
 
     /**
      * Set year (4 digits)
-     * @method setYear
+     * @function setYear
      * @param {Number} year
      *
      */
@@ -79,7 +79,7 @@ ludo.calendar.Calendar = new Class({
 
     /**
      * Returns selected date as Date object
-     * @method getDate
+     * @function getDate
      * @return {Object} selected date
      */
     getDate : function(){
@@ -95,7 +95,7 @@ ludo.calendar.Calendar = new Class({
     },
     /**
      * Returns selected date
-     * @method getValue
+     * @function getValue
      * @return {String} selected date
      */
     getValue:function(){
@@ -105,7 +105,7 @@ ludo.calendar.Calendar = new Class({
     },
     /**
      * Set new current date
-	 * @method setValue
+	 * @function setValue
      * @param {Date} date
      */
     setValue:function(date){
@@ -117,7 +117,7 @@ ludo.calendar.Calendar = new Class({
 
     /**
      * Set current month
-	 * @method setMonth
+	 * @function setMonth
      * @param {Number} month (1-12)
 	 * @return void
      */

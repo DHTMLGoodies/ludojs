@@ -66,7 +66,7 @@ ludo.layout.Card = new Class({
 
 	/**
 	 * Return reference to previus card of passed card
-	 * @method getPreviousCardOf
+	 * @function getPreviousCardOf
 	 * @param {View} view
 	 * @return View
 	 */
@@ -82,7 +82,7 @@ ludo.layout.Card = new Class({
 
 	/**
 	 * Show previous card of current visible card
-	 * @method showPreviousCard
+	 * @function showPreviousCard
 	 * @param {Boolean} skipAnimation (optional)
 	 * @return {Boolean} success
 	 */
@@ -102,7 +102,7 @@ ludo.layout.Card = new Class({
 
 	/**
 	 * Show next card of current visible card
-	 * @method showNextCard
+	 * @function showNextCard
 	 * @param {Boolean} skipAnimation (optional)
 	 * @return {Boolean} success
 	 */
@@ -137,7 +137,7 @@ ludo.layout.Card = new Class({
 
 	/**
 	 * Show a card with this name
-	 * @method showCard
+	 * @function showCard
 	 * @param {String} name
 	 * @return {Boolean} success
 	 */
@@ -150,7 +150,7 @@ ludo.layout.Card = new Class({
 	},
 	/**
 	 * Return true if passed card is last card in deck
-	 * @method isLastCard
+	 * @function isLastCard
 	 * @param {View} card
 	 * @return Boolean
 	 */
@@ -159,7 +159,7 @@ ludo.layout.Card = new Class({
 	},
 	/**
 	 * Return true if passed card is first card in deck
-	 * @method isFirstCard
+	 * @function isFirstCard
 	 * @param  {View} card
 	 * @return {Boolean}
 	 */
@@ -267,7 +267,7 @@ ludo.layout.Card = new Class({
 	},
 	/**
 	 * Show first card in deck
-	 * @method showFirstCard
+	 * @function showFirstCard
 	 * @return void
 	 */
 	showFirstCard:function () {
@@ -275,7 +275,7 @@ ludo.layout.Card = new Class({
 	},
 	/**
 	 * Show last card in deck
-	 * @method showLastCard
+	 * @function showLastCard
 	 * @return void
 	 */
 	showLastCard:function () {
@@ -291,7 +291,7 @@ ludo.layout.Card = new Class({
 	},
 	/**
 	 * Returns true if form of current card is valid
-	 * @method isValid
+	 * @function isValid
 	 * @public
 	 * @return {Boolean}
 	 */
@@ -303,7 +303,7 @@ ludo.layout.Card = new Class({
 	},
 	/**
 	 * Return number of cards in deck
-	 * @method getCountCards
+	 * @function getCountCards
 	 * @return {Number} count cards
 	 */
 	getCountCards:function () {
@@ -311,7 +311,7 @@ ludo.layout.Card = new Class({
 	},
 	/**
 	 * Return index of visible card
-	 * @method getIndexOfVisibleCard
+	 * @function getIndexOfVisibleCard
 	 * @return {Number} card index
 	 */
 	getIndexOfVisibleCard:function () {
@@ -320,7 +320,7 @@ ludo.layout.Card = new Class({
 
 	/**
 	 * true if first card in deck is shown.
-	 * @method isOnFirstCard
+	 * @function isOnFirstCard
 	 * @return {Boolean} is on first card
 	 */
 	isOnFirstCard:function () {
@@ -328,7 +328,7 @@ ludo.layout.Card = new Class({
 	},
 	/**
 	 * true if last card in deck is shown.
-	 * @method isOnLastCard
+	 * @function isOnLastCard
 	 * @return {Boolean} is on last card
 	 */
 	isOnLastCard:function () {
@@ -337,7 +337,7 @@ ludo.layout.Card = new Class({
 
 	/**
 	 * Returns percentage position of current visible card.
-	 * @method getPercentCompleted
+	 * @function getPercentCompleted
 	 * @return {Number} percent
 	 */
 	getPercentCompleted:function () {

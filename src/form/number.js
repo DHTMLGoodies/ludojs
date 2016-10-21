@@ -1,8 +1,8 @@
 /**
- * @namespace form
+ * @namespace ludo.form
  * @class Number
  * @description A customized text input only allowing numeric characters
- * @extends form.Text
+ * @augments ludo.form.Text
  */
 ludo.form.Number = new Class({
     Extends:ludo.form.Text,
@@ -100,7 +100,7 @@ ludo.form.Number = new Class({
     },
     /**
      * Increment value by
-	 * @method incrementBy
+	 * @function incrementBy
      * @param {Number} value
      * @param {Boolean} shift
      */

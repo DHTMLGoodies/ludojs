@@ -59,7 +59,7 @@ ludo.canvas.Path = new Class({
     },
     /**
      * Get size of polyline (max X - min X) and (max X - min Y)
-     * @method getSize
+     * @function getSize
      * @return {Object} x and y
      */
     getSize:function () {

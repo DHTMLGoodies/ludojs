@@ -1,8 +1,7 @@
 /**
-@class Window
-@extends FramedView
+@class ludo.Window
+@augments ludo.FramedView
 @description Class for floating window
-@constructor
 @param {Object} config
 @example
 	new ludo.Window({
@@ -88,6 +87,7 @@ ludo.Window = new Class({
     /**
      * Preserve aspect ratio when resizing
      * @attribute {Boolean} preserveAspectRatio
+     * @memberof ludo.Window
      * @default false
      */
     preserveAspectRatio:false,
@@ -174,7 +174,7 @@ ludo.Window = new Class({
     },
     /**
      * Show window at x and y position
-     * @method showAt
+     * @function showAt
      * @param {Number} x
      * @param {Number} y
      * @return void
@@ -202,7 +202,7 @@ ludo.Window = new Class({
 
     /**
      * Show window centered on screen
-     * @method showCentered
+     * @function showCentered
      * @return void
      */
     showCentered:function () {

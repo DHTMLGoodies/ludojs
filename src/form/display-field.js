@@ -1,8 +1,8 @@
 /**
  * Read only field, used for display only
- * @namespace form
+ * @namespace ludo.form
  * @class DisplayField
- * @extends form.Text
+ * @augments ludo.form.Text
  */
 ludo.form.DisplayField = new Class({
 	Extends:ludo.form.LabelElement,

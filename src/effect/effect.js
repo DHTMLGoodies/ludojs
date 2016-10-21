@@ -8,7 +8,7 @@ ludo.effect.Effect = new Class({
 	fps:33,
 	/**
 	 Fly/Slide DOM node to a position
-	 @method fly
+	 @function fly
 	 @param {Object} config
 	 @example
 	 	<div id="myDiv" style="position:absolute;width:100px;height:100px;border:1px solid #000;background-color:#DEF;left:50px;top:50px"></div>
@@ -51,7 +51,7 @@ ludo.effect.Effect = new Class({
 
 	/**
 	 Fly/Slide DOM node from current location to given x and y coordinats in given seconds.
-	 @method flyTo
+	 @function flyTo
 	 @param {HTMLElement} el
 	 @param {Number} x
 	 @param {Number} y

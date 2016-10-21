@@ -3,7 +3,7 @@
  * This class is instantiated automatically
  * @namespace view
  * @class ButtonBar
- * @extends View
+ * @augments View
  */
 ludo.view.ButtonBar = new Class({
     Extends:ludo.View,
@@ -96,7 +96,7 @@ ludo.view.ButtonBar = new Class({
     },
     /**
      * Returns the component where the button bar is placed
-	 * @method getView
+	 * @function getView
      * @return {Object} ludo Component
      * @private
      */

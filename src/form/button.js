@@ -1,9 +1,8 @@
 /**
  * Button component
- * @namespace form
- * @class Button
- * @extends form.Element
- *
+ * @namespace ludo.form
+ * @class ludo.form.Button
+ * @augments ludo.form.Element
  */
 ludo.form.Button = new Class({
     Extends:ludo.form.Element,
@@ -28,12 +27,14 @@ ludo.form.Button = new Class({
     /**
      * Toggle button
      * @attribute {Boolean} toggle
+     * @memberof ludo.form.Button.prototype
      * @default false
      */
     toggle:false,
 
     /**
      Assign button to a toggleGroup
+     @memberof ludo.form.Button.prototype
      @attribute {Object} toggleGroup
      @default undefined
 	 @example
@@ -66,11 +67,13 @@ ludo.form.Button = new Class({
 		 		type : 'ludo.myapp.form.MyToggleGroup'
 		 	}
 		 });
-     /
+     */
+
     toggleGroup:undefined,
 
     /**
      * Disable button when form of parent component is invalid
+     * @memberof ludo.form.Button.prototype
      * @attribute {Boolean} disableOnInvalid
      * @default false
      */
@@ -85,7 +88,8 @@ ludo.form.Button = new Class({
     /**
      * Is this button by default selected
      * When parent component is displayed, it will call select() method for first selected button. If no buttons
-     * have config param selected set to true, it will select first SubmitButton.
+     * have config param selected set to true, it will select first
+     * @memberof ludo.form.Button.prototype
      * @attribute {Boolean} selected
      * @default false
      */
@@ -96,6 +100,7 @@ ludo.form.Button = new Class({
     /**
      * Path to button icon
      * @attribute {String} icon
+     * @memberof ludo.form.Button.prototype
      * @default undefined
      */
     icon:undefined,
@@ -104,6 +109,7 @@ ludo.form.Button = new Class({
 
 	/**
 	 * Size,i.e height of button. Possible values 's', 'm' and 'l' (small,medium, large)
+     * @memberof ludo.form.Button.prototype
 	 * @config {String} size
 	 * @default 'm'
 	 */
@@ -122,7 +128,6 @@ ludo.form.Button = new Class({
         'l' : 35,
 		'xl' : 45
 	},
-
 
     ludoConfig:function (config) {
 		this.parent(config);
@@ -351,7 +356,7 @@ ludo.form.Button = new Class({
     },
     /**
      * Trigger click on button
-     * @method click
+     * @function click
      * @return {undefined|Boolean}
      */
     click:function () {
@@ -438,7 +443,7 @@ ludo.form.Button = new Class({
 
     /**
      * Return instance of ludo.form.ToggleGroup
-     * @method getToggleGroup
+     * @function getToggleGroup
      * @return {Object} ludo.form.ToggleGroup
      */
     getToggleGroup:function () {

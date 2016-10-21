@@ -2,7 +2,7 @@
  Class for drawing polylines.
  @namespace canvas
  @class Polyline
- @extends canvas.NamedNode
+ @augments canvas.NamedNode
  @constructor
  @param {String} points
  @param {canvas.NodeConfig} config
@@ -26,7 +26,7 @@ ludo.canvas.Polyline = new Class({
 
 	/**
 	 * Return x and y of a point
-	 * @method getPoint
+	 * @function getPoint
 	 * @param {Number} index
 	 * @return {Object|undefined} x and y
 	 */
@@ -42,7 +42,7 @@ ludo.canvas.Polyline = new Class({
 
 	/**
 	 Set new x and y for one of the points.
-	 @method setPoint
+	 @function setPoint
 	 @param {Number} index
 	 @param {Number} x
 	 @param {Number} y
@@ -72,7 +72,7 @@ ludo.canvas.Polyline = new Class({
 	},
 	/**
 	 * Get size of polyline (max X - min X) and (max X - min Y)
-	 * @method getSize
+	 * @function getSize
 	 * @return {Object} x and y
 	 */
 	getSize:function(){
@@ -87,7 +87,7 @@ ludo.canvas.Polyline = new Class({
 	},
 	/**
 	 * Get position of polyline, min X and min Y)
-	 * @method getPosition
+	 * @function getPosition
 	 * @return {Object} x and y
 	 */
 	getPosition:function(){

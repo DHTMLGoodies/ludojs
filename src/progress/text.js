@@ -3,7 +3,7 @@
  * Step 1 of 10
  * @namespace progress
  * @class Text
- * @extends progress.Base
+ * @augments progress.Base
  */
 ludo.progress.Text = new Class({
     Extends:ludo.progress.Base,

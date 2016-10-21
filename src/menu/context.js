@@ -3,11 +3,10 @@
  ludo.View.contextMenu config array,
  @namespace menu
  @class Context
- @extends menu.Menu
+ @augments menu.Menu
  @constructor
  @param {Object} config
- @example
-    new ludo.Window({
+ @example new ludo.Window({
            contextMenu:[{
                selector : '.my-selector',
                children:[{label:'Menu Item 1'},{label:'Menu item 2'}],
@@ -40,8 +39,8 @@ ludo.menu.Context = new Class({
 	 @attribute selector
 	 @type String
 	 @default undefined
-	 @example
-	    selector : '.selected-records'
+	 @example {@lang Javascript}
+	 selector : '.selected-records'
 	 */
 	selector:undefined,
 	component:undefined,
@@ -52,7 +51,6 @@ ludo.menu.Context = new Class({
 	 Show context menu for records with these properties
 	 @config {Object} record
 	 @default undefined
-	 @example
 	 */
 	record:undefined,
 	/**
@@ -63,7 +61,7 @@ ludo.menu.Context = new Class({
 	 @attribute recordType
 	 @type String
 	 @default undefined
-	 @example
+	 @example {@lang Javascript}
 	 recordType : 'city'
 	 */
 	recordType:undefined,
@@ -108,7 +106,7 @@ ludo.menu.Context = new Class({
 	/**
 	 * when recordType property is defined, this will return the selected record of parent applyTo,
 	 * example: record in a tree
-	 * @method getSelectedRecord
+	 * @function getSelectedRecord
 	 * @return object record
 	 */
 	getSelectedRecord:function () {

@@ -2,7 +2,7 @@
  * Displays nav-buttons for previous month and year to the left, a calendar.MonthYearSelector in the center and buttons for next month and next year to the right.
  * @namespace calendar
  * @class NavBar
- * @extends calendar.Base
+ * @augments calendar.Base
  */
 ludo.calendar.NavBar = new Class({
     Extends:ludo.calendar.Base,

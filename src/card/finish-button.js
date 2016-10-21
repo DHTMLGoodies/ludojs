@@ -8,7 +8,7 @@
  *
  * @namespace card
  * @class FinishButton
- * @extends card.Button
+ * @augments card.Button
  */
 ludo.card.FinishButton = new Class({
     Extends:ludo.card.Button,

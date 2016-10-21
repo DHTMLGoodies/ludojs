@@ -2,7 +2,7 @@
  * Class used to select month for a calendar.
  * @namespace calendar
  * @class MonthSelector
- * @extends calendar.Base
+ * @augments calendar.Base
  * @type {Class}
  */
 ludo.calendar.MonthSelector = new Class({

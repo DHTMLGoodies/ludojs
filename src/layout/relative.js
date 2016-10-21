@@ -61,7 +61,7 @@ ludo.layout.Relative = new Class({
 
     /**
      * No resize done yet, create resize functions
-     * @method prepareResize
+     * @function prepareResize
      * @private
      */
 	prepareResize:function( ){
@@ -72,7 +72,7 @@ ludo.layout.Relative = new Class({
 
     /**
      * Create/Compile resize functions for each child
-     * @method createResizeFunctions
+     * @function createResizeFunctions
      * @private
      */
 	createResizeFunctions:function () {
@@ -82,7 +82,7 @@ ludo.layout.Relative = new Class({
 	},
     /**
      * Convert layout id references to direct view reference for optimal performance
-     * @method fixLayoutReferences
+     * @function fixLayoutReferences
      * @private
      */
 	fixLayoutReferences:function () {
@@ -96,7 +96,7 @@ ludo.layout.Relative = new Class({
 	},
     /**
      * Return resize function for a child
-     * @method getResizeFnFor
+     * @function getResizeFnFor
      * @param {ludo.View} child
      * @return {Function}
      * @private
@@ -111,7 +111,7 @@ ludo.layout.Relative = new Class({
 	},
     /**
      * Return array of resize function to call when view is resized.
-     * @method getLayoutFnsFor
+     * @function getLayoutFnsFor
      * @param {ludo.View} child
      * @return {Array}
      * @private
@@ -130,7 +130,7 @@ ludo.layout.Relative = new Class({
 	},
     /**
      Return one resize function for a child
-     @method getLayoutFn
+     @function getLayoutFn
      @param {String} property
      @param {ludo.View} child
      @return {Function|undefined}
@@ -281,7 +281,7 @@ ludo.layout.Relative = new Class({
 	},
     /**
      * Return special resize function for the properties alignLeft, alignRight, alignTop and alignBottom
-     * @method getAlignmentFn
+     * @function getAlignmentFn
      * @param {ludo.View} child
      * @param {String} alignment
      * @param {String} property
@@ -298,7 +298,7 @@ ludo.layout.Relative = new Class({
 
     /**
      * Returns layout function for the width and height layout properties
-     * @method getPropertyFn
+     * @function getPropertyFn
      * @param {ludo.View} child
      * @param {String} property
      * @return {Function|undefined}
@@ -342,7 +342,7 @@ ludo.layout.Relative = new Class({
      * layout function stores values for the left,width,top,bottom, width and height properties.
      * This function call the resize function for each view with the values of these previously
      * set properties
-     * @method getLayoutLayoutFn
+     * @function getLayoutLayoutFn
      * @param {ludo.View} child
      * @return {Function}
      * @private
@@ -394,7 +394,7 @@ ludo.layout.Relative = new Class({
 	},
     /**
      * Update lastChildCoordinates properties for a child after resize is completed
-     * @method updateLastCoordinatesFor
+     * @function updateLastCoordinatesFor
      * @param {ludo.View} child
      * @private
      */
@@ -411,7 +411,7 @@ ludo.layout.Relative = new Class({
 
     /**
      * Position child at this coordinates
-     * @method positionChild
+     * @function positionChild
      * @param {ludo.View} child
      * @param {String} property
      * @param {Number} value
@@ -423,7 +423,7 @@ ludo.layout.Relative = new Class({
 	},
     /**
      * Creates empty newChildCoordinates and lastChildCoordinates for a child view
-     * @method assignDefaultCoordinates
+     * @function assignDefaultCoordinates
      * @param {ludo.View|ludo.layout.Resizer} child
      * @private
      */
@@ -437,7 +437,7 @@ ludo.layout.Relative = new Class({
      * other views are resized after the view it's depending on. example: if view "a" has leftOf property
      * set to view "b", then view "b" should be resized and positioned first. This method rearranges
      * the internal children array according to this
-     * @method arrangeChildren
+     * @function arrangeChildren
      * @private
      */
 	arrangeChildren:function () {
@@ -486,7 +486,7 @@ ludo.layout.Relative = new Class({
 
     /**
      * Create resize handles for resizable children
-     * @method createResizables
+     * @function createResizables
      * @private
      */
 	createResizables:function () {
@@ -512,7 +512,7 @@ ludo.layout.Relative = new Class({
 
     /**
      * Return resizable handle for a child view
-     * @method getResizableFor
+     * @function getResizableFor
      * @param {ludo.View} child
      * @param {String} direction
      * @return {ludo.layout.Resizer}
@@ -541,7 +541,7 @@ ludo.layout.Relative = new Class({
 
     /**
      * Return sibling which may be affected when a child is resized
-     * @method getSiblingForResize
+     * @function getSiblingForResize
      * @param {ludo.View} child
      * @param {String} direction
      * @return {ludo.View|undefined}
@@ -562,7 +562,7 @@ ludo.layout.Relative = new Class({
 	},
     /**
      * Before resize function executed for a resize handle
-     * @method beforeResize
+     * @function beforeResize
      * @param {ludo.layout.Resizer} resize
      * @param {ludo.View} child
      * @private
@@ -578,7 +578,7 @@ ludo.layout.Relative = new Class({
 	},
     /**
      * Return layout config for a resize handle
-     * @method getResizerLayout
+     * @function getResizerLayout
      * @param {ludo.View} child
      * @param {String} resize
      * @return {ludo.layout.RelativeSpec}
@@ -605,7 +605,7 @@ ludo.layout.Relative = new Class({
      * Update layout references when a resize handle has been created. example: When a resize handle
      * is added to the left of a child view. The leftOf view of this child is now the resize handle
      * and not another view
-     * @method updateReferences
+     * @function updateReferences
      * @param {String} property
      * @param {ludo.View} child
      * @param {ludo.layout.Resizer} resizer
@@ -622,7 +622,7 @@ ludo.layout.Relative = new Class({
 	},
     /**
      * Returns true if a child is resizable
-     * @method isChildResizable
+     * @function isChildResizable
      * @param {ludo.View} child
      * @return {Boolean}
      * @private
@@ -633,7 +633,7 @@ ludo.layout.Relative = new Class({
 
     /**
      * Return a child which should be rearrange because it's layout depends on a next sibling
-     * @method getWronglyArrangedChild
+     * @function getWronglyArrangedChild
      * @return {ludo.View|undefined}
      * @private
      */
@@ -653,7 +653,7 @@ ludo.layout.Relative = new Class({
 	},
     /**
      * Returns true if a child is previous sibling of another child
-     * @method isArrangedBefore
+     * @function isArrangedBefore
      * @param {ludo.View} child
      * @param {ludo.View} of
      * @return {Boolean}
@@ -672,7 +672,7 @@ ludo.layout.Relative = new Class({
 
     /**
      * Return all the siblings a child is depending on for layout
-     * @method getDependencies
+     * @function getDependencies
      * @param {ludo.View} child
      * @return {Array}
      * @private
@@ -691,7 +691,7 @@ ludo.layout.Relative = new Class({
 	},
     /**
      * Return direct reference to child
-     * @method getReference
+     * @function getReference
      * @param {String|ludo.View} child
      * @return {ludo.View}
      * @private
@@ -705,7 +705,7 @@ ludo.layout.Relative = new Class({
     /**
      * Clear internal children array. When this is done, resize function will be recreated. This happens
      * when a child is removed or when a new child is added
-     * @method clearChildren
+     * @function clearChildren
      * @private
      */
 	clearChildren:function () {
@@ -713,7 +713,7 @@ ludo.layout.Relative = new Class({
 	},
     /**
      * Return internal children array
-     * @method getChildren
+     * @function getChildren
      * @return {Array}
      * @private
      */
@@ -723,7 +723,7 @@ ludo.layout.Relative = new Class({
 
     /**
      * Validate and set required layout properties of new children
-     * @method onNewChild
+     * @function onNewChild
      * @param {ludo.View} child
      * @private
      */
@@ -751,7 +751,7 @@ ludo.layout.Relative = new Class({
 
     /**
      * Add events to child view
-     * @method addChildEvents
+     * @function addChildEvents
      * @param {ludo.View} child
      * @private
      */

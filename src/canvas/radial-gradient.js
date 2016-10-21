@@ -3,7 +3,7 @@
  see: http://www.w3.org/TR/SVG/pservers.html#RadialGradientElement
  @namespace canvas
  @class RadialGradient
- @extends canvas.Gradient
+ @augments canvas.Gradient
  @example
  	var gradient = new ludo.canvas.RadialGradient({
 		cx:400,cy:200,r:300,fx:400,fy:200

@@ -36,7 +36,7 @@ ludo.layout.SlideIn = new Class({
     },
     /**
      Show menu
-     @method show
+     @function show
      @example
         view.getLayout().show();
      */
@@ -53,7 +53,7 @@ ludo.layout.SlideIn = new Class({
     },
     /**
      hide menu
-     @method hide
+     @function hide
      @example
         view.getLayout().hide();
      */
@@ -71,7 +71,7 @@ ludo.layout.SlideIn = new Class({
 
     /**
      * Toggle between show and hide
-     * @method toggle
+     * @function toggle
      */
     toggle:function () {
         this[this.view.layout.active ? 'hide' : 'show']();

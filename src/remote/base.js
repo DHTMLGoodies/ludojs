@@ -43,7 +43,7 @@ ludo.remote.Base = new Class({
 	},
 	/**
 	 * Return url for the request
-	 * @method getUrl
+	 * @function getUrl
 	 * @param {String} service
 	 * @param {Array} arguments
 	 * @return {String}
@@ -59,7 +59,7 @@ ludo.remote.Base = new Class({
 		return ret;
 	},
 	/**
-	 * @method getServicePath
+	 * @function getServicePath
 	 * @param {String} service
 	 * @param {Array} arguments
 	 * @return {String}
@@ -72,7 +72,7 @@ ludo.remote.Base = new Class({
 		return parts.join('/');
 	},
 	/**
-	 * @method getDataForRequest
+	 * @function getDataForRequest
 	 * @param {String} service
 	 * @param {Array} arguments
 	 * @param {Object} data
@@ -104,7 +104,7 @@ ludo.remote.Base = new Class({
 	},
 	/**
 	 * Return "code" property of last received server response.
-	 * @method getResponseCode
+	 * @function getResponseCode
 	 * @return {String|undefined}
 	 */
 	getResponseCode:function () {
@@ -112,7 +112,7 @@ ludo.remote.Base = new Class({
 	},
 	/**
 	 * Return response message
-	 * @method getResponseMessage
+	 * @function getResponseMessage
 	 * @return {String|undefined}
 	 */
 	getResponseMessage:function () {
@@ -121,7 +121,7 @@ ludo.remote.Base = new Class({
 
 	/**
 	 * Return name of resource
-	 * @method getResource
+	 * @function getResource
 	 * @return {String}
 	 */
 	getResource:function(){

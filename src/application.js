@@ -1,7 +1,7 @@
 /**
  * A view rendered to document.body with a width and height of 100%
  * @class Application
- * @extends FramedView
+ * @augments FramedView
  */
 ludo.Application = new Class({
     Extends:ludo.View,

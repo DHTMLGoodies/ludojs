@@ -40,8 +40,13 @@ $skin = isset($skin) ? $skin : 'light-gray';
 
         ludo.SourceCodePreview = new Class({
             Extends: ludo.View,
+            type:'SourceCodePreview',
             title : 'Source code',
             bodyCls : 'source-code-preview',
+            containerCss:{
+                'border-top': '1px solid #ddd',
+                'background-color': '#aaa'
+            },
             css:{
                 'background-color' : '#fff',
                 'padding' : 3

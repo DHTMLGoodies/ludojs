@@ -24,7 +24,7 @@ ludo.dataSource.Record = new Class({
 
 	/**
 	 * Update property of record
-	 * @method set
+	 * @function set
 	 * @param {String} key
 	 * @param {String|Number|Object} value
 	 * @return {dataSource.Record}
@@ -40,7 +40,7 @@ ludo.dataSource.Record = new Class({
 
 	/**
 	 Return value of key
-	 @method get
+	 @function get
 	 @param {String} key
 	 @return {String|Number|Object} value
 	 */
@@ -49,7 +49,7 @@ ludo.dataSource.Record = new Class({
 	},
 	/**
 	 Update multiple properties
-	 @method setProperties
+	 @function setProperties
 	 @param {Object} properties
 	 @return {dataSource.Record|undefined}
 	 @example

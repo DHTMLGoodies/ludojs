@@ -1,8 +1,8 @@
 /**
  * Text Area field
- * @namespace form
+ * @namespace ludo.form
  * @class Textarea
- * @extends form.Element
+ * @augments ludo.form.Element
  */
 ludo.form.Textarea = new Class({
     Extends:ludo.form.Text,

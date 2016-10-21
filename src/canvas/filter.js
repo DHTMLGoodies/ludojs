@@ -5,7 +5,7 @@
  Ref: http://caniuse.com/svg-filters
  @namespace canvas
  @class Filter
- @extends canvas.NamedNode
+ @augments canvas.NamedNode
  @constructor
  @param {Object} attributes
  @param {Object} config options
@@ -36,7 +36,7 @@ ludo.canvas.Filter = new Class({
 	},
 	/**
 	 Set drop shadow
-	 @method setDropShadow
+	 @function setDropShadow
 	 @param {Object} properties
 	 @example
 	 	filter.setDropShadow({
@@ -100,7 +100,7 @@ ludo.canvas.Filter = new Class({
 
 	/**
 	 * Adds a new feMergeNode DOM node to the feMerge node
-	 * @method addFeMergeNode
+	 * @function addFeMergeNode
 	 * @param {String} key
 	 * @return {canvas.Node} feMergeNode
 	 */

@@ -3,7 +3,7 @@
  * relative to number of cards
  * @namespace card
  * @class ProgressBar
- * @extends progress.Bar
+ * @augments progress.Bar
  */
 ludo.card.ProgressBar = new Class({
     Extends: ludo.progress.Bar,

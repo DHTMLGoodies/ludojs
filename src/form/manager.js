@@ -1,39 +1,36 @@
 /**
  Class for form Management. This is a convenient class used for easy access and manipulation of form elements. You get an instance
- of this class by calling view.getForm().
- @namespace form
- @class Manager
- @extends Core
- @constructor
- @param {Object} config
- @example
- 	var view = new ludo.View({
-        form:{
-            arguments:1
-        },
-        children:[
-            { type:'form.Text', label:'First name', name:'firstname' },
-            { type:'form.Text', label:'Last name', name:'lastname' },
-            {
-                layout:{ type:'linear',orientation:'horizontal',height:25},
-                children:[
-                    { type:'form.SubmitButton', value:'Save' },
-                    { type:'form.ResetButton', value:'Reset form }
-                ]
-            }
-        ]
-    });
-
- 	// Set name using the form manager
- 	view.getForm().val("firstname", "John");
- 	view.getForm().val("lastname", "Doe");
-
-    // Return form values as JSON { "firstname": "John", "lastname": "Doe" }
- 	var json = view.getForm().values();
-
+ of this class by calling view.getForm().<br><br>
  An instance of this class is created automatically and configured from the "form"
  config object of the View. You will get access to the instance of this class by calling
- View.getForm(), example: v.getForm().submit(); for the example above.
+ View.getForm()
+ @namespace ludo.form
+ @class ludo.form.Manager
+ @augments ludo.Core
+ @param {Object} config
+ @example
+var view = new ludo.View({
+	form:{
+
+	},
+	children:[
+		{ type:'form.Text', label:'First name', name:'firstname' },
+		{ type:'form.Text', label:'Last name', name:'lastname' },
+		{
+			layout:{ type:'linear',orientation:'horizontal',height:25},
+			children:[
+				{ type:'form.SubmitButton', value:'Save' },
+				{ type:'form.ResetButton', value:'Reset form }
+			]
+		}
+	]
+});
+
+view.getForm().val("firstname", "John"); // update all form views with name "firstname" with the value "John"
+view.getForm().val("lastname", "Doe"); // update all form veiws with name "lastname" with the value "Doe"
+
+// Return form values as JSON { "firstname": "John", "lastname": "Doe" }
+var json = view.getForm().values();
 
  */
 ludo.form.Manager = new Class({
@@ -120,7 +117,7 @@ ludo.form.Manager = new Class({
 
 	/**
 	 * Get all form elements, store them in an array and add valid and invalid events to them
-	 * @method getFormElements
+	 * @function getFormElements
 	 * @private
 	 */
 	getFormElements:function () {
@@ -187,7 +184,8 @@ ludo.form.Manager = new Class({
 
     /**
      * Set value of a form element
-     * @method set
+     * @function set
+	 * @memberOf ludo.form.Manager.prototype
      * @param {String} key
      * @param {String|Number|Object} value
      */
@@ -198,10 +196,10 @@ ludo.form.Manager = new Class({
 	},
 
 	/**
-	 * @method val
 	 * Set OR get value of form component.
 	 * Called with two arguments(key and value), a value will be set. Called with one argument(key), value will be returned.
-	 *
+	 * @function val
+	 * @memberOf ludo.form.Manager.prototype
 	 * @param key
 	 * @param value
      */
@@ -216,9 +214,8 @@ ludo.form.Manager = new Class({
 	/**
 	 * Returns values of all form elements in JSON format.
 	 * This method can be called on all views. It will return a JSON containing key-value pairs for all the views form elements(nested, i.e. children, grand children etc)
-	 *
-	 * @method values
-	 *
+	 * @function values
+	 * @memberOf ludo.form.Manager.prototype
 	 * @returns {{}}
      */
 	values:function(){
@@ -233,7 +230,8 @@ ludo.form.Manager = new Class({
 
     /**
      * Return value of form element.
-     * @method get
+     * @function get
+	 * @memberOf ludo.form.Manager.prototype
      * @param {String} key
      * @return {String|Number|Object}
      */
@@ -284,7 +282,7 @@ ludo.form.Manager = new Class({
 	},
 	/**
 	 * One form element is valid. Fire valid event if all form elements are valid
-	 * @method onValid
+	 * @function onValid
 	 * @private
 	 * @param {String} value
 	 * @param {object } formComponent
@@ -305,7 +303,7 @@ ludo.form.Manager = new Class({
 	/**
 	 * Set view invalid when a form element inside it is invalid
 	 *
-	 * @method onInvalid
+	 * @function onInvalid
 	 * @private
 	 * @param {String} value
 	 * @param {Object} formComponent
@@ -326,7 +324,7 @@ ludo.form.Manager = new Class({
 	},
 	/**
 	 * Validate form and fire "invalid" or "valid" event
-	 * @method validate
+	 * @function validate
 	 * @return void
 	 */
 	validate:function () {
@@ -337,9 +335,9 @@ ludo.form.Manager = new Class({
 		}
 	},
 	/**
-	 * @method isValid
-	 * @private
-	 * @description Returns true when form is valid.
+	 * Returns true when all child form views are valid
+	 * @function isValid
+	 * @memberOf ludo.form.Manager.prototype
 	 */
 	isValid:function () {
 		return this.invalidIds.length === 0;
@@ -347,7 +345,7 @@ ludo.form.Manager = new Class({
 
 	/**
 	 * Submit form to server
-	 * @method submit
+	 * @function submit
 	 * @private
 	 */
 	submit:function () {
@@ -375,7 +373,7 @@ ludo.form.Manager = new Class({
 			this.fireEvent('invalid');
 			this.fireEvent('beforeSave');
 			this.beforeRequest();
-			this.requestHandler().send('save', this.currentId, this.getValues(),
+			this.requestHandler().send('save', this.currentId, this.values(),
 				{
 					"progressBarId":this.getProgressBarId()
 				}
@@ -385,7 +383,7 @@ ludo.form.Manager = new Class({
 
 	/**
 	 * Read form values from the server
-	 * @method read
+	 * @function read
 	 * @param {String|undefined} id
 	 */
 	read:function(id){
@@ -406,7 +404,9 @@ ludo.form.Manager = new Class({
 				listeners:{
 					"success":function (request) {
 						this.currentId = this.currentIdToBeSet;
-						this.fill(this.record);
+						this.populate(this.record);
+						this.commit();
+
 						/**
 						 * Event fired after data for the form has been read successfully
 						 * To add listeners, use <br>
@@ -438,19 +438,6 @@ ludo.form.Manager = new Class({
 		return this._readHandler;
 	},
 
-	fill:function(data){
-		for(var key in this.map){
-			if(this.map.hasOwnProperty(key)){
-				if(data[key] !== undefined){
-					this.map[key].val(data[key]);
-                    this.map[key].commit();
-				}else{
-					this.map[key].reset();
-				}
-			}
-		}
-	},
-
 	_request:undefined,
 	requestHandler:function () {
 		if (this._request === undefined) {
@@ -460,7 +447,7 @@ ludo.form.Manager = new Class({
 				method:this.method ? this.method : 'post',
 				listeners:{
 					"success":function (request) {
-						this.commitFormElements();
+						this.commit();
 						/**
 						 * Event fired after a form has been saved successfully.
 						 * To add listeners, use <br>
@@ -547,11 +534,24 @@ ludo.form.Manager = new Class({
 		return this.progressBar ? this.progressBar.getProgressBarId() : undefined;
 	},
 
-	commitFormElements:function () {
+	/**
+	 * Commit all form Views. This will reset the dirty flag. The dirty flag is true when on form view has been updated.
+	 * A later call to {@link ludo.form.Manager#reset|reset} will reset all form Views back to the value it had when commit was called.
+	 * with a new value.
+	 * @function commit
+	 * @memberof ludo.form.Manager.prototype
+	 */
+	commit:function () {
 		for (var i = 0; i < this.formComponents.length; i++) {
 			this.formComponents[i].commit();
 		}
 	},
+
+	/**
+	 * Reset value of all form Views back to it's original value. 
+	 * @method reset
+	 * @memberof ludo.form.Manager.prototype
+	 */
 
 	reset:function () {
 		for (var i = 0; i < this.formComponents.length; i++) {
@@ -572,6 +572,11 @@ ludo.form.Manager = new Class({
 		this.clear();
 	},
 
+	/**
+	 * Clear value of all child form views
+	 * @function clear
+	 * @memberof ludo.form.Manager.prototype
+	 */
 	clear:function () {
 		for (var i = 0; i < this.formComponents.length; i++) {
 			this.formComponents[i].clear();
@@ -583,9 +588,11 @@ ludo.form.Manager = new Class({
 	},
 
 	/**
-	 * @method isDirty
-	 * @private
-	 * @description Returns true if one or more form elements of view have value different from it' original
+	 * Returns true if a form View has been updated with a new value. This is useful for handling disabling/enabling of buttons
+	 * based on changes made to the form. The dirty flag can be reset by calling the {@link ludo.form.Manager#commit} method. This will
+	 * call commit on all form views.
+	 * @function isDirty
+	 * @memberof ludo.form.Manager.prototype
 	 */
 	isDirty:function () {
 		return this.dirtyIds.length > 0;

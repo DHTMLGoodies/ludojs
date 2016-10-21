@@ -2,7 +2,7 @@
  Goggle Video player component
  @namespace video
  @class GoogleVideo
- @extends video.Video
+ @augments video.Video
  */
 ludo.video.GoogleVideo = new Class({
     Extends : ludo.video.Video,

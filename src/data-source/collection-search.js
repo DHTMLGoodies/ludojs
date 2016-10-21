@@ -3,7 +3,7 @@
  It is used to search and filter data in a collection.
  @namespace dataSource
  @class CollectionSearch
- @extends Core
+ @augments Core
  */
 ludo.dataSource.CollectionSearch = new Class({
 	Extends:ludo.Core,
@@ -50,7 +50,7 @@ ludo.dataSource.CollectionSearch = new Class({
 	},
 	/**
 	 * execute a text search
-	 * @method Search
+	 * @function Search
 	 * @param {String} search
 	 */
 	search:function (search) {
@@ -75,7 +75,7 @@ ludo.dataSource.CollectionSearch = new Class({
 
 	/**
 	 Clear all search terms and search functions
-	 @method clear
+	 @function clear
 	 @chainable
 	 @return {dataSource.CollectionSearch} this
 	 */
@@ -88,7 +88,7 @@ ludo.dataSource.CollectionSearch = new Class({
 	 * Delete search terms/functions and dispose search result. This method will fire a deleteSearch event which
 	 * {{#crossLink "dataSource.Collection"}}{{/crossLink}} listens to. It will trigger an update of
 	 * views using the {{#crossLink "dataSource.Collection"}}{{/crossLink}} object as dataSource.
-	 * @method deleteSearch
+	 * @function deleteSearch
 	 */
 	deleteSearch:function () {
 		/**
@@ -101,7 +101,7 @@ ludo.dataSource.CollectionSearch = new Class({
 	},
 	/**
 	 Start building a new search
-	 @method where
+	 @function where
 	 @param {String|Function} search
 	 @return {dataSource.CollectionSearch} this
 	 @chainable
@@ -127,7 +127,7 @@ ludo.dataSource.CollectionSearch = new Class({
 
 	/**
 	 OR search
-	 @method or
+	 @function or
 	 @param {String|Function} search
 	 @return {dataSource.CollectionSearch} this
 	 @chainable
@@ -162,7 +162,7 @@ ludo.dataSource.CollectionSearch = new Class({
 
 	/**
 	 AND search
-	 @method and
+	 @function and
 	 @param {String|Function} search
 	 @return {dataSource.CollectionSearch} this
 	 @chainable
@@ -206,7 +206,7 @@ ludo.dataSource.CollectionSearch = new Class({
 
 	/**
 	 * Search for match in one of the items
-	 * @method withIn
+	 * @function withIn
 	 * @param {Array} searches
 	 * @chainable
 	 * @return {dataSource.CollectionSearch} this
@@ -220,7 +220,7 @@ ludo.dataSource.CollectionSearch = new Class({
 
 	/**
 	 * Start grouping search items together
-	 * @method branch
+	 * @function branch
 	 * @chainable
 	 * @return {dataSource.CollectionSearch} this
 	 */
@@ -230,7 +230,7 @@ ludo.dataSource.CollectionSearch = new Class({
 	},
 	/**
 	 * Close group of search items.
-	 * @method branch
+	 * @function branch
 	 * @chainable
 	 * @return {endBranch.CollectionSearch} this
 	 */
@@ -246,7 +246,7 @@ ludo.dataSource.CollectionSearch = new Class({
 	},
 	/**
 	 Execute a search based on current search terms
-	 @method execute
+	 @function execute
 	 @chainable
 	 @return {dataSource.CollectionSearch} this
 	 @example
@@ -295,7 +295,7 @@ ludo.dataSource.CollectionSearch = new Class({
 
 	/**
 	 * Returns true if search terms or search functions exists.
-	 * @method hasSearchTokens
+	 * @function hasSearchTokens
 	 * @return {Boolean}
 	 */
 	hasSearchTokens:function () {
@@ -313,7 +313,7 @@ ludo.dataSource.CollectionSearch = new Class({
 	 *     - zero or more records are found in search result<br>
 	 * Returns false when<br>
 	 *  - search result is undefined because no search has been executed or search has been deleted.
-	 * @method hasData
+	 * @function hasData
 	 * @return {Boolean}
 	 */
 	hasData:function () {
@@ -387,7 +387,7 @@ ludo.dataSource.CollectionSearch = new Class({
 
 	/**
 	 * Returns number of records in search result
-	 * @method getCount
+	 * @function getCount
 	 * @return {Number}
 	 */
 	getCount:function () {

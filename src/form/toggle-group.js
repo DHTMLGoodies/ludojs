@@ -1,7 +1,7 @@
 /**
- * @namespace form
+ * @namespace ludo.form
  * @class ToggleGroup
- * @extends Core
+ * @augments Core
  */
 ludo.form.ToggleGroup = new Class({
     Extends:ludo.Core,
@@ -53,7 +53,7 @@ ludo.form.ToggleGroup = new Class({
     },
     /**
      * Turn a button in the toggle group on
-	 * @method turnOn
+	 * @function turnOn
      * @param button
      */
     turnOn:function (button) {
@@ -63,7 +63,7 @@ ludo.form.ToggleGroup = new Class({
     },
     /**
      * Turn a button in the toggle group on
-	 * @method turnOff
+	 * @function turnOff
      * @param button
      */
     turnOff:function (button) {

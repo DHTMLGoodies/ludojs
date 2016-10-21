@@ -2,7 +2,7 @@
  * Class for remote data source.
  * @namespace dataSource
  * @class JSON
- * @extends dataSource.Base
+ * @augments dataSource.Base
  */
 ludo.dataSource.JSON = new Class({
     Extends:ludo.dataSource.Base,
@@ -11,7 +11,7 @@ ludo.dataSource.JSON = new Class({
     /**
      * Reload data from server
      * Components using this data-source will be automatically updated
-     * @method load
+     * @function load
      * @return void
      */
     load:function () {

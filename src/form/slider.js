@@ -1,8 +1,8 @@
 /**
  * Slider form component
- * @namespace form
+ * @namespace ludo.form
  * @class Slider
- * @extends form.LabelElement
+ * @augments ludo.form.LabelElement
  */
 ludo.form.Slider = new Class({
     // TODO implement support for min and max, example slider from 0 to 100, min and max from 10 to 90

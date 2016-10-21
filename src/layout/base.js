@@ -29,7 +29,7 @@ ludo.layout.Base = new Class({
 	},
     /**f
     * Method executed when adding new child view to a layout
-     * @method addChild
+     * @function addChild
      * @param {ludo.View} child
      * @param {ludo.View} insertAt
      * @optional
@@ -77,7 +77,7 @@ ludo.layout.Base = new Class({
 	},
     /**
     * Return parent DOM element for new child
-     * @method getParentForNewChild
+     * @function getParentForNewChild
      * @protected
      */
 	getParentForNewChild:function(){
@@ -92,7 +92,7 @@ ludo.layout.Base = new Class({
 
     /**
 	 * Implementation in sub classes
-	 * @method onNewChild
+	 * @function onNewChild
 	 * @private
 	 */
 	onNewChild:function (child) {
@@ -230,7 +230,7 @@ ludo.layout.Base = new Class({
 	},
     /**
      * Update viewport properties, coordinates of DHTML Container for child views, i.e. body of parent view
-     * @method updateViewport
+     * @function updateViewport
      * @param {Object} c
      */
 	updateViewport:function (c) {
@@ -253,7 +253,7 @@ ludo.layout.Base = new Class({
 
     /**
      * Executed when a child is hidden. It set's the internal layout properties width and height to 0(zero)
-     * @method hideChild
+     * @function hideChild
      * @param {ludo.View} child
      * @private
      */
@@ -265,7 +265,7 @@ ludo.layout.Base = new Class({
 
     /**
      * Executed when a child is minimized. It set's temporary width or properties
-     * @method minimize
+     * @function minimize
      * @param {ludo.View} child
      * @param {Object} newSize
      * @protected
@@ -277,7 +277,7 @@ ludo.layout.Base = new Class({
 
     /**
      * Store temporary size when a child is minimized or hidden
-     * @method setTemporarySize
+     * @function setTemporarySize
      * @param {ludo.View} child
      * @param {Object} newSize
      * @protected
@@ -294,7 +294,7 @@ ludo.layout.Base = new Class({
     /**
      * Clear temporary width or height values. This method is executed when a child
      * is shown or maximized
-     * @method clearTemporaryValues
+     * @function clearTemporaryValues
      * @param {ludo.View} child
      * @protected
      */

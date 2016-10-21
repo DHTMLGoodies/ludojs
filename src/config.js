@@ -15,7 +15,7 @@ ludo._Config = new Class({
 
     /**
      * Reset all config properties back to default values
-     * @method reset
+     * @function reset
      */
 	reset:function(){
 		this.setDefaultValues();
@@ -34,7 +34,7 @@ ludo._Config = new Class({
     /**
      Set global url. This url will be used for requests to server if no url is explicit set by
      a component.
-     @method config
+     @function config
      @param {String} url
      @example
         ludo.config.setUrl('../controller.php');
@@ -44,7 +44,7 @@ ludo._Config = new Class({
 	},
     /**
      * Return global url
-     * @method getUrl
+     * @function getUrl
      * @return {String}
      * */
 	getUrl:function () {
@@ -52,21 +52,21 @@ ludo._Config = new Class({
 	},
     /**
      * Enable url in format <url>/resource/arg1/arg2/service
-     * @method enableModRewriteUrls
+     * @function enableModRewriteUrls
      */
 	enableModRewriteUrls:function () {
 		this.storage.modRewrite = true;
 	},
     /**
      * Disable url's for mod rewrite enabled web servers.
-     * @method disableModRewriteUrls
+     * @function disableModRewriteUrls
      */
 	disableModRewriteUrls:function () {
 		this.storage.modRewrite = false;
 	},
     /**
      * Returns true when url's for mod rewrite has been enabled
-	 * @method hasModRewriteUrls
+	 * @function hasModRewriteUrls
      * @return {Boolean}
      */
 	hasModRewriteUrls:function () {
@@ -74,7 +74,7 @@ ludo._Config = new Class({
 	},
     /**
      * Set default socket url(node.js).
-     * @method setSocketUrl
+     * @function setSocketUrl
      * @param url
      */
 	setSocketUrl:function (url) {
@@ -82,7 +82,7 @@ ludo._Config = new Class({
 	},
     /**
      * Return default socket url
-     * @method getSocketUrl
+     * @function getSocketUrl
      * @return {String}
      */
 	getSocketUrl:function () {
@@ -90,14 +90,14 @@ ludo._Config = new Class({
 	},
     /**
      * Set document root path
-     * @method setDocumentRoot
+     * @function setDocumentRoot
      * @param {String} root
      */
 	setDocumentRoot:function (root) {
 		this.storage.documentRoot = root === '.' ? '' : root;
 	},
     /**
-     * @method getDocumentRoot
+     * @function getDocumentRoot
      * @return {String}
      */
 	getDocumentRoot:function () {
@@ -105,14 +105,14 @@ ludo._Config = new Class({
 	},
     /**
      * Set default upload url for form.File components.
-     * @method setFileUploadUrl
+     * @function setFileUploadUrl
      * @param {String} url
      */
 	setFileUploadUrl:function (url) {
 		this.storage.fileUploadUrl = url;
 	},
     /**
-     * @method getFileUploadUrl
+     * @function getFileUploadUrl
      * @return {String}
      */
 	getFileUploadUrl:function(){

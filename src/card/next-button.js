@@ -6,7 +6,7 @@
  *
  * @namespace card
  * @class NextButton
- * @extends card.Button
+ * @augments card.Button
  */
 ludo.card.NextButton = new Class({
 	Extends:ludo.card.Button,

@@ -75,7 +75,7 @@ ludo.canvas.Paint = new Class({
 
 	/**
 	 Update a css style
-	 @method setStyle
+	 @function setStyle
 	 @param {String} style
 	 @param {String|Number}value
 	 @example
@@ -117,7 +117,7 @@ ludo.canvas.Paint = new Class({
 
 	/**
 	 * Return value of a css style
-	 * @method getStyle
+	 * @function getStyle
 	 * @param {String} style
 	 * @return {String|Number} value
 	 */
@@ -132,7 +132,7 @@ ludo.canvas.Paint = new Class({
 
 	/**
 	 * Apply css to a SVG node. This is done by adding CSS class to the node
-	 * @method applyTo
+	 * @function applyTo
 	 * @param {canvas.Node} node
 	 */
 	applyTo:function (node) {
@@ -141,7 +141,7 @@ ludo.canvas.Paint = new Class({
 
 	/**
 	 * Returns class name of Paint object
-	 * @method getClassName
+	 * @function getClassName
 	 * @return {String} className
 	 */
 	getClassName:function () {

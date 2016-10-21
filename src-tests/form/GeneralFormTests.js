@@ -53,7 +53,6 @@ TestCase("GeneralFormTests", {
     },
 
     "test should get all values via form object": function(){
-
         // given
         var view = this.getView();
         ludo.get("firstname").val("Alf");
@@ -79,6 +78,14 @@ TestCase("GeneralFormTests", {
         // then
         assertEquals("Alf", view.getForm().val("firstname"));
         assertEquals("444-555", view.getForm().val("phone"));
+    },
+
+    "test should be able to load data from server": function(){
+
+    },
+
+    "test should be able to submit form": function(){
+
     }
 
 

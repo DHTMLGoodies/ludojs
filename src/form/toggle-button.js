@@ -1,7 +1,7 @@
 /**
- * @namespace form
+ * @namespace ludo.form
  * @class ToggleButton
- * @extends form.Button
+ * @augments ludo.form.Button
  */
 ludo.form.ToggleButton = new Class({
     Extends:ludo.form.Button,
@@ -18,7 +18,7 @@ ludo.form.ToggleButton = new Class({
     },
     /**
      * Trigger click on button
-     * @method click
+     * @function click
      */
     click:function () {
         this.parent();

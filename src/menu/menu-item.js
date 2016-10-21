@@ -2,7 +2,7 @@
  * Class for menu items. MenuItems are created dynamically from config object(children of ludo.menu.Menu or ludo.menu.Context)
  * @namespace menu
  * @class MenuItem
- * @extends View
+ * @augments View
  */
 ludo.menu.Item = new Class({
     Extends:ludo.View,
@@ -173,7 +173,7 @@ ludo.menu.Item = new Class({
 
     /**
      * Disable menu item
-     * @method disable
+     * @function disable
      * @return void
      */
     disable:function () {
@@ -183,7 +183,7 @@ ludo.menu.Item = new Class({
 
     /**
      * Return disable state of menu item
-     * @method isDisabled
+     * @function isDisabled
      * @return {Boolean} disabled
      */
     isDisabled:function () {
@@ -192,7 +192,7 @@ ludo.menu.Item = new Class({
 
     /**
      * Enable menu item
-     * @method enable
+     * @function enable
      * @return void
      */
     enable:function () {

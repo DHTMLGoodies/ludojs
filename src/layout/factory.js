@@ -7,7 +7,7 @@ ludo.layout.Factory = new Class({
 
     /**
      * Returns layout manager, a layout.Base or subclass
-	 * @method getManager
+	 * @function getManager
      * @param {ludo.View} view
      * @return {ludo.layout.Base} manager
      */
@@ -17,7 +17,7 @@ ludo.layout.Factory = new Class({
 
     /**
      * Returns correct name of layout class
-     * @method getLayoutClass
+     * @function getLayoutClass
      * @param {ludo.View} view
      * @return {String} className
      * @private
@@ -60,7 +60,7 @@ ludo.layout.Factory = new Class({
 
     /**
      * Returns valid layout configuration for a view
-     * @method getValidLayoutObject
+     * @function getValidLayoutObject
      * @param {ludo.View} view
      * @param {Object} config
      * @return {Object}
@@ -126,7 +126,7 @@ ludo.layout.Factory = new Class({
     /**
      * Returned merged layout object, i.e. layout defind on HTML page merged
      * with internal layout defined in class
-     * @method getMergedLayout
+     * @function getMergedLayout
      * @param {Object} layout
      * @param {Object} mergeWith
      * @return {Object}

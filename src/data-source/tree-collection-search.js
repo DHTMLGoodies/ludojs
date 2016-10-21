@@ -3,7 +3,7 @@
  It is used to search and filter data in a tree collection.
  @namespace dataSource
  @class TreeCollectionSearch
- @extends Core
+ @augments Core
  */
 ludo.dataSource.TreeCollectionSearch = new Class({
 	Extends:ludo.dataSource.CollectionSearch,

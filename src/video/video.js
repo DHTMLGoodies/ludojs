@@ -2,7 +2,7 @@
  Base class for Video Player components
  @namespace video
  @class Video
- @extends View
+ @augments View
  */
 ludo.video.Video = new Class({
 	Extends:ludo.View,
@@ -57,7 +57,7 @@ ludo.video.Video = new Class({
 	},
 	/**
 	 * Load a new movie
-	 * @method loadMovie
+	 * @function loadMovie
 	 * @param {String} movieId
 	 * @return undefined
 	 */

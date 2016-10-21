@@ -2,7 +2,7 @@
  Button used to navigate to first page in a dataSource.Collection
  @namespace paging
  @class First
- @extends paging.Button
+ @augments paging.Button
  @constructor
  @param {Object} config
  @example

@@ -2,7 +2,7 @@
  * Stop tag used by gradients
  * @namespace canvas
  * @class Stop
- * @extends ludo.canvas.Node
+ * @augments ludo.canvas.Node
  */
 ludo.canvas.Stop = new Class({
 	Extends: ludo.canvas.Node,
@@ -13,7 +13,7 @@ ludo.canvas.Stop = new Class({
 
 	/**
 	 Set new offset
-	 @method setOffset
+	 @function setOffset
 	 @param {String} offset
 	 @example
 	 	gradient.getStop(0).setOffset('10%');
@@ -23,7 +23,7 @@ ludo.canvas.Stop = new Class({
 	},
 	/**
 	 Set new stop color
-	 @method setStopColor
+	 @function setStopColor
 	 @param {String} stopColor
 	 @example
 	 	gradient.getStop(0).setStopColor('#FFFFFF');
@@ -34,7 +34,7 @@ ludo.canvas.Stop = new Class({
 
 	/**
 	 * Returns value of offset attribute
-	 * @method getOffset
+	 * @function getOffset
 	 * @return {String} offset
 	 */
 	getOffset:function(){
@@ -43,7 +43,7 @@ ludo.canvas.Stop = new Class({
 
 	/**
 	 * Returns value of stop-color attribute
-	 * @method getStopColor
+	 * @function getStopColor
 	 * @return {String} stop color
 	 */
 	getStopColor:function(){
@@ -52,7 +52,7 @@ ludo.canvas.Stop = new Class({
 
 	/**
 	 * Set new stop opacity(0 = transparent, 1 = full opacity)
-	 * @method setStopOpacity
+	 * @function setStopOpacity
 	 * @param {Number} stopOpacity
 	 */
 	setStopOpacity:function(stopOpacity){
@@ -61,7 +61,7 @@ ludo.canvas.Stop = new Class({
 
 	/**
 	 * Returns value of stop-opacity property
-	 * @method getStopOpacity
+	 * @function getStopOpacity
 	 * @return {Number} stop opacity
 	 */
 	getStopOpacity:function(){

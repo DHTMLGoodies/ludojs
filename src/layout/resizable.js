@@ -2,7 +2,7 @@
  * Resize Components within col or row layout
  * @namespace layout
  * @class Resizable
- * @extends Core
+ * @augments Core
  */
 ludo.ResizableZIndex = 50000;
 ludo.layout.Resizable = new Class({

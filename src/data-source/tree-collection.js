@@ -2,7 +2,7 @@
  * Special collection class for tree structures.
  * @namespace dataSource
  * @class TreeCollection
- * @extends dataSource.Collection
+ * @augments dataSource.Collection
  */
 ludo.dataSource.TreeCollection = new Class({
 	Extends:ludo.dataSource.Collection,
@@ -10,7 +10,7 @@ ludo.dataSource.TreeCollection = new Class({
 	searcherType:'dataSource.TreeCollectionSearch',
 	/**
 	 * Return children of parent with this id
-	 * @method getChildren
+	 * @function getChildren
 	 * @param {String} parent id
 	 * @return {Array|undefined} children
 	 */

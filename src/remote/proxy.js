@@ -105,7 +105,7 @@ ludo.remote.deleteProxies = function () {
 };
 /**
  Create a new proxy for an url
- @method ludo.remote.createProxy
+ @function ludo.remote.createProxy
  @param {String} url
  @param {Object} config
  @example

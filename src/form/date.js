@@ -1,8 +1,8 @@
 /**
  * Date picker
- * @namespace form
+ * @namespace ludo.form
  * @class Date
- * @extends form.Combo
+ * @augments ludo.form.Combo
  */
 ludo.form.Date = new Class({
     Extends: ludo.form.Combo,

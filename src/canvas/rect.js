@@ -3,7 +3,7 @@
  for x,y, width, height and rounded corners(rx and ry).
  @namespace canvas
  @class Rect
- @extends canvas.Node
+ @augments canvas.Node
  @constructor
  @param {Object} coordinates
  @param {canvas.NodeConfig} config
@@ -20,7 +20,7 @@ ludo.canvas.Rect = new Class({
 	 * Returns value of 'x' attribute. Actual position on canvas may be different due to
 	 * translate transformation. Use {{#crossLink "canvas.Rect/getPosition"}}{{/crossLink}} to
 	 * get actual position on canvas.
-	 * @method getX
+	 * @function getX
 	 * @return {Number} x
 	 */
 	getX:function(){
@@ -29,7 +29,7 @@ ludo.canvas.Rect = new Class({
 
 	/**
 	 * Returns value of 'y' attribute.
-	 * @method getY
+	 * @function getY
 	 * @return {Number} y
 	 */
 	getY:function(){
@@ -38,7 +38,7 @@ ludo.canvas.Rect = new Class({
 
 	/**
 	 * Returns width of rectangle
-	 * @method getWidth
+	 * @function getWidth
 	 * @return {Number} width
 	 */
 	getWidth:function(){
@@ -47,7 +47,7 @@ ludo.canvas.Rect = new Class({
 
 	/**
 	 * Returns height of rectangle
-	 * @method getWidth
+	 * @function getWidth
 	 * @return {Number} width
 	 */
 	getHeight:function(){
@@ -55,7 +55,7 @@ ludo.canvas.Rect = new Class({
 	},
 	/**
 	 * Return x-size of rounded corners
-	 * @method getRx
+	 * @function getRx
 	 * @return {Number} rx
 	 */
 	getRx:function(){
@@ -64,7 +64,7 @@ ludo.canvas.Rect = new Class({
 
 	/**
 	 * Return y-size of rounded corners
-	 * @method getRy
+	 * @function getRy
 	 * @return {Number} ry
 	 */
 	getRy:function(){
@@ -73,7 +73,7 @@ ludo.canvas.Rect = new Class({
 
 	/**
 	 * Set new x coordinate
-	 * @method setX
+	 * @function setX
 	 * @param {Number} x
 	 */
 	setX:function(x){
@@ -82,7 +82,7 @@ ludo.canvas.Rect = new Class({
 
 	/**
 	 * Set new y coordinate
-	 * @method setY
+	 * @function setY
 	 * @param {Number} y
 	 */
 	setY:function(y){
@@ -91,7 +91,7 @@ ludo.canvas.Rect = new Class({
 
 	/**
 	 * Set new width
-	 * @method setWidth
+	 * @function setWidth
 	 * @param {Number} width
 	 */
 	setWidth:function(width){
@@ -99,7 +99,7 @@ ludo.canvas.Rect = new Class({
 	},
 	/**
 	 * Set new height
-	 * @method setHeight
+	 * @function setHeight
 	 * @param {Number} height
 	 */
 	setHeight:function(height){
@@ -108,7 +108,7 @@ ludo.canvas.Rect = new Class({
 
 	/**
 	 * Set new width of rounded corners
-	 * @method setRx
+	 * @function setRx
 	 * @param {Number} rx
 	 */
 	setRx:function(rx){
@@ -117,7 +117,7 @@ ludo.canvas.Rect = new Class({
 
 	/**
 	 * Set new height of rounded corners
-	 * @method setRy
+	 * @function setRy
 	 * @param {Number} ry
 	 */
 	setRy:function(ry){

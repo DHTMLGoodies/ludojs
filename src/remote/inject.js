@@ -9,7 +9,7 @@ ludo.remote.Inject = new Class({
 
 	/**
 	 Add data to be posted with the next request.
-	 @method add
+	 @function add
 	 @param resourceService
 	 @param data
 	 @example

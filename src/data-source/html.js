@@ -2,7 +2,7 @@
  * Class for remote data source.
  * @namespace dataSource
  * @class HTML
- * @extends dataSource.Base
+ * @augments dataSource.Base
  */
 ludo.dataSource.HTML = new Class({
 	Extends:ludo.dataSource.Base,
@@ -15,7 +15,7 @@ ludo.dataSource.HTML = new Class({
 	/**
 	 * Reload data from server
 	 * Components using this data-source will be automatically updated
-	 * @method load
+	 * @function load
 	 * @return void
 	 */
 	load:function () {

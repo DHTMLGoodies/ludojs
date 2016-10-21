@@ -1,7 +1,7 @@
 /**
  @namespace grid
  @class Grid
- @extends View
+ @augments View
  @constructor
  @param {Object} config
  @example
@@ -431,7 +431,7 @@ ludo.grid.Grid = new Class({
 	},
 	/**
 	 Select a record.
-	 @method selectRecord
+	 @function selectRecord
 	 @param {Object} record
 	 @example
 	 	grid.selectRecord({ id: 100 } );

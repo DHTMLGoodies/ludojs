@@ -2,7 +2,7 @@
  * effect.Drag with support for drop events.
  * @namespace effect
  * @class DragDrop
- * @extends effect.Drag
+ * @augments effect.Drag
  */
 ludo.effect.DragDrop = new Class({
 	Extends:ludo.effect.Drag,
@@ -12,7 +12,7 @@ ludo.effect.DragDrop = new Class({
 
 	/**
 	 Capture regions when moving over drop points
-	 @config {Boolean|undefined} captureRegions
+	 @config {Boolean|undefined}
 	 @optional
 	 @default false
 	 @example
@@ -23,7 +23,7 @@ ludo.effect.DragDrop = new Class({
 	/**
 	 * While dragging, always show dragged element this amount of pixels below mouse cursor.
 	 * @config mouseYOffset
-	 * @type {Number|undefined} pixels
+	 * @type {Number|undefined}
 	 * @optional
 	 * @default undefined
 	 */
@@ -51,7 +51,7 @@ ludo.effect.DragDrop = new Class({
 
 	/**
 	 * Remove node
-	 * @method remove
+	 * @function remove
 	 * @param {String} id
 	 * @return {Boolean} success
 	 */
@@ -67,7 +67,7 @@ ludo.effect.DragDrop = new Class({
 
 	/**
 	 * Create new drop point.
-	 * @method addDropTarget
+	 * @function addDropTarget
 	 * @param {ludo.effect.DropPoint} node
 	 * @return {ludo.effect.DropPoint} node
 	 */
@@ -159,7 +159,7 @@ ludo.effect.DragDrop = new Class({
 	/**
 	 Set drop point invalid. This method is usually used in connection with a listener
 	 for the enterDropTarget event
-	 @method setInvalid
+	 @function setInvalid
 	 @example
 	 	dd.addEvent('enterDropTarget', function(node, dd){
 			 if(node.name === 'John Doe'){

@@ -2,7 +2,7 @@
  * A Panel
  * A Panel is a component where the body element is a &lt;fieldset> with a &lt;legend>
  * @class Panel
- * @extends View
+ * @augments View
  */
 ludo.Panel = new Class({
 	Extends:ludo.View,

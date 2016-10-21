@@ -2,7 +2,7 @@
  * Dialog with one text field. Default buttons are "OK" and "Cancel"
  * @namespace dialog
  * @class Prompt
- * @extends Dialog
+ * @augments Dialog
  */
 ludo.dialog.Prompt = new Class({
     Extends: ludo.dialog.Dialog,
@@ -43,7 +43,7 @@ ludo.dialog.Prompt = new Class({
     },
     /**
      * Return value of input field
-     * @method getValue
+     * @function getValue
      * @return String value
      */
     getValue : function(){

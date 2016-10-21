@@ -2,9 +2,9 @@
  * Special Button for form submission.
  * This button will automatically be disabled when a form is invalid, and automatically enabled when it's valid.
  * A form consists of all form elements of parent component, including form elements of child components.
- * @namespace form
+ * @namespace ludo.form
  * @class SubmitButton
- * @extends form.Button
+ * @augments ludo.form.Button
  */
 ludo.form.SubmitButton = new Class({
 	Extends:ludo.form.Button,

@@ -2,7 +2,7 @@
  * Class used to display days in a month
  * @namespace calendar
  * @class Days
- * @extends calendar.Base
+ * @augments calendar.Base
  */
 ludo.calendar.Days = new Class({
     Extends:ludo.calendar.Base,
@@ -360,7 +360,7 @@ ludo.calendar.Days = new Class({
     },
     /**
      * Set currently viewed month
-     * @method setDate
+     * @function setDate
      * @param {Object} date
      * @return void
      */
@@ -370,7 +370,7 @@ ludo.calendar.Days = new Class({
     },
     /**
      * Set selected date
-     * @method setValue
+     * @function setValue
      * @param {Date} date
      */
     setValue:function (date) {

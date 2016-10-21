@@ -1,8 +1,7 @@
 /**
  * Base class for calendar related classes
  * @namespace calendar
- * @module calendar
- * @class Base
+ * @class ludo.calendar.Base
  */
 ludo.calendar.Base = new Class({
     Extends: ludo.View,

@@ -2,7 +2,7 @@
  *
  * @namespace card
  * @class PreviousButton
- * @extends card.Button
+ * @augments card.Button
  * @description Special Button for card.Deck component for navigation to previous card.
  * On click, this button will show previous card.
  * The button will be automatically disabled when first card in deck is shown.
