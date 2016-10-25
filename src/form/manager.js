@@ -118,7 +118,7 @@ ludo.form.Manager = new Class({
 	/**
 	 * Get all form elements, store them in an array and add valid and invalid events to them
 	 * @function getFormElements
-	 * @private
+	 * @memberof ludo.form.Manager.prototype
 	 */
 	getFormElements:function () {
 		if (!this.view.isRendered) {
@@ -177,6 +177,26 @@ ludo.form.Manager = new Class({
 		}
 	},
 
+	/**
+	 * Populate form fields with data from JSON object
+	 * @function populate
+	 * @memberof ludo.form.Manager.prototype
+	 * @param {Object} json JSON object
+	 * @example
+	 * var view = new ludo.View({
+	 * 	renderTo:document.body,
+	 * 	layout:{ type:'linear', orientation:'vertical', width:'matchParent', height:'matchParent' },
+	 * 	children:[
+	 * 		{ type:'form.Text', name:'firstname' },
+	 * 		{ type:'form.Text', name:'lastname' }
+	 * 	]
+	 * });
+	 * // Update form views firstname and lastname with values from JSON
+	 * view.getForm.populate({
+	 * 	"firstname" : "Jane", "lastname": "Anderson"
+	 * });
+	 *
+     */
 	populate:function(json) {
 		$.each(json, this.set.bind(this));
 	},
@@ -186,12 +206,12 @@ ludo.form.Manager = new Class({
      * Set value of a form element
      * @function set
 	 * @memberOf ludo.form.Manager.prototype
-     * @param {String} key
+     * @param {String} name name of form element
      * @param {String|Number|Object} value
      */
-	set:function(key, value){
-		if(this.map[key]){
-			this.map[key].val(value);
+	set:function(name, value){
+		if(this.map[name]){
+			this.map[name].val(value);
 		}
 	},
 
@@ -232,11 +252,11 @@ ludo.form.Manager = new Class({
      * Return value of form element.
      * @function get
 	 * @memberOf ludo.form.Manager.prototype
-     * @param {String} key
+     * @param {String} name Name of form element
      * @return {String|Number|Object}
      */
-	get:function(key){
-		return this.map[key] ? this.map[key].val() : undefined;
+	get:function(name){
+		return this.map[name] ? this.map[name].val() : undefined;
 	},
 
 	registerProgressBar:function (view) {

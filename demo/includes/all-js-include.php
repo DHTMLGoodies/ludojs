@@ -16,13 +16,14 @@
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/dom.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/core.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/view.js"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/util/geometry.js"></script>
 
 
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/engine.js"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/element.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/event-manager.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/node.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/named-node.js"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/element.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/canvas.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/filter.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/gradient.js"></script>
@@ -148,6 +149,7 @@
 
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/notification.js"></script>
 
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/calendar/time-picker.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/calendar/base.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/calendar/calendar.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/calendar/selector.js"></script>

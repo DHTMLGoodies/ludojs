@@ -1,7 +1,7 @@
 /**
 * Base class for ludoJS layouts
- * @namespace layout
- * @class Base
+ * @namespace ludo.layout
+ * @class ludo.layout.Base
  */
 ludo.layout.Base = new Class({
 	Extends:Events,
@@ -181,7 +181,7 @@ ludo.layout.Base = new Class({
 
 	resize:function () {
 		var config = {};
-		config.width = ludo.dom.getInnerWidthOf(this.view.getBody());
+		config.width = this.view.getBody().width();
 		if (config.width < 0) {
 			config.width = undefined;
 		}
@@ -191,7 +191,7 @@ ludo.layout.Base = new Class({
 	},
 
 	getAvailWidth:function () {
-		return ludo.dom.getInnerWidthOf(this.view.getBody());
+		return this.view.getBody().width();
 	},
 
 	getAvailHeight:function () {

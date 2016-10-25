@@ -53,7 +53,10 @@ ludo.canvas.Node = new Class({
 				if (value['getUrl'] !== undefined) {
 					value = value.getUrl();
 				}
-				if (key.substring(0, 6) == "xlink:") {
+				if(key == 'css'){
+					ludo.canvasEngine.css(el, value);
+				}
+				else if (key.substring(0, 6) == "xlink:") {
 					el.setAttributeNS("http://www.w3.org/1999/xlink", key.substring(6), value);
 				} else {
 					el.setAttribute(key, value);

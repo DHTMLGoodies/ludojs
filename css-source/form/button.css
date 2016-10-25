@@ -113,6 +113,10 @@ div.ludo-form-button-disabled .ludo-form-button-m-bg-right {
 .ludo-form-button-value {
     background-repeat:no-repeat;
     background-position:center center;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .ludo-form-button-l .ludo-form-button-value{

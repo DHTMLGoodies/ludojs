@@ -12,6 +12,10 @@
     cursor: pointer;
     z-index: 2;
     overflow:hidden;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .ludo-tab-strip-tab-bg-first, .ludo-tab-strip-tab-bg-last{
@@ -233,4 +237,8 @@ div.ludo-tab-strip-top div.ludo-body {
     font-family:arial, helvetica, serif;
     font-size:11px;
     line-height:20px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }

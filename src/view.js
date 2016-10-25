@@ -86,14 +86,7 @@ ludo.View = new Class({
 	isRendered:false,
 	unRenderedChildren:[],
 
-	/**
-	 * Draw a frame around the component. This is done by assigning the container to css class
-	 * ludo-container-frame and body element to ludo-body-frame. You can also customize layout
-	 * by specifying css and|or containerCss
-	 * @property frame
-	 * @type {Boolean}
-	 * @default false
-	 */
+
 	frame:false,
 
 	form:undefined,
@@ -106,9 +99,6 @@ ludo.View = new Class({
 	 * converts uses the template defined in tpl and converts JSON into a String.
 	 * If you want to create your own parser, extend ludo.tpl.Parser and change value of JSONParser to the name
 	 * of your class
-	 * @property object JSONParser
-	 * @memberof ludo.View.prototype
-	 * @default { type: 'tpl.Parser' }
 	 */
 	JSONParser:{ type:'tpl.Parser' },
 	initialItemsObject:[],
@@ -136,10 +126,8 @@ ludo.View = new Class({
 	},
 
 	/**
-	 * Return child views of this class.
-	 * By default it returns the children property of the class. There may be advantages of defining children
-	 * in this method. By defining children in the children property of the class, you don't have access to "this". By returning
-	 * children from getClassChildren, you will be able to use "this" as a reference to the class instance.
+	 * Alternative to the "children" config array. By defining children in getClassChildren, you will have access to "this" referring to
+	 * the View instance. This is a method you override when creating your own Views.
 	 * @function getClassChildren
 	 * @memberof ludo.View.prototype
 	 * @return {Array|children}
@@ -203,10 +191,18 @@ ludo.View = new Class({
 		this.parent(config);
 		config.els = config.els || {};
 		if (this.parentComponent)config.renderTo = undefined;
-		var keys = ['css', 'contextMenu', 'renderTo', 'tpl', 'containerCss', 'socket', 'form', 'title', 'hidden',
+		var keys = ['contextMenu', 'renderTo', 'tpl', 'containerCss', 'socket', 'form', 'title', 'hidden',
 			'dataSource', 'movable', 'resizable', 'closable', 'minimizable', 'alwaysInFront',
 			'parentComponent', 'cls', 'bodyCls', 'objMovable', 'width', 'height', 'frame', 'formConfig',
 			'overflow'];
+
+		if(config.css != undefined){
+			if(this.css != undefined){
+				this.css = Object.merge(this.css, config.css);
+			}else{
+				this.css = config.css;
+			}
+		}
 		if(config.html != undefined)this._html = config.html;
 		this.setConfigParams(config, keys);
 

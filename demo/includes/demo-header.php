@@ -18,7 +18,7 @@ $skin = isset($skin) ? $skin : 'light-gray';
         font-family:arial,serif;
     }
     body,html{
-        height:100%;
+        height:100%;margin:0;padding:0;
     }
     </style>
     <!--<script type="text/javascript" src="<?php echo $prefix; ?>../js/ludojs<?php echo isset($_GET['fullSource']) ? "" : "-minified"; ?>.js"></script>-->
@@ -49,7 +49,7 @@ $skin = isset($skin) ? $skin : 'light-gray';
             },
             css:{
                 'background-color' : '#fff',
-                'padding' : 3
+                'padding' : 5
             },
             ludoRendered:function(){
                 var el = $(document.body).find('.source-code');

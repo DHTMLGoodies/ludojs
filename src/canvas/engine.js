@@ -332,7 +332,14 @@ ludo.canvas.Engine = new Class({
 	},
 
 	css:function(el, key, value){
-		el.style[String.camelCase(key)] = value;
+		if(arguments.length < 3){
+			$.each(key, function(attr, val){
+				el.style[String.camelCase(attr)] = val;
+			});
+		}else{
+			el.style[String.camelCase(key)] = value;
+
+		}
 	},
 
 	addClass:function(el, className){

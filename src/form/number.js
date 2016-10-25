@@ -1,8 +1,11 @@
 /**
+ * A customized text input only allowing numeric characters
  * @namespace ludo.form
- * @class Number
- * @description A customized text input only allowing numeric characters
+ * @class ludo.form.Number
  * @augments ludo.form.Text
+ * @param {Object} config
+ * @param {Number} config.minValue Optional minimum value
+ * @param {Number} config.maxValue Optional maximum value
  */
 ludo.form.Number = new Class({
     Extends:ludo.form.Text,
@@ -31,20 +34,6 @@ ludo.form.Number = new Class({
      * @default false
      */
     reverseWheel:false,
-
-    /**
-     * Minimum value
-     * @attribute {Number} minValue
-     * @default undefined
-     */
-    minValue:undefined,
-
-    /**
-     * Maximum value
-     * @attribute {Number} maxValue
-     * @default undefined
-     */
-    maxValue:undefined,
 
     /**
      * Amount to increment/decrement when using mousewheel while pressing shift-key

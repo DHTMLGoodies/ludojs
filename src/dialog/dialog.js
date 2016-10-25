@@ -16,13 +16,13 @@ ludo.dialog.Dialog = new Class({
 	modal:true,
 	/**
 	 * Auto dispose/erase component on close
-	 * @attribute {Boolean} autoDispose
+	 * @attribute {Boolean} autoRemove
 	 * @optional
 	 * @default true
 	 */
-	autoDispose:true,
+	autoRemove:true,
 	/**
-	 * Auto hide component on button click. If autoDispose is set to true, the component
+	 * Auto hide component on button click. If autoRemove is set to true, the component
 	 * will be deleted
 	 * @attribute {Boolean} autoHideOnBtnClick
 	 * @optional
@@ -70,7 +70,7 @@ ludo.dialog.Dialog = new Class({
 			}
 		}
 		this.parent(config);
-        this.setConfigParams(config, ['modal','autoDispose','autoHideOnBtnClick']);
+        this.setConfigParams(config, ['modal','autoRemove','autoHideOnBtnClick']);
 	},
 
 	ludoDOM:function () {
@@ -122,7 +122,7 @@ ludo.dialog.Dialog = new Class({
 	hide:function () {
 		this.parent();
 		this.hideShim();
-		if (this.autoDispose) {
+		if (this.autoRemove) {
 			this.dispose.delay(1000, this);
 		}
 	},

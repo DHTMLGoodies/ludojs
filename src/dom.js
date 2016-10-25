@@ -149,7 +149,6 @@ ludo.dom = {
 		return el.parent('#' + id);
 	},
 
-    // TODO rename to cls
 	addClass:function (el, className) {
 		console.info("Use of deprecated ludo.dom.addClass");
 		console.trace();
@@ -207,13 +206,10 @@ ludo.dom = {
 	},
 
 	getInnerWidthOf:function (el) {
+		console.warn("Use of deprecated getInnerWidthOf");
+		console.trace();
 		return el.width();
-		/*
-		if (el.style.width && el.style.width.indexOf('%') == -1) {
-			return ludo.dom.getNumericStyle(el, 'width');
-		}
-		return el.offsetWidth - ludo.dom.getPW(el) - ludo.dom.getBW(el);
-		*/
+
 	},
 
 	getInnerHeightOf:function (el) {

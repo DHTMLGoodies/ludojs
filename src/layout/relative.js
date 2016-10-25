@@ -1,15 +1,52 @@
 /**
- Class for relative positioning of child views. This is the most powerful layout
- in ludoJS.
- An instance of this class is created dynamically when
- layout.type for a View is set to "relative".
- This layout uses ideas from Android's relative layout.
- When using a relative layout, all layout properties should be defined inside a layout config object.
- That also includes width and height.
- @namespace layout
- @class Relative
- @constructor
-
+ Relative Layout. This layout will render children relative to each other based on the rules defined below.
+ <a href="../demo/layout/relative.php" onclick="var w=window.open(this.href);return false">Relative layout demo</a>.
+ @namespace ludo.layout
+ @class ludo.layout.Relative
+ @param {object} config
+ @param {number|string} config.width Width in Pixels or "matchParent". 
+ @param {number|string} config.height Height in pixels or "matchParent"
+ @param {Boolean} config.alignParentTop Align at top edge of parent view
+ @param {Boolean} config.alignParentBottom Align bottom of this view with the bottom of parent view
+ @param {Boolean} config.alignParentLeft Align left in parent
+ @param {Boolean} config.alignParentRight Right align inside parent
+ @param {String} config.leftOf Align left of sibling with this id
+ @param {String} config.rightOf Align right of sibling with this id
+ @param {String} config.below Align below sibling with this id
+ @param {String} config.above Align above sibling with this id
+ @param {String} config.alignLeft Same left position as sibling with this id.
+ @param {String} config.alignRight Same right position as sibling with this id
+ @param {String} config.alignTop Same top position as sibling with this id
+ @param {String} config.alignBottom Same bottom edge as sibling with this id
+ @param {String} config.sameWidthAs Same width as sibling with this id
+ @param {String} config.sameHeightAs Same height as sibling with this id
+ @param {Boolean} config.centerInParent True to Center view inside parent
+ @param {Boolean} config.centerHorizontal True to Center view horizontally inside parent
+ @param {Boolean} config.centerVertical True to Center View vertically inside parent
+ @param {Boolean} config.fillLeft True to use all remaining space left of view. (left pos will be 0)
+ @param {Boolean} config.fillRight True to use all remaining space right of view.
+ @param {Boolean} config.fillUp True to use all remaining space above view. (top pos will be 0)
+ @param {Number} config.absLeft Absolute pixel value for left position
+ @param {Number} config.absRight Absolute pixel value for right position
+ @param {Number} config.absTop Absolute pixel value for top position
+ @param {Number} config.absBottom Absolute pixel value for bottom position
+ @param {Number} config.offsetX After positioning the view, offset left position with these number of pixels.
+ @param {Number} config.offsetX After positioning the view, offset top position with these number of pixels.
+ @param {String} config.resize Make the view resizable in this direction(left|right|above|below)
+ @example
+ var view = new ludo.View({
+ 	layout:{
+ 		width:'matchParent',height:'matchParent',
+ 		type:'relative' // Render children in relative layout
+ 	},
+ 	children:[ // array of relative positioned children
+ 	{
+ 		// Center this view inside parent
+		{ id:'child1', html: 'First View', layout:{ centerInParent:true,width:200,height:200}},
+		// Render below "child1" and align it with "child1"
+		{ id:'child2', html: 'Second View', layout:{ below:'child1', alignLeft:'child1', width:300,height:50 }
+ 	}]
+ });
  */
 ludo.layout.Relative = new Class({
 	Extends:ludo.layout.Base,

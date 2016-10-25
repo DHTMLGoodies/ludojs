@@ -769,11 +769,19 @@ div.ludo-tab-strip-tab-active {
 }
 
 .ludo-notification{
-    background-color:#f5f5f5;
+    background-color:#AAA;
     padding:3px;
     padding-left:5px;
     padding-right:5px;
     border:1px solid #b3b3b3;
+    border-radius:10px;
+
+
+}
+
+.ludo-notification .ludo-body{
+    color:#FFF;
+    font-size:0.9em;
 }
 
 div.ludo-form-el-invalid label{

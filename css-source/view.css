@@ -112,6 +112,11 @@
     font-weight: bold;
     line-height: 23px;
     color: #000;
+
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .ludo-framed-view-shim {
@@ -173,6 +178,7 @@
     white-space: nowrap;
     color: #666;
 }
+
 
 .ludo-title-bar-button-container {
     position: absolute;

@@ -113,6 +113,11 @@
     font-weight: bold;
     line-height: 23px;
     color: #000;
+
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .ludo-framed-view-shim {
@@ -174,6 +179,7 @@
     white-space: nowrap;
     color: #666;
 }
+
 
 .ludo-title-bar-button-container {
     position: absolute;
@@ -638,6 +644,10 @@ div.ludo-resize-handle-active {
     cursor: pointer;
     z-index: 2;
     overflow:hidden;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .ludo-tab-strip-tab-bg-first, .ludo-tab-strip-tab-bg-last{
@@ -859,6 +869,10 @@ div.ludo-tab-strip-top div.ludo-body {
     font-family:arial, helvetica, serif;
     font-size:11px;
     line-height:20px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }/* ../ludojs/css-source/window.css */
 .ludo-window{
     box-shadow:2px 2px 3px #888;
@@ -1290,6 +1304,10 @@ div.ludo-form-button-disabled .ludo-form-button-m-bg-right {
 .ludo-form-button-value {
     background-repeat:no-repeat;
     background-position:center center;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .ludo-form-button-l .ludo-form-button-value{
