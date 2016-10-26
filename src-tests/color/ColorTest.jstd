@@ -4,9 +4,11 @@ load:
   - ../../jquery/jquery-3.1.0.min.js
   - ../../js/ludojs.js
   - ../../src/color/color.js
+  - ../../src/color/color-schemes.js
 
 test:
   - ColorTest.js
+  - SchemeTest.js
 
 plugin:
  - name: "coverage"

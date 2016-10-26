@@ -1,10 +1,20 @@
 /**
  * Time Picker module
+ * @module timeanddat
  * @namespace ludo.calendar
- * @extends ludo.View
+ * @class ludo.calendar.TimePicker
  * @param {object} config Config object
  * @param {number} config.hours Initial hours
  * @param {number} config.minutes Initial minutes
+ * @param {String} config.clockBackground Background color of "Watch face"
+ * @param {String} config.hourColor Color of hours text, default: #555555
+ * @param {String} config.minuteColor Color for the minute text, default: #555555
+ * @param {String} config.handColor Color of Arrow Hand indicating selected hours and minutes. default: #669900
+ * @param {String} config.handTextColor Color of hour and minute text on the hour/minute hand. default: #FFFFFFF
+ * @param {String} config.minuteDotColor Color of small dot inside the hour/minute hand., default: #FFFFFF
+ *
+ * @fires ludo.calendar.TimePicker#time
+ * @fires ludo.calendar.TimePicker#mode
  */
 ludo.calendar.TimePicker = new Class({
 
@@ -33,7 +43,7 @@ ludo.calendar.TimePicker = new Class({
     needle: undefined,
     needleCircle: undefined,
     needleText: undefined,
-
+    clipPath: undefined,
     mode: undefined,
 
     dragActive: false,
@@ -43,16 +53,17 @@ ludo.calendar.TimePicker = new Class({
     outerSize: 0.85,
     hourInnerSize: 0.65,
 
-    needleColor: '#669900',
+    handColor: '#669900',
     minuteDotColor:'#ffffff',
     clockBackground: '#DDDDDD',
-    needleTextColor: '#ffffff',
+    handTextColor: '#ffffff',
     hourColor:'#555555',
     minuteColor:'#555555',
 
     ludoConfig: function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['hours', 'minutes']);
+        this.setConfigParams(config, ['hours', 'minutes','handColor', 'minuteDotColor', 'clockBackground','handTextColor',
+        'hourColor', 'minuteColor']);
 
         var d = new Date();
         if (this.hours == undefined) {
@@ -74,6 +85,7 @@ ludo.calendar.TimePicker = new Class({
     setTime:function(hour, minutes){
         this.hours = hour;
         this.minutes = minutes;
+        this.setPrefixed();
         this.restart();
         this.notify();
         this.updateNeedle();
@@ -81,18 +93,44 @@ ludo.calendar.TimePicker = new Class({
 
     },
 
+    /**
+     * Show hours
+     */
     restart: function () {
         this.showHours();
     },
 
+
+    setPrefixed:function(){
+        this.hourPrefixed= this.hours < 10 ? "0" + this.hours : this.hours;
+        this.minutePrefixed = this.minutes < 10 ? "0" + this.minutes : this.minutes;
+    },
+
     notify: function () {
-        var h = this.hours < 10 ? "0" + this.hours : this.hours;
-        var m = this.minutes < 10 ? "0" + this.minutes : this.minutes;
 
-        this.hourPrefixed = h;
-        this.minutePrefixed = m;
 
-        this.fireEvent('time', [this.hours, this.minutes, h + ":" + m]);
+        /**
+         * Mode event, arguments can be "hours" or "minutes"
+         * @event ludo.calendar.TimePicker#time
+         * @property {Number} hours Current hours
+         * @property {Number} minutes Current minutes
+         * @property {String} timeString. Time in format HH:MM
+         * @example
+         * var t = new ludo.calendar.TimePicker({
+         *      layout:{width:500,height:500},
+         *      renderTo:document.body,
+         *      listeners:{
+         *          // Listener for the "time" event
+         *          'time' : function(hour, minutes, timeAsString){
+         *              // timeString in format HH:MM, example: 11:48
+         *              console.log(timeAsString);
+         *          }
+         *
+         * });
+         *
+         */
+
+        this.fireEvent('time', [this.hours, this.minutes, this.hourPrefixed + ":" + this.minutePrefixed]);
     },
 
     mouseDown: function (e) {
@@ -149,6 +187,7 @@ ludo.calendar.TimePicker = new Class({
         if (hour != this.hours || minute != this.minutes) {
             this.hours = hour;
             this.minutes = minute;
+            this.setPrefixed();
             this.notify();
             this.updateNeedle();
 
@@ -210,7 +249,7 @@ ludo.calendar.TimePicker = new Class({
 
     },
 
-    clipPath: undefined,
+
 
     renderClock: function () {
         var canvas = this.getCanvas();
@@ -315,7 +354,7 @@ ludo.calendar.TimePicker = new Class({
             cx: this.origo.x, cy: this.origo.y,
             r: 2,
             css: {
-                'fill': this.needleColor, 'stroke-width': 0
+                'fill': this.handColor, 'stroke-width': 0
             }
         });
 
@@ -325,7 +364,7 @@ ludo.calendar.TimePicker = new Class({
                 x2: 100, y2: 100,
                 css: {
                     'stroke-linecap': "round",
-                    'stroke': this.needleColor,
+                    'stroke': this.handColor,
                     'stroke-width': 2
                 }
             }
@@ -359,7 +398,7 @@ ludo.calendar.TimePicker = new Class({
         this.needleCircle = new ludo.canvas.Circle({
             cx: this.origo.x, cy: this.origo.y, r: 10,
             css: {
-                'fill': this.needleColor
+                'fill': this.handColor
             }
         });
         canvas.append(this.needleCircle);
@@ -375,7 +414,7 @@ ludo.calendar.TimePicker = new Class({
 
 
         this.needleText = new ludo.canvas.Text("", {
-            'fill': this.needleTextColor,
+            'fill': this.handTextColor,
             css: styles
 
         });
@@ -495,6 +534,8 @@ ludo.calendar.TimePicker = new Class({
         this.minuteGroup.show();
         this.needleCircleInnerMinutes.show();
         this.updateNeedle();
+
+        this.fireEvent('mode', 'minutes');
     },
 
     showHours: function () {
@@ -504,9 +545,35 @@ ludo.calendar.TimePicker = new Class({
         this.minuteGroup.hide();
         this.needleCircleInnerMinutes.hide();
         this.updateNeedle();
+
+        /**
+         * Mode event, arguments can be "hours" or "minutes"
+         * @event ludo.calendar.TimePicker#mode
+         * @property {string} mode - "hours" when hour is displayed, "minutes" when minutes is displayed
+         * @example
+         * var t = new ludo.calendar.TimePicker({
+         *      layout:{width:500,height:500},
+         *      renderTo:document.body,
+         *      listeners:{
+         *          'mode' : function(mode){
+         *              console.log(mode);
+         *          }
+         *
+         * });
+         *
+         */
+        this.fireEvent('mode', 'hours');
     },
 
     getTimeString:function(){
+        return this.hourPrefixed + ":" + this.minutePrefixed;
+    },
+
+    val:function(val){
+        if(arguments.length > 0){
+            var tokens = val.split(/:/g);
+            this.setTime(parseInt(tokens[0]),parseInt(tokens[1]));
+        }
         return this.hourPrefixed + ":" + this.minutePrefixed;
     }
 

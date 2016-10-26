@@ -7,6 +7,7 @@
  * @memberOf ludo.form
  * @param {object} config
  * @param {number} config.value Initial value, default 0
+ * @param {number} config.orientation Orientation of seekbar, "horizontal" or "vertical", default: "vertical"
  * @param {number} config.minValue Minimum value, default 0
  * @param {number} config.maxValue Maximum value, default 10
  * @param {number} config.negativeColor color of seekbar line below(vertical) and left(horizontal mode), default: #888
@@ -21,6 +22,7 @@
  * @example
  * new ludo.form.Seekbar({
         renderTo:document.body,
+        orientation:"vertical",
         layout:{
             width:50, height:300
         },
@@ -65,7 +67,6 @@ ludo.form.Seekbar = new Class({
     area: {width: 0, height: 0, max: 0},
     valueArea: {min: 0, max: 0, width: 0},
 
-    orientation: undefined,
     thumbSize: 0,
     isActive: false,
 
@@ -73,10 +74,13 @@ ludo.form.Seekbar = new Class({
 
     valueListener: undefined,
 
+    reverse:false,
+
+    orientation : 'vertical',
 
     ludoConfig:function(config){
         this.parent(config);
-        this.setConfigParams(config, ["minValue", "maxValue", "value", "valueListener", "negativeColor", "positiveColor", "needleSize", "barSize"]);
+        this.setConfigParams(config, ["orientation", "reverse", "minValue", "maxValue", "value", "valueListener", "negativeColor", "positiveColor", "needleSize", "barSize"]);
 
 
         if (config.thumbColor != undefined) {
@@ -87,21 +91,14 @@ ludo.form.Seekbar = new Class({
             }
             this.thumbColor = config.thumbColor;
         }
-
-
-
-
     },
 
-    ludoDOM:function(){
-        this.parent();
+    renderSeekbar:function(){
         this.el = $('<div class="dhtmlgoodies-seekbar" style="position:relative;width:100%;height:100%"></div>');
 
         this.getBody().append(this.el);
 
-
-
-        this.orientation = this.getWidth() >= this.getHeight() ? 'horizontal' : 'vertical';
+       // this.orientation = this.getWidth() >= this.getHeight() ? 'horizontal' : 'vertical';
 
         this.elNegative = $('<div class="seekbar-negative" style="position:absolute;z-index:1"></div>');
         this.elPositive = $('<div class="seekbar-positive" style="position:absolute;z-index:1"></div>');
@@ -147,11 +144,6 @@ ludo.form.Seekbar = new Class({
 
     },
 
-    ludoRendered:function(){
-        this.parent();
-        this.positionItems();
-    },
-
     clickOnBar: function (e) {
         var pos = this.orientation == "vertical" ? this.area.size - e.offsetY  - e.currentTarget.offsetTop : e.offsetX;
 
@@ -160,7 +152,10 @@ ludo.form.Seekbar = new Class({
         if (e.target && e.target.className == "seekbar-thumb")return;
 
         var value = this.minValue + (pos / this.valueArea.size * (this.maxValue - this.minValue));
-
+        if(this.reverse){
+            value = this.maxValue - value;
+        }
+        value = Math.min(this.maxValue, Math.max(this.minValue, value));
         this.val(value);
 
         if (this.valueListener != undefined) {
@@ -196,8 +191,14 @@ ludo.form.Seekbar = new Class({
 
     },
 
+    ludoRendered:function(){
+        this.renderSeekbar();
+        this.parent();
+    },
+
     resizeDOM:function(){
         this.parent();
+
         this.positionItems();
     },
 
@@ -274,24 +275,60 @@ ludo.form.Seekbar = new Class({
         var pos = this.getValuePos();
 
         if (this.orientation == 'horizontal') {
-            this.elNegative.css("width", pos);
-            this.elPositive.css({"left": pos + this.valueArea.min, "width": this.valueArea.size - pos});
+            if(this.reverse){
+                this.elNegative.css({
+                    left : pos + this.valueArea.min,
+                    width: this.valueArea.size - pos
+                });
+
+                this.elPositive.css(
+                    {"left": this.valueArea.min,
+                        "width": pos}
+                );
+
+            }else{
+                this.elNegative.css("width", pos);
+                this.elPositive.css({"left": pos + this.valueArea.min, "width": this.valueArea.size - pos});
+
+            }
+
+
 
         } else {
-            this.elPositive.css("height", pos);
-            this.elNegative.css({
-                top: pos + this.valueArea.min,
-                height: this.valueArea.size - pos
-            });
+
+            if(this.reverse){
+                this.elPositive.css({
+                    "height" :this.valueArea.size - pos,
+                    top:pos + this.valueArea.min
+                });
+                this.elNegative.css({
+                    top:this.valueArea.min,
+                    height: pos
+                });
+            }else{
+                this.elPositive.css("height", pos);
+                this.elNegative.css({
+                    top: pos + this.valueArea.min,
+                    height: this.valueArea.size - pos
+                });
+            }
+
         }
 
     },
 
     getValuePos: function () {
         if (this.orientation == 'horizontal') {
-            return (this.valueArea.size * (this.value - this.minValue) / this.maxValue);
+            var ratio = (this.value - this.minValue) / this.maxValue;
+            var val = (this.valueArea.size * ratio);
+            return this.reverse ? this.valueArea.size - val : val;
         } else {
-            return this.valueArea.max - (this.valueArea.min + (this.valueArea.size * (this.value - this.minValue) / this.maxValue));
+            if(this.reverse){
+                return (this.valueArea.min + (this.valueArea.size * (this.value - this.minValue) / this.maxValue)) - this.valueArea.min;
+            }else{
+                return this.valueArea.max - (this.valueArea.min + (this.valueArea.size * (this.value - this.minValue) / this.maxValue));
+
+            }
         }
     },
 
@@ -340,9 +377,10 @@ ludo.form.Seekbar = new Class({
 
         var value =  this.minValue + (pos / this.valueArea.size * (this.maxValue - this.minValue));
 
-        if (this.orientation == 'vertical') {
+        if ((this.orientation == 'vertical' && !this.reverse) || (this.orientation == "horizontal" && this.reverse)) {
             value = this.maxValue - value;
         }
+
 
         this._set(value);
 

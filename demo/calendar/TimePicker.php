@@ -15,7 +15,7 @@ require_once("../includes/demo-header.php");
 
     function showTimePicker() {
         ludo.get('timePickerWindow').show();
-        ludo.get('timePickerWidget').setTime(time.hour, time.minute);
+        ludo.get('timePickerWidget').val(time.timeString);
 
     }
 
@@ -55,7 +55,7 @@ require_once("../includes/demo-header.php");
     });
 
     var w = new ludo.Window({
-        hidden: true,
+        hidden: false,
         id: 'timePickerWindow',
         alwaysInFront:true,
         left: 50, top: 50,

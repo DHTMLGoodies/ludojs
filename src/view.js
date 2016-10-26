@@ -632,7 +632,7 @@ ludo.View = new Class({
 	 * @return {Number} width
 	 */
 	getWidth:function () {
-		return this.layout.pixelWidth ? this.layout.pixelWidth : this.layout.width;
+		return this.layout.pixelWidth ? this.layout.pixelWidth : this.layout.width ? this.layout.width : this.getBody().width();
 	},
 
 	/**

@@ -10,7 +10,7 @@ ludo.layout.LinearVertical = new Class({
 		this.parent();
 	},
 	resize:function () {
-		var componentHeight = this.view.getInnerHeightOfBody();
+		var componentHeight = this.view.getBody().height();
 		if (componentHeight == 0) {
 			return;
 		}
@@ -35,12 +35,12 @@ ludo.layout.LinearVertical = new Class({
 		var stretchHeight = remainingHeight = (componentHeight - totalHeightOfItems);
 
 
-		var width = ludo.dom.getInnerWidthOf(this.view.getBody());
+		var width = this.view.getBody().width();
 		for (i = 0; i < this.view.children.length; i++) {
 			if(!this.view.children[i].isHidden()){
-				var config = { width:width };
-
-
+				var config = {
+					width:width
+				};
 				if (this.hasLayoutWeight(this.view.children[i])) {
 					if (this.view.children[i].id == this.idLastDynamic) {
 						config.height = remainingHeight;
@@ -48,10 +48,7 @@ ludo.layout.LinearVertical = new Class({
 						config.height = Math.round(stretchHeight * this.view.children[i].layout.weight / totalWeight);
 						remainingHeight -= config.height;
 					}
-
-
 				} else {
-
 					config.height = this.getHeightOf(this.view.children[i]);
 				}
 
@@ -64,7 +61,6 @@ ludo.layout.LinearVertical = new Class({
 				if(this.view.children[i].getEl().css('position') === 'absolute'){
 					tm += this.view.children[i].getHeight();
 				}
-
 				this.resizeChild(this.view.children[i], config);
 			}
 		}

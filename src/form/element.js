@@ -292,7 +292,10 @@ ludo.form.Element = new Class({
 
     getWidth:function () {
         var ret = this.parent();
-        return ret ? ret : this.fieldWidth + (this.label ? this.labelWidth : 0) + 2;
+
+        var f = this.fieldWidth ? this.fieldWidth : 0;
+        
+        return ret ? ret : f + (this.label ? this.labelWidth : 0) + 2;
     },
 
     keyUp:function (e) {

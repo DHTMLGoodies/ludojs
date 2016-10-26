@@ -1,0 +1,839 @@
+/**
+            "500": "#009688",
+            "50": "#E0F2F1",
+            "100": "#B2DFDB",
+            "200": "#80CBC4",
+            "300": "#4DB6AC",
+            "400": "#26A69A",
+            "600": "#00897B",
+            "700": "#00796B",
+            "800": "#00695C",
+            "900": "#004D40",
+            "A100": "#A7FFEB",
+            "A200": "#64FFDA",
+            "A400": "#1DE9B6",
+            "A700": "#00BFA5"
+
+*/
+
+.ludo-body label, .ludo-body legend {
+    color: #384350;
+    font-weight: bold;
+    line-height: 20px;
+}
+
+.ludo-window .ludo-body{
+    margin: 5px;
+    border: 1px solid #00796B;
+}
+.ludo-framed-view .ludo-body {
+    overflow: hidden;
+}
+
+.ludo-component-with-buttonbar {
+    padding-bottom: 5px !important;
+}
+
+/** Rich component with button bar */
+.ludo-component-with-buttonbar .ludo-body {
+    margin-bottom: 0;
+}
+
+/** Rich component without button bar */
+.ludo-component-no-buttonbar .ludo-body {
+    margin-bottom: 5px;
+}
+
+.ludo-framed-view .ludo-body div.ludo-body {
+    border: 0;
+}
+
+.ludo-framed-view .ludo-body .ludo-body {
+    margin: 0;
+}
+
+.ludo-view-container {
+    background-color: #E0F2F1;
+}
+.ludo-resize-handle{
+    background-color: #E0F2F1;
+}
+div.ludo-framed-view-body {
+    background-color: #E0F2F1;
+}
+
+div.ludo-framed-view-titlebar {
+    border-bottom: 1px solid #00796B;
+    background-color:#00897B;
+    color:#FFF;
+
+}
+
+div.ludo-framed-view-titlebar {
+    border-bottom: 1px solid #00796B;
+}
+
+div.ludo-framed-view {
+    border: 1px solid #00796B;
+}
+
+.ludo-body {
+    font-size: 11px;
+}
+
+div.ludo-framed-view-titlebar-title {
+    font-size: 12px;
+    color: #384350;
+}
+
+div.ludo-component-statusbar {
+    background-color: #E0F2F1;
+    border-top: 0 solid #AAAAAA;
+}
+
+div.ludo-window, div.ludo-framed-view-shim, div.ludo-dashboard-insertion-marker {
+    border-radius: 3px;
+}
+
+div.ludo-FramedView {
+    border-radius: 0;
+}
+
+.ludo-FramedView .ludo-component-statusbar-resize-height {
+    display: none;
+}
+
+.ludo-component-buttonbar {
+    background-color: #E0F2F1;
+    border: 1px solid #00796B;
+    border-top: 0 solid #00796B;
+}
+
+.ludo-window {
+
+    background-repeat: repeat-x;
+    border-left: 1px solid #777 !important;
+    border-right: 1px solid #777 !important;
+    border-bottom: 1px solid #777 !important;
+    border-top: 1px solid #AAA !important;
+}
+
+.ludo-window .ludo-component-statusbar-resize-height {
+    display: block;
+}
+
+div.ludo-application, div.ludo-application-content {
+    border-width: 0 !important;
+}
+
+div.ludo-layout-resize-col {
+    background-image: url('../images/light-gray-skin/horizontal-resize.png')
+}
+
+div.ludo-layout-resize-row {
+    background-image: url('../images/light-gray-skin/vertical-resize.png')
+}
+
+.ludo-component-resize-region-se {
+    background-image: url('../images/light-gray-skin/resize-dots.png');
+}
+
+div.ludo-resize-handle-over {
+    background-color: #d7d7d7;
+}
+
+div.ludo-resize-handle-active {
+    background-color: #e2e2e2;
+}
+
+div.ludo-resize-handle-
+
+.ludo-layout-resize-row {
+    height: 6px;
+    opacity: 1;
+    filter: alpha(opacity = 100);
+    background-image: url('../images/vertical-resize.gif');
+    background-position: center center;
+    background-repeat: no-repeat;
+}
+
+.ludo-application-content .ludo-component-statusbar-resize-horizontal {
+    display: none;
+}
+
+.ludo-application-content .ludo-component-statusbar-resize {
+    display: none;
+}
+
+.ludo-application-content .ludo-component-statusbar-resize-both {
+    display: none;
+}
+
+div.ludo-container-frame {
+    border: 1px solid #00796B !important;
+}
+
+
+.ludo-form-button-m-bg-right, .ludo-form-button-m-bg-left {
+    background-image: url('../images/button/button-bg-light.png');
+}
+
+.ludo-form-button-over .ludo-form-button-m-bg-left, .ludo-form-button-over .ludo-form-button-m-bg-right {
+    background-image: url('../images/button/button-bg-light-over.png');
+}
+
+.ludo-form-button-down .ludo-form-button-m-bg-left, .ludo-form-button-down .ludo-form-button-m-bg-right {
+    background-image: url('../images/button/button-bg-light-down.png');
+}
+
+.ludo-form-button-pressed .ludo-form-button-m-bg-left, .ludo-form-button-pressed .ludo-form-button-m-bg-right {
+    background-image: url('../images/button/button-bg-light-down.png');
+}
+
+div.ludo-form-button-selected .ludo-form-button-m-bg-left, div.ludo-form-button-selected .ludo-form-button-m-bg-right {
+    background-image: url('../images/button/button-bg-light-over.png');
+}
+
+div.ludo-form-button-disabled .ludo-form-button-m-bg-left, div.ludo-form-button-disabled .ludo-form-button-m-bg-right {
+    background-image: url('../images/button/button-bg-light-disabled.png') !important;
+}
+
+/** Large buttons */
+.ludo-form-button-xl-bg-right, .ludo-form-button-xl-bg-left {
+    background-image: url('../images/light-gray-skin/xl-button.png');
+}
+
+.ludo-form-button-over .ludo-form-button-xl-bg-left, .ludo-form-button-over .ludo-form-button-xl-bg-right {
+    background-image: url('../images/light-gray-skin/xl-button-over.png');
+}
+
+.ludo-form-button-down .ludo-form-button-xl-bg-left, .ludo-form-button-down .ludo-form-button-xl-bg-right {
+    background-image: url('../images/light-gray-skin/xl-button-down.png');
+}
+
+.ludo-form-button-pressed .ludo-form-button-xl-bg-left, .ludo-form-button-pressed .ludo-form-button-xl-bg-right {
+    background-image: url('../images/light-gray-skin/xl-button-over.png');
+}
+
+div.ludo-form-button-selected .ludo-form-button-xl-bg-left, div.ludo-form-button-selected .ludo-form-button-xl-bg-right {
+    background-image: url('../images/light-gray-skin/xl-button-selected.png');
+}
+
+div.ludo-form-button-disabled .ludo-form-button-xl-bg-left, div.ludo-form-button-disabled .ludo-form-button-xl-bg-right {
+    background-image: url('../images/light-gray-skin/xl-button-disabled.png') !important;
+}
+
+/** Large buttons */
+.ludo-form-button-l-bg-right, .ludo-form-button-l-bg-left {
+    background-image: url('../images/light-gray-skin/l-button.png');
+}
+
+.ludo-form-button-over .ludo-form-button-l-bg-left, .ludo-form-button-over .ludo-form-button-l-bg-right {
+    background-image: url('../images/light-gray-skin/l-button-over.png');
+}
+
+.ludo-form-button-down .ludo-form-button-l-bg-left, .ludo-form-button-down .ludo-form-button-l-bg-right {
+    background-image: url('../images/light-gray-skin/l-button-down.png');
+}
+
+.ludo-form-button-pressed .ludo-form-button-l-bg-left, .ludo-form-button-pressed .ludo-form-button-l-bg-right {
+    background-image: url('../images/light-gray-skin/l-button-over.png');
+}
+
+div.ludo-form-button-selected .ludo-form-button-l-bg-left, div.ludo-form-button-selected .ludo-form-button-l-bg-right {
+    background-image: url('../images/light-gray-skin/l-button-selected.png');
+}
+
+div.ludo-form-button-disabled .ludo-form-button-l-bg-left, div.ludo-form-button-disabled .ludo-form-button-l-bg-right {
+    background-image: url('../images/light-gray-skin/l-button-disabled.png') !important;
+}
+
+
+div.ludo-form-button-disabled {
+    color: #555;
+    cursor: default;
+}
+
+.ludo-view-collapsed {
+    border-color: #00796B;
+}
+.ludo-view-collapsed-title{
+    line-height:20px;
+    font-family:arial, helvetica, serif;
+}
+.ludo-view-collapsed-over {
+    background-color: #E0F2F1;
+}
+
+/** Title bar buttons */
+.ludo-title-bar-button-container-left-edge {
+    background-image: url('../images/light-gray-skin/bg-title-bar-buttons.png');
+}
+
+.ludo-title-bar-button-container-right-edge {
+    background-image: url('../images/light-gray-skin/bg-title-bar-buttons.png');
+}
+
+.ludo-title-bar-button-with-border {
+    /** Border between buttons in title bar can be set here */
+}
+
+/** Tab strip */
+
+.ludo-tab-strip {
+    background-color: #E0F2F1;
+}
+
+.ludo-tab-strip div.ludo-tab {
+    background-color: #6c9ad1;
+}
+
+/** Bg behind tabs */
+.ludo-tab-strip-bg {
+    height: 1px;
+    background-color: #00796B;
+}
+
+.ludo-tab-strip div.ludo-tab-active {
+    height: 21px;
+    border-left: 1px solid #00796B;
+    border-top: 1px solid #00796B;
+    border-right: 1px solid #00796B;
+}
+
+/** Resize shim */
+.ludo-shim-resize {
+    border: 1px dashed #777;
+}
+
+/* Menu */
+.ludo-menu-item-horizontal {
+    padding-top: 0;
+    padding-bottom: 0;
+    line-height: 20px;
+}
+
+.ludo-body {
+    text-align: left;
+}
+
+
+div.ludo-menu-vertical {
+    background-color: #FFF;
+}
+
+.ludo-menu-vertical .ludo-menu-item {
+    background-color: transparent;
+}
+
+
+
+.ludo-menu-item-horizontal {
+    padding-top: 0;
+    padding-bottom: 0;
+    margin: 0;
+    color: #000;
+
+}
+
+.ludo-menu {
+    font-family: arial,serif !important;
+    font-size: 11px;
+}
+
+.ludo-menu div {
+    background-color: transparent;
+}
+
+.ludo-menu div.ludo-menu-item-spacer-horizontal {
+    background-color: #7fa2c9;
+}
+
+.ludo-menu div.ludo-menu-item-spacer-vertical {
+    background-color: #d7d7d7;
+    margin-top:2px;
+    margin-bottom:2px;
+    height:1px;
+}
+.ludo-menu-horizontal .ludo-menu-item {
+    font-weight: bold;
+    color: #333;
+}
+
+
+.ludo-menu-vertical .ludo-menu-item-over {
+    background-color: #FFF;
+}
+
+.ludo-menu-horizontal .ludo-menu-item-over {
+    background-color: transparent;
+    color: #000;
+    border-color: #000;
+}
+
+.ludo-menu-item-horizontal.ludo-menu-item-over, .ludo-menu-horizontal .ludo-menu-item-active {
+    /* background-image: url(../images/light-gray-skin/bg-horizontal-menu-over.png); */
+    background-color:#CCC;
+}
+
+.ludo-menu-vertical {
+    border: 1px solid #00796B;
+    background: url(../images/light-gray-skin/menu-bg-vertical.png) repeat-y;
+    -moz-box-shadow: 1px 1px 4px #555;
+    -webkit-box-shadow: 1px 1px 4px #555;
+    box-shadow: 1px 1px 3px #555;
+}
+
+
+.ludo-menu-vertical .ludo-menu-item-over, .ludo-menu-vertical .ludo-menu-item-active {
+    background-color: #FFF;
+    border: 1px solid #00796B;
+    padding-left: 34px;
+    padding-right: 19px;
+    padding-top: 1px;
+    padding-bottom: 1px;
+    border-radius: 2px;
+    color: #000;
+}
+
+.ludo-menu-item-vertical-expand {
+    background-image: url(../images/expand-menu.png);
+}
+
+.ludo-menu-item-horizontal-expand {
+    background-image: url(../images/light-gray-skin/expand-menu-horizontal.png);
+}
+
+.ludo-form-button-s .ludo-form-button-s-bg-left, .ludo-form-button-s .ludo-form-button-s-bg-right {
+    background-image: url('../images/light-gray-skin/tiny-button.png');
+}
+
+.ludo-form-button-s .ludo-form-button-over .ludo-form-button-s-bg-left, .ludo-form-button-s .ludo-form-button-over .ludo-form-button-s-bg-right {
+    background-image: url('../images/light-gray-skin/tiny-button-over.png');
+}
+
+.ludo-form-button-s .ludo-form-button-down .ludo-form-button-s-bg-left, .ludo-form-button-s .ludo-form-button-down .ludo-form-button-s-bg-right {
+    background-image: url('../images/light-gray-skin/tiny-button-down.png');
+}
+
+.ludo-form-button-s .ludo-form-button-disabled .ludo-form-button-s-bg-left, .ludo-form-button-s .ludo-form-button-disabled .ludo-form-button-s-bg-right {
+    background-image: url('../images/light-gray-skin/tiny-button-disabled.png');
+}
+
+
+/** Calendar */
+.ludo-calendar-year-container {
+    background-color: #00796B;
+    padding-bottom: 5px;
+    padding-top: 5px;
+    height: 20px;
+}
+
+.ludo-calendar-month-year-container {
+    background-color: #E0F2F1;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    padding-left: 3px;
+    padding-right: 3px;
+    height: 20px;
+}
+
+.ludo-calendar-year, .ludo-calendar-month-year {
+    color: #555;
+    float: left;
+    font-size: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    cursor: pointer;
+}
+
+.ludo-calendar-year-selected {
+    background-color: #E0F2F1;
+
+    color: #000;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    font-weight: bold;
+}
+
+.ludo-calendar-month-year-selected {
+    background-color: #E0F2F1;
+    color: #000;
+    font-size: 11px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+
+    font-weight: bold;
+}
+
+.ludo-calendar-year-disabled {
+    cursor: default;
+    color: #CCC;
+}
+
+.ludo-calendar-month-container {
+    background-color: #00796B;
+    padding-top: 5px;
+    height: 14px;
+}
+
+.ludo-calendar-month {
+    cursor: pointer;
+    float: left;
+    font-size: 10px;
+    color: #FFF;
+
+}
+
+.ludo-calendar-month-selected {
+    background-color: #E0F2F1;
+    color: #000;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    font-weight: bold;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.ludo-calendar-month-tip {
+    background-color: #00796B;
+}
+
+.ludo-calendar-month-inactive {
+    width: 10px;
+    height: 10px;
+    background-image: url(../images/calendar/calendar-month-dot.png);
+    background-repeat: no-repeat;
+    background-position: center center;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.ludo-calendar-header {
+    border-bottom: 1px solid #00796B;
+    background-color: #E0F2F1;
+}
+
+.ludo-calendar-header td {
+    text-align: center;
+}
+
+.ludo-calendar-days-container {
+    background-color: #00796B;
+}
+
+.ludo-calendar-view {
+    font-size: 11px;
+    background-color: #00796B;
+}
+
+.ludo-calendar-header {
+    height: 20px;
+    line-height: 20px;
+    position: relative;
+}
+
+.ludo-calendar-container-days {
+    border-bottom: 1px solid #00796B;
+}
+
+.ludo-calendar-container-days td, .ludo-calendar-container-days tr {
+    padding: 0;
+    margin: 0;
+}
+
+.ludo-calendar-body-days {
+    background-color: #FFF;
+}
+
+.ludo-calendar-container-days td {
+    line-height: 15px;
+}
+
+.calendar-week {
+    border-right: 1px solid #00796B;
+    text-align: center;
+    background-color: #E0F2F1;
+    color: #000;
+}
+
+td.calendar-day {
+    text-align: center;
+    cursor: pointer;
+}
+
+.calendar-sunday {
+    color: red;
+}
+
+.calendar-day-inactive {
+    color: #999;
+}
+
+.ludo-calendar-month-info {
+    text-align: center !important;
+    color: #000;
+    font-size: 10px;
+    font-weight: bold;
+    border-top: 0;
+}
+
+.ludo-calendar-month-info div {
+    text-align: center;
+}
+
+.calendar-day {
+    border: 1px solid #FFF;
+}
+
+.calendar-day-today {
+    border: 1px solid #E0F2F1;
+}
+
+td.calendar-day-selected {
+    background-color: #E0F2F1;
+    border: 1px solid #00796B;
+}
+
+.calendar-day-mouse-over {
+    background-color: #E0F2F1;
+}
+
+/** form.FilterText component */
+.ludo-form-text-autocomplete-container {
+    background-color: #FFF;
+}
+
+/**
+form.ComboTree
+*/
+.ludo-Filter-Tree-Combo-Field {
+    margin-left: 3px;
+    margin-right: 3px;
+}
+
+.ludo-Filter-Tree-Bg-Left, .ludo-Filter-Tree-Bg-Right {
+    background-image: url("../images/light-gray-skin/combo-bg.png");
+    background-repeat: no-repeat;
+}
+
+.ludo-Filter-Tree-Field-Arrow {
+    background-image: url('../images/light-gray-skin/combo-arrow.png');
+}
+
+.ludo-Filter-Tree-Window {
+    padding: 0;
+}
+
+.ludo-Filter-Tree-Window .ludo-body {
+    padding: 0;
+    overflow-y: auto;
+    background-color: #FFF;
+}
+
+/** Grid */
+.ludo-grid-Grid .ludo-header {
+    background-color: #e4e4e4;
+    background-image: url(../images/light-gray-skin/header-gray.png);
+}
+
+.ludo-grid-Grid .ludo-grid-header-cell-top {
+    background-image: url(../images/light-gray-skin/header-top-gray.png);
+}
+
+.ludo-grid-Grid .ludo-grid-header-cell-bottom {
+    background-image: url(../images/light-gray-skin/header-bottom-gray.png);
+}
+
+.ludo-grid-header-cell {
+    border-right: 1px solid #00796B;
+    border-bottom: 1px solid #00796B;
+}
+
+
+.ludo-grid-Grid div.ludo-active-record {
+    font-weight: bold;
+    background-color: #e4e4e4;
+
+    border-top:1px solid #e4e4e4;
+    border-bottom:1px solid #e4e4e4;
+}
+.ludo-grid-Grid .ludo-menu-button-active{
+    background-color:#e4e4e4;
+    border-left:1px solid #C0C0C0;
+}
+.ludo-form-slider-horizontal .ludo-form-slider-bg-first{
+    background-image:url(../images/light-gray-skin/form/slider.png);
+
+}
+
+.ludo-form-slider-horizontal .ludo-form-slider-bg-last{
+    background-image:url(../images/light-gray-skin/form/slider.png);
+}
+
+.ludo-form-slider-horizontal .ludo-form-slider-handle{
+    background-image:url(../images/light-gray-skin/form/slider-handle.png);
+}
+.ludo-form-slider-vertical .ludo-form-slider-bg-first{
+    background-image:url(../images/light-gray-skin/form/slider-vertical.png);
+}
+
+.ludo-form-slider-vertical .ludo-form-slider-bg-last{
+    background-image:url(../images/light-gray-skin/form/slider-vertical.png);
+}
+
+.ludo-form-slider-vertical .ludo-form-slider-handle{
+    background-image:url(../images/light-gray-skin/form/slider-handle-vertical.png);
+}
+
+div.ludo-component-buttonbar{
+    height:25px;
+}
+
+
+
+/**
+tab layout */
+
+div.ludo-tab-strip-tab span{
+    color:#000;
+}
+.ludo-tab-strip .ludo-body,.ludo-tab-strip-tab {
+    background-color: #D7D7D7;
+    border-color:#00796B;
+}
+
+.ludo-tab-strip .ludo-tab-strip-line {
+    background-color: #E0F2F1;
+    border-color:#a5a5a5;
+}
+div.ludo-tab-strip-tab-bg-first, div.ludo-tab-strip-tab-bg-last {
+    border-color:#E0F2F1;
+}
+.ludo-tab-strip,div.ludo-tab-strip-left div.ludo-body,.ludo-tab-strip-top {
+    border-color:#00796B;
+}
+div.ludo-tab-strip-tab-active {
+    background-color: #E0F2F1;
+}
+.ludo-tab-strip-tab-top {
+    border: 1px solid #00796B;
+    border-right: 1px solid #a5a5a5;
+    border-bottom: 1px solid #a5a5a5;
+}
+.ludo-tab-strip-tab-bottom {
+    border: 1px solid #00796B;
+    border-right: 1px solid #a5a5a5;
+    border-top: 1px solid #a5a5a5;
+}
+.ludo-tab-strip-tab-left {
+    border: 1px solid #00796B;
+    border-right: 1px solid #a5a5a5;
+    border-bottom: 1px solid #a5a5a5;
+}
+.ludo-tab-strip-tab-right {
+    border: 1px solid #00796B;
+    border-left: 1px solid #a5a5a5;
+    border-bottom: 1px solid #a5a5a5;
+}
+
+/** Collapse bar */
+
+.ludo-view-collapsed-title{
+    font-size:11px;
+    line-height:16px;
+    font-family:arial, helvetica, serif;
+    font-weight:normal;
+}
+.ludo-collapse-bar{
+    background-color:#E0F2F1;
+}
+.ludo-collapse-bar-left{
+    border-left:1px solid #C0C0C0;
+    border-top:1px solid #C0C0C0;
+    border-bottom:1px solid #C0C0C0;
+}
+.ludo-collapse-bar-right{
+    border-right:1px solid #C0C0C0;
+    border-top:1px solid #C0C0C0;
+    border-bottom:1px solid #C0C0C0;
+}
+.ludo-collapse-bar-bottom{
+    border:1px solid #C0C0C0;
+    border-top:1px solid #C0C0C0;
+}
+.ludo-collapse-bar-top{
+    border:1px solid #C0C0C0;
+}
+.collapse-bar-button{
+    border:1px solid #E0F2F1;
+}
+
+.collapse-bar-button-over{
+    border:1px solid #C0C0C0;
+}
+.collapse-bar-button-active{
+    background-color:#d7d7d7;
+    border-left:1px solid #b0b0b0;
+    border-top:1px solid #b0b0b0;
+}
+.collapse-bar-button-active .collapse-bar-button-bg-first{
+    border-top:1px solid #b3b3b3;
+    border-right:1px solid #b3b3b3;
+}
+.collapse-bar-button-active .collapse-bar-button-bg-last{
+    border-bottom:1px solid #b3b3b3;
+    border-left:1px solid #b3b3b3;
+}
+
+.ludo-notification{
+    background-color:#AAA;
+    padding:3px;
+    padding-left:5px;
+    padding-right:5px;
+    border:1px solid #b3b3b3;
+    border-radius:10px;
+
+
+}
+
+.ludo-notification .ludo-body{
+    color:#FFF;
+    font-size:0.9em;
+}
+
+div.ludo-form-el-invalid label{
+    color:#F00;
+}
+div.ludo-form-element input{
+    height:14px;
+}
+
+.input-row .ludo-menu-button-over{
+    background-color:#e2e2e2;
+}
+
+.input-row .ludo-menu-button{
+    background-color:#eeeee8;
+
+}
+.form-combo-child{
+    border:1px solid #d7d7d7;
+    box-shadow: 2px 2px 5px 0 #555;
+}
+.input-row .ludo-menu-button-arrow{
+    border-left:1px solid #d7d7d7;
+}
+/** Color picker */
+
+div.ludo-tabs-in-dropdown-body{
+    border-top : 0;
+    border-left : 1px solid #d7d7d7;
+    border-right : 1px solid #d7d7d7;
+    border-bottom : 1px solid #d7d7d7;
+    padding : 0;
+    margin-top : 0;
+    background-color : #f2f2f2;
+}

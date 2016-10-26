@@ -1,13 +1,14 @@
 /**
+ * // TODO this class should be removed. Instead, think of layout for forms and a separate label class
  * Base class for all form elements with label
  * @namespace ludo.form
  * @class LabelElement
  * @augments ludo.form.Element
  */
 ludo.form.LabelElement = new Class({
-    Extends:ludo.form.Element,
+    Extends: ludo.form.Element,
 
-    fieldTpl:['<table ', 'cellpadding="0" cellspacing="0" border="0" width="100%">',
+    fieldTpl: ['<table ', 'cellpadding="0" cellspacing="0" border="0" width="100%">',
         '<tbody>',
         '<tr class="input-row">',
         '<td class="label-cell"><label class="input-label"></label></td>',
@@ -26,15 +27,15 @@ ludo.form.LabelElement = new Class({
      * @default ":"
      * @property {string} labelSuffix
      */
-    labelSuffix:':',
+    labelSuffix: ':',
 
-    ludoConfig:function (config) {
+    ludoConfig: function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['inlineLabel','labelSuffix']);
-        if(!this.supportsInlineLabel())this.inlineLabel = undefined;
+        this.setConfigParams(config, ['inlineLabel', 'labelSuffix']);
+        if (!this.supportsInlineLabel())this.inlineLabel = undefined;
     },
 
-    ludoEvents:function () {
+    ludoEvents: function () {
         this.parent();
         if (this.inlineLabel) {
             var el = this.getFormEl();
@@ -46,7 +47,7 @@ ludo.form.LabelElement = new Class({
         }
     },
 
-    ludoDOM:function () {
+    ludoDOM: function () {
         this.parent();
         this.getBody().html(this.fieldTpl.join(''));
         this.addInput();
@@ -55,17 +56,17 @@ ludo.form.LabelElement = new Class({
 
     },
 
-    ludoRendered:function(){
+    ludoRendered: function () {
         this.parent();
-        if(this.inlineLabel)this.setInlineLabel();
+        if (this.inlineLabel)this.setInlineLabel();
     },
 
-    supportsInlineLabel:function(){
+    supportsInlineLabel: function () {
         return true;
     },
 
-    setInlineLabel:function () {
-		if(!this.inlineLabel)return;
+    setInlineLabel: function () {
+        if (!this.inlineLabel)return;
         var el = this.getFormEl();
         if (el.val().length === 0) {
             el.addClass('ludo-form-el-inline-label');
@@ -73,17 +74,17 @@ ludo.form.LabelElement = new Class({
         }
     },
 
-	clear:function(){
-		this.parent();
-		this.setInlineLabel();
-	},
+    clear: function () {
+        this.parent();
+        this.setInlineLabel();
+    },
 
-	reset:function(){
-		this.parent();
-		this.setInlineLabel();
-	},
+    reset: function () {
+        this.parent();
+        this.setInlineLabel();
+    },
 
-    clearInlineLabel:function () {
+    clearInlineLabel: function () {
         var el = this.getFormEl();
         if (el.val() === this.inlineLabel) {
             el.val('');
@@ -91,18 +92,18 @@ ludo.form.LabelElement = new Class({
         }
     },
 
-    clearInlineLabelCls:function(){
+    clearInlineLabelCls: function () {
         this.getFormEl().removeClass('ludo-form-el-inline-label');
     },
 
-    getValueOfFormEl:function () {
+    getValueOfFormEl: function () {
         var val = this.getFormEl().val();
         return this.inlineLabel && this.inlineLabel === val ? '' : val;
     },
 
-    addLabel:function () {
+    addLabel: function () {
         if (this.label !== undefined) {
-			this.getLabelDOM().html(this.label ?  this.label + this.labelSuffix : '');
+            this.getLabelDOM().html(this.label ? this.label + this.labelSuffix : '');
             this.els.label.attr('for', this.getFormElId());
         }
         if (this.suffix) {
@@ -110,29 +111,29 @@ ludo.form.LabelElement = new Class({
             s.css('display', '');
             var label = s.find('label').first();
             if (label) {
-                label.html( this.suffix);
+                label.html(this.suffix);
                 label.attr('for', this.getFormElId());
             }
         }
     },
 
-    setWidthOfLabel:function () {
-        if(this.label === undefined){
+    setWidthOfLabel: function () {
+        if (this.label === undefined) {
             this.getLabelDOM().css('display', 'none');
-        }else{
+        } else {
             this.getLabelDOM().parent().css('width', this.labelWidth);
         }
     },
 
-    getLabelDOM:function () {
+    getLabelDOM: function () {
         return this.getCell('.input-label', 'label');
     },
 
-    addInput:function () {
+    addInput: function () {
         if (!this.inputTag) {
             return;
         }
-        this.els.formEl =$('<' + this.inputTag + '>');
+        this.els.formEl = $('<' + this.inputTag + '>');
 
         if (this.inputType) {
             this.els.formEl.attr('type', this.inputType);
@@ -151,48 +152,52 @@ ludo.form.LabelElement = new Class({
         this.els.formEl.id = this.getFormElId();
     },
 
-    getSuffixCell:function () {
+    getSuffixCell: function () {
         return this.getCell('.suffix-cell', 'labelSuffix');
     },
 
-    getInputCell:function () {
+    getInputCell: function () {
         return this.getCell('.input-cell', 'cellInput');
     },
 
-    getInputRow:function () {
+    getInputRow: function () {
         return this.getCell('.input-row', 'inputRow');
     },
 
-    getCell:function (selector, cacheKey) {
+    getCell: function (selector, cacheKey) {
         if (!this.els[cacheKey]) {
             this.els[cacheKey] = this.getBody().find(selector + ":first");
         }
         return this.els[cacheKey];
     },
 
-    resizeDOM:function () {
+    resizeDOM: function () {
         this.parent();
-        if (this.stretchField && this.els.formEl) {
-            var width = this.getWidth();
-            if (!isNaN(width) && width > 0) {
-                width -= (ludo.dom.getMBPW(this.getEl()) + ludo.dom.getMBPW(this.getBody()));
-            } else {
-                var parent = this.getParent();
-                if (parent && parent.layout.type !== 'linear' && parent.layout.orientation !== 'horizontal') {
-                    width = parent.getWidth();
-                    width -= (ludo.dom.getMBPW(parent.getEl()) + ludo.dom.getMBPW(parent.getBody()));
+        if (this.els.formEl) {
+            if (this.stretchField) {
+                var width = this.getWidth();
+                if (!isNaN(width) && width > 0) {
                     width -= (ludo.dom.getMBPW(this.getEl()) + ludo.dom.getMBPW(this.getBody()));
                 } else {
-                    var c = this.els.container;
-                    width = c.offsetWidth - ludo.dom.getMBPW(this.els.body) - ludo.dom.getPW(c) - ludo.dom.getBW(c);
+                    var parent = this.getParent();
+                    if (parent && parent.layout.type !== 'linear' && parent.layout.orientation !== 'horizontal') {
+                        width = parent.getWidth();
+                        width -= (ludo.dom.getMBPW(parent.getEl()) + ludo.dom.getMBPW(parent.getBody()));
+                        width -= (ludo.dom.getMBPW(this.getEl()) + ludo.dom.getMBPW(this.getBody()));
+                    } else {
+                        var c = this.els.container;
+                        width = c.offsetWidth - ludo.dom.getMBPW(this.els.body) - ludo.dom.getPW(c) - ludo.dom.getBW(c);
+                    }
                 }
-            }
-            if (this.label !== undefined)width -= this.labelWidth;
-            if (this.suffix)width -= this.getSuffixCell().offsetWidth;
-            if(this.inputTag !== 'select') width -= 5;
-            if (width > 0 && !isNaN(width)) {
-                this.formFieldWidth = width;
-                this.getFormEl().css('width', width);
+                if (this.label !== undefined)width -= this.labelWidth;
+                if (this.suffix)width -= this.getSuffixCell().offsetWidth;
+                if (this.inputTag !== 'select') width -= 5;
+                if (width > 0 && !isNaN(width)) {
+                    this.formFieldWidth = width;
+                    this.getFormEl().css('width', width);
+                }
+            }else{
+
             }
         }
     }

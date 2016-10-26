@@ -82,7 +82,7 @@ require_once("../includes/demo-header.php");
                     height: 'matchParent',
                     width: 'matchParent',
                     type: 'linear',
-                    orientation: 'horizontal'
+                    orientation: 'vertical'
                 },
                 css:{
                     padding:10
@@ -93,6 +93,7 @@ require_once("../includes/demo-header.php");
                     {
                         id: 'red', // id of view for easy access using ludo.get('red') later
                         reverse:true,
+                        orientation:'horizontal',
                         minValue:0,maxValue:255, // Min value set to 0, max set to 255
                         thumbColor:'#D32F2F', // Red color of seekbar thumb
                         negativeColor:'#D32F2F', // Same red color on the seekbar(below thumb)
@@ -103,7 +104,7 @@ require_once("../includes/demo-header.php");
                             'padding-left': 5,'padding-right':5 // some space between the seekbars
                         },
                         layout: {
-                            width:60 // Sets with of seek bar to 60. height will be height of parent(default for linear horizontal layout
+                            height:60 // Sets with of seek bar to 60. height will be height of parent(default for linear horizontal layout
                         },
                         listeners:{
                             change:updateColor // call the updateColor function above when red value is changed
@@ -113,6 +114,7 @@ require_once("../includes/demo-header.php");
                         // Seekbar for the green color
                         id: 'green',
                         value:200,
+                        orientation:'horizontal',
                         thumbColor:'#388E3C',
                         negativeColor:'#388E3C',
                         minValue:0,maxValue:255,
@@ -122,7 +124,7 @@ require_once("../includes/demo-header.php");
                             'padding-left': 5,'padding-right':5
                         },
                         layout: {
-                            width:60
+                            height:60
                         },
                         listeners:{
                             change:updateColor
@@ -132,6 +134,7 @@ require_once("../includes/demo-header.php");
                         // Seekbar for the blue color
                         id: 'blue',
                         value:50,
+                        orientation:'horizontal',
                         thumbColor:'#1976D2',
                         negativeColor:'#1976D2',
                         type: 'form.Seekbar',
@@ -141,7 +144,7 @@ require_once("../includes/demo-header.php");
                             'padding-left': 5,'padding-right':5
                         },
                         layout: {
-                            width:60
+                            height:60
                         },
                         listeners:{
                             change:updateColor
@@ -189,7 +192,7 @@ require_once("../includes/demo-header.php");
 
 
             }, {
-                type: 'SourceCodePreview' 
+                type: 'SourceCodePreview'
             }
         ]
     });
