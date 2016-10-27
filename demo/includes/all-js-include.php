@@ -20,7 +20,7 @@
 
 
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/engine.js"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/element.js"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/view.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/event-manager.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/node.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/named-node.js"></script>
@@ -62,6 +62,7 @@
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/menu-vertical.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/menu-container.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/collapse-bar.js"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/table.js"></script>
 
 
 

@@ -5,7 +5,7 @@
  * @class Group
  */
 ludo.canvas.Group = new Class({
-    Extends:ludo.canvas.Element,
+    Extends:ludo.canvas.View,
     tag:'g',
     layout:{},
 

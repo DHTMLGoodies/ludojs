@@ -45,7 +45,7 @@ ludo.layout.Canvas = new Class({
 	/**
 	 * Position child at this coordinates
 	 * @function positionChild
-	 * @param {canvas.Element} child
+	 * @param {canvas.View} child
 	 * @param {String} property
 	 * @param {Number} value
 	 * @private

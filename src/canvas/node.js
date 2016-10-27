@@ -147,7 +147,7 @@ ludo.canvas.Node = new Class({
 	/**
 	 * append a new node
 	 * @function append
-	 * @param {canvas.Element|canvas.Node} node node
+	 * @param {canvas.View|canvas.Node} node node
 	 * @return {canvas.Node} parent
 	 */
 	append:function (node) {

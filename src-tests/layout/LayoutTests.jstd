@@ -1,6 +1,7 @@
 load:
-  - ../../mootools/mootools-core-1.4.5.js
-  - ../../mootools/mootools-more-1.4.0.1.js
+  - ../../mootools/Mootools-Core-1.6.0.js
+  - ../../mootools/Mootools-More-1.6.0.js
+  - ../../jquery/jquery-3.1.0.min.js
   - ../../js/ludojs.js
   - ../../src/dom.js
   - ../../src/layout/factory.js
@@ -17,6 +18,7 @@ load:
   - ../../src/layout/renderer.js
   - ../../src/layout/canvas.js
   - ../../src/layout/slide-in.js
+  - ../../src/layout/table.js
   - ../../src/menu/context.js
   - ../../src/menu/menu.js
   - ../../src/menu/item.js
@@ -38,6 +40,7 @@ test:
   - CoordinateTest.js
   - CanvasTest.js
   - SlideInTest.js
+  - TableLayoutTest.js
 
 serve:
   - ../../css/ludojs-light-gray.css

@@ -10,7 +10,7 @@
  	});
  */
 ludo.canvas.Canvas = new Class({
-	Extends:ludo.canvas.Element,
+	Extends:ludo.canvas.View,
 	tag:'svg',
 	defaultProperties:{
 		xmlns:'http://www.w3.org/2000/svg',
@@ -148,7 +148,7 @@ ludo.canvas.Canvas = new Class({
 	/**
 	 * Adopt node into &lt;defs> tag of canvas
 	 * @function appendDef
-	 * @param {canvas.Node|canvas.Element} node
+	 * @param {canvas.Node|canvas.View} node
 	 * @return {canvas.Node} defs Node
 	 */
 	appendDef:function(node){

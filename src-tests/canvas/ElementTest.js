@@ -6,7 +6,7 @@ TestCase("ElementTest", {
 				'stroke-color':'#FFFFFF'
 			}
 		});
-		return new ludo.canvas.Element({
+		return new ludo.canvas.View({
 			tag:'rect',
 			paint:paint
 		});
@@ -18,7 +18,7 @@ TestCase("ElementTest", {
 				'stroke-color':'#FFFFFF'
 			}
 		});
-		var el = new ludo.canvas.Element({
+		var el = new ludo.canvas.View({
 			tag:'rect',
 			paint:paint
 		});
@@ -44,7 +44,7 @@ TestCase("ElementTest", {
 				'stroke-color':'#FFFFFF'
 			}
 		});
-		var el = new ludo.canvas.Element({
+		var el = new ludo.canvas.View({
 			tag:'rect',
 			attr:{ "class": paint }
 		});
@@ -55,7 +55,7 @@ TestCase("ElementTest", {
 	},
 
 	"test should be able to access node":function () {
-		var el = new ludo.canvas.Element({
+		var el = new ludo.canvas.View({
 			tag:'rect'
 		});
 
@@ -68,7 +68,7 @@ TestCase("ElementTest", {
 
 	"test should be able to access properties":function () {
 		// when
-		var element = new ludo.canvas.Element({
+		var element = new ludo.canvas.View({
 			tag:'rect',
 			attr:{x1:100, y1:150, x2:200, y2:250}
 		});

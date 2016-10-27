@@ -107,8 +107,6 @@ ludo.calendar.TimePicker = new Class({
     },
 
     notify: function () {
-
-
         /**
          * Mode event, arguments can be "hours" or "minutes"
          * @event ludo.calendar.TimePicker#time

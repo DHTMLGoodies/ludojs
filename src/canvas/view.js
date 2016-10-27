@@ -1,16 +1,16 @@
 /**
- * Base class for Canvas elements. canvas.Element can be handled as
+ * Base class for Canvas elements. canvas.View can be handled as
  * {{#crossLink "canvas.Node"}}{{/crossLink}}, but it extends ludo.Core which
  * make it accessible using ludo.get('id'). The {{#crossLink "canvas.Node"}}{{/crossLink}} object
- * can be accessed using {{#crossLink "canvas.Element/getNode"}}{{/crossLink}}. A canvas.Element
- * object can be adopted to other elements or nodes using the  {{#crossLink "canvas.Element/adopt"}}{{/crossLink}}
+ * can be accessed using {{#crossLink "canvas.View/getNode"}}{{/crossLink}}. A canvas.View
+ * object can be adopted to other elements or nodes using the  {{#crossLink "canvas.View/adopt"}}{{/crossLink}}
  * or  {{#crossLink "canvas.Node/adopt"}}{{/crossLink}} methods.
  * A canvas element contains methods for transformations and other
  * @namespace canvas
  * @class Element
  * @augments ludo.Core
  */
-ludo.canvas.Element = new Class({
+ludo.canvas.View = new Class({
     Extends: ludo.Core,
 
     /**
@@ -73,7 +73,7 @@ ludo.canvas.Element = new Class({
      @param key
      @return {String} value
      @example
-     var element = new ludo.canvas.Element('rect', {
+     var element = new ludo.canvas.View('rect', {
 	 		attr:{x1:100,y1:150,x2:200,y2:250}
 	 	});
      alert(element.get('x1')); // outputs 100
@@ -128,8 +128,8 @@ ludo.canvas.Element = new Class({
     /**
      * Adopt element or node
      * @function adopt
-     * @param {canvas.Element|canvas.Node} node
-     * @return {canvas.Element} parent
+     * @param {canvas.View|canvas.Node} node
+     * @return {canvas.View} parent
      */
     append: function (node) {
         this.node.append(node);
@@ -139,7 +139,7 @@ ludo.canvas.Element = new Class({
     /**
      * Remove text and child nodes from element
      * @function empty
-     * @return {canvas.Element} this
+     * @return {canvas.View} this
      */
     empty: function () {
         this.node.empty();

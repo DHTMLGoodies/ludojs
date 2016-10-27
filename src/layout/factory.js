@@ -26,6 +26,8 @@ ludo.layout.Factory = new Class({
 		if(!view.layout || !view.layout.type)return 'Base';
 
 		switch(view.layout.type.toLowerCase()){
+			case "table":
+				return "Table";
             case 'slidein':
                 return 'SlideIn';
 			case 'relative':

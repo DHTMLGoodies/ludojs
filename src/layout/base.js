@@ -39,7 +39,7 @@ ludo.layout.Base = new Class({
 	addChild:function (child, insertAt, pos) {
         child = this.getValidChild(child);
 		child = this.getNewComponent(child);
-		var parentEl = this.getParentForNewChild();
+		var parentEl = this.getParentForNewChild(child);
 		parentEl = $(parentEl);
 		if (insertAt) {
 			var children = [];
