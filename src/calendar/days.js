@@ -316,12 +316,12 @@ ludo.calendar.Days = new Class({
     },
 
     selectDay:function (e) {
-        var el = e.target;
-        if (!ludo.dom.hasClass(el, 'calendar-day')) {
-            el = el.getParent('.calendar-day');
+        var el = $(e.target);
+        if (!el.hasClass('calendar-day')) {
+            el = el.closest('.calendar-day');
             if (!el)return;
         }
-        if (ludo.dom.hasClass(el, 'calendar-day-inactive')) {
+        if (el.hasClass('calendar-day-inactive')) {
             return;
         }
         this.removeClsFromSelectedDay();

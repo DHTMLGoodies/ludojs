@@ -1,39 +1,25 @@
 /**
- * Super class for form components.
+ * Super class for form Views.
+ * This class inherits from <a href="ludo.View.html">ludo.View</a>.
  * @namespace ludo.form
  * @class ludo.form.Element
- * @augments ludo.View
+ * @param {Object} config Configuration when creating the View. These properties and properties from superclass is available
+ * @param {String} config.name Name of element. A call to parentView.getForm().values() will return &lt;name> : &lt;value>.
+ * @param {Boolean} config.required True to apply validation for required. Default:false
+ * @param {Object} config.formCss Optional css styling of the form element. Example: { type:'form.Text', formCss:{ "text-align": right }} to right align text of a text input.
+ * @param {Function} config.validator A Validator function to be executed when value is changed. This function should return true when valid, false when invalid. Current value will be passed to this function.
+ * Example: { type:'form.Text', placeHolder='Enter Valid Value', validator:function(value){ return value == 'Valid Value' } }
+ *
  */
 ludo.form.Element = new Class({
     Extends:ludo.View,
-	/**
-	 * Form element label
-	 * @config {String} label
-	 * @default ''
-	 */
-    label:undefined,
-	/**
-	 * Label after input field
-	 * @config {String} suffix
-	 *
-	 */
-	suffix:'',
-
     /**
      * Initial value
      * @config {String|Number} value
      * @default undefined
      */
     value:undefined,
-
     onLoadMessage:'',
-
-    /**
-     * Width of label
-     * @attribute labelWidth
-     * @default 100
-     */
-    labelWidth:100,
     /**
      * "name" is inherited from ludo.View. It will also be set as name of input element
      * @attribute name
@@ -41,13 +27,6 @@ ludo.form.Element = new Class({
      * @default undefined
      */
     name:undefined,
-    /**
-     * Width of input element
-     * @attribute fieldWidth
-     * @type int
-     * @default undefined
-     */
-    fieldWidth:undefined,
 
     /**
      * Custom CSS rules to apply to input element
@@ -58,21 +37,7 @@ ludo.form.Element = new Class({
      * @default undefined
      */
     formCss:undefined,
-    /**
-     * Let input field use all remaining space of the component
-     * @attribute stretchField
-     * @type {Boolean}
-     * @default true
-     */
     stretchField:true,
-
-
-    /**
-     * Is a value required for this field
-     * @attribute required
-     * @type {Boolean}
-     * @default false
-     */
     required:false,
     dirtyFlag:false,
     initialValue:undefined,
@@ -134,20 +99,18 @@ ludo.form.Element = new Class({
     validatorFn:undefined,
 
     validators:[],
+    submittable:true,
 
     ludoConfig:function (config) {
         this.parent(config);
         var defaultConfig = this.getInheritedFormConfig();
-        this.labelWidth = defaultConfig.labelWidth || this.labelWidth;
-        this.fieldWidth = defaultConfig.fieldWidth || this.fieldWidth;
-        this.inlineLabel = defaultConfig.inlineLabel || this.inlineLabel;
 
         // TODO change disabled to enabled
-        var keys = ['label', 'suffix', 'formCss', 'validator', 'stretchField', 'required', 'twin', 'disabled', 'labelWidth', 'fieldWidth',
+        var keys = ['label', 'suffix', 'formCss', 'validator', 'stretchField', 'required', 'twin', 'disabled','submittable',
             'value', 'data'];
         this.setConfigParams(config, keys);
 
-        this.elementId = 'el-' + this.id;
+        this.elementId = ('el-' + this.id).trim();
         this.formCss = defaultConfig.formCss || this.formCss;
         if (defaultConfig.height && config.height === undefined)this.layout.height = defaultConfig.height;
 
@@ -170,7 +133,10 @@ ludo.form.Element = new Class({
         this.applyValidatorFns(['twin']);
     },
 
-
+    ludoDOM:function(){
+        this.parent();
+        this.addInput();
+    },
 
     applyValidatorFns:function (keys) {
         for (var i = 0; i < keys.length; i++) {
@@ -206,6 +172,7 @@ ludo.form.Element = new Class({
         }
 
         var formEl = this.getFormEl();
+
         if (formEl) {
             formEl.on('keydown', this.keyDown.bind(this));
             formEl.on('keypress', this.keyPress.bind(this));
@@ -274,10 +241,6 @@ ludo.form.Element = new Class({
         this.parent();
         this.getEl().addClass('ludo-form-element');
         if (this.els.formEl) {
-            if (this.fieldWidth) {
-                this.els.formEl.css('width', (this.fieldWidth - ludo.dom.getPW(this.els.formEl) - ludo.dom.getBW(this.els.formEl)));
-            }
-
             this.els.formEl.id = this.elementId;
 
             if (this.formCss) {
@@ -292,10 +255,7 @@ ludo.form.Element = new Class({
 
     getWidth:function () {
         var ret = this.parent();
-
-        var f = this.fieldWidth ? this.fieldWidth : 0;
-        
-        return ret ? ret : f + (this.label ? this.labelWidth : 0) + 2;
+        return ret ? ret : 20;
     },
 
     keyUp:function (e) {
@@ -332,7 +292,6 @@ ludo.form.Element = new Class({
     },
 
     focus:function () {
-
         this._focus = true;
         this.clearInvalid();
         /**
@@ -345,7 +304,8 @@ ludo.form.Element = new Class({
     },
     change:function () {
         if (this.els.formEl) {
-            this.val(this.els.formEl.val());
+            this._set(this.els.formEl.val());
+
         }
         /**
          * On change event. This event is fired when value is changed manually
@@ -438,10 +398,8 @@ ludo.form.Element = new Class({
 
     _set:function(value){
 
-        
-
         if (!this.isReady) {
-            if(value)this.setValue.delay(50, this, value);
+            if(value)this._set.delay(50, this, value);
             return;
         }
 
@@ -669,8 +627,35 @@ ludo.form.Element = new Class({
         }
     },
 
+    addInput: function () {
+        if (!this.inputTag) {
+            return;
+        }
+
+        this.els.inputCell = $('<div class="input-cell"></div>');
+        this.getBody().append(this.els.inputCell);
+        this.els.formEl = $('<' + this.inputTag + '>');
+
+        if (this.inputType) {
+            this.els.formEl.attr('type', this.inputType);
+        }
+        if (this.maxLength) {
+            this.els.formEl.attr('maxlength', this.maxLength);
+        }
+        if (this.readonly) {
+            this.els.formEl.attr('readonly', true);
+        }
+        this.getInputCell().append(this.els.formEl);
+        this.els.formEl.css('width', '100%');
+        this.els.formEl.attr("id", this.getFormElId());
+    },
+
     getLinkWith:function(){
         var cmp = ludo.get(this.linkWith);
         return cmp ? cmp : this.parentComponent ? this.parentComponent.child[this.linkWith] : undefined;
+    },
+
+    getInputCell:function(){
+        return this.els.inputCell;
     }
 });

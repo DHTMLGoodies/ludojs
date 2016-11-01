@@ -6,11 +6,12 @@ TestCase("ViewTest", {
 		dialog.getForm();
 
 		// when
-		dialog.dispose();
+		dialog.remove();
 
 		// then
-		assertUndefined(dialog.getBody());
+		assertNotUndefined(dialog);
 		assertNull(dialog.getEl());
+
 
 		this.assertNoEvents(dialog);
 		this.assertNoEvents(dialog.getLayout());
@@ -32,10 +33,10 @@ TestCase("ViewTest", {
 			}
 		}
 
-		if(obj.getBody && obj.getBody()){
+		if(obj.getBody && obj.els && obj.getBody()){
 			this.assertNoEvents(obj.getBody());
 		}
-		if(obj.getEl && obj.getEl()){
+		if(obj.els && obj.getEl && obj.getEl()){
 			this.assertNoEvents(obj.getEl());
 		}
 	},

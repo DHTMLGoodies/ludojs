@@ -1,15 +1,29 @@
 /**
+ * Text Input View
+ * This class inherits from <a href="ludo.form.Element.html">ludo.form.Element</a>.
  * @namespace ludo.form
- * @class Text
+ * @class ludo.form.Text
  * @description Form input text
- * @augments ludo.form.LabelElement
+ *  @param {Object} config Configuration when creating the View. These properties and properties from superclass is available
+ * @param {String} config.name Name of element. A call to parentView.getForm().values() will return &lt;name> : &lt;value>.
+ * @param {String} config.placeholder Placeholder attribute for the input. Displayed when value is empty. (Default:undefined)
+ * @param {Number} config.minLength Defines required min length of value(count characters). (Default:undefined)
+ * @param {Number} config.maxLength Defines required max length of value(count characters)
+ * @param {Boolean} config.ucFirst True to automatically Uppercase first letter. (Default: false)
+ * @param {RegExp} config.regex Regular expression used for validation, example: regex: /$[0-9]{3}^/ to require 3 digits. (Default:undefined)
+ * @param {Boolean} config.readonly True to make this form field read only. (Default: false)
+ * @param {Boolean} config.selectOnFocus Automatically make the text selected on focus. Default: false
+ * @param {Boolean} config.validateKeyStrokes True to run validation after every key stroke(Default: false)
+ 
+ * @augments ludo.form.Element
  *
  */
 ludo.form.Text = new Class({
-    Extends: ludo.form.LabelElement,
+    Extends: ludo.form.Element,
     type: 'form.Text',
     labelWidth: 100,
     defaultValue: '',
+    placeholder:'',
     /**
      * Max length of input field
      * @attribute maxLength
@@ -44,31 +58,8 @@ ludo.form.Text = new Class({
 
     inputType: 'text',
     inputTag: 'input',
-
-    /**
-     Regular expression used for validation
-     @attribute regex
-     @type RegExp
-     @default undefined
-     @example
-     regex:'[0-9]'
-     This will only validate numbers
-     */
     regex: undefined,
-
-    /**
-     Run RegEx validation on key strokes. Only keys matching "regex" will be added to the text field.
-     @property validateKeyStrokes
-     @type {Boolean}
-     @default false
-     */
     validateKeyStrokes: false,
-
-    /**
-     * current pixel width of form element
-     * @property int
-     * @private
-     */
     formFieldWidth: undefined,
 
     /**
@@ -77,19 +68,12 @@ ludo.form.Text = new Class({
      * @default false
      */
     readonly: false,
-
-    /**
-     * On focus, auto select text of input field.
-     * @attribute selectOnFocus
-     * @type {Boolean}
-     * @default false
-     */
     selectOnFocus: false,
 
 
     ludoConfig: function (config) {
         this.parent(config);
-        var keys = ['selectOnFocus', 'regex', 'minLength', 'maxLength', 'defaultValue', 'validateKeyStrokes', 'ucFirst', 'ucWords', 'readonly'];
+        var keys = ['placeholder', 'selectOnFocus', 'regex', 'minLength', 'maxLength', 'defaultValue', 'validateKeyStrokes', 'ucFirst', 'ucWords', 'readonly'];
         this.setConfigParams(config, keys);
         if (this.regex && ludo.util.isString(this.regex)) {
             var tokens = this.regex.split(/\//g);
@@ -97,6 +81,14 @@ ludo.form.Text = new Class({
             this.regex = new RegExp(tokens.join('/'), flags);
         }
         this.applyValidatorFns(['minLength', 'maxLength', 'regex']);
+    },
+
+    ludoDOM:function(){
+        this.parent();
+        if(this.placeholder){
+            console.log(this.getFormEl());
+            this.getFormEl().attr('placeholder', this.placeholder);
+        }
     },
 
     ludoEvents: function () {

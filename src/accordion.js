@@ -1,4 +1,5 @@
 /**
+ * TODO Accordion should be a layout
  * @class Accordion
  * @augments FramedView
  * @description Accordion component

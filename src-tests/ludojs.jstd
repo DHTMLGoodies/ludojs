@@ -1,6 +1,4 @@
 load:
-  - ../mootools/Mootools-Core-1.6.0.js
-  - ../mootools/Mootools-More-1.6.0.js
   - ../jquery/jquery-3.1.0.min.js
   - ../js/ludojs.js
   - ../src/assets.js
@@ -22,7 +20,6 @@ test:
   - layout/*.js
   - misc/*.js
   - remote/*.js
-  - socket/*.js
   - store/*.js
   - view/*.js
   - chart/*.js

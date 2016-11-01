@@ -1,5 +1,5 @@
 /**
- * A customized text input only allowing numeric characters
+ * A <a href="ludo.form.Text.html">ludo.form.Text</a> field accepting only numeric characters.
  * @namespace ludo.form
  * @class ludo.form.Number
  * @augments ludo.form.Text
@@ -84,7 +84,9 @@ ludo.form.Number = new Class({
     },
 
     _mouseWheel:function (e) {
-        this.incrementBy(e.wheel > 0 ? Math.ceil(e.wheel) : Math.floor(e.wheel), e.shift);	// Math.ceil because of a mystery error in either firefox or mootools
+        var delta = (e.originalEvent.wheelDelta || e.originalEvent.detail) / 120;
+        if(delta == 0)return;
+        this.incrementBy(delta >0 ? 1 : -1, e.shift);	// Math.ceil because of a mystery error in either firefox or mootools
         return false;
     },
     /**
@@ -94,6 +96,14 @@ ludo.form.Number = new Class({
      * @param {Boolean} shift
      */
     incrementBy:function (value, shift) {
+        if(!this.value){
+            if(this.minValue){
+                this._set(this.minValue);
+                return;
+            }
+            this._set(0);
+        }
+
         if(this.reverseWheel)value = value * -1;
         value = parseInt(this.value) + (shift ? value * this.shiftIncrement : value);
         if(this.maxValue && value > this.maxValue)value = this.maxValue;

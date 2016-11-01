@@ -100,7 +100,7 @@ ludo.util = {
 		for (var name in view.els) {
 			if (view.els.hasOwnProperty(name)) {
 				if (view.els[name] && view.els[name].tagName && name != 'parent') {
-					view.els[name].dispose();
+					view.els[name].remove();
 					if(view.els[name].removeEvents)view.els[name].removeEvents();
 				}
 			}
@@ -108,7 +108,7 @@ ludo.util = {
 
 		ludo.CmpMgr.deleteComponent(view);
 
-		view.els = undefined;
+		view.els = {};
 	},
 
 	disposeDependencies:function(deps){

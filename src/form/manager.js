@@ -135,7 +135,7 @@ ludo.form.Manager = new Class({
 			if (c['getProgressBarId'] !== undefined) {
 				this.registerProgressBar(c);
 			}
-			else if (c.isFormElement()) {
+			else if (c.isFormElement() && c.submittable) {
 				this.registerFormElement(c);
 			}
 		}

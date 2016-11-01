@@ -132,9 +132,9 @@ ludo.calendar.Calendar = new Class({
         for(var i=0;i<this.children.length;i++){
             var c = this.children[i];
             c.setDate(this.date);
-            c.setValue(this.date);
+            c.val(this.date);
             c.addEvent('setdate', this.setDate.bind(this));
-            c.addEvent('change', this.setValue.bind(this));
+            c.addEvent('change', this.val.bind(this));
         }
 		this.getLayout().resize();
     }

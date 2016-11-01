@@ -33,6 +33,9 @@ ludo.form.LabelElement = new Class({
         this.parent(config);
         this.setConfigParams(config, ['inlineLabel', 'labelSuffix']);
         if (!this.supportsInlineLabel())this.inlineLabel = undefined;
+
+        console.warn("Use of deprecated ancestor ludo.form.LabelElement");
+        console.trace();
     },
 
     ludoEvents: function () {

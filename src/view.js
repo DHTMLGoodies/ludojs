@@ -23,6 +23,7 @@
  @param {String} config.name When set, you can access it by calling parentView.child["&lt;childName>"]
  @param {String} config.title Title of this view. If the view is a child in tab layout, the title will be displayed on the Tab
  @param {String} config.tpl A template for string when inserting JSON Content(the insertJSON method), example: "name:{firstname} {lastname}<br>"
+ @param {Boolean} config.alwaysInFront True to make this view always appear in front of the other views.
  // TODO describe data sources
  @example {@lang Javascript}
 	// Example 1: View render to &lt;body> tag
@@ -58,10 +59,7 @@ ludo.View = new Class({
 	resizable:false,
 	alwaysInFront:false,
 	statefulProperties:['layout'],
-
-	els:{
-
-	},
+	els:{ },
 	state:{},
 
 	defaultDS : 'dataSource.JSON',
@@ -85,14 +83,9 @@ ludo.View = new Class({
 	formConfig:undefined,
 	isRendered:false,
 	unRenderedChildren:[],
-
-
 	frame:false,
-
 	form:undefined,
-
 	layout:undefined,
-
 	tpl:'',
 	/**
 	 * Default config for ludo.tpl.Parser. ludo.tpl.Parser is a JSON parser which
@@ -179,9 +172,7 @@ ludo.View = new Class({
 		 * @param Component this
 		 */
 		this.fireEvent('render', this);
-		
 	},
-
 	/**
 	 * First life cycle step when creating and object
 	 * @function ludoConfig
@@ -205,12 +196,6 @@ ludo.View = new Class({
 		}
 		if(config.html != undefined)this._html = config.html;
 		this.setConfigParams(config, keys);
-
-		if (this.socket) {
-			if (!this.socket.type)this.socket.type = 'socket.Socket';
-			this.socket.component = this;
-			this.socket = this.createDependency('socket', this.socket);
-		}
 
 		if (this.renderTo)this.renderTo = $(this.renderTo);
 
@@ -322,7 +307,7 @@ ludo.View = new Class({
 	},
 
 	insertJSON:function (data) {
-		console.warn("Use of deprecated insertJOSN");
+		console.warn("Use of deprecated insertJSON");
 		if (this.tpl) {
 			this.getBody().html(this.getTplParser().asString(data, this.tpl));
 		}
@@ -646,10 +631,10 @@ ludo.View = new Class({
 	},
 
 	/**
-	 Resize View and it's children. Example:
+	 Resize View and it's children.
 	 @function resize
 	 @memberof ludo.View.prototype
-	 @param {Object} config
+	 @param {Object} config Object with optional width and height properties. Example: { width: 200, height: 100 }
 	 @example
 	 view.resize(
 	 { width: 200, height:200 }
@@ -746,7 +731,6 @@ ludo.View = new Class({
 
 	cachedInnerHeight:undefined,
 	resizeDOM:function () {
-
 		if (this.layout.pixelHeight > 0) {
 			var height = this.layout.pixelHeight ? this.layout.pixelHeight - ludo.dom.getMBPH(this.els.container) : this.els.container.css('height').replace('px', '');
 			height -= ludo.dom.getMBPH(this.els.body);
@@ -956,10 +940,6 @@ ludo.View = new Class({
 
 	getHeightOfButtonBar:function () {
 		return 0;
-	},
-
-	getSocket:function () {
-		return this.socket;
 	},
 
 	canvas:undefined,

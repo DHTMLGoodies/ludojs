@@ -1,6 +1,6 @@
 <?php
 $sub = true;
-$pageTitle = 'Example of ludo form components';
+$pageTitle = 'Seekbar Demo';
 require_once("../includes/demo-header.php");
 ?>
 <body>
@@ -61,7 +61,6 @@ require_once("../includes/demo-header.php");
         layout: {
             // for this demo, the demo it's self will be displayed in one tab and the source code in a second tab
             type: 'tabs'
-
         },
         css: {
             'border-top': 0
@@ -77,7 +76,6 @@ require_once("../includes/demo-header.php");
         children: [
             {
                 title: 'Seekbar Demo', // Tab title
-
                 layout: {
                     height: 'matchParent',
                     width: 'matchParent',
@@ -92,12 +90,11 @@ require_once("../includes/demo-header.php");
 
                     {
                         id: 'red', // id of view for easy access using ludo.get('red') later
-                        reverse:true,
                         minValue:0,maxValue:255, // Min value set to 0, max set to 255
                         thumbColor:'#D32F2F', // Red color of seekbar thumb
                         negativeColor:'#D32F2F', // Same red color on the seekbar(below thumb)
                         type: 'form.Seekbar', // Type of view is form.Seekbar
-                        stateful:true, // value will be saved, i.e. saved
+                        stateful:true, // value will be preserved after browser refresh.
                         value:100, // Sets a default red value of 100
                         css:{
                             'padding-left': 5,'padding-right':5 // some space between the seekbars
@@ -154,7 +151,6 @@ require_once("../includes/demo-header.php");
                             orientation:'vertical' // beneath each other
                         },
                         children:[
-
                             {
                                 id:'preview', // This view will be updated with a background color of the three seekbars
                                 layout:{
@@ -184,11 +180,9 @@ require_once("../includes/demo-header.php");
                             }
                         ]
                     }
-
                 ]
-
-
             }, {
+                // Custom View for this demo showing the source code.
                 type: 'SourceCodePreview' 
             }
         ]

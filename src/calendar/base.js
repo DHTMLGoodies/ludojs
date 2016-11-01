@@ -38,7 +38,7 @@ ludo.calendar.Base = new Class({
         this.fireEvent('setdate', [this.date, this]);
     },
 
-    setValue:function(){
+    val:function(){
 
     }
 });

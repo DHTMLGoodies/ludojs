@@ -13,7 +13,7 @@
  * @param {number} config.negativeColor color of seekbar line below(vertical) and left(horizontal mode), default: #888
  * @param {number} config.positiveColor color of seekbar line above(vertical) and right of(horizontal mode), default: #CCC
  * @param {number} config.thumbColor Color of thumb, default: #888
- * @param {number} config.thumbAlpha Alpha(opacity) of thumb in range 0-1, default: 1
+ * @param {number} config.thumbAlpha Alpha(opacity) of thumb in range 0-1 while dragging, default: 1
  * @param {number} config.barSize Size(height or width) of bar in pixels, default: 2
  * @param {number} config.needleSize Fraction size of of needle(circle inside thumb) relative to thumb size, default: 0.2
  *
@@ -82,7 +82,6 @@ ludo.form.Seekbar = new Class({
         this.parent(config);
         this.setConfigParams(config, ["orientation", "reverse", "minValue", "maxValue", "value", "valueListener", "negativeColor", "positiveColor", "needleSize", "barSize"]);
 
-
         if (config.thumbColor != undefined) {
             if (config.thumbColor.length == 9) {
                 var alpha = config.thumbColor.substr(1, 2);
@@ -134,13 +133,9 @@ ludo.form.Seekbar = new Class({
         this.eventEl.on("click", this.clickOnBar.bind(this));
 
 
-        this.thumb.on("mousedown", this.startDragging.bind(this));
-        this.thumb.on("touchstart", this.startDragging.bind(this));
-
-        $(document.documentElement).on("touchmove", this.drag.bind(this));
-        $(document.documentElement).on("mousemove", this.drag.bind(this));
-        $(document.documentElement).on("mouseup", this.endDrag.bind(this));
-        $(document.documentElement).on("touchend", this.endDrag.bind(this));
+        this.thumb.on(ludo.util.getDragStartEvent(), this.startDragging.bind(this));
+        $(document.documentElement).on(ludo.util.getDragMoveEvent(), this.drag.bind(this));
+        $(document.documentElement).on(ludo.util.getDragEndEvent(), this.endDrag.bind(this));
 
     },
 
@@ -226,7 +221,6 @@ ludo.form.Seekbar = new Class({
         this.thumbInner.css({
             width: needleSize, height: needleSize, borderRadius: needleSize / 2, left: pos, top: pos
         });
-
 
         this.valueArea.min = this.thumbSize / 2;
         this.valueArea.max = size - this.thumbSize / 2;

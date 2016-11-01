@@ -1,4 +1,4 @@
-/* Generated Thu Oct 27 12:49:09 CEST 2016 */
+/* Generated Tue Nov 1 14:56:30 CET 2016 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -19,6 +19,2301 @@ written by Alf Magne Kalleland.
 Alf Magne Kalleland, 2016
 Owner of ludoJS.com
 ************************************************************************************************************/
+/* ../ludojs/src/../mootools/MooTools-Core-1.6.0.js */
+/* MooTools: the javascript framework. license: MIT-style license. copyright: Copyright (c) 2006-2016 [Valerio Proietti](http://mad4milk.net/).*/ 
+/*!
+Web Build: http://mootools.net/core/builder/e7289bd0058c6790cb2b769822285f97
+*/
+/*
+---
+
+name: Core
+
+description: The heart of MooTools.
+
+license: MIT-style license.
+
+copyright: Copyright (c) 2006-2015 [Valerio Proietti](http://mad4milk.net/).
+
+authors: The MooTools production team (http://mootools.net/developers/)
+
+inspiration:
+  - Class implementation inspired by [Base.js](http://dean.edwards.name/weblog/2006/03/base/) Copyright (c) 2006 Dean Edwards, [GNU Lesser General Public License](http://opensource.org/licenses/lgpl-license.php)
+  - Some functionality inspired by [Prototype.js](http://prototypejs.org) Copyright (c) 2005-2007 Sam Stephenson, [MIT License](http://opensource.org/licenses/mit-license.php)
+
+provides: [Core, MooTools, Type, typeOf, instanceOf, Native]
+
+...
+*/
+/*! MooTools: the javascript framework. license: MIT-style license. copyright: Copyright (c) 2006-2015 [Valerio Proietti](http://mad4milk.net/).*/
+(function(){
+
+this.MooTools = {
+	version: '1.6.0',
+	build: '529422872adfff401b901b8b6c7ca5114ee95e2b'
+};
+
+// typeOf, instanceOf
+
+var typeOf = this.typeOf = function(item){
+	if (item == null) return 'null';
+	if (item.$family != null) return item.$family();
+
+	if (item.nodeName){
+		if (item.nodeType == 1) return 'element';
+		if (item.nodeType == 3) return (/\S/).test(item.nodeValue) ? 'textnode' : 'whitespace';
+	} else if (typeof item.length == 'number'){
+		if ('callee' in item) return 'arguments';
+		if ('item' in item) return 'collection';
+	}
+
+	return typeof item;
+};
+
+var instanceOf = this.instanceOf = function(item, object){
+	if (item == null) return false;
+	var constructor = item.$constructor || item.constructor;
+	while (constructor){
+		if (constructor === object) return true;
+		constructor = constructor.parent;
+	}
+	/*<ltIE8>*/
+	if (!item.hasOwnProperty) return false;
+	/*</ltIE8>*/
+	return item instanceof object;
+};
+
+var hasOwnProperty = Object.prototype.hasOwnProperty;
+
+/*<ltIE8>*/
+var enumerables = true;
+for (var i in {toString: 1}) enumerables = null;
+if (enumerables) enumerables = ['hasOwnProperty', 'valueOf', 'isPrototypeOf', 'propertyIsEnumerable', 'toLocaleString', 'toString', 'constructor'];
+function forEachObjectEnumberableKey(object, fn, bind){
+	if (enumerables) for (var i = enumerables.length; i--;){
+		var k = enumerables[i];
+		// signature has key-value, so overloadSetter can directly pass the
+		// method function, without swapping arguments.
+		if (hasOwnProperty.call(object, k)) fn.call(bind, k, object[k]);
+	}
+}
+/*</ltIE8>*/
+
+// Function overloading
+
+var Function = this.Function;
+
+Function.prototype.overloadSetter = function(usePlural){
+	var self = this;
+	return function(a, b){
+		if (a == null) return this;
+		if (usePlural || typeof a != 'string'){
+			for (var k in a) self.call(this, k, a[k]);
+			/*<ltIE8>*/
+			forEachObjectEnumberableKey(a, self, this);
+			/*</ltIE8>*/
+		} else {
+			self.call(this, a, b);
+		}
+		return this;
+	};
+};
+
+Function.prototype.overloadGetter = function(usePlural){
+	var self = this;
+	return function(a){
+		var args, result;
+		if (typeof a != 'string') args = a;
+		else if (arguments.length > 1) args = arguments;
+		else if (usePlural) args = [a];
+		if (args){
+			result = {};
+			for (var i = 0; i < args.length; i++) result[args[i]] = self.call(this, args[i]);
+		} else {
+			result = self.call(this, a);
+		}
+		return result;
+	};
+};
+
+Function.prototype.extend = function(key, value){
+	this[key] = value;
+}.overloadSetter();
+
+Function.prototype.implement = function(key, value){
+	this.prototype[key] = value;
+}.overloadSetter();
+
+// From
+
+var slice = Array.prototype.slice;
+
+Array.convert = function(item){
+	if (item == null) return [];
+	return (Type.isEnumerable(item) && typeof item != 'string') ? (typeOf(item) == 'array') ? item : slice.call(item) : [item];
+};
+
+Function.convert = function(item){
+	return (typeOf(item) == 'function') ? item : function(){
+		return item;
+	};
+};
+
+
+Number.convert = function(item){
+	var number = parseFloat(item);
+	return isFinite(number) ? number : null;
+};
+
+String.convert = function(item){
+	return item + '';
+};
+
+
+
+Function.from = Function.convert;
+Number.from = Number.convert;
+String.from = String.convert;
+
+// hide, protect
+
+Function.implement({
+
+	hide: function(){
+		this.$hidden = true;
+		return this;
+	},
+
+	protect: function(){
+		this.$protected = true;
+		return this;
+	}
+
+});
+
+// Type
+
+var Type = this.Type = function(name, object){
+	if (name){
+		var lower = name.toLowerCase();
+		var typeCheck = function(item){
+			return (typeOf(item) == lower);
+		};
+
+		Type['is' + name] = typeCheck;
+		if (object != null){
+			object.prototype.$family = (function(){
+				return lower;
+			}).hide();
+			
+		}
+	}
+
+	if (object == null) return null;
+
+	object.extend(this);
+	object.$constructor = Type;
+	object.prototype.$constructor = object;
+
+	return object;
+};
+
+var toString = Object.prototype.toString;
+
+Type.isEnumerable = function(item){
+	return (item != null && typeof item.length == 'number' && toString.call(item) != '[object Function]' );
+};
+
+var hooks = {};
+
+var hooksOf = function(object){
+	var type = typeOf(object.prototype);
+	return hooks[type] || (hooks[type] = []);
+};
+
+var implement = function(name, method){
+	if (method && method.$hidden) return;
+
+	var hooks = hooksOf(this);
+
+	for (var i = 0; i < hooks.length; i++){
+		var hook = hooks[i];
+		if (typeOf(hook) == 'type') implement.call(hook, name, method);
+		else hook.call(this, name, method);
+	}
+
+	var previous = this.prototype[name];
+	if (previous == null || !previous.$protected) this.prototype[name] = method;
+
+	if (this[name] == null && typeOf(method) == 'function') extend.call(this, name, function(item){
+		return method.apply(item, slice.call(arguments, 1));
+	});
+};
+
+var extend = function(name, method){
+	if (method && method.$hidden) return;
+	var previous = this[name];
+	if (previous == null || !previous.$protected) this[name] = method;
+};
+
+Type.implement({
+
+	implement: implement.overloadSetter(),
+
+	extend: extend.overloadSetter(),
+
+	alias: function(name, existing){
+		implement.call(this, name, this.prototype[existing]);
+	}.overloadSetter(),
+
+	mirror: function(hook){
+		hooksOf(this).push(hook);
+		return this;
+	}
+
+});
+
+new Type('Type', Type);
+
+// Default Types
+
+var force = function(name, object, methods){
+	var isType = (object != Object),
+		prototype = object.prototype;
+
+	if (isType) object = new Type(name, object);
+
+	for (var i = 0, l = methods.length; i < l; i++){
+		var key = methods[i],
+			generic = object[key],
+			proto = prototype[key];
+
+		if (generic) generic.protect();
+		if (isType && proto) object.implement(key, proto.protect());
+	}
+
+	if (isType){
+		var methodsEnumerable = prototype.propertyIsEnumerable(methods[0]);
+		object.forEachMethod = function(fn){
+			if (!methodsEnumerable) for (var i = 0, l = methods.length; i < l; i++){
+				fn.call(prototype, prototype[methods[i]], methods[i]);
+			}
+			for (var key in prototype) fn.call(prototype, prototype[key], key);
+		};
+	}
+
+	return force;
+};
+
+force('String', String, [
+	'charAt', 'charCodeAt', 'concat', 'contains', 'indexOf', 'lastIndexOf', 'match', 'quote', 'replace', 'search',
+	'slice', 'split', 'substr', 'substring', 'trim', 'toLowerCase', 'toUpperCase'
+])('Array', Array, [
+	'pop', 'push', 'reverse', 'shift', 'sort', 'splice', 'unshift', 'concat', 'join', 'slice',
+	'indexOf', 'lastIndexOf', 'filter', 'forEach', 'every', 'map', 'some', 'reduce', 'reduceRight', 'contains'
+])('Number', Number, [
+	'toExponential', 'toFixed', 'toLocaleString', 'toPrecision'
+])('Function', Function, [
+	'apply', 'call', 'bind'
+])('RegExp', RegExp, [
+	'exec', 'test'
+])('Object', Object, [
+	'create', 'defineProperty', 'defineProperties', 'keys',
+	'getPrototypeOf', 'getOwnPropertyDescriptor', 'getOwnPropertyNames',
+	'preventExtensions', 'isExtensible', 'seal', 'isSealed', 'freeze', 'isFrozen'
+])('Date', Date, ['now']);
+
+Object.extend = extend.overloadSetter();
+
+Date.extend('now', function(){
+	return +(new Date);
+});
+
+new Type('Boolean', Boolean);
+
+// fixes NaN returning as Number
+
+Number.prototype.$family = function(){
+	return isFinite(this) ? 'number' : 'null';
+}.hide();
+
+// Number.random
+
+Number.extend('random', function(min, max){
+	return Math.floor(Math.random() * (max - min + 1) + min);
+});
+
+// forEach, each, keys
+
+Array.implement({
+
+	/*<!ES5>*/
+	forEach: function(fn, bind){
+		for (var i = 0, l = this.length; i < l; i++){
+			if (i in this) fn.call(bind, this[i], i, this);
+		}
+	},
+	/*</!ES5>*/
+
+	each: function(fn, bind){
+		Array.forEach(this, fn, bind);
+		return this;
+	}
+
+});
+
+Object.extend({
+
+	keys: function(object){
+		var keys = [];
+		for (var k in object){
+			if (hasOwnProperty.call(object, k)) keys.push(k);
+		}
+		/*<ltIE8>*/
+		forEachObjectEnumberableKey(object, function(k){
+			keys.push(k);
+		});
+		/*</ltIE8>*/
+		return keys;
+	},
+
+	forEach: function(object, fn, bind){
+		Object.keys(object).forEach(function(key){
+			fn.call(bind, object[key], key, object);
+		});
+	}
+
+});
+
+Object.each = Object.forEach;
+
+
+// Array & Object cloning, Object merging and appending
+
+var cloneOf = function(item){
+	switch (typeOf(item)){
+		case 'array': return item.clone();
+		case 'object': return Object.clone(item);
+		default: return item;
+	}
+};
+
+Array.implement('clone', function(){
+	var i = this.length, clone = new Array(i);
+	while (i--) clone[i] = cloneOf(this[i]);
+	return clone;
+});
+
+var mergeOne = function(source, key, current){
+	switch (typeOf(current)){
+		case 'object':
+			if (typeOf(source[key]) == 'object') Object.merge(source[key], current);
+			else source[key] = Object.clone(current);
+			break;
+		case 'array': source[key] = current.clone(); break;
+		default: source[key] = current;
+	}
+	return source;
+};
+
+Object.extend({
+
+	merge: function(source, k, v){
+		if (typeOf(k) == 'string') return mergeOne(source, k, v);
+		for (var i = 1, l = arguments.length; i < l; i++){
+			var object = arguments[i];
+			for (var key in object) mergeOne(source, key, object[key]);
+		}
+		return source;
+	},
+
+	clone: function(object){
+		var clone = {};
+		for (var key in object) clone[key] = cloneOf(object[key]);
+		return clone;
+	},
+
+	append: function(original){
+		for (var i = 1, l = arguments.length; i < l; i++){
+			var extended = arguments[i] || {};
+			for (var key in extended) original[key] = extended[key];
+		}
+		return original;
+	}
+
+});
+
+// Object-less types
+
+['Object', 'WhiteSpace', 'TextNode', 'Collection', 'Arguments'].each(function(name){
+	new Type(name);
+});
+
+// Unique ID
+
+var UID = Date.now();
+
+String.extend('uniqueID', function(){
+	return (UID++).toString(36);
+});
+
+
+
+})();
+
+/*
+---
+
+name: Array
+
+description: Contains Array Prototypes like each, contains, and erase.
+
+license: MIT-style license.
+
+requires: [Type]
+
+provides: Array
+
+...
+*/
+
+Array.implement({
+
+	/*<!ES5>*/
+	every: function(fn, bind){
+		for (var i = 0, l = this.length >>> 0; i < l; i++){
+			if ((i in this) && !fn.call(bind, this[i], i, this)) return false;
+		}
+		return true;
+	},
+
+	filter: function(fn, bind){
+		var results = [];
+		for (var value, i = 0, l = this.length >>> 0; i < l; i++) if (i in this){
+			value = this[i];
+			if (fn.call(bind, value, i, this)) results.push(value);
+		}
+		return results;
+	},
+
+	indexOf: function(item, from){
+		var length = this.length >>> 0;
+		for (var i = (from < 0) ? Math.max(0, length + from) : from || 0; i < length; i++){
+			if (this[i] === item) return i;
+		}
+		return -1;
+	},
+
+	map: function(fn, bind){
+		var length = this.length >>> 0, results = Array(length);
+		for (var i = 0; i < length; i++){
+			if (i in this) results[i] = fn.call(bind, this[i], i, this);
+		}
+		return results;
+	},
+
+	some: function(fn, bind){
+		for (var i = 0, l = this.length >>> 0; i < l; i++){
+			if ((i in this) && fn.call(bind, this[i], i, this)) return true;
+		}
+		return false;
+	},
+	/*</!ES5>*/
+
+	clean: function(){
+		return this.filter(function(item){
+			return item != null;
+		});
+	},
+
+	invoke: function(methodName){
+		var args = Array.slice(arguments, 1);
+		return this.map(function(item){
+			return item[methodName].apply(item, args);
+		});
+	},
+
+	associate: function(keys){
+		var obj = {}, length = Math.min(this.length, keys.length);
+		for (var i = 0; i < length; i++) obj[keys[i]] = this[i];
+		return obj;
+	},
+
+	link: function(object){
+		var result = {};
+		for (var i = 0, l = this.length; i < l; i++){
+			for (var key in object){
+				if (object[key](this[i])){
+					result[key] = this[i];
+					delete object[key];
+					break;
+				}
+			}
+		}
+		return result;
+	},
+
+	contains: function(item, from){
+		return this.indexOf(item, from) != -1;
+	},
+
+	append: function(array){
+		this.push.apply(this, array);
+		return this;
+	},
+
+	getLast: function(){
+		return (this.length) ? this[this.length - 1] : null;
+	},
+
+	getRandom: function(){
+		return (this.length) ? this[Number.random(0, this.length - 1)] : null;
+	},
+
+	include: function(item){
+		if (!this.contains(item)) this.push(item);
+		return this;
+	},
+
+	combine: function(array){
+		for (var i = 0, l = array.length; i < l; i++) this.include(array[i]);
+		return this;
+	},
+
+	erase: function(item){
+		for (var i = this.length; i--;){
+			if (this[i] === item) this.splice(i, 1);
+		}
+		return this;
+	},
+
+	empty: function(){
+		this.length = 0;
+		return this;
+	},
+
+	flatten: function(){
+		var array = [];
+		for (var i = 0, l = this.length; i < l; i++){
+			var type = typeOf(this[i]);
+			if (type == 'null') continue;
+			array = array.concat((type == 'array' || type == 'collection' || type == 'arguments' || instanceOf(this[i], Array)) ? Array.flatten(this[i]) : this[i]);
+		}
+		return array;
+	},
+
+	pick: function(){
+		for (var i = 0, l = this.length; i < l; i++){
+			if (this[i] != null) return this[i];
+		}
+		return null;
+	},
+
+	hexToRgb: function(array){
+		if (this.length != 3) return null;
+		var rgb = this.map(function(value){
+			if (value.length == 1) value += value;
+			return parseInt(value, 16);
+		});
+		return (array) ? rgb : 'rgb(' + rgb + ')';
+	},
+
+	rgbToHex: function(array){
+		if (this.length < 3) return null;
+		if (this.length == 4 && this[3] == 0 && !array) return 'transparent';
+		var hex = [];
+		for (var i = 0; i < 3; i++){
+			var bit = (this[i] - 0).toString(16);
+			hex.push((bit.length == 1) ? '0' + bit : bit);
+		}
+		return (array) ? hex : '#' + hex.join('');
+	}
+
+});
+
+
+
+/*
+---
+
+name: Function
+
+description: Contains Function Prototypes like create, bind, pass, and delay.
+
+license: MIT-style license.
+
+requires: Type
+
+provides: Function
+
+...
+*/
+
+Function.extend({
+
+	attempt: function(){
+		for (var i = 0, l = arguments.length; i < l; i++){
+			try {
+				return arguments[i]();
+			} catch (e){}
+		}
+		return null;
+	}
+
+});
+
+Function.implement({
+
+	attempt: function(args, bind){
+		try {
+			return this.apply(bind, Array.convert(args));
+		} catch (e){}
+
+		return null;
+	},
+
+	/*<!ES5-bind>*/
+	bind: function(that){
+		var self = this,
+			args = arguments.length > 1 ? Array.slice(arguments, 1) : null,
+			F = function(){};
+
+		var bound = function(){
+			var context = that, length = arguments.length;
+			if (this instanceof bound){
+				F.prototype = self.prototype;
+				context = new F;
+			}
+			var result = (!args && !length)
+				? self.call(context)
+				: self.apply(context, args && length ? args.concat(Array.slice(arguments)) : args || arguments);
+			return context == that ? result : context;
+		};
+		return bound;
+	},
+	/*</!ES5-bind>*/
+
+	pass: function(args, bind){
+		var self = this;
+		if (args != null) args = Array.convert(args);
+		return function(){
+			return self.apply(bind, args || arguments);
+		};
+	},
+
+	delay: function(delay, bind, args){
+		return setTimeout(this.pass((args == null ? [] : args), bind), delay);
+	},
+
+	periodical: function(periodical, bind, args){
+		return setInterval(this.pass((args == null ? [] : args), bind), periodical);
+	}
+
+});
+
+
+
+/*
+---
+
+name: Number
+
+description: Contains Number Prototypes like limit, round, times, and ceil.
+
+license: MIT-style license.
+
+requires: Type
+
+provides: Number
+
+...
+*/
+
+Number.implement({
+
+	limit: function(min, max){
+		return Math.min(max, Math.max(min, this));
+	},
+
+	round: function(precision){
+		precision = Math.pow(10, precision || 0).toFixed(precision < 0 ? -precision : 0);
+		return Math.round(this * precision) / precision;
+	},
+
+	times: function(fn, bind){
+		for (var i = 0; i < this; i++) fn.call(bind, i, this);
+	},
+
+	toFloat: function(){
+		return parseFloat(this);
+	},
+
+	toInt: function(base){
+		return parseInt(this, base || 10);
+	}
+
+});
+
+Number.alias('each', 'times');
+
+(function(math){
+
+var methods = {};
+
+math.each(function(name){
+	if (!Number[name]) methods[name] = function(){
+		return Math[name].apply(null, [this].concat(Array.convert(arguments)));
+	};
+});
+
+Number.implement(methods);
+
+})(['abs', 'acos', 'asin', 'atan', 'atan2', 'ceil', 'cos', 'exp', 'floor', 'log', 'max', 'min', 'pow', 'sin', 'sqrt', 'tan']);
+
+/*
+---
+
+name: String
+
+description: Contains String Prototypes like camelCase, capitalize, test, and toInt.
+
+license: MIT-style license.
+
+requires: [Type, Array]
+
+provides: String
+
+...
+*/
+
+String.implement({
+
+	//<!ES6>
+	contains: function(string, index){
+		return (index ? String(this).slice(index) : String(this)).indexOf(string) > -1;
+	},
+	//</!ES6>
+
+	test: function(regex, params){
+		return ((typeOf(regex) == 'regexp') ? regex : new RegExp('' + regex, params)).test(this);
+	},
+
+	trim: function(){
+		return String(this).replace(/^\s+|\s+$/g, '');
+	},
+
+	clean: function(){
+		return String(this).replace(/\s+/g, ' ').trim();
+	},
+
+	camelCase: function(){
+		return String(this).replace(/-\D/g, function(match){
+			return match.charAt(1).toUpperCase();
+		});
+	},
+
+	hyphenate: function(){
+		return String(this).replace(/[A-Z]/g, function(match){
+			return ('-' + match.charAt(0).toLowerCase());
+		});
+	},
+
+	capitalize: function(){
+		return String(this).replace(/\b[a-z]/g, function(match){
+			return match.toUpperCase();
+		});
+	},
+
+	escapeRegExp: function(){
+		return String(this).replace(/([-.*+?^${}()|[\]\/\\])/g, '\\$1');
+	},
+
+	toInt: function(base){
+		return parseInt(this, base || 10);
+	},
+
+	toFloat: function(){
+		return parseFloat(this);
+	},
+
+	hexToRgb: function(array){
+		var hex = String(this).match(/^#?(\w{1,2})(\w{1,2})(\w{1,2})$/);
+		return (hex) ? hex.slice(1).hexToRgb(array) : null;
+	},
+
+	rgbToHex: function(array){
+		var rgb = String(this).match(/\d{1,3}/g);
+		return (rgb) ? rgb.rgbToHex(array) : null;
+	},
+
+	substitute: function(object, regexp){
+		return String(this).replace(regexp || (/\\?\{([^{}]+)\}/g), function(match, name){
+			if (match.charAt(0) == '\\') return match.slice(1);
+			return (object[name] != null) ? object[name] : '';
+		});
+	}
+
+});
+
+
+
+/*
+---
+
+name: Browser
+
+description: The Browser Object. Contains Browser initialization, Window and Document, and the Browser Hash.
+
+license: MIT-style license.
+
+requires: [Array, Function, Number, String]
+
+provides: [Browser, Window, Document]
+
+...
+*/
+
+(function(){
+
+var document = this.document;
+var window = document.window = this;
+
+var parse = function(ua, platform){
+	ua = ua.toLowerCase();
+	platform = (platform ? platform.toLowerCase() : '');
+
+	// chrome is included in the edge UA, so need to check for edge first,
+	// before checking if it's chrome.
+	var UA = ua.match(/(edge)[\s\/:]([\w\d\.]+)/);
+	if (!UA){
+		UA = ua.match(/(opera|ie|firefox|chrome|trident|crios|version)[\s\/:]([\w\d\.]+)?.*?(safari|(?:rv[\s\/:]|version[\s\/:])([\w\d\.]+)|$)/) || [null, 'unknown', 0];
+	}
+
+	if (UA[1] == 'trident'){
+		UA[1] = 'ie';
+		if (UA[4]) UA[2] = UA[4];
+	} else if (UA[1] == 'crios'){
+		UA[1] = 'chrome';
+	}
+
+	platform = ua.match(/ip(?:ad|od|hone)/) ? 'ios' : (ua.match(/(?:webos|android)/) || ua.match(/mac|win|linux/) || ['other'])[0];
+	if (platform == 'win') platform = 'windows';
+
+	return {
+		extend: Function.prototype.extend,
+		name: (UA[1] == 'version') ? UA[3] : UA[1],
+		version: parseFloat((UA[1] == 'opera' && UA[4]) ? UA[4] : UA[2]),
+		platform: platform
+	};
+};
+
+var Browser = this.Browser = parse(navigator.userAgent, navigator.platform);
+
+if (Browser.name == 'ie' && document.documentMode){
+	Browser.version = document.documentMode;
+}
+
+Browser.extend({
+	Features: {
+		xpath: !!(document.evaluate),
+		air: !!(window.runtime),
+		query: !!(document.querySelector),
+		json: !!(window.JSON)
+	},
+	parseUA: parse
+});
+
+
+
+// Request
+
+Browser.Request = (function(){
+
+	var XMLHTTP = function(){
+		return new XMLHttpRequest();
+	};
+
+	var MSXML2 = function(){
+		return new ActiveXObject('MSXML2.XMLHTTP');
+	};
+
+	var MSXML = function(){
+		return new ActiveXObject('Microsoft.XMLHTTP');
+	};
+
+	return Function.attempt(function(){
+		XMLHTTP();
+		return XMLHTTP;
+	}, function(){
+		MSXML2();
+		return MSXML2;
+	}, function(){
+		MSXML();
+		return MSXML;
+	});
+
+})();
+
+Browser.Features.xhr = !!(Browser.Request);
+
+
+
+// String scripts
+
+Browser.exec = function(text){
+	if (!text) return text;
+	if (window.execScript){
+		window.execScript(text);
+	} else {
+		var script = document.createElement('script');
+		script.setAttribute('type', 'text/javascript');
+		script.text = text;
+		document.head.appendChild(script);
+		document.head.removeChild(script);
+	}
+	return text;
+};
+
+String.implement('stripScripts', function(exec){
+	var scripts = '';
+	var text = this.replace(/<script[^>]*>([\s\S]*?)<\/script>/gi, function(all, code){
+		scripts += code + '\n';
+		return '';
+	});
+	if (exec === true) Browser.exec(scripts);
+	else if (typeOf(exec) == 'function') exec(scripts, text);
+	return text;
+});
+
+// Window, Document
+
+Browser.extend({
+	Document: this.Document,
+	Window: this.Window,
+	Element: this.Element,
+	Event: this.Event
+});
+
+this.Window = this.$constructor = new Type('Window', function(){});
+
+this.$family = Function.convert('window').hide();
+
+Window.mirror(function(name, method){
+	window[name] = method;
+});
+
+this.Document = document.$constructor = new Type('Document', function(){});
+
+document.$family = Function.convert('document').hide();
+
+Document.mirror(function(name, method){
+	document[name] = method;
+});
+
+document.html = document.documentElement;
+if (!document.head) document.head = document.getElementsByTagName('head')[0];
+
+if (document.execCommand) try {
+	document.execCommand('BackgroundImageCache', false, true);
+} catch (e){}
+
+/*<ltIE9>*/
+if (this.attachEvent && !this.addEventListener){
+	var unloadEvent = function(){
+		this.detachEvent('onunload', unloadEvent);
+		document.head = document.html = document.window = null;
+		window = this.Window = document = null;
+	};
+	this.attachEvent('onunload', unloadEvent);
+}
+
+// IE fails on collections and <select>.options (refers to <select>)
+var arrayFrom = Array.convert;
+try {
+	arrayFrom(document.html.childNodes);
+} catch (e){
+	Array.convert = function(item){
+		if (typeof item != 'string' && Type.isEnumerable(item) && typeOf(item) != 'array'){
+			var i = item.length, array = new Array(i);
+			while (i--) array[i] = item[i];
+			return array;
+		}
+		return arrayFrom(item);
+	};
+
+	var prototype = Array.prototype,
+		slice = prototype.slice;
+	['pop', 'push', 'reverse', 'shift', 'sort', 'splice', 'unshift', 'concat', 'join', 'slice'].each(function(name){
+		var method = prototype[name];
+		Array[name] = function(item){
+			return method.apply(Array.convert(item), slice.call(arguments, 1));
+		};
+	});
+}
+/*</ltIE9>*/
+
+
+
+})();
+
+/*
+---
+
+name: Class
+
+description: Contains the Class Function for easily creating, extending, and implementing reusable Classes.
+
+license: MIT-style license.
+
+requires: [Array, String, Function, Number]
+
+provides: Class
+
+...
+*/
+
+(function(){
+
+var Class = this.Class = new Type('Class', function(params){
+	if (instanceOf(params, Function)) params = {initialize: params};
+
+	var newClass = function(){
+		reset(this);
+		if (newClass.$prototyping) return this;
+		this.$caller = null;
+		this.$family = null;
+		var value = (this.initialize) ? this.initialize.apply(this, arguments) : this;
+		this.$caller = this.caller = null;
+		return value;
+	}.extend(this).implement(params);
+
+	newClass.$constructor = Class;
+	newClass.prototype.$constructor = newClass;
+	newClass.prototype.parent = parent;
+
+	return newClass;
+});
+
+var parent = function(){
+	if (!this.$caller) throw new Error('The method "parent" cannot be called.');
+	var name = this.$caller.$name,
+		parent = this.$caller.$owner.parent,
+		previous = (parent) ? parent.prototype[name] : null;
+	if (!previous) throw new Error('The method "' + name + '" has no parent.');
+	return previous.apply(this, arguments);
+};
+
+var reset = function(object){
+	for (var key in object){
+		var value = object[key];
+		switch (typeOf(value)){
+			case 'object':
+				var F = function(){};
+				F.prototype = value;
+				object[key] = reset(new F);
+				break;
+			case 'array': object[key] = value.clone(); break;
+		}
+	}
+	return object;
+};
+
+var wrap = function(self, key, method){
+	if (method.$origin) method = method.$origin;
+	var wrapper = function(){
+		if (method.$protected && this.$caller == null) throw new Error('The method "' + key + '" cannot be called.');
+		var caller = this.caller, current = this.$caller;
+		this.caller = current; this.$caller = wrapper;
+		var result = method.apply(this, arguments);
+		this.$caller = current; this.caller = caller;
+		return result;
+	}.extend({$owner: self, $origin: method, $name: key});
+	return wrapper;
+};
+
+var implement = function(key, value, retain){
+	if (Class.Mutators.hasOwnProperty(key)){
+		value = Class.Mutators[key].call(this, value);
+		if (value == null) return this;
+	}
+
+	if (typeOf(value) == 'function'){
+		if (value.$hidden) return this;
+		this.prototype[key] = (retain) ? value : wrap(this, key, value);
+	} else {
+		Object.merge(this.prototype, key, value);
+	}
+
+	return this;
+};
+
+var getInstance = function(klass){
+	klass.$prototyping = true;
+	var proto = new klass;
+	delete klass.$prototyping;
+	return proto;
+};
+
+Class.implement('implement', implement.overloadSetter());
+
+Class.Mutators = {
+
+	Extends: function(parent){
+		this.parent = parent;
+		this.prototype = getInstance(parent);
+	},
+
+	Implements: function(items){
+		Array.convert(items).each(function(item){
+			var instance = new item;
+			for (var key in instance) implement.call(this, key, instance[key], true);
+		}, this);
+	}
+};
+
+})();
+
+/*
+---
+
+name: Class.Extras
+
+description: Contains Utility Classes that can be implemented into your own Classes to ease the execution of many common tasks.
+
+license: MIT-style license.
+
+requires: Class
+
+provides: [Class.Extras, Chain, Events, Options]
+
+...
+*/
+
+(function(){
+
+this.Chain = new Class({
+
+	$chain: [],
+
+	chain: function(){
+		this.$chain.append(Array.flatten(arguments));
+		return this;
+	},
+
+	callChain: function(){
+		return (this.$chain.length) ? this.$chain.shift().apply(this, arguments) : false;
+	},
+
+	clearChain: function(){
+		this.$chain.empty();
+		return this;
+	}
+
+});
+
+var removeOn = function(string){
+	return string.replace(/^on([A-Z])/, function(full, first){
+		return first.toLowerCase();
+	});
+};
+
+this.Events = new Class({
+
+	$events: {},
+
+	addEvent: function(type, fn, internal){
+		type = removeOn(type);
+
+		
+
+		this.$events[type] = (this.$events[type] || []).include(fn);
+		if (internal) fn.internal = true;
+		return this;
+	},
+
+	addEvents: function(events){
+		for (var type in events) this.addEvent(type, events[type]);
+		return this;
+	},
+
+	fireEvent: function(type, args, delay){
+		type = removeOn(type);
+		var events = this.$events[type];
+		if (!events) return this;
+		args = Array.convert(args);
+		events.each(function(fn){
+			if (delay) fn.delay(delay, this, args);
+			else fn.apply(this, args);
+		}, this);
+		return this;
+	},
+
+	removeEvent: function(type, fn){
+		type = removeOn(type);
+		var events = this.$events[type];
+		if (events && !fn.internal){
+			var index = events.indexOf(fn);
+			if (index != -1) delete events[index];
+		}
+		return this;
+	},
+
+	removeEvents: function(events){
+		var type;
+		if (typeOf(events) == 'object'){
+			for (type in events) this.removeEvent(type, events[type]);
+			return this;
+		}
+		if (events) events = removeOn(events);
+		for (type in this.$events){
+			if (events && events != type) continue;
+			var fns = this.$events[type];
+			for (var i = fns.length; i--;) if (i in fns){
+				this.removeEvent(type, fns[i]);
+			}
+		}
+		return this;
+	}
+
+});
+
+this.Options = new Class({
+
+	setOptions: function(){
+		var options = this.options = Object.merge.apply(null, [{}, this.options].append(arguments));
+		if (this.addEvent) for (var option in options){
+			if (typeOf(options[option]) != 'function' || !(/^on[A-Z]/).test(option)) continue;
+			this.addEvent(option, options[option]);
+			delete options[option];
+		}
+		return this;
+	}
+
+});
+
+})();
+/* ../ludojs/src/../mootools/Mootools-More-1.6.0.js */
+/* MooTools: the javascript framework. license: MIT-style license. copyright: Copyright (c) 2006-2016 [Valerio Proietti](http://mad4milk.net/).*/ 
+/*!
+Web Build: http://mootools.net/more/builder/447324cc9ea6344646513d80fe56da74
+*/
+/*
+---
+
+script: More.js
+
+name: More
+
+description: MooTools More
+
+license: MIT-style license
+
+authors:
+  - Guillermo Rauch
+  - Thomas Aylott
+  - Scott Kyle
+  - Arian Stolwijk
+  - Tim Wienk
+  - Christoph Pojer
+  - Aaron Newton
+  - Jacob Thornton
+
+requires:
+  - Core/MooTools
+
+provides: [MooTools.More]
+
+...
+*/
+
+MooTools.More = {
+	version: '1.6.0',
+	build: '45b71db70f879781a7e0b0d3fb3bb1307c2521eb'
+};
+
+/*
+---
+
+script: Object.Extras.js
+
+name: Object.Extras
+
+description: Extra Object generics, like getFromPath which allows a path notation to child elements.
+
+license: MIT-style license
+
+authors:
+  - Aaron Newton
+
+requires:
+  - Core/Object
+  - MooTools.More
+
+provides: [Object.Extras]
+
+...
+*/
+
+(function(){
+
+var defined = function(value){
+	return value != null;
+};
+
+var hasOwnProperty = Object.prototype.hasOwnProperty;
+
+Object.extend({
+
+	getFromPath: function(source, parts){
+		if (typeof parts == 'string') parts = parts.split('.');
+		for (var i = 0, l = parts.length; i < l; i++){
+			if (hasOwnProperty.call(source, parts[i])) source = source[parts[i]];
+			else return null;
+		}
+		return source;
+	},
+
+	cleanValues: function(object, method){
+		method = method || defined;
+		for (var key in object) if (!method(object[key])){
+			delete object[key];
+		}
+		return object;
+	},
+
+	erase: function(object, key){
+		if (hasOwnProperty.call(object, key)) delete object[key];
+		return object;
+	},
+
+	run: function(object){
+		var args = Array.slice(arguments, 1);
+		for (var key in object) if (object[key].apply){
+			object[key].apply(object, args);
+		}
+		return object;
+	}
+
+});
+
+})();
+
+/*
+---
+
+script: Locale.js
+
+name: Locale
+
+description: Provides methods for localization.
+
+license: MIT-style license
+
+authors:
+  - Aaron Newton
+  - Arian Stolwijk
+
+requires:
+  - Core/Events
+  - Object.Extras
+  - MooTools.More
+
+provides: [Locale, Lang]
+
+...
+*/
+
+(function(){
+
+var current = null,
+	locales = {},
+	inherits = {};
+
+var getSet = function(set){
+	if (instanceOf(set, Locale.Set)) return set;
+	else return locales[set];
+};
+
+var Locale = this.Locale = {
+
+	define: function(locale, set, key, value){
+		var name;
+		if (instanceOf(locale, Locale.Set)){
+			name = locale.name;
+			if (name) locales[name] = locale;
+		} else {
+			name = locale;
+			if (!locales[name]) locales[name] = new Locale.Set(name);
+			locale = locales[name];
+		}
+
+		if (set) locale.define(set, key, value);
+
+		
+
+		if (!current) current = locale;
+
+		return locale;
+	},
+
+	use: function(locale){
+		locale = getSet(locale);
+
+		if (locale){
+			current = locale;
+
+			this.fireEvent('change', locale);
+
+			
+		}
+
+		return this;
+	},
+
+	getCurrent: function(){
+		return current;
+	},
+
+	get: function(key, args){
+		return (current) ? current.get(key, args) : '';
+	},
+
+	inherit: function(locale, inherits, set){
+		locale = getSet(locale);
+
+		if (locale) locale.inherit(inherits, set);
+		return this;
+	},
+
+	list: function(){
+		return Object.keys(locales);
+	}
+
+};
+
+Object.append(Locale, new Events);
+
+Locale.Set = new Class({
+
+	sets: {},
+
+	inherits: {
+		locales: [],
+		sets: {}
+	},
+
+	initialize: function(name){
+		this.name = name || '';
+	},
+
+	define: function(set, key, value){
+		var defineData = this.sets[set];
+		if (!defineData) defineData = {};
+
+		if (key){
+			if (typeOf(key) == 'object') defineData = Object.merge(defineData, key);
+			else defineData[key] = value;
+		}
+		this.sets[set] = defineData;
+
+		return this;
+	},
+
+	get: function(key, args, _base){
+		var value = Object.getFromPath(this.sets, key);
+		if (value != null){
+			var type = typeOf(value);
+			if (type == 'function') value = value.apply(null, Array.convert(args));
+			else if (type == 'object') value = Object.clone(value);
+			return value;
+		}
+
+		// get value of inherited locales
+		var index = key.indexOf('.'),
+			set = index < 0 ? key : key.substr(0, index),
+			names = (this.inherits.sets[set] || []).combine(this.inherits.locales).include('en-US');
+		if (!_base) _base = [];
+
+		for (var i = 0, l = names.length; i < l; i++){
+			if (_base.contains(names[i])) continue;
+			_base.include(names[i]);
+
+			var locale = locales[names[i]];
+			if (!locale) continue;
+
+			value = locale.get(key, args, _base);
+			if (value != null) return value;
+		}
+
+		return '';
+	},
+
+	inherit: function(names, set){
+		names = Array.convert(names);
+
+		if (set && !this.inherits.sets[set]) this.inherits.sets[set] = [];
+
+		var l = names.length;
+		while (l--) (set ? this.inherits.sets[set] : this.inherits.locales).unshift(names[l]);
+
+		return this;
+	}
+
+});
+
+
+
+})();
+
+/*
+---
+
+name: Locale.en-US.Date
+
+description: Date messages for US English.
+
+license: MIT-style license
+
+authors:
+  - Aaron Newton
+
+requires:
+  - Locale
+
+provides: [Locale.en-US.Date]
+
+...
+*/
+
+Locale.define('en-US', 'Date', {
+
+	months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+	months_abbr: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+	days: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+	days_abbr: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+
+	// Culture's date order: MM/DD/YYYY
+	dateOrder: ['month', 'date', 'year'],
+	shortDate: '%m/%d/%Y',
+	shortTime: '%I:%M%p',
+	AM: 'AM',
+	PM: 'PM',
+	firstDayOfWeek: 0,
+
+	// Date.Extras
+	ordinal: function(dayOfMonth){
+		// 1st, 2nd, 3rd, etc.
+		return (dayOfMonth > 3 && dayOfMonth < 21) ? 'th' : ['th', 'st', 'nd', 'rd', 'th'][Math.min(dayOfMonth % 10, 4)];
+	},
+
+	lessThanMinuteAgo: 'less than a minute ago',
+	minuteAgo: 'about a minute ago',
+	minutesAgo: '{delta} minutes ago',
+	hourAgo: 'about an hour ago',
+	hoursAgo: 'about {delta} hours ago',
+	dayAgo: '1 day ago',
+	daysAgo: '{delta} days ago',
+	weekAgo: '1 week ago',
+	weeksAgo: '{delta} weeks ago',
+	monthAgo: '1 month ago',
+	monthsAgo: '{delta} months ago',
+	yearAgo: '1 year ago',
+	yearsAgo: '{delta} years ago',
+
+	lessThanMinuteUntil: 'less than a minute from now',
+	minuteUntil: 'about a minute from now',
+	minutesUntil: '{delta} minutes from now',
+	hourUntil: 'about an hour from now',
+	hoursUntil: 'about {delta} hours from now',
+	dayUntil: '1 day from now',
+	daysUntil: '{delta} days from now',
+	weekUntil: '1 week from now',
+	weeksUntil: '{delta} weeks from now',
+	monthUntil: '1 month from now',
+	monthsUntil: '{delta} months from now',
+	yearUntil: '1 year from now',
+	yearsUntil: '{delta} years from now'
+
+});
+
+/*
+---
+
+script: Date.js
+
+name: Date
+
+description: Extends the Date native object to include methods useful in managing dates.
+
+license: MIT-style license
+
+authors:
+  - Aaron Newton
+  - Nicholas Barthelemy - https://svn.nbarthelemy.com/date-js/
+  - Harald Kirshner - mail [at] digitarald.de; http://digitarald.de
+  - Scott Kyle - scott [at] appden.com; http://appden.com
+
+requires:
+  - Core/Array
+  - Core/String
+  - Core/Number
+  - MooTools.More
+  - Locale
+  - Locale.en-US.Date
+
+provides: [Date]
+
+...
+*/
+
+(function(){
+
+var Date = this.Date;
+
+var DateMethods = Date.Methods = {
+	ms: 'Milliseconds',
+	year: 'FullYear',
+	min: 'Minutes',
+	mo: 'Month',
+	sec: 'Seconds',
+	hr: 'Hours'
+};
+
+[
+	'Date', 'Day', 'FullYear', 'Hours', 'Milliseconds', 'Minutes', 'Month', 'Seconds', 'Time', 'TimezoneOffset',
+	'Week', 'Timezone', 'GMTOffset', 'DayOfYear', 'LastMonth', 'LastDayOfMonth', 'UTCDate', 'UTCDay', 'UTCFullYear',
+	'AMPM', 'Ordinal', 'UTCHours', 'UTCMilliseconds', 'UTCMinutes', 'UTCMonth', 'UTCSeconds', 'UTCMilliseconds'
+].each(function(method){
+	Date.Methods[method.toLowerCase()] = method;
+});
+
+var pad = function(n, digits, string){
+	if (digits == 1) return n;
+	return n < Math.pow(10, digits - 1) ? (string || '0') + pad(n, digits - 1, string) : n;
+};
+
+Date.implement({
+
+	set: function(prop, value){
+		prop = prop.toLowerCase();
+		var method = DateMethods[prop] && 'set' + DateMethods[prop];
+		if (method && this[method]) this[method](value);
+		return this;
+	}.overloadSetter(),
+
+	get: function(prop){
+		prop = prop.toLowerCase();
+		var method = DateMethods[prop] && 'get' + DateMethods[prop];
+		if (method && this[method]) return this[method]();
+		return null;
+	}.overloadGetter(),
+
+	clone: function(){
+		return new Date(this.get('time'));
+	},
+
+	increment: function(interval, times){
+		interval = interval || 'day';
+		times = times != null ? times : 1;
+
+		switch (interval){
+			case 'year':
+				return this.increment('month', times * 12);
+			case 'month':
+				var d = this.get('date');
+				this.set('date', 1).set('mo', this.get('mo') + times);
+				return this.set('date', d.min(this.get('lastdayofmonth')));
+			case 'week':
+				return this.increment('day', times * 7);
+			case 'day':
+				return this.set('date', this.get('date') + times);
+		}
+
+		if (!Date.units[interval]) throw new Error(interval + ' is not a supported interval');
+
+		return this.set('time', this.get('time') + times * Date.units[interval]());
+	},
+
+	decrement: function(interval, times){
+		return this.increment(interval, -1 * (times != null ? times : 1));
+	},
+
+	isLeapYear: function(){
+		return Date.isLeapYear(this.get('year'));
+	},
+
+	clearTime: function(){
+		return this.set({hr: 0, min: 0, sec: 0, ms: 0});
+	},
+
+	diff: function(date, resolution){
+		if (typeOf(date) == 'string') date = Date.parse(date);
+
+		return ((date - this) / Date.units[resolution || 'day'](3, 3)).round(); // non-leap year, 30-day month
+	},
+
+	getLastDayOfMonth: function(){
+		return Date.daysInMonth(this.get('mo'), this.get('year'));
+	},
+
+	getDayOfYear: function(){
+		return (Date.UTC(this.get('year'), this.get('mo'), this.get('date') + 1)
+			- Date.UTC(this.get('year'), 0, 1)) / Date.units.day();
+	},
+
+	setDay: function(day, firstDayOfWeek){
+		if (firstDayOfWeek == null){
+			firstDayOfWeek = Date.getMsg('firstDayOfWeek');
+			if (firstDayOfWeek === '') firstDayOfWeek = 1;
+		}
+
+		day = (7 + Date.parseDay(day, true) - firstDayOfWeek) % 7;
+		var currentDay = (7 + this.get('day') - firstDayOfWeek) % 7;
+
+		return this.increment('day', day - currentDay);
+	},
+
+	getWeek: function(firstDayOfWeek){
+		if (firstDayOfWeek == null){
+			firstDayOfWeek = Date.getMsg('firstDayOfWeek');
+			if (firstDayOfWeek === '') firstDayOfWeek = 1;
+		}
+
+		var date = this,
+			dayOfWeek = (7 + date.get('day') - firstDayOfWeek) % 7,
+			dividend = 0,
+			firstDayOfYear;
+
+		if (firstDayOfWeek == 1){
+			// ISO-8601, week belongs to year that has the most days of the week (i.e. has the thursday of the week)
+			var month = date.get('month'),
+				startOfWeek = date.get('date') - dayOfWeek;
+
+			if (month == 11 && startOfWeek > 28) return 1; // Week 1 of next year
+
+			if (month == 0 && startOfWeek < -2){
+				// Use a date from last year to determine the week
+				date = new Date(date).decrement('day', dayOfWeek);
+				dayOfWeek = 0;
+			}
+
+			firstDayOfYear = new Date(date.get('year'), 0, 1).get('day') || 7;
+			if (firstDayOfYear > 4) dividend = -7; // First week of the year is not week 1
+		} else {
+			// In other cultures the first week of the year is always week 1 and the last week always 53 or 54.
+			// Days in the same week can have a different weeknumber if the week spreads across two years.
+			firstDayOfYear = new Date(date.get('year'), 0, 1).get('day');
+		}
+
+		dividend += date.get('dayofyear');
+		dividend += 6 - dayOfWeek; // Add days so we calculate the current date's week as a full week
+		dividend += (7 + firstDayOfYear - firstDayOfWeek) % 7; // Make up for first week of the year not being a full week
+
+		return (dividend / 7);
+	},
+
+	getOrdinal: function(day){
+		return Date.getMsg('ordinal', day || this.get('date'));
+	},
+
+	getTimezone: function(){
+		return this.toString()
+			.replace(/^.*? ([A-Z]{3}).[0-9]{4}.*$/, '$1')
+			.replace(/^.*?\(([A-Z])[a-z]+ ([A-Z])[a-z]+ ([A-Z])[a-z]+\)$/, '$1$2$3');
+	},
+
+	getGMTOffset: function(){
+		var off = this.get('timezoneOffset');
+		return ((off > 0) ? '-' : '+') + pad((off.abs() / 60).floor(), 2) + pad(off % 60, 2);
+	},
+
+	setAMPM: function(ampm){
+		ampm = ampm.toUpperCase();
+		var hr = this.get('hr');
+		if (hr > 11 && ampm == 'AM') return this.decrement('hour', 12);
+		else if (hr < 12 && ampm == 'PM') return this.increment('hour', 12);
+		return this;
+	},
+
+	getAMPM: function(){
+		return (this.get('hr') < 12) ? 'AM' : 'PM';
+	},
+
+	parse: function(str){
+		this.set('time', Date.parse(str));
+		return this;
+	},
+
+	isValid: function(date){
+		if (!date) date = this;
+		return typeOf(date) == 'date' && !isNaN(date.valueOf());
+	},
+
+	format: function(format){
+		if (!this.isValid()) return 'invalid date';
+
+		if (!format) format = '%x %X';
+		if (typeof format == 'string') format = formats[format.toLowerCase()] || format;
+		if (typeof format == 'function') return format(this);
+
+		var d = this;
+		return format.replace(/%([a-z%])/gi,
+			function($0, $1){
+				switch ($1){
+					case 'a': return Date.getMsg('days_abbr')[d.get('day')];
+					case 'A': return Date.getMsg('days')[d.get('day')];
+					case 'b': return Date.getMsg('months_abbr')[d.get('month')];
+					case 'B': return Date.getMsg('months')[d.get('month')];
+					case 'c': return d.format('%a %b %d %H:%M:%S %Y');
+					case 'd': return pad(d.get('date'), 2);
+					case 'e': return pad(d.get('date'), 2, ' ');
+					case 'H': return pad(d.get('hr'), 2);
+					case 'I': return pad((d.get('hr') % 12) || 12, 2);
+					case 'j': return pad(d.get('dayofyear'), 3);
+					case 'k': return pad(d.get('hr'), 2, ' ');
+					case 'l': return pad((d.get('hr') % 12) || 12, 2, ' ');
+					case 'L': return pad(d.get('ms'), 3);
+					case 'm': return pad((d.get('mo') + 1), 2);
+					case 'M': return pad(d.get('min'), 2);
+					case 'o': return d.get('ordinal');
+					case 'p': return Date.getMsg(d.get('ampm'));
+					case 's': return Math.round(d / 1000);
+					case 'S': return pad(d.get('seconds'), 2);
+					case 'T': return d.format('%H:%M:%S');
+					case 'U': return pad(d.get('week'), 2);
+					case 'w': return d.get('day');
+					case 'x': return d.format(Date.getMsg('shortDate'));
+					case 'X': return d.format(Date.getMsg('shortTime'));
+					case 'y': return d.get('year').toString().substr(2);
+					case 'Y': return d.get('year');
+					case 'z': return d.get('GMTOffset');
+					case 'Z': return d.get('Timezone');
+				}
+				return $1;
+			}
+		);
+	},
+
+	toISOString: function(){
+		return this.format('iso8601');
+	}
+
+}).alias({
+	toJSON: 'toISOString',
+	compare: 'diff',
+	strftime: 'format'
+});
+
+// The day and month abbreviations are standardized, so we cannot use simply %a and %b because they will get localized
+var rfcDayAbbr = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+	rfcMonthAbbr = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+var formats = {
+	db: '%Y-%m-%d %H:%M:%S',
+	compact: '%Y%m%dT%H%M%S',
+	'short': '%d %b %H:%M',
+	'long': '%B %d, %Y %H:%M',
+	rfc822: function(date){
+		return rfcDayAbbr[date.get('day')] + date.format(', %d ') + rfcMonthAbbr[date.get('month')] + date.format(' %Y %H:%M:%S %Z');
+	},
+	rfc2822: function(date){
+		return rfcDayAbbr[date.get('day')] + date.format(', %d ') + rfcMonthAbbr[date.get('month')] + date.format(' %Y %H:%M:%S %z');
+	},
+	iso8601: function(date){
+		return (
+			date.getUTCFullYear() + '-' +
+			pad(date.getUTCMonth() + 1, 2) + '-' +
+			pad(date.getUTCDate(), 2) + 'T' +
+			pad(date.getUTCHours(), 2) + ':' +
+			pad(date.getUTCMinutes(), 2) + ':' +
+			pad(date.getUTCSeconds(), 2) + '.' +
+			pad(date.getUTCMilliseconds(), 3) + 'Z'
+		);
+	}
+};
+
+var parsePatterns = [],
+	nativeParse = Date.parse;
+
+var parseWord = function(type, word, num){
+	var ret = -1,
+		translated = Date.getMsg(type + 's');
+	switch (typeOf(word)){
+		case 'object':
+			ret = translated[word.get(type)];
+			break;
+		case 'number':
+			ret = translated[word];
+			if (!ret) throw new Error('Invalid ' + type + ' index: ' + word);
+			break;
+		case 'string':
+			var match = translated.filter(function(name){
+				return this.test(name);
+			}, new RegExp('^' + word, 'i'));
+			if (!match.length) throw new Error('Invalid ' + type + ' string');
+			if (match.length > 1) throw new Error('Ambiguous ' + type);
+			ret = match[0];
+	}
+
+	return (num) ? translated.indexOf(ret) : ret;
+};
+
+var startCentury = 1900,
+	startYear = 70;
+
+Date.extend({
+
+	getMsg: function(key, args){
+		return Locale.get('Date.' + key, args);
+	},
+
+	units: {
+		ms: Function.convert(1),
+		second: Function.convert(1000),
+		minute: Function.convert(60000),
+		hour: Function.convert(3600000),
+		day: Function.convert(86400000),
+		week: Function.convert(608400000),
+		month: function(month, year){
+			var d = new Date;
+			return Date.daysInMonth(month != null ? month : d.get('mo'), year != null ? year : d.get('year')) * 86400000;
+		},
+		year: function(year){
+			year = year || new Date().get('year');
+			return Date.isLeapYear(year) ? 31622400000 : 31536000000;
+		}
+	},
+
+	daysInMonth: function(month, year){
+		return [31, Date.isLeapYear(year) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month];
+	},
+
+	isLeapYear: function(year){
+		return ((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0);
+	},
+
+	parse: function(from){
+		var t = typeOf(from);
+		if (t == 'number') return new Date(from);
+		if (t != 'string') return from;
+		from = from.clean();
+		if (!from.length) return null;
+
+		var parsed;
+		parsePatterns.some(function(pattern){
+			var bits = pattern.re.exec(from);
+			return (bits) ? (parsed = pattern.handler(bits)) : false;
+		});
+
+		if (!(parsed && parsed.isValid())){
+			parsed = new Date(nativeParse(from));
+			if (!(parsed && parsed.isValid())) parsed = new Date(from.toInt());
+		}
+		return parsed;
+	},
+
+	parseDay: function(day, num){
+		return parseWord('day', day, num);
+	},
+
+	parseMonth: function(month, num){
+		return parseWord('month', month, num);
+	},
+
+	parseUTC: function(value){
+		var localDate = new Date(value);
+		var utcSeconds = Date.UTC(
+			localDate.get('year'),
+			localDate.get('mo'),
+			localDate.get('date'),
+			localDate.get('hr'),
+			localDate.get('min'),
+			localDate.get('sec'),
+			localDate.get('ms')
+		);
+		return new Date(utcSeconds);
+	},
+
+	orderIndex: function(unit){
+		return Date.getMsg('dateOrder').indexOf(unit) + 1;
+	},
+
+	defineFormat: function(name, format){
+		formats[name] = format;
+		return this;
+	},
+
+	
+
+	defineParser: function(pattern){
+		parsePatterns.push((pattern.re && pattern.handler) ? pattern : build(pattern));
+		return this;
+	},
+
+	defineParsers: function(){
+		Array.flatten(arguments).each(Date.defineParser);
+		return this;
+	},
+
+	define2DigitYearStart: function(year){
+		startYear = year % 100;
+		startCentury = year - startYear;
+		return this;
+	}
+
+}).extend({
+	defineFormats: Date.defineFormat.overloadSetter()
+});
+
+var regexOf = function(type){
+	return new RegExp('(?:' + Date.getMsg(type).map(function(name){
+		return name.substr(0, 3);
+	}).join('|') + ')[a-z]*');
+};
+
+var replacers = function(key){
+	switch (key){
+		case 'T':
+			return '%H:%M:%S';
+		case 'x': // iso8601 covers yyyy-mm-dd, so just check if month is first
+			return ((Date.orderIndex('month') == 1) ? '%m[-./]%d' : '%d[-./]%m') + '([-./]%y)?';
+		case 'X':
+			return '%H([.:]%M)?([.:]%S([.:]%s)?)? ?%p? ?%z?';
+	}
+	return null;
+};
+
+var keys = {
+	d: /[0-2]?[0-9]|3[01]/,
+	H: /[01]?[0-9]|2[0-3]/,
+	I: /0?[1-9]|1[0-2]/,
+	M: /[0-5]?\d/,
+	s: /\d+/,
+	o: /[a-z]*/,
+	p: /[ap]\.?m\.?/,
+	y: /\d{2}|\d{4}/,
+	Y: /\d{4}/,
+	z: /Z|[+-]\d{2}(?::?\d{2})?/
+};
+
+keys.m = keys.I;
+keys.S = keys.M;
+
+var currentLanguage;
+
+var recompile = function(language){
+	currentLanguage = language;
+
+	keys.a = keys.A = regexOf('days');
+	keys.b = keys.B = regexOf('months');
+
+	parsePatterns.each(function(pattern, i){
+		if (pattern.format) parsePatterns[i] = build(pattern.format);
+	});
+};
+
+var build = function(format){
+	if (!currentLanguage) return {format: format};
+
+	var parsed = [];
+	var re = (format.source || format) // allow format to be regex
+	.replace(/%([a-z])/gi,
+		function($0, $1){
+			return replacers($1) || $0;
+		}
+	).replace(/\((?!\?)/g, '(?:') // make all groups non-capturing
+	.replace(/ (?!\?|\*)/g, ',? ') // be forgiving with spaces and commas
+	.replace(/%([a-z%])/gi,
+		function($0, $1){
+			var p = keys[$1];
+			if (!p) return $1;
+			parsed.push($1);
+			return '(' + p.source + ')';
+		}
+	).replace(/\[a-z\]/gi, '[a-z\\u00c0-\\uffff;\&]'); // handle unicode words
+
+	return {
+		format: format,
+		re: new RegExp('^' + re + '$', 'i'),
+		handler: function(bits){
+			bits = bits.slice(1).associate(parsed);
+			var date = new Date().clearTime(),
+				year = bits.y || bits.Y;
+
+			if (year != null) handle.call(date, 'y', year); // need to start in the right year
+			if ('d' in bits) handle.call(date, 'd', 1);
+			if ('m' in bits || bits.b || bits.B) handle.call(date, 'm', 1);
+
+			for (var key in bits) handle.call(date, key, bits[key]);
+			return date;
+		}
+	};
+};
+
+var handle = function(key, value){
+	if (!value) return this;
+
+	switch (key){
+		case 'a': case 'A': return this.set('day', Date.parseDay(value, true));
+		case 'b': case 'B': return this.set('mo', Date.parseMonth(value, true));
+		case 'd': return this.set('date', value);
+		case 'H': case 'I': return this.set('hr', value);
+		case 'm': return this.set('mo', value - 1);
+		case 'M': return this.set('min', value);
+		case 'p': return this.set('ampm', value.replace(/\./g, ''));
+		case 'S': return this.set('sec', value);
+		case 's': return this.set('ms', ('0.' + value) * 1000);
+		case 'w': return this.set('day', value);
+		case 'Y': return this.set('year', value);
+		case 'y':
+			value = +value;
+			if (value < 100) value += startCentury + (value < startYear ? 100 : 0);
+			return this.set('year', value);
+		case 'z':
+			if (value == 'Z') value = '+00';
+			var offset = value.match(/([+-])(\d{2}):?(\d{2})?/);
+			offset = (offset[1] + '1') * (offset[2] * 60 + (+offset[3] || 0)) + this.getTimezoneOffset();
+			return this.set('time', this - offset * 60000);
+	}
+
+	return this;
+};
+
+Date.defineParsers(
+	'%Y([-./]%m([-./]%d((T| )%X)?)?)?', // "1999-12-31", "1999-12-31 11:59pm", "1999-12-31 23:59:59", ISO8601
+	'%Y%m%d(T%H(%M%S?)?)?', // "19991231", "19991231T1159", compact
+	'%x( %X)?', // "12/31", "12.31.99", "12-31-1999", "12/31/2008 11:59 PM"
+	'%d%o( %b( %Y)?)?( %X)?', // "31st", "31st December", "31 Dec 1999", "31 Dec 1999 11:59pm"
+	'%b( %d%o)?( %Y)?( %X)?', // Same as above with month and day switched
+	'%Y %b( %d%o( %X)?)?', // Same as above with year coming first
+	'%o %b %d %X %z %Y', // "Thu Oct 22 08:11:23 +0000 2009"
+	'%T', // %H:%M:%S
+	'%H:%M( ?%p)?' // "11:05pm", "11:05 am" and "11:05"
+);
+
+Locale.addEvent('change', function(language){
+	if (Locale.get('Date')) recompile(language);
+}).fireEvent('change', Locale.getCurrent());
+
+})();
+
+/*
+---
+
+script: Date.Extras.js
+
+name: Date.Extras
+
+description: Extends the Date native object to include extra methods (on top of those in Date.js).
+
+license: MIT-style license
+
+authors:
+  - Aaron Newton
+  - Scott Kyle
+
+requires:
+  - Date
+
+provides: [Date.Extras]
+
+...
+*/
+
+Date.implement({
+
+	timeDiffInWords: function(to){
+		return Date.distanceOfTimeInWords(this, to || new Date);
+	},
+
+	timeDiff: function(to, separator){
+		if (to == null) to = new Date;
+		var delta = ((to - this) / 1000).floor().abs();
+
+		var vals = [],
+			durations = [60, 60, 24, 365, 0],
+			names = ['s', 'm', 'h', 'd', 'y'],
+			value, duration;
+
+		for (var item = 0; item < durations.length; item++){
+			if (item && !delta) break;
+			value = delta;
+			if ((duration = durations[item])){
+				value = (delta % duration);
+				delta = (delta / duration).floor();
+			}
+			vals.unshift(value + (names[item] || ''));
+		}
+
+		return vals.join(separator || ':');
+	}
+
+}).extend({
+
+	distanceOfTimeInWords: function(from, to){
+		return Date.getTimePhrase(((to - from) / 1000).toInt());
+	},
+
+	getTimePhrase: function(delta){
+		var suffix = (delta < 0) ? 'Until' : 'Ago';
+		if (delta < 0) delta *= -1;
+
+		var units = {
+			minute: 60,
+			hour: 60,
+			day: 24,
+			week: 7,
+			month: 52 / 12,
+			year: 12,
+			eon: Infinity
+		};
+
+		var msg = 'lessThanMinute';
+
+		for (var unit in units){
+			var interval = units[unit];
+			if (delta < 1.5 * interval){
+				if (delta > 0.75 * interval) msg = unit;
+				break;
+			}
+			delta /= interval;
+			msg = unit + 's';
+		}
+
+		delta = delta.round();
+		return Date.getMsg(msg + suffix, delta).substitute({delta: delta});
+	}
+
+}).defineParsers(
+
+	{
+		// "today", "tomorrow", "yesterday"
+		re: /^(?:tod|tom|yes)/i,
+		handler: function(bits){
+			var d = new Date().clearTime();
+			switch (bits[0]){
+				case 'tom': return d.increment();
+				case 'yes': return d.decrement();
+				default: return d;
+			}
+		}
+	},
+
+	{
+		// "next Wednesday", "last Thursday"
+		re: /^(next|last) ([a-z]+)$/i,
+		handler: function(bits){
+			var d = new Date().clearTime();
+			var day = d.getDay();
+			var newDay = Date.parseDay(bits[2], true);
+			var addDays = newDay - day;
+			if (newDay <= day) addDays += 7;
+			if (bits[1] == 'last') addDays -= 7;
+			return d.set('date', d.getDate() + addDays);
+		}
+	}
+
+).alias('timeAgoInWords', 'timeDiffInWords');
 /* ../ludojs/src/ludo.js */
 /**
  * @module ludo
@@ -407,7 +2702,7 @@ ludo.util = {
 		for (var name in view.els) {
 			if (view.els.hasOwnProperty(name)) {
 				if (view.els[name] && view.els[name].tagName && name != 'parent') {
-					view.els[name].dispose();
+					view.els[name].remove();
 					if(view.els[name].removeEvents)view.els[name].removeEvents();
 				}
 			}
@@ -415,7 +2710,7 @@ ludo.util = {
 
 		ludo.CmpMgr.deleteComponent(view);
 
-		view.els = undefined;
+		view.els = {};
 	},
 
 	disposeDependencies:function(deps){
@@ -3717,7 +6012,7 @@ ludo.layout.Base = new Class({
 	addChild:function (child, insertAt, pos) {
         child = this.getValidChild(child);
 		child = this.getNewComponent(child);
-		var parentEl = this.getParentForNewChild();
+		var parentEl = this.getParentForNewChild(child);
 		parentEl = $(parentEl);
 		if (insertAt) {
 			var children = [];
@@ -4020,6 +6315,8 @@ ludo.layout.Factory = new Class({
 		if(!view.layout || !view.layout.type)return 'Base';
 
 		switch(view.layout.type.toLowerCase()){
+			case "table":
+				return "Table";
             case 'slidein':
                 return 'SlideIn';
 			case 'relative':
@@ -5265,6 +7562,7 @@ ludo.remote.Shim = new Class({
  @param {String} config.name When set, you can access it by calling parentView.child["&lt;childName>"]
  @param {String} config.title Title of this view. If the view is a child in tab layout, the title will be displayed on the Tab
  @param {String} config.tpl A template for string when inserting JSON Content(the insertJSON method), example: "name:{firstname} {lastname}<br>"
+ @param {Boolean} config.alwaysInFront True to make this view always appear in front of the other views.
  // TODO describe data sources
  @example {@lang Javascript}
 	// Example 1: View render to &lt;body> tag
@@ -5300,10 +7598,7 @@ ludo.View = new Class({
 	resizable:false,
 	alwaysInFront:false,
 	statefulProperties:['layout'],
-
-	els:{
-
-	},
+	els:{ },
 	state:{},
 
 	defaultDS : 'dataSource.JSON',
@@ -5327,14 +7622,9 @@ ludo.View = new Class({
 	formConfig:undefined,
 	isRendered:false,
 	unRenderedChildren:[],
-
-
 	frame:false,
-
 	form:undefined,
-
 	layout:undefined,
-
 	tpl:'',
 	/**
 	 * Default config for ludo.tpl.Parser. ludo.tpl.Parser is a JSON parser which
@@ -5421,9 +7711,7 @@ ludo.View = new Class({
 		 * @param Component this
 		 */
 		this.fireEvent('render', this);
-		
 	},
-
 	/**
 	 * First life cycle step when creating and object
 	 * @function ludoConfig
@@ -5447,12 +7735,6 @@ ludo.View = new Class({
 		}
 		if(config.html != undefined)this._html = config.html;
 		this.setConfigParams(config, keys);
-
-		if (this.socket) {
-			if (!this.socket.type)this.socket.type = 'socket.Socket';
-			this.socket.component = this;
-			this.socket = this.createDependency('socket', this.socket);
-		}
 
 		if (this.renderTo)this.renderTo = $(this.renderTo);
 
@@ -5564,7 +7846,7 @@ ludo.View = new Class({
 	},
 
 	insertJSON:function (data) {
-		console.warn("Use of deprecated insertJOSN");
+		console.warn("Use of deprecated insertJSON");
 		if (this.tpl) {
 			this.getBody().html(this.getTplParser().asString(data, this.tpl));
 		}
@@ -5888,10 +8170,10 @@ ludo.View = new Class({
 	},
 
 	/**
-	 Resize View and it's children. Example:
+	 Resize View and it's children.
 	 @function resize
 	 @memberof ludo.View.prototype
-	 @param {Object} config
+	 @param {Object} config Object with optional width and height properties. Example: { width: 200, height: 100 }
 	 @example
 	 view.resize(
 	 { width: 200, height:200 }
@@ -5988,7 +8270,6 @@ ludo.View = new Class({
 
 	cachedInnerHeight:undefined,
 	resizeDOM:function () {
-
 		if (this.layout.pixelHeight > 0) {
 			var height = this.layout.pixelHeight ? this.layout.pixelHeight - ludo.dom.getMBPH(this.els.container) : this.els.container.css('height').replace('px', '');
 			height -= ludo.dom.getMBPH(this.els.body);
@@ -6198,10 +8479,6 @@ ludo.View = new Class({
 
 	getHeightOfButtonBar:function () {
 		return 0;
-	},
-
-	getSocket:function () {
-		return this.socket;
 	},
 
 	canvas:undefined,
@@ -11694,10 +13971,8 @@ ludo.form.Element = new Class({
 
     _set:function(value){
 
-        
-
         if (!this.isReady) {
-            if(value)this.setValue.delay(50, this, value);
+            if(value)this._set.delay(50, this, value);
             return;
         }
 
@@ -12715,6 +14990,158 @@ ludo.color.RgbColors = new Class({
 		color = color.toString(16).toUpperCase();
 		return color + color;
 	}
+
+});/* ../ludojs/src/layout/table.js */
+/**
+ * When layout.type is set to "table", children will be arranged in a table layout.
+ * For demo, see <a href="../demo/layout/table.php">Table layout demo</a>
+ * @param {Object} view.layout
+ * @param {Object} view.layout.columns Column configuration for the table layout. These layout options are added to the parent View.
+ * @param {Number} view.layout.columns.width Optional width of column
+ * @param {Number} view.layout.columns.weight Optional width weight of columns. "weight" means use remaining space.
+ * In a view where width is 400, and you have three columns, one with fixed with of 100,
+ * one with weight of 1 and one width weight of 2, the first column will use get its fixed with of 100.
+ * The second one will get a width of 100(300(remaining width) * 1(weight) / 3(total weight)) and last column a width of 200
+ * (300(remaining width) * 2(weight) / 3(total weight))
+ * @param {Number} view.layout.row true to create a new row. (Option for child layout)
+ * @param {Number} view.layout.vAlign Optional Vertical alignment of View(top|middle|bottom|baseline). Default: "top"(Option for child layout)
+ * @class ludo.layout.Table
+ * @example
+ var w = new ludo.Window({
+        title: 'Table layout',
+        layout: {
+            // position and size of this window
+            left: 20, top: 20,width: 600, height: 600,
+            // render children in a table layout
+            type: 'table',
+            // Define columns, weight means use remaining space
+            columns: [
+                {width: 100}, {width: 200}, {weight: 1}
+            ]
+        },
+        css: {
+            border: 0
+        },
+        children: [
+            {html: 'First row 1 '},
+            {html: 'First row 2 '},
+            // Table picker below spans 3 rows
+            {
+                type: 'calendar.TimePicker',
+                layout: {
+                    height: 200,
+                    weight:1,
+                    rowspan: 3
+                }
+            },
+            // Place the cell below in a new row
+            {html: 'Second row 1 ', layout: {row: true, vAlign : 'top' }},
+            {html: 'Second row 2 '},
+            {html: 'Third row 1 ', layout: {row: true, colspan : 2}}
+        ]
+    });
+ */
+ludo.layout.Table = new Class({
+    Extends: ludo.layout.Base,
+
+    table: undefined,
+    tbody: undefined,
+    countChildren: undefined,
+    cols: undefined,
+    currentRow: undefined,
+
+    fixedWidth: undefined,
+    totalWeight: undefined,
+
+
+    countCellsInNextRow: undefined,
+
+
+    onCreate: function () {
+        this.parent();
+
+        this.countChildren = 0;
+        this.cols = this.view.layout.columns;
+        this.fixedWidth = 0;
+        this.totalWeight = 0;
+        var cols = [];
+        for (var i = 0; i < this.cols.length; i++) {
+            var col = this.cols[i];
+            var numWidth = col.width != undefined ? col.width : 0;
+            this.fixedWidth += numWidth;
+            this.totalWeight += (col.weight != undefined ? col.weight : 0);
+            var width = numWidth != undefined ? ' width="' + numWidth + '"' : "";
+            cols.push('<col' + width + '>');
+        }
+
+        this.table = $('<table style="padding:0;margin:0;border-collapse: collapse"><colgroup>' + (cols.join('')) + '</table>');
+        this.tbody = $('<tbody></tbody>');
+        this.table.append(this.tbody);
+
+        this.view.getBody().append(this.table);
+
+    },
+
+    addChild: function (child, insertAt, pos) {
+        return this.parent(child, insertAt, pos);
+    },
+
+    getParentForNewChild: function (child) {
+        if (this.countChildren == 0 || child.layout.row) {
+            this.currentRow = $('<tr></tr>');
+            this.tbody.append(this.currentRow);
+            this.countChildren = 0;
+
+            this.countCellsInNextRow = this.cols.length;
+
+        }
+        var colspan = child.layout.colspan ? child.layout.colspan : 1;
+        var rowspan = child.layout.rowspan ? child.layout.rowspan : 1;
+
+        var vAlign = child.layout.vAlign ? child.layout.vAlign : "top";
+
+        var cell = $('<td style="vertical-align:' + vAlign + ';margin:0;padding:0" colspan="' + colspan + '" rowspan="' + rowspan + '"></td>');
+        this.currentRow.append(cell);
+        this.countChildren++;
+        return cell;
+    },
+
+    resize: function () {
+        var c = this.view.children;
+        var curCellIndex = 0;
+        for (var i = 0; i < c.length; i++) {
+            var child = c[i];
+
+            if (child.layout.row)curCellIndex = 0;
+
+            var config = {};
+
+            if (child.layout.height != undefined)config.height = child.layout.height;
+
+            config.width = this.getWidthOfChild(child, curCellIndex);
+
+            child.resize(config);
+            child.saveState();
+            curCellIndex += child.layout.colspan ? child.layout.colspan : 1;
+        }
+
+    },
+
+    getWidthOfChild: function (child, colIndex) {
+        var colspan = child.layout.colspan ? child.layout.colspan : 1;
+        var width = 0;
+        var totalWidth = this.view.getBody().width();
+        var weightWidth = totalWidth - this.fixedWidth;
+        for (var i = colIndex; i < colIndex + colspan; i++) {
+            if (this.cols[i].width) {
+                width += this.cols[i].width;
+            } else if (this.cols[i].weight) {
+                width += (weightWidth * this.cols[i].weight / this.totalWeight);
+            }
+
+        }
+        return width;
+    }
 
 });/* ../ludojs/src/layout/linear.js */
 /**
@@ -15961,275 +18388,6 @@ ludo.Notification = new Class({
 		this.getEl().css('display', 'none');
 		this.fireEvent('hide', this);
 	}
-});/* ../ludojs/src/socket/socket.js */
-/**
- Class for nodeJS communication. You configure nodeJS communication by passing a {{#crossLink "View/socket"}}socket{{/crossLink}} object to
- a {{#crossLink "View"}}{{/crossLink}}, example: socket:{ url:'http://127.0.0.1:1337' }. You can get a reference to this class by calling
- {{#crossLink "View/getSocket"}}{{/crossLink}}
- @namespace socket
- @class Socket
- @augments Core
- @constructor
- @param {Object} config
- @example
- 	// Server side code:
-	 var io = require('socket.io').listen(1337, "127.0.0.1");
-
-	 io.sockets.on('connection', function (socket, request) {
-		 socket.on('sayhello', function (person) {
-			 socket.emit('hello', { message:'Hello ' + person.name, success:true });
-		 });
-
-		 socket.on('chat', function (request) {
-			 socket.broadcast.emit('getmessage', { message:'Person A says: ' + request.message, success:true });
-			 socket.emit('getmessage', { message:'Person A says: ' + request.message, success:true });
-		 });
-	 });
- Client side code:
- @example
-	 ludo.chat = {};
-	  ludo.chat.Panel = new Class({
-		  Extends:ludo.View,
-		  type:'chat.Panel',
-		  weight:1,
-		  css:{
-			  'background-color':'#FFF',
-			  'overflow-y':'auto'
-		  },
-		  socket:{
-			  url:'http://127.0.0.1:1337'
-		  },
-
-		  ludoEvents:function () {
-			  this.getSocket().on('getmessage', this.appendMessage.bind(this));
-		  },
-
-		  appendMessage:function (msg) {
-			  var html = this.getBody().get('html');
-			  html = html + '>' + msg.message + '<br>';
-			  this.getBody().html( html);
-		  }
-	  });
-
-	  ludo.chat.TextPanel = new Class({
-		  Extends:ludo.View,
-		  layout:'cols',
-		  height:30,
-		  css:{
-			  'margin-top':3
-		  },
-		  children:[
-			  {
-				  type:'form.Text',
-				  weight:1,
-				  name:'text'
-			  },
-			  {
-				  type:'form.Button', value:'Send',
-				  name:'send',
-				  width:80
-			  }
-		  ],
-		  socket:{
-			  url:'http://127.0.0.1:1337',
-			  emitEvents:['chat']
-		  },
-
-		  ludoEvents:function () {
-			  this.parent();
-			  this.child['send'].addEvent('click', this.sendMessage.bind(this))
-		  },
-		  sendMessage:function () {
-			  if (this.child['text'].getValue().length > 0) {
-				  this.fireEvent('chat', { message:this.child['text'].getValue()});
-				  this.child['text'].setValue('');
-			  }
-		  }
-	  });
-
-	  new ludo.Window({
-		  id:'myWindow',
-		  minWidth:100, minHeight:100,
-		  left:50, top:50,
-		  width:410, height:490,
-		  title:'Chat application',
-		  layout:'rows',
-		  children:[
-			  {
-				  type:'chat.Panel'
-			  },
-			  {
-				  type:'chat.TextPanel'
-			  }
-		  ]
-	  });
- */
-ludo.socket.Socket = new Class({
-	Extends:ludo.Core,
-	type:'socket.Socket',
-
-	/**
-	 * Socket http url, example: http://localhost:1337
-	 * URL can also be defined in ludo.config.setSocketUrl()
-	 * @config url
-	 * @type String
-	 * @default undefined
-	 */
-	url:undefined,
-
-	socket:undefined,
-
-	/**
-	 * Reference to parent component
-	 * @property {Object} component
-	 */
-	component:undefined,
-
-	/**
-	 Array of view/component events to emit to server. When this event is fired, it will be emitted
-	 to the server automatically.
-	 @config emitEvents
-	 @type {Array}
-	 @default undefined
-	 @example
-	 	new ludo.View({
-	 		...
-	 		socket:{
-	 			url:'http://127.0.0.1:1337',
-	 			emitEvents:['chat'] // emit the "chat" event
-	 		}
-	 specifies that the "chat" event should be sent to NodeJS on the server.
-	 @example
-	 	this.fireEvent('chat', { message:this.child['text'].getValue()});
-
-	 will cause { message:this.child['text'].getValue()} to be sent to the server where you can pick it up with code like this
-	 @example
-	 	socket.on('chat', function (data) {
-	 		console.log(data.message);
-		}
-
-	 */
-	emitEvents:undefined,
-
-
-	ludoConfig:function (config) {
-		this.parent(config);
-		if (config.url !== undefined)this.url = config.url;
-		if (config.component !== undefined) this.component = config.component;
-		if (config.emitEvents !== undefined)this.emitEvents = config.emitEvents;
-		if (!this.hasIoSocketLibrary() || !this.hasIoSocketLibraryForThisUrl()) {
-			this.loadLib();
-		}
-		if (this.emitEvents)this.assignComponentEvents();
-	},
-
-	assignComponentEvents:function () {
-		for (var i = 0; i < this.emitEvents.length; i++) {
-			this.component.addEvent(this.emitEvents[i], this.getEventFn(this.emitEvents[i]).bind(this));
-		}
-	},
-
-	getEventFn:function (event) {
-		return function (obj) {
-			this.emit(event, obj);
-		}
-	},
-
-	getUrl:function () {
-		var url = this.url || ludo.config.getSocketUrl();
-		if (url)url = url.trim();
-		return url;
-	},
-
-	loadLib:function () {
-		var url = this.getUrl();
-		if (url !== undefined) {
-			if (ludo.socket.libLoaded === undefined) {
-				ludo.socket.libLoaded = {};
-			}
-			if (ludo.socket.libLoaded[url] === undefined) {
-				if (url !== undefined) {
-					ludo.socket.libLoaded[url] = true;
-					Asset.javascript(url + '/socket.io/socket.io.js');
-				}
-			}
-		}
-	},
-
-	/**
-	Add socket event
-	@function on
-	@param {String} event
-	@param {Function} fn
-	@example
-		this.getSocket().on('eventName', this.myMethod.bind(this));
-	This is an example of how to add a socket event from a View. It will execute the "myMethod" method when
-	socket event "eventName" is fired.
-	*/
-	on:function (event, fn) {
-		if (!this.hasIoSocketLibrary()) {
-			this.on.delay(50, this, [event, fn]);
-			return;
-		}
-		this.getSocket().on(event, fn);
-	},
-	/**
-	Emit socket event
-	@function emit
-	@param {String} event
-	@param {Object} query
-	@example
-		{
-			q: { query },
-			m: 'module',
-			s: 'submodule',
-			c: 'command/event name'
-		}
-
-	 "c" will be set to your passed event name
-	 "q" will be set to your passed query object
-	 "m" will be set to module name of the view(if any)
-	 "s" will be set to sub module name of the view(if any)
-	 */
-	emit:function (event, query) {
-		if (!this.hasIoSocketLibrary()) {
-			this.emit.delay(50, this, [event, query]);
-			return;
-		}
-		this.getSocket().emit(event, this.getObjectToEmit(event, query));
-	},
-
-	getObjectToEmit:function (event, obj) {
-		return {
-			m:this.getModule(),
-			s:this.getSubModule(),
-			c:event,
-			q:obj
-		}
-	},
-
-	hasIoSocketLibrary:function () {
-		return window['io'] !== undefined;
-	},
-
-	hasIoSocketLibraryForThisUrl:function () {
-		return ludo.socket.libLoaded === undefined || ludo.socket.libLoaded[this.getUrl()] == undefined;
-	},
-
-	getSocket:function () {
-		if (this.socket === undefined) {
-			if (ludo.socket.socketCache === undefined) {
-				ludo.socket.socketCache = {};
-			}
-			var url = this.getUrl();
-			if (ludo.socket.socketCache[url] === undefined) {
-				ludo.socket.socketCache[url] = window['io'].connect(url);
-			}
-			this.socket = ludo.socket.socketCache[url];
-		}
-
-		return this.socket;
-	}
 });/* ../ludojs/src/effect/resize.js */
 /***
  * Make component or DOM elements resizable
@@ -17873,6 +20031,7 @@ ludo.Window = new Class({
     }
 });/* ../ludojs/src/accordion.js */
 /**
+ * TODO Accordion should be a layout
  * @class Accordion
  * @augments FramedView
  * @description Accordion component
@@ -23313,6 +25472,584 @@ ludo.calendar.MonthYearSelector = new Class({
         }
 		return undefined;
     }
+});/* ../ludojs/src/calendar/time-picker.js */
+/**
+ * Time Picker module
+ * @module timeanddat
+ * @namespace ludo.calendar
+ * @class ludo.calendar.TimePicker
+ * @param {object} config Config object
+ * @param {number} config.hours Initial hours
+ * @param {number} config.minutes Initial minutes
+ * @param {String} config.clockBackground Background color of "Watch face"
+ * @param {String} config.hourColor Color of hours text, default: #555555
+ * @param {String} config.minuteColor Color for the minute text, default: #555555
+ * @param {String} config.handColor Color of Arrow Hand indicating selected hours and minutes. default: #669900
+ * @param {String} config.handTextColor Color of hour and minute text on the hour/minute hand. default: #FFFFFFF
+ * @param {String} config.minuteDotColor Color of small dot inside the hour/minute hand., default: #FFFFFF
+ *
+ * @fires ludo.calendar.TimePicker#time
+ * @fires ludo.calendar.TimePicker#mode
+ */
+ludo.calendar.TimePicker = new Class({
+
+    Extends: ludo.View,
+    origo: undefined,
+
+    hours: undefined,
+    minutes: undefined,
+
+    hourPrefixed: undefined,
+    minutePrefixed: undefined,
+
+    area: undefined,
+
+    initialArea: undefined,
+
+    hourGroupInner: undefined,
+    hourGroup: undefined,
+
+    frontGroup: undefined,
+
+    hourElements: undefined,
+    minuteEls: undefined,
+
+    centerDot: undefined,
+    needle: undefined,
+    needleCircle: undefined,
+    needleText: undefined,
+    clipPath: undefined,
+    mode: undefined,
+
+    dragActive: false,
+
+    drag: undefined,
+
+    outerSize: 0.85,
+    hourInnerSize: 0.65,
+
+    handColor: '#669900',
+    minuteDotColor:'#ffffff',
+    clockBackground: '#DDDDDD',
+    handTextColor: '#ffffff',
+    hourColor:'#555555',
+    minuteColor:'#555555',
+
+    ludoConfig: function (config) {
+        this.parent(config);
+        this.setConfigParams(config, ['hours', 'minutes','handColor', 'minuteDotColor', 'clockBackground','handTextColor',
+        'hourColor', 'minuteColor']);
+
+        var d = new Date();
+        if (this.hours == undefined) {
+            this.hours = d.getHours();
+        }
+        if (this.minutes == undefined) {
+            this.minutes = d.getMinutes();
+        }
+        this.mode = 'hours';
+    },
+
+
+    ludoRendered: function () {
+        this.parent();
+        this.renderClock();
+        this.notify();
+    },
+
+    setTime:function(hour, minutes){
+        this.hours = hour;
+        this.minutes = minutes;
+        this.setPrefixed();
+        this.restart();
+        this.notify();
+        this.updateNeedle();
+
+
+    },
+
+    /**
+     * Show hours
+     */
+    restart: function () {
+        this.showHours();
+    },
+
+
+    setPrefixed:function(){
+        this.hourPrefixed= this.hours < 10 ? "0" + this.hours : this.hours;
+        this.minutePrefixed = this.minutes < 10 ? "0" + this.minutes : this.minutes;
+    },
+
+    notify: function () {
+        /**
+         * Mode event, arguments can be "hours" or "minutes"
+         * @event ludo.calendar.TimePicker#time
+         * @property {Number} hours Current hours
+         * @property {Number} minutes Current minutes
+         * @property {String} timeString. Time in format HH:MM
+         * @example
+         * var t = new ludo.calendar.TimePicker({
+         *      layout:{width:500,height:500},
+         *      renderTo:document.body,
+         *      listeners:{
+         *          // Listener for the "time" event
+         *          'time' : function(hour, minutes, timeAsString){
+         *              // timeString in format HH:MM, example: 11:48
+         *              console.log(timeAsString);
+         *          }
+         *
+         * });
+         *
+         */
+
+        this.fireEvent('time', [this.hours, this.minutes, this.hourPrefixed + ":" + this.minutePrefixed]);
+    },
+
+    mouseDown: function (e) {
+        this.dragActive = true;
+
+        var offset = this.getBody().offset();
+        this.drag = {
+            elX: offset.left + parseInt(this.getBody().css("paddingLeft")) + parseInt(this.getBody().css("border-left-width")),
+            elY: offset.top + parseInt(this.getBody().css("paddingLeft")) + parseInt(this.getBody().css("border-top-width"))
+        };
+        this.updateTimeByEvent(e);
+    },
+
+    mouseMove: function (e) {
+        if (!this.dragActive)return;
+        this.updateTimeByEvent(e);
+
+    },
+
+    mouseUp: function () {
+        if (this.dragActive) {
+            if (this.mode == 'hours') {
+                this.showMinutes();
+            }
+        }
+        this.dragActive = false;
+    },
+
+    updateTimeByEvent: function (e) {
+
+
+        var posX = e.pageX - this.drag.elX;
+        var posY = e.pageY - this.drag.elY;
+
+        var angle = ludo.geometry.getAngleFrom(this.origo.x, this.origo.y, posX, posY);
+        var distance = ludo.geometry.distanceBetweenPoints(this.origo.x, this.origo.y, posX, posY);
+
+        var hour = this.hours;
+        var minute = this.minutes;
+
+        if (this.mode == "hours") {
+            var inner = distance < (this.area.size / 2) * (this.hourInnerSize * 1.05);
+            hour = angle / 360 * 12;
+            if (inner)hour += 12;
+            hour = Math.round(hour);
+            if (!inner && hour == 0)hour = 12;
+            if (inner && hour == 12)hour = 0;
+            if (hour == 24) hour = 0;
+
+        } else {
+            minute = angle / 360 * 60;
+            minute = Math.round(minute) % 60;
+        }
+        if (hour != this.hours || minute != this.minutes) {
+            this.hours = hour;
+            this.minutes = minute;
+            this.setPrefixed();
+            this.notify();
+            this.updateNeedle();
+
+        }
+    },
+
+    updateNeedle: function () {
+
+        var pos, txt;
+        if (this.mode == 'hours') {
+            var angle = this.getHourAngle(this.hours);
+            var length = this.getHourDistance(this.hours);
+
+            pos = ludo.geometry.getPointDistanceFrom(this.origo.x, this.origo.y, angle, length);
+            txt = this.hourPrefixed;
+
+            this.needleText.text(txt);
+
+            this.needleText.set('x', pos.x);
+            this.needleText.set('y', pos.y);
+
+        } else {
+
+            var a = this.getMinuteAngle(this.minutes);
+            var l = this.area.size * this.outerSize / 2;
+            pos = ludo.geometry.getPointDistanceFrom(this.origo.x, this.origo.y, a, l);
+
+            var minute = Math.round(this.minutes / 5) * 5;
+            if (minute == 60)minute = 0;
+            var m = minute < 10 ? "0" + minute : minute;
+            var a2 = this.getMinuteAngle(minute);
+            var pos2 = ludo.geometry.getPointDistanceFrom(this.origo.x, this.origo.y, a2, l);
+
+            this.needleText.set('x', pos2.x);
+            this.needleText.set('y', pos2.y);
+
+            this.needleCircleInnerMinutes.set('cx', pos.x);
+            this.needleCircleInnerMinutes.set('cy', pos.y);
+
+            if(pos.x != pos2.x){
+                this.needleCircleInnerMinutes.show();
+            }else{
+                this.needleCircleInnerMinutes.hide();
+            }
+
+            this.needleText.text(m);
+        }
+
+
+        this.clipCircle.set('cx', pos.x);
+        this.clipCircle.set('cy', pos.y);
+
+        this.needle.set('x2', pos.x);
+        this.needle.set('y2', pos.y);
+
+        this.needleCircle.set('cx', pos.x);
+        this.needleCircle.set('cy', pos.y);
+
+
+    },
+
+
+
+    renderClock: function () {
+        var canvas = this.getCanvas();
+        canvas.getNode().on(ludo.util.getDragStartEvent(), this.mouseDown.bind(this));
+        $(document.body).on(ludo.util.getDragMoveEvent(), this.mouseMove.bind(this));
+        $(document.body).on(ludo.util.getDragEndEvent(), this.mouseUp.bind(this));
+
+
+        var size = Math.min(canvas.width, canvas.height);
+
+        this.hourElements = [];
+        this.minuteEls = [];
+
+        this.origo = {
+            x: canvas.width / 2,
+            y: canvas.height / 2
+        };
+
+        this.area = {
+            x: (canvas.width - size) / 2,
+            y: (canvas.height - size) / 2,
+            size: size
+        };
+
+        this.initialArea = {
+            x: this.area.x, y: this.area.y, size: this.area.size
+        };
+
+        this.clipPath = new ludo.canvas.Node('clipPath', {});
+        canvas.append(this.clipPath);
+        this.clipCircle = new ludo.canvas.Circle({
+            cx: this.origo.x, cy: this.origo.y, r: 5
+        });
+        this.clipPath.append(this.clipCircle);
+
+
+        this.clockBackground = new ludo.canvas.Circle({
+            cx: this.origo.x, cy: this.origo.y, r: this.area.size / 2,
+            css: {
+                'fill': this.clockBackground
+            }
+        });
+        canvas.append(this.clockBackground);
+
+        this.hourGroup = new ludo.canvas.Group({
+            css: {
+                'fill': this.hourColor,
+                'stroke-width': 0
+
+            }
+        });
+
+        var styles = {
+            '-webkit-user-select': 'none',
+            '-moz-user-select': 'none',
+            '-ms-user-select': 'none',
+            'user-select': 'none'
+        };
+
+        canvas.append(this.hourGroup);
+
+        this.hourGroupInner = new ludo.canvas.Group({
+            css: {
+                'fill': this.hourColor,
+                'stroke-width': 0
+            }
+        });
+        canvas.append(this.hourGroupInner);
+
+        var i;
+
+        for (i = 1; i <= 12; i++) {
+            var text = new ludo.canvas.Text("" + i, {
+                css: styles
+            });
+
+            text.set("text-anchor", "middle");
+            text.set("alignment-baseline", "middle");
+
+            this.hourGroup.append(text);
+            this.hourElements.push({
+                hour: i,
+                el: text
+            });
+        }
+
+        for (i = 13; i <= 24; i++) {
+            var txt = i == 24 ? "00" : "" + i;
+            text = new ludo.canvas.Text(txt, {
+                css: styles
+            });
+            text.set("text-anchor", "middle");
+            text.set("alignment-baseline", "middle");
+            this.hourElements.push({
+                hour: i,
+                el: text
+            });
+            this.hourGroupInner.append(text);
+        }
+
+        this.centerDot = new ludo.canvas.Circle({
+            cx: this.origo.x, cy: this.origo.y,
+            r: 2,
+            css: {
+                'fill': this.handColor, 'stroke-width': 0
+            }
+        });
+
+        this.needle = new ludo.canvas.Node('line',
+            {
+                x1: this.origo.x, y1: this.origo.y,
+                x2: 100, y2: 100,
+                css: {
+                    'stroke-linecap': "round",
+                    'stroke': this.handColor,
+                    'stroke-width': 2
+                }
+            }
+        );
+        canvas.append(this.needle);
+
+
+        this.minuteGroup = new ludo.canvas.Group({
+            css: {
+                'fill': this.minuteColor,
+                'stroke-width': 0
+            }
+        });
+        canvas.append(this.minuteGroup);
+
+        for (i = 0; i < 60; i += 5) {
+            var m = "" + i;
+            if (m.length == "1")m = "0" + m;
+            text = new ludo.canvas.Text(m, {
+                css: styles
+            });
+            text.set("text-anchor", "middle");
+            text.set("alignment-baseline", "middle");
+            this.minuteEls.push({
+                minute: i,
+                el: text
+            });
+            this.minuteGroup.append(text);
+        }
+
+        this.needleCircle = new ludo.canvas.Circle({
+            cx: this.origo.x, cy: this.origo.y, r: 10,
+            css: {
+                'fill': this.handColor
+            }
+        });
+        canvas.append(this.needleCircle);
+
+        this.needleCircleInnerMinutes = new ludo.canvas.Circle({
+            cx: this.origo.x, cy: this.origo.y, r: 1,
+            css: {
+                fill: this.minuteDotColor
+            }
+        });
+        canvas.append(this.needleCircleInnerMinutes);
+
+
+
+        this.needleText = new ludo.canvas.Text("", {
+            'fill': this.handTextColor,
+            css: styles
+
+        });
+        this.needleText.set("text-anchor", "middle");
+        this.needleText.set("alignment-baseline", "middle");
+        canvas.append(this.needleText);
+
+        this.needleText.applyClipPath(this.clipPath);
+
+        this.showHours();
+
+        canvas.append(this.centerDot);
+
+        this.resizeSVG();
+    },
+
+    positionHour: function (index) {
+        var hour = this.hourElements[index].hour;
+        var offset = this.getHourDistance(hour);
+        var angle = this.getHourAngle(hour);
+        var x = Math.cos(angle);
+        var y = Math.sin(angle);
+        this.hourElements[index].el.set('x', (x * offset) + this.origo.x);
+        this.hourElements[index].el.set('y', (y * offset) + this.origo.y);
+    },
+
+    getHourDistance: function (hour) {
+        return hour <= 12 && hour > 0 ? this.area.size * this.outerSize / 2 : this.area.size * this.hourInnerSize / 2;
+    },
+
+    getHourAngle: function (hour) {
+        hour = hour % 12;
+        var degrees = 360 / 12 * hour;
+        degrees -= (360 * 3 / 12);
+        return ludo.geometry.degreesToRadians(degrees);
+    },
+
+    getMinuteAngle: function (minute) {
+        var degrees = 360 / 60 * minute;
+        degrees -= 90;
+        return ludo.geometry.degreesToRadians(degrees);
+    },
+
+    positionMinute: function (index) {
+        var offset = this.area.size * this.outerSize / 2;
+        var angle = this.getMinuteAngle(this.minuteEls[index].minute);
+        var x = Math.cos(angle);
+        var y = Math.sin(angle);
+        this.minuteEls[index].el.set('x', (x * offset) + this.origo.x);
+        this.minuteEls[index].el.set('y', (y * offset) + this.origo.y);
+    },
+
+    resizeDOM: function () {
+        this.parent();
+        if (!this.hourGroup)return;
+        this.resizeSVG();
+    },
+
+    resizeSVG: function () {
+        var canvas = this.getCanvas();
+        canvas.fitParent();
+        var size = Math.min(canvas.width, canvas.height);
+
+        this.area = {
+            x: (canvas.width - size) / 2,
+            y: (canvas.height - size) / 2,
+            size: size
+        };
+
+        this.hourGroup.css({
+            'font-size': this.area.size / 20
+        });
+        this.hourGroupInner.css({
+            'font-size': this.area.size / 25
+        });
+
+        this.needleCircle.set('r', this.area.size / 20);
+        this.clipCircle.set('r', this.area.size / 20);
+
+        this.origo = {
+            x: canvas.width / 2,
+            y: canvas.height / 2
+        };
+
+        for (i = 0; i < this.hourElements.length; i++) {
+            this.positionHour(i);
+            var s = i < 12 ? this.area.size / 20 : this.area.size / 25;
+            this.hourElements[i].el.css("font-size", s);
+        }
+        for (i = 0; i < this.minuteEls.length; i++) {
+            this.positionMinute(i);
+            this.minuteEls[i].el.css("font-size", this.area.size / 20);
+        }
+
+        this.clockBackground.set('cx', this.origo.x);
+        this.clockBackground.set('cy', this.origo.y);
+        this.clockBackground.set('r', this.area.size / 2);
+
+        this.centerDot.set('cx', this.origo.x);
+        this.centerDot.set('cy', this.origo.y);
+        this.centerDot.set('r', this.area.size / 70);
+        this.needleCircleInnerMinutes.set('r', this.area.size / 150);
+
+        this.needle.set('x1', this.origo.x);
+        this.needle.set('y1', this.origo.y);
+
+        this.needleText.css("font-size", this.area.size / 20);
+
+        this.updateNeedle();
+    },
+
+
+    showMinutes: function () {
+        this.mode = 'minutes';
+        this.hourGroup.hide();
+        this.hourGroupInner.hide();
+        this.minuteGroup.show();
+        this.needleCircleInnerMinutes.show();
+        this.updateNeedle();
+
+        this.fireEvent('mode', 'minutes');
+    },
+
+    showHours: function () {
+        this.mode = 'hours';
+        this.hourGroup.show();
+        this.hourGroupInner.show();
+        this.minuteGroup.hide();
+        this.needleCircleInnerMinutes.hide();
+        this.updateNeedle();
+
+        /**
+         * Mode event, arguments can be "hours" or "minutes"
+         * @event ludo.calendar.TimePicker#mode
+         * @property {string} mode - "hours" when hour is displayed, "minutes" when minutes is displayed
+         * @example
+         * var t = new ludo.calendar.TimePicker({
+         *      layout:{width:500,height:500},
+         *      renderTo:document.body,
+         *      listeners:{
+         *          'mode' : function(mode){
+         *              console.log(mode);
+         *          }
+         *
+         * });
+         *
+         */
+        this.fireEvent('mode', 'hours');
+    },
+
+    getTimeString:function(){
+        return this.hourPrefixed + ":" + this.minutePrefixed;
+    },
+
+    val:function(val){
+        if(arguments.length > 0){
+            var tokens = val.split(/:/g);
+            this.setTime(parseInt(tokens[0]),parseInt(tokens[1]));
+        }
+        return this.hourPrefixed + ":" + this.minutePrefixed;
+    }
+
 });/* ../ludojs/src/menu/item.js */
 /**
  * Class for menu items. MenuItems are created dynamically from config object(children of ludo.menu.Menu or ludo.menu.Context)
@@ -29232,7 +31969,7 @@ ludo.form.OnOffSwitch = new Class({
  * @param {number} config.negativeColor color of seekbar line below(vertical) and left(horizontal mode), default: #888
  * @param {number} config.positiveColor color of seekbar line above(vertical) and right of(horizontal mode), default: #CCC
  * @param {number} config.thumbColor Color of thumb, default: #888
- * @param {number} config.thumbAlpha Alpha(opacity) of thumb in range 0-1, default: 1
+ * @param {number} config.thumbAlpha Alpha(opacity) of thumb in range 0-1 while dragging, default: 1
  * @param {number} config.barSize Size(height or width) of bar in pixels, default: 2
  * @param {number} config.needleSize Fraction size of of needle(circle inside thumb) relative to thumb size, default: 0.2
  *
@@ -29301,7 +32038,6 @@ ludo.form.Seekbar = new Class({
         this.parent(config);
         this.setConfigParams(config, ["orientation", "reverse", "minValue", "maxValue", "value", "valueListener", "negativeColor", "positiveColor", "needleSize", "barSize"]);
 
-
         if (config.thumbColor != undefined) {
             if (config.thumbColor.length == 9) {
                 var alpha = config.thumbColor.substr(1, 2);
@@ -29353,13 +32089,9 @@ ludo.form.Seekbar = new Class({
         this.eventEl.on("click", this.clickOnBar.bind(this));
 
 
-        this.thumb.on("mousedown", this.startDragging.bind(this));
-        this.thumb.on("touchstart", this.startDragging.bind(this));
-
-        $(document.documentElement).on("touchmove", this.drag.bind(this));
-        $(document.documentElement).on("mousemove", this.drag.bind(this));
-        $(document.documentElement).on("mouseup", this.endDrag.bind(this));
-        $(document.documentElement).on("touchend", this.endDrag.bind(this));
+        this.thumb.on(ludo.util.getDragStartEvent(), this.startDragging.bind(this));
+        $(document.documentElement).on(ludo.util.getDragMoveEvent(), this.drag.bind(this));
+        $(document.documentElement).on(ludo.util.getDragEndEvent(), this.endDrag.bind(this));
 
     },
 
@@ -29445,7 +32177,6 @@ ludo.form.Seekbar = new Class({
         this.thumbInner.css({
             width: needleSize, height: needleSize, borderRadius: needleSize / 2, left: pos, top: pos
         });
-
 
         this.valueArea.min = this.thumbSize / 2;
         this.valueArea.max = size - this.thumbSize / 2;

@@ -1,8 +1,15 @@
 /**
  * Button component
+ * The button class extends ludo.form.Element
  * @namespace ludo.form
  * @class ludo.form.Button
- * @augments ludo.form.Element
+ * @param {Object} config
+ * @param {Boolean} config.submittable Default: false. When false, the JSON from parentView.getForm().values() will not not include the button.
+ * @param {Boolean} config.disabled Default: false. True to initially disable the button
+ * @param {Boolean} config.toggle When true, the button will remain in it's pressed until a new press on button occurs.
+ * @param {String|Object} config.toggleGroup Used for toggling between buttons. Example: { type:'form.Button', toggle:true, toggleGroup:'myGroup',value:'1' }, 
+ * { type:'form.Button', toggle:true, toggleGroup:'myGroup',value:'2' }. Here, two buttons are assigned to the same toggleGroup 'myGroup'. When one button is pressed,
+ * the other button will be unpressed.
  */
 ludo.form.Button = new Class({
     Extends:ludo.form.Element,
@@ -23,6 +30,7 @@ ludo.form.Button = new Class({
     component:null,
 
     menu:undefined,
+    submittable:false,
 
     /**
      * Toggle button

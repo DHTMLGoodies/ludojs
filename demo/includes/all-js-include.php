@@ -87,6 +87,7 @@
 
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/form/manager.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/form/element.js"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/form/label.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/form/label-element.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/form/button.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/form/text.js"></script>
