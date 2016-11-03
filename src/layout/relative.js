@@ -75,7 +75,7 @@ ludo.layout.Relative = new Class({
     /**
      * Internal storage of child coordinates for last resize
      * @property {Object} lastChildCoordinates
-     * @private
+     * @privatea
      */
 	lastChildCoordinates:{},
 

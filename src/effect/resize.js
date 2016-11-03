@@ -491,8 +491,8 @@ ludo.effect.Resize = new Class({
     getShimCoordinates:function () {
         var el = this.getEl();
         var coords = el.offset();
-        coords.width = el.width();
-        coords.height = el.height();
+        coords.width = el.outerWidth();
+        coords.height = el.outerHeight();
 
         if (this.useShim) {
             var shim = this.getShim();

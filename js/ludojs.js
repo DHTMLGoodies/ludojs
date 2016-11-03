@@ -1,4 +1,4 @@
-/* Generated Tue Nov 1 14:56:30 CET 2016 */
+/* Generated Thu Nov 3 19:29:38 CET 2016 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -5988,6 +5988,7 @@ ludo.layout.Base = new Class({
 		width:0, height:0,
 		bottom:0, right:0
 	},
+    resized:false,
 
 	initialize:function (view) {
         this.id = String.uniqueID();
@@ -6089,6 +6090,10 @@ ludo.layout.Base = new Class({
 	},
 
 	resizeChildren:function () {
+        if(!this.resized){
+            this.beforeFirstResize();
+            this.resized = true;
+        }
 		if (this.benchmarkTime) {
 			var start = new Date().getTime();
 		}
@@ -6106,6 +6111,12 @@ ludo.layout.Base = new Class({
 			ludo.util.log("Time for resize(" + this.view.layout.type + "): " + (new Date().getTime() - start));
 		}
 	},
+
+
+
+	beforeFirstResize:function(){
+
+    },
 
 	storeViewPortSize:function () {
 		this.viewport.absWidth = this.getAvailWidth();
@@ -6315,6 +6326,8 @@ ludo.layout.Factory = new Class({
 		if(!view.layout || !view.layout.type)return 'Base';
 
 		switch(view.layout.type.toLowerCase()){
+			case "accordion":
+				return "Accordion";
 			case "table":
 				return "Table";
             case 'slidein':
@@ -13532,41 +13545,27 @@ ludo.form.validator.twin = function(value, twin){
     return !cmp || (cmp && value === cmp.value);
 };/* ../ludojs/src/form/element.js */
 /**
- * Super class for form components.
+ * Super class for form Views.
+ * This class inherits from <a href="ludo.View.html">ludo.View</a>.
  * @namespace ludo.form
  * @class ludo.form.Element
- * @augments ludo.View
+ * @param {Object} config Configuration when creating the View. These properties and properties from superclass is available
+ * @param {String} config.name Name of element. A call to parentView.getForm().values() will return &lt;name> : &lt;value>.
+ * @param {Boolean} config.required True to apply validation for required. Default:false
+ * @param {Object} config.formCss Optional css styling of the form element. Example: { type:'form.Text', formCss:{ "text-align": right }} to right align text of a text input.
+ * @param {Function} config.validator A Validator function to be executed when value is changed. This function should return true when valid, false when invalid. Current value will be passed to this function.
+ * Example: { type:'form.Text', placeHolder='Enter Valid Value', validator:function(value){ return value == 'Valid Value' } }
+ *
  */
 ludo.form.Element = new Class({
     Extends:ludo.View,
-	/**
-	 * Form element label
-	 * @config {String} label
-	 * @default ''
-	 */
-    label:undefined,
-	/**
-	 * Label after input field
-	 * @config {String} suffix
-	 *
-	 */
-	suffix:'',
-
     /**
      * Initial value
      * @config {String|Number} value
      * @default undefined
      */
     value:undefined,
-
     onLoadMessage:'',
-
-    /**
-     * Width of label
-     * @attribute labelWidth
-     * @default 100
-     */
-    labelWidth:100,
     /**
      * "name" is inherited from ludo.View. It will also be set as name of input element
      * @attribute name
@@ -13574,13 +13573,6 @@ ludo.form.Element = new Class({
      * @default undefined
      */
     name:undefined,
-    /**
-     * Width of input element
-     * @attribute fieldWidth
-     * @type int
-     * @default undefined
-     */
-    fieldWidth:undefined,
 
     /**
      * Custom CSS rules to apply to input element
@@ -13591,21 +13583,7 @@ ludo.form.Element = new Class({
      * @default undefined
      */
     formCss:undefined,
-    /**
-     * Let input field use all remaining space of the component
-     * @attribute stretchField
-     * @type {Boolean}
-     * @default true
-     */
     stretchField:true,
-
-
-    /**
-     * Is a value required for this field
-     * @attribute required
-     * @type {Boolean}
-     * @default false
-     */
     required:false,
     dirtyFlag:false,
     initialValue:undefined,
@@ -13667,20 +13645,18 @@ ludo.form.Element = new Class({
     validatorFn:undefined,
 
     validators:[],
+    submittable:true,
 
     ludoConfig:function (config) {
         this.parent(config);
         var defaultConfig = this.getInheritedFormConfig();
-        this.labelWidth = defaultConfig.labelWidth || this.labelWidth;
-        this.fieldWidth = defaultConfig.fieldWidth || this.fieldWidth;
-        this.inlineLabel = defaultConfig.inlineLabel || this.inlineLabel;
 
         // TODO change disabled to enabled
-        var keys = ['label', 'suffix', 'formCss', 'validator', 'stretchField', 'required', 'twin', 'disabled', 'labelWidth', 'fieldWidth',
+        var keys = ['label', 'suffix', 'formCss', 'validator', 'stretchField', 'required', 'twin', 'disabled','submittable',
             'value', 'data'];
         this.setConfigParams(config, keys);
 
-        this.elementId = 'el-' + this.id;
+        this.elementId = ('el-' + this.id).trim();
         this.formCss = defaultConfig.formCss || this.formCss;
         if (defaultConfig.height && config.height === undefined)this.layout.height = defaultConfig.height;
 
@@ -13703,7 +13679,10 @@ ludo.form.Element = new Class({
         this.applyValidatorFns(['twin']);
     },
 
-
+    ludoDOM:function(){
+        this.parent();
+        this.addInput();
+    },
 
     applyValidatorFns:function (keys) {
         for (var i = 0; i < keys.length; i++) {
@@ -13739,6 +13718,7 @@ ludo.form.Element = new Class({
         }
 
         var formEl = this.getFormEl();
+
         if (formEl) {
             formEl.on('keydown', this.keyDown.bind(this));
             formEl.on('keypress', this.keyPress.bind(this));
@@ -13807,10 +13787,6 @@ ludo.form.Element = new Class({
         this.parent();
         this.getEl().addClass('ludo-form-element');
         if (this.els.formEl) {
-            if (this.fieldWidth) {
-                this.els.formEl.css('width', (this.fieldWidth - ludo.dom.getPW(this.els.formEl) - ludo.dom.getBW(this.els.formEl)));
-            }
-
             this.els.formEl.id = this.elementId;
 
             if (this.formCss) {
@@ -13825,10 +13801,7 @@ ludo.form.Element = new Class({
 
     getWidth:function () {
         var ret = this.parent();
-
-        var f = this.fieldWidth ? this.fieldWidth : 0;
-        
-        return ret ? ret : f + (this.label ? this.labelWidth : 0) + 2;
+        return ret ? ret : 20;
     },
 
     keyUp:function (e) {
@@ -13865,7 +13838,6 @@ ludo.form.Element = new Class({
     },
 
     focus:function () {
-
         this._focus = true;
         this.clearInvalid();
         /**
@@ -13878,7 +13850,8 @@ ludo.form.Element = new Class({
     },
     change:function () {
         if (this.els.formEl) {
-            this.val(this.els.formEl.val());
+            this._set(this.els.formEl.val());
+
         }
         /**
          * On change event. This event is fired when value is changed manually
@@ -14165,7 +14138,8 @@ ludo.form.Element = new Class({
 
     setClean:function () {
         this.dirtyFlag = false;
-        this.getEl().removeClass('ludo-form-el-dirty');
+        var el = this.getEl();
+        if(el)el.removeClass('ludo-form-el-dirty');
     },
 
     setReady:function () {
@@ -14200,9 +14174,36 @@ ludo.form.Element = new Class({
         }
     },
 
+    addInput: function () {
+        if (!this.inputTag) {
+            return;
+        }
+
+        this.els.inputCell = $('<div class="input-cell"></div>');
+        this.getBody().append(this.els.inputCell);
+        this.els.formEl = $('<' + this.inputTag + '>');
+
+        if (this.inputType) {
+            this.els.formEl.attr('type', this.inputType);
+        }
+        if (this.maxLength) {
+            this.els.formEl.attr('maxlength', this.maxLength);
+        }
+        if (this.readonly) {
+            this.els.formEl.attr('readonly', true);
+        }
+        this.getInputCell().append(this.els.formEl);
+        this.els.formEl.css('width', '100%');
+        this.els.formEl.attr("id", this.getFormElId());
+    },
+
     getLinkWith:function(){
         var cmp = ludo.get(this.linkWith);
         return cmp ? cmp : this.parentComponent ? this.parentComponent.child[this.linkWith] : undefined;
+    },
+
+    getInputCell:function(){
+        return this.els.inputCell;
     }
 });/* ../ludojs/src/form/label-element.js */
 /**
@@ -14240,6 +14241,9 @@ ludo.form.LabelElement = new Class({
         this.parent(config);
         this.setConfigParams(config, ['inlineLabel', 'labelSuffix']);
         if (!this.supportsInlineLabel())this.inlineLabel = undefined;
+
+        console.warn("Use of deprecated ancestor ludo.form.LabelElement");
+        console.trace();
     },
 
     ludoEvents: function () {
@@ -15129,6 +15133,7 @@ ludo.layout.Table = new Class({
 
     getWidthOfChild: function (child, colIndex) {
         var colspan = child.layout.colspan ? child.layout.colspan : 1;
+        if(child.layout.width)return child.layout.width;
         var width = 0;
         var totalWidth = this.view.getBody().width();
         var weightWidth = totalWidth - this.fixedWidth;
@@ -15143,6 +15148,222 @@ ludo.layout.Table = new Class({
         return width;
     }
 
+});/* ../ludojs/src/layout/accordion.js */
+/**
+ * This layout will render children in an Accordion. For a demo, see
+ * <a href="../demo/layout/accordion.php" onclick="var w=window.open(this.href);return false">accordion demo</a>
+ * @class ludo.layout.Accordion
+ * @param {object} layout Layout config properties
+ * @param {String} layout.type Set "type" to "accordion" on a parent view to render children in an accordion layout.
+ * @param {String} layout.easing Easing for the animation. Default: "swing". easing is used for jQuery.animate, so any easing properties you have
+ * available in jQuery or jQuery plugins are available here.
+ * @param {number} layout.duration Duration of accordion animation in milliseconds(1/1000s).
+ * @param {String} layout.title Option for child views inside an accordion layout. This is the title for the clickable title bar for each child view.
+ * @example
+ var w = new ludo.Window({
+        title:'Accordion layout',
+        layout:{
+            left:50, top:50,
+            width:700, height:600,
+            type:'accordion',
+            easing: 'linear',
+            duration: 300
+        },
+        children:[
+            {
+                title: 'Drawing', // Title for the accordion
+                html: '<img src="../images/drawing.png" style="margin-right:5px;margin-bottom:5px;float:left">' +
+                'This is a Charcoal drawing on Smooth Newsprint paper. <br>',
+                css:{ // CSS styling for the view
+                    padding:5,
+                    'font-size' : '1.2em',
+                    'overflow-y': 'auto'
+                }
+            },
+            {
+                title: 'Second Accordion View',// Title for the accordion
+                html: 'Second Accordion',
+                css:{
+                    padding:5
+                }
+            },
+            {
+                title: 'Source Code',// Title for the accordion
+                type:'SourceCodePreview',
+                css:{
+                    padding:5
+                }
+            }
+        ]
+    });
+ */
+
+ludo.layout.Accordion = new Class({
+    Extends: ludo.layout.Base,
+    easing: 'swing',
+    titleEls: undefined,
+    titleHeight: undefined,
+
+
+    expandedView: undefined,
+    expandedChild: undefined,
+    expandedTitle: undefined,
+
+    childIndex: 0,
+
+    duration: 200,
+    busy: false,
+
+    onCreate: function () {
+        this.parent();
+        var l = this.view.layout;
+        if (l.easing != undefined)this.easing = l.easing;
+        if (l.duration != undefined)this.duration = l.duration;
+        this.titleEls = [];
+
+    },
+
+    addChild: function (child, insertAt, pos) {
+        if (child.layout == undefined)child.layout = {};
+        child.layout.index = this.childIndex++;
+        return this.parent(child, insertAt, pos);
+    },
+
+    getParentForNewChild: function (child) {
+
+
+        var el = $('<div class="ludo-framed-view-titlebar ludo-accordion-titlebar"></div>');
+
+        var title = $('<div class="ludo-framed-view-titlebar-title ludo-accordion-title"></div>');
+        var expand = $('<div class="ludo-accordion-collapsed"></div>');
+        expand.attr("id", "accordion-expand-" + child.id);
+        el.attr("id", "accordion-title-" + child.id);
+        el.attr("data-accordion-for", child.id);
+        el.on('click', this.getExpandFn(child));
+        el.attr("data-child-index", child.layout.index);
+        el.append(expand);
+        el.append(title);
+        if (child.title) {
+            title.html(child.title);
+        }
+        this.view.getBody().append(el);
+
+        this.titleEls.push(el);
+
+
+        var container = $('<div class="ludo-accordion-container" style="height:0"></div>');
+        container.attr("id", "accordion-" + child.id);
+        this.view.getBody().append(container);
+
+        return container;
+    },
+
+    getExpandFn: function (child) {
+        return function () {
+            this.expandChild(child.id);
+        }.bind(this);
+    },
+
+    expandChild: function (id) {
+        if (this.busy)return;
+
+        var view = $("#accordion-" + id);
+        var expand = $("#accordion-expand" + id);
+
+
+        if (id == this.expandedChild)return;
+        var h = this.viewport.height - this.titleHeight;
+
+        if (this.expandedView) {
+            var el = this.expandedView;
+            var fn = this.onAnimationComplete.bind(this);
+            var d = this.duration;
+            var e = this.easing;
+            $(function () {
+                el.animate({height: 0, easing: e}, d, fn);
+                view.animate({height: h, easing: e}, d);
+            });
+            this.busy = true;
+        } else {
+            view.animate({height: h}, 200);
+        }
+        this.expandedView = view;
+        this.expandedChild = id;
+        this.toggleTitle(id);
+        console.log(id);
+    },
+
+    titleNextOfOpened: undefined,
+    expandIcon: undefined,
+
+    toggleTitle: function (id) {
+        if (this.expandIcon) {
+            this.expandIcon.removeClass('ludo-accordion-expanded');
+
+        }
+        this.expandIcon = $('#accordion-expand-' + id);
+        this.expandIcon.addClass('ludo-accordion-expanded');
+        this.expandedTitle = $("#accordion-title-" + id);
+        if (this.titleNextOfOpened) {
+            this.titleNextOfOpened.removeClass('ludo-accordion-titlebar-below-expanded');
+        }
+        var index = this.expandedTitle.attr("data-child-index");
+        if (index < this.titleEls.length - 1) {
+            index++;
+            this.titleNextOfOpened = this.titleEls[index];
+
+            this.titleNextOfOpened.addClass('ludo-accordion-titlebar-below-expanded');
+        }
+    },
+
+    measureTitleHeight: function () {
+        this.titleHeight = 0;
+        for (var i = 0; i < this.titleEls.length; i++) {
+            this.titleHeight += this.titleEls[i].outerHeight();
+        }
+    },
+
+    onAnimationComplete: function () {
+        this.busy = false;
+    },
+
+    beforeFirstResize: function () {
+        this.measureTitleHeight();
+        var c = this.view.children;
+        for (var i = 0; i < c.length; i++) {
+            if (c[i].layout.expanded) {
+                this.expandedChild = c[i].id;
+                break;
+            }
+        }
+
+        if (!this.expandedChild) {
+            this.expandedChild = c[0].id;
+        }
+
+
+        this.expandedView = $('#accordion-' + this.expandedChild);
+        this.expandedView.css('height', this.viewport.height - this.titleHeight);
+        this.toggleTitle(this.expandedChild);
+
+    },
+
+    resize: function () {
+        var c = this.view.children;
+        var h = this.viewport.height - this.titleHeight;
+        if (this.expandedView) {
+            this.expandedView.css('height', h);
+        }
+
+        var size = {
+            width: this.viewport.width,
+            height: h
+        };
+        for (var i = 0; i < c.length; i++) {
+            c[i].resize(size);
+        }
+
+    }
 });/* ../ludojs/src/layout/linear.js */
 /**
  * Abstract base class for linear layouts
@@ -16238,7 +16459,7 @@ ludo.layout.Relative = new Class({
     /**
      * Internal storage of child coordinates for last resize
      * @property {Object} lastChildCoordinates
-     * @private
+     * @privatea
      */
 	lastChildCoordinates:{},
 
@@ -18882,8 +19103,8 @@ ludo.effect.Resize = new Class({
     getShimCoordinates:function () {
         var el = this.getEl();
         var coords = el.offset();
-        coords.width = el.width();
-        coords.height = el.height();
+        coords.width = el.outerWidth();
+        coords.height = el.outerHeight();
 
         if (this.useShim) {
             var shim = this.getShim();
@@ -23373,9 +23594,16 @@ ludo.grid.Grid = new Class({
 });/* ../ludojs/src/form/button.js */
 /**
  * Button component
+ * The button class extends ludo.form.Element
  * @namespace ludo.form
  * @class ludo.form.Button
- * @augments ludo.form.Element
+ * @param {Object} config
+ * @param {Boolean} config.submittable Default: false. When false, the JSON from parentView.getForm().values() will not not include the button.
+ * @param {Boolean} config.disabled Default: false. True to initially disable the button
+ * @param {Boolean} config.toggle When true, the button will remain in it's pressed until a new press on button occurs.
+ * @param {String|Object} config.toggleGroup Used for toggling between buttons. Example: { type:'form.Button', toggle:true, toggleGroup:'myGroup',value:'1' }, 
+ * { type:'form.Button', toggle:true, toggleGroup:'myGroup',value:'2' }. Here, two buttons are assigned to the same toggleGroup 'myGroup'. When one button is pressed,
+ * the other button will be unpressed.
  */
 ludo.form.Button = new Class({
     Extends:ludo.form.Element,
@@ -23396,6 +23624,7 @@ ludo.form.Button = new Class({
     component:null,
 
     menu:undefined,
+    submittable:false,
 
     /**
      * Toggle button
@@ -24406,7 +24635,7 @@ ludo.calendar.Base = new Class({
         this.fireEvent('setdate', [this.date, this]);
     },
 
-    setValue:function(){
+    val:function(){
 
     }
 });
@@ -24545,9 +24774,9 @@ ludo.calendar.Calendar = new Class({
         for(var i=0;i<this.children.length;i++){
             var c = this.children[i];
             c.setDate(this.date);
-            c.setValue(this.date);
+            c.val(this.date);
             c.addEvent('setdate', this.setDate.bind(this));
-            c.addEvent('change', this.setValue.bind(this));
+            c.addEvent('change', this.val.bind(this));
         }
 		this.getLayout().resize();
     }
@@ -24870,12 +25099,12 @@ ludo.calendar.Days = new Class({
     },
 
     selectDay:function (e) {
-        var el = e.target;
-        if (!ludo.dom.hasClass(el, 'calendar-day')) {
-            el = el.getParent('.calendar-day');
+        var el = $(e.target);
+        if (!el.hasClass('calendar-day')) {
+            el = el.closest('.calendar-day');
             if (!el)return;
         }
-        if (ludo.dom.hasClass(el, 'calendar-day-inactive')) {
+        if (el.hasClass('calendar-day-inactive')) {
             return;
         }
         this.removeClsFromSelectedDay();
@@ -27829,7 +28058,7 @@ ludo.form.Manager = new Class({
 			if (c['getProgressBarId'] !== undefined) {
 				this.registerProgressBar(c);
 			}
-			else if (c.isFormElement()) {
+			else if (c.isFormElement() && c.submittable) {
 				this.registerFormElement(c);
 			}
 		}
@@ -28412,17 +28641,31 @@ ludo.form.CancelButton = new Class({
     }
 });/* ../ludojs/src/form/text.js */
 /**
+ * Text Input View
+ * This class inherits from <a href="ludo.form.Element.html">ludo.form.Element</a>.
  * @namespace ludo.form
- * @class Text
+ * @class ludo.form.Text
  * @description Form input text
- * @augments ludo.form.LabelElement
+ *  @param {Object} config Configuration when creating the View. These properties and properties from superclass is available
+ * @param {String} config.name Name of element. A call to parentView.getForm().values() will return &lt;name> : &lt;value>.
+ * @param {String} config.placeholder Placeholder attribute for the input. Displayed when value is empty. (Default:undefined)
+ * @param {Number} config.minLength Defines required min length of value(count characters). (Default:undefined)
+ * @param {Number} config.maxLength Defines required max length of value(count characters)
+ * @param {Boolean} config.ucFirst True to automatically Uppercase first letter. (Default: false)
+ * @param {RegExp} config.regex Regular expression used for validation, example: regex: /$[0-9]{3}^/ to require 3 digits. (Default:undefined)
+ * @param {Boolean} config.readonly True to make this form field read only. (Default: false)
+ * @param {Boolean} config.selectOnFocus Automatically make the text selected on focus. Default: false
+ * @param {Boolean} config.validateKeyStrokes True to run validation after every key stroke(Default: false)
+
+ * @augments ludo.form.Element
  *
  */
 ludo.form.Text = new Class({
-    Extends: ludo.form.LabelElement,
+    Extends: ludo.form.Element,
     type: 'form.Text',
     labelWidth: 100,
     defaultValue: '',
+    placeholder:'',
     /**
      * Max length of input field
      * @attribute maxLength
@@ -28457,31 +28700,8 @@ ludo.form.Text = new Class({
 
     inputType: 'text',
     inputTag: 'input',
-
-    /**
-     Regular expression used for validation
-     @attribute regex
-     @type RegExp
-     @default undefined
-     @example
-     regex:'[0-9]'
-     This will only validate numbers
-     */
     regex: undefined,
-
-    /**
-     Run RegEx validation on key strokes. Only keys matching "regex" will be added to the text field.
-     @property validateKeyStrokes
-     @type {Boolean}
-     @default false
-     */
     validateKeyStrokes: false,
-
-    /**
-     * current pixel width of form element
-     * @property int
-     * @private
-     */
     formFieldWidth: undefined,
 
     /**
@@ -28490,19 +28710,12 @@ ludo.form.Text = new Class({
      * @default false
      */
     readonly: false,
-
-    /**
-     * On focus, auto select text of input field.
-     * @attribute selectOnFocus
-     * @type {Boolean}
-     * @default false
-     */
     selectOnFocus: false,
 
 
     ludoConfig: function (config) {
         this.parent(config);
-        var keys = ['selectOnFocus', 'regex', 'minLength', 'maxLength', 'defaultValue', 'validateKeyStrokes', 'ucFirst', 'ucWords', 'readonly'];
+        var keys = ['placeholder', 'selectOnFocus', 'regex', 'minLength', 'maxLength', 'defaultValue', 'validateKeyStrokes', 'ucFirst', 'ucWords', 'readonly'];
         this.setConfigParams(config, keys);
         if (this.regex && ludo.util.isString(this.regex)) {
             var tokens = this.regex.split(/\//g);
@@ -28510,6 +28723,14 @@ ludo.form.Text = new Class({
             this.regex = new RegExp(tokens.join('/'), flags);
         }
         this.applyValidatorFns(['minLength', 'maxLength', 'regex']);
+    },
+
+    ludoDOM:function(){
+        this.parent();
+        if(this.placeholder){
+            console.log(this.getFormEl());
+            this.getFormEl().attr('placeholder', this.placeholder);
+        }
     },
 
     ludoEvents: function () {
@@ -28526,7 +28747,7 @@ ludo.form.Text = new Class({
         el.on('keyup', this.sendKeyEvent.bind(this));
 
         if (this.selectOnFocus) {
-            el.addEvent('focus', this.selectText.bind(this));
+            el.on('focus', this.selectText.bind(this));
         }
     },
 
@@ -28675,14 +28896,13 @@ ludo.form.Combo = new Class({
         c.layout = c.layout || {};
         if(this.childLayout)c.layout = Object.merge(c.layout, this.childLayout);
 
-        c.layout.below = c.layout.below || this.getInputCell();
-        if(c.left === undefined)c.layout.alignLeft = c.layout.alignLeft || this.getInputCell();
-        if(!c.layout.width)c.layout.sameWidthAs = c.layout.sameWidthAs || this.getInputCell();
+        c.layout.below = c.layout.below || this.getBody();
+        if(c.left === undefined)c.layout.alignLeft = c.layout.alignLeft || this.getBody();
+        if(!c.layout.width)c.layout.sameWidthAs = c.layout.sameWidthAs || this.getBody();
         c.layout.height = c.layout.height || 200;
         c.alwaysInFront = true;
         c.cls = c.cls ? c.cls + ' ' + 'form-combo-child' : 'form-combo-child';
 
-        this.getInputCell().css('position', 'relative');
 		this.createDependency('menuButton', new ludo.menu.Button({
 			type:'menu.Button',
 			renderTo: this.getInputCell(),
@@ -30121,7 +30341,7 @@ ludo.form.StrongPassword = new Class({
     }
 });/* ../ludojs/src/form/number.js */
 /**
- * A customized text input only allowing numeric characters
+ * A <a href="ludo.form.Text.html">ludo.form.Text</a> field accepting only numeric characters.
  * @namespace ludo.form
  * @class ludo.form.Number
  * @augments ludo.form.Text
@@ -30206,7 +30426,9 @@ ludo.form.Number = new Class({
     },
 
     _mouseWheel:function (e) {
-        this.incrementBy(e.wheel > 0 ? Math.ceil(e.wheel) : Math.floor(e.wheel), e.shift);	// Math.ceil because of a mystery error in either firefox or mootools
+        var delta = (e.originalEvent.wheelDelta || e.originalEvent.detail) / 120;
+        if(delta == 0)return;
+        this.incrementBy(delta >0 ? 1 : -1, e.shift);	// Math.ceil because of a mystery error in either firefox or mootools
         return false;
     },
     /**
@@ -30216,6 +30438,14 @@ ludo.form.Number = new Class({
      * @param {Boolean} shift
      */
     incrementBy:function (value, shift) {
+        if(!this.value){
+            if(this.minValue){
+                this._set(this.minValue);
+                return;
+            }
+            this._set(0);
+        }
+
         if(this.reverseWheel)value = value * -1;
         value = parseInt(this.value) + (shift ? value * this.shiftIncrement : value);
         if(this.maxValue && value > this.maxValue)value = this.maxValue;
@@ -33746,7 +33976,7 @@ ludo.dialog.Dialog = new Class({
 		 * @event buttonvalue
 		 * @param {Object} ludo.View (Parent component of button)
 		 */
-		this.fireEvent(button.getValue().replace(/\s/g, '').toLowerCase(), this);
+		this.fireEvent(button._get().replace(/\s/g, '').toLowerCase(), this);
 		if (this.autoHideOnBtnClick) {
 			this.hide();
 		}

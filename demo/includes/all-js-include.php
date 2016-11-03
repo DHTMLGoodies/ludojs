@@ -63,6 +63,7 @@
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/menu-container.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/collapse-bar.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/table.js"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/accordion.js"></script>
 
 
 

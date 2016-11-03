@@ -592,7 +592,8 @@ ludo.form.Element = new Class({
 
     setClean:function () {
         this.dirtyFlag = false;
-        this.getEl().removeClass('ludo-form-el-dirty');
+        var el = this.getEl();
+        if(el)el.removeClass('ludo-form-el-dirty');
     },
 
     setReady:function () {

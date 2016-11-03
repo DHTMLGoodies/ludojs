@@ -22,7 +22,7 @@ require_once("../includes/demo-header.php");
 
     var w = new ludo.Window({
         id: 'myWindow',
-        title: 'Example of table ',
+        title: 'Label and Text Fields',
         layout: {
             type: 'tabs',
             height: 550,
@@ -95,7 +95,8 @@ require_once("../includes/demo-header.php");
                         type: 'form.Button', value: 'Show Values',
                         listeners: {
                             'click': function () {
-                                ludo.get('formValues').html(JSON.stringify(ludo.get('myForm').getForm().values()));
+                                var values = JSON.stringify(ludo.get('myForm').getForm().values());
+                                ludo.get('formValues').html('A call to the myForm views getForm().values() returns these values:<br>' + values);
                             }
                         }
                     },
@@ -106,10 +107,14 @@ require_once("../includes/demo-header.php");
                             height: 100
                         },
                         id: 'formValues',
+                        containerCss:{
+                            'marginTop': 5
+                        },
                         css: {
                             'font-size': '1.1em',
                             border: '1px solid #aaa',
-                            padding: 5
+                            padding: 5  ,
+                            cursor: 'col-resize'
                         }
                     }
                 ]

@@ -14,7 +14,7 @@
  * @param {Boolean} config.readonly True to make this form field read only. (Default: false)
  * @param {Boolean} config.selectOnFocus Automatically make the text selected on focus. Default: false
  * @param {Boolean} config.validateKeyStrokes True to run validation after every key stroke(Default: false)
- 
+
  * @augments ludo.form.Element
  *
  */
@@ -105,7 +105,7 @@ ludo.form.Text = new Class({
         el.on('keyup', this.sendKeyEvent.bind(this));
 
         if (this.selectOnFocus) {
-            el.addEvent('focus', this.selectText.bind(this));
+            el.on('focus', this.selectText.bind(this));
         }
     },
 

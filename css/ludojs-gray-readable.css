@@ -594,6 +594,38 @@ div.ludo-resize-handle-active {
 }
 .ludo-remote-error-message{
     color:#f00;
+}/* ../ludojs/css-source/layout/accordion.css */
+.ludo-accordion-container{
+    overflow:hidden;
+    position:relative;
+}
+
+.ludo-accordion-collapsed{
+    width:14px;
+    height:100%;
+    float:left;
+    background: url(../images/accordion/accordion-collapsed.png) no-repeat center center;
+}
+
+.ludo-accordion-expanded{
+    background: url(../images/accordion/accordion-expanded.png) no-repeat center center;
+
+}
+
+/** Not the first child */
+.ludo-accordion-titlebar-below-expanded{
+    border-top: 1px solid #c6c6c6;
+}
+
+.ludo-accordion-titlebar{
+    cursor:pointer;
+    border-radius:0;
+
+}
+div.ludo-accordion-title
+{
+    position:relative;
+    float:left;
 }/* ../ludojs/css-source/layout/tab.css */
 .ludo-tab-close{
     background-repeat:no-repeat;
@@ -3090,6 +3122,12 @@ form.ComboTree
 div.ludo-component-buttonbar{
     height:25px;
 }
+
+.ludo-accordion-titlebar-below-expanded{
+    border-top: 1px solid #a5a5a5;
+}
+
+
 /**
 tab layout */
 .ludo-tab-strip .ludo-body,.ludo-tab-strip-tab {

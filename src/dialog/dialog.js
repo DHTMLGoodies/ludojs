@@ -161,7 +161,7 @@ ludo.dialog.Dialog = new Class({
 		 * @event buttonvalue
 		 * @param {Object} ludo.View (Parent component of button)
 		 */
-		this.fireEvent(button.getValue().replace(/\s/g, '').toLowerCase(), this);
+		this.fireEvent(button._get().replace(/\s/g, '').toLowerCase(), this);
 		if (this.autoHideOnBtnClick) {
 			this.hide();
 		}

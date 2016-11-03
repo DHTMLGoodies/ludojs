@@ -607,6 +607,12 @@ form.ComboTree
 div.ludo-component-buttonbar{
     height:25px;
 }
+
+.ludo-accordion-titlebar-below-expanded{
+    border-top: 1px solid #a5a5a5;
+}
+
+
 /**
 tab layout */
 .ludo-tab-strip .ludo-body,.ludo-tab-strip-tab {
