@@ -5,7 +5,7 @@
  * @augments ludo.form.Text
  */
 ludo.form.DisplayField = new Class({
-	Extends:ludo.form.LabelElement,
+	Extends:ludo.form.Element,
 	type:'form.DisplayField',
 	inputTag:'span',
 	inputType:'',

@@ -6,29 +6,29 @@
  @class Menu
  @constructor
  @example
- 	layout:{
+ layout:{
 		 type:'Menu',
 		 rightOf:'leftMenu'
 	 },
-	 children:[
-		 {
-			 html:'Games',
-			 children:[
-				 { html:'Console games',
-					 children:['XBox 360',
-						 {
-							 html:'Wii U',
-							 children:['NintendoLand', 'Batman Arkham City', 'SuperMario Wii U']
-						 }, 'PlayStation']},
-				 'PC Games',
-				 'Mac Games',
-				 'Mobile games'
-			 ]
-		 },
-		 'Apps',
-		 'Utilities'
-	 ],
- 	 listeners:{
+ children:[
+ {
+     html:'Games',
+     children:[
+         { html:'Console games',
+             children:['XBox 360',
+                 {
+                     html:'Wii U',
+                     children:['NintendoLand', 'Batman Arkham City', 'SuperMario Wii U']
+                 }, 'PlayStation']},
+         'PC Games',
+         'Mac Games',
+         'Mobile games'
+     ]
+ },
+ 'Apps',
+ 'Utilities'
+ ],
+ listeners:{
  	 	'click' : function(item){
  	 		console.log('You clicked ' + item.html);
  	 	}
@@ -79,6 +79,8 @@ ludo.layout.Menu = new Class({
 		if (this.parentForNewChild === undefined) {
 			var isTop = !this.hasMenuLayout(this.view.parentComponent);
 			var p = isTop ? this.parent() : this.getMenuContainer().getBody();
+
+
 			p.parent().addClass('ludo-menu');
 			p.parent().addClass('ludo-menu-' + this.view.layout.orientation);
 
@@ -120,7 +122,7 @@ ludo.layout.Menu = new Class({
 		var topLm = topMenu.getLayout();
 
 		if (child.mouseOver === undefined) {
-			child.getEl().on('mouseenter', function () {
+			child.getEl().mouseenter(function () {
 				this.mouseOver();
 			}.bind(child));
 			child.mouseOver = function () {
@@ -265,9 +267,9 @@ ludo.layout.Menu = new Class({
 
 	autoHideMenus:function (e) {
 		if (this.active || this.alwaysActive) {
-			var cls = $(e.target).attr("class");
-			var parent = $(e.target).closest('.ludo-menu');
-			if (cls && cls.indexOf && cls.indexOf('ludo-menu-item') === -1 && !parent) {
+			var parent = $(e.target).parents('.ludo-menu');
+
+			if (e.target.className && e.target.className.indexOf && e.target.className.indexOf('ludo-menu-item') === -1 && parent.length == 0) {
 				this.hideAllMenus();
 				if (this.view.layout.orientation === 'horizontal') {
 					this.active = false;

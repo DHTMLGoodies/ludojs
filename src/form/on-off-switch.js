@@ -6,7 +6,7 @@
  *
  */
 ludo.form.OnOffSwitch = new Class({
-    Extends: ludo.form.LabelElement,
+    Extends: ludo.form.Element,
 
     listener: undefined,
     trackBorderColor: undefined,
@@ -129,7 +129,7 @@ ludo.form.OnOffSwitch = new Class({
         this.height= 30;
 
         this.el = $('<div class="on-off-switch"></div>');
-        this.getInputCell().append(this.el);
+        this.getBody().append(this.el);
 
         this.renderTrack();
         this.renderThumb();
@@ -163,7 +163,7 @@ ludo.form.OnOffSwitch = new Class({
 
     resizeDOM:function(){
         this.parent();
-        var width = this.width = this.getBody().width() - this.labelWidth - (this.trackBorderWidth * 2);
+        var width = this.width = this.getBody().width() - (this.trackBorderWidth * 2);
         var height = this.height = this.getBody().height() - (this.trackBorderWidth * 2);
 
         var trackWidth = width - (this.trackBorderWidth * 2);

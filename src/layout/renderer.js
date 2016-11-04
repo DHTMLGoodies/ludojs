@@ -180,7 +180,7 @@ ludo.layout.Renderer = new Class({
                 }.bind(this);
 			case 'rightOf':
 				return function () {
-					c.left = value.offset().left + value.width();
+					c.left = value.offset().left + value.outerWidth();
 				};
 			case 'leftOf':
 				return function () {
@@ -190,15 +190,15 @@ ludo.layout.Renderer = new Class({
 				return function () {
 					var x = value.offset().left - c.width;
 					if (x - c.width < 0) {
-						x += (value.width() + c.width);
+						x += (value.outerWidth() + c.width);
 					}
 					c.left = x;
 				};
 			case 'rightOrLeftOf' :
 				return function (view, renderer) {
-					var val = value.offset().left + value.width();
+					var val = value.offset().left + value.outerWidth();
 					if (val + c.width > renderer.viewport.width) {
-						val -= (value.width() + c.width);
+						val -= (value.outerWidth() + c.width);
 					}
 					c.left = val;
 				};
@@ -221,7 +221,7 @@ ludo.layout.Renderer = new Class({
 			case 'alignRight':
 				return function () {
 
-					c.left = value.offset().left + value.width() - c.width;
+					c.left = value.offset().left + value.outerWidth() - c.width;
 				};
 			case 'alignBottom':
 				return function () {
@@ -251,11 +251,11 @@ ludo.layout.Renderer = new Class({
 				return function () {
 					var pos = value.offset();
 					c.top = (pos.top + value.height()) / 2 - (c.height / 2);
-					c.left = (pos.left + value.width()) / 2 - (c.width / 2);
+					c.left = (pos.left + value.outerWidth()) / 2 - (c.width / 2);
 				};
 			case 'centerHorizontalIn':
 				return function () {
-					c.left = (value.offset().left + value.width()) / 2 - (c.width / 2);
+					c.left = (value.offset().left + value.outerWidth()) / 2 - (c.width / 2);
 				};
 			case 'centerVerticalIn':
 				return function () {
@@ -263,7 +263,7 @@ ludo.layout.Renderer = new Class({
 				};
 			case 'sameWidthAs':
 				return function () {
-					c.width = value.width();
+					c.width = value.outerWidth();
 				};
 			case 'x':
 			case 'left':
@@ -305,6 +305,14 @@ ludo.layout.Renderer = new Class({
 
 		var c = this.coordinates;
 
+		if(this.view._html == "View"){
+			console.log(c);
+			console.log(this.view.layout);
+
+			console.trace();
+		console.log(this.view._html);
+
+		}
 		this.view.resize(c);
 
 
@@ -325,7 +333,7 @@ ludo.layout.Renderer = new Class({
 	setViewport:function () {
 		var el = this.view.getEl().parent();
 		if (!el)return;
-		this.viewport.width = el.width() - ludo.dom.getPW(el) - ludo.dom.getBW(el);
+		this.viewport.width = el.outerWidth() - ludo.dom.getPW(el) - ludo.dom.getBW(el);
 		this.viewport.height = el.height() - ludo.dom.getPH(el) - ludo.dom.getBH(el);
 	},
 

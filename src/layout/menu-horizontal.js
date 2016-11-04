@@ -14,12 +14,13 @@ ludo.layout.MenuHorizontal = new Class({
 
     resized:false,
     resize:function () {
+        this.resized=false;
         if (!this.resized) {
             this.resized = true;
             var left = 0;
             for (var i = 0; i < this.view.children.length; i++) {
                 this.view.children[i].resize({ left:left,height:this.viewport.height });
-                left += this.view.children[i].getEl().width() + ludo.dom.getMW(this.view.children[i].getEl());
+                left += this.view.children[i].getEl().outerWidth() + ludo.dom.getMW(this.view.children[i].getEl());
             }
         }
     }

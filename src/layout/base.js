@@ -115,11 +115,12 @@ ludo.layout.Base = new Class({
 	addChildEvents:function(){
 
 	},
+    firstResized : false,
 
 	resizeChildren:function () {
-        if(!this.resized){
+        if(!this.firstResized){
             this.beforeFirstResize();
-            this.resized = true;
+            this.firstResized = true;
         }
 		if (this.benchmarkTime) {
 			var start = new Date().getTime();

@@ -12,6 +12,7 @@ ludo.layout.MenuContainer = new Class({
         this.lm = layoutManager;
         this.setLayout();
         this.createDom();
+
     },
 
     setLayout: function () {
@@ -69,7 +70,7 @@ ludo.layout.MenuContainer = new Class({
         }
         this.body = $('<div>');
         this.el.append(this.body);
-    
+
     },
 
     getEl: function () {
@@ -81,6 +82,7 @@ ludo.layout.MenuContainer = new Class({
     },
 
     resize: function (config) {
+
         if (config.width) {
             this.getEl().css('width', config.width + 'px');
         }
@@ -91,6 +93,7 @@ ludo.layout.MenuContainer = new Class({
     },
 
     show: function () {
+
         this.getEl().css('zIndex',  (ludo.util.getNewZIndex(this) + 100));
 
         if (this.getEl().css('display') === '')return;

@@ -1,6 +1,6 @@
 <?php
 $sub = true;
-$pageTitle = 'Example of ludo form components';
+$pageTitle = 'On-Off Switch Sample - LudoJS';
 require_once("../includes/demo-header.php");
 ?>
 <body>
@@ -22,74 +22,91 @@ require_once("../includes/demo-header.php");
 <script type="text/javascript" class="source-code">
 
     var w = new ludo.Window({
-        id:'myWindow',
-        title:'Form components',
-        layout:{
-            type:'tabs'
+        id: 'myWindow',
+        title: 'On-Off Switch',
+        layout: {
+            type: 'tabs'
 
         },
-        css:{
-            'border-top' : 0
+        css: {
+            'border-top': 0
         },
-        closable:false,
-        height:430,
-        width:650,
-        left:50,
-        top:30,
-        children:[
+        closable: false,
+        height: 430,
+        width: 650,
+        left: 50,
+        top: 30,
+        children: [
             {
-                title:'Form',
-                layout:{
-                    type:'relative'
+                title: 'Form',
+                layout: {
+                    type: 'table',
+                    columns: [
+                        {width: 100},
+                        {weight: 1}
+                    ]
                 },
-                children:[
+                css:{
+                    padding:5
+                },
+                children: [
                     {
-                        label:'Heater',
-                        id:'heater',
-                        fieldWidth:350,
-                        type:'form.OnOffSwitch',
+                        type: 'form.Label',
+                        label: 'Heater',
                         layout:{
-                            width:200,
-                            height:30
+                            vAlign:'middle'
+                        }
+                    },
+                    {
+                        label: 'Heater',
+                        id: 'heater',
+                        fieldWidth: 350,
+                        type: 'form.OnOffSwitch',
+                        layout: {
+                            height: 30,
+                            width:60
                         },
-                        textOn:'On',
-                        textOff:'Off',
-                        listeners:{
-                            'change':function(checked){
-                                if(checked){
+                        textOn: 'On',
+                        textOff: 'Off',
+                        listeners: {
+                            'change': function (checked) {
+                                if (checked) {
                                     ludo.get('textEl').html('Heater turned on');
-                                }else{
+                                } else {
                                     ludo.get('textEl').html('Heater turned off');
                                 }
                             }
                         }
                     },
                     {
-                        id:'textEl',
-                        layout:{
-                            height:150,
-                            below:'heater'
+
+                        id: 'textEl',
+                        layout: {
+                            row: true,
+                            colspan:2,
+                            height: 150
                         },
-                        css:{
-                            padding:5,'font-size':20
+                        css: {
+                            'font-size': 20
                         }
                     },
                     {
-                        type:'form.Button',
-                        layout:{
-                            below:'textEl'
+                        type: 'form.Button',
+                        layout: {
+                            row:true,
+                            colspan:2
                         },
-                        listeners:{
-                            'click': function(){
+                        listeners: {
+                            'click': function () {
                                 ludo.get('heater').toggle();
                             }
                         },
-                        value:'Call OnOffSwitch toggle method'
+                        value: 'Call OnOffSwitch toggle method'
                     }
                 ]
 
-            },{
-                type:'SourceCodePreview'
+            }, {
+                type: 'SourceCodePreview'
             }
         ]
     });

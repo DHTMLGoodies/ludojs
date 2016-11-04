@@ -28,6 +28,8 @@ TestCase("SliderTest", {
         // then
         assertEquals('horizontal', slider.getDirection());
     },
+
+    
     "test width of slider should be biggest when direction is horizontal": function () {
         // given
         var slider = this.getSlider();

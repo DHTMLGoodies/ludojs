@@ -642,6 +642,9 @@ ludo.View = new Class({
 	 */
 	resize:function (config) {
 
+
+		if(this.html == "Edit")console.trace();
+		
 		if (this.isHidden()) {
 			return;
 		}

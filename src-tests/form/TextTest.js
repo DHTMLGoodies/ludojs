@@ -59,54 +59,15 @@ TestCase("TextTest", {
 
 	},
 
-    "test should be able to have inline label": function(){
+    "test should be able to add placeholder": function(){
         // given
         var el = new ludo.form.Text({
-            label : 'Zip code',
-            inlineLabel : 'Zip code'
-        });
-
-        // then
-        assertEquals('Zip code', el.getFormEl().val());
-    },
-
-    "test should add css class for inline label": function(){
-        // given
-        var el = new ludo.form.Text({
-            label : 'Zip code',
+            placeholder : 'Zip code',
             inlineLabel : true
         });
 
         // then
-        assertTrue(el.getFormEl().hasClass('ludo-form-el-inline-label'));
-    },
-
-    "test should remove css class for inline label when value is set": function(){
-        // given
-        var el = new ludo.form.Text({
-            label : 'Zip code',
-            inlineLabel : true
-        });
-
-        // when
-        el.val('New value');
-
-        // then
-        assertEquals('New value', el.getFormEl().val());
-        assertFalse(el.getFormEl().hasClass('ludo-form-el-inline-label'));
-
-        // given
-        el = new ludo.form.Date({
-            label : 'Born',
-            inlineLabel : true
-        });
-
-        // when
-        el.val(Date.parse('1973-09-06'));
-
-        // then
-        assertEquals('1973-09-06', el.getFormEl().val());
-        assertFalse(el.getFormEl().hasClass('ludo-form-el-inline-label'));
+		assertEquals('Zip code', el.getFormEl().attr("placeholder"));
     },
 
     "test should be able to define inlineLabel in parent view": function(){
@@ -316,24 +277,7 @@ TestCase("TextTest", {
 		assertTrue(eventFired);
 		assertTrue(changeEventFired);
 	},
-
-	"test should be able to specify form config to control label and field width": function(){
-		var v = new ludo.View({
-			formConfig:{
-				labelWidth:100,
-				fieldWidth:120
-			},
-            children:[{
-                name:'a-text-input', type:'form.Text','label' : 'My label'
-            }]
-		});
-
-        // then
-        assertEquals(100, v.child['a-text-input'].labelWidth);
-        assertEquals(120, v.child['a-text-input'].fieldWidth);
-
-	},
-
+	
 	"test should not apply invalid css class to valid fields": function(){
 		var el = new ludo.form.Number({
 			value : 255,
