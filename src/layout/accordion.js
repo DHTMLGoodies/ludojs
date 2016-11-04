@@ -139,7 +139,6 @@ ludo.layout.Accordion = new Class({
         this.expandedView = view;
         this.expandedChild = id;
         this.toggleTitle(id);
-        console.log(id);
     },
 
     titleNextOfOpened: undefined,
