@@ -1,4 +1,4 @@
-/* Generated Thu Nov 3 19:29:38 CET 2016 */
+/* Generated Fri Nov 4 22:24:55 CET 2016 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -6088,11 +6088,12 @@ ludo.layout.Base = new Class({
 	addChildEvents:function(){
 
 	},
+    firstResized : false,
 
 	resizeChildren:function () {
-        if(!this.resized){
+        if(!this.firstResized){
             this.beforeFirstResize();
-            this.resized = true;
+            this.firstResized = true;
         }
 		if (this.benchmarkTime) {
 			var start = new Date().getTime();
@@ -6902,7 +6903,7 @@ ludo.layout.Renderer = new Class({
                 }.bind(this);
 			case 'rightOf':
 				return function () {
-					c.left = value.offset().left + value.width();
+					c.left = value.offset().left + value.outerWidth();
 				};
 			case 'leftOf':
 				return function () {
@@ -6912,15 +6913,15 @@ ludo.layout.Renderer = new Class({
 				return function () {
 					var x = value.offset().left - c.width;
 					if (x - c.width < 0) {
-						x += (value.width() + c.width);
+						x += (value.outerWidth() + c.width);
 					}
 					c.left = x;
 				};
 			case 'rightOrLeftOf' :
 				return function (view, renderer) {
-					var val = value.offset().left + value.width();
+					var val = value.offset().left + value.outerWidth();
 					if (val + c.width > renderer.viewport.width) {
-						val -= (value.width() + c.width);
+						val -= (value.outerWidth() + c.width);
 					}
 					c.left = val;
 				};
@@ -6943,7 +6944,7 @@ ludo.layout.Renderer = new Class({
 			case 'alignRight':
 				return function () {
 
-					c.left = value.offset().left + value.width() - c.width;
+					c.left = value.offset().left + value.outerWidth() - c.width;
 				};
 			case 'alignBottom':
 				return function () {
@@ -6973,11 +6974,11 @@ ludo.layout.Renderer = new Class({
 				return function () {
 					var pos = value.offset();
 					c.top = (pos.top + value.height()) / 2 - (c.height / 2);
-					c.left = (pos.left + value.width()) / 2 - (c.width / 2);
+					c.left = (pos.left + value.outerWidth()) / 2 - (c.width / 2);
 				};
 			case 'centerHorizontalIn':
 				return function () {
-					c.left = (value.offset().left + value.width()) / 2 - (c.width / 2);
+					c.left = (value.offset().left + value.outerWidth()) / 2 - (c.width / 2);
 				};
 			case 'centerVerticalIn':
 				return function () {
@@ -6985,7 +6986,7 @@ ludo.layout.Renderer = new Class({
 				};
 			case 'sameWidthAs':
 				return function () {
-					c.width = value.width();
+					c.width = value.outerWidth();
 				};
 			case 'x':
 			case 'left':
@@ -7027,6 +7028,14 @@ ludo.layout.Renderer = new Class({
 
 		var c = this.coordinates;
 
+		if(this.view._html == "View"){
+			console.log(c);
+			console.log(this.view.layout);
+
+			console.trace();
+		console.log(this.view._html);
+
+		}
 		this.view.resize(c);
 
 
@@ -7047,7 +7056,7 @@ ludo.layout.Renderer = new Class({
 	setViewport:function () {
 		var el = this.view.getEl().parent();
 		if (!el)return;
-		this.viewport.width = el.width() - ludo.dom.getPW(el) - ludo.dom.getBW(el);
+		this.viewport.width = el.outerWidth() - ludo.dom.getPW(el) - ludo.dom.getBW(el);
 		this.viewport.height = el.height() - ludo.dom.getPH(el) - ludo.dom.getBH(el);
 	},
 
@@ -8194,6 +8203,9 @@ ludo.View = new Class({
 	 */
 	resize:function (config) {
 
+
+		if(this.html == "Edit")console.trace();
+		
 		if (this.isHidden()) {
 			return;
 		}
@@ -17636,6 +17648,7 @@ ludo.layout.MenuContainer = new Class({
         this.lm = layoutManager;
         this.setLayout();
         this.createDom();
+
     },
 
     setLayout: function () {
@@ -17693,7 +17706,7 @@ ludo.layout.MenuContainer = new Class({
         }
         this.body = $('<div>');
         this.el.append(this.body);
-    
+
     },
 
     getEl: function () {
@@ -17705,6 +17718,7 @@ ludo.layout.MenuContainer = new Class({
     },
 
     resize: function (config) {
+
         if (config.width) {
             this.getEl().css('width', config.width + 'px');
         }
@@ -17715,6 +17729,7 @@ ludo.layout.MenuContainer = new Class({
     },
 
     show: function () {
+
         this.getEl().css('zIndex',  (ludo.util.getNewZIndex(this) + 100));
 
         if (this.getEl().css('display') === '')return;
@@ -17777,29 +17792,29 @@ ludo.layout.MenuContainer = new Class({
  @class Menu
  @constructor
  @example
- 	layout:{
+ layout:{
 		 type:'Menu',
 		 rightOf:'leftMenu'
 	 },
-	 children:[
-		 {
-			 html:'Games',
-			 children:[
-				 { html:'Console games',
-					 children:['XBox 360',
-						 {
-							 html:'Wii U',
-							 children:['NintendoLand', 'Batman Arkham City', 'SuperMario Wii U']
-						 }, 'PlayStation']},
-				 'PC Games',
-				 'Mac Games',
-				 'Mobile games'
-			 ]
-		 },
-		 'Apps',
-		 'Utilities'
-	 ],
- 	 listeners:{
+ children:[
+ {
+     html:'Games',
+     children:[
+         { html:'Console games',
+             children:['XBox 360',
+                 {
+                     html:'Wii U',
+                     children:['NintendoLand', 'Batman Arkham City', 'SuperMario Wii U']
+                 }, 'PlayStation']},
+         'PC Games',
+         'Mac Games',
+         'Mobile games'
+     ]
+ },
+ 'Apps',
+ 'Utilities'
+ ],
+ listeners:{
  	 	'click' : function(item){
  	 		console.log('You clicked ' + item.html);
  	 	}
@@ -17850,6 +17865,8 @@ ludo.layout.Menu = new Class({
 		if (this.parentForNewChild === undefined) {
 			var isTop = !this.hasMenuLayout(this.view.parentComponent);
 			var p = isTop ? this.parent() : this.getMenuContainer().getBody();
+
+
 			p.parent().addClass('ludo-menu');
 			p.parent().addClass('ludo-menu-' + this.view.layout.orientation);
 
@@ -17891,7 +17908,7 @@ ludo.layout.Menu = new Class({
 		var topLm = topMenu.getLayout();
 
 		if (child.mouseOver === undefined) {
-			child.getEl().on('mouseenter', function () {
+			child.getEl().mouseenter(function () {
 				this.mouseOver();
 			}.bind(child));
 			child.mouseOver = function () {
@@ -18036,9 +18053,9 @@ ludo.layout.Menu = new Class({
 
 	autoHideMenus:function (e) {
 		if (this.active || this.alwaysActive) {
-			var cls = $(e.target).attr("class");
-			var parent = $(e.target).closest('.ludo-menu');
-			if (cls && cls.indexOf && cls.indexOf('ludo-menu-item') === -1 && !parent) {
+			var parent = $(e.target).parents('.ludo-menu');
+
+			if (e.target.className && e.target.className.indexOf && e.target.className.indexOf('ludo-menu-item') === -1 && parent.length == 0) {
 				this.hideAllMenus();
 				if (this.view.layout.orientation === 'horizontal') {
 					this.active = false;
@@ -18063,12 +18080,13 @@ ludo.layout.MenuHorizontal = new Class({
 
     resized:false,
     resize:function () {
+        this.resized=false;
         if (!this.resized) {
             this.resized = true;
             var left = 0;
             for (var i = 0; i < this.view.children.length; i++) {
                 this.view.children[i].resize({ left:left,height:this.viewport.height });
-                left += this.view.children[i].getEl().width() + ludo.dom.getMW(this.view.children[i].getEl());
+                left += this.view.children[i].getEl().outerWidth() + ludo.dom.getMW(this.view.children[i].getEl());
             }
         }
     }
@@ -25701,7 +25719,93 @@ ludo.calendar.MonthYearSelector = new Class({
         }
 		return undefined;
     }
-});/* ../ludojs/src/calendar/time-picker.js */
+});/* ../ludojs/src/util/geometry.js */
+
+ludo.geometry = {
+
+    degreesToRadians: function (degrees) {
+        return (degrees * Math.PI) / 180;
+    },
+
+    radiansToDegrees: function (radians) {
+        return radians * (180 / Math.PI);
+    },
+
+    getPointDistanceFrom:function(originX, originY, radiansFromOrigin, distance){
+        var xDelta = distance * Math.cos(radiansFromOrigin);
+        var yDelta = distance * Math.sin(radiansFromOrigin);
+
+        return {
+            x: originX + xDelta, y: originY + yDelta
+        }
+    },
+
+    getPoint: function (originX, originY, degreesFromOrigin, distance) {
+        return this.getPointDistanceFrom(originX, originY, this.degreesToRadians(degreesFromOrigin), distance);
+    },
+
+    distanceBetweenPoints: function (x1, y1, x2, y2) {
+
+        var xDiff = Math.abs(x2 - x1);
+        var yDiff = Math.abs(y2 - y1);
+
+        return this.distanceBetweenVectors(xDiff, yDiff);
+    },
+
+    distanceBetweenVectors: function (vectorX, vectorY) {
+        return Math.sqrt((vectorX * vectorX) + (vectorY * vectorY));
+
+    },
+
+    // Returns angle in degrees
+    // @function getAngleFrom
+    // @memberOf ludo.geometry
+    getAngleFrom: function (fromX, fromY, toX, toY) {
+        var angle = this.radiansToDegrees(Math.atan2(fromY - toY, fromX - toX));
+
+        if (angle < 0) {
+            angle += 360;
+        }
+
+        angle = ((angle - 90) + 360) % 360;
+
+        return angle;
+
+    },
+
+    cosSinBetweenLocations:function(lat1, long1, lat2, long2) {
+        var dLon = (long2 - long1);
+
+        var y = Math.sin(dLon) * Math.cos(lat2);
+        var x = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1)
+            * Math.cos(lat2) * Math.cos(dLon);
+
+        var brng = Math.atan2(y, x);
+
+        // TODO this should be moved out
+        // Temporary fix since 0 degrees(NORTH) is right in view
+        brng -= this.degreesToRadians(90);
+
+        return { x: Math.cos(brng), y: Math.sin(brng) };
+    },
+
+    bearingBetweenLocations: function (lat1, long1, lat2, long2) {
+        var dLon = (long2 - long1);
+
+        var y = Math.sin(dLon) * Math.cos(lat2);
+        var x = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1)
+            * Math.cos(lat2) * Math.cos(dLon);
+
+        var brng = Math.atan2(y, x);
+        brng = this.radiansToDegrees(brng);
+        brng = (brng + 360) % 360;
+        brng = 360 - brng;
+
+        return brng;
+    }
+
+
+};/* ../ludojs/src/calendar/time-picker.js */
 /**
  * Time Picker module
  * @module timeanddat
@@ -29626,7 +29730,7 @@ ludo.form.Textarea = new Class({
  * @augments ludo.form.Text
  */
 ludo.form.DisplayField = new Class({
-	Extends:ludo.form.LabelElement,
+	Extends:ludo.form.Element,
 	type:'form.DisplayField',
 	inputTag:'span',
 	inputType:'',
@@ -31724,7 +31828,7 @@ ludo.form.RadioGroup = new Class({
  *
  */
 ludo.form.OnOffSwitch = new Class({
-    Extends: ludo.form.LabelElement,
+    Extends: ludo.form.Element,
 
     listener: undefined,
     trackBorderColor: undefined,
@@ -31847,7 +31951,7 @@ ludo.form.OnOffSwitch = new Class({
         this.height= 30;
 
         this.el = $('<div class="on-off-switch"></div>');
-        this.getInputCell().append(this.el);
+        this.getBody().append(this.el);
 
         this.renderTrack();
         this.renderThumb();
@@ -31881,7 +31985,7 @@ ludo.form.OnOffSwitch = new Class({
 
     resizeDOM:function(){
         this.parent();
-        var width = this.width = this.getBody().width() - this.labelWidth - (this.trackBorderWidth * 2);
+        var width = this.width = this.getBody().width() - (this.trackBorderWidth * 2);
         var height = this.height = this.getBody().height() - (this.trackBorderWidth * 2);
 
         var trackWidth = width - (this.trackBorderWidth * 2);
