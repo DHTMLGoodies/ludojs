@@ -66,6 +66,9 @@ ludo.layout.Base = new Class({
 		}
 
 		this.onNewChild(child);
+
+
+
 		this.addChildEvents(child);
 		/**
 		 * Event fired by layout manager when a new child is added
@@ -140,7 +143,9 @@ ludo.layout.Base = new Class({
 		}
 	},
 
-
+	hasBeenRendered:function(){
+		return this.firstResized;
+	},
 
 	beforeFirstResize:function(){
 

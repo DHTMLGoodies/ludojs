@@ -56,7 +56,10 @@ require_once("../includes/demo-header.php");
 
                 }
             },
-            { name:'rightMenu', cls:'customView', html:"Item 1<br>Item 2<br>Item 3<br>Item 4<br>Item 5<br><br><b>Layout:</b><br>alignParentTop:true, alignParentRight:true, width:150, above:'bottomMenu', fillUp:true",
+            {
+                id:'rightMenu',
+                name:'rightMenu',
+                cls:'customView', html:"Item 1<br>Item 2<br>Item 3<br>Item 4<br>Item 5<br><br><b>Layout:</b><br>alignParentTop:true, alignParentRight:true, width:150, above:'bottomMenu', fillUp:true",
                 layout:{ alignParentTop:true, alignParentRight:true, width:150, above:'bottomMenu', fillUp:true, resize:['left'] }},
             { name:'bottomMenu', cls:'customView', html:"Bottom menu box<br><b>Layout:</b> height:50, alignParentBottom:true,rightOf:'leftMenu',fillRight:true,resize:above", layout:{
                 height:50, alignParentBottom:true, rightOf:'leftMenu', fillRight:true, resize:['above'], maxHeight:100

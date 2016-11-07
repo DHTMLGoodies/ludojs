@@ -1,0 +1,9 @@
+<p>You can switch selected accordion view programatically by calling
+ludo.get('&lt;id-of-view>').show().</p>
+<p>Call <a href="#" onclick="ludo.get('customStyling').show();return false">ludo.get('customStyling').show()</a></p>
+<p>Call <a href="#" onclick="ludo.get('customStyling').hide();return false">ludo.get('customStyling').hide()</a></p>
+<p>You can also make some of the accordion views initially hidden and show them using the show method:</p>
+<p>Call <a href="#" onclick="ludo.get('hiddenView').show();return false">ludo.get('hiddenView').show()</a></p>
+
+<p>To add a new child view programatically, use ludo.get('&lt;id of parent'>).addChild(object);</p>
+<p>Try it: <a href="#" onclick="ludo.get('accordionWindow').addChild({ 'title': 'New child', html: 'Child' });return false">ludo.get('accordionWindow').addChild({ 'title': 'New child', html: 'Child' })</a></p>

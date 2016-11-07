@@ -85,6 +85,7 @@ ludo.layout.Relative = new Class({
 	},
 
 	resize:function () {
+
 		if (this.children === undefined) {
 			this.prepareResize();
 		}

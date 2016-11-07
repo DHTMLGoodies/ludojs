@@ -163,7 +163,7 @@ ludo.View = new Class({
 			ludo.dom.clearCache.delay(50, this);
 			var r = this.getLayout().getRenderer();
 			r.resize();
-			r.resizeChildren();
+
 		}
 
 		/**
@@ -470,8 +470,8 @@ ludo.View = new Class({
 			 * @event hide
 			 * @param {Object} htis
 			 */
-			this.fireEvent('hide', this);
 			this.resizeParent();
+			this.fireEvent('hide', this);
 		}
 	},
 	/**
@@ -528,6 +528,13 @@ ludo.View = new Class({
 
 		this.setNewZIndex();
 
+
+		if (this.parentComponent) {
+			// this.resizeParent();
+		} else {
+			this.getLayout().getRenderer().resize();
+		}
+
 		/**
 		 * Fired when a component is shown using the show method
 		 * @event show
@@ -535,11 +542,7 @@ ludo.View = new Class({
 		 */
 		if (!skipEvents)this.fireEvent('show', this);
 
-		if (this.parentComponent) {
-			this.resizeParent();
-		} else {
-			this.getLayout().getRenderer().resize();
-		}
+
 	},
 
 	resizeParent:function () {

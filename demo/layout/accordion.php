@@ -15,6 +15,7 @@ require_once("../includes/demo-header.php");
 <script type="text/javascript" class="source-code">
     var w = new ludo.Window({
         title:'Accordion layout',
+        id:'accordionWindow',
         layout:{
             left:50, top:50,
             width:700, height:600,
@@ -24,6 +25,13 @@ require_once("../includes/demo-header.php");
         },
         children:[ // Children for the accordion listed below
             {
+                id:'firstHidden',
+                hidden:true,
+                title:'Hidden view',
+                html: 'Hidden body'
+            },
+            {
+                id:'customStyling',
                 title: 'How to apply custom styling to your Accordion',// Title for the accordion
                 dataSource:{ // Insert content from external file
                     type: 'dataSource.HTML',
@@ -35,14 +43,24 @@ require_once("../includes/demo-header.php");
                 }
             },
             {
-                title: 'Drawing', // Title for the accordion
-                html: '<img src="../images/drawing.png" style="margin-right:5px;margin-bottom:5px;float:left">' +
-                'This is a Charcoal drawing on Smooth Newsprint paper. <br>',
+                id:'methods',
+                title: 'Methods', // Title for the accordion
+                dataSource:{ // Insert content from external file
+                    type: 'dataSource.HTML',
+                    url: 'includes/accordion-methods.html'
+                },
                 css:{ // CSS styling for the view
                     padding:5,
                     'font-size' : '1.2em',
                     'overflow-y': 'auto'
                 }
+            },
+
+            {
+                id:'hiddenView',
+                title: "Initially hidden",
+                html: "This one is initially hidden",
+                hidden:true
             },
 
             {

@@ -41,6 +41,7 @@ test:
   - CanvasTest.js
   - SlideInTest.js
   - TableLayoutTest.js
+  - AccordionTest.js
 
 serve:
   - ../../css/ludojs-light-gray.css
