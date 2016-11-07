@@ -1,4 +1,4 @@
-/* Generated Fri Nov 4 22:40:52 CET 2016 */
+/* Generated Mon Nov 7 18:59:15 CET 2016 */
 /************************************************************************************************************
 @fileoverview
 ludoJS - Javascript framework
@@ -5920,7 +5920,7 @@ ludo.layout.Resizer = new Class({
 	},
 
 	show:function(){
-		this.el.style.display = '';
+		this.el.css('display', '');
 		this.hidden = false;
 	},
 
@@ -5941,6 +5941,7 @@ ludo.layout.Resizer = new Class({
 		this.el.css({
 			left:'', top:'',right:'',bottom:''
 		});
+
 
 		if(config.width !== undefined && config.width > 0)this.el.css('width', config.width);
 		if(config.height !== undefined && config.height > 0)this.el.css('height', (config.height - ludo.dom.getMBPH(this.el)));
@@ -6039,6 +6040,9 @@ ludo.layout.Base = new Class({
 		}
 
 		this.onNewChild(child);
+
+
+
 		this.addChildEvents(child);
 		/**
 		 * Event fired by layout manager when a new child is added
@@ -6113,7 +6117,9 @@ ludo.layout.Base = new Class({
 		}
 	},
 
-
+	hasBeenRendered:function(){
+		return this.firstResized;
+	},
 
 	beforeFirstResize:function(){
 
@@ -7028,17 +7034,8 @@ ludo.layout.Renderer = new Class({
 
 		var c = this.coordinates;
 
-		if(this.view._html == "View"){
-			console.log(c);
-			console.log(this.view.layout);
-
-			console.trace();
-		console.log(this.view._html);
-
-		}
 		this.view.resize(c);
-
-
+		
         if(c['bottom'])c['top'] = undefined;
         if(c['right'])c['left'] = undefined;
 
@@ -7724,7 +7721,7 @@ ludo.View = new Class({
 			ludo.dom.clearCache.delay(50, this);
 			var r = this.getLayout().getRenderer();
 			r.resize();
-			r.resizeChildren();
+
 		}
 
 		/**
@@ -8031,8 +8028,8 @@ ludo.View = new Class({
 			 * @event hide
 			 * @param {Object} htis
 			 */
-			this.fireEvent('hide', this);
 			this.resizeParent();
+			this.fireEvent('hide', this);
 		}
 	},
 	/**
@@ -8089,6 +8086,13 @@ ludo.View = new Class({
 
 		this.setNewZIndex();
 
+
+		if (this.parentComponent) {
+			// this.resizeParent();
+		} else {
+			this.getLayout().getRenderer().resize();
+		}
+
 		/**
 		 * Fired when a component is shown using the show method
 		 * @event show
@@ -8096,11 +8100,7 @@ ludo.View = new Class({
 		 */
 		if (!skipEvents)this.fireEvent('show', this);
 
-		if (this.parentComponent) {
-			this.resizeParent();
-		} else {
-			this.getLayout().getRenderer().resize();
-		}
+
 	},
 
 	resizeParent:function () {
@@ -15238,12 +15238,47 @@ ludo.layout.Accordion = new Class({
     addChild: function (child, insertAt, pos) {
         if (child.layout == undefined)child.layout = {};
         child.layout.index = this.childIndex++;
+
         return this.parent(child, insertAt, pos);
     },
 
+    addChildEvents:function(child){
+        child.addEvent('show', this.onShowHide.bind(this));
+        child.addEvent('hide', this.onShowHide.bind(this));
+    },
+
+    onShowHide:function(child){
+
+        var id = child.id;
+
+        var style = child.hidden ? "none": "";
+
+
+        $('#accordion-title-' + id).css('display', style);
+        $('#accordion-' + id).css('display', style);
+
+        this.measureTitleHeight();
+        this.resize();
+
+
+        if(!child.hidden)this.expandChild(id);
+
+        if(id == this.expandedChild){
+            this.expandedChild = this.firstExpanded();
+            this.expandChild(this.expandedChild );
+        }
+
+    },
+
+    onNewChild:function(child){
+        this.parent(child);
+        if(this.hasBeenRendered()){
+            this.measureTitleHeight();
+            this.resize();
+        }
+    },
+
     getParentForNewChild: function (child) {
-
-
         var el = $('<div class="ludo-framed-view-titlebar ludo-accordion-titlebar"></div>');
 
         var title = $('<div class="ludo-framed-view-titlebar-title ludo-accordion-title"></div>');
@@ -15262,11 +15297,14 @@ ludo.layout.Accordion = new Class({
 
         this.titleEls.push(el);
 
-
         var container = $('<div class="ludo-accordion-container" style="height:0"></div>');
         container.attr("id", "accordion-" + child.id);
         this.view.getBody().append(container);
 
+        if (child.hidden) {
+            el.css('display', 'none');
+            container.css('display', 'none');
+        }
         return container;
     },
 
@@ -15282,7 +15320,6 @@ ludo.layout.Accordion = new Class({
         var view = $("#accordion-" + id);
         var expand = $("#accordion-expand" + id);
 
-
         if (id == this.expandedChild)return;
         var h = this.viewport.height - this.titleHeight;
 
@@ -15291,6 +15328,9 @@ ludo.layout.Accordion = new Class({
             var fn = this.onAnimationComplete.bind(this);
             var d = this.duration;
             var e = this.easing;
+
+
+            view.height(0);
             $(function () {
                 el.animate({height: 0, easing: e}, d, fn);
                 view.animate({height: h, easing: e}, d);
@@ -15318,19 +15358,32 @@ ludo.layout.Accordion = new Class({
         if (this.titleNextOfOpened) {
             this.titleNextOfOpened.removeClass('ludo-accordion-titlebar-below-expanded');
         }
-        var index = this.expandedTitle.attr("data-child-index");
-        if (index < this.titleEls.length - 1) {
-            index++;
-            this.titleNextOfOpened = this.titleEls[index];
+        var index = parseInt(this.expandedTitle.attr("data-child-index"));
+        var next = this.nextVisible(index);
 
+        if (next >= 0) {
+            this.titleNextOfOpened = this.titleEls[next];
             this.titleNextOfOpened.addClass('ludo-accordion-titlebar-below-expanded');
         }
+
+    },
+
+    nextVisible: function (index) {
+        for (var i = index + 1; i < this.view.children.length; i++) {
+            if (!this.view.children[i].hidden) {
+                return i;
+            }
+        }
+        return -1;
     },
 
     measureTitleHeight: function () {
         this.titleHeight = 0;
         for (var i = 0; i < this.titleEls.length; i++) {
-            this.titleHeight += this.titleEls[i].outerHeight();
+            if (!this.view.children[i].hidden) {
+                this.titleHeight += this.titleEls[i].outerHeight();
+
+            }
         }
     },
 
@@ -15340,23 +15393,32 @@ ludo.layout.Accordion = new Class({
 
     beforeFirstResize: function () {
         this.measureTitleHeight();
-        var c = this.view.children;
-        for (var i = 0; i < c.length; i++) {
-            if (c[i].layout.expanded) {
-                this.expandedChild = c[i].id;
-                break;
-            }
-        }
-
-        if (!this.expandedChild) {
-            this.expandedChild = c[0].id;
-        }
-
-
+        this.expandedChild = this.firstExpanded().id;
         this.expandedView = $('#accordion-' + this.expandedChild);
         this.expandedView.css('height', this.viewport.height - this.titleHeight);
         this.toggleTitle(this.expandedChild);
 
+    },
+
+    firstExpanded: function () {
+        var ret = undefined;
+        var c = this.view.children;
+        for (var i = 0; i < c.length; i++) {
+            if (c[i].layout.expanded && !c[i].hidden) {
+                ret = c[i];
+                break;
+            }
+        }
+        if (!ret) {
+            for (i = 0; i < c.length; i++) {
+                if (!c[i].hidden) {
+                    ret = c[i];
+                    break;
+                }
+            }
+        }
+
+        return ret;
     },
 
     resize: function () {
@@ -15365,7 +15427,6 @@ ludo.layout.Accordion = new Class({
         if (this.expandedView) {
             this.expandedView.css('height', h);
         }
-
         var size = {
             width: this.viewport.width,
             height: h
@@ -15373,7 +15434,6 @@ ludo.layout.Accordion = new Class({
         for (var i = 0; i < c.length; i++) {
             c[i].resize(size);
         }
-
     }
 });/* ../ludojs/src/layout/linear.js */
 /**
@@ -16480,6 +16540,7 @@ ludo.layout.Relative = new Class({
 	},
 
 	resize:function () {
+
 		if (this.children === undefined) {
 			this.prepareResize();
 		}
