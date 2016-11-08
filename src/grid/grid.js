@@ -293,6 +293,9 @@ ludo.grid.Grid = new Class({
 			this.els.dataContainer.css('cursor', 'pointer');
 		}
 
+
+
+
 		this.positionVerticalScrollbar.delay(100, this);
 
 		if (this.getParent()) {
@@ -542,7 +545,9 @@ ludo.grid.Grid = new Class({
 		this.els.body.css('height', height);
 		this.cachedInnerHeight = height;
 
+
 		var contentHeight = this.getBody().height();
+
 		if (contentHeight == 0) {
 			this.resizeDOM.delay(100, this);
 			return;
@@ -750,7 +755,8 @@ ludo.grid.Grid = new Class({
 		if (!column) {
 			return;
 		}
-		var height = column.offsetHeight;
+		var height = column.outerHeight();
+
 		if (height === 0) {
 			this.resizeVerticalScrollbar.delay(300, this);
 		} else {

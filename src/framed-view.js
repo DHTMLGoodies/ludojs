@@ -1,7 +1,15 @@
 /**
- * View with title bar
+ * Displays a View with a title bar and support for a bottom button bar .
+ * @parent ludo.View
  * @class ludo.FramedView
- * @augments ludo.View
+ * @extends ludo.View
+ * @param {Object} config
+ * @param {String} config.title Title for the title bar
+ * @param {String} config.icon Path to icon to be placed in top left corner of title bar, default:undefined
+ * @param {Boolean} config.minimizable True to add minimize button to the title bar.
+ * @param {Boolean} config.minimized True to render the view minimized.
+ * @param {Object} config.buttonBar Optional button bar configuration. The button bar is div at the bottom of the view where child views(example buttons) are rendered in a linear horizontal layout.
+ * Alignment of button can be set using config.buttonBar.align(left, center or right).<br> Example: <br><code>buttonBar: { align:'left', children:[ {type:'ludo.form.Button', value: 'OK' }]}. </code>.<br>Default alignment is "right"
  */
 ludo.FramedView = new Class({
 	Extends:ludo.View,
@@ -13,43 +21,16 @@ ludo.FramedView = new Class({
 	},
 
 	minimized:false,
-
-	/**
-	 * Title of component. A title is only useful for FramedView's or when the component is collapsible.
-	 * @param {String} title
-	 */
 	title:'',
-
-
 	movable:false,
-	/**
-	 * Is view minimizable. When set to true, a minimize button will appear on the title bar of the component
-	 * @param {Boolean} minimizable
-	 * @memberof ludo.FramedView
-	 * @default false
-	 */
 	minimizable:false,
-
 	resizable:false,
-	/**
-	 * When set to true, a close button will appear on the title bar of the component.
-	 * @attribute closable
-	 * @type {Boolean}
-	 * @memberof ludo.FramedView
-	 * @default false
-	 */
 	closable:false,
 
 	width:null,
 	height:200,
 
 	preserveAspectRatio:false,
-	/**
-	 * Path to icon to be placed on the title bar
-	 * @config {String} icon
-	 * @memberof ludo.FramedView
-     * @default undefined
-	 */
 	icon:undefined,
 
 	/**
@@ -92,42 +73,14 @@ ludo.FramedView = new Class({
 		 });
 	 */
 	titleBar:undefined,
-
-	/**
-	 * Don't show the title bar
-	 * @config {Boolean} titleBarHidden
-	 * @default false
-	 */
 	titleBarHidden:false,
-
-	/**
-	 * Bold title bar. True to give the component a window type title bar, false to give it a smaller title bar
-	 * @attribute boldTitle
-	 * @memberof ludo.FramedView
-	 * @type {Boolean}
-	 * @default true
-	 */
 	boldTitle:true,
 	hasMenu:false,
-
 	buttons:[],
-	/**
-	 Button bar object. Components to be placed on the button bar.
-	 @attribute buttonBar
-	 @memberof ludo.FramedView
-	 @type Object
-	 @example
-	 	buttonBar : {
-			align : 'left',
-			children : [{ type: form.Button, value: 'Send' }]
-		}
-	 */
 	buttonBar:undefined,
 
 	menuConfig:null,
 	menuObj:null,
-
-	column:null,
 
 	state:{
 		isMinimized:false
@@ -232,6 +185,12 @@ ludo.FramedView = new Class({
 	resizeDOM:function () {
 		var height = this.getHeight();
 		height -= (ludo.dom.getMBPH(this.els.container) + ludo.dom.getMBPH(this.els.body) +  this.getHeightOfTitleAndButtonBar());
+
+		console.log(ludo.dom.getMBPH(this.els.body));
+		console.log(ludo.dom.getMBPH(this.els.container));
+		console.log(this.getHeightOfTitleAndButtonBar());
+
+
         if(height >= 0){
             this.els.body.css('height', height);
             this.cachedInnerHeight = height;

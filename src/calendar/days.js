@@ -1,3 +1,4 @@
+
 /**
  * Class used to display days in a month
  * @namespace calendar
@@ -47,8 +48,8 @@ ludo.calendar.Days = new Class({
     touchStart:function (e) {
         this.touch = {
             enabled:true,
-            x1:e.page.x, x2:e.page.x,
-            y1:e.page.y, y2:e.page.y
+            x1:e.pageX, x2:e.pageX,
+            y1:e.pageY, y2:e.pageY
         };
 
         if (e.target.tagName.toLowerCase() == 'window') {
@@ -58,8 +59,8 @@ ludo.calendar.Days = new Class({
     },
     touchMove:function (e) {
         if (this.touch.enabled) {
-            this.touch.x2 = e.page.x;
-            this.touch.y2 = e.page.y;
+            this.touch.x2 = e.pageX;
+            this.touch.y2 = e.pageY;
 
             var left = this.touch.x2 - this.touch.x1;
             var top = this.touch.y2 - this.touch.y1;
@@ -127,7 +128,7 @@ ludo.calendar.Days = new Class({
         this.parent();
         var b = this.getBody();
         var h = this.els.daysHeader;
-        var size = { x : b.width(), y: b.height() };
+        var size = { x:b.width(),y:b.height() };
 
         var height = size.y - ludo.dom.getBH(b) - ludo.dom.getPH(b) - h.height() + ludo.dom.getMH(h);
 

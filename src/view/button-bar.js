@@ -26,8 +26,11 @@ ludo.view.ButtonBar = new Class({
     ludoConfig:function (config) {
         this.setConfigParams(config, ['align','component','buttonBarCss']);
         config.children = this.getValidChildren(config.children);
-        if (this.align == 'right') {
+        if (this.align == 'right' || config.align == 'center') {
             config.children = this.getItemsWithSpacer(config.children);
+            if(config.align == 'center'){
+                config.children.push(this.emptyChild());
+            }
         }else{
             config.children[0].containerCss = config.children[0].containerCss || {};
             if(!config.children[0].containerCss['margin-left']){
@@ -86,13 +89,17 @@ ludo.view.ButtonBar = new Class({
     },
 
     getItemsWithSpacer:function (children) {
-        children.splice(0, 0, {
+        children.splice(0, 0, this.emptyChild());
+
+        return children;
+    },
+
+    emptyChild:function(){
+        return {
             layout: { weight:1 },
             containerCss:{ 'background-color':'transparent' },
             css:{ 'background-color':'transparent'}
-        });
-
-        return children;
+        };
     },
     /**
      * Returns the component where the button bar is placed

@@ -14,7 +14,10 @@
     "plugins/markdown"
   ],
   "templates": {
-    "analytics": "UA-34153510-1",
+    "analytics": {
+        "ua" : "UA-34153510-1",
+        "domain": "http://www.ludojs.com"
+    },
     "logoFile": "",
     "cleverLinks": true,
     "monospaceLinks": false,
@@ -26,12 +29,13 @@
     "copyright": "© LudoJS.com 2012-2016",
     "syntaxTheme": "default",
     "navType": "vertical",
-    "theme": "sandstone",
+    "theme": "ludojs",
     "linenums": true,
     "collapseSymbols": true,
     "inverseNav": true,
     "protocol": "html://",
-    "methodHeadingReturns": true
+    "methodHeadingReturns": true,
+    "allowUnknownTags": true
   },
   "markdown": {
     "parser": "gfm",

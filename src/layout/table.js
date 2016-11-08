@@ -1,17 +1,18 @@
 /**
  * When layout.type is set to "table", children will be arranged in a table layout.
- * For demo, see <a href="../demo/layout/table.php">Table layout demo</a>
- * @param {Object} view.layout
- * @param {Object} view.layout.columns Column configuration for the table layout. These layout options are added to the parent View.
- * @param {Number} view.layout.columns.width Optional width of column
- * @param {Number} view.layout.columns.weight Optional width weight of columns. "weight" means use remaining space.
+ * For demo, see <a href="../demo/layout/table.php">Table layout demo</a>.
+ * @namespace ludo.layout
+ * @class ludo.layout.Table
+ * @param {Object} config
+ * @param {Object} config.columns Column configuration for the table layout. These layout options are added to the parent View.
+ * @param {Number} config.columns.width Optional width of column
+ * @param {Number} config.columns.weight Optional width weight of columns. "weight" means use remaining space.
  * In a view where width is 400, and you have three columns, one with fixed with of 100,
  * one with weight of 1 and one width weight of 2, the first column will use get its fixed with of 100.
  * The second one will get a width of 100(300(remaining width) * 1(weight) / 3(total weight)) and last column a width of 200
  * (300(remaining width) * 2(weight) / 3(total weight))
- * @param {Number} view.layout.row true to create a new row. (Option for child layout)
- * @param {Number} view.layout.vAlign Optional Vertical alignment of View(top|middle|bottom|baseline). Default: "top"(Option for child layout)
- * @class ludo.layout.Table
+ * @param {Number} config.row true to create a new row. (Option for child layout)
+ * @param {Number} config.vAlign Optional Vertical alignment of View(top|middle|bottom|baseline). Default: "top"(Option for child layout)
  * @example
  var w = new ludo.Window({
         title: 'Table layout',
@@ -113,6 +114,7 @@ ludo.layout.Table = new Class({
     },
 
     resize: function () {
+        console.log('resize table');
         var c = this.view.children;
         var curCellIndex = 0;
         for (var i = 0; i < c.length; i++) {
@@ -140,6 +142,7 @@ ludo.layout.Table = new Class({
         var totalWidth = this.view.getBody().width();
         var weightWidth = totalWidth - this.fixedWidth;
         for (var i = colIndex; i < colIndex + colspan; i++) {
+            console.log(i +',' + colspan);
             if (this.cols[i].width) {
                 width += this.cols[i].width;
             } else if (this.cols[i].weight) {

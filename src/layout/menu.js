@@ -188,6 +188,7 @@ ludo.layout.Menu = new Class({
 			return this.parentMenuItems;
 		}.bind(child);
 
+		
 		child.addEvent('click', function () {
 			topMenu.fireEvent('click', this);
 		}.bind(child));

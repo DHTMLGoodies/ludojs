@@ -1,7 +1,8 @@
 /**
- * Basic dialog class and base class for all other dialogs
- * @namespace dialog
- * @class dialog.Dialog
+ * Basic dialog class and base class for all other dialogs. This class extends
+ * <a href="ludo.Window.html">ludo.Window</a>.
+ * @class ludo.dialog.Dialog
+ * @param {object} config
  * @augments Window
  */
 ludo.dialog.Dialog = new Class({

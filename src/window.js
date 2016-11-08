@@ -1,135 +1,95 @@
 /**
-@class ludo.Window
-@augments ludo.FramedView
-@description Class for floating window
-@param {Object} config
-@example
-	new ludo.Window({
-	   width:500,height:500,
-	   left:100,top:100,
-	   layout:'cols',
-	   children:[{
-		   	layout:{
-		   		weight:1
-			},
-		   html : 'Panel 1'
-	   },{
-		   	layout:{
-		   		weight:1
-			},
-		   	html: 'Panel 2'
-	   }]
-	});
+ * Displays a movable View with Title Bar.
+ * @parent ludo.FramedView
+ * @class ludo.Window
+ * @param {Object} config
+ * @param {Boolean} config.resizable true to make the window resizable, default = true
+ * @param {Boolean} config.movable true to make the window movable, default = true
+ * @param {Boolean} config.hideBodyOnMove true to display a dotted rectangle when moving the window. The window will be positioned on mouse up.
+ * @param {Boolean} config.resizeLeft true make the window resizable from left edge, default = true
+ * @param {Boolean} config.resizeTop true make the window resizable from top edge, default = true.
+ * @param {Boolean} config.resizeRight true make the window resizable from right edge, default = true.
+ * @param {Boolean} config.resizeBottom true make the window resizable from bottom edge, default = true.
+ * @param {Boolean} config.preserveAspectRatio Preserve aspect ratio(width/height) when resizing.
+ * @param {Boolean} config.closable True to make the window closable. This will add a close button to the title bar.
+ * @param {Boolean} config.minimizable True to make the window minimizable. This will add a minimize button to the title bar.
+ * @summary new ludo.Window({ ... });
+ *
+ * @example
+ * new ludo.Window({
+ *	   layout:{
+ *	        type:'linear', orientation:'horizontal',
+ *          width:500,height:500,
+ *	        left:100,top:100
+ *
+ *	   },
+ *	   children:[
+ *	   {
+ *		   	layout:{
+ *		   		weight:1
+ *			},
+ *		   html : 'Panel 1'
+ *	   },{
+ *		   	layout:{
+ *		   		weight:1
+ *			},
+ *		   	html: 'Panel 2'
+ *	   }]
+ *	});
  */
 ludo.Window = new Class({
-    Extends:ludo.FramedView,
-    type:'Window',
-    cssSignature:'ludo-window',
+    Extends: ludo.FramedView,
+    type: 'Window',
+    cssSignature: 'ludo-window',
+    movable: true,
+    resizable: true,
+    closable: true,
+    top: undefined,
+    left: undefined,
+    width: 300,
+    height: 200,
+    resizeTop: true,
+    resizeLeft: true,
+    hideBodyOnMove: false,
+    preserveAspectRatio: false,
+    statefulProperties: ['layout'],
 
-	/**
-	 * True to make the window movable
-	 * @attribute movable
-	 * @type {Boolean}
-	 * @default true
-	 */
-	movable:true,
-	resizable:true,
-	closable:true,
-
-    /**
-     * Top position of window
-     * @attribute {Number} top
-     * @default undefined
-     */
-    top:undefined,
-    /**
-     * Left position of window
-     * @attribute {Number} left
-     * @default undefined
-     */
-    left:undefined,
-    /**
-     * Width of window
-     * @attribute {Number} width
-     * @default 300
-     */
-    width:300,
-    /**
-     * Height of window
-     * @attribute {Number} height
-     * @default 200
-     */
-    height:200,
-    /**
-     * When set to true, resize handle will be added
-     * to the top ludo of the window. This can be useful to turn off when you're extending the ludo.Window component
-     * to create custom components where top position should be fixed.
-     * @attribute {Boolean} resizeTop
-     * @default true
-     */
-    resizeTop:true,
-    /**
-     * When set to true, resize handle will be added
-     * to the left ludo of the window. This can be useful to turn off when you're extending the ludo.Window component
-     * to create custom components where left position should be fixed.
-     * @attribute {Boolean} resizeLeft
-     * @default true
-     */
-    resizeLeft:true,
-
-    /**
-     * Hide content of window while moving/dragging the window
-     * @attribute {Boolean} hideBodyOnMove
-     * @default false
-     */
-    hideBodyOnMove:false,
-
-    /**
-     * Preserve aspect ratio when resizing
-     * @attribute {Boolean} preserveAspectRatio
-     * @memberof ludo.Window
-     * @default false
-     */
-    preserveAspectRatio:false,
-
-	statefulProperties:['layout'],
-
-    ludoConfig:function (config) {
-		config = config || {};
-		config.renderTo = document.body;
-        var keys = ['resizeTop','resizeLeft','hideBodyOnMove','preserveAspectRatio'];
+    ludoConfig: function (config) {
+        config = config || {};
+        config.renderTo = document.body;
+        var keys = ['resizeTop', 'resizeLeft', 'hideBodyOnMove', 'preserveAspectRatio'];
         this.setConfigParams(config, keys);
 
-		this.parent(config);
+        this.parent(config);
     },
 
-    ludoEvents:function () {
+    ludoEvents: function () {
         this.parent();
         if (this.hideBodyOnMove) {
             this.addEvent('startmove', this.hideBody.bind(this));
             this.addEvent('stopmove', this.showBody.bind(this));
         }
-		this.addEvent('stopmove', this.saveState.bind(this));
+        this.addEvent('stopmove', this.saveState.bind(this));
     },
 
-    hideBody:function () {
+    hideBody: function () {
         this.getBody().css('display', 'none');
-        if(this.els.buttonBar)this.els.buttonBar.el.css('display', 'none');
+        if (this.els.buttonBar)this.els.buttonBar.el.css('display', 'none');
     },
 
-    showBody:function () {
+    showBody: function () {
         this.getBody().css('display', '');
-        if(this.els.buttonBar)this.els.buttonBar.el.css('display', '');
+        if (this.els.buttonBar)this.els.buttonBar.el.css('display', '');
     },
 
-    ludoRendered:function () {
+    ludoRendered: function () {
         this.parent();
         this.getEl().addClass('ludo-window');
         this.focusFirstFormField();
         this.fireEvent('activate', this);
     },
 
-    ludoDOM:function () {
+    ludoDOM: function () {
         this.parent();
         if (this.isResizable()) {
             var r = this.getResizer();
@@ -150,12 +110,12 @@ ludo.Window = new Class({
         }
     },
 
-    show:function () {
-		this.parent();
+    show: function () {
+        this.parent();
         this.focusFirstFormField();
     },
 
-    focusFirstFormField:function () {
+    focusFirstFormField: function () {
         var els = this.getBody().children('input');
         for (var i = 0, count = els.length; i < count; i++) {
             if (els[i].type && els[i].type.toLowerCase() === 'text') {
@@ -169,7 +129,7 @@ ludo.Window = new Class({
         }
     },
 
-    isUsingShimForResize:function () {
+    isUsingShimForResize: function () {
         return true;
     },
     /**
@@ -179,12 +139,12 @@ ludo.Window = new Class({
      * @param {Number} y
      * @return void
      */
-    showAt:function (x, y) {
-        this.setXY(x,y);
+    showAt: function (x, y) {
+        this.setXY(x, y);
         this.show();
     },
 
-    setXY:function(x,y){
+    setXY: function (x, y) {
         this.layout.left = x;
         this.layout.top = y;
         var r = this.getLayout().getRenderer();
@@ -192,12 +152,12 @@ ludo.Window = new Class({
         r.resize();
     },
 
-    center:function(){
+    center: function () {
         var b = $(document.body);
-        var bodySize = { x: b.width(), y: b.height() };
+        var bodySize = {x: b.width(), y: b.height()};
         var x = Math.round((bodySize.x / 2) - (this.getWidth() / 2));
         var y = Math.round((bodySize.y / 2) - (this.getHeight() / 2));
-        this.setXY(x,Math.max(0,y));
+        this.setXY(x, Math.max(0, y));
     },
 
     /**
@@ -205,12 +165,12 @@ ludo.Window = new Class({
      * @function showCentered
      * @return void
      */
-    showCentered:function () {
+    showCentered: function () {
         this.center();
         this.show();
     },
 
-    isWindow:function(){
+    isWindow: function () {
         return true;
     }
 });

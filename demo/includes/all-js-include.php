@@ -167,7 +167,6 @@
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/menu/button.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/menu/menu.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/menu/item.js"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/menu/menu-item.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/menu/drop-down.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/menu/context.js"></script>
 

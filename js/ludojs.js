@@ -1,7 +1,7 @@
-/* Generated Mon Nov 7 18:59:15 CET 2016 */
+/* Generated Tue Nov 8 23:05:03 CET 2016 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework
+ludoJS - Javascript framework, 1.1.24
 Copyright (C) 2012-2016  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -15010,18 +15010,19 @@ ludo.color.RgbColors = new Class({
 });/* ../ludojs/src/layout/table.js */
 /**
  * When layout.type is set to "table", children will be arranged in a table layout.
- * For demo, see <a href="../demo/layout/table.php">Table layout demo</a>
- * @param {Object} view.layout
- * @param {Object} view.layout.columns Column configuration for the table layout. These layout options are added to the parent View.
- * @param {Number} view.layout.columns.width Optional width of column
- * @param {Number} view.layout.columns.weight Optional width weight of columns. "weight" means use remaining space.
+ * For demo, see <a href="../demo/layout/table.php">Table layout demo</a>.
+ * @namespace ludo.layout
+ * @class ludo.layout.Table
+ * @param {Object} config
+ * @param {Object} config.columns Column configuration for the table layout. These layout options are added to the parent View.
+ * @param {Number} config.columns.width Optional width of column
+ * @param {Number} config.columns.weight Optional width weight of columns. "weight" means use remaining space.
  * In a view where width is 400, and you have three columns, one with fixed with of 100,
  * one with weight of 1 and one width weight of 2, the first column will use get its fixed with of 100.
  * The second one will get a width of 100(300(remaining width) * 1(weight) / 3(total weight)) and last column a width of 200
  * (300(remaining width) * 2(weight) / 3(total weight))
- * @param {Number} view.layout.row true to create a new row. (Option for child layout)
- * @param {Number} view.layout.vAlign Optional Vertical alignment of View(top|middle|bottom|baseline). Default: "top"(Option for child layout)
- * @class ludo.layout.Table
+ * @param {Number} config.row true to create a new row. (Option for child layout)
+ * @param {Number} config.vAlign Optional Vertical alignment of View(top|middle|bottom|baseline). Default: "top"(Option for child layout)
  * @example
  var w = new ludo.Window({
         title: 'Table layout',
@@ -15123,6 +15124,7 @@ ludo.layout.Table = new Class({
     },
 
     resize: function () {
+        console.log('resize table');
         var c = this.view.children;
         var curCellIndex = 0;
         for (var i = 0; i < c.length; i++) {
@@ -15150,6 +15152,7 @@ ludo.layout.Table = new Class({
         var totalWidth = this.view.getBody().width();
         var weightWidth = totalWidth - this.fixedWidth;
         for (var i = colIndex; i < colIndex + colspan; i++) {
+            console.log(i +',' + colspan);
             if (this.cols[i].width) {
                 width += this.cols[i].width;
             } else if (this.cols[i].weight) {
@@ -16455,10 +16458,11 @@ ludo.layout.TabStrip = new Class({
 });/* ../ludojs/src/layout/relative.js */
 /**
  Relative Layout. This layout will render children relative to each other based on the rules defined below.
- <a href="../demo/layout/relative.php" onclick="var w=window.open(this.href);return false">Relative layout demo</a>.
+ For a demo, see <a href="../demo/layout/relative.php" onclick="var w=window.open(this.href);return false">Relative layout demo</a>.
  @namespace ludo.layout
  @class ludo.layout.Relative
  @param {object} config
+ @summary layout: {type: "relative" }
  @param {number|string} config.width Width in Pixels or "matchParent". 
  @param {number|string} config.height Height in pixels or "matchParent"
  @param {Boolean} config.alignParentTop Align at top edge of parent view
@@ -17627,8 +17631,10 @@ ludo.layout.SlideIn = new Class({
             }
             this.view.layout.active = true;
             var widthOfFirst = this.getWidthOfMenu();
-         
-            this.effect().slide(this.slideEl, { left:widthOfFirst * -1}, {left:0 }, this.getDuration());
+
+            this.slideEl.animate({
+                left:0
+            }, this.getDuration());
         }
     },
     /**
@@ -17641,7 +17647,10 @@ ludo.layout.SlideIn = new Class({
         if (this.isMenuOpen()) {
             this.view.layout.active = false;
             var widthOfFirst = this.getWidthOfMenu();
-            this.effect().slide(this.slideEl, {left:0 }, { left:widthOfFirst * -1}, this.getDuration());
+
+            this.slideEl.animate({
+                left: widthOfFirst * -1
+            }, this.getDuration());
         }
     },
 
@@ -17665,7 +17674,7 @@ ludo.layout.SlideIn = new Class({
     },
 
     getDuration:function () {
-        return this.view.layout.duration || .15;
+        return this.view.layout.duration || 150;
     },
 
     getWidthOfMenu:function(){
@@ -18034,6 +18043,7 @@ ludo.layout.Menu = new Class({
 			return this.parentMenuItems;
 		}.bind(child);
 
+		
 		child.addEvent('click', function () {
 			topMenu.fireEvent('click', this);
 		}.bind(child));
@@ -19275,8 +19285,11 @@ ludo.view.ButtonBar = new Class({
     ludoConfig:function (config) {
         this.setConfigParams(config, ['align','component','buttonBarCss']);
         config.children = this.getValidChildren(config.children);
-        if (this.align == 'right') {
+        if (this.align == 'right' || config.align == 'center') {
             config.children = this.getItemsWithSpacer(config.children);
+            if(config.align == 'center'){
+                config.children.push(this.emptyChild());
+            }
         }else{
             config.children[0].containerCss = config.children[0].containerCss || {};
             if(!config.children[0].containerCss['margin-left']){
@@ -19335,13 +19348,17 @@ ludo.view.ButtonBar = new Class({
     },
 
     getItemsWithSpacer:function (children) {
-        children.splice(0, 0, {
+        children.splice(0, 0, this.emptyChild());
+
+        return children;
+    },
+
+    emptyChild:function(){
+        return {
             layout: { weight:1 },
             containerCss:{ 'background-color':'transparent' },
             css:{ 'background-color':'transparent'}
-        });
-
-        return children;
+        };
     },
     /**
      * Returns the component where the button bar is placed
@@ -19574,10 +19591,7 @@ ludo.view.TitleBar = new Class({
     height:undefined,
     getHeight:function () {
         if (this.height === undefined) {
-            var el = this.els.el;
-            this.height = el.outerHeight();
-
-            // this.height += ludo.dom.getMH(el) + ludo.dom.getBH(el) + ludo.dom.getPH(el);
+            this.height = this.els.el.outerHeight();
         }
         return this.height;
     },
@@ -19608,9 +19622,17 @@ ludo.view.registerTitleBarButton('minimize', {
     toggle:['minimize', 'maximize']
 });/* ../ludojs/src/framed-view.js */
 /**
- * View with title bar
+ * Displays a View with a title bar and support for a bottom button bar .
+ * @parent ludo.View
  * @class ludo.FramedView
- * @augments ludo.View
+ * @extends ludo.View
+ * @param {Object} config
+ * @param {String} config.title Title for the title bar
+ * @param {String} config.icon Path to icon to be placed in top left corner of title bar, default:undefined
+ * @param {Boolean} config.minimizable True to add minimize button to the title bar.
+ * @param {Boolean} config.minimized True to render the view minimized.
+ * @param {Object} config.buttonBar Optional button bar configuration. The button bar is div at the bottom of the view where child views(example buttons) are rendered in a linear horizontal layout.
+ * Alignment of button can be set using config.buttonBar.align(left, center or right).<br> Example: <br><code>buttonBar: { align:'left', children:[ {type:'ludo.form.Button', value: 'OK' }]}. </code>.<br>Default alignment is "right"
  */
 ludo.FramedView = new Class({
 	Extends:ludo.View,
@@ -19622,43 +19644,16 @@ ludo.FramedView = new Class({
 	},
 
 	minimized:false,
-
-	/**
-	 * Title of component. A title is only useful for FramedView's or when the component is collapsible.
-	 * @param {String} title
-	 */
 	title:'',
-
-
 	movable:false,
-	/**
-	 * Is view minimizable. When set to true, a minimize button will appear on the title bar of the component
-	 * @param {Boolean} minimizable
-	 * @memberof ludo.FramedView
-	 * @default false
-	 */
 	minimizable:false,
-
 	resizable:false,
-	/**
-	 * When set to true, a close button will appear on the title bar of the component.
-	 * @attribute closable
-	 * @type {Boolean}
-	 * @memberof ludo.FramedView
-	 * @default false
-	 */
 	closable:false,
 
 	width:null,
 	height:200,
 
 	preserveAspectRatio:false,
-	/**
-	 * Path to icon to be placed on the title bar
-	 * @config {String} icon
-	 * @memberof ludo.FramedView
-     * @default undefined
-	 */
 	icon:undefined,
 
 	/**
@@ -19701,42 +19696,14 @@ ludo.FramedView = new Class({
 		 });
 	 */
 	titleBar:undefined,
-
-	/**
-	 * Don't show the title bar
-	 * @config {Boolean} titleBarHidden
-	 * @default false
-	 */
 	titleBarHidden:false,
-
-	/**
-	 * Bold title bar. True to give the component a window type title bar, false to give it a smaller title bar
-	 * @attribute boldTitle
-	 * @memberof ludo.FramedView
-	 * @type {Boolean}
-	 * @default true
-	 */
 	boldTitle:true,
 	hasMenu:false,
-
 	buttons:[],
-	/**
-	 Button bar object. Components to be placed on the button bar.
-	 @attribute buttonBar
-	 @memberof ludo.FramedView
-	 @type Object
-	 @example
-	 	buttonBar : {
-			align : 'left',
-			children : [{ type: form.Button, value: 'Send' }]
-		}
-	 */
 	buttonBar:undefined,
 
 	menuConfig:null,
 	menuObj:null,
-
-	column:null,
 
 	state:{
 		isMinimized:false
@@ -19841,6 +19808,12 @@ ludo.FramedView = new Class({
 	resizeDOM:function () {
 		var height = this.getHeight();
 		height -= (ludo.dom.getMBPH(this.els.container) + ludo.dom.getMBPH(this.els.body) +  this.getHeightOfTitleAndButtonBar());
+
+		console.log(ludo.dom.getMBPH(this.els.body));
+		console.log(ludo.dom.getMBPH(this.els.container));
+		console.log(this.getHeightOfTitleAndButtonBar());
+
+
         if(height >= 0){
             this.els.body.css('height', height);
             this.cachedInnerHeight = height;
@@ -20114,137 +20087,97 @@ ludo.Application = new Class({
     }
 });/* ../ludojs/src/window.js */
 /**
-@class ludo.Window
-@augments ludo.FramedView
-@description Class for floating window
-@param {Object} config
-@example
-	new ludo.Window({
-	   width:500,height:500,
-	   left:100,top:100,
-	   layout:'cols',
-	   children:[{
-		   	layout:{
-		   		weight:1
-			},
-		   html : 'Panel 1'
-	   },{
-		   	layout:{
-		   		weight:1
-			},
-		   	html: 'Panel 2'
-	   }]
-	});
+ * Displays a movable View with Title Bar.
+ * @parent ludo.FramedView
+ * @class ludo.Window
+ * @param {Object} config
+ * @param {Boolean} config.resizable true to make the window resizable, default = true
+ * @param {Boolean} config.movable true to make the window movable, default = true
+ * @param {Boolean} config.hideBodyOnMove true to display a dotted rectangle when moving the window. The window will be positioned on mouse up.
+ * @param {Boolean} config.resizeLeft true make the window resizable from left edge, default = true
+ * @param {Boolean} config.resizeTop true make the window resizable from top edge, default = true.
+ * @param {Boolean} config.resizeRight true make the window resizable from right edge, default = true.
+ * @param {Boolean} config.resizeBottom true make the window resizable from bottom edge, default = true.
+ * @param {Boolean} config.preserveAspectRatio Preserve aspect ratio(width/height) when resizing.
+ * @param {Boolean} config.closable True to make the window closable. This will add a close button to the title bar.
+ * @param {Boolean} config.minimizable True to make the window minimizable. This will add a minimize button to the title bar.
+ * @summary new ludo.Window({ ... });
+ *
+ * @example
+ * new ludo.Window({
+ *	   layout:{
+ *	        type:'linear', orientation:'horizontal',
+ *          width:500,height:500,
+ *	        left:100,top:100
+ *
+ *	   },
+ *	   children:[
+ *	   {
+ *		   	layout:{
+ *		   		weight:1
+ *			},
+ *		   html : 'Panel 1'
+ *	   },{
+ *		   	layout:{
+ *		   		weight:1
+ *			},
+ *		   	html: 'Panel 2'
+ *	   }]
+ *	});
  */
 ludo.Window = new Class({
-    Extends:ludo.FramedView,
-    type:'Window',
-    cssSignature:'ludo-window',
+    Extends: ludo.FramedView,
+    type: 'Window',
+    cssSignature: 'ludo-window',
+    movable: true,
+    resizable: true,
+    closable: true,
+    top: undefined,
+    left: undefined,
+    width: 300,
+    height: 200,
+    resizeTop: true,
+    resizeLeft: true,
+    hideBodyOnMove: false,
+    preserveAspectRatio: false,
+    statefulProperties: ['layout'],
 
-	/**
-	 * True to make the window movable
-	 * @attribute movable
-	 * @type {Boolean}
-	 * @default true
-	 */
-	movable:true,
-	resizable:true,
-	closable:true,
-
-    /**
-     * Top position of window
-     * @attribute {Number} top
-     * @default undefined
-     */
-    top:undefined,
-    /**
-     * Left position of window
-     * @attribute {Number} left
-     * @default undefined
-     */
-    left:undefined,
-    /**
-     * Width of window
-     * @attribute {Number} width
-     * @default 300
-     */
-    width:300,
-    /**
-     * Height of window
-     * @attribute {Number} height
-     * @default 200
-     */
-    height:200,
-    /**
-     * When set to true, resize handle will be added
-     * to the top ludo of the window. This can be useful to turn off when you're extending the ludo.Window component
-     * to create custom components where top position should be fixed.
-     * @attribute {Boolean} resizeTop
-     * @default true
-     */
-    resizeTop:true,
-    /**
-     * When set to true, resize handle will be added
-     * to the left ludo of the window. This can be useful to turn off when you're extending the ludo.Window component
-     * to create custom components where left position should be fixed.
-     * @attribute {Boolean} resizeLeft
-     * @default true
-     */
-    resizeLeft:true,
-
-    /**
-     * Hide content of window while moving/dragging the window
-     * @attribute {Boolean} hideBodyOnMove
-     * @default false
-     */
-    hideBodyOnMove:false,
-
-    /**
-     * Preserve aspect ratio when resizing
-     * @attribute {Boolean} preserveAspectRatio
-     * @memberof ludo.Window
-     * @default false
-     */
-    preserveAspectRatio:false,
-
-	statefulProperties:['layout'],
-
-    ludoConfig:function (config) {
-		config = config || {};
-		config.renderTo = document.body;
-        var keys = ['resizeTop','resizeLeft','hideBodyOnMove','preserveAspectRatio'];
+    ludoConfig: function (config) {
+        config = config || {};
+        config.renderTo = document.body;
+        var keys = ['resizeTop', 'resizeLeft', 'hideBodyOnMove', 'preserveAspectRatio'];
         this.setConfigParams(config, keys);
 
-		this.parent(config);
+        this.parent(config);
     },
 
-    ludoEvents:function () {
+    ludoEvents: function () {
         this.parent();
         if (this.hideBodyOnMove) {
             this.addEvent('startmove', this.hideBody.bind(this));
             this.addEvent('stopmove', this.showBody.bind(this));
         }
-		this.addEvent('stopmove', this.saveState.bind(this));
+        this.addEvent('stopmove', this.saveState.bind(this));
     },
 
-    hideBody:function () {
+    hideBody: function () {
         this.getBody().css('display', 'none');
-        if(this.els.buttonBar)this.els.buttonBar.el.css('display', 'none');
+        if (this.els.buttonBar)this.els.buttonBar.el.css('display', 'none');
     },
 
-    showBody:function () {
+    showBody: function () {
         this.getBody().css('display', '');
-        if(this.els.buttonBar)this.els.buttonBar.el.css('display', '');
+        if (this.els.buttonBar)this.els.buttonBar.el.css('display', '');
     },
 
-    ludoRendered:function () {
+    ludoRendered: function () {
         this.parent();
         this.getEl().addClass('ludo-window');
         this.focusFirstFormField();
         this.fireEvent('activate', this);
     },
 
-    ludoDOM:function () {
+    ludoDOM: function () {
         this.parent();
         if (this.isResizable()) {
             var r = this.getResizer();
@@ -20265,12 +20198,12 @@ ludo.Window = new Class({
         }
     },
 
-    show:function () {
-		this.parent();
+    show: function () {
+        this.parent();
         this.focusFirstFormField();
     },
 
-    focusFirstFormField:function () {
+    focusFirstFormField: function () {
         var els = this.getBody().children('input');
         for (var i = 0, count = els.length; i < count; i++) {
             if (els[i].type && els[i].type.toLowerCase() === 'text') {
@@ -20284,7 +20217,7 @@ ludo.Window = new Class({
         }
     },
 
-    isUsingShimForResize:function () {
+    isUsingShimForResize: function () {
         return true;
     },
     /**
@@ -20294,12 +20227,12 @@ ludo.Window = new Class({
      * @param {Number} y
      * @return void
      */
-    showAt:function (x, y) {
-        this.setXY(x,y);
+    showAt: function (x, y) {
+        this.setXY(x, y);
         this.show();
     },
 
-    setXY:function(x,y){
+    setXY: function (x, y) {
         this.layout.left = x;
         this.layout.top = y;
         var r = this.getLayout().getRenderer();
@@ -20307,12 +20240,12 @@ ludo.Window = new Class({
         r.resize();
     },
 
-    center:function(){
+    center: function () {
         var b = $(document.body);
-        var bodySize = { x: b.width(), y: b.height() };
+        var bodySize = {x: b.width(), y: b.height()};
         var x = Math.round((bodySize.x / 2) - (this.getWidth() / 2));
         var y = Math.round((bodySize.y / 2) - (this.getHeight() / 2));
-        this.setXY(x,Math.max(0,y));
+        this.setXY(x, Math.max(0, y));
     },
 
     /**
@@ -20320,12 +20253,12 @@ ludo.Window = new Class({
      * @function showCentered
      * @return void
      */
-    showCentered:function () {
+    showCentered: function () {
         this.center();
         this.show();
     },
 
-    isWindow:function(){
+    isWindow: function () {
         return true;
     }
 });/* ../ludojs/src/data-source/search-parser.js */
@@ -21362,7 +21295,7 @@ ludo.Scroller = new Class({
             'overflow':'hidden'
         });
 
-		var overflow = Browser.ie && Browser.version < 9 ? 'scroll' : 'auto';
+		var overflow = 'auto';
         if (this.type == 'horizontal') {
             this.els.el.css({
                 'overflow-x':overflow,
@@ -21380,7 +21313,9 @@ ludo.Scroller = new Class({
             });
         }
 
-        this.els.el.on('scroll', this.performScroll.bind(this));
+
+
+        this.els.el.scroll(this.performScroll.bind(this));
 
         this.els.elInner = $('<div>');
         this.els.elInner.css('position', 'relative');
@@ -21401,15 +21336,14 @@ ludo.Scroller = new Class({
 
     resize:function () {
         if (this.type == 'horizontal') {
-            this.els.el.css('width', this.renderTo.offsetWidth);
+            this.els.el.css('width', this.renderTo.outerWidth());
         } else {
-            var size = this.renderTo.offsetHeight;
+            var size = this.renderTo.outerHeight();
             if (size == 0) {
                 return;
             }
             this.els.el.css('height', size);
         }
-
         this.toggle();
     },
 
@@ -21422,11 +21356,13 @@ ludo.Scroller = new Class({
             this.currentSize = size || this.getWidthOfScrollableElements();
             this.els.elInner.css('width', this.currentSize);
         } else {
+
             this.currentSize = size || this.getHeightOfScrollableElements();
+
             if (this.currentSize <= 0) {
                 var el = this.els.applyTo.getChildren('.ludo-grid-data-column');
                 if (el.length) {
-                    this.currentSize = el[0].getSize().y;
+                    this.currentSize = el[0].outerHeight();
                 }
             }
             this.els.elInner.css('height', this.currentSize);
@@ -21441,41 +21377,46 @@ ludo.Scroller = new Class({
     },
 
     getWidthOfScrollableElements:function () {
-        return this.getTotalSize('offsetWidth');
+        return this.getTotalSize('outerWidth');
     },
 
     getHeightOfScrollableElements:function () {
-        return this.getTotalSize('offsetHeight');
+        return this.getTotalSize('outerHeight');
     },
 
     getTotalSize:function (key) {
         var ret = 0;
         for (var i = 0; i < this.els.applyTo.length; i++) {
-            ret += this.els.applyTo[i][key];
+            ret += this.els.applyTo[i][key]();
         }
         return ret;
     },
 
     eventScroll:function (e) {
-        this.els.el.scrollTop -= (e.wheel * this.wheelSize);
+        var s = this.els.el.scrollTop();
+        this.els.el.scrollTop(s - e.originalEvent.wheelDelta);
         return false;
     },
 
     performScroll:function () {
+
         if (this.type == 'horizontal') {
-            this.scrollTo(this.els.el.scrollLeft);
+            this.scrollTo(this.els.el.scrollLeft());
         } else {
-            this.scrollTo(this.els.el.scrollTop);
+            this.scrollTo(this.els.el.scrollTop());
         }
     },
 
     scrollBy:function (val) {
+
+
         var key = this.type === 'horizontal' ? 'scrollLeft' : 'scrollTop';
         this.els.el[key] += val;
         this.scrollTo(this.els.el[key]);
     },
 
     scrollTo:function (val) {
+
         var css = this.type === 'horizontal' ? 'left' : 'top';
         for (var i = 0; i < this.els.applyTo.length; i++) {
             this.els.applyTo[i].css(css, (val * -1));
@@ -21507,7 +21448,7 @@ ludo.Scroller = new Class({
 
     show:function () {
         this.active = true;
-        this.els.el.style.display='';
+        this.els.el.css('display', '');
     },
 
     hide:function () {
@@ -23048,6 +22989,9 @@ ludo.grid.Grid = new Class({
 			this.els.dataContainer.css('cursor', 'pointer');
 		}
 
+
+
+
 		this.positionVerticalScrollbar.delay(100, this);
 
 		if (this.getParent()) {
@@ -23297,7 +23241,9 @@ ludo.grid.Grid = new Class({
 		this.els.body.css('height', height);
 		this.cachedInnerHeight = height;
 
+
 		var contentHeight = this.getBody().height();
+
 		if (contentHeight == 0) {
 			this.resizeDOM.delay(100, this);
 			return;
@@ -23505,7 +23451,8 @@ ludo.grid.Grid = new Class({
 		if (!column) {
 			return;
 		}
-		var height = column.offsetHeight;
+		var height = column.outerHeight();
+
 		if (height === 0) {
 			this.resizeVerticalScrollbar.delay(300, this);
 		} else {
@@ -24773,6 +24720,7 @@ ludo.calendar.Calendar = new Class({
 		this.getLayout().resize();
     }
 });/* ../ludojs/src/calendar/days.js */
+
 /**
  * Class used to display days in a month
  * @namespace calendar
@@ -24822,8 +24770,8 @@ ludo.calendar.Days = new Class({
     touchStart:function (e) {
         this.touch = {
             enabled:true,
-            x1:e.page.x, x2:e.page.x,
-            y1:e.page.y, y2:e.page.y
+            x1:e.pageX, x2:e.pageX,
+            y1:e.pageY, y2:e.pageY
         };
 
         if (e.target.tagName.toLowerCase() == 'window') {
@@ -24833,8 +24781,8 @@ ludo.calendar.Days = new Class({
     },
     touchMove:function (e) {
         if (this.touch.enabled) {
-            this.touch.x2 = e.page.x;
-            this.touch.y2 = e.page.y;
+            this.touch.x2 = e.pageX;
+            this.touch.y2 = e.pageY;
 
             var left = this.touch.x2 - this.touch.x1;
             var top = this.touch.y2 - this.touch.y1;
@@ -24902,7 +24850,7 @@ ludo.calendar.Days = new Class({
         this.parent();
         var b = this.getBody();
         var h = this.els.daysHeader;
-        var size = { x : b.width(), y: b.height() };
+        var size = { x:b.width(),y:b.height() };
 
         var height = size.y - ludo.dom.getBH(b) - ludo.dom.getPH(b) - h.height() + ludo.dom.getMH(h);
 
@@ -33892,9 +33840,10 @@ ludo.Anchor = new Class({
 
 });/* ../ludojs/src/dialog/dialog.js */
 /**
- * Basic dialog class and base class for all other dialogs
- * @namespace dialog
- * @class dialog.Dialog
+ * Basic dialog class and base class for all other dialogs. This class extends
+ * <a href="ludo.Window.html">ludo.Window</a>.
+ * @class ludo.dialog.Dialog
+ * @param {object} config
  * @augments Window
  */
 ludo.dialog.Dialog = new Class({
@@ -34111,13 +34060,12 @@ ludo.dialog.Confirm = new Class({
 
 /* ../ludojs/src/dialog/alert.js */
 /**
- @namespace dialog
- @class Alert
+ @namespace ludo.dialog
+ @class ludo.dialog.Alert
  @augments Dialog
  @description Alert dialog. This component has by default one button "OK" and will fire an
  "ok" event when this button is clicked
- @constructor
- @param config
+ @param {Object} config
  @example
 	 new ludo.dialog.Alert(
 	 	{ html: 'Well done! You solved this puzzle. Click OK to load next' }
@@ -34321,35 +34269,6 @@ ludo.video.YouTube = new Class({
 		return 'http://www.youtube.com/v/' + this.movieId;
 	}
 
-});/* ../ludojs/src/video/google-video.js */
-/**
- Goggle Video player component
- @namespace video
- @class GoogleVideo
- @augments video.Video
- */
-ludo.video.GoogleVideo = new Class({
-    Extends : ludo.video.Video,
-    type : 'video.GoogleVideo',
-
-    getVideoUrl:function(){
-        return 'http://video.google.com/googleplayer.swf?docid=' + this.movieId;
-    }
-
-});/* ../ludojs/src/video/daily-motion.js */
-/**
- DailyMotion video player component
- @namespace video
- @class DailyMotion
- @augments video.Video
- */
-ludo.video.DailyMotion = new Class({
-	Extends:ludo.video.Video,
-	type:'video.DailyMotion',
-
-	getVideoUrl:function () {
-		return 'http://www.dailymotion.com/swf/' + this.movieId;
-	}
 });/* ../ludojs/src/canvas/gradient.js */
 /**
 Class for linear gradients

@@ -219,10 +219,7 @@ ludo.view.TitleBar = new Class({
     height:undefined,
     getHeight:function () {
         if (this.height === undefined) {
-            var el = this.els.el;
-            this.height = el.outerHeight();
-
-            // this.height += ludo.dom.getMH(el) + ludo.dom.getBH(el) + ludo.dom.getPH(el);
+            this.height = this.els.el.outerHeight();
         }
         return this.height;
     },

@@ -7,7 +7,7 @@ require_once("../includes/demo-header.php");
 
 <script type="text/javascript" class="source-code">
     var w = new ludo.Window({
-        left: 250, top: 50,
+        left: 50, top: 50,
         title: 'Grid - capital and population',
         width: 500, height: 370,
         layout: 'fill',

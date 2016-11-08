@@ -54,7 +54,7 @@ ludo.Scroller = new Class({
             'overflow':'hidden'
         });
 
-		var overflow = Browser.ie && Browser.version < 9 ? 'scroll' : 'auto';
+		var overflow = 'auto';
         if (this.type == 'horizontal') {
             this.els.el.css({
                 'overflow-x':overflow,
@@ -72,7 +72,9 @@ ludo.Scroller = new Class({
             });
         }
 
-        this.els.el.on('scroll', this.performScroll.bind(this));
+
+
+        this.els.el.scroll(this.performScroll.bind(this));
 
         this.els.elInner = $('<div>');
         this.els.elInner.css('position', 'relative');
@@ -93,15 +95,14 @@ ludo.Scroller = new Class({
 
     resize:function () {
         if (this.type == 'horizontal') {
-            this.els.el.css('width', this.renderTo.offsetWidth);
+            this.els.el.css('width', this.renderTo.outerWidth());
         } else {
-            var size = this.renderTo.offsetHeight;
+            var size = this.renderTo.outerHeight();
             if (size == 0) {
                 return;
             }
             this.els.el.css('height', size);
         }
-
         this.toggle();
     },
 
@@ -114,11 +115,13 @@ ludo.Scroller = new Class({
             this.currentSize = size || this.getWidthOfScrollableElements();
             this.els.elInner.css('width', this.currentSize);
         } else {
+
             this.currentSize = size || this.getHeightOfScrollableElements();
+
             if (this.currentSize <= 0) {
                 var el = this.els.applyTo.getChildren('.ludo-grid-data-column');
                 if (el.length) {
-                    this.currentSize = el[0].getSize().y;
+                    this.currentSize = el[0].outerHeight();
                 }
             }
             this.els.elInner.css('height', this.currentSize);
@@ -133,41 +136,46 @@ ludo.Scroller = new Class({
     },
 
     getWidthOfScrollableElements:function () {
-        return this.getTotalSize('offsetWidth');
+        return this.getTotalSize('outerWidth');
     },
 
     getHeightOfScrollableElements:function () {
-        return this.getTotalSize('offsetHeight');
+        return this.getTotalSize('outerHeight');
     },
 
     getTotalSize:function (key) {
         var ret = 0;
         for (var i = 0; i < this.els.applyTo.length; i++) {
-            ret += this.els.applyTo[i][key];
+            ret += this.els.applyTo[i][key]();
         }
         return ret;
     },
 
     eventScroll:function (e) {
-        this.els.el.scrollTop -= (e.wheel * this.wheelSize);
+        var s = this.els.el.scrollTop();
+        this.els.el.scrollTop(s - e.originalEvent.wheelDelta);
         return false;
     },
 
     performScroll:function () {
+
         if (this.type == 'horizontal') {
-            this.scrollTo(this.els.el.scrollLeft);
+            this.scrollTo(this.els.el.scrollLeft());
         } else {
-            this.scrollTo(this.els.el.scrollTop);
+            this.scrollTo(this.els.el.scrollTop());
         }
     },
 
     scrollBy:function (val) {
+
+
         var key = this.type === 'horizontal' ? 'scrollLeft' : 'scrollTop';
         this.els.el[key] += val;
         this.scrollTo(this.els.el[key]);
     },
 
     scrollTo:function (val) {
+
         var css = this.type === 'horizontal' ? 'left' : 'top';
         for (var i = 0; i < this.els.applyTo.length; i++) {
             this.els.applyTo[i].css(css, (val * -1));
@@ -199,7 +207,7 @@ ludo.Scroller = new Class({
 
     show:function () {
         this.active = true;
-        this.els.el.style.display='';
+        this.els.el.css('display', '');
     },
 
     hide:function () {

@@ -1,11 +1,10 @@
 /**
- @namespace dialog
- @class Alert
+ @namespace ludo.dialog
+ @class ludo.dialog.Alert
  @augments Dialog
  @description Alert dialog. This component has by default one button "OK" and will fire an
  "ok" event when this button is clicked
- @constructor
- @param config
+ @param {Object} config
  @example
 	 new ludo.dialog.Alert(
 	 	{ html: 'Well done! You solved this puzzle. Click OK to load next' }

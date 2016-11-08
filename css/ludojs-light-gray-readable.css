@@ -2502,7 +2502,7 @@ fieldset{
 
 /** Rich component without button bar */
 .ludo-component-no-buttonbar .ludo-body {
-    margin-bottom: 5px;
+    /** margin-bottom: 5px; **/
 }
 
 .ludo-framed-view .ludo-body div.ludo-body {
@@ -2537,7 +2537,7 @@ div.ludo-framed-view {
 }
 
 .ludo-body {
-    font-size: 11px;
+    font-size: 12px;
 }
 
 div.ludo-framed-view-titlebar-title {

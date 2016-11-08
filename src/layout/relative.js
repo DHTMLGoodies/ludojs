@@ -1,9 +1,10 @@
 /**
  Relative Layout. This layout will render children relative to each other based on the rules defined below.
- <a href="../demo/layout/relative.php" onclick="var w=window.open(this.href);return false">Relative layout demo</a>.
+ For a demo, see <a href="../demo/layout/relative.php" onclick="var w=window.open(this.href);return false">Relative layout demo</a>.
  @namespace ludo.layout
  @class ludo.layout.Relative
  @param {object} config
+ @summary layout: {type: "relative" }
  @param {number|string} config.width Width in Pixels or "matchParent". 
  @param {number|string} config.height Height in pixels or "matchParent"
  @param {Boolean} config.alignParentTop Align at top edge of parent view

@@ -47,8 +47,10 @@ ludo.layout.SlideIn = new Class({
             }
             this.view.layout.active = true;
             var widthOfFirst = this.getWidthOfMenu();
-         
-            this.effect().slide(this.slideEl, { left:widthOfFirst * -1}, {left:0 }, this.getDuration());
+
+            this.slideEl.animate({
+                left:0
+            }, this.getDuration());
         }
     },
     /**
@@ -61,7 +63,10 @@ ludo.layout.SlideIn = new Class({
         if (this.isMenuOpen()) {
             this.view.layout.active = false;
             var widthOfFirst = this.getWidthOfMenu();
-            this.effect().slide(this.slideEl, {left:0 }, { left:widthOfFirst * -1}, this.getDuration());
+
+            this.slideEl.animate({
+                left: widthOfFirst * -1
+            }, this.getDuration());
         }
     },
 
@@ -85,7 +90,7 @@ ludo.layout.SlideIn = new Class({
     },
 
     getDuration:function () {
-        return this.view.layout.duration || .15;
+        return this.view.layout.duration || 150;
     },
 
     getWidthOfMenu:function(){
