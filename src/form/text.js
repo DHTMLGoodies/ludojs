@@ -81,12 +81,16 @@ ludo.form.Text = new Class({
             this.regex = new RegExp(tokens.join('/'), flags);
         }
         this.applyValidatorFns(['minLength', 'maxLength', 'regex']);
+
+        if(this.layout.height == undefined){
+            this.layout.height = 20;
+        }
+
     },
 
     ludoDOM:function(){
         this.parent();
         if(this.placeholder){
-            console.log(this.getFormEl());
             this.getFormEl().attr('placeholder', this.placeholder);
         }
     },

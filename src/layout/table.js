@@ -114,7 +114,7 @@ ludo.layout.Table = new Class({
     },
 
     resize: function () {
-        console.log('resize table');
+
         var c = this.view.children;
         var curCellIndex = 0;
         for (var i = 0; i < c.length; i++) {

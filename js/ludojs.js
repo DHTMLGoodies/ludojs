@@ -1,7 +1,7 @@
-/* Generated Wed Nov 9 15:55:44 CET 2016 */
+/* Generated Wed Nov 9 19:06:12 CET 2016 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.26
+ludoJS - Javascript framework, 1.1.29
 Copyright (C) 2012-2016  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -5854,18 +5854,20 @@ ludo.layout.Resizer = new Class({
 			var el = this.view.getEl();
 			this.dd.setMaxX(el.offsetLeft + el.width() - x);
 		}else{
-			this.dd.setMinX(this.view.getEl().offsetLeft + x);
+			this.dd.setMinX(this.view.getEl().position().left + x);
 		}
 	},
 
 	setMaxWidth:function(x){
 		var el = this.view.getEl();
 		if(this.pos === 'right'){
-			this.dd.setMaxX(el.offsetLeft + x);
+			this.dd.setMaxX(el.position().left + x);
+			console.log(x);
+			
 		}else{
 			var pos = 0;
 			if(this.layout.affectedSibling){
-				pos = this.layout.affectedSibling.getEl().offsetLeft + 10;
+				pos = this.layout.affectedSibling.getEl().position().left + 10;
 			}
 			this.dd.setMinX(Math.max(pos, el.offsetLeft + el.width() - x));
 		}
@@ -5874,9 +5876,9 @@ ludo.layout.Resizer = new Class({
 	setMinHeight:function(y){
 		if(this.pos === 'above'){
 			var el = this.view.getEl();
-			this.dd.setMaxY(el.offsetTop + el.height() - y);
+			this.dd.setMaxY(el.position().top + el.height() - y);
 		}else{
-			this.dd.setMinY(this.view.getEl().offsetTop + y);
+			this.dd.setMinY(this.view.getEl().position().top + y);
 		}
 
 	},
@@ -5884,13 +5886,13 @@ ludo.layout.Resizer = new Class({
 	setMaxHeight:function(y){
 		var el = this.view.getEl();
 		if(this.pos === 'below'){
-			this.dd.setMaxY(el.offsetTop + y);
+			this.dd.setMaxY(el.position().top + y);
 		}else{
 			var pos = 10;
 			if(this.layout.affectedSibling){
-				pos = this.layout.affectedSibling.getEl().offsetTop + 10;
+				pos = this.layout.affectedSibling.getEl().position().top + 10;
 			}
-			this.dd.setMinY(Math.max(pos, el.offsetTop + el.height() - y));
+			this.dd.setMinY(Math.max(pos, el.position().top + el.height() - y));
 		}
 	},
 
@@ -16495,8 +16497,8 @@ ludo.layout.TabStrip = new Class({
  @param {Number} config.absTop Absolute pixel value for top position
  @param {Number} config.absBottom Absolute pixel value for bottom position
  @param {Number} config.offsetX After positioning the view, offset left position with these number of pixels.
- @param {Number} config.offsetX After positioning the view, offset top position with these number of pixels.
- @param {String} config.resize Make the view resizable in this direction(left|right|above|below)
+ @param {Number} config.offsetY After positioning the view, offset top position with these number of pixels.
+ @param {Array} config.resize Make the view resizable in these directions(left|right|above|below).
  @example
  var view = new ludo.View({
  	layout:{
@@ -16903,8 +16905,9 @@ ludo.layout.Relative = new Class({
 	updateLastCoordinatesFor:function (child) {
 		var lc = this.lastChildCoordinates[child.id];
 		var el = child.getEl();
-		if (lc.left === undefined) lc.left = el.offsetLeft > 0 ? el.offsetLeft : 0;
-		if (lc.top === undefined) lc.top = el.offsetTop > 0 ? el.offsetTop : 0;
+		var pos = el.position();
+		if (lc.left === undefined) lc.left = pos.left > 0 ? pos.left : 0;
+		if (lc.top === undefined) lc.top = pos.top > 0 ? pos.top : 0;
 		if (lc.width === undefined) lc.width = el.width != undefined ? el.width() : el.offsetWidth;
 		if (lc.height === undefined) lc.height = el.height != undefined ? el.height() : el.offsetHeight;
 		if (lc.right === undefined) lc.right = this.viewport.width - lc.left - lc.width;
@@ -17070,7 +17073,9 @@ ludo.layout.Relative = new Class({
      * @private
      */
 	beforeResize:function(resize, child){
+
 		if(resize.orientation === 'horizontal'){
+			console.log(child.layout.maxWidth);
 			resize.setMinWidth(child.layout.minWidth || 10);
 			resize.setMaxWidth(child.layout.maxWidth || this.view.getBody().width());
 		}else{
@@ -19818,12 +19823,7 @@ ludo.FramedView = new Class({
 	resizeDOM:function () {
 		var height = this.getHeight();
 		height -= (ludo.dom.getMBPH(this.els.container) + ludo.dom.getMBPH(this.els.body) +  this.getHeightOfTitleAndButtonBar());
-
-		console.log(ludo.dom.getMBPH(this.els.body));
-		console.log(ludo.dom.getMBPH(this.els.container));
-		console.log(this.getHeightOfTitleAndButtonBar());
-
-
+		
         if(height >= 0){
             this.els.body.css('height', height);
             this.cachedInnerHeight = height;
@@ -28769,12 +28769,16 @@ ludo.form.Text = new Class({
             this.regex = new RegExp(tokens.join('/'), flags);
         }
         this.applyValidatorFns(['minLength', 'maxLength', 'regex']);
+
+        if(this.layout.height == undefined){
+            this.layout.height = 20;
+        }
+
     },
 
     ludoDOM:function(){
         this.parent();
         if(this.placeholder){
-            console.log(this.getFormEl());
             this.getFormEl().attr('placeholder', this.placeholder);
         }
     },
@@ -32438,11 +32442,13 @@ ludo.form.Seekbar = new Class({
     resizeDOM:function(){
         this.parent();
 
+
+
         this.positionItems();
     },
 
     positionItems: function () {
-
+        
         this.area.width = this.el.width();
         this.area.height = this.el.height();
         this.area.size = Math.max(this.area.width, this.area.height);

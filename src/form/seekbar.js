@@ -206,11 +206,13 @@ ludo.form.Seekbar = new Class({
     resizeDOM:function(){
         this.parent();
 
+
+
         this.positionItems();
     },
 
     positionItems: function () {
-
+        
         this.area.width = this.el.width();
         this.area.height = this.el.height();
         this.area.size = Math.max(this.area.width, this.area.height);

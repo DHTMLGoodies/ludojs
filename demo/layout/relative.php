@@ -91,7 +91,7 @@ require_once("../includes/demo-header.php");
                         layout:{
                             alignLeft:'greenValue',
                             above:'greenValue',
-                            filllUp:true,
+                            fillUp:true,
                             width:50
 
                         },
@@ -119,7 +119,7 @@ require_once("../includes/demo-header.php");
                         layout:{
                             alignLeft:'redValue',
                             above:'redValue',
-                            filllUp:true,
+                            fillUp:true,
                             width:50
 
                         },
@@ -135,7 +135,7 @@ require_once("../includes/demo-header.php");
                         type : 'form.Number',
                         layout:{
                             rightOf:'greenValue',
-                            absBottom:0,
+                            alignParentBottom:true,
                             width:50
                         },
                         linkWith:'blueSlider'
@@ -148,14 +148,14 @@ require_once("../includes/demo-header.php");
                         layout:{
                             alignLeft:'blueValue',
                             above:'blueValue',
-                            filllUp:true,
+                            fillUp:true,
                             width:50
 
                         },
                         value:22,
                         thumbColor :'#1976D2',
                         negativeColor:'#1976D2',
-                        minValue:0,maxValue:255,
+                        minValue:0,maxValue:255
 
                     },
                     {

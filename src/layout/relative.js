@@ -33,7 +33,7 @@
  @param {Number} config.absBottom Absolute pixel value for bottom position
  @param {Number} config.offsetX After positioning the view, offset left position with these number of pixels.
  @param {Number} config.offsetY After positioning the view, offset top position with these number of pixels.
- @param {String} config.resize Make the view resizable in this direction(left|right|above|below)
+ @param {Array} config.resize Make the view resizable in these directions(left|right|above|below).
  @example
  var view = new ludo.View({
  	layout:{
@@ -83,10 +83,10 @@ ludo.layout.Relative = new Class({
 	onCreate:function () {
 		this.parent();
 		this.view.getBody().css('position', 'relative');
+
 	},
 
 	resize:function () {
-
 		if (this.children === undefined) {
 			this.prepareResize();
 		}
@@ -440,8 +440,9 @@ ludo.layout.Relative = new Class({
 	updateLastCoordinatesFor:function (child) {
 		var lc = this.lastChildCoordinates[child.id];
 		var el = child.getEl();
-		if (lc.left === undefined) lc.left = el.offsetLeft > 0 ? el.offsetLeft : 0;
-		if (lc.top === undefined) lc.top = el.offsetTop > 0 ? el.offsetTop : 0;
+		var pos = el.position();
+		if (lc.left === undefined) lc.left = pos.left > 0 ? pos.left : 0;
+		if (lc.top === undefined) lc.top = pos.top > 0 ? pos.top : 0;
 		if (lc.width === undefined) lc.width = el.width != undefined ? el.width() : el.offsetWidth;
 		if (lc.height === undefined) lc.height = el.height != undefined ? el.height() : el.offsetHeight;
 		if (lc.right === undefined) lc.right = this.viewport.width - lc.left - lc.width;
@@ -607,14 +608,28 @@ ludo.layout.Relative = new Class({
      * @private
      */
 	beforeResize:function(resize, child){
+
 		if(resize.orientation === 'horizontal'){
-			resize.setMinWidth(child.layout.minWidth || 10);
-			resize.setMaxWidth(child.layout.maxWidth || this.view.getBody().width());
+			var min = this.toPixels(child.layout.minWidth || 10);
+			resize.setMinWidth(min);
+			var max = child.layout.maxWidth || this.view.getBody().width();
+			max = this.toPixels(max, true);
+			resize.setMaxWidth(max);
 		}else{
-			resize.setMinHeight(child.layout.minHeight || 10);
+			var minHeight = this.toPixels(child.layout.minHeight || 10);
+			resize.setMinHeight(minHeight);
 			resize.setMaxHeight(child.layout.maxHeight || this.view.getBody().height());
 		}
 	},
+
+	toPixels:function(value, isWidth){
+		if(jQuery.type(value) == "string" && value.indexOf('%') >0){
+			var val = parseInt(value);
+			return val / 100 * (isWidth ? this.viewport.width : this.viewport.height);
+		}
+		return value;
+	},
+
     /**
      * Return layout config for a resize handle
      * @function getResizerLayout
