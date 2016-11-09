@@ -83,7 +83,7 @@ var w = new ludo.Window({
                     id:'myGrid',
                     type:'grid.Grid',
                     weight:1,
-                    containerCss:{
+                    elCss:{
                         'border':0,
                         'border-right':'0',
                         'border-top':'1px solid #d7d7d7',

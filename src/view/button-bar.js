@@ -14,7 +14,7 @@ ludo.view.ButtonBar = new Class({
 		width:'matchParent',
         height:'matchParent'
     },
-    containerCss:{
+    elCss:{
         height:'100%'
     },
     align:'right',
@@ -32,9 +32,9 @@ ludo.view.ButtonBar = new Class({
                 config.children.push(this.emptyChild());
             }
         }else{
-            config.children[0].containerCss = config.children[0].containerCss || {};
-            if(!config.children[0].containerCss['margin-left']){
-                config.children[0].containerCss['margin-left'] = 2
+            config.children[0].elCss = config.children[0].elCss || {};
+            if(!config.children[0].elCss['margin-left']){
+                config.children[0].elCss['margin-left'] = 2
             }
         }
 
@@ -97,7 +97,7 @@ ludo.view.ButtonBar = new Class({
     emptyChild:function(){
         return {
             layout: { weight:1 },
-            containerCss:{ 'background-color':'transparent' },
+            elCss:{ 'background-color':'transparent' },
             css:{ 'background-color':'transparent'}
         };
     },

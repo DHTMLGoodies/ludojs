@@ -32,7 +32,7 @@ require_once("includes/demo-header.php");
                 id: 'button2',
                 type:'form.Button',
                 value: 'Show positioned Notification',
-                containerCss:{
+                elCss:{
                     marginTop:20
                 },
                 layout: {

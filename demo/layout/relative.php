@@ -14,70 +14,241 @@ require_once("../includes/demo-header.php");
 </style>
 <script type="text/javascript" src="../../src/layout/relative.js"></script>
 <script type="text/javascript" class="source-code">
-    var d = new Date().getTime();
     var w = new ludo.Window({
-        left:20, top:20,
-        title:'Relative layout',
-        width:600, height:600,
+        title:'Relative Layout',
+
         layout:{
-            type:'relative'
-        },
-        css:{
-            border:0
+            left:20,top:20,
+            width:400,height:400,
+            minWidth:300,minHeight:300,
+            type:'tabs'
         },
         children:[
-            { name:'leftMenu',
-                type:'FramedView',
-                id:'menuView',
-                collapsible:'left',
-                title:'Minimizable',
-
-                css:{
-                    'background-color' : '#FFF'
+            {
+                id:'relativeView',
+                title:'Relative Layout',
+                // This is the view for the demo
+                layout:{
+                    type:'relative'
                 },
-                html:"<b>Layout:</b><br>left menu<br>height:'matchParent', width:150, alignParentLeft:true, resize:right",
-                layout:{
-                    height:200,
-                    width:150,
-                    alignParentLeft:true,
-                    resize:['below','right'],
-                    maxHeight:300
-                }
+                form:{
+                    listeners:{
+                        'change': function(){
+                            this.view.updatePreviews();
+                        }
+                    }
+                },
+
+                listeners:{
+                    'render': function(){
+                        this.updatePreviews();
+                    }
+                },
+
+                updatePreviews:function(){
+                    var color = this.getColorCode();
+                    if(this.currentColor != color){
+                        ludo.get('colorPreview').getBody().css('background-color', color);
+                        ludo.get('colorCode').html(color);
+                        this.currentColor = color;
+
+                        var complementary = this.colorUtil.offsetHue(color, 180);
+                        ludo.get('colorPreviewComplementary').getBody().css('background-color', complementary);
+                        ludo.get('colorCodeComplementary').html(complementary);
+                    }
+                },
+                /* Custom function which can be called using this.getColorCode() */
+                getColorCode:function(){
+                    if(this.colorUtil == undefined){
+                        this.colorUtil = new ludo.color.Color();
+                    }
+
+                    return this.colorUtil.rgbCode(
+                        ludo.get('redSlider').val(),
+                        ludo.get('greenSlider').val(),
+                        ludo.get('blueSlider').val()
+                    );
+                },
+
+                children:[
+
+                    {
+                        id:'greenValue',
+                        type : 'form.Number',
+                        layout:{
+                            centerHorizontal:true,
+
+                            absBottom:0,
+                            width:50
+                        },
+
+                        linkWith:'greenSlider'
+                    },
+                    {
+                        id:'greenSlider',
+                        type:'form.Seekbar',
+                        orientation:'vertical',
+                        layout:{
+                            alignLeft:'greenValue',
+                            above:'greenValue',
+                            filllUp:true,
+                            width:50
+
+                        },
+                        value:144,
+                        minValue:0,maxValue:255,
+                        increments:1,
+                        thumbColor :'#388E3C',
+                        negativeColor:'#388E3C'
+                    },
+                    /** Red */
+                    {
+                        id:'redValue',
+                        type : 'form.Number',
+                        layout:{
+                            leftOf:'greenValue',
+                            absBottom:0,
+                            width:50
+                        },
+                        linkWith:'redSlider'
+                    },
+                    {
+                        id:'redSlider',
+                        type:'form.Seekbar',
+                        orientation:'vertical',
+                        layout:{
+                            alignLeft:'redValue',
+                            above:'redValue',
+                            filllUp:true,
+                            width:50
+
+                        },
+                        minValue:0,maxValue:255,
+                        thumbColor :'#D32F2F',
+                        negativeColor:'#D32F2F',
+                        increments:1,
+                        value:33
+                    },
+                    /** Blue */
+                    {
+                        id:'blueValue',
+                        type : 'form.Number',
+                        layout:{
+                            rightOf:'greenValue',
+                            absBottom:0,
+                            width:50
+                        },
+                        linkWith:'blueSlider'
+                    },
+                    {
+                        id:'blueSlider',
+                        increments:1,
+                        type:'form.Seekbar',
+                        orientation:'vertical',
+                        layout:{
+                            alignLeft:'blueValue',
+                            above:'blueValue',
+                            filllUp:true,
+                            width:50
+
+                        },
+                        value:22,
+                        thumbColor :'#1976D2',
+                        negativeColor:'#1976D2',
+                        minValue:0,maxValue:255,
+
+                    },
+                    {
+                        id:'colorPreview',
+                        layout:{
+                            type:'relative',
+                            alignParentTop:true,
+                            rightOf:'blueValue',
+                            fillRight:true,
+                            fillDown:true
+                        },
+                        children:[
+                            {
+                                id:'colorCode',
+                                elCss:{
+                                    border:'1px solid #EEE',
+                                    'border-radius': '10px'
+                                },
+
+                                css:{
+                                    'line-height' : '20px',
+                                    'text-align': 'center'
+                                },
+                                layout:{
+                                    centerInParent:true,
+                                    width:70,
+                                    height:20
+                                }
+
+                            }
+                        ]
+                    },
+                    {
+                        id:'colorPreviewComplementary',
+                        layout:{
+                            type:'relative',
+                            alignParentTop:true,
+                            leftOf:'redValue',
+                            fillLeft:true,
+                            fillDown:true
+                        },
+                        children:[
+                            {
+                                id:'colorCodeComplementary',
+                                elCss:{
+                                    border:'1px solid #EEE',
+                                    'border-radius': '10px'
+                                },
+
+                                css:{
+                                    'line-height' : '20px',
+                                    'text-align': 'center'
+                                },
+                                layout:{
+                                    centerInParent:true,
+                                    width:70,
+                                    height:20
+                                }
+
+                            },
+                            {
+                                layout:{
+                                    centerHorizontal:true,
+                                    width:100,
+                                    alignParentTop:true,
+                                    offsetY:20
+
+                                },
+                                elCss:{
+                                    border:'1px solid #EEE',
+                                    'border-radius': '10px',
+                                    'background-color': '#333',
+                                    color: '#EEE',
+                                    padding:3
+
+                                },
+                                css:{
+                                    'font-size': '0.8em',
+                                    'text-align': 'center'
+                                },
+                                html: 'Complementary'
+
+                            }
+                        ]
+                    }
+
+                ]
             },
             {
-               name : 'leftLowerMenu', cls:'customView',
-               html : 'Below left menu',
-
-                layout:{
-                    below:'leftMenu',
-                    sameWidthAs:'leftMenu',
-                    alignLeft:'leftMenu',
-                    fillDown:true
-
-                }
-            },
-            {
-                id:'rightMenu',
-                name:'rightMenu',
-                cls:'customView', html:"Item 1<br>Item 2<br>Item 3<br>Item 4<br>Item 5<br><br><b>Layout:</b><br>alignParentTop:true, alignParentRight:true, width:150, above:'bottomMenu', fillUp:true",
-                layout:{ alignParentTop:true, alignParentRight:true, width:150, above:'bottomMenu', fillUp:true, resize:['left'] }},
-            { name:'bottomMenu', cls:'customView', html:"Bottom menu box<br><b>Layout:</b> height:50, alignParentBottom:true,rightOf:'leftMenu',fillRight:true,resize:above", layout:{
-                height:50, alignParentBottom:true, rightOf:'leftMenu', fillRight:true, resize:['above'], maxHeight:100
-            }},
-            {
-                name:'c', html:"Main view<br><br><b>Layout:</b><br>leftOf:'rightMenu',above:'bottomMenu',rightOf:'leftMenu', fillUp:true", cls:'customView',
-                layout:{
-                    leftOf:'rightMenu', above:'bottomMenu', rightOf:'leftMenu', fillUp:true
-                }
+                type:'SourceCodePreview'
             }
 
-        ],
-        buttonBar:{
-            children:[
-                { type:'form.Button', value:'OK', name:'ok', layout:{ leftOf:'cancel'} },
-                { type:'form.Button', value:'Cancel', name:'cancel', layout:{ 'alignParentRight':true} }
-            ]
-        }
+        ]
     });
 
     new ludo.Window({
@@ -121,7 +292,8 @@ require_once("../includes/demo-header.php");
             }
         ]
     });
-    ludo.util.log(new Date().getTime() - d);
+
+
 </script>
 </body>
 </html>

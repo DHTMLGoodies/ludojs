@@ -122,7 +122,7 @@ require_once("../includes/demo-header.php");
                         height:30,
                         weight:0,
                         dataSource:'myDataSource',
-                        containerCss:{
+                        elCss:{
                             'border-top':'1px solid #CCC',
                             'padding-top':2
                         }

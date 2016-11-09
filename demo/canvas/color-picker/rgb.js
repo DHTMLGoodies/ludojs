@@ -8,7 +8,7 @@ ludo.colorPicker.RGB = new Class({
     minimizable:false,
     title:'RGB',
     colorObj:undefined,
-    containerCss:{
+    elCss:{
         'border-right': '0',
         'border-top': '0'
     },

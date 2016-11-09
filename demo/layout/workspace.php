@@ -38,7 +38,7 @@ function newTab(tagId, title, type, subTitle){
    			'closable':true,
    			title:subTitle || ''
    		},
-   		containerCss:{
+   		elCss:{
    			'border':0,
                margin:0,padding:0,
    			'background-color':'#d1e7ff'
@@ -85,7 +85,7 @@ new ludo.View({
                                         layout:{
                                             'closable':true
                                         },
-                                        containerCss:{
+                                        elCss:{
                                             'border':0,
                                             'background-color':'#d1e7ff'
                                         },
@@ -111,7 +111,7 @@ new ludo.View({
                 alignParentTop:true,
                 fillRight:true
             },
-            containerCss:{
+            elCss:{
                 'border-bottom':'1px solid #a6cbf5',
                 'border-top':'1px solid #a6cbf5',
                 'margin-top':3
@@ -159,7 +159,7 @@ new ludo.View({
                 fillRight:true,
                 type:'relative'
             },
-            containerCss:{
+            elCss:{
                 'padding-top':6,
                 'padding-left':3
             },
@@ -194,7 +194,7 @@ new ludo.View({
                 fillDown:true,
                 fillRight:true
             },
-            containerCss:{
+            elCss:{
                 'background-color':'#d1e7ff'
             },
             css:{
@@ -216,7 +216,7 @@ new ludo.View({
                         'closable':false,
                         title:'Panel 1'
                     },
-                    containerCss:{
+                    elCss:{
                         border:0
                     },
                     css:{
@@ -230,7 +230,7 @@ new ludo.View({
                     type:'FramedView',
                     title:'Panel 2',
                     minimizable:false,
-                    containerCss:{
+                    elCss:{
                         border:0
                     },
                     css:{
@@ -251,7 +251,7 @@ new ludo.View({
                     type:'FramedView',
                     title:'Calendar',
                     minimizable:false,
-                    containerCss:{
+                    elCss:{
                         border:0
                     },
                     css:{
@@ -275,7 +275,7 @@ new ludo.View({
                     },
                     title:'YouTube video',
                     minimizable:false,
-                    containerCss:{
+                    elCss:{
                         border:0
                     },
                     css:{
@@ -297,7 +297,7 @@ new ludo.View({
                         closable:true
                     },
                     title:'Grid',
-                    containerCss:{
+                    elCss:{
                         border:0
                     },
                     children:[
@@ -305,7 +305,7 @@ new ludo.View({
                             id:'myGrid',
                             type:'grid.Grid',
                             weight:1,
-                            containerCss:{
+                            elCss:{
                                 'border':0,
                                 'border-right':'1px solid #EBF0F5',
                                 'border-top':'1px solid #EBF0F5',

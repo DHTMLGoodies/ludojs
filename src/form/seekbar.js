@@ -16,6 +16,7 @@
  * @param {number} config.thumbAlpha Alpha(opacity) of thumb in range 0-1 while dragging, default: 1
  * @param {number} config.barSize Size(height or width) of bar in pixels, default: 2
  * @param {number} config.needleSize Fraction size of of needle(circle inside thumb) relative to thumb size, default: 0.2
+ * @param {number} config.increments Optional increment value. If you want to disable decimals, set this value to 1
  *
  * @fires change Event fired when value is changed.
  *
@@ -75,12 +76,12 @@ ludo.form.Seekbar = new Class({
     valueListener: undefined,
 
     reverse:false,
-
+    increments:undefined,
     orientation : 'vertical',
 
     ludoConfig:function(config){
         this.parent(config);
-        this.setConfigParams(config, ["orientation", "reverse", "minValue", "maxValue", "value", "valueListener", "negativeColor", "positiveColor", "needleSize", "barSize"]);
+        this.setConfigParams(config, ["increments", "orientation", "reverse", "minValue", "maxValue", "value", "valueListener", "negativeColor", "positiveColor", "needleSize", "barSize"]);
 
         if (config.thumbColor != undefined) {
             if (config.thumbColor.length == 9) {
@@ -173,17 +174,28 @@ ludo.form.Seekbar = new Class({
      */
     val: function (value) {
         if(arguments.length != 0){
-            this.value = Math.max(this.minValue, value);
-            this.value = Math.min(this.maxValue, this.value);
-
-            this.positionBars();
-            this.positionThumb();
             this._set(value);
             this.change();
         }
 
         return this.value;
+    },
 
+
+    _set:function(value){
+        if(this.increments != undefined){
+            value -= (value % this.increments);
+        }
+
+        value = Math.max(this.minValue, value);
+        value = Math.min(this.maxValue, value);
+
+        value = this.parent(value);
+
+        this.positionBars();
+        this.positionThumb();
+
+        return value;
     },
 
     ludoRendered:function(){
@@ -376,9 +388,9 @@ ludo.form.Seekbar = new Class({
         }
 
 
-        this._set(value);
+        this.val(value);
 
-        this.change();
+
 
         this.positionBars();
 

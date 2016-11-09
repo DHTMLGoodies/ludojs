@@ -13,6 +13,10 @@
  * @param {Boolean} config.preserveAspectRatio Preserve aspect ratio(width/height) when resizing.
  * @param {Boolean} config.closable True to make the window closable. This will add a close button to the title bar.
  * @param {Boolean} config.minimizable True to make the window minimizable. This will add a minimize button to the title bar.
+ * @param {Number} config.layout.minWidth Optional minimum width of window in pixels.
+ * @param {Number} config.layout.minHeight Optional minimum height of window in pixels.
+ * @param {Number} config.layout.maxWidth Optional maximum width of window in pixels.
+ * @param {Number} config.layout.maxHeight Optional maximum height of window in pixels.
  * @summary new ludo.Window({ ... });
  *
  * @example

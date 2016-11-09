@@ -1,5 +1,23 @@
 TestCase("ViewTest", {
 
+
+	"test listeners should have this assigned to the class": function(){
+		// given
+		var that;
+		var v = new ludo.View({
+			renderTo:document.body,
+			listeners:{
+				'render': function(){
+					that = this;
+				}
+			}
+		});
+
+		// then
+		assertEquals(that, v);
+	},
+
+
 	"test should dispose all children": function(){
 		// given
 		var dialog = this.getDialog('myDialog');

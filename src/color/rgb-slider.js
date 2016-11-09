@@ -52,7 +52,7 @@ ludo.color.RGBSlider = new Class({
                 css:{
                     border:'1px solid #000'
                 },
-                containerCss:{
+                elCss:{
                     margin:3
                 },
                 children:[

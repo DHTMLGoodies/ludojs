@@ -12,7 +12,7 @@
  @param {String} config.bodyCls Additional css classes to assign to the body &lt;div>, example: bodyCls: "classname1 classname2"
  @param {Array} config.children An array of config objects for the child views. Example: children:[{ html: "child 1", layout:{ height: 100 }}, { html: "Child 2", layout: { height:200 } }]. See <a href="../demo/view/children.php" onclick="var w = window.open(this.href);return false">Demo</a>
  @param {String} config.cls Additional css classes to assign to the views &lt;div>, example: cls: "classname1 classname2"
- @param {Object} config.containerCss Specific css rules to apply to the View, @example: containerCss:{ border: '1px solid #ddd' } for a gray border
+ @param {Object} config.elCss Specific css rules to apply to the View, @example: elCss:{ border: '1px solid #ddd' } for a gray border
  @param {Object} config.css Specific css rules to apply to the View's body &lt;div, @example: css:{ 'background-color': '#EEEEEE' } for a light gray background
  @param {Object} config.dataSource A config object for the data source.
  @param {Object} config.formConfig Default form properties for child form views. Example: formConfig:{labelWidth:100}. Then we don't have to specify labelWidth:100 for all the child form views.
@@ -24,6 +24,7 @@
  @param {String} config.title Title of this view. If the view is a child in tab layout, the title will be displayed on the Tab
  @param {String} config.tpl A template for string when inserting JSON Content(the insertJSON method), example: "name:{firstname} {lastname}<br>"
  @param {Boolean} config.alwaysInFront True to make this view always appear in front of the other views.
+ @param {Object} config.form Configuration for the form Manager. See <a href="ludo.form.Manager">ludo.form.Manager</a> for details.
  // TODO describe data sources
  @example {@lang Javascript}
 	// Example 1: View render to &lt;body> tag
@@ -79,7 +80,7 @@ ludo.View = new Class({
 	hidden:false,
 
 	css:undefined,
-	containerCss:undefined,
+	elCss:undefined,
 	formConfig:undefined,
 	isRendered:false,
 	unRenderedChildren:[],
@@ -182,7 +183,7 @@ ludo.View = new Class({
 		this.parent(config);
 		config.els = config.els || {};
 		if (this.parentComponent)config.renderTo = undefined;
-		var keys = ['contextMenu', 'renderTo', 'tpl', 'containerCss', 'socket', 'form', 'title', 'hidden',
+		var keys = ['contextMenu', 'renderTo', 'tpl', 'elCss', 'socket', 'form', 'title', 'hidden',
 			'dataSource', 'movable', 'resizable', 'closable', 'minimizable', 'alwaysInFront',
 			'parentComponent', 'cls', 'bodyCls', 'objMovable', 'width', 'height', 'frame', 'formConfig',
 			'overflow'];
@@ -241,7 +242,7 @@ ludo.View = new Class({
 		if (this.bodyCls)this.getBody().addClass(this.bodyCls);
 		if (this.type)this.getEl().addClass('ludo-' + (this.type.replace(/\./g, '-').toLowerCase()));
 		if (this.css)this.getBody().css(this.css);
-		if (this.containerCss)this.getEl().css(this.containerCss);
+		if (this.elCss)this.getEl().css(this.elCss);
 
 		if (this.frame) {
 			this.getEl().addClass('ludo-container-frame');

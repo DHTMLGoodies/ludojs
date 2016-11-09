@@ -24,7 +24,7 @@ require_once("../includes/demo-header.php");
         children:[
             {
                 id:'colorPreview',
-                containerCss:{
+                elCss:{
                     'margin':3
                 },
                 css:{

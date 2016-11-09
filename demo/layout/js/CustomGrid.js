@@ -14,7 +14,7 @@ myApp.CustomGrid = new Class({
 		orientation:'vertical'
 	},
 
-	containerCss:{
+	elCss:{
 		margin:0
 	},
 
@@ -59,7 +59,7 @@ myApp.CustomGrid = new Class({
 				name:'grid',
 				type:'grid.Grid',
 				weight:1,
-				containerCss:{
+				elCss:{
 					'border':0,
 					'border-right':'0',
 					'border-top':'1px solid #EBF0F5',

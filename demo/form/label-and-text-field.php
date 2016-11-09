@@ -107,7 +107,7 @@ require_once("../includes/demo-header.php");
                             height: 100
                         },
                         id: 'formValues',
-                        containerCss:{
+                        elCss:{
                             'marginTop': 5
                         },
                         css: {

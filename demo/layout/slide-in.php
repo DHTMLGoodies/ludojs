@@ -59,7 +59,7 @@ require_once("../includes/demo-header.php");
                                     type:'Menu',
                                     orientation:'vertical'
                                 },
-                                containerCss:{
+                                elCss:{
                                     border:0,
                                     padding:2,
                                     'border-right':'1px solid #d7d7d7'

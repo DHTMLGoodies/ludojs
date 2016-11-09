@@ -8,6 +8,8 @@
  * @param {Boolean} config.required True to apply validation for required. Default:false
  * @param {Object} config.formCss Optional css styling of the form element. Example: { type:'form.Text', formCss:{ "text-align": right }} to right align text of a text input.
  * @param {Function} config.validator A Validator function to be executed when value is changed. This function should return true when valid, false when invalid. Current value will be passed to this function.
+ * @param {Function} config.linkWith Creates a link with form element with this id. When two form views are linked, they will always have the same value. When one value is changed, the linked form view is automatically updated.
+ * Example: A link between a form.Seekbar and a form.Number.
  * Example: { type:'form.Text', placeHolder='Enter Valid Value', validator:function(value){ return value == 'Valid Value' } }
  *
  */
@@ -404,7 +406,7 @@ ludo.form.Element = new Class({
         }
 
         if (value == this.value) {
-            return;
+            return value;
         }
 
         this.setFormElValue(value);
@@ -430,6 +432,8 @@ ludo.form.Element = new Class({
         }
 
         this.fireEvent('value', value);
+
+        return value;
     },
 
     /**

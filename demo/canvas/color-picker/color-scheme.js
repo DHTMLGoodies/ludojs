@@ -5,7 +5,7 @@ ludo.colorPicker.ColorScheme = new Class({
 	css:{
 		'background-color' : '#f5f5f5'
 	},
-	containerCss:{
+	elCss:{
 		'border-top': '1px solid #C0C0C0'
 	},
 	colorBoxes:[],

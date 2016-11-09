@@ -42,7 +42,7 @@ ludo.effect.DragDrop = new Class({
 	},
 
 	getDropIdByEvent:function (e) {
-		var el = e.target;
+		var el = $(e.target);
 		if (!el.hasClass('ludo-drop')) {
 			el = el.getParent('.ludo-drop');
 		}

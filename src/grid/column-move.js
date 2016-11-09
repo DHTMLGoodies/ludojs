@@ -2,8 +2,6 @@
  * Class responsible for moving columns using drag and drop.
  * An instance of this class is automatically created by the grid. It is
  * rarely nescessary to create your own instances of this class
- * @namespace grid
- * @class ColumnMove
  */
 ludo.grid.ColumnMove = new Class({
 	Extends:ludo.effect.DragDrop,
@@ -26,7 +24,7 @@ ludo.grid.ColumnMove = new Class({
 	},
 
 	setZIndex:function(shim){
-		shim.style.zIndex = 50000;
+		shim.css('zIndex', 50000);
 	},
 
 	getMarker:function () {
@@ -46,21 +44,26 @@ ludo.grid.ColumnMove = new Class({
 	},
 
 	showMarkerAt:function(cell, pos){
-		var coordinates = cell.getCoordinates();
-        var s = this.getMarker().style;
-        s.display='';
-        s.left = (coordinates.left + (pos=='after' ? coordinates.width : 0)) + 'px';
-        s.top = (coordinates.top - this.getArrowHeight()) + 'px';
-        s.height = coordinates.height + 'px';
+		var coordinates = cell.offset();
+		coordinates.width= cell.outerWidth();
+		coordinates.height = cell.outerHeight();
+
+		this.getMarker().css({
+			display:'',
+			left: (coordinates.left + (pos=='after' ? coordinates.width : 0)),
+			top: (coordinates.top - this.getArrowHeight()),
+			height: coordinates.height
+
+		});
 	},
 
 	setMarkerHeight:function(height){
-		this.getMarker().style.height = (height + (this.getArrowHeight() * 2)) + 'px';
+		this.getMarker().css('height', (height + (this.getArrowHeight() * 2)));
 	},
 
 	getArrowHeight:function(){
 		if(!this.arrowHeight){
-			this.arrowHeight = this.getMarker().getElement('.ludo-grid-movable-insertion-marker-bottom').offsetHeight;
+			this.arrowHeight = this.getMarker().find('.ludo-grid-movable-insertion-marker-bottom').first().outerHeight();
 		}
 		return this.arrowHeight;
 	}

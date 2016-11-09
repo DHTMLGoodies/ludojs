@@ -48,7 +48,7 @@ require_once("../includes/demo-header.php");
                         css:{
                           'background-color' : '#FFF'
                         },
-                        containerCss:{
+                        elCss:{
                             'border-top' : 0
                         }
                     },
@@ -63,7 +63,7 @@ require_once("../includes/demo-header.php");
                         css:{
                           'background-color' : '#FFF'
                         },
-                        containerCss:{
+                        elCss:{
                             'border-top' : 0
                         }
                     },
@@ -79,7 +79,7 @@ require_once("../includes/demo-header.php");
                             padding:5,
                             'background-color' : '#fff'
                         },
-                        containerCss:{
+                        elCss:{
                             'border-bottom' : 0,
                             'border-top' : 0
                         }

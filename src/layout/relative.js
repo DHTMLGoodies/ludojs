@@ -32,7 +32,7 @@
  @param {Number} config.absTop Absolute pixel value for top position
  @param {Number} config.absBottom Absolute pixel value for bottom position
  @param {Number} config.offsetX After positioning the view, offset left position with these number of pixels.
- @param {Number} config.offsetX After positioning the view, offset top position with these number of pixels.
+ @param {Number} config.offsetY After positioning the view, offset top position with these number of pixels.
  @param {String} config.resize Make the view resizable in this direction(left|right|above|below)
  @example
  var view = new ludo.View({

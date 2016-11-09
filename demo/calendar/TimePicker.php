@@ -76,7 +76,7 @@ require_once("../includes/demo-header.php");
                     '-ms-user-select': 'none',
                     'user-select': 'none'
                 },
-                containerCss: {"background-color": "#669900"},
+                elCss: {"background-color": "#669900"},
                 layout: {height: 100}
             },
             {
@@ -113,7 +113,7 @@ require_once("../includes/demo-header.php");
                     {
                         type: 'form.Button',
                         value: 'OK',
-                        containerCss: {
+                        elCss: {
                             'margin-right': 5
                         },
                         listeners: {

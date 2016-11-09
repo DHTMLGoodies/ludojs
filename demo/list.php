@@ -130,7 +130,7 @@ var w = new ludo.Window({
                                 'background-color' : '#fff',
                                 'overflow-y' : 'auto'
                             },
-                            containerCss:{
+                            elCss:{
                                 'border':0,
                                 'border-right':'1px solid #d7d7d7',
                                 'border-top':'1px solid #d7d7d7',

@@ -1,7 +1,7 @@
-/* Generated Tue Nov 8 23:05:03 CET 2016 */
+/* Generated Wed Nov 9 15:55:44 CET 2016 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.24
+ludoJS - Javascript framework, 1.1.26
 Copyright (C) 2012-2016  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -7570,7 +7570,7 @@ ludo.remote.Shim = new Class({
  @param {String} config.bodyCls Additional css classes to assign to the body &lt;div>, example: bodyCls: "classname1 classname2"
  @param {Array} config.children An array of config objects for the child views. Example: children:[{ html: "child 1", layout:{ height: 100 }}, { html: "Child 2", layout: { height:200 } }]. See <a href="../demo/view/children.php" onclick="var w = window.open(this.href);return false">Demo</a>
  @param {String} config.cls Additional css classes to assign to the views &lt;div>, example: cls: "classname1 classname2"
- @param {Object} config.containerCss Specific css rules to apply to the View, @example: containerCss:{ border: '1px solid #ddd' } for a gray border
+ @param {Object} config.elCss Specific css rules to apply to the View, @example: elCss:{ border: '1px solid #ddd' } for a gray border
  @param {Object} config.css Specific css rules to apply to the View's body &lt;div, @example: css:{ 'background-color': '#EEEEEE' } for a light gray background
  @param {Object} config.dataSource A config object for the data source.
  @param {Object} config.formConfig Default form properties for child form views. Example: formConfig:{labelWidth:100}. Then we don't have to specify labelWidth:100 for all the child form views.
@@ -7582,6 +7582,7 @@ ludo.remote.Shim = new Class({
  @param {String} config.title Title of this view. If the view is a child in tab layout, the title will be displayed on the Tab
  @param {String} config.tpl A template for string when inserting JSON Content(the insertJSON method), example: "name:{firstname} {lastname}<br>"
  @param {Boolean} config.alwaysInFront True to make this view always appear in front of the other views.
+ @param {Object} config.form Configuration for the form Manager. See <a href="ludo.form.Manager">ludo.form.Manager</a> for details.
  // TODO describe data sources
  @example {@lang Javascript}
 	// Example 1: View render to &lt;body> tag
@@ -7637,7 +7638,7 @@ ludo.View = new Class({
 	hidden:false,
 
 	css:undefined,
-	containerCss:undefined,
+	elCss:undefined,
 	formConfig:undefined,
 	isRendered:false,
 	unRenderedChildren:[],
@@ -7740,7 +7741,7 @@ ludo.View = new Class({
 		this.parent(config);
 		config.els = config.els || {};
 		if (this.parentComponent)config.renderTo = undefined;
-		var keys = ['contextMenu', 'renderTo', 'tpl', 'containerCss', 'socket', 'form', 'title', 'hidden',
+		var keys = ['contextMenu', 'renderTo', 'tpl', 'elCss', 'socket', 'form', 'title', 'hidden',
 			'dataSource', 'movable', 'resizable', 'closable', 'minimizable', 'alwaysInFront',
 			'parentComponent', 'cls', 'bodyCls', 'objMovable', 'width', 'height', 'frame', 'formConfig',
 			'overflow'];
@@ -7799,7 +7800,7 @@ ludo.View = new Class({
 		if (this.bodyCls)this.getBody().addClass(this.bodyCls);
 		if (this.type)this.getEl().addClass('ludo-' + (this.type.replace(/\./g, '-').toLowerCase()));
 		if (this.css)this.getBody().css(this.css);
-		if (this.containerCss)this.getEl().css(this.containerCss);
+		if (this.elCss)this.getEl().css(this.elCss);
 
 		if (this.frame) {
 			this.getEl().addClass('ludo-container-frame');
@@ -13566,6 +13567,8 @@ ludo.form.validator.twin = function(value, twin){
  * @param {Boolean} config.required True to apply validation for required. Default:false
  * @param {Object} config.formCss Optional css styling of the form element. Example: { type:'form.Text', formCss:{ "text-align": right }} to right align text of a text input.
  * @param {Function} config.validator A Validator function to be executed when value is changed. This function should return true when valid, false when invalid. Current value will be passed to this function.
+ * @param {Function} config.linkWith Creates a link with form element with this id. When two form views are linked, they will always have the same value. When one value is changed, the linked form view is automatically updated.
+ * Example: A link between a form.Seekbar and a form.Number.
  * Example: { type:'form.Text', placeHolder='Enter Valid Value', validator:function(value){ return value == 'Valid Value' } }
  *
  */
@@ -13962,7 +13965,7 @@ ludo.form.Element = new Class({
         }
 
         if (value == this.value) {
-            return;
+            return value;
         }
 
         this.setFormElValue(value);
@@ -13988,6 +13991,8 @@ ludo.form.Element = new Class({
         }
 
         this.fireEvent('value', value);
+
+        return value;
     },
 
     /**
@@ -14732,7 +14737,7 @@ ludo.color.RGBSlider = new Class({
                 css:{
                     border:'1px solid #000'
                 },
-                containerCss:{
+                elCss:{
                     margin:3
                 },
                 children:[
@@ -17593,6 +17598,7 @@ ludo.layout.SlideIn = new Class({
 
     onCreate:function(){
         this.view.getBody().css('overflowX', 'hidden');
+
     },
 
     onNewChild:function (child) {
@@ -17608,8 +17614,10 @@ ludo.layout.SlideIn = new Class({
             height:this.viewport.height
         });
 
-        this.slideEl.css('width', (this.viewport.absWidth + widthOfFirst) + 'px');
-        this.slideEl.css('left', this.view.layout.active ? 0 : (widthOfFirst * -1) + 'px');
+        this.slideEl.css({
+            width: (this.viewport.absWidth + widthOfFirst),
+            left: this.view.layout.active ? 0 : (widthOfFirst * -1)
+        });
 
         this.view.children[1].getEl().css('left', widthOfFirst + 'px');
         this.view.children[1].resize({
@@ -17630,11 +17638,9 @@ ludo.layout.SlideIn = new Class({
                 this.view.children[0].show();
             }
             this.view.layout.active = true;
-            var widthOfFirst = this.getWidthOfMenu();
-
             this.slideEl.animate({
                 left:0
-            }, this.getDuration());
+            }, this.getDuration(), this.getEasing());
         }
     },
     /**
@@ -17650,7 +17656,7 @@ ludo.layout.SlideIn = new Class({
 
             this.slideEl.animate({
                 left: widthOfFirst * -1
-            }, this.getDuration());
+            }, this.getDuration(), this.getEasing());
         }
     },
 
@@ -17675,6 +17681,10 @@ ludo.layout.SlideIn = new Class({
 
     getDuration:function () {
         return this.view.layout.duration || 150;
+    },
+
+    getEasing:function(){
+        return this.view.layout.easing || 'swing';
     },
 
     getWidthOfMenu:function(){
@@ -19273,7 +19283,7 @@ ludo.view.ButtonBar = new Class({
 		width:'matchParent',
         height:'matchParent'
     },
-    containerCss:{
+    elCss:{
         height:'100%'
     },
     align:'right',
@@ -19291,9 +19301,9 @@ ludo.view.ButtonBar = new Class({
                 config.children.push(this.emptyChild());
             }
         }else{
-            config.children[0].containerCss = config.children[0].containerCss || {};
-            if(!config.children[0].containerCss['margin-left']){
-                config.children[0].containerCss['margin-left'] = 2
+            config.children[0].elCss = config.children[0].elCss || {};
+            if(!config.children[0].elCss['margin-left']){
+                config.children[0].elCss['margin-left'] = 2
             }
         }
 
@@ -19356,7 +19366,7 @@ ludo.view.ButtonBar = new Class({
     emptyChild:function(){
         return {
             layout: { weight:1 },
-            containerCss:{ 'background-color':'transparent' },
+            elCss:{ 'background-color':'transparent' },
             css:{ 'background-color':'transparent'}
         };
     },
@@ -20101,6 +20111,10 @@ ludo.Application = new Class({
  * @param {Boolean} config.preserveAspectRatio Preserve aspect ratio(width/height) when resizing.
  * @param {Boolean} config.closable True to make the window closable. This will add a close button to the title bar.
  * @param {Boolean} config.minimizable True to make the window minimizable. This will add a minimize button to the title bar.
+ * @param {Number} config.layout.minWidth Optional minimum width of window in pixels.
+ * @param {Number} config.layout.minHeight Optional minimum height of window in pixels.
+ * @param {Number} config.layout.maxWidth Optional maximum width of window in pixels.
+ * @param {Number} config.layout.maxHeight Optional maximum height of window in pixels.
  * @summary new ludo.Window({ ... });
  *
  * @example
@@ -20936,7 +20950,7 @@ ludo.effect.DragDrop = new Class({
 	},
 
 	getDropIdByEvent:function (e) {
-		var el = e.target;
+		var el = $(e.target);
 		if (!el.hasClass('ludo-drop')) {
 			el = el.getParent('.ludo-drop');
 		}
@@ -21176,8 +21190,6 @@ ludo.effect.DragDrop = new Class({
  * Class responsible for moving columns using drag and drop.
  * An instance of this class is automatically created by the grid. It is
  * rarely nescessary to create your own instances of this class
- * @namespace grid
- * @class ColumnMove
  */
 ludo.grid.ColumnMove = new Class({
 	Extends:ludo.effect.DragDrop,
@@ -21200,7 +21212,7 @@ ludo.grid.ColumnMove = new Class({
 	},
 
 	setZIndex:function(shim){
-		shim.style.zIndex = 50000;
+		shim.css('zIndex', 50000);
 	},
 
 	getMarker:function () {
@@ -21220,21 +21232,26 @@ ludo.grid.ColumnMove = new Class({
 	},
 
 	showMarkerAt:function(cell, pos){
-		var coordinates = cell.getCoordinates();
-        var s = this.getMarker().style;
-        s.display='';
-        s.left = (coordinates.left + (pos=='after' ? coordinates.width : 0)) + 'px';
-        s.top = (coordinates.top - this.getArrowHeight()) + 'px';
-        s.height = coordinates.height + 'px';
+		var coordinates = cell.offset();
+		coordinates.width= cell.outerWidth();
+		coordinates.height = cell.outerHeight();
+
+		this.getMarker().css({
+			display:'',
+			left: (coordinates.left + (pos=='after' ? coordinates.width : 0)),
+			top: (coordinates.top - this.getArrowHeight()),
+			height: coordinates.height
+
+		});
 	},
 
 	setMarkerHeight:function(height){
-		this.getMarker().style.height = (height + (this.getArrowHeight() * 2)) + 'px';
+		this.getMarker().css('height', (height + (this.getArrowHeight() * 2)));
 	},
 
 	getArrowHeight:function(){
 		if(!this.arrowHeight){
-			this.arrowHeight = this.getMarker().getElement('.ludo-grid-movable-insertion-marker-bottom').offsetHeight;
+			this.arrowHeight = this.getMarker().find('.ludo-grid-movable-insertion-marker-bottom').first().outerHeight();
 		}
 		return this.arrowHeight;
 	}
@@ -21459,8 +21476,6 @@ ludo.Scroller = new Class({
 });/* ../ludojs/src/grid/grid-header.js */
 /**
  Private class used by grid.Grid to render headers
- @namespace grid
- @class GridHeader
  @private
  */
 ludo.grid.GridHeader = new Class({
@@ -22708,30 +22723,29 @@ ludo.grid.RowManager = new Class({
 		  type:'grid.Grid',
 		  stateful:true,
 		  resizable:false,
-		  columnManager:{
-			  columns:{
-				  'country':{
-					  heading:'Country',
-					  removable:false,
-					  sortable:true,
-					  movable:true,
-					  width:200,
-					  renderer:function (val) {
-						  return '<span style="color:blue">' + val + '</span>';
-					  }
-				  },
-				  'capital':{
-					  heading:'Capital',
-					  sortable:true,
-					  removable:true,
-					  movable:true,
-					  width:150
-				  },
-				  population:{
-					  heading:'Population',
-					  movable:true,
-					  removable:true
+
+		  columns:{
+			  'country':{
+				  heading:'Country',
+				  removable:false,
+				  sortable:true,
+				  movable:true,
+				  width:200,
+				  renderer:function (val) {
+					  return '<span style="color:blue">' + val + '</span>';
 				  }
+			  },
+			  'capital':{
+				  heading:'Capital',
+				  sortable:true,
+				  removable:true,
+				  movable:true,
+				  width:150
+			  },
+			  population:{
+				  heading:'Population',
+				  movable:true,
+				  removable:true
 			  }
 		  },
 		  dataSource:{
@@ -27948,30 +27962,29 @@ ludo.form.ToggleGroup = new Class({
     }
 });/* ../ludojs/src/form/manager.js */
 /**
- Class for form Management. This is a convenient class used for easy access and manipulation of form elements. You get an instance
- of this class by calling view.getForm().<br><br>
- An instance of this class is created automatically and configured from the "form"
- config object of the View. You will get access to the instance of this class by calling
- View.getForm()
+ Form management class. An instance of this class is automatically created for a view if the config.form property is set or after
+ after a call to view.getForm() is made.<br>
+ new ludo.View({
+ 	form:{ ... }
+ </code>
+ You'll get access to the methods of this class from view.getForm().
  @namespace ludo.form
  @class ludo.form.Manager
- @augments ludo.Core
  @param {Object} config
+ @param {Object} config.listeners The form fires events when something is changed with one of the child form views(recursive).
+It is convenient to place event handlers here instead of adding them to the individual form views.
+ Example: create a form.change event to listen to all changes to child form views.
+ @fires ludo.form.Manager#change Event fired when the value of one of the child form view is changed(recursive).
+ @fires ludo.form.Manager#valid Event fired when all child form views have a valid value.
+ @fires ludo.form.Manager#invalid Event fired when one or more child form views have invalid value.
+ @fires ludo.form.Manager#clean A form is considered clean when none of it's values has changed from it's original. Otherwise it's considered dirty. The clean event
+ is fired when the form is clean.
+ @fires ludo.form.Manager#dirty Fired when the form is dirty.
  @example
 var view = new ludo.View({
-	form:{
-
-	},
 	children:[
 		{ type:'form.Text', label:'First name', name:'firstname' },
-		{ type:'form.Text', label:'Last name', name:'lastname' },
-		{
-			layout:{ type:'linear',orientation:'horizontal',height:25},
-			children:[
-				{ type:'form.SubmitButton', value:'Save' },
-				{ type:'form.ResetButton', value:'Reset form }
-			]
-		}
+		{ type:'form.Text', label:'Last name', name:'lastname' }
 	]
 });
 
@@ -27984,6 +27997,10 @@ var json = view.getForm().values();
  */
 ludo.form.Manager = new Class({
 	Extends:ludo.Core,
+	/**
+	 * @attribute {ludo.View} view Reference to the forms view
+	 * @memberof ludo.form.Manager.prototype
+	 */
 	view:null,
 	formComponents:[],
 	map:{},
@@ -28171,6 +28188,9 @@ ludo.form.Manager = new Class({
 	 * @memberOf ludo.form.Manager.prototype
 	 * @param key
 	 * @param value
+	 * @example
+	 * view.getForm().val('firstname', 'Hannah');
+	 * var firstneame = view.getForm().val('firstname');
      */
 	val:function(key, value){
 		if(arguments.length == 2){
@@ -29571,7 +29591,7 @@ ludo.form.Hidden = new Class({
     defaultValue : '',
     hidden: false,
 
-	containerCss:{
+	elCss:{
 		display : 'none'
 	},
 
@@ -31442,7 +31462,7 @@ ludo.form.TextFilterContainer = new Class({
     records:[],
     selectedIndex:undefined,
 
-    containerCss:{
+    elCss:{
         position:'absolute',
         border:'1px solid #AAA',
         'background-color':'#FFF'
@@ -32228,6 +32248,7 @@ ludo.form.OnOffSwitch = new Class({
  * @param {number} config.thumbAlpha Alpha(opacity) of thumb in range 0-1 while dragging, default: 1
  * @param {number} config.barSize Size(height or width) of bar in pixels, default: 2
  * @param {number} config.needleSize Fraction size of of needle(circle inside thumb) relative to thumb size, default: 0.2
+ * @param {number} config.increments Optional increment value. If you want to disable decimals, set this value to 1
  *
  * @fires change Event fired when value is changed.
  *
@@ -32287,12 +32308,12 @@ ludo.form.Seekbar = new Class({
     valueListener: undefined,
 
     reverse:false,
-
+    increments:undefined,
     orientation : 'vertical',
 
     ludoConfig:function(config){
         this.parent(config);
-        this.setConfigParams(config, ["orientation", "reverse", "minValue", "maxValue", "value", "valueListener", "negativeColor", "positiveColor", "needleSize", "barSize"]);
+        this.setConfigParams(config, ["increments", "orientation", "reverse", "minValue", "maxValue", "value", "valueListener", "negativeColor", "positiveColor", "needleSize", "barSize"]);
 
         if (config.thumbColor != undefined) {
             if (config.thumbColor.length == 9) {
@@ -32385,17 +32406,28 @@ ludo.form.Seekbar = new Class({
      */
     val: function (value) {
         if(arguments.length != 0){
-            this.value = Math.max(this.minValue, value);
-            this.value = Math.min(this.maxValue, this.value);
-
-            this.positionBars();
-            this.positionThumb();
             this._set(value);
             this.change();
         }
 
         return this.value;
+    },
 
+
+    _set:function(value){
+        if(this.increments != undefined){
+            value -= (value % this.increments);
+        }
+
+        value = Math.max(this.minValue, value);
+        value = Math.min(this.maxValue, value);
+
+        value = this.parent(value);
+
+        this.positionBars();
+        this.positionThumb();
+
+        return value;
     },
 
     ludoRendered:function(){
@@ -32588,9 +32620,9 @@ ludo.form.Seekbar = new Class({
         }
 
 
-        this._set(value);
+        this.val(value);
 
-        this.change();
+
 
         this.positionBars();
 

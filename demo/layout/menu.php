@@ -51,7 +51,7 @@ var w = new ludo.Window({
                         type:'Menu',
                         orientation:'horizontal'
                     },
-                    containerCss:{
+                    elCss:{
                         'border-bottom':'0'
                     },
                     children:[
@@ -77,7 +77,7 @@ var w = new ludo.Window({
                                     children:[
                                         {
                                             type:'calendar.Calendar',
-                                            containerCss:{
+                                            elCss:{
                                                 'background-color':'#FFF',
                                                 'border-top':'1px solid #d7d7d7'
                                             },
@@ -93,7 +93,7 @@ var w = new ludo.Window({
                                     children:[
                                         {
                                             type:'color.RGBSlider',
-                                            containerCss:{
+                                            elCss:{
                                                 'background-color':'#FFF',
                                                 'border-top':'1px solid #d7d7d7'
                                             },
@@ -137,7 +137,7 @@ var w = new ludo.Window({
                             }
                         }
                     },
-                    containerCss:{
+                    elCss:{
                         border:0,
                         'border-top':'1px solid #d7d7d7',
                         'border-bottom':'1px solid #d7d7d7',
@@ -173,7 +173,7 @@ var w = new ludo.Window({
                         type:'tabs',
                         tabs:'right'
                     },
-                    containerCss:{
+                    elCss:{
                         'border-top':'1px solid #d7d7d7',
                         'border-left':'1px solid #d7d7d7'
 
@@ -185,7 +185,7 @@ var w = new ludo.Window({
                                 url:'../resources/articles/front-page.php'
                             },
                             title:'Front page',
-                            containerCss:{
+                            elCss:{
                                 'background-color':'#FFF'
 
                             },
@@ -201,7 +201,7 @@ var w = new ludo.Window({
                                 url:'../resources/articles/sport.php'
                             },
                             title:'Sport news',
-                            containerCss:{
+                            elCss:{
                                 'background-color':'#FFF'
 
                             },
@@ -217,7 +217,7 @@ var w = new ludo.Window({
 
                 {
                     id:'bottom',
-                    containerCss:{
+                    elCss:{
                         'border-top':'1px solid #d7d7d7',
                         'border-left':'1px solid #d7d7d7',
                         'border-bottom':'1px solid #d7d7d7'

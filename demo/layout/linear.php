@@ -20,7 +20,7 @@ require_once("../includes/demo-header.php");
         },
         children:[
             {
-                containerCss:{border:0},
+                elCss:{border:0},
                 type:'FramedView',
                 title:'Weight of 1',
                 resizable:false,
@@ -58,7 +58,7 @@ require_once("../includes/demo-header.php");
                 type:'FramedView',
                 title:'Weight of 2',
                 resizable:false,
-                containerCss:{'border-top':0, 'border-bottom':0, 'border-right':0},
+                elCss:{'border-top':0, 'border-bottom':0, 'border-right':0},
                 minimizable:false,
                 layout:{
                     type:'linear',

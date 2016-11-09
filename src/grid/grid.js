@@ -12,30 +12,29 @@
 		  type:'grid.Grid',
 		  stateful:true,
 		  resizable:false,
-		  columnManager:{
-			  columns:{
-				  'country':{
-					  heading:'Country',
-					  removable:false,
-					  sortable:true,
-					  movable:true,
-					  width:200,
-					  renderer:function (val) {
-						  return '<span style="color:blue">' + val + '</span>';
-					  }
-				  },
-				  'capital':{
-					  heading:'Capital',
-					  sortable:true,
-					  removable:true,
-					  movable:true,
-					  width:150
-				  },
-				  population:{
-					  heading:'Population',
-					  movable:true,
-					  removable:true
+
+		  columns:{
+			  'country':{
+				  heading:'Country',
+				  removable:false,
+				  sortable:true,
+				  movable:true,
+				  width:200,
+				  renderer:function (val) {
+					  return '<span style="color:blue">' + val + '</span>';
 				  }
+			  },
+			  'capital':{
+				  heading:'Capital',
+				  sortable:true,
+				  removable:true,
+				  movable:true,
+				  width:150
+			  },
+			  population:{
+				  heading:'Population',
+				  movable:true,
+				  removable:true
 			  }
 		  },
 		  dataSource:{

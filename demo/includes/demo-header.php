@@ -43,7 +43,7 @@ $skin = isset($skin) ? $skin : 'light-gray';
             type:'SourceCodePreview',
             title : 'Source code',
             bodyCls : 'source-code-preview',
-            containerCss:{
+            elCss:{
                 'border-top': '1px solid #ddd',
                 'background-color': '#aaa'
             },

@@ -22,7 +22,7 @@ require_once("includes/demo-header.php");
                 animate:true,
                 animationDuration:250,
                 titleBar:false,
-                containerCss:{
+                elCss:{
                     border:0
                 },
                 form:{

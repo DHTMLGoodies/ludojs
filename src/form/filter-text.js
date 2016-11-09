@@ -468,7 +468,7 @@ ludo.form.TextFilterContainer = new Class({
     records:[],
     selectedIndex:undefined,
 
-    containerCss:{
+    elCss:{
         position:'absolute',
         border:'1px solid #AAA',
         'background-color':'#FFF'

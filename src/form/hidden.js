@@ -5,7 +5,7 @@ ludo.form.Hidden = new Class({
     defaultValue : '',
     hidden: false,
 
-	containerCss:{
+	elCss:{
 		display : 'none'
 	},
 

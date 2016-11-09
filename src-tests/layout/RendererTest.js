@@ -63,7 +63,7 @@ TestCase("Renderer", {
 						alignParentLeft:true,
 						width:300
 					},
-					containerCss:{
+					elCss:{
 						margin:0,padding:0,border:0
 					}
 				}

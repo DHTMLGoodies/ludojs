@@ -8,7 +8,7 @@ ludo.colorPicker.HSV = new Class({
 	minimizable:false,
 	title:'HSV',
 	colorObj:undefined,
-	containerCss:{
+	elCss:{
 		'border-right':'0',
 		'border-top':'0'
 	},

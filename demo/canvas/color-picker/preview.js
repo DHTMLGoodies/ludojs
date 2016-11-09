@@ -3,7 +3,7 @@ ludo.colorPicker.Preview = new Class({
     type:'colorPicker.Preview',
     weight:1,
     useController:true,
-    containerCss:{
+    elCss:{
         'border-left': '1px solid #C0C0C0'
     },
     css:{

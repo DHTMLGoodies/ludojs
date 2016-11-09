@@ -24,7 +24,7 @@ require_once("../includes/demo-header.php");
 
                 animationDuration:250,
                 titleBar:false,
-                containerCss:{
+                elCss:{
                     border:0
                 },
                 name:'deck',

@@ -19,7 +19,7 @@ require_once("../includes/demo-header.php");
             width:'matchParent',
             height:'matchParent'
         },
-        containerCss:{
+        elCss:{
             'background-color':'#fff'
         }
     });

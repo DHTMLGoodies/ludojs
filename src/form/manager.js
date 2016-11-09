@@ -1,28 +1,27 @@
 /**
- Class for form Management. This is a convenient class used for easy access and manipulation of form elements. You get an instance
- of this class by calling view.getForm().<br><br>
- An instance of this class is created automatically and configured from the "form"
- config object of the View. You will get access to the instance of this class by calling
- View.getForm()
+ Form management class. An instance of this class is automatically created for a view if the config.form property is set or after
+ after a call to view.getForm() is made.<br>
+ new ludo.View({
+ 	form:{ ... }
+ </code>
+ You'll get access to the methods of this class from view.getForm().
  @namespace ludo.form
  @class ludo.form.Manager
- @augments ludo.Core
  @param {Object} config
+ @param {Object} config.listeners The form fires events when something is changed with one of the child form views(recursive).
+It is convenient to place event handlers here instead of adding them to the individual form views.
+ Example: create a form.change event to listen to all changes to child form views.
+ @fires ludo.form.Manager#change Event fired when the value of one of the child form view is changed(recursive).
+ @fires ludo.form.Manager#valid Event fired when all child form views have a valid value.
+ @fires ludo.form.Manager#invalid Event fired when one or more child form views have invalid value.
+ @fires ludo.form.Manager#clean A form is considered clean when none of it's values has changed from it's original. Otherwise it's considered dirty. The clean event
+ is fired when the form is clean.
+ @fires ludo.form.Manager#dirty Fired when the form is dirty.
  @example
 var view = new ludo.View({
-	form:{
-
-	},
 	children:[
 		{ type:'form.Text', label:'First name', name:'firstname' },
-		{ type:'form.Text', label:'Last name', name:'lastname' },
-		{
-			layout:{ type:'linear',orientation:'horizontal',height:25},
-			children:[
-				{ type:'form.SubmitButton', value:'Save' },
-				{ type:'form.ResetButton', value:'Reset form }
-			]
-		}
+		{ type:'form.Text', label:'Last name', name:'lastname' }
 	]
 });
 
@@ -35,6 +34,10 @@ var json = view.getForm().values();
  */
 ludo.form.Manager = new Class({
 	Extends:ludo.Core,
+	/**
+	 * @attribute {ludo.View} view Reference to the forms view
+	 * @memberof ludo.form.Manager.prototype
+	 */
 	view:null,
 	formComponents:[],
 	map:{},
@@ -222,6 +225,9 @@ ludo.form.Manager = new Class({
 	 * @memberOf ludo.form.Manager.prototype
 	 * @param key
 	 * @param value
+	 * @example
+	 * view.getForm().val('firstname', 'Hannah');
+	 * var firstneame = view.getForm().val('firstname');
      */
 	val:function(key, value){
 		if(arguments.length == 2){

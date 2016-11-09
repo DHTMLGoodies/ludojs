@@ -1,7 +1,5 @@
 /**
  Private class used by grid.Grid to render headers
- @namespace grid
- @class GridHeader
  @private
  */
 ludo.grid.GridHeader = new Class({

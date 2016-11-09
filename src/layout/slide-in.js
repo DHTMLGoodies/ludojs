@@ -9,6 +9,7 @@ ludo.layout.SlideIn = new Class({
 
     onCreate:function(){
         this.view.getBody().css('overflowX', 'hidden');
+
     },
 
     onNewChild:function (child) {
@@ -24,8 +25,10 @@ ludo.layout.SlideIn = new Class({
             height:this.viewport.height
         });
 
-        this.slideEl.css('width', (this.viewport.absWidth + widthOfFirst) + 'px');
-        this.slideEl.css('left', this.view.layout.active ? 0 : (widthOfFirst * -1) + 'px');
+        this.slideEl.css({
+            width: (this.viewport.absWidth + widthOfFirst),
+            left: this.view.layout.active ? 0 : (widthOfFirst * -1)
+        });
 
         this.view.children[1].getEl().css('left', widthOfFirst + 'px');
         this.view.children[1].resize({
@@ -46,11 +49,9 @@ ludo.layout.SlideIn = new Class({
                 this.view.children[0].show();
             }
             this.view.layout.active = true;
-            var widthOfFirst = this.getWidthOfMenu();
-
             this.slideEl.animate({
                 left:0
-            }, this.getDuration());
+            }, this.getDuration(), this.getEasing());
         }
     },
     /**
@@ -66,7 +67,7 @@ ludo.layout.SlideIn = new Class({
 
             this.slideEl.animate({
                 left: widthOfFirst * -1
-            }, this.getDuration());
+            }, this.getDuration(), this.getEasing());
         }
     },
 
@@ -91,6 +92,10 @@ ludo.layout.SlideIn = new Class({
 
     getDuration:function () {
         return this.view.layout.duration || 150;
+    },
+
+    getEasing:function(){
+        return this.view.layout.easing || 'swing';
     },
 
     getWidthOfMenu:function(){

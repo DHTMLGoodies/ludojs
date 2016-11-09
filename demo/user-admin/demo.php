@@ -22,7 +22,7 @@ require_once("../includes/demo-header.php");
                             layout:{
                                 width:300
                             },
-                            containerCss:{
+                            elCss:{
                                 'border-right':'1px solid #d7d7d7'
                             },
                             resizable:true,
@@ -59,7 +59,7 @@ require_once("../includes/demo-header.php");
                             title:'Edit user',
                             id:'formView',
                             minimizable:false,
-                            containerCss:{
+                            elCss:{
                                 'border':0,
                                 'border-left':'1px solid #d7d7d7'
                             },
