@@ -19,6 +19,7 @@ load:
   - ../../src/layout/canvas.js
   - ../../src/layout/slide-in.js
   - ../../src/layout/table.js
+  - ../../src/layout/view-pager.js
   - ../../src/menu/context.js
   - ../../src/menu/menu.js
   - ../../src/menu/item.js
@@ -34,7 +35,7 @@ test:
   - RelativeTest.js
   - RendererTest.js
   - TabTest.js
-  - CardTest.js
+  - ViewPagerTest.js
   - PopupTest.js
   - MenuTest.js
   - CoordinateTest.js

@@ -132,7 +132,7 @@ ludo.layout.Card = new Class({
 
 	setTemporaryZIndexOfVisibleCard:function () {
 		var zIndex = ludo.util.getNewZIndex(this.visibleCard);
-		this.visibleCard.getEl().style.zIndex = zIndex + 100;
+		this.visibleCard.getEl().css('zIndex',  zIndex + 100);
 	},
 
 	/**
@@ -385,17 +385,34 @@ ludo.layout.Card = new Class({
 	},
 
 	animateAlongX:function (from, to) {
-		this.visibleCard.getEl().style.left = from + 'px';
-		this.getFx().start({
-			'left':[from, to]
+		console.log(to);
+
+		this.visibleCard.getEl().css('left', from + 'px');
+		var el = this.visibleCard.getEl();
+		this.visibleCard.getEl().animate({
+			left: to
+		}, this.getAnimationDuration(), function(){
+			el.css({
+				left:0,top:0,borderWidth:0
+			});
 		});
 	},
 
 	animateAlongY:function (from, to) {
 		this.visibleCard.getEl().style.top = from + 'px';
+
+		var el = this.visibleCard.getEl();
+		this.visibleCard.getEl().animate({
+			left: to
+		}, this.getAnimationDuration(), function(){
+			el.css({
+				left:0,top:0,borderWidth:0
+			});
+		});
+		/*
 		this.getFx().start({
 			'top':[from, to]
-		});
+		});*/
 	},
 	fx:{},
 
@@ -415,9 +432,11 @@ ludo.layout.Card = new Class({
     },
 
 	animationComplete:function (el) {
-		el.style.left = '0';
-		el.style.top = '0';
-        el.style.borderWidth = '0';
+
+		el.css({
+			left:0,top:0,borderWidth:0
+		});
+
 	},
 
 	touchStart:function (e) {
@@ -434,11 +453,11 @@ ludo.layout.Card = new Class({
 		var parentSize = animateX ? this.view.getEl().width() : this.view.getEl().height();
 		this.touch = {
 			active:true,
-			pos:animateX ? e.page.x : e.page.y,
+			pos:animateX ? e.pageX : e.pageY,
 			previousCard:this.getPreviousCardOf(this.visibleCard),
 			nextCard:this.getNextCardOf(this.visibleCard),
 			animateX:animateX,
-			zIndex:this.visibleCard.getEl().getStyle('z-index'),
+			zIndex:this.visibleCard.getEl().css('z-index'),
 			max:isFirstCard ? 0 : parentSize,
 			min:(isLastCard || !isValid) ? 0 : parentSize * -1,
 			previousPos:0
@@ -458,10 +477,10 @@ ludo.layout.Card = new Class({
 			var pos;
 			var key;
 			if (this.touch.animateX) {
-				pos = e.page.x - this.touch.pos;
+				pos = e.pageX - this.touch.pos;
 				key = 'left';
 			} else {
-				pos = e.page.x - this.touch.pos;
+				pos = e.pageY- this.touch.pos;
 				key = 'top'
 			}
 
@@ -470,7 +489,8 @@ ludo.layout.Card = new Class({
 
 			this.setZIndexOfOtherCards(pos);
 			this.touch.previousPos = pos;
-			this.visibleCard.els.container.style[key] = pos + 'px';
+
+			this.visibleCard.getEl().css(key, pos + 'px');
 			return false;
 		}
 		return undefined;
@@ -479,17 +499,17 @@ ludo.layout.Card = new Class({
 	setZIndexOfOtherCards:function (pos) {
 		if (pos > 0 && this.touch.previousPos <= 0) {
 			if (this.touch.nextCard) {
-				this.touch.nextCard.getEl().style.zIndex = (this.touch.zIndex - 3);
+				this.touch.nextCard.getEl().css('zIndex', (this.touch.zIndex - 3));
 			}
 			if (this.touch.previousCard) {
-				this.touch.previousCard.getEl().style.zIndex = this.touch.zIndex - 1;
+				this.touch.previousCard.getEl().css('zIndex', this.touch.zIndex - 1);
 			}
 		} else if (pos < 0 && this.touch.previousPos >= 0) {
 			if (this.touch.nextCard) {
-				this.touch.nextCard.getEl().style.zIndex = this.touch.zIndex - 1;
+				this.touch.nextCard.getEl().css('zIndex', this.touch.zIndex - 1);
 			}
 			if (this.touch.previousCard) {
-				this.touch.previousCard.getEl().style.zIndex = this.touch.zIndex - 3;
+				this.touch.previousCard.getEl().css('zIndex', this.touch.zIndex - 3);
 			}
 		}
 	},
@@ -503,7 +523,7 @@ ludo.layout.Card = new Class({
 			} else if (pos < 0 && pos < (this.touch.min / 2)) {
 				this.animateToNext();
 			} else {
-				this.visibleCard.getEl().style[this.touch.animateX ? 'left' : 'top'] = '0px';
+				this.visibleCard.getEl().css((this.touch.animateX ? 'left' : 'top'), 0);
 			}
 		}
 	},

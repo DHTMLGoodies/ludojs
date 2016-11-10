@@ -1,37 +1,37 @@
 /**
  *
- * @namespace card
+ * @namespace page
  * @class PreviousButton
- * @augments card.Button
- * @description Special Button for card.Deck component for navigation to previous card.
- * On click, this button will show previous card.
- * The button will be automatically disabled when first card in deck is shown.
- * When clicked, next card will be shown
+ * @augments page.Button
+ * @description Special Button for page.Deck component for navigation to previous page.
+ * On click, this button will show previous page.
+ * The button will be automatically disabled when first page in deck is shown.
+ * When clicked, next page will be shown
  */
 ludo.card.PreviousButton = new Class({
 	Extends:ludo.card.Button,
-	type:'card.PreviousButton',
+	type:'page.PreviousButton',
 	value:'Previous',
 
 	addButtonEvents:function () {
-		this.addEvent('click', this.showPreviousCard.bind(this));
+		this.addEvent('click', this.showPreviousPage.bind(this));
 		if (this.applyTo) {
 			var lm = this.applyTo.getLayout();
 			if (this.autoHide) {
-				if(!lm.isOnFirstCard())this.show(); else this.hide();
-				lm.addEvent('firstcard', this.hide.bind(this));
-				lm.addEvent('notfirstcard', this.show.bind(this));
+				if(!lm.isOnFirstPage())this.show(); else this.hide();
+				lm.addEvent('firstpage', this.hide.bind(this));
+				lm.addEvent('notfirstpage', this.show.bind(this));
 			} else {
-				if(!lm.isOnFirstCard())this.enable(); else this.disable();
-				lm.addEvent('firstcard', this.disable.bind(this));
-				lm.addEvent('notfirstcard', this.enable.bind(this));
+				if(!lm.isOnFirstPage())this.enable(); else this.disable();
+				lm.addEvent('firstpage', this.disable.bind(this));
+				lm.addEvent('notfirstpage', this.enable.bind(this));
 			}
 		}
 	},
 
-	showPreviousCard:function () {
+	showPreviousPage:function () {
 		if (this.applyTo) {
-			this.applyTo.getLayout().showPreviousCard();
+			this.applyTo.getLayout().showPreviousPage();
 		}
 	}
 });

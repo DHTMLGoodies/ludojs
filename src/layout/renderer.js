@@ -71,7 +71,7 @@ ludo.layout.Renderer = new Class({
 								el = view.getEl();
 								view.addEvent('resize', this.clearFn.bind(this));
 							} else {
-								el = document.id(val);
+								el = $(val);
 							}
 						} else {
 							if (val.getEl !== undefined) {

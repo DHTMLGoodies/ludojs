@@ -1,16 +1,16 @@
 /**
- * Special Button for card.Deck used to navigate to next card.
+ * Special Button for page.Deck used to navigate to next page.
  * This button will automatically be disabled when a form is invalid, and automatically enabled when it's valid.
  * A form consists of all form elements of parent component, including form elements of child components.
- * When clicked, next card will be shown
+ * When clicked, next page will be shown
  *
- * @namespace card
+ * @namespace page
  * @class NextButton
- * @augments card.Button
+ * @augments page.Button
  */
 ludo.card.NextButton = new Class({
 	Extends:ludo.card.Button,
-	type:'card.NextButton',
+	type:'page.NextButton',
 	value:'Next',
 
 	addButtonEvents:function () {
@@ -22,17 +22,17 @@ ludo.card.NextButton = new Class({
 				this.disable();
 			}
 			if (this.autoHide) {
-				if (lm.isOnLastCard())this.hide(); else this.show();
-				lm.addEvent('lastcard', this.hide.bind(this));
-				lm.addEvent('notlastcard', this.show.bind(this));
+				if (lm.isOnLastPage())this.hide(); else this.show();
+				lm.addEvent('lastpage', this.hide.bind(this));
+				lm.addEvent('notlastpage', this.show.bind(this));
 			} else {
-				if (lm.isOnLastCard())this.disable(); else this.enable();
-				lm.addEvent('lastcard', this.disable.bind(this));
-				lm.addEvent('notlastcard', this.enable.bind(this));
+				if (lm.isOnLastPage())this.disable(); else this.enable();
+				lm.addEvent('lastpage', this.disable.bind(this));
+				lm.addEvent('notlastpage', this.enable.bind(this));
 			}
 		}
 
-		this.addEvent('click', this.nextCard.bind(this));
+		this.addEvent('click', this.nextPage.bind(this));
 	},
 
 	enable:function () {
@@ -41,9 +41,9 @@ ludo.card.NextButton = new Class({
 		}
 	},
 
-	nextCard:function () {
+	nextPage:function () {
 		if (this.applyTo) {
-			this.applyTo.getLayout().showNextCard();
+			this.applyTo.getLayout().showNextPage();
 		}
 	}
 });

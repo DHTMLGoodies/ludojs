@@ -15,7 +15,6 @@ ludo.FramedView = new Class({
 	Extends:ludo.View,
 	type:'FramedView',
 	layout:{
-		type:'fill',
 		minWidth:100,
 		minHeight:100
 	},
@@ -185,7 +184,7 @@ ludo.FramedView = new Class({
 	resizeDOM:function () {
 		var height = this.getHeight();
 		height -= (ludo.dom.getMBPH(this.els.container) + ludo.dom.getMBPH(this.els.body) +  this.getHeightOfTitleAndButtonBar());
-		
+
         if(height >= 0){
             this.els.body.css('height', height);
             this.cachedInnerHeight = height;

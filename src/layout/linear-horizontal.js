@@ -8,8 +8,8 @@ ludo.layout.LinearHorizontal = new Class({
 	Extends:ludo.layout.Linear,
 
 	resize:function () {
-		var totalWidth = this.view.getInnerWidthOfBody();
-		var height = this.hasDynamicHeight() ? 'auto' : this.view.getInnerHeightOfBody();
+		var totalWidth = this.view.getBody().width();
+		var height = this.hasDynamicHeight() ? 'auto' : this.view.getBody().height();
 		if (height == 0) {
 			return;
 		}

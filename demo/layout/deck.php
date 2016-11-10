@@ -1,33 +1,36 @@
 <?php
 $sub = true;
-$pageTitle = 'Deck/Card demo';
+$pageTitle = 'ViePager Layout demo';
 require_once("../includes/demo-header.php");
 ?>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/base.js"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/card.js"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/view-pager.js"></script>
 
 <body>
 <script type="text/javascript" class="source-code">
     var w = new ludo.Window({
         id:'myWindow',
         left:50, top:50,
-        width:310, height:290,
+        width:310, height:285,
         resizable:false,
-        title:'Card/Deck inside a window',
-        layout:'fill',
+        title:'Swipe between pages',
+        layout:{
+            type: 'tabs'
+
+        },
         children:[
             {
+                title:'Demo',
                 layout:{
+                    animationDuration:250,
                     animate:true,
-                    type:'card'
+                    dragging:true,
+                    type:'ViewPager',
+                    orientation:'horizontal'
                 },
-
-                animationDuration:250,
-                titleBar:false,
                 elCss:{
                     border:0
                 },
-                name:'deck',
                 children:[
                     { name:'card1', html:'<img src="../images/card1.png">' },
                     { name:'card2', html:'<img src="../images/card2.png">'},
@@ -44,25 +47,15 @@ require_once("../includes/demo-header.php");
                     { name:'card13', html:'<img src="../images/card13.png">'}
                 ],
                 listeners:{
-                    'showcard':function (deck, card) {
-                        ludo.get('myWindow').setTitle('Showing card ' + (deck.getIndexOfVisibleCard() + 1) + ' of ' + deck.getCountCards())
+                    'showpage':function (deck, card) {
+                        ludo.get('myWindow').setTitle('Showing card ' + (deck.getIndexOfVisiblePage() + 1) + ' of ' + deck.getCountCards())
                     }
                 }
+            },
+            {
+                type:'SourceCodePreview'
             }
-        ],
-        buttonBar:{
-            align:'left',
-            children:[
-                {
-                    type:'card.ProgressBar', weight:1
-                },
-                {
-                    type:'card.PreviousButton'
-                },
-                {
-                    type:'card.NextButton'
-                }
-            ]}
+        ]
     });
 </script>
 </body>

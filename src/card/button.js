@@ -45,13 +45,15 @@ ludo.card.Button = new Class({
 
     getParentComponent:function () {
         var cmp = this.parent();
-        if (cmp.layout === undefined || (cmp.layout.type!=='card')) {
+
+        if (cmp.layout === undefined || (cmp.layout.type.toLowerCase()!=='viewpager')) {
             for (var i = 0; i < cmp.children.length; i++) {
-                if (cmp.children[i].layout && cmp.children[i].layout.type==='card') {
+
+                if (cmp.children[i].layout && cmp.children[i].layout.type.toLowerCase()==='viewpager') {
                     return cmp.children[i];
                 }
             }
         }
-        return cmp.layout && cmp.layout.type === 'card' ? cmp : undefined;
+        return cmp.layout && cmp.layout.type.toLowerCase()!=='viewpager' ? cmp : undefined;
     }
 });

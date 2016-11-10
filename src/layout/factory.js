@@ -36,6 +36,8 @@ ludo.layout.Factory = new Class({
 				return 'Relative';
 			case 'fill':
 				return 'Fill';
+			case 'viewpager':
+				return 'ViewPager';
 			case 'card':
 				return 'Card';
 			case 'grid':
@@ -58,7 +60,7 @@ ludo.layout.Factory = new Class({
 			case 'linear':
 				return ['Linear', (view.layout.orientation && view.layout.orientation.toLowerCase()=='horizontal') ? 'Horizontal' : 'Vertical'].join('');
 			default:
-				return 'Base';
+				return 'LinearVertical';
 		}
 	},
 

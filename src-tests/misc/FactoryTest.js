@@ -1,5 +1,16 @@
 TestCase("FactoryTest", {
 
+	"test should be able to create namespace": function(){
+		// when
+		ludo.factory.ns("alf.magne.kalleland");
+
+		assertNotUndefined(window.alf);
+		assertNotUndefined(window.alf.magne);
+		assertNotUndefined(window.alf.magne.kalleland);
+		assertNotUndefined(ludo);
+		assertNotUndefined(Class);
+	},
+
 	"should be able to build class using config object": function(){
 		// given
 		ludo.MyClass = new Class({

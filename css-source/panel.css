@@ -4,19 +4,19 @@
 
 .ludo-panel fieldset{
     border-radius : 5px;
-     webkit-border-radius: 5px;
+     -webkit-border-radius: 5px;
      -moz-border-radius : 5px;    
 
 }
-.ludo-panel .ludo-view-container{
+.ludo-panel .ludo-view{
     margin:2px;
 }
-.ludo-panel .ludo-view-container .ludo-view-container{
-    padding-left:0px;
-    padding-right:0px;
+.ludo-panel .ludo-view .ludo-view{
+    padding-left:0;
+    padding-right:0;
 }
 
 fieldset{
-    padding:0px;
+    padding:0;
     margin:2px;
 }

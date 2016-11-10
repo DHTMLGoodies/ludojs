@@ -358,7 +358,7 @@ div.ludo-content-child-of-fullscreen {
     margin: 0;
 }
 
-.ludo-view-container {
+.ludo-view {
     overflow: hidden;
     font-family:arial;
 }
@@ -414,7 +414,7 @@ div.ludo-component-button-container, div.ludo-content-buttons {
     background-color: transparent !important;
 }
 
-.ludo-content-buttons .ludo-view-container{
+.ludo-content-buttons .ludo-view{
     background-color:transparent;
 }
 .ludo-component-button-container{
@@ -435,7 +435,7 @@ div.ludo-FramedView {
     -ms-user-select: none;
 }
 
-.ludo-view-container {
+.ludo-view {
     border-width: 1px;
     background-color: #FFF;
     overflow: hidden;
@@ -2441,20 +2441,20 @@ div.ludo-spinbox-arrow-overeffect{
 
 .ludo-panel fieldset{
     border-radius : 5px;
-     webkit-border-radius: 5px;
+     -webkit-border-radius: 5px;
      -moz-border-radius : 5px;    
 
 }
-.ludo-panel .ludo-view-container{
+.ludo-panel .ludo-view{
     margin:2px;
 }
-.ludo-panel .ludo-view-container .ludo-view-container{
-    padding-left:0px;
-    padding-right:0px;
+.ludo-panel .ludo-view .ludo-view{
+    padding-left:0;
+    padding-right:0;
 }
 
 fieldset{
-    padding:0px;
+    padding:0;
     margin:2px;
 }/* ../ludojs/css-source/anchor.css */
 .ludo-anchor-text{
@@ -2512,7 +2512,7 @@ fieldset{
     margin: 0;
 }
 
-.ludo-view-container {
+.ludo-view {
     background-color: #d1e7ff;
 }
 

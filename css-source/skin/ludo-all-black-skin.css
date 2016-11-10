@@ -1,4 +1,4 @@
-.ludo-view-container {
+.ludo-view {
     background-color: #DDD;
 }
 
@@ -67,7 +67,7 @@ span.ludo-grid-header-cell-text-sort-asc {
 .ludo-grid{
     border-radius:0px !important;
 }
-.ludo-view-container{
+.ludo-view{
     background-color:#777;
 }
 

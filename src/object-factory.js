@@ -26,71 +26,113 @@ ludo.ObjectFactory = new Class({
 			var obj = this.getInNamespace(this.namespaces[i], config);
 			if(obj)return obj;
 		}
+		try{
+			var obj = this.createInstance(config.type, config);
+			if(obj!=undefined)return obj;
+		}catch(e){
+
+		}
 		ludo.util.log('Could not find class ' + config.type);
 		return undefined;
 	},
 
-	/**
-	 Register a class for quick lookup. First argument is the value of the type attribute you want
-	 to support. It is not required to call this for each class you create. The alternative is to
-	 register a namespace by calling ludo.factory.registerNamespace('MyApp'). However, if you have a lot of
-	 classes, it will increase performance by registering your classes. ludoJS will then know it instantly
-	 and doesn't have to traverse the name space tree to find it.
-	 @function registerClass
-	 @param {String} typeName
-	 @param {ludo.Core} classReference
-	 @example
-        ludo.factory.createNamespace('MyApp');
-	 	MyApp.MyView = new Class({
-	 		Extends: ludo.View,
-	 		type: 'MyApp.MyView'
-	 	});
-	 	ludo.factory.register('MyApp.MyView', MyApp.MyView);
-		...
-	 	...
-	 	new ludo.View({
-	 		...
-	 		children:[{
-	 			type:'MyApp.MyView' // ludoJS now knows how to find this class
-			}]
-		});
+	createInstance:function(path, config){
+		var tokens = path.split(/\./g);
+		var name = tokens.pop();
+		var parent = window;
+		for(var i=0;i<tokens.length;i++){
+			var n = tokens[i];
+			if(parent[n] != undefined){
+				parent = parent[n];
+			}
+		}
 
+		if(parent[name] != undefined){
+			return new parent[name](config);
+		}
+		return undefined;
+	},
 
-	 */
 	registerClass:function(typeName, classReference){
 		this.classReferences[typeName] = classReference;
 	},
 
+
 	/**
-	 Method used to create global name space for your web applications.
-	 This methods makes ludoJS aware of the namespace and register a global variable
-	 window[ns] for it if it does not exists. It makes it possible for ludoJS to find
-	 classes by type attribute.
-	 @function ludo.factory.createNamespace
-	 @param {String} ns
+	 Creates alias name to a custom View or class for use in the type attributes.
+	 @function createAlias
+	 @param {String} typeName
+	 @param {ludo.Core} classReference
 	 @example
-	 	ludo.factory.createNamespace('MyApp');
-	 	...
-	 	...
-	 	MyApp.MyClass = new Class({
-	 		Extends: ludo.View,
-			type : 'MyApp.MyClass'
-	 	});
+	 ludo.factory.ns('MyApp.view'); // creates window.MyApp.view if undefined
 
-	 	var view = new ludo.View({
+	 // Create new class
+	 MyApp.view.MyView = new Class({
+	 		Extends: ludo.View
+	 });
+
+	 // Create alias name "MyView" which refers to MyApp.view.MyView
+	 ludo.factory.createAlias('MyView', MyApp.view.MyView);
+	 ...
+	 ...
+	 new ludo.View({
+	 		...
 	 		children:[{
-	 			type : 'MyApp.MyClass'
+	 			type:'MyView' // Alias name used instead of full namespace and class name
 			}]
-	 	});
-
-	 Notice that "Namespace" is used as prefix in type attribute in the last snippet. For
-	 standard ludoJS components, you could write type:"View". For views in your namespaces,
-	 you should always use the syntax "Namespace.ClassName"
+		});
 	 */
+	createAlias : function(aliasName, classReference){
+		this.classReferences[aliasName] = classReference;
+	},
+
 	createNamespace:function(ns){
 		if(window[ns] === undefined)window[ns] = {};
 		if(this.namespaces.indexOf(ns) === -1)this.namespaces.push(ns);
 	},
+
+
+	/**
+	 Automatically creates a Javascript namespace if it doesn't exists.
+	 This is a convenient method which you let you write
+	 <code>
+	 ludo.factory.ns('my.namespace');
+	 </code>
+	 instead of
+	 <code>
+	 if(window.my == undefined)window.my = {};
+	 if(window.my.namespace == undefined)window.my.namespace = {};
+	 </code>
+
+	 @function ludo.factory.createNamespace
+	 @param {String} ns
+	 @example
+	 ludo.factory.ns('parent.child.grandchild');
+	 ...
+	 ...
+	 parent.child.grandchild.MyClass = new Class({
+	 		Extends: ludo.View,
+			type : 'MyApp.MyClass'
+	 	});
+
+	 var view = new ludo.View({
+	 		children:[{
+	 			type : 'parent.child.grandchild.MyClass'
+			}]
+	 	});
+	 */
+	ns:function(ns){
+		var parent = window;
+		var tokens = ns.split(/\./g);
+		for(var i=0;i<tokens.length;i++){
+			var n = tokens[i];
+			if(parent[n] == undefined){
+				parent[n] = {};
+			}
+			parent = parent[n];
+		}
+	},
+	
 
 	getInNamespace:function(ns, config){
 		if(jQuery.type(config) == "string"){

@@ -73,7 +73,7 @@ require_once("includes/demo-header.php");
                 ],
                 listeners:{
                     'showcard':function (deck, card) {
-                        ludo.get('myWindow').setTitle('Step ' + (deck.getIndexOfVisibleCard() + 1) + ' of ' + deck.getCountCards())
+                        ludo.get('myWindow').setTitle('Step ' + (deck.getIndexOfVisiblePage() + 1) + ' of ' + deck.getCountCards())
                     }
                 }
             }

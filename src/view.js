@@ -2,7 +2,7 @@
  A basic ludoJS view. When rendered on a Web page, a View is made out of two &lt;div> elements, one parent and one child(called body).
  @example {@lang XML}
  <!--  A basic rendered ludoJS view -->
- <div class="ludo-view-container">
+ <div class="ludo-view">
  	<div class="ludo-body"></div>
  </div>
  @namespace ludo
@@ -398,7 +398,7 @@ ludo.View = new Class({
 	},
 
 	_styleDOM:function () {
-		this.els.container.addClass('ludo-view-container');
+		this.els.container.addClass('ludo-view');
 		this.els.body.addClass('ludo-body');
 
 		this.els.container.attr("id", this.getId());
@@ -409,7 +409,7 @@ ludo.View = new Class({
 		}
 
 		if (ludo.util.isTabletOrMobile()) {
-			this.els.container.addClass('ludo-view-container-mobile');
+			this.els.container.addClass('ludo-view-mobile');
 		}
 
 		this.setContent();

@@ -12,9 +12,10 @@ ludo.card.ProgressBar = new Class({
 
     ludoEvents: function () {
         this.parent();
+        console.log(this.applyTo);
         if (this.applyTo) {
             this.applyTo.getLayout().registerButton(this);
-            this.applyTo.getLayout().addEvent('showcard', this.setCardPercent.bind(this))
+            this.applyTo.getLayout().addEvent('showpage', this.setCardPercent.bind(this))
         }
     },
 
