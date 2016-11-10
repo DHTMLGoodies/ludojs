@@ -121,10 +121,7 @@ ludo.layout.Base = new Class({
     firstResized : false,
 
 	resizeChildren:function () {
-        if(!this.firstResized){
-            this.beforeFirstResize();
-            this.firstResized = true;
-        }
+
 		if (this.benchmarkTime) {
 			var start = new Date().getTime();
 		}
@@ -136,6 +133,11 @@ ludo.layout.Base = new Class({
 		}
 
 		this.storeViewPortSize();
+
+		if(!this.firstResized){
+			this.beforeFirstResize();
+			this.firstResized = true;
+		}
 
 		this.resize();
 		if (this.benchmarkTime) {

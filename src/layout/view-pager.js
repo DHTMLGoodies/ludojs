@@ -13,16 +13,19 @@
  *
  */
 ludo.layout.ViewPager = new Class({
-    Extends:ludo.layout.Base,
-    visiblePage:undefined,
-    animate:true,
-    initialAnimate:false,
-    animationDuration:.25,
-    touch:{},
-    dragging:true,
-    orientation:'horizontal',
+    Extends: ludo.layout.Base,
+    visiblePageIndex: undefined,
+    animate: true,
+    initialAnimate: false,
+    animationDuration: 250,
+    touch: {},
+    dragging: true,
+    orientation: 'horizontal',
 
-    onCreate:function () {
+    parentDiv: undefined,
+
+
+    onCreate: function () {
         this.parent();
         var l = this.view.layout;
 
@@ -32,66 +35,106 @@ ludo.layout.ViewPager = new Class({
         if (l.orientation !== undefined)this.orientation = l.orientation;
         this.initialAnimate = this.animate;
 
-        if (this.animate) {
-            this.addEvent('higherpage', this.animateHigherPage.bind(this));
-            this.addEvent('lowerpage', this.animateLowerPage.bind(this));
+        this.view.getEventEl().on(ludo.util.getDragMoveEvent(), this.touchMove.bind(this));
+        this.view.getEventEl().on(ludo.util.getDragEndEvent(), this.touchEnd.bind(this));
+
+    },
+
+    getParentForNewChild: function () {
+        if (this.parentDiv == undefined) {
+            this.parentDiv = $('<div style="position:absolute"></div>');
+            this.view.getBody().append(this.parentDiv);
+            this.parentDiv.on(ludo.util.getDragStartEvent(), this.touchStart.bind(this));
+        }
+        return this.parentDiv;
+    },
+
+
+    beforeFirstResize: function () {
+        this.resizeParentDiv();
+        var selectedIndex = 0;
+        for (var i = 0; i < this.view.children.length; i++) {
+            if (this.view.children[i].layout.visible) {
+                selectedIndex = i;
+            }
+        }
+        this.makeViewsVisible(selectedIndex);
+        this.setVisiblePageIndex(selectedIndex);
+    },
+
+    makeViewsVisible: function (index) {
+        console.log(index);
+        this.view.children[index].show();
+        if (index > 0) {
+            this.view.children[index - 1].show();
+        }
+        if (index < this.view.children.length - 1) {
+            this.view.children[index + 1].show();
         }
     },
-    addChild:function (child, insertAt, pos) {
-        if (!child.layout || !child.layout.visible)child.hidden = true;
-        return this.parent(child, insertAt, pos);
+
+
+    resizeParentDiv: function () {
+        if (this.parentDiv == undefined)return;
+
+        var w = this.viewport.width * (this.orientation == 'horizontal' ? this.view.children.length : 1);
+        var h = this.viewport.height * (this.orientation == 'vertical' ? this.view.children.length : 1);
+
+        this.parentDiv.css({
+            width: w, height: h
+        });
     },
-    onNewChild:function (child) {
-        this.parent(child);
+
+    addChild: function (child, insertAt, pos) {
+        child.layout = child.layout || {};
+        if (!child.layout.visible)child.hidden = true;
+        child.layout.width = this.viewport.width;
+        child.layout.height = this.viewport.height;
+        child.layout.viewPagerIndex = this.view.children.length;
+
+        var ret = this.parent(child, insertAt, pos);
+        this.resizeParentDiv();
+
+        return ret;
+    },
+    onNewChild: function (child) {
+
         child.getEl().css('position', 'absolute');
-        child.addEvent('show', this.setVisiblePage.bind(this));
+        child.addEvent('show', this.onChildShow.bind(this));
+        child.addEvent('render', this.onPageRender.bind(this));
+
         child.applyTo = this.view;
-        if (this.shouldSetPageVisible(child)) {
-            this.visiblePage = child;
-            child.show();
+        if (this.dragging)this.addDragEvents(child);
+    },
+
+    onChildShow: function (child) {
+        this.positionPage(child);
+    },
+
+    addDragEvents: function (child) {
+
+    },
+
+    resize: function () {
+        for (var i = 0; i < this.view.children.length; i++) {
+            var v = this.view.children[i];
+            if (!v.hidden) {
+                v.resize({height: this.viewport.height, width: this.viewport.width});
+            }
         }
-        if(this.dragging)this.addDragEvents(child);
+
+        this.positionPage(this.getVisiblePage());
+
+        this.parentDiv.css(this.getAnimation(this.visiblePageIndex));
+
     },
 
-    addDragEvents:function (child) {
-        child.getBody().on(ludo.util.getDragStartEvent(), this.touchStart.bind(this));
-        child.getEventEl().on(ludo.util.getDragMoveEvent(), this.touchMove.bind(this));
-        child.getEventEl().on(ludo.util.getDragEndEvent(), this.touchEnd.bind(this));
+    getVisiblePage: function () {
+        return this.view.children[this.visiblePageIndex];
     },
 
-    resize:function () {
-        if (this.visiblePage === undefined) {
-            this.view.children[0].show();
-        }
-        var height = this.view.getBody().height();
-        var width = this.view.getBody().width();
-        if (this.visiblePage) {
-            this.visiblePage.resize({ height:height, width:width });
-        }
-    },
-
-    getVisiblePage:function () {
-        return this.visiblePage;
-    },
-
-    shouldSetPageVisible:function (page) {
+    shouldSetPageVisible: function (page) {
         return page.layout && page.layout.visible == true;
-    },
-
-    /**
-     * Return reference to previus card of passed card
-     * @function getPreviousPageOf
-     * @param {View} view
-     * @return View
-     */
-    getPreviousPageOf:function (view) {
-        var index = this.view.children.indexOf(view);
-        return index > 0 ? this.view.children[index - 1] : undefined;
-    },
-
-    getNextPageOf:function (page) {
-        var index = this.view.children.indexOf(page);
-        return index < this.view.children.length - 1 ? this.view.children[index + 1] : undefined;
     },
 
     /**
@@ -100,19 +143,37 @@ ludo.layout.ViewPager = new Class({
      * @param {Boolean} skipAnimation (optional)
      * @return {Boolean} success
      */
-    showPreviousPage:function (skipAnimation) {
-        if (skipAnimation) {
-            this.temporaryDisableAnimation();
-        }
-        if (this.visiblePage) {
-            var page = this.getPreviousPageOf(this.visiblePage);
-            if (page) {
-                page.show();
-                return true;
-            }
-        }
-        return false;
+    showPreviousPage: function (skipAnimation) {
+        return this.goToPage(this.visiblePageIndex-1);
     },
+
+    goToPage:function(pageIndex){
+        if(pageIndex < 0 || pageIndex >= this.view.children.length)return false;
+        this.setVisiblePageIndex(pageIndex);
+        this.animateToSelected();
+        this.makeViewsVisible(pageIndex);
+        return true;
+    },
+
+    animateToSelected: function () {
+        this.animateTo(this.visiblePageIndex);
+    },
+
+    animateTo: function (childIndex) {
+        this.parentDiv.animate(this.getAnimation(childIndex), this.animationDuration);
+    },
+
+    getAnimation: function (childIndex) {
+        var ret = {};
+        var key = this.orientation == 'horizontal' ? 'left' : 'top';
+        ret[key] = this.getParentPos(childIndex);
+        return ret;
+    },
+
+    getParentPos: function (childIndex) {
+        return this.orientation == 'horizontal' ? this.viewport.width * childIndex * -1 : this.viewport.height * childIndex;
+    },
+
 
     /**
      * Show next card of current visible card
@@ -120,44 +181,32 @@ ludo.layout.ViewPager = new Class({
      * @param {Boolean} skipAnimation (optional)
      * @return {Boolean} success
      */
-    showNextPage:function (skipAnimation) {
-        if (skipAnimation) {
-            this.temporaryDisableAnimation();
-        }
-        if (this.visiblePage) {
-            var page = this.getNextPageOf(this.visiblePage);
-            if (page) {
-                page.show();
-                return true;
-            }
-        }
-        return false;
+    showNextPage: function (animate) {
+        return this.goToPage(this.visiblePageIndex+1);
     },
 
 
-    temporaryDisableAnimation:function () {
+    temporaryDisableAnimation: function () {
         this.animate = false;
         this.resetAnimation.delay(500, this);
     },
 
-    resetAnimation:function () {
+    resetAnimation: function () {
         this.animate = this.initialAnimate;
     },
 
-    setTemporaryZIndexOfVisiblePage:function () {
-        var zIndex = ludo.util.getNewZIndex(this.visiblePage);
-        this.visiblePage.getEl().css('zIndex',  zIndex + 100);
-    },
-
     /**
-     * Show a card with this name
+     * Show Child View with this name
      * @function showPage
      * @param {String} name
      * @return {Boolean} success
      */
-    showPage:function (name) {
-        if (this.view.child[name]) {
-            this.view.child[name].show();
+    showPage: function (name) {
+        var c = this.view.child[name];
+        if (c != undefined) {
+            var i = this.view.children.indexOf(c);
+            this.setVisiblePageIndex(i);
+            this.animateToSelected();
             return true;
         }
         return false;
@@ -168,7 +217,7 @@ ludo.layout.ViewPager = new Class({
      * @param {View} page
      * @return Boolean
      */
-    isLastPage:function (page) {
+    isLastPage: function (page) {
         return this.view.children.indexOf(page) == this.view.children.length - 1;
     },
     /**
@@ -177,24 +226,39 @@ ludo.layout.ViewPager = new Class({
      * @param  {View} page
      * @return {Boolean}
      */
-    isFirstPage:function (page) {
+    isFirstPage: function (page) {
         return this.view.children.indexOf(page) == 0;
     },
 
-    setVisiblePage:function (page) {
+    onPageRender: function (page) {
+        page.resize({
+            width: this.viewport.width,
+            height: this.viewport.height
+        });
+    },
+
+    positionPage: function (page) {
+        var prop = this.orientation == 'horizontal' ? 'left' : 'top';
+        var size = this.orientation == 'horizontal' ? this.viewport.width : this.viewport.height;
+        var val = size * page.layout.viewPagerIndex;
+        page.getEl().css(prop, val);
+    },
+
+    setVisiblePageIndex: function (pageIndex) {
+
 
         this.removeValidationEvents();
 
         var indexDiff = 0;
-        if (this.visiblePage) {
-            var indexOld = this.view.children.indexOf(this.visiblePage);
-            var indexNew = this.view.children.indexOf(page);
-            indexDiff = indexNew - indexOld;
+        if (this.visiblePageIndex != undefined) {
+            indexDiff = pageIndex - this.visiblePageIndex;
         }
 
-        this.visiblePage = page;
+        this.visiblePageIndex = pageIndex;
 
         this.addValidationEvents();
+
+        var page = this.getVisiblePage();
 
         if (indexDiff > 0) {
             /**
@@ -259,24 +323,24 @@ ludo.layout.ViewPager = new Class({
         }
     },
 
-    removeValidationEvents:function () {
-        if (this.visiblePage) {
-            this.visiblePage.removeEvent('invalid', this.setInvalid);
-            this.visiblePage.removeEvent('valid', this.setValid);
+    removeValidationEvents: function () {
+        if (this.visiblePageIndex != undefined) {
+            this.getVisiblePage().removeEvent('invalid', this.setInvalid);
+            this.getVisiblePage().removeEvent('valid', this.setValid);
         }
     },
 
-    addValidationEvents:function () {
-        var manager = this.visiblePage.getForm();
+    addValidationEvents: function () {
+        var manager = this.getVisiblePage().getForm();
         manager.addEvent('invalid', this.setInvalid.bind(this));
         manager.addEvent('valid', this.setValid.bind(this));
         manager.validate();
     },
-    setInvalid:function () {
+    setInvalid: function () {
         this.fireEvent('invalid', this);
     },
 
-    setValid:function () {
+    setValid: function () {
         this.fireEvent('valid', this);
     },
     /**
@@ -284,16 +348,16 @@ ludo.layout.ViewPager = new Class({
      * @function showFirstPage
      * @return void
      */
-    showFirstPage:function () {
-        if (this.view.children.length > 0)this.view.children[0].show();
+    showFirstPage: function () {
+        if (this.view.children.length > 0)this.goToPage(0);
     },
     /**
      * Show last card in deck
      * @function showLastPage
      * @return void
      */
-    showLastPage:function () {
-        if (this.view.children.length > 0)this.view.children[this.view.children.length - 1].show();
+    showLastPage: function () {
+        this.goToPage(this.view.children.length-1);
     },
 
     /**
@@ -302,7 +366,7 @@ ludo.layout.ViewPager = new Class({
      * @public
      * @return {Boolean}
      */
-    isValid:function () {
+    isValid: function () {
         if (this.visiblePage) {
             return this.visiblePage.getForm().isValid();
         }
@@ -313,7 +377,7 @@ ludo.layout.ViewPager = new Class({
      * @function getCountPages
      * @return {Number} count cards
      */
-    getCountPages:function () {
+    getCountPages: function () {
         return this.view.children.length;
     },
     /**
@@ -321,7 +385,7 @@ ludo.layout.ViewPager = new Class({
      * @function getIndexOfVisiblePage
      * @return {Number} card index
      */
-    getIndexOfVisiblePage:function () {
+    getIndexOfVisiblePage: function () {
         return this.visiblePage ? this.view.children.indexOf(this.visiblePage) : 0;
     },
 
@@ -330,7 +394,7 @@ ludo.layout.ViewPager = new Class({
      * @function isOnFirstPage
      * @return {Boolean} is on first card
      */
-    isOnFirstPage:function () {
+    isOnFirstPage: function () {
         return this.getIndexOfVisiblePage() == 0;
     },
     /**
@@ -338,7 +402,7 @@ ludo.layout.ViewPager = new Class({
      * @function isOnLastPage
      * @return {Boolean} is on last card
      */
-    isOnLastPage:function () {
+    isOnLastPage: function () {
         return this.getIndexOfVisiblePage() == this.view.children.length - 1;
     },
 
@@ -347,13 +411,13 @@ ludo.layout.ViewPager = new Class({
      * @function getPercentCompleted
      * @return {Number} percent
      */
-    getPercentCompleted:function () {
+    getPercentCompleted: function () {
         return Math.round((this.getIndexOfVisiblePage() + 1 ) / this.view.children.length * 100);
     },
 
-    animateHigherPage:function () {
-        if(this.animate){
-            if (this.orientation=='horizontal') {
+    animateHigherPage: function () {
+        if (this.animate) {
+            if (this.orientation == 'horizontal') {
                 this.animateFromRight();
             } else {
                 this.animateFromBottom();
@@ -361,95 +425,41 @@ ludo.layout.ViewPager = new Class({
         }
     },
 
-    animateLowerPage:function () {
-        if(this.animate){
-            if (this.orientation=='horizontal') {
-                this.animateFromLeft();
-            } else {
-                this.animateFromTop();
-            }
-        }
-    },
-
-    animateFromRight:function () {
-        this.animateAlongX(this.visiblePage.getParent().getBody().width(), 0);
-    },
-
-    animateFromLeft:function () {
-        this.animateAlongX(this.visiblePage.getParent().getBody().width() * -1, 0);
-    },
-
-    animateFromTop:function () {
-        this.animateAlongY(this.visiblePage.getParent().getBody().height() * -1, 0);
-    },
-
-    animateFromBottom:function () {
-        this.animateAlongY(this.visiblePage.getParent().getBody().height(), 0);
-    },
-
-    animateAlongX:function (from, to) {
-        this.visiblePage.getEl().css('left', from + 'px');
-        var el = this.visiblePage.getEl();
-        this.visiblePage.getEl().animate({
-            left: to
-        }, this.animationDuration, function(){
-            el.css({
-                left:0,top:0,borderWidth:0
-            });
-        });
-    },
-
-    animateAlongY:function (from, to) {
-        this.visiblePage.getEl().css('top', from + 'px');
-
-        var el = this.visiblePage.getEl();
-        this.visiblePage.getEl().animate({
-            top: to
-        }, this.animationDuration, function(){
-            el.css({
-                top:0,top:0,borderWidth:0
-            });
-        });
-        /*
-         this.getFx().start({
-         'top':[from, to]
-         });*/
-    },
-
-    animationStart:function(){
+    animationStart: function () {
         // TODO apply shadow or border during dragging and animation.
     },
 
-    animationComplete:function (el) {
+    animationComplete: function (el) {
 
         el.css({
-            left:0,top:0,borderWidth:0
+            left: 0, top: 0, borderWidth: 0
         });
 
     },
 
-    touchStart:function (e) {
+    touchStart: function (e) {
         if (this.isOnFormElement(e.target))return undefined;
-        var isFirstPage = this.isFirstPage(this.visiblePage);
-        var isValid = this.visiblePage.getForm().isValid();
+        var isFirstPage = this.visiblePageIndex == 0;
+        var isValid = this.view.children[this.visiblePageIndex].getForm().isValid();
         if (!isValid && isFirstPage) {
             return undefined;
         }
 
-        var isLastPage = this.isLastPage(this.visiblePage);
-        this.renderNextAndPreviousPage();
-        var animateX = this.orientation=='horizontal';
-        var parentSize = animateX ? this.view.getEl().width() : this.view.getEl().height();
+        var animateX = this.orientation == 'horizontal';
+        var parentSize = animateX ? this.viewport.width : this.viewport.height;
+
+        var min = this.visiblePageIndex < this.view.children.length-1 ? (parentSize * -1) : 0;
+        var max = this.visiblePageIndex > 0 ? parentSize : 0;
+
+
         this.touch = {
-            active:true,
-            pos:animateX ? e.pageX : e.pageY,
-            previousPage:this.getPreviousPageOf(this.visiblePage),
-            nextPage:this.getNextPageOf(this.visiblePage),
-            animateX:animateX,
-            zIndex:this.visiblePage.getEl().css('z-index'),
-            max:isFirstPage ? 0 : parentSize,
-            min:(isLastPage || !isValid) ? 0 : parentSize * -1,
-            previousPos:0
+            active: true,
+            pos: animateX ? e.pageX : e.pageY,
+            animateX: animateX,
+            min: min,
+            max: max,
+            currentPos: this.parentDiv.position(),
+            previousPos: 0
         };
         if (e.target.tagName.toLowerCase() == 'img') {
             return false;
@@ -458,7 +468,7 @@ ludo.layout.ViewPager = new Class({
     },
 
 
-    touchMove:function (e) {
+    touchMove: function (e) {
         if (this.touch && this.touch.active) {
             var pos;
             var key;
@@ -466,7 +476,7 @@ ludo.layout.ViewPager = new Class({
                 pos = e.pageX - this.touch.pos;
                 key = 'left';
             } else {
-                pos = e.pageY- this.touch.pos;
+                pos = e.pageY - this.touch.pos;
                 key = 'top'
             }
 
@@ -476,84 +486,33 @@ ludo.layout.ViewPager = new Class({
             this.setZIndexOfOtherPages(pos);
             this.touch.previousPos = pos;
 
-            this.visiblePage.getEl().css(key, pos + 'px');
+            pos += this.touch.currentPos[key];
+
+            this.parentDiv.css(key, pos + 'px');
             return false;
         }
         return undefined;
     },
 
-    setZIndexOfOtherPages:function (pos) {
-        if (pos > 0 && this.touch.previousPos <= 0) {
-            if (this.touch.nextPage) {
-                this.touch.nextPage.getEl().css('zIndex', (this.touch.zIndex - 3));
-            }
-            if (this.touch.previousPage) {
-                this.touch.previousPage.getEl().css('zIndex', this.touch.zIndex - 1);
-            }
-        } else if (pos < 0 && this.touch.previousPos >= 0) {
-            if (this.touch.nextPage) {
-                this.touch.nextPage.getEl().css('zIndex', this.touch.zIndex - 1);
-            }
-            if (this.touch.previousPage) {
-                this.touch.previousPage.getEl().css('zIndex', this.touch.zIndex - 3);
-            }
-        }
+    setZIndexOfOtherPages: function (pos) {
     },
 
-    touchEnd:function () {
+    touchEnd: function () {
         if (this.touch.active) {
             this.touch.active = false;
             var pos = this.touch.previousPos;
             if (pos > 0 && this.touch.max && pos > (this.touch.max / 2)) {
-                this.animateToPrevious();
+                this.showPreviousPage();
             } else if (pos < 0 && pos < (this.touch.min / 2)) {
-                this.animateToNext();
+                this.showNextPage();
             } else {
-                this.visiblePage.getEl().css((this.touch.animateX ? 'left' : 'top'), 0);
+                this.animateToSelected();
             }
         }
     },
 
-    isOnFormElement:function (el) {
+    isOnFormElement: function (el) {
         var tag = el.tagName.toLowerCase();
-        return tag == 'input' || tag == 'textarea'  || tag === 'select';
-    },
-
-    renderNextAndPreviousPage:function () {
-        this.setTemporaryZIndexOfVisiblePage();
-
-        var id = this.visiblePage.id;
-
-        this.temporaryDisableAnimation();
-        var card;
-        var skipEvents = true;
-        if (card = this.getPreviousPageOf(ludo.get(id))) {
-            card.show(skipEvents);
-        }
-        if (card = this.getNextPageOf(ludo.get(id))) {
-            card.show(skipEvents);
-        }
-        ludo.get(id).show();
-
-    },
-
-    animateToPrevious:function () {
-        var pos= this.visiblePage.getEl().position();
-        if (this.touch.animateX) {
-            this.animateAlongX(pos.left, this.view.getEl().width());
-        } else {
-            this.animateAlongY(pos.top, this.view.getEl().height());
-        }
-        this.showPreviousPage.delay(this.animationDuration, this, true);
-    },
-
-    animateToNext:function () {
-        var pos= this.visiblePage.getEl().position();
-        if (this.touch.animateX) {
-            this.animateAlongX(pos.left, this.view.getEl().width() * -1);
-        } else {
-            this.animateAlongY(pos.top, this.view.getEl().height() * -1);
-        }
-        this.showNextPage.delay(this.animationDuration, this, true);
+        return tag == 'input' || tag == 'textarea' || tag === 'select';
     }
 });

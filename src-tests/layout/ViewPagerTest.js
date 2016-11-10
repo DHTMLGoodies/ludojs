@@ -268,17 +268,6 @@ TestCase("ViewPagerLayout", {
 		// then
 		assertEquals('card1', deck.getLayout().getVisiblePage().getName());
 	},
-	"test should be able to find next card":function () {
-		// given
-		var deck = this.getDeck();
-		var card1 = deck.child['card1'];
-		var card2 = deck.child['card2'];
-		// when
-		var nextPage = deck.getLayout().getNextPageOf(card1);
-
-		// then
-		assertEquals('card2', nextPage.getName());
-	},
 
 	"test should be able to show next card":function () {
 		var deck = this.getDeck();
@@ -310,24 +299,15 @@ TestCase("ViewPagerLayout", {
 		assertEquals('card4', deck.getLayout().getVisiblePage().getName());
 		assertFalse(card4.isHidden());
 	},
-	"test should be able to find previous card":function () {
-		// given
-		var deck = this.getDeck();
-		var card1 = deck.child['card1'];
-		var card2 = deck.child['card2'];
-		// when
-		var previousPage = deck.getLayout().getPreviousPageOf(card2);
 
-		// then
-		assertEquals('card1', previousPage.getName());
-	},
 	"test should be able to show previous card":function () {
 		var deck = this.getDeck();
 		var card1 = deck.child['card1'];
 		var card2 = deck.child['card2'];
 		assertEquals('Initial card is wrong', 'card1', deck.getLayout().getVisiblePage().getName());
 
-		card2.show();
+		deck.getLayout().showPage('card2');
+
 		// when
 		assertEquals('card2', deck.getLayout().getVisiblePage().getName());
 
@@ -537,17 +517,6 @@ TestCase("ViewPagerLayout", {
 		assertEquals(5, deckWith5Pages.getLayout().getCountPages())
 
 	},
-	"test should find index of current card":function () {
-		// given
-		var deck = this.getDeck();
-
-		// when
-		deck.getLayout().showPage('card3');
-
-		// then
-		assertEquals(2, deck.getLayout().getIndexOfVisiblePage());
-	},
-
 
 	"getDialogWithDeckAndButtons":function () {
 		var id = String.uniqueID();

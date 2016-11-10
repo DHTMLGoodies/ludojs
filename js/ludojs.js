@@ -1,7 +1,7 @@
-/* Generated Thu Nov 10 19:46:44 CET 2016 */
+/* Generated Thu Nov 10 23:23:04 CET 2016 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.51
+ludoJS - Javascript framework, 1.1.55
 Copyright (C) 2012-2016  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -6137,10 +6137,7 @@ ludo.layout.Base = new Class({
     firstResized : false,
 
 	resizeChildren:function () {
-        if(!this.firstResized){
-            this.beforeFirstResize();
-            this.firstResized = true;
-        }
+
 		if (this.benchmarkTime) {
 			var start = new Date().getTime();
 		}
@@ -6152,6 +6149,11 @@ ludo.layout.Base = new Class({
 		}
 
 		this.storeViewPortSize();
+
+		if(!this.firstResized){
+			this.beforeFirstResize();
+			this.firstResized = true;
+		}
 
 		this.resize();
 		if (this.benchmarkTime) {
@@ -15568,8 +15570,8 @@ ludo.layout.LinearHorizontal = new Class({
 	Extends:ludo.layout.Linear,
 
 	resize:function () {
-		var totalWidth = this.view.getInnerWidthOfBody();
-		var height = this.hasDynamicHeight() ? 'auto' : this.view.getInnerHeightOfBody();
+		var totalWidth = this.view.getBody().width();
+		var height = this.hasDynamicHeight() ? 'auto' : this.view.getBody().height();
 		if (height == 0) {
 			return;
 		}
@@ -15721,86 +15723,143 @@ ludo.layout.LinearVertical = new Class({
 		}
 	}
 });/* ../ludojs/src/layout/view-pager.js */
+/**
+ * The ViewPager layout displays one child view at a time. You can swipe between pages or
+ * go to a specific page using code.
+ * @namespace ludo.layout
+ * @class ludo.layout.ViewPager
+ * @param {Object} config
+ * @param {Boolean} config.dragging - True to support support page navigation with mouse and touch drag events. Default: true
+ * @param {Boolean} config.animate - Animate transition between pages. Default: true
+ * @param {Number} config.animationDuration - Duration of animation in milliseconds(1/1000s), Default: 250
+ * @param {String} config.orientation - Orientation of child views, horizontal or vertical. When orientation is horizontal
+ * you swipe left and right to switch between child views. With linear orientation, you swipe up and down.
+ *
+ *
+ */
 ludo.layout.ViewPager = new Class({
-    Extends:ludo.layout.Base,
-    visiblePage:undefined,
-    animate:false,
-    initialAnimate:false,
-    animationDuration:.25,
-    animateX:true,
-    touch:{},
-    dragging:true,
+    Extends: ludo.layout.Base,
+    visiblePageIndex: undefined,
+    animate: true,
+    initialAnimate: false,
+    animationDuration: 250,
+    touch: {},
+    dragging: true,
+    orientation: 'horizontal',
 
-    onCreate:function () {
+    parentDiv: undefined,
+
+
+    onCreate: function () {
         this.parent();
         var l = this.view.layout;
 
         if (l.animate !== undefined)this.animate = l.animate;
         if (l.dragging !== undefined)this.dragging = l.dragging;
         if (l.animationDuration !== undefined)this.animationDuration = l.animationDuration;
-        if (l.animateX !== undefined)this.animateX = l.animateX;
+        if (l.orientation !== undefined)this.orientation = l.orientation;
         this.initialAnimate = this.animate;
 
-        if (this.animate) {
-            this.addEvent('higherpage', this.animateHigherPage.bind(this));
-            this.addEvent('lowerpage', this.animateLowerPage.bind(this));
+        this.view.getEventEl().on(ludo.util.getDragMoveEvent(), this.touchMove.bind(this));
+        this.view.getEventEl().on(ludo.util.getDragEndEvent(), this.touchEnd.bind(this));
+
+    },
+
+    getParentForNewChild: function () {
+        if (this.parentDiv == undefined) {
+            this.parentDiv = $('<div style="position:absolute"></div>');
+            this.view.getBody().append(this.parentDiv);
+            this.parentDiv.on(ludo.util.getDragStartEvent(), this.touchStart.bind(this));
+        }
+        return this.parentDiv;
+    },
+
+
+    beforeFirstResize: function () {
+        this.resizeParentDiv();
+        var selectedIndex = 0;
+        for (var i = 0; i < this.view.children.length; i++) {
+            if (this.view.children[i].layout.visible) {
+                selectedIndex = i;
+            }
+        }
+        this.makeViewsVisible(selectedIndex);
+        this.setVisiblePageIndex(selectedIndex);
+    },
+
+    makeViewsVisible: function (index) {
+        console.log(index);
+        this.view.children[index].show();
+        if (index > 0) {
+            this.view.children[index - 1].show();
+        }
+        if (index < this.view.children.length - 1) {
+            this.view.children[index + 1].show();
         }
     },
-    addChild:function (child, insertAt, pos) {
-        if (!child.layout || !child.layout.visible)child.hidden = true;
-        return this.parent(child, insertAt, pos);
+
+
+    resizeParentDiv: function () {
+        if (this.parentDiv == undefined)return;
+
+        var w = this.viewport.width * (this.orientation == 'horizontal' ? this.view.children.length : 1);
+        var h = this.viewport.height * (this.orientation == 'vertical' ? this.view.children.length : 1);
+
+        this.parentDiv.css({
+            width: w, height: h
+        });
     },
-    onNewChild:function (child) {
-        this.parent(child);
+
+    addChild: function (child, insertAt, pos) {
+        child.layout = child.layout || {};
+        if (!child.layout.visible)child.hidden = true;
+        child.layout.width = this.viewport.width;
+        child.layout.height = this.viewport.height;
+        child.layout.viewPagerIndex = this.view.children.length;
+
+        var ret = this.parent(child, insertAt, pos);
+        this.resizeParentDiv();
+
+        return ret;
+    },
+    onNewChild: function (child) {
+
         child.getEl().css('position', 'absolute');
-        child.addEvent('show', this.setVisiblePage.bind(this));
+        child.addEvent('show', this.onChildShow.bind(this));
+        child.addEvent('render', this.onPageRender.bind(this));
+
         child.applyTo = this.view;
-        if (this.shouldSetPageVisible(child)) {
-            this.visiblePage = child;
-            child.show();
+        if (this.dragging)this.addDragEvents(child);
+    },
+
+    onChildShow: function (child) {
+        this.positionPage(child);
+    },
+
+    addDragEvents: function (child) {
+
+    },
+
+    resize: function () {
+        for (var i = 0; i < this.view.children.length; i++) {
+            var v = this.view.children[i];
+            if (!v.hidden) {
+                v.resize({height: this.viewport.height, width: this.viewport.width});
+            }
         }
-        if(this.dragging)this.addDragEvents(child);
+
+        this.positionPage(this.getVisiblePage());
+
+        this.parentDiv.css(this.getAnimation(this.visiblePageIndex));
+
     },
 
-    addDragEvents:function (child) {
-        child.getBody().on(ludo.util.getDragStartEvent(), this.touchStart.bind(this));
-        child.getEventEl().on(ludo.util.getDragMoveEvent(), this.touchMove.bind(this));
-        child.getEventEl().on(ludo.util.getDragEndEvent(), this.touchEnd.bind(this));
+    getVisiblePage: function () {
+        return this.view.children[this.visiblePageIndex];
     },
 
-    resize:function () {
-        if (this.visiblePage === undefined) {
-            this.view.children[0].show();
-        }
-        var height = this.view.getBody().height();
-        var width = this.view.getBody().width();
-        if (this.visiblePage) {
-            this.visiblePage.resize({ height:height, width:width });
-        }
-    },
-
-    getVisiblePage:function () {
-        return this.visiblePage;
-    },
-
-    shouldSetPageVisible:function (card) {
-        return card.layout && card.layout.visible == true;
-    },
-
-    /**
-     * Return reference to previus card of passed card
-     * @function getPreviousPageOf
-     * @param {View} view
-     * @return View
-     */
-    getPreviousPageOf:function (view) {
-        var index = this.view.children.indexOf(view);
-        return index > 0 ? this.view.children[index - 1] : undefined;
-    },
-
-    getNextPageOf:function (card) {
-        var index = this.view.children.indexOf(card);
-        return index < this.view.children.length - 1 ? this.view.children[index + 1] : undefined;
+    shouldSetPageVisible: function (page) {
+        return page.layout && page.layout.visible == true;
     },
 
     /**
@@ -15809,19 +15868,37 @@ ludo.layout.ViewPager = new Class({
      * @param {Boolean} skipAnimation (optional)
      * @return {Boolean} success
      */
-    showPreviousPage:function (skipAnimation) {
-        if (skipAnimation) {
-            this.temporaryDisableAnimation();
-        }
-        if (this.visiblePage) {
-            var card = this.getPreviousPageOf(this.visiblePage);
-            if (card) {
-                card.show();
-                return true;
-            }
-        }
-        return false;
+    showPreviousPage: function (skipAnimation) {
+        return this.goToPage(this.visiblePageIndex-1);
     },
+
+    goToPage:function(pageIndex){
+        if(pageIndex < 0 || pageIndex >= this.view.children.length)return false;
+        this.setVisiblePageIndex(pageIndex);
+        this.animateToSelected();
+        this.makeViewsVisible(pageIndex);
+        return true;
+    },
+
+    animateToSelected: function () {
+        this.animateTo(this.visiblePageIndex);
+    },
+
+    animateTo: function (childIndex) {
+        this.parentDiv.animate(this.getAnimation(childIndex), this.animationDuration);
+    },
+
+    getAnimation: function (childIndex) {
+        var ret = {};
+        var key = this.orientation == 'horizontal' ? 'left' : 'top';
+        ret[key] = this.getParentPos(childIndex);
+        return ret;
+    },
+
+    getParentPos: function (childIndex) {
+        return this.orientation == 'horizontal' ? this.viewport.width * childIndex * -1 : this.viewport.height * childIndex;
+    },
+
 
     /**
      * Show next card of current visible card
@@ -15829,44 +15906,32 @@ ludo.layout.ViewPager = new Class({
      * @param {Boolean} skipAnimation (optional)
      * @return {Boolean} success
      */
-    showNextPage:function (skipAnimation) {
-        if (skipAnimation) {
-            this.temporaryDisableAnimation();
-        }
-        if (this.visiblePage) {
-            var card = this.getNextPageOf(this.visiblePage);
-            if (card) {
-                card.show();
-                return true;
-            }
-        }
-        return false;
+    showNextPage: function (animate) {
+        return this.goToPage(this.visiblePageIndex+1);
     },
 
 
-    temporaryDisableAnimation:function () {
+    temporaryDisableAnimation: function () {
         this.animate = false;
         this.resetAnimation.delay(500, this);
     },
 
-    resetAnimation:function () {
+    resetAnimation: function () {
         this.animate = this.initialAnimate;
     },
 
-    setTemporaryZIndexOfVisiblePage:function () {
-        var zIndex = ludo.util.getNewZIndex(this.visiblePage);
-        this.visiblePage.getEl().css('zIndex',  zIndex + 100);
-    },
-
     /**
-     * Show a card with this name
+     * Show Child View with this name
      * @function showPage
      * @param {String} name
      * @return {Boolean} success
      */
-    showPage:function (name) {
-        if (this.view.child[name]) {
-            this.view.child[name].show();
+    showPage: function (name) {
+        var c = this.view.child[name];
+        if (c != undefined) {
+            var i = this.view.children.indexOf(c);
+            this.setVisiblePageIndex(i);
+            this.animateToSelected();
             return true;
         }
         return false;
@@ -15874,36 +15939,51 @@ ludo.layout.ViewPager = new Class({
     /**
      * Return true if passed card is last card in deck
      * @function isLastPage
-     * @param {View} card
+     * @param {View} page
      * @return Boolean
      */
-    isLastPage:function (card) {
-        return this.view.children.indexOf(card) == this.view.children.length - 1;
+    isLastPage: function (page) {
+        return this.view.children.indexOf(page) == this.view.children.length - 1;
     },
     /**
      * Return true if passed card is first card in deck
      * @function isFirstPage
-     * @param  {View} card
+     * @param  {View} page
      * @return {Boolean}
      */
-    isFirstPage:function (card) {
-        return this.view.children.indexOf(card) == 0;
+    isFirstPage: function (page) {
+        return this.view.children.indexOf(page) == 0;
     },
 
-    setVisiblePage:function (card) {
+    onPageRender: function (page) {
+        page.resize({
+            width: this.viewport.width,
+            height: this.viewport.height
+        });
+    },
+
+    positionPage: function (page) {
+        var prop = this.orientation == 'horizontal' ? 'left' : 'top';
+        var size = this.orientation == 'horizontal' ? this.viewport.width : this.viewport.height;
+        var val = size * page.layout.viewPagerIndex;
+        page.getEl().css(prop, val);
+    },
+
+    setVisiblePageIndex: function (pageIndex) {
+
 
         this.removeValidationEvents();
 
         var indexDiff = 0;
-        if (this.visiblePage) {
-            var indexOld = this.view.children.indexOf(this.visiblePage);
-            var indexNew = this.view.children.indexOf(card);
-            indexDiff = indexNew - indexOld;
+        if (this.visiblePageIndex != undefined) {
+            indexDiff = pageIndex - this.visiblePageIndex;
         }
 
-        this.visiblePage = card;
+        this.visiblePageIndex = pageIndex;
 
         this.addValidationEvents();
+
+        var page = this.getVisiblePage();
 
         if (indexDiff > 0) {
             /**
@@ -15912,7 +15992,7 @@ ludo.layout.ViewPager = new Class({
              * @param {layout.Page} this deck
              * @param {View} shown card
              */
-            this.fireEvent('higherpage', [this, card]);
+            this.fireEvent('higherpage', [this, page]);
         } else if (indexDiff < 0) {
             /**
              * Event fired when a lower card than current is shown
@@ -15920,7 +16000,7 @@ ludo.layout.ViewPager = new Class({
              * @param {layout.Page} this deck
              * @param {View} shown card
              */
-            this.fireEvent('lowerpage', [this, card]);
+            this.fireEvent('lowerpage', [this, page]);
         }
 
         /**
@@ -15931,14 +16011,14 @@ ludo.layout.ViewPager = new Class({
          */
         this.fireEvent('showpage', [this, this.visiblePage]);
 
-        if (this.isLastPage(card)) {
+        if (this.isLastPage(page)) {
             /**
              * Event fired when last card of deck is shown
              * @event lastpage
              * @param {layout.Page} this card
              * @param {View} shown card
              */
-            this.fireEvent('lastpage', [this, card]);
+            this.fireEvent('lastpage', [this, page]);
         } else {
             /**
              * Event fired when na card which is not the last card in the deck is shown
@@ -15946,16 +16026,16 @@ ludo.layout.ViewPager = new Class({
              * @param {layout.Page} this card
              * @param {View} shown card
              */
-            this.fireEvent('notlastpage', [this, card]);
+            this.fireEvent('notlastpage', [this, page]);
         }
-        if (this.isFirstPage(card)) {
+        if (this.isFirstPage(page)) {
             /**
              * Event fired when first card of deck is shown
              * @event firstpage
              * @param {layout.Page} this card
              * @param {View} shown card
              */
-            this.fireEvent('firstpage', [this, card]);
+            this.fireEvent('firstpage', [this, page]);
         }
         else {
             /**
@@ -15964,28 +16044,28 @@ ludo.layout.ViewPager = new Class({
              * @param {layout.Page} this card
              * @param {View} shown card
              */
-            this.fireEvent('notfirstpage', [this, card]);
+            this.fireEvent('notfirstpage', [this, page]);
         }
     },
 
-    removeValidationEvents:function () {
-        if (this.visiblePage) {
-            this.visiblePage.removeEvent('invalid', this.setInvalid);
-            this.visiblePage.removeEvent('valid', this.setValid);
+    removeValidationEvents: function () {
+        if (this.visiblePageIndex != undefined) {
+            this.getVisiblePage().removeEvent('invalid', this.setInvalid);
+            this.getVisiblePage().removeEvent('valid', this.setValid);
         }
     },
 
-    addValidationEvents:function () {
-        var manager = this.visiblePage.getForm();
+    addValidationEvents: function () {
+        var manager = this.getVisiblePage().getForm();
         manager.addEvent('invalid', this.setInvalid.bind(this));
         manager.addEvent('valid', this.setValid.bind(this));
         manager.validate();
     },
-    setInvalid:function () {
+    setInvalid: function () {
         this.fireEvent('invalid', this);
     },
 
-    setValid:function () {
+    setValid: function () {
         this.fireEvent('valid', this);
     },
     /**
@@ -15993,34 +16073,25 @@ ludo.layout.ViewPager = new Class({
      * @function showFirstPage
      * @return void
      */
-    showFirstPage:function () {
-        if (this.view.children.length > 0)this.view.children[0].show();
+    showFirstPage: function () {
+        if (this.view.children.length > 0)this.goToPage(0);
     },
     /**
      * Show last card in deck
      * @function showLastPage
      * @return void
      */
-    showLastPage:function () {
-        if (this.view.children.length > 0)this.view.children[this.view.children.length - 1].show();
+    showLastPage: function () {
+        this.goToPage(this.view.children.length-1);
     },
-    
-    button:{},
-    registerButton:function (button) {
-        console.log(button.id + ',' + button.name);
-        this.button[button.name || button.id] = button;
 
-    },
-    getButton:function (ref) {
-        return this.button[ref];
-    },
     /**
      * Returns true if form of current card is valid
      * @function isValid
      * @public
      * @return {Boolean}
      */
-    isValid:function () {
+    isValid: function () {
         if (this.visiblePage) {
             return this.visiblePage.getForm().isValid();
         }
@@ -16031,7 +16102,7 @@ ludo.layout.ViewPager = new Class({
      * @function getCountPages
      * @return {Number} count cards
      */
-    getCountPages:function () {
+    getCountPages: function () {
         return this.view.children.length;
     },
     /**
@@ -16039,7 +16110,7 @@ ludo.layout.ViewPager = new Class({
      * @function getIndexOfVisiblePage
      * @return {Number} card index
      */
-    getIndexOfVisiblePage:function () {
+    getIndexOfVisiblePage: function () {
         return this.visiblePage ? this.view.children.indexOf(this.visiblePage) : 0;
     },
 
@@ -16048,7 +16119,7 @@ ludo.layout.ViewPager = new Class({
      * @function isOnFirstPage
      * @return {Boolean} is on first card
      */
-    isOnFirstPage:function () {
+    isOnFirstPage: function () {
         return this.getIndexOfVisiblePage() == 0;
     },
     /**
@@ -16056,7 +16127,7 @@ ludo.layout.ViewPager = new Class({
      * @function isOnLastPage
      * @return {Boolean} is on last card
      */
-    isOnLastPage:function () {
+    isOnLastPage: function () {
         return this.getIndexOfVisiblePage() == this.view.children.length - 1;
     },
 
@@ -16065,13 +16136,13 @@ ludo.layout.ViewPager = new Class({
      * @function getPercentCompleted
      * @return {Number} percent
      */
-    getPercentCompleted:function () {
+    getPercentCompleted: function () {
         return Math.round((this.getIndexOfVisiblePage() + 1 ) / this.view.children.length * 100);
     },
 
-    animateHigherPage:function () {
-        if(this.animate){
-            if (this.animateX) {
+    animateHigherPage: function () {
+        if (this.animate) {
+            if (this.orientation == 'horizontal') {
                 this.animateFromRight();
             } else {
                 this.animateFromBottom();
@@ -16079,113 +16150,41 @@ ludo.layout.ViewPager = new Class({
         }
     },
 
-    animateLowerPage:function () {
-        if(this.animate){
-            if (this.animateX) {
-                this.animateFromLeft();
-            } else {
-                this.animateFromTop();
-            }
-        }
-    },
-
-    getAnimationDuration:function () {
-        return this.animationDuration * 1000;
-    },
-
-    animateFromRight:function () {
-        this.animateAlongX(this.visiblePage.getParent().getBody().width(), 0);
-    },
-
-    animateFromLeft:function () {
-        this.animateAlongX(this.visiblePage.getParent().getBody().width() * -1, 0);
-    },
-
-    animateFromTop:function () {
-        this.animateAlongY(this.visiblePage.getParent().getBody().height() * -1, 0);
-    },
-
-    animateFromBottom:function () {
-        this.animateAlongY(this.visiblePage.getParent().getBody().height(), 0);
-    },
-
-    animateAlongX:function (from, to) {
-        console.log(to);
-
-        this.visiblePage.getEl().css('left', from + 'px');
-        var el = this.visiblePage.getEl();
-        this.visiblePage.getEl().animate({
-            left: to
-        }, this.getAnimationDuration(), function(){
-            el.css({
-                left:0,top:0,borderWidth:0
-            });
-        });
-    },
-
-    animateAlongY:function (from, to) {
-        this.visiblePage.getEl().style.top = from + 'px';
-
-        var el = this.visiblePage.getEl();
-        this.visiblePage.getEl().animate({
-            left: to
-        }, this.getAnimationDuration(), function(){
-            el.css({
-                left:0,top:0,borderWidth:0
-            });
-        });
-        /*
-         this.getFx().start({
-         'top':[from, to]
-         });*/
-    },
-    fx:{},
-
-    getFx:function () {
-        if (this.fx[this.visiblePage.id] === undefined) {
-            this.fx[this.visiblePage.id] = new Fx.Morph(this.visiblePage.getEl(), {
-                duration:this.getAnimationDuration()
-            });
-            this.fx[this.visiblePage.id].addEvent('complete', this.animationComplete.bind(this));
-            this.fx[this.visiblePage.id].addEvent('start', this.animationStart.bind(this));
-        }
-        return this.fx[this.visiblePage.id];
-    },
-
-    animationStart:function(){
+    animationStart: function () {
         // TODO apply shadow or border during dragging and animation.
     },
 
-    animationComplete:function (el) {
+    animationComplete: function (el) {
 
         el.css({
-            left:0,top:0,borderWidth:0
+            left: 0, top: 0, borderWidth: 0
         });
 
     },
 
-    touchStart:function (e) {
+    touchStart: function (e) {
         if (this.isOnFormElement(e.target))return undefined;
-        var isFirstPage = this.isFirstPage(this.visiblePage);
-        var isValid = this.visiblePage.getForm().isValid();
+        var isFirstPage = this.visiblePageIndex == 0;
+        var isValid = this.view.children[this.visiblePageIndex].getForm().isValid();
         if (!isValid && isFirstPage) {
             return undefined;
         }
 
-        var isLastPage = this.isLastPage(this.visiblePage);
-        this.renderNextAndPreviousPage();
-        var animateX = this.shouldAnimateOnXAxis();
-        var parentSize = animateX ? this.view.getEl().width() : this.view.getEl().height();
+        var animateX = this.orientation == 'horizontal';
+        var parentSize = animateX ? this.viewport.width : this.viewport.height;
+
+        var min = this.visiblePageIndex < this.view.children.length-1 ? (parentSize * -1) : 0;
+        var max = this.visiblePageIndex > 0 ? parentSize : 0;
+
+
         this.touch = {
-            active:true,
-            pos:animateX ? e.pageX : e.pageY,
-            previousPage:this.getPreviousPageOf(this.visiblePage),
-            nextPage:this.getNextPageOf(this.visiblePage),
-            animateX:animateX,
-            zIndex:this.visiblePage.getEl().css('z-index'),
-            max:isFirstPage ? 0 : parentSize,
-            min:(isLastPage || !isValid) ? 0 : parentSize * -1,
-            previousPos:0
+            active: true,
+            pos: animateX ? e.pageX : e.pageY,
+            animateX: animateX,
+            min: min,
+            max: max,
+            currentPos: this.parentDiv.position(),
+            previousPos: 0
         };
         if (e.target.tagName.toLowerCase() == 'img') {
             return false;
@@ -16193,11 +16192,8 @@ ludo.layout.ViewPager = new Class({
         return false;
     },
 
-    shouldAnimateOnXAxis:function () {
-        return this.animateX;
-    },
 
-    touchMove:function (e) {
+    touchMove: function (e) {
         if (this.touch && this.touch.active) {
             var pos;
             var key;
@@ -16205,7 +16201,7 @@ ludo.layout.ViewPager = new Class({
                 pos = e.pageX - this.touch.pos;
                 key = 'left';
             } else {
-                pos = e.pageY- this.touch.pos;
+                pos = e.pageY - this.touch.pos;
                 key = 'top'
             }
 
@@ -16215,85 +16211,34 @@ ludo.layout.ViewPager = new Class({
             this.setZIndexOfOtherPages(pos);
             this.touch.previousPos = pos;
 
-            this.visiblePage.getEl().css(key, pos + 'px');
+            pos += this.touch.currentPos[key];
+
+            this.parentDiv.css(key, pos + 'px');
             return false;
         }
         return undefined;
     },
 
-    setZIndexOfOtherPages:function (pos) {
-        if (pos > 0 && this.touch.previousPos <= 0) {
-            if (this.touch.nextPage) {
-                this.touch.nextPage.getEl().css('zIndex', (this.touch.zIndex - 3));
-            }
-            if (this.touch.previousPage) {
-                this.touch.previousPage.getEl().css('zIndex', this.touch.zIndex - 1);
-            }
-        } else if (pos < 0 && this.touch.previousPos >= 0) {
-            if (this.touch.nextPage) {
-                this.touch.nextPage.getEl().css('zIndex', this.touch.zIndex - 1);
-            }
-            if (this.touch.previousPage) {
-                this.touch.previousPage.getEl().css('zIndex', this.touch.zIndex - 3);
-            }
-        }
+    setZIndexOfOtherPages: function (pos) {
     },
 
-    touchEnd:function () {
+    touchEnd: function () {
         if (this.touch.active) {
             this.touch.active = false;
             var pos = this.touch.previousPos;
             if (pos > 0 && this.touch.max && pos > (this.touch.max / 2)) {
-                this.animateToPrevious();
+                this.showPreviousPage();
             } else if (pos < 0 && pos < (this.touch.min / 2)) {
-                this.animateToNext();
+                this.showNextPage();
             } else {
-                this.visiblePage.getEl().css((this.touch.animateX ? 'left' : 'top'), 0);
+                this.animateToSelected();
             }
         }
     },
 
-    isOnFormElement:function (el) {
+    isOnFormElement: function (el) {
         var tag = el.tagName.toLowerCase();
-        return tag == 'input' || tag == 'textarea'  || tag === 'select';
-    },
-
-    renderNextAndPreviousPage:function () {
-        this.setTemporaryZIndexOfVisiblePage();
-
-        var id = this.visiblePage.id;
-
-        this.temporaryDisableAnimation();
-        var card;
-        var skipEvents = true;
-        if (card = this.getPreviousPageOf(ludo.get(id))) {
-            card.show(skipEvents);
-        }
-        if (card = this.getNextPageOf(ludo.get(id))) {
-            card.show(skipEvents);
-        }
-        ludo.get(id).show();
-
-    },
-
-    animateToPrevious:function () {
-        var pos= this.visiblePage.getEl().position();
-        if (this.touch.animateX) {
-            this.animateAlongX(pos.left, this.view.getEl().width());
-        } else {
-            this.animateAlongY(pos.top, this.view.getEl().height());
-        }
-        this.showPreviousPage.delay(this.getAnimationDuration(), this, true);
-    },
-
-    animateToNext:function () {
-        var pos= this.visiblePage.getEl().position();
-        if (this.touch.animateX) {
-            this.animateAlongX(pos.left, this.view.getEl().width() * -1);
-        } else {
-            this.animateAlongX(pos.top, this.view.getEl().height() * -1);
-        }
-        this.showNextPage.delay(this.getAnimationDuration(), this, true);
+        return tag == 'input' || tag == 'textarea' || tag === 'select';
     }
 });
 /* ../ludojs/src/layout/tab-strip.js */
@@ -23621,1011 +23566,6 @@ ludo.grid.Grid = new Class({
 	getColumnManager:function(){
 		return this.columnManager;
 	}
-});/* ../ludojs/src/form/button.js */
-/**
- * Button component
- * The button class extends ludo.form.Element
- * @namespace ludo.form
- * @class ludo.form.Button
- * @param {Object} config
- * @param {Boolean} config.submittable Default: false. When false, the JSON from parentView.getForm().values() will not not include the button.
- * @param {Boolean} config.disabled Default: false. True to initially disable the button
- * @param {Boolean} config.toggle When true, the button will remain in it's pressed until a new press on button occurs.
- * @param {String|Object} config.toggleGroup Used for toggling between buttons. Example: { type:'form.Button', toggle:true, toggleGroup:'myGroup',value:'1' }, 
- * { type:'form.Button', toggle:true, toggleGroup:'myGroup',value:'2' }. Here, two buttons are assigned to the same toggleGroup 'myGroup'. When one button is pressed,
- * the other button will be unpressed.
- */
-ludo.form.Button = new Class({
-    Extends:ludo.form.Element,
-    type:'form.Button',
-    defaultSubmit:false,
-    inputType:'submit',
-    cssSignature:'ludo-form-button',
-    name:'',
-    /**
-     * Text of button
-     * @attribute {String} value
-     */
-    value:'',
-    els:{
-        el:null,
-        txt:null
-    },
-    component:null,
-
-    menu:undefined,
-    submittable:false,
-
-    /**
-     * Toggle button
-     * @attribute {Boolean} toggle
-     * @memberof ludo.form.Button.prototype
-     * @default false
-     */
-    toggle:false,
-
-    /**
-     Assign button to a toggleGroup
-     @memberof ludo.form.Button.prototype
-     @attribute {Object} toggleGroup
-     @default undefined
-	 @example
-		 var buttonLeft = new ludo.form.Button({
-		 	value : 'left',
-		 	toggle:true,
-		 	toggleGroup:'alignment'
-		 });
-
-		 var buttonCenter = new ludo.form.Button({
-		 	value : 'center',
-		 	toggle:true,
-		 	toggleGroup:'alignment'
-		 });
-
-	 which creates a singleton ludo.form.ToggleGroup instance and
-	 assign each button to it.
-
-	 When using a toggle group, only one button can be turned on. The toggle
-	 group will automatically turn off the other button.
-
-	 You can create your own ludo.form.ToggleGroup by extending
-	 ludo.form.ToggleGroup and set the toggleGroup property to an
-	 object:
-	 @example
-		 var buttonLeft = new ludo.form.Button({
-		 	value: 'left',
-		 	toggle:true,
-		 	toggleGroup:{
-		 		type : 'ludo.myapp.form.MyToggleGroup'
-		 	}
-		 });
-     */
-
-    toggleGroup:undefined,
-
-    /**
-     * Disable button when form of parent component is invalid
-     * @memberof ludo.form.Button.prototype
-     * @attribute {Boolean} disableOnInvalid
-     * @default false
-     */
-    disableOnInvalid:false,
-
-    /**
-     * True to initially disable button
-     * @attribute {Boolean} disabled
-     * @default false
-     */
-    disabled:false,
-    /**
-     * Is this button by default selected
-     * When parent component is displayed, it will call select() method for first selected button. If no buttons
-     * have config param selected set to true, it will select first
-     * @memberof ludo.form.Button.prototype
-     * @attribute {Boolean} selected
-     * @default false
-     */
-    selected:false,
-
-    overflow:'hidden',
-
-    /**
-     * Path to button icon
-     * @attribute {String} icon
-     * @memberof ludo.form.Button.prototype
-     * @default undefined
-     */
-    icon:undefined,
-
-    active:false,
-
-	/**
-	 * Size,i.e height of button. Possible values 's', 'm' and 'l' (small,medium, large)
-     * @memberof ludo.form.Button.prototype
-	 * @config {String} size
-	 * @default 'm'
-	 */
-	size : 'm',
-
-	iconWidths:{
-		's' : 15,
-		'm' : 25,
-        'l' : 34,
-		'xl' : 44
-	},
-
-	heights:{
-		's' : 15,
-		'm' : 25,
-        'l' : 35,
-		'xl' : 45
-	},
-
-    ludoConfig:function (config) {
-		this.parent(config);
-
-        var val = config.value || this.value;
-        var len = val ? val.length : 5;
-        this.layout.width = this.layout.width || Math.max(len * 10, 80);
-
-
-        this.setConfigParams(config, ['size','menu','icon','toggle','disableOnInvalid','defaultSubmit','disabled','selected']);
-
-        if (config.toggleGroup !== undefined) {
-            if (ludo.util.type(config.toggleGroup) === 'string') {
-                config.toggleGroup = {
-                    type:'form.ToggleGroup',
-                    id:'toggleGroup-' + config.toggleGroup
-                };
-            }
-            config.toggleGroup.singleton = true;
-            this.toggleGroup = ludo._new(config.toggleGroup);
-            this.toggleGroup.addButton(this);
-        }
-    },
-
-
-    ludoDOM:function () {
-        this.parent();
-
-        this.getEl().css('display', this.isHidden() ? 'none' : 'block');
-
-		this.getEl().addClass('ludo-form-button-' + this.size);
-
-        this.addLeftEdge();
-        this.addRightEdge();
-
-        this.addLabel();
-
-        if (this.icon) {
-            this.addIcon();
-        }
-
-        var b = this.getBody();
-
-        b.css('padding-left', 0);
-        this.getEl().on('selectstart', ludo.util.cancelEvent);
-    },
-
-    ludoEvents:function () {
-        this.parent();
-        var el = this.getBody();
-
-        el.on('click', this.click.bind(this));
-        el.mouseenter(this.mouseOver.bind(this));
-        el.mouseleave(this.mouseOut.bind(this));
-        el.on('mousedown', this.mouseDown.bind(this));
-
-		// TODO need to bound in order to remove event later. Make this easier and more intuitive
-		this.mouseUpBound = this.mouseUp.bind(this);
-        $(document.body).on('mouseup', this.mouseUpBound);
-        if (this.defaultSubmit) {
-			this.keyPressBound = this.keyPress.bind(this);
-            $(window).addEvent('keypress', this.keyPressBound);
-        }
-    },
-
-    ludoRendered:function () {
-        this.parent();
-        if (this.disabled) {
-            this.disable();
-        }
-        if (this.toggle && this.active) {
-            this.getBody().addClass('ludo-form-button-pressed');
-        }
-
-        this.component = this.getParentComponent();
-        if(this.component && this.disableOnInvalid){
-            var m = this.component.getForm();
-            m.addEvent('valid', this.enable.bind(this));
-            m.addEvent('invalid', this.disable.bind(this));
-            if(!m.isValid())this.disable();
-        }
-    },
-
-	dispose:function(){
-		this.parent();
-		$(document.body).off('mouseup', this.mouseUpBound);
-		if (this.defaultSubmit) document.id(window).removeEvent('keypress', this.keyPressBound);
-	},
-
-    addLabel:function () {
-        var txt = this.els.txt = $('<div>');
-        txt.addClass('ludo-form-button-value');
-        txt.css({
-            'width':'100%',
-			'height' : this.heights[this.size] - 2,
-            'position':'absolute',
-            'left':this.icon ? this.iconWidths[this.size] + 'px' : '0px',
-            'text-align':this.icon ? 'left' : 'center',
-            'z-index':7
-        });
-        txt.html(this.value);
-        this.getBody().append(txt);
-    },
-
-    addIcon:function () {
-        var el = this.els.icon = $('<div>');
-        el.css({
-            position:'absolute',
-            width:this.iconWidths[this.size],
-            'z-index':8,
-            left:0,
-            top:0,
-            height:'100%',
-            'background-image':'url(' + this.icon + ')',
-            'background-repeat':'no-repeat',
-            'background-position':'center center'
-        });
-        el.insertBefore(this.els.txt);
-
-    },
-
-    setIcon:function(src){
-        if(!this.els.icon){
-            this.addIcon();
-        }
-        this.icon = src;
-        this.els.icon.css('background-image', 'url(' + src + ')');
-    },
-
-    addLeftEdge:function () {
-        var bg = this.els.buttonLeftludo = $('<div>');
-        bg.addClass('ludo-form-button-bg-left');
-        bg.addClass('ludo-form-button-' + this.size +'-bg-left');
-        bg.css({
-            position:'absolute',
-            'left':0,
-            'z-index':5
-        });
-        this.getBody().append(bg);
-    },
-
-    addRightEdge:function () {
-        var bg = $('<div>');
-        bg.addClass('ludo-form-button-bg-right');
-        bg.addClass('ludo-form-button-' + this.size + '-bg-right');
-        bg.css({
-            position:'absolute',
-            'right':0,
-            'z-index':6
-        });
-        this.getBody().append(bg);
-    },
-
-    disable:function () {
-        this.disabled = true;
-        if (this.els.body) {
-            this.els.body.addClass('ludo-form-button-disabled');
-            this.els.body.removeClass('ludo-form-button-over');
-            this.els.body.removeClass('ludo-form-button-down');
-        }
-    },
-
-    enable:function () {
-        this.disabled = false;
-        if (this.els.body) {
-            this.els.body.removeClass('ludo-form-button-disabled');
-        }
-    },
-
-    isDisabled:function () {
-        return this.disabled;
-    },
-
-    setValue:function (value) {
-        console.warn("Use of deprecated setValue");
-        console.trace();
-        this.value = value;
-        this.els.txt.html( value);
-    },
-
-    val:function (value) {
-        if(arguments.length != 0){
-            this.value = value;
-            this.els.txt.html( value);
-        }else{
-            return this.value;
-        }
-    },
-    getValue:function () {
-        console.warn("Use of deprecated button.getValue");
-        console.trace();
-        return this.value;
-    },
-
-    mouseOver:function () {
-
-        if (!this.isDisabled()) {
-            this.getBody().addClass('ludo-form-button-over');
-            this.fireEvent('mouseover', this);
-        }
-    },
-    mouseOut:function () {
-        if (!this.isDisabled()) {
-            this.getBody().removeClass('ludo-form-button-over');
-            this.fireEvent('mouseout', this);
-        }
-
-    },
-	isDown:false,
-    mouseDown:function () {
-        if (!this.isDisabled()) {
-			this.isDown = true;
-            this.getBody().addClass('ludo-form-button-down');
-            this.fireEvent('mousedown', this);
-        }
-    },
-    mouseUp:function () {
-        if (this.isDown && !this.isDisabled()) {
-            this.getBody().removeClass('ludo-form-button-down');
-            this.fireEvent('mouseup', this);
-        }
-    },
-
-    clickAfterDelay:function () {
-        this.click.delay(10, this);
-    },
-    /**
-     * Trigger click on button
-     * @function click
-     * @return {undefined|Boolean}
-     */
-    click:function () {
-        this.focus();
-        if (!this.isDisabled()) {
-            this.getEl().focus();
-            /**
-             * Click on button event
-             * @event click
-             * @param {String} value, i.e. label of button
-             * @param Component this
-             */
-            this.fireEvent('click', [this._get(), this]);
-
-            if (this.toggle) {
-                if (!this.active) {
-                    this.turnOn();
-                } else {
-                    this.turnOff();
-                }
-            }
-			return false;
-        }
-    },
-    getName:function () {
-        return this.name;
-    },
-    defaultBeforeClickEvent:function () {
-        return true;
-    },
-
-    isButton:function () {
-        return true
-    },
-    resizeDOM:function () {
-        // TODO refactor - buttons too tall in relative layout
-        this.getBody().css('height', this.heights[this.size]);
-        /* No DOM resize for buttons */
-    },
-
-    validate:function () {
-        /* Don't do anything for buttons */
-    },
-
-    getParentComponent:function () {
-        var parent = this.getParent();
-        if (parent && parent.type.indexOf('ButtonBar') >= 0) {
-            return parent.getView();
-        }
-        return parent;
-    },
-
-    select:function () {
-        this.getBody().addClass('ludo-form-button-selected');
-    },
-
-    deSelect:function () {
-        this.getBody().removeClass('ludo-form-button-selected');
-    },
-
-    turnOn:function () {
-        this.active = true;
-        /**
-         * Turn toggle button on
-         * @event on
-         * @param {String} value, i.e. label of button
-         * @param Component this
-         */
-        this.fireEvent('on', [this._get(), this]);
-        this.getBody().addClass('ludo-form-button-pressed');
-    },
-
-    turnOff:function () {
-        this.active = false;
-        /**
-         * Turn toggle button off
-         * @event off
-         * @param {String} value, i.e. label of button
-         * @param Component this
-         */
-        this.fireEvent('off', [this._get(), this]);
-        this.getBody().removeClass('ludo-form-button-pressed');
-    },
-
-    /**
-     * Return instance of ludo.form.ToggleGroup
-     * @function getToggleGroup
-     * @return {Object} ludo.form.ToggleGroup
-     */
-    getToggleGroup:function () {
-        return this.toggleGroup;
-    },
-
-    isActive:function () {
-        return this.active;
-    }
-});/* ../ludojs/src/card/button.js */
-/**
- * Special Button for card.Deck component
- * @namespace card
- * @class Button
- * @augments form.Button
- */
-ludo.card.Button = new Class({
-    Extends:ludo.form.Button,
-    type:'card.Button',
-
-    /**
-     * Automatically hide button instead of disabling it. This will happen on
-     * first cards for previous buttons and on last card for next and finish buttons.
-     * @attribute autoHide
-     * @type {Boolean}
-     * @default false
-     */
-    autoHide:false,
-
-    /**
-     * Apply button to a specific view with this id. This view has to have layout type set to "card".
-     * @attribute applyTo
-     * @type String
-     * @default undefined
-     */
-    applyTo : undefined,
-
-    ludoConfig:function (config) {
-        this.parent(config);
-        this.setConfigParams(config, ['autoHide', 'applyTo']);
-        if(config.applyTo && !ludo.get(config.applyTo)){
-            this.onCreate.delay(50, this);
-        }else{
-            this.onCreate();
-        }
-    },
-
-    onCreate:function(){
-        this.applyTo = this.applyTo ? ludo.get(this.applyTo) : this.getParentComponent();
-        if(this.applyTo){
-            this.applyTo.getLayout().registerButton(this);
-        }
-        this.addButtonEvents();
-    },
-
-    getParentComponent:function () {
-        var cmp = this.parent();
-
-        if (cmp.layout === undefined || (cmp.layout.type.toLowerCase()!=='viewpager')) {
-            for (var i = 0; i < cmp.children.length; i++) {
-
-                if (cmp.children[i].layout && cmp.children[i].layout.type.toLowerCase()==='viewpager') {
-                    return cmp.children[i];
-                }
-            }
-        }
-        return cmp.layout && cmp.layout.type.toLowerCase()!=='viewpager' ? cmp : undefined;
-    }
-});/* ../ludojs/src/card/finish-button.js */
-/**
- * Special Button for card.Deck component
- * This button will automatically be disabled when a form is invalid, and automatically enabled when it's valid.
- * A form consists of all form elements of parent component, including form elements of child components.
- * When clicked, it will submit the form of card.Deck.
- *
- * A ludo.card.FinishButton will only be visible when last card in the deck is shown.
- *
- * @namespace card
- * @class FinishButton
- * @augments card.Button
- */
-ludo.card.FinishButton = new Class({
-    Extends:ludo.card.Button,
-    type:'card.FinishButton',
-    value:'Finish',
-    hidden:true,
-
-    addButtonEvents:function(){
-		var lm;
-        if (this.applyTo) {
-			lm = this.applyTo.getLayout();
-            var fm = this.applyTo.getForm();
-
-            lm.addEvent('valid', this.enable.bind(this));
-            lm.addEvent('invalid', this.disable.bind(this));
-            lm.addEvent('lastcard', this.show.bind(this));
-            lm.addEvent('notlastpage', this.hide.bind(this));
-
-            fm.addEvent('beforeSave', this.disable.bind(this));
-            fm.addEvent('success', this.setSubmitted.bind(this));
-
-            if(!lm.isValid()){
-                this.disabled = true;
-            }
-        }
-        this.addEvent('click', this.submit.bind(this));
-
-        if(lm && lm.isOnLastPage()){
-            this.show();
-        }
-    },
-
-    enable:function(){
-        if(this.applyTo.getLayout().isValid()){
-            this.parent();
-        }
-    },
-
-    show:function(){
-        if(!this.submitted){
-            return this.parent();
-        }
-        return undefined;
-    },
-    submitted : false,
-    submit:function () {
-        if (this.applyTo) {
-            this.applyTo.getForm().submit();
-        }
-    },
-
-    setSubmitted:function(){
-        this.submitted = true;
-    }
-});/* ../ludojs/src/card/next-button.js */
-/**
- * Special Button for page.Deck used to navigate to next page.
- * This button will automatically be disabled when a form is invalid, and automatically enabled when it's valid.
- * A form consists of all form elements of parent component, including form elements of child components.
- * When clicked, next page will be shown
- *
- * @namespace page
- * @class NextButton
- * @augments page.Button
- */
-ludo.card.NextButton = new Class({
-	Extends:ludo.card.Button,
-	type:'page.NextButton',
-	value:'Next',
-
-	addButtonEvents:function () {
-		if (this.applyTo) {
-			var lm = this.applyTo.getLayout();
-			lm.addEvent('valid', this.enable.bind(this));
-			lm.addEvent('invalid', this.disable.bind(this));
-			if (!lm.isValid()) {
-				this.disable();
-			}
-			if (this.autoHide) {
-				if (lm.isOnLastPage())this.hide(); else this.show();
-				lm.addEvent('lastpage', this.hide.bind(this));
-				lm.addEvent('notlastpage', this.show.bind(this));
-			} else {
-				if (lm.isOnLastPage())this.disable(); else this.enable();
-				lm.addEvent('lastpage', this.disable.bind(this));
-				lm.addEvent('notlastpage', this.enable.bind(this));
-			}
-		}
-
-		this.addEvent('click', this.nextPage.bind(this));
-	},
-
-	enable:function () {
-		if (this.applyTo.getLayout().isValid()) {
-			this.parent();
-		}
-	},
-
-	nextPage:function () {
-		if (this.applyTo) {
-			this.applyTo.getLayout().showNextPage();
-		}
-	}
-});/* ../ludojs/src/card/previous-button.js */
-/**
- *
- * @namespace page
- * @class PreviousButton
- * @augments page.Button
- * @description Special Button for page.Deck component for navigation to previous page.
- * On click, this button will show previous page.
- * The button will be automatically disabled when first page in deck is shown.
- * When clicked, next page will be shown
- */
-ludo.card.PreviousButton = new Class({
-	Extends:ludo.card.Button,
-	type:'page.PreviousButton',
-	value:'Previous',
-
-	addButtonEvents:function () {
-		this.addEvent('click', this.showPreviousPage.bind(this));
-		if (this.applyTo) {
-			var lm = this.applyTo.getLayout();
-			if (this.autoHide) {
-				if(!lm.isOnFirstPage())this.show(); else this.hide();
-				lm.addEvent('firstpage', this.hide.bind(this));
-				lm.addEvent('notfirstpage', this.show.bind(this));
-			} else {
-				if(!lm.isOnFirstPage())this.enable(); else this.disable();
-				lm.addEvent('firstpage', this.disable.bind(this));
-				lm.addEvent('notfirstpage', this.enable.bind(this));
-			}
-		}
-	},
-
-	showPreviousPage:function () {
-		if (this.applyTo) {
-			this.applyTo.getLayout().showPreviousPage();
-		}
-	}
-});/* ../ludojs/src/progress/datasource.js */
-/**
- * Data source for progress bars
- * @namespace progress
- * @class DataSource
- * @augments dataSource.JSON
- */
-ludo.progress.DataSource = new Class({
-    Extends:ludo.dataSource.JSON,
-    type:'progress.DataSource',
-    singleton:true,
-    autoload:false,
-    progressId:undefined,
-    stopped : false,
-    pollFrequence : 1,
-
-    resource:'LudoDBProgress',
-    service:'read',
-	listenTo:undefined,
-
-    ludoConfig:function(config){
-        this.parent(config);
-
-		this.setConfigParams(config, ['pollFrequence','listenTo']);
-
-        if(this.listenTo){
-            ludo.remoteBroadcaster.withResourceService(this.listenTo).on('start', this.startProgress.bind(this));
-        }
-    },
-
-    startProgress:function(){
-		this.inject();
-        this.stopped = false;
-        this.fireEvent('start');
-        this.load.delay(1000, this);
-    },
-
-	inject:function(){
-		ludo.remoteInject.add(this.listenTo, {
-			LudoDBProgressID : this.getNewProgressBarId()
-		});
-	},
-
-    loadComplete:function (data) {
-        this.fireEvent('load', data);
-        if(data.percent<100 && !this.stopped){
-            this.load.delay(this.pollFrequence * 1000, this);
-        }else{
-            if(data.percent>=100){
-                this.finish();
-            }
-        }
-    },
-
-    getNewProgressBarId:function(){
-        this.progressId = this.progressId = 'ludo-progress-' + String.uniqueID();
-		this.arguments = this.progressId;
-        return this.progressId;
-    },
-
-    getProgressId:function(){
-        return this.progressId;
-    },
-
-    stop:function(){
-        this.stopped = true;
-        this.fireEvent('stop');
-    },
-
-    proceed : function(){
-        this.stopped = false;
-        this.load();
-    },
-
-    finish:function(){
-        this.stopped = true;
-        this.progressId = undefined;
-        this.fireEvent('finish');
-		this.inject();
-    }
-});/* ../ludojs/src/progress/base.js */
-/**
- * Super class for all progress bar views
- * @namespace progress
- * @class Base
- * @augments View
- */
-ludo.progress.Base = new Class({
-    Extends:ludo.View,
-	applyTo:undefined,
-    pollFrequence:1,
-    url:undefined,
-    onLoadMessage:'',
-    /**
-     * Hide progress bar on finish
-     * @attribute {Boolean} hideOnFinish
-     */
-    hideOnFinish:true,
-
-    defaultDS:'progress.DataSource',
-
-    ludoConfig:function (config) {
-        this.parent(config);
-        this.setConfigParams(config, ['applyTo','listenTo', 'pollFrequence','hideOnFinish']);
-
-        if(this.applyTo)this.applyTo = ludo.get(this.applyTo);
-        this.dataSource = this.dataSource || {};
-        this.dataSource.pollFrequence = this.pollFrequence;
-        this.dataSource.listenTo = this.listenTo;
-
-        if(this.listenTo){
-            ludo.remoteBroadcaster.withResourceService(this.listenTo).on('start', this.show.bind(this));
-        }
-
-        this.getDataSource().addEvents({
-            'load' : this.insertJSON.bind(this),
-            'start' : this.start.bind(this),
-            'finish' : this.finishEvent.bind(this)
-        });
-    },
-
-    start:function(){
-        this.fireEvent('start');
-        this.insertJSON({text:'',percent:0});
-    },
-
-    hideAfterDelay:function(){
-        this.hide.delay(1000, this);
-    },
-
-    getProgressBarId:function () {
-        return this.getDataSource().getProgressId();
-    },
-
-    stop:function () {
-        this.getDataSource().stop();
-    },
-
-    proceed:function(){
-        this.getDataSource().proceed();
-    },
-    /**
-     * Finish progress bar manually
-     * @function finish
-     */
-    finish:function () {
-        this.getDataSource().finish();
-    },
-
-    finishEvent:function(){
-
-        if (this.hideOnFinish) {
-            this.hideAfterDelay();
-        }
-
-        /**
-         * Event fired when progress bar is finished
-         * @event render
-         * @param Component this
-         */
-        this.fireEvent('finish');
-        
-    }
-});/* ../ludojs/src/progress/bar.js */
-/**
- * Progress bar class
- * @namespace progress
- * @class Bar
- * @augments progress.Base
- */
-ludo.progress.Bar = new Class({
-    Extends:ludo.progress.Base,
-    type:'ProgressBar',
-    width:300,
-    height:35,
-    progressBarWidth:0,
-    currentPercent:0,
-    stopped:false,
-    hidden:true,
-    fx:undefined,
-
-    ludoRendered:function () {
-        this.parent();
-
-        this.createBackgroundForProgressBar();
-        this.createMovablePartOfProgressBar();
-        this.createTextElement();
-
-        this.autoSetProgressWidth();
-    },
-    createBackgroundForProgressBar:function () {
-        var el = this.els.progressBg = $('<div>');
-        el.addClass('ludo-Progress-Bar-Bg');
-        this.getBody().append(el);
-
-        var left = this.els.progressBgRight = $('<div>');
-        left.addClass('ludo-Progress-Bar-Bg-Left');
-        el.append(left);
-
-        var right = this.els.progressBgRight = $('<div>');
-        right.addClass('ludo-Progress-Bar-Bg-Right');
-        el.append(right);
-    },
-
-    createMovablePartOfProgressBar:function () {
-        var el = this.els.progress = $('<div class="ludo-Progress-Bar">');
-        this.els.progressBg.append(el);
-        this.els.progress.css('width', '0px');
-
-        var left = this.els.progressLeft = $('<div>');
-        left.addClass('ludo-Progress-Bar-Left');
-        el.append(left);
-
-        var right = this.els.progressRight = $('<div>');
-        right.addClass('ludo-Progress-Bar-Right');
-        el.append(right);
-    },
-
-    createTextElement:function () {
-        var percent = this.els.percent = $('<div>');
-        percent.addClass('ludo-Progress-Bar-Percent');
-        this.els.progressBg.append(percent);
-	},
-
-    resizeDOM:function () {
-        this.parent();
-        if (this.els.progressBg) {
-            this.autoSetProgressWidth();
-        }
-    },
-
-    insertJSON:function (json) {
-        var data = json.data ? json.data : json;
-        this.setPercent(data.percent);
-    },
-
-    startProgress:function () {
-        this.parent();
-        this.stopped = false;
-        this.setPercent(0);
-        this.els.progress.css('width',  '0');
-        this.currentPercent = 0;
-    },
-
-    finish:function () {
-        this.parent();
-        this.setPercent(100);
-    },
-
-    autoSetProgressWidth:function () {
-        if (!this.isVisible()) {
-            return;
-        }
-        var width = parseInt(this.getBody().css('width').replace('px', ''));
-        width -= ludo.dom.getMW(this.els.progressBg);
-        this.setProgressBarWidth(width);
-        this.setPercent(this.currentPercent);
-    },
-
-    setProgressBarWidth:function (width) {
-
-        if (isNaN(width)) {
-            return;
-        }
-        this.progressBarWidth = width;
-        this.els.progressBg.css('width', width);
-
-        this.progressBarWidth = width;
-    },
-
-    setPercent:function (percent) {
-        if(percent == this.currentPercent)return;
-		if(percent === 0 && this.currentPercent === 100){
-			this.els.progress.css('width',  '0px');
-		}else{
-            this.els.progress.animate({
-                width : percent + "%"
-            }, 100);
-		}
-
-        this.currentPercent = percent;
-        this.els.percent.html(percent + '%');
-    },
-
-    getCurrentPercent:function () {
-        return this.currentPercent;
-    },
-
-    animate:function () {
-        if (this.currentPercent < 100) {
-            this.currentPercent++;
-            this.setPercent(this.currentPercent);
-            this.animate.delay(50, this);
-        }
-    }
-});/* ../ludojs/src/card/progress-bar.js */
-/**
- * Progress bar for cards in a deck. percentage will be position of current curd
- * relative to number of cards
- * @namespace card
- * @class ProgressBar
- * @augments progress.Bar
- */
-ludo.card.ProgressBar = new Class({
-    Extends: ludo.progress.Bar,
-    hidden: false,
-    applyTo: undefined,
-
-    ludoEvents: function () {
-        this.parent();
-        if (this.applyTo) {
-            this.applyTo.getLayout().registerButton(this);
-            this.applyTo.getLayout().addEvent('showpage', this.setCardPercent.bind(this))
-        }
-    },
-
-    ludoRendered: function () {
-        this.parent();
-        if (this.applyTo) {
-            this.setCardPercent();
-        }
-    },
-
-    setCardPercent: function () {
-        this.setPercent(this.applyTo.getLayout().getPercentCompleted());
-    },
-
-    getProgressBarId: function () {
-        return undefined;
-    }
 });/* ../ludojs/src/calendar/base.js */
 /**
  * Base class for calendar related classes
@@ -27928,7 +26868,302 @@ ludo.getController = function (controller) {
 		controller = ludo.get(controller);
 	}
 	return controller;
-};/* ../ludojs/src/progress/text.js */
+};/* ../ludojs/src/progress/datasource.js */
+/**
+ * Data source for progress bars
+ * @namespace progress
+ * @class DataSource
+ * @augments dataSource.JSON
+ */
+ludo.progress.DataSource = new Class({
+    Extends:ludo.dataSource.JSON,
+    type:'progress.DataSource',
+    singleton:true,
+    autoload:false,
+    progressId:undefined,
+    stopped : false,
+    pollFrequence : 1,
+
+    resource:'LudoDBProgress',
+    service:'read',
+	listenTo:undefined,
+
+    ludoConfig:function(config){
+        this.parent(config);
+
+		this.setConfigParams(config, ['pollFrequence','listenTo']);
+
+        if(this.listenTo){
+            ludo.remoteBroadcaster.withResourceService(this.listenTo).on('start', this.startProgress.bind(this));
+        }
+    },
+
+    startProgress:function(){
+		this.inject();
+        this.stopped = false;
+        this.fireEvent('start');
+        this.load.delay(1000, this);
+    },
+
+	inject:function(){
+		ludo.remoteInject.add(this.listenTo, {
+			LudoDBProgressID : this.getNewProgressBarId()
+		});
+	},
+
+    loadComplete:function (data) {
+        this.fireEvent('load', data);
+        if(data.percent<100 && !this.stopped){
+            this.load.delay(this.pollFrequence * 1000, this);
+        }else{
+            if(data.percent>=100){
+                this.finish();
+            }
+        }
+    },
+
+    getNewProgressBarId:function(){
+        this.progressId = this.progressId = 'ludo-progress-' + String.uniqueID();
+		this.arguments = this.progressId;
+        return this.progressId;
+    },
+
+    getProgressId:function(){
+        return this.progressId;
+    },
+
+    stop:function(){
+        this.stopped = true;
+        this.fireEvent('stop');
+    },
+
+    proceed : function(){
+        this.stopped = false;
+        this.load();
+    },
+
+    finish:function(){
+        this.stopped = true;
+        this.progressId = undefined;
+        this.fireEvent('finish');
+		this.inject();
+    }
+});/* ../ludojs/src/progress/base.js */
+/**
+ * Super class for all progress bar views
+ * @namespace progress
+ * @class Base
+ * @augments View
+ */
+ludo.progress.Base = new Class({
+    Extends:ludo.View,
+	applyTo:undefined,
+    pollFrequence:1,
+    url:undefined,
+    onLoadMessage:'',
+    /**
+     * Hide progress bar on finish
+     * @attribute {Boolean} hideOnFinish
+     */
+    hideOnFinish:true,
+
+    defaultDS:'progress.DataSource',
+
+    ludoConfig:function (config) {
+        this.parent(config);
+        this.setConfigParams(config, ['applyTo','listenTo', 'pollFrequence','hideOnFinish']);
+
+        if(this.applyTo)this.applyTo = ludo.get(this.applyTo);
+        this.dataSource = this.dataSource || {};
+        this.dataSource.pollFrequence = this.pollFrequence;
+        this.dataSource.listenTo = this.listenTo;
+
+        if(this.listenTo){
+            ludo.remoteBroadcaster.withResourceService(this.listenTo).on('start', this.show.bind(this));
+        }
+
+        this.getDataSource().addEvents({
+            'load' : this.insertJSON.bind(this),
+            'start' : this.start.bind(this),
+            'finish' : this.finishEvent.bind(this)
+        });
+    },
+
+    start:function(){
+        this.fireEvent('start');
+        this.insertJSON({text:'',percent:0});
+    },
+
+    hideAfterDelay:function(){
+        this.hide.delay(1000, this);
+    },
+
+    getProgressBarId:function () {
+        return this.getDataSource().getProgressId();
+    },
+
+    stop:function () {
+        this.getDataSource().stop();
+    },
+
+    proceed:function(){
+        this.getDataSource().proceed();
+    },
+    /**
+     * Finish progress bar manually
+     * @function finish
+     */
+    finish:function () {
+        this.getDataSource().finish();
+    },
+
+    finishEvent:function(){
+
+        if (this.hideOnFinish) {
+            this.hideAfterDelay();
+        }
+
+        /**
+         * Event fired when progress bar is finished
+         * @event render
+         * @param Component this
+         */
+        this.fireEvent('finish');
+        
+    }
+});/* ../ludojs/src/progress/bar.js */
+/**
+ * Progress bar class
+ * @namespace progress
+ * @class Bar
+ * @augments progress.Base
+ */
+ludo.progress.Bar = new Class({
+    Extends:ludo.progress.Base,
+    type:'ProgressBar',
+    width:300,
+    height:35,
+    progressBarWidth:0,
+    currentPercent:0,
+    stopped:false,
+    hidden:true,
+    fx:undefined,
+
+    ludoRendered:function () {
+        this.parent();
+
+        this.createBackgroundForProgressBar();
+        this.createMovablePartOfProgressBar();
+        this.createTextElement();
+
+        this.autoSetProgressWidth();
+    },
+    createBackgroundForProgressBar:function () {
+        var el = this.els.progressBg = $('<div>');
+        el.addClass('ludo-Progress-Bar-Bg');
+        this.getBody().append(el);
+
+        var left = this.els.progressBgRight = $('<div>');
+        left.addClass('ludo-Progress-Bar-Bg-Left');
+        el.append(left);
+
+        var right = this.els.progressBgRight = $('<div>');
+        right.addClass('ludo-Progress-Bar-Bg-Right');
+        el.append(right);
+    },
+
+    createMovablePartOfProgressBar:function () {
+        var el = this.els.progress = $('<div class="ludo-Progress-Bar">');
+        this.els.progressBg.append(el);
+        this.els.progress.css('width', '0px');
+
+        var left = this.els.progressLeft = $('<div>');
+        left.addClass('ludo-Progress-Bar-Left');
+        el.append(left);
+
+        var right = this.els.progressRight = $('<div>');
+        right.addClass('ludo-Progress-Bar-Right');
+        el.append(right);
+    },
+
+    createTextElement:function () {
+        var percent = this.els.percent = $('<div>');
+        percent.addClass('ludo-Progress-Bar-Percent');
+        this.els.progressBg.append(percent);
+	},
+
+    resizeDOM:function () {
+        this.parent();
+        if (this.els.progressBg) {
+            this.autoSetProgressWidth();
+        }
+    },
+
+    insertJSON:function (json) {
+        var data = json.data ? json.data : json;
+        this.setPercent(data.percent);
+    },
+
+    startProgress:function () {
+        this.parent();
+        this.stopped = false;
+        this.setPercent(0);
+        this.els.progress.css('width',  '0');
+        this.currentPercent = 0;
+    },
+
+    finish:function () {
+        this.parent();
+        this.setPercent(100);
+    },
+
+    autoSetProgressWidth:function () {
+        if (!this.isVisible()) {
+            return;
+        }
+        var width = parseInt(this.getBody().css('width').replace('px', ''));
+        width -= ludo.dom.getMW(this.els.progressBg);
+        this.setProgressBarWidth(width);
+        this.setPercent(this.currentPercent);
+    },
+
+    setProgressBarWidth:function (width) {
+
+        if (isNaN(width)) {
+            return;
+        }
+        this.progressBarWidth = width;
+        this.els.progressBg.css('width', width);
+
+        this.progressBarWidth = width;
+    },
+
+    setPercent:function (percent) {
+        if(percent == this.currentPercent)return;
+		if(percent === 0 && this.currentPercent === 100){
+			this.els.progress.css('width',  '0px');
+		}else{
+            this.els.progress.animate({
+                width : percent + "%"
+            }, 100);
+		}
+
+        this.currentPercent = percent;
+        this.els.percent.html(percent + '%');
+    },
+
+    getCurrentPercent:function () {
+        return this.currentPercent;
+    },
+
+    animate:function () {
+        if (this.currentPercent < 100) {
+            this.currentPercent++;
+            this.setPercent(this.currentPercent);
+            this.animate.delay(50, this);
+        }
+    }
+});/* ../ludojs/src/progress/text.js */
 /**
  * Component used to display text for a progress bar, example
  * Step 1 of 10
@@ -27950,6 +27185,470 @@ ludo.progress.Text = new Class({
      * @type String
      */
     tpl : '{text}'
+});/* ../ludojs/src/form/button.js */
+/**
+ * Button component
+ * The button class extends ludo.form.Element
+ * @namespace ludo.form
+ * @class ludo.form.Button
+ * @param {Object} config
+ * @param {Boolean} config.submittable Default: false. When false, the JSON from parentView.getForm().values() will not not include the button.
+ * @param {Boolean} config.disabled Default: false. True to initially disable the button
+ * @param {Boolean} config.toggle When true, the button will remain in it's pressed until a new press on button occurs.
+ * @param {String|Object} config.toggleGroup Used for toggling between buttons. Example: { type:'form.Button', toggle:true, toggleGroup:'myGroup',value:'1' }, 
+ * { type:'form.Button', toggle:true, toggleGroup:'myGroup',value:'2' }. Here, two buttons are assigned to the same toggleGroup 'myGroup'. When one button is pressed,
+ * the other button will be unpressed.
+ */
+ludo.form.Button = new Class({
+    Extends:ludo.form.Element,
+    type:'form.Button',
+    defaultSubmit:false,
+    inputType:'submit',
+    cssSignature:'ludo-form-button',
+    name:'',
+    /**
+     * Text of button
+     * @attribute {String} value
+     */
+    value:'',
+    els:{
+        el:null,
+        txt:null
+    },
+    component:null,
+
+    menu:undefined,
+    submittable:false,
+
+    /**
+     * Toggle button
+     * @attribute {Boolean} toggle
+     * @memberof ludo.form.Button.prototype
+     * @default false
+     */
+    toggle:false,
+
+    /**
+     Assign button to a toggleGroup
+     @memberof ludo.form.Button.prototype
+     @attribute {Object} toggleGroup
+     @default undefined
+	 @example
+		 var buttonLeft = new ludo.form.Button({
+		 	value : 'left',
+		 	toggle:true,
+		 	toggleGroup:'alignment'
+		 });
+
+		 var buttonCenter = new ludo.form.Button({
+		 	value : 'center',
+		 	toggle:true,
+		 	toggleGroup:'alignment'
+		 });
+
+	 which creates a singleton ludo.form.ToggleGroup instance and
+	 assign each button to it.
+
+	 When using a toggle group, only one button can be turned on. The toggle
+	 group will automatically turn off the other button.
+
+	 You can create your own ludo.form.ToggleGroup by extending
+	 ludo.form.ToggleGroup and set the toggleGroup property to an
+	 object:
+	 @example
+		 var buttonLeft = new ludo.form.Button({
+		 	value: 'left',
+		 	toggle:true,
+		 	toggleGroup:{
+		 		type : 'ludo.myapp.form.MyToggleGroup'
+		 	}
+		 });
+     */
+
+    toggleGroup:undefined,
+
+    /**
+     * Disable button when form of parent component is invalid
+     * @memberof ludo.form.Button.prototype
+     * @attribute {Boolean} disableOnInvalid
+     * @default false
+     */
+    disableOnInvalid:false,
+
+    /**
+     * True to initially disable button
+     * @attribute {Boolean} disabled
+     * @default false
+     */
+    disabled:false,
+    /**
+     * Is this button by default selected
+     * When parent component is displayed, it will call select() method for first selected button. If no buttons
+     * have config param selected set to true, it will select first
+     * @memberof ludo.form.Button.prototype
+     * @attribute {Boolean} selected
+     * @default false
+     */
+    selected:false,
+
+    overflow:'hidden',
+
+    /**
+     * Path to button icon
+     * @attribute {String} icon
+     * @memberof ludo.form.Button.prototype
+     * @default undefined
+     */
+    icon:undefined,
+
+    active:false,
+
+	/**
+	 * Size,i.e height of button. Possible values 's', 'm' and 'l' (small,medium, large)
+     * @memberof ludo.form.Button.prototype
+	 * @config {String} size
+	 * @default 'm'
+	 */
+	size : 'm',
+
+	iconWidths:{
+		's' : 15,
+		'm' : 25,
+        'l' : 34,
+		'xl' : 44
+	},
+
+	heights:{
+		's' : 15,
+		'm' : 25,
+        'l' : 35,
+		'xl' : 45
+	},
+
+    ludoConfig:function (config) {
+		this.parent(config);
+
+        var val = config.value || this.value;
+        var len = val ? val.length : 5;
+        this.layout.width = this.layout.width || Math.max(len * 10, 80);
+
+
+        this.setConfigParams(config, ['size','menu','icon','toggle','disableOnInvalid','defaultSubmit','disabled','selected']);
+
+        if (config.toggleGroup !== undefined) {
+            if (ludo.util.type(config.toggleGroup) === 'string') {
+                config.toggleGroup = {
+                    type:'form.ToggleGroup',
+                    id:'toggleGroup-' + config.toggleGroup
+                };
+            }
+            config.toggleGroup.singleton = true;
+            this.toggleGroup = ludo._new(config.toggleGroup);
+            this.toggleGroup.addButton(this);
+        }
+    },
+
+
+    ludoDOM:function () {
+        this.parent();
+
+        this.getEl().css('display', this.isHidden() ? 'none' : 'block');
+
+		this.getEl().addClass('ludo-form-button-' + this.size);
+
+        this.addLeftEdge();
+        this.addRightEdge();
+
+        this.addLabel();
+
+        if (this.icon) {
+            this.addIcon();
+        }
+
+        var b = this.getBody();
+
+        b.css('padding-left', 0);
+        this.getEl().on('selectstart', ludo.util.cancelEvent);
+    },
+
+    ludoEvents:function () {
+        this.parent();
+        var el = this.getBody();
+
+        el.on('click', this.click.bind(this));
+        el.mouseenter(this.mouseOver.bind(this));
+        el.mouseleave(this.mouseOut.bind(this));
+        el.on('mousedown', this.mouseDown.bind(this));
+
+		// TODO need to bound in order to remove event later. Make this easier and more intuitive
+		this.mouseUpBound = this.mouseUp.bind(this);
+        $(document.body).on('mouseup', this.mouseUpBound);
+        if (this.defaultSubmit) {
+			this.keyPressBound = this.keyPress.bind(this);
+            $(window).addEvent('keypress', this.keyPressBound);
+        }
+    },
+
+    ludoRendered:function () {
+        this.parent();
+        if (this.disabled) {
+            this.disable();
+        }
+        if (this.toggle && this.active) {
+            this.getBody().addClass('ludo-form-button-pressed');
+        }
+
+        this.component = this.getParentComponent();
+        if(this.component && this.disableOnInvalid){
+            var m = this.component.getForm();
+            m.addEvent('valid', this.enable.bind(this));
+            m.addEvent('invalid', this.disable.bind(this));
+            if(!m.isValid())this.disable();
+        }
+    },
+
+	dispose:function(){
+		this.parent();
+		$(document.body).off('mouseup', this.mouseUpBound);
+		if (this.defaultSubmit) document.id(window).removeEvent('keypress', this.keyPressBound);
+	},
+
+    addLabel:function () {
+        var txt = this.els.txt = $('<div>');
+        txt.addClass('ludo-form-button-value');
+        txt.css({
+            'width':'100%',
+			'height' : this.heights[this.size] - 2,
+            'position':'absolute',
+            'left':this.icon ? this.iconWidths[this.size] + 'px' : '0px',
+            'text-align':this.icon ? 'left' : 'center',
+            'z-index':7
+        });
+        txt.html(this.value);
+        this.getBody().append(txt);
+    },
+
+    addIcon:function () {
+        var el = this.els.icon = $('<div>');
+        el.css({
+            position:'absolute',
+            width:this.iconWidths[this.size],
+            'z-index':8,
+            left:0,
+            top:0,
+            height:'100%',
+            'background-image':'url(' + this.icon + ')',
+            'background-repeat':'no-repeat',
+            'background-position':'center center'
+        });
+        el.insertBefore(this.els.txt);
+
+    },
+
+    setIcon:function(src){
+        if(!this.els.icon){
+            this.addIcon();
+        }
+        this.icon = src;
+        this.els.icon.css('background-image', 'url(' + src + ')');
+    },
+
+    addLeftEdge:function () {
+        var bg = this.els.buttonLeftludo = $('<div>');
+        bg.addClass('ludo-form-button-bg-left');
+        bg.addClass('ludo-form-button-' + this.size +'-bg-left');
+        bg.css({
+            position:'absolute',
+            'left':0,
+            'z-index':5
+        });
+        this.getBody().append(bg);
+    },
+
+    addRightEdge:function () {
+        var bg = $('<div>');
+        bg.addClass('ludo-form-button-bg-right');
+        bg.addClass('ludo-form-button-' + this.size + '-bg-right');
+        bg.css({
+            position:'absolute',
+            'right':0,
+            'z-index':6
+        });
+        this.getBody().append(bg);
+    },
+
+    disable:function () {
+        this.disabled = true;
+        if (this.els.body) {
+            this.els.body.addClass('ludo-form-button-disabled');
+            this.els.body.removeClass('ludo-form-button-over');
+            this.els.body.removeClass('ludo-form-button-down');
+        }
+    },
+
+    enable:function () {
+        this.disabled = false;
+        if (this.els.body) {
+            this.els.body.removeClass('ludo-form-button-disabled');
+        }
+    },
+
+    isDisabled:function () {
+        return this.disabled;
+    },
+
+    setValue:function (value) {
+        console.warn("Use of deprecated setValue");
+        console.trace();
+        this.value = value;
+        this.els.txt.html( value);
+    },
+
+    val:function (value) {
+        if(arguments.length != 0){
+            this.value = value;
+            this.els.txt.html( value);
+        }else{
+            return this.value;
+        }
+    },
+    getValue:function () {
+        console.warn("Use of deprecated button.getValue");
+        console.trace();
+        return this.value;
+    },
+
+    mouseOver:function () {
+
+        if (!this.isDisabled()) {
+            this.getBody().addClass('ludo-form-button-over');
+            this.fireEvent('mouseover', this);
+        }
+    },
+    mouseOut:function () {
+        if (!this.isDisabled()) {
+            this.getBody().removeClass('ludo-form-button-over');
+            this.fireEvent('mouseout', this);
+        }
+
+    },
+	isDown:false,
+    mouseDown:function () {
+        if (!this.isDisabled()) {
+			this.isDown = true;
+            this.getBody().addClass('ludo-form-button-down');
+            this.fireEvent('mousedown', this);
+        }
+    },
+    mouseUp:function () {
+        if (this.isDown && !this.isDisabled()) {
+            this.getBody().removeClass('ludo-form-button-down');
+            this.fireEvent('mouseup', this);
+        }
+    },
+
+    clickAfterDelay:function () {
+        this.click.delay(10, this);
+    },
+    /**
+     * Trigger click on button
+     * @function click
+     * @return {undefined|Boolean}
+     */
+    click:function () {
+        this.focus();
+        if (!this.isDisabled()) {
+            this.getEl().focus();
+            /**
+             * Click on button event
+             * @event click
+             * @param {String} value, i.e. label of button
+             * @param Component this
+             */
+            this.fireEvent('click', [this._get(), this]);
+
+            if (this.toggle) {
+                if (!this.active) {
+                    this.turnOn();
+                } else {
+                    this.turnOff();
+                }
+            }
+			return false;
+        }
+    },
+    getName:function () {
+        return this.name;
+    },
+    defaultBeforeClickEvent:function () {
+        return true;
+    },
+
+    isButton:function () {
+        return true
+    },
+    resizeDOM:function () {
+        // TODO refactor - buttons too tall in relative layout
+        this.getBody().css('height', this.heights[this.size]);
+        /* No DOM resize for buttons */
+    },
+
+    validate:function () {
+        /* Don't do anything for buttons */
+    },
+
+    getParentComponent:function () {
+        var parent = this.getParent();
+        if (parent && parent.type.indexOf('ButtonBar') >= 0) {
+            return parent.getView();
+        }
+        return parent;
+    },
+
+    select:function () {
+        this.getBody().addClass('ludo-form-button-selected');
+    },
+
+    deSelect:function () {
+        this.getBody().removeClass('ludo-form-button-selected');
+    },
+
+    turnOn:function () {
+        this.active = true;
+        /**
+         * Turn toggle button on
+         * @event on
+         * @param {String} value, i.e. label of button
+         * @param Component this
+         */
+        this.fireEvent('on', [this._get(), this]);
+        this.getBody().addClass('ludo-form-button-pressed');
+    },
+
+    turnOff:function () {
+        this.active = false;
+        /**
+         * Turn toggle button off
+         * @event off
+         * @param {String} value, i.e. label of button
+         * @param Component this
+         */
+        this.fireEvent('off', [this._get(), this]);
+        this.getBody().removeClass('ludo-form-button-pressed');
+    },
+
+    /**
+     * Return instance of ludo.form.ToggleGroup
+     * @function getToggleGroup
+     * @return {Object} ludo.form.ToggleGroup
+     */
+    getToggleGroup:function () {
+        return this.toggleGroup;
+    },
+
+    isActive:function () {
+        return this.active;
+    }
 });/* ../ludojs/src/form/toggle-group.js */
 /**
  * @namespace ludo.form

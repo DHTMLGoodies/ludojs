@@ -1173,238 +1173,6 @@ div.ludo-paging-current-page .ludo-body{
 
 .input-cell input {
     height: 15px;
-}/* ../ludojs/css-source/form/form.css */
-.ludo-form-element div.ludo-body {
-    padding: 2px;
-}
-
-.ludo-body label.ludo-form-label-disabled {
-    color: #AAA;
-}
-
-.ludo-body input, .ludo-body textarea {
-    font-family: arial, helvetica, Sans-Serif;
-}/* ../ludojs/css-source/form/button.css */
-.ludo-component-buttonbar {
-    box-shadow: 0 !important;
-    padding-right: 2px;
-}
-
-div.ludo-form-button {
-    margin-left: 2px;
-    margin-right:2px;
-    background-repeat: no-repeat;
-    color: #000;
-    position: relative;
-    text-align: center;
-    cursor: pointer;
-    font-size: 11px;
-    font-weight: bold;
-    background-color: transparent;
-
-}
-
-
-div.ludo-form-button-m{
-    height: 23px;
-}
-
-div.ludo-form-button-l{
-    height: 35px;
-    font-size:14px;
-    line-height:30px;
-}
-
-div.ludo-form-button-xl{
-    height: 45px;
-    font-size:14px;
-    line-height:40px;
-}
-
-div.ludo-form-button-s{
-    height: 14px;
-}
-
-div.ludo-form-button-l{
-    height:45px;
-}
-
-.ludo-form-tiny-button{
-    margin-top:2px;
-}
-div.ludo-form-button div {
-    padding: 0 ! important;
-    background-color: transparent;
-    -moz-user-select: none;
-}
-
-div.ludo-form-button-disabled {
-    cursor: default;
-    color:#555;
-}
-
-.ludo-form-button-selected .ludo-form-button-m-bg-left {
-    background-image: url('../images/button/button-bg-light-selected.png');
-}
-
-.ludo-form-button-selected .ludo-form-button-m-bg-right {
-    background-image: url('../images/button/button-bg-light-selected.png');
-}
-
-div.ludo-form-button-disabled .ludo-form-button-m-bg-left {
-    background-image: url('../images/button/button-bg-light-disabled.png');
-}
-
-div.ludo-form-button-disabled .ludo-form-button-m-bg-right {
-    background-image: url('../images/button/button-bg-light-disabled.png');
-}
-
-.ludo-form-button-over .ludo-form-button-m-bg-left {
-    background-image: url('../images/button/button-bg-light-over.png');
-}
-
-.ludo-form-button-over .ludo-form-button-m-bg-right {
-    background-image: url('../images/button/button-bg-light-over.png');
-}
-
-.ludo-form-button-down .ludo-form-button-m-bg-left {
-    background-image: url('../images/button/button-bg-light-down.png');
-}
-
-.ludo-form-button-down .ludo-form-button-m-bg-right {
-    background-image: url('../images/button/button-bg-light-down.png');
-}
-.ludo-form-button-bg-left{
-    width: 55%;
-    height: 100%;
-    position: absolute;
-    background-repeat: no-repeat;
-}
-.ludo-form-button-bg-right{
-    height: 100%;
-    width: 55%;
-    background-repeat: no-repeat;
-    position: absolute;
-    background-position: top right;
-}
-
-.ludo-form-button-m-bg-left {
-    background-image: url('../images/button/button-bg-light.png');
-}
-
-.ludo-form-button-m-bg-right {
-    background-image: url('../images/button/button-bg-light.png');
-}
-
-
-.ludo-form-button-value {
-    background-repeat:no-repeat;
-    background-position:center center;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-}
-
-.ludo-form-button-l .ludo-form-button-value{
-    font-size:16px;
-    line-height:34px;
-}
-.ludo-form-button-xl .ludo-form-button-value{
-    font-size:16px;
-    line-height:44px;
-}
-.ludo-form-button-s .ludo-form-button-value{
-    line-height:14px;
-}
-
-.ludo-form-button-m .ludo-form-button-value{
-    line-height:22px;
-}
-
-.ludo-buttonbar-component-content .ludo-form-button {
-    padding-top: 2px;
-}
-
-
-/* ../ludojs/css-source/progress/progress-bar.css */
-.ludo-Progress-Bar-Bg{
-    width:300px;
-    height:20px;
-    position:relative;
-    margin-left:2px;
-    margin-right:2px;
-    margin-top:1px;
-    overflow:hidden;
-}
-.ludo-Progress-Bar-Bg-Left{
-    background-image:url('../images/progress-bar/progress-bg.png');
-    width:60%;
-    left:0;
-    position:absolute;
-    background-position:top left;
-    height:20px;
-    background-repeat:no-repeat;
-
-}
-.ludo-Progress-Bar-Bg-Right{
-    background-image:url('../images/progress-bar/progress-bg.png');
-    position:absolute;
-    background-position:top right;
-    right:0;
-    top:0;
-    width:60%;
-    height:20px;
-    background-repeat:no-repeat;
-}
-
-
-.ludo-Progress-Bar{
-    background-repeat:repeat-x;
-    background-position:top left;
-    position:absolute;
-    top:0;
-    left:0;
-    height:20px;
-    width:300px;
-    overflow:hidden;
-}
-
-.ludo-Progress-Bar-Left{
-    background-image:url('../images/progress-bar/progress-bg-filled.png');
-    background-repeat:no-repeat;
-    position:absolute;
-    left:0;
-    top:0;
-    height:20px;
-    width:55%;
-}
-
-.ludo-Progress-Bar-Right{
-    background-image:url('../images/progress-bar/progress-bg-filled.png');
-    background-repeat:no-repeat;
-    background-position:top right;
-    position:absolute;
-    top:0;
-    right:0;
-    height:20px;
-    width:55%;
-}
-
-.ludo-Progress-Bar-Percent{
-    width:100%;
-    height:100%;
-    text-align:center;
-    color:#000;
-    line-height:20px;
-    z-index:100;
-    position:relative;
-    font-family:arial;
-    font-size:0.9em;
-}
-
-.ludo-Progress-Bar-Message{
-    text-align:center;
 }/* ../ludojs/css-source/calendar/calendar.css */
 .ludo-calendar-year-container {
      background-color:#555;
@@ -1874,6 +1642,238 @@ div.ludo-tree-movable-shim img{
     -moz-user-select:none;
     line-height:16px;
     height:18px;
+}
+
+
+/* ../ludojs/css-source/progress/progress-bar.css */
+.ludo-Progress-Bar-Bg{
+    width:300px;
+    height:20px;
+    position:relative;
+    margin-left:2px;
+    margin-right:2px;
+    margin-top:1px;
+    overflow:hidden;
+}
+.ludo-Progress-Bar-Bg-Left{
+    background-image:url('../images/progress-bar/progress-bg.png');
+    width:60%;
+    left:0;
+    position:absolute;
+    background-position:top left;
+    height:20px;
+    background-repeat:no-repeat;
+
+}
+.ludo-Progress-Bar-Bg-Right{
+    background-image:url('../images/progress-bar/progress-bg.png');
+    position:absolute;
+    background-position:top right;
+    right:0;
+    top:0;
+    width:60%;
+    height:20px;
+    background-repeat:no-repeat;
+}
+
+
+.ludo-Progress-Bar{
+    background-repeat:repeat-x;
+    background-position:top left;
+    position:absolute;
+    top:0;
+    left:0;
+    height:20px;
+    width:300px;
+    overflow:hidden;
+}
+
+.ludo-Progress-Bar-Left{
+    background-image:url('../images/progress-bar/progress-bg-filled.png');
+    background-repeat:no-repeat;
+    position:absolute;
+    left:0;
+    top:0;
+    height:20px;
+    width:55%;
+}
+
+.ludo-Progress-Bar-Right{
+    background-image:url('../images/progress-bar/progress-bg-filled.png');
+    background-repeat:no-repeat;
+    background-position:top right;
+    position:absolute;
+    top:0;
+    right:0;
+    height:20px;
+    width:55%;
+}
+
+.ludo-Progress-Bar-Percent{
+    width:100%;
+    height:100%;
+    text-align:center;
+    color:#000;
+    line-height:20px;
+    z-index:100;
+    position:relative;
+    font-family:arial;
+    font-size:0.9em;
+}
+
+.ludo-Progress-Bar-Message{
+    text-align:center;
+}/* ../ludojs/css-source/form/form.css */
+.ludo-form-element div.ludo-body {
+    padding: 2px;
+}
+
+.ludo-body label.ludo-form-label-disabled {
+    color: #AAA;
+}
+
+.ludo-body input, .ludo-body textarea {
+    font-family: arial, helvetica, Sans-Serif;
+}/* ../ludojs/css-source/form/button.css */
+.ludo-component-buttonbar {
+    box-shadow: 0 !important;
+    padding-right: 2px;
+}
+
+div.ludo-form-button {
+    margin-left: 2px;
+    margin-right:2px;
+    background-repeat: no-repeat;
+    color: #000;
+    position: relative;
+    text-align: center;
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: bold;
+    background-color: transparent;
+
+}
+
+
+div.ludo-form-button-m{
+    height: 23px;
+}
+
+div.ludo-form-button-l{
+    height: 35px;
+    font-size:14px;
+    line-height:30px;
+}
+
+div.ludo-form-button-xl{
+    height: 45px;
+    font-size:14px;
+    line-height:40px;
+}
+
+div.ludo-form-button-s{
+    height: 14px;
+}
+
+div.ludo-form-button-l{
+    height:45px;
+}
+
+.ludo-form-tiny-button{
+    margin-top:2px;
+}
+div.ludo-form-button div {
+    padding: 0 ! important;
+    background-color: transparent;
+    -moz-user-select: none;
+}
+
+div.ludo-form-button-disabled {
+    cursor: default;
+    color:#555;
+}
+
+.ludo-form-button-selected .ludo-form-button-m-bg-left {
+    background-image: url('../images/button/button-bg-light-selected.png');
+}
+
+.ludo-form-button-selected .ludo-form-button-m-bg-right {
+    background-image: url('../images/button/button-bg-light-selected.png');
+}
+
+div.ludo-form-button-disabled .ludo-form-button-m-bg-left {
+    background-image: url('../images/button/button-bg-light-disabled.png');
+}
+
+div.ludo-form-button-disabled .ludo-form-button-m-bg-right {
+    background-image: url('../images/button/button-bg-light-disabled.png');
+}
+
+.ludo-form-button-over .ludo-form-button-m-bg-left {
+    background-image: url('../images/button/button-bg-light-over.png');
+}
+
+.ludo-form-button-over .ludo-form-button-m-bg-right {
+    background-image: url('../images/button/button-bg-light-over.png');
+}
+
+.ludo-form-button-down .ludo-form-button-m-bg-left {
+    background-image: url('../images/button/button-bg-light-down.png');
+}
+
+.ludo-form-button-down .ludo-form-button-m-bg-right {
+    background-image: url('../images/button/button-bg-light-down.png');
+}
+.ludo-form-button-bg-left{
+    width: 55%;
+    height: 100%;
+    position: absolute;
+    background-repeat: no-repeat;
+}
+.ludo-form-button-bg-right{
+    height: 100%;
+    width: 55%;
+    background-repeat: no-repeat;
+    position: absolute;
+    background-position: top right;
+}
+
+.ludo-form-button-m-bg-left {
+    background-image: url('../images/button/button-bg-light.png');
+}
+
+.ludo-form-button-m-bg-right {
+    background-image: url('../images/button/button-bg-light.png');
+}
+
+
+.ludo-form-button-value {
+    background-repeat:no-repeat;
+    background-position:center center;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.ludo-form-button-l .ludo-form-button-value{
+    font-size:16px;
+    line-height:34px;
+}
+.ludo-form-button-xl .ludo-form-button-value{
+    font-size:16px;
+    line-height:44px;
+}
+.ludo-form-button-s .ludo-form-button-value{
+    line-height:14px;
+}
+
+.ludo-form-button-m .ludo-form-button-value{
+    line-height:22px;
+}
+
+.ludo-buttonbar-component-content .ludo-form-button {
+    padding-top: 2px;
 }
 
 
