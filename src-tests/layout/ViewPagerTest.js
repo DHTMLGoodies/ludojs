@@ -278,14 +278,14 @@ TestCase("ViewPagerLayout", {
 		card1.show();
 
 		// when
-		deck.getLayout().showNextPage();
+		deck.getLayout().nextPage();
 
 		// then
 		assertEquals('card2', deck.getLayout().getVisiblePage().getName());
 		assertFalse(card2.isHidden());
 
 		// when
-		deck.getLayout().showNextPage();
+		deck.getLayout().nextPage();
 
 		// then
 		assertEquals('card3', deck.getLayout().getVisiblePage().getName());
@@ -293,7 +293,7 @@ TestCase("ViewPagerLayout", {
 
 
 		// when
-		deck.getLayout().showNextPage();
+		deck.getLayout().nextPage();
 
 		// then
 		assertEquals('card4', deck.getLayout().getVisiblePage().getName());

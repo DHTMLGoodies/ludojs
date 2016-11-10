@@ -31,7 +31,7 @@
     "navType": "vertical",
     "theme": "ludojs",
     "linenums": true,
-    "collapseSymbols": true,
+    "collapseSymbols": false,
     "inverseNav": true,
     "protocol": "html://",
     "methodHeadingReturns": true,

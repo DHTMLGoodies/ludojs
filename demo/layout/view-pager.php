@@ -1,6 +1,6 @@
 <?php
 $sub = true;
-$pageTitle = 'ViePager Layout demo';
+$pageTitle = 'ViewPager Layout demo';
 require_once("../includes/demo-header.php");
 ?>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/base.js"></script>
@@ -26,14 +26,19 @@ require_once("../includes/demo-header.php");
                     animate:true,
                     dragging:true,
                     type:'ViewPager',
-                    orientation:'horizontal'
+                    orientation:'horizontal',
+                    listeners:{
+                        'showpage': function(layout){
+                            ludo.get('myWindow').setTitle('Swipe between pages ' + (layout.selectedIndex+1) + " of " + layout.count);
+                        }
+                    }
                 },
                 elCss:{
                     border:0
                 },
                 children:[
-                    { name:'card1', html:'<img src="../images/card1.png">' },
-                    { name:'card2', html:'<img src="../images/card2.png">', layout:{ visible: true }},
+                    { name:'card1', html:'<img src="../images/card1.png">', layout:{ visible: true } },
+                    { name:'card2', html:'<img src="../images/card2.png">'},
                     { name:'card3', html:'<img src="../images/card3.png">'},
                     { name:'card4', html:'<img src="../images/card4.png">'},
                     { name:'card5', html:'<img src="../images/card5.png">'},

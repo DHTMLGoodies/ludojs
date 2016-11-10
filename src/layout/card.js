@@ -1,17 +1,4 @@
-/**
- * The ViewPager layout displays one child view at a time. You can swipe between pages or
- * go to a specific page using code.
- * @namespace ludo.layout
- * @class ludo.layout.ViewPager
- * @param {Object} config
- * @param {Boolean} config.dragging - True to support support page navigation with mouse and touch drag events. Default: true
- * @param {Boolean} config.animate - Animate transition between pages. Default: true
- * @param {Number} config.animationDuration - Duration of animation in milliseconds(1/1000s), Default: 250
- * @param {String} config.orientation - Orientation of child views, horizontal or vertical. When orientation is horizontal
- * you swipe left and right to switch between child views. With linear orientation, you swipe up and down.
- *
- *
- */
+
 ludo.layout.Card = new Class({
 	Extends:ludo.layout.Base,
 	visiblePage:undefined,

@@ -43,7 +43,7 @@ ludo.card.NextButton = new Class({
 
 	nextPage:function () {
 		if (this.applyTo) {
-			this.applyTo.getLayout().showNextPage();
+			this.applyTo.getLayout().nextPage();
 		}
 	}
 });

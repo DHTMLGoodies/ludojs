@@ -27,6 +27,9 @@ ludo.layout.Base = new Class({
 		if (this.view.layout.collapseBar) {
 			this.addCollapseBars();
 		}
+		if(this.view.layout.listeners != undefined){
+			this.addEvents(this.view.layout.listeners);
+		}
 	},
     /**f
     * Method executed when adding new child view to a layout

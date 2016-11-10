@@ -1,6 +1,8 @@
 /**
  * The ViewPager layout displays one child view at a time. You can swipe between pages or
  * go to a specific page using code.
+ *
+ * For demo, see <a href="../demo/layout/view-pager.php" onclick="var w = window.open(this.href);return false">View Pager demo</a>
  * @namespace ludo.layout
  * @class ludo.layout.ViewPager
  * @param {Object} config
@@ -9,20 +11,31 @@
  * @param {Number} config.animationDuration - Duration of animation in milliseconds(1/1000s), Default: 250
  * @param {String} config.orientation - Orientation of child views, horizontal or vertical. When orientation is horizontal
  * you swipe left and right to switch between child views. With linear orientation, you swipe up and down.
- *
+ * @property {Number} count Count child views
+ * @property {Number} selectedIndex Index of currently selected child view
+ * @fires ludo.layout.ViewPager#showpage - Event fired when a page is displayed. To add listeners, add a listeners object to your layout.
+ * Example: <code>layout:{ type:'ViewPager', listeners: { "showpage": function(){ } }}</code>
+ * @fires ludo.layout.ViewPager#lowerpage - Navigated back to a one of it's previous sibling views. Many of these events are useful for toggling buttons(enable/disable).
+ * @fires ludo.layout.ViewPager#higherpage - Navigated to one of it's next sibling views
+ * @fires ludo.layout.ViewPager#lastpage - Navigated to last child view
+ * @fires ludo.layout.ViewPager#notlastpage - Navigated to a child view which is not last.
+ * @fires ludo.layout.ViewPager#firstpage - Navigated to first child view
+ * @fires ludo.layout.ViewPager#notfirstpage - Navigated to a page which is different than first child view.
+ * @fires ludo.layout.ViewPager#valid - Fired when all form views on current shown child view is valid
+ * @fires ludo.layout.ViewPager#invalid - Fired when visible child view has a form view with invalid value.
  *
  */
 ludo.layout.ViewPager = new Class({
     Extends: ludo.layout.Base,
-    visiblePageIndex: undefined,
+    selectedIndex: undefined,
     animate: true,
     initialAnimate: false,
     animationDuration: 250,
     touch: {},
     dragging: true,
     orientation: 'horizontal',
-
     parentDiv: undefined,
+    count : undefined,
 
 
     onCreate: function () {
@@ -63,7 +76,6 @@ ludo.layout.ViewPager = new Class({
     },
 
     makeViewsVisible: function (index) {
-        console.log(index);
         this.view.children[index].show();
         if (index > 0) {
             this.view.children[index - 1].show();
@@ -109,6 +121,7 @@ ludo.layout.ViewPager = new Class({
 
     onChildShow: function (child) {
         this.positionPage(child);
+        this.count = this.view.children.length;
     },
 
     addDragEvents: function (child) {
@@ -119,44 +132,49 @@ ludo.layout.ViewPager = new Class({
         for (var i = 0; i < this.view.children.length; i++) {
             var v = this.view.children[i];
             if (!v.hidden) {
+                this.positionPage(v);
                 v.resize({height: this.viewport.height, width: this.viewport.width});
             }
         }
 
-        this.positionPage(this.getVisiblePage());
-
-        this.parentDiv.css(this.getAnimation(this.visiblePageIndex));
+        this.parentDiv.css(this.getAnimation(this.selectedIndex));
 
     },
 
     getVisiblePage: function () {
-        return this.view.children[this.visiblePageIndex];
-    },
-
-    shouldSetPageVisible: function (page) {
-        return page.layout && page.layout.visible == true;
+        return this.view.children[this.selectedIndex];
     },
 
     /**
      * Show previous card of current visible card
      * @function showPreviousPage
-     * @param {Boolean} skipAnimation (optional)
+     * @param {Boolean} animate Animate transition. Optional parameter, default: true
      * @return {Boolean} success
      */
-    showPreviousPage: function (skipAnimation) {
-        return this.goToPage(this.visiblePageIndex-1);
+    showPreviousPage: function (animate) {
+        return this.goToPage(this.selectedIndex-1, animate);
     },
 
-    goToPage:function(pageIndex){
+    /**
+     * Go to a specific page index(0 = first page)
+     * @memberof ludo.layout.ViewPager.prototype
+     * @param {Number} pageIndex page index
+     * @param {Boolean} animate Animate transition, Optional parameter, default true
+     * @returns {boolean} navigation successful. will return false on invalid index.
+     */
+    goToPage:function(pageIndex, animate){
+        if(animate == undefined)animate = this.animate;
+        if(!animate)this.temporaryDisableAnimation();
         if(pageIndex < 0 || pageIndex >= this.view.children.length)return false;
         this.setVisiblePageIndex(pageIndex);
         this.animateToSelected();
         this.makeViewsVisible(pageIndex);
+        this.resetAnimation();
         return true;
     },
 
     animateToSelected: function () {
-        this.animateTo(this.visiblePageIndex);
+        this.animateTo(this.selectedIndex);
     },
 
     animateTo: function (childIndex) {
@@ -178,11 +196,12 @@ ludo.layout.ViewPager = new Class({
     /**
      * Show next card of current visible card
      * @function showNextPage
-     * @param {Boolean} skipAnimation (optional)
+     * @memberof ludo.layout.ViewPager.prototype
+     * @param {Boolean} animate Animate transition, default: true
      * @return {Boolean} success
      */
-    showNextPage: function (animate) {
-        return this.goToPage(this.visiblePageIndex+1);
+    nextPage: function (animate) {
+        return this.goToPage(this.selectedIndex+1);
     },
 
 
@@ -211,24 +230,6 @@ ludo.layout.ViewPager = new Class({
         }
         return false;
     },
-    /**
-     * Return true if passed card is last card in deck
-     * @function isLastPage
-     * @param {View} page
-     * @return Boolean
-     */
-    isLastPage: function (page) {
-        return this.view.children.indexOf(page) == this.view.children.length - 1;
-    },
-    /**
-     * Return true if passed card is first card in deck
-     * @function isFirstPage
-     * @param  {View} page
-     * @return {Boolean}
-     */
-    isFirstPage: function (page) {
-        return this.view.children.indexOf(page) == 0;
-    },
 
     onPageRender: function (page) {
         page.resize({
@@ -250,43 +251,25 @@ ludo.layout.ViewPager = new Class({
         this.removeValidationEvents();
 
         var indexDiff = 0;
-        if (this.visiblePageIndex != undefined) {
-            indexDiff = pageIndex - this.visiblePageIndex;
+        if (this.selectedIndex != undefined) {
+            indexDiff = pageIndex - this.selectedIndex;
         }
 
-        this.visiblePageIndex = pageIndex;
+        this.selectedIndex = pageIndex;
+
 
         this.addValidationEvents();
 
         var page = this.getVisiblePage();
 
         if (indexDiff > 0) {
-            /**
-             * Event fired when a higher card than current is shown
-             * @event higherpage
-             * @param {layout.Page} this deck
-             * @param {View} shown card
-             */
             this.fireEvent('higherpage', [this, page]);
         } else if (indexDiff < 0) {
-            /**
-             * Event fired when a lower card than current is shown
-             * @event lowerpage
-             * @param {layout.Page} this deck
-             * @param {View} shown card
-             */
             this.fireEvent('lowerpage', [this, page]);
         }
-
-        /**
-         * Event fired when a card is shown
-         * @event showpage
-         * @param {layout.Page} this deck
-         * @param {View} shown card
-         */
         this.fireEvent('showpage', [this, this.visiblePage]);
 
-        if (this.isLastPage(page)) {
+        if (this.selectedIndex == this.count-1) {
             /**
              * Event fired when last card of deck is shown
              * @event lastpage
@@ -295,36 +278,18 @@ ludo.layout.ViewPager = new Class({
              */
             this.fireEvent('lastpage', [this, page]);
         } else {
-            /**
-             * Event fired when na card which is not the last card in the deck is shown
-             * @event notlastpage
-             * @param {layout.Page} this card
-             * @param {View} shown card
-             */
             this.fireEvent('notlastpage', [this, page]);
         }
-        if (this.isFirstPage(page)) {
-            /**
-             * Event fired when first card of deck is shown
-             * @event firstpage
-             * @param {layout.Page} this card
-             * @param {View} shown card
-             */
+        if (this.selectedIndex == 0) {
             this.fireEvent('firstpage', [this, page]);
         }
         else {
-            /**
-             * Event fired when a card which is not the first card in the deck is shown
-             * @event notfirstpage
-             * @param {layout.Page} this card
-             * @param {View} shown card
-             */
             this.fireEvent('notfirstpage', [this, page]);
         }
     },
 
     removeValidationEvents: function () {
-        if (this.visiblePageIndex != undefined) {
+        if (this.selectedIndex != undefined) {
             this.getVisiblePage().removeEvent('invalid', this.setInvalid);
             this.getVisiblePage().removeEvent('valid', this.setValid);
         }
@@ -344,93 +309,25 @@ ludo.layout.ViewPager = new Class({
         this.fireEvent('valid', this);
     },
     /**
-     * Show first card in deck
+     * Go to first child view
      * @function showFirstPage
+     * @memberof ludo.layout.ViewPager.prototype
      * @return void
      */
     showFirstPage: function () {
-        if (this.view.children.length > 0)this.goToPage(0);
+        if (this.count > 0)this.goToPage(0);
     },
     /**
-     * Show last card in deck
+     * Go to last page
      * @function showLastPage
+     * @memberof ludo.layout.ViewPager.prototype
      * @return void
      */
     showLastPage: function () {
-        this.goToPage(this.view.children.length-1);
-    },
-
-    /**
-     * Returns true if form of current card is valid
-     * @function isValid
-     * @public
-     * @return {Boolean}
-     */
-    isValid: function () {
-        if (this.visiblePage) {
-            return this.visiblePage.getForm().isValid();
-        }
-        return true;
-    },
-    /**
-     * Return number of cards in deck
-     * @function getCountPages
-     * @return {Number} count cards
-     */
-    getCountPages: function () {
-        return this.view.children.length;
-    },
-    /**
-     * Return index of visible card
-     * @function getIndexOfVisiblePage
-     * @return {Number} card index
-     */
-    getIndexOfVisiblePage: function () {
-        return this.visiblePage ? this.view.children.indexOf(this.visiblePage) : 0;
-    },
-
-    /**
-     * true if first card in deck is shown.
-     * @function isOnFirstPage
-     * @return {Boolean} is on first card
-     */
-    isOnFirstPage: function () {
-        return this.getIndexOfVisiblePage() == 0;
-    },
-    /**
-     * true if last card in deck is shown.
-     * @function isOnLastPage
-     * @return {Boolean} is on last card
-     */
-    isOnLastPage: function () {
-        return this.getIndexOfVisiblePage() == this.view.children.length - 1;
-    },
-
-    /**
-     * Returns percentage position of current visible card.
-     * @function getPercentCompleted
-     * @return {Number} percent
-     */
-    getPercentCompleted: function () {
-        return Math.round((this.getIndexOfVisiblePage() + 1 ) / this.view.children.length * 100);
-    },
-
-    animateHigherPage: function () {
-        if (this.animate) {
-            if (this.orientation == 'horizontal') {
-                this.animateFromRight();
-            } else {
-                this.animateFromBottom();
-            }
-        }
-    },
-
-    animationStart: function () {
-        // TODO apply shadow or border during dragging and animation.
+        this.goToPage(this.count-1);
     },
 
     animationComplete: function (el) {
-
         el.css({
             left: 0, top: 0, borderWidth: 0
         });
@@ -439,18 +336,16 @@ ludo.layout.ViewPager = new Class({
 
     touchStart: function (e) {
         if (this.isOnFormElement(e.target))return undefined;
-        var isFirstPage = this.visiblePageIndex == 0;
-        var isValid = this.view.children[this.visiblePageIndex].getForm().isValid();
-        if (!isValid && isFirstPage) {
+        var isValid = this.view.children[this.selectedIndex].getForm().isValid();
+        if (!isValid && this.selectedIndex == 0) {
             return undefined;
         }
 
         var animateX = this.orientation == 'horizontal';
         var parentSize = animateX ? this.viewport.width : this.viewport.height;
 
-        var min = this.visiblePageIndex < this.view.children.length-1 ? (parentSize * -1) : 0;
-        var max = this.visiblePageIndex > 0 ? parentSize : 0;
-
+        var min = this.selectedIndex < this.view.children.length-1 ? (parentSize * -1) : 0;
+        var max = this.selectedIndex > 0 ? parentSize : 0;
 
         this.touch = {
             active: true,
@@ -504,7 +399,7 @@ ludo.layout.ViewPager = new Class({
             if (pos > 0 && this.touch.max && pos > (this.touch.max / 2)) {
                 this.showPreviousPage();
             } else if (pos < 0 && pos < (this.touch.min / 2)) {
-                this.showNextPage();
+                this.nextPage();
             } else {
                 this.animateToSelected();
             }

@@ -1,7 +1,7 @@
-/* Generated Thu Nov 10 23:23:04 CET 2016 */
+/* Generated Thu Nov 10 23:45:06 CET 2016 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.55
+ludoJS - Javascript framework, 1.1.58
 Copyright (C) 2012-2016  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -6042,6 +6042,9 @@ ludo.layout.Base = new Class({
 	onCreate:function () {
 		if (this.view.layout.collapseBar) {
 			this.addCollapseBars();
+		}
+		if(this.view.layout.listeners != undefined){
+			this.addEvents(this.view.layout.listeners);
 		}
 	},
     /**f
@@ -15739,7 +15742,7 @@ ludo.layout.LinearVertical = new Class({
  */
 ludo.layout.ViewPager = new Class({
     Extends: ludo.layout.Base,
-    visiblePageIndex: undefined,
+    selectedIndex: undefined,
     animate: true,
     initialAnimate: false,
     animationDuration: 250,
@@ -15788,7 +15791,6 @@ ludo.layout.ViewPager = new Class({
     },
 
     makeViewsVisible: function (index) {
-        console.log(index);
         this.view.children[index].show();
         if (index > 0) {
             this.view.children[index - 1].show();
@@ -15850,12 +15852,12 @@ ludo.layout.ViewPager = new Class({
 
         this.positionPage(this.getVisiblePage());
 
-        this.parentDiv.css(this.getAnimation(this.visiblePageIndex));
+        this.parentDiv.css(this.getAnimation(this.selectedIndex));
 
     },
 
     getVisiblePage: function () {
-        return this.view.children[this.visiblePageIndex];
+        return this.view.children[this.selectedIndex];
     },
 
     shouldSetPageVisible: function (page) {
@@ -15869,7 +15871,7 @@ ludo.layout.ViewPager = new Class({
      * @return {Boolean} success
      */
     showPreviousPage: function (skipAnimation) {
-        return this.goToPage(this.visiblePageIndex-1);
+        return this.goToPage(this.selectedIndex-1);
     },
 
     goToPage:function(pageIndex){
@@ -15881,7 +15883,7 @@ ludo.layout.ViewPager = new Class({
     },
 
     animateToSelected: function () {
-        this.animateTo(this.visiblePageIndex);
+        this.animateTo(this.selectedIndex);
     },
 
     animateTo: function (childIndex) {
@@ -15907,7 +15909,7 @@ ludo.layout.ViewPager = new Class({
      * @return {Boolean} success
      */
     showNextPage: function (animate) {
-        return this.goToPage(this.visiblePageIndex+1);
+        return this.goToPage(this.selectedIndex+1);
     },
 
 
@@ -15975,11 +15977,11 @@ ludo.layout.ViewPager = new Class({
         this.removeValidationEvents();
 
         var indexDiff = 0;
-        if (this.visiblePageIndex != undefined) {
-            indexDiff = pageIndex - this.visiblePageIndex;
+        if (this.selectedIndex != undefined) {
+            indexDiff = pageIndex - this.selectedIndex;
         }
 
-        this.visiblePageIndex = pageIndex;
+        this.selectedIndex = pageIndex;
 
         this.addValidationEvents();
 
@@ -16049,7 +16051,7 @@ ludo.layout.ViewPager = new Class({
     },
 
     removeValidationEvents: function () {
-        if (this.visiblePageIndex != undefined) {
+        if (this.selectedIndex != undefined) {
             this.getVisiblePage().removeEvent('invalid', this.setInvalid);
             this.getVisiblePage().removeEvent('valid', this.setValid);
         }
@@ -16164,8 +16166,8 @@ ludo.layout.ViewPager = new Class({
 
     touchStart: function (e) {
         if (this.isOnFormElement(e.target))return undefined;
-        var isFirstPage = this.visiblePageIndex == 0;
-        var isValid = this.view.children[this.visiblePageIndex].getForm().isValid();
+        var isFirstPage = this.selectedIndex == 0;
+        var isValid = this.view.children[this.selectedIndex].getForm().isValid();
         if (!isValid && isFirstPage) {
             return undefined;
         }
@@ -16173,8 +16175,8 @@ ludo.layout.ViewPager = new Class({
         var animateX = this.orientation == 'horizontal';
         var parentSize = animateX ? this.viewport.width : this.viewport.height;
 
-        var min = this.visiblePageIndex < this.view.children.length-1 ? (parentSize * -1) : 0;
-        var max = this.visiblePageIndex > 0 ? parentSize : 0;
+        var min = this.selectedIndex < this.view.children.length-1 ? (parentSize * -1) : 0;
+        var max = this.selectedIndex > 0 ? parentSize : 0;
 
 
         this.touch = {
@@ -16239,6 +16241,10 @@ ludo.layout.ViewPager = new Class({
     isOnFormElement: function (el) {
         var tag = el.tagName.toLowerCase();
         return tag == 'input' || tag == 'textarea' || tag === 'select';
+    },
+
+    countPages:function(){
+        return this.view.children.length;
     }
 });
 /* ../ludojs/src/layout/tab-strip.js */
