@@ -224,6 +224,10 @@ ludo.get = function (id) {
     return ludo.CmpMgr.get(id);
 };
 
+ludo.$ = function(id){
+    return ludo.CmpMgr.get(id);
+};
+
 ludo._new = function (config) {
     if (config.type && ludo.SINGLETONS[config.type]) {
         return ludo.SINGLETONS[config.type];
@@ -266,6 +270,8 @@ ludo.FormMgrClass = new Class({
         return this.formElements[name] ? this.formElements[name] : null;
     },
 
+
+
     currentFocusedElement:undefined,
 
     setFocus:function (value, component) {
@@ -282,3 +288,4 @@ ludo.FormMgrClass = new Class({
 });
 ludo.Form = new ludo.FormMgrClass();
 
+Events.prototype.on = Events.prototype.addEvent;

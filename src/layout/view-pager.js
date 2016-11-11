@@ -27,6 +27,7 @@
  */
 ludo.layout.ViewPager = new Class({
     Extends: ludo.layout.Base,
+    lastIndex:undefined,
     selectedIndex: undefined,
     animate: true,
     initialAnimate: false,
@@ -73,6 +74,10 @@ ludo.layout.ViewPager = new Class({
         }
         this.makeViewsVisible(selectedIndex);
         this.setVisiblePageIndex(selectedIndex);
+    },
+
+    afterRendered:function(){
+        this.triggerEvents();
     },
 
     makeViewsVisible: function (index) {
@@ -147,11 +152,11 @@ ludo.layout.ViewPager = new Class({
 
     /**
      * Show previous card of current visible card
-     * @function showPreviousPage
+     * @function previousPage
      * @param {Boolean} animate Animate transition. Optional parameter, default: true
      * @return {Boolean} success
      */
-    showPreviousPage: function (animate) {
+    previousPage: function (animate) {
         return this.goToPage(this.selectedIndex-1, animate);
     },
 
@@ -195,7 +200,7 @@ ludo.layout.ViewPager = new Class({
 
     /**
      * Show next card of current visible card
-     * @function showNextPage
+     * @function nextPage
      * @memberof ludo.layout.ViewPager.prototype
      * @param {Boolean} animate Animate transition, default: true
      * @return {Boolean} success
@@ -250,24 +255,27 @@ ludo.layout.ViewPager = new Class({
 
         this.removeValidationEvents();
 
-        var indexDiff = 0;
-        if (this.selectedIndex != undefined) {
-            indexDiff = pageIndex - this.selectedIndex;
-        }
+        this.lastIndex = this.selectedIndex || 0;
 
         this.selectedIndex = pageIndex;
 
-
         this.addValidationEvents();
+        if(this.hasBeenRendered()){
+            this.triggerEvents();
+        }
+    },
 
+    triggerEvents:function(){
         var page = this.getVisiblePage();
 
+        var payload = [this, this.view, page];
+        var indexDiff = this.selectedIndex - this.lastIndex;
         if (indexDiff > 0) {
-            this.fireEvent('higherpage', [this, page]);
+            this.fireEvent('higherpage', payload);
         } else if (indexDiff < 0) {
-            this.fireEvent('lowerpage', [this, page]);
+            this.fireEvent('lowerpage', payload);
         }
-        this.fireEvent('showpage', [this, this.visiblePage]);
+        this.fireEvent('showpage', payload);
 
         if (this.selectedIndex == this.count-1) {
             /**
@@ -276,15 +284,15 @@ ludo.layout.ViewPager = new Class({
              * @param {layout.Page} this card
              * @param {View} shown card
              */
-            this.fireEvent('lastpage', [this, page]);
+            this.fireEvent('lastpage', payload);
         } else {
-            this.fireEvent('notlastpage', [this, page]);
+            this.fireEvent('notlastpage', payload);
         }
         if (this.selectedIndex == 0) {
-            this.fireEvent('firstpage', [this, page]);
+            this.fireEvent('firstpage', payload);
         }
         else {
-            this.fireEvent('notfirstpage', [this, page]);
+            this.fireEvent('notfirstpage', payload);
         }
     },
 
@@ -302,11 +310,11 @@ ludo.layout.ViewPager = new Class({
         manager.validate();
     },
     setInvalid: function () {
-        this.fireEvent('invalid', this);
+        this.fireEvent('invalid', [this, this.view, this.view.children[this.selectedIndex]]);
     },
 
     setValid: function () {
-        this.fireEvent('valid', this);
+        this.fireEvent('valid', [this, this.view, this.view.children[this.selectedIndex]]);
     },
     /**
      * Go to first child view
@@ -397,7 +405,7 @@ ludo.layout.ViewPager = new Class({
             this.touch.active = false;
             var pos = this.touch.previousPos;
             if (pos > 0 && this.touch.max && pos > (this.touch.max / 2)) {
-                this.showPreviousPage();
+                this.previousPage();
             } else if (pos < 0 && pos < (this.touch.min / 2)) {
                 this.nextPage();
             } else {

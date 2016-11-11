@@ -167,12 +167,10 @@ ludo.View = new Class({
 
 		}
 
-		/**
-		 * Event fired when component has been rendered
-		 * @event render
-		 * @param Component this
-		 */
+		// TODO remove 'render' and replace with 'rendered'
+
 		this.fireEvent('render', this);
+		this.fireEvent('rendered', this);
 	},
 	/**
 	 * First life cycle step when creating and object

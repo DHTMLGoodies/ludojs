@@ -311,7 +311,7 @@ TestCase("ViewPagerLayout", {
 		// when
 		assertEquals('card2', deck.getLayout().getVisiblePage().getName());
 
-		deck.getLayout().showPreviousPage();
+		deck.getLayout().previousPage();
 
 		// then
 		assertFalse(card1.isHidden());

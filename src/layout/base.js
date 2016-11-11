@@ -2,6 +2,13 @@
 * Base class for ludoJS layouts
  * @namespace ludo.layout
  * @class ludo.layout.Base
+ * @property {object} viewport
+ * @property {Number} viewport.width - Inner width of View's body
+ * @property {Number} viewport.height - Inner height of View's body
+ * @fires ludo.layout.Base#rendered Fired after all children has been rendered and resized. Arguments: 1) the layout, 2) Parent view
+ * @fires ludo.layout.Base#addChild Fired after adding new child to parent view. Arguments: 1) Layout, 2) parent view, 3) child
+ * @fires ludo.layout.Base#addChildRuntime Fired after adding new child to parent during runtime, i.e. after first rendering with
+ * code <code>view.addChild()</code>. Arguments: 1) Layout, 2) parent view, 3) child
  */
 ludo.layout.Base = new Class({
 	Extends:Events,
@@ -10,17 +17,19 @@ ludo.layout.Base = new Class({
 	resizables:[],
 	benchmarkTime:false,
 	dependency:{},
-	viewport:{
-		top:0, left:0,
-		width:0, height:0,
-		bottom:0, right:0
-	},
+	viewport:undefined,
     resized:false,
 
 	initialize:function (view) {
         this.id = String.uniqueID();
 		this.view = view;
+		this.viewport = {
+			top:0, left:0,
+			width:0, height:0,
+			bottom:0, right:0
+		};
 		if(view.getBody())this.onCreate();
+
 	},
 
 	onCreate:function () {
@@ -30,6 +39,8 @@ ludo.layout.Base = new Class({
 		if(this.view.layout.listeners != undefined){
 			this.addEvents(this.view.layout.listeners);
 		}
+
+		this.fireEvent('create', [this, this.view]);
 	},
     /**f
     * Method executed when adding new child view to a layout
@@ -79,7 +90,11 @@ ludo.layout.Base = new Class({
 		 * @param {ludo.View} child
 		 * @param {ludo.layout.Base} layout manager
 		 */
-		this.fireEvent('addChild', [child, this]);
+		this.fireEvent('addChild', [this, this.view, child]);
+
+		if(this.firstResized){
+			this.fireEvent('addChildRuntime', [this, this.view, child])
+		}
 		return child;
 	},
     /**
@@ -123,6 +138,7 @@ ludo.layout.Base = new Class({
 	},
     firstResized : false,
 
+
 	resizeChildren:function () {
 
 		if (this.benchmarkTime) {
@@ -139,13 +155,28 @@ ludo.layout.Base = new Class({
 
 		if(!this.firstResized){
 			this.beforeFirstResize();
-			this.firstResized = true;
+
 		}
 
 		this.resize();
+
+
+		if(!this.firstResized){
+			this.fireEvent('rendered', [this, this.view]);
+			this.afterRendered();
+			this.firstResized = true;
+		}
+
+
 		if (this.benchmarkTime) {
 			ludo.util.log("Time for resize(" + this.view.layout.type + "): " + (new Date().getTime() - start));
 		}
+
+
+	},
+
+	afterRendered:function(){
+
 	},
 
 	hasBeenRendered:function(){
@@ -155,6 +186,8 @@ ludo.layout.Base = new Class({
 	beforeFirstResize:function(){
 
     },
+
+
 
 	storeViewPortSize:function () {
 		this.viewport.absWidth = this.getAvailWidth();
@@ -217,7 +250,7 @@ ludo.layout.Base = new Class({
 	},
 
 	getAvailHeight:function () {
-		return this.view.getInnerHeightOfBody();
+		return this.view.getBody().height();
 	},
 
 	addCollapseBars:function () {
@@ -284,6 +317,8 @@ ludo.layout.Base = new Class({
             width:0,height:0
         });
     },
+
+
 
     /**
      * Executed when a child is minimized. It set's temporary width or properties

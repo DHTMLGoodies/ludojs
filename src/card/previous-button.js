@@ -31,7 +31,7 @@ ludo.card.PreviousButton = new Class({
 
 	showPreviousPage:function () {
 		if (this.applyTo) {
-			this.applyTo.getLayout().showPreviousPage();
+			this.applyTo.getLayout().previousPage();
 		}
 	}
 });
