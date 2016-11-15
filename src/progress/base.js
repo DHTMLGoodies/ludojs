@@ -18,7 +18,7 @@ ludo.progress.Base = new Class({
 
     defaultDS:'progress.DataSource',
 
-    ludoConfig:function (config) {
+    __construct:function (config) {
         this.parent(config);
         this.setConfigParams(config, ['applyTo','listenTo', 'pollFrequence','hideOnFinish']);
 

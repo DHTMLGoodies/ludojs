@@ -2,7 +2,7 @@
 $pageTitle = 'Progress bar demo';
 require_once("includes/demo-header.php");
 ?>
-<body>
+
 <script type="text/javascript" class="source-code">
     new ludo.Window({
         id:'progress-bar-window',

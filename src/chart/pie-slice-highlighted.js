@@ -42,7 +42,7 @@ ludo.chart.PieSliceHighlighted = new Class({
      */
     size : 5,
 
-    ludoConfig:function (config) {
+    __construct:function (config) {
         this.parent(config);
 
         this.setConfigParams(config, ['styles','size']);

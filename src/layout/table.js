@@ -142,7 +142,6 @@ ludo.layout.Table = new Class({
         var totalWidth = this.view.getBody().width();
         var weightWidth = totalWidth - this.fixedWidth;
         for (var i = colIndex; i < colIndex + colspan; i++) {
-            console.log(i +',' + colspan);
             if (this.cols[i].width) {
                 width += this.cols[i].width;
             } else if (this.cols[i].weight) {

@@ -74,7 +74,7 @@ ludo.form.FilterText = new Class({
     timeStamp:0,
     remote:{},
 
-    ludoConfig:function (config) {
+    __construct:function (config) {
         this.filterOnServer = config.filterOnServer || this.filterOnServer;
         if (config.remote) {
             config.remote.isJSON = true;
@@ -90,7 +90,7 @@ ludo.form.FilterText = new Class({
     },
 
 
-    ludoRendered:function () {
+    __rendered:function () {
         this.parent();
 
         var cell = this.els.cellInput;
@@ -473,7 +473,7 @@ ludo.form.TextFilterContainer = new Class({
         border:'1px solid #AAA',
         'background-color':'#FFF'
     },
-    ludoConfig:function (config) {
+    __construct:function (config) {
         this.formComponent = config.formComponent;
         config.els = config.els || {};
         config.renderTo = document.body;
@@ -483,7 +483,7 @@ ludo.form.TextFilterContainer = new Class({
 
     },
 
-    ludoRendered:function () {
+    __rendered:function () {
         this.parent();
         this.resize({
             width:this.layout.width,

@@ -110,9 +110,7 @@
     height: 100%;
     font-family: arial;
     font-size:12px;
-    font-weight: bold;
     line-height: 23px;
-    color: #000;
 
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -421,9 +419,7 @@ div.ludo-component-button-container, div.ludo-content-buttons {
     padding-left:3px;
 }
 
-div.ludo-window, div.ludo-framed-view-shim, div.ludo-dashboard-insertion-marker{
-    border-radius:3px;
-}
+
 div.ludo-FramedView {
     border-radius: 0;
 }
@@ -612,10 +608,6 @@ div.ludo-resize-handle-active {
 
 }
 
-/** Not the first child */
-.ludo-accordion-titlebar-below-expanded{
-    border-top: 1px solid #c6c6c6;
-}
 
 .ludo-accordion-titlebar{
     cursor:pointer;
@@ -914,7 +906,7 @@ div.ludo-tab-strip-top div.ludo-body {
 .ludo-window, .ludo-richcomponent, .ludo-framed-view-shim {
     border-radius: 7px 7px 0 0;
     -moz-border-radius: 7px 7px 0 0;
-    webkit-border-radius: 7px 7px 0 0;
+    -webkit-border-radius: 7px 7px 0 0;
 }/* ../ludojs/css-source/grid/grid.css */
 .ludo-grid-Grid {
     border-radius:0;
@@ -1173,6 +1165,9 @@ div.ludo-paging-current-page .ludo-body{
 
 .input-cell input {
     height: 15px;
+}/* ../ludojs/css-source/view/view-pager-nav.css */
+.viewpager-dot-parent{
+    cursor:pointer;
 }/* ../ludojs/css-source/calendar/calendar.css */
 .ludo-calendar-year-container {
      background-color:#555;
@@ -1297,7 +1292,7 @@ div.ludo-paging-current-page .ludo-body{
      border-top:1px solid #999;
  }
 .calendar-day{
-    border:1px solid #FFF;
+    border:1px solid transparent;
 }
 .calendar-day-selected{
     background-color:#eeeee8;
@@ -2525,7 +2520,7 @@ div.ludo-framed-view-body {
 
 div.ludo-framed-view-titlebar {
     border-bottom: 1px solid #c6c6c6;
-    background: #c6e1ff url("../images/light-gray-skin/bg-title-bar.png");
+
 }
 
 div.ludo-framed-view-titlebar {
@@ -3186,6 +3181,8 @@ div.ludo-tab-strip-tab-active {
     border: 1px solid #c6c6c6;
     border-right: 1px solid #a5a5a5;
     border-top: 1px solid #a5a5a5;
+    border-bottom:0;
+
 }
 .ludo-tab-strip-tab-left {
     border: 1px solid #c6c6c6;
@@ -3295,4 +3292,22 @@ div.ludo-tabs-in-dropdown-body{
     padding : 0;
     margin-top : 0;
     background-color : #f2f2f2;
+}
+
+.navigator-dot-parent{
+    cursor:pointer;
+}
+.viewpager-dot{
+    background-color:#388E3C;
+
+}
+.viewpager-dot-selected{
+    background-color:#1B5E20;
+}
+
+/** Accordion layout **/
+
+/** Not the first child */
+.ludo-accordion-titlebar-below-expanded{
+    border-top: 1px solid #c6c6c6;
 }

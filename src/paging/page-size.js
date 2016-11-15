@@ -16,7 +16,7 @@ ludo.paging.PageSize = new Class({
 	label : 'Page size',
 	applyTo:undefined,
 
-	ludoConfig:function(config){
+	__construct:function(config){
 		this.applyTo = ludo.get(config.dataSource || this.applyTo);
 		config.dataSource = undefined;
 		this.parent(config);

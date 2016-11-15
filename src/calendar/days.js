@@ -26,7 +26,7 @@ ludo.calendar.Days = new Class({
         enabled:false
     },
 
-    ludoRendered:function () {
+    __rendered:function () {
         this.parent();
         this.createCalendarHeader();
         this.createCalendarView();
@@ -39,9 +39,9 @@ ludo.calendar.Days = new Class({
         this.parent();
         if (ludo.util.isTabletOrMobile()) {
             var el = this.getBody();
-            el.addEvent('touchstart', this.touchStart.bind(this));
-            this.getEventEl().addEvent('touchmove', this.touchMove.bind(this));
-            this.getEventEl().addEvent('touchend', this.touchEnd.bind(this));
+            el.on('touchstart', this.touchStart.bind(this));
+            this.getEventEl().on('touchmove', this.touchMove.bind(this));
+            this.getEventEl().on('touchend', this.touchEnd.bind(this));
         }
     },
 
@@ -256,6 +256,7 @@ ludo.calendar.Days = new Class({
     },
 
     isValueMonth:function () {
+
         return this.value ? this.value.get('month') == this.date.get('month') && this.value.get('year') == this.date.get('year') : false;
     },
 
@@ -329,7 +330,7 @@ ludo.calendar.Days = new Class({
 
         el.addClass('calendar-day-selected');
         this.value = this.date.clone();
-        this.value.set('date', el.get('html'));
+        this.value.set('date', el.html());
         this.fireEvent('change', [this.value, this]);
     },
 
@@ -337,6 +338,8 @@ ludo.calendar.Days = new Class({
         if (this.els.monthView && this.isValueMonth()) {
             var el = this.els.monthView.find('.calendar-day-' + this.value.get('date'));
             if (el)el.removeClass('calendar-day-selected');
+        }else{
+            console.log("not same month " + this.isValueMonth());
         }
     },
 

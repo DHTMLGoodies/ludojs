@@ -10,7 +10,7 @@ ludo.tree.FilterTree = new Class({
 	treePanel:undefined,
 	input:undefined,
 
-	ludoConfig:function (config) {
+	__construct:function (config) {
 
 		this.parent(config);
 		this.inputConfig = config.inputConfig;
@@ -37,7 +37,7 @@ ludo.tree.FilterTree = new Class({
 
 	},
 
-	ludoRendered:function () {
+	__rendered:function () {
 		this.parent();
 
 		this.viewField = this.addChild({

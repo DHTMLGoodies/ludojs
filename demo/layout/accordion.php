@@ -3,14 +3,16 @@ $sub = true;
 $pageTitle = 'Accordion Layout';
 require_once("../includes/demo-header.php");
 ?>
-<body>
+
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/base.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/renderer.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/linear.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/linear-horizontal.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/linear-vertical.js"></script>
 <style type="text/css">
-
+a{
+    color:#600;
+}
 </style>
 <script type="text/javascript" class="source-code">
     var w = new ludo.Window({
@@ -39,7 +41,7 @@ require_once("../includes/demo-header.php");
                 },
                 css:{
                     padding:5,
-                    'font-size' : '1.2em'
+                    'font-size' : '1.1em'
                 }
             },
             {
@@ -51,7 +53,7 @@ require_once("../includes/demo-header.php");
                 },
                 css:{ // CSS styling for the view
                     padding:5,
-                    'font-size' : '1.2em',
+                    'font-size' : '1.1em',
                     'overflow-y': 'auto'
                 }
             },

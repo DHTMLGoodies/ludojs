@@ -5,7 +5,7 @@ ludo.chart.Fragment = new Class({
 
     rendering:{},
 
-    ludoConfig:function (config) {
+    __construct:function (config) {
         this.parent(config);
         this.setConfigParams(config, ['record','parentComponent']);
         this.createNodes();

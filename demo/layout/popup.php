@@ -3,7 +3,7 @@ $sub = true;
 $pageTitle = 'Popup layout';
 require_once("../includes/demo-header.php");
 ?>
-<body>
+
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/renderer.js"></script>
 <h1>Click button to see the popup layout in action</h1>
 <script type="text/javascript">
@@ -84,7 +84,7 @@ require_once("../includes/demo-header.php");
             }
         ],
 
-        ludoRendered:function () {
+        __rendered:function () {
             this.parent();
             this.addEvent('click', this.toggleView.bind(this));
             this.child['loginWindow'].addEvent('login', this.showUserInfo.bind(this));

@@ -1,6 +1,6 @@
 TestCase("TabLayout", {
 
-    getView: function (tabs) {
+    getView_250_40: function (tabs) {
         return new ludo.View({
             layout: {
                 type: 'tab',
@@ -39,7 +39,7 @@ TestCase("TabLayout", {
 
     "test should set correct layout of children": function () {
         // given
-        var v = this.getView();
+        var v = this.getView_250_40();
 
         // then
         assertTrue(v.child['a'].layout.alignParentLeft);
@@ -52,7 +52,7 @@ TestCase("TabLayout", {
 
     "test should create tab strip": function () {
         // given
-        var v = this.getView('top');
+        var v = this.getView_250_40('top');
 
         // when
         var tabStrip = v.getLayout().tabStrip;
@@ -70,7 +70,7 @@ TestCase("TabLayout", {
 
     "test should show initial visible child": function () {
         // given
-        var v = this.getView('top');
+        var v = this.getView_250_40('top');
 
         // then
         assertTrue(v.child['a'].isHidden());
@@ -106,7 +106,7 @@ TestCase("TabLayout", {
 
     "test should be able to show and hide tabs": function () {
         // given
-        var v = this.getView('top');
+        var v = this.getView_250_40('top');
         assertFalse(v.child['c'].isHidden());
 
         // when
@@ -128,7 +128,7 @@ TestCase("TabLayout", {
 
     "test tab strip should register added children": function () {
         // given
-        var v = this.getView('top');
+        var v = this.getView_250_40('top');
 
         // when
         var tabStrip = v.getLayout().getTabStrip();
@@ -139,7 +139,7 @@ TestCase("TabLayout", {
 
     "test should highlight tab when child is shown": function () {
         // given
-        var v = this.getView('top');
+        var v = this.getView_250_40('top');
 
         // when
         var tabStrip = v.getLayout().getTabStrip();
@@ -153,7 +153,7 @@ TestCase("TabLayout", {
         // given
         var eventFired = false;
         var eventChild = undefined;
-        var v = this.getView('top');
+        var v = this.getView_250_40('top');
         v.getLayout().addEvent('showChild', function (child) {
             eventFired = true;
             eventChild = child;
@@ -170,7 +170,7 @@ TestCase("TabLayout", {
 
     "test should highlight tab when new child is shown": function () {
         // given
-        var v = this.getView('top');
+        var v = this.getView_250_40('top');
 
         // when
         var tabStrip = v.getLayout().getTabStrip();
@@ -185,7 +185,7 @@ TestCase("TabLayout", {
 
     "test should display previous tab when a child is disposed": function () {
         // given
-        var v = this.getView('top');
+        var v = this.getView_250_40('top');
 
         // when
         v.child['d'].show();

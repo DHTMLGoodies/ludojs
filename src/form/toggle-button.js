@@ -9,11 +9,11 @@ ludo.form.ToggleButton = new Class({
     toggle:true,
     active:false,
 
-    ludoConfig:function (config) {
+    __construct:function (config) {
         this.parent(config);
     },
 
-    ludoRendered:function () {
+    __rendered:function () {
         this.parent()
     },
     /**

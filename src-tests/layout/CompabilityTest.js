@@ -2,7 +2,7 @@ TestCase("CompabilityTest", {
 
 	"test should be able to have cols layout":function () {
 		// when
-		var view = this.getView('cols');
+		var view = this.getView_250_40('cols');
 
 		// then
 		assertEquals(300, view.child['childOne'].getEl().width());
@@ -15,7 +15,7 @@ TestCase("CompabilityTest", {
 
 	"test should preserve weight when defined in config": function(){
 		// when
-		var view = this.getView('cols');
+		var view = this.getView_250_40('cols');
 
 		// then
 		assertEquals(2, view.child['childFour'].layout.weight);
@@ -24,7 +24,7 @@ TestCase("CompabilityTest", {
 
 	"test should be able to have rows layout":function () {
 		// when
-		var view = this.getView('rows');
+		var view = this.getView_250_40('rows');
 
 		// then
 		assertEquals(300, view.child['childOne'].getEl().height());
@@ -61,7 +61,7 @@ TestCase("CompabilityTest", {
 
 	},
 
-	getView:function (layout) {
+	getView_250_40:function (layout) {
 		return new ludo.View({
 			layout:layout,
 			width:1100,

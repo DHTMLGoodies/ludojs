@@ -2,7 +2,7 @@
 $pageTitle = 'Components using singleton JSON data-source';
 require_once("includes/demo-header.php");
 ?>
-<body>
+
 
 <script type="text/javascript" class="source-code">
 /** Custom dataSource class used by windows below */

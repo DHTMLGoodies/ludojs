@@ -10,7 +10,7 @@ ludo.form.ToggleGroup = new Class({
     buttons:[],
     activeButton:undefined,
 
-    ludoConfig:function (config) {
+    __construct:function (config) {
         this.parent(config);
     },
 

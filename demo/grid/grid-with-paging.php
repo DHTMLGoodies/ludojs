@@ -4,7 +4,7 @@ $pageTitle = 'Grid demo with paging';
 require_once("../includes/demo-header.php");
 ?>
 <script type="text/javascript" src="../../src/grid/grid-header.js"></script>
-<body>
+
 <style type="text/css">
     .input-cell input {
         height: 15px;

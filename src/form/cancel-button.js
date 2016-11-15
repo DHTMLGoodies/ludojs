@@ -24,12 +24,12 @@ ludo.form.CancelButton = new Class({
 	 */
 	applyTo:undefined,
 
-	ludoConfig:function(config){
+	__construct:function(config){
 		this.parent(config);
 		this.setConfigParams(config, ['applyTo']);
 	},
 
-    ludoRendered:function () {
+    __rendered:function () {
         this.parent();
         this.applyTo = this.applyTo ? ludo.get(this.applyTo) : this.getParentComponent();
         this.addEvent('click', this.hideComponent.bind(this));

@@ -93,7 +93,7 @@ ludo.form.Select = new Class({
 
 	defaultDS:'dataSource.Collection',
 
-    ludoConfig:function (config) {
+    __construct:function (config) {
         this.parent(config);
         this.setConfigParams(config, ['emptyItem', 'options', 'valueKey', 'textKey']);
         if(!this.emptyItem && this.inlineLabel){

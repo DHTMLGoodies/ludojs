@@ -9,7 +9,7 @@ ludo.colorPicker.Picker = new Class({
 
 	currentBrightness : -1,
 	currentSaturation: -1,
-	ludoRendered:function () {
+	__rendered:function () {
 		this.parent();
 		this.colorObj = new ludo.color.Color();
 		var canvas = this.getCanvas();

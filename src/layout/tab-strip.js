@@ -9,7 +9,7 @@ ludo.layout.TabStrip = new Class({
     activeTab:undefined,
     currentZIndex:3,
 
-    ludoConfig:function (config) {
+    __construct:function (config) {
         this.parent(config);
         if (config.tabPos !== undefined)this.tabPos = config.tabPos;
         this.lm = config.lm;
@@ -22,12 +22,12 @@ ludo.layout.TabStrip = new Class({
         this.addEvent('resize', this.resizeTabs.bind(this));
     },
 
-    ludoRendered:function(){
+    __rendered:function(){
         this.parent();
         this.resizeTabs();
     },
 
-    registerChild:function (child) {
+    registerChild:function (layout, parent, child) {
         if (!this.lm.isTabStrip(child)) {
             this.createTabFor(child);
         }
@@ -152,7 +152,7 @@ ludo.layout.TabStrip = new Class({
         el.append(svgEl);
         var box = new ludo.layout.TextBox({
             renderTo:svgEl,
-            width:100, height:100,
+            width:1000, height:1000,
             className:'ludo-tab-strip-tab-txt-svg',
             text:this.getTitleFor(child),
             rotation:this.getRotation()
@@ -186,7 +186,7 @@ ludo.layout.TabStrip = new Class({
     },
 
     getTitleFor:function (child) {
-        return (child.layout.title || child.getTitle());
+        return (child.title || child.layout.title || child.getTitle());
     },
 
     activateTabFor:function (child) {
@@ -218,9 +218,9 @@ ludo.layout.TabStrip = new Class({
     getChangedViewport:function () {
         var value;
         if (this.tabPos === 'top' || this.tabPos === 'bottom') {
-            value = this.getEl().height() + ludo.dom.getMH(this.getEl());
+            value = this.getEl().outerHeight();
         } else {
-            value = this.getEl().width() + ludo.dom.getMW(this.getEl());
+            value = this.getEl().outerWidth();
         }
         return {
             key:this.tabPos, value:value

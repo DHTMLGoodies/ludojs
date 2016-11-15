@@ -5,7 +5,7 @@ ludo.form.Label = new Class({
     label:undefined,
 
 
-    ludoConfig:function(config){
+    __construct:function(config){
         this.parent(config);
         this.setConfigParams(config, ['label','labelFor']);
     },
@@ -31,6 +31,11 @@ ludo.form.Label = new Class({
             if(!view.isValid())
                 this.onInvalid();
         }
+    },
+
+    resizeDOM:function(){
+        this.parent();
+        this.els.label.css('line-height', this.getBody().height() + 'px');
     },
 
     onValid:function(){

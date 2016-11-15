@@ -11,7 +11,7 @@ ludo.grid.RowManager = new Class({
 	 */
 	renderer:undefined,
 
-	ludoConfig:function(config){
+	__construct:function(config){
 		this.parent(config);
 		if(config.renderer)this.renderer = config.renderer;
 	}

@@ -56,7 +56,7 @@ ludo.dialog.Dialog = new Class({
 	closable:false,
 	minimizable:false,
 
-	ludoConfig:function (config) {
+	__construct:function (config) {
 		// TODO use buttons instead of buttonConfig and check for string
 		config.buttonConfig = config.buttonConfig || this.buttonConfig;
 		if (config.buttonConfig) {
@@ -97,7 +97,7 @@ ludo.dialog.Dialog = new Class({
 		}
 	},
 
-	ludoRendered:function () {
+	__rendered:function () {
 		this.parent();
 		if (!this.isHidden()) {
             this.center();

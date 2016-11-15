@@ -19,7 +19,7 @@ ludo.crop.Crop = new Class({
         }]
     },
 
-    ludoConfig:function(config){
+    __construct:function(config){
         this.parent(config);
         new ludo.crop.Controller();
     },

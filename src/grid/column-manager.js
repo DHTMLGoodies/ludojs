@@ -66,7 +66,7 @@ ludo.grid.ColumnManager = new Class({
 	 */
 	columnLookup:{},
 
-	ludoConfig:function (config) {
+	__construct:function (config) {
 		this.parent(config);
         this.setConfigParams(config, ['fill','columns']);
 

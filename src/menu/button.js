@@ -50,7 +50,7 @@ ludo.menu.Button = new Class({
 
     toggleOnClick: false,
 
-    ludoConfig: function (config) {
+    __construct: function (config) {
         this.parent(config);
         this.setConfigParams(config, ['alwaysVisible', 'region', 'renderTo', 'menu', 'autoPosition', 'toggleOnClick']);
     },

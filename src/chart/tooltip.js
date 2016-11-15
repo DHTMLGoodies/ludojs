@@ -25,7 +25,7 @@ ludo.chart.Tooltip = new Class({
 	 */
 	textStyles:{},
 
-	ludoConfig:function (config) {
+	__construct:function (config) {
 		this.parent(config);
 		this.setConfigParams(config, ['tpl','boxStyles','textStyles']);
 		this.createDOM();

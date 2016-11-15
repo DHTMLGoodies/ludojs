@@ -15,7 +15,7 @@ ludo.video.Video = new Class({
 	 */
 	movieId:undefined,
 
-	ludoConfig:function (config) {
+	__construct:function (config) {
 		this.parent(config);
 		if (config.movieId)this.movieId = config.movieId;
 	},

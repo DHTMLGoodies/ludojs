@@ -6,7 +6,7 @@ ludo.ColResize = new Class({
     minPos:0,
     maxPos:10000,
 
-    ludoConfig:function (config) {
+    __construct:function (config) {
         this.parent(config);
         this.component = config.component;
         this.createEvents();

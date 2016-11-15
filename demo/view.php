@@ -2,7 +2,7 @@
 $pageTitle = 'YouTube component demo';
 require_once("includes/demo-header.php");
 ?>
-<body>
+
 <script type="text/javascript" class="source-code">
     var win = new ludo.Window({
         left:100, top:50,

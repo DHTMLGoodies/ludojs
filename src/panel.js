@@ -21,7 +21,7 @@ ludo.Panel = new Class({
 		this.setTitle(this.title);
 	},
 
-	ludoRendered:function () {
+	__rendered:function () {
 		this.parent();
 		this.getBody().setStyle('display', 'block');
 	},

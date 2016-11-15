@@ -17,12 +17,12 @@ ludo.calendar.Selector = new Class({
     offsetOptions:13,
     calCls:'ludo-calendar-year-container',
 
-    ludoConfig:function (config) {
+    __construct:function (config) {
         this.parent(config);
         this.els.options = [];
     },
 
-    ludoRendered:function () {
+    __rendered:function () {
         this.parent();
         this.createOptionsContainer();
 
@@ -69,12 +69,12 @@ ludo.calendar.Selector = new Class({
             { 'margin-left' : this.getCenterPos(domEl)},
                 200
             );
-            // this.fx.start('margin-left', domEl.getParent().style.marginLeft, this.getCenterPos(domEl));
         }
     },
 
     getCenterPos:function (domEl) {
-        return Math.round((this.getBody().clientWidth / 2) - domEl.offsetLeft - (domEl.offsetWidth / 2));
+        domEl = $(domEl);
+        return Math.round((this.getBody().outerWidth() / 2) - domEl.position().left - (domEl.outerWidth() / 2));
     },
 
     setMinDate:function (date) {

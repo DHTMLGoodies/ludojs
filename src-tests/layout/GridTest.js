@@ -1,77 +1,124 @@
 TestCase("GridTest", {
 
+	setUp:function(){
+		$(document.body).empty();
+	},
+
 	"test should give children absolute positioning":function () {
 		// given
-		var view = this.getView();
+		var view = this.getView_250_40();
 
 		// when
-		var pos = view.child['a'].getEl().css("position");
+		var pos = ludo.$('child00').getEl().css("position");
 
 		// then
 		assertEquals('absolute', pos);
+
+		assertEquals('relative', view.getBody().css('position'));
 	},
 
-	"test should find rows and cols": function(){
+	"test find correct col width": function(){
 		// given
-		var view = this.getView();
-
+		var v = this.getView_250_40();
+		var l = v.getLayout();
+		
 		// then
-		assertEquals(4, view.getLayout().columns);
-		assertEquals(8, view.getLayout().rows);
-	},
-
-	"test should find cell size": function(){
-		// given
-		var view = this.getView();
-
-		// when
-		var cellSize = view.getLayout().getCellSize();
-
-		// then
-
-		assertEquals(1000/4, cellSize.x);
-		assertEquals(2000/8, cellSize.y);
+		assertEquals(1000/4, l.colWidth);
 
 	},
 
 	"test should position children correctly": function(){
-		// given
-		var view = this.getView();
+		this.getView_250_40();
 
 		// then
-		assertEquals(250, view.child['b'].getEl().offset().left);
-		assertEquals(500, view.child['c'].getEl().offset().left);
-		assertEquals(250, view.child['f'].getEl().offset().top);
 
-		assertEquals(0, view.child['i'].getEl().offset().left);
+		this.assertPosition(0,0,'child00' );
+		this.assertPosition(250,80,'child12' );
 
-		assertEquals(500, view.child['j'].getEl().offset().top);
-		assertEquals(250, view.child['j'].getEl().offset().left);
+
 	},
 
-	getView:function () {
+	"test should return correct position": function(){
+		var l = this.getView_250_40().getLayout();
+
+		this.assertLayoutPos(0,0, l, 'child00');
+		this.assertLayoutPos(250,80, l, 'child12');
+
+
+
+	},
+
+	assertLayoutPos:function(x, y, layout, childId){
+		var pos = layout.pos(ludo.$(childId));
+
+		assertEquals(x, pos.left);
+		assertEquals(y, pos.top);
+
+	},
+
+
+	"test should find width of views": function(){
+		var l = this.getView_250_40().getLayout();
+
+
+		// then
+		assertEquals(250, l.widthOfView(ludo.$('child00')));
+		assertEquals(500, l.widthOfView(ludo.$('child31')));
+
+	},
+
+	"test should find correct width when spacing is added": function(){
+		var v= this.getView_250_40_spacing_10_5();
+
+
+
+		assertEquals(490, ludo.$('spacing31_21').getEl().outerWidth());
+		assertEquals(740, ludo.$('spacing40_32').getEl().outerWidth());
+		assertEquals(75, ludo.$('spacing40_32').getEl().outerHeight());
+
+
+	},
+
+
+	assertPosition:function(x, y, id){
+		assertEquals(id, x, ludo.$(id).getEl().position().left);
+		assertEquals(id, y, ludo.$(id).getEl().position().top);
+	},
+
+	getView_250_40:function () {
 		return new ludo.View({
 			renderTo:document.body,
 			width:1000,
-			height:2000,
+			height:200,
 			layout:{
 				type:'grid',
 				columns:4,
-				rows:8
+				rows:5
 			},
 			children:[
-				{ name:'a'},
-				{ name:'b'},
-				{ name:'c'},
-				{ name:'d'},
+				{ id: 'child00', layout: { x: 0, y: 0 }},
+				{ id: 'child12', layout: { x: 1, y: 2 }},
+				{ id: 'child31', layout: { x: 3, y: 1, colspan:2 }}
+			]
+		});
+	},
 
-				{ name:'e'},
-				{ name:'f'},
-				{ name:'g'},
-				{ name:'h'},
-
-				{ name:'i'},
-				{ name:'j'}
+	getView_250_40_spacing_10_5:function () {
+		return new ludo.View({
+			renderTo:document.body,
+			width:1000,
+			height:200,
+			layout:{
+				type:'grid',
+				columns:4,
+				rows:5,
+				padX: 10, padY: 5
+			},
+			children:[
+				{ id: 'spacing00', layout: { x: 0, y: 0 }},
+				{ id: 'spacing12', layout: { x: 1, y: 2 }},
+				{ id: 'spacing31_21', layout: { x: 3, y: 1, colspan:2 }},
+				{ id: 'spacing40_32', layout: { x: 3, y: 1, colspan:3,rowspan:2 }}
 			]
 		});
 	}

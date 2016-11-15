@@ -15,7 +15,7 @@ ludo.progress.Bar = new Class({
     hidden:true,
     fx:undefined,
 
-    ludoRendered:function () {
+    __rendered:function () {
         this.parent();
 
         this.createBackgroundForProgressBar();

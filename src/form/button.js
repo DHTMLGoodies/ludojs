@@ -137,7 +137,7 @@ ludo.form.Button = new Class({
 		'xl' : 45
 	},
 
-    ludoConfig:function (config) {
+    __construct:function (config) {
 		this.parent(config);
 
         var val = config.value || this.value;
@@ -201,7 +201,7 @@ ludo.form.Button = new Class({
         }
     },
 
-    ludoRendered:function () {
+    __rendered:function () {
         this.parent();
         if (this.disabled) {
             this.disable();
@@ -399,10 +399,14 @@ ludo.form.Button = new Class({
     isButton:function () {
         return true
     },
+    borderSize:undefined,
+
     resizeDOM:function () {
         // TODO refactor - buttons too tall in relative layout
-        this.getBody().css('height', this.heights[this.size]);
-        /* No DOM resize for buttons */
+        if(this.borderSize == undefined)
+            this.borderSize = ludo.dom.getBH(this.getBody());
+
+        this.getBody().css('height', this.heights[this.size]  - this.borderSize);
     },
 
     validate:function () {
@@ -412,7 +416,7 @@ ludo.form.Button = new Class({
     getParentComponent:function () {
         var parent = this.getParent();
         if (parent && parent.type.indexOf('ButtonBar') >= 0) {
-            return parent.getView();
+            return parent.getView_250_40();
         }
         return parent;
     },

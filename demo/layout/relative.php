@@ -3,7 +3,7 @@ $sub = true;
 $pageTitle = 'Relative layout';
 require_once("../includes/demo-header.php");
 ?>
-<body>
+
 <style type="text/css">
     div.customView {
         border: 1px solid #C0C0C0;

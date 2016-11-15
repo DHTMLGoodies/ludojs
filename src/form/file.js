@@ -142,7 +142,7 @@ ludo.form.File = new Class({
      */
     resource:'FileUpload',
 
-	ludoConfig:function (config) {
+	__construct:function (config) {
 		this.parent(config);
         this.setConfigParams(config, ['resource','instantUpload','labelButton','labelRemove','labelDelete','buttonWidth']);
 		if (config.accept) {
@@ -154,7 +154,7 @@ ludo.form.File = new Class({
 		this.value = '';
 	},
 
-	ludoRendered:function () {
+	__rendered:function () {
 		this.parent();
 
 		var cell = $('<td>');

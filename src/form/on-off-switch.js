@@ -114,7 +114,7 @@ ludo.form.OnOffSwitch = new Class({
      */
     uncheckedVal: '',
 
-    ludoConfig:function(config){
+    __construct:function(config){
         this.parent(config);
         this.setConfigParams(config, ["textOn", "textOff", "trackColorOn", "trackColorOff",
             "textColorOn", "textColorOff", "listeners", "trackBorderColor", "textSizeRatio","checked",
@@ -156,7 +156,7 @@ ludo.form.OnOffSwitch = new Class({
         $(document.documentElement).on("touchend", this.endDrag.bind(this));
     },
 
-    ludoRendered:function(){
+    __rendered:function(){
         this.parent();
         this.setChecked(this.checked);
     },

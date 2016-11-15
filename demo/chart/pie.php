@@ -3,7 +3,7 @@ $sub = true;
 $pageTitle = 'Pie Chart - ludoJS';
 require_once("../includes/demo-header.php");
 ?>
-<body>
+
 <script type="text/javascript" class="source-code">
 
     var provider = new ludo.chart.DataProvider({

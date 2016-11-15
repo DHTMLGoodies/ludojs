@@ -44,7 +44,7 @@ ludo.canvas.View = new Class({
      */
     attr: undefined,
 
-    ludoConfig: function (config) {
+    __construct: function (config) {
         this.parent(config);
         this.setConfigParams(config, ['tag', 'attr']);
         this.node = new ludo.canvas.Node(this.tag, this.attr);

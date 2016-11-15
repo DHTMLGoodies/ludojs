@@ -39,7 +39,7 @@ ludo.Notification = new Class({
 	effectDuration:1,
 	autoRemove:false,
 
-	ludoConfig:function (config) {
+	__construct:function (config) {
 		config.renderTo = config.renderTo || document.body;
 		
         this.setConfigParams(config, ['autoRemove','showEffect','hideEffect','effect','effectDuration','duration']);
@@ -65,7 +65,7 @@ ludo.Notification = new Class({
 		this.getEl().addClass('ludo-notification');
 	},
 
-	ludoRendered:function () {
+	__rendered:function () {
 		if (!this.layout.width || !this.layout.height) {
 			var size = ludo.dom.getWrappedSizeOfView(this);
 			if (!this.layout.width)this.layout.width = size.x;

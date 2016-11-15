@@ -18,7 +18,7 @@ ludo.canvas.TextBox = new Class({
         '<br>':'text'
     },
 
-    ludoConfig:function (config) {
+    __construct:function (config) {
         config = config || {};
         config.attr = this.getAttributes(config);
         this.parent(config);

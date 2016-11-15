@@ -29,7 +29,7 @@ ludo.form.LabelElement = new Class({
      */
     labelSuffix: ':',
 
-    ludoConfig: function (config) {
+    __construct: function (config) {
         this.parent(config);
         this.setConfigParams(config, ['inlineLabel', 'labelSuffix']);
         if (!this.supportsInlineLabel())this.inlineLabel = undefined;
@@ -59,7 +59,7 @@ ludo.form.LabelElement = new Class({
 
     },
 
-    ludoRendered: function () {
+    __rendered: function () {
         this.parent();
         if (this.inlineLabel)this.setInlineLabel();
     },

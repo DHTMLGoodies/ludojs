@@ -10,7 +10,7 @@ ludo.colorPicker.Controller = new Class({
 	rgbKeys : ['r','g','b'],
 	hsvKeys : ['h','s','v'],
 
-    ludoConfig:function (config) {
+    __construct:function (config) {
         this.parent(config);
         this.colorObj = new ludo.color.Color();
     },

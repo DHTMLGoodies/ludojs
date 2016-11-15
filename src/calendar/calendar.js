@@ -45,7 +45,7 @@ ludo.calendar.Calendar = new Class({
      */
     maxDate:undefined,
 
-    ludoConfig:function (config) {
+    __construct:function (config) {
         this.parent(config);
         this.setConfigParams(config, ['inputFormat','value','minDate','maxDate','date']);
         this.date = this.date || this.value;
@@ -127,7 +127,7 @@ ludo.calendar.Calendar = new Class({
         this.setDate(this.date);
     },
 
-    ludoRendered:function () {
+    __rendered:function () {
         this.parent();
         for(var i=0;i<this.children.length;i++){
             var c = this.children[i];

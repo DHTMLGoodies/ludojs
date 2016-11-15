@@ -18,12 +18,12 @@ ludo.form.SubmitButton = new Class({
 	 * @default undefined
 	 */
 	applyTo:undefined,
-	ludoConfig:function(config){
+	__construct:function(config){
 		this.parent(config);
 		this.setConfigParams(config, ['applyTo']);
 	},
 
-	ludoRendered:function () {
+	__rendered:function () {
 		this.parent();
 		this.applyTo = this.applyTo ? ludo.get(this.applyTo) : this.getParentComponent();
 

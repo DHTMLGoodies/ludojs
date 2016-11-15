@@ -60,7 +60,7 @@ ludo.calendar.TimePicker = new Class({
     hourColor:'#555555',
     minuteColor:'#555555',
 
-    ludoConfig: function (config) {
+    __construct: function (config) {
         this.parent(config);
         this.setConfigParams(config, ['hours', 'minutes','handColor', 'minuteDotColor', 'clockBackground','handTextColor',
         'hourColor', 'minuteColor']);
@@ -76,7 +76,7 @@ ludo.calendar.TimePicker = new Class({
     },
 
 
-    ludoRendered: function () {
+    __rendered: function () {
         this.parent();
         this.renderClock();
         this.notify();

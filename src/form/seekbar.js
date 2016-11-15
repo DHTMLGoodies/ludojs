@@ -79,7 +79,7 @@ ludo.form.Seekbar = new Class({
     increments:undefined,
     orientation : 'vertical',
 
-    ludoConfig:function(config){
+    __construct:function(config){
         this.parent(config);
         this.setConfigParams(config, ["increments", "orientation", "reverse", "minValue", "maxValue", "value", "valueListener", "negativeColor", "positiveColor", "needleSize", "barSize"]);
 
@@ -198,7 +198,7 @@ ludo.form.Seekbar = new Class({
         return value;
     },
 
-    ludoRendered:function(){
+    __rendered:function(){
         this.renderSeekbar();
         this.parent();
     },

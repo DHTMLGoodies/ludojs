@@ -4,7 +4,7 @@ $pageTitle = 'Searchable grid';
 require_once("../includes/demo-header.php");
 ?>
 
-<body>
+
 <script type="text/javascript" src="../../src/grid/grid.js"></script>
 <script type="text/javascript" src="../../src/data-source/collection.js"></script>
 <style type="text/css">

@@ -109,9 +109,7 @@
     height: 100%;
     font-family: arial;
     font-size:12px;
-    font-weight: bold;
     line-height: 23px;
-    color: #000;
 
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -420,9 +418,7 @@ div.ludo-component-button-container, div.ludo-content-buttons {
     padding-left:3px;
 }
 
-div.ludo-window, div.ludo-framed-view-shim, div.ludo-dashboard-insertion-marker{
-    border-radius:3px;
-}
+
 div.ludo-FramedView {
     border-radius: 0;
 }

@@ -24,7 +24,7 @@ ludo.dialog.Alert = new Class({
 
 	resizable:false,
 
-	ludoConfig:function (config) {
+	__construct:function (config) {
 		if (config.substr) {
 			config = {
 				html:config

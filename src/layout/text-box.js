@@ -8,7 +8,9 @@ ludo.layout.TextBox = new Class({
         x: 0, y: 0
     },
     x: 0, y: 0,
-    ludoConfig: function (config) {
+    colorUtil:undefined,
+
+    __construct: function (config) {
         this.text = config.text;
         this.rotation = config.rotation;
         this.className = config.className;
@@ -27,6 +29,8 @@ ludo.layout.TextBox = new Class({
         this.storeSize();
         this.rotate();
         this.resizeCanvas();
+
+       
     },
 
     createIE8Box: function () {
@@ -110,7 +114,7 @@ ludo.layout.TextBox = new Class({
             'font-weight': node.css('font-weight'),
             'font-style': node.css('font-style'),
             'line-height': lh,
-            'fill': node.css('color'),
+            'fill': this.toRGBColor(node.css('color')),
             'stroke': 'none',
             'stroke-opacity': 0
         };
@@ -118,12 +122,28 @@ ludo.layout.TextBox = new Class({
         node.remove();
         return ret;
     },
+
+    toRGBColor:function(val){
+        if(val.indexOf('rgb') >= 0){
+            if(this.colorUtil == undefined){
+                this.colorUtil = new ludo.color.Color();
+            }
+            val = val.replace(/[^0-9,]/g,'');
+            var colors = val.split(/,/g);
+            val = this.colorUtil.rgbCode(colors[0]/1, colors[1]/1, colors[2]/1);
+            return val;
+        }
+
+        return val;
+    },
+
     storeSize: function () {
         var bbox = this.textNode.el.getBBox();
         this.size = {
             x: bbox.width + bbox.x,
             y: bbox.height + bbox.y
         };
+        console.log(this.size);
     },
     rotate: function () {
         var x = this.size.x;

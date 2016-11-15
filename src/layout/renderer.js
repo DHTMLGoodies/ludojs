@@ -141,6 +141,9 @@ ludo.layout.Renderer = new Class({
 				if (value === 'wrap') {
 					var s = ludo.dom.getWrappedSizeOfView(this.view);
                     // TODO test out layout in order to check that the line below is working.
+					console.log(s);
+					console.log(this.view.layout);
+					console.log(this.view.layout.label);
                     this.view.layout.height = s.y;
 					return function () {
 						c.height = s.y;
@@ -306,7 +309,9 @@ ludo.layout.Renderer = new Class({
 		var c = this.coordinates;
 
 		this.view.resize(c);
-		
+
+
+
         if(c['bottom'])c['top'] = undefined;
         if(c['right'])c['left'] = undefined;
 

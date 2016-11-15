@@ -13,7 +13,7 @@ ludo.grid.ColumnMove = new Class({
 
 	arrowHeight:undefined,
 
-	ludoConfig:function (config) {
+	__construct:function (config) {
 		this.parent(config);
         this.setConfigParams(config, ['gridHeader','columnManager']);
 	},
@@ -24,7 +24,7 @@ ludo.grid.ColumnMove = new Class({
 	},
 
 	setZIndex:function(shim){
-		shim.css('zIndex', 50000);
+		$(shim).css('zIndex', 50000);
 	},
 
 	getMarker:function () {

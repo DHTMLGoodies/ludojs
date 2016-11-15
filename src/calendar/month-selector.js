@@ -9,7 +9,7 @@ ludo.calendar.MonthSelector = new Class({
     Extends: ludo.calendar.Base,
     height:25,
 
-    ludoRendered:function(){
+    __rendered:function(){
         this.parent();
         this.createMonthContainer();
         this.renderMonths();

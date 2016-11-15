@@ -18,7 +18,7 @@ ludo.layout.Resizable = new Class({
     alignWithCmp:undefined,
     css:undefined,
 
-    ludoConfig:function (config) {
+    __construct:function (config) {
         this.parent(config);
         this.component = config.component;
         this.type = config.type || this.type;

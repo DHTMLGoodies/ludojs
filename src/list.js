@@ -5,7 +5,7 @@ ludo.List = new Class({
     highlighted:undefined,
     recordMap:{},
 
-    ludoConfig:function (config) {
+    __construct:function (config) {
         this.parent(config);
     },
 
@@ -14,7 +14,7 @@ ludo.List = new Class({
         this.getBody().on('click', this.onClick.bind(this));
     },
 
-    ludoRendered:function () {
+    __rendered:function () {
         this.parent();
 
         if (this.dataSource) {

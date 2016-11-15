@@ -17,7 +17,7 @@
         }
     </style>
 </head>
-<body>
+
 <script type="text/javascript" class="source-code">
 
 new ludo.Window({

@@ -5,7 +5,7 @@ ludo.layout.MenuVertical = new Class({
 	getValidChild:function(child){
 		child = this.parent(child);
 		if (!child.layout.width) {
-			child.layout.width = 'fitParent';
+			child.layout.width = 'matchParent';
 		}
 		return child;
 	},

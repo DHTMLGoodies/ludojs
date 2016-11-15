@@ -12,7 +12,7 @@ ludo.view.TitleBar = new Class({
 
     toggleStatus:{},
 
-    ludoConfig:function (config) {
+    __construct:function (config) {
         this.parent(config);
 
         this.setConfigParams(config, ['view', 'buttons']);

@@ -2,7 +2,7 @@ TestCase("TitleBarTest", {
 
     "test should minimize on click on minimize button" : function(){
         // given
-        var v = this.getView();
+        var v = this.getView_250_40();
 
         // when
         v.getTitleBar().fireEvent('minimize');
@@ -15,7 +15,7 @@ TestCase("TitleBarTest", {
 
     "test should minimize on click on maximize button" : function(){
         // given
-        var v = this.getView();
+        var v = this.getView_250_40();
 
         // when
         v.getTitleBar().fireEvent('minimize');
@@ -29,7 +29,7 @@ TestCase("TitleBarTest", {
 
     "test should close on close event": function(){
         // given
-        var v = this.getView();
+        var v = this.getView_250_40();
 
         // when
         v.getTitleBar().fireEvent('close');
@@ -40,7 +40,7 @@ TestCase("TitleBarTest", {
 
 	"test should have button DOM": function(){
 		// given
-		var v = this.getView();
+		var v = this.getView_250_40();
 		// when
 
 		// then
@@ -49,7 +49,7 @@ TestCase("TitleBarTest", {
 		assertEquals('div', v.getEl().find('.ludo-title-bar-button-minimize').first().prop("tagName").toLowerCase());
 	},
 
-    getView:function(){
+    getView_250_40:function(){
         return new ludo.FramedView({
             minimizable:true,
             closable:true,

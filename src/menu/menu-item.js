@@ -68,7 +68,7 @@ ludo.menu.Item = new Class({
      */
     fire:undefined,
 
-    ludoConfig:function (config) {
+    __construct:function (config) {
         if (config.children) {
             this.menuItems = config.children;
             config.children = [];
@@ -140,7 +140,7 @@ ludo.menu.Item = new Class({
 
     },
 
-    ludoRendered:function () {
+    __rendered:function () {
         this.parent();
         if (this.isSpacer()) {
             this.getBody().setStyle('visibility', 'hidden');

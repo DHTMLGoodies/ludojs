@@ -186,7 +186,7 @@ ludo.grid.Grid = new Class({
 
 	defaultDS : 'dataSource.Collection',
 
-	ludoConfig:function (config) {
+	__construct:function (config) {
 		this.parent(config);
 
         this.setConfigParams(config, ['columns','fill','headerMenu','columnManager','rowManager','mouseOverEffect','emptyText','highlightRecord']);
@@ -284,7 +284,7 @@ ludo.grid.Grid = new Class({
 		}
 	},
 
-	ludoRendered:function () {
+	__rendered:function () {
 		this.parent();
 		this.ifStretchHideLastResizeHandles();
 

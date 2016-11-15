@@ -96,7 +96,7 @@ ludo.Core = new Class({
 	},
 
 	lifeCycle:function(config){
-		this.ludoConfig(config);
+		this.__construct(config);
 		this.ludoEvents();
 	},
 
@@ -109,13 +109,13 @@ ludo.Core = new Class({
         }
     },
 
-	ludoConfig:function(config){
+	__construct:function(config){
         this.setConfigParams(config, ['url','name','controller','module','submodule','stateful','id','useController','addOns']);
 
 		// TODO new code 2016 - custom functions
 		if(config != undefined){
 			for(var key in config){
-				if(config.hasOwnProperty(key) && $.type(config[key]) == "function"){
+				if(config.hasOwnProperty(key) && $.type(config[key]) == "function" && this[key] == undefined){
 					this[key] = config[key].bind(this);
 				}
 			}

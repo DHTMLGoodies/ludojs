@@ -92,7 +92,7 @@ ludo.form.ComboTree = new Class({
     timeStamp:0,
     currentSearchValue:'',
 
-    ludoConfig:function (config) {
+    __construct:function (config) {
         this.parent(config);
         this.setConfigParams(config, ['searchable','inputConfig','treeConfig','emptyText']);
 
@@ -156,7 +156,7 @@ ludo.form.ComboTree = new Class({
         this.resizeChildren();
     },
 
-    ludoRendered:function () {
+    __rendered:function () {
         this.parent();
         if (this.emptyText) {
             this.setViewValue(this.emptyText);

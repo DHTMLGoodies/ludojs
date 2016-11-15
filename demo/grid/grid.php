@@ -3,7 +3,7 @@ $sub = true;
 $pageTitle = 'Grid demo';
 require_once("../includes/demo-header.php");
 ?>
-<body>
+
 
 <script type="text/javascript" class="source-code">
     var w = new ludo.Window({

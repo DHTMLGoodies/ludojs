@@ -21,7 +21,7 @@ ludo.crop.CropArea = new Class({
         height:300
     },
 
-    ludoRendered:function(){
+    __rendered:function(){
         this.parent();
     },
 

@@ -40,7 +40,7 @@ ludo.form.SearchField = new Class({
 
 	lastSearch:undefined,
 
-	ludoConfig:function (config) {
+	__construct:function (config) {
 		this.parent(config);
         this.setConfigParams(config, ['searchIn','delay','searchFn','remote']);
 

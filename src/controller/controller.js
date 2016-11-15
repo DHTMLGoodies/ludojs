@@ -79,7 +79,7 @@ ludo.controller.Controller = new Class({
 	 */
 	broadcast:undefined,
 
-	ludoConfig:function (config) {
+	__construct:function (config) {
 		config = config || {};
         config.controller = undefined;
         config.useController = false;

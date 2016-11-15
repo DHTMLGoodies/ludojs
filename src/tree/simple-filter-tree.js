@@ -18,7 +18,7 @@ ludo.tree.SimpleFilterTree = new Class({
     timeStamp:0,
     currentSearchValue:'',
 
-    ludoConfig : function(config){
+    __construct : function(config){
         this.parent(config);
 
         if(config.treeConfig){
@@ -46,7 +46,7 @@ ludo.tree.SimpleFilterTree = new Class({
         this.treeConfig.search = true;
     },
 
-    ludoRendered : function() {
+    __rendered : function() {
         this.parent();
         this.input = this.addChild(this.inputConfig);
 

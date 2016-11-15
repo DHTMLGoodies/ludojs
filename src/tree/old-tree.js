@@ -100,7 +100,7 @@ ludo.tree.Tree = new Class({
      */
     modificationManager:undefined,
 
-    ludoConfig:function (config) {
+    __construct:function (config) {
         this.parent(config);
         this.setConfigParams(config, ['data','nodeTpl','recordConfig','showLines','autoScrollNode','expandDepth',
             'search','dd','primaryKey']);
@@ -125,7 +125,7 @@ ludo.tree.Tree = new Class({
         }
     },
 
-    ludoRendered:function () {
+    __rendered:function () {
         if (this.data.length) {
             this.insertJSON(this.data);
         }

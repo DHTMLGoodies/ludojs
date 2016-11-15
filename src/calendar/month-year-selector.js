@@ -51,9 +51,9 @@ ludo.calendar.MonthYearSelector = new Class({
     },
 
     clickMonth:function (e) {
-        var el = e.target;
-        if (!el.hasClass('ludo-calendar-month-year'))el = el.getParent('.ludo-calendar-month-year');
-
+        console.log(e);
+        var el = $(e.currentTarget);
+        console.log(el.attr('month') + ',' + el.attr('year'));
         this.setMonthAndYear(el.attr('month'), el.attr('year'));
         this.sendSetDateEvent();
     },

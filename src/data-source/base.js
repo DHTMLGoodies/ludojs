@@ -94,7 +94,7 @@ ludo.dataSource.Base = new Class({
 	 */
 	shim:undefined,
 
-	ludoConfig:function (config) {
+	__construct:function (config) {
 		this.parent(config);
 		this.setConfigParams(config, ['url', 'postData', 'autoload', 'resource', 'service', 'arguments', 'data', 'shim']);
 

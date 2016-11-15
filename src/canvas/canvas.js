@@ -21,7 +21,7 @@ ludo.canvas.Canvas = new Class({
 	title:undefined,
 	description:undefined,
 
-	ludoConfig:function (config) {
+	__construct:function (config) {
 		config = config || {};
 		config.attr = config.attr || {};
 		config.attr = Object.merge(config.attr, this.defaultProperties);

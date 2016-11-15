@@ -9,13 +9,13 @@ ludo.calendar.Today = new Class({
     layout : {
         type:'relative'
     },
-    height:25,
+    height:30,
     overflow:'hidden',
     css:{
         'margin-top' : 2
     },
 
-    ludoRendered:function(){
+    __rendered:function(){
         this.parent();
         this.child['today'].addEvent('click', this.setToday.bind(this));
     },
@@ -25,7 +25,7 @@ ludo.calendar.Today = new Class({
     },
 
     setDate:function(){
-        // this.date is always today's date which is set in ludoConfig
+        // this.date is always today's date which is set in __construct
     },
 
     setToday:function(){

@@ -30,7 +30,7 @@ ludo.remote.Message = new Class({
 
     messageTypes:['success', 'failure', 'error'],
 
-    ludoConfig:function (config) {
+    __construct:function (config) {
         this.parent(config);
         this.setConfigParams(config, ['listenTo']);
         if (!ludo.util.isArray(this.listenTo))this.listenTo = [this.listenTo];

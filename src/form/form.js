@@ -3,7 +3,7 @@ ludo.form.Form = new Class({
     Extends:ludo.View,
     elements : [],
     labelWidth : 150,
-    ludoConfig:function (config) {
+    __construct:function (config) {
         config.formName = config.formName || 'form-' + String.uniqueID();
         this.elements = config.elements || this.elements;
         this.parent(config);
@@ -29,7 +29,7 @@ ludo.form.Form = new Class({
         });
     },
 
-    ludoRendered:function () {
+    __rendered:function () {
         this.parent();
         this.formComponents = [];
 

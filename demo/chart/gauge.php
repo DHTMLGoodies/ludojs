@@ -3,7 +3,7 @@ $sub = true;
 $pageTitle = 'Gauge - ludoJS';
 require_once("../includes/demo-header.php");
 ?>
-<body>
+
 <script type="text/javascript" src="../../src/canvas/canvas.js"></script>
 <script type="text/javascript" src="../../src/canvas/node.js"></script>
 <script type="text/javascript" src="../../src/canvas/named-node.js"></script>

@@ -15,11 +15,11 @@ ludo.colorPicker.ColorScheme = new Class({
 	stateful:true,
 	statefulProperties:['colors'],
 
-	ludoConfig:function(config){
+	__construct:function(config){
 		this.parent(config);
 		if(config.colors !== undefined)this.colors = config.colors;
 	},
-	ludoRendered:function(){
+	__rendered:function(){
 		this.parent();
 		this.colorObj = new ludo.color.Color();
 		this.getBody().html('<div class="default-color-scheme-box">Generate color scheme using the buttons below</div>');

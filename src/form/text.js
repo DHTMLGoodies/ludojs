@@ -71,7 +71,7 @@ ludo.form.Text = new Class({
     selectOnFocus: false,
 
 
-    ludoConfig: function (config) {
+    __construct: function (config) {
         this.parent(config);
         var keys = ['placeholder', 'selectOnFocus', 'regex', 'minLength', 'maxLength', 'defaultValue', 'validateKeyStrokes', 'ucFirst', 'ucWords', 'readonly'];
         this.setConfigParams(config, keys);

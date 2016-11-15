@@ -19,7 +19,7 @@ ludo.card.ProgressBar = new Class({
         }
     },
 
-    ludoRendered: function () {
+    __rendered: function () {
         this.parent();
         if (this.applyTo) {
             this.setCardPercent();

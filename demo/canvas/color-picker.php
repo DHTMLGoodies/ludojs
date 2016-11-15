@@ -3,7 +3,7 @@ $sub = true;
 $pageTitle = 'Color Picker using ludo canvas - ludoJS';
 require_once("../includes/demo-header.php");
 ?>
-<body>
+
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/core.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/view.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/framed-view.js"></script>

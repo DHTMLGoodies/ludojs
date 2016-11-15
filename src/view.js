@@ -38,7 +38,7 @@
     myApp.View = new Class({
  		Extends: ludo.View,
  		type : 'myApp.View',
- 		ludoRendered:function(){
+ 		__rendered:function(){
  			this.html('My custom component');
 		}
 	}
@@ -106,7 +106,7 @@ ludo.View = new Class({
 			this.children = [];
 		}
 
-		this.ludoConfig(config);
+		this.__construct(config);
 
 		if (!config.children || !config.children.length) {
 			config.children = this.getClassChildren();
@@ -157,7 +157,7 @@ ludo.View = new Class({
 		}
 
 		this.addCoreEvents();
-		this.ludoRendered();
+		this.__rendered();
 
 		if (!this.parentComponent) {
 			ludo.dom.clearCache();
@@ -174,10 +174,10 @@ ludo.View = new Class({
 	},
 	/**
 	 * First life cycle step when creating and object
-	 * @function ludoConfig
+	 * @function __construct
 	 * @param {Object} config
 	 */
-	ludoConfig:function (config) {
+	__construct:function (config) {
 		this.parent(config);
 		config.els = config.els || {};
 		if (this.parentComponent)config.renderTo = undefined;
@@ -273,10 +273,10 @@ ludo.View = new Class({
 	 * The final life cycle method. When this method is executed, the view (including child views)
 	 * are fully rendered.
 	 * @memberof ludo.View.prototype
-	 * @function ludoRendered
+	 * @function __rendered
 	 * @fires 'render'
 	 */
-	ludoRendered:function () {
+	__rendered:function () {
 		if (!this.layout.height && !this.layout.above && !this.layout.sameHeightAs && !this.layout.alignWith) {
 			this.autoSetHeight();
 		}
@@ -645,8 +645,6 @@ ludo.View = new Class({
 	resize:function (config) {
 
 
-		if(this.html == "Edit")console.trace();
-		
 		if (this.isHidden()) {
 			return;
 		}

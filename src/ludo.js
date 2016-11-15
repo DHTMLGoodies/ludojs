@@ -216,7 +216,7 @@ ludo.CmpMgrClass = new Class({
 
 ludo.CmpMgr = new ludo.CmpMgrClass();
 
-ludo.getView = function (id) {
+ludo.getView_250_40 = function (id) {
     return ludo.CmpMgr.get(id);
 };
 

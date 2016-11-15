@@ -3,7 +3,7 @@ $sub = true;
 $pageTitle = 'Example of ludo form components';
 require_once("../includes/demo-header.php");
 ?>
-<body>
+
 <link rel="stylesheet" href="../../css-source/form/on-off-switch.css" type="text/css"/>
 <style type="text/css">
     .ludo-form-text-element input, .ludo-form-text-element textarea {

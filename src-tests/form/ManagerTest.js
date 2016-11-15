@@ -160,7 +160,7 @@ TestCase("ManagerTest", {
 
 	"test should be able to update value from form manager":function () {
 		// given
-		var v = this.getView();
+		var v = this.getView_250_40();
 
 		// when
 		v.getForm().set('firstname', 'Alf');
@@ -171,7 +171,7 @@ TestCase("ManagerTest", {
 
 	"test should be able to get value from form manager": function(){
 		// given
-		var v = this.getView();
+		var v = this.getView_250_40();
 
 		// then
 		assertEquals('Doe', v.getForm().get('lastname'));
@@ -196,7 +196,7 @@ TestCase("ManagerTest", {
 		return new ludo.ResponseMock();
 	},
 
-	getView:function (formConfig) {
+	getView_250_40:function (formConfig) {
 		return new ludo.View({
 			renderTo:document.body,
             form:formConfig,

@@ -17,7 +17,7 @@ ludo.progress.DataSource = new Class({
     service:'read',
 	listenTo:undefined,
 
-    ludoConfig:function(config){
+    __construct:function(config){
         this.parent(config);
 
 		this.setConfigParams(config, ['pollFrequence','listenTo']);

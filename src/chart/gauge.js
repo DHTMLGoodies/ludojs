@@ -10,7 +10,7 @@ ludo.chart.Gauge = new Class({
     min:0,
     max:100,
 
-    ludoConfig:function (config) {
+    __construct:function (config) {
         this.parent(config);
         this.setConfigParams(config, ['startOffset', 'endOffset','min','max']);
     },

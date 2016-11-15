@@ -7,7 +7,7 @@ ludo.Anchor = new Class({
     Extends:ludo.View,
     type:'Anchor',
     height:15,
-    ludoConfig:function (config) {
+    __construct:function (config) {
         this.parent(config);
         this.anchorText = config.anchorText;
     },

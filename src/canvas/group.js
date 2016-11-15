@@ -9,7 +9,7 @@ ludo.canvas.Group = new Class({
     tag:'g',
     layout:{},
 
-    ludoConfig:function (config) {
+    __construct:function (config) {
         this.parent(config);
         this.setConfigParams(config, ['layout', 'renderTo', 'parentComponent']);
         if (this.renderTo) {

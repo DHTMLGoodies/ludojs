@@ -11,7 +11,7 @@ ludo.dialog.Prompt = new Class({
     inputConfig : {},
     label:'',
     value:'',
-    ludoConfig : function(config){
+    __construct : function(config){
         if(!config.buttons && !config.buttonConfig && !config.buttonBar){
             config.buttons = [
                 {
@@ -30,7 +30,7 @@ ludo.dialog.Prompt = new Class({
         this.parent(config);
     },
 
-    ludoRendered : function(){
+    __rendered : function(){
         this.parent();
         var inputConfig = Object.merge(this.inputConfig, {
             type : 'form.Text',

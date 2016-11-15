@@ -7,7 +7,7 @@ ludo.layout.CollapseBar = new Class({
 	buttons:{},
 	currentPos:0,
 
-	ludoConfig:function(config){
+	__construct:function(config){
 		this.parent(config);
 		this.position = config.position || 'left';
 		this.setLayout();

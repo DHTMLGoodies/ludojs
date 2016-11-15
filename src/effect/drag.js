@@ -187,7 +187,7 @@ ludo.effect.Drag = new Class({
 
     fireEffectEvents:true,
 
-	ludoConfig:function (config) {
+	__construct:function (config) {
 		this.parent(config);
 		if (config.el !== undefined) {
 			this.add({

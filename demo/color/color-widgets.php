@@ -3,7 +3,7 @@ $sub = true;
 $pageTitle = 'Color widgets';
 require_once("../includes/demo-header.php");
 ?>
-<body>
+
 <style type="text/css">
 .ludo-color-box{
     width:15px;

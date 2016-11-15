@@ -4,7 +4,7 @@ ludo.view.Collapsed = new Class({
     titleEl:undefined,
     component:undefined,
 
-    ludoConfig:function (config) {
+    __construct:function (config) {
         this.parent(config);
         this.component = config.component;
         this.createDOM();

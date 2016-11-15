@@ -3,7 +3,7 @@ $sub = true;
 $pageTitle = 'Tab layout';
 require_once("../includes/demo-header.php");
 ?>
-<body>
+
 <script type="text/javascript" class="source-code">
 
     var w = new ludo.Window({

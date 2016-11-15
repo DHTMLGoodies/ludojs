@@ -3,7 +3,7 @@ $sub = true;
 $pageTitle = 'LudoDB Integration example';
 require_once("../includes/demo-header.php");
 ?>
-<body>
+
 <script type="text/javascript" src="../../src/core.js"></script>
 <script type="text/javascript" src="../../src/view.js"></script>
 <script type="text/javascript" src="../../src/framed-view.js"></script>

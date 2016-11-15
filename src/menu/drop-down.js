@@ -8,7 +8,7 @@ ludo.menu.DropDown = new Class({
     Extends:ludo.menu.Menu,
     type:'menu.DropDown',
 
-    ludoConfig:function (config) {
+    __construct:function (config) {
         config.renderTo = document.body;
         this.parent(config);
 		this.setConfigParams(config, ['applyTo']);

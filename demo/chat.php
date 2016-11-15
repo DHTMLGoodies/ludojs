@@ -2,7 +2,7 @@
 $pageTitle = 'Chat using NodeJS and ludoJS';
 require_once("includes/demo-header.php");
 ?>
-<body>
+
 
 
 <h1>Server code:</h1>

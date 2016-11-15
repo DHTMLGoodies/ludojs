@@ -3,7 +3,7 @@ $sub = true;
 $pageTitle = 'Wizard demo';
 require_once("../includes/demo-header.php");
 ?>
-<body>
+
 <script type="text/javascript" src="../../src/progress/base.js"></script>
 <script type="text/javascript" src="../../src/progress/bar.js"></script>
 <script type="text/javascript" src="../../src/progress/datasource.js"></script>

@@ -2,7 +2,7 @@ TestCase("RelativeTest", {
 
 	"test should arrange children":function () {
 		// given
-		var view = this.getView([
+		var view = this.getView_250_40([
 			{ name:'a' },
 			{ name:'e', layout:{ below:'b' }},
 			{ name:'b', layout:{ above:'c', leftOf:'d' }},
@@ -25,7 +25,7 @@ TestCase("RelativeTest", {
 	"test should arrange correctly when nested dependencies":function () {
 		// given
 
-		var view = this.getView([
+		var view = this.getView_250_40([
 			{ name:'c', layout:{ leftOf:'b', width:50 }},
 			{ name:'b', layout:{ leftOf:'a', width:50 }},
 			{ name:'d', layout:{ leftOf:'c', width:50 }},
@@ -54,7 +54,7 @@ TestCase("RelativeTest", {
 
 	"test should figure out when a child position is depending on a sibling":function () {
 		// given
-		var view = this.getView([
+		var view = this.getView_250_40([
 			{ name:'a' },
 			{ name:'b', layout:{ above:'c', leftOf:'d' }},
 			{ name:'c', layout:{ centerHorizontal:true} },
@@ -70,7 +70,7 @@ TestCase("RelativeTest", {
 
 	"test should store all coordinates after a resize":function () {
 		// given
-		var view = this.getView([
+		var view = this.getView_250_40([
 			{ name:'a', layout:{ alignParentBottom:true, width:250, alignParentRight:true, height:500 } },
 			{ name:'b', layout:{ above:'a', width:100, height:100, leftOf:'a' }}
 		]);
@@ -95,7 +95,7 @@ TestCase("RelativeTest", {
 
 	"test should position children PARENT BOTTOM correctly":function () {
 		// given
-		var view = this.getView([
+		var view = this.getView_250_40([
 			{ name:'a', layout:{ alignParentBottom:true, height:500 } },
 			{ name:'b', layout:{ above:'a' }}
 		]);
@@ -109,7 +109,7 @@ TestCase("RelativeTest", {
 
 	"test should position children PARENT TOP correctly":function () {
 		// given
-		var view = this.getView([
+		var view = this.getView_250_40([
 			{ name:'a', layout:{ alignParentTop:true, height:500 } }
 		]);
 
@@ -122,7 +122,7 @@ TestCase("RelativeTest", {
 
 	"test should position children PARENT LEFT correctly":function () {
 		// given
-		var view = this.getView([
+		var view = this.getView_250_40([
 			{ name:'a', layout:{ alignParentLeft:true, height:500 } }
 		]);
 
@@ -135,7 +135,7 @@ TestCase("RelativeTest", {
 
 	"test should position children PARENT RIGHT correctly":function () {
 		// given
-		var view = this.getView([
+		var view = this.getView_250_40([
 			{ name:'a', layout:{ alignParentRight:true, height:500 } }
 		]);
 
@@ -148,7 +148,7 @@ TestCase("RelativeTest", {
 
 	"test should set width and height of child correctly":function () {
 		// given
-		var view = this.getView([
+		var view = this.getView_250_40([
 			{ name:'a', layout:{ height:500 } }
 		]);
 
@@ -159,7 +159,7 @@ TestCase("RelativeTest", {
 
 	"test should align child RIGHT OF correctly":function () {
 		// given
-		var view = this.getView([
+		var view = this.getView_250_40([
 			{ name:'a', layout:{ height:500, alignParentTop:0, alignParentLeft:0, width:300 } },
 			{ name:'b', layout:{ width:100, height:100, rightOf:'a' }}
 		]);
@@ -171,7 +171,7 @@ TestCase("RelativeTest", {
 
 	"test should align child LEFT OF correctly":function () {
 		// given
-		var view = this.getView([
+		var view = this.getView_250_40([
 			{ name:'a', layout:{ height:500, alignParentTop:true, alignParentRight:true, width:300 } },
 			{ name:'b', layout:{ width:100, height:100, leftOf:'a' }}
 		]);
@@ -181,7 +181,7 @@ TestCase("RelativeTest", {
 	},
 	"test should align child BELOW correctly":function () {
 		// given
-		var view = this.getView([
+		var view = this.getView_250_40([
 			{ name:'a', layout:{ height:500, alignParentTop:true, alignParentRight:true, width:300 } },
 			{ name:'b', layout:{ width:100, height:100, below:'a' }}
 		]);
@@ -191,7 +191,7 @@ TestCase("RelativeTest", {
 	},
 	"test should align child ABOVE correctly":function () {
 		// given
-		var view = this.getView([
+		var view = this.getView_250_40([
 			{ name:'a', layout:{ height:500, alignParentBottom:true, alignParentRight:true, width:300 } },
 			{ name:'b', layout:{ width:100, height:100, above:'a' }}
 		]);
@@ -202,7 +202,7 @@ TestCase("RelativeTest", {
 
 	"test should be able to CENTER IN PARENT":function () {
 		// given
-		var view = this.getView([
+		var view = this.getView_250_40([
 			{ name:'a', layout:{ height:600, width:400, centerInParent:true } }
 		]);
 
@@ -216,7 +216,7 @@ TestCase("RelativeTest", {
 
 	"test should be able to CENTER HORIZONTAL IN PARENT":function () {
 		// given
-		var view = this.getView([
+		var view = this.getView_250_40([
 			{ name:'a', layout:{ height:500, width:400, centerHorizontal:true } }
 		]);
 
@@ -229,7 +229,7 @@ TestCase("RelativeTest", {
 
 	"test should be able to CENTER VERTICAL IN PARENT":function () {
 		// given
-		var view = this.getView([
+		var view = this.getView_250_40([
 			{ name:'a', layout:{ height:600, width:400, centerVertical:true } }
 		]);
 
@@ -242,7 +242,7 @@ TestCase("RelativeTest", {
 
 	"test should be able to have width set to match_parent":function () {
 		// given
-		var view = this.getView([
+		var view = this.getView_250_40([
 			{ name:'a', layout:{ height:500, width:'matchParent', centerHorizontal:true } }
 		]);
 
@@ -255,7 +255,7 @@ TestCase("RelativeTest", {
 
 	"test should be able to have percentage size":function () {
 		// given
-		var view = this.getView([
+		var view = this.getView_250_40([
 			{ name:'a', layout:{ height:500, width:'40%', centerHorizontal:true } }
 		]);
 
@@ -269,7 +269,7 @@ TestCase("RelativeTest", {
 
 	"test should be able to have height set to match_parent":function () {
 		// given
-		var view = this.getView([
+		var view = this.getView_250_40([
 			{ name:'a', layout:{ width:500, height:'matchParent'} }
 		]);
 
@@ -283,7 +283,7 @@ TestCase("RelativeTest", {
 
 	"test should be able to fill left":function () {
 		// given
-		var view = this.getView([
+		var view = this.getView_250_40([
 			{ name:'a', layout:{ height:500, alignParentTop:true, alignParentRight:true, width:300 } },
 			{ name:'b', layout:{ height:100, leftOf:'a', fillLeft:true }}
 		]);
@@ -295,7 +295,7 @@ TestCase("RelativeTest", {
 
 	"test should be able to fill right":function () {
 		// given
-		var view = this.getView([
+		var view = this.getView_250_40([
 			{ name:'a', layout:{ height:500, alignParentTop:true, alignParentLeft:true, width:400 } },
 			{ name:'b', layout:{ height:100, rightOf:'a', fillRight:true }}
 		]);
@@ -306,7 +306,7 @@ TestCase("RelativeTest", {
 
 	"test should be able to fill up":function () {
 		// given
-		var view = this.getView([
+		var view = this.getView_250_40([
 			{ name:'a', layout:{ height:500, alignParentBottom:true, alignParentLeft:true, width:400 } },
 			{ name:'b', layout:{ width:100, above:'a', fillUp:true }}
 		]);
@@ -317,7 +317,7 @@ TestCase("RelativeTest", {
 
 	"test should be able to fill down":function () {
 		// given
-		var view = this.getView([
+		var view = this.getView_250_40([
 			{ name:'a', layout:{ height:600, alignParentTop:true, alignParentLeft:true, width:400 } },
 			{ name:'b', layout:{ width:100, below:'a', fillDown:true }}
 		]);
@@ -328,7 +328,7 @@ TestCase("RelativeTest", {
 
 	"test should be able to ALIGN LEFT":function () {
 		// given
-		var view = this.getView([
+		var view = this.getView_250_40([
 			{ name:'a', layout:{ height:500, alignParentTop:true, alignParentRight:true, width:400 } },
 			{ name:'b', layout:{ width:100, below:'a', alignLeft:'a' }}
 		]);
@@ -339,7 +339,7 @@ TestCase("RelativeTest", {
 
 	"test should be able to ALIGN RIGHT":function () {
 		// given
-		var view = this.getView([
+		var view = this.getView_250_40([
 			{ name:'a', layout:{ height:500, alignParentTop:true, alignParentLeft:true, width:400 } },
 			{ name:'b', layout:{ width:100, below:'a', alignRight:'a' }}
 		]);
@@ -350,7 +350,7 @@ TestCase("RelativeTest", {
 
 	"test should be able to ALIGN TOP":function () {
 		// given
-		var view = this.getView([
+		var view = this.getView_250_40([
 			{ name:'a', layout:{ height:500, alignParentBottom:true, alignParentLeft:true, width:400 } },
 			{ name:'b', layout:{ width:100, below:'a', alignTop:'a' }}
 		]);
@@ -360,7 +360,7 @@ TestCase("RelativeTest", {
 	},
 	"test should be able to ALIGN BOTTOM":function () {
 		// given
-		var view = this.getView([
+		var view = this.getView_250_40([
 			{ name:'a', layout:{ height:500, alignParentTop:true, alignParentLeft:true, width:400 } },
 			{ name:'b', layout:{ width:100, height:300, below:'a', alignBottom:'a' }}
 		]);
@@ -371,7 +371,7 @@ TestCase("RelativeTest", {
 
 	"test should be able to resize":function () {
 		// given
-		var view = this.getView([
+		var view = this.getView_250_40([
 			{ name:'a', layout:{ height:500, alignParentTop:true, alignParentLeft:true, width:400, resize:['right'] } },
 			{ name:'b', layout:{ width:100, height:300, below:'a', alignBottom:'a' }}
 		]);
@@ -386,7 +386,7 @@ TestCase("RelativeTest", {
 
 	"test should re-assign references when resizable":function () {
 		// given
-		var view = this.getView([
+		var view = this.getView_250_40([
 			{ name:'a', layout:{ height:500, alignParentTop:true, alignParentLeft:true, width:400, resize:['right'] } },
 			{ name:'b', layout:{ width:100, height:300, rightOf:'a', alignBottom:'a' }}
 		]);
@@ -402,7 +402,7 @@ TestCase("RelativeTest", {
 
 	"test should assign correct layout properties to resizer":function () {
 		// given
-		var view = this.getView([
+		var view = this.getView_250_40([
 			{ name:'a', layout:{ height:500, alignParentTop:true, alignParentLeft:true, width:400, resize:['right'] } },
 			{ name:'b', layout:{ width:100, height:300, rightOf:'a', alignBottom:'a' }}
 		]);
@@ -418,7 +418,7 @@ TestCase("RelativeTest", {
 
 	"test should resize when view is hidden":function () {
 		// given
-		var view = this.getView([
+		var view = this.getView_250_40([
 			{ type:'FramedView', name:'a1', collapsible:'left', layout:{ height:500, alignParentTop:true, alignParentLeft:true, width:400 } },
 			{ name:'b1', layout:{ width:100, height:300, rightOf:'a1', alignBottom:'a1', fillRight:true }}
 		]);
@@ -435,7 +435,7 @@ TestCase("RelativeTest", {
 
 	"test should update layout when child is shown":function () {
 		// given
-		var view = this.getView([
+		var view = this.getView_250_40([
 			{ type:'FramedView', name:'a1', collapsible:'left', layout:{ height:500, alignParentTop:true, alignParentLeft:true, width:400 } },
 			{ name:'b1', layout:{ width:100, height:300, rightOf:'a1', alignBottom:'a1', fillRight:true }}
 		]);
@@ -454,7 +454,7 @@ TestCase("RelativeTest", {
 
 	"test should find correct position when a view is initial hidden":function () {
 		// given
-		var view = this.getView([
+		var view = this.getView_250_40([
 			{ type:'FramedView', hidden:true, name:'a1', collapsible:'left', layout:{ height:500, alignParentTop:true, alignParentLeft:true, width:400 } },
 			{ name:'b1', layout:{ width:100, height:300, rightOf:'a1', alignBottom:'a1', fillRight:true }}
 		]);
@@ -471,7 +471,7 @@ TestCase("RelativeTest", {
 
 	"test should render at top when below ref is hidden":function () {
 		// given
-		var view = this.getView([
+		var view = this.getView_250_40([
 			{ type:'FramedView', hidden:true, name:'a1', layout:{ height:500, alignParentTop:true, alignParentLeft:true, width:400 } },
 			{ name:'b1', layout:{ width:100, height:300, below:'a1' }}
 		]);
@@ -485,7 +485,7 @@ TestCase("RelativeTest", {
 
 	"test should render at below when below ref initial hidden is shown":function () {
 		// given
-		var view = this.getView([
+		var view = this.getView_250_40([
 			{ type:'FramedView', hidden:true, name:'a1', layout:{ height:500, alignParentTop:true, alignParentLeft:true, width:400 } },
 			{ name:'b1', layout:{ width:100, height:300, below:'a1' }}
 		]);
@@ -498,7 +498,7 @@ TestCase("RelativeTest", {
 		assertEquals('500px', b1.getEl().css('top'));
 	},
 
-	getView:function (children) {
+	getView_250_40:function (children) {
 		var view = new ludo.View({
 			layout:'relative',
 			width:1000,

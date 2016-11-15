@@ -11,13 +11,13 @@ ludo.Application = new Class({
 		height:'matchParent'
 	},
 
-    ludoConfig:function (config) {
+    __construct:function (config) {
         config.renderTo = document.body;
         this.parent(config);
 		this.setBorderStyles();
     },
 
-    ludoRendered:function () {
+    __rendered:function () {
         this.parent();
         this.getEl().addClass('ludo-application');
         this.getBody().addClass('ludo-application-content');

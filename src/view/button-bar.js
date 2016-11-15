@@ -23,7 +23,7 @@ ludo.view.ButtonBar = new Class({
     component:undefined,
 	buttonBarCss:undefined,
 
-    ludoConfig:function (config) {
+    __construct:function (config) {
         this.setConfigParams(config, ['align','component','buttonBarCss']);
         config.children = this.getValidChildren(config.children);
         if (this.align == 'right' || config.align == 'center') {
@@ -45,7 +45,7 @@ ludo.view.ButtonBar = new Class({
         this.getBody().addClass('ludo-content-buttons');
     },
 
-    ludoRendered:function () {
+    __rendered:function () {
         this.parent();
 		this.component.addEvent('resize', this.resizeRenderer.bind(this));
 
@@ -107,7 +107,7 @@ ludo.view.ButtonBar = new Class({
      * @return {Object} ludo Component
      * @private
      */
-    getView : function(){
+    getView_250_40 : function(){
         return this.component;
     }
 });

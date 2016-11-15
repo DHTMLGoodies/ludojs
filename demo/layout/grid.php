@@ -3,12 +3,14 @@ $sub=true;
 $pageTitle = 'Grid layout';
 require_once("../includes/demo-header.php");
 ?>
-<body>
+
 <style type="text/css">
 .customView{
     border:1px solid #000;
-    margin:2px;
     background-color:#FFF;
+}
+.customView .ludo-body{
+    padding:5px;
 }
 </style>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/base.js"></script>
@@ -20,22 +22,16 @@ var w = new ludo.Window({
     width:700,height:600,
     layout:{
         type:'grid',
-        cols:5,
-        rows:3
+        columns:5,
+        rows:5,
+        padX:5,padY:5
     },
     children:[
-        { html:'A (colspan=2)',cls:'customView', layout:{ colspan:2} },
-        { html:'B',cls:'customView' },
-        { html:'C',cls:'customView' },
-        { html:'D',cls:'customView' },
-        { html:'E',cls:'customView' },
-        { html:'F (colspan=3)',cls:'customView', layout:{ colspan:3} },
-        { html:'G',cls:'customView' },
-        { html:'H',cls:'customView' },
-        { html:'I',cls:'customView' },
-        { html:'J',cls:'customView' },
-        { html:'K',cls:'customView' },
-        { html:'L',cls:'customView' }
+        { html:'layout:{ colspan:2, x:0, y:0 }',cls:'customView', layout:{ colspan:2, x:0, y:0 } },
+        { html:'layout: { x: 2, y: 0}',cls:'customView', layout: { x: 2, y: 0} },
+        { html:' layout: { x: 0, y: 1}',cls:'customView', layout: { x: 0, y: 1} },
+        { html:'layout: { x: 1, y: 1} ',cls:'customView', layout: { x: 1, y: 1} },
+        { html:'layout: { x: 1, y: 2}',cls:'customView', layout: { x: 1, y: 2} }
     ],
     buttonBar:[
         { type : 'form.Button', value:'OK' }

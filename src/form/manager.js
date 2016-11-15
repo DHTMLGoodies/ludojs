@@ -100,7 +100,7 @@ ludo.form.Manager = new Class({
      */
     arguments:undefined,
 
-	ludoConfig:function (config) {
+	__construct:function (config) {
 		this.view = config.view;
 		config.form = config.form || {};
 

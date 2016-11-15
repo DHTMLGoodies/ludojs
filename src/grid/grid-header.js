@@ -11,7 +11,7 @@ ludo.grid.GridHeader = new Class({
 	spacing:{},
 	headerMenu:false,
 
-	ludoConfig:function (config) {
+	__construct:function (config) {
 		this.parent(config);
         this.setConfigParams(config, ['columnManager','headerMenu','grid']);
 

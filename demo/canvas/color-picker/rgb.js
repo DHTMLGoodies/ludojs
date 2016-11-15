@@ -48,7 +48,7 @@ ludo.colorPicker.RGB = new Class({
         this.child['rgb'].addEvent('change', this.receiveRGB.bind(this));
     },
 
-    ludoRendered:function () {
+    __rendered:function () {
         this.parent();
         this.colorObj = new ludo.color.Color();
     },

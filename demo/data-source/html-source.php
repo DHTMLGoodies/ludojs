@@ -3,7 +3,7 @@ $sub = true;
 $pageTitle = 'HTML data sources';
 require_once("../includes/demo-header.php");
 ?>
-<body>
+
 
 <script type="text/javascript">
     var w = new ludo.Window({

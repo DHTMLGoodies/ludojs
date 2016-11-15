@@ -12,7 +12,7 @@ ludo.chart.Chart = new Class({
      */
     dataProvider:undefined,
 
-	ludoConfig:function(config){
+	__construct:function(config){
 		this.parent(config);
 		this.layout.type = 'Canvas';
 		this.setConfigParams(config, ['dataProvider']);

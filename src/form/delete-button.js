@@ -17,13 +17,13 @@ ludo.form.DeleteButton = new Class({
 	 * @default undefined
 	 */
 	applyTo:undefined,
-	ludoConfig:function(config){
+	__construct:function(config){
 		this.parent(config);
 		// TODO create base class for delete, submit and cancel button
 		this.setConfigParams(config, ['applyTo']);
 	},
 
-	ludoRendered:function () {
+	__rendered:function () {
 		this.parent();
 		this.applyTo = this.applyTo ? ludo.get(this.applyTo) : this.getParentComponent();
 		this.addEvent('click', this.submit.bind(this));

@@ -58,7 +58,7 @@ ludo.Window = new Class({
     preserveAspectRatio: false,
     statefulProperties: ['layout'],
 
-    ludoConfig: function (config) {
+    __construct: function (config) {
         config = config || {};
         config.renderTo = document.body;
         var keys = ['resizeTop', 'resizeLeft', 'hideBodyOnMove', 'preserveAspectRatio'];
@@ -86,7 +86,7 @@ ludo.Window = new Class({
         if (this.els.buttonBar)this.els.buttonBar.el.css('display', '');
     },
 
-    ludoRendered: function () {
+    __rendered: function () {
         this.parent();
         this.getEl().addClass('ludo-window');
         this.focusFirstFormField();

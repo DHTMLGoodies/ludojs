@@ -3,7 +3,7 @@ $sub = true;
 require_once("../includes/demo-header.php");
 ?>
 
-<body>
+
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/form/slider.js"></script>
 <script type="text/javascript" class="source-code">
     function setColor(obj) {

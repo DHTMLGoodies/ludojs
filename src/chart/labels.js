@@ -72,7 +72,7 @@ ludo.chart.Labels = new Class({
      */
     orientation:undefined,
 
-    ludoConfig:function(config){
+    __construct:function(config){
         this.parent(config);
         this.setConfigParams(config, ['orientation', 'textStyles', 'boxStyles', 'textStylesOver','boxStylesOver']);
     },

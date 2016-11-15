@@ -4,7 +4,7 @@ $pageTitle = 'Relative layout';
 require_once("../includes/demo-header.php");
 ?>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/linear-vertical.js"></script>
-<body>
+
 <style type="text/css">
     div.customView {
         border: 1px solid #C0C0C0;
@@ -32,10 +32,7 @@ require_once("../includes/demo-header.php");
             { name:'leftMenu',
                 type:'View',
                 id:'menuView',
-                css:{
-                    'background-color':'#d7d7d7',
-                    'border-top' : '1px solid #d7d7d7'
-                },
+
                 children:[
                     {
                         title:'View 1',
@@ -44,9 +41,6 @@ require_once("../includes/demo-header.php");
                             weight:1,
                             collapsible:'left',
                             collapseTo:'myWindow'
-                        },
-                        css:{
-                          'background-color' : '#FFF'
                         },
                         elCss:{
                             'border-top' : 0
@@ -60,9 +54,7 @@ require_once("../includes/demo-header.php");
                             collapsible:'left',
                             collapseTo:'myWindow'
                         },
-                        css:{
-                          'background-color' : '#FFF'
-                        },
+
                         elCss:{
                             'border-top' : 0
                         }
@@ -76,8 +68,7 @@ require_once("../includes/demo-header.php");
                             weight:1
                         },
                         css:{
-                            padding:5,
-                            'background-color' : '#fff'
+                            padding:5
                         },
                         elCss:{
                             'border-bottom' : 0,
@@ -96,13 +87,15 @@ require_once("../includes/demo-header.php");
                     resize:['right'],
                     maxWidth:200
                 }},
-            { name:'rightMenu', cls:'customView', html:"Item 1<br>Item 2<br>Item 3<br>Item 4<br>Item 5<br><br><b>Layout:</b><br>alignParentTop:true, alignParentRight:true, width:150, above:'bottomMenu', fillUp:true",
+            { name:'rightMenu', html:"Item 1<br>Item 2<br>Item 3<br>Item 4<br>Item 5<br><br><b>Layout:</b><br>alignParentTop:true, alignParentRight:true, width:150, above:'bottomMenu', fillUp:true",
                 layout:{ alignParentTop:true, alignParentRight:true, width:150, above:'bottomMenu', fillUp:true, resize:['left'] }},
-            { name:'bottomMenu', cls:'customView', html:"Bottom menu box<br><b>Layout:</b> height:50, alignParentBottom:true,rightOf:'leftMenu',fillRight:true,resize:above", layout:{
+            { name:'bottomMenu', html:"Bottom menu box<br><b>Layout:</b> height:50, alignParentBottom:true,rightOf:'leftMenu',fillRight:true,resize:above", layout:{
                 height:50, alignParentBottom:true, rightOf:'leftMenu', fillRight:true, resize:['above'], maxHeight:100
             }},
             {
-                name:'c', html:"Main view<br><br><b>Layout:</b><br>leftOf:'rightMenu',above:'bottomMenu',rightOf:'leftMenu', fillUp:true", cls:'customView',
+                name:'c',
+                html:"Main view<br><br><b>Layout:</b><br>leftOf:'rightMenu',above:'bottomMenu',rightOf:'leftMenu', fillUp:true",
+
                 layout:{
                     leftOf:'rightMenu', above:'bottomMenu', rightOf:'leftMenu', fillUp:true
                 }

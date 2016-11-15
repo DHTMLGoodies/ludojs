@@ -12,7 +12,7 @@ ludo.colorPicker.HueBar = new Class({
 	topMargin : 2,
 	currentBarHeight:undefined,
 	
-    ludoRendered:function(){
+    __rendered:function(){
         this.parent();
         this.colorObj = new ludo.color.Color();
         var c = this.getCanvas();

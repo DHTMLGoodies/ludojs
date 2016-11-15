@@ -69,12 +69,12 @@ ludo.form.Slider = new Class({
     reverse:false,
 
 
-    ludoConfig:function (config) {
+    __construct:function (config) {
         this.parent(config);
         this.setConfigParams(config, ['direction','minValue','maxValue','reverse']);
     },
 
-    ludoRendered:function () {
+    __rendered:function () {
         this.parent();
         this.moveSliderBackgrounds();
     },

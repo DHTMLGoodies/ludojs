@@ -27,7 +27,7 @@ ludo.form.Password = new Class({
 	 */
 	md5:false,
 
-	ludoConfig:function (config) {
+	__construct:function (config) {
 		this.parent(config);
 		if (config.md5 !== undefined)this.md5 = config.md5;
 	},

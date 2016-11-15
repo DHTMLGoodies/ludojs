@@ -17,7 +17,7 @@ ludo.form.Hidden = new Class({
         this.getBody().append(this.els.formEl);
     },
 
-    ludoRendered : function(){
+    __rendered : function(){
         this.parent();
         this.hide();
     },

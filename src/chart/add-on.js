@@ -1,7 +1,7 @@
 ludo.chart.AddOn = new Class({
     Extends: ludo.Core,
 
-    ludoConfig:function(config){
+    __construct:function(config){
         this.parent(config);
         this.parentComponent = config.parentComponent;
     },

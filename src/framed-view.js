@@ -85,7 +85,7 @@ ludo.FramedView = new Class({
 		isMinimized:false
 	},
 
-	ludoConfig:function (config) {
+	__construct:function (config) {
 		this.parent(config);
         if (config.buttons) {
             config.buttonBar = {
@@ -132,7 +132,7 @@ ludo.FramedView = new Class({
 	},
 
 
-	ludoRendered:function () {
+	__rendered:function () {
         // TODO create button bar after view is rendered.
 
 

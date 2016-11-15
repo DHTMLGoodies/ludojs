@@ -44,14 +44,14 @@ ludo.form.Spinner = new Class({
     decimals:0,
 
 
-    ludoConfig:function (config) {
+    __construct:function (config) {
         this.parent(config);
         this.setConfigParams(config, ['increment', 'decimals']);
     },
 
     mode:{},
 
-    ludoRendered:function () {
+    __rendered:function () {
         this.parent();
         this.createSpinnerElements();
 

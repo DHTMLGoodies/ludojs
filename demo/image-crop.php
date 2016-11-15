@@ -2,7 +2,7 @@
 $pageTitle = 'Image Crop demo';
 require_once("includes/demo-header.php");
 ?>
-<body>
+
 
 
 

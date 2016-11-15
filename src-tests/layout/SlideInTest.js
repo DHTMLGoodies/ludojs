@@ -2,7 +2,7 @@ TestCase("SlideIn", {
 
     "test main view should have the same width and height as viewport": function(){
         // given
-        var v = this.getView();
+        var v = this.getView_250_40();
 
         // when
         var child = v.children[1];
@@ -14,7 +14,7 @@ TestCase("SlideIn", {
 
     "test body should have left set to minus width of first child": function(){
         // given
-        var v = this.getView();
+        var v = this.getView_250_40();
 
         // then
         assertEquals('-300px', v.getLayout().slideEl.css("left"));
@@ -24,7 +24,7 @@ TestCase("SlideIn", {
 
     "test children should have absolute positioning": function(){
         // given
-        var v = this.getView();
+        var v = this.getView_250_40();
 
         // then
         assertEquals('absolute', v.children[0].getEl().css("position"));
@@ -32,7 +32,7 @@ TestCase("SlideIn", {
 
     },
 
-    getView:function(){
+    getView_250_40:function(){
         return new ludo.View({
             renderTo:document.body,
             layout:{

@@ -25,10 +25,54 @@ $skin = isset($skin) ? $skin : 'light-gray';
 
     <?php
     require_once("all-js-include.php");
-    
+
+    if(isset($_GET["gray"])){
+        ?>
+        <link rel="stylesheet" href="<?php echo $prefix; ?>../css/ludojs.css" type="text/css">
+        <link rel="stylesheet" href="<?php echo $prefix; ?>../css-source/skin/ludo-all-light-gray-skin.css" type="text/css">
+        <?php
+    }
+
+    else if(isset($_GET['skin'])){
+        ?>
+    <link rel="stylesheet" href="<?php echo $prefix; ?>../css/ludojs-<?php echo $skin; ?>.css" type="text/css">
+        <?php
+
+    }else{
+        $skin = "twilight";
+        ?>
+    <link rel="stylesheet" href="<?php echo $prefix; ?>../css/ludojs.css" type="text/css">
+    <link rel="stylesheet" href="<?php echo $prefix; ?>../css-source/skin/ludo-all-twilight.css" type="text/css">
+        <?php
+
+    }
+
     ?>
     
-    <link rel="stylesheet" href="<?php echo $prefix; ?>../css/ludojs-<?php echo $skin; ?>.css" type="text/css">
+
+    <style type="text/css">
+        div.source-code-preview{
+            background-color:#FFF;
+            padding:5px;
+        }
+        .ludo-twilight div.source-code-preview{
+            background-color:#fff;
+        }
+        .source-code-preview-parent .ludo-body{
+            color:#333;
+        }
+        .source-code-preview-parent{
+            border-top:1px solid #ddd;
+            background-color:#aaa;
+        }
+        .ludo-twilight .source-code-preview-parent{
+            border-top:1px solid #424242;
+            background-color:#aaa;
+        }
+    </style>
+
+
+
     <script type="text/javascript">
         ludo.appConfig = {
             fileupload:{
@@ -42,16 +86,9 @@ $skin = isset($skin) ? $skin : 'light-gray';
             Extends: ludo.View,
             type:'SourceCodePreview',
             title : 'Source code',
+            cls: 'source-code-preview-parent',
             bodyCls : 'source-code-preview',
-            elCss:{
-                'border-top': '1px solid #ddd',
-                'background-color': '#aaa'
-            },
-            css:{
-                'background-color' : '#fff',
-                'padding' : 5
-            },
-            ludoRendered:function(){
+            __rendered:function(){
                 var el = $(document.body).find('.source-code');
                 if(el){
                     this.getBody().html(el.html());
@@ -83,3 +120,5 @@ $skin = isset($skin) ? $skin : 'light-gray';
     ludo.config.setUrl('../controller.php');
     </script>
 </head>
+
+<body class="ludo-<?php echo $skin; ?>">

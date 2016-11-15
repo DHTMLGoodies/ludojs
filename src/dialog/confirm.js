@@ -28,7 +28,7 @@ ludo.dialog.Confirm = new Class({
     Extends: ludo.dialog.Dialog,
     type : 'dialog.Confirm',
 
-    ludoConfig : function(config){
+    __construct : function(config){
         if(!config.buttons && !config.buttonConfig && !config.buttonBar){
             config.buttons = [
                 {

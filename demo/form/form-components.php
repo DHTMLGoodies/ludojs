@@ -3,7 +3,7 @@ $sub = true;
 $pageTitle = 'Example of ludo form components';
 require_once("../includes/demo-header.php");
 ?>
-<body>
+
 <style type="text/css">
     .ludo-form-text-element input, .ludo-form-text-element textarea {
         border: 0;
@@ -30,10 +30,7 @@ require_once("../includes/demo-header.php");
             left:50,
             top:30
         },
-        css:{
-            'border-top' : 0
-        },
-
+        
         form:{
             resource : 'StaticUser',
             autoLoad:true,

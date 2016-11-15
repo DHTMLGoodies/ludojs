@@ -3,7 +3,7 @@ $sub = true;
 $pageTitle = 'Menu layout';
 require_once("../includes/demo-header.php");
 ?>
-<body>
+
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/factory.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/base.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/renderer.js"></script>
@@ -77,10 +77,6 @@ var w = new ludo.Window({
                                     children:[
                                         {
                                             type:'calendar.Calendar',
-                                            elCss:{
-                                                'background-color':'#FFF',
-                                                'border-top':'1px solid #d7d7d7'
-                                            },
                                             layout:{
                                                 width:200,
                                                 height:200
@@ -92,14 +88,80 @@ var w = new ludo.Window({
                                     html:'Select color',
                                     children:[
                                         {
-                                            type:'color.RGBSlider',
-                                            elCss:{
-                                                'background-color':'#FFF',
-                                                'border-top':'1px solid #d7d7d7'
-                                            },
+                                            type:'form.Seekbar',
+                                            id:'red',
+                                            orientation:'horizontal',
                                             layout:{
-                                                width:200,
+                                                height:25,
+                                                width:200
+                                            },
+                                            thumbColor:'#D32F2F', // Red color of seekbar thumb
+                                            negativeColor:'#D32F2F', // Same red color on the seekbar(below thumb)
+                                            minValue:0,maxValue:255,
+                                            listeners:{
+                                                'change': function(){
+                                                    ludo.$('colorPreview').updateColor();
+                                                }
+                                            }
+                                        },
+                                        {
+                                            type:'form.Seekbar',
+                                            id:'green',
+                                            orientation:'horizontal',
+                                            layout:{
+                                                height:25,
+                                                width:200
+                                            },
+                                            thumbColor:'#388E3C',
+                                            negativeColor:'#388E3C',
+                                            value:100,
+                                            minValue:0,maxValue:255,
+                                            listeners:{
+                                                'change': function(){
+                                                    ludo.$('colorPreview').updateColor();
+                                                }
+                                            }
+                                        },
+                                        {
+                                            type:'form.Seekbar',
+                                            id:'blue',
+                                            orientation:'horizontal',
+                                            layout:{
+                                                height:25,
+                                                width:200
+                                            },
+                                            value:45,
+                                            thumbColor:'#1976D2',
+                                            negativeColor:'#1976D2',
+                                            minValue:0,maxValue:255,
+                                            listeners:{
+                                                'change': function(){
+                                                    ludo.$('colorPreview').updateColor();
+                                                }
+                                            }
+                                        },
+                                        {
+                                            id:'colorPreview',
+                                            type:'View',
+                                            layout:{
                                                 height:200
+                                            },
+                                            elCss:{
+                                                'margin-top': 5
+                                            },
+                                            updateColor:function(){
+                                                if(this.colorUtil == undefined){
+                                                    this.colorUtil = new ludo.color.Color();
+                                                }
+                                                var color = this.colorUtil.rgbCode(
+                                                    ludo.get('red').val(), ludo.get('green').val(), ludo.get('blue').val()
+                                                );
+                                                this.getBody().css('background-color', color);
+                                            },
+                                            listeners:{
+                                                'rendered': function(){
+                                                    this.updateColor();
+                                                }
                                             }
                                         }
                                     ]
@@ -139,9 +201,9 @@ var w = new ludo.Window({
                     },
                     elCss:{
                         border:0,
-                        'border-top':'1px solid #d7d7d7',
-                        'border-bottom':'1px solid #d7d7d7',
-                        'border-right':'1px solid #d7d7d7'
+                        'border-top':'1px solid #424242',
+                        'border-bottom':'1px solid #424242',
+                        'border-right':'1px solid #424242'
                     },
                     children:[
                         {
@@ -174,8 +236,8 @@ var w = new ludo.Window({
                         tabs:'right'
                     },
                     elCss:{
-                        'border-top':'1px solid #d7d7d7',
-                        'border-left':'1px solid #d7d7d7'
+                        'border-top':'1px solid #424242',
+                        'border-left':'1px solid #424242'
 
                     },
                     children:[
@@ -185,10 +247,6 @@ var w = new ludo.Window({
                                 url:'../resources/articles/front-page.php'
                             },
                             title:'Front page',
-                            elCss:{
-                                'background-color':'#FFF'
-
-                            },
                             css:{
                                 'overflow-y':'auto',
                                 padding:5
@@ -201,10 +259,6 @@ var w = new ludo.Window({
                                 url:'../resources/articles/sport.php'
                             },
                             title:'Sport news',
-                            elCss:{
-                                'background-color':'#FFF'
-
-                            },
                             css:{
                                 'overflow-y':'auto',
                                 padding:5
@@ -218,9 +272,9 @@ var w = new ludo.Window({
                 {
                     id:'bottom',
                     elCss:{
-                        'border-top':'1px solid #d7d7d7',
-                        'border-left':'1px solid #d7d7d7',
-                        'border-bottom':'1px solid #d7d7d7'
+                        'border-top':'1px solid #424242',
+                        'border-left':'1px solid #424242',
+                        'border-bottom':'1px solid #424242'
                     },
                     layout:{
                         type:'Menu',

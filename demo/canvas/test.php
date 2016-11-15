@@ -3,7 +3,7 @@ $sub = true;
 $pageTitle = 'Canvas Demo - ludoJS';
 require_once("../includes/demo-header.php");
 ?>
-<body>
+
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/node.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/named-node.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/element.js"></script>

@@ -4,7 +4,7 @@ $pageTitle = 'Searchable list';
 require_once("includes/demo-header.php");
 ?>
 
-<body>
+
 <script type="text/javascript" src="../src/tpl/parser.js"></script>
 <script type="text/javascript" src="../src/list.js"></script>
 <script type="text/javascript" src="../src/data-source/collection.js"></script>

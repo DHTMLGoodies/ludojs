@@ -16,7 +16,7 @@ ludo.form.validator.Base = new Class({
 	 */
 	applyTo:undefined,
 
-	ludoConfig:function (config) {
+	__construct:function (config) {
 		this.parent(config);
 		if (config.value !== undefined)this.value = config.value;
 		if (config.applyTo !== undefined)this.applyTo = config.applyTo;

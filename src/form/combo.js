@@ -26,12 +26,12 @@ ludo.form.Combo = new Class({
      */
     childLayout:undefined,
 
-    ludoConfig:function(config){
+    __construct:function(config){
         this.parent(config);
         this.childLayout = config.childLayout || this.childLayout;
     },
 
-    ludoRendered:function(){
+    __rendered:function(){
         this.parent();
 
         ludo.Form.addEvent('focus', this.autoHide.bind(this));

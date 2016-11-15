@@ -41,7 +41,7 @@ ludo.colorPicker.HSV = new Class({
 		this.child['v'].addEvent('change', this.receiveColor.bind(this));
 	},
 
-	ludoRendered:function () {
+	__rendered:function () {
 		this.parent();
 		this.colorObj = new ludo.color.Color();
 	},

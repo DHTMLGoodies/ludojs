@@ -20,7 +20,7 @@ ludo.calendar.NavBar = new Class({
         { type:'form.Button', size : 's', name:'nextyear', value:'>>', width:25 }
     ],
 
-    ludoRendered:function () {
+    __rendered:function () {
         this.parent();
         this.child['previous'].addEvent('click', this.goToPreviousMonth.bind(this));
         this.child['next'].addEvent('click', this.goToNextMonth.bind(this));

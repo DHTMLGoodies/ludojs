@@ -53,7 +53,7 @@ TestCase("FactoryTest", {
 			type : 'MyApp2.MyClass',
 			arg1:undefined,
 			arg2:undefined,
-			ludoConfig:function(config){
+			__construct:function(config){
 				this.parent(config);
 				this.arg1 = config.arg1;
 				this.arg2 = config.arg2;
@@ -80,7 +80,7 @@ TestCase("FactoryTest", {
 			type : 'MyApp3.View',
 			arg1:undefined,
 			arg2:undefined,
-			ludoConfig:function(config){
+			__construct:function(config){
 				this.parent(config);
 				this.arg1 = config.arg1;
 				this.arg2 = config.arg2;

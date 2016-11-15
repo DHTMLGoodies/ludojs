@@ -11,12 +11,12 @@ ludo.form.Textarea = new Class({
     inputTag:'textarea',
     overflow:'hidden',
 
-    ludoConfig:function (config) {
+    __construct:function (config) {
         this.parent(config);
         this.ucWords = false;
     },
 
-    ludoRendered:function(){
+    __rendered:function(){
         this.parent();
         this.els.formEl.css({
             paddingRight:0,paddingTop:0

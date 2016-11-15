@@ -29,7 +29,7 @@ ludo.effect.DragDrop = new Class({
 	 */
 	mouseYOffset:undefined,
 
-	ludoConfig:function (config) {
+	__construct:function (config) {
 		this.parent(config);
 		if (config.captureRegions !== undefined)this.captureRegions = config.captureRegions;
 

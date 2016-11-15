@@ -2,7 +2,7 @@
 $pageTitle = 'Drag and Drop demo';
 require_once("includes/demo-header.php");
 ?>
-<body>
+
 
 
 

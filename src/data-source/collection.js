@@ -107,7 +107,7 @@ ludo.dataSource.Collection = new Class({
 	 */
 	selected:undefined,
 
-	ludoConfig:function (config) {
+	__construct:function (config) {
 		this.parent(config);
         this.setConfigParams(config, ['searchConfig','sortFn','primaryKey','sortedBy','paging','selected']);
 

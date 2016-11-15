@@ -85,6 +85,7 @@
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/video/you-tube.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/view/title-bar.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/view/button-bar.js"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/view/view-pager-nav.js"></script>
 
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/form/manager.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/form/element.js"></script>

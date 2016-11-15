@@ -20,7 +20,7 @@ ludo.chart.Base = new Class({
 
     rendered:false,
 
-    ludoConfig:function (config) {
+    __construct:function (config) {
         this.parent(config);
         this.setConfigParams(config, ['animation']);
 

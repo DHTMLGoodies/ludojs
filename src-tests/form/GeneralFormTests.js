@@ -5,14 +5,14 @@ TestCase("GeneralFormTests", {
 
 
     setUp:function(){
-        this.getView();
+        this.getView_250_40();
         ludo.get("firstname").val("");
         ludo.get("lastname").val("");
         ludo.get("address").val("");
         ludo.get("phone").val("");
     },
 
-    getView: function () {
+    getView_250_40: function () {
 
         if (ludo.get("formView") == undefined) {
 
@@ -39,7 +39,7 @@ TestCase("GeneralFormTests", {
 
     "test should be able to populate form via view": function () {
         // given
-        var view = this.getView();
+        var view = this.getView_250_40();
 
         // when
         view.getForm().populate({
@@ -54,7 +54,7 @@ TestCase("GeneralFormTests", {
 
     "test should get all values via form object": function(){
         // given
-        var view = this.getView();
+        var view = this.getView_250_40();
         ludo.get("firstname").val("Alf");
         ludo.get("lastname").val("Johnson");
         ludo.get("phone").val("444-555");
@@ -70,7 +70,7 @@ TestCase("GeneralFormTests", {
 
     "test should get values using val method": function(){
         // given
-        var view = this.getView();
+        var view = this.getView_250_40();
         ludo.get("firstname").val("Alf");
         ludo.get("lastname").val("Johnson");
         ludo.get("phone").val("444-555");

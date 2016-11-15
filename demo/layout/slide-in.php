@@ -3,7 +3,7 @@ $sub = true;
 $pageTitle = 'Slide in layout';
 require_once("../includes/demo-header.php");
 ?>
-<body>
+
 
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/slide-in.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/effect/effect.js"></script>

@@ -103,7 +103,7 @@ ludo.form.Element = new Class({
     validators:[],
     submittable:true,
 
-    ludoConfig:function (config) {
+    __construct:function (config) {
         this.parent(config);
         var defaultConfig = this.getInheritedFormConfig();
 
@@ -185,7 +185,7 @@ ludo.form.Element = new Class({
         }
     },
 
-    ludoRendered:function () {
+    __rendered:function () {
         this.parent();
 
         if (this.disabled)this.disable();

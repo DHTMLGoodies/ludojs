@@ -7,12 +7,12 @@ ludo.color.RGBSlider = new Class({
     value:'#000000',
     regex:/^\#[0-9A-Fa-f]{6}$/i,
 
-    ludoConfig:function (config) {
+    __construct:function (config) {
         this.parent(config);
         this.setConfigParams(config, ['value']);
     },
 
-    ludoRendered:function () {
+    __rendered:function () {
         this.parent();
         this.updatePreview();
         this.child['preview'].child['colorValue'].addEvent('setColor', this.receiveColor.bind(this));

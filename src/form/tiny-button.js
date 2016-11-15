@@ -9,7 +9,7 @@ ludo.form.TinyButton = new Class({
     width:20,
     buttonHeight:15,
 
-    ludoConfig:function (config) {
+    __construct:function (config) {
         if(config.width == undefined){
             config.width = Math.max(config.value ? config.value.length*10 : 20, 20);
         }

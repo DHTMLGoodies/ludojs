@@ -40,7 +40,7 @@ ludo.form.Checkbox = new Class({
         '</table>'
     ],
 
-    ludoConfig:function (config) {
+    __construct:function (config) {
         config = config || {};
         config.value = config.value || '1';
         this.parent(config);

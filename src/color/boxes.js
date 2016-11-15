@@ -1,7 +1,7 @@
 ludo.color.Boxes = new Class({
     Extends : ludo.color.Base,
 
-    ludoConfig:function(config){
+    __construct:function(config){
         this.parent(config);
         this.setConfigParams(config, ['colors']);
     },
@@ -16,7 +16,7 @@ ludo.color.Boxes = new Class({
         this.getBody().on('click', this.clickOnColorBox.bind(this));
     },
 
-    ludoRendered:function(){
+    __rendered:function(){
         this.parent();
         this.addColorBoxes();
     },

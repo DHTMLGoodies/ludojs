@@ -6,7 +6,7 @@ require_once("../includes/demo-header.php");
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/base.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/view-pager.js"></script>
 
-<body>
+
 <style type="text/css">
     .navigator-dot-parent{
         cursor:pointer;
@@ -38,7 +38,7 @@ require_once("../includes/demo-header.php");
         spacing:0,
 
 
-        ludoConfig:function(config){
+        __construct:function(config){
             this.parent(config);
             if(config.spacing != undefined)this.spacing = config.spacing;
 
@@ -171,8 +171,6 @@ require_once("../includes/demo-header.php");
                     listeners:{
                         'showpage': function(layout){
                             ludo.get('myWindow').setTitle('Swipe between pages ' + (layout.selectedIndex+1) + " of " + layout.count);
-
-
                             ludo.$('navigator').navigate();
 
                         },

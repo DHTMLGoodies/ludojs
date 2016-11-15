@@ -40,7 +40,7 @@ ludo.form.DisplayField = new Class({
 		this.setTextContent(value);
 	},
 
-	ludoRendered:function(){
+	__rendered:function(){
 		this.parent();
 		this.setTextContent(this.value);
 	},

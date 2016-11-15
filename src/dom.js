@@ -225,18 +225,22 @@ ludo.dom = {
 
 	getWrappedSizeOfView:function (view) {
 
+		view.cachedInnerHeight = undefined;
+		view.getEl().css('height', 'auto');
+		view.getBody().css('height', 'auto');
+
 		var el = view.getEl();
 		var b = view.getBody();
 		b.css('position', 'absolute');
-
-		var width = b.width();
-		b.css('position', 'relative');
-		var height = b.height();
 		
+		var width = b.outerWidth();
+		b.css('position', 'relative');
+		var height = b.outerHeight();
+
 
 		return {
-			x:width + ludo.dom.getMBPW(b) + ludo.dom.getMBPW(el),
-			y:height + ludo.dom.getMBPH(b) + ludo.dom.getMBPH(el) + (view.getHeightOfTitleBar ? view.getHeightOfTitleBar() : 0)
+			x:width + ludo.dom.getMBPW(el),
+			y:height + ludo.dom.getMBPH(el) + (view.getHeightOfTitleBar ? view.getHeightOfTitleBar() : 0)
 		}
 	},
 

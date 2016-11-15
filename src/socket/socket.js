@@ -148,7 +148,7 @@ ludo.socket.Socket = new Class({
 	emitEvents:undefined,
 
 
-	ludoConfig:function (config) {
+	__construct:function (config) {
 		this.parent(config);
 		if (config.url !== undefined)this.url = config.url;
 		if (config.component !== undefined) this.component = config.component;

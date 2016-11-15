@@ -3,7 +3,7 @@ $sub = true;
 $pageTitle = 'Seekbar Demo';
 require_once("../includes/demo-header.php");
 ?>
-<body>
+<body class="ludo-twilight">
 <link rel="stylesheet" href="../../css-source/form/on-off-switch.css" type="text/css"/>
 <style type="text/css">
     .ludo-form-text-element input, .ludo-form-text-element textarea {
@@ -62,9 +62,6 @@ require_once("../includes/demo-header.php");
             // for this demo, the demo it's self will be displayed in one tab and the source code in a second tab
             type: 'tabs'
         },
-        css: {
-            'border-top': 0
-        },
         closable: false,
         height: 430,
         width: 650,
@@ -89,61 +86,117 @@ require_once("../includes/demo-header.php");
                 children: [
 
                     {
-                        id: 'red', // id of view for easy access using ludo.get('red') later
-                        minValue:0,maxValue:255, // Min value set to 0, max set to 255
-                        thumbColor:'#D32F2F', // Red color of seekbar thumb
-                        negativeColor:'#D32F2F', // Same red color on the seekbar(below thumb)
-                        type: 'form.Seekbar', // Type of view is form.Seekbar
-                        stateful:true, // value will be preserved after browser refresh.
-                        value:100, // Sets a default red value of 100
-                        css:{
-                            'padding-left': 5,'padding-right':5 // some space between the seekbars
+                        layout:{
+                            type:'linear', orientation:'vertical',width:180
                         },
-                        layout: {
-                            width:60 // Sets with of seek bar to 60. height will be height of parent(default for linear horizontal layout
-                        },
-                        listeners:{
-                            change:updateColor // call the updateColor function above when red value is changed
-                        }
-                    },
-                    {
-                        // Seekbar for the green color
-                        id: 'green',
-                        value:200,
-                        thumbColor:'#388E3C',
-                        negativeColor:'#388E3C',
-                        minValue:0,maxValue:255,
-                        type: 'form.Seekbar',
-                        stateful:true,
-                        css:{
-                            'padding-left': 5,'padding-right':5
-                        },
-                        layout: {
-                            width:60
-                        },
-                        listeners:{
-                            change:updateColor
-                        }
-                    },
-                    {
-                        // Seekbar for the blue color
-                        id: 'blue',
-                        value:50,
-                        thumbColor:'#1976D2',
-                        negativeColor:'#1976D2',
-                        type: 'form.Seekbar',
-                        minValue:0,maxValue:255,
-                        stateful:true,
-                        css:{
-                            'padding-left': 5,'padding-right':5
-                        },
-                        layout: {
-                            width:60
-                        },
-                        listeners:{
-                            change:updateColor
-                        }
-                    },
+                        children:[
+                            {
+                                layout:{
+                                    type:'linear',orientation:'horizontal',
+                                    width:180,
+                                    weight:1
+                                },
+                                children:[
+
+                                    {
+                                        id: 'red', // id of view for easy access using ludo.get('red') later
+                                        minValue:0,maxValue:255, // Min value set to 0, max set to 255
+                                        thumbColor:'#D32F2F', // Red color of seekbar thumb
+                                        negativeColor:'#D32F2F', // Same red color on the seekbar(below thumb)
+                                        type: 'form.Seekbar', // Type of view is form.Seekbar
+                                        stateful:true, // value will be preserved after browser refresh.
+                                        value:100, // Sets a default red value of 100
+                                        css:{
+                                            'padding-left': 5,'padding-right':5 // some space between the seekbars
+                                        },
+                                        layout: {
+                                            width:60 // Sets with of seek bar to 60. height will be height of parent(default for linear horizontal layout
+                                        },
+                                        listeners:{
+                                            change:updateColor // call the updateColor function above when red value is changed
+                                        }
+                                    },
+                                    {
+                                        // Seekbar for the green color
+                                        id: 'green',
+                                        value:200,
+                                        thumbColor:'#388E3C',
+                                        negativeColor:'#388E3C',
+                                        minValue:0,maxValue:255,
+                                        type: 'form.Seekbar',
+                                        stateful:true,
+                                        css:{
+                                            'padding-left': 5,'padding-right':5
+                                        },
+                                        layout: {
+                                            width:60
+                                        },
+                                        listeners:{
+                                            change:updateColor
+                                        }
+                                    },
+                                    {
+                                        // Seekbar for the blue color
+                                        id: 'blue',
+                                        value:50,
+                                        thumbColor:'#1976D2',
+                                        negativeColor:'#1976D2',
+                                        type: 'form.Seekbar',
+                                        minValue:0,maxValue:255,
+                                        stateful:true,
+                                        css:{
+                                            'padding-left': 5,'padding-right':5
+                                        },
+                                        layout: {
+                                            width:60
+                                        },
+                                        listeners:{
+                                            change:updateColor
+                                        }
+                                    }
+                                ]
+                            },
+                            {
+                                layout:{
+                                    type:'linear', orientation:'horizontal',height:25
+                                },
+                                css:{
+                                    'margin-left' : 5
+                                },
+                                children:[
+                                    {
+                                        type:'form.Label',
+                                        labelFor:'rgbCode',
+                                        label:'#',
+                                        layout:{
+                                            width:10,
+                                            height:30
+                                        }
+                                    },
+                                    {
+                                        // A form text element showing the
+                                        type:'form.Text',
+                                        label:'#',
+                                        labelSuffix:'', // label suffix for all form views is ":", This line removes it
+                                        labelWidth:15, // Short label
+                                        maxLength:6, // Max length of color code is 6, example: FFAABB
+                                        layout:{ height:30, width:160 },
+                                        id:'rgbCode', // id for easy access using ludo.get("rgbCode")
+                                        // A custom validator function. The value has to match this color code Regular Expression pattern(6 characters from 0-9,A-F)
+                                        // The validator will make sure that the change event below will only be triggered when we have a valid RGB code
+                                        validator:function(val){
+                                            return /^[0-9A-F]{6}$/.test(val);
+                                        },
+                                        listeners:{
+                                            'change': updateColorByCode // When value is changed, call the updateColorByCode function
+                                        }
+                                    }
+                                ]
+                            }
+
+                        ]
+                    }
+,
                     {
                         layout:{
                             weight:1, // This view should use all remaining space of parent
@@ -159,25 +212,8 @@ require_once("../includes/demo-header.php");
                                 css:{
                                     'border':'1px solid #AAA' // A nice medium gray border around the preview
                                 }
-                            },
-                            {
-                                // A form text element showing the
-                                type:'form.Text',
-                                label:'#',
-                                labelSuffix:'', // label suffix for all form views is ":", This line removes it
-                                labelWidth:15, // Short label
-                                maxLength:6, // Max length of color code is 6, example: FFAABB
-                                layout:{ height:30 },
-                                id:'rgbCode', // id for easy access using ludo.get("rgbCode")
-                                // A custom validator function. The value has to match this color code Regular Expression pattern(6 characters from 0-9,A-F)
-                                // The validator will make sure that the change event below will only be triggered when we have a valid RGB code
-                                validator:function(val){
-                                    return /^[0-9A-F]{6}$/.test(val);
-                                },
-                                listeners:{
-                                    'change': updateColorByCode // When value is changed, call the updateColorByCode function
-                                }
                             }
+
                         ]
                     }
                 ]

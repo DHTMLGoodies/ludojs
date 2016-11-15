@@ -2,7 +2,7 @@
 $pageTitle = 'File upload demo';
 require_once("includes/demo-header.php");
 ?>
-<body>
+
 <script type="text/javascript">
 
 var w = new ludo.Window({

@@ -8,7 +8,7 @@ ludo.layout.Resizer = new Class({
     isActive: false,
     hidden: false,
 
-    ludoConfig: function (config) {
+    __construct: function (config) {
         this.parent(config);
         this.setConfigParams(config, ['orientation', 'view', 'layout', 'pos', 'hidden']);
         this.createDOM(config.renderTo);

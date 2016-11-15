@@ -21,7 +21,7 @@ ludo.crop.Handle = new Class({
         current:{x:0, y:0},
         el:{x:0, y:0}
     },
-    ludoConfig:function (config) {
+    __construct:function (config) {
         this.region = config.region;
         this.parent(config);
     },

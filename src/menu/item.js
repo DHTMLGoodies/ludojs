@@ -63,7 +63,7 @@ ludo.menu.Item = new Class({
      */
     fire:undefined,
 
-    ludoConfig:function (config) {
+    __construct:function (config) {
         this.parent(config);
         this.setConfigParams(config, ['orientation', 'icon', 'record', 'value', 'label', 'action', 'disabled', 'fire']);
 
@@ -72,7 +72,7 @@ ludo.menu.Item = new Class({
             this.spacer = true;
             this.layout.height = 1;
 		}else{
-			this.layout.height = this.layout.height || this.orientation === 'vertical' ? 25 : 'matchParent';
+			this.layout.height = this.layout.height || this.orientation === 'vertical' ? 'wrap' : 'matchParent';
         }
 
     },
@@ -131,7 +131,7 @@ ludo.menu.Item = new Class({
         return this.record;
     },
 
-    ludoRendered:function () {
+    __rendered:function () {
         this.parent();
         if (this.isSpacer()) {
             this.getBody().css('visibility', 'hidden');

@@ -74,7 +74,7 @@ ludo.form.RadioGroup = new Class({
         this.toggleDirtyFlag();
     },
 
-    ludoRendered : function() {
+    __rendered : function() {
         this.parent();
         if(this.checkboxes.length > 0 && !this.isChecked()){
             this.checkboxes[0].check();

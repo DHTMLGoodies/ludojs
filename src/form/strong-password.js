@@ -31,7 +31,7 @@ ludo.form.StrongPassword = new Class({
      */
     passwordLength : 8,
 
-    ludoConfig:function(config){
+    __construct:function(config){
         config = config || {};
         this.passwordLength = config.passwordLength || this.passwordLength;
         this.regex = new RegExp(this.regex.replace('_length_', this.passwordLength));

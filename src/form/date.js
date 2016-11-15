@@ -25,7 +25,7 @@ ludo.form.Date = new Class({
         width:250,height:250
     },
 
-    ludoConfig:function(config){
+    __construct:function(config){
         this.parent(config);
         this.setConfigParams(config, ['displayFormat','inputFormat']);
 
@@ -36,7 +36,7 @@ ludo.form.Date = new Class({
     },
 
 
-    ludoRendered:function(){
+    __rendered:function(){
         this.parent();
         this.setFormElValue(this.value);
     },

@@ -5,6 +5,7 @@ load:
   - ../../js/ludojs.js
   - ../../src/dom.js
   - ../../src/layout/factory.js
+  - ../../src/layout/grid.js
   - ../../src/layout/base.js
   - ../../src/layout/linear.js
   - ../../src/layout/relative.js

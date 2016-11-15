@@ -73,7 +73,7 @@ ludo.menu.Context = new Class({
 	 */
 	contextEl:undefined,
 
-	ludoConfig:function (config) {
+	__construct:function (config) {
 		this.renderTo = document.body;
 		this.parent(config);
 		this.setConfigParams(config, ['selector', 'recordType', 'record', 'applyTo','contextEl']);
@@ -98,7 +98,7 @@ ludo.menu.Context = new Class({
 		}
 	},
 
-	ludoRendered:function () {
+	__rendered:function () {
 		this.parent();
 		this.hide();
 	},

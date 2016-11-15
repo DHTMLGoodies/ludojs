@@ -3,7 +3,7 @@ $sub = true;
 $pageTitle = 'Linear layout';
 require_once("../includes/demo-header.php");
 ?>
-<body>
+
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/base.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/effect/drag.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/resizer.js"></script>

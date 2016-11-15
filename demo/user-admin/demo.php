@@ -3,7 +3,7 @@ $sub = true;
 $pageTitle = 'User admin with LudoJS and LudoDB';
 require_once("../includes/demo-header.php");
 ?>
-<body>
+
 <script type="text/javascript">
     ludo.config.setUrl('../controller.php');
         window.addEvent('domready', function () {

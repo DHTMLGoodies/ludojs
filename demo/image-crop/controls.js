@@ -13,7 +13,7 @@ ludo.crop.Controls = new Class({
         { type:'form.Number', value:'0', name:'height', label:'Height' }
     ],
 
-    ludoRendered:function(){
+    __rendered:function(){
         this.parent();
         this.getForm().addEvent('dirty', this.receiveCoordinate.bind(this));
     },

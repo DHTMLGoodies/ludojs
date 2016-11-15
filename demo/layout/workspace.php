@@ -5,7 +5,7 @@ $skin = 'blue';
 require_once("../includes/demo-header.php");
 
 ?>
-<body>
+
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/framed-view.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/tab-strip.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/relative.js"></script>

@@ -365,28 +365,7 @@ TestCase("ViewPagerLayout", {
 		// then
 		assertTrue(eventFired);
 	},
-	"test should find if a card is last card":function () {
-		// given
-		var deck = this.getDeck();
 
-		// when
-		var card = deck.child['lastpage'];
-
-		// then
-		assertTrue(deck.getLayout().isLastPage(card));
-
-	},
-	"test should find if a card is first card":function () {
-		// given
-		var deck = this.getDeck();
-
-		// when
-		var card = deck.child['card1'];
-
-		// then
-		assertTrue(deck.getLayout().isFirstPage(card));
-
-	},
 	"test should fire first card event when showing first card":function () {
 		// given
 		var deck = this.getDeck();
@@ -514,7 +493,7 @@ TestCase("ViewPagerLayout", {
 		var deckWith5Pages = this.getDeck();
 
 		// then
-		assertEquals(5, deckWith5Pages.getLayout().getCountPages())
+		assertEquals(5, deckWith5Pages.getLayout().count)
 
 	},
 

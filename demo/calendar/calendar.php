@@ -3,7 +3,7 @@ $sub = true;
 $pageTitle = 'Calendar demo';
 require_once("../includes/demo-header.php");
 ?>
-<body>
+
 
 <script type="text/javascript" class="source-code">
 var w = new ludo.Window({
@@ -15,7 +15,7 @@ var w = new ludo.Window({
     },
     layout:'fill',
     children:[
-        { type:'calendar.Calendar', name:'title',minDate:'1971-01-01',date:'2013-02-21' }
+        { type:'calendar.Calendar', name:'title',minDate:'1971-01-01',date:'2016-11-21' }
     ]
 });
 </script>
