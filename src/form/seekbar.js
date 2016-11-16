@@ -133,7 +133,7 @@ ludo.form.Seekbar = new Class({
         this.el.append(this.eventEl);
         this.eventEl.on("click", this.clickOnBar.bind(this));
 
-
+        console.log(ludo.util.getDragStartEvent());
         this.thumb.on(ludo.util.getDragStartEvent(), this.startDragging.bind(this));
         $(document.documentElement).on(ludo.util.getDragMoveEvent(), this.drag.bind(this));
         $(document.documentElement).on(ludo.util.getDragEndEvent(), this.endDrag.bind(this));

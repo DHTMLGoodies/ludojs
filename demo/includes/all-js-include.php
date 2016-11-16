@@ -56,7 +56,7 @@
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/popup.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/canvas.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/tab.js"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/tab-strip.js"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/tabs.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/text-box.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/menu.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/menu-vertical.js"></script>
