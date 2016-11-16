@@ -81,7 +81,7 @@
 }
 
 /* No bold titlebar */
-.ludo-component-titlebar {
+.ludo-view-titlebar {
     width: 100%;
     z-index: 100;
     height: 22px;
@@ -90,7 +90,7 @@
     border-bottom: 1px solid;
 }
 
-.ludo-component-titlebar .ludo-component-buttonbar {
+.ludo-view-titlebar .ludo-view-buttonbar {
     height: 22px;
 }
 
@@ -134,7 +134,7 @@
     position: relative;
 }
 
-.ludo-component-buttonbar {
+.ludo-view-buttonbar {
     position: relative;
     padding-right: 1px;
     padding-top: 2px;
@@ -144,19 +144,19 @@
     height: 24px;
 }
 
-.ludo-component-statusbar {
+.ludo-view-statusbar {
     height: 18px;
     border-top: 1px solid;
     position: relative;
 }
 
-.ludo-component-statusbar div {
+.ludo-view-statusbar div {
     float: left;
     padding-left: 3px;
 }
 
 
-.ludo-component-statusbar-icon {
+.ludo-view-statusbar-icon {
     position: relative;
     left: 2px;
     top: 0;
@@ -166,7 +166,7 @@
     width: 20px;
 }
 
-.ludo-component-statusbar-text {
+.ludo-view-statusbar-text {
     position: relative;
     line-height: 18px;
     height: 100%;
@@ -338,11 +338,11 @@
     overflow: hidden;
 }
 
-.ludo-component-full-screen .ludo-body {
+.ludo-view-full-screen .ludo-body {
     overflow: hidden;
 }
 
-.ludo-component-full-screen-view-effect {
+.ludo-view-full-screen-view-effect {
     border: 1px dotted #000;
 }
 
@@ -360,15 +360,15 @@ div.ludo-content-child-of-fullscreen {
     font-family:arial;
 }
 
-.ludo-richcomponent .ludo-component-resize {
+.ludo-richcomponent .ludo-view-resize {
     display: none;
 }
 
-.ludo-component-resize, .ludo-window .ludo-component-resize, .ludo-dashboard-column .ludo-component-resize {
+.ludo-view-resize, .ludo-window .ludo-view-resize, .ludo-dashboard-column .ludo-view-resize {
     display: block;
 }
 
-.ludo-application-content .ludo-component-resize {
+.ludo-application-content .ludo-view-resize {
     display: none;
 }
 
@@ -404,7 +404,7 @@ div.ludo-content-child-of-fullscreen {
     padding-left:3px;
 }
 /* Button container at the bottom */
-div.ludo-component-button-container, div.ludo-content-buttons {
+div.ludo-view-button-container, div.ludo-content-buttons {
     padding: 0 !important;
     margin: 0 !important;
     border: 0 !important;
@@ -414,7 +414,7 @@ div.ludo-component-button-container, div.ludo-content-buttons {
 .ludo-content-buttons .ludo-view{
     background-color:transparent;
 }
-.ludo-component-button-container{
+.ludo-view-button-container{
     padding-left:3px;
 }
 

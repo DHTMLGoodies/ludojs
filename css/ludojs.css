@@ -1,7 +1,7 @@
-/* Generated Tue Nov 15 16:36:19 CET 2016 */
+/* Generated Wed Nov 16 16:39:45 CET 2016 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.88
+ludoJS - Javascript framework, 1.1.108
 Copyright (C) 2012-2016  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -103,7 +103,7 @@ Owner of ludoJS.com
 }
 
 /* No bold titlebar */
-.ludo-component-titlebar {
+.ludo-view-titlebar {
     width: 100%;
     z-index: 100;
     height: 22px;
@@ -112,7 +112,7 @@ Owner of ludoJS.com
     border-bottom: 1px solid;
 }
 
-.ludo-component-titlebar .ludo-component-buttonbar {
+.ludo-view-titlebar .ludo-view-buttonbar {
     height: 22px;
 }
 
@@ -156,7 +156,7 @@ Owner of ludoJS.com
     position: relative;
 }
 
-.ludo-component-buttonbar {
+.ludo-view-buttonbar {
     position: relative;
     padding-right: 1px;
     padding-top: 2px;
@@ -166,19 +166,19 @@ Owner of ludoJS.com
     height: 24px;
 }
 
-.ludo-component-statusbar {
+.ludo-view-statusbar {
     height: 18px;
     border-top: 1px solid;
     position: relative;
 }
 
-.ludo-component-statusbar div {
+.ludo-view-statusbar div {
     float: left;
     padding-left: 3px;
 }
 
 
-.ludo-component-statusbar-icon {
+.ludo-view-statusbar-icon {
     position: relative;
     left: 2px;
     top: 0;
@@ -188,7 +188,7 @@ Owner of ludoJS.com
     width: 20px;
 }
 
-.ludo-component-statusbar-text {
+.ludo-view-statusbar-text {
     position: relative;
     line-height: 18px;
     height: 100%;
@@ -360,11 +360,11 @@ Owner of ludoJS.com
     overflow: hidden;
 }
 
-.ludo-component-full-screen .ludo-body {
+.ludo-view-full-screen .ludo-body {
     overflow: hidden;
 }
 
-.ludo-component-full-screen-view-effect {
+.ludo-view-full-screen-view-effect {
     border: 1px dotted #000;
 }
 
@@ -382,15 +382,15 @@ div.ludo-content-child-of-fullscreen {
     font-family:arial;
 }
 
-.ludo-richcomponent .ludo-component-resize {
+.ludo-richcomponent .ludo-view-resize {
     display: none;
 }
 
-.ludo-component-resize, .ludo-window .ludo-component-resize, .ludo-dashboard-column .ludo-component-resize {
+.ludo-view-resize, .ludo-window .ludo-view-resize, .ludo-dashboard-column .ludo-view-resize {
     display: block;
 }
 
-.ludo-application-content .ludo-component-resize {
+.ludo-application-content .ludo-view-resize {
     display: none;
 }
 
@@ -426,7 +426,7 @@ div.ludo-content-child-of-fullscreen {
     padding-left:3px;
 }
 /* Button container at the bottom */
-div.ludo-component-button-container, div.ludo-content-buttons {
+div.ludo-view-button-container, div.ludo-content-buttons {
     padding: 0 !important;
     margin: 0 !important;
     border: 0 !important;
@@ -436,7 +436,7 @@ div.ludo-component-button-container, div.ludo-content-buttons {
 .ludo-content-buttons .ludo-view{
     background-color:transparent;
 }
-.ludo-component-button-container{
+.ludo-view-button-container{
     padding-left:3px;
 }
 
@@ -519,7 +519,7 @@ div.ludo-resize-handle-active {
     border: 1px dashed #777;
 }
 
-.ludo-component-resize-el {
+.ludo-view-resize-el {
     position: absolute;
     padding: 0 !important;
     border: 0 !important;
@@ -528,7 +528,7 @@ div.ludo-resize-handle-active {
     background-color: transparent !important;
 }
 
-.ludo-component-resize-region-s {
+.ludo-view-resize-region-s {
     background-repeat: no-repeat;
     background-position: center center;
     position: absolute;
@@ -539,14 +539,14 @@ div.ludo-resize-handle-active {
     z-index: 15500;
 }
 
-.ludo-component-resize-region-e {
+.ludo-view-resize-region-e {
     top: 5%;
     width: 5px;
     right: 0;
     height: 90%;
 }
 
-.ludo-component-resize-region-w {
+.ludo-view-resize-region-w {
     height: 90%;
     left: 0;
     top: 5%;
@@ -554,7 +554,7 @@ div.ludo-resize-handle-active {
     cursor: w-resize;
 }
 
-.ludo-component-resize-region-n {
+.ludo-view-resize-region-n {
     width: 90%;
     top: 0;
     left: 5%;
@@ -562,27 +562,27 @@ div.ludo-resize-handle-active {
     cursor: s-resize;
 }
 
-.ludo-component-resize-region-nw, .ludo-component-resize-region-ne, .ludo-component-resize-region-sw {
+.ludo-view-resize-region-nw, .ludo-view-resize-region-ne, .ludo-view-resize-region-sw {
     width: 7px;
     height: 7px;
 }
 
-.ludo-component-resize-region-nw {
+.ludo-view-resize-region-nw {
     top: 0;
     left: 0;
 }
 
-.ludo-component-resize-region-ne {
+.ludo-view-resize-region-ne {
     top: 0;
     right: 0;
 }
 
-.ludo-component-resize-region-sw {
+.ludo-view-resize-region-sw {
     left: 0;
     bottom: 0;
 }
 
-.ludo-component-resize-region-se {
+.ludo-view-resize-region-se {
     background-image: none;
     background-repeat: no-repeat;
     position: absolute;
@@ -594,11 +594,11 @@ div.ludo-resize-handle-active {
     cursor: se-resize;
 }
 
-.ludo-component-resize-right {
+.ludo-view-resize-right {
     background-position: left center;
 }
 
-.ludo-component-resize-right {
+.ludo-view-resize-right {
     cursor: w-resize;
     height: 100%;
     width: 3px;
@@ -1751,7 +1751,7 @@ div.ludo-tree-movable-shim img{
 .ludo-body input, .ludo-body textarea {
     font-family: arial, helvetica, Sans-Serif;
 }/* ../ludojs/css-source/form/button.css */
-.ludo-component-buttonbar {
+.ludo-view-buttonbar {
     box-shadow: 0 !important;
     padding-right: 2px;
 }
@@ -2104,7 +2104,7 @@ div.ludo-color-rgb-slider-value .ludo-body{
     border-bottom-left-radius: 2px;
     border-bottom-right-radius: 2px;
 }
-.ludo-Filter-Tree-Window .ludo-component-resize-both{
+.ludo-Filter-Tree-Window .ludo-view-resize-both{
     background-image:none;
 }
 .ludo-Filter-Tree-Window .ludo-body{

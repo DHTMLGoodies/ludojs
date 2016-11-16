@@ -1,7 +1,7 @@
-/* Generated Tue Nov 15 16:36:19 CET 2016 */
+/* Generated Wed Nov 16 16:39:45 CET 2016 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.88
+ludoJS - Javascript framework, 1.1.108
 Copyright (C) 2012-2016  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -2533,7 +2533,7 @@ ludo.CmpMgrClass = new Class({
 
 ludo.CmpMgr = new ludo.CmpMgrClass();
 
-ludo.getView = function (id) {
+ludo.getView_250_40 = function (id) {
     return ludo.CmpMgr.get(id);
 };
 
@@ -3375,7 +3375,7 @@ ludo.Core = new Class({
 		// TODO new code 2016 - custom functions
 		if(config != undefined){
 			for(var key in config){
-				if(config.hasOwnProperty(key) && $.type(config[key]) == "function"){
+				if(config.hasOwnProperty(key) && $.type(config[key]) == "function" && this[key] == undefined){
 					this[key] = config[key].bind(this);
 				}
 			}
@@ -6973,8 +6973,11 @@ ludo.layout.Renderer = new Class({
 
 			case 'height':
 				if (value === 'matchParent') {
+
 					return function (view, renderer) {
+
 						c.height = renderer.viewport.height;
+
 					}
 				}
 				if (value === 'wrap') {
@@ -7145,7 +7148,9 @@ ludo.layout.Renderer = new Class({
 		var c = this.coordinates;
 
 		this.view.resize(c);
-		
+
+
+
         if(c['bottom'])c['top'] = undefined;
         if(c['right'])c['left'] = undefined;
 
@@ -7163,8 +7168,8 @@ ludo.layout.Renderer = new Class({
 	setViewport:function () {
 		var el = this.view.getEl().parent();
 		if (!el)return;
-		this.viewport.width = el.outerWidth() - ludo.dom.getPW(el) - ludo.dom.getBW(el);
-		this.viewport.height = el.height() - ludo.dom.getPH(el) - ludo.dom.getBH(el);
+		this.viewport.width = el.width();
+		this.viewport.height = el.height();
 	},
 
 	getMinWidth:function () {
@@ -7536,10 +7541,14 @@ ludo.dom = {
 
 	getWrappedSizeOfView:function (view) {
 
+		view.cachedInnerHeight = undefined;
+		view.getEl().css('height', 'auto');
+		view.getBody().css('height', 'auto');
+
 		var el = view.getEl();
 		var b = view.getBody();
 		b.css('position', 'absolute');
-
+		
 		var width = b.outerWidth();
 		b.css('position', 'relative');
 		var height = b.outerHeight();
@@ -8313,8 +8322,6 @@ ludo.View = new Class({
 	resize:function (config) {
 
 
-		if(this.html == "Edit")console.trace();
-		
 		if (this.isHidden()) {
 			return;
 		}
@@ -15265,7 +15272,6 @@ ludo.layout.Table = new Class({
         var totalWidth = this.view.getBody().width();
         var weightWidth = totalWidth - this.fixedWidth;
         for (var i = colIndex; i < colIndex + colspan; i++) {
-            console.log(i +',' + colspan);
             if (this.cols[i].width) {
                 width += this.cols[i].width;
             } else if (this.cols[i].weight) {
@@ -17409,62 +17415,94 @@ ludo.layout.Fill = new Class({
 	}
 });/* ../ludojs/src/layout/grid.js */
 /**
- * Arrange child views in a grid layout
- * @namespace layout
- * @class Grid
+ * This layout arranges child views in a grid layout. It is similar to the Table Layout, but a bit simpler.
+ * It creates a coordinate system based on given number of columns and rows. All the columns has the
+ * same width, and all rows has the same height. You position child views inside the coordinate system
+ * by specifying a value for x and y. Child views can also span multiple columns and/or rows using
+ * the colspan and rowspan attribute.
+ *
+ * Spacing between columns and rows are controlled by the padX and padY attribute.
+ *
+ * For demo, see <a href="../demo/layout/grid.php">Grid layout demo</a>.
+ * @class ludo.layout.Grid
+ * @param {object} config
+ * @param {Number} config.columns Number of columns
+ * @param {Number} config.rows Number of rows
+ * @param {Number} config.padX Optional horizontal spacing between columns
+ * @param {Number} config.padY Optional vertical spacing between columns
+ * @param {Number} config.x Parameter for child view, x coordinate, 0 = first column.
+ * @param {Number} config.y Parameter for child view, y coordinate, y = first row.
+ * @param {Number} config.colspan Parameter for child view. Span these many columns, default = 1
+ * @param {Number} config.rowspan Parameter for child view. Span these many rows, default = 1
  */
 ludo.layout.Grid = new Class({
-	Extends:ludo.layout.Base,
-    /**
-     * Number of columns
-     * @config {Number} columns
-     * @default 5
-     */
-	columns:5,
-    /**
-     * Number of rows
-     * @config {Number} rows
-     * @default 5
-     */
-	rows:5,
+    Extends: ludo.layout.Base,
+    columns: undefined,
+    rows: undefined,
+    colWidth: undefined,
+    rowHeight: undefined,
 
-	onCreate:function () {
-		var l = this.view.layout;
-		if (l.columns !== undefined)this.columns = l.columns;
-		if (l.rows !== undefined)this.rows = l.rows;
-	},
+    padX: undefined,
+    padY: undefined,
 
-	resize:function () {
-		this.storeCellSize();
-		var pos = 0;
-		var colspan;
-		for (var i = 0; i < this.view.children.length; i++) {
-			var c = this.view.children[i];
-			colspan = c.layout && c.layout.colspan ? c.layout.colspan : 1;
-			this.view.children[i].resize({
-				width:this.cellSize.x * colspan,
-				height:this.cellSize.y,
-				left:this.cellSize.x * (pos % this.columns),
-				top:this.cellSize.y * (Math.floor(pos / this.columns) % this.rows)
-			});
-			pos += colspan;
-		}
-	},
+    onCreate: function () {
+        var l = this.view.layout;
+        this.columns = l.columns || 5;
+        this.rows = l.rows || 5;
 
-	storeCellSize:function () {
-		this.cellSize = {
-			x:this.getAvailWidth() / this.columns,
-			y:this.getAvailHeight() / this.rows
-		}
-	},
+        this.padX = l.padX || 0;
+        this.padY = l.padY || 0;
 
-	getCellSize:function () {
-		return this.cellSize;
-	},
+        this.view.getBody().css('position', 'relative');
+    },
 
-	onNewChild:function (child) {
-		child.getEl().css('position', 'absolute');
-	}
+    addChild: function (child, insertAt, pos) {
+        child.layout.colspan = child.layout.colspan ||1;
+        child.layout.rowspan = child.layout.rowspan ||1;
+        child.layout.x = child.layout.x || 0;
+        child.layout.y = child.layout.y || 0;
+        return this.parent(child, insertAt, pos);
+    },
+
+    resize: function () {
+        this.storeSize();
+
+        for (var i = 0; i < this.view.children.length; i++) {
+            var c = this.view.children[i];
+            var r = this.pos(c);
+            r.width = this.widthOfView(c);
+            r.height = this.heightOfView(c);
+
+            c.resize(r);
+        }
+    },
+
+    pos:function(child){
+        return {
+            left: child.layout.x * this.colWidth,
+            top: child.layout.y * this.rowHeight
+        }
+    },
+
+    widthOfView:function(child){
+        var colspan = child.layout.colspan || 1;
+        var width = colspan * this.colWidth;
+        return width - this.padX;
+    },
+
+    heightOfView:function(child){
+        var rowspan = child.layout.rowspan || 1;
+        return (rowspan * this.rowHeight) - this.padY;
+    },
+
+    storeSize: function () {
+        this.colWidth = this.viewport.width / this.columns;
+        this.rowHeight = this.viewport.height / this.rows;
+    },
+
+    onNewChild: function (child) {
+        child.getEl().css('position', 'absolute');
+    }
 });/* ../ludojs/src/layout/popup.js */
 /**
  * Class handling popup layout defined by setting layout.type to "popup". The popup layout model
@@ -18171,7 +18209,7 @@ ludo.layout.MenuVertical = new Class({
 	getValidChild:function(child){
 		child = this.parent(child);
 		if (!child.layout.width) {
-			child.layout.width = 'fitParent';
+			child.layout.width = 'matchParent';
 		}
 		return child;
 	},
@@ -18850,7 +18888,7 @@ ludo.effect.Resize = new Class({
 
     addHandle:function (region, cssClass) {
         var el = this.els.handle[region] = $('<div>');
-        el.addClass('ludo-component-resize-el');
+        el.addClass('ludo-view-resize-el');
         el.addClass(this.getCssFor(region));
         if (cssClass)el.addClass(cssClass);
         el.html('<span></span>');
@@ -19172,7 +19210,7 @@ ludo.effect.Resize = new Class({
     },
 
     getCssFor:function (region) {
-        return 'ludo-component-resize-region-' + region;
+        return 'ludo-view-resize-region-' + region;
     },
 
     showShim:function () {
@@ -19280,7 +19318,7 @@ ludo.view.ButtonBar = new Class({
         height:'100%'
     },
     align:'right',
-    cls:'ludo-component-button-container',
+    cls:'ludo-view-button-container',
     overflow:'hidden',
     component:undefined,
 	buttonBarCss:undefined,
@@ -19314,6 +19352,8 @@ ludo.view.ButtonBar = new Class({
 		if(this.buttonBarCss){
 			this.getEl().parent().css(this.buttonBarCss);
 		}
+
+        console.log(this.layout);
 
     },
 
@@ -19369,7 +19409,7 @@ ludo.view.ButtonBar = new Class({
      * @return {Object} ludo Component
      * @private
      */
-    getView : function(){
+    getView_250_40 : function(){
         return this.component;
     }
 });/* ../ludojs/src/view/title-bar.js */
@@ -19411,7 +19451,7 @@ ludo.view.TitleBar = new Class({
 
     createDOM:function () {
         var el = this.els.el = $('<div>');
-        el.addClass(this.view.boldTitle ? 'ludo-framed-view-titlebar' : 'ludo-component-titlebar');
+        el.addClass(this.view.boldTitle ? 'ludo-framed-view-titlebar' : 'ludo-view-titlebar');
         var left = 0;
         if (this.view.icon) {
             this.createIconDOM();
@@ -19770,7 +19810,7 @@ ludo.FramedView = new Class({
         if (this.buttonBar) {
             this.getButtonBar()
         } else {
-			this.els.container.addClass('ludo-component-no-buttonbar')
+			this.els.container.addClass('ludo-view-no-buttonbar')
         }
 		this.parent();
 		if (this.minimized) {
@@ -19952,10 +19992,10 @@ ludo.FramedView = new Class({
 		if (!this.els.buttonBar) {
 			this.els.buttonBar = this.els.buttonBar || {};
 
-			var el = this.els.buttonBar.el = $('<div class="ludo-component-buttonbar"></div>');
+			var el = this.els.buttonBar.el = $('<div class="ludo-view-buttonbar"></div>');
 			this.els.container.append(el);
 
-			this.getEl().addClass('ludo-component-with-buttonbar');
+			this.getEl().addClass('ludo-view-with-buttonbar');
 			this.buttonBar.renderTo = el;
 			this.buttonBar.component = this;
 			this.buttonBarComponent = this.createDependency('buttonBar', new ludo.view.ButtonBar(this.buttonBar));
@@ -21199,7 +21239,7 @@ ludo.grid.ColumnMove = new Class({
 	},
 
 	setZIndex:function(shim){
-		shim.css('zIndex', 50000);
+		$(shim).css('zIndex', 50000);
 	},
 
 	getMarker:function () {
@@ -24108,6 +24148,7 @@ ludo.calendar.Days = new Class({
     },
 
     isValueMonth:function () {
+
         return this.value ? this.value.get('month') == this.date.get('month') && this.value.get('year') == this.date.get('year') : false;
     },
 
@@ -24181,7 +24222,7 @@ ludo.calendar.Days = new Class({
 
         el.addClass('calendar-day-selected');
         this.value = this.date.clone();
-        this.value.set('date', el.get('html'));
+        this.value.set('date', el.html());
         this.fireEvent('change', [this.value, this]);
     },
 
@@ -24189,6 +24230,8 @@ ludo.calendar.Days = new Class({
         if (this.els.monthView && this.isValueMonth()) {
             var el = this.els.monthView.find('.calendar-day-' + this.value.get('date'));
             if (el)el.removeClass('calendar-day-selected');
+        }else{
+            console.log("not same month " + this.isValueMonth());
         }
     },
 
@@ -24362,7 +24405,6 @@ ludo.calendar.Selector = new Class({
     },
 
     animateDomToCenter:function (domEl) {
-        console.log(this.getCenterPos(domEl));
         if(domEl && $(domEl).parent()){
             this.els.calendarContainer.animate(
             { 'margin-left' : this.getCenterPos(domEl)},
@@ -24495,7 +24537,7 @@ ludo.calendar.Today = new Class({
     layout : {
         type:'relative'
     },
-    height:37,
+    height:30,
     overflow:'hidden',
     css:{
         'margin-top' : 2
@@ -25511,7 +25553,7 @@ ludo.menu.Item = new Class({
             this.spacer = true;
             this.layout.height = 1;
 		}else{
-			this.layout.height = this.layout.height || this.orientation === 'vertical' ? 25 : 'matchParent';
+			this.layout.height = this.layout.height || this.orientation === 'vertical' ? 'wrap' : 'matchParent';
         }
 
     },
@@ -27685,10 +27727,14 @@ ludo.form.Button = new Class({
     isButton:function () {
         return true
     },
+    borderSize:undefined,
+
     resizeDOM:function () {
         // TODO refactor - buttons too tall in relative layout
-        this.getBody().css('height', this.heights[this.size]);
-        /* No DOM resize for buttons */
+        if(this.borderSize == undefined)
+            this.borderSize = ludo.dom.getBH(this.getBody());
+
+        this.getBody().css('height', this.heights[this.size]  - this.borderSize);
     },
 
     validate:function () {
@@ -27698,7 +27744,7 @@ ludo.form.Button = new Class({
     getParentComponent:function () {
         var parent = this.getParent();
         if (parent && parent.type.indexOf('ButtonBar') >= 0) {
-            return parent.getView();
+            return parent.getView_250_40();
         }
         return parent;
     },
@@ -29492,6 +29538,55 @@ ludo.form.Hidden = new Class({
     },
     getWidth : function(){
         return 0;
+    }
+});/* ../ludojs/src/form/label.js */
+
+ludo.form.Label = new Class({
+    Extends: ludo.View,
+    labelFor:undefined,
+    label:undefined,
+
+
+    __construct:function(config){
+        this.parent(config);
+        this.setConfigParams(config, ['label','labelFor']);
+    },
+
+    ludoDOM:function(){
+        this.parent();
+        
+        this.els.label = $('<label class="input-label" for="el-' + this.labelFor + '">' + this.label + '</label>');
+        this.getBody().append(this.els.label);
+    },
+
+    ludoEvents:function(){
+        this.parent();
+        this.addInvalidEvents.delay(40, this);
+    },
+
+    addInvalidEvents:function(){
+        if(!this.labelFor)return;
+        var view = ludo.get(this.labelFor);
+        if(view){
+            view.addEvent('valid', this.onValid.bind(this));
+            view.addEvent('invalid', this.onInvalid.bind(this));
+            if(!view.isValid())
+                this.onInvalid();
+        }
+    },
+
+    resizeDOM:function(){
+        this.parent();
+        this.els.label.css('line-height', this.getBody().height() + 'px');
+    },
+
+    onValid:function(){
+        this.getBody().removeClass('ludo-form-el-invalid');
+    },
+
+    onInvalid:function(){
+        this.getBody().removeClass('ludo-form-el-invalid');
+        this.getBody().addClass('ludo-form-el-invalid');
     }
 });/* ../ludojs/src/form/textarea.js */
 /**

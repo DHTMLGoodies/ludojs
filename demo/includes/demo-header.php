@@ -1,7 +1,7 @@
 <?php
 if($sub)$prefix = '../'; else $prefix = '';
 if(isset($_GET['skin']))$skin = $_GET['skin'];
-$skin = isset($skin) ? $skin : 'light-gray';
+$skin = isset($skin) ? $skin : 'twilight';
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
@@ -13,6 +13,7 @@ $skin = isset($skin) ? $skin : 'light-gray';
     <script type="text/javascript" src="<?php echo $prefix; ?>../mootools/mootools-core-1.6.0.js"></script>
     <script type="text/javascript" src="<?php echo $prefix; ?>../mootools/mootools-More-1.6.0.js"></script>
     <link rel="icon" type="image/gif" href="<?php echo $prefix; ?>../images/favicon.png" />
+
     <style type="text/css">
     body{
         font-family:arial,serif;
@@ -35,21 +36,16 @@ $skin = isset($skin) ? $skin : 'light-gray';
 
     else if(isset($_GET['skin'])){
         ?>
-    <link rel="stylesheet" href="<?php echo $prefix; ?>../css/ludojs-<?php echo $skin; ?>.css" type="text/css">
+        <link rel="stylesheet" href="<?php echo $prefix; ?>../css/ludojs.css" type="text/css">
+        <link rel="stylesheet" href="<?php echo $prefix; ?>../css-source/skin/ludo-all-twilight.css" type="text/css">
         <?php
 
     }else{
-        $skin = "twilight";
         ?>
-    <link rel="stylesheet" href="<?php echo $prefix; ?>../css/ludojs.css" type="text/css">
-    <link rel="stylesheet" href="<?php echo $prefix; ?>../css-source/skin/ludo-all-twilight.css" type="text/css">
+        <link rel="stylesheet" href="<?php echo $prefix; ?>../css/ludojs-all.css" type="text/css">
         <?php
-
     }
-
     ?>
-    
-
     <style type="text/css">
         div.source-code-preview{
             background-color:#FFF;

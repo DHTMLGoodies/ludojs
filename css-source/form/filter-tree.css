@@ -10,7 +10,7 @@
     border-bottom-left-radius: 2px;
     border-bottom-right-radius: 2px;
 }
-.ludo-Filter-Tree-Window .ludo-component-resize-both{
+.ludo-Filter-Tree-Window .ludo-view-resize-both{
     background-image:none;
 }
 .ludo-Filter-Tree-Window .ludo-body{

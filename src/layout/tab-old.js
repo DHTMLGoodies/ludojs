@@ -42,7 +42,7 @@ ludo.layout.Tab = new Class({
 	},
 
 	prepareView:function () {
-		this.view.getEl().addClass('ludo-component-tab-layout');
+		this.view.getEl().addClass('ludo-view-tab-layout');
 		this.prepareTabLayout();
 	},
 

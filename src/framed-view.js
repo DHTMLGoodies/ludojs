@@ -144,7 +144,7 @@ ludo.FramedView = new Class({
         if (this.buttonBar) {
             this.getButtonBar()
         } else {
-			this.els.container.addClass('ludo-component-no-buttonbar')
+			this.els.container.addClass('ludo-view-no-buttonbar')
         }
 		this.parent();
 		if (this.minimized) {
@@ -326,10 +326,10 @@ ludo.FramedView = new Class({
 		if (!this.els.buttonBar) {
 			this.els.buttonBar = this.els.buttonBar || {};
 
-			var el = this.els.buttonBar.el = $('<div class="ludo-component-buttonbar"></div>');
+			var el = this.els.buttonBar.el = $('<div class="ludo-view-buttonbar"></div>');
 			this.els.container.append(el);
 
-			this.getEl().addClass('ludo-component-with-buttonbar');
+			this.getEl().addClass('ludo-view-with-buttonbar');
 			this.buttonBar.renderTo = el;
 			this.buttonBar.component = this;
 			this.buttonBarComponent = this.createDependency('buttonBar', new ludo.view.ButtonBar(this.buttonBar));

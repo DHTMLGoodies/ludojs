@@ -134,16 +134,16 @@ ludo.layout.Renderer = new Class({
 
 			case 'height':
 				if (value === 'matchParent') {
+
 					return function (view, renderer) {
+
 						c.height = renderer.viewport.height;
+
 					}
 				}
 				if (value === 'wrap') {
 					var s = ludo.dom.getWrappedSizeOfView(this.view);
                     // TODO test out layout in order to check that the line below is working.
-					console.log(s);
-					console.log(this.view.layout);
-					console.log(this.view.layout.label);
                     this.view.layout.height = s.y;
 					return function () {
 						c.height = s.y;
@@ -329,8 +329,8 @@ ludo.layout.Renderer = new Class({
 	setViewport:function () {
 		var el = this.view.getEl().parent();
 		if (!el)return;
-		this.viewport.width = el.outerWidth() - ludo.dom.getPW(el) - ludo.dom.getBW(el);
-		this.viewport.height = el.height() - ludo.dom.getPH(el) - ludo.dom.getBH(el);
+		this.viewport.width = el.width();
+		this.viewport.height = el.height();
 	},
 
 	getMinWidth:function () {

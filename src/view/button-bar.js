@@ -18,7 +18,7 @@ ludo.view.ButtonBar = new Class({
         height:'100%'
     },
     align:'right',
-    cls:'ludo-component-button-container',
+    cls:'ludo-view-button-container',
     overflow:'hidden',
     component:undefined,
 	buttonBarCss:undefined,
@@ -52,6 +52,8 @@ ludo.view.ButtonBar = new Class({
 		if(this.buttonBarCss){
 			this.getEl().parent().css(this.buttonBarCss);
 		}
+
+        console.log(this.layout);
 
     },
 

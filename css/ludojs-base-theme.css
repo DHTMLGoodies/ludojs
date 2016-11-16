@@ -30,17 +30,17 @@
     overflow: hidden;
 }
 
-.ludo-component-with-buttonbar {
+.ludo-view-with-buttonbar {
     padding-bottom: 5px !important;
 }
 
 /** Rich component with button bar */
-.ludo-component-with-buttonbar .ludo-body {
+.ludo-view-with-buttonbar .ludo-body {
     margin-bottom: 0;
 }
 
 /** Rich component without button bar */
-.ludo-component-no-buttonbar .ludo-body {
+.ludo-view-no-buttonbar .ludo-body {
     margin-bottom: 5px;
 }
 
@@ -86,7 +86,7 @@ div.ludo-framed-view-titlebar-title {
     color: #384350;
 }
 
-div.ludo-component-statusbar {
+div.ludo-view-statusbar {
     background-color: #E0F2F1;
     border-top: 0 solid #AAAAAA;
 }
@@ -99,11 +99,11 @@ div.ludo-FramedView {
     border-radius: 0;
 }
 
-.ludo-FramedView .ludo-component-statusbar-resize-height {
+.ludo-FramedView .ludo-view-statusbar-resize-height {
     display: none;
 }
 
-.ludo-component-buttonbar {
+.ludo-view-buttonbar {
     background-color: #E0F2F1;
     border: 1px solid #00796B;
     border-top: 0 solid #00796B;
@@ -118,7 +118,7 @@ div.ludo-FramedView {
     border-top: 1px solid #AAA !important;
 }
 
-.ludo-window .ludo-component-statusbar-resize-height {
+.ludo-window .ludo-view-statusbar-resize-height {
     display: block;
 }
 
@@ -134,7 +134,7 @@ div.ludo-layout-resize-row {
     background-image: url('../images/light-gray-skin/vertical-resize.png')
 }
 
-.ludo-component-resize-region-se {
+.ludo-view-resize-region-se {
     background-image: url('../images/light-gray-skin/resize-dots.png');
 }
 
@@ -157,15 +157,15 @@ div.ludo-resize-handle-
     background-repeat: no-repeat;
 }
 
-.ludo-application-content .ludo-component-statusbar-resize-horizontal {
+.ludo-application-content .ludo-view-statusbar-resize-horizontal {
     display: none;
 }
 
-.ludo-application-content .ludo-component-statusbar-resize {
+.ludo-application-content .ludo-view-statusbar-resize {
     display: none;
 }
 
-.ludo-application-content .ludo-component-statusbar-resize-both {
+.ludo-application-content .ludo-view-statusbar-resize-both {
     display: none;
 }
 
@@ -688,7 +688,7 @@ form.ComboTree
     background-image:url(../images/light-gray-skin/form/slider-handle-vertical.png);
 }
 
-div.ludo-component-buttonbar{
+div.ludo-view-buttonbar{
     height:25px;
 }
 

@@ -147,7 +147,7 @@ ludo.effect.Resize = new Class({
 
     addHandle:function (region, cssClass) {
         var el = this.els.handle[region] = $('<div>');
-        el.addClass('ludo-component-resize-el');
+        el.addClass('ludo-view-resize-el');
         el.addClass(this.getCssFor(region));
         if (cssClass)el.addClass(cssClass);
         el.html('<span></span>');
@@ -469,7 +469,7 @@ ludo.effect.Resize = new Class({
     },
 
     getCssFor:function (region) {
-        return 'ludo-component-resize-region-' + region;
+        return 'ludo-view-resize-region-' + region;
     },
 
     showShim:function () {

@@ -58,7 +58,7 @@ div.ludo-resize-handle-active {
     border: 1px dashed #777;
 }
 
-.ludo-component-resize-el {
+.ludo-view-resize-el {
     position: absolute;
     padding: 0 !important;
     border: 0 !important;
@@ -67,7 +67,7 @@ div.ludo-resize-handle-active {
     background-color: transparent !important;
 }
 
-.ludo-component-resize-region-s {
+.ludo-view-resize-region-s {
     background-repeat: no-repeat;
     background-position: center center;
     position: absolute;
@@ -78,14 +78,14 @@ div.ludo-resize-handle-active {
     z-index: 15500;
 }
 
-.ludo-component-resize-region-e {
+.ludo-view-resize-region-e {
     top: 5%;
     width: 5px;
     right: 0;
     height: 90%;
 }
 
-.ludo-component-resize-region-w {
+.ludo-view-resize-region-w {
     height: 90%;
     left: 0;
     top: 5%;
@@ -93,7 +93,7 @@ div.ludo-resize-handle-active {
     cursor: w-resize;
 }
 
-.ludo-component-resize-region-n {
+.ludo-view-resize-region-n {
     width: 90%;
     top: 0;
     left: 5%;
@@ -101,27 +101,27 @@ div.ludo-resize-handle-active {
     cursor: s-resize;
 }
 
-.ludo-component-resize-region-nw, .ludo-component-resize-region-ne, .ludo-component-resize-region-sw {
+.ludo-view-resize-region-nw, .ludo-view-resize-region-ne, .ludo-view-resize-region-sw {
     width: 7px;
     height: 7px;
 }
 
-.ludo-component-resize-region-nw {
+.ludo-view-resize-region-nw {
     top: 0;
     left: 0;
 }
 
-.ludo-component-resize-region-ne {
+.ludo-view-resize-region-ne {
     top: 0;
     right: 0;
 }
 
-.ludo-component-resize-region-sw {
+.ludo-view-resize-region-sw {
     left: 0;
     bottom: 0;
 }
 
-.ludo-component-resize-region-se {
+.ludo-view-resize-region-se {
     background-image: none;
     background-repeat: no-repeat;
     position: absolute;
@@ -133,11 +133,11 @@ div.ludo-resize-handle-active {
     cursor: se-resize;
 }
 
-.ludo-component-resize-right {
+.ludo-view-resize-right {
     background-position: left center;
 }
 
-.ludo-component-resize-right {
+.ludo-view-resize-right {
     cursor: w-resize;
     height: 100%;
     width: 3px;
