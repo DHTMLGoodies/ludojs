@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<title>LudoJS Source: layout/menu-spec.js</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/site.ludojs.css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top navbar-inverse">
+<div class="container">
+	<div class="navbar-header">
+		<a class="navbar-brand" href="index.html">LudoJS</a>
+		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#topNavigation">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+        </button>
+	</div>
+	<div class="navbar-collapse collapse" id="topNavigation">
+		<ul class="nav navbar-nav">
+			
+			<li class="dropdown">
+				<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="module-Canvas.html">Canvas</a></li><li><a href="module-language.html">language</a></li><li><a href="module-ludo.html">ludo</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="Anchor.html">Anchor</a></li><li><a href="Application.html">Application</a></li><li><a href="Bar.html">Bar</a></li><li><a href="Base.html">Base</a></li><li><a href="Broadcaster.html">Broadcaster</a></li><li><a href="Button.html">Button</a></li><li><a href="ButtonBar.html">ButtonBar</a></li><li><a href="CancelButton.html">CancelButton</a></li><li><a href="canvas.html">canvas</a></li><li><a href="CardSpec.html">CardSpec</a></li><li><a href="CollectionSearch.html">CollectionSearch</a></li><li><a href="CollectionView.html">CollectionView</a></li><li><a href="Column.html">Column</a></li><li><a href="Combo.html">Combo</a></li><li><a href="ComboTree.html">ComboTree</a></li><li><a href="controller.Controller.html">controller.Controller</a></li><li><a href="Core.html">Core</a></li><li><a href="DataProvider.html">DataProvider</a></li><li><a href="global.html#dataSource">dataSource</a></li><li><a href="DataSource_.html">DataSource</a></li><li><a href="Date.html">Date</a></li><li><a href="Days.html">Days</a></li><li><a href="dialog.html">dialog</a></li><li><a href="DisplayField.html">DisplayField</a></li><li><a href="DragDrop.html">DragDrop</a></li><li><a href="DraggableNode.html">DraggableNode</a></li><li><a href="DropDown.html">DropDown</a></li><li><a href="Effect.html">Effect</a></li><li><a href="effect_.html">effect</a></li><li><a href="Element.html">Element</a></li><li><a href="Email.html">Email</a></li><li><a href="ErrorMessage.html">ErrorMessage</a></li><li><a href="Factory.html">Factory</a></li><li><a href="Filter.html">Filter</a></li><li><a href="FilterText.html">FilterText</a></li><li><a href="FinishButton.html">FinishButton</a></li><li><a href="grid.html">grid</a></li><li><a href="Grid_.html">Grid</a></li><li><a href="Group.html">Group</a></li><li><a href="HTML.html">HTML</a></li><li><a href="Inject.html">Inject</a></li><li><a href="JSON.html">JSON</a></li><li><a href="LabelElement.html">LabelElement</a></li><li><a href="Labels.html">Labels</a></li><li><a href="layout.html">layout</a></li><li><a href="Layout_.html">Layout</a></li><li><a href="Linear.html">Linear</a></li><li><a href="LinearVertical.html">LinearVertical</a></li><li><a href="ludo.calendar.Base.html">ludo.calendar.Base</a></li><li><a href="ludo.calendar.Calendar.html">ludo.calendar.Calendar</a></li><li><a href="ludo.calendar.TimePicker.html">ludo.calendar.TimePicker</a></li><li><a href="ludo.canvas.Text.html">ludo.canvas.Text</a></li><li><a href="ludo.color.Color.html">ludo.color.Color</a></li><li><a href="ludo.dialog.Alert.html">ludo.dialog.Alert</a></li><li><a href="ludo.dialog.Dialog.html">ludo.dialog.Dialog</a></li><li><a href="ludo.dom.html">ludo.dom</a></li><li><a href="ludo.effect.html">ludo.effect</a></li><li><a href="ludo.form.html">ludo.form</a></li><li><a href="ludo.form.Button.html">ludo.form.Button</a></li><li><a href="ludo.form.Checkbox.html">ludo.form.Checkbox</a></li><li><a href="ludo.form.Element.html">ludo.form.Element</a></li><li><a href="ludo.form.Manager.html">ludo.form.Manager</a></li><li><a href="ludo.form.Number.html">ludo.form.Number</a></li><li><a href="ludo.form.OnOffSwitch.html">ludo.form.OnOffSwitch</a></li><li><a href="ludo.form.Seekbar.html">ludo.form.Seekbar</a></li><li><a href="ludo.form.Text.html">ludo.form.Text</a></li><li><a href="ludo.FramedView.html">ludo.FramedView</a></li><li><a href="ludo.layout.Accordion.html">ludo.layout.Accordion</a></li><li><a href="ludo.layout.Base.html">ludo.layout.Base</a></li><li><a href="ludo.layout.Relative.html">ludo.layout.Relative</a></li><li><a href="ludo.layout.Table.html">ludo.layout.Table</a></li><li><a href="ludo.layout.ViewPager.html">ludo.layout.ViewPager</a></li><li><a href="ludo.Notification.html">ludo.Notification</a></li><li><a href="ludo.paging.CurrentPage.html">ludo.paging.CurrentPage</a></li><li><a href="ludo.paging.TotalPages.html">ludo.paging.TotalPages</a></li><li><a href="ludo.View.html">ludo.View</a></li><li><a href="ludo.Window.html">ludo.Window</a></li><li><a href="Manager.html">Manager</a></li><li><a href="Md5.html">Md5</a></li><li><a href="Menu.html">Menu</a></li><li><a href="global.html#menu">menu</a></li><li><a href="MenuItem.html">MenuItem</a></li><li><a href="MenuSpec.html">MenuSpec</a></li><li><a href="Modifications.html">Modifications</a></li><li><a href="module-Canvas-canvas.html">Canvas~canvas</a></li><li><a href="MonthSelector.html">MonthSelector</a></li><li><a href="MonthYearSelector.html">MonthYearSelector</a></li><li><a href="NamedNode.html">NamedNode</a></li><li><a href="NavBar.html">NavBar</a></li><li><a href="NextButton.html">NextButton</a></li><li><a href="NodeConfig.html">NodeConfig</a></li><li><a href="ObjectFactory.html">ObjectFactory</a></li><li><a href="PageInput.html">PageInput</a></li><li><a href="PageSize.html">PageSize</a></li><li><a href="global.html#paging">paging</a></li><li><a href="Panel.html">Panel</a></li><li><a href="Parser.html">Parser</a></li><li><a href="Path.html">Path</a></li><li><a href="Pie.html">Pie</a></li><li><a href="PieSliceHighlighted.html">PieSliceHighlighted</a></li><li><a href="Popup.html">Popup</a></li><li><a href="PreviousButton.html">PreviousButton</a></li><li><a href="ProgressBar.html">ProgressBar</a></li><li><a href="Prompt.html">Prompt</a></li><li><a href="Proxy.html">Proxy</a></li><li><a href="RadialGradient.html">RadialGradient</a></li><li><a href="Radio.html">Radio</a></li><li><a href="RadioGroup.html">RadioGroup</a></li><li><a href="Record.html">Record</a></li><li><a href="remote.html">remote</a></li><li><a href="Renderer.html">Renderer</a></li><li><a href="ResetButton.html">ResetButton</a></li><li><a href="Resizable.html">Resizable</a></li><li><a href="SearchField.html">SearchField</a></li><li><a href="SearchParser.html">SearchParser</a></li><li><a href="Selector.html">Selector</a></li><li><a href="Shim.html">Shim</a></li><li><a href="SlideIn.html">SlideIn</a></li><li><a href="Slider.html">Slider</a></li><li><a href="socket.html">socket</a></li><li><a href="Spinner.html">Spinner</a></li><li><a href="Stop.html">Stop</a></li><li><a href="SubmitButton.html">SubmitButton</a></li><li><a href="TabSpec.html">TabSpec</a></li><li><a href="Text.html">Text</a></li><li><a href="Textarea.html">Textarea</a></li><li><a href="TextBox.html">TextBox</a></li><li><a href="TinbyButton.html">TinbyButton</a></li><li><a href="Today.html">Today</a></li><li><a href="ToggleButton.html">ToggleButton</a></li><li><a href="ToggleGroup.html">ToggleGroup</a></li><li><a href="Tree.html">Tree</a></li><li><a href="TreeCollection.html">TreeCollection</a></li><li><a href="TreeCollectionSearch.html">TreeCollectionSearch</a></li><li><a href="Video.html">Video</a></li><li><a href="video_.html">video</a></li><li><a href="YearSelector.html">YearSelector</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="events.list.html" class="dropdown-toggle" data-toggle="dropdown">Events<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="global.html#event:activate">event:activate</a></li><li><a href="global.html#event:add">event:add</a></li><li><a href="global.html#event:addChild">event:addChild</a></li><li><a href="global.html#event:animationComplete">event:animationComplete</a></li><li><a href="global.html#event:beforeload">event:beforeload</a></li><li><a href="global.html#event:beforeshow">event:beforeshow</a></li><li><a href="global.html#event:beforeShow">event:beforeShow</a></li><li><a href="global.html#event:blur">event:blur</a></li><li><a href="global.html#event:buttonvalue">event:buttonvalue</a></li><li><a href="global.html#event:change">event:change</a></li><li><a href="global.html#event:clean">event:clean</a></li><li><a href="global.html#event:click">event:click</a></li><li><a href="global.html#event:createNode">event:createNode</a></li><li><a href="global.html#event:createShim">event:createShim</a></li><li><a href="global.html#event:dblclick">event:dblclick</a></li><li><a href="global.html#event:delete">event:delete</a></li><li><a href="global.html#event:deleteSearch">event:deleteSearch</a></li><li><a href="global.html#event:deselect">event:deselect</a></li><li><a href="global.html#event:dirty">event:dirty</a></li><li><a href="global.html#event:drag">event:drag</a></li><li><a href="global.html#event:drop">event:drop</a></li><li><a href="global.html#event:east">event:east</a></li><li><a href="global.html#event:end">event:end</a></li><li><a href="global.html#event:enterDropTarget">event:enterDropTarget</a></li><li><a href="global.html#event:fail">event:fail</a></li><li><a href="global.html#event:failure">event:failure</a></li><li><a href="global.html#event:firstpage">event:firstpage</a></li><li><a href="global.html#event:firstPage">event:firstPage</a></li><li><a href="global.html#event:flyBack">event:flyBack</a></li><li><a href="global.html#event:focus">event:focus</a></li><li><a href="global.html#event:hide">event:hide</a></li><li><a href="global.html#event:hidecolumn">event:hidecolumn</a></li><li><a href="global.html#event:higherpage">event:higherpage</a></li><li><a href="global.html#event:invalid">event:invalid</a></li><li><a href="global.html#event:invalidDropTarget">event:invalidDropTarget</a></li><li><a href="global.html#event:key">event:key</a></li><li><a href="global.html#event:key_down">event:key_down</a></li><li><a href="global.html#event:key_press">event:key_press</a></li><li><a href="global.html#event:key_up">event:key_up</a></li><li><a href="global.html#event:lastpage">event:lastpage</a></li><li><a href="global.html#event:lastPage">event:lastPage</a></li><li><a href="global.html#event:loadValue">event:loadValue</a></li><li><a href="global.html#event:lowercasenameofbuttonwithwhitespaceremoved">event:lowercase name of button with white space removed</a></li><li><a href="global.html#event:lowerpage">event:lowerpage</a></li><li><a href="global.html#event:maximize">event:maximize</a></li><li><a href="global.html#event:minimize">event:minimize</a></li><li><a href="global.html#event:movecolumn">event:movecolumn</a></li><li><a href="global.html#event:new">event:new</a></li><li><a href="global.html#event:nextPage">event:nextPage</a></li><li><a href="global.html#event:north">event:north</a></li><li><a href="global.html#event:notFirstPage">event:notFirstPage</a></li><li><a href="global.html#event:notfirstpage">event:notfirstpage</a></li><li><a href="global.html#event:notlastpage">event:notlastpage</a></li><li><a href="global.html#event:notLastPage">event:notLastPage</a></li><li><a href="global.html#event:off">event:off</a></li><li><a href="global.html#event:on">event:on</a></li><li><a href="global.html#event:page">event:page</a></li><li><a href="global.html#event:previousPage">event:previousPage</a></li><li><a href="global.html#event:read">event:read</a></li><li><a href="global.html#event:render">event:render</a></li><li><a href="global.html#event:requestComplete">event:requestComplete</a></li><li><a href="global.html#event:resize">event:resize</a></li><li><a href="global.html#event:saved">event:saved</a></li><li><a href="global.html#event:search">event:search</a></li><li><a href="global.html#event:select">event:select</a></li><li><a href="global.html#event:send">event:send</a></li><li><a href="global.html#event:servererror">event:servererror</a></li><li><a href="global.html#event:show">event:show</a></li><li><a href="global.html#event:showcolumn">event:showcolumn</a></li><li><a href="global.html#event:showMessage">event:showMessage</a></li><li><a href="global.html#event:showpage">event:showpage</a></li><li><a href="global.html#event:sort">event:sort</a></li><li><a href="global.html#event:south">event:south</a></li><li><a href="global.html#event:start">event:start</a></li><li><a href="global.html#event:stop">event:stop</a></li><li><a href="global.html#event:stopmove">event:stopmove</a></li><li><a href="global.html#event:submit">event:submit</a></li><li><a href="global.html#event:submitfail">event:submitfail</a></li><li><a href="global.html#event:toPage">event:toPage</a></li><li><a href="global.html#event:valid">event:valid</a></li><li><a href="global.html#event:validDropTarget">event:validDropTarget</a></li><li><a href="global.html#event:valueChange">event:valueChange</a></li><li><a href="global.html#event:west">event:west</a></li><li><a href="ludo.calendar.TimePicker.html#event:mode">ludo.calendar.TimePicker#event:mode</a></li><li><a href="ludo.calendar.TimePicker.html#event:time">ludo.calendar.TimePicker#event:time</a></li><li>{effect.event:DraggableNode}</li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="global.html#above">above</a></li><li><a href="global.html#accept">accept</a></li><li><a href="global.html#action">action</a></li><li><a href="global.html#add">add</a></li><li><a href="global.html#addChild">addChild</a></li><li><a href="global.html#addControllerEvents">addControllerEvents</a></li><li><a href="global.html#addDropTarget">addDropTarget</a></li><li><a href="global.html#addFeMergeNode">addFeMergeNode</a></li><li><a href="global.html#addHandle">addHandle</a></li><li><a href="global.html#addOns">addOns</a></li><li><a href="global.html#addOption">addOption</a></li><li><a href="global.html#addRecord">addRecord</a></li><li><a href="global.html#addResourceEvent">addResourceEvent</a></li><li><a href="global.html#addStop">addStop</a></li><li><a href="global.html#adopt">adopt</a></li><li><a href="global.html#align">align</a></li><li><a href="global.html#alignBottom">alignBottom</a></li><li><a href="global.html#alignLeft">alignLeft</a></li><li><a href="global.html#alignParentBottom">alignParentBottom</a></li><li><a href="global.html#alignParentLeft">alignParentLeft</a></li><li><a href="global.html#alignParentRight">alignParentRight</a></li><li><a href="global.html#alignParentTop">alignParentTop</a></li><li><a href="global.html#alignRight">alignRight</a></li><li><a href="global.html#alignTop">alignTop</a></li><li><a href="global.html#alwaysVisible">alwaysVisible</a></li><li><a href="global.html#and">and</a></li><li><a href="global.html#appendDef">appendDef</a></li><li><a href="global.html#applyTo">applyTo</a></li><li><a href="global.html#arguments">arguments</a></li><li><a href="global.html#ascending">ascending</a></li><li><a href="global.html#attr">attr</a></li><li><a href="global.html#autoComplete">autoComplete</a></li><li><a href="global.html#autoExpand">autoExpand</a></li><li><a href="global.html#autoHide">autoHide</a></li><li><a href="global.html#autoHideOnBtnClick">autoHideOnBtnClick</a></li><li><a href="global.html#autoHideShim">autoHideShim</a></li><li><a href="global.html#autoLoad">autoLoad</a></li><li><a href="global.html#autoRemove">autoRemove</a></li><li><a href="global.html#autoScrollNode">autoScrollNode</a></li><li><a href="global.html#below">below</a></li><li><a href="global.html#boxStyles">boxStyles</a></li><li><a href="global.html#boxStylesOver">boxStylesOver</a></li><li><a href="global.html#branch">branch</a></li><li><a href="global.html#broadcast">broadcast</a></li><li><a href="global.html#buttonConfig">buttonConfig</a></li><li><a href="global.html#buttonWidth">buttonWidth</a></li><li><a href="global.html#by">by</a></li><li><a href="global.html#cancelDrag">cancelDrag</a></li><li><a href="global.html#cancelShow">cancelShow</a></li><li><a href="global.html#captureRegions">captureRegions</a></li><li><a href="global.html#categoryConfig">categoryConfig</a></li><li><a href="global.html#categoryKey">categoryKey</a></li><li><a href="global.html#centerHorizontal">centerHorizontal</a></li><li><a href="global.html#centerHorizontalIn">centerHorizontalIn</a></li><li><a href="global.html#centerIn">centerIn</a></li><li><a href="global.html#centerInParent">centerInParent</a></li><li><a href="global.html#centerVertical">centerVertical</a></li><li><a href="global.html#centerVerticalIn">centerVerticalIn</a></li><li><a href="global.html#check">check</a></li><li><a href="global.html#checked">checked</a></li><li><a href="global.html#childLayout">childLayout</a></li><li><a href="global.html#clear">clear</a></li><li><a href="global.html#clearCacheStylesClearcachedpadding,borderandmargins.">clearCacheStyles
+Clear cached padding,border and margins.</a></li><li><a href="global.html#clearTemporaryValues">clearTemporaryValues</a></li><li><a href="global.html#click">click</a></li><li><a href="global.html#close">close</a></li><li><a href="global.html#columns">columns</a></li><li><a href="global.html#component">component</a></li><li><a href="global.html#config">config</a></li><li><a href="global.html#contextEl">contextEl</a></li><li><a href="global.html#controller">controller</a></li><li><a href="global.html#create">create</a></li><li><a href="global.html#createAlias">createAlias</a></li><li><a href="global.html#data">data</a></li><li><a href="global.html#dataProvider">dataProvider</a></li><li><a href="global.html#date">date</a></li><li><a href="global.html#decimals">decimals</a></li><li><a href="global.html#defaults">defaults</a></li><li><a href="global.html#delay">delay</a></li><li><a href="global.html#deleteRecord">deleteRecord</a></li><li><a href="global.html#deleteRecords">deleteRecords</a></li><li><a href="global.html#deleteSearch">deleteSearch</a></li><li><a href="global.html#descending">descending</a></li><li><a href="global.html#direction">direction</a></li><li><a href="global.html#directions">directions</a></li><li><a href="global.html#disable">disable</a></li><li><a href="global.html#disableButton">disableButton</a></li><li><a href="global.html#disabled">disabled</a></li><li><a href="global.html#disableModRewriteUrls">disableModRewriteUrls</a></li><li><a href="global.html#disableWheel">disableWheel</a></li><li><a href="global.html#displayField">displayField</a></li><li><a href="global.html#displayFormat">displayFormat</a></li><li><a href="global.html#disposeAllChildren">disposeAllChildren</a></li><li><a href="global.html#el">el</a></li><li><a href="global.html#emit">emit</a></li><li><a href="global.html#emitEvents">emitEvents</a></li><li><a href="global.html#empty">empty</a></li><li><a href="global.html#emptyItem">emptyItem</a></li><li><a href="global.html#emptyText">emptyText</a></li><li><a href="global.html#enable">enable</a></li><li><a href="global.html#enableButton">enableButton</a></li><li><a href="global.html#enableModRewriteUrls">enableModRewriteUrls</a></li><li><a href="global.html#eventKeys">eventKeys</a></li><li><a href="global.html#execute">execute</a></li><li><a href="global.html#expandAll">expandAll</a></li><li><a href="global.html#expandDepth">expandDepth</a></li><li><a href="global.html#expandSome">expandSome</a></li><li><a href="global.html#fileUploadComplete">fileUploadComplete</a></li><li><a href="global.html#fill">fill</a></li><li><a href="global.html#fillDown">fillDown</a></li><li><a href="global.html#fillLeft">fillLeft</a></li><li><a href="global.html#fillRight">fillRight</a></li><li><a href="global.html#fillUp">fillUp</a></li><li><a href="global.html#filterOnServer">filterOnServer</a></li><li><a href="global.html#findRecord">findRecord</a></li><li><a href="global.html#findRecords">findRecords</a></li><li><a href="global.html#finish">finish</a></li><li><a href="global.html#fire">fire</a></li><li><a href="global.html#fly">fly</a></li><li><a href="global.html#flyBack">flyBack</a></li><li><a href="global.html#flyTo">flyTo</a></li><li><a href="global.html#flyToShim">flyToShim</a></li><li><a href="global.html#focus">focus</a></li><li><a href="global.html#formCss">formCss</a></li><li><a href="global.html#get">get</a></li><li><a href="global.html#getBH">getBH</a></li><li><a href="global.html#getButtonBarConfig">getButtonBarConfig</a></li><li><a href="global.html#getBW">getBW</a></li><li><a href="global.html#getById">getById</a></li><li><a href="global.html#getCenter">getCenter</a></li><li><a href="global.html#getCheckedRadio">getCheckedRadio</a></li><li><a href="global.html#getChildren">getChildren</a></li><li><a href="global.html#getClassName">getClassName</a></li><li><a href="global.html#getColumnsInRow">getColumnsInRow</a></li><li><a href="global.html#getCompiled">getCompiled</a></li><li><a href="global.html#getCoordinates">getCoordinates</a></li><li><a href="global.html#getCount">getCount</a></li><li><a href="global.html#getCountPages">getCountPages</a></li><li><a href="global.html#getCy">getCy</a></li><li><a href="global.html#getDate">getDate</a></li><li><a href="global.html#getDefs">getDefs</a></li><li><a href="global.html#getDocumentRoot">getDocumentRoot</a></li><li><a href="global.html#getDragged">getDragged</a></li><li><a href="global.html#getDraggedX">getDraggedX</a></li><li><a href="global.html#getDraggedY">getDraggedY</a></li><li><a href="global.html#getEl">getEl</a></li><li><a href="global.html#getEl()">getEl()</a></li><li><a href="global.html#getFieldWidth">getFieldWidth</a></li><li><a href="global.html#getFileUploadUrl">getFileUploadUrl</a></li><li><a href="global.html#getFormEl">getFormEl</a></li><li><a href="global.html#getGroupFor">getGroupFor</a></li><li><a href="global.html#getGroupIdOf">getGroupIdOf</a></li><li><a href="global.html#getHeight">getHeight</a></li><li><a href="global.html#getId">getId</a></li><li><a href="global.html#getIndexOfVisiblePage">getIndexOfVisiblePage</a></li><li><a href="global.html#getLeft">getLeft</a></li><li><a href="global.html#getManager">getManager</a></li><li><a href="global.html#getMeasuredWidth">getMeasuredWidth</a></li><li><a href="global.html#getMH">getMH</a></li><li><a href="global.html#getMW">getMW</a></li><li><a href="global.html#getName">getName</a></li><li><a href="global.html#getNamespace">getNamespace</a></li><li><a href="global.html#getNextOf">getNextOf</a></li><li><a href="global.html#getNode">getNode</a></li><li><a href="global.html#getOffset">getOffset</a></li><li><a href="global.html#getPageCount">getPageCount</a></li><li><a href="global.html#getPageNumber">getPageNumber</a></li><li><a href="global.html#getParent">getParent</a></li><li><a href="global.html#getParentForNewChild">getParentForNewChild</a></li><li><a href="global.html#getPercentCompleted">getPercentCompleted</a></li><li><a href="global.html#getPH">getPH</a></li><li><a href="global.html#getPoint">getPoint</a></li><li><a href="global.html#getPosition">getPosition</a></li><li><a href="global.html#getPosition()">getPosition()</a></li><li><a href="global.html#getPreviousOf">getPreviousOf</a></li><li><a href="global.html#getPreviousPageOf">getPreviousPageOf</a></li><li><a href="global.html#getPW">getPW</a></li><li><a href="global.html#getRadius">getRadius</a></li><li><a href="global.html#getRadiusX">getRadiusX</a></li><li><a href="global.html#getRadiusY">getRadiusY</a></li><li><a href="global.html#getRecord">getRecord</a></li><li><a href="global.html#getResponse">getResponse</a></li><li><a href="global.html#getResponseData">getResponseData</a></li><li><a href="global.html#getRx">getRx</a></li><li><a href="global.html#getRy">getRy</a></li><li><a href="global.html#getSearcher">getSearcher</a></li><li><a href="global.html#getSelectedRecord">getSelectedRecord</a></li><li><a href="global.html#getSelectedRecords">getSelectedRecords</a></li><li><a href="global.html#getShim">getShim</a></li><li><a href="global.html#getSize">getSize</a></li><li><a href="global.html#getSocketUrl">getSocketUrl</a></li><li><a href="global.html#getSortedBy">getSortedBy</a></li><li><a href="global.html#getSortOrder">getSortOrder</a></li><li><a href="global.html#getStop">getStop</a></li><li><a href="global.html#getStopColor">getStopColor</a></li><li><a href="global.html#getStopOpacity">getStopOpacity</a></li><li><a href="global.html#getStyle">getStyle</a></li><li><a href="global.html#getTitleBarConfig">getTitleBarConfig</a></li><li><a href="global.html#getToggleGroup">getToggleGroup</a></li><li><a href="global.html#getTop">getTop</a></li><li><a href="global.html#getUrl">getUrl</a></li><li><a href="global.html#getValue">getValue</a></li><li><a href="global.html#getVisibleColumns">getVisibleColumns</a></li><li><a href="global.html#getWidth">getWidth</a></li><li><a href="global.html#getX">getX</a></li><li><a href="global.html#getY">getY</a></li><li><a href="global.html#handle">handle</a></li><li><a href="global.html#hasData">hasData</a></li><li><a href="global.html#hasModRewriteUrls">hasModRewriteUrls</a></li><li><a href="global.html#hasSearchTokens">hasSearchTokens</a></li><li><a href="global.html#headerAlign">headerAlign</a></li><li><a href="global.html#headerMenu">headerMenu</a></li><li><a href="global.html#heading">heading</a></li><li><a href="global.html#height">height</a></li><li><a href="global.html#hidden">hidden</a></li><li><a href="global.html#hide">hide</a></li><li><a href="global.html#hideAfterDelay">hideAfterDelay</a></li><li><a href="global.html#hideButton">hideButton</a></li><li><a href="global.html#hideOnFinish">hideOnFinish</a></li><li><a href="global.html#hideShim">hideShim</a></li><li><a href="global.html#highlightRecord">highlightRecord</a></li><li><a href="global.html#html">html</a></li><li><a href="global.html#icon">icon</a></li><li><a href="global.html#id">id</a></li><li><a href="global.html#idField">idField</a></li><li><a href="global.html#image">image</a></li><li><a href="global.html#increment">increment</a></li><li><a href="global.html#incrementBy">incrementBy</a></li><li><a href="global.html#index">index</a></li><li><a href="global.html#inputConfig">inputConfig</a></li><li><a href="global.html#inputFormat">inputFormat</a></li><li><a href="global.html#insertColumnAfter">insertColumnAfter</a></li><li><a href="global.html#insertColumnBefore">insertColumnBefore</a></li><li><a href="global.html#insertJSON">insertJSON</a></li><li><a href="global.html#instantUpload">instantUpload</a></li><li><a href="global.html#isChecked">isChecked</a></li><li><a href="global.html#isCollapsible">isCollapsible</a></li><li><a href="global.html#isDirty">isDirty</a></li><li><a href="global.html#isDisabled">isDisabled</a></li><li><a href="global.html#isFirstPage">isFirstPage</a></li><li><a href="global.html#isInAGroup">isInAGroup</a></li><li><a href="global.html#isLastPage">isLastPage</a></li><li><a href="global.html#isOnFirstPage">isOnFirstPage</a></li><li><a href="global.html#isOnLastPage">isOnLastPage</a></li><li><a href="global.html#isOnPage">isOnPage</a></li><li><a href="global.html#isResizable">isResizable</a></li><li><a href="global.html#isValid">isValid</a></li><li><a href="global.html#isVisible">isVisible</a></li><li><a href="global.html#JSONParser">JSONParser</a></li><li><a href="global.html#label">label</a></li><li><a href="global.html#labelButton">labelButton</a></li><li><a href="global.html#labelDelete">labelDelete</a></li><li><a href="global.html#labelRemove">labelRemove</a></li><li><a href="global.html#lastChildCoordinates">lastChildCoordinates</a></li><li><a href="global.html#lastPage">lastPage</a></li><li><a href="global.html#left">left</a></li><li><a href="global.html#leftOf">leftOf</a></li><li><a href="global.html#linkWith">linkWith</a></li><li><a href="global.html#listeners">listeners</a></li><li><a href="global.html#listenTo">listenTo</a></li><li><a href="global.html#load">load</a></li><li><a href="global.html#loadMovie">loadMovie</a></li><li><a href="global.html#loadValueRequesttoserverexample:">loadValue
+	 Request to server example:</a></li><li><a href="global.html#ludoConfig">ludoConfig</a></li><li><a href="global.html#ludoEvents">ludoEvents</a></li><li><a href="global.html#maxDate">maxDate</a></li><li><a href="global.html#maxDisplayed">maxDisplayed</a></li><li><a href="global.html#maxHeight">maxHeight</a></li><li><a href="global.html#maximize">maximize</a></li><li><a href="global.html#maxLength">maxLength</a></li><li><a href="global.html#maxPos">maxPos</a></li><li><a href="global.html#maxValue">maxValue</a></li><li><a href="global.html#maxWidth">maxWidth</a></li><li><a href="global.html#maxX">maxX</a></li><li><a href="global.html#maxY">maxY</a></li><li><a href="global.html#md5">md5</a></li><li><a href="global.html#minDate">minDate</a></li><li><a href="global.html#minHeight">minHeight</a></li><li><a href="global.html#minimize">minimize</a></li><li><a href="global.html#minLength">minLength</a></li><li><a href="global.html#minPos">minPos</a></li><li><a href="global.html#minValue">minValue</a></li><li><a href="global.html#minWidth">minWidth</a></li><li><a href="global.html#minX">minX</a></li><li><a href="global.html#minY">minY</a></li><li><a href="global.html#modal">modal</a></li><li><a href="global.html#modificationManager">modificationManager</a></li><li><a href="global.html#mouseOverEffect">mouseOverEffect</a></li><li><a href="global.html#mouseXOffset">mouseXOffset</a></li><li><a href="global.html#mouseYOffset">mouseYOffset</a></li><li><a href="global.html#movable">movable</a></li><li><a href="global.html#movieId">movieId</a></li><li><a href="global.html#name">name</a></li><li><a href="global.html#next">next</a></li><li><a href="global.html#nextPage">nextPage</a></li><li><a href="global.html#node">node</a></li><li><a href="global.html#offsetBrightness">offsetBrightness</a></li><li><a href="global.html#offsetHeight">offsetHeight</a></li><li><a href="global.html#offsetHue">offsetHue</a></li><li><a href="global.html#offsetSaturation">offsetSaturation</a></li><li><a href="global.html#offsetWidth">offsetWidth</a></li><li><a href="global.html#offsetX">offsetX</a></li><li><a href="global.html#offsetY">offsetY</a></li><li><a href="global.html#on">on</a></li><li><a href="global.html#open">open</a></li><li><a href="global.html#options">options</a></li><li><a href="global.html#or">or</a></li><li><a href="global.html#orientation">orientation</a></li><li><a href="global.html#p">p</a></li><li><a href="global.html#paint">paint</a></li><li><a href="global.html#passwordLength">passwordLength</a></li><li><a href="global.html#preserveAspectRatio">preserveAspectRatio</a></li><li><a href="global.html#previous">previous</a></li><li><a href="global.html#previousPage">previousPage</a></li><li><a href="global.html#primaryKey">primaryKey</a></li><li><a href="global.html#read">read</a></li><li><a href="global.html#readonly">readonly</a></li><li><a href="global.html#record">record</a></li><li><a href="global.html#recordType">recordType</a></li><li><a href="global.html#region">region</a></li><li><a href="global.html#remoteSearch">remoteSearch</a></li><li><a href="global.html#removable">removable</a></li><li><a href="global.html#remove">remove</a></li><li><a href="global.html#removeFromGroup">removeFromGroup</a></li><li><a href="global.html#renderer">renderer</a></li><li><a href="global.html#renderTo">renderTo</a></li><li><a href="global.html#reset">reset</a></li><li><a href="global.html#resizable">resizable</a></li><li><a href="global.html#resize">resize</a></li><li><a href="global.html#resource">resource</a></li><li><a href="global.html#restart">restart</a></li><li><a href="global.html#reverse">reverse</a></li><li><a href="global.html#reverseWheel">reverseWheel</a></li><li><a href="global.html#rightOf">rightOf</a></li><li><a href="global.html#rotate">rotate</a></li><li><a href="global.html#rotateAround">rotateAround</a></li><li><a href="global.html#rowManager">rowManager</a></li><li><a href="global.html#rows">rows</a></li><li><a href="global.html#sameHeightAs">sameHeightAs</a></li><li><a href="global.html#sameWidthAs">sameWidthAs</a></li><li><a href="global.html#saveState">saveState</a></li><li><a href="global.html#Search">Search</a></li><li><a href="global.html#search">search</a></li><li><a href="global.html#searchConfig">searchConfig</a></li><li><a href="global.html#searchFn">searchFn</a></li><li><a href="global.html#searchIn">searchIn</a></li><li><a href="global.html#selected">selected</a></li><li><a href="global.html#selector">selector</a></li><li><a href="global.html#selectRecord">selectRecord</a></li><li><a href="global.html#selectRecordIndex">selectRecordIndex</a></li><li><a href="global.html#selectRecords">selectRecords</a></li><li><a href="global.html#selectTo">selectTo</a></li><li><a href="global.html#send">send</a></li><li><a href="global.html#set">set</a></li><li><a href="global.html#setChecked">setChecked</a></li><li><a href="global.html#setCx">setCx</a></li><li><a href="global.html#setCy">setCy</a></li><li><a href="global.html#setData">setData</a></li><li><a href="global.html#setDate">setDate</a></li><li><a href="global.html#setDefaultMessage">setDefaultMessage</a></li><li><a href="global.html#setDocumentRoot">setDocumentRoot</a></li><li><a href="global.html#setDropShadow">setDropShadow</a></li><li><a href="global.html#setEnabled">setEnabled</a></li><li><a href="global.html#setFileUploadUrl">setFileUploadUrl</a></li><li><a href="global.html#setHeight">setHeight</a></li><li><a href="global.html#setInvalid">setInvalid</a></li><li><a href="global.html#setMaxPos">setMaxPos</a></li><li><a href="global.html#setMaxX">setMaxX</a></li><li><a href="global.html#setMaxY">setMaxY</a></li><li><a href="global.html#setMinPos">setMinPos</a></li><li><a href="global.html#setMinX">setMinX</a></li><li><a href="global.html#setMinY">setMinY</a></li><li><a href="global.html#setMonth">setMonth</a></li><li><a href="global.html#setOffset">setOffset</a></li><li><a href="global.html#setPoint">setPoint</a></li><li><a href="global.html#setProperties">setProperties</a></li><li><a href="global.html#setRadius">setRadius</a></li><li><a href="global.html#setRadiusX">setRadiusX</a></li><li><a href="global.html#setRadiusY">setRadiusY</a></li><li><a href="global.html#setResource">setResource</a></li><li><a href="global.html#setRx">setRx</a></li><li><a href="global.html#setRy">setRy</a></li><li><a href="global.html#setShimText">setShimText</a></li><li><a href="global.html#setSocketUrl">setSocketUrl</a></li><li><a href="global.html#setStopColor">setStopColor</a></li><li><a href="global.html#setStopOpacity">setStopOpacity</a></li><li><a href="global.html#setStyle">setStyle</a></li><li><a href="global.html#setTemporarySize">setTemporarySize</a></li><li><a href="global.html#setTitle">setTitle</a></li><li><a href="global.html#setValue">setValue</a></li><li><a href="global.html#setViewBox">setViewBox</a></li><li><a href="global.html#setWidth">setWidth</a></li><li><a href="global.html#setX">setX</a></li><li><a href="global.html#setY">setY</a></li><li><a href="global.html#setYear">setYear</a></li><li><a href="global.html#shiftIncrement">shiftIncrement</a></li><li><a href="global.html#shimCls">shimCls</a></li><li><a href="global.html#show">show</a></li><li><a href="global.html#showAt">showAt</a></li><li><a href="global.html#showButton">showButton</a></li><li><a href="global.html#showCentered">showCentered</a></li><li><a href="global.html#showChild">showChild</a></li><li><a href="global.html#showFirstPage">showFirstPage</a></li><li><a href="global.html#showLastPage">showLastPage</a></li><li><a href="global.html#showLines">showLines</a></li><li><a href="global.html#showNextPage">showNextPage</a></li><li><a href="global.html#showPage">showPage</a></li><li><a href="global.html#showPreviousPage">showPreviousPage</a></li><li><a href="global.html#showShim">showShim</a></li><li><a href="global.html#size">size</a></li><li><a href="global.html#sort">sort</a></li><li><a href="global.html#sortable">sortable</a></li><li><a href="global.html#sortBy">sortBy</a></li><li><a href="global.html#sortFn">sortFn</a></li><li><a href="global.html#stateful">stateful</a></li><li><a href="global.html#statefulProperties">statefulProperties</a></li><li><a href="global.html#stretchField">stretchField</a></li><li><a href="global.html#styles">styles</a></li><li><a href="global.html#tag">tag</a></li><li><a href="global.html#textKey">textKey</a></li><li><a href="global.html#textStyles">textStyles</a></li><li><a href="global.html#textStylesOver">textStylesOver</a></li><li><a href="global.html#titleBar">titleBar</a></li><li><a href="global.html#toggle">toggle</a></li><li><a href="global.html#top">top</a></li><li><a href="global.html#toPage">toPage</a></li><li><a href="global.html#toRad">toRad</a></li><li><a href="global.html#tpl">tpl</a></li><li><a href="global.html#treeConfig">treeConfig</a></li><li><a href="global.html#turnOff">turnOff</a></li><li><a href="global.html#turnOn">turnOn</a></li><li><a href="global.html#twin">twin</a></li><li><a href="global.html#type">type</a></li><li><a href="global.html#ucFirst">ucFirst</a></li><li><a href="global.html#ucWords">ucWords</a></li><li><a href="global.html#uncheck">uncheck</a></li><li><a href="global.html#unit">unit</a></li><li><a href="global.html#updateRecord">updateRecord</a></li><li><a href="global.html#updateViewport">updateViewport</a></li><li><a href="global.html#url">url</a></li><li><a href="global.html#useController">useController</a></li><li><a href="global.html#useShim">useShim</a></li><li><a href="global.html#val">val</a></li><li><a href="global.html#validate">validate</a></li><li><a href="global.html#validator">validator</a></li><li><a href="global.html#value">value</a></li><li><a href="global.html#valueKey">valueKey</a></li><li><a href="global.html#weight">weight</a></li><li><a href="global.html#where">where</a></li><li><a href="global.html#width">width</a></li><li><a href="global.html#withIn">withIn</a></li><li><a href="global.html#withResource">withResource</a></li><li><a href="global.html#withResourceService">withResourceService</a></li><li><a href="global.html#withService">withService</a></li>
+				</ul>
+			</li>
+			
+		</ul>
+        
+            <div class="col-sm-3 col-md-3">
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        
+	</div>
+
+</div>
+</div>
+
+
+<div class="container" id="toc-content">
+<div class="row">
+
+	
+	<div class="col-md-12">
+	
+		<div id="main">
+			
+
+		<h1 class="page-title">Source: layout/menu-spec.js</h1>
+    
+<section>
+    <article>
+        <pre
+            class="sunlight-highlight-javascript linenums">/**
+ * Spec of config options for the Menu Layout.
+ * @namespace layout
+ * @class MenuSpec
+ * @type {Object}
+ */
+ludo.layout.MenuSpec = {
+	/**
+	 type attribute of parent must be set to "menu" to get menu layout
+	 @config {String} type
+	 @example
+	 	new ludo.View({
+	 		layout:{
+	 			type:'menu'
+			}
+		});
+	 */
+	type : 'menu',
+
+	/**
+	 * How to render menu items, vertical or horizontal
+	 * @config {String} orientation
+	 * @default 'horizontal'
+	 */
+	orientation:'horizontal',
+
+	/**
+	 * true to show sub menus on mouse over without first having to click on parent menu item.
+	 * @config {Boolean} active
+	 * @default false
+	 */
+	active:false,
+
+    /**
+     * For horizontal menus, where to show sub menu vertically, below or above
+     * @config {String} alignSubMenuV
+     * @default 'below'
+     */
+    alignSubMenuV:'below',
+
+    /**
+     * Where to show sub menu horizontally, rightOrLeftOf, leftOrRightOf, leftOr or rightOf.
+     * rightOrLeftOf will show sub menu to the right if there's enough space left. leftOrRightOf will show sub menu to
+     * the left if there's enough available space. leftOf and rightOf will always show the sub menu to the left or right no
+     * matter available space.
+     * @config {String} alignSubMenuH
+     * @default 'rightOrLeftOf'
+     */
+    alignSubMenuH:'rightOrLeftOf'
+};</pre>
+    </article>
+</section>
+
+
+
+
+
+		</div>
+	</div>
+
+	<div class="clearfix"></div>
+
+	
+
+</div>
+</div>
+
+
+    <div class="modal fade" id="searchResults">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Search results</h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
+
+<footer>
+
+
+	<span class="copyright">
+	© LudoJS.com 2012-2016
+	</span>
+
+<span class="jsdoc-message">
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.2</a>
+	
+		on Fri Nov 11th 2016
+	
+	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
+</span>
+</footer>
+
+<script src="scripts/docstrap.lib.js"></script>
+<script src="scripts/toc.js"></script>
+
+    <script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+
+<script>
+$( function () {
+	$( "[id*='$']" ).each( function () {
+		var $this = $( this );
+
+		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+	} );
+
+	$( ".tutorial-section pre, .readme-section pre, pre.prettyprint.source" ).each( function () {
+		var $this = $( this );
+
+		var example = $this.find( "code" );
+		exampleText = example.html();
+		var lang = /{@lang (.*?)}/.exec( exampleText );
+		if ( lang && lang[1] ) {
+			exampleText = exampleText.replace( lang[0], "" );
+			example.html( exampleText );
+			lang = lang[1];
+		} else {
+			var langClassMatch = example.parent()[0].className.match(/lang\-(\S+)/);
+			lang = langClassMatch ? langClassMatch[1] : "javascript";
+		}
+
+		if ( lang ) {
+
+			$this
+			.addClass( "sunlight-highlight-" + lang )
+			.addClass( "linenums" )
+			.html( example.html() );
+
+		}
+	} );
+
+	Sunlight.highlightAll( {
+		lineNumbers : true,
+		showMenu : true,
+		enableDoclinks : true
+	} );
+
+	$.catchAnchorLinks( {
+        navbarOffset: 10
+	} );
+	$( "#toc" ).toc( {
+		anchorName  : function ( i, heading, prefix ) {
+			return $( heading ).attr( "id" ) || ( prefix + i );
+		},
+		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
+		showAndHide : false,
+		smoothScrolling: true
+	} );
+
+	$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+	$( '.dropdown-toggle' ).dropdown();
+
+    $( "table" ).each( function () {
+      var $this = $( this );
+      $this.addClass('table');
+    } );
+
+} );
+</script>
+
+
+
+<!--Navigation and Symbol Display-->
+
+
+<!--Google Analytics-->
+
+<script>
+	(function ( i, s, o, g, r, a, m ) {
+		i['GoogleAnalyticsObject'] = r;
+		i[r] = i[r] || function () {
+			(i[r].q = i[r].q || []).push( arguments )
+		}, i[r].l = 1 * new Date();
+		a = s.createElement( o ),
+			m = s.getElementsByTagName( o )[0];
+		a.async = 1;
+		a.src = g;
+		m.parentNode.insertBefore( a, m )
+	})( window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga' );
+
+	ga( 'create', 'UA-34153510-1', 'http://www.ludojs.com' );
+	ga( 'send', 'pageview' );
+</script>
+
+
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            SearcherDisplay.init();
+        });
+    </script>
+
+
+</body>
+</html>
