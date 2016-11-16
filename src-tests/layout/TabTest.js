@@ -59,7 +59,7 @@ TestCase("TabLayout", {
 
         // then
         assertNotUndefined(tabStrip);
-        assertTrue(v.getLayout().isTabStrip(tabStrip));
+        assertTrue(v.getLayout().isTabs(tabStrip));
         assertFalse(tabStrip.isHidden());
 
         assertEquals('top', tabStrip.tabPos);
@@ -131,7 +131,7 @@ TestCase("TabLayout", {
         var v = this.getView_250_40('top');
 
         // when
-        var tabStrip = v.getLayout().getTabStrip();
+        var tabStrip = v.getLayout().getTabs();
 
         // then
         assertEquals(4, tabStrip.getCount());
@@ -142,7 +142,7 @@ TestCase("TabLayout", {
         var v = this.getView_250_40('top');
 
         // when
-        var tabStrip = v.getLayout().getTabStrip();
+        var tabStrip = v.getLayout().getTabs();
         var tab = tabStrip.getTabFor(v.child['c']);
         // then
         assertNotUndefined(tabStrip.activeTab);
@@ -173,7 +173,7 @@ TestCase("TabLayout", {
         var v = this.getView_250_40('top');
 
         // when
-        var tabStrip = v.getLayout().getTabStrip();
+        var tabStrip = v.getLayout().getTabs();
         v.child['b'].show();
         var tabB = tabStrip.getTabFor(v.child['b']);
         var tabC = tabStrip.getTabFor(v.child['c']);

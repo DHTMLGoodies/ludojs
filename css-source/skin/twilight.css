@@ -487,3 +487,9 @@ Collapse bar
 .ludo-twilight .ludo-body label{
     color:#aeb0b0;
 }
+
+/** Viewpager nav */
+
+.ludo-twilight .ludojs-viewpager-dot{
+    background-color:#ccc;
+}

@@ -18,20 +18,20 @@ ludo.layout.Tab = new Class({
 		if (this.view.children.length === 0) {
 			return;
 		}
-		this.getTabStrip().onComponentResize();
+		this.getTabs().onComponentResize();
 	},
 
 	onNewChild:function (child) {
 		this.parent(child);
-		var tab = this.getTabStrip().addChild(child);
-		if (this.getTabStrip().getCountItems() === 1) {
+		var tab = this.getTabs().addChild(child);
+		if (this.getTabs().getCountItems() === 1) {
 			tab.show();
 		}
 	},
 
-	getTabStrip:function () {
+	getTabs:function () {
 		if (!this.tabStrip) {
-			this.tabStrip = new ludo.TabStrip({
+			this.tabStrip = new ludo.Tabs({
 				parentComponent:this.view,
 				listeners:{
 					add:this.resize.bind(this)
@@ -47,7 +47,7 @@ ludo.layout.Tab = new Class({
 	},
 
 	prepareTabLayout:function () {
-		var tabStrip = this.getTabStrip();
+		var tabStrip = this.getTabs();
 		tabStrip.showFirstActiveTab();
 	},
 

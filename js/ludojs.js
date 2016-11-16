@@ -1,7 +1,7 @@
-/* Generated Wed Nov 16 16:55:29 CET 2016 */
+/* Generated Wed Nov 16 20:43:47 CET 2016 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.109
+ludoJS - Javascript framework, 1.1.115
 Copyright (C) 2012-2016  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -16212,11 +16212,11 @@ ludo.layout.ViewPager = new Class({
         return tag == 'input' || tag == 'textarea' || tag === 'select';
     }
 });
-/* ../ludojs/src/layout/tab-strip.js */
+/* ../ludojs/src/layout/tabs.js */
 /* TODO should be able to update tab title when view title is changed */
-ludo.layout.TabStrip = new Class({
+ludo.layout.Tabs = new Class({
     Extends:ludo.View,
-    type:'layout.TabStrip',
+    type:'layout.Tabs',
     tabPos:'left',
     lm:undefined,
     tabs:{},
@@ -16243,7 +16243,7 @@ ludo.layout.TabStrip = new Class({
     },
 
     registerChild:function (layout, parent, child) {
-        if (!this.lm.isTabStrip(child)) {
+        if (!this.lm.isTabs(child)) {
             this.createTabFor(child);
         }
     },
@@ -17273,19 +17273,19 @@ ludo.layout.Tab = new Class({
 	onCreate:function () {
 		this.parent();
         this.view.getEl().addClass('ludo-layout-tab');
-		this.addChild(this.getTabStrip());
+		this.addChild(this.getTabs());
 
 		this.updateViewport(this.tabStrip.getChangedViewport());
 	},
 
 	addChild:function (child, insertAt, pos) {
-		if (!this.isTabStrip(child) && (!child.layout || !child.layout.visible))child.hidden = true;
+		if (!this.isTabs(child) && (!child.layout || !child.layout.visible))child.hidden = true;
 		return this.parent(child, insertAt, pos);
 	},
 
 	onNewChild:function (child) {
 
-		if (!this.isTabStrip(child)) {
+		if (!this.isTabs(child)) {
 			if(!child.isHidden()){
 				this.setVisibleChild(child);
 			}
@@ -17303,7 +17303,7 @@ ludo.layout.Tab = new Class({
 	},
 
 	addChildEvents:function(child){
-		if(!this.isTabStrip(child)){
+		if(!this.isTabs(child)){
 			child.addEvent('show', this.showTab.bind(this));
 			child.addEvent('dispose', this.onChildDispose.bind(this));
 		}
@@ -17312,14 +17312,14 @@ ludo.layout.Tab = new Class({
 	getTabPosition:function () {
 		return this.view.layout.tabs || 'top';
 	},
-	getTabStrip:function () {
+	getTabs:function () {
 		if (this.tabStrip === undefined) {
-			this.tabStrip = new ludo.layout.TabStrip({
+			this.tabStrip = new ludo.layout.Tabs({
 				lm : this,
 				parentComponent:this.view,
 				tabPos:this.getTabPosition(),
 				renderTo:this.view.getBody(),
-				layout:this.getTabStripLayout()
+				layout:this.getTabsLayout()
 			});
 		}
 		return this.tabStrip;
@@ -17354,7 +17354,7 @@ ludo.layout.Tab = new Class({
 		}
 	},
 
-	getTabStripLayout:function () {
+	getTabsLayout:function () {
 		switch (this.getTabPosition()) {
 			case 'top':
 				return {
@@ -17384,8 +17384,8 @@ ludo.layout.Tab = new Class({
         return undefined;
 	},
 
-	isTabStrip:function (view) {
-		return view.type === 'layout.TabStrip';
+	isTabs:function (view) {
+		return view.type === 'layout.Tabs';
 	},
 
 	onChildDispose:function(child){
@@ -23586,6 +23586,7 @@ ludo.view.ViewPagerNav = new Class({
 
     dotSize:undefined,
     dotSizeSelected:undefined,
+    dotSizeUnselected:undefined,
 
     // Reference to selected dot
     selectedDot:undefined,
@@ -23618,9 +23619,8 @@ ludo.view.ViewPagerNav = new Class({
         this.getBody().empty();
 
         for(var i=0;i<this.viewPager.count;i++){
-            var parent = $('<div class="viewpager-dot-parent" style="position:absolute"></div>');
-            var dot = $('<div class="viewpager-dot" style="position:absolute"></div>');
-            dot.css('background-color', this.color);
+            var parent = $('<div class="ludojs-viewpager-dot-parent" style="position:absolute"></div>');
+            var dot = $('<div class="ludojs-viewpager-dot" style="position:absolute"></div>');
             parent.attr('data-index', i);
             parent.append(dot);
             this.getBody().append(parent);
@@ -23645,6 +23645,7 @@ ludo.view.ViewPagerNav = new Class({
     resizeAndPositionDots:function(){
         this.dotSizeSelected = this.getBody().height();
         this.dotSize = this.dotSizeSelected * 0.5;
+        this.dotSizeUnselected = this.dotSizeSelected * 0.8;
 
         var totalWidthOfDots = this.dotSizeSelected * this.viewPager.count;
         var totalSpacing = this.spacing * this.viewPager.count;
@@ -23658,7 +23659,7 @@ ludo.view.ViewPagerNav = new Class({
 
             var selected = i == this.viewPager.selectedIndex;
 
-            var size = selected ? this.dotSizeSelected : this.dotSize;
+            var size = selected ? this.dotSizeSelected : this.dotSizeUnselected;
             var offset = selected ? 0 : size / 2;
             this.dots[i].css({
                 width: size,
@@ -23670,7 +23671,7 @@ ludo.view.ViewPagerNav = new Class({
 
             if(selected){
                 this.selectedDot = this.dots[i];
-                this.selectedDot.addClass('navigator-dot-selected');
+                this.selectedDot.addClass('ludojs-viewpager-dot-selected');
             }
             // Set left position for next dot
             left+= this.dotSizeSelected + this.spacing;
@@ -23680,27 +23681,25 @@ ludo.view.ViewPagerNav = new Class({
 
     navigate:function(){
         if(this.selectedDot != undefined){
-            this.selectedDot.removeClass('viewpager-dot-selected');
-            var size = this.dotSize;
+            this.selectedDot.removeClass('ludojs-viewpager-dot-selected');
+            var size = this.dotSizeUnselected;
             this.selectedDot.animate({
                 width: size,
                 height: size,
                 top:(size/2) + 'px',
-                left:(size/2)+ 'px',
-                'border-radius': (size/2) + 'px'
+                left:(size/2)+ 'px'
             }, { duration: 200, queue: false });
 
 
         }
         this.selectedDot = this.dots[this.viewPager.selectedIndex];
 
-        this.selectedDot.addClass('navigator-dot-selected');
+        this.selectedDot.addClass('ludojs-viewpager-dot-selected');
         this.selectedDot.animate({
             width: this.dotSizeSelected,
             height: this.dotSizeSelected,
             top:0,
             left:0,
-            'border-radius': (this.dotSizeSelected/2) + 'px'
         }, { duration: 200, queue: false });
     }
 });/* ../ludojs/src/calendar/base.js */

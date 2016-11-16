@@ -1,3 +1,7 @@
-.viewpager-dot-parent{
+.ludojs-viewpager-dot-parent{
     cursor:pointer;
+}
+.ludojs-viewpager-dot{
+    border-radius:999px;
+    background-color:#ccc;
 }

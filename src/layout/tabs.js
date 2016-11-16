@@ -1,7 +1,7 @@
 /* TODO should be able to update tab title when view title is changed */
-ludo.layout.TabStrip = new Class({
+ludo.layout.Tabs = new Class({
     Extends:ludo.View,
-    type:'layout.TabStrip',
+    type:'layout.Tabs',
     tabPos:'left',
     lm:undefined,
     tabs:{},
@@ -28,7 +28,7 @@ ludo.layout.TabStrip = new Class({
     },
 
     registerChild:function (layout, parent, child) {
-        if (!this.lm.isTabStrip(child)) {
+        if (!this.lm.isTabs(child)) {
             this.createTabFor(child);
         }
     },

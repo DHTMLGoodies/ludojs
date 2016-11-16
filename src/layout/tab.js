@@ -6,19 +6,19 @@ ludo.layout.Tab = new Class({
 	onCreate:function () {
 		this.parent();
         this.view.getEl().addClass('ludo-layout-tab');
-		this.addChild(this.getTabStrip());
+		this.addChild(this.getTabs());
 
 		this.updateViewport(this.tabStrip.getChangedViewport());
 	},
 
 	addChild:function (child, insertAt, pos) {
-		if (!this.isTabStrip(child) && (!child.layout || !child.layout.visible))child.hidden = true;
+		if (!this.isTabs(child) && (!child.layout || !child.layout.visible))child.hidden = true;
 		return this.parent(child, insertAt, pos);
 	},
 
 	onNewChild:function (child) {
 
-		if (!this.isTabStrip(child)) {
+		if (!this.isTabs(child)) {
 			if(!child.isHidden()){
 				this.setVisibleChild(child);
 			}
@@ -36,7 +36,7 @@ ludo.layout.Tab = new Class({
 	},
 
 	addChildEvents:function(child){
-		if(!this.isTabStrip(child)){
+		if(!this.isTabs(child)){
 			child.addEvent('show', this.showTab.bind(this));
 			child.addEvent('dispose', this.onChildDispose.bind(this));
 		}
@@ -45,14 +45,14 @@ ludo.layout.Tab = new Class({
 	getTabPosition:function () {
 		return this.view.layout.tabs || 'top';
 	},
-	getTabStrip:function () {
+	getTabs:function () {
 		if (this.tabStrip === undefined) {
-			this.tabStrip = new ludo.layout.TabStrip({
+			this.tabStrip = new ludo.layout.Tabs({
 				lm : this,
 				parentComponent:this.view,
 				tabPos:this.getTabPosition(),
 				renderTo:this.view.getBody(),
-				layout:this.getTabStripLayout()
+				layout:this.getTabsLayout()
 			});
 		}
 		return this.tabStrip;
@@ -87,7 +87,7 @@ ludo.layout.Tab = new Class({
 		}
 	},
 
-	getTabStripLayout:function () {
+	getTabsLayout:function () {
 		switch (this.getTabPosition()) {
 			case 'top':
 				return {
@@ -117,8 +117,8 @@ ludo.layout.Tab = new Class({
         return undefined;
 	},
 
-	isTabStrip:function (view) {
-		return view.type === 'layout.TabStrip';
+	isTabs:function (view) {
+		return view.type === 'layout.Tabs';
 	},
 
 	onChildDispose:function(child){

@@ -1,7 +1,7 @@
-/* Generated Wed Nov 16 16:55:29 CET 2016 */
+/* Generated Wed Nov 16 20:43:47 CET 2016 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.109
+ludoJS - Javascript framework, 1.1.115
 Copyright (C) 2012-2016  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -1187,9 +1187,14 @@ div.ludo-paging-current-page .ludo-body{
 .input-cell input {
     height: 15px;
 }/* ../ludojs/css-source/view/view-pager-nav.css */
-.viewpager-dot-parent{
+.ludojs-viewpager-dot-parent{
     cursor:pointer;
-}/* ../ludojs/css-source/calendar/calendar.css */
+}
+.ludojs-viewpager-dot{
+    border-radius:999px;
+    background-color:#ccc;
+}
+/* ../ludojs/css-source/calendar/calendar.css */
 .ludo-calendar-year-container {
      background-color:#555;
      padding-bottom:5px;
