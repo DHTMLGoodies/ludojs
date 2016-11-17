@@ -10,8 +10,8 @@ ludo.view.ViewPagerNav = new Class({
     dotParents : undefined,
     dots:undefined,
 
-    dotSize:undefined,
     dotSizeSelected:undefined,
+    dotSizeParent:undefined,
     dotSizeUnselected:undefined,
 
     // Reference to selected dot
@@ -69,30 +69,29 @@ ludo.view.ViewPagerNav = new Class({
     },
 
     resizeAndPositionDots:function(){
-        this.dotSizeSelected = this.getBody().height();
-        this.dotSize = this.dotSizeSelected * 0.5;
-        this.dotSizeUnselected = this.dotSizeSelected * 0.8;
+        this.dotSizeParent = this.getBody().height();
+        this.dotSizeSelected = this.dotSizeParent * 0.8;
+        this.dotSizeUnselected = this.dotSizeParent * 0.5;
 
-        var totalWidthOfDots = this.dotSizeSelected * this.viewPager.count;
+        var totalWidthOfDots = this.dotSizeParent * this.viewPager.count;
         var totalSpacing = this.spacing * this.viewPager.count;
         var left = (this.getBody().width() / 2) - (totalWidthOfDots / 2) - (totalSpacing / 2);
         for(var i=0;i<this.viewPager.count;i++){
             this.dotParents[i].css({
                 left: left,
-                width: this.dotSizeSelected,
-                height: this.dotSizeSelected
+                width: this.dotSizeParent,
+                height: this.dotSizeParent
             });
 
             var selected = i == this.viewPager.selectedIndex;
 
-            var size = selected ? this.dotSizeSelected : this.dotSizeUnselected;
+            var size = selected ? this.dotSizeParent : this.dotSizeUnselected;
             var offset = selected ? 0 : size / 2;
             this.dots[i].css({
                 width: size,
                 height: size,
                 top:offset + 'px',
-                left:offset+ 'px',
-                'border-radius': (size/2) + 'px'
+                left:offset+ 'px'
             });
 
             if(selected){
@@ -100,7 +99,7 @@ ludo.view.ViewPagerNav = new Class({
                 this.selectedDot.addClass('ludojs-viewpager-dot-selected');
             }
             // Set left position for next dot
-            left+= this.dotSizeSelected + this.spacing;
+            left+= this.dotSizeParent + this.spacing;
         }
     },
 
@@ -122,10 +121,10 @@ ludo.view.ViewPagerNav = new Class({
 
         this.selectedDot.addClass('ludojs-viewpager-dot-selected');
         this.selectedDot.animate({
-            width: this.dotSizeSelected,
-            height: this.dotSizeSelected,
+            width: this.dotSizeParent,
+            height: this.dotSizeParent,
             top:0,
-            left:0,
+            left:0
         }, { duration: 200, queue: false });
     }
 });

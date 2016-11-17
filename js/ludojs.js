@@ -1,7 +1,7 @@
-/* Generated Wed Nov 16 23:35:44 CET 2016 */
+/* Generated Thu Nov 17 7:20:02 CET 2016 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.116
+ludoJS - Javascript framework, 1.1.118
 Copyright (C) 2012-2016  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -16126,7 +16126,10 @@ ludo.layout.ViewPager = new Class({
     },
 
     touchStart: function (e) {
+
         if (this.isOnFormElement(e.target))return undefined;
+
+
         var isValid = this.view.children[this.selectedIndex].getForm().isValid();
         if (!isValid && this.selectedIndex == 0) {
             return undefined;
@@ -16138,33 +16141,40 @@ ludo.layout.ViewPager = new Class({
         var min = this.selectedIndex < this.view.children.length-1 ? (parentSize * -1) : 0;
         var max = this.selectedIndex > 0 ? parentSize : 0;
 
+
         this.touch = {
             active: true,
-            pos: animateX ? e.pageX : e.pageY,
+            pos: animateX ? this.touchPosParent(e).pageX : this.touchPosParent(e).pageY,
             animateX: animateX,
             min: min,
             max: max,
             currentPos: this.parentDiv.position(),
             previousPos: 0
         };
+
+
         if (e.target.tagName.toLowerCase() == 'img') {
             return false;
         }
+
+
         return false;
     },
 
 
     touchMove: function (e) {
         if (this.touch && this.touch.active) {
+
             var pos;
             var key;
             if (this.touch.animateX) {
-                pos = e.pageX - this.touch.pos;
+                pos = this.touchPosParent(e).pageX - this.touch.pos;
                 key = 'left';
             } else {
-                pos = e.pageY - this.touch.pos;
+                pos = this.touchPosParent(e).pageY - this.touch.pos;
                 key = 'top'
             }
+
 
             pos = Math.min(pos, this.touch.max);
             pos = Math.max(pos, (this.touch.min));
@@ -16174,10 +16184,16 @@ ludo.layout.ViewPager = new Class({
 
             pos += this.touch.currentPos[key];
 
+
+
             this.parentDiv.css(key, pos + 'px');
             return false;
         }
         return undefined;
+    },
+
+    touchPosParent:function(e){
+        return e.pageX != undefined ? e : e.originalEvent.touches[0];
     },
 
     setZIndexOfOtherPages: function (pos) {
@@ -23574,8 +23590,8 @@ ludo.view.ViewPagerNav = new Class({
     dotParents : undefined,
     dots:undefined,
 
-    dotSize:undefined,
     dotSizeSelected:undefined,
+    dotSizeParent:undefined,
     dotSizeUnselected:undefined,
 
     // Reference to selected dot
@@ -23633,30 +23649,29 @@ ludo.view.ViewPagerNav = new Class({
     },
 
     resizeAndPositionDots:function(){
-        this.dotSizeSelected = this.getBody().height();
-        this.dotSize = this.dotSizeSelected * 0.5;
-        this.dotSizeUnselected = this.dotSizeSelected * 0.8;
+        this.dotSizeParent = this.getBody().height();
+        this.dotSizeSelected = this.dotSizeParent * 0.8;
+        this.dotSizeUnselected = this.dotSizeParent * 0.5;
 
-        var totalWidthOfDots = this.dotSizeSelected * this.viewPager.count;
+        var totalWidthOfDots = this.dotSizeParent * this.viewPager.count;
         var totalSpacing = this.spacing * this.viewPager.count;
         var left = (this.getBody().width() / 2) - (totalWidthOfDots / 2) - (totalSpacing / 2);
         for(var i=0;i<this.viewPager.count;i++){
             this.dotParents[i].css({
                 left: left,
-                width: this.dotSizeSelected,
-                height: this.dotSizeSelected
+                width: this.dotSizeParent,
+                height: this.dotSizeParent
             });
 
             var selected = i == this.viewPager.selectedIndex;
 
-            var size = selected ? this.dotSizeSelected : this.dotSizeUnselected;
+            var size = selected ? this.dotSizeParent : this.dotSizeUnselected;
             var offset = selected ? 0 : size / 2;
             this.dots[i].css({
                 width: size,
                 height: size,
                 top:offset + 'px',
-                left:offset+ 'px',
-                'border-radius': (size/2) + 'px'
+                left:offset+ 'px'
             });
 
             if(selected){
@@ -23664,7 +23679,7 @@ ludo.view.ViewPagerNav = new Class({
                 this.selectedDot.addClass('ludojs-viewpager-dot-selected');
             }
             // Set left position for next dot
-            left+= this.dotSizeSelected + this.spacing;
+            left+= this.dotSizeParent + this.spacing;
         }
     },
 
@@ -23686,10 +23701,10 @@ ludo.view.ViewPagerNav = new Class({
 
         this.selectedDot.addClass('ludojs-viewpager-dot-selected');
         this.selectedDot.animate({
-            width: this.dotSizeSelected,
-            height: this.dotSizeSelected,
+            width: this.dotSizeParent,
+            height: this.dotSizeParent,
             top:0,
-            left:0,
+            left:0
         }, { duration: 200, queue: false });
     }
 });/* ../ludojs/src/calendar/base.js */

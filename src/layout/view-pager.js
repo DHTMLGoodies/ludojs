@@ -343,7 +343,10 @@ ludo.layout.ViewPager = new Class({
     },
 
     touchStart: function (e) {
+
         if (this.isOnFormElement(e.target))return undefined;
+
+
         var isValid = this.view.children[this.selectedIndex].getForm().isValid();
         if (!isValid && this.selectedIndex == 0) {
             return undefined;
@@ -355,33 +358,40 @@ ludo.layout.ViewPager = new Class({
         var min = this.selectedIndex < this.view.children.length-1 ? (parentSize * -1) : 0;
         var max = this.selectedIndex > 0 ? parentSize : 0;
 
+
         this.touch = {
             active: true,
-            pos: animateX ? e.pageX : e.pageY,
+            pos: animateX ? this.touchPosParent(e).pageX : this.touchPosParent(e).pageY,
             animateX: animateX,
             min: min,
             max: max,
             currentPos: this.parentDiv.position(),
             previousPos: 0
         };
+
+
         if (e.target.tagName.toLowerCase() == 'img') {
             return false;
         }
+
+
         return false;
     },
 
 
     touchMove: function (e) {
         if (this.touch && this.touch.active) {
+
             var pos;
             var key;
             if (this.touch.animateX) {
-                pos = e.pageX - this.touch.pos;
+                pos = this.touchPosParent(e).pageX - this.touch.pos;
                 key = 'left';
             } else {
-                pos = e.pageY - this.touch.pos;
+                pos = this.touchPosParent(e).pageY - this.touch.pos;
                 key = 'top'
             }
+
 
             pos = Math.min(pos, this.touch.max);
             pos = Math.max(pos, (this.touch.min));
@@ -391,10 +401,16 @@ ludo.layout.ViewPager = new Class({
 
             pos += this.touch.currentPos[key];
 
+
+
             this.parentDiv.css(key, pos + 'px');
             return false;
         }
         return undefined;
+    },
+
+    touchPosParent:function(e){
+        return e.pageX != undefined ? e : e.originalEvent.touches[0];
     },
 
     setZIndexOfOtherPages: function (pos) {
