@@ -38,7 +38,7 @@ ludo.layout.Tab = new Class({
 	addChildEvents:function(child){
 		if(!this.isTabs(child)){
 			child.addEvent('show', this.showTab.bind(this));
-			child.addEvent('dispose', this.onChildDispose.bind(this));
+			child.addEvent('remove', this.onChildDispose.bind(this));
 		}
 	},
 

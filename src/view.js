@@ -784,7 +784,7 @@ ludo.View = new Class({
 		if (child.name) {
 			this.child[child.name] = child;
 		}
-		child.addEvent('dispose', this.removeChild.bind(this));
+		child.addEvent('remove', this.removeChild.bind(this));
 		return child;
 	},
 
@@ -818,17 +818,15 @@ ludo.View = new Class({
 	removeChild:function (child) {
 		this.children.erase(child);
 		child.parentComponent = null;
+		
 	},
-	/**
-	 * Remove all children
-	 * @function disposeAllChildren
-	 * @return void
-	 */
-	disposeAllChildren:function () {
+
+	disposeAllChildren:function(){
 		for (var i = this.children.length - 1; i >= 0; i--) {
-			this.children[i].dispose();
+			this.children[i].remove();
 		}
 	},
+
 	/**
 	 * Hide and removes the view view
 	 * @memberof ludo.View.prototype
@@ -836,7 +834,7 @@ ludo.View = new Class({
 	 * @return void
 	 */
 	remove:function(){
-		this.fireEvent('dispose', this);
+		this.fireEvent('remove', this);
 		ludo.util.dispose(this);
 	},
 
@@ -844,7 +842,7 @@ ludo.View = new Class({
 	dispose:function () {
 		console.warn("Use of deprecated dispose");
 		console.trace();
-        this.fireEvent('dispose', this);
+        this.fireEvent('remove', this);
         ludo.util.dispose(this);
 	},
 	/**

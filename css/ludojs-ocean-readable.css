@@ -897,6 +897,23 @@ div.ludo-tab-strip-top div.ludo-body {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+}
+
+
+.ludo-tab-expand-box{
+    position:absolute;
+    z-index:10;
+    background-repeat:no-repeat;
+    cursor:pointer;
+    font-size:10px;
+}
+
+
+.ludo-tab-expand-box-top, .ludo-tab-expand-box-bottom{
+    right:0;
+    top:0;
+    margin-left:4px;
+
 }/* ../ludojs/css-source/window.css */
 .ludo-window{
     box-shadow:2px 2px 3px #888;
@@ -2961,7 +2978,7 @@ fieldset{
     color: #000;
 }
 
-td.calendar-day {
+.ludo-ocean  td.calendar-day {
     text-align: center;
     cursor: pointer;
 }
@@ -2994,7 +3011,7 @@ td.calendar-day {
     border: 1px solid #B2D5EE;
 }
 
-td.calendar-day-selected {
+.ludo-ocean  td.calendar-day-selected {
     background-color: #B2D5EE;
     border: 1px solid #91C7ED;
 }

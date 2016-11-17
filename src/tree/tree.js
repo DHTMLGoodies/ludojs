@@ -93,7 +93,7 @@ ludo.tree.Tree = new Class({
                 'deselect' : this.deSelectRecord.bind(this),
                 'add' : this.addRecord.bind(this),
                 'addChild' : this.addChild.bind(this),
-                'dispose' : this.removeChild.bind(this),
+                'remove' : this.removeChild.bind(this),
                 'removeChild' : this.removeChild.bind(this),
                 'show' : this.showRecord.bind(this),
                 'hide' : this.hideRecord.bind(this)

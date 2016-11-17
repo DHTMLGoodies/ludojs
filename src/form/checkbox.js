@@ -4,7 +4,7 @@
  * @augments ludo.form.LabelElement
  */
 ludo.form.Checkbox = new Class({
-    Extends:ludo.form.LabelElement,
+    Extends:ludo.form.Element,
     type:'form.Checkbox',
     inputType:'checkbox',
     stretchField:false,

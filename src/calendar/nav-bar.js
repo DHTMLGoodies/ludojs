@@ -7,9 +7,12 @@
 ludo.calendar.NavBar = new Class({
     Extends:ludo.calendar.Base,
     type:'calendar.NavBar',
-    height:20,
     date:undefined,
-    layout:{ type:'linear', orientation:'horizontal'},
+    layout:{
+        height: 20,
+        type:'linear',
+        orientation:'horizontal'
+    },
     cls:'ludo-calendar-info-panel',
 
     children:[

@@ -14,26 +14,24 @@ require_once("../includes/demo-header.php");
             type:'tab',
             tabs:'top'
         },
-        css:{
-            'border-top' : 0
-        },
         children:[
             {
                 id:'firstTab',
                 title:'Tab One',
                 html:'Content of child one',
                 css:{
-                    'background-color':'#FFF',
                     padding:3
                 }
             },
             {
+                id:'tab2video',
                 title:'YouTube video',
                 type:'video.YouTube',
                 movieId:'6UJZBLABGsI',
                 html:'Content of child two'
             },
             {
+                id:'tab3cal',
                 title:'Calendar',
                 type:'calendar.Calendar',
                 minDate:'1971-01-01', date:'2012-03-01',
@@ -42,6 +40,7 @@ require_once("../includes/demo-header.php");
                 }
             },
             {
+                id:'tab4',
                 title:'Tab Three',
                 html:'Content of child three',
                 css:{
@@ -53,6 +52,7 @@ require_once("../includes/demo-header.php");
                 }
             },
             {
+                id:'tab5grid',
                 title:'Grid',
                 layout:{
                     type:'linear',
@@ -128,12 +128,45 @@ require_once("../includes/demo-header.php");
                         }
                     }
                 ]
+            },
+            {
+                id:'tab6',
+                title:"Tab 3",
+                html:'Tab 3'
+            },
+            {
+                id:'tab7',
+                title:"Tab 4",
+                html:'Tab 4'
+            },
+            {
+                id:'tab8',
+                title:"Tab 5",
+                html:'Tab 5'
+            },
+            {
+                id:'tab9',
+                title:"Tab 6",
+                html:'Tab 6'
+            },
+            {
+                id:'tab10',
+                title:"Tab 7",
+                html:'Tab 7'
+
+            },
+            {
+                id:'tab11',
+                title:"Tab 8",
+                html:'Tab 8'
             }
         ],
         buttonBar:[
             { type:'form.Button', value:'OK' }
         ]
     });
+
+    /*
     new ludo.Window({
         title:'Nested tab layouts',
         left:100, top:100, width:500, height:500,
@@ -181,6 +214,7 @@ require_once("../includes/demo-header.php");
 
         ]
     });
+    */
 </script>
 </body>
 </html>

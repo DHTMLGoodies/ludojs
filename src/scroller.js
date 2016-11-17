@@ -184,11 +184,11 @@ ludo.Scroller = new Class({
     },
 
     getHeight:function () {
-        return this.active ? this.els.el.getSize().y : 0;
+        return this.active ? this.els.el.height() : 0;
     },
 
     getWidth:function () {
-        return this.active ? this.els.el.getSize().x : 0;
+        return this.active ? this.els.el.width() : 0;
     },
 
     toggle:function () {

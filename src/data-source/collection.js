@@ -1080,7 +1080,7 @@ ludo.dataSource.Collection = new Class({
 
 	addRecordEvents:function(record){
 		record.addEvent('update', this.onRecordUpdate.bind(this));
-		record.addEvent('dispose', this.onRecordDispose.bind(this));
+		record.addEvent('remove', this.onRecordDispose.bind(this));
 		record.addEvent('select', this.selectRecord.bind(this));
 	},
 
@@ -1101,7 +1101,7 @@ ludo.dataSource.Collection = new Class({
 				branch.splice(index,1);
 			}
 			this.removeFromIndex(record);
-			this.fireEvent('dispose', record);
+			this.fireEvent('remove', record);
 		}
 	},
 

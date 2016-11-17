@@ -37,6 +37,9 @@ ludo.layout.Renderer = new Class({
 		this.view.addEvent('show', this.resize.bind(this));
 		ludo.dom.clearCache();
 		this.addResizeEvent();
+
+		this.view.getLayout().on('addChild', this.clearFn.bind(this));
+		this.view.on('addChild', this.clearFn.bind(this));
 	},
 
 	fixReferences:function () {
@@ -130,15 +133,14 @@ ludo.layout.Renderer = new Class({
 
 
 
+
 		switch (option) {
 
 			case 'height':
 				if (value === 'matchParent') {
 
 					return function (view, renderer) {
-
 						c.height = renderer.viewport.height;
-
 					}
 				}
 				if (value === 'wrap') {
@@ -169,8 +171,10 @@ ludo.layout.Renderer = new Class({
 					var size = ludo.dom.getWrappedSizeOfView(this.view);
                     this.view.layout.width = size.x;
 					return function () {
+						console.log('settingwidth to ' + size.x)
 						c.width = size.x;
 					}
+
 				}
 				if (value.indexOf !== undefined && value.indexOf('%') > 0) {
 					value = parseInt(value);
@@ -224,11 +228,14 @@ ludo.layout.Renderer = new Class({
 			case 'alignRight':
 				return function () {
 
+					console.log(value.outerWidth());
+					console.log(c.width);
+
 					c.left = value.offset().left + value.outerWidth() - c.width;
 				};
 			case 'alignBottom':
 				return function () {
-					c.top = value.offset().top + value.height() - c.height;
+					c.top = value.offset().top + value.outerHeight() - c.height;
 				};
 			case 'offsetX' :
 				return function () {

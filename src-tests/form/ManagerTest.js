@@ -31,6 +31,36 @@ TestCase("ManagerTest", {
 		})
 	},
 
+	"test should be able to have hidden fields": function(){
+
+		// given
+		var v = new ludo.View({
+			layout:'rows',
+			form:{
+				hiddenFields: ['id']
+			},
+			children:[
+				{ type:'form.Text', name:'firstname', 'value':'John' },
+				{ type:'form.Text', name:'lastname', 'value':'Doe' },
+				{ type:'form.Textarea', name:'address', 'value':'Park Avenue' }
+			]
+		});
+
+		// when
+		v.getForm().val('id', 100);
+
+		// then
+		assertEquals(100, v.getForm().val('id'));
+
+		v.getForm().populate({
+			'id' : 200
+		});
+		// then
+		assertEquals(200, v.getForm().val('id'));
+
+
+	},
+
 	"test should be able to create form Manager Dynamically":function () {
 		// given
 		var cmp = this.getComponent();

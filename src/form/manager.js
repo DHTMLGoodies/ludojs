@@ -11,6 +11,8 @@
  @param {Object} config.listeners The form fires events when something is changed with one of the child form views(recursive).
 It is convenient to place event handlers here instead of adding them to the individual form views.
  Example: create a form.change event to listen to all changes to child form views.
+  @param {Array} config.hiddenFields Array with name of form fields. example: hiddenFields:["id"]. There are noe &lt;input type="hidden">
+  in ludoJS. Instead, you define hiddenFields which later can be populated using view.getForm().val(key, value).
  @fires ludo.form.Manager#change Event fired when the value of one of the child form view is changed(recursive).
  @fires ludo.form.Manager#valid Event fired when all child form views have a valid value.
  @fires ludo.form.Manager#invalid Event fired when one or more child form views have invalid value.
@@ -48,6 +50,9 @@ ludo.form.Manager = new Class({
 	form:{
 		method:'post'
 	},
+	
+	hiddenFields:undefined,
+	hiddenValues:undefined,
 
     method:undefined,
     url:undefined,
@@ -104,7 +109,9 @@ ludo.form.Manager = new Class({
 		this.view = config.view;
 		config.form = config.form || {};
 
-        this.setConfigParams(config.form, ['method', 'url','autoLoad']);
+        this.setConfigParams(config.form, ['method', 'url','autoLoad', 'hiddenFields']);
+		this.hiddenValues = {};
+
 
 		this.id = String.uniqueID();
 
@@ -215,7 +222,10 @@ ludo.form.Manager = new Class({
 	set:function(name, value){
 		if(this.map[name]){
 			this.map[name].val(value);
+		}else if(this.hiddenFields != undefined && this.hiddenFields.indexOf(name) != -1){
+			this.hiddenValues[name] = value;
 		}
+
 	},
 
 	/**
@@ -262,7 +272,7 @@ ludo.form.Manager = new Class({
      * @return {String|Number|Object}
      */
 	get:function(name){
-		return this.map[name] ? this.map[name].val() : undefined;
+		return this.map[name] ? this.map[name].val() : this.hiddenValues[name] != undefined ? this.hiddenValues[name] : undefined;
 	},
 
 	registerProgressBar:function (view) {

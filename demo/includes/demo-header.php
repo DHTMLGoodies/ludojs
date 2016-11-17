@@ -30,14 +30,14 @@ $skin = isset($skin) ? $skin : 'twilight';
     if(isset($_GET["gray"])){
         ?>
         <link rel="stylesheet" href="<?php echo $prefix; ?>../css/ludojs.css" type="text/css">
-        <link rel="stylesheet" href="<?php echo $prefix; ?>../css-source/skin/ludo-all-light-gray-skin.css" type="text/css">
+        <link rel="stylesheet" href="<?php echo $prefix; ?>../css-source/skin/light-gray-skin.css" type="text/css">
         <?php
     }
 
-    else if(isset($_GET['skin'])){
+    else if(isset($_GET['twilight'])){
         ?>
         <link rel="stylesheet" href="<?php echo $prefix; ?>../css/ludojs.css" type="text/css">
-        <link rel="stylesheet" href="<?php echo $prefix; ?>../css-source/skin/ludo-all-twilight.css" type="text/css">
+        <link rel="stylesheet" href="<?php echo $prefix; ?>../css-source/skin/twilight.css" type="text/css">
         <?php
 
     }else{

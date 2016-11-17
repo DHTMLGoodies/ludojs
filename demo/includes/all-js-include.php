@@ -193,6 +193,7 @@
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/paging/page-size.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/paging/current-page.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/paging/total-pages.js"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/paging/nav-bar.js"></script>
 
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/controller/controller.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/controller/manager.js"></script>

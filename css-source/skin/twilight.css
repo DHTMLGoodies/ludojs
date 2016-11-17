@@ -50,7 +50,50 @@ body.ludo-twilight{
 /**
 tab layout */
 
+.ludo-twilight .ludo-tab-expand-box{
+    width:auto;
+    padding-left:17px;
+    padding-right:2px;
+    background-position: left center;
+    background-color:#424242;
+}
 
+.ludo-twilight .ludo-tab-expand-box-top{
+    background-image:url(../images/twilight-skin/tabs-expand-top.png);
+}
+
+.ludo-twilight .ludo-tab-expand-box-top-over{
+    background-image:url(../images/twilight-skin/tabs-expand-top-over.png);
+}
+
+
+.ludo-twilight .ludo-tab-expand-box-bottom{
+    background-image:url(../images/twilight-skin/tabs-expand-bottom.png);
+}
+
+.ludo-twilight .ludo-tab-expand-box-bottom-over{
+    background-image:url(../images/twilight-skin/tabs-expand-bottom-over.png);
+}
+
+
+.ludo-twilight .ludo-tab-close{
+    background-image:url(../images/layout/tab-close.png);
+}
+.ludo-twilight  .ludo-tab-close-top-over,.ludo-tab-close-bottom-over{
+    background-image:url(../images/layout/tab-close-over.png);
+}
+
+.ludo-twilight .ludo-tab-close-top,
+.ludo-twilight .ludo-tab-close-bottom{
+    top:0;
+    height:22px;
+}
+
+
+
+.ludo-twilight .ludo-tab-close-top{
+    padding-left:10px;
+}
 
 .ludo-twilight div.ludo-tab-strip-tab span{
     color:#aeb0b0;
@@ -290,6 +333,11 @@ Collapse bar
     border:1px solid transparent;
 }
 
+.ludo-twilight .ludo-calendar-header td{
+    font-size:11px;
+    color:#aeb0b0;
+}
+
 .ludo-twilight.ludo-calendar-container-days{
     background-color:#535354;
 }
@@ -306,6 +354,24 @@ Collapse bar
 
 .ludo-twilight .calendar-day-today{
 
+}
+
+.ludo-twilight  td.calendar-day-selected {
+    background-color: #fff;
+    border:1px solid transparent;
+
+}
+
+.ludo-twilight .calendar-day-mouse-over {
+    background-color: transparent;
+    border:1px solid #fff;
+}
+
+
+.ludo-twilight  div.ludo-calendar-month-year-selected{
+    background-color:#aeb0b0;
+    color:#535354;
+    border-radius:999px;
 }
 
 .ludo-twilight  div.ludo-calendar-month-year-selected{
@@ -347,15 +413,15 @@ Collapse bar
 }
 
 .ludo-twilight .ludo-grid-Grid .ludo-cell-text-sort-asc {
-    background-image: url('../images/twilight-skin/grid-sort-asc.png');
+    background-image: url(../images/twilight-skin/grid-sort-asc.png);
 }
 
 .ludo-twilight .ludo-grid-Grid .ludo-cell-text-sort-desc {
-    background-image: url('../images/twilight-skin/grid-sort-desc.png');
+    background-image: url(../images/twilight-skin/grid-sort-desc.png);
 }
 
 .ludo-twilight .ludo-view-resize-region-se {
-    background-image: url('../images/twilight-skin/resize-dots.png');
+    background-image: url(../images/twilight-skin/resize-dots.png);
 }
 
 .ludo-twilight .ludo-menu-button .ludo-menu-button-arrow{

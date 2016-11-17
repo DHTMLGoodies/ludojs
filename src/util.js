@@ -87,14 +87,13 @@ ludo.util = {
 
         view.disposeAllChildren();
 
-		for (var name in view.els) {
-			if (view.els.hasOwnProperty(name)) {
-				if (view.els[name] && view.els[name].tagName && name != 'parent') {
-					view.els[name].remove();
-					if(view.els[name].removeEvents)view.els[name].removeEvents();
-				}
+		$.each(view.els, function(key){
+			if(key != 'parent' && view.els[key].prop("tagName")){
+				view.els[key].remove();
+				view.els[key].off();
 			}
-		}
+
+		}.bind(view));
 
 		ludo.CmpMgr.deleteComponent(view);
 

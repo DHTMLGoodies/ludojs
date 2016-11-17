@@ -14,9 +14,7 @@ ludo.calendar.Calendar = new Class({
     value:undefined,
     children:[
         { type:'calendar.NavBar', name:'info'},
-        // { type:'calendar.MonthYearSelector', name:'monthyear'},
         { type:'calendar.Days', name:'days'},
-        // { type:'calendar.YearSelector', name:'year'},
         { type:'calendar.Today', name:'today'}
     ],
     /**

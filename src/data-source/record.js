@@ -171,7 +171,7 @@ ludo.dataSource.Record = new Class({
 	},
 
 	dispose:function(){
-		this.fireEvent('dispose', this.record);
+		this.fireEvent('remove', this.record);
 		delete this.record;
 	}
 });

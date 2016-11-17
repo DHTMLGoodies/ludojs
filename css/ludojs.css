@@ -1,7 +1,7 @@
-/* Generated Thu Nov 17 7:20:02 CET 2016 */
+/* Generated Thu Nov 17 20:27:27 CET 2016 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.118
+ludoJS - Javascript framework, 1.1.147
 Copyright (C) 2012-2016  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -918,6 +918,23 @@ div.ludo-tab-strip-top div.ludo-body {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+}
+
+
+.ludo-tab-expand-box{
+    position:absolute;
+    z-index:10;
+    background-repeat:no-repeat;
+    cursor:pointer;
+    font-size:10px;
+}
+
+
+.ludo-tab-expand-box-top, .ludo-tab-expand-box-bottom{
+    right:0;
+    top:0;
+    margin-left:4px;
+
 }/* ../ludojs/css-source/window.css */
 .ludo-window{
     box-shadow:2px 2px 3px #888;
