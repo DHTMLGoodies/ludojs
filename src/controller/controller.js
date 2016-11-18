@@ -29,7 +29,7 @@
  * for the component(it's defined in ludo.Core)
  *
  * @namespace controller
- * @class controller.Controller
+ * @class ludo.controller.Controller
  * @augments Core
  */
 

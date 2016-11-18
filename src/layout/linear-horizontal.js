@@ -1,7 +1,7 @@
 /**
  * This class arranges child views in a row layout.
- * @namespace layout
- * @class LinearVertical
+ * @namespace ludo.layout
+ * @class ludo.layout.LinearVertical
  *
  */
 ludo.layout.LinearHorizontal = new Class({

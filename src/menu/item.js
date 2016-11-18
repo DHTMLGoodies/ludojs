@@ -1,7 +1,16 @@
 /**
  * Class for menu items. MenuItems are created dynamically from config object(children of ludo.menu.Menu or ludo.menu.Context)
- * @namespace menu
- * @class MenuItem
+ * @namespace ludo.menu
+ * @class ludo.menu.MenuItem
+ * @param {Object} config
+ * @param {String} config.icon Path to Icon for the menu item. If no period sign(.) is found in the icon, the text will be displayed
+ * where the icon should be. example: icon: "myicon.png" to display the icon image, or icon: "!" to display the exclamation mark.
+ * @param {Boolean} disabled True to initially disable the menu item
+ * @param {String} label Text for the menu item
+ * @param {String} action Useful when adding click events to the parent menu. Determine what to do based on the clicked menu item's action attribute.
+ * @param {String} orientation Useful when adding click events to the parent menu. Determine what to do based on the clicked menu item's action attribute.
+ * @param {Boolean} spacer Spacer menu item. Creates a non-clickable spacer between menu items.
+ * @fires ludo.menu.item#click Fired on click. Arguments: 1) ludo.menu.Item
  * @augments View
  */
 ludo.menu.Item = new Class({
@@ -11,48 +20,13 @@ ludo.menu.Item = new Class({
     subMenu:null,
     menuItems:[],
     spacer:undefined,
-    /**
-     Path to menu item icon or text placed in the icon placeholder. If icon contains one
-     or more periods(.) it will be consider an image. Otherwise, config.icon will be displayed
-     as plain text
-     @config {String} icon
-     @default undefined
-     @example
-        icon: 'my-icon.jpg'
-     Sets icon to my-icon.jpg
-     @example
-        icon : '!'
-     sets icon to the character "!", i.e. text
-     */
+
     icon:undefined,
     orientation:'vertical',
-    /**
-     * Initially disable the menu item
-     * @config {Boolean} disabled
-     * @default false
-     */
     disabled:false,
 
-    /**
-     * Text for menu item
-     * @config {String} label
-     * @default '' empty string
-     */
     label:'',
-    /**
-     * Useful property if you want to apply only one click event for the menu
-     * and then determine which menu item was clicked. example:
-     *
-     * switch(menuItem.action){
-     *
-     *
-     *
-     * }
-     *
-     * @Attribute {String} action
-     * @type String
-     * @default undefined
-     */
+
     action:undefined,
     record:undefined,
 
@@ -68,8 +42,9 @@ ludo.menu.Item = new Class({
         this.setConfigParams(config, ['orientation', 'icon', 'record', 'value', 'label', 'action', 'disabled', 'fire']);
 
         this._html = this._html || this.label;
-        if (this._html === '|') {
-            this.spacer = true;
+        if(this._html == '[')this.spacer = true;
+
+        if (this.spacer) {
             this.layout.height = 1;
 		}else{
 			this.layout.height = this.layout.height || this.orientation === 'vertical' ? 'wrap' : 'matchParent';
@@ -161,6 +136,7 @@ ludo.menu.Item = new Class({
      * Disable menu item
      * @function disable
      * @return void
+     * @memberof ludo.menu.Item.prototype
      */
     disable:function () {
         this.disabled = true;
@@ -171,6 +147,7 @@ ludo.menu.Item = new Class({
      * Return disable state of menu item
      * @function isDisabled
      * @return {Boolean} disabled
+     * @memberof ludo.menu.Item.prototype
      */
     isDisabled:function () {
         return this.disabled;
@@ -180,6 +157,7 @@ ludo.menu.Item = new Class({
      * Enable menu item
      * @function enable
      * @return void
+     * @memberof ludo.menu.Item.prototype
      */
     enable:function () {
         this.disabled = false;

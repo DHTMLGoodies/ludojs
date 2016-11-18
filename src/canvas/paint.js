@@ -1,8 +1,8 @@
 /**
  Class for styling of SVG DOM nodes
- @namespace canvas
- @class Paint
- @constructor
+ @namespace ludo.canvas
+ @class ludo.canvas.Paint
+ 
  @param {Object} config
  @example
  	var canvas = new ludo.canvas.Canvas({

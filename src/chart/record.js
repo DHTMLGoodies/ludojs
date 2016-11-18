@@ -1,7 +1,7 @@
 /**
  * Record for charts
- * @namespace chart
- * @class Record
+ * @namespace ludo.chart
+ * @class ludo.chart.Record
  */
 ludo.chart.Record = new Class({
     Extends:ludo.dataSource.Record,

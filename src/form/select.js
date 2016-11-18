@@ -1,9 +1,9 @@
 /**
  Select box (&lt;select>)
  @namespace ludo.form
- @class Select
+ @class ludo.form.Select
  @augments ludo.form.Element
- @constructor
+ 
  @param {Object} config
  @example
 	 {
@@ -36,7 +36,7 @@
 	 }
  */
 ludo.form.Select = new Class({
-    Extends:ludo.form.LabelElement,
+    Extends:ludo.form.Element,
     type:'form.Select',
     labelWidth:100,
     /**

@@ -1,7 +1,7 @@
 /**
  * Class for remote data source.
  * @namespace dataSource
- * @class HTML
+ * @class ludo.dataSource.HTML
  * @augments dataSource.Base
  */
 ludo.dataSource.HTML = new Class({

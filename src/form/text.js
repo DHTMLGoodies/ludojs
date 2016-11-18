@@ -132,8 +132,6 @@ ludo.form.Text = new Class({
     },
     /**
      * Return width of input field in pixels.
-     * @function getFieldWidth
-     * @return {Number} width
      */
     getFieldWidth: function () {
         return this.formFieldWidth;
@@ -142,6 +140,7 @@ ludo.form.Text = new Class({
      * Focus form element
      * @function focus
      * @return void
+     * @memberof ludo.form.Text.prototype
      */
     focus: function () {
         this.parent();

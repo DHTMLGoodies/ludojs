@@ -1,9 +1,9 @@
 /**
  Button used to navigate to last page in a dataSource.Collection
- @namespace paging
- @class Last
- @augments paging.Button
- @constructor
+ @namespace ludo.paging
+ @class ludo.paging.Last
+ @augments ludo.paging.Button
+ 
  @param {Object} config
  @example
  	children:[

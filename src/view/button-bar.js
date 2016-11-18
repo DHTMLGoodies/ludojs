@@ -1,9 +1,5 @@
 /**
  * Class used to create button bars at bottom of components.
- * This class is instantiated automatically
- * @namespace view
- * @class ButtonBar
- * @augments View
  */
 ludo.view.ButtonBar = new Class({
     Extends:ludo.View,

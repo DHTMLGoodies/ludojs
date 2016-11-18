@@ -1,10 +1,4 @@
-/**
- * Progress bar for cards in a deck. percentage will be position of current curd
- * relative to number of cards
- * @namespace card
- * @class ProgressBar
- * @augments progress.Bar
- */
+
 ludo.card.ProgressBar = new Class({
     Extends: ludo.progress.Bar,
     hidden: false,

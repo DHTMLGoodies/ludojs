@@ -1,8 +1,8 @@
 /**
  * Progress bar class
  * @namespace progress
- * @class Bar
- * @augments progress.Base
+ * @class ludo.progress.Bar
+ * @augments ludo.progress.Base
  */
 ludo.progress.Bar = new Class({
     Extends:ludo.progress.Base,

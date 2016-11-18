@@ -1,7 +1,7 @@
 /**
  Class for pie charts.
- @namespace chart
- @class Pie
+ @namespace ludo.chart
+ @class ludo.chart.Pie
  @example
      // Create data source for the pie chart.
      var provider = new ludo.chart.DataProvider({

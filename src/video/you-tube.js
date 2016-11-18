@@ -1,9 +1,9 @@
 /**
  YouTube video player component
  @namespace video
- @class YouTube
+ @class ludo.video.YouTube
  @augments video.Video
- @constructor
+ 
  @param {Object} config
  @example
 	 var win = new ludo.Window({

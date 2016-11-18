@@ -1,13 +1,4 @@
-/**
- * Special Button for page.Deck used to navigate to next page.
- * This button will automatically be disabled when a form is invalid, and automatically enabled when it's valid.
- * A form consists of all form elements of parent component, including form elements of child components.
- * When clicked, next page will be shown
- *
- * @namespace page
- * @class NextButton
- * @augments page.Button
- */
+
 ludo.card.NextButton = new Class({
 	Extends:ludo.card.Button,
 	type:'page.NextButton',

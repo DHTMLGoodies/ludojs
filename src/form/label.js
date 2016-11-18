@@ -1,4 +1,14 @@
-
+/**
+ * Label for a ludo.form View
+ *
+ * A label will be assigned the css class ludo-form-el-invalid when the associated form element has an invalid value(not validated).
+ * By default, this will render it with a red text.
+ * @class ludo.form.Label
+ * @param {Object} config
+ * @param {String} label Text label
+ * @param {String|ludo.form.Element} Reference to a ludo.form View which this label should be associated with.
+ *
+ */
 ludo.form.Label = new Class({
     Extends: ludo.View,
     labelFor:undefined,

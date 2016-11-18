@@ -1,7 +1,7 @@
 /**
  * Tree widget
- * @namespace tree
- * @class Tree
+ * @namespace ludo.tree
+ * @class ludo.tree.Tree
  */
 ludo.tree.Tree = new Class({
 	Extends:ludo.CollectionView,

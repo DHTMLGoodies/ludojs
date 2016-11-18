@@ -2,7 +2,8 @@
  * Specification of config object used to create canvas.Node. You will never create
  * any objects of this class. It is used as help and spec only.
  * @namespace canvas
- * @class NodeConfig
+ * @name ludo.canvas.NodeConfig
+ * @type {object}
  */
 ludo.canvas.NodeConfig = new Class({
 	/**

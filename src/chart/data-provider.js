@@ -1,7 +1,7 @@
 /**
  * Special data source for charts
- * @namespace chart
- * @class DataProvider
+ * @namespace ludo.chart
+ * @class ludo.chart.DataProvider
  * @augments dataSource.Collection
  */
 ludo.chart.DataProvider = new Class({

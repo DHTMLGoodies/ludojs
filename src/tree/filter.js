@@ -1,6 +1,6 @@
 /**
- * @namespace tree
- * @class Filter
+ * @namespace ludo.tree
+ * @class ludo.tree.Filter
  */
 
 ludo.tree.Filter = new Class({

@@ -1,4 +1,4 @@
-TestCase("SlideIn", {
+TestCase("NavBar", {
 
     "test main view should have the same width and height as viewport": function(){
         // given
@@ -38,7 +38,7 @@ TestCase("SlideIn", {
             layout:{
                 width:1000,
                 height:500,
-                type : 'SlideIn'
+                type : 'NavBar'
             },
             children:[
                 {

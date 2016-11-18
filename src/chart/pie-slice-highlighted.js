@@ -2,8 +2,8 @@
  Add-on for Pie chart. This add-on highlights slices in a pie chart by showing a larger slice behind
  current highlighted chart slice.
  See {{#crossLink "chart/Pie"}}{{/crossLink}} for example of use.
- @namespace chart
- @class PieSliceHighlighted
+ @namespace ludo.chart
+ @class ludo.chart.PieSliceHighlighted
  @type {Class}
  @example
     {

@@ -2,7 +2,7 @@
  * Special SVG 'g' element which can be positioned and
  * sized using the layout.Canvas layout model.
  * @namespace canvas
- * @class Group
+ * @class ludo.canvas.Group
  */
 ludo.canvas.Group = new Class({
     Extends:ludo.canvas.View,

@@ -1,14 +1,12 @@
 /**
  * Spec of config options for tab layout
- * @namespace layout
- * @class TabSpec
- * @type {Object}
+
  */
 ludo.layout.TabSpec = {
 	/**
 	 type attribute of parent must be set to "tab" to get tab layout
-	 @config {String} type
-	 @example
+	 config {String} type
+	 example
 	 	new ludo.View({
 	 		layout:{
 	 			type:'tab'
@@ -19,29 +17,29 @@ ludo.layout.TabSpec = {
 
 	/**
 	 * Where to render tab strip, left,right,top or bottom
-	 * @config {String} tabs
-	 * @default 'top'
+	 * config {String} tabs
+	 * default 'top'
 	 */
 	tabs:'top',
 
 	/**
 	 * True to make child closable by adding close button to tab
-	 * @config {Boolean} closable
-	 * @default false
+	 * config {Boolean} closable
+	 * default false
 	 */
 	closable:false,
 
 	/**
 	 * Path to icon to show left of title.
-	 * @config {String} icon
-	 * @default undefined
+	 * config {String} icon
+	 * default undefined
 	 */
 	icon:undefined,
 
 	/**
 	 * Alternative title to use in tab. By default view.getTitle() will be used
-	 * @config {String} title
-	 * @default undefined
+	 * config {String} title
+	 * default undefined
 	 */
 	title:undefined
 };

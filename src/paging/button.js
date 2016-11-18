@@ -2,9 +2,9 @@
  * Base class, paging buttons for datasource.Collection
  * Assign a paging element to a data source by sending "id" or config object of
  * the source using the dataSource constructor property
- * @namespace paging
- * @class Button
- * @augments form.Button
+ * @namespace ludo.paging
+ * @class ludo.paging.Button
+ * @augments ludo.form.Button
  */
 ludo.paging.Button = new Class({
     Extends: ludo.form.Button,

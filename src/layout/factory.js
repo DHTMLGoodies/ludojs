@@ -1,7 +1,7 @@
 /**
  * Factory class for layout managers
- * @namespace layout
- * @class Factory
+ * @namespace ludo.layout
+ * @class ludo.layout.Factory
  */
 ludo.layout.Factory = new Class({
 
@@ -30,8 +30,8 @@ ludo.layout.Factory = new Class({
 				return "Accordion";
 			case "table":
 				return "Table";
-            case 'slidein':
-                return 'SlideIn';
+            case 'navbar':
+                return 'NavBar';
 			case 'relative':
 				return 'Relative';
 			case 'fill':

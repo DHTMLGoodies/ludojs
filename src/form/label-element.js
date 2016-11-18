@@ -1,9 +1,6 @@
 /**
  * // TODO this class should be removed. Instead, think of layout for forms and a separate label class
  * Base class for all form elements with label
- * @namespace ludo.form
- * @class LabelElement
- * @augments ludo.form.Element
  */
 ludo.form.LabelElement = new Class({
     Extends: ludo.form.Element,
@@ -21,12 +18,7 @@ ludo.form.LabelElement = new Class({
         '</table>'
     ],
 
-    /**
-     * Suffix after the label. Default is ":" (colon)
-     * @memberof ludo.form.LabelElement.prototype
-     * @default ":"
-     * @property {string} labelSuffix
-     */
+
     labelSuffix: ':',
 
     __construct: function (config) {

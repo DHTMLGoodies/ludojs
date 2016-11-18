@@ -1,9 +1,9 @@
 /**
- * Class representing a record in {{#crossLink "dataSource.Collection"}}{{/crossLink}}
- * Instances of this class are created from {{#crossLink "dataSource.Collection/getRecord"}}{{/crossLink}}
+ * Class representing a record in a <a href="ludo.dataSource.Collection.html">Collection</a>
+ * Instances of this class are created by the collections getRecord method.
  * When you update a record
- * @namespace dataSource
- * @class Record
+ * @namespace ludo.dataSource
+ * @class ludo.dataSource.Record
  */
 ludo.dataSource.Record = new Class({
 	Extends:Events,

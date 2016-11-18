@@ -1,9 +1,9 @@
 /**
  Data source collection
- @namespace dataSource
- @class Collection
+ @namespace ludo.dataSource.
+ @class ludo.dataSource.Collection
  @augments dataSource.JSON
- @constructor
+ 
  @param {Object} config
  @example
  	dataSource:{

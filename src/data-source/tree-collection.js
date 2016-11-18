@@ -1,8 +1,8 @@
 /**
  * Special collection class for tree structures.
- * @namespace dataSource
- * @class TreeCollection
- * @augments dataSource.Collection
+ * @namespace ludo.dataSource
+ * @class ludo.dataSource.TreeCollection
+ * @augments ludo.dataSource.Collection
  */
 ludo.dataSource.TreeCollection = new Class({
 	Extends:ludo.dataSource.Collection,

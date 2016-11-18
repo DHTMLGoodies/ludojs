@@ -2,7 +2,13 @@
  * @namespace calendar
  * @class ludo.calendar.Calendar
  * @augments ludo.calendar.Base
- * @type {Class}
+ * @param {Object} config
+ * @param {String} config.inputFormat Date format saved as value(example: d-m-Y). Default is Y-m-d.
+ * @param {String|Date} config.value Initial date.
+ * @param {String|Date} config.date Alias to config.value.
+ * @param {String|Date} config.minDate Optional minimum selectable date
+ * @param {String|Date} config.maxDate Optional maximum selectable date
+ * @fires ludo.calendar.Calendar#setDate - Arguments Date and ludo.View(the view firing the event)
  */
 ludo.calendar.Calendar = new Class({
     Extends:ludo.calendar.Base,

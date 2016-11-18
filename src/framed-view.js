@@ -101,6 +101,7 @@ ludo.FramedView = new Class({
 	 * Return config of title bar using a method instead of config object. Useful when you need to refer to "this"
 	 * @function getTitleBarConfig
 	 * @return {Object|undefined}
+	 * @memberof ludo.FramedView.prototype
 	 */
 	getTitleBarConfig:function(){
 		return undefined;
@@ -111,6 +112,7 @@ ludo.FramedView = new Class({
 	 * "this"
 	 * @function getButtonBarConfig
 	 * @return {Object|undefined}
+	 * @memberof ludo.FramedView.prototype
 	 */
 	getButtonBarConfig:function(){
 		return undefined;
@@ -175,6 +177,7 @@ ludo.FramedView = new Class({
 	 * Set new title
 	 * @function setTitle
 	 * @param {String} title
+	 * @memberof ludo.FramedView.prototype
 	 */
 	setTitle:function (title) {
 		this.parent(title);
@@ -265,6 +268,7 @@ ludo.FramedView = new Class({
 	 * Maximize component
 	 * @function maximize
 	 * @return void
+	 * @memberof ludo.FramedView.prototype
 	 */
 	maximize:function () {
         this.state.isMinimized = false;
@@ -299,6 +303,7 @@ ludo.FramedView = new Class({
 	 * Minimize component
 	 * @function minimize
 	 * @return void
+	 * @memberof ludo.FramedView.prototype
 	 */
 	minimize:function () {
         this.state.isMinimized = true;
@@ -345,6 +350,7 @@ ludo.FramedView = new Class({
 	 * @function hideButton
 	 * @param id of button
 	 * @return {Boolean} success
+	 * @memberof ludo.FramedView.prototype
 	 */
 	hideButton:function (id) {
         return this.buttonEffect(id, 'hide');
@@ -354,6 +360,7 @@ ludo.FramedView = new Class({
 	 * @function showButton
 	 * @param id of button
 	 * @return {Boolean} success
+	 * @memberof ludo.FramedView.prototype
 	 */
 	showButton:function (id) {
         return this.buttonEffect(id, 'show');
@@ -367,6 +374,7 @@ ludo.FramedView = new Class({
 	 * @function disableButton
 	 * @param id
 	 * @return {Boolean} success
+	 * @memberof ludo.FramedView.prototype
 	 */
 	disableButton:function (id) {
         return this.buttonEffect(id, 'disable');
@@ -376,6 +384,7 @@ ludo.FramedView = new Class({
 	 * @function enableButton
 	 * @param id
 	 * @return {Boolean} success
+	 * @memberof ludo.FramedView.prototype
 	 */
 	enableButton:function (id) {
         return this.buttonEffect(id, 'enable');
@@ -405,6 +414,7 @@ ludo.FramedView = new Class({
 	 * Is component resizable
 	 * @function isResizable
 	 * @return {Boolean}
+	 * @memberof ludo.FramedView.prototype
 	 */
 	isResizable:function () {
 		return this.resizable;

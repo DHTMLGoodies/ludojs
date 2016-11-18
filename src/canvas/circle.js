@@ -2,9 +2,9 @@
  Class for circle tags. It extends canvas.Node by adding setter and getter methods
  for radius, center x and center y.
  @namespace canvas
- @class Circle
+ @class ludo.canvas.Circle
  @augments canvas.Node
- @constructor
+ 
  @param {Object} coordinates
  @param {canvas.NodeConfig} config
  @example

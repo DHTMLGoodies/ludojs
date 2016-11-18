@@ -4,9 +4,8 @@
  * services are "load", "save". Arguments are arguments used when instantiating the resource on the
  * server, example: Person with id 1. The "data" property is used for data which should be sent to
  * the service on the server. Example: For Person with id equals 1, save these data.
- * @namespace remote
- * @class JSON
- * @augments Events
+ * @namespace ludo.remote
+ * @class ludo.remote.JSON
  */
 
 /**

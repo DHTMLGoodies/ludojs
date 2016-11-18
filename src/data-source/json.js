@@ -1,7 +1,7 @@
 /**
  * Class for remote data source.
- * @namespace dataSource
- * @class JSON
+ * @namespace ludo.dataSource
+ * @class ludo.dataSource.JSON
  * @augments dataSource.Base
  */
 ludo.dataSource.JSON = new Class({

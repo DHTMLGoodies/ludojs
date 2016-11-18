@@ -1,8 +1,9 @@
 /**
- * A Panel
- * A Panel is a component where the body element is a &lt;fieldset> with a &lt;legend>
- * @class Panel
- * @augments View
+ * A Panel is a View where the body element is a &lt;fieldset> with a &lt;legend>
+ *
+ * @class ludo.Panel
+ * @param {Object} config
+ * @param {String} config.title Legend title
  */
 ludo.Panel = new Class({
 	Extends:ludo.View,
@@ -11,7 +12,7 @@ ludo.Panel = new Class({
 	_createDOM:function () {
 		this.parent();
 		this.getEl().addClass('ludo-panel');
-		this.els.legend = new Element('legend');
+		this.els.legend = $('<legend>');
 		this.els.body.append(this.els.legend);
 		this.getEl().addClass('ludo-panel');
 	},

@@ -1,8 +1,6 @@
 /**
  Displays number of pages in a data source
- @class paging.TotalPages
- @augments View
- @constructor
+ @class ludo.paging.TotalPages
  @param {Object} config
  @example
  children:[

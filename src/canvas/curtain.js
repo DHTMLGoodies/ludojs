@@ -1,8 +1,8 @@
 /**
  Special animation class for SVG elements
- @namespace canvas
- @class Curtain
- @constructor
+ @namespace ludo.canvas
+ @class ludo.canvas.Curtain
+ 
  @param {ludo.canvas.Node} node
  @example
 	node.curtain().open('LeftRight');

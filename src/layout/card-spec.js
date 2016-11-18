@@ -1,9 +1,3 @@
-/**
- Spec for "card" layout. These are the available configuration options for the card layout.
- @namespace layout
- @class CardSpec
- @type {Object}
- */
 ludo.layout.CardSpec = {
 	/**
 	 Type attribute should be set to "card" for parent

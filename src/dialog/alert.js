@@ -1,9 +1,9 @@
 /**
+ Alert dialog. This component has by default one button "OK" and will fire an
+ "ok" event when this button is clicked
  @namespace ludo.dialog
  @class ludo.dialog.Alert
- @augments Dialog
- @description Alert dialog. This component has by default one button "OK" and will fire an
- "ok" event when this button is clicked
+ @augments ludo.dialog.Dialog
  @param {Object} config
  @example
 	 new ludo.dialog.Alert(

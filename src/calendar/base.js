@@ -2,6 +2,8 @@
  * Base class for calendar related classes
  * @namespace calendar
  * @class ludo.calendar.Base
+ *
+ * @fires ludo.calendar.Base#setDate - Arguments Date and ludo.View(the view firing the event)
  */
 ludo.calendar.Base = new Class({
     Extends: ludo.View,

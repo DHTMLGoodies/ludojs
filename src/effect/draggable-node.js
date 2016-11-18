@@ -1,8 +1,8 @@
 /**
  Specification of a draggable node objects sent to {{#crossLink "effect.Drag/add"}}{{/crossLink}}. You will
  never create objects of this class.
- @namespace effect
- @class DraggableNode
+ @namespace ludo.effect
+ @class ludo.effect.DraggableNode
  @type {Object|String}
  */
 ludo.effect.DraggableNode = new Class({

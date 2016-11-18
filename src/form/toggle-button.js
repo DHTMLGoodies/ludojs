@@ -1,6 +1,6 @@
 /**
  * @namespace ludo.form
- * @class ToggleButton
+ * @class ludo.form.ToggleButton
  * @augments ludo.form.Button
  */
 ludo.form.ToggleButton = new Class({

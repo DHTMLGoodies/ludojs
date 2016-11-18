@@ -274,7 +274,6 @@ ludo.View = new Class({
 	 * are fully rendered.
 	 * @memberof ludo.View.prototype
 	 * @function __rendered
-	 * @fires 'render'
 	 */
 	__rendered:function () {
 		if (!this.layout.height && !this.layout.above && !this.layout.sameHeightAs && !this.layout.alignWith) {
@@ -769,7 +768,7 @@ ludo.View = new Class({
 		return ret;
 	},
 	/**
-	 * Add a child component. The method will returned the created component.
+	 * Add a child View. The method will returned the created view.
 	 * @memberof ludo.View.prototype
 	 * @function addChild
 	 * @param {Object|View} child. A Child object can be a View or a JSON config object for a new View.

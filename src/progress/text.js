@@ -2,8 +2,8 @@
  * Component used to display text for a progress bar, example
  * Step 1 of 10
  * @namespace progress
- * @class Text
- * @augments progress.Base
+ * @class ludo.progress.Text
+ * @augments ludo.progress.Base
  */
 ludo.progress.Text = new Class({
     Extends:ludo.progress.Base,

@@ -3,55 +3,29 @@
  * <a href="ludo.Window.html">ludo.Window</a>.
  * @class ludo.dialog.Dialog
  * @param {object} config
- * @augments Window
+ * @param {Boolean} config.modal True to make the window modal, default: true
+ * @param {Boolean} config.autoRemove True to destroy the dialog on close. Will remove the dialog from the DOM. Default: true
+ * @param {String} config.buttonConfig Camel case string config for buttons. example: YesNoCancel for three buttons labeled "Yes", "No" and "Cancel"
+ * @param {Boolean} config.autoHideOnBtnClick. True to automatically hide the dialog on click on one of the buttons.
+ * @fires ludo.dialog.Dialog#buttonName buttonName will be the lowercase value of the button without spaces. Example: Button "Yes" will fire a "yes" event.
+ * @augments ludo.Window
+ * @example
+ new ludo.dialog.Dialog({
+              html : 'Do you want to save your work?',
+               buttonConfig : 'YesNoCancel'
+               listeners : {
+                   'yes' : function(){ this.saveWork() },
+                   'no' : function() { this.discardWork() }
+               }
+          });
  */
 ludo.dialog.Dialog = new Class({
 	Extends:ludo.Window,
 	type:'dialog.Dialog',
-	/**
-	 * Show modal version of dialog
-	 * @attribute {Boolean} modal
-	 * @optional
-	 * @default true
-	 */
 	modal:true,
-	/**
-	 * Auto dispose/erase component on close
-	 * @attribute {Boolean} autoRemove
-	 * @optional
-	 * @default true
-	 */
 	autoRemove:true,
-	/**
-	 * Auto hide component on button click. If autoRemove is set to true, the component
-	 * will be deleted
-	 * @attribute {Boolean} autoHideOnBtnClick
-	 * @optional
-	 * @default true
-	 */
 	autoHideOnBtnClick:true,
-
-	/**
-	  Camel case string config for buttons.<br>
-	  example: YesNoCancel for three buttons labeled "Yes", "No" and "Cancel"<br>
-	  Example of use: <br>
-
-	  @attribute {String} buttonConfig
-	  @default undefined
-      @example
-         new ludo.dialog.Dialog({
-              html : 'Do you want to save your work?',
-               buttonConfig : 'YesNoCancel'
-               listeners : {
-                   'yes' : this.saveWork.bind(this),
-                   'no' : this.discardWork.bind(this),
-                   'cancel' : this.hide.bind(this)
-               }
-          });
-	 */
 	buttonConfig:undefined,
-
-
 	movable:true,
 	closable:false,
 	minimizable:false,
@@ -153,15 +127,7 @@ ludo.dialog.Dialog = new Class({
 	},
 
 	buttonClick:function (value, button) {
-		/**
-		 * This event is fired when a button is clicked.
-		 * The name of the button is lowercase version of button value with white space removed
-		 * Example: for a button with value "OK", an "ok" event will be sent.
-		 *
-		 * Name of event is value of button in lowercase
-		 * @event buttonvalue
-		 * @param {Object} ludo.View (Parent component of button)
-		 */
+
 		this.fireEvent(button._get().replace(/\s/g, '').toLowerCase(), this);
 		if (this.autoHideOnBtnClick) {
 			this.hide();

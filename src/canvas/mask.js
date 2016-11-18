@@ -1,8 +1,8 @@
 /**
  Class for masking of SVG DOM nodes
- @namespace canvas
- @class Mask
- @constructor
+ @namespace ludo.canvas
+ @class ludo.canvas.Mask
+ 
  @param {Object} properties
  @example
 	 var mask = new ludo.canvas.Mask({ id : 'Mask' });

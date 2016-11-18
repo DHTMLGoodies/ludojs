@@ -1,7 +1,8 @@
 /**
  * Base class for components and views in ludoJS. This class extends
  * Mootools Events class.
- * @class Core
+ * @namepace ludo
+ * @class ludo.Core
  */
 ludo.Core = new Class({
 	Extends:Events,
@@ -26,10 +27,10 @@ ludo.Core = new Class({
 	 If you create your own controller by extending ludo.controller.Controller,
 	 you can control several views by adding events in the addView(component) method.
 
-	 @attribute {Object} controller
-	 @example
+	 attribute {Object} controller
+	 example
 	 	controller : 'idOfController'
-	 @example
+	 example
 	 	controller : { type : 'controller.MyController' }
 	 A Controller can also be a singleton.
 
@@ -38,8 +39,8 @@ ludo.Core = new Class({
 
 	/**
 	 * Find controller and register this component to controller
-	 * @attribute {Boolean} userController
-	 * @default false
+	 * attribute {Boolean} userController
+	 * default false
 	 */
 	useController:false,
 
@@ -50,6 +51,7 @@ ludo.Core = new Class({
 	 * @attribute stateful
 	 * @type {Boolean}
 	 * @default false
+	 * @memberof ludo.Core.prototype
 	 */
 	stateful:false,
 
@@ -59,6 +61,7 @@ ludo.Core = new Class({
 	 * @property statefulProperties
 	 * @type Array
 	 * @default undefined
+	 * @memberof ludo.Core.prototype
 	 */
 	statefulProperties:undefined,
 
@@ -76,6 +79,7 @@ ludo.Core = new Class({
 
      @config addOns
      @type {Array}
+	 @memberof ludo.Core.prototype
      @example
         new ludo.View({<br>
 		   addOns : [ { type : 'plugins.Sound' }]
@@ -172,6 +176,7 @@ ludo.Core = new Class({
 	 Return id of component
 	 @function getId
 	 @return String id
+	 @memberof ludo.Core.prototype
 	 */
 	getId:function () {
 		return this.id;
@@ -180,6 +185,7 @@ ludo.Core = new Class({
 	 Get name of component and form element
 	 @function getName
 	 @return String name
+	 @memberof ludo.Core.prototype
 	 */
 	getName:function () {
 		return this.name;
@@ -188,8 +194,8 @@ ludo.Core = new Class({
     // TODO refactor this to use only this.url or global url.
 	/**
 	 * Get url for component
-	 * @function getUrl
-	 * @return {String|undefined} url
+	 * function getUrl
+	 * return {String|undefined} url
 	 */
 	getUrl:function () {
 		if (this.url) {
@@ -222,6 +228,7 @@ ludo.Core = new Class({
 	 * type: calendar.View will return "calendar"
 	 * @function getNamespace
 	 * @return {String} namespace
+	 * @memberof ludo.Core.prototype
 	 */
 	getNamespace:function () {
 		if (this.NS == undefined) {
@@ -253,6 +260,7 @@ ludo.Core = new Class({
 	 Add events to controller
 	 @function addControllerEvents
 	 @return void
+	 @memberof ludo.Core.prototype
 	 @example
 	 this.controller.addEvent('eventname', this.methodName.bind(this));
 	 */
@@ -275,6 +283,7 @@ ludo.Core = new Class({
 	 Save state for stateful components and views. States are stored in localStorage which
 	 is supported by all major browsers(IE from version 8).
 	 @function saveState
+	 @memberof ludo.Core.prototype
 	 @return void
 	 @example
 	 	myComponent.saveState();

@@ -1,8 +1,6 @@
 /**
  Base class for Video Player components
- @namespace video
- @class Video
- @augments View
+
  */
 ludo.video.Video = new Class({
 	Extends:ludo.View,

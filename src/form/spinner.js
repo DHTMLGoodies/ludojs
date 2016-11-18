@@ -5,8 +5,7 @@
  * to the right of the input fields and you will be able to increment and decrement by
  * using the mouse wheel or by "nudging" the label.
  * @namespace ludo.form
- * @class Spinner
- * @augments ludo.form.Number
+ * @class ludo.form.Spinner
  */
 ludo.form.Spinner = new Class({
     Extends:ludo.form.Number,

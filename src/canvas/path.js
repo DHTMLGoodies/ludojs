@@ -1,7 +1,7 @@
 /**
  * Returns a path SVG element which can be adopted to a canvas.
- * @namespace canvas
- * @class Path
+ * @namespace ludo.canvas
+ * @class ludo.canvas.Path
  */
 ludo.canvas.Path = new Class({
     Extends:ludo.canvas.NamedNode,

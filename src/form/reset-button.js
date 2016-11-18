@@ -1,13 +1,15 @@
 /**
  * Special Button used to reset all form fields of component back to it's original state.
  * This button will automatically be disabled when the form is "clean", and disabled when it's "dirty".
- * @namespace ludo.form
- * @class ResetButton
- * @augments ludo.form.Button
+ *
+ * The Reset button extends <a href="ludo.form.Button.html">ludo.form.Button</a>.
+ * @class ludo.form.ResetButton
+ * @param {Object} config
+ * @param {String} config applyTo. The reset button will be a reset button for the View(including child views) with this id.
+ * A press on this button will trigger ludo.$(applyTo).getForm().reset()
  */
 ludo.form.ResetButton = new Class({
     Extends:ludo.form.Button,
-    type:'form.ResetButton',
     /**
      * Value of button
      * @attribute {String} value
@@ -24,7 +26,7 @@ ludo.form.ResetButton = new Class({
     
     __rendered:function () {
         this.parent();
-        this.applyTo = this.applyTo ? ludo.get(this.applyTo) : this.getParentComponent();
+        this.applyTo = this.applyTo ? ludo.$(this.applyTo) : this.getParentComponent();
         var manager = this.applyTo.getForm();
         if (this.applyTo) {
             manager.addEvent('dirty', this.enable.bind(this));

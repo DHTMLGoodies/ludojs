@@ -1,9 +1,9 @@
 /**
 Class for linear gradients
 @namespace canvas
-@class Gradient
+@class ludo.canvas.Gradient
 @augments canvas.NamedNode
-@constructor
+
 @param {Object} config
 @example
 	var gradient = new ludo.canvas.Gradient({

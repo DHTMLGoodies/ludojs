@@ -1,9 +1,12 @@
 /**
- * JSON Content compiler. This component will return compiled JSON for a view. It will
- * be created on demand by a ludo.View. If you want to create your own parser, extend this
- * class and
+ * JSON Content compiler. This parser works with a template string, like: "<p>{lastname}, {firstname}</p>" and a JSON
+ * array, like: [{"firstname":"John", "lastname": "Anderson"},{"firstname":"Anna", "lastname": "Anderson"}] and returns
+ * <p>{Anderson}, {John}</p><p>{Anderson}, {Anna}</p>.
+ *
+ * It walks through all the objects in the JSON array and uses the template string on each one of them.
+ * 
  * @namespace tpl
- * @class Parser
+ * @class ludo.tpl.Parser
  * @augments Core
  */
 ludo.tpl.Parser = new Class({
@@ -14,7 +17,7 @@ ludo.tpl.Parser = new Class({
     /**
      * Get compiled string
 	 * @function getCompiled
-     * @param {Object} records
+     * @param {Array} records
      * @param {String} tpl
      * @return {Array} string items
      */

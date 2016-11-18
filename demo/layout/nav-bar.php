@@ -38,18 +38,18 @@ require_once("../includes/demo-header.php");
                         },
                         listeners:{
                             'click':function () {
-                                ludo.get('slideIn').getLayout().toggle();
+                                ludo.get('navBar').getLayout().toggle();
                             }
                         }
                     },
                     {
-                        id:'slideIn',
+                        id:'navBar',
                         css:{
                             'border-top':'1px solid #d7d7d7'
                         },
                         layout:{
                             weight:1,
-                            type:'SlideIn' // Slide In Layout
+                            type:'NavBar' // Slide In Layout
                         },
                         children:[
                             {

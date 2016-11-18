@@ -1,19 +1,13 @@
 /**
  * Base class for form component validators
  * @namespace ludo.form.validator
- * @class Base
+ * @class ludo.form.validator.Base
  * @augments Core
  */
 ludo.form.validator.Base = new Class({
 	Extends:ludo.Core,
 
 	value:undefined,
-
-	/**
-	 * Validator is applied to this component
-	 * @attribute object applyTo
-	 * @default undefined
-	 */
 	applyTo:undefined,
 
 	__construct:function (config) {
@@ -28,6 +22,7 @@ ludo.form.validator.Base = new Class({
 	/**
 	 Loading valid value from server.
 	 @function loadValue
+	 @memberof ludo.form.validator.Base.prototype
 	 Request to server example:
 	 @example
 		{

@@ -1,9 +1,9 @@
 /**
  Button used to navigate to next page in a dataSource.Collection
  @namespace paging
- @class Next
+ @class ludo.paging.Next
  @augments paging.Button
- @constructor
+ 
  @param {Object} config
  @example
  	children:[

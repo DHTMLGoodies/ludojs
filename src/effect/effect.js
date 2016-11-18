@@ -1,7 +1,7 @@
 /**
  * Base class for animations
- * @namespace effect
- * @class Effect
+ * @namespace ludo.effect
+ * @class ludo.effect.Effect
  */
 ludo.effect.Effect = new Class({
 	Extends: ludo.Core,

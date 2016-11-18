@@ -1,8 +1,7 @@
 /***
  * Make component or DOM elements resizable
- * @module effect
- * @class Resize
- * @namespace effect
+ * @class ludo.effect.Resize
+ * @namespace ludo.effect
  * @augments Core
  */
 ludo.effect.Resize = new Class({

@@ -1,12 +1,13 @@
-/**
+/*
  Documentation of available options for the Relative layout. The relative layout is a very flexible layout model.
  It offers you the possibility of positioning and sizing children relative to each other and relative to the parent
  View. If also offers the possibility of resizing views as in the linear layout.
- @namespace layout
- @class RelativeSpec
- @constructor
- @param {Object} config
- @example
+ namespace layout
+ class RelativeSpec
+ @private
+ 
+ param {Object} config
+ example
  	new ludo.View({
  		renderTo:document.body,
  		width:1000,height:1000,
@@ -22,26 +23,26 @@
  	});
  */
 ludo.layout.RelativeSpec = new Class({
-	/**
+	/*
 	Width of child inside a relative layout. The value can be a pixel, percentage value of parent width or
      the one of the keywords "wrap" or "matchParent". "wrap" will render the child with the width required for
      it's content. "matchParent" is equivalent to height:"100%"
-	@config width
-	@type {String|Number}
-	@example
+	config width
+	type {String|Number}
+	example
 	 	width:200
 	 	width:'matchParent'
 	 	width:'wrap'
 	 	width:'40%'
 	 */
 	width: undefined,
-	/**
+	/*
 	height of child inside a relative layout in pixel value, percent, "wrap" or "matchParent".
      "wrap" will render the view in the height needed for it's content. "matchParent" is equivalent to
      height: "100%".
-	@config height
-	@type {String|Number}
-	@example
+	config height
+	type {String|Number}
+	example
 	 	height:200
 	 	height:'matchParent'
 	 	height:'wrap'
@@ -49,10 +50,10 @@ ludo.layout.RelativeSpec = new Class({
 	 */
 	height: undefined,
 
-	/**
+	/*
 	Render above this sibling View. Reference can be name, id of a view reference.
-	@config {String|View} above
-	@example
+	config {String|View} above
+	example
 	 	children:[{
 			name : 'a', html : 'View A', layout: { width: 'matchParent', height:100, alignParentBottom:true }
 		},{
@@ -60,11 +61,11 @@ ludo.layout.RelativeSpec = new Class({
 		}]
 	 */
 	above:undefined,
-	/**
+	/*
 	Render below this sibling View. Reference to sibling can be done using name, id or a direct reference
      to the View.
-	@config {String|View} below
-	@example
+	config {String|View} below
+	example
 	 	children:[{
 			name : 'a', html : 'View A', layout: { width: 'matchParent', height:100, alignParentTop:true }
 		},{
@@ -72,10 +73,10 @@ ludo.layout.RelativeSpec = new Class({
 		}]
 	 */
 	below:undefined,
-	/**
+	/*
 	Render left of this sibling View. Reference can be name, id of a view reference.
-	@config {String|View} leftOf
-	@example
+	config {String|View} leftOf
+	example
 	 	children:[{
 			name : 'a', html : 'View A', layout: { width: '200', height:100, alignParentTop:true, alignParentRight:true }
 		},{
@@ -84,11 +85,11 @@ ludo.layout.RelativeSpec = new Class({
 	 */
 	leftOf:undefined,
 
-	/**
+	/*
 	Render right of this sibling View. Reference can be name, id of a view reference.
     left edge of this view will match right edge of referenced view.
-	@config {String|View} above
-	@example
+	config {String|View} above
+	example
 	 	children:[{
 			name : 'a', html : 'View A', layout: { width: '200', height:100, alignParentTop:true, alignParentLeft:true }
 		},{
@@ -97,42 +98,42 @@ ludo.layout.RelativeSpec = new Class({
 	 */
 	rightOf:undefined,
 
-	/**
+	/*
 	 * Top align inside parent view, i.e. css "top" set to "0px"
-	 * @config {Boolean} alignParentTop
-	 * @default undefined
+	 * config {Boolean} alignParentTop
+	 * default undefined
 	 */
 	alignParentTop:undefined,
-	/**
+	/*
 	 * Left align inside parent view, i.e. css "left" set to "0px"
-	 * @config {Boolean} alignParentLeft
-	 * @default undefined
+	 * config {Boolean} alignParentLeft
+	 * default undefined
 	 */
 	alignParentLeft:undefined,
-	/**
+	/*
 	 * Right align inside parent view, i.e. css "right" set to "0px"
-	 * @config {Boolean} alignParentRight
-	 * @default false
+	 * config {Boolean} alignParentRight
+	 * default false
 	 */
 	alignParentRight:false,
-	/**
+	/*
 	 * Bottom align inside parent view, i.e. css "bottom" set to "0px"
-	 * @config {Boolean} alignParentTop
-	 * @default false
+	 * config {Boolean} alignParentTop
+	 * default false
 	 */
 	alignParentBottom:false,
 
-	/**
+	/*
 	 * Center horizontally and vertically inside parent view
-	 * @config {Boolean} centerInParent
-	 * @default false
+	 * config {Boolean} centerInParent
+	 * default false
 	 */
 	centerInParent:false,
-	/**
+	/*
 	 Center horizontally  inside parent view
-	 @config {Boolean} centerHorizontal
-	 @default false
-     @example
+	 config {Boolean} centerHorizontal
+	 default false
+     example
          new ludo.Window({
             left:600, top:100, height:300, width:300,
             title:'Sign In',
@@ -177,17 +178,17 @@ ludo.layout.RelativeSpec = new Class({
 	 */
 	centerHorizontal:false,
 
-	/**
+	/*
 	 * Center vertically  inside parent view
-	 * @config {Boolean} centerVertical
-	 * @default false
+	 * config {Boolean} centerVertical
+	 * default false
 	 */
 	centerVertical:false,
-	/**
+	/*
 	 Fill left inside parent view.
-	 @config {Boolean} fillLeft
-	 @default false
-	 @example
+	 config {Boolean} fillLeft
+	 default false
+	 example
 	 	layout:{
 	 		leftOf:'a',
 	 		sameHeightAs:'a',
@@ -196,11 +197,11 @@ ludo.layout.RelativeSpec = new Class({
 	 will render the child left of sibling "a" and it will fill up all remaining
 	 */
 	fillLeft:false,
-	/**
+	/*
 	 Fill upwards inside parent view (i.e. "top" attribute set to 0).
-	 @config {Boolean} fillUp
-	 @default false
-	 @example
+	 config {Boolean} fillUp
+	 default false
+	 example
 	 	layout:{
 	 		above:'nameOfOtherView',
 	 		fillUp:true
@@ -208,11 +209,11 @@ ludo.layout.RelativeSpec = new Class({
 	 will set bottom edge of view to top edge of "nameOfOtherView" and set height to parent height - bottom edge.
 	 */
 	fillUp:false,
-	/**
+	/*
 	 Fill right inside parent view.
-	 @config {Boolean} fillRight
-	 @default false
-	 @example
+	 config {Boolean} fillRight
+	 default false
+	 example
 	 	layout:{
 	 		rightOf:'nameOfOtherView',
 	 		fillRight:true
@@ -220,11 +221,11 @@ ludo.layout.RelativeSpec = new Class({
 	 will set left edge of view to right edge of "nameOfOtherView" and set width to parent width - left edge.
 	 */
 	fillRight:undefined,
-	/**
+	/*
 	 Fill down inside parent view.
-	 @config {Boolean} fillDown
-	 @default false
-	 @example
+	 config {Boolean} fillDown
+	 default false
+	 example
 	 	layout:{
 	 		below:'nameOfOtherView',
 	 		fillDown:true
@@ -233,10 +234,10 @@ ludo.layout.RelativeSpec = new Class({
 	 */
 	fillDown:undefined,
 
-	/**
+	/*
 	Align left edge of this View with left edge of references View.
-	@config {String|View} alignLeft
-	@example
+	config {String|View} alignLeft
+	example
 	 	children:[{
 			name : 'a', html : 'View A', layout: { width: '200', height:100, alignParentTop:true, alignParentRight:true }
 		},{
@@ -245,10 +246,10 @@ ludo.layout.RelativeSpec = new Class({
 	 will set left edge of "b" to left edge of "a"
 	 */
 	alignLeft:undefined,
-	/**
+	/*
 	Align right edge of this View with right edge of references View.
-	@config {String|View} alignRight
-	@example
+	config {String|View} alignRight
+	example
 	 	children:[{
 			name : 'a', html : 'View A', layout: { width: '200', height:100, alignParentTop:true, alignParentLeft:true }
 		},{
@@ -257,10 +258,10 @@ ludo.layout.RelativeSpec = new Class({
 	 will set right edge of "b" to right edge of "a"
 	 */
 	alignRight:undefined,
-	/**
+	/*
 	Align top edge of this View with top edge of references View.
-	@config {String|View} alignTop
-	@example
+	config {String|View} alignTop
+	example
 	 	children:[{
 			name : 'a', html : 'View A', layout: { width: '200', height:300, alignParentBottom:true, alignParentLeft:true }
 		},{
@@ -269,10 +270,10 @@ ludo.layout.RelativeSpec = new Class({
 	 will set top edge of "b" to top edge of "a"
 	 */
 	alignTop:undefined,
-	/**
+	/*
 	Align bottom edge of this View with bottom edge of references View.
-	@config {String|View} alignBottom
-	@example
+	config {String|View} alignBottom
+	example
 	 	children:[{
 			name : 'a', html : 'View A', layout: { width: '200', height:300, alignParentTop:true, alignParentLeft:true }
 		},{
@@ -282,22 +283,22 @@ ludo.layout.RelativeSpec = new Class({
 	 */
 	alignBottom:undefined,
 
-	/**
+	/*
 	 If the child has it's own children, the type attribute specifies the layout model for these children.
-	 @config type
-	 @type {String}
-     @example
+	 config type
+	 type {String}
+     example
         children:[{
             name:'a', layout:{ type:'menu', orientation:'vertical' }
         }]
 	 */
 	type:undefined,
 
-	/**
+	/*
 	 Add resize handles for resize in these directions, possible values: 'up','down','left','right'.
-	 @config resize
-	 @type {String|Array}
-	 @example
+	 config resize
+	 type {String|Array}
+	 example
 	 	layout:{
 			 height:200,
 			 width:150,
@@ -308,10 +309,10 @@ ludo.layout.RelativeSpec = new Class({
 	 */
 	resize:undefined,
 
-    /**
+    /*
      Render with the same height as this sibling
-     @config {String|View} sameHeightAs
-     @example
+     config {String|View} sameHeightAs
+     example
      children:[{
 			name : 'a', html : 'View A', layout: { width: 200, alignParentRight:true, alignParentBottom:true }
 		},{
@@ -321,10 +322,10 @@ ludo.layout.RelativeSpec = new Class({
      */
     sameHeightAs:undefined,
 
-    /**
+    /*
      Render with the same width as this sibling
-     @config {String|View} sameWidthAs
-     @example
+     config {String|View} sameWidthAs
+     example
         children:[{
 			name : 'a', html : 'View A', layout: { width: 200, alignParentRight:true, alignParentTop:true }
 		},{
@@ -334,11 +335,11 @@ ludo.layout.RelativeSpec = new Class({
      */
     sameWidthAs:undefined,
 
-    /**
+    /*
      Render at this x position inside parent
-     @config {Number} left
-     @default undefined,
-     @example
+     config {Number} left
+     default undefined,
+     example
         children:[
             {
                 name : 'a', layout:{ width:200,height:20, left:20, top : 20 }
@@ -349,11 +350,11 @@ ludo.layout.RelativeSpec = new Class({
 
     left:undefined,
 
-    /**
+    /*
      Render at this y position inside parent
-     @config {Number} top
-     @default undefined,
-     @example
+     config {Number} top
+     default undefined,
+     example
         children:[
             {
                 name : 'a', layout:{ width:200,height:20, left:20, top : 20 }
@@ -363,11 +364,11 @@ ludo.layout.RelativeSpec = new Class({
      */
     top:undefined,
 
-    /**
+    /*
      Offset left position with this number of pixels.
-     @config {Number} offsetX
-     @default undefined,
-     @example
+     config {Number} offsetX
+     default undefined,
+     example
          children:[
              {
                  name : 'a', layout:{ alignParentLeft:true, width:200, height:200, top: 0 }
@@ -379,11 +380,11 @@ ludo.layout.RelativeSpec = new Class({
      */
     offsetX:undefined,
 
-    /**
+    /*
      Offset top position with this number of pixels.
-     @config {Number} offsetY
-     @default undefined,
-     @example
+     config {Number} offsetY
+     default undefined,
+     example
          children:[
              {
                  name : 'a', layout:{ alignParentLeft:true, width:200, height:200, top: 0 }

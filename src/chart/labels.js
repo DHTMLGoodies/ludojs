@@ -7,69 +7,26 @@
  * "vertical" or "horizontal". If orientation is not set and width is greater
  * than height, the labels will be displayed vertically. If height is greater
  * than width, the labels will be rendered vertically.
- * @namespace chart
- * @class Labels
+ * @namespace ludo.chart
+ * @class ludo.chart.Labels
+ * @param {Object} config
+ * @param {Object} config.textStyles CSS styling of text, default:  { fill:'#000000', 'font-size' : '13px', 'font-weight' : 'normal' }
+ * @param {Object} config.textStylesOver CSS styling on mouse over, default: { 'font-weight': 'bold' }
+ * @param {Object} config.boxStyles CSS for box around labels, default: { 'stroke' : '#000' }
+ * @param {Object} config.boxStylesOver mouse over css for box around labels, default: undefined
+ * @param {String} config.orientation Orientation of labels. If not set, orientation will be set automatically
+ * base on space allocated to the labels. When width is greater than height, the
+ * labels will be displayed horizontally, side by side. Otherwise, they will be
+ * displayed vertically.
  */
 ludo.chart.Labels = new Class({
     Extends:ludo.chart.Base,
 
     fragmentType:'chart.Label',
-
-    /**
-     Styling options for text
-     @config {Object} textStyles
-     @example
-        textStyles:{
-            'font-size' : '14px',
-            'font-weight' : 'normal'
-        }
-     @default { fill:'#000000', 'font-size' : '13px', 'font-weight' : 'normal' }
-     */
     textStyles:undefined,
-    /**
-     Styling options for text of labels for highlighted chart items.
-     @config {Object} textStylesOver
-     @example
-        textStylesOver:{
-            'fill' : '#000',
-            'font-weight' : 'bold'
-        }
-     @default { 'font-weight': 'bold' }
-
-     */
     textStylesOver:undefined,
-
-    /**
-     Styling of color box displayed left of text label. The box will always
-     be displayed in the same color as the chart item it's representing.
-     @config {Object} boxStyles
-     @default undefined
-     @example
-        boxStyles:{ 'stroke' : '#000' }
-     */
     boxStyles:undefined,
-
-    /**
-     Styling of color box when highlighted. By default fill will be set to a slightly brighter color
-     than the chart item it's representing.
-     @config {Object} boxStylesOver
-     @default undefined
-     @example
-        boxStylesOver:{
-            'stroke-width' : 1,
-            'stroke' : '#000'
-        }
-     */
     boxStylesOver:undefined,
-
-    /**
-     * Orientation of labels. If not set, orientation will be set automatically
-     * base on space allocated to the labels. When width is greater than height, the
-     * labels will be displayed horizontally, side by side. Otherwise, they will be
-     * displayed vertically.
-     * @config {String} orientation
-     * @default undefined
-     */
     orientation:undefined,
 
     __construct:function(config){

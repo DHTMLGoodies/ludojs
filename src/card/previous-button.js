@@ -1,13 +1,4 @@
-/**
- *
- * @namespace page
- * @class PreviousButton
- * @augments page.Button
- * @description Special Button for page.Deck component for navigation to previous page.
- * On click, this button will show previous page.
- * The button will be automatically disabled when first page in deck is shown.
- * When clicked, next page will be shown
- */
+
 ludo.card.PreviousButton = new Class({
 	Extends:ludo.card.Button,
 	type:'page.PreviousButton',

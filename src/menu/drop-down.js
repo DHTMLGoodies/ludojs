@@ -1,6 +1,6 @@
 /**
- * @namespace menu
- * @class DropDown
+ * @namespace ludo.menu
+ * @class ludo.menu.DropDown
  * @augments menu.Menu
  *
  */

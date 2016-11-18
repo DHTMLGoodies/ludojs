@@ -1,8 +1,8 @@
 /**
  Class for creating Radial Gradients,
  see: http://www.w3.org/TR/SVG/pservers.html#RadialGradientElement
- @namespace canvas
- @class RadialGradient
+ @namespace ludo.canvas
+ @class ludo.canvas.RadialGradient
  @augments canvas.Gradient
  @example
  	var gradient = new ludo.canvas.RadialGradient({

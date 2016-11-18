@@ -1,9 +1,26 @@
+/**
+ * Class for saving data to local storage(browser cache).
+ *
+ * ludo.getLocalStorage() returns a singleton for ludo.storage.LocalStorage
+ * 
+ * @class ludo.storage.LocalStorage
+ * @type {Type}
+ * @example
+ * ludo.getLocalStorage().save('name', 'John');
+ * ludo.getLocalStorage().save('myobject', { "a": 1, "b" : 2 ));
+ */
 ludo.storage.LocalStorage = new Class({
 	supported:false,
 	initialize:function(){
 		this.supported = typeof(Storage)!=="undefined";
 	},
-	// TODO rename to save
+
+	/**
+	 * @function save
+	 * @param {String} key
+	 * @param {String|Number|Array|Object} value
+	 * @memberof ludo.storage.LocalStorage.prototype
+     */
 	save:function(key,value){
 		if(!this.supported)return;
 		var type = 'simple';
@@ -15,14 +32,21 @@ ludo.storage.LocalStorage = new Class({
 		localStorage[this.getTypeKey(key)] = type;
 	},
 
-	/** TODO (2016) Implement support for default value */
-	get:function(key){
-		if(!this.supported)return undefined;
+	/**
+	 * Get value from local storage
+	 * @function get
+	 * @param {string} key
+	 * @param {mixed} defaultValue
+	 * @memberof ludo.storage.LocalStorage.prototype
+	 * @returns {*}
+     */
+	get:function(key, defaultValue){
+		if(!this.supported)return defaultValue;
 		var type = this.getType(key);
 		if(type==='object'){
 			return JSON.parse(localStorage[key]);
 		}
-		return localStorage[key];
+		return localStorage[key] ? localStorage[key] : defaultValue;
 	},
 
 	getTypeKey:function(key){

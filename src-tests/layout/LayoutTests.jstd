@@ -41,7 +41,7 @@ test:
   - MenuTest.js
   - CoordinateTest.js
   - CanvasTest.js
-  - SlideInTest.js
+  - NavBarTest.js
   - TableLayoutTest.js
   - AccordionTest.js
 

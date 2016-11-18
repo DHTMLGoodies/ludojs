@@ -142,6 +142,7 @@ ludo.Window = new Class({
      * @param {Number} x
      * @param {Number} y
      * @return void
+     * @memberof ludo.Window.prototype
      */
     showAt: function (x, y) {
         this.setXY(x, y);
@@ -167,6 +168,7 @@ ludo.Window = new Class({
     /**
      * Show window centered on screen
      * @function showCentered
+     * @memberof ludo.Window.prototype
      * @return void
      */
     showCentered: function () {

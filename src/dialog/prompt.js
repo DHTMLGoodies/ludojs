@@ -1,7 +1,7 @@
 /**
  * Dialog with one text field. Default buttons are "OK" and "Cancel"
- * @namespace dialog
- * @class Prompt
+ * @namespace ludo.dialog
+ * @class ludo.dialog.Prompt
  * @augments Dialog
  */
 ludo.dialog.Prompt = new Class({

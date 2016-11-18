@@ -1,81 +1,76 @@
-/**
- Specification of a column object for grid.ColumnManager. You can not create objects of this class
- @namespace grid
- @class Column
-*/
 ludo.grid.Column = new Class({
 	/**
 	 * Heading to diplay
-	 * @config {String} heading
+	 * config {String} heading
  	 */
 	heading : '',
 
 	/**
 	 * True to make column removable
-	 * @config {Boolean} removable
-	 * @default false
+	 * config {Boolean} removable
+	 * default false
  	 */
 	removable : false,
 	/**
 	 * True to make column movable
-	 * @config {Boolean} movable
-	 * @default false
+	 * config {Boolean} movable
+	 * default false
  	 */
 	movable : false,
 
 	/**
 	 * Initial width of column
-	 * @config {Number} width
+	 * config {Number} width
 	 */
 	width:undefined,
 
 	/**
 	 * True to make column sortable
-	 * @config {Boolean} sortable
-	 * @default false
+	 * config {Boolean} sortable
+	 * default false
  	 */
 	sortable : false,
 
 	/**
 	 * Minimium width of column
-	 * @config {Number} minWidth
-	 * @default 50
+	 * config {Number} minWidth
+	 * default 50
 	 */
 	minWidth:50,
 
 	/**
 	 * Maximum width of column
-	 * @config {Number} maxWidth
-	 * @default 500
+	 * config {Number} maxWidth
+	 * default 500
 	 */
 	maxWidth:500,
 
 	/**
 	 * True to make column initial hidden
-	 * @config {Boolean} hidden
-	 * @default false
+	 * config {Boolean} hidden
+	 * default false
 	 */
 	hidden:false,
 
 	/**
 	 * True to make column resizable
-	 * @config {Boolean} resizable
-	 * @default true
+	 * config {Boolean} resizable
+	 * default true
 	 */
 	resizable:true,
 
 
 	/**
 	 * Alignment of text(left|right)
-	 * @config {String} align
-	 * @default 'left'
+	 * config {String} align
+	 * default 'left'
 	 */
 	align:'left',
 
 	/**
 	 * Alignment of header
-	 * @config {String} headerAlign
-	 * @default 'left'
+	 * config {String} headerAlign
+	 * default 'left'
 	 */
 	headerAlign:'left',
 
@@ -84,9 +79,9 @@ ludo.grid.Column = new Class({
 	 are sent to this function. The first one is the record value of this cell,
 	 the second one is the record it's self. The function should return a string which
 	 will be the value rendered in the cells of this column.
-	 @config {Function} renderer
-	 @default undefined
-	 @example
+	 config {Function} renderer
+	 default undefined
+	 example
 	 	renderer:function(value){
 	 		if(value >= 0){
 				return '<span style="color:blue">' + val + '</span>';
@@ -100,8 +95,8 @@ ludo.grid.Column = new Class({
 
 	/**
 	 * Attribute used for grouping
-	 * @config {Array} columns
-	 * @default undefined
+	 * config {Array} columns
+	 * default undefined
 	 */
 	columns:undefined
 });

@@ -2,9 +2,9 @@ ludo.layout.LinearSpec = new Class({
 
 	/**
 	 * vertical to arrange children in rows, horizontal to arrange in columns
-	 * @config orientation
-	 * @type {String}
-	 * @default vertical
+	 * config orientation
+	 * type {String}
+	 * default vertical
 	 */
 	orientation:'vertical',
 
@@ -20,8 +20,8 @@ ludo.layout.LinearSpec = new Class({
 	 * i.e. 400 pixels. Child C will use 1/3 of 600, i.e. 200 pixels.
 	 * When parent view is resized, the width of A will remain fixed, while the width of child B and C
 	 * will change dynamically based on their weight.
-	 * @config {Boolean} weight
-	 * @default undefined
+	 * config {Boolean} weight
+	 * default undefined
 	 */
 	weight:undefined
 

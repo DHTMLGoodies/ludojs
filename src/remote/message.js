@@ -1,9 +1,10 @@
 /**
  Class displaying all messages from remote requests
+
+ Extends: ludo.View
+ 
  @namespace remote
- @class Message
- @augments ludo.View
- @constructor
+ @class ludo.remote.Message
  @param {Object} config
  @example
  	children:[{

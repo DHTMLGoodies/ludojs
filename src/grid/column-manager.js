@@ -1,10 +1,10 @@
 /**
  Column manager for grids. Grids will listen to events fired by this component. A column manager is usually created by
- sending a "columnManager" config object to the constructor of a grid.Grid view.
- @namespace grid
- @class ColumnManager
+ sending a "columns" array to the constructor of a grid.Grid view.
+ @namespace ludo.grid
+ @class ludo.grid.ColumnManager
  @augments Core
- @constructor
+ 
  @param {Object} config
  @example
     columnManager:{

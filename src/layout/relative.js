@@ -69,14 +69,12 @@ ludo.layout.Relative = new Class({
 	],
     /**
      * Internal child coordinates set during resize
-     * @property {Object} newChildCoordinates
-     * @private
+
      */
 	newChildCoordinates:{},
     /**
      * Internal storage of child coordinates for last resize
-     * @property {Object} lastChildCoordinates
-     * @privatea
+
      */
 	lastChildCoordinates:{},
 
@@ -111,8 +109,7 @@ ludo.layout.Relative = new Class({
 
     /**
      * Create/Compile resize functions for each child
-     * @function createResizeFunctions
-     * @private
+
      */
 	createResizeFunctions:function () {
 		for (var i = 0; i < this.children.length; i++) {
@@ -121,8 +118,7 @@ ludo.layout.Relative = new Class({
 	},
     /**
      * Convert layout id references to direct view reference for optimal performance
-     * @function fixLayoutReferences
-     * @private
+
      */
 	fixLayoutReferences:function () {
 		for (var i = 0; i < this.view.children.length; i++) {
@@ -135,10 +131,7 @@ ludo.layout.Relative = new Class({
 	},
     /**
      * Return resize function for a child
-     * @function getResizeFnFor
-     * @param {ludo.View} child
-     * @return {Function}
-     * @private
+
      */
 	getResizeFnFor:function (child) {
 		var fns = this.getLayoutFnsFor(child);
@@ -150,10 +143,7 @@ ludo.layout.Relative = new Class({
 	},
     /**
      * Return array of resize function to call when view is resized.
-     * @function getLayoutFnsFor
-     * @param {ludo.View} child
-     * @return {Array}
-     * @private
+
      */
 	getLayoutFnsFor:function (child) {
 		var ret = [];
@@ -169,12 +159,7 @@ ludo.layout.Relative = new Class({
 	},
     /**
      Return one resize function for a child
-     @function getLayoutFn
-     @param {String} property
-     @param {ludo.View} child
-     @return {Function|undefined}
-     @private
-     @example
+
         getLayoutFn(left, view)
      may return
         function(){
@@ -320,12 +305,7 @@ ludo.layout.Relative = new Class({
 	},
     /**
      * Return special resize function for the properties alignLeft, alignRight, alignTop and alignBottom
-     * @function getAlignmentFn
-     * @param {ludo.View} child
-     * @param {String} alignment
-     * @param {String} property
-     * @return {Function}
-     * @private
+
      */
 	getAlignmentFn:function (child, alignment, property) {
 		var c = this.newChildCoordinates[child.id];
@@ -337,11 +317,7 @@ ludo.layout.Relative = new Class({
 
     /**
      * Returns layout function for the width and height layout properties
-     * @function getPropertyFn
-     * @param {ludo.View} child
-     * @param {String} property
-     * @return {Function|undefined}
-     * @private
+
      */
 	getPropertyFn:function (child, property) {
 		var c = this.newChildCoordinates[child.id];
@@ -378,13 +354,7 @@ ludo.layout.Relative = new Class({
 
     /**
      * Final resize function for each child. All the other dynamically created
-     * layout function stores values for the left,width,top,bottom, width and height properties.
-     * This function call the resize function for each view with the values of these previously
-     * set properties
-     * @function getLayoutLayoutFn
-     * @param {ludo.View} child
-     * @return {Function}
-     * @private
+
      */
 	getLastLayoutFn:function (child) {
 		return function (lm) {
@@ -451,11 +421,7 @@ ludo.layout.Relative = new Class({
 
     /**
      * Position child at this coordinates
-     * @function positionChild
-     * @param {ludo.View} child
-     * @param {String} property
-     * @param {Number} value
-     * @private
+
      */
 	positionChild:function (child, property, value) {
 		child.getEl().css(property, value); // style[property] = value + 'px';
@@ -463,9 +429,7 @@ ludo.layout.Relative = new Class({
 	},
     /**
      * Creates empty newChildCoordinates and lastChildCoordinates for a child view
-     * @function assignDefaultCoordinates
-     * @param {ludo.View|ludo.layout.Resizer} child
-     * @private
+
      */
 	assignDefaultCoordinates:function (child) {
 		this.newChildCoordinates[child.id] = {};

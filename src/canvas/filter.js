@@ -3,10 +3,9 @@
  Note! Filters will produce raster graphic, not Vector.
  Note! Filters are not supported by IE 9 and lower. (Support is added to IE10).
  Ref: http://caniuse.com/svg-filters
- @namespace canvas
- @class Filter
+ @namespace ludo.canvas
+ @class ludo.canvas.Filter
  @augments canvas.NamedNode
- @constructor
  @param {Object} attributes
  @param {Object} config options
  *

@@ -1,7 +1,7 @@
 /**
  * Stop tag used by gradients
  * @namespace canvas
- * @class Stop
+ * @class ludo.canvas.Stop
  * @augments ludo.canvas.Node
  */
 ludo.canvas.Stop = new Class({

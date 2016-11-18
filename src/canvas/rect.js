@@ -1,10 +1,9 @@
 /**
  Class for rect tags. It extends canvas.Node by adding setter and getter methods
  for x,y, width, height and rounded corners(rx and ry).
- @namespace canvas
- @class Rect
- @augments canvas.Node
- @constructor
+ @namespace ludo.canvas
+ @class ludo.canvas.Rect
+ @augments ludo.canvas.Node
  @param {Object} coordinates
  @param {canvas.NodeConfig} config
  @example

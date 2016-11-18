@@ -1,7 +1,5 @@
 /**
  * Abstract base class for linear layouts
- * @namespace layout
- * @class Linear
  */
 ludo.layout.Linear = new Class({
 	Extends:ludo.layout.Base,

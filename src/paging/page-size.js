@@ -1,7 +1,7 @@
 /**
  * Select box for setting page size of a Collection
- * @namespace paging
- * @class PageSize
+ * @namespace ludo.paging
+ * @class ludo.paging.PageSize
  */
 ludo.paging.PageSize = new Class({
 	Extends: ludo.form.Select,

@@ -1,12 +1,8 @@
 /**
- * @module Canvas
- */
-
-/**
- Factory for new svg DOM nodes
+ Class for creating SVG DOM Nodes
  @namespace canvas
- @class Node
- @constructor
+ @class ludo.canvas.Node
+ 
  @param {String} tag
  @param {Object} properties
  @optional

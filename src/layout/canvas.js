@@ -1,7 +1,7 @@
 /**
  * Layout manager for items in a chart
  * @namespace chart
- * @class Layout
+ * @class ludo.layout.Canvas
  * @augments layout.Relative
  */
 ludo.layout.Canvas = new Class({

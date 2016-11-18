@@ -1,7 +1,7 @@
 /**
  * Base class for ludo.remote.HTML and ludo.remote.JSON
- * @namespace remote
- * @class Base
+ * @namespace ludo.remote
+ * @class ludo.remote.Base
  */
 ludo.remote.Base = new Class({
 	Extends:Events,

@@ -1,8 +1,8 @@
 /**
- @namespace grid
- @class Grid
+ @namespace ludo.grid
+ @class ludo.grid.Grid
  @augments View
- @constructor
+ 
  @param {Object} config
  @example
 	 children:[

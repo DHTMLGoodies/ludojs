@@ -1,8 +1,9 @@
 /**
 * Class used to select month and year for a calendar.
-* @namespace calendar
-* @class MonthYearSelector
-* @augments calendar.Selector
+* @namespace ludo.calendar
+* @class ludo.calendar.MonthYearSelector
+* @augments ludo.calendar.Selector
+* @fires ludo.calendar.MonthYearSelector#setDate - Arguments Date and ludo.View(the view firing the event)
 */
 ludo.calendar.MonthYearSelector = new Class({
     Extends:ludo.calendar.Selector,
@@ -51,9 +52,7 @@ ludo.calendar.MonthYearSelector = new Class({
     },
 
     clickMonth:function (e) {
-        console.log(e);
         var el = $(e.currentTarget);
-        console.log(el.attr('month') + ',' + el.attr('year'));
         this.setMonthAndYear(el.attr('month'), el.attr('year'));
         this.sendSetDateEvent();
     },

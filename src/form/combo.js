@@ -1,9 +1,11 @@
 /**
- * A text field with combo button. Click on the combo button will child view beneath the text input
+ * A text field with combo button. Click on the combo button will show child view beneath the text input
  *
- * @namespace ludo.form
- * @class Combo
- * @augments ludo.form.Element
+ * This class extends ludo.form.Text.
+ * @param {Object} config
+ * @param {Object} config.childLayout 
+ *
+ * @class ludo.form.Combo
  */
 ludo.form.Combo = new Class({
     Extends:ludo.form.Text,

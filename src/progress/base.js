@@ -1,7 +1,7 @@
 /**
  * Super class for all progress bar views
  * @namespace progress
- * @class Base
+ * @class ludo.progress.Base
  * @augments View
  */
 ludo.progress.Base = new Class({

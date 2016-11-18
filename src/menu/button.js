@@ -1,9 +1,8 @@
 /**
  Menu button arrow which you can apply to DOM Element to have a menu drop down
  below it.
- @namespace menu
- @class Button
- @augments Core
+ @namespace ludo.menu
+ @class ludo.menu.Button
  */
 ludo.menu.Button = new Class({
     Extends: ludo.Core,

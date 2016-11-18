@@ -1,9 +1,8 @@
 /**
   Standard confirm dialog with default "OK" and "Cancel" buttons
   @namespace dialog
-  @class Confirm
-  @augments Dialog
-  @constructor
+  @class ludo.dialog.Confirm
+  @augments ludo.dialog.Dialog
   @param {Object} config
   @example
  	new ludo.dialog.Confirm({

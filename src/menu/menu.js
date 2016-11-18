@@ -1,7 +1,7 @@
 /**
- * Menu class
- * @namespace menu
- * @class Menu
+ * A ludo.View with with layout properties set to "type": "menu", orientation:"vertical", "width":"wrap", "height":"wrap"
+ * @namespace ludo.menu
+ * @class ludo.menu.Menu
  * @augments View
  */
 ludo.menu.Menu = new Class({

@@ -1,8 +1,5 @@
 /**
  * Slider form component
- * @namespace ludo.form
- * @class Slider
- * @augments ludo.form.LabelElement
  */
 ludo.form.Slider = new Class({
     // TODO implement support for min and max, example slider from 0 to 100, min and max from 10 to 90
@@ -25,47 +22,19 @@ ludo.form.Slider = new Class({
     inputTag:undefined,
     inputType:undefined,
 
-    /**
-     * Size of slider background
-     * @property sliderSize
-	 * @optional
-     * @private
-     */
+
     sliderSize:100,
 
-    /**
-     * Direction of slider. If not explicit set, it will
-     * be set to "horizontal" when width of slide is greater than height of slider,
-     * otherwise it will be set to "vertical".
-     * @property {String} direction
-	 * @type String
-     * @default horizontal
-	 * @optional
-     *
-     */
     direction:'horizontal',
 
-    /**
-     * Minimum value of slider
-     * @attribute {Number} minValue
-     * @default 1
-     */
+
     minValue:1,
 
-    /**
-     * Maximum value of slider
-     * @attribute {Number} maxValue
-     * @default 10
-     */
     maxValue:10,
 
     height:undefined,
 
-    /**
-     * Revert x-, or y-axis, i.e. minimum value to the right instead of left or at the top instead of bottom
-     * @attribute {Boolean} reverse
-     * @default false
-     */
+
     reverse:false,
 
 

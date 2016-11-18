@@ -1,7 +1,7 @@
 /**
  * Super class for canvas.Circle, canvas.Rect +++
- * @namespace canvas
- * @class NamedNode
+ * @namespace ludo.canvas
+ * @class ludo.canvas.NamedNode
  */
 ludo.canvas.NamedNode = new Class({
 	Extends: ludo.canvas.Node,

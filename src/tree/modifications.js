@@ -1,7 +1,7 @@
 /**
  * This class stores modified records in a tree
- * @namespace tree
- * @class Modifications
+ * @namespace ludo.tree
+ * @class ludo.tree.Modifications
  */
 ludo.tree.Modifications = new Class({
 

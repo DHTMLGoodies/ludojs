@@ -2,7 +2,7 @@
  * Md5 validator for form elements
  * When used, the associated form element will be flagged as invalid if MD5(value) doesn't match value of this validator.
  * If no value is sent to the constructor of form.validator.Md5, it will send a request to the server and ask for it.
- * @class Md5
+ * @class ludo.form.validator.Md5
  * @augments ludo.form.validator.Base
  *
  */
@@ -15,6 +15,7 @@ ludo.form.validator.Md5 = new Class({
      * md5(formElement.value) matches this value
      * @attribute value
      * @default undefined
+     * @memberof ludo.form.validator.Md5.prototype
      */
     value:undefined,
 

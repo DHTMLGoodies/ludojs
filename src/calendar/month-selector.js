@@ -1,9 +1,10 @@
 /**
  * Class used to select month for a calendar.
- * @namespace calendar
- * @class MonthSelector
- * @augments calendar.Base
- * @type {Class}
+ * @namespace ludo.calendar
+ * @class ludo.calendar.MonthSelector
+ * @augments ludo.calendar.Base
+ *
+ * @fires ludo.calendar.MonthSelector#setDate - Arguments Date and ludo.View(the view firing the event)
  */
 ludo.calendar.MonthSelector = new Class({
     Extends: ludo.calendar.Base,

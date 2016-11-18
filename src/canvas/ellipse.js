@@ -1,11 +1,10 @@
 /**
  Class for drawing ellipses.
- @namespace canvas
- @class Ellipse
- @augments canvas.NamedNode
- @constructor
+ @namespace ludo.canvas
+ @class ludo.canvas.Ellipse
+ @augments ludo.canvas.NamedNode
  @param {Object} coordinates
- @param {canvas.NodeConfig} config
+ @param {ludo.canvas.NodeConfig} config
  @example
  	var ellipse = new ludo.canvas.Ellipse({ cx:500, cy:425, rx:250, ry:200 }, { paint: paintObject } );
  */

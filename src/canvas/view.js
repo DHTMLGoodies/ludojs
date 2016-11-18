@@ -6,8 +6,8 @@
  * object can be adopted to other elements or nodes using the  {{#crossLink "canvas.View/adopt"}}{{/crossLink}}
  * or  {{#crossLink "canvas.Node/adopt"}}{{/crossLink}} methods.
  * A canvas element contains methods for transformations and other
- * @namespace canvas
- * @class Element
+ * @namespace ludo.canvas
+ * @class ludo.canvas.View
  * @augments ludo.Core
  */
 ludo.canvas.View = new Class({

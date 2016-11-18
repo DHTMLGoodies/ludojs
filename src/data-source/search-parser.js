@@ -1,7 +1,7 @@
 /**
  * Internal class used to parse search into a function
- * @namespace dataSource
- * @class SearchParser
+ * @namespace ludo.dataSource
+ * @class ludo.dataSource.SearchParser
  */
 ludo.dataSource.SearchParser = new Class({
 

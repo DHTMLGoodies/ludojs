@@ -1,7 +1,7 @@
 /**
  * Display "Today" button inside a calendar. When clicked, date of calendar will be set to today's date.
  * @namespace calendar
- * @class Today
+ * @class ludo.calendar.Today
  * @augments calendar.Base
  */
 ludo.calendar.Today = new Class({

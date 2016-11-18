@@ -33,17 +33,6 @@ ludo.form.Color = new Class({
 							'setColor':this.receiveColor.bind(this),
 							'render':this.setInitialWidgetValue.bind(this)
 						}
-					},
-					{
-                        name:'slider',
-						title:ludo.language.get('Color Slider'),
-						type:'color.RGBSlider',
-						value:this.value,
-						listeners:{
-							'setColor':this.receiveColor.bind(this),
-							'render':this.setInitialWidgetValue.bind(this)
-						}
-
 					}
 				]
 			}

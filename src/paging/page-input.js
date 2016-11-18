@@ -1,7 +1,7 @@
 /**
  * Text input for navigating to a specific page in a datasource.Collection
- * @namespace paging
- * @class PageInput
+ * @namespace ludo.paging
+ * @class ludo.paging.PageInput
  * @augments form.Number
  */
 ludo.paging.PageInput = new Class({

@@ -2,9 +2,9 @@
  Class for menu layouts in LudoJS
  An instance of this class is created dynamically when
  layout.type for a View is set to "menu".
- @namespace layout
- @class Menu
- @constructor
+ @namespace ludo.layout
+ @class ludo.layout.Menu
+ 
  @example
  layout:{
 		 type:'Menu',

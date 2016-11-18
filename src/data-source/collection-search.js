@@ -1,9 +1,9 @@
 /**
  Class created dynamically by dataSource.Collection.
  It is used to search and filter data in a collection.
- @namespace dataSource
- @class CollectionSearch
- @augments Core
+ @namespace ludo.dataSource
+ @class ludo.dataSource.CollectionSearch
+
  */
 ludo.dataSource.CollectionSearch = new Class({
 	Extends:ludo.Core,

@@ -2,12 +2,7 @@
  Class for nodeJS communication. You configure nodeJS communication by passing a {{#crossLink "View/socket"}}socket{{/crossLink}} object to
  a {{#crossLink "View"}}{{/crossLink}}, example: socket:{ url:'http://127.0.0.1:1337' }. You can get a reference to this class by calling
  {{#crossLink "View/getSocket"}}{{/crossLink}}
- @namespace socket
- @class Socket
- @augments Core
- @constructor
- @param {Object} config
- @example
+
  	// Server side code:
 	 var io = require('socket.io').listen(1337, "127.0.0.1");
 
@@ -22,7 +17,7 @@
 		 });
 	 });
  Client side code:
- @example
+
 	 ludo.chat = {};
 	  ludo.chat.Panel = new Class({
 		  Extends:ludo.View,
@@ -124,10 +119,7 @@ ludo.socket.Socket = new Class({
 	/**
 	 Array of view/component events to emit to server. When this event is fired, it will be emitted
 	 to the server automatically.
-	 @config emitEvents
-	 @type {Array}
-	 @default undefined
-	 @example
+
 	 	new ludo.View({
 	 		...
 	 		socket:{
@@ -135,11 +127,11 @@ ludo.socket.Socket = new Class({
 	 			emitEvents:['chat'] // emit the "chat" event
 	 		}
 	 specifies that the "chat" event should be sent to NodeJS on the server.
-	 @example
+
 	 	this.fireEvent('chat', { message:this.child['text'].getValue()});
 
 	 will cause { message:this.child['text'].getValue()} to be sent to the server where you can pick it up with code like this
-	 @example
+
 	 	socket.on('chat', function (data) {
 	 		console.log(data.message);
 		}

@@ -1,7 +1,7 @@
-/* Generated Thu Nov 17 20:27:27 CET 2016 */
+/* Generated Fri Nov 18 15:21:08 CET 2016 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.147
+ludoJS - Javascript framework, 1.1.152
 Copyright (C) 2012-2016  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -6434,8 +6434,8 @@ ludo.layout.Factory = new Class({
 				return "Accordion";
 			case "table":
 				return "Table";
-            case 'slidein':
-                return 'SlideIn';
+            case 'navbar':
+                return 'NavBar';
 			case 'relative':
 				return 'Relative';
 			case 'fill':
@@ -16262,6 +16262,7 @@ ludo.layout.Tabs = new Class({
     ludoEvents: function () {
         this.parent();
         this.lm.addEvent('addChild', this.registerChild.bind(this));
+        this.lm.addEvent('addChildRuntime', this.resizeTabs.bind(this));
         this.lm.addEvent('showChild', this.activateTabFor.bind(this));
         this.lm.addEvent('removeChild', this.removeTabFor.bind(this));
         this.addEvent('resize', this.resizeTabs.bind(this));
@@ -16287,7 +16288,7 @@ ludo.layout.Tabs = new Class({
 
         this.resizeTabsDom();
 
-        this.findHiddenTabs();
+        if (this.tabPos === 'top' || this.tabPos === 'bottom')this.findHiddenTabs();
     },
 
     resizeTabsDom: function () {
@@ -16359,16 +16360,8 @@ ludo.layout.Tabs = new Class({
             this.maxSize = size - menu.outerWidth(true);
             this.moveCurrentIntoView();
             this.getMenuIcon().show();
-
         }
-
         this.resizeTabsDom();
-
-        console.log(this.hiddenTabs);
-
-        console.log(size + ',' + pos);
-
-
     },
 
     moveCurrentIntoView: function () {
@@ -16389,9 +16382,10 @@ ludo.layout.Tabs = new Class({
 
         if(offsetStart < 0){
 
+
+            this.tabParent.css('left', offsetStart);
         }else if(offsetEnd > 0){
             var newPos = pos - offsetEnd;
-            console.log('newpos ' + newPos);
             this.tabParent.css('left', newPos);
         }
     },
@@ -16405,11 +16399,17 @@ ludo.layout.Tabs = new Class({
 
     getMenuIcon: function () {
         if (this.tabMenuEl == undefined) {
+
+            if(this.tabPos == 'left' || this.tabPos == 'right') {
+                this.tabMenuEl = this.getBody();
+                return this.tabMenuEl;
+            }
             this.tabMenuEl = $('<div class="ludo-tab-expand-box ludo-tab-expand-box-' + this.tabPos + '"></div>');
             this.getBody().append(this.tabMenuEl);
 
             var s = this.getBody().outerHeight() - this.elLine.height();
-            this.tabMenuEl.css('height', s);
+            var k = this.tabPos == 'top' ||this.tabPos == 'bottom' ? 'height' : 'width';
+            this.tabMenuEl.css(k, s);
 
             if(this.tabPos == 'bottom'){
                 this.tabMenuEl.css('top', this.elLine.height());
@@ -16422,6 +16422,7 @@ ludo.layout.Tabs = new Class({
 
             this.tabMenuEl.mouseenter(this.enterMenuIcon.bind(this));
             this.tabMenuEl.mouseleave(this.leaveMenuIcon.bind(this));
+
         }
         return this.tabMenuEl;
     },
@@ -16465,6 +16466,7 @@ ludo.layout.Tabs = new Class({
                 }
 
             });
+            this.menu.getEl().mousedown(ludo.util.cancelEvent);;
             ludo.EffectObject.on('start', this.hideMenu.bind(this));
             $(document.documentElement).mousedown(this.domClick.bind(this));
 
@@ -16475,11 +16477,15 @@ ludo.layout.Tabs = new Class({
     menuShown:false,
 
     domClick:function(e){
-        console.log(e);
         if(this.menu == undefined)return;
         if(e.target == this.tabMenuEl[0])return;
-        if(this.menuShown)this.hideMenu();
+        this.hideMenu();
     },
+
+    autoHide:function(){
+        this.hideMenu();
+    },
+
     hideMenu: function () {
         this.getMenu().hide();
     },
@@ -16680,7 +16686,12 @@ ludo.layout.Tabs = new Class({
             this.currentZIndex++;
 
             this.activeTabId = child.id;
+
+            if(this.hiddenTabs.length > 0){
+                this.resizeTabs();
+            }
         }
+
     },
 
     ludoDOM: function () {
@@ -17785,8 +17796,7 @@ ludo.layout.Grid = new Class({
  * position. One example of use is a combo box which displays a child view below a button or input box.
  * See {{#crossLink "layout.LayoutSpec"}}{{/crossLink}} for the available position and
  * sizing properties available to children inside a popup layout.
- * @namespace layout
- * @class Popup
+ * @class ludo.layout.Popup
  *
  */
 ludo.layout.Popup = new Class({
@@ -17891,13 +17901,17 @@ ludo.layout.Canvas = new Class({
 
 
 
-});/* ../ludojs/src/layout/slide-in.js */
+});/* ../ludojs/src/layout/nav-bar.js */
 /**
- * Layout where first child slides in from the left on demand
+ * Layout where first child slides in from the left on demand.
+ * 
+ * For tutorial, see <a href="../../learn/
+ * 
+ * This class extends ludo.layout.Base
  * @namespace layout
- * @class SlideIn
+ * @class ludo.layout.NavBar
  */
-ludo.layout.SlideIn = new Class({
+ludo.layout.NavBar = new Class({
     Extends:ludo.layout.Base,
     slideEl:undefined,
 
@@ -29364,13 +29378,15 @@ ludo.form.Color = new Class({
 /**
  * Special Button used to reset all form fields of component back to it's original state.
  * This button will automatically be disabled when the form is "clean", and disabled when it's "dirty".
- * @namespace ludo.form
- * @class ResetButton
- * @augments ludo.form.Button
+ *
+ * The Reset button extends <a href="ludo.form.Button.html">ludo.form.Button</a>.
+ * @class ludo.form.ResetButton
+ * @param {Object} config
+ * @param {String} config applyTo. The reset button will be a reset button for the View(including child views) with this id.
+ * A press on this button will trigger ludo.$(applyTo).getForm().reset()
  */
 ludo.form.ResetButton = new Class({
     Extends:ludo.form.Button,
-    type:'form.ResetButton',
     /**
      * Value of button
      * @attribute {String} value
@@ -29387,7 +29403,7 @@ ludo.form.ResetButton = new Class({
     
     __rendered:function () {
         this.parent();
-        this.applyTo = this.applyTo ? ludo.get(this.applyTo) : this.getParentComponent();
+        this.applyTo = this.applyTo ? ludo.$(this.applyTo) : this.getParentComponent();
         var manager = this.applyTo.getForm();
         if (this.applyTo) {
             manager.addEvent('dirty', this.enable.bind(this));

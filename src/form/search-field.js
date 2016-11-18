@@ -1,39 +1,24 @@
 /**
  * Form field designed to search in dataSource.Collection
  * @namespace ludo.form
- * @class SearchField
+ * @class ludo.form.SearchField
  * @augments ludo.form.Text
+ * @param {Object} config
+ * @param {ludo.dataSource.Collection} searchIn Collection to search in
+ * @param {Number} delay Delay in seconds after key press before search is executed. Default 0.
+ * @param {Function} searchFn Custom search fn to execute instead of plain text search. Example:
+ * <code>	 	searchFn:function(record){
+	 		return record.value = this.value && record.active === true
+	 	}
+ </code>
+ note that "this" inside the function is a reference to search field.
  */
 ludo.form.SearchField = new Class({
 	Extends:ludo.form.Text,
 	type:'form.SearchField',
-
-	/**
-	 * Collection to search in
-	 * @config {dataSource.Collection} searchIn
-	 * @default undefined
-	 */
 	searchIn:undefined,
-
-	/**
-	 * Delay in seconds from key press to search is executed.
-	 * @config {Number} delay
-	 * @default 0
-	 */
 	delay:0,
-
 	lastValue:undefined,
-
-	/**
-	 Custom search fn to execute instead of plain text search
-	 @config {Function} searchFn
-	 @default undefined
-	 @example
-	 	searchFn:function(record){
-	 		return record.value = this.value && record.active === true
-	 	}
-	 note that "this" inside the function is a reference to search field.
-	 */
 	searchFn:undefined,
 
 	remote:false,

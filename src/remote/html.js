@@ -1,7 +1,7 @@
 /**
  Class for remote HTML requests.
  @namespace remote
- @class HTML
+
  */
 ludo.remote.HTML = new Class({
 	Extends:ludo.remote.Base,

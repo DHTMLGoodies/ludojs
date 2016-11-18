@@ -1,9 +1,16 @@
 /**
- * Layout where first child slides in from the left on demand
+ * In the Navigation Bar layout, you have to two child views. The first child view is the
+ * navigation Bar which initially is hidden off to the left.
+ *
+ * It can be displayed on demand by calling it's **show** method.
+ * 
+ * For tutorial, see <a href="../../learn/layout-navbar.html">layout-navbar.html</a>.
+ * 
+ * This class extends ludo.layout.Base
  * @namespace layout
- * @class SlideIn
+ * @class ludo.layout.NavBar
  */
-ludo.layout.SlideIn = new Class({
+ludo.layout.NavBar = new Class({
     Extends:ludo.layout.Base,
     slideEl:undefined,
 

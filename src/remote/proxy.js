@@ -5,10 +5,6 @@
  * Instead of having one post "request" array, you will now have a post "requests"(plural)
  * array sent to the server where each item in the array is a "request" object.
  *
- * @namespace remote
- * @class Proxy
- * @deprecated
- *
  */
 
 ludo.remote.proxies = {};

@@ -1,6 +1,6 @@
 /**
  * @namespace ludo.form
- * @class FilterText
+ * @class ludo.form.FilterText
  * @augments ludo.form.Text
  * TODO this class is not working properly loading data from server. fix later
  */
@@ -44,6 +44,7 @@ ludo.form.FilterText = new Class({
      * @attribute filterOnServer
      * @type {Boolean}
      * @default false
+     * @memberof ludo.form.FilterText.prototype
      */
     filterOnServer:false,
     /**
@@ -52,6 +53,7 @@ ludo.form.FilterText = new Class({
      * @attribute maxDisplayed
      * @type int
      * @default 10
+     * @memberof ludo.form.FilterText.prototype
      */
     maxDisplayed:10,
     /**
@@ -60,6 +62,7 @@ ludo.form.FilterText = new Class({
      * @attribute idField
      * @type string
      * @default "id"
+     * @memberof ludo.form.FilterText.prototype
      */
     idField:'id',
     /**
@@ -68,6 +71,7 @@ ludo.form.FilterText = new Class({
      * @attribute displayField
      * @type string
      * @default "title"
+     * @memberof ludo.form.FilterText.prototype
      */
     displayField:'title',
     selectedRecord:undefined,
@@ -260,6 +264,7 @@ ludo.form.FilterText = new Class({
      *  { success: true, data : { id: 100, title: 'John Doe' } }
      * @function setValue
      * @param {String} value
+     * @memberof ludo.form.FilterText.prototype
      */
     _set:function (value) {
         if (this.remote.url) {

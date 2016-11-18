@@ -1,7 +1,7 @@
 /**
  * Class for checkbox form elements
  * @class ludo.form.Checkbox
- * @augments ludo.form.LabelElement
+ * @augments ludo.form.Element
  */
 ludo.form.Checkbox = new Class({
     Extends:ludo.form.Element,

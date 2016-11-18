@@ -1,7 +1,5 @@
 /**
  * Class for injecting data to specific resource/service requests
- * @namespace {remote}
- * @class Inject
  */
 ludo.remote.Inject = new Class({
 

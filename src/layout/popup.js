@@ -5,8 +5,7 @@
  * position. One example of use is a combo box which displays a child view below a button or input box.
  * See {{#crossLink "layout.LayoutSpec"}}{{/crossLink}} for the available position and
  * sizing properties available to children inside a popup layout.
- * @namespace layout
- * @class Popup
+ * @class ludo.layout.Popup
  *
  */
 ludo.layout.Popup = new Class({

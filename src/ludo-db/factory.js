@@ -1,13 +1,13 @@
 /**
  Factory for automatic creation of children from server ludoDB config. This class is used
  internally by ludoJS when you specify a ludoDB config object in your view configuration.
- @namespace ludoDB
- @class Factory
- @constructor
- @param config
- @type {Object}
- @augments ludo.Core
- @example {@lang Javascript}
+ namespace ludoDB
+ class Factory
+ 
+ param config
+ type {Object}
+ augments ludo.Core
+ example {lang Javascript}
     new ludo.Window({
         title:'LudoDB Integration',
         stateful:true,

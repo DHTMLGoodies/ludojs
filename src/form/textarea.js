@@ -1,8 +1,8 @@
 /**
  * Text Area field
  * @namespace ludo.form
- * @class Textarea
- * @augments ludo.form.Element
+ * @class ludo.form.Textarea
+ * @augments ludo.form.Text
  */
 ludo.form.Textarea = new Class({
     Extends:ludo.form.Text,
@@ -24,21 +24,6 @@ ludo.form.Textarea = new Class({
     },
     resizeDOM:function () {
         this.parent();
-		/*
-        var w;
-        if (!this.label) {
-            w = this.getInnerWidthOfBody();
-            if (w <= 0)return;
-        }else{
-            var p = this.els.formEl.parentNode;
-            w = (p.offsetWidth - ludo.dom.getBW(p) - ludo.dom.getPW(p));
-        }
-
-        if(this.stretchField)w-=10;
-
-        this.els.formEl.setStyle('width', (w - 10) + 'px');
-        */
-
         if (this.layout && this.layout.weight) {
             var height = this.getEl().offsetHeight;
             height -= (ludo.dom.getMBPH(this.getEl()) + ludo.dom.getMBPH(this.getBody()) + ludo.dom.getMH(this.els.formEl.parent()));

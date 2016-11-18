@@ -2,11 +2,12 @@
 /**
  Password field
  @namespace ludo.form
- @class Password
+ @class ludo.form.Password
  @augments ludo.form.Text
- @constructor
+ 
  @description Form component for passwords.
  @param {Object} config
+ @param {Boolean} config.md5 True to convert password value to md5. A call to val() will then return md5 of the password.
  @example
  	...
  	children:[
@@ -19,12 +20,6 @@ ludo.form.Password = new Class({
 	Extends:ludo.form.Text,
 	type:'form.Password',
 	inputType:'password',
-
-	/**
-	 * Convert password to md5 hash
-	 * getValue method will then return an md5 version of the password
-	 * @attribute {Boolean} md5
-	 */
 	md5:false,
 
 	__construct:function (config) {

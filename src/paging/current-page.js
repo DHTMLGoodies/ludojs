@@ -1,8 +1,6 @@
 /**
  Displays current page number shown in a collection
- @class paging.TotalPages
- @augments View
- @constructor
+ @class ludo.paging.TotalPages
  @param {Object} config
  @example
  children:[

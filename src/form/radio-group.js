@@ -1,6 +1,6 @@
 /**
  * @namespace ludo.form
- * @class RadioGroup
+ * @class ludo.form.RadioGroup
  * @description class for a group of radio buttons. Config for the radio buttons should be passed to the
  * constructor or loaded remotely. Here's an example of format:
  * [{ value: 1, text : 'my radio', image: 'images/my-radio-image.png' }]

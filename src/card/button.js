@@ -1,27 +1,22 @@
-/**
- * Special Button for card.Deck component
- * @namespace card
- * @class Button
- * @augments form.Button
- */
+
 ludo.card.Button = new Class({
     Extends:ludo.form.Button,
     type:'card.Button',
 
-    /**
+    /*
      * Automatically hide button instead of disabling it. This will happen on
      * first cards for previous buttons and on last card for next and finish buttons.
-     * @attribute autoHide
-     * @type {Boolean}
-     * @default false
+     * attribute autoHide
+     * type {Boolean}
+     * default false
      */
     autoHide:false,
 
-    /**
+    /*
      * Apply button to a specific view with this id. This view has to have layout type set to "card".
-     * @attribute applyTo
-     * @type String
-     * @default undefined
+     * attribute applyTo
+     * type String
+     * default undefined
      */
     applyTo : undefined,
 

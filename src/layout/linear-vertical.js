@@ -1,7 +1,7 @@
 /**
  * This class arranges child views in a column layout (side by side).
- * @namespace layout
- * @class LinearVertical
+ * @namespace ludo.layout
+ * @class ludo.layout.LinearVertical
  *
  */
 ludo.layout.LinearVertical = new Class({

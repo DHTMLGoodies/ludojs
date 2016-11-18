@@ -1,7 +1,7 @@
 /**
  * Read only field, used for display only
  * @namespace ludo.form
- * @class DisplayField
+ * @class ludo.form.DisplayField
  * @augments ludo.form.Text
  */
 ludo.form.DisplayField = new Class({

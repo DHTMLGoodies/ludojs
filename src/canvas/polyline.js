@@ -1,9 +1,9 @@
 /**
  Class for drawing polylines.
- @namespace canvas
- @class Polyline
+ @namespace ludo.canvas
+ @class ludo.canvas.Polyline
  @augments canvas.NamedNode
- @constructor
+ 
  @param {String} points
  @param {canvas.NodeConfig} config
  @example

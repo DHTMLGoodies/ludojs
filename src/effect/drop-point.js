@@ -1,9 +1,9 @@
 /**
  Specification of a drop point node sent to {{#crossLink "effect.DragDrop/addDropTarget"}}{{/crossLink}}.
  You may add your own properties in addition to the ones below.
- @namespace effect
- @class DropPoint
- @constructor
+ @namespace ludo.effect
+ @class ludo.effect.DropPoint
+ 
  @param {Object} config
  @example
  	var dd = new ludo.effect.DragDrop();

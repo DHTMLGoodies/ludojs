@@ -1,11 +1,17 @@
 /**
  Context menu class. You can create one or more context menus for a component by using the
  ludo.View.contextMenu config array,
- @namespace menu
- @class Context
+ @namespace ludo.menu
+ @class ludo.menu.Context
  @augments menu.Menu
- @constructor
  @param {Object} config
+ @param {string} config.selector Show context menu only for DOM nodes matching a CSS selector. The context menu will also
+ be shown if a match is found in one of the parent DOM elements. example: selector:'.my-class'
+ @param {string} config.recordType Similar to selector, but focused on JSON data.
+ It asks it's parent view's getRecordByDOM(e.target) (must be implemented), which will return something like { "name": "Oslo", type:"city" }.
+ If config.recordType is "city", the context menu will be shown, otherwise it will not.
+ This is typically useful in tree views and grids.
+
  @example new ludo.Window({
            contextMenu:[{
                selector : '.my-selector',
@@ -32,45 +38,14 @@ ludo.menu.Context = new Class({
 		isContext:true
 	},
 
-	renderTo:document.body,
-	/**
-	 Show context menu only for DOM nodes matching a CSS selector. The context menu will also
-	 be shown if a match is found in one of the parent DOM elements.
-	 @attribute selector
-	 @type String
-	 @default undefined
-	 @example {@lang Javascript}
-	 selector : '.selected-records'
-	 */
+	renderTo:undefined,
 	selector:undefined,
 	component:undefined,
 
 	// TODO change this code to record:{ keys that has to match }, example: record:{ type:'country' }
 
-	/**
-	 Show context menu for records with these properties
-	 @config {Object} record
-	 @default undefined
-	 */
 	record:undefined,
-	/**
-	 Show context menu only for records of a specific type. The component creating the context
-	 menu has to have a getRecordByDOM method in order for this to work. These methods are already
-	 implemented for tree.Tree and grid.Grid
-
-	 @attribute recordType
-	 @type String
-	 @default undefined
-	 @example {@lang Javascript}
-	 recordType : 'city'
-	 */
 	recordType:undefined,
-
-	/**
-	 * Add context menu to this DOM element
-	 * @config {String|HTMLElement} contextEl
-	 * @default undefined
-	 */
 	contextEl:undefined,
 
 	__construct:function (config) {
@@ -78,6 +53,7 @@ ludo.menu.Context = new Class({
 		this.parent(config);
 		this.setConfigParams(config, ['selector', 'recordType', 'record', 'applyTo','contextEl']);
 		if (this.recordType)this.record = { type:this.recordType };
+
 	},
 
 	ludoDOM:function () {
@@ -146,6 +122,7 @@ ludo.menu.Context = new Class({
 	},
 
 	isContextMenuFor:function (record) {
+		if(jQuery.type(record) == "string" && this.record.type == record)return true;
 		for (var key in this.record) {
 			if (this.record.hasOwnProperty(key))
 				if (!record[key] || this.record[key] !== record[key])return false;
@@ -158,8 +135,9 @@ ludo.menu.Context = new Class({
 			x:e.pageX,
 			y:e.pageY
 		};
-		var clientWidth = document.body.clientWidth;
-		var clientHeight = document.body.clientHeight;
+		var b = $(document.body);
+		var clientWidth = b.width();
+		var clientHeight = b.height();
 		var size = {
 			x: this.getEl().width(), y: this.getEl().height()
 		};

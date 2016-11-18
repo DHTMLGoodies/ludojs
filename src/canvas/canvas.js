@@ -1,8 +1,7 @@
 /**
  Class used to create canvas(&lt;SVG>) object
  @namespace canvas
- @class Canvas
- @constructor
+ @class ludo.canvas.Canvas
  @param {Object} config
  @example
  	var canvas = new ludo.canvas.Canvas({

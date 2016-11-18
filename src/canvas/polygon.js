@@ -1,9 +1,8 @@
 /**
  Class for drawing polygons.
- @namespace canvas
- @class Polygon
+ @namespace ludo.canvas
+ @class ludo.canvas.Polygon
  @augments canvas.Polyline
- @constructor
  @param {String} points
  @param {canvas.NodeConfig} config
  @example

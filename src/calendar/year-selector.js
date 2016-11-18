@@ -1,7 +1,7 @@
 /**
  * Class used to display years in a calendar
- * @namespace calendar
- * @class YearSelector
+ * @namespace ludo.calendar
+ * @class ludo.calendar.YearSelector
  * @augments calendar.Selector
  */
 ludo.calendar.YearSelector = new Class({

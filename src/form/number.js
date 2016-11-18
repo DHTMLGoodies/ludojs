@@ -6,6 +6,9 @@
  * @param {Object} config
  * @param {Number} config.minValue Optional minimum value
  * @param {Number} config.maxValue Optional maximum value
+ * @param {Boolean} config.disableWheel Disable chaning values using mouse wheel.
+ * @param {Boolean} config.reverseWheel Reverse wheel. Up = smaller value.
+ * @param {Number} config.shiftIncrement Mouse wheel increment when shift key is pressed. Default = 10.
  */
 ludo.form.Number = new Class({
     Extends:ludo.form.Text,
@@ -15,31 +18,10 @@ ludo.form.Number = new Class({
     formCss:{
         'text-align':'right'
     },
-    /**
-     * Stretch is default set to false for numbers
-     * @attribute {Boolean} stretchField
-     */
+
     stretchField:false,
-
-    /**
-     * Disable changing values using mousewheel
-     * @attribute {Boolean} disableWheel
-     * @default false
-     */
     disableWheel:false,
-
-    /**
-     * Reverse wheel, i.e. down for larger value, up  for smaller
-     * @attribute {Boolean} reverseWheel
-     * @default false
-     */
     reverseWheel:false,
-
-    /**
-     * Amount to increment/decrement when using mousewheel while pressing shift-key
-     * @attribute {Number} shiftIncrement
-     * @default 10
-     */
     shiftIncrement:10,
 
     __construct:function (config) {
@@ -89,12 +71,7 @@ ludo.form.Number = new Class({
         this.incrementBy(delta >0 ? 1 : -1, e.shift);	// Math.ceil because of a mystery error in either firefox or mootools
         return false;
     },
-    /**
-     * Increment value by
-	 * @function incrementBy
-     * @param {Number} value
-     * @param {Boolean} shift
-     */
+
     incrementBy:function (value, shift) {
         if(!this.value){
             if(this.minValue){

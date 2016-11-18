@@ -2,10 +2,10 @@
  A view containing buttons and views for navigating in a dataSource.Collection.
  default children: ['paging.First','paging.Previous','paging.PageInput','paging.TotalPages','paging.Next','paging.Last']
  You can customize which views to show by using the children constructor property.
- @namespace paging
- @class NavBar
+ @namespace ludo.paging
+ @class ludo.paging.NavBar
  @augments View
- @constructor
+ 
  @param {Object} config
  @example
  	children:[

@@ -1,8 +1,7 @@
 /**
  * This class connects view modules and controllers
- * @namespace controller
- * @class Manager
- * @augments Core
+ * @namespace ludo.controller
+ * @class ludo.controller.Manager
  */
 ludo.controller.Manager = new Class({
     Extends: ludo.Core,

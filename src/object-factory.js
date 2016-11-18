@@ -1,7 +1,10 @@
 /**
  * Internal class designed to create ludoJS class instances.
- * The global ludo.factory is an instance of this class
- * @class ObjectFactory
+ *
+ * Use ludo.factory to reference this class.
+ *
+ * @class ludo.ObjectFactory
+ *
  */
 ludo.ObjectFactory = new Class({
 	namespaces:[],
@@ -12,6 +15,7 @@ ludo.ObjectFactory = new Class({
 	 @function create
 	 @param {Object|ludo.Core} config
 	 @return {ludo.Core} object
+	 @memberof ludo.ObjectFactory.prototype
 	 */
 	create:function(config){
 		if(this.isClass(config))return config;
@@ -61,6 +65,7 @@ ludo.ObjectFactory = new Class({
 	/**
 	 Creates alias name to a custom View or class for use in the type attributes.
 	 @function createAlias
+	 @memberof ludo.ObjectFactory.prototype
 	 @param {String} typeName
 	 @param {ludo.Core} classReference
 	 @example
@@ -105,6 +110,7 @@ ludo.ObjectFactory = new Class({
 	 </code>
 
 	 @function ludo.factory.createNamespace
+	 @memberof ludo.ObjectFactory.prototype
 	 @param {String} ns
 	 @example
 	 ludo.factory.ns('parent.child.grandchild');

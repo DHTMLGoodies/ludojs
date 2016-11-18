@@ -13,10 +13,19 @@
  A PHP implementation of the PHP code of this can be obtained by contacting post[at]dhtmlgoodies.com.
 
  @namespace ludo.form
- @class File
+ @class ludo.form.File
  @augments ludo.form.Element
- @constructor
+ 
  @param {Object} config
+ @param {String} config.labelButton Label for button, default: "Browse"
+ @param {String} config.labelRemove Remove existing file label, default: "Remove"
+ @param {Boolean} config.instantUpload  Upload instantly when selecting file. During upload the form component will be flagged
+ as invalid, i.e. submit button will be disabled during file upload.
+ @param {Number} config.buttonWidth Width of browse button in pixels.
+ @param {String} config.accept Comma separated string of valid extensions, example : 'png,gif,bmp'
+ @fires ludo.form.File#submit Fired after successful file upload. Arguments: 1) {Object} Json from server, 2) ludo.form.File
+ @fires ludo.form.File#submitFail Fired after failed file upload, i.e. server responded with a JSON object where success was false({ "success": false }). Arguments: 1) {Object} Json from server, 2) ludo.form.File
+ @fires ludo.form.File#fail Fired on other failures than submitFail, example: server error. Arguments: 1) String response from server, 2) ludo.form.File
  @example
 	 ...
 	 children:[{
@@ -67,79 +76,31 @@ ludo.form.File = new Class({
 	inputTag:'input',
 	inputType:'file',
 
-	/**
-	 * Label of "Browse" button
-	 * @attribute labelButton
-	 * @type String
-	 * @default "Browse"
-	 */
+
 	labelButton:'Browse',
 
-	/**
-	 * Label for "Remove" new file link
-	 * @attribute labelRemove
-	 * @type String
-	 * @default Remove
-	 */
+
 	labelRemove:'Remove',
-	/**
-	 * Label for "Delete" new file link
-	 * @attribute {String} labelDelete
-	 * @default Delete
-	 */
+
 	labelDelete:'Delete',
 
-	/**
-	 * Private property for displayed file name. The file upload component is read only. It will only
-	 * submit a value if a new file has been selected.
-	 * @property valueForDisplay
-	 * @private
-	 */
+
 	valueForDisplay:'',
-	/**
-	 * Upload instantly when selecting file. During upload the form component will be flagged
-	 * as invalid, i.e. submit button will be disabled during file upload.
-	 * @attribute instantUpload
-	 * @type {Boolean}
-	 * @default true
-	 */
+
 	instantUpload:true,
 
 	uploadInProgress:false,
 
-	/**
-	 * false when a file has been selected but not uploaded. Happens
-	 * when instantUpload is set to false
-	 * @property fileUploadComplete
-	 * @type {Boolean}
-	 */
 	fileUploadComplete:true,
 
-	/*
-	 * Property used to identify file upload components
-	 */
+
 	isFileUploadComponent:true,
 
-	/**
-	 * Width of browse button
-	 * @attribute buttonWidth
-	 * @type {Number}
-	 * @default 80
-	 */
+
 	buttonWidth:80,
 
-	/**
-	 * Comma separated string of valid extensions, example : 'png,gif,bmp'
-	 * @attribute accept
-	 * @type String
-	 */
 	accept:undefined,
 
-    /**
-     * Name of resource on server to handle uploaded file.
-     * @config {String} FileUpload
-     * @default 'FileUpload'
-     */
     resource:'FileUpload',
 
 	__construct:function (config) {
@@ -253,24 +214,10 @@ ludo.form.File = new Class({
 			var json = JSON.parse(window.frames[this.iframeName].document.body.innerHTML);
 			if (json.success) {
 				this.value = json.response;
-				/**
-				 * Event fired after a successful file upload, i.e. no server errors and json.success in
-				 * response is true
-				 * @event submit
-				 * @param {Object} JSON from server (json.response)
-				 * @param {Object} ludo.form.file
-				 */
 				this.fireEvent('submit', [json.response, this]);
 			} else {
-				/**
-				 * Event fired after an unsuccessful file upload because json.success was false
-				 * @event submitfail
-				 * @param {Object} json from server
-				 * @param {Object} ludo.form.file
-				 */
 				this.fireEvent('submitfail', [json, this]);
 			}
-
 			this.fireEvent('valid', ['', this]);
 		} catch (e) {
 			var html = '';
@@ -278,13 +225,6 @@ ludo.form.File = new Class({
 				html = window.frames[this.iframeName].document.body.innerHTML;
 			} catch (e) {
 			}
-			/**
-			 * Event fired when upload failed
-			 * @event fail
-			 * @param {Object} Exception
-			 * @param {String} response from server
-			 * @param {Object} ludo.form.file
-			 */
 			this.fireEvent('fail', [e, html, this]);
 
 		}

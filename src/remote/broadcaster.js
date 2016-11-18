@@ -5,9 +5,7 @@
  The broadcaster can fire four events:
  start, success, failure and serverError. The example below show you how
  to add listeners to these events.
- @namespace remote
- @class Broadcaster
- @example
+
     ludo.remoteBroadcaster.withResource('Person').withService('read').on('success', function(){
 		// Do something
 	});

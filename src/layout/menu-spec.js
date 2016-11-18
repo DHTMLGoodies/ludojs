@@ -1,8 +1,6 @@
 /**
  * Spec of config options for the Menu Layout.
- * @namespace layout
- * @class MenuSpec
- * @type {Object}
+
  */
 ludo.layout.MenuSpec = {
 	/**

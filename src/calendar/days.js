@@ -1,10 +1,11 @@
 
 /**
- * Class used to display days in a month
+ * A View displaying days in a month. It's one of the child views of ludo.calendar.Calendar.
  * @namespace calendar
- * @class Days
- * @augments calendar.Base
+ * @class ludo.calendar.Days
+ * @fires ludo.calendar.Days#setDate - Arguments Date and ludo.View(the view firing the event)
  */
+
 ludo.calendar.Days = new Class({
     Extends:ludo.calendar.Base,
     layout:{

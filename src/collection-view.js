@@ -1,6 +1,6 @@
 /**
  * Base class for List and tree.Tree
- * @class CollectionView
+ * @class ludo.CollectionView
  */
 ludo.CollectionView = new Class({
 	Extends: ludo.View,

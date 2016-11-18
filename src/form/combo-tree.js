@@ -1,9 +1,7 @@
 /**
- * @namespace ludo.form
- * @class ComboTree
+ * @class ludo.form.ComboTree
  * @description A "combo" where you select value from a tree. id of clicked tree node will be set as
  * value.
- * @augments ludo.form.Element
  */
 ludo.form.ComboTree = new Class({
     Extends:ludo.form.Element,
@@ -14,47 +12,47 @@ ludo.form.ComboTree = new Class({
      * a simple reference to your own pre-configured tree, example:
      * { width: 500, height: 500, type: 'myApp.tree.Folders'
      * 'myApp.tree.Folders' will here be  class named ludo.myApp.tree.Folders
-     * This is an example of a custom made ludo.tree.Tree:<br>
-     * ludo.chess.view.folder.Tree = new Class({<br>
-     Extends:ludo.tree.Tree,<br>
-     module:'folder.tree',<br>
-     remote:{<br>
-     url:window.ludo.chess.URL,<br>
-     data:{<br>
-     getFolders:1<br>
-     }<br>
-     },<br>
-     nodeTpl:'<img src="' + window.ludo.chess.ROOT + 'images/{icon}"><span>{title}</span>',<br><br>
+     * This is an example of a custom made ludo.tree.Tree:
+     * ludo.chess.view.folder.Tree = new Class({
+     Extends:ludo.tree.Tree,
+     module:'folder.tree',
+     remote:{
+     url:window.ludo.chess.URL,
+     data:{
+     getFolders:1
+     }
+     },
+     nodeTpl:'<img src="' + window.ludo.chess.ROOT + 'images/{icon}"><span>{title}</span>',
 
-     recordConfig:{<br>
-     'folder':{<br>
-     selectable:false,<br>
-     defaults:{<br>
-     icon:'folder.png'<br>
-     }<br>
-     },<br>
-     'database':{<br>
-     selectable:true,<br>
-     defaults:{<br>
-     icon:'database.png'<br>
-     }<br>
-     }<br>
-     },<br><br>
+     recordConfig:{
+     'folder':{
+     selectable:false,
+     defaults:{
+     icon:'folder.png'
+     }
+     },
+     'database':{
+     selectable:true,
+     defaults:{
+     icon:'database.png'
+     }
+     }
+     },
 
-     treeConfig:{<br>
-     defaultValues:{<br>
-     icon:'folder.png'<br>
-     }<br>
-     },<br>
-     <br>
-     ludoEvents:function () {<br>
-     this.parent();<br>
-     this.addEvent('selectrecord', this.selectDatabase.bind(this));<br>
-     },<br>
-     <br>
-     selectDatabase:function (record) {<br>
-     this.fireEvent('selectdatabase', record);<br>
-     }<br>
+     treeConfig:{
+     defaultValues:{
+     icon:'folder.png'
+     }
+     },
+     
+     ludoEvents:function () {
+     this.parent();
+     this.addEvent('selectrecord', this.selectDatabase.bind(this));
+     },
+     
+     selectDatabase:function (record) {
+     this.fireEvent('selectdatabase', record);
+     }
      });
      * @attribute treeConfig
 	 * @type Object

@@ -7,11 +7,11 @@
  not limited in length
  
  @namespace ludo.form
- @class Password
- @augments ludo.form.Text
- @constructor
+ @class ludo.form.StrongPassword
+ @augments ludo.form.Password
  @description Form component for passwords.
  @param {Object} config
+ @param {Number} config.passwordLength Required password length, default = 8
  @example
  ...
  children:[
@@ -23,12 +23,7 @@
 ludo.form.StrongPassword = new Class({
     Extends: ludo.form.Password,
     regex : '(?=^.{_length_,}$)((?=.*[0-9])|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$',
-    /**
-     * Custom minimum length of password
-     * @config {Number} passwordLength
-     * @default 8
-     * @optional
-     */
+
     passwordLength : 8,
 
     __construct:function(config){

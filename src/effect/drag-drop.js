@@ -1,7 +1,7 @@
 /**
  * effect.Drag with support for drop events.
- * @namespace effect
- * @class DragDrop
+ * @namespace ludo.effect
+ * @class ludo.effect.DragDrop
  * @augments effect.Drag
  */
 ludo.effect.DragDrop = new Class({

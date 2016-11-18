@@ -57,52 +57,12 @@ ludo.form.Manager = new Class({
     method:undefined,
     url:undefined,
 	currentId:undefined,
-    /**
-     * Autoload data from server on creation
-     * @config {Boolean} autoLoad
-     * @default false
-     */
+
     autoLoad:false,
-    /**
-     Event listeners for the events fired by the form.
-     user.
-     @config {Object} listeners
-     @default undefined
-     @example
-        new ludo.View({
-            form:{
-                "resource": "User",
-                listeners:{
-                    "saved": function(){
-                        new ludo.Notification({ html : 'Your changes has been saved' });
-                    }
-                }
-            },
-            children:[
-                {
-                    type:"form.Text", name:"firstname"
-                },
-                {
-                    type:"form.Text", name:"lastname"
-                }
-            ]
-        });
-     */
+
     listeners:undefined,
 
-    /**
-     Read arguments sent when autoLoad is set to true
-     @config {String|Number} arguments
-     @default undefined
-     @example
-        form:{
-	 		url:'controller.php',
-	 		resource:'Person',
-	 		arguments:100,
-	 		autoLoad:true
-	 	}
-     will send request 'Person/100/read' to controller.php.
-     */
+
     arguments:undefined,
 
 	__construct:function (config) {

@@ -1,7 +1,6 @@
 /**
  * Anchor Component
- * @class Anchor
- * @augments View
+ * DELETED
  */
 ludo.Anchor = new Class({
     Extends:ludo.View,

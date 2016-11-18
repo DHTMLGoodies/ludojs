@@ -1,8 +1,5 @@
 /**
  * Super class for year and month-selectors
- * @namespace calendar
- * @class Selector
- * @augments calendar.Base
  */
 ludo.calendar.Selector = new Class({
     Extends:ludo.calendar.Base,

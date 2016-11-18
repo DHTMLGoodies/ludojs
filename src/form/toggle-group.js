@@ -1,6 +1,6 @@
 /**
  * @namespace ludo.form
- * @class ToggleGroup
+ * @class ludo.form.ToggleGroup
  * @augments Core
  */
 ludo.form.ToggleGroup = new Class({

@@ -1,7 +1,7 @@
 /**
  * Small button
  * @namespace ludo.form
- * @class TinbyButton
+ * @class ludo.form.TinbyButton
  */
 ludo.form.TinyButton = new Class({
     Extends: ludo.form.Button,

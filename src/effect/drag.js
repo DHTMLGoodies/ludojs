@@ -3,7 +3,7 @@
 @namespace ludo.effect
 @class ludo.effect.Drag
 @augments ludo.effect.Effect
-@constructor
+
 @param {Object} config
 @example
 	<style type="text/css">

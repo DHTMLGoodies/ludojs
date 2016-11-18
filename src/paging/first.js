@@ -1,9 +1,9 @@
 /**
  Button used to navigate to first page in a dataSource.Collection
- @namespace paging
- @class First
- @augments paging.Button
- @constructor
+ @namespace ludo.paging
+ @class ludo.paging.First
+ @augments ludo.paging.Button
+ 
  @param {Object} config
  @example
  	children:[
