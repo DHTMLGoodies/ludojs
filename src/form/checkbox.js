@@ -1,6 +1,8 @@
 /**
  * Class for checkbox form elements
  * @class ludo.form.Checkbox
+ * @param {Object} config
+ * @param {booelan} config.checked Initial checked
  * @augments ludo.form.Element
  */
 ludo.form.Checkbox = new Class({
@@ -9,19 +11,9 @@ ludo.form.Checkbox = new Class({
     inputType:'checkbox',
     stretchField:false,
     labelWidth:undefined,
-    /**
-     * Image to be displayed above the checkbox-/radio button
-     * @attribute image (Path to image).
-     * @type string
-     * @default null
-     */
+
     image:undefined,
-    /**
-     * Initial state
-     * @attribute {Boolean} checked
-     * @type {Boolean}
-     * @default false
-     */
+
     checked:false,
     height:undefined,
     labelSuffix : '',
@@ -113,6 +105,7 @@ ludo.form.Checkbox = new Class({
      * Return true if checkbox is checked, false otherwise
      * @function isChecked
      * @return {Boolean} checked
+     * @memberof ludo.form.Checkbox.prototype
      */
     isChecked:function () {
         return this.getFormEl().attr('checked') ? true : false;
@@ -121,6 +114,7 @@ ludo.form.Checkbox = new Class({
      * Set checkbox to checked
      * @function check
      * @return void
+     * @memberof ludo.form.Checkbox.prototype
      */
     check:function () {
         if (!this.isChecked()) {
@@ -159,6 +153,7 @@ ludo.form.Checkbox = new Class({
      * Set checkbox to checked or unchecked
      * @function setChecked
      * @param {Boolean} checked
+     * @memberof ludo.form.Checkbox.prototype
      */
     setChecked:function (checked) {
         this.setCheckedProperty(checked);
@@ -181,6 +176,11 @@ ludo.form.Checkbox = new Class({
         this.toggleDirtyFlag();
     },
 
+    /**
+     * Reset back to original value(checked or unchecked)
+     * @function reset
+     * @memberof ludo.form.Checkbox.prototype
+     */
     reset:function(){
         this.setCheckedProperty(this.initialValue ? true : false);
         this.fireEvent('valueChange', [this._get(), this]);

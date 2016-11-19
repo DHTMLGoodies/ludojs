@@ -10,6 +10,8 @@
  * @param {Boolean} config.minimized True to render the view minimized.
  * @param {Object} config.buttonBar Optional button bar configuration. The button bar is div at the bottom of the view where child views(example buttons) are rendered in a linear horizontal layout.
  * Alignment of button can be set using config.buttonBar.align(left, center or right).<br> Example: <br><code>buttonBar: { align:'left', children:[ {type:'ludo.form.Button', value: 'OK' }]}. </code>.<br>Default alignment is "right"
+ * @fires ludo.FramedView#minimize Fired on mimimize. Argument: ludo.FramedView
+ * @fires ludo.FramedView#maximize Fired on maximize
  */
 ludo.FramedView = new Class({
 	Extends:ludo.View,
@@ -37,6 +39,7 @@ ludo.FramedView = new Class({
 	 @config titleBar
 	 @type {Object}
 	 @default undefined
+	 @memberof ludo.FramedView.prototype
 	 @example
 	 	new ludo.Window({
 	 		titleBar:{
@@ -278,11 +281,6 @@ ludo.FramedView = new Class({
             });
             this.els.body.css('visibility', 'visible');
             this.showResizeHandles();
-            /**
-             * Fired when a component is maximized
-             * @event maximize
-             * @param component this
-             */
             this.fireEvent('maximize', this);
         }
 	},
@@ -315,10 +313,7 @@ ludo.FramedView = new Class({
             this.hideResizeHandles();
 
             this.layout.height = height;
-            /**
-             * @event minimize
-             * @param Component this
-             */
+
             this.fireEvent('minimize', [this, { height: newHeight }]);
         }
 	},
@@ -421,11 +416,7 @@ ludo.FramedView = new Class({
 	},
 	stopMove:function (el, drag) {
 		this.getLayout().getRenderer().setPosition(drag.getX(), drag.getY());
-		/**
-		 * Event fired after moving Component
-		 * @event stopmove
-		 * @param {Object} Component
-		 */
+
 		this.fireEvent('stopmove', this);
 	}
 });

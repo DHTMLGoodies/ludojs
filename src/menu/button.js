@@ -3,50 +3,25 @@
  below it.
  @namespace ludo.menu
  @class ludo.menu.Button
+ @param {object} config
+ @param {string|HTMLElement} renderTo Render menu button to this DOM node
+ @param {boolean} alwaysVisible Button always visible. When false, it will be visible when mouse enters
+ @param {string} region Position button in this region. Valid values : 'nw','ne','sw' and 'se'
+ @param {object} menu View configuration for menu, example { layout:{}, children:[ { "item 1", "item 2" ]}
+ @
  */
 ludo.menu.Button = new Class({
     Extends: ludo.Core,
     width: 15,
     // TODO refactor this class
-    /**
-     * Render button to this element
-     * @attribute renderTo
-     * @type {String|DOMElement}
-     * @default undefined
-     */
+
     renderTo: undefined,
-
-    /**
-     * Button always visible. When false, it will be visible when mouse enters
-     * parent DOM element and hidden when it leaves it
-     * @attribute alwaysVisible
-     * @type {Boolean}
-     * default false
-     */
     alwaysVisible: false,
-
-    /**
-     * Position button in this region. Valid values : 'nw','ne','sw' and 'se'
-     * @attribute region
-     * @type String
-     * @default 'ne'
-     */
     region: 'ne',
-
     el: undefined,
-
-    /**
-     * Configuration object for the object to show on click on button
-     * @attribute menu
-     * @type {View}
-     * @default undefined
-     */
     menu: undefined,
-
     menuCreated: false,
-
     autoPosition: true,
-
     toggleOnClick: false,
 
     __construct: function (config) {
@@ -140,7 +115,7 @@ ludo.menu.Button = new Class({
         this.fireEvent('show', this);
     },
 
-    /**
+    /*
      This method should be called from function added as event handler to "beforeShow"
      @function cancelShow
      @example
@@ -207,7 +182,7 @@ ludo.menu.Button = new Class({
 
     show: function () {
         this.okToShowButton = true;
-        /**
+        /*
          * Event fired before button is shown. You can use this event and call
          * the cancel method if there are situations where you don't always want to show the button
          * @event beforeShow

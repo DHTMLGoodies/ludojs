@@ -1,20 +1,47 @@
 /**
  * Class for dragging DOM elements.
-@namespace ludo.effect
-@class ludo.effect.Drag
-@augments ludo.effect.Effect
+ @namespace ludo.effect
+ @class ludo.effect.Drag
+ @augments ludo.effect.Effect
 
-@param {Object} config
-@example
-	<style type="text/css">
-	.ludo-shim {
+ @param {Object} config
+ @param {Number} config.minX Optional minimum left coordinate
+ @param {Number} config.maxX Optional maximum left coordinate
+ @param {Number} config.minY Optional minimum top coordinate
+ @param {Number} config.maxY Optional maximum top coordinate
+ @param {Number} config.maxY Optional maximum top coordinate
+ @param {String|HTMLElement} config.el This element is draggable.
+ @param {String|HTMLElement} config.handle Optional dom element. Mouse down on this element will initiate the drag process. example: A title bar above a view. If not set, Mouse down on this.el will initiate dragging.
+ @param {String} config.directions Accept dragging in these directions, default: "XY". For horizontal dragging only, use "X" and for vertical "Y".
+ @param {Number} config.minPos Alternative to minX and minY when you only accepts dragging along the X or Y-axis.
+ @param {Number} config.maxPos Alternative to maxX and maxY when you only accepts dragging along the X or Y-axis.
+ @param {Number} config.delay Optional delay in seconds from mouse down to dragging starts. Default: 0
+ @param {Boolean} config.useShim True to drag a "ghost" DOM element while dragging, default: false
+ @param {String} config.shimCls Name of css class to add to the shim
+ @param {Boolean} config.autoHideShim True to automatically hide shim on drag end, default: true
+ @param {Number} config.mouseYOffset While dragging, always show dragged element this amount of pixels below mouse cursor.
+ @param {Number} config.mouseXOffset While dragging, always show dragged element this amount of pixels right of mouse cursor.
+ @param {String} config.unit Unit used while dragging, default: "px"
+
+
+ @fires ludo.effect.Drag#before Event fired before drag starts. Params: 1) Dom element to be dragged, 2) ludo.effect.Drag, 3) {x,y}
+ @fires ludo.effect.Drag#start Event when drag starts. Params: 1) Dom element to be dragged, 2) ludo.effect.Drag, 3) {x,y}
+ @fires ludo.effect.Drag#end' Event when drag ends. Params: 1) Dom element to be dragged, 2) ludo.effect.Drag, 3) {x,y}
+ @fires ludo.effect.Drag#showShim' Event fired when shim DOM node is shown. Argument: 1) Shim DOM Node, 2) ludo.effect.Drag
+ @fires ludo.effect.Drag#flyToShim' Event fired after flyBack animation is complete. Arguments: 1) ludo.effect.Drag, 2) Shim DOM node
+ @fires ludo.effect.Drag#flyBack' Event fired when shim DOM node is shown. Argument: Arguments: 1) ludo.effect.Drag, 2) Shim DOM node
+
+
+ @example
+ <style type="text/css">
+ .ludo-shim {
 		 border: 15px solid #AAA;
 		 background-color: #DEF;
 		 margin: 5;
 		 opacity: .5;
 		 border-radius: 5px;
 	}
-	.draggable{
+ .draggable{
 		width:150px;
 		z-index:1000;
 		height:150px;
@@ -22,12 +49,12 @@
 		border:1px solid #555;
 		background-color:#DEF
 	}
-	</style>
-	<div id="draggable" class="draggable">
-		I am draggable
-	</div>
-	<script type="text/javascript">
-	 var d = new ludo.effect.Drag({
+ </style>
+ <div id="draggable" class="draggable">
+ I am draggable
+ </div>
+ <script type="text/javascript">
+ var d = new ludo.effect.Drag({
 		useShim:true,
 		 listeners:{
 			 endDrag:function(dragged, dragEffect){
@@ -41,866 +68,766 @@
 			 }
 		 }
 	 });
-	d.add('draggable'); // "draggable" is the id of the div
- 	</script>
+ d.add('draggable'); // "draggable" is the id of the div
+ </script>
 
-*/
+ */
 ludo.effect.Drag = new Class({
-	Extends:ludo.effect.Effect,
+    Extends: ludo.effect.Effect,
 
-	/**
-	 * Reference to drag handle (Optional). If not set, "el" will be used
-	 * @config handle
-	 * @type Object|String
-	 * @default undefined
-	 */
-	handle:undefined,
-	/**
-	 * Reference to DOM element to be dragged
-	 * @config el
-	 * @type Object|String
-	 * @default undefined
-	 */
-	el:undefined,
 
-	/**
-	 * Minimum x position
-	 * @config minX
-	 * @type {Number}
-	 * @default undefined
-	 */
-	minX:undefined,
-	/**
-	 * Minimum y position
-	 * @config minY
-	 * @type {Number}
-	 * @default undefined
-	 */
-	minY:undefined,
+    handle: undefined,
 
-	/**
-	 * Maximum x position
-	 * @config maxX
-	 * @type {Number}
-	 * @default undefined
-	 */
-	maxX:undefined,
-	/**
-	 * config y position
-	 * @attribute maxY
-	 * @type {Number}
-	 * @default undefined
-	 */
-	maxY:undefined,
+    el: undefined,
 
-	/**
-	 * minPos and maxPos can be used instead of minX,maxX,minY and maxY if
-	 * you only accept dragging along x-axis or y-axis
-	 * @config {Number} minPos
-	 * @default undefined
-	 */
-	minPos:undefined,
-	/**
-	 * @config maxPos
-	 * @type {Number}
-	 * @default undefined
-	 */
-	maxPos:undefined,
-	/**
-	 * Accept dragging in these directions
-	 * @config dragX
-	 * @type String
-	 * @default XY
-	 */
-	directions:'XY',
 
-	/**
-	 * Unit used while dragging
-	 * @config unit, example : "px", "%"
-	 * @default px
-	 */
-	unit:'px',
+    minX: undefined,
 
-	dragProcess:{
-		active:false
-	},
+    minY: undefined,
 
-	coordinatesToDrag:undefined,
-	/**
-	 * Delay in seconds from mouse down to start drag. If mouse is released within this interval,
-	 * the drag will be cancelled.
-	 * @config delay
-	 * @type {Number}
-	 * @default 0
-	 */
-	delay:0,
 
-	inDelayMode:false,
+    maxX: undefined,
 
-	els:{},
+    maxY: undefined,
 
-	/**
-	 * True to use dynamically created shim while dragging. When true,
-	 * the original DOM element will not be dragged.
-	 * @config useShim
-	 * @type {Boolean}
-	 * @default false
-	 */
-	useShim:false,
 
-	/**
-	 * True to automatically hide shim after drag is finished
-	 * @config autohideShim
-	 * @type {Boolean}
-	 * @default true
-	 */
-	autoHideShim:true,
+    minPos: undefined,
 
-	/**
-	 CSS classes to add to shim
-	 @config shimCls
-	 @type Array
-	 @default undefined
-	 @example
-		 shimCls:['myShim','myShim-2']
-	 which will results in this shim :
-	 @example
-	 	<div class="ludo-shim myShim myShim-2">
-	 */
-	shimCls:undefined,
+    maxPos: undefined,
 
-	/**
-	 * While dragging, always show dragged element this amount of pixels below mouse cursor.
-	 * @param mouseYOffset
-	 * @type {Number}
-	 * @default undefined
-	 */
-	mouseYOffset:undefined,
+    directions: 'XY',
 
-	/**
-	 * While dragging, always show dragged element this amount of pixels right of mouse cursor.
-	 * @config mouseXOffset
-	 * @type {Number}
-	 * @default undefined
-	 */
-	mouseXOffset:undefined,
 
-    fireEffectEvents:true,
+    unit: 'px',
 
-	__construct:function (config) {
-		this.parent(config);
-		if (config.el !== undefined) {
-			this.add({
-				el:config.el,
-				handle:config.handle
-			});
-		}
+    dragProcess: {
+        active: false
+    },
 
-        this.setConfigParams(config, ['useShim','autoHideShim','directions','delay','minX','maxX','minY','maxY',
-            'minPos','maxPos','unit','shimCls','mouseYOffset','mouseXOffset','fireEffectEvents']);
-	},
+    coordinatesToDrag: undefined,
 
-	ludoEvents:function () {
-		this.parent();
-		this.getEventEl().on(ludo.util.getDragMoveEvent(), this.drag.bind(this));
-		this.getEventEl().on(ludo.util.getDragEndEvent(), this.endDrag.bind(this));
-		if (this.useShim) {
-			this.addEvent('start', this.showShim.bind(this));
-			if(this.autoHideShim){
-				this.addEvent('end', this.hideShim.bind(this));
-			}
-		}
-	},
+    delay: 0,
 
-	/**
-	 Add draggable object
-	 @function add
-	 @param {effect.DraggableNode|String|HTMLDivElement} node
-	 @return {effect.DraggableNode}
-	 @example
-	 	dragObject.add({
+    inDelayMode: false,
+
+    els: {},
+
+
+    useShim: false,
+
+
+    autoHideShim: true,
+
+
+    shimCls: undefined,
+
+    mouseYOffset: undefined,
+
+
+    mouseXOffset: undefined,
+
+    fireEffectEvents: true,
+
+    __construct: function (config) {
+        this.parent(config);
+        if (config.el !== undefined) {
+            this.add({
+                el: config.el,
+                handle: config.handle
+            });
+        }
+
+        this.setConfigParams(config, ['useShim', 'autoHideShim', 'directions', 'delay', 'minX', 'maxX', 'minY', 'maxY',
+            'minPos', 'maxPos', 'unit', 'shimCls', 'mouseYOffset', 'mouseXOffset', 'fireEffectEvents']);
+    },
+
+    ludoEvents: function () {
+        this.parent();
+        this.getEventEl().on(ludo.util.getDragMoveEvent(), this.drag.bind(this));
+        this.getEventEl().on(ludo.util.getDragEndEvent(), this.endDrag.bind(this));
+        if (this.useShim) {
+            this.addEvent('start', this.showShim.bind(this));
+            if (this.autoHideShim) {
+                this.addEvent('end', this.hideShim.bind(this));
+            }
+        }
+    },
+
+    /**
+     Add draggable object
+     @function add
+     @param {effect.DraggableNode|String|HTMLDivElement} node
+     @memberof ludo.effect.Effect.prototype
+     @return {effect.DraggableNode}
+     @example
+     dragObject.add({
 			el: 'myDiv',
 			handle : 'myHandle'
 		});
-	 handle is optional.
+     handle is optional.
 
-	 @example
-	 	dragObject.add('idOfMyDiv');
+     @example
+     dragObject.add('idOfMyDiv');
 
-	 You can also add custom properties:
+     You can also add custom properties:
 
-	 @example
-	 	dragobject.add({
+     @example
+     dragobject.add({
 	 		id: "myReference',
 			el: 'myDiv',
 			column: 'city'
 		});
-	 	...
-	 	...
-	 	dragobject.addEvent('before', beforeDrag);
-		 ...
-		 ...
-	 	function beforeDrag(dragged){
+     ...
+     ...
+     dragobject.addEvent('before', beforeDrag);
+     ...
+     ...
+     function beforeDrag(dragged){
 	 		console.log(dragged.el);
 	 		console.log(dragged.column);
 	 	}
-	 */
-	add:function (node) {
-		node = this.getValidNode(node);
-		var el = $(node.el);
-		this.setPositioning(el);
+     */
+    add: function (node) {
+        node = this.getValidNode(node);
+        var el = $(node.el);
+        this.setPositioning(el);
 
         var handle = node.handle ? $(node.handle) : el;
 
-		handle.id = handle.id || 'ludo-' + String.uniqueID();
-		handle.addClass("ludo-drag");
+        handle.attr("id",  handle.id || 'ludo-' + String.uniqueID());
+        handle.addClass("ludo-drag");
 
-		handle.on(ludo.util.getDragStartEvent(), this.startDrag.bind(this));
-		handle.attr('forId', node.id);
-		this.els[node.id] = Object.merge(node, {
-			el:$(el),
-			handle:handle
-		});
-		return this.els[node.id];
-	},
+        handle.on(ludo.util.getDragStartEvent(), this.startDrag.bind(this));
+        handle.attr('forId', node.id);
+        this.els[node.id] = Object.merge(node, {
+            el: $(el),
+            handle: handle
+        });
+        return this.els[node.id];
+    },
 
-	/**
-	 * Remove node
-	 * @function remove
-	 * @param {String} id
-	 * @return {Boolean} success
-	 */
-	remove:function(id){
-		if(this.els[id]!==undefined){
-			var el = $("#" + this.els[id].handle);
-			el.off(ludo.util.getDragStartEvent(), this.startDrag.bind(this));
-			this.els[id] = undefined;
-			return true;
-		}
-		return false;
-	},
+    /**
+     * Remove node
+     * @function remove
+     * @param {String} id
+     * @return {Boolean} success
+     * @memberof ludo.effect.Effect.prototype
+     */
+    remove: function (id) {
+        if (this.els[id] !== undefined) {
+            var el = $("#" + this.els[id].handle);
+            el.off(ludo.util.getDragStartEvent(), this.startDrag.bind(this));
+            this.els[id] = undefined;
+            return true;
+        }
+        return false;
+    },
 
-	removeAll:function(){
-		var keys = Object.keys(this.els);
-		for(var i=0;i<keys.length;i++){
-			this.remove(keys[i]);
-		}
-		this.els = {};
-	},
+    removeAll: function () {
+        var keys = Object.keys(this.els);
+        for (var i = 0; i < keys.length; i++) {
+            this.remove(keys[i]);
+        }
+        this.els = {};
+    },
 
-	getValidNode:function(node){
-		if (!this.isElConfigObject(node)) {
-			node = {
-				el:$(node)
-			};
-		}
-		if(typeof node.el === 'string'){
-			if(node.el.substr(0,1) != "#")node.el = "#" + node.el;
-			node.el = $(node.el);
-		}
-		node.id = node.id || node.el.attr("id") || 'ludo-' + String.uniqueID();
-		if (!node.el.attr("id"))node.el.attr("id", node.id);
-		node.el.attr('forId', node.id);
-		return node;
-	},
+    getValidNode: function (node) {
+        if (!this.isElConfigObject(node)) {
+            node = {
+                el: $(node)
+            };
+        }
+        if (typeof node.el === 'string') {
+            if (node.el.substr(0, 1) != "#")node.el = "#" + node.el;
+            node.el = $(node.el);
+        }
+        node.id = node.id || node.el.attr("id") || 'ludo-' + String.uniqueID();
+        if (!node.el.attr("id"))node.el.attr("id", node.id);
+        node.el.attr('forId', node.id);
+        return node;
+    },
 
-	isElConfigObject:function (config) {
-		return config.el !== undefined || config.handle !== undefined;
-	},
+    isElConfigObject: function (config) {
+        return config.el !== undefined || config.handle !== undefined;
+    },
 
-	setPositioning:function(el){
-		if (!this.useShim){
-			el.css('position', 'absolute');
-		}else{
+    setPositioning: function (el) {
+        if (!this.useShim) {
+            el.css('position', 'absolute');
+        } else {
             var pos = el.css('position');
-			if(!pos || (pos!='relative' && pos!='absolute')){
-				el.css('position', 'relative');
-			}
-		}
-	},
+            if (!pos || (pos != 'relative' && pos != 'absolute')) {
+                el.css('position', 'relative');
+            }
+        }
+    },
 
-	getById:function(id){
-		return this.els[id];
-	},
+    getById: function (id) {
+        return this.els[id];
+    },
 
-	getIdByEvent:function (e) {
-		var el = $(e.target);
-		if (!el.hasClass('ludo-drag')) {
-			el = el.closest('.ludo-drag');
-		}
-		return el.attr('forId');
-	},
-
-	/**
-	 * Returns reference to dragged object, i.e. object added in constructor or
-	 * by use of add method
-	 * @function getDragged
-	 * @return {Object}
-	 */
-	getDragged:function(){
-		return this.els[this.dragProcess.dragged];
-	},
-
-	/**
-	 * Returns reference to draggable DOM node
-	 * @function getEl
-	 * @return {Object} DOMNode
-	 */
-	getEl:function () {
-		return this.els[this.dragProcess.dragged].el;
-	},
-
-	getShimOrEl:function () {
-		return this.useShim ? this.getShim() : this.getEl();
-	},
-
-	getSizeOf:function(el){
-		return el.outerWidth !== undefined ? { x: el.outerWidth(), y: el.outerHeight() } : { x: 0, y: 0 };
-	},
-
-	getPositionOf:function(el){
-
-		return $(el).position();
-	},
-
-	setDragCoordinates:function(){
-		this.coordinatesToDrag = {
-			x : 'x', y:'y'
-		};
-	},
-	startDrag:function (e) {
-		var id = this.getIdByEvent(e);
-
-		var el = this.getById(id).el;
-
-		var size = this.getSizeOf(el);
-		var pos;
-		if(this.useShim){
-			pos = el.position();
-		}else{
-			var parent = this.getPositionedParent(el);
-            pos = parent? el.getPosition(parent) : this.getPositionOf(el)
-		}
-
-		var x = pos.left;
-		var y = pos.top;
-		this.dragProcess = {
-			active:true,
-			dragged:id,
-			currentX:x,
-			currentY:y,
-			elX:x,
-			elY:y,
-			width:size.x,
-			height:size.y,
-			mouseX:e.pageX,
-			mouseY:e.pageY
-		};
+    getIdByEvent: function (e) {
+        var el = $(e.target);
+        if (!el.hasClass('ludo-drag')) {
+            el = el.closest('.ludo-drag');
+        }
+        return el.attr('forId');
+    },
 
 
-		this.dragProcess.el = this.getShimOrEl();
-		/**
-		 * Event fired before drag
-		 * @event {effect.DraggableNode}
-		 * @param {Object} object to be dragged
-		 * @param {ludo.effect.Drag} component
-		 * @param {Object} pos(x and y)
-		 */
-		this.fireEvent('before', [this.els[id], this, {x:x,y:y}]);
+    getDragged: function () {
+        return this.els[this.dragProcess.dragged];
+    },
 
-		if(!this.isActive()){
-			return undefined;
-		}
+    /**
+     * Returns reference to draggable DOM node
+     * @function getEl
+     * @return {HTMLElement} DOMNode
+     * @memberof ludo.effect.Effect.prototype
+     */
+    getEl: function () {
+        return this.els[this.dragProcess.dragged].el;
+    },
 
-		this.dragProcess.minX = this.getMinX();
-		this.dragProcess.maxX = this.getMaxX();
-		this.dragProcess.minY = this.getMinY();
-		this.dragProcess.maxY = this.getMaxY();
-		this.dragProcess.dragX = this.canDragAlongX();
-		this.dragProcess.dragY = this.canDragAlongY();
+    getShimOrEl: function () {
+        return this.useShim ? this.getShim() : this.getEl();
+    },
 
-		if (this.delay) {
-			this.setActiveAfterDelay();
-		} else {
-			/**
-			 * Event fired before dragging
-			 * @event start
-			 * @param {effect.DraggableNode} object to be dragged.
-			 * @param {ludo.effect.Drag} component
-			 * @param {Object} pos(x and y)
-			 */
-			this.fireEvent('start', [this.els[id], this, {x:x,y:y}]);
+    getSizeOf: function (el) {
+        return el.outerWidth !== undefined ? {x: el.outerWidth(), y: el.outerHeight()} : {x: 0, y: 0};
+    },
 
-			if(this.fireEffectEvents)ludo.EffectObject.start();
-		}
+    getPositionOf: function (el) {
 
-		return false;
-	},
+        return $(el).position();
+    },
 
-	getPositionedParent:function(el){
+    setDragCoordinates: function () {
+        this.coordinatesToDrag = {
+            x: 'x', y: 'y'
+        };
+    },
+    startDrag: function (e) {
+        var id = this.getIdByEvent(e);
 
-		var parent = el.parentNode;
-		while(parent){
-			var pos = parent.getStyle('position');
-			if (pos === 'relative' || pos === 'absolute')return parent;
-			parent = parent.getParent();
-		}
-		return undefined;
-	},
+        var el = this.getById(id).el;
 
-	/**
-	 Cancel drag. This method is designed to be called from an event handler
-	 attached to the "beforeDrag" event.
-	 @function cancelDrag
-	 @example
-	 	// Here, dd is a {{#crossLink "effect.Drag"}}{{/crossLink}} object
-	 	dd.on('before', function(draggable, dd, pos){
+        var size = this.getSizeOf(el);
+        var pos;
+        if (this.useShim) {
+            pos = el.position();
+        } else {
+            var parent = this.getPositionedParent(el);
+            pos = parent ? el.getPosition(parent) : this.getPositionOf(el)
+        }
+
+        var x = pos.left;
+        var y = pos.top;
+        this.dragProcess = {
+            active: true,
+            dragged: id,
+            currentX: x,
+            currentY: y,
+            elX: x,
+            elY: y,
+            width: size.x,
+            height: size.y,
+            mouseX: e.pageX,
+            mouseY: e.pageY
+        };
+
+
+        this.dragProcess.el = this.getShimOrEl();
+
+        this.fireEvent('before', [this.els[id], this, {x: x, y: y}]);
+
+        if (!this.isActive()) {
+            return undefined;
+        }
+
+        this.dragProcess.minX = this.getMinX();
+        this.dragProcess.maxX = this.getMaxX();
+        this.dragProcess.minY = this.getMinY();
+        this.dragProcess.maxY = this.getMaxY();
+        this.dragProcess.dragX = this.canDragAlongX();
+        this.dragProcess.dragY = this.canDragAlongY();
+
+        if (this.delay) {
+            this.setActiveAfterDelay();
+        } else {
+            /**
+             * Event fired before dragging
+             * @event start
+             * @param {effect.DraggableNode} object to be dragged.
+             * @param {ludo.effect.Drag} component
+             * @param {Object} pos(x and y)
+             */
+            this.fireEvent('start', [this.els[id], this, {x: x, y: y}]);
+
+            if (this.fireEffectEvents)ludo.EffectObject.start();
+        }
+
+        return false;
+    },
+
+    getPositionedParent: function (el) {
+
+        var parent = el.parentNode;
+        while (parent) {
+            var pos = parent.getStyle('position');
+            if (pos === 'relative' || pos === 'absolute')return parent;
+            parent = parent.getParent();
+        }
+        return undefined;
+    },
+
+    /**
+     Cancel drag. This method is designed to be called from an event handler
+     attached to the "beforeDrag" event.
+     @function cancelDrag
+     @memberof ludo.effect.Effect.prototype
+     @example
+     // Here, dd is a {{#crossLink "effect.Drag"}}{{/crossLink}} object
+     dd.on('before', function(draggable, dd, pos){
 	 		if(pos.x > 1000 || pos.y > 500){
 	 			dd.cancelDrag();
 			}
 	 	});
-	 In this example, dragging will be cancelled when the x position of the mouse
-	 is greater than 1000 or if the y position is greater than 500. Another more
-	 useful example is this:
-	 @example
-		 dd.on('before', function(draggable, dd){
+     In this example, dragging will be cancelled when the x position of the mouse
+     is greater than 1000 or if the y position is greater than 500. Another more
+     useful example is this:
+     @example
+     dd.on('before', function(draggable, dd){
 		 	if(!this.isDraggable(draggable)){
 		 		dd.cancelDrag()
 		 	}
 		});
-	 Here, we assume that we have an isDraggable method which returns true or false
-	 for whether the given node is draggable or not. "draggable" in this example
-	 is one of the {{#crossLink "effect.DraggableNode"}}{{/crossLink}} objects added
-	 using the {{#crossLink "effect.Drag/add"}}{{/crossLink}} method.
-	 */
+     Here, we assume that we have an isDraggable method which returns true or false
+     for whether the given node is draggable or not. "draggable" in this example
+     is one of the {{#crossLink "effect.DraggableNode"}}{{/crossLink}} objects added
+     using the {{#crossLink "effect.Drag/add"}}{{/crossLink}} method.
+     */
 
-	cancelDrag:function () {
-		this.dragProcess.active = false;
-		this.dragProcess.el = undefined;
-        if(this.fireEffectEvents)ludo.EffectObject.end();
-	},
+    cancelDrag: function () {
+        this.dragProcess.active = false;
+        this.dragProcess.el = undefined;
+        if (this.fireEffectEvents)ludo.EffectObject.end();
+    },
 
-	getShimFor:function (el) {
-		return el;
-	},
+    getShimFor: function (el) {
+        return el;
+    },
 
-	setActiveAfterDelay:function () {
-		this.inDelayMode = true;
-		this.dragProcess.active = false;
-		this.startIfMouseNotReleased.delay(this.delay * 1000, this);
-	},
+    setActiveAfterDelay: function () {
+        this.inDelayMode = true;
+        this.dragProcess.active = false;
+        this.startIfMouseNotReleased.delay(this.delay * 1000, this);
+    },
 
-	startIfMouseNotReleased:function () {
-		if (this.inDelayMode) {
-			this.dragProcess.active = true;
-			this.inDelayMode = false;
-			this.fireEvent('start', [this.getDragged(), this, {x:this.getX(),y:this.getY()}]);
-			ludo.EffectObject.start();
-		}
-	},
+    startIfMouseNotReleased: function () {
+        if (this.inDelayMode) {
+            this.dragProcess.active = true;
+            this.inDelayMode = false;
+            this.fireEvent('start', [this.getDragged(), this, {x: this.getX(), y: this.getY()}]);
+            ludo.EffectObject.start();
+        }
+    },
 
-	drag:function (e) {
-		if (this.dragProcess.active && this.dragProcess.el) {
-			var pos = {
-				x:undefined,
-				y:undefined
-			};
-			if (this.dragProcess.dragX) {
-				pos.x = this.getXDrag(e);
+    drag: function (e) {
+        if (this.dragProcess.active && this.dragProcess.el) {
+            var pos = {
+                x: undefined,
+                y: undefined
+            };
+            if (this.dragProcess.dragX) {
+                pos.x = this.getXDrag(e);
 
-			}
+            }
 
-			if (this.dragProcess.dragY) {
-				pos.y = this.getYDrag(e);
-			}
+            if (this.dragProcess.dragY) {
+                pos.y = this.getYDrag(e);
+            }
 
 
-			this.move(pos);
+            this.move(pos);
 
-			/**
-			 * Event fired while dragging. Sends position, example {x:100,y:50}
-			 * and reference to effect.Drag as arguments
-			 * @event drag
-			 * @param {Object} x and y
-			 * @param {effect.Drag} this
-			 */
-			this.fireEvent('drag', [pos, this.els[this.dragProcess.dragged], this]);
-			if (ludo.util.isTabletOrMobile())return false;
+            /**
+             * Event fired while dragging. Sends position, example {x:100,y:50}
+             * and reference to effect.Drag as arguments
+             * @event drag
+             * @param {Object} x and y
+             * @param {effect.Drag} this
+             */
+            this.fireEvent('drag', [pos, this.els[this.dragProcess.dragged], this]);
+            if (ludo.util.isTabletOrMobile())return false;
 
-		}
-		return undefined;
-	},
+        }
+        return undefined;
+    },
 
-	move:function (pos) {
-		if (pos.x !== undefined) {
-			this.dragProcess.currentX = pos.x;
-			this.dragProcess.el.css('left',  pos.x + this.unit);
-		}
-		if (pos.y !== undefined) {
-			this.dragProcess.currentY = pos.y;
-			this.dragProcess.el.css('top',  pos.y + this.unit);
-		}
-	},
+    move: function (pos) {
+        if (pos.x !== undefined) {
+            this.dragProcess.currentX = pos.x;
+            this.dragProcess.el.css('left', pos.x + this.unit);
+        }
+        if (pos.y !== undefined) {
+            this.dragProcess.currentY = pos.y;
+            this.dragProcess.el.css('top', pos.y + this.unit);
+        }
+    },
 
-	/**
-	 * Return current x pos
-	 * @function getX
-	 * @return {Number} x
-	 */
-	getX:function(){
-		return this.dragProcess.currentX;
-	},
-	/**
-	 * Return current y pos
-	 * @function getY
-	 * @return {Number} y
-	 */
-	getY:function(){
-		return this.dragProcess.currentY;
-	},
+    /**
+     * Return current x pos
+     * @function getX
+     * @return {Number} x
+     * @memberof ludo.effect.Effect.prototype
+     */
+    getX: function () {
+        return this.dragProcess.currentX;
+    },
+    /**
+     * Return current y pos
+     * @function getY
+     * @return {Number} y
+     * @memberof ludo.effect.Effect.prototype
+     */
+    getY: function () {
+        return this.dragProcess.currentY;
+    },
 
-	getXDrag:function (e) {
-		var posX;
+    getXDrag: function (e) {
+        var posX;
 
-		if(this.mouseXOffset){
-			posX = e.pageX + this.mouseXOffset;
-		}else{
-			posX = e.pageX - this.dragProcess.mouseX + this.dragProcess.elX;
-		}
+        if (this.mouseXOffset) {
+            posX = e.pageX + this.mouseXOffset;
+        } else {
+            posX = e.pageX - this.dragProcess.mouseX + this.dragProcess.elX;
+        }
 
-		if (posX < this.dragProcess.minX) {
-			posX = this.dragProcess.minX;
-		}
-		if (posX > this.dragProcess.maxX) {
-			posX = this.dragProcess.maxX;
-		}
-		return posX;
-	},
+        if (posX < this.dragProcess.minX) {
+            posX = this.dragProcess.minX;
+        }
+        if (posX > this.dragProcess.maxX) {
+            posX = this.dragProcess.maxX;
+        }
+        return posX;
+    },
 
-	getYDrag:function (e) {
-		var posY;
-		if(this.mouseYOffset){
-			posY = e.pageY + this.mouseYOffset;
-		}else{
-			posY = e.pageY - this.dragProcess.mouseY + this.dragProcess.elY;
-		}
+    getYDrag: function (e) {
+        var posY;
+        if (this.mouseYOffset) {
+            posY = e.pageY + this.mouseYOffset;
+        } else {
+            posY = e.pageY - this.dragProcess.mouseY + this.dragProcess.elY;
+        }
 
-		if (posY < this.dragProcess.minY) {
-			posY = this.dragProcess.minY;
-		}
-		if (posY > this.dragProcess.maxY) {
-			posY = this.dragProcess.maxY;
-		}
-		return posY;
-	},
+        if (posY < this.dragProcess.minY) {
+            posY = this.dragProcess.minY;
+        }
+        if (posY > this.dragProcess.maxY) {
+            posY = this.dragProcess.maxY;
+        }
+        return posY;
+    },
 
-	endDrag:function () {
-		if (this.dragProcess.active) {
-			this.cancelDrag();
-			/**
-			 * Event fired on drag end
-			 * @event end
-			 * @param {effect.DraggableNode} dragged
-			 * @param {ludo.effect.Drag} this
-			 * @param {Object} x and y
-			 */
-			this.fireEvent('end', [
-				this.getDragged(),
-				this,
-				{
-					x:this.getX(),
-					y:this.getY()
-				}
-			]);
+    endDrag: function () {
+        if (this.dragProcess.active) {
+            this.cancelDrag();
 
-		}
-		if (this.inDelayMode)this.inDelayMode = false;
+            this.fireEvent('end', [
+                this.getDragged(),
+                this,
+                {
+                    x: this.getX(),
+                    y: this.getY()
+                }
+            ]);
 
-	},
+        }
+        if (this.inDelayMode)this.inDelayMode = false;
 
-	/**
-	 * Set new max X pos
-	 * @function setMaxX
-	 * @param {Number} x
-	 */
-	setMaxX:function (x) {
-		this.maxX = x;
-	},
-	/**
-	 * Set new min X pos
-	 * @function setMinX
-	 * @param {Number} x
-	 */
-	setMinX:function (x) {
-		this.minX = x;
-	},
-	/**
-	 * Set new min Y pos
-	 * @function setMinY
-	 * @param {Number} y
-	 */
-	setMinY:function (y) {
-		this.minY = y;
-	},
-	/**
-	 * Set new max Y pos
-	 * @function setMaxY
-	 * @param {Number} y
-	 */
-	setMaxY:function (y) {
-		this.maxY = y;
-	},
-	/**
-	 * Set new min pos
-	 * @function setMinPos
-	 * @param {Number} pos
-	 */
-	setMinPos:function (pos) {
-		this.minPos = pos;
-	},
-	/**
-	 * Set new max pos
-	 * @function setMaxPos
-	 * @param {Number} pos
-	 */
-	setMaxPos:function (pos) {
-		this.maxPos = pos;
-	},
+    },
 
-	getMaxX:function () {
+    /**
+     * Set new max X pos
+     * @function setMaxX
+     * @param {Number} x
+     * @memberof ludo.effect.Effect.prototype
+     */
+    setMaxX: function (x) {
+        this.maxX = x;
+    },
+    /**
+     * Set new min X pos
+     * @function setMinX
+     * @param {Number} x
+     * @memberof ludo.effect.Effect.prototype
+     */
+    setMinX: function (x) {
+        this.minX = x;
+    },
+    /**
+     * Set new min Y pos
+     * @function setMinY
+     * @param {Number} y
+     * @memberof ludo.effect.Effect.prototype
+     */
+    setMinY: function (y) {
+        this.minY = y;
+    },
+    /**
+     * Set new max Y pos
+     * @function setMaxY
+     * @param {Number} y
+     * @memberof ludo.effect.Effect.prototype
+     */
+    setMaxY: function (y) {
+        this.maxY = y;
+    },
+    /**
+     * Set new min pos
+     * @function setMinPos
+     * @param {Number} pos
+     * @memberof ludo.effect.Effect.prototype
+     */
+    setMinPos: function (pos) {
+        this.minPos = pos;
+    },
+    /**
+     * Set new max pos
+     * @function setMaxPos
+     * @param {Number} pos
+     * @memberof ludo.effect.Effect.prototype
+     */
+    setMaxPos: function (pos) {
+        this.maxPos = pos;
+    },
+
+    getMaxX: function () {
         return this.getMaxPos('maxX');
-	},
+    },
 
-	getMaxY:function () {
+    getMaxY: function () {
         return this.getMaxPos('maxY');
-	},
+    },
 
-    getMaxPos:function(key){
+    getMaxPos: function (key) {
         var max = this.getConfigProperty(key);
         return max !== undefined ? max : this.maxPos !== undefined ? this.maxPos : 100000;
     },
 
-	getMinX:function () {
-		var minX = this.getConfigProperty('minX');
+    getMinX: function () {
+        var minX = this.getConfigProperty('minX');
         return minX !== undefined ? minX : this.minPos;
-	},
+    },
 
-	getMinY:function () {
-		var dragged = this.getDragged();
-        return dragged && dragged.minY!==undefined ? dragged.minY : this.minY!==undefined ? this.minY : this.minPos;
-	},
-	/**
-	 * Return amount dragged in x direction
-	 * @function getDraggedX
-	 * @return {Number} x
-	 */
-	getDraggedX:function(){
-		return this.getX() - this.dragProcess.elX;
-	},
-	/**
-	 * Return amount dragged in y direction
-	 * @function getDraggedY
-	 * @return {Number} y
-	 */
-	getDraggedY:function(){
-		return this.getY() - this.dragProcess.elY;
-	},
+    getMinY: function () {
+        var dragged = this.getDragged();
+        return dragged && dragged.minY !== undefined ? dragged.minY : this.minY !== undefined ? this.minY : this.minPos;
+    },
+    /**
+     * Return amount dragged in x direction
+     * @function getDraggedX
+     * @return {Number} x
+     * @memberof ludo.effect.Effect.prototype
+     */
+    getDraggedX: function () {
+        return this.getX() - this.dragProcess.elX;
+    },
+    /**
+     * Return amount dragged in y direction
+     * @function getDraggedY
+     * @return {Number} y
+     * @memberof ludo.effect.Effect.prototype
+     */
+    getDraggedY: function () {
+        return this.getY() - this.dragProcess.elY;
+    },
 
-	canDragAlongX:function () {
-		return this.getConfigProperty('directions').indexOf('X') >= 0;
-	},
-	canDragAlongY:function () {
-		return this.getConfigProperty('directions').indexOf('Y') >= 0;
-	},
+    canDragAlongX: function () {
+        return this.getConfigProperty('directions').indexOf('X') >= 0;
+    },
+    canDragAlongY: function () {
+        return this.getConfigProperty('directions').indexOf('Y') >= 0;
+    },
 
-	getConfigProperty:function(property){
-		var dragged = this.getDragged();
-		return dragged && dragged[property] !== undefined ? dragged[property] : this[property];
-	},
+    getConfigProperty: function (property) {
+        var dragged = this.getDragged();
+        return dragged && dragged[property] !== undefined ? dragged[property] : this[property];
+    },
 
-	/**
-	 * Returns width of dragged element
-	 * @function getHeight
-	 * @return {Number}
-	 */
-	getWidth:function () {
-		return this.dragProcess.width;
-	},
+    /**
+     * Returns width of dragged element
+     * @function getHeight
+     * @return {Number}
+     * @memberof ludo.effect.Effect.prototype
+     */
+    getWidth: function () {
+        return this.dragProcess.width;
+    },
 
-	/**
-	 * Returns height of dragged element
-	 * @function getHeight
-	 * @return {Number}
-	 */
-	getHeight:function () {
-		return this.dragProcess.height;
-	},
-	/**
-	 * Returns current left position of dragged
-	 * @function getLeft
-	 * @return {Number}
-	 */
-	getLeft:function () {
-		return this.dragProcess.currentX;
-	},
+    /**
+     * Returns height of dragged element
+     * @function getHeight
+     * @return {Number}
+     * @memberof ludo.effect.Effect.prototype
+     */
+    getHeight: function () {
+        return this.dragProcess.height;
+    },
+    /**
+     * Returns current left position of dragged
+     * @function getLeft
+     * @return {Number}
+     * @memberof ludo.effect.Effect.prototype
+     */
+    getLeft: function () {
+        return this.dragProcess.currentX;
+    },
 
-	/**
-	 * Returns current top/y position of dragged.
-	 * @function getTop
-	 * @return {Number}
-	 */
-	getTop:function () {
-		return this.dragProcess.currentY;
-	},
+    /**
+     * Returns current top/y position of dragged.
+     * @function getTop
+     * @return {Number}
+     * @memberof ludo.effect.Effect.prototype
+     */
+    getTop: function () {
+        return this.dragProcess.currentY;
+    },
 
-	/**
-	 * Returns reference to DOM element of shim
-	 * @function getShim
-	 * @return {HTMLDivElement} shim
-	 */
-	getShim:function () {
-		if (this.shim === undefined) {
-			this.shim = $('<div>');
-			this.shim.addClass('ludo-shim');
-			this.shim.css({
-				position:'absolute',
-				'z-index':50000,
-				display:'none'
-			});
-			$(document.body).append(this.shim);
+    /**
+     * Returns reference to DOM element of shim
+     * @function getShim
+     * @return {HTMLDivElement} shim
+     * @memberof ludo.effect.Effect.prototype
+     */
+    getShim: function () {
+        if (this.shim === undefined) {
+            this.shim = $('<div>');
+            this.shim.addClass('ludo-shim');
+            this.shim.css({
+                position: 'absolute',
+                'z-index': 50000,
+                display: 'none'
+            });
+            $(document.body).append(this.shim);
 
-			if (this.shimCls) {
-				for (var i = 0; i < this.shimCls.length; i++) {
-					this.shim.addClass(this.shimCls[i]);
-				}
-			}
-			/**
-			 * Event fired when shim is created
-			 * @event createShim
-			 * @param {HTMLDivElement} shim
-			 */
-			this.fireEvent('createShim', this.shim);
-		}
-		return this.shim;
-	},
+            if (this.shimCls) {
+                for (var i = 0; i < this.shimCls.length; i++) {
+                    this.shim.addClass(this.shimCls[i]);
+                }
+            }
 
-	/**
-	 * Show shim
-	 * @function showShim
-	 */
-	showShim:function () {
-		this.getShim().css({
-			display:'',
-			left:this.getShimX(),
-			top:this.getShimY(),
-			width:this.getWidth() + this.getShimWidthDiff(),
-			height:this.getHeight() + this.getShimHeightDiff()
-		});
+            this.fireEvent('createShim', this.shim);
+        }
+        return this.shim;
+    },
 
-		this.fireEvent('showShim', [this.getShim(), this]);
-	},
 
-	getShimY:function(){
-		if(this.mouseYOffset){
-			return this.dragProcess.mouseY + this.mouseYOffset;
-		}else{
-			return this.getTop() + ludo.dom.getMH(this.getEl()) - ludo.dom.getMW(this.shim);
-		}
-	},
+    showShim: function () {
+        this.getShim().css({
+            display: '',
+            left: this.getShimX(),
+            top: this.getShimY(),
+            width: this.getWidth() + this.getShimWidthDiff(),
+            height: this.getHeight() + this.getShimHeightDiff()
+        });
 
-	getShimX:function(){
-		if(this.mouseXOffset){
-			return this.dragProcess.mouseX + this.mouseXOffset;
-		}else{
-			return this.getLeft() + ludo.dom.getMW(this.getEl()) - ludo.dom.getMW(this.shim);
-		}
-	},
+        this.fireEvent('showShim', [this.getShim(), this]);
+    },
 
-	getShimWidthDiff:function(){
-		return ludo.dom.getMW(this.getEl()) - ludo.dom.getMBPW(this.shim);
-	},
-	getShimHeightDiff:function(){
-		return ludo.dom.getMH(this.getEl()) - ludo.dom.getMBPH(this.shim);
-	},
+    getShimY: function () {
+        if (this.mouseYOffset) {
+            return this.dragProcess.mouseY + this.mouseYOffset;
+        } else {
+            return this.getTop() + ludo.dom.getMH(this.getEl()) - ludo.dom.getMW(this.shim);
+        }
+    },
 
-	/**
-	 * Hide shim
-	 * @function hideShim
-	 */
-	hideShim:function () {
-		this.getShim().css('display', 'none');
-	},
+    getShimX: function () {
+        if (this.mouseXOffset) {
+            return this.dragProcess.mouseX + this.mouseXOffset;
+        } else {
+            return this.getLeft() + ludo.dom.getMW(this.getEl()) - ludo.dom.getMW(this.shim);
+        }
+    },
 
-	/**
-	 * Set text content of shim
-	 * @function setShimText
-	 * @param {String} text
-	 */
-	setShimText:function (text) {
-		this.getShim().html( text);
-	},
+    getShimWidthDiff: function () {
+        return ludo.dom.getMW(this.getEl()) - ludo.dom.getMBPW(this.shim);
+    },
+    getShimHeightDiff: function () {
+        return ludo.dom.getMH(this.getEl()) - ludo.dom.getMBPH(this.shim);
+    },
 
-	/**
-	 * Fly/Slide dragged element back to it's original position
-	 * @function flyBack
-	 */
-	flyBack:function (duration) {
-		this.fly({
-			el: this.getShimOrEl(),
-			duration: duration,
-			from:{ x: this.getLeft(), y : this.getTop() },
-			to:{ x: this.getStartX(), y : this.getStartY() },
-			onComplete : this.flyBackComplete.bind(this)
-		});
-	},
+    /**
+     * Hide shim
+     * @function hideShim
+     * @memberof ludo.effect.Effect.prototype
+     */
+    hideShim: function () {
+        this.getShim().css('display', 'none');
+    },
 
-	/**
-	 * Fly/Slide dragged element to position of shim. This will only
-	 * work when useShim is set to true.
-	 * @function flyToShim
-	 * @param {Number} duration in seconds(default = .2)
-	 */
-	flyToShim:function(duration){
-		this.fly({
-			el: this.getEl(),
-			duration: duration,
-			from:{ x: this.getStartX(), y : this.getStartY() },
-			to:{ x: this.getLeft(), y : this.getTop() },
-			onComplete : this.flyToShimComplete.bind(this)
-		});
-	},
+    /**
+     * Set text content of shim
+     * @function setShimText
+     * @param {String} text
+     * @memberof ludo.effect.Effect.prototype
+     */
+    setShimText: function (text) {
+        this.getShim().html(text);
+    },
 
-	getStartX:function () {
-		return this.dragProcess.elX;
-	},
+    /**
+     * Fly/Slide dragged element back to it's original position
+     * @function flyBack
+     * @memberof ludo.effect.Effect.prototype
+     */
+    flyBack: function (duration) {
+        this.fly({
+            el: this.getShimOrEl(),
+            duration: duration,
+            from: {x: this.getLeft(), y: this.getTop()},
+            to: {x: this.getStartX(), y: this.getStartY()},
+            onComplete: this.flyBackComplete.bind(this)
+        });
+    },
 
-	getStartY:function () {
-		return this.dragProcess.elY;
-	},
+    /**
+     * Fly/Slide dragged element to position of shim. This will only
+     * work when useShim is set to true.
+     * @function flyToShim
+     * @param {Number} duration in seconds(default = .2)
+     * @memberof ludo.effect.Effect.prototype
+     */
+    flyToShim: function (duration) {
+        this.fly({
+            el: this.getEl(),
+            duration: duration,
+            from: {x: this.getStartX(), y: this.getStartY()},
+            to: {x: this.getLeft(), y: this.getTop()},
+            onComplete: this.flyToShimComplete.bind(this)
+        });
+    },
 
-	flyBackComplete:function(){
+    getStartX: function () {
+        return this.dragProcess.elX;
+    },
 
-		/**
-		 * Event fired after flyBack animation is complete
-		 * @event flyBack
-		 * @param {effect.Drag} this
-		 * @param {HTMLElement} dom node
-		 */
-		this.fireEvent('flyBack', [this, this.getShimOrEl()]);
-	},
+    getStartY: function () {
+        return this.dragProcess.elY;
+    },
 
-	flyToShimComplete:function(){
+    flyBackComplete: function () {
 
-		/**
-		 * Event fired after flyToShim animation is complete
-		 * @event flyBack
-		 * @param {effect.Drag} this
-		 * @param {HTMLElement} dom node
-		 */
-		this.fireEvent('flyToShim', [this, this.getEl()]);
-	},
+        this.fireEvent('flyBack', [this, this.getShimOrEl()]);
+    },
 
-	isActive:function(){
-		return this.dragProcess.active;
-	}
+    flyToShimComplete: function () {
+        this.fireEvent('flyToShim', [this, this.getEl()]);
+    },
+
+    isActive: function () {
+        return this.dragProcess.active;
+    }
 });

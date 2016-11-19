@@ -11,6 +11,7 @@ ludo.tree.Tree = new Class({
 	/**
 	 String template for nodes in the tree
 	 @config {String|Object}
+	 @memberof ludo.tree.Tree.prototype
 	 @example
 	 	tpl : '{title}
 	 or as an object:
@@ -50,6 +51,7 @@ ludo.tree.Tree = new Class({
 	/**
 	 Default values when not present in node.
 	 @config {Object} defaults
+	 @memberof ludo.tree.Tree.prototype
 	 @default undefined
 	 @example
 	 	defaults:{
@@ -64,6 +66,7 @@ ludo.tree.Tree = new Class({
 	/**
 	 * Key used to defined nodes inside categories. This key is used for default values and node config
 	 * @config {String} categoryKey
+	 * @memberof ludo.tree.Tree.prototype
 	 * @default "type"
 	 */
 	categoryKey : 'type',
@@ -71,6 +74,7 @@ ludo.tree.Tree = new Class({
 	/**
 	 Config of tree node categories
 	 @config {Object} categoryConfig
+	 @memberof ludo.tree.Tree.prototype
 	 @example
 	 	categoryConfig:{
 	 		"database":{

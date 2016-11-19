@@ -1,4 +1,4 @@
-/**
+/*
  Specification of a draggable node objects sent to {{#crossLink "effect.Drag/add"}}{{/crossLink}}. You will
  never create objects of this class.
  @namespace ludo.effect
@@ -6,7 +6,7 @@
  @type {Object|String}
  */
 ludo.effect.DraggableNode = new Class({
-	/**
+	/*
 	 id of node. This attribute is optional
 	 @property id
 	 @type {String}
@@ -31,14 +31,14 @@ ludo.effect.DraggableNode = new Class({
 	 */
 	id: undefined,
 
-	/**
+	/*
 	 * Reference to dragable DOM node
 	 * @property el
 	 * @default undefined
 	 * @type {String|HTMLDivElement}
 	 */
 	el:undefined,
-	/**
+	/*
 	 * Reference to handle for dragging. el will only be draggable by dragging the handle.
 	 * @property handle
 	 * @type {String|HTMLDivElement}
@@ -47,7 +47,7 @@ ludo.effect.DraggableNode = new Class({
 	 */
 	handle:undefined,
 
-	/**
+	/*
 	 * Minimum x position. This is an optional argument. If not set, you will use the params
 	 * set when creating the ludo.effect.Drag component if any.
 	 * @property minX
@@ -56,7 +56,7 @@ ludo.effect.DraggableNode = new Class({
 	 * @optional
 	 */
 	minX:undefined,
-	/**
+	/*
 	 * Maximum x position. This is an optional argument. If not set, you will use the params
 	 * set when creating the ludo.effect.Drag component if any.
 	 * @property maxX
@@ -65,7 +65,7 @@ ludo.effect.DraggableNode = new Class({
 	 * @optional
 	 */
 	maxX:undefined,
-	/**
+	/*
 	 * Minimum x position. This is an optional argument. If not set, you will use the params
 	 * set when creating the ludo.effect.Drag component if any.
 	 * @property minY
@@ -74,7 +74,7 @@ ludo.effect.DraggableNode = new Class({
 	 * @optional
 	 */
 	minY:undefined,
-	/**
+	/*
 	 * Maximum y position. This is an optional argument. If not set, you will use the params
 	 * set when creating the ludo.effect.Drag component if any.
 	 * @property maxY
@@ -83,7 +83,7 @@ ludo.effect.DraggableNode = new Class({
 	 * @optional
 	 */
 	maxY:undefined,
-	/**
+	/*
 	 Allow dragging in these directions. This is an optional argument. If not set, you will use the params
 	 set when creating the ludo.effect.Drag component if any.
 	 @property directions

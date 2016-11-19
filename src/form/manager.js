@@ -13,7 +13,7 @@ It is convenient to place event handlers here instead of adding them to the indi
  Example: create a form.change event to listen to all changes to child form views.
   @param {Array} config.hiddenFields Array with name of form fields. example: hiddenFields:["id"]. There are noe &lt;input type="hidden">
   in ludoJS. Instead, you define hiddenFields which later can be populated using view.getForm().val(key, value).
- @fires ludo.form.Manager#change Event fired when the value of one of the child form view is changed(recursive).
+ @fires ludo.form.Manager#change Event fired when the value of one of the child form view is changed(recursive)., arguments: form.Manager and form.Element(the element changed)
  @fires ludo.form.Manager#valid Event fired when all child form views have a valid value.
  @fires ludo.form.Manager#invalid Event fired when one or more child form views have invalid value.
  @fires ludo.form.Manager#clean A form is considered clean when none of it's values has changed from it's original. Otherwise it's considered dirty. The clean event
@@ -246,11 +246,7 @@ ludo.form.Manager = new Class({
 		if (this.dirtyIds.indexOf(elId) == -1) {
 			this.dirtyIds.push(elId);
 		}
-		/**
-		 * @event dirty
-		 * @description Fired when value of one or more form views are different from their original start value
-		 * @param {Object} formComponent
-		 */
+
 		this.fireEvent('dirty', formComponent);
 	},
 
@@ -258,22 +254,12 @@ ludo.form.Manager = new Class({
 		this.dirtyIds.erase(formComponent.getId());
 
 		if (this.dirtyIds.length === 0) {
-			/**
-			 * @event clean
-			 * @description Fired when value of all views are equal to their original start value
-			 */
+
 			this.fireEvent('clean');
 		}
 	},
 
 	onChange:function (value, formComponent) {
-		/**
-		 * Event fired when a form element has been changed
-		 * @event change
-		 * @param {ludo.form.Manager} form
-		 * @param {ludo.form.Element} form element
-		 *
-		 */
 		this.fireEvent('change', [this, formComponent])
 	},
 	/**
@@ -286,13 +272,7 @@ ludo.form.Manager = new Class({
 	onValid:function (value, formComponent) {
 		this.invalidIds.erase(formComponent.getId());
 		if (this.invalidIds.length == 0) {
-			/**
-			 * @event valid
-			 * @param {Object} form.Manager
-			 * @description form.SubmitButton listens to this event which is fired
-			 * when all form elements inside a view are valid. The submit button will
-			 * be enabled automatically when this event is fired.
-			 */
+
 			this.fireEvent('valid', this);
 		}
 	},
@@ -309,13 +289,7 @@ ludo.form.Manager = new Class({
 		if (this.invalidIds.indexOf(elId) == -1) {
 			this.invalidIds.push(elId);
 		}
-		/**
-		 * @event invalid
-		 * @param {Object} form.Manager
-		 * @description form.SubmitButton listens to this event which is fired
-		 * when one or more form elements inside a view is invalid. The submit
-		 * button will be disabled automatically when this event is fired.
-		 */
+
 		this.fireEvent('invalid', this);
 	},
 	/**
@@ -403,13 +377,7 @@ ludo.form.Manager = new Class({
 						this.populate(this.record);
 						this.commit();
 
-						/**
-						 * Event fired after data for the form has been read successfully
-						 * To add listeners, use <br>
-						 * ludo.View.getForm().addEvent('success', fn);
-						 * @event read
-						 * @param {Object} JSON response from server
-						 */
+
 						this.fireEvent('read', [request.getResponse(), this.view]);
 						if (this.isValid()) {
 							this.fireEvent('valid');
@@ -444,13 +412,7 @@ ludo.form.Manager = new Class({
 				listeners:{
 					"success":function (request) {
 						this.commit();
-						/**
-						 * Event fired after a form has been saved successfully.
-						 * To add listeners, use <br>
-						 * ludo.View.getForm().addEvent('success', fn);
-						 * @event saved
-						 * @param {Object} JSON response from server
-						 */
+
 						this.fireEvent('saved', [request.getResponse(), this.view]);
 
 						this.setCurrentId(request.getResponseData());
@@ -469,26 +431,13 @@ ludo.form.Manager = new Class({
 							this.fireEvent('valid');
 						}
 
-						/**
-						 * Event fired after form submission when success parameter in response is false.
-						 * To add listeners, use <br>
-						 * ludo.View.getForm().addEvent('failure', fn);<br>
-						 * @event failure
-						 * @param {Object} JSON response from server
-						 * @param {Object} Component
-						 */
 
 						this.fireEvent('failure', [request.getResponse(), this.view]);
 
 						this.afterRequest();
 					}.bind(this),
 					"error":function (request) {
-						/**
-						 * Server error event. Fired when the server didn't handle the request
-						 * @event servererror
-						 * @param {String} error text
-						 * @param {String} error message
-						 */
+
 						this.fireEvent('servererror', [request.getResponseMessage(), request.getResponseCode()]);
 						this.fireEvent('valid', this);
 
@@ -501,18 +450,12 @@ ludo.form.Manager = new Class({
 	},
 
 	afterRequest:function(){
-		/**
-		 * Event fired after read, save and delete requests has been completed with or without failures
-		 * @event requestComplete
-		 */
+
 		this.fireEvent('afterRequest');
 	},
 
 	beforeRequest:function(){
-		/**
-		 * Event fired before read, save and delete request
-		 * @event requestComplete
-		 */
+
 		this.fireEvent('beforeRequest');
 	},
 	
@@ -559,10 +502,7 @@ ludo.form.Manager = new Class({
 	},
 
 	newRecord:function(){
-		/**
-		 * Event fired when newRecord is called, i.e. when the form is cleared and currentId unset.
-		 * @event new
-		 */
+
 		this.fireEvent('new');
 		this.currentId = undefined;
 		this.clear();

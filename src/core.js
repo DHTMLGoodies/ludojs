@@ -23,6 +23,7 @@ ludo.Core = new Class({
 	 the same namespace as your component. Then that controller will be registered as controller
 	 for the component.
 	 The 'controller' property can be used to override this and assign a specific controller
+	 @memberof ludo.Core.prototype
 
 	 If you create your own controller by extending ludo.controller.Controller,
 	 you can control several views by adding events in the addView(component) method.
@@ -41,6 +42,7 @@ ludo.Core = new Class({
 	 * Find controller and register this component to controller
 	 * attribute {Boolean} userController
 	 * default false
+	 * @memberof ludo.Core.prototype
 	 */
 	useController:false,
 

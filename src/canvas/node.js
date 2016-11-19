@@ -1,6 +1,6 @@
 /**
  Class for creating SVG DOM Nodes
- @namespace canvas
+ @namespace ludo.canvas
  @class ludo.canvas.Node
  
  @param {String} tag
@@ -104,6 +104,7 @@ ludo.canvas.Node = new Class({
 	 * @param {Function} fn
 	 * @param {Object} el
 	 * @private
+	 * @memberof ludo.canvas.Node.prototype
 	 */
 	_addEvent:(function () {
 		if (document.addEventListener) {
@@ -145,6 +146,7 @@ ludo.canvas.Node = new Class({
 	 * @function append
 	 * @param {canvas.View|canvas.Node} node node
 	 * @return {canvas.Node} parent
+	 * @memberof ludo.canvas.Node.prototype
 	 */
 	append:function (node) {
 		this.el.appendChild(node.getEl());
@@ -212,6 +214,7 @@ ludo.canvas.Node = new Class({
 	 * Apply filter to node
 	 * @function applyFilter
 	 * @param {canvas.Filter} filter
+	 * @memberof ludo.canvas.Node.prototype
 	 */
 	applyFilter:function (filter) {
 		this.set('filter', filter.getUrl());
@@ -220,6 +223,7 @@ ludo.canvas.Node = new Class({
 	 * Apply mask to node
 	 * @function addMask
 	 * @param {canvas.Node} mask
+	 * @memberof ludo.canvas.Node.prototype
 	 */
 	applyMask:function (mask) {
 		this.set('mask', mask.getUrl());
@@ -229,6 +233,7 @@ ludo.canvas.Node = new Class({
 	 * Apply clip path to node
 	 * @function applyClipPath
 	 * @param {canvas.Node} clip
+	 * @memberof ludo.canvas.Node.prototype
 	 */
 	applyClipPath:function(clip){
 		this.set('clip-path', clip.getUrl());
@@ -238,6 +243,7 @@ ludo.canvas.Node = new Class({
 	 Create url reference
 	 @function url
 	 @param {String} key
+	 @memberof ludo.canvas.Node.prototype
 	 @param {canvas.Node|String} to
 	 @example
 	 node.url('filter', filterObj); // sets node property filter="url(#&lt;filterObj->id>)"
@@ -266,6 +272,7 @@ ludo.canvas.Node = new Class({
 	 @param {String} text content
 	 @optional
 	 @return {ludo.canvas.Node} added node
+	 @memberof ludo.canvas.Node.prototype
 	 @example
 	 var filter = new ludo.canvas.Filter();
 	 filter.add('feGaussianBlur', { 'stdDeviation' : 2, result:'blur'  });
@@ -296,6 +303,7 @@ ludo.canvas.Node = new Class({
 	 * Add css class to SVG node
 	 * @function addClass
 	 * @param {String} className
+	 * @memberof ludo.canvas.Node.prototype
 	 */
 	addClass:function (className) {
 		ludo.canvasEngine.addClass(this.el, className);
@@ -305,6 +313,7 @@ ludo.canvas.Node = new Class({
 	 @function hasClass
 	 @param {String} className
 	 @return {Boolean}
+	 @memberof ludo.canvas.Node.prototype
 	 @example
 	 var node = new ludo.canvas.Node('rect', { id:'myId2'});
 	 node.addClass('myClass');
@@ -317,6 +326,7 @@ ludo.canvas.Node = new Class({
 	 Remove css class name from css Node
 	 @function removeClass
 	 @param {String} className
+	 @memberof ludo.canvas.Node.prototype
 	 @example
 	 var node = new ludo.canvas.Node('rect', { id:'myId2'});
 	 node.addClass('myClass');
@@ -338,6 +348,7 @@ ludo.canvas.Node = new Class({
 	 * Returns bounding box of el as an object with x,y, width and height.
 	 * @function getBBox
 	 * @return {Object}
+	 * @memberof ludo.canvas.Node.prototype
 	 */
 	getBBox:function () {
 		return this.el.getBBox();
@@ -349,6 +360,7 @@ ludo.canvas.Node = new Class({
 	 * where x is width and y is height.
 	 * @function getSize
 	 * @return {Object} size x and y
+	 * @memberof ludo.canvas.Node.prototype
 	 */
 	getSize:function(){
 		var b = this.getBBox();
@@ -362,6 +374,7 @@ ludo.canvas.Node = new Class({
 	 * The nearest ancestor 'svg' element. Null if the given element is the outermost svg element.
 	 * @function getCanvas
 	 * @return {ludo.canvas.Node.el} svg
+	 * @memberof ludo.canvas.Node.prototype
 	 */
 	getCanvas:function () {
 		return this.el.ownerSVGElement;
@@ -370,6 +383,7 @@ ludo.canvas.Node = new Class({
 	 * The element which established the current viewport. Often, the nearest ancestor ‘svg’ element. Null if the given element is the outermost svg element
 	 * @function getViewPort
 	 * @return {ludo.canvas.Node.el} svg
+	 * @memberof ludo.canvas.Node.prototype
 	 */
 	getViewPort:function () {
 		return this.el.viewPortElement;

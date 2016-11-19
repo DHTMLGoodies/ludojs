@@ -1,16 +1,26 @@
 /***
- * Make component or DOM elements resizable
+ * Make View or DOM elements resizable
+ * This class is mostly used internally in LudoJS when views are resizable.
  * @class ludo.effect.Resize
  * @namespace ludo.effect
- * @augments Core
+ * @param {Object} config
+ * @param {boolean} useShim True to use dotted rectangle when resizing. The view or DOM element will be resized on mouse/ up/touch end.
+ * @param {Number} minX minimum x coordinate.
+ * @param {Number} minY minimum y coordinate.
+ * @param {Number} maxX maximum x coordinate.
+ * @param {Number} maxY maximum y coordinate.
+ * @param {Number} minWidth Minimum width.
+ * @param {Number} maxWidth Maximum width.
+ * @param {Number} minHeight Minimum height.
+ * @param {Number} maxHeight Maximum height.
+ * @param {Boolean} preserveAspectRatio Preserve aspect ratio while resizing.
+ * @fires ludo.effect.Resize#start Fired when resizing starts. Param: {String} region
+ * @fires ludo.effect.Resize#resize Fired during resize. CSS coordinates(Object with left,top.width,height) are passed as argument with the event.
+ * @fires ludo.effect.Resize#stop Fired when resize ends. CSS coordinates(Object with left,top.width,height) are passed as argument with the event
  */
 ludo.effect.Resize = new Class({
     Extends:ludo.Core,
-    /**
-     * Use shim
-     * @attribute {Boolean} useShim
-     * @optional
-     */
+
     useShim:true,
     component:undefined,
     els:{
@@ -18,60 +28,24 @@ ludo.effect.Resize = new Class({
         applyTo:undefined,
         handle:{}
     },
-    /**
-     * min x position
-     * @attribute {Number} minX
-     * @default undefined
-     */
+
     minX:undefined,
-    /**
-     * max x position
-     * @attribute {Number} maxX
-     * @default undefined
-     */
+
     maxX:undefined,
-    /**
-     * minimum width
-     * @attribute {Number} minWidth
-     * @default undefined
-     */
+
     minWidth:undefined,
-    /**
-     * Maximum width
-     * @attribute {Number} maxWidth
-     * @default undefined
-     */
+
     maxWidth:undefined,
-    /**
-     * min y position
-     * @attribute {Number} minY
-     * @default undefined
-     */
+
     minY:undefined,
-    /**
-     * max x position
-     * @attribute {Number} maxY
-     * @default undefined
-     */
+
     maxY:undefined,
-    /**
-     * minimum height
-     * @attribute {Number} minHeight
-     * @default undefined
-     */
+
     minHeight:undefined,
-    /**
-     * max height
-     * @attribute {Number} maxHeight
-     * @default undefined
-     */
+
     maxHeight:undefined,
 
-    /**
-     * Preserve aspect ratio while resizing
-     * @attribute {Boolean} preserveAspectRatio
-     * @default false
-     */
+
     preserveAspectRatio:false,
 
     aspectRatio:undefined,
@@ -142,6 +116,7 @@ ludo.effect.Resize = new Class({
      * @param {String} region
      * @param {String} cssClass
      * @return void
+     * @memberof ludo.effect.Resize.prototype
      */
 
     addHandle:function (region, cssClass) {
@@ -159,11 +134,7 @@ ludo.effect.Resize = new Class({
     startResize:function (e) {
 
         var region = $(e.target).attr('region');
-        /**
-         * Fired when starting resize
-         * @event start
-         * @param string region
-         */
+
         this.fireEvent('start', region);
 
 		ludo.EffectObject.start();
@@ -198,11 +169,7 @@ ludo.effect.Resize = new Class({
 
     },
 
-    /**
-     * Set min and max width/height based on aspect ratio
-     * @function setMinAndMax
-     * @private
-     */
+
     setMinAndMax:function () {
         var ratio = this.getAspectRatio();
         var d = this.dragProperties;
@@ -292,11 +259,7 @@ ludo.effect.Resize = new Class({
         if (this.dragProperties.active) {
             this.dragProperties.current = this.getCurrentCoordinates(e);
             var coordinates = this.getCoordinates();
-            /**
-             * Fired during resize. CSS coordinates are passed as parameter to this event.
-             * @event resize
-             * @param {Object} coordinates
-             */
+
             this.fireEvent('resize', coordinates);
 
             if (this.useShim) {
@@ -318,12 +281,7 @@ ludo.effect.Resize = new Class({
         return ret;
     },
 
-    /**
-     * Returns coordinates for current drag operation,
-     * example: {left:100,top:100,width:500,height:400}
-     * @function getCoordinates
-     * @return {Object}
-     */
+
     getCoordinates:function () {
         var d = this.dragProperties;
         var keys = this.resizeKeys[d.region];
@@ -452,12 +410,7 @@ ludo.effect.Resize = new Class({
     stopResize:function () {
         if (this.dragProperties.active) {
             this.dragProperties.active = false;
-            /**
-             * Fired when resize is complete.
-             * CSS coordinates are passed as parameter to this event.
-             * @event stop
-             * @param {Object} coordinates
-             */
+
             this.fireEvent('stop', this.getCoordinates());
 			ludo.EffectObject.end();
             this.revertBodyCursor();

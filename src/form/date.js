@@ -2,6 +2,9 @@
  * Date picker
  * @namespace ludo.form
  * @class ludo.form.Date
+ * @param {Object} config
+ * @param {String} inputFormat internal date format, and date format sent on form submission. default: Y-m-d
+ * @param {String} displayFormat date format shown to the viewer, default: Y-m-d
  * @augments ludo.form.Combo
  */
 ludo.form.Date = new Class({
@@ -9,17 +12,9 @@ ludo.form.Date = new Class({
     children:[{
        type:'calendar.Calendar'
     }],
-    /**
-     * Display format, example: Y/m/d
-     * @config {String} displayFormat
-     * @default Y-m-d
-     */
+
     displayFormat : 'Y-m-d',
-    /**
-     * Format of date returned by getValue method.
-     * @config {String} inputFormat
-     * @default Y-m-d
-     */
+
     inputFormat : 'Y-m-d',
     childLayout:{
         width:250,height:250

@@ -4,6 +4,13 @@
  @augments View
  
  @param {Object} config
+ @param {Boolean} config.headerMenu Show menu on each column heading.
+ @param {Boolean} config.highlightRecord True to highlight rows on click, default: true
+ @param {Boolean} config.mouseOverEffect True to highlight rows on mouse over, default: true.
+ @param {Object} config.columns Description of columns. See example below for details.
+ @param {Object} config.emptyText Text to show on grid when there are no data, default: "No data"
+ @fires ludo.grid.Grid#click Row clicked. Arguments: 1) The record, i.e. JSON Object, example: { "firstname": "Jane", "lastname": "Johnson" } and 2) name of clicked column, example: "lastname"
+ @fires ludo.grid.Grid#dblclick Row double clicked. Arguments: 1) The record, i.e. JSON Object, example: { "firstname": "Jane", "lastname": "Johnson" } and 2) name of clicked column, example: "lastname"
  @example
 	 children:[
 	 ..
@@ -83,35 +90,20 @@ ludo.grid.Grid = new Class({
 	scrollbar:{
 
 	},
-	/**
-	 * true to highlight record on click
-	 * @config highlightRecord
-	 * @type {Boolean}
-	 */
+
 	highlightRecord:true,
 
 	uniqueId:'',
 	activeRecord:{},
 
-	/**
-	 * Show menu when mouse over headers
-	 * @config headerMenu
-	 * @type {Boolean}
-	 * @default true
-	 */
 	headerMenu:true,
 
-	/**
-	 * True to highlight rows while moving mouse over them
-	 * @config mouseOverEffect
-	 * @type {Boolean}
-	 * @default true
-	 */
+
 	mouseOverEffect:true,
 
 	columnManager:undefined,
 
-	/**
+	/*
 	 Column config
 	 @config {Object} columns
 	 @example
@@ -169,19 +161,8 @@ ludo.grid.Grid = new Class({
 
 	 */
 	columns:undefined,
-
-	/**
-	 * Row manager config object
-	 * @config {grid.RowManager} rowManager
-	 * @default undefined
-	 */
 	rowManager:undefined,
 
-	/**
-	 * Text to show in the center of the grid when there's no data in the data to show
-	 * @config {String} emptyText
-	 * @default "No data"
-	 */
 	emptyText:'No data',
 
 	defaultDS : 'dataSource.Collection',
@@ -332,12 +313,6 @@ ludo.grid.Grid = new Class({
 		var record = this.getRecordByDOM(e.target);
 		if (record) {
 			this.getDataSource().selectRecord(record);
-			/**
-			 * Click on record
-			 * @event click
-			 * @param {Object} Record clicked record
-			 * @param {String} column
-			 */
 			this.fireEvent('click', [record, this.getColumnByDom(e.target)]);
 		}
 	},
@@ -449,12 +424,7 @@ ludo.grid.Grid = new Class({
 		var record = this.getRecordByDOM(e.target);
 		if (record) {
 			this.getDataSource().selectRecord(record);
-			/**
-			 * Double click on record
-			 * @event dblclick
-			 * @param {Object} Record clicked record
-			 * @param {String} column
-			 */
+
 			this.fireEvent('dblclick', [record, this.getColumnByDom(e.target)]);
 		}
 	},

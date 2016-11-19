@@ -1,4 +1,4 @@
-/**
+/*
  Class for nodeJS communication. You configure nodeJS communication by passing a {{#crossLink "View/socket"}}socket{{/crossLink}} object to
  a {{#crossLink "View"}}{{/crossLink}}, example: socket:{ url:'http://127.0.0.1:1337' }. You can get a reference to this class by calling
  {{#crossLink "View/getSocket"}}{{/crossLink}}
@@ -99,7 +99,7 @@ ludo.socket.Socket = new Class({
 	Extends:ludo.Core,
 	type:'socket.Socket',
 
-	/**
+	/*
 	 * Socket http url, example: http://localhost:1337
 	 * URL can also be defined in ludo.config.setSocketUrl()
 	 * @config url
@@ -110,13 +110,13 @@ ludo.socket.Socket = new Class({
 
 	socket:undefined,
 
-	/**
+	/*
 	 * Reference to parent component
 	 * @property {Object} component
 	 */
 	component:undefined,
 
-	/**
+	/*
 	 Array of view/component events to emit to server. When this event is fired, it will be emitted
 	 to the server automatically.
 
@@ -184,7 +184,7 @@ ludo.socket.Socket = new Class({
 		}
 	},
 
-	/**
+	/*
 	Add socket event
 	@function on
 	@param {String} event
@@ -201,7 +201,7 @@ ludo.socket.Socket = new Class({
 		}
 		this.getSocket().on(event, fn);
 	},
-	/**
+	/*
 	Emit socket event
 	@function emit
 	@param {String} event

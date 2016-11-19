@@ -6,6 +6,11 @@
  * using the mouse wheel or by "nudging" the label.
  * @namespace ludo.form
  * @class ludo.form.Spinner
+ * @param {object} config
+ * @param {number} config.minValue min value, default 0
+ * @param {number} config.maxValue max value, default 100
+ * @param {number} config.increment amount of increment by click on arrow buttons or by rolling mouse wheel
+ * @param {number} config.decimals Number of decimals
  */
 ludo.form.Spinner = new Class({
     Extends:ludo.form.Number,
@@ -14,32 +19,13 @@ ludo.form.Spinner = new Class({
     inputType:'text',
     stretchField:false,
     regex:undefined,
-    /**
-     * Minimum value
-     * @attribute maxValue
-     * @type int
-     * @default 0
-     */
-    maxValue:100,
-    /**
-     * Minimum value
-     * @attribute {Number} minValue
-     * @default 0
-     */
-    minValue:0,
-    /**
-     * amount of increment by click on arrow buttons or by rolling mouse wheel
-     * @attribute increment
-     * @type int
-     * @default 1
-     */
-    increment:1,
 
-    /**
-     * Number of decimals
-     * @config {Number|undefined} decimals
-     * @default 0
-     */
+    maxValue:100,
+
+    minValue:0,
+
+    increment:1,
+    
     decimals:0,
 
 
