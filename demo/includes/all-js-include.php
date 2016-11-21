@@ -50,7 +50,7 @@
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/relative.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/resizer.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/renderer.js"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/slide-in.js"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/nav-bar.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/fill.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/factory.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/popup.js"></script>
@@ -203,7 +203,6 @@
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/color/color.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/color/named-colors.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/color/rgb-colors.js"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/color/rgb-slider.js"></script>
 
 
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/chart/add-on.js"></script>

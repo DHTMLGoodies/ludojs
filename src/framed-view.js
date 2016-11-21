@@ -176,16 +176,6 @@ ludo.FramedView = new Class({
 		}
 		return this.resizer;
 	},
-	/**
-	 * Set new title
-	 * @function setTitle
-	 * @param {String} title
-	 * @memberof ludo.FramedView.prototype
-	 */
-	setTitle:function (title) {
-		this.parent(title);
-        this.fireEvent('setTitle', title);
-	},
 
 	resizeDOM:function () {
 		var height = this.getHeight();

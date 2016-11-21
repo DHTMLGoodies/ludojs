@@ -4,7 +4,6 @@
  @namespace ludo.grid
  @class ludo.grid.ColumnManager
  @augments Core
- 
  @param {Object} config
  @example
     columnManager:{
@@ -39,31 +38,10 @@
 ludo.grid.ColumnManager = new Class({
 	Extends:ludo.Core,
 	type:'grid.ColumnManager',
-	/**
-	 * Always fill view, i.e. dynamically increase with of last visible column when
-	 * total width of visible columns is less than width of the Grid.
-	 * @config fill
-	 * @type {Boolean}
-	 * @default true
-	 */
 	fill:true,
-
-	/**
-	 * Configuration of columns
-	 * @config {Object} columns
-	 * @default {}
-	 */
 	columns:{},
-
 	columnKeys:[],
-
 	statefulProperties:['columns', 'columnKeys'],
-
-	/**
-	 * Internal column lookup. Flat version of this.columns
-	 * @property {Object} columnLookup
-	 * @private
-	 */
 	columnLookup:{},
 
 	__construct:function (config) {
@@ -141,6 +119,7 @@ ludo.grid.ColumnManager = new Class({
 	/**
 	 Returns object of visible columns, example:
 	 @function getVisibleColumns
+	 @memberof ludo.grid.ColumnManager.prototype
 	 @return {Object} visible columns
      @example
         {
@@ -221,6 +200,7 @@ ludo.grid.ColumnManager = new Class({
 	 * @function isInAGroup
 	 * @param {String} column
 	 * @return {Boolean} is in a group
+	 * memberof ludo.grid.ColumnManager.prototype
 	 */
 	isInAGroup:function (column) {
 		return this.getColumnKey(column, 'group') !== undefined;
@@ -231,6 +211,7 @@ ludo.grid.ColumnManager = new Class({
 	 * @function getGroupIdOf
 	 * @param {String} column
 	 * @return {String} group id
+	 * memberof ludo.grid.ColumnManager.prototype
 	 */
 	getGroupIdOf:function (column) {
 		return this.getColumnKey(column, 'group');
@@ -241,6 +222,7 @@ ludo.grid.ColumnManager = new Class({
 	 * @function getGroupFor
 	 * @param {String} column
 	 * @return {grid.Column|undefined} parent
+	 * memberof ludo.grid.ColumnManager.prototype
 	 */
 	getGroupFor:function (column) {
 		var id = this.getGroupIdOf(column);
@@ -398,6 +380,7 @@ ludo.grid.ColumnManager = new Class({
 	 * @function insertColumnBefore
 	 * @param {String} column id
 	 * @param {String} before column id
+	 * memberof ludo.grid.ColumnManager.prototype
 	 */
 	insertColumnBefore:function (column, before) {
 		this.moveColumn(column, before, 'before');
@@ -407,6 +390,7 @@ ludo.grid.ColumnManager = new Class({
 	 * @function insertColumnAfter
 	 * @param {String} column id
 	 * @param {String} after column id
+	 * memberof ludo.grid.ColumnManager.prototype
 	 */
 	insertColumnAfter:function (column, after) {
 		this.moveColumn(column, after, 'after');
@@ -474,6 +458,7 @@ ludo.grid.ColumnManager = new Class({
 	 * @param {String} column
 	 * @param {String} as
 	 * @private
+	 * memberof ludo.grid.ColumnManager.prototype
 	 */
 	insertIntoSameGroupAs:function(column, as){
 		var group = this.columnLookup[as].group;
@@ -498,6 +483,7 @@ ludo.grid.ColumnManager = new Class({
 	 * @function removeFromGroup
 	 * @param {String} column
 	 * @return {Boolean} success
+	 * memberof ludo.grid.ColumnManager.prototype
 	 */
 	removeFromGroup:function (column) {
 		var group = this.getGroupFor(column);
@@ -537,10 +523,7 @@ ludo.grid.ColumnManager = new Class({
 	showColumn:function (column) {
 		if (this.columnExists(column) && this.isHidden([column])) {
 			this.columnLookup[column].hidden = false;
-			/**
-			 * Fired when a column is shown
-			 * @event showcolumn
-			 */
+
 			this.fireEvent('showcolumn', column);
 
 			this.fireEvent('state');
@@ -599,6 +582,7 @@ ludo.grid.ColumnManager = new Class({
 	 * @function getColumnsInRow
 	 * @param {Number} rowNumber
 	 * @return {Array} columns
+	 * @memberof ludo.grid.ColumnManager.prototype
 	 */
 	getColumnsInRow:function (rowNumber) {
 		var ret = [];

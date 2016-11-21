@@ -68,16 +68,31 @@ var w = new ludo.Window({
             },
             children:[
                 {
-                    height:27,
-                    labelWidth:50,
-                    type:'form.Text',
-                    label:'Search',
+                    layout:{
+                        type:'linear', orientation:'horizontal',
+                        height:31
+                    },
+                    css:{
+                        padding:2
+                    } ,
+                    children:[
+                        { type:'form.Label', labelFor:'searchField', label:'Search', layout: {width : 50 }},
+                        {
 
-                    listeners:{
-                        key:function (value) {
-                            ludo.get('myDataSource').search(value);
+                            type:'form.Text',
+                            label:'Search',
+                            id:'searchField',
+                            layout:{
+                                weight:1
+                            },
+
+                            listeners:{
+                                key:function (value) {
+                                    ludo.get('myDataSource').search(value);
+                                }
+                            }
                         }
-                    }
+                    ]
                 },
                 {
                     id:'myGrid',
@@ -86,8 +101,8 @@ var w = new ludo.Window({
                     elCss:{
                         'border':0,
                         'border-right':'0',
-                        'border-top':'1px solid #d7d7d7',
-                        'border-bottom':'1px solid #d7d7d7'
+                        'border-top':'1px solid #424242',
+                        'border-bottom':'1px solid #424242'
                     },
                     stateful:false,
                     resizable:false,
@@ -105,7 +120,7 @@ var w = new ludo.Window({
                                     movable:true,
                                     width:200,
                                     renderer:function (val) {
-                                        return '<span style="color:blue">' + val + '</span>';
+                                        return '<span>' + val + '</span>';
                                     }
                                 },
                                 'capital':{

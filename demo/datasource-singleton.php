@@ -37,7 +37,7 @@ var win2 = new ludo.Window({
 
 /** The server returns content in this format
  *
- * {"success":true,"message":"","data":{"title":"Components using the same dataSource","body":"Data from server at time: 2012-04-12 21:37:47"}}
+ * {"success":true,"message":"","data":{"title":"Views using the same dataSource","body":"Data from server at time: 2012-04-12 21:37:47"}}
  *
  */
 </script>

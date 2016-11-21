@@ -2,6 +2,9 @@
  Class for providing short messages and feedback in a popup.
  Notifications automatically disappear after a timeout. Positioning
  of notification can be configured using the layout object.
+
+ Custom CSS styling can be done by adding styles to the .ludo-notification class.
+ 
  @class ludo.Notification
  @augments ludo.View
  @param {Object} config

@@ -10,14 +10,14 @@ ludo.layout.LinearVertical = new Class({
 		this.parent();
 	},
 	resize:function () {
-		var componentHeight = this.view.getBody().height();
-		if (componentHeight == 0) {
+		var availHeight = this.viewport.height;
+		if (availHeight == 0) {
 			return;
 		}
 		var totalHeightOfItems = 0;
 		var totalWeight = 0;
 		var height;
-		var tm = 0;
+		var tm = this.viewport.top;
 		for (var i = 0; i < this.view.children.length; i++) {
 			if (!this.hasLayoutWeight(this.view.children[i])) {
                 height = this.view.children[i].isHidden() ? 0 :  this.getHeightOf(this.view.children[i]);
@@ -32,7 +32,7 @@ ludo.layout.LinearVertical = new Class({
 		totalWeight = Math.max(1, totalWeight);
 
         var remainingHeight;
-		var stretchHeight = remainingHeight = (componentHeight - totalHeightOfItems);
+		var stretchHeight = remainingHeight = (availHeight - totalHeightOfItems);
 
 
 		var width = this.view.getBody().width();
@@ -58,10 +58,10 @@ ludo.layout.LinearVertical = new Class({
 				if(tm > 0){
 					config.top = tm;
 				}
-				if(this.view.children[i].getEl().css('position') === 'absolute'){
-					tm += this.view.children[i].getHeight();
-				}
+
+
 				this.resizeChild(this.view.children[i], config);
+				tm += this.view.children[i].getEl().outerHeight(true);
 			}
 		}
 	},
@@ -76,8 +76,11 @@ ludo.layout.LinearVertical = new Class({
 		this.parent(child);
 		if (this.isResizable(child)) {
 			var isLastSibling = this.isLastSibling(child);
+
 			var resizer = this.getResizableFor(child, isLastSibling ? 'above' : 'below');
 			this.addChild(resizer, child, isLastSibling ? 'before' : 'after');
 		}
+
+		child.getEl().css('position', 'absolute');
 	}
 });

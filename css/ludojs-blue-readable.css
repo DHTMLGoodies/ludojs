@@ -1512,7 +1512,6 @@ div.ludo-menu-horizontal-up div.ludo-menu-item-expand {
 div.ludo-tree-tree div.ludo-body{
     overflow-y:auto;
     overflow-x:hidden;
-    background-color:#FFF;
     padding-left:4px;
 }
 
@@ -2473,12 +2472,7 @@ div.ludo-spinbox-arrow-overeffect{
 fieldset{
     padding:0;
     margin:2px;
-}/* ../ludojs/css-source/anchor.css */
-.ludo-anchor-text{
-    text-decoration:underline;
-    color:blue;
-}
-/* ../ludojs/css-source/dialog/dialog.css */
+}/* ../ludojs/css-source/dialog/dialog.css */
 .ludo-dialog-shim{
     position:absolute;
     left:0;

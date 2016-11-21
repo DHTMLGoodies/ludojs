@@ -57,6 +57,7 @@ ludo.layout.Tabs = new Class({
     resizeTabs: function () {
 
 
+        this.showAllTabs();
         if (this.tabPositions == undefined) {
             this.tabPositions = {};
         }
@@ -66,18 +67,25 @@ ludo.layout.Tabs = new Class({
         if (this.tabPos === 'top' || this.tabPos === 'bottom')this.findHiddenTabs();
     },
 
+    showAllTabs:function(){
+        $.each(this.tabs, function (key) {
+            this.tabs[key].show();
+
+        }.bind(this));
+    },
+
     resizeTabsDom: function () {
         var pos = 0;
         var size;
 
         $.each(this.tabs, function (key) {
+
             var node = this.tabs[key];
             if (this.tabPos === 'top' || this.tabPos === 'bottom') {
                 size = node.outerWidth(true);
             } else {
                 size = node.outerHeight(true);
             }
-
             this.tabPositions[key] = {
                 pos: pos,
                 size: size
@@ -141,8 +149,6 @@ ludo.layout.Tabs = new Class({
 
     moveCurrentIntoView: function () {
 
-
-
         var size =  this.getBody().width();
         var menu = this.getMenuIcon();
         size -= menu.outerWidth(true);
@@ -150,23 +156,16 @@ ludo.layout.Tabs = new Class({
 
         var tabPosition = this.tabPositions[this.activeTabId];
 
-
         var offsetStart = tabPosition.pos - pos;
         var offsetEnd = (tabPosition.pos + tabPosition.size) - (pos + size);
 
-
         if(offsetStart < 0){
-
-
             this.tabParent.css('left', offsetStart);
         }else if(offsetEnd > 0){
             var newPos = pos - offsetEnd;
             this.tabParent.css('left', newPos);
         }
     },
-
-
-
 
     haveTabsOutOfView: function () {
         return this.maxPos > this.getBody().width();

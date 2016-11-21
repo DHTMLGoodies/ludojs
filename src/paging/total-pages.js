@@ -36,6 +36,12 @@ ludo.paging.TotalPages = new Class({
         this.dataSourceEvents();
 	},
 
+
+	resize:function(config){
+		this.parent(config);
+		this.getBody().css('line-height', (this.getBody().height() * 0.8) + 'px');
+	},
+
     dataSourceEvents:function(){
         if(ludo.get(this.dataSource)){
             var ds = this.getDataSource();

@@ -155,19 +155,23 @@
     color:#FFF;
     font-weight:bold;
 }
-.ludo-ocean .ludo-form-button-m-bg-right, .ludo-ocean .ludo-form-button-m-bg-left {
+.ludo-ocean .ludo-form-button-m-bg-right,
+.ludo-ocean .ludo-form-button-m-bg-left {
     background-image: url('../images/ocean-skin/button.png');
 }
 
-.ludo-ocean .ludo-form-button-over .ludo-form-button-m-bg-left, .ludo-ocean .ludo-form-button-over .ludo-form-button-m-bg-right {
+.ludo-ocean .ludo-form-button-over .ludo-form-button-m-bg-left,
+.ludo-ocean .ludo-form-button-over .ludo-form-button-m-bg-right {
     background-image: url('../images/ocean-skin/button-over.png');
 }
 
-.ludo-ocean .ludo-form-button-down .ludo-form-button-m-bg-left, .ludo-ocean .ludo-form-button-down .ludo-form-button-m-bg-right {
+.ludo-ocean .ludo-form-button-down .ludo-form-button-m-bg-left,
+.ludo-ocean .ludo-form-button-down .ludo-form-button-m-bg-right {
     background-image: url('../images/ocean-skin/button-pressed.png');
 }
 
-.ludo-ocean .ludo-form-button-pressed .ludo-form-button-m-bg-left, .ludo-ocean .ludo-form-button-pressed .ludo-form-button-m-bg-right {
+.ludo-ocean .ludo-form-button-pressed .ludo-form-button-m-bg-left,
+.ludo-ocean .ludo-form-button-pressed .ludo-form-button-m-bg-right {
     background-image: url('../images/ocean-skin/button-pressed.png');
 }
 
@@ -176,11 +180,13 @@
     cursor: default;
 }
 
-.ludo-ocean div.ludo-form-button-selected .ludo-form-button-m-bg-left, .ludo-ocean div.ludo-form-button-selected .ludo-form-button-m-bg-right {
+.ludo-ocean div.ludo-form-button-selected .ludo-form-button-m-bg-left,
+.ludo-ocean div.ludo-form-button-selected .ludo-form-button-m-bg-right {
     background-image: url('../images/ocean-skin/button-over.png');
 }
 
-.ludo-ocean div.ludo-form-button-disabled .ludo-form-button-m-bg-left, .ludo-ocean div.ludo-form-button-disabled .ludo-form-button-m-bg-right {
+.ludo-ocean div.ludo-form-button-disabled .ludo-form-button-m-bg-left,
+.ludo-ocean div.ludo-form-button-disabled .ludo-form-button-m-bg-right {
     background-image: url('../images/ocean-skin/button-disabled.png') !important;
 }
 
@@ -324,19 +330,23 @@
     background-image: url(../images/ocean-skin/expand-menu-horizontal.png);
 }
 
-.ludo-ocean .ludo-form-button-s .ludo-form-button-m-bg-left, .ludo-ocean .ludo-form-button-s .ludo-form-button-m-bg-right {
+.ludo-ocean .ludo-form-button-s .ludo-form-button-m-bg-left,
+.ludo-ocean .ludo-form-button-s .ludo-form-button-m-bg-right {
     background-image: url('../images/ocean-skin/tiny-button.png');
 }
 
-.ludo-ocean .ludo-form-button-s .ludo-form-button-over .ludo-form-button-m-bg-left, .ludo-ocean .ludo-form-button-s .ludo-form-button-over .ludo-form-button-m-bg-right {
+.ludo-ocean .ludo-form-button-s .ludo-form-button-over .ludo-form-button-m-bg-left,
+.ludo-ocean .ludo-form-button-s .ludo-form-button-over .ludo-form-button-m-bg-right {
     background-image: url('../images/ocean-skin/tiny-button-over.png');
 }
 
-.ludo-ocean .ludo-form-button-s .ludo-form-button-down .ludo-form-button-m-bg-left, .ludo-ocean .ludo-form-button-s .ludo-form-button-down .ludo-form-button-m-bg-right {
+.ludo-ocean .ludo-form-button-s .ludo-form-button-down .ludo-form-button-m-bg-left,
+.ludo-ocean .ludo-form-button-s .ludo-form-button-down .ludo-form-button-m-bg-right {
     background-image: url('../images/ocean-skin/tiny-button-down.png');
 }
 
-.ludo-ocean .ludo-form-button-s .ludo-form-button-disabled .ludo-form-button-m-bg-left, .ludo-ocean .ludo-form-button-s .ludo-form-button-disabled .ludo-form-button-m-bg-right {
+.ludo-ocean .ludo-form-button-s .ludo-form-button-disabled .ludo-form-button-m-bg-left,
+.ludo-ocean .ludo-form-button-s .ludo-form-button-disabled .ludo-form-button-m-bg-right {
     background-image: url('../images/ocean-skin/tiny-button-disabled.png');
 }
 

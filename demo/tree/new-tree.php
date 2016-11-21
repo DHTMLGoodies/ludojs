@@ -11,7 +11,6 @@ require_once("../includes/demo-header.php");
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/data-source/tree-collection-search.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/data-source/tree-collection.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/tree/tree.js"></script>
-<link rel="stylesheet" href="<?php echo $prefix; ?>../css/ludojs-ocean.css" type="text/css">
 <style type="text/css">
     span.ludo-tree-node-spacer{
         background-image: url('../../images/tree/tree-dots-2.gif');
@@ -42,8 +41,8 @@ require_once("../includes/demo-header.php");
             {
                 type:'form.SearchField',
                 searchIn:ds,
-                css:{
-                    'border-bottom' : '1px solid #C0C0C0'
+                layout:{
+                    'height': 25
                 }
             },
             {
@@ -52,7 +51,7 @@ require_once("../includes/demo-header.php");
                     weight:1
                 },
                 css:{
-                    'background-color' : '#FFF',
+
                     'padding-left' : 3
                 },
                 id:'myTree',

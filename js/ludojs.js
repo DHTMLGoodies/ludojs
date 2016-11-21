@@ -1,7 +1,7 @@
-/* Generated Fri Nov 18 15:21:08 CET 2016 */
+/* Generated Mon Nov 21 20:18:01 CET 2016 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.152
+ludoJS - Javascript framework, 1.1.164
 Copyright (C) 2012-2016  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -2851,12 +2851,29 @@ ludo.RegistryClass = new Class({
 });
 
 ludo.registry = new ludo.RegistryClass();/* ../ludojs/src/storage/storage.js */
+/**
+ * Class for saving data to local storage(browser cache).
+ *
+ * ludo.getLocalStorage() returns a singleton for ludo.storage.LocalStorage
+ * 
+ * @class ludo.storage.LocalStorage
+ * @type {Type}
+ * @example
+ * ludo.getLocalStorage().save('name', 'John');
+ * ludo.getLocalStorage().save('myobject', { "a": 1, "b" : 2 ));
+ */
 ludo.storage.LocalStorage = new Class({
 	supported:false,
 	initialize:function(){
 		this.supported = typeof(Storage)!=="undefined";
 	},
-	// TODO rename to save
+
+	/**
+	 * @function save
+	 * @param {String} key
+	 * @param {String|Number|Array|Object} value
+	 * @memberof ludo.storage.LocalStorage.prototype
+     */
 	save:function(key,value){
 		if(!this.supported)return;
 		var type = 'simple';
@@ -2868,14 +2885,21 @@ ludo.storage.LocalStorage = new Class({
 		localStorage[this.getTypeKey(key)] = type;
 	},
 
-	/** TODO (2016) Implement support for default value */
-	get:function(key){
-		if(!this.supported)return undefined;
+	/**
+	 * Get value from local storage
+	 * @function get
+	 * @param {string} key
+	 * @param {mixed} defaultValue
+	 * @memberof ludo.storage.LocalStorage.prototype
+	 * @returns {*}
+     */
+	get:function(key, defaultValue){
+		if(!this.supported)return defaultValue;
 		var type = this.getType(key);
 		if(type==='object'){
 			return JSON.parse(localStorage[key]);
 		}
-		return localStorage[key];
+		return localStorage[key] ? localStorage[key] : defaultValue;
 	},
 
 	getTypeKey:function(key){
@@ -2904,8 +2928,11 @@ ludo.getLocalStorage = function(){
 /* ../ludojs/src/object-factory.js */
 /**
  * Internal class designed to create ludoJS class instances.
- * The global ludo.factory is an instance of this class
- * @class ObjectFactory
+ *
+ * Use ludo.factory to reference this class.
+ *
+ * @class ludo.ObjectFactory
+ *
  */
 ludo.ObjectFactory = new Class({
 	namespaces:[],
@@ -2916,6 +2943,7 @@ ludo.ObjectFactory = new Class({
 	 @function create
 	 @param {Object|ludo.Core} config
 	 @return {ludo.Core} object
+	 @memberof ludo.ObjectFactory.prototype
 	 */
 	create:function(config){
 		if(this.isClass(config))return config;
@@ -2965,6 +2993,7 @@ ludo.ObjectFactory = new Class({
 	/**
 	 Creates alias name to a custom View or class for use in the type attributes.
 	 @function createAlias
+	 @memberof ludo.ObjectFactory.prototype
 	 @param {String} typeName
 	 @param {ludo.Core} classReference
 	 @example
@@ -3009,6 +3038,7 @@ ludo.ObjectFactory = new Class({
 	 </code>
 
 	 @function ludo.factory.createNamespace
+	 @memberof ludo.ObjectFactory.prototype
 	 @param {String} ns
 	 @example
 	 ludo.factory.ns('parent.child.grandchild');
@@ -3250,7 +3280,8 @@ var Asset = {
 /**
  * Base class for components and views in ludoJS. This class extends
  * Mootools Events class.
- * @class Core
+ * @namepace ludo
+ * @class ludo.Core
  */
 ludo.Core = new Class({
 	Extends:Events,
@@ -3271,14 +3302,15 @@ ludo.Core = new Class({
 	 the same namespace as your component. Then that controller will be registered as controller
 	 for the component.
 	 The 'controller' property can be used to override this and assign a specific controller
+	 @memberof ludo.Core.prototype
 
 	 If you create your own controller by extending ludo.controller.Controller,
 	 you can control several views by adding events in the addView(component) method.
 
-	 @attribute {Object} controller
-	 @example
+	 attribute {Object} controller
+	 example
 	 	controller : 'idOfController'
-	 @example
+	 example
 	 	controller : { type : 'controller.MyController' }
 	 A Controller can also be a singleton.
 
@@ -3287,8 +3319,9 @@ ludo.Core = new Class({
 
 	/**
 	 * Find controller and register this component to controller
-	 * @attribute {Boolean} userController
-	 * @default false
+	 * attribute {Boolean} userController
+	 * default false
+	 * @memberof ludo.Core.prototype
 	 */
 	useController:false,
 
@@ -3299,6 +3332,7 @@ ludo.Core = new Class({
 	 * @attribute stateful
 	 * @type {Boolean}
 	 * @default false
+	 * @memberof ludo.Core.prototype
 	 */
 	stateful:false,
 
@@ -3308,6 +3342,7 @@ ludo.Core = new Class({
 	 * @property statefulProperties
 	 * @type Array
 	 * @default undefined
+	 * @memberof ludo.Core.prototype
 	 */
 	statefulProperties:undefined,
 
@@ -3325,6 +3360,7 @@ ludo.Core = new Class({
 
      @config addOns
      @type {Array}
+	 @memberof ludo.Core.prototype
      @example
         new ludo.View({<br>
 		   addOns : [ { type : 'plugins.Sound' }]
@@ -3421,6 +3457,7 @@ ludo.Core = new Class({
 	 Return id of component
 	 @function getId
 	 @return String id
+	 @memberof ludo.Core.prototype
 	 */
 	getId:function () {
 		return this.id;
@@ -3429,6 +3466,7 @@ ludo.Core = new Class({
 	 Get name of component and form element
 	 @function getName
 	 @return String name
+	 @memberof ludo.Core.prototype
 	 */
 	getName:function () {
 		return this.name;
@@ -3437,8 +3475,8 @@ ludo.Core = new Class({
     // TODO refactor this to use only this.url or global url.
 	/**
 	 * Get url for component
-	 * @function getUrl
-	 * @return {String|undefined} url
+	 * function getUrl
+	 * return {String|undefined} url
 	 */
 	getUrl:function () {
 		if (this.url) {
@@ -3471,6 +3509,7 @@ ludo.Core = new Class({
 	 * type: calendar.View will return "calendar"
 	 * @function getNamespace
 	 * @return {String} namespace
+	 * @memberof ludo.Core.prototype
 	 */
 	getNamespace:function () {
 		if (this.NS == undefined) {
@@ -3502,6 +3541,7 @@ ludo.Core = new Class({
 	 Add events to controller
 	 @function addControllerEvents
 	 @return void
+	 @memberof ludo.Core.prototype
 	 @example
 	 this.controller.addEvent('eventname', this.methodName.bind(this));
 	 */
@@ -3524,6 +3564,7 @@ ludo.Core = new Class({
 	 Save state for stateful components and views. States are stored in localStorage which
 	 is supported by all major browsers(IE from version 8).
 	 @function saveState
+	 @memberof ludo.Core.prototype
 	 @return void
 	 @example
 	 	myComponent.saveState();
@@ -3865,8 +3906,6 @@ ludo.Movable = new Class({
 });/* ../ludojs/src/remote/inject.js */
 /**
  * Class for injecting data to specific resource/service requests
- * @namespace {remote}
- * @class Inject
  */
 ludo.remote.Inject = new Class({
 
@@ -3907,8 +3946,8 @@ ludo.remoteInject = new ludo.remote.Inject();
 /* ../ludojs/src/remote/base.js */
 /**
  * Base class for ludo.remote.HTML and ludo.remote.JSON
- * @namespace remote
- * @class Base
+ * @namespace ludo.remote
+ * @class ludo.remote.Base
  */
 ludo.remote.Base = new Class({
 	Extends:Events,
@@ -4045,9 +4084,8 @@ ludo.remote.Base = new Class({
  * services are "load", "save". Arguments are arguments used when instantiating the resource on the
  * server, example: Person with id 1. The "data" property is used for data which should be sent to
  * the service on the server. Example: For Person with id equals 1, save these data.
- * @namespace remote
- * @class JSON
- * @augments Events
+ * @namespace ludo.remote
+ * @class ludo.remote.JSON
  */
 
 /**
@@ -4214,7 +4252,7 @@ ludo.remote.JSON = new Class({
 /**
  Class for remote HTML requests.
  @namespace remote
- @class HTML
+
  */
 ludo.remote.HTML = new Class({
 	Extends:ludo.remote.Base,
@@ -4269,9 +4307,7 @@ ludo.remote.HTML = new Class({
  The broadcaster can fire four events:
  start, success, failure and serverError. The example below show you how
  to add listeners to these events.
- @namespace remote
- @class Broadcaster
- @example
+
     ludo.remoteBroadcaster.withResource('Person').withService('read').on('success', function(){
 		// Do something
 	});
@@ -4928,14 +4964,10 @@ ludo.canvasEngine = new ludo.canvas.Engine();
 
 /* ../ludojs/src/canvas/node.js */
 /**
- * @module Canvas
- */
-
-/**
- Factory for new svg DOM nodes
- @namespace canvas
- @class Node
- @constructor
+ Class for creating SVG DOM Nodes
+ @namespace ludo.canvas
+ @class ludo.canvas.Node
+ 
  @param {String} tag
  @param {Object} properties
  @optional
@@ -5037,6 +5069,7 @@ ludo.canvas.Node = new Class({
 	 * @param {Function} fn
 	 * @param {Object} el
 	 * @private
+	 * @memberof ludo.canvas.Node.prototype
 	 */
 	_addEvent:(function () {
 		if (document.addEventListener) {
@@ -5078,6 +5111,7 @@ ludo.canvas.Node = new Class({
 	 * @function append
 	 * @param {canvas.View|canvas.Node} node node
 	 * @return {canvas.Node} parent
+	 * @memberof ludo.canvas.Node.prototype
 	 */
 	append:function (node) {
 		this.el.appendChild(node.getEl());
@@ -5145,6 +5179,7 @@ ludo.canvas.Node = new Class({
 	 * Apply filter to node
 	 * @function applyFilter
 	 * @param {canvas.Filter} filter
+	 * @memberof ludo.canvas.Node.prototype
 	 */
 	applyFilter:function (filter) {
 		this.set('filter', filter.getUrl());
@@ -5153,6 +5188,7 @@ ludo.canvas.Node = new Class({
 	 * Apply mask to node
 	 * @function addMask
 	 * @param {canvas.Node} mask
+	 * @memberof ludo.canvas.Node.prototype
 	 */
 	applyMask:function (mask) {
 		this.set('mask', mask.getUrl());
@@ -5162,6 +5198,7 @@ ludo.canvas.Node = new Class({
 	 * Apply clip path to node
 	 * @function applyClipPath
 	 * @param {canvas.Node} clip
+	 * @memberof ludo.canvas.Node.prototype
 	 */
 	applyClipPath:function(clip){
 		this.set('clip-path', clip.getUrl());
@@ -5171,6 +5208,7 @@ ludo.canvas.Node = new Class({
 	 Create url reference
 	 @function url
 	 @param {String} key
+	 @memberof ludo.canvas.Node.prototype
 	 @param {canvas.Node|String} to
 	 @example
 	 node.url('filter', filterObj); // sets node property filter="url(#&lt;filterObj->id>)"
@@ -5199,6 +5237,7 @@ ludo.canvas.Node = new Class({
 	 @param {String} text content
 	 @optional
 	 @return {ludo.canvas.Node} added node
+	 @memberof ludo.canvas.Node.prototype
 	 @example
 	 var filter = new ludo.canvas.Filter();
 	 filter.add('feGaussianBlur', { 'stdDeviation' : 2, result:'blur'  });
@@ -5229,6 +5268,7 @@ ludo.canvas.Node = new Class({
 	 * Add css class to SVG node
 	 * @function addClass
 	 * @param {String} className
+	 * @memberof ludo.canvas.Node.prototype
 	 */
 	addClass:function (className) {
 		ludo.canvasEngine.addClass(this.el, className);
@@ -5238,6 +5278,7 @@ ludo.canvas.Node = new Class({
 	 @function hasClass
 	 @param {String} className
 	 @return {Boolean}
+	 @memberof ludo.canvas.Node.prototype
 	 @example
 	 var node = new ludo.canvas.Node('rect', { id:'myId2'});
 	 node.addClass('myClass');
@@ -5250,6 +5291,7 @@ ludo.canvas.Node = new Class({
 	 Remove css class name from css Node
 	 @function removeClass
 	 @param {String} className
+	 @memberof ludo.canvas.Node.prototype
 	 @example
 	 var node = new ludo.canvas.Node('rect', { id:'myId2'});
 	 node.addClass('myClass');
@@ -5271,6 +5313,7 @@ ludo.canvas.Node = new Class({
 	 * Returns bounding box of el as an object with x,y, width and height.
 	 * @function getBBox
 	 * @return {Object}
+	 * @memberof ludo.canvas.Node.prototype
 	 */
 	getBBox:function () {
 		return this.el.getBBox();
@@ -5282,6 +5325,7 @@ ludo.canvas.Node = new Class({
 	 * where x is width and y is height.
 	 * @function getSize
 	 * @return {Object} size x and y
+	 * @memberof ludo.canvas.Node.prototype
 	 */
 	getSize:function(){
 		var b = this.getBBox();
@@ -5295,6 +5339,7 @@ ludo.canvas.Node = new Class({
 	 * The nearest ancestor 'svg' element. Null if the given element is the outermost svg element.
 	 * @function getCanvas
 	 * @return {ludo.canvas.Node.el} svg
+	 * @memberof ludo.canvas.Node.prototype
 	 */
 	getCanvas:function () {
 		return this.el.ownerSVGElement;
@@ -5303,6 +5348,7 @@ ludo.canvas.Node = new Class({
 	 * The element which established the current viewport. Often, the nearest ancestor ‘svg’ element. Null if the given element is the outermost svg element
 	 * @function getViewPort
 	 * @return {ludo.canvas.Node.el} svg
+	 * @memberof ludo.canvas.Node.prototype
 	 */
 	getViewPort:function () {
 		return this.el.viewPortElement;
@@ -5358,8 +5404,12 @@ ludo.canvas.Node = new Class({
  * object can be adopted to other elements or nodes using the  {{#crossLink "canvas.View/adopt"}}{{/crossLink}}
  * or  {{#crossLink "canvas.Node/adopt"}}{{/crossLink}} methods.
  * A canvas element contains methods for transformations and other
- * @namespace canvas
- * @class Element
+ * @namespace ludo.canvas
+ * @class ludo.canvas.View
+ * @param {Object} config
+ * @param {String} config.tag SVG tag name, example "path"
+ * @param {Object} config.attr Attributes for the svg tag, example: attr: { "d" : "M 100 100 L 200 200 Z" }
+ *
  * @augments ludo.Core
  */
 ludo.canvas.View = new Class({
@@ -5368,32 +5418,16 @@ ludo.canvas.View = new Class({
     /**
      * Reference to canvas.Node
      * @property {canvas.Node} node
+     * @memberof ludo.canvas.View.prototype
      */
     node: undefined,
 
-    /**
-     * Which tag, example: "rect"
-     * @config {String} tag
-     */
     tag: undefined,
 
     engine: ludo.canvasEngine,
-    /**
-     * Properties
-     * @config {Object} p
-     */
+
     p: undefined,
 
-    /**
-     Attributes applied to DOM node
-     @config attr
-     @type {Object}
-     @default undefined
-     @example
-     {
-        x1:50,y1:50,x2:100,y2:150
-    }
-     */
     attr: undefined,
 
     __construct: function (config) {
@@ -5406,6 +5440,7 @@ ludo.canvas.View = new Class({
      * Return canvas node for this element
      * @function getNode
      * @return {canvas.Node} node
+     * @memberof ludo.canvas.View.prototype
      */
     getNode: function () {
         return this.node;
@@ -5422,6 +5457,7 @@ ludo.canvas.View = new Class({
     /**
      Returns value of an attribute
      @function get
+     @memberof ludo.canvas.View.prototype
      @param key
      @return {String} value
      @example
@@ -5434,38 +5470,96 @@ ludo.canvas.View = new Class({
         return this.engine.get(this.getEl(), key);
     },
 
+    /**
+     * Inserts text to the node if the node supports it
+     * @param html
+     * @memberof ludo.canvas.View.prototype
+     */
     html: function (html) {
         this.engine.html(this.getEl(), html);
     },
 
+    /**
+     * Rotate node by this many degrees
+     * @function rotate
+     * @param {Number} degrees
+     * @memberof ludo.canvas.View.prototype
+     */
     rotate: function (degrees) {
         this.engine.rotate(this.getEl(), degrees);
     },
+
+    /**
+     * Bring view to front (z index)
+     * @function toFront
+     * @memberof ludo.canvas.View.prototype
+     */
     toFront: function () {
         this.engine.toFront(this.getEl());
     },
+
+    /**
+     * Move view back (z-index)
+     * @function toBack
+     * @memberof ludo.canvas.View.prototype
+     */
     toBack: function () {
         this.engine.toBack(this.getEl());
     },
+
+    /**
+     * Skew X by this many degrees
+     * @function skewX
+     * @param {Number} degrees
+     * @memberof ludo.canvas.View.prototype
+     */
     skewX: function (degrees) {
         this.engine.skewX(this.getEl(), degrees);
     },
+
+    /**
+     * Skew Y by this many degrees
+     * @function skewY
+     * @param {Number} degrees
+     * @memberof ludo.canvas.View.prototype
+     */
     skewY: function (degrees) {
         this.engine.skewY(this.getEl(), degrees);
     },
 
+    /**
+     * Hide SVG element
+     * @function hide
+     * @memberof ludo.canvas.View.prototype
+     */
     hide:function(){
         this.engine.hide(this.getEl());
     },
 
+    /**
+     * Show SVG element
+     * @function show
+     * @memberof ludo.canvas.View.prototype
+     */
     show:function(){
         this.engine.show(this.getEl());
     },
 
+    /**
+     * Scale SVG element
+     * @param {Number} x x-Ratio
+     * @param {Number} y y-Ratio
+     */
     scale: function (x, y) {
         this.engine.scale(this.getEl(), x, y);
     },
 
+    /**
+     * Apply CSS attribute to node
+     * @param {String} key
+     * @param {String|Number} value
+     * @memberof ludo.canvas.View.prototype
+     */
     css: function (key, value) {
         if (arguments.length == 1) {
             $.each(key, function (a, b) {
@@ -5478,10 +5572,11 @@ ludo.canvas.View = new Class({
     },
 
     /**
-     * Adopt element or node
-     * @function adopt
+     * Append child node
+     * @function append
      * @param {canvas.View|canvas.Node} node
      * @return {canvas.View} parent
+     * @memberof ludo.canvas.View.prototype
      */
     append: function (node) {
         this.node.append(node);
@@ -5492,21 +5587,32 @@ ludo.canvas.View = new Class({
      * Remove text and child nodes from element
      * @function empty
      * @return {canvas.View} this
+     * @memberof ludo.canvas.View.prototype
      */
     empty: function () {
         this.node.empty();
         return this;
     },
 
-    add: function (tagName, properties, config) {
-        return this.node.add(tagName, properties, config);
+    // TODO refactor the method below
+    /**
+     * Appends a new child node and returns it.
+     * @function add
+     * @param {String} tagName
+     * @param {Object} attributes
+     * @param {String} text
+     * @returns {ludo.canvas.Node} created node
+     * @memberof ludo.canvas.View.prototype
+     */
+
+    add: function (tagName, attributes, text) {
+        return this.node.add(tagName, attributes, text);
     }
 });/* ../ludojs/src/canvas/canvas.js */
 /**
  Class used to create canvas(&lt;SVG>) object
  @namespace canvas
- @class Canvas
- @constructor
+ @class ludo.canvas.Canvas
  @param {Object} config
  @example
  	var canvas = new ludo.canvas.Canvas({
@@ -5998,8 +6104,7 @@ ludo.layout.Resizer = new Class({
         this.el.css({
             left: '', top: '', right: '', bottom: ''
         });
-
-
+        
         if (config.width !== undefined && config.width > 0)this.el.css('width', config.width);
         if (config.height !== undefined && config.height > 0)this.el.css('height', (config.height - ludo.dom.getMBPH(this.el)));
         if (config.left !== undefined)this.el.css('left', config.left);
@@ -6225,6 +6330,11 @@ ludo.layout.Base = new Class({
 		this.viewport.absHeight = this.getAvailHeight();
 		this.viewport.width = this.getAvailWidth() - this.viewport.left - this.viewport.right;
 		this.viewport.height = this.getAvailHeight() - this.viewport.top - this.viewport.bottom;
+
+		this.viewport.left = parseInt(this.view.getBody().css('padding-left'));
+		this.viewport.top = parseInt(this.view.getBody().css('padding-top'));
+
+		console.log(this.viewport);
 	},
 
 	previousContentWidth:undefined,
@@ -6404,8 +6514,8 @@ ludo.layout.Base = new Class({
 });/* ../ludojs/src/layout/factory.js */
 /**
  * Factory class for layout managers
- * @namespace layout
- * @class Factory
+ * @namespace ludo.layout
+ * @class ludo.layout.Factory
  */
 ludo.layout.Factory = new Class({
 
@@ -6742,8 +6852,8 @@ ludo.dataSource.Base = new Class({
 });/* ../ludojs/src/data-source/json.js */
 /**
  * Class for remote data source.
- * @namespace dataSource
- * @class JSON
+ * @namespace ludo.dataSource
+ * @class ludo.dataSource.JSON
  * @augments dataSource.Base
  */
 ludo.dataSource.JSON = new Class({
@@ -6827,413 +6937,439 @@ ludo.dataSource.JSON = new Class({
 
 ludo.factory.registerClass('dataSource.JSON', ludo.dataSource.JSON);/* ../ludojs/src/layout/renderer.js */
 /**
- * @namespace layout
- * @class Renderer
+ * Renderer class for Views which does not have a parent view and are typically rendered to the &lt;body> tag.
+ *
+ * It uses the views layout options for it's rendering. The config options are much the same as for the relative layout.
+ *
+ * You can use a combination of the layout properties mentioned below.
+ *
+ * @class ludo.layout.Renderer
+ * @config {object} layout
+ * @config {number|string} layout.width Width of view in pixels, percent, "matchParent" or "wrap"
+ * @config {number|string} layout.height Height of view in pixels, percent, "matchParent" or "wrap"
+ * @config {number|string} rightOf Id of view or id of dom element to align right of.
+ * It can be any view which could be referenced using ludo.$, or any value which can be referenced using jQuery's dollar function. if jQuery use
+ * values like '#id'.
+ * @config {number|string} rightOrLeftOf Id of view or dom node to align right of(if enough room). it will be placed to the left if not enough room.
+ * @config {number|string} leftOrRightOf Id of view or dom node to align left of(if enough room). it will be placed to the right if not enough room.
+ * @config {number|string} sameHeightAs Same height as view or dom node with this id. if jQuery, use "#" prefix
+ * @config {number|string} sameWidthAs Same width as view or dom node with this id. if jQuery, use "#" prefix
+ * @config {number|string} alignLeft Align left with view or dom node with this id. if jQuery, use "#" prefix
+ * @config {number|string} alignRight Align right with view or dom node with this id. if jQuery, use "#" prefix
+ * @config {number|string} alignTop Align top edge with view or dom node with this id. if jQuery, use "#" prefix
+ * @config {number|string} alignBottom Align bottom edge with view or dom node with this id. if jQuery, use "#" prefix
+ * @config {number|string} centerIn. Center in view  or dom node with this id. if jQuery, use "#" prefix
+ * @config {number|string} left. left coordinate in pixels
+ * @config {number|string} top. top coordinate in pixels
+ * @config {number|string} offsetX. After positioning, offset left coordinate with these many pixels
+ * @config {number|string} offsetY. After positioning, offset top coordinate with these many pixels
+ *
  */
 ludo.layout.Renderer = new Class({
-	// TODO Support top and left resize of center aligned dialogs
-	// TODO store inner height and width of views(body) for fast lookup
-	view:undefined,
-	options:['width', 'height',
-		'rightOf', 'leftOf', 'below', 'above',
-		'sameHeightAs', 'sameWidthAs',
-		'offsetWidth', 'offsetHeight',
+    // TODO Support top and left resize of center aligned dialogs
+    // TODO store inner height and width of views(body) for fast lookup
+    view: undefined,
+    options: ['width', 'height',
+        'rightOf', 'leftOf', 'below', 'above',
+        'sameHeightAs', 'sameWidthAs',
+        'offsetWidth', 'offsetHeight',
         'rightOrLeftOf', 'leftOrRightOf',
         'alignLeft', 'alignRight', 'alignTop', 'alignBottom',
-		'centerIn',
-		'left', 'top',
-		'offsetX', 'offsetY', 'fitVerticalViewPort'],
-	fn:undefined,
-	viewport:{
-		x:0, y:0, width:0, height:0
-	},
-	coordinates:{
-		left:undefined,
-		right:undefined,
-		above:undefined,
-		below:undefined,
-		width:undefined,
-		height:undefined
-	},
-	lastCoordinates:{},
+        'centerIn',
+        'left', 'top',
+        'offsetX', 'offsetY', 'fitVerticalViewPort'],
+    fn: undefined,
+    viewport: {
+        x: 0, y: 0, width: 0, height: 0
+    },
+    coordinates: {
+        left: undefined,
+        right: undefined,
+        above: undefined,
+        below: undefined,
+        width: undefined,
+        height: undefined
+    },
+    lastCoordinates: {},
 
-	initialize:function (config) {
+    initialize: function (config) {
 
-		this.view = config.view;
-		this.fixReferences();
-		this.setDefaultProperties();
-		this.view.addEvent('show', this.resize.bind(this));
-		ludo.dom.clearCache();
-		this.addResizeEvent();
+        this.view = config.view;
+        this.fixReferences();
+        this.setDefaultProperties();
+        this.view.addEvent('show', this.resize.bind(this));
+        ludo.dom.clearCache();
+        this.addResizeEvent();
 
-		this.view.getLayout().on('addChild', this.clearFn.bind(this));
-		this.view.on('addChild', this.clearFn.bind(this));
-	},
+        this.view.getLayout().on('addChild', this.clearFn.bind(this));
+        this.view.on('addChild', this.clearFn.bind(this));
+    },
 
-	fixReferences:function () {
-		var el;
-		var hasReferences = false;
+    fixReferences: function () {
+        var el;
+        var hasReferences = false;
 
-		for (var i = 0; i < this.options.length; i++) {
-			var key = this.options[i];
-			switch (key) {
-				case 'offsetX':
-				case 'offsetY':
-				case 'width':
-				case 'height':
-				case 'left':
-				case 'top':
-				case 'fitVerticalViewPort':
-					break;
-				default:
-					el = undefined;
-					if (this.view.layout[key] !== undefined) {
-						hasReferences = true;
-						var val = this.view.layout[key];
+        for (var i = 0; i < this.options.length; i++) {
+            var key = this.options[i];
+            switch (key) {
+                case 'offsetX':
+                case 'offsetY':
+                case 'width':
+                case 'height':
+                case 'left':
+                case 'top':
+                case 'fitVerticalViewPort':
+                    break;
+                default:
+                    el = undefined;
+                    if (this.view.layout[key] !== undefined) {
+                        hasReferences = true;
+                        var val = this.view.layout[key];
 
-						if (typeof val === 'string') {
-							var view;
-							if (val === 'parent') {
-								view = this.view.getParent();
-							} else {
-								view = ludo.get(val);
-							}
-							if (view) {
-								el = view.getEl();
-								view.addEvent('resize', this.clearFn.bind(this));
-							} else {
-								el = $(val);
-							}
-						} else {
-							if (val.getEl !== undefined) {
-								el = val.getEl();
-								val.addEvent('resize', this.clearFn.bind(this));
-							} else {
-								el = $(val);
-							}
-						}
-						if (el)this.view.layout[key] = el; else this.view.layout[key] = undefined;
-					}
-			}
-		}
-		if (hasReferences)this.view.getEl().css('position', 'absolute');
-	},
+                        if (typeof val === 'string') {
+                            var view;
+                            if (val === 'parent') {
+                                view = this.view.getParent();
+                            } else {
+                                view = ludo.get(val);
+                            }
+                            if (view) {
+                                el = view.getEl();
+                                view.addEvent('resize', this.clearFn.bind(this));
+                            } else {
+                                el = $(val);
+                            }
+                        } else {
+                            if (val.getEl !== undefined) {
+                                el = val.getEl();
+                                val.addEvent('resize', this.clearFn.bind(this));
+                            } else {
+                                el = $(val);
+                            }
+                        }
+                        if (el)this.view.layout[key] = el; else this.view.layout[key] = undefined;
+                    }
+            }
+        }
+        if (hasReferences)this.view.getEl().css('position', 'absolute');
+    },
 
-	setDefaultProperties:function () {
+    setDefaultProperties: function () {
         // TODO is this necessary ?
-		this.view.layout.width = this.view.layout.width || 'matchParent';
-		this.view.layout.height = this.view.layout.height || 'matchParent';
-	},
+        this.view.layout.width = this.view.layout.width || 'matchParent';
+        this.view.layout.height = this.view.layout.height || 'matchParent';
+    },
 
-	addResizeEvent:function () {
-		// todo no resize should be done for absolute positioned views with a width. refactor the next line
-		if (this.view.isWindow)return;
-		var node = this.view.getEl().parent();
-		if (!node || !node.prop("tagName"))return;
-		if (node.prop("tagName").toLowerCase() !== 'body') {
-			node = $(node);
-		} else {
-			node = $(window);
-		}
-		node.on('resize', this.resize.bind(this));
-	},
+    addResizeEvent: function () {
+        // todo no resize should be done for absolute positioned views with a width. refactor the next line
+        if (this.view.isWindow)return;
+        var node = this.view.getEl().parent();
+        if (!node || !node.prop("tagName"))return;
+        if (node.prop("tagName").toLowerCase() !== 'body') {
+            node = $(node);
+        } else {
+            node = $(window);
+        }
+        node.on('resize', this.resize.bind(this));
+    },
 
-	buildResizeFn:function () {
-		var parent = this.view.getEl().parent();
-		if (!parent)this.fn = function () {};
-		var fns = [];
-		var fnNames = [];
-		for (var i = 0; i < this.options.length; i++) {
-			if (this.view.layout[this.options[i]] !== undefined) {
-				fns.push(this.getFnFor(this.options[i], this.view.layout[this.options[i]]));
-				fnNames.push(this.options[i]);
-			}
-		}
-		this.fn = function () {
-			for (i = 0; i < fns.length; i++) {
-				fns[i].call(this, this.view, this);
-			}
-		}
-	},
+    buildResizeFn: function () {
+        var parent = this.view.getEl().parent();
+        if (!parent)this.fn = function () {
+        };
+        var fns = [];
+        var fnNames = [];
+        for (var i = 0; i < this.options.length; i++) {
+            if (this.view.layout[this.options[i]] !== undefined) {
+                fns.push(this.getFnFor(this.options[i], this.view.layout[this.options[i]]));
+                fnNames.push(this.options[i]);
+            }
+        }
+        this.fn = function () {
+            for (i = 0; i < fns.length; i++) {
+                fns[i].call(this, this.view, this);
+            }
+        }
+    },
 
-	getFnFor:function (option, value) {
-		var c = this.coordinates;
+    getFnFor: function (option, value) {
+        var c = this.coordinates;
 
 
+        switch (option) {
 
+            case 'height':
+                if (value === 'matchParent') {
 
-		switch (option) {
-
-			case 'height':
-				if (value === 'matchParent') {
-
-					return function (view, renderer) {
-						c.height = renderer.viewport.height;
-					}
-				}
-				if (value === 'wrap') {
-					var s = ludo.dom.getWrappedSizeOfView(this.view);
+                    return function (view, renderer) {
+                        c.height = renderer.viewport.height;
+                    }
+                }
+                if (value === 'wrap') {
+                    var s = ludo.dom.getWrappedSizeOfView(this.view);
                     // TODO test out layout in order to check that the line below is working.
                     this.view.layout.height = s.y;
-					return function () {
-						c.height = s.y;
-					}
+                    return function () {
+                        c.height = s.y;
+                    }
 
-				}
-				if (value.indexOf !== undefined && value.indexOf('%') > 0) {
-					value = parseInt(value);
-					return function (view, renderer) {
-						c.height = (renderer.viewport.height * value / 100)
-					}
-				}
-				return function () {
-					c.height = this.view.layout[option];
-				}.bind(this);
-			case 'width':
-				if (value === 'matchParent') {
-					return function (view, renderer) {
-						c.width = renderer.viewport.width;
-					}
-				}
-				if (value === 'wrap') {
-					var size = ludo.dom.getWrappedSizeOfView(this.view);
+                }
+                if (value.indexOf !== undefined && value.indexOf('%') > 0) {
+                    value = parseInt(value);
+                    return function (view, renderer) {
+                        c.height = (renderer.viewport.height * value / 100)
+                    }
+                }
+                return function () {
+                    c.height = this.view.layout[option];
+                }.bind(this);
+            case 'width':
+                if (value === 'matchParent') {
+                    return function (view, renderer) {
+                        c.width = renderer.viewport.width;
+                    }
+                }
+                if (value === 'wrap') {
+                    var size = ludo.dom.getWrappedSizeOfView(this.view);
                     this.view.layout.width = size.x;
-					return function () {
-						console.log('settingwidth to ' + size.x)
-						c.width = size.x;
-					}
+                    return function () {
+                        console.log('settingwidth to ' + size.x)
+                        c.width = size.x;
+                    }
 
-				}
-				if (value.indexOf !== undefined && value.indexOf('%') > 0) {
-					value = parseInt(value);
-					return function (view, renderer) {
-						c.width = (renderer.viewport.width * value / 100)
-					}
-				}
-				return function () {
-					c.width = this.view.layout[option];
+                }
+                if (value.indexOf !== undefined && value.indexOf('%') > 0) {
+                    value = parseInt(value);
+                    return function (view, renderer) {
+                        c.width = (renderer.viewport.width * value / 100)
+                    }
+                }
+                return function () {
+                    c.width = this.view.layout[option];
                 }.bind(this);
-			case 'rightOf':
-				return function () {
-					c.left = value.offset().left + value.outerWidth();
-				};
-			case 'leftOf':
-				return function () {
+            case 'rightOf':
+                return function () {
+                    c.left = value.offset().left + value.outerWidth();
+                };
+            case 'leftOf':
+                return function () {
                     c.left = value.offset().left - c.width;
-				};
-			case 'leftOrRightOf':
-				return function () {
-					var x = value.offset().left - c.width;
-					if (x - c.width < 0) {
-						x += (value.outerWidth() + c.width);
-					}
-					c.left = x;
-				};
-			case 'rightOrLeftOf' :
-				return function (view, renderer) {
-					var val = value.offset().left + value.outerWidth();
-					if (val + c.width > renderer.viewport.width) {
-						val -= (value.outerWidth() + c.width);
-					}
-					c.left = val;
-				};
-			case 'above':
-				return function (view, renderer) {
+                };
+            case 'leftOrRightOf':
+                return function () {
+                    var x = value.offset().left - c.width;
+                    if (x - c.width < 0) {
+                        x += (value.outerWidth() + c.width);
+                    }
+                    c.left = x;
+                };
+            case 'rightOrLeftOf' :
+                return function (view, renderer) {
+                    var val = value.offset().left + value.outerWidth();
+                    if (val + c.width > renderer.viewport.width) {
+                        val -= (value.outerWidth() + c.width);
+                    }
+                    c.left = val;
+                };
+            case 'above':
+                return function (view, renderer) {
                     c.bottom = renderer.viewport.height - value.offset().top;
-				};
-			case 'below':
-				return function () {
-					c.top = value.offset().top + value.height();
-				};
-			case 'alignLeft':
-				return function () {
-					c.left = value.offset().left;
-				};
-			case 'alignTop':
-				return function () {
-					c.top = value.offset().top;
-				};
-			case 'alignRight':
-				return function () {
+                };
+            case 'below':
+                return function () {
+                    c.top = value.offset().top + value.height();
+                };
+            case 'alignLeft':
+                return function () {
+                    c.left = value.offset().left;
+                };
+            case 'alignTop':
+                return function () {
+                    c.top = value.offset().top;
+                };
+            case 'alignRight':
+                return function () {
 
-					console.log(value.outerWidth());
-					console.log(c.width);
+                    console.log(value.outerWidth());
+                    console.log(c.width);
 
-					c.left = value.offset().left + value.outerWidth() - c.width;
-				};
-			case 'alignBottom':
-				return function () {
-					c.top = value.offset().top + value.outerHeight() - c.height;
-				};
-			case 'offsetX' :
-				return function () {
-					c.left = c.left ? c.left + value : value;
-				};
-			case 'offsetY':
-				return function () {
-					c.top = c.top ? c.top + value : value;
-				};
-			case 'sameHeightAs':
-				return function () {
-					c.height = value.height();
-				};
-			case 'offsetWidth' :
-				return function () {
-					c.width = c.width + value;
-				};
-			case 'offsetHeight':
-				return function () {
-					c.height = c.height + value;
-				};
-			case 'centerIn':
-				return function () {
-					var pos = value.offset();
-					c.top = (pos.top + value.height()) / 2 - (c.height / 2);
-					c.left = (pos.left + value.outerWidth()) / 2 - (c.width / 2);
-				};
-			case 'centerHorizontalIn':
-				return function () {
-					c.left = (value.offset().left + value.outerWidth()) / 2 - (c.width / 2);
-				};
-			case 'centerVerticalIn':
-				return function () {
-					c.top = (value.offset().top + value.height()) / 2 - (c.height / 2);
-				};
-			case 'sameWidthAs':
-				return function () {
-					c.width = value.outerWidth();
-				};
-			case 'x':
-			case 'left':
-				return function () {
-					c.left = this.view.layout[option];
+                    c.left = value.offset().left + value.outerWidth() - c.width;
+                };
+            case 'alignBottom':
+                return function () {
+                    c.top = value.offset().top + value.outerHeight() - c.height;
+                };
+            case 'offsetX' :
+                return function () {
+                    c.left = c.left ? c.left + value : value;
+                };
+            case 'offsetY':
+                return function () {
+                    c.top = c.top ? c.top + value : value;
+                };
+            case 'sameHeightAs':
+                return function () {
+                    c.height = value.height();
+                };
+            case 'offsetWidth' :
+                return function () {
+                    c.width = c.width + value;
+                };
+            case 'offsetHeight':
+                return function () {
+                    c.height = c.height + value;
+                };
+            case 'centerIn':
+                return function () {
+                    var pos = value.offset();
+                    c.top = (pos.top + value.height()) / 2 - (c.height / 2);
+                    c.left = (pos.left + value.outerWidth()) / 2 - (c.width / 2);
+                };
+            case 'centerHorizontalIn':
+                return function () {
+                    c.left = (value.offset().left + value.outerWidth()) / 2 - (c.width / 2);
+                };
+            case 'centerVerticalIn':
+                return function () {
+                    c.top = (value.offset().top + value.height()) / 2 - (c.height / 2);
+                };
+            case 'sameWidthAs':
+                return function () {
+                    c.width = value.outerWidth();
+                };
+            case 'x':
+            case 'left':
+                return function () {
+                    c.left = this.view.layout[option];
                 }.bind(this);
-			case 'y':
-			case 'top':
-				return function () {
-					c.top = this.view.layout[option];
+            case 'y':
+            case 'top':
+                return function () {
+                    c.top = this.view.layout[option];
                 }.bind(this);
-			case 'fitVerticalViewPort':
-				return function (view, renderer) {
-					if (c.height) {
-						var pos = c.top !== undefined ? c.top : view.getEl().offset().top;
-						if (pos + c.height > renderer.viewport.height - 2) {
-							c.top = renderer.viewport.height - c.height - 2;
-						}
-					}
-				};
-			default:
-				return function () {
-			};
-		}
-	},
+            case 'fitVerticalViewPort':
+                return function (view, renderer) {
+                    if (c.height) {
+                        var pos = c.top !== undefined ? c.top : view.getEl().offset().top;
+                        if (pos + c.height > renderer.viewport.height - 2) {
+                            c.top = renderer.viewport.height - c.height - 2;
+                        }
+                    }
+                };
+            default:
+                return function () {
+                };
+        }
+    },
 
-	posKeys:['left', 'right', 'top', 'bottom'],
+    posKeys: ['left', 'right', 'top', 'bottom'],
 
-	clearFn:function () {
-		this.fn = undefined;
-	},
+    clearFn: function () {
+        this.fn = undefined;
+    },
 
-	resize:function () {
-		if (this.view.isHidden())return;
-		if (this.fn === undefined)this.buildResizeFn();
-		this.setViewport();
+    resize: function () {
+        if (this.view.isHidden())return;
+        if (this.fn === undefined)this.buildResizeFn();
+        this.setViewport();
 
-		this.fn.call(this);
+        this.fn.call(this);
 
-		var c = this.coordinates;
+        var c = this.coordinates;
 
-		this.view.resize(c);
+        this.view.resize(c);
 
 
+        if (c['bottom'])c['top'] = undefined;
+        if (c['right'])c['left'] = undefined;
 
-        if(c['bottom'])c['top'] = undefined;
-        if(c['right'])c['left'] = undefined;
+        for (var i = 0; i < this.posKeys.length; i++) {
+            var k = this.posKeys[i];
+            if (this.coordinates[k] !== undefined && this.coordinates[k] !== this.lastCoordinates[k])this.view.getEl().css(k, c[k]);
+        }
+        this.lastCoordinates = Object.clone(c);
+    },
 
-		for (var i = 0; i < this.posKeys.length; i++) {
-			var k = this.posKeys[i];
-			if (this.coordinates[k] !== undefined && this.coordinates[k] !== this.lastCoordinates[k])this.view.getEl().css(k, c[k]);
-		}
-		this.lastCoordinates = Object.clone(c);
-	},
+    resizeChildren: function () {
+        if (this.view.children.length > 0)this.view.getLayout().resizeChildren();
+    },
 
-	resizeChildren:function(){
-		if (this.view.children.length > 0)this.view.getLayout().resizeChildren();
-	},
+    setViewport: function () {
+        var el = this.view.getEl().parent();
+        if (!el)return;
+        this.viewport.width = el.width();
+        this.viewport.height = el.height();
+    },
 
-	setViewport:function () {
-		var el = this.view.getEl().parent();
-		if (!el)return;
-		this.viewport.width = el.width();
-		this.viewport.height = el.height();
-	},
+    getMinWidth: function () {
+        return this.view.layout.minWidth || 5;
+    },
 
-	getMinWidth:function () {
-		return this.view.layout.minWidth || 5;
-	},
+    getMinHeight: function () {
+        return this.view.layout.minHeight || 5;
+    },
 
-	getMinHeight:function () {
-		return this.view.layout.minHeight || 5;
-	},
+    getMaxHeight: function () {
+        return this.view.layout.maxHeight || 5000;
+    },
 
-	getMaxHeight:function () {
-		return this.view.layout.maxHeight || 5000;
-	},
+    getMaxWidth: function () {
+        return this.view.layout.maxWidth || 5000;
+    },
 
-	getMaxWidth:function () {
-		return this.view.layout.maxWidth || 5000;
-	},
+    setPosition: function (x, y) {
+        if (x !== undefined && x >= 0) {
+            this.coordinates.left = this.view.layout.left = x;
+            this.view.getEl().css('left', x);
+            this.lastCoordinates.left = x;
+        }
+        if (y !== undefined && y >= 0) {
+            this.coordinates.top = this.view.layout.top = y;
+            this.view.getEl().css('top', y);
+            this.lastCoordinates.top = y;
+        }
+    },
 
-	setPosition:function (x, y) {
-		if (x !== undefined && x >= 0) {
-			this.coordinates.left = this.view.layout.left = x;
-			this.view.getEl().css('left', x);
-			this.lastCoordinates.left = x;
-		}
-		if (y !== undefined && y >= 0) {
-			this.coordinates.top = this.view.layout.top = y;
-			this.view.getEl().css('top', y);
-			this.lastCoordinates.top = y;
-		}
-	},
+    setSize: function (config) {
 
-	setSize:function (config) {
+        if (config.left)this.coordinates.left = this.view.layout.left = config.left;
+        if (config.top)this.coordinates.top = this.view.layout.top = config.top;
+        if (config.width)this.view.layout.width = this.coordinates.width = config.width;
+        if (config.height)this.view.layout.height = this.coordinates.height = config.height;
+        this.resize();
+    },
 
-		if (config.left)this.coordinates.left = this.view.layout.left = config.left;
-		if (config.top)this.coordinates.top = this.view.layout.top = config.top;
-		if (config.width)this.view.layout.width = this.coordinates.width = config.width;
-		if (config.height)this.view.layout.height = this.coordinates.height = config.height;
-		this.resize();
-	},
+    position: function () {
+        return {
+            x: this.coordinates.left,
+            y: this.coordinates.top
+        };
+    },
 
-	position:function () {
-		return {
-			x:this.coordinates.left,
-			y:this.coordinates.top
-		};
-	},
+    getSize: function () {
+        return {
+            x: this.coordinates.width,
+            y: this.coordinates.height
+        }
+    },
 
-	getSize:function () {
-		return {
-			x:this.coordinates.width,
-			y:this.coordinates.height
-		}
-	},
+    setValue: function (key, value) {
+        this.view.layout[key] = value;
+    },
 
-	setValue:function(key, value){
-		this.view.layout[key] = value;
-	},
-
-	getValue:function(key){
-		return this.view.layout[key];
-	}
+    getValue: function (key) {
+        return this.view.layout[key];
+    }
 });/* ../ludojs/src/tpl/parser.js */
 /**
- * JSON Content compiler. This component will return compiled JSON for a view. It will
- * be created on demand by a ludo.View. If you want to create your own parser, extend this
- * class and
+ * JSON Content compiler. This parser works with a template string, like: "<p>{lastname}, {firstname}</p>" and a JSON
+ * array, like: [{"firstname":"John", "lastname": "Anderson"},{"firstname":"Anna", "lastname": "Anderson"}] and returns
+ * <p>{Anderson}, {John}</p><p>{Anderson}, {Anna}</p>.
+ *
+ * It walks through all the objects in the JSON array and uses the template string on each one of them.
+ * 
  * @namespace tpl
- * @class Parser
+ * @class ludo.tpl.Parser
  * @augments Core
  */
 ludo.tpl.Parser = new Class({
@@ -7244,7 +7380,7 @@ ludo.tpl.Parser = new Class({
     /**
      * Get compiled string
 	 * @function getCompiled
-     * @param {Object} records
+     * @param {Array} records
      * @param {String} tpl
      * @return {Array} string items
      */
@@ -7587,8 +7723,7 @@ ludo.dom = {
 };/* ../ludojs/src/view/shim.js */
 /**
  * Render a shim
- * @namespace view
- * @class Shim
+
  */
 ludo.view.Shim = new Class({
     txt:'Loading content...',
@@ -7947,7 +8082,6 @@ ludo.View = new Class({
 	 * are fully rendered.
 	 * @memberof ludo.View.prototype
 	 * @function __rendered
-	 * @fires 'render'
 	 */
 	__rendered:function () {
 		if (!this.layout.height && !this.layout.above && !this.layout.sameHeightAs && !this.layout.alignWith) {
@@ -8283,6 +8417,7 @@ ludo.View = new Class({
 	 */
 	setTitle:function (title) {
 		this.title = title;
+		this.fireEvent('setTitle', this);
 	},
 
 	/**
@@ -8442,7 +8577,7 @@ ludo.View = new Class({
 		return ret;
 	},
 	/**
-	 * Add a child component. The method will returned the created component.
+	 * Add a child View. The method will returned the created view.
 	 * @memberof ludo.View.prototype
 	 * @function addChild
 	 * @param {Object|View} child. A Child object can be a View or a JSON config object for a new View.
@@ -8657,10 +8792,11 @@ ludo.View = new Class({
 ludo.factory.registerClass('View', ludo.View);/* ../ludojs/src/remote/message.js */
 /**
  Class displaying all messages from remote requests
+
+ Extends: ludo.View
+ 
  @namespace remote
- @class Message
- @augments ludo.View
- @constructor
+ @class ludo.remote.Message
  @param {Object} config
  @example
  	children:[{
@@ -8767,8 +8903,8 @@ ludo.remote.Message = new Class({
 });/* ../ludojs/src/remote/error-message.js */
 /**
  * Show error messages from remote requests
- * @namespace remote
- * @class ErrorMessage
+ * @namespace ludo.remote
+ * @class ludo.remote.ErrorMessage
  * @augments ludo.remote.Message
  */
 ludo.remote.ErrorMessage = new Class({
@@ -8839,11 +8975,11 @@ ludo.canvas.Effect = new Class({
     }
 });/* ../ludojs/src/data-source/record.js */
 /**
- * Class representing a record in {{#crossLink "dataSource.Collection"}}{{/crossLink}}
- * Instances of this class are created from {{#crossLink "dataSource.Collection/getRecord"}}{{/crossLink}}
+ * Class representing a record in a <a href="ludo.dataSource.Collection.html">Collection</a>
+ * Instances of this class are created by the collections getRecord method.
  * When you update a record
- * @namespace dataSource
- * @class Record
+ * @namespace ludo.dataSource
+ * @class ludo.dataSource.Record
  */
 ludo.dataSource.Record = new Class({
 	Extends:Events,
@@ -9017,8 +9153,8 @@ ludo.dataSource.Record = new Class({
 });/* ../ludojs/src/chart/record.js */
 /**
  * Record for charts
- * @namespace chart
- * @class Record
+ * @namespace ludo.chart
+ * @class ludo.chart.Record
  */
 ludo.chart.Record = new Class({
     Extends:ludo.dataSource.Record,
@@ -9092,10 +9228,10 @@ ludo.chart.Record = new Class({
 });/* ../ludojs/src/data-source/collection.js */
 /**
  Data source collection
- @namespace dataSource
- @class Collection
+ @namespace ludo.dataSource.
+ @class ludo.dataSource.Collection
  @augments dataSource.JSON
- @constructor
+ 
  @param {Object} config
  @example
  	dataSource:{
@@ -10228,8 +10364,8 @@ ludo.dataSource.Collection = new Class({
 ludo.factory.registerClass('dataSource.Collection', ludo.dataSource.Collection);/* ../ludojs/src/chart/data-provider.js */
 /**
  * Special data source for charts
- * @namespace chart
- * @class DataProvider
+ * @namespace ludo.chart
+ * @class ludo.chart.DataProvider
  * @augments dataSource.Collection
  */
 ludo.chart.DataProvider = new Class({
@@ -10528,7 +10664,7 @@ ludo.chart.Fragment = new Class({
  * Special SVG 'g' element which can be positioned and
  * sized using the layout.Canvas layout model.
  * @namespace canvas
- * @class Group
+ * @class ludo.canvas.Group
  */
 ludo.canvas.Group = new Class({
     Extends:ludo.canvas.View,
@@ -10807,8 +10943,8 @@ ludo.chart.PieSlice = new Class({
 });/* ../ludojs/src/chart/pie.js */
 /**
  Class for pie charts.
- @namespace chart
- @class Pie
+ @namespace ludo.chart
+ @class ludo.chart.Pie
  @example
      // Create data source for the pie chart.
      var provider = new ludo.chart.DataProvider({
@@ -11037,69 +11173,26 @@ ludo.chart.Pie = new Class({
  * "vertical" or "horizontal". If orientation is not set and width is greater
  * than height, the labels will be displayed vertically. If height is greater
  * than width, the labels will be rendered vertically.
- * @namespace chart
- * @class Labels
+ * @namespace ludo.chart
+ * @class ludo.chart.Labels
+ * @param {Object} config
+ * @param {Object} config.textStyles CSS styling of text, default:  { fill:'#000000', 'font-size' : '13px', 'font-weight' : 'normal' }
+ * @param {Object} config.textStylesOver CSS styling on mouse over, default: { 'font-weight': 'bold' }
+ * @param {Object} config.boxStyles CSS for box around labels, default: { 'stroke' : '#000' }
+ * @param {Object} config.boxStylesOver mouse over css for box around labels, default: undefined
+ * @param {String} config.orientation Orientation of labels. If not set, orientation will be set automatically
+ * base on space allocated to the labels. When width is greater than height, the
+ * labels will be displayed horizontally, side by side. Otherwise, they will be
+ * displayed vertically.
  */
 ludo.chart.Labels = new Class({
     Extends:ludo.chart.Base,
 
     fragmentType:'chart.Label',
-
-    /**
-     Styling options for text
-     @config {Object} textStyles
-     @example
-        textStyles:{
-            'font-size' : '14px',
-            'font-weight' : 'normal'
-        }
-     @default { fill:'#000000', 'font-size' : '13px', 'font-weight' : 'normal' }
-     */
     textStyles:undefined,
-    /**
-     Styling options for text of labels for highlighted chart items.
-     @config {Object} textStylesOver
-     @example
-        textStylesOver:{
-            'fill' : '#000',
-            'font-weight' : 'bold'
-        }
-     @default { 'font-weight': 'bold' }
-
-     */
     textStylesOver:undefined,
-
-    /**
-     Styling of color box displayed left of text label. The box will always
-     be displayed in the same color as the chart item it's representing.
-     @config {Object} boxStyles
-     @default undefined
-     @example
-        boxStyles:{ 'stroke' : '#000' }
-     */
     boxStyles:undefined,
-
-    /**
-     Styling of color box when highlighted. By default fill will be set to a slightly brighter color
-     than the chart item it's representing.
-     @config {Object} boxStylesOver
-     @default undefined
-     @example
-        boxStylesOver:{
-            'stroke-width' : 1,
-            'stroke' : '#000'
-        }
-     */
     boxStylesOver:undefined,
-
-    /**
-     * Orientation of labels. If not set, orientation will be set automatically
-     * base on space allocated to the labels. When width is greater than height, the
-     * labels will be displayed horizontally, side by side. Otherwise, they will be
-     * displayed vertically.
-     * @config {String} orientation
-     * @default undefined
-     */
     orientation:undefined,
 
     __construct:function(config){
@@ -11270,8 +11363,8 @@ ludo.chart.AddOn = new Class({
  Add-on for Pie chart. This add-on highlights slices in a pie chart by showing a larger slice behind
  current highlighted chart slice.
  See {{#crossLink "chart/Pie"}}{{/crossLink}} for example of use.
- @namespace chart
- @class PieSliceHighlighted
+ @namespace ludo.chart
+ @class ludo.chart.PieSliceHighlighted
  @type {Class}
  @example
     {
@@ -11377,9 +11470,9 @@ ludo.chart.PieSliceHighlighted = new Class({
 });/* ../ludojs/src/canvas/paint.js */
 /**
  Class for styling of SVG DOM nodes
- @namespace canvas
- @class Paint
- @constructor
+ @namespace ludo.canvas
+ @class ludo.canvas.Paint
+ 
  @param {Object} config
  @example
  	var canvas = new ludo.canvas.Canvas({
@@ -11532,8 +11625,8 @@ ludo.canvas.Paint = new Class({
 /* ../ludojs/src/canvas/named-node.js */
 /**
  * Super class for canvas.Circle, canvas.Rect +++
- * @namespace canvas
- * @class NamedNode
+ * @namespace ludo.canvas
+ * @class ludo.canvas.NamedNode
  */
 ludo.canvas.NamedNode = new Class({
 	Extends: ludo.canvas.Node,
@@ -11550,10 +11643,9 @@ ludo.canvas.NamedNode = new Class({
 /**
  Class for rect tags. It extends canvas.Node by adding setter and getter methods
  for x,y, width, height and rounded corners(rx and ry).
- @namespace canvas
- @class Rect
- @augments canvas.Node
- @constructor
+ @namespace ludo.canvas
+ @class ludo.canvas.Rect
+ @augments ludo.canvas.Node
  @param {Object} coordinates
  @param {canvas.NodeConfig} config
  @example
@@ -11679,7 +11771,7 @@ ludo.canvas.Rect = new Class({
  * Text box class which handles simple HTML tags
  * and renders them in SVG format.
  * @namespace canvsa
- * @class TextBox
+ * @class ludo.canvas.TextBox
  */
 ludo.canvas.TextBox = new Class({
     Extends:ludo.canvas.Group,
@@ -11850,14 +11942,14 @@ ludo.chart.Tooltip = new Class({
 		x:0,y:0
 	},
 
-	/**
+	/*
 	 * Styling of box where the tooltip is rendered
 	 * @config {Object} boxStyles
 	 * @default { "fill":"#fff", "fill-opacity":.8, "stroke-width" : 1, "stroke-location": "inside" }
 	 */
 	boxStyles:{},
 
-	/**
+	/*
 	 * Overall styling of text
 	 * @config {Object} textStyles
 	 * @default { "fill" : "#000" }
@@ -11992,13 +12084,13 @@ ludo.chart.Tooltip = new Class({
 /**
  Factory for automatic creation of children from server ludoDB config. This class is used
  internally by ludoJS when you specify a ludoDB config object in your view configuration.
- @namespace ludoDB
- @class Factory
- @constructor
- @param config
- @type {Object}
- @augments ludo.Core
- @example {@lang Javascript}
+ namespace ludoDB
+ class Factory
+ 
+ param config
+ type {Object}
+ augments ludo.Core
+ example {lang Javascript}
     new ludo.Window({
         title:'LudoDB Integration',
         stateful:true,
@@ -12416,2560 +12508,6 @@ ludo.color.Base = new Class({
 	setColor:function(color){
 		this.value = color;
 	}
-});/* ../ludojs/src/effect/draggable-node.js */
-/**
- Specification of a draggable node objects sent to {{#crossLink "effect.Drag/add"}}{{/crossLink}}. You will
- never create objects of this class.
- @namespace effect
- @class DraggableNode
- @type {Object|String}
- */
-ludo.effect.DraggableNode = new Class({
-	/**
-	 id of node. This attribute is optional
-	 @property id
-	 @type {String}
-	 @default undefined
-	 @optional
-	 @example
-	 	var dragDrop = new ludo.effect.Drag();
-	 	var el = $('<div>');
-	 	dragDrop.add({
-	 		id: 'myId',
-			el : el
-	 	});
-	 	var ref = dragDrop.getById('myId');
-	 Or you can use this code which does the same:
-	 @example
-	 	var dragDrop = new ludo.effect.Drag();
-	 	var el = $('<div>');
-	 	el.id = 'myId';
-	 	dragDrop.add(el);
-	 	var ref = dragDrop.getById('myId');
-	 Id's are only important if you need to access nodes later using {{#crossLink "effect.Drag/getById"}}{{/crossLink}}
-	 */
-	id: undefined,
-
-	/**
-	 * Reference to dragable DOM node
-	 * @property el
-	 * @default undefined
-	 * @type {String|HTMLDivElement}
-	 */
-	el:undefined,
-	/**
-	 * Reference to handle for dragging. el will only be draggable by dragging the handle.
-	 * @property handle
-	 * @type {String|HTMLDivElement}
-	 * @default undefined
-	 * @optional
-	 */
-	handle:undefined,
-
-	/**
-	 * Minimum x position. This is an optional argument. If not set, you will use the params
-	 * set when creating the ludo.effect.Drag component if any.
-	 * @property minX
-	 * @type {Number}
-	 * @default undefined
-	 * @optional
-	 */
-	minX:undefined,
-	/**
-	 * Maximum x position. This is an optional argument. If not set, you will use the params
-	 * set when creating the ludo.effect.Drag component if any.
-	 * @property maxX
-	 * @type {Number}
-	 * @default undefined
-	 * @optional
-	 */
-	maxX:undefined,
-	/**
-	 * Minimum x position. This is an optional argument. If not set, you will use the params
-	 * set when creating the ludo.effect.Drag component if any.
-	 * @property minY
-	 * @type {Number}
-	 * @default undefined
-	 * @optional
-	 */
-	minY:undefined,
-	/**
-	 * Maximum y position. This is an optional argument. If not set, you will use the params
-	 * set when creating the ludo.effect.Drag component if any.
-	 * @property maxY
-	 * @type {Number}
-	 * @default undefined
-	 * @optional
-	 */
-	maxY:undefined,
-	/**
-	 Allow dragging in these directions. This is an optional argument. If not set, you will use the params
-	 set when creating the ludo.effect.Drag component if any.
-	 @property directions
-	 @type {String}
-	 @default 'XY'
-	 @optional
-	 @example
-	 	directions:'XY'	//
-	 	..
-	 	directions:'X' // Only allow dragging along x-axis
-	 	..
-	 	directions:'Y' // Only allow dragging along y-axis
-	 */
-	directions:undefined
-});/* ../ludojs/src/effect/effect.js */
-/**
- * Base class for animations
- * @namespace effect
- * @class Effect
- */
-ludo.effect.Effect = new Class({
-	Extends: ludo.Core,
-	fps:33,
-	/**
-	 Fly/Slide DOM node to a position
-	 @function fly
-	 @param {Object} config
-	 @example
-	 	<div id="myDiv" style="position:absolute;width:100px;height:100px;border:1px solid #000;background-color:#DEF;left:50px;top:50px"></div>
-		<script type="text/javascript">
-		 new ludo.effect.Effect().fly({
-			el: 'myDiv',
-			duration:.5,
-			to:{ x:500, y: 300 },
-			 onComplete:function(){
-				 new ludo.effect.Effect().fly({
-					el: 'myDiv',
-					duration:1,
-					to:{ x:600, y: 50 }
-				 });
-			 }
-		 });
-	 	</script>
-	 Which will first move "myDiv" to position 500x300 on the screen, then to 600x50.
-	 */
-	fly:function(config){
-		config.el = $(config.el);
-		config.duration = config.duration || .2;
-		if(config.from == undefined){
-			config.from = config.el.position();
-		}
-		var fns = [this.animationComplete.bind(this)];
-		if(config.onComplete)fns.push(config.onComplete);
-
-		var callback = function(){
-			for(var i=0;i<fns.length;i++){
-				fns[i].call();
-			}
-		};
-		$(config.el).animate({
-			left: config.to.x,
-			top: config.to.y
-		}, config.duration * 1000, callback);
-
-	},
-
-	/**
-	 Fly/Slide DOM node from current location to given x and y coordinats in given seconds.
-	 @function flyTo
-	 @param {HTMLElement} el
-	 @param {Number} x
-	 @param {Number} y
-	 @param {Number} seconds
-	 @example
-
-	 You may also use this method like this:
-	 @example
-	 	<div id="myDiv" style="position:absolute;width:100px;height:100px;border:1px solid #000;background-color:#DEF;left:50px;top:50px"></div>
-		<script type="text/javascript">
-	 	new ludo.effect.Effect().flyTo('myDiv', 500, 300, .5);
-	 	</script>
-	 Which slides "myDiv" to position 500x300 in 0.5 seconds.
-	 */
-	flyTo:function(el, x, y, seconds){
-		this.fly({
-			el:el,
-			to:{x : x, y: y},
-			duration: seconds
-		});
-	},
-
-
-	animationComplete:function(onComplete, el){
-		/**
-		 * Fired when animation is completed
-		 * @event animationComplete
-		 * @param {effect.Drag} this
-		 */
-
-		this.fireEvent('animationComplete', this);
-
-		if(onComplete !== undefined){
-			onComplete.call(this, el);
-		}
-	},
-
-	fadeOut:function(el, duration, callback){
-		var stops = this.getStops(duration);
-		var stopIncrement = 100 / stops * -1;
-		this.execute({
-			el:el,
-			index:0,
-			stops:stops,
-			styles:[
-				{ key: 'opacity', currentValue: 100, change: stopIncrement }
-			],
-			callback : callback,
-			unit:''
-		})
-	},
-
-	slideIn:function(el, duration, callback, to){
-		to = to || el.getPosition();
-		var from = {
-			x: to.left,
-			y : el.parent().width() + el.height()
-		};
-		this.slide(el,from, to, duration, callback);
-	},
-
-	slideOut:function(el, duration, callback, from){
-		from = from || el.getPosition();
-		var to = {
-			x: from.left,
-			y : el.parent().height() + el.height()
-		};
-		this.slide(el, from, to, duration, callback);
-	},
-
-	slide:function(el, from, to, duration, callback){
-		if(from.x != undefined && from.left == undefined){
-			console.warn("Use of property x in slide");
-			console.trace();
-			from.left = from.x;
-		}
-		if(to.x != undefined && to.left == undefined){
-			console.warn("Use of property x in slide");
-			console.trace();
-			to.left = to.x;
-		}
-		var stops = this.getStops(duration);
-		var styles = [];
-		if(from.left !== to.left){
-			el.css('left', from.left);
-			styles.push({
-				key : 'left',
-				currentValue:from.left,
-				change: (to.left - from.left) / stops
-			});
-		}
-
-		if(from.top !== to.top){
-			el.style.top = from.top + 'px';
-			styles.push({
-				key : 'top',
-				currentValue:from.top,
-				change: (to.top - from.top) / stops
-			});
-		}
-
-		this.execute({
-			el:el,
-			index:0,
-			stops:stops,
-			styles:styles,
-			callback : callback,
-			unit:'px'
-		});
-		this.show(el);
-	},
-
-	fadeIn:function(el, duration, callback){
-		var stops = this.getStops(duration);
-		var stopIncrement = 100 / stops;
-		this.execute({
-			el:el,
-			index:0,
-			stops:stops,
-			styles:[
-				{ key: 'opacity', currentValue: 0, change: stopIncrement }
-			],
-			callback : callback,
-			unit:''
-		});
-		this.show(el);
-	},
-
-	show:function(el){
-		if(el.css("visibility") ==='hidden')el.css('visibility', 'visible');
-	},
-
-	getStops:function(duration){
-		return Math.round(duration * this.fps);
-	},
-
-	execute:function(config){
-		var el = config.el;
-
-		for(var i=0;i<config.styles.length;i++){
-			var s = config.styles[i];
-			s.currentValue += s.change;
-
-			switch(s.key){
-				case 'opacity':
-					el.css("opacity", s.currentValue / 100);
-					break;
-				default:
-					el.css(s.key, Math.round(s.currentValue) + config.unit);
-			}
-			config.index ++;
-
-			if(config.index < config.stops){
-				this.execute.delay(this.fps, this, config);
-			}else{
-				if(config.callback)config.callback.apply(this);
-			}
-		}
-	}
-});
-
-/* ../ludojs/src/effect/drag.js */
-/**
- * Class for dragging DOM elements.
-@namespace ludo.effect
-@class ludo.effect.Drag
-@augments ludo.effect.Effect
-@constructor
-@param {Object} config
-@example
-	<style type="text/css">
-	.ludo-shim {
-		 border: 15px solid #AAA;
-		 background-color: #DEF;
-		 margin: 5;
-		 opacity: .5;
-		 border-radius: 5px;
-	}
-	.draggable{
-		width:150px;
-		z-index:1000;
-		height:150px;
-		border-radius:5px;
-		border:1px solid #555;
-		background-color:#DEF
-	}
-	</style>
-	<div id="draggable" class="draggable">
-		I am draggable
-	</div>
-	<script type="text/javascript">
-	 var d = new ludo.effect.Drag({
-		useShim:true,
-		 listeners:{
-			 endDrag:function(dragged, dragEffect){
-				 dragEffect.getEl().setStyles({
-					 left : dragEffect.getX(),
-					 top: dragEffect.getY()
-				 });
-			 },
-			 drag:function(pos, dragEffect){
-				 dragEffect.setShimText(dragEffect.getX() + 'x' + dragEffect.getY());
-			 }
-		 }
-	 });
-	d.add('draggable'); // "draggable" is the id of the div
- 	</script>
-
-*/
-ludo.effect.Drag = new Class({
-	Extends:ludo.effect.Effect,
-
-	/**
-	 * Reference to drag handle (Optional). If not set, "el" will be used
-	 * @config handle
-	 * @type Object|String
-	 * @default undefined
-	 */
-	handle:undefined,
-	/**
-	 * Reference to DOM element to be dragged
-	 * @config el
-	 * @type Object|String
-	 * @default undefined
-	 */
-	el:undefined,
-
-	/**
-	 * Minimum x position
-	 * @config minX
-	 * @type {Number}
-	 * @default undefined
-	 */
-	minX:undefined,
-	/**
-	 * Minimum y position
-	 * @config minY
-	 * @type {Number}
-	 * @default undefined
-	 */
-	minY:undefined,
-
-	/**
-	 * Maximum x position
-	 * @config maxX
-	 * @type {Number}
-	 * @default undefined
-	 */
-	maxX:undefined,
-	/**
-	 * config y position
-	 * @attribute maxY
-	 * @type {Number}
-	 * @default undefined
-	 */
-	maxY:undefined,
-
-	/**
-	 * minPos and maxPos can be used instead of minX,maxX,minY and maxY if
-	 * you only accept dragging along x-axis or y-axis
-	 * @config {Number} minPos
-	 * @default undefined
-	 */
-	minPos:undefined,
-	/**
-	 * @config maxPos
-	 * @type {Number}
-	 * @default undefined
-	 */
-	maxPos:undefined,
-	/**
-	 * Accept dragging in these directions
-	 * @config dragX
-	 * @type String
-	 * @default XY
-	 */
-	directions:'XY',
-
-	/**
-	 * Unit used while dragging
-	 * @config unit, example : "px", "%"
-	 * @default px
-	 */
-	unit:'px',
-
-	dragProcess:{
-		active:false
-	},
-
-	coordinatesToDrag:undefined,
-	/**
-	 * Delay in seconds from mouse down to start drag. If mouse is released within this interval,
-	 * the drag will be cancelled.
-	 * @config delay
-	 * @type {Number}
-	 * @default 0
-	 */
-	delay:0,
-
-	inDelayMode:false,
-
-	els:{},
-
-	/**
-	 * True to use dynamically created shim while dragging. When true,
-	 * the original DOM element will not be dragged.
-	 * @config useShim
-	 * @type {Boolean}
-	 * @default false
-	 */
-	useShim:false,
-
-	/**
-	 * True to automatically hide shim after drag is finished
-	 * @config autohideShim
-	 * @type {Boolean}
-	 * @default true
-	 */
-	autoHideShim:true,
-
-	/**
-	 CSS classes to add to shim
-	 @config shimCls
-	 @type Array
-	 @default undefined
-	 @example
-		 shimCls:['myShim','myShim-2']
-	 which will results in this shim :
-	 @example
-	 	<div class="ludo-shim myShim myShim-2">
-	 */
-	shimCls:undefined,
-
-	/**
-	 * While dragging, always show dragged element this amount of pixels below mouse cursor.
-	 * @param mouseYOffset
-	 * @type {Number}
-	 * @default undefined
-	 */
-	mouseYOffset:undefined,
-
-	/**
-	 * While dragging, always show dragged element this amount of pixels right of mouse cursor.
-	 * @config mouseXOffset
-	 * @type {Number}
-	 * @default undefined
-	 */
-	mouseXOffset:undefined,
-
-    fireEffectEvents:true,
-
-	__construct:function (config) {
-		this.parent(config);
-		if (config.el !== undefined) {
-			this.add({
-				el:config.el,
-				handle:config.handle
-			});
-		}
-
-        this.setConfigParams(config, ['useShim','autoHideShim','directions','delay','minX','maxX','minY','maxY',
-            'minPos','maxPos','unit','shimCls','mouseYOffset','mouseXOffset','fireEffectEvents']);
-	},
-
-	ludoEvents:function () {
-		this.parent();
-		this.getEventEl().on(ludo.util.getDragMoveEvent(), this.drag.bind(this));
-		this.getEventEl().on(ludo.util.getDragEndEvent(), this.endDrag.bind(this));
-		if (this.useShim) {
-			this.addEvent('start', this.showShim.bind(this));
-			if(this.autoHideShim){
-				this.addEvent('end', this.hideShim.bind(this));
-			}
-		}
-	},
-
-	/**
-	 Add draggable object
-	 @function add
-	 @param {effect.DraggableNode|String|HTMLDivElement} node
-	 @return {effect.DraggableNode}
-	 @example
-	 	dragObject.add({
-			el: 'myDiv',
-			handle : 'myHandle'
-		});
-	 handle is optional.
-
-	 @example
-	 	dragObject.add('idOfMyDiv');
-
-	 You can also add custom properties:
-
-	 @example
-	 	dragobject.add({
-	 		id: "myReference',
-			el: 'myDiv',
-			column: 'city'
-		});
-	 	...
-	 	...
-	 	dragobject.addEvent('before', beforeDrag);
-		 ...
-		 ...
-	 	function beforeDrag(dragged){
-	 		console.log(dragged.el);
-	 		console.log(dragged.column);
-	 	}
-	 */
-	add:function (node) {
-		node = this.getValidNode(node);
-		var el = $(node.el);
-		this.setPositioning(el);
-
-        var handle = node.handle ? $(node.handle) : el;
-
-		handle.id = handle.id || 'ludo-' + String.uniqueID();
-		handle.addClass("ludo-drag");
-
-		handle.on(ludo.util.getDragStartEvent(), this.startDrag.bind(this));
-		handle.attr('forId', node.id);
-		this.els[node.id] = Object.merge(node, {
-			el:$(el),
-			handle:handle
-		});
-		return this.els[node.id];
-	},
-
-	/**
-	 * Remove node
-	 * @function remove
-	 * @param {String} id
-	 * @return {Boolean} success
-	 */
-	remove:function(id){
-		if(this.els[id]!==undefined){
-			var el = $("#" + this.els[id].handle);
-			el.off(ludo.util.getDragStartEvent(), this.startDrag.bind(this));
-			this.els[id] = undefined;
-			return true;
-		}
-		return false;
-	},
-
-	removeAll:function(){
-		var keys = Object.keys(this.els);
-		for(var i=0;i<keys.length;i++){
-			this.remove(keys[i]);
-		}
-		this.els = {};
-	},
-
-	getValidNode:function(node){
-		if (!this.isElConfigObject(node)) {
-			node = {
-				el:$(node)
-			};
-		}
-		if(typeof node.el === 'string'){
-			if(node.el.substr(0,1) != "#")node.el = "#" + node.el;
-			node.el = $(node.el);
-		}
-		node.id = node.id || node.el.attr("id") || 'ludo-' + String.uniqueID();
-		if (!node.el.attr("id"))node.el.attr("id", node.id);
-		node.el.attr('forId', node.id);
-		return node;
-	},
-
-	isElConfigObject:function (config) {
-		return config.el !== undefined || config.handle !== undefined;
-	},
-
-	setPositioning:function(el){
-		if (!this.useShim){
-			el.css('position', 'absolute');
-		}else{
-            var pos = el.css('position');
-			if(!pos || (pos!='relative' && pos!='absolute')){
-				el.css('position', 'relative');
-			}
-		}
-	},
-
-	getById:function(id){
-		return this.els[id];
-	},
-
-	getIdByEvent:function (e) {
-		var el = $(e.target);
-		if (!el.hasClass('ludo-drag')) {
-			el = el.closest('.ludo-drag');
-		}
-		return el.attr('forId');
-	},
-
-	/**
-	 * Returns reference to dragged object, i.e. object added in constructor or
-	 * by use of add method
-	 * @function getDragged
-	 * @return {Object}
-	 */
-	getDragged:function(){
-		return this.els[this.dragProcess.dragged];
-	},
-
-	/**
-	 * Returns reference to draggable DOM node
-	 * @function getEl
-	 * @return {Object} DOMNode
-	 */
-	getEl:function () {
-		return this.els[this.dragProcess.dragged].el;
-	},
-
-	getShimOrEl:function () {
-		return this.useShim ? this.getShim() : this.getEl();
-	},
-
-	getSizeOf:function(el){
-		return el.outerWidth !== undefined ? { x: el.outerWidth(), y: el.outerHeight() } : { x: 0, y: 0 };
-	},
-
-	getPositionOf:function(el){
-
-		return $(el).position();
-	},
-
-	setDragCoordinates:function(){
-		this.coordinatesToDrag = {
-			x : 'x', y:'y'
-		};
-	},
-	startDrag:function (e) {
-		var id = this.getIdByEvent(e);
-
-		var el = this.getById(id).el;
-
-		var size = this.getSizeOf(el);
-		var pos;
-		if(this.useShim){
-			pos = el.position();
-		}else{
-			var parent = this.getPositionedParent(el);
-            pos = parent? el.getPosition(parent) : this.getPositionOf(el)
-		}
-
-		var x = pos.left;
-		var y = pos.top;
-		this.dragProcess = {
-			active:true,
-			dragged:id,
-			currentX:x,
-			currentY:y,
-			elX:x,
-			elY:y,
-			width:size.x,
-			height:size.y,
-			mouseX:e.pageX,
-			mouseY:e.pageY
-		};
-
-
-		this.dragProcess.el = this.getShimOrEl();
-		/**
-		 * Event fired before drag
-		 * @event {effect.DraggableNode}
-		 * @param {Object} object to be dragged
-		 * @param {ludo.effect.Drag} component
-		 * @param {Object} pos(x and y)
-		 */
-		this.fireEvent('before', [this.els[id], this, {x:x,y:y}]);
-
-		if(!this.isActive()){
-			return undefined;
-		}
-
-		this.dragProcess.minX = this.getMinX();
-		this.dragProcess.maxX = this.getMaxX();
-		this.dragProcess.minY = this.getMinY();
-		this.dragProcess.maxY = this.getMaxY();
-		this.dragProcess.dragX = this.canDragAlongX();
-		this.dragProcess.dragY = this.canDragAlongY();
-
-		if (this.delay) {
-			this.setActiveAfterDelay();
-		} else {
-			/**
-			 * Event fired before dragging
-			 * @event start
-			 * @param {effect.DraggableNode} object to be dragged.
-			 * @param {ludo.effect.Drag} component
-			 * @param {Object} pos(x and y)
-			 */
-			this.fireEvent('start', [this.els[id], this, {x:x,y:y}]);
-
-			if(this.fireEffectEvents)ludo.EffectObject.start();
-		}
-
-		return false;
-	},
-
-	getPositionedParent:function(el){
-
-		var parent = el.parentNode;
-		while(parent){
-			var pos = parent.getStyle('position');
-			if (pos === 'relative' || pos === 'absolute')return parent;
-			parent = parent.getParent();
-		}
-		return undefined;
-	},
-
-	/**
-	 Cancel drag. This method is designed to be called from an event handler
-	 attached to the "beforeDrag" event.
-	 @function cancelDrag
-	 @example
-	 	// Here, dd is a {{#crossLink "effect.Drag"}}{{/crossLink}} object
-	 	dd.on('before', function(draggable, dd, pos){
-	 		if(pos.x > 1000 || pos.y > 500){
-	 			dd.cancelDrag();
-			}
-	 	});
-	 In this example, dragging will be cancelled when the x position of the mouse
-	 is greater than 1000 or if the y position is greater than 500. Another more
-	 useful example is this:
-	 @example
-		 dd.on('before', function(draggable, dd){
-		 	if(!this.isDraggable(draggable)){
-		 		dd.cancelDrag()
-		 	}
-		});
-	 Here, we assume that we have an isDraggable method which returns true or false
-	 for whether the given node is draggable or not. "draggable" in this example
-	 is one of the {{#crossLink "effect.DraggableNode"}}{{/crossLink}} objects added
-	 using the {{#crossLink "effect.Drag/add"}}{{/crossLink}} method.
-	 */
-
-	cancelDrag:function () {
-		this.dragProcess.active = false;
-		this.dragProcess.el = undefined;
-        if(this.fireEffectEvents)ludo.EffectObject.end();
-	},
-
-	getShimFor:function (el) {
-		return el;
-	},
-
-	setActiveAfterDelay:function () {
-		this.inDelayMode = true;
-		this.dragProcess.active = false;
-		this.startIfMouseNotReleased.delay(this.delay * 1000, this);
-	},
-
-	startIfMouseNotReleased:function () {
-		if (this.inDelayMode) {
-			this.dragProcess.active = true;
-			this.inDelayMode = false;
-			this.fireEvent('start', [this.getDragged(), this, {x:this.getX(),y:this.getY()}]);
-			ludo.EffectObject.start();
-		}
-	},
-
-	drag:function (e) {
-		if (this.dragProcess.active && this.dragProcess.el) {
-			var pos = {
-				x:undefined,
-				y:undefined
-			};
-			if (this.dragProcess.dragX) {
-				pos.x = this.getXDrag(e);
-
-			}
-
-			if (this.dragProcess.dragY) {
-				pos.y = this.getYDrag(e);
-			}
-
-
-			this.move(pos);
-
-			/**
-			 * Event fired while dragging. Sends position, example {x:100,y:50}
-			 * and reference to effect.Drag as arguments
-			 * @event drag
-			 * @param {Object} x and y
-			 * @param {effect.Drag} this
-			 */
-			this.fireEvent('drag', [pos, this.els[this.dragProcess.dragged], this]);
-			if (ludo.util.isTabletOrMobile())return false;
-
-		}
-		return undefined;
-	},
-
-	move:function (pos) {
-		if (pos.x !== undefined) {
-			this.dragProcess.currentX = pos.x;
-			this.dragProcess.el.css('left',  pos.x + this.unit);
-		}
-		if (pos.y !== undefined) {
-			this.dragProcess.currentY = pos.y;
-			this.dragProcess.el.css('top',  pos.y + this.unit);
-		}
-	},
-
-	/**
-	 * Return current x pos
-	 * @function getX
-	 * @return {Number} x
-	 */
-	getX:function(){
-		return this.dragProcess.currentX;
-	},
-	/**
-	 * Return current y pos
-	 * @function getY
-	 * @return {Number} y
-	 */
-	getY:function(){
-		return this.dragProcess.currentY;
-	},
-
-	getXDrag:function (e) {
-		var posX;
-
-		if(this.mouseXOffset){
-			posX = e.pageX + this.mouseXOffset;
-		}else{
-			posX = e.pageX - this.dragProcess.mouseX + this.dragProcess.elX;
-		}
-
-		if (posX < this.dragProcess.minX) {
-			posX = this.dragProcess.minX;
-		}
-		if (posX > this.dragProcess.maxX) {
-			posX = this.dragProcess.maxX;
-		}
-		return posX;
-	},
-
-	getYDrag:function (e) {
-		var posY;
-		if(this.mouseYOffset){
-			posY = e.pageY + this.mouseYOffset;
-		}else{
-			posY = e.pageY - this.dragProcess.mouseY + this.dragProcess.elY;
-		}
-
-		if (posY < this.dragProcess.minY) {
-			posY = this.dragProcess.minY;
-		}
-		if (posY > this.dragProcess.maxY) {
-			posY = this.dragProcess.maxY;
-		}
-		return posY;
-	},
-
-	endDrag:function () {
-		if (this.dragProcess.active) {
-			this.cancelDrag();
-			/**
-			 * Event fired on drag end
-			 * @event end
-			 * @param {effect.DraggableNode} dragged
-			 * @param {ludo.effect.Drag} this
-			 * @param {Object} x and y
-			 */
-			this.fireEvent('end', [
-				this.getDragged(),
-				this,
-				{
-					x:this.getX(),
-					y:this.getY()
-				}
-			]);
-
-		}
-		if (this.inDelayMode)this.inDelayMode = false;
-
-	},
-
-	/**
-	 * Set new max X pos
-	 * @function setMaxX
-	 * @param {Number} x
-	 */
-	setMaxX:function (x) {
-		this.maxX = x;
-	},
-	/**
-	 * Set new min X pos
-	 * @function setMinX
-	 * @param {Number} x
-	 */
-	setMinX:function (x) {
-		this.minX = x;
-	},
-	/**
-	 * Set new min Y pos
-	 * @function setMinY
-	 * @param {Number} y
-	 */
-	setMinY:function (y) {
-		this.minY = y;
-	},
-	/**
-	 * Set new max Y pos
-	 * @function setMaxY
-	 * @param {Number} y
-	 */
-	setMaxY:function (y) {
-		this.maxY = y;
-	},
-	/**
-	 * Set new min pos
-	 * @function setMinPos
-	 * @param {Number} pos
-	 */
-	setMinPos:function (pos) {
-		this.minPos = pos;
-	},
-	/**
-	 * Set new max pos
-	 * @function setMaxPos
-	 * @param {Number} pos
-	 */
-	setMaxPos:function (pos) {
-		this.maxPos = pos;
-	},
-
-	getMaxX:function () {
-        return this.getMaxPos('maxX');
-	},
-
-	getMaxY:function () {
-        return this.getMaxPos('maxY');
-	},
-
-    getMaxPos:function(key){
-        var max = this.getConfigProperty(key);
-        return max !== undefined ? max : this.maxPos !== undefined ? this.maxPos : 100000;
-    },
-
-	getMinX:function () {
-		var minX = this.getConfigProperty('minX');
-        return minX !== undefined ? minX : this.minPos;
-	},
-
-	getMinY:function () {
-		var dragged = this.getDragged();
-        return dragged && dragged.minY!==undefined ? dragged.minY : this.minY!==undefined ? this.minY : this.minPos;
-	},
-	/**
-	 * Return amount dragged in x direction
-	 * @function getDraggedX
-	 * @return {Number} x
-	 */
-	getDraggedX:function(){
-		return this.getX() - this.dragProcess.elX;
-	},
-	/**
-	 * Return amount dragged in y direction
-	 * @function getDraggedY
-	 * @return {Number} y
-	 */
-	getDraggedY:function(){
-		return this.getY() - this.dragProcess.elY;
-	},
-
-	canDragAlongX:function () {
-		return this.getConfigProperty('directions').indexOf('X') >= 0;
-	},
-	canDragAlongY:function () {
-		return this.getConfigProperty('directions').indexOf('Y') >= 0;
-	},
-
-	getConfigProperty:function(property){
-		var dragged = this.getDragged();
-		return dragged && dragged[property] !== undefined ? dragged[property] : this[property];
-	},
-
-	/**
-	 * Returns width of dragged element
-	 * @function getHeight
-	 * @return {Number}
-	 */
-	getWidth:function () {
-		return this.dragProcess.width;
-	},
-
-	/**
-	 * Returns height of dragged element
-	 * @function getHeight
-	 * @return {Number}
-	 */
-	getHeight:function () {
-		return this.dragProcess.height;
-	},
-	/**
-	 * Returns current left position of dragged
-	 * @function getLeft
-	 * @return {Number}
-	 */
-	getLeft:function () {
-		return this.dragProcess.currentX;
-	},
-
-	/**
-	 * Returns current top/y position of dragged.
-	 * @function getTop
-	 * @return {Number}
-	 */
-	getTop:function () {
-		return this.dragProcess.currentY;
-	},
-
-	/**
-	 * Returns reference to DOM element of shim
-	 * @function getShim
-	 * @return {HTMLDivElement} shim
-	 */
-	getShim:function () {
-		if (this.shim === undefined) {
-			this.shim = $('<div>');
-			this.shim.addClass('ludo-shim');
-			this.shim.css({
-				position:'absolute',
-				'z-index':50000,
-				display:'none'
-			});
-			$(document.body).append(this.shim);
-
-			if (this.shimCls) {
-				for (var i = 0; i < this.shimCls.length; i++) {
-					this.shim.addClass(this.shimCls[i]);
-				}
-			}
-			/**
-			 * Event fired when shim is created
-			 * @event createShim
-			 * @param {HTMLDivElement} shim
-			 */
-			this.fireEvent('createShim', this.shim);
-		}
-		return this.shim;
-	},
-
-	/**
-	 * Show shim
-	 * @function showShim
-	 */
-	showShim:function () {
-		this.getShim().css({
-			display:'',
-			left:this.getShimX(),
-			top:this.getShimY(),
-			width:this.getWidth() + this.getShimWidthDiff(),
-			height:this.getHeight() + this.getShimHeightDiff()
-		});
-
-		this.fireEvent('showShim', [this.getShim(), this]);
-	},
-
-	getShimY:function(){
-		if(this.mouseYOffset){
-			return this.dragProcess.mouseY + this.mouseYOffset;
-		}else{
-			return this.getTop() + ludo.dom.getMH(this.getEl()) - ludo.dom.getMW(this.shim);
-		}
-	},
-
-	getShimX:function(){
-		if(this.mouseXOffset){
-			return this.dragProcess.mouseX + this.mouseXOffset;
-		}else{
-			return this.getLeft() + ludo.dom.getMW(this.getEl()) - ludo.dom.getMW(this.shim);
-		}
-	},
-
-	getShimWidthDiff:function(){
-		return ludo.dom.getMW(this.getEl()) - ludo.dom.getMBPW(this.shim);
-	},
-	getShimHeightDiff:function(){
-		return ludo.dom.getMH(this.getEl()) - ludo.dom.getMBPH(this.shim);
-	},
-
-	/**
-	 * Hide shim
-	 * @function hideShim
-	 */
-	hideShim:function () {
-		this.getShim().css('display', 'none');
-	},
-
-	/**
-	 * Set text content of shim
-	 * @function setShimText
-	 * @param {String} text
-	 */
-	setShimText:function (text) {
-		this.getShim().html( text);
-	},
-
-	/**
-	 * Fly/Slide dragged element back to it's original position
-	 * @function flyBack
-	 */
-	flyBack:function (duration) {
-		this.fly({
-			el: this.getShimOrEl(),
-			duration: duration,
-			from:{ x: this.getLeft(), y : this.getTop() },
-			to:{ x: this.getStartX(), y : this.getStartY() },
-			onComplete : this.flyBackComplete.bind(this)
-		});
-	},
-
-	/**
-	 * Fly/Slide dragged element to position of shim. This will only
-	 * work when useShim is set to true.
-	 * @function flyToShim
-	 * @param {Number} duration in seconds(default = .2)
-	 */
-	flyToShim:function(duration){
-		this.fly({
-			el: this.getEl(),
-			duration: duration,
-			from:{ x: this.getStartX(), y : this.getStartY() },
-			to:{ x: this.getLeft(), y : this.getTop() },
-			onComplete : this.flyToShimComplete.bind(this)
-		});
-	},
-
-	getStartX:function () {
-		return this.dragProcess.elX;
-	},
-
-	getStartY:function () {
-		return this.dragProcess.elY;
-	},
-
-	flyBackComplete:function(){
-
-		/**
-		 * Event fired after flyBack animation is complete
-		 * @event flyBack
-		 * @param {effect.Drag} this
-		 * @param {HTMLElement} dom node
-		 */
-		this.fireEvent('flyBack', [this, this.getShimOrEl()]);
-	},
-
-	flyToShimComplete:function(){
-
-		/**
-		 * Event fired after flyToShim animation is complete
-		 * @event flyBack
-		 * @param {effect.Drag} this
-		 * @param {HTMLElement} dom node
-		 */
-		this.fireEvent('flyToShim', [this, this.getEl()]);
-	},
-
-	isActive:function(){
-		return this.dragProcess.active;
-	}
-});/* ../ludojs/src/form/validator/fns.js */
-ludo.form.validator.required = function(value, required){
-    return !required || value.length > 0;
-};
-
-ludo.form.validator.minLength = function(value, minLength){
-    return value.length === 0 || value.length >= minLength;
-};
-
-ludo.form.validator.maxLength = function(value, maxLength){
-    return value.length === 0 || value.length <= maxLength;
-};
-
-ludo.form.validator.regex = function(value, regex){
-    return value.length === 0 || regex.test(value);
-};
-
-ludo.form.validator.minValue = function(value, minValue){
-    return value.length === 0 || parseInt(value) >= minValue;
-};
-ludo.form.validator.maxValue = function(value, maxValue){
-    return value.length === 0 || parseInt(value) <= maxValue;
-};
-ludo.form.validator.twin = function(value, twin){
-    var cmp = ludo.get(twin);
-    return !cmp || (cmp && value === cmp.value);
-};/* ../ludojs/src/form/element.js */
-/**
- * Super class for form Views.
- * This class inherits from <a href="ludo.View.html">ludo.View</a>.
- * @namespace ludo.form
- * @class ludo.form.Element
- * @param {Object} config Configuration when creating the View. These properties and properties from superclass is available
- * @param {String} config.name Name of element. A call to parentView.getForm().values() will return &lt;name> : &lt;value>.
- * @param {Boolean} config.required True to apply validation for required. Default:false
- * @param {Object} config.formCss Optional css styling of the form element. Example: { type:'form.Text', formCss:{ "text-align": right }} to right align text of a text input.
- * @param {Function} config.validator A Validator function to be executed when value is changed. This function should return true when valid, false when invalid. Current value will be passed to this function.
- * @param {Function} config.linkWith Creates a link with form element with this id. When two form views are linked, they will always have the same value. When one value is changed, the linked form view is automatically updated.
- * Example: A link between a form.Seekbar and a form.Number.
- * Example: { type:'form.Text', placeHolder='Enter Valid Value', validator:function(value){ return value == 'Valid Value' } }
- *
- */
-ludo.form.Element = new Class({
-    Extends:ludo.View,
-    /**
-     * Initial value
-     * @config {String|Number} value
-     * @default undefined
-     */
-    value:undefined,
-    onLoadMessage:'',
-    /**
-     * "name" is inherited from ludo.View. It will also be set as name of input element
-     * @attribute name
-     * @type string
-     * @default undefined
-     */
-    name:undefined,
-
-    /**
-     * Custom CSS rules to apply to input element
-     * @attribute formCss
-     * @type Object
-     * @example:  {@lang Javascript}
-     * { border : '1px solid #000' }
-     * @default undefined
-     */
-    formCss:undefined,
-    stretchField:true,
-    required:false,
-    dirtyFlag:false,
-    initialValue:undefined,
-    constructorValue:undefined,
-    /**
-     * Is form element ready for setValue. For combo boxes and select boxes it may
-     * not be ready until available values has been loaded remotely
-     * @property isReady
-     * @type {Boolean}
-     * @private
-     */
-    isReady:true,
-    overflow:'hidden',
-
-    /**
-     * Will not validate unless value is the same as value of the form element with this id
-     * Example of use: Password and Repeat password. It's sufficient to specify "twin" for one of
-     * the views.
-     * @property twin
-     * @type String
-     * @default undefined
-     */
-    twin:undefined,
-
-    /**
-     * Link with a form component with this id. Value of these components will always be the same
-     * Update one and the other component will be updated automatically. It's sufficient
-     * to specify linkWith for one of the two views.
-     * @property linkWith
-     * @type String
-     * @default undefined
-     */
-    linkWith:undefined,
-
-    /**
-     * When using stateful:true, value will be preserved to next visit.
-     * @property statefulProperties
-     * @type Array
-     * @default ['value']
-     */
-    statefulProperties:['value'],
-
-    /**
-     Object of class form.validator.* or a plain validator function
-     When set the isValid method of the validator will be called after standard validation is complete
-     and form element is valid.
-     @property validator
-     @type Object
-     @example
-        validator : { type : 'form.validator.Md5', value : 'MD5 hash of something' }
-     In order to validate this field, the MD5 of form field value must match form.validator.Md5.value
-     @example
-        validator:function(value){
-	 		return value === 'Valid value';
-	 	}
-     is example of simple function used as validator.
-     */
-    validator:undefined,
-    validatorFn:undefined,
-
-    validators:[],
-    submittable:true,
-
-    __construct:function (config) {
-        this.parent(config);
-        var defaultConfig = this.getInheritedFormConfig();
-
-        // TODO change disabled to enabled
-        var keys = ['label', 'suffix', 'formCss', 'validator', 'stretchField', 'required', 'twin', 'disabled','submittable',
-            'value', 'data'];
-        this.setConfigParams(config, keys);
-
-        this.elementId = ('el-' + this.id).trim();
-        this.formCss = defaultConfig.formCss || this.formCss;
-        if (defaultConfig.height && config.height === undefined)this.layout.height = defaultConfig.height;
-
-        if (this.validator) {
-            this.createValidator();
-        }
-        if (config.linkWith !== undefined) {
-            this.setLinkWith(config.linkWith);
-        }
-
-        if (this.dataSource) {
-            this.isReady = false;
-        }
-        this.initialValue = this.constructorValue = this.value;
-        if (!this.name)this.name = 'ludo-form-el-' + String.uniqueID();
-
-
-        ludo.Form.add(this);
-        if(this.required)this.applyValidatorFns(['required']);
-        this.applyValidatorFns(['twin']);
-    },
-
-    ludoDOM:function(){
-        this.parent();
-        this.addInput();
-    },
-
-    applyValidatorFns:function (keys) {
-        for (var i = 0; i < keys.length; i++) {
-            var key = keys[i];
-            if (this[key] !== undefined) {
-                this.validators.push({
-                    fn:ludo.form.validator[key],
-                    key:key
-                });
-            }
-        }
-    },
-
-    createValidator:function () {
-        var fn;
-        if (ludo.util.isFunction(this.validator)) {
-            fn = this.validator;
-        } else {
-            this.validator.applyTo = this;
-            this.validator = ludo._new(this.validator);
-            fn = this.validator.isValid.bind(this.validator);
-        }
-        this.validators.push({
-            fn : fn,key:''
-        });
-    },
-
-    ludoEvents:function () {
-        this.parent();
-
-        if (this.dataSource) {
-            this.getDataSource().addEvent('load', this.setReady.bind(this));
-        }
-
-        var formEl = this.getFormEl();
-
-        if (formEl) {
-            formEl.on('keydown', this.keyDown.bind(this));
-            formEl.on('keypress', this.keyPress.bind(this));
-            formEl.on('keyup', this.keyUp.bind(this));
-            formEl.on('focus', this.focus.bind(this));
-            formEl.on('change', this.change.bind(this));
-            formEl.on('blur', this.blur.bind(this));
-        }
-    },
-
-    __rendered:function () {
-        this.parent();
-
-        if (this.disabled)this.disable();
-
-		if(this.els.formEl){
-			this.els.formEl.attr('name', this.getName());
-			if(this.value !== undefined)this.els.formEl.val(this.value)
-		}
-        if (this.linkWith) {
-            this.createBackLink();
-        }
-		var parentFormManager = this.getParentForm();
-	    if (parentFormManager) {
-			parentFormManager.registerFormElement(this);
-		}
-		this.validate();
-    },
-
-    /**
-     * Enable or disable form element
-     * @param {Boolean} enabled
-     */
-    setEnabled:function(enabled){
-        if(enabled)this.enable(); else this.disable();
-    },
-
-    /**
-     * Disable form element
-     * @function disable
-     * @return void
-     */
-    disable:function () {
-        this.getFormEl().attr('disabled', '1');
-        this.els.label.addClass('ludo-form-label-disabled');
-    },
-    /**
-     * Enable form element
-     * @function enable
-     * @return void
-     */
-    enable:function () {
-        this.getFormEl().removeProperty('disabled');
-        this.els.label.removeClass('ludo-form-label-disabled');
-    },
-
-    getInheritedFormConfig:function () {
-        var cmp = this.getParent();
-        if (cmp) {
-            return cmp.formConfig || {};
-        }
-        return {};
-    },
-
-    ludoCSS:function () {
-        this.parent();
-        this.getEl().addClass('ludo-form-element');
-        if (this.els.formEl) {
-            this.els.formEl.id = this.elementId;
-
-            if (this.formCss) {
-                this.els.formEl.css(this.formCss);
-            }
-        }
-    },
-
-    getFormElId:function () {
-        return this.elementId;
-    },
-
-    getWidth:function () {
-        var ret = this.parent();
-        return ret ? ret : 20;
-    },
-
-    keyUp:function (e) {
-        /**
-         * key up event
-         * @event key_up
-         * @param {String} key
-         * @param {String|Boolean|Object|Number} value
-         * @param {View} this
-         */
-        this.fireEvent('key_up', [ e.key, this.value, this ]);
-    },
-
-    keyDown:function (e) {
-        /**
-         * key down event
-         * @event key_down
-         * @param {String} key
-         * @param {String|Boolean|Object|Number} value
-         * $param {View} this
-         */
-        this.fireEvent('key_down', [ e.key, this.value, this ]);
-    },
-
-    keyPress:function (e) {
-        /**
-         * key press event
-         * @event key_press
-         * @param {String} key
-         * @param {String|Boolean|Object|Number} value
-         * $param {View} this
-         */
-        this.fireEvent('key_press', [ e.key, this.value, this ]);
-    },
-
-    focus:function () {
-        this._focus = true;
-        this.clearInvalid();
-        /**
-         * On focus event
-         * @event focus
-         * @param {String|Boolean|Object|Number} value
-         * $param {View} this
-         */
-        this.fireEvent('focus', [ this.value, this ]);
-    },
-    change:function () {
-        if (this.els.formEl) {
-            this._set(this.els.formEl.val());
-
-        }
-        /**
-         * On change event. This event is fired when value is changed manually
-         * by the user via GUI. The "change" event is followed by a
-         * "valueChange" event.
-         * When value is changed using the setValue method
-         * only the "valueChange" event is fired.
-         *
-         * @event change
-         * @param {String|Boolean|Object|Number} value
-         * $param {View} this
-         */
-        if (this.wasValid)this.fireEvent('change', [ this._get(), this ]);
-    },
-
-    blur:function () {
-        this._focus = false;
-        this.validate();
-        if (this.getFormEl())this.value = this.getValueOfFormEl();
-        this.toggleDirtyFlag();
-        /**
-         * On blur event
-         * @event blur
-         * @param {String|Boolean|Object|Number} value
-         * $param {View} this
-         */
-        this.fireEvent('blur', [ this.value, this ]);
-    },
-
-    getValueOfFormEl:function(){
-        return this.getFormEl().val();
-    },
-
-    toggleDirtyFlag:function(){
-        if (this.value !== this.initialValue) {
-            /**
-             * @event dirty
-             * @description event fired on blur when value is different from it's original value
-             * @param {String} value
-             * @param {Object} ludo.form.* component
-             */
-            this.setDirty();
-            this.fireEvent('dirty', [this.value, this]);
-        } else {
-            /**
-             * @event clean
-             * @description event fired on blur when value is equal to original/start value
-             * @param {String} value
-             * @param {Object} ludo.form.* component
-             */
-            this.setClean();
-            this.fireEvent('clean', [this.value, this]);
-        }
-    },
-
-    hasFocus:function () {
-        return this._focus;
-    },
-    insertJSON:function (data) {
-        this.populate(data);
-    },
-    populate:function () {
-
-    },
-    getLabel:function () {
-        return this.label;
-    },
-    /**
-     * Return current value
-     * @function getValue
-     * @return string
-     */
-    getValue:function () {
-        console.warn("Use of deprecated getValue");
-        console.trace();
-        return this.els.formEl ? this.els.formEl.val() : this.value;
-    },
-
-
-    val:function(val){
-        if(arguments.length == 0){
-            return this._get();
-        }
-        this._set(val);
-    },
-
-    _get:function(){
-        return this.els.formEl ? this.els.formEl.val() : this.value;
-    },
-
-    _set:function(value){
-
-        if (!this.isReady) {
-            if(value)this._set.delay(50, this, value);
-            return;
-        }
-
-        if (value == this.value) {
-            return value;
-        }
-
-        this.setFormElValue(value);
-        this.value = value;
-
-
-
-        this.validate();
-
-        if (this.wasValid) {
-            /**
-             * This event is fired whenever current value is changed, either
-             * manually by user or by calling setValue. When the value is changed
-             * manually by user via GUI, the "change" event is fired first, then
-             * "valueChange" afterwards.
-             * @event valueChange
-             * @param {Object|String|Number} value
-             * @param {form.Element} form component
-             */
-            this.fireEvent('valueChange', [this._get(), this]);
-            if (this.stateful)this.fireEvent('state');
-            if (this.linkWith)this.updateLinked();
-        }
-
-        this.fireEvent('value', value);
-
-        return value;
-    },
-
-    /**
-     * Set new value
-     * @function setValue
-     * @param value
-     * @return void
-     */
-    setValue:function (value) {
-        console.warn("Use of deprecated setValue");
-        console.trace();
-        if (!this.isReady) {
-            if(value)this.val.delay(50, this, value);
-            return;
-        }
-
-        if (value == this.value) {
-            return;
-        }
-
-        this.setFormElValue(value);
-        this.value = value;
-
-
-
-        this.validate();
-
-        if (this.wasValid) {
-            /**
-             * This event is fired whenever current value is changed, either
-             * manually by user or by calling setValue. When the value is changed
-             * manually by user via GUI, the "change" event is fired first, then
-             * "valueChange" afterwards.
-             * @event valueChange
-             * @param {Object|String|Number} value
-             * @param {form.Element} form component
-             */
-            this.fireEvent('valueChange', [this._get(), this]);
-            if (this.stateful)this.fireEvent('state');
-            if (this.linkWith)this.updateLinked();
-        }
-
-        this.fireEvent('value', value);
-    },
-
-    setFormElValue:function(value){
-        if (this.els.formEl && this.els.formEl.val() !== value) {
-            this.els.formEl.val(value);
-            if(this.inlineLabel)this.els.formEl.removeClass('ludo-form-el-inline-label');
-        }
-    },
-
-    /**
-     * Get reference to input element
-     * @function getFormEl
-     * @return DOMElement
-     */
-    getFormEl:function () {
-        return this.els.formEl;
-    },
-    /**
-     * Returns true when value of form element is valid, i.e. larger than minValue, matching regex etc.
-     * @function isValid
-     * @return {Boolean} valid
-     */
-    isValid:function () {
-        if(this.validators.length === 0)return true;
-
-        var val = this.getFormEl() ? this.getValueOfFormEl().trim() : this.value;
-        for (var i = 0; i < this.validators.length; i++) {
-            if (!this.validators[i].fn.apply(this, [val, this[this.validators[i].key]])){
-                return false;
-            }
-        }
-        return true;
-    },
-
-    clearInvalid:function () {
-        this.getEl().removeClass('ludo-form-el-invalid');
-    },
-
-    wasValid:true,
-
-    validate:function () {
-        this.clearInvalid();
-        if (this.isValid()) {
-            this.wasValid = true;
-            /**
-             * Event fired when value of form component is valid. This is fired on blur
-             * @event valid
-             * @param {String} value
-             * @param {Object} component
-             */
-            this.fireEvent('valid', [this.value, this]);
-            return true;
-        } else {
-            this.wasValid = false;
-            /**
-             * Event fired when value of form component is valid. This is fired on blur
-             * @event invalid
-             * @param {String} value
-             * @param {Object} component
-             */
-            this.fireEvent('invalid', [this.value, this]);
-            return false;
-        }
-    },
-
-    isFormElement:function () {
-        return true;
-    },
-
-    /**
-     * Reset / Roll back to last committed value. It could be the value stored by last commit method call
-     * or if the original value/default value of this field.
-     * @function reset
-     * @memberof ludo.form.Element.prototype
-     * @return void
-     */
-    reset:function () {
-        this._set(this.initialValue);
-    },
-
-    /**
-     * Reset value back to the original value sent(constructor value)
-     * @function clear
-     * @memberof ludo.form.Element.prototype
-     */
-    clear:function () {
-        this._set(this.constructorValue);
-    },
-
-    /**
-     * Update initial value to current value. These actions will always trigger a commit<br>
-     * - Form or Model submission
-     * - Fetching new record for a ludo.model.Model
-     * @function commit
-     * @memberOf ludo.form.Element.prototype
-     */
-    commit:function () {
-        if(!this.isReady){
-            this.commit.delay(100, this);
-            return;
-        }
-        this.initialValue = this.value;
-    },
-    /**
-     * Returns true if current value is different from original value
-     * @function isDirty
-     * @return {Boolean} isDirty
-     */
-    isDirty:function () {
-        return this.dirtyFlag;
-    },
-
-    setDirty:function () {
-        this.dirtyFlag = true;
-        this.getEl().addClass('ludo-form-el-dirty');
-    },
-
-    setClean:function () {
-        this.dirtyFlag = false;
-        var el = this.getEl();
-        if(el)el.removeClass('ludo-form-el-dirty');
-    },
-
-    setReady:function () {
-        this.isReady = true;
-    },
-
-    updateLinked:function () {
-        var cmp = this.getLinkWith();
-        if (cmp && cmp.value !== this.value) {
-            cmp._set(this.value);
-        }
-    },
-
-    setLinkWith:function (linkWith) {
-        this.linkWith = linkWith;
-        this.addEvent('valueChange', this.updateLinked.bind(this));
-    },
-
-    createBackLink:function (attempts) {
-        attempts = attempts || 0;
-        var cmp = this.getLinkWith();
-        if (cmp && !cmp.linkWith) {
-            if (this.value === undefined){
-				this.initialValue = this.constructorValue = cmp.value;
-				this._set(cmp.value);
-			}
-            cmp.setLinkWith(this);
-        } else {
-            if (attempts < 100) {
-                this.createBackLink.delay(50, this, attempts + 1);
-            }
-        }
-    },
-
-    addInput: function () {
-        if (!this.inputTag) {
-            return;
-        }
-
-        this.els.inputCell = $('<div class="input-cell"></div>');
-        this.getBody().append(this.els.inputCell);
-        this.els.formEl = $('<' + this.inputTag + '>');
-
-        if (this.inputType) {
-            this.els.formEl.attr('type', this.inputType);
-        }
-        if (this.maxLength) {
-            this.els.formEl.attr('maxlength', this.maxLength);
-        }
-        if (this.readonly) {
-            this.els.formEl.attr('readonly', true);
-        }
-        this.getInputCell().append(this.els.formEl);
-        this.els.formEl.css('width', '100%');
-        this.els.formEl.attr("id", this.getFormElId());
-    },
-
-    getLinkWith:function(){
-        var cmp = ludo.get(this.linkWith);
-        return cmp ? cmp : this.parentComponent ? this.parentComponent.child[this.linkWith] : undefined;
-    },
-
-    getInputCell:function(){
-        return this.els.inputCell;
-    }
-});/* ../ludojs/src/form/label-element.js */
-/**
- * // TODO this class should be removed. Instead, think of layout for forms and a separate label class
- * Base class for all form elements with label
- * @namespace ludo.form
- * @class LabelElement
- * @augments ludo.form.Element
- */
-ludo.form.LabelElement = new Class({
-    Extends: ludo.form.Element,
-
-    fieldTpl: ['<table ', 'cellpadding="0" cellspacing="0" border="0" width="100%">',
-        '<tbody>',
-        '<tr class="input-row">',
-        '<td class="label-cell"><label class="input-label"></label></td>',
-        '<td><div class="input-cell"></div></td>',
-        '<td class="invalid-cell" style="position:relative"><div class="invalid-cell-div"></div></td>',
-        '<td class="suffix-cell" style="display:none"><label></label></td>',
-        '<td class="help-cell" style="display:none"></td>',
-        '</tr>',
-        '</tbody>',
-        '</table>'
-    ],
-
-    /**
-     * Suffix after the label. Default is ":" (colon)
-     * @memberof ludo.form.LabelElement.prototype
-     * @default ":"
-     * @property {string} labelSuffix
-     */
-    labelSuffix: ':',
-
-    __construct: function (config) {
-        this.parent(config);
-        this.setConfigParams(config, ['inlineLabel', 'labelSuffix']);
-        if (!this.supportsInlineLabel())this.inlineLabel = undefined;
-
-        console.warn("Use of deprecated ancestor ludo.form.LabelElement");
-        console.trace();
-    },
-
-    ludoEvents: function () {
-        this.parent();
-        if (this.inlineLabel) {
-            var el = this.getFormEl();
-            if (el) {
-                el.on('blur', this.setInlineLabel.bind(this));
-                el.on('focus', this.clearInlineLabel.bind(this));
-                this.addEvent('value', this.clearInlineLabelCls.bind(this));
-            }
-        }
-    },
-
-    ludoDOM: function () {
-        this.parent();
-        this.getBody().html(this.fieldTpl.join(''));
-        this.addInput();
-        this.addLabel();
-        this.setWidthOfLabel();
-
-    },
-
-    __rendered: function () {
-        this.parent();
-        if (this.inlineLabel)this.setInlineLabel();
-    },
-
-    supportsInlineLabel: function () {
-        return true;
-    },
-
-    setInlineLabel: function () {
-        if (!this.inlineLabel)return;
-        var el = this.getFormEl();
-        if (el.val().length === 0) {
-            el.addClass('ludo-form-el-inline-label');
-            el.val(this.inlineLabel);
-        }
-    },
-
-    clear: function () {
-        this.parent();
-        this.setInlineLabel();
-    },
-
-    reset: function () {
-        this.parent();
-        this.setInlineLabel();
-    },
-
-    clearInlineLabel: function () {
-        var el = this.getFormEl();
-        if (el.val() === this.inlineLabel) {
-            el.val('');
-            this.getFormEl().removeClass('ludo-form-el-inline-label');
-        }
-    },
-
-    clearInlineLabelCls: function () {
-        this.getFormEl().removeClass('ludo-form-el-inline-label');
-    },
-
-    getValueOfFormEl: function () {
-        var val = this.getFormEl().val();
-        return this.inlineLabel && this.inlineLabel === val ? '' : val;
-    },
-
-    addLabel: function () {
-        if (this.label !== undefined) {
-            this.getLabelDOM().html(this.label ? this.label + this.labelSuffix : '');
-            this.els.label.attr('for', this.getFormElId());
-        }
-        if (this.suffix) {
-            var s = this.getSuffixCell();
-            s.css('display', '');
-            var label = s.find('label').first();
-            if (label) {
-                label.html(this.suffix);
-                label.attr('for', this.getFormElId());
-            }
-        }
-    },
-
-    setWidthOfLabel: function () {
-        if (this.label === undefined) {
-            this.getLabelDOM().css('display', 'none');
-        } else {
-            this.getLabelDOM().parent().css('width', this.labelWidth);
-        }
-    },
-
-    getLabelDOM: function () {
-        return this.getCell('.input-label', 'label');
-    },
-
-    addInput: function () {
-        if (!this.inputTag) {
-            return;
-        }
-        this.els.formEl = $('<' + this.inputTag + '>');
-
-        if (this.inputType) {
-            this.els.formEl.attr('type', this.inputType);
-        }
-        if (this.maxLength) {
-            this.els.formEl.attr('maxlength', this.maxLength);
-        }
-        if (this.readonly) {
-            this.els.formEl.attr('readonly', true);
-        }
-        this.getInputCell().append(this.els.formEl);
-        if (this.fieldWidth) {
-            this.els.formEl.css('width', this.fieldWidth);
-            this.getInputCell().parent().css('width', (this.fieldWidth + ludo.dom.getMBPW(this.els.formEl)));
-        }
-        this.els.formEl.id = this.getFormElId();
-    },
-
-    getSuffixCell: function () {
-        return this.getCell('.suffix-cell', 'labelSuffix');
-    },
-
-    getInputCell: function () {
-        return this.getCell('.input-cell', 'cellInput');
-    },
-
-    getInputRow: function () {
-        return this.getCell('.input-row', 'inputRow');
-    },
-
-    getCell: function (selector, cacheKey) {
-        if (!this.els[cacheKey]) {
-            this.els[cacheKey] = this.getBody().find(selector + ":first");
-        }
-        return this.els[cacheKey];
-    },
-
-    resizeDOM: function () {
-        this.parent();
-        if (this.els.formEl) {
-            if (this.stretchField) {
-                var width = this.getWidth();
-                if (!isNaN(width) && width > 0) {
-                    width -= (ludo.dom.getMBPW(this.getEl()) + ludo.dom.getMBPW(this.getBody()));
-                } else {
-                    var parent = this.getParent();
-                    if (parent && parent.layout.type !== 'linear' && parent.layout.orientation !== 'horizontal') {
-                        width = parent.getWidth();
-                        width -= (ludo.dom.getMBPW(parent.getEl()) + ludo.dom.getMBPW(parent.getBody()));
-                        width -= (ludo.dom.getMBPW(this.getEl()) + ludo.dom.getMBPW(this.getBody()));
-                    } else {
-                        var c = this.els.container;
-                        width = c.offsetWidth - ludo.dom.getMBPW(this.els.body) - ludo.dom.getPW(c) - ludo.dom.getBW(c);
-                    }
-                }
-                if (this.label !== undefined)width -= this.labelWidth;
-                if (this.suffix)width -= this.getSuffixCell().offsetWidth;
-                if (this.inputTag !== 'select') width -= 5;
-                if (width > 0 && !isNaN(width)) {
-                    this.formFieldWidth = width;
-                    this.getFormEl().css('width', width);
-                }
-            }else{
-
-            }
-        }
-    }
-});/* ../ludojs/src/form/slider.js */
-/**
- * Slider form component
- * @namespace ludo.form
- * @class Slider
- * @augments ludo.form.LabelElement
- */
-ludo.form.Slider = new Class({
-    // TODO implement support for min and max, example slider from 0 to 100, min and max from 10 to 90
-    Extends:ludo.form.LabelElement,
-    cssSignature:'ludo-form-slider',
-    type:'form.Slider',
-    fieldTpl:['<table ','cellpadding="0" cellspacing="0" border="0" width="100%">',
-        '<tbody>',
-        '<tr class="input-row">',
-        '<td class="label-cell"><label class="input-label"></label></td>',
-        '<td class="input-cell"></td>',
-        '<td class="suffix-cell" style="display:none"></td>',
-        '<td class="help-cell" style="display:none"></td>',
-        '</tr>',
-        '</tbody>',
-        '</table>'
-    ],
-
-    /* No input element for slider */
-    inputTag:undefined,
-    inputType:undefined,
-
-    /**
-     * Size of slider background
-     * @property sliderSize
-	 * @optional
-     * @private
-     */
-    sliderSize:100,
-
-    /**
-     * Direction of slider. If not explicit set, it will
-     * be set to "horizontal" when width of slide is greater than height of slider,
-     * otherwise it will be set to "vertical".
-     * @property {String} direction
-	 * @type String
-     * @default horizontal
-	 * @optional
-     *
-     */
-    direction:'horizontal',
-
-    /**
-     * Minimum value of slider
-     * @attribute {Number} minValue
-     * @default 1
-     */
-    minValue:1,
-
-    /**
-     * Maximum value of slider
-     * @attribute {Number} maxValue
-     * @default 10
-     */
-    maxValue:10,
-
-    height:undefined,
-
-    /**
-     * Revert x-, or y-axis, i.e. minimum value to the right instead of left or at the top instead of bottom
-     * @attribute {Boolean} reverse
-     * @default false
-     */
-    reverse:false,
-
-
-    __construct:function (config) {
-        this.parent(config);
-        this.setConfigParams(config, ['direction','minValue','maxValue','reverse']);
-    },
-
-    __rendered:function () {
-        this.parent();
-        this.moveSliderBackgrounds();
-    },
-
-    moveSliderBackgrounds:function () {
-        var offset = Math.round(this.getHandleSize() / 2);
-        var css = this.getDirection() == 'horizontal' ? ['left','right'] : ['top','bottom'];
-        this.els['bgfirst'].css(css[0], offset + 'px');
-        this.els['bglast'].css(css[1], offset + 'px');
-    },
-
-    addInput:function () {
-        this.parent();
-
-        var el = this.els.slider = $('<div>');
-        this.els.slider.on('click', this.sliderClick.bind(this));
-
-        el.addClass('ludo-form-slider-container');
-        el.addClass('ludo-form-slider-' + this.getDirection());
-        this.getInputCell().append(el);
-
-        this.addSliderBg('first');
-        this.addSliderBg('last');
-
-        this.createSliderHandle();
-    },
-
-    createSliderHandle:function () {
-        this.els.sliderHandle = $('<div class="ludo-form-slider-handle"></div>');
-        this.els.slider.append(this.els.sliderHandle);
-        this.drag = new ludo.effect.Drag(this.getDragConfig());
-    },
-
-    addSliderBg:function (pos) {
-        this.els['bg' + pos] = $('<div class="ludo-form-slider-bg-' + pos + '"></div>');
-        this.els.slider.append(this.els['bg' + pos])
-    },
-
-    getDragConfig:function () {
-        return {
-            el:this.els.sliderHandle,
-            fireEffectEvents:false,
-            directions:this.getDirection() == 'horizontal' ? 'X' : 'Y',
-            listeners:{
-                'drag':this.receivePosition.bind(this)
-            },
-            minPos:0,
-            maxPos:this.getSliderSize()
-        };
-    },
-
-    sliderClick:function (e) {
-        if (!$(e.target).hasClass('ludo-form-slider-handle')) {
-            var pos = this.els.slider.position();
-            var offset = Math.round(this.getHandleSize() / 2);
-            this.receivePosition({
-                x:e.pageX - pos.left - offset,
-                y:e.pageY - pos.top - offset
-            });
-        }
-
-    },
-    receivePosition:function (pos) {
-        this._set(this.pixelToValue(this.getDirection() == 'horizontal' ? pos.x : pos.y));
-        /**
-         * Change event
-         * @event change
-         * @param value of form field
-         * @param Component this
-         */
-        this.fireEvent('change', [ this.value, this ]);
-    },
-
-    pixelToValue:function (px) {
-        var min = this.getMinValue();
-        var max = this.getMaxValue();
-
-        var sliderSize = this.getSliderSize();
-        var ret = Math.round(px / sliderSize * (max - min)) + min;
-        if (this.shouldReverseAxis()) {
-            ret = max - ret;
-        }
-
-        return ret;
-    },
-
-    getDirection:function () {
-        if (this.direction === undefined) {
-            var size = this.getBody().getSize();
-            if (size.x >= size.y) {
-                this.direction = 'horizontal';
-            } else {
-                this.direction = 'vertical';
-            }
-        }
-        return this.direction;
-    },
-
-    getMinValue:function () {
-        return this.minValue;
-    },
-
-    getMaxValue:function () {
-        return this.maxValue;
-    },
-    setValue:function(value){
-        console.warn("Use of deprecated setValue");
-        console.trace();
-    },
-
-    _set:function (value) {
-        if (value > this.getMaxValue()) {
-            value = this.getMaxValue();
-        } else if (value < this.getMinValue()) {
-            value = this.getMinValue();
-        }
-        this.parent(value);
-        this.positionSliderHandle();
-        this.toggleDirtyFlag();
-    },
-
-    resizeDOM:function () {
-        this.parent();
-        if (this.direction == 'horizontal') {
-            this.sliderSize = this.els.slider.width();
-        } else {
-            this.sliderSize = this.getBody().height() - ludo.dom.getMH(this.els.slider);
-            this.els.slider.css('height',  this.getHeight() + 'px');
-        }
-        this.sliderSize -= this.getHandleSize();
-
-        this.positionSliderHandle();
-        this.drag.setMaxPos(this.sliderSize);
-    },
-
-    positionSliderHandle:function () {
-        this.els.sliderHandle.css(this.handleCssProperty, this.getHandlePos() + 'px');
-    },
-
-    getHandlePos:function () {
-        var ret = Math.round((this.value - this.minValue) / (this.maxValue - this.minValue) * this.sliderSize);
-        if (this.shouldReverseAxis()) {
-            ret = this.sliderSize - ret;
-        }
-        return ret;
-    },
-    _shouldReverse:undefined,
-    shouldReverseAxis:function () {
-        if (this._shouldReverse == undefined) {
-            this._shouldReverse = (this.direction == 'horizontal' && this.reverse) || (this.direction == 'vertical' && !this.reverse);
-        }
-        return this._shouldReverse;
-    },
-
-    getSliderSize:function () {
-        return this.sliderSize;
-    },
-
-    getHandleSize:function () {
-        if (this.handleSize === undefined) {
-            var cssProperty = 'height';
-            this.handleCssProperty = 'top';
-            if (this.getDirection() == 'horizontal') {
-                cssProperty = 'width';
-                this.handleCssProperty = 'left';
-            }
-
-            this.handleSize = parseInt(this.els.sliderHandle.css(cssProperty).replace('px', ''));
-        }
-        return this.handleSize;
-    },
-
-    supportsInlineLabel:function(){
-        return false;
-    }
-});/* ../ludojs/src/color/rgb-slider.js */
-ludo.color.RGBSlider = new Class({
-    Extends:ludo.color.Base,
-	type:'color.RGBSlider',
-    layout:{
-        type:'relative'
-    },
-    value:'#000000',
-    regex:/^\#[0-9A-Fa-f]{6}$/i,
-
-    __construct:function (config) {
-        this.parent(config);
-        this.setConfigParams(config, ['value']);
-    },
-
-    __rendered:function () {
-        this.parent();
-        this.updatePreview();
-        this.child['preview'].child['colorValue'].addEvent('setColor', this.receiveColor.bind(this));
-    },
-
-    show:function(){
-        this.parent();
-        this.updateSliders();
-    },
-
-    setColor:function (color) {
-        if (this.regex.test(color)) {
-            this.value = color;
-            this.updateSliders();
-        }
-    },
-
-    getClassChildren:function () {
-        return [
-            this.getSlider('red', undefined),
-            this.getSlider('green', 'red'),
-            this.getSlider('blue', 'green'),
-            this.getNumberField('red', undefined),
-            this.getNumberField('green', 'redValue'),
-            this.getNumberField('blue', 'greenValue'),
-            {
-                id:'colorPreview',
-                name:'preview',
-                layout:{
-                    alignParentLeft:true,
-                    fillRight:true,
-                    below:'blueValue',
-                    fillDown:true,
-                    width:'matchParent',
-                    type:'relative'
-                },
-                css:{
-                    border:'1px solid #000'
-                },
-                elCss:{
-                    margin:3
-                },
-                children:[
-                    {
-                        name:'colorValue',
-                        type:'color.RGBSliderValue'
-                    }
-                ]
-            }
-        ];
-    },
-
-    receiveColor:function (color) {
-        this.fireEvent('setColor', color.toUpperCase());
-    },
-
-    getSlider:function (name, below) {
-        return {
-            name:name,
-            id:name,
-            value:this.getColorValue(name),
-            type:'form.Slider',
-            label:name.substr(0, 1).toUpperCase() + name.substr(1), minValue:0, maxValue:255,
-            labelWidth:45,
-            layout:{
-                alignParentTop:below ? false : true,
-                below:below,
-                height:23,
-                leftOf:name + 'Value',
-                fillLeft:true
-            },
-            listeners:{
-                'change':this.updatePreview.bind(this)
-            }
-        };
-    },
-
-    getNumberField:function (name, below) {
-        return {
-            type:'form.Number',
-            minValue:0,
-            maxValue:255,
-            fieldWidth:30,
-            value:this.getColorValue(name),
-            label:'',
-            name:name + 'Value',
-            linkWith:name,
-            layout:{
-                alignParentRight:true,
-                width:40,
-                below:below
-            },
-            listeners:{
-                'change':this.updatePreview.bind(this)
-            }
-        };
-    },
-
-    updatePreview:function () {
-        var items = ['red', 'green', 'blue'];
-        var color = '#';
-
-        for (var i = 0; i < items.length; i++) {
-            color = color + this.prefixed(parseInt(this.child[items[i]].val()).toString(16));
-        }
-        this.child['preview'].getBody().css('backgroundColor',  color);
-        this.child['preview'].child['colorValue'].setColor(color);
-
-    },
-
-    prefixed:function (color) {
-        return color.length === 1 ? '0' + color : color;
-    },
-    cInstance:undefined,
-    colorInstance:function () {
-        if (this.cInstance === undefined) {
-            this.cInstance = new ludo.color.Color();
-        }
-        return this.cInstance;
-    },
-
-    getColorValue:function (color) {
-        return this.colorInstance().rgbObject(this.value)[color.substr(0, 1)] || 0;
-    },
-
-    updateSliders:function(){
-
-        if(!this.child['red'] || !this.value)return;
-
-        var color = this.colorInstance().rgbObject(this.value);
-
-        this.child['red'].val(color.r);
-        this.child['green'].val(color.g);
-        this.child['blue'].val(color.b);
-        this.updatePreview();
-    }
-});
-
-ludo.color.RGBSliderValue = new Class({
-    Extends:ludo.View,
-    color:undefined,
-    cls:'ludo-color-rgb-slider-value',
-    layout:{
-        width:70,
-        height:20,
-        centerInParent:true
-    },
-
-    overflow:'hidden',
-
-    ludoEvents:function () {
-        this.parent();
-        this.getBody().on('click', this.sendColor.bind(this));
-    },
-
-    setColor:function (color) {
-        this.color = color;
-        this.getBody().html(color.toUpperCase());
-    },
-
-    sendColor:function () {
-        this.fireEvent('setColor', this.color);
-    }
 });/* ../ludojs/src/color/boxes.js */
 ludo.color.Boxes = new Class({
     Extends : ludo.color.Base,
@@ -15554,8 +13092,6 @@ ludo.layout.Accordion = new Class({
 });/* ../ludojs/src/layout/linear.js */
 /**
  * Abstract base class for linear layouts
- * @namespace layout
- * @class Linear
  */
 ludo.layout.Linear = new Class({
 	Extends:ludo.layout.Base,
@@ -15603,6 +13139,7 @@ ludo.layout.Linear = new Class({
 	},
 
 	getResizableFor:function (child, r) {
+		console.trace();
 		var resizeProp = (r === 'left' || r === 'right') ? 'width' : 'height';
 		return new ludo.layout.Resizer({
 			name:'resizer-' + child.name,
@@ -15624,16 +13161,17 @@ ludo.layout.Linear = new Class({
 });/* ../ludojs/src/layout/linear-horizontal.js */
 /**
  * This class arranges child views in a row layout.
- * @namespace layout
- * @class LinearVertical
+ * @namespace ludo.layout
+ * @class ludo.layout.LinearVertical
  *
  */
 ludo.layout.LinearHorizontal = new Class({
 	Extends:ludo.layout.Linear,
 
 	resize:function () {
-		var totalWidth = this.view.getBody().width();
-		var height = this.hasDynamicHeight() ? 'auto' : this.view.getBody().height();
+		var totalWidth = this.viewport.width;
+
+		var height = this.hasDynamicHeight() ? 'auto' : this.viewport.height;
 		if (height == 0) {
 			return;
 		}
@@ -15656,7 +13194,7 @@ ludo.layout.LinearHorizontal = new Class({
 		var remainingWidth;
 		totalWidth = remainingWidth = totalWidth - totalWidthOfItems;
 
-		var currentLeft = 0;
+		var currentLeft = this.viewport.left;
 		for (i = 0; i < this.view.children.length; i++) {
 			if (this.view.children[i].isVisible()) {
 				var config = { 'height':height, 'left':currentLeft };
@@ -15704,8 +13242,8 @@ ludo.layout.LinearHorizontal = new Class({
 });/* ../ludojs/src/layout/linear-vertical.js */
 /**
  * This class arranges child views in a column layout (side by side).
- * @namespace layout
- * @class LinearVertical
+ * @namespace ludo.layout
+ * @class ludo.layout.LinearVertical
  *
  */
 ludo.layout.LinearVertical = new Class({
@@ -15714,14 +13252,14 @@ ludo.layout.LinearVertical = new Class({
 		this.parent();
 	},
 	resize:function () {
-		var componentHeight = this.view.getBody().height();
-		if (componentHeight == 0) {
+		var availHeight = this.viewport.height;
+		if (availHeight == 0) {
 			return;
 		}
 		var totalHeightOfItems = 0;
 		var totalWeight = 0;
 		var height;
-		var tm = 0;
+		var tm = this.viewport.top;
 		for (var i = 0; i < this.view.children.length; i++) {
 			if (!this.hasLayoutWeight(this.view.children[i])) {
                 height = this.view.children[i].isHidden() ? 0 :  this.getHeightOf(this.view.children[i]);
@@ -15736,7 +13274,7 @@ ludo.layout.LinearVertical = new Class({
 		totalWeight = Math.max(1, totalWeight);
 
         var remainingHeight;
-		var stretchHeight = remainingHeight = (componentHeight - totalHeightOfItems);
+		var stretchHeight = remainingHeight = (availHeight - totalHeightOfItems);
 
 
 		var width = this.view.getBody().width();
@@ -15762,10 +13300,10 @@ ludo.layout.LinearVertical = new Class({
 				if(tm > 0){
 					config.top = tm;
 				}
-				if(this.view.children[i].getEl().css('position') === 'absolute'){
-					tm += this.view.children[i].getHeight();
-				}
+
+
 				this.resizeChild(this.view.children[i], config);
+				tm += this.view.children[i].getEl().outerHeight(true);
 			}
 		}
 	},
@@ -15780,9 +13318,12 @@ ludo.layout.LinearVertical = new Class({
 		this.parent(child);
 		if (this.isResizable(child)) {
 			var isLastSibling = this.isLastSibling(child);
+
 			var resizer = this.getResizableFor(child, isLastSibling ? 'above' : 'below');
 			this.addChild(resizer, child, isLastSibling ? 'before' : 'after');
 		}
+
+		child.getEl().css('position', 'absolute');
 	}
 });/* ../ludojs/src/layout/view-pager.js */
 /**
@@ -16282,6 +13823,7 @@ ludo.layout.Tabs = new Class({
     resizeTabs: function () {
 
 
+        this.showAllTabs();
         if (this.tabPositions == undefined) {
             this.tabPositions = {};
         }
@@ -16291,18 +13833,25 @@ ludo.layout.Tabs = new Class({
         if (this.tabPos === 'top' || this.tabPos === 'bottom')this.findHiddenTabs();
     },
 
+    showAllTabs:function(){
+        $.each(this.tabs, function (key) {
+            this.tabs[key].show();
+
+        }.bind(this));
+    },
+
     resizeTabsDom: function () {
         var pos = 0;
         var size;
 
         $.each(this.tabs, function (key) {
+
             var node = this.tabs[key];
             if (this.tabPos === 'top' || this.tabPos === 'bottom') {
                 size = node.outerWidth(true);
             } else {
                 size = node.outerHeight(true);
             }
-
             this.tabPositions[key] = {
                 pos: pos,
                 size: size
@@ -16366,8 +13915,6 @@ ludo.layout.Tabs = new Class({
 
     moveCurrentIntoView: function () {
 
-
-
         var size =  this.getBody().width();
         var menu = this.getMenuIcon();
         size -= menu.outerWidth(true);
@@ -16375,23 +13922,16 @@ ludo.layout.Tabs = new Class({
 
         var tabPosition = this.tabPositions[this.activeTabId];
 
-
         var offsetStart = tabPosition.pos - pos;
         var offsetEnd = (tabPosition.pos + tabPosition.size) - (pos + size);
 
-
         if(offsetStart < 0){
-
-
             this.tabParent.css('left', offsetStart);
         }else if(offsetEnd > 0){
             var newPos = pos - offsetEnd;
             this.tabParent.css('left', newPos);
         }
     },
-
-
-
 
     haveTabsOutOfView: function () {
         return this.maxPos > this.getBody().width();
@@ -16801,14 +14341,12 @@ ludo.layout.Relative = new Class({
 	],
     /**
      * Internal child coordinates set during resize
-     * @property {Object} newChildCoordinates
-     * @private
+
      */
 	newChildCoordinates:{},
     /**
      * Internal storage of child coordinates for last resize
-     * @property {Object} lastChildCoordinates
-     * @privatea
+
      */
 	lastChildCoordinates:{},
 
@@ -16843,8 +14381,7 @@ ludo.layout.Relative = new Class({
 
     /**
      * Create/Compile resize functions for each child
-     * @function createResizeFunctions
-     * @private
+
      */
 	createResizeFunctions:function () {
 		for (var i = 0; i < this.children.length; i++) {
@@ -16853,8 +14390,7 @@ ludo.layout.Relative = new Class({
 	},
     /**
      * Convert layout id references to direct view reference for optimal performance
-     * @function fixLayoutReferences
-     * @private
+
      */
 	fixLayoutReferences:function () {
 		for (var i = 0; i < this.view.children.length; i++) {
@@ -16867,10 +14403,7 @@ ludo.layout.Relative = new Class({
 	},
     /**
      * Return resize function for a child
-     * @function getResizeFnFor
-     * @param {ludo.View} child
-     * @return {Function}
-     * @private
+
      */
 	getResizeFnFor:function (child) {
 		var fns = this.getLayoutFnsFor(child);
@@ -16882,10 +14415,7 @@ ludo.layout.Relative = new Class({
 	},
     /**
      * Return array of resize function to call when view is resized.
-     * @function getLayoutFnsFor
-     * @param {ludo.View} child
-     * @return {Array}
-     * @private
+
      */
 	getLayoutFnsFor:function (child) {
 		var ret = [];
@@ -16901,12 +14431,7 @@ ludo.layout.Relative = new Class({
 	},
     /**
      Return one resize function for a child
-     @function getLayoutFn
-     @param {String} property
-     @param {ludo.View} child
-     @return {Function|undefined}
-     @private
-     @example
+
         getLayoutFn(left, view)
      may return
         function(){
@@ -17052,12 +14577,7 @@ ludo.layout.Relative = new Class({
 	},
     /**
      * Return special resize function for the properties alignLeft, alignRight, alignTop and alignBottom
-     * @function getAlignmentFn
-     * @param {ludo.View} child
-     * @param {String} alignment
-     * @param {String} property
-     * @return {Function}
-     * @private
+
      */
 	getAlignmentFn:function (child, alignment, property) {
 		var c = this.newChildCoordinates[child.id];
@@ -17069,11 +14589,7 @@ ludo.layout.Relative = new Class({
 
     /**
      * Returns layout function for the width and height layout properties
-     * @function getPropertyFn
-     * @param {ludo.View} child
-     * @param {String} property
-     * @return {Function|undefined}
-     * @private
+
      */
 	getPropertyFn:function (child, property) {
 		var c = this.newChildCoordinates[child.id];
@@ -17110,13 +14626,7 @@ ludo.layout.Relative = new Class({
 
     /**
      * Final resize function for each child. All the other dynamically created
-     * layout function stores values for the left,width,top,bottom, width and height properties.
-     * This function call the resize function for each view with the values of these previously
-     * set properties
-     * @function getLayoutLayoutFn
-     * @param {ludo.View} child
-     * @return {Function}
-     * @private
+
      */
 	getLastLayoutFn:function (child) {
 		return function (lm) {
@@ -17183,11 +14693,7 @@ ludo.layout.Relative = new Class({
 
     /**
      * Position child at this coordinates
-     * @function positionChild
-     * @param {ludo.View} child
-     * @param {String} property
-     * @param {Number} value
-     * @private
+
      */
 	positionChild:function (child, property, value) {
 		child.getEl().css(property, value); // style[property] = value + 'px';
@@ -17195,9 +14701,7 @@ ludo.layout.Relative = new Class({
 	},
     /**
      * Creates empty newChildCoordinates and lastChildCoordinates for a child view
-     * @function assignDefaultCoordinates
-     * @param {ludo.View|ludo.layout.Resizer} child
-     * @private
+
      */
 	assignDefaultCoordinates:function (child) {
 		this.newChildCoordinates[child.id] = {};
@@ -17689,15 +15193,15 @@ ludo.layout.Tab = new Class({
 	}
 });/* ../ludojs/src/layout/fill.js */
 ludo.layout.Fill = new Class({
-	Extends:ludo.layout.Base,
+    Extends: ludo.layout.Base,
 
-	resize:function () {
-		var height = this.view.getInnerHeightOfBody();
-		if (height <= 0)return;
-		for (var i = 0; i < this.view.children.length; i++) {
-			this.view.children[i].resize({ height:height });
-		}
-	}
+    resize: function () {
+        var height = this.view.getBody().height();
+        if (height <= 0)return;
+        for (var i = 0; i < this.view.children.length; i++) {
+            this.view.children[i].resize({height: height});
+        }
+    }
 });/* ../ludojs/src/layout/grid.js */
 /**
  * This layout arranges child views in a grid layout. It is similar to the Table Layout, but a bit simpler.
@@ -17840,7 +15344,7 @@ ludo.layout.Popup = new Class({
 /**
  * Layout manager for items in a chart
  * @namespace chart
- * @class Layout
+ * @class ludo.layout.Canvas
  * @augments layout.Relative
  */
 ludo.layout.Canvas = new Class({
@@ -17903,9 +15407,12 @@ ludo.layout.Canvas = new Class({
 
 });/* ../ludojs/src/layout/nav-bar.js */
 /**
- * Layout where first child slides in from the left on demand.
+ * In the Navigation Bar layout, you have to two child views. The first child view is the
+ * navigation Bar which initially is hidden off to the left.
+ *
+ * It can be displayed on demand by calling it's **show** method.
  * 
- * For tutorial, see <a href="../../learn/
+ * For tutorial, see <a href="../../learn/layout-navbar.html">layout-navbar.html</a>.
  * 
  * This class extends ludo.layout.Base
  * @namespace layout
@@ -18186,9 +15693,9 @@ ludo.layout.MenuContainer = new Class({
  Class for menu layouts in LudoJS
  An instance of this class is created dynamically when
  layout.type for a View is set to "menu".
- @namespace layout
- @class Menu
- @constructor
+ @namespace ludo.layout
+ @class ludo.layout.Menu
+ 
  @example
  layout:{
 		 type:'Menu',
@@ -18696,7 +16203,7 @@ ludo.layout.CollapseBar = new Class({
 });/* ../ludojs/src/collection-view.js */
 /**
  * Base class for List and tree.Tree
- * @class CollectionView
+ * @class ludo.CollectionView
  */
 ludo.CollectionView = new Class({
 	Extends: ludo.View,
@@ -18894,6 +16401,9 @@ ludo.List = new Class({
  Class for providing short messages and feedback in a popup.
  Notifications automatically disappear after a timeout. Positioning
  of notification can be configured using the layout object.
+
+ Custom CSS styling can be done by adding styles to the .ludo-notification class.
+ 
  @class ludo.Notification
  @augments ludo.View
  @param {Object} config
@@ -19026,21 +16536,1180 @@ ludo.Notification = new Class({
 		this.getEl().css('display', 'none');
 		this.fireEvent('hide', this);
 	}
+});/* ../ludojs/src/effect/draggable-node.js */
+/*
+ Specification of a draggable node objects sent to {{#crossLink "effect.Drag/add"}}{{/crossLink}}. You will
+ never create objects of this class.
+ @namespace ludo.effect
+ @class ludo.effect.DraggableNode
+ @type {Object|String}
+ */
+ludo.effect.DraggableNode = new Class({
+	/*
+	 id of node. This attribute is optional
+	 @property id
+	 @type {String}
+	 @default undefined
+	 @optional
+	 @example
+	 	var dragDrop = new ludo.effect.Drag();
+	 	var el = $('<div>');
+	 	dragDrop.add({
+	 		id: 'myId',
+			el : el
+	 	});
+	 	var ref = dragDrop.getById('myId');
+	 Or you can use this code which does the same:
+	 @example
+	 	var dragDrop = new ludo.effect.Drag();
+	 	var el = $('<div>');
+	 	el.id = 'myId';
+	 	dragDrop.add(el);
+	 	var ref = dragDrop.getById('myId');
+	 Id's are only important if you need to access nodes later using {{#crossLink "effect.Drag/getById"}}{{/crossLink}}
+	 */
+	id: undefined,
+
+	/*
+	 * Reference to dragable DOM node
+	 * @property el
+	 * @default undefined
+	 * @type {String|HTMLDivElement}
+	 */
+	el:undefined,
+	/*
+	 * Reference to handle for dragging. el will only be draggable by dragging the handle.
+	 * @property handle
+	 * @type {String|HTMLDivElement}
+	 * @default undefined
+	 * @optional
+	 */
+	handle:undefined,
+
+	/*
+	 * Minimum x position. This is an optional argument. If not set, you will use the params
+	 * set when creating the ludo.effect.Drag component if any.
+	 * @property minX
+	 * @type {Number}
+	 * @default undefined
+	 * @optional
+	 */
+	minX:undefined,
+	/*
+	 * Maximum x position. This is an optional argument. If not set, you will use the params
+	 * set when creating the ludo.effect.Drag component if any.
+	 * @property maxX
+	 * @type {Number}
+	 * @default undefined
+	 * @optional
+	 */
+	maxX:undefined,
+	/*
+	 * Minimum x position. This is an optional argument. If not set, you will use the params
+	 * set when creating the ludo.effect.Drag component if any.
+	 * @property minY
+	 * @type {Number}
+	 * @default undefined
+	 * @optional
+	 */
+	minY:undefined,
+	/*
+	 * Maximum y position. This is an optional argument. If not set, you will use the params
+	 * set when creating the ludo.effect.Drag component if any.
+	 * @property maxY
+	 * @type {Number}
+	 * @default undefined
+	 * @optional
+	 */
+	maxY:undefined,
+	/*
+	 Allow dragging in these directions. This is an optional argument. If not set, you will use the params
+	 set when creating the ludo.effect.Drag component if any.
+	 @property directions
+	 @type {String}
+	 @default 'XY'
+	 @optional
+	 @example
+	 	directions:'XY'	//
+	 	..
+	 	directions:'X' // Only allow dragging along x-axis
+	 	..
+	 	directions:'Y' // Only allow dragging along y-axis
+	 */
+	directions:undefined
+});/* ../ludojs/src/effect/effect.js */
+/**
+ * Base class for animations
+ * @namespace ludo.effect
+ * @class ludo.effect.Effect
+ */
+ludo.effect.Effect = new Class({
+	Extends: ludo.Core,
+	fps:33,
+	/**
+	 Fly/Slide DOM node to a position
+	 @function fly
+	 @param {Object} config
+	 @example
+	 	<div id="myDiv" style="position:absolute;width:100px;height:100px;border:1px solid #000;background-color:#DEF;left:50px;top:50px"></div>
+		<script type="text/javascript">
+		 new ludo.effect.Effect().fly({
+			el: 'myDiv',
+			duration:.5,
+			to:{ x:500, y: 300 },
+			 onComplete:function(){
+				 new ludo.effect.Effect().fly({
+					el: 'myDiv',
+					duration:1,
+					to:{ x:600, y: 50 }
+				 });
+			 }
+		 });
+	 	</script>
+	 Which will first move "myDiv" to position 500x300 on the screen, then to 600x50.
+	 */
+	fly:function(config){
+		config.el = $(config.el);
+		config.duration = config.duration || .2;
+		if(config.from == undefined){
+			config.from = config.el.position();
+		}
+		var fns = [this.animationComplete.bind(this)];
+		if(config.onComplete)fns.push(config.onComplete);
+
+		var callback = function(){
+			for(var i=0;i<fns.length;i++){
+				fns[i].call();
+			}
+		};
+		$(config.el).animate({
+			left: config.to.x,
+			top: config.to.y
+		}, config.duration * 1000, callback);
+
+	},
+
+	/**
+	 Fly/Slide DOM node from current location to given x and y coordinats in given seconds.
+	 @function flyTo
+	 @param {HTMLElement} el
+	 @param {Number} x
+	 @param {Number} y
+	 @param {Number} seconds
+	 @example
+
+	 You may also use this method like this:
+	 @example
+	 	<div id="myDiv" style="position:absolute;width:100px;height:100px;border:1px solid #000;background-color:#DEF;left:50px;top:50px"></div>
+		<script type="text/javascript">
+	 	new ludo.effect.Effect().flyTo('myDiv', 500, 300, .5);
+	 	</script>
+	 Which slides "myDiv" to position 500x300 in 0.5 seconds.
+	 */
+	flyTo:function(el, x, y, seconds){
+		this.fly({
+			el:el,
+			to:{x : x, y: y},
+			duration: seconds
+		});
+	},
+
+
+	animationComplete:function(onComplete, el){
+		/**
+		 * Fired when animation is completed
+		 * @event animationComplete
+		 * @param {effect.Drag} this
+		 */
+
+		this.fireEvent('animationComplete', this);
+
+		if(onComplete !== undefined){
+			onComplete.call(this, el);
+		}
+	},
+
+	fadeOut:function(el, duration, callback){
+		var stops = this.getStops(duration);
+		var stopIncrement = 100 / stops * -1;
+		this.execute({
+			el:el,
+			index:0,
+			stops:stops,
+			styles:[
+				{ key: 'opacity', currentValue: 100, change: stopIncrement }
+			],
+			callback : callback,
+			unit:''
+		})
+	},
+
+	slideIn:function(el, duration, callback, to){
+		to = to || el.getPosition();
+		var from = {
+			x: to.left,
+			y : el.parent().width() + el.height()
+		};
+		this.slide(el,from, to, duration, callback);
+	},
+
+	slideOut:function(el, duration, callback, from){
+		from = from || el.getPosition();
+		var to = {
+			x: from.left,
+			y : el.parent().height() + el.height()
+		};
+		this.slide(el, from, to, duration, callback);
+	},
+
+	slide:function(el, from, to, duration, callback){
+		if(from.x != undefined && from.left == undefined){
+			console.warn("Use of property x in slide");
+			console.trace();
+			from.left = from.x;
+		}
+		if(to.x != undefined && to.left == undefined){
+			console.warn("Use of property x in slide");
+			console.trace();
+			to.left = to.x;
+		}
+		var stops = this.getStops(duration);
+		var styles = [];
+		if(from.left !== to.left){
+			el.css('left', from.left);
+			styles.push({
+				key : 'left',
+				currentValue:from.left,
+				change: (to.left - from.left) / stops
+			});
+		}
+
+		if(from.top !== to.top){
+			el.style.top = from.top + 'px';
+			styles.push({
+				key : 'top',
+				currentValue:from.top,
+				change: (to.top - from.top) / stops
+			});
+		}
+
+		this.execute({
+			el:el,
+			index:0,
+			stops:stops,
+			styles:styles,
+			callback : callback,
+			unit:'px'
+		});
+		this.show(el);
+	},
+
+	fadeIn:function(el, duration, callback){
+		var stops = this.getStops(duration);
+		var stopIncrement = 100 / stops;
+		this.execute({
+			el:el,
+			index:0,
+			stops:stops,
+			styles:[
+				{ key: 'opacity', currentValue: 0, change: stopIncrement }
+			],
+			callback : callback,
+			unit:''
+		});
+		this.show(el);
+	},
+
+	show:function(el){
+		if(el.css("visibility") ==='hidden')el.css('visibility', 'visible');
+	},
+
+	getStops:function(duration){
+		return Math.round(duration * this.fps);
+	},
+
+	execute:function(config){
+		var el = config.el;
+
+		for(var i=0;i<config.styles.length;i++){
+			var s = config.styles[i];
+			s.currentValue += s.change;
+
+			switch(s.key){
+				case 'opacity':
+					el.css("opacity", s.currentValue / 100);
+					break;
+				default:
+					el.css(s.key, Math.round(s.currentValue) + config.unit);
+			}
+			config.index ++;
+
+			if(config.index < config.stops){
+				this.execute.delay(this.fps, this, config);
+			}else{
+				if(config.callback)config.callback.apply(this);
+			}
+		}
+	}
+});
+
+/* ../ludojs/src/effect/drag.js */
+/**
+ * Class for dragging DOM elements.
+ @namespace ludo.effect
+ @class ludo.effect.Drag
+ @augments ludo.effect.Effect
+
+ @param {Object} config
+ @param {Number} config.minX Optional minimum left coordinate
+ @param {Number} config.maxX Optional maximum left coordinate
+ @param {Number} config.minY Optional minimum top coordinate
+ @param {Number} config.maxY Optional maximum top coordinate
+ @param {Number} config.maxY Optional maximum top coordinate
+ @param {String|HTMLElement} config.el This element is draggable.
+ @param {String|HTMLElement} config.handle Optional dom element. Mouse down on this element will initiate the drag process. example: A title bar above a view. If not set, Mouse down on this.el will initiate dragging.
+ @param {String} config.directions Accept dragging in these directions, default: "XY". For horizontal dragging only, use "X" and for vertical "Y".
+ @param {Number} config.minPos Alternative to minX and minY when you only accepts dragging along the X or Y-axis.
+ @param {Number} config.maxPos Alternative to maxX and maxY when you only accepts dragging along the X or Y-axis.
+ @param {Number} config.delay Optional delay in seconds from mouse down to dragging starts. Default: 0
+ @param {Boolean} config.useShim True to drag a "ghost" DOM element while dragging, default: false
+ @param {String} config.shimCls Name of css class to add to the shim
+ @param {Boolean} config.autoHideShim True to automatically hide shim on drag end, default: true
+ @param {Number} config.mouseYOffset While dragging, always show dragged element this amount of pixels below mouse cursor.
+ @param {Number} config.mouseXOffset While dragging, always show dragged element this amount of pixels right of mouse cursor.
+ @param {String} config.unit Unit used while dragging, default: "px"
+
+
+ @fires ludo.effect.Drag#before Event fired before drag starts. Params: 1) Dom element to be dragged, 2) ludo.effect.Drag, 3) {x,y}
+ @fires ludo.effect.Drag#start Event when drag starts. Params: 1) Dom element to be dragged, 2) ludo.effect.Drag, 3) {x,y}
+ @fires ludo.effect.Drag#end' Event when drag ends. Params: 1) Dom element to be dragged, 2) ludo.effect.Drag, 3) {x,y}
+ @fires ludo.effect.Drag#showShim' Event fired when shim DOM node is shown. Argument: 1) Shim DOM Node, 2) ludo.effect.Drag
+ @fires ludo.effect.Drag#flyToShim' Event fired after flyBack animation is complete. Arguments: 1) ludo.effect.Drag, 2) Shim DOM node
+ @fires ludo.effect.Drag#flyBack' Event fired when shim DOM node is shown. Argument: Arguments: 1) ludo.effect.Drag, 2) Shim DOM node
+
+
+ @example
+ <style type="text/css">
+ .ludo-shim {
+		 border: 15px solid #AAA;
+		 background-color: #DEF;
+		 margin: 5;
+		 opacity: .5;
+		 border-radius: 5px;
+	}
+ .draggable{
+		width:150px;
+		z-index:1000;
+		height:150px;
+		border-radius:5px;
+		border:1px solid #555;
+		background-color:#DEF
+	}
+ </style>
+ <div id="draggable" class="draggable">
+ I am draggable
+ </div>
+ <script type="text/javascript">
+ var d = new ludo.effect.Drag({
+		useShim:true,
+		 listeners:{
+			 endDrag:function(dragged, dragEffect){
+				 dragEffect.getEl().setStyles({
+					 left : dragEffect.getX(),
+					 top: dragEffect.getY()
+				 });
+			 },
+			 drag:function(pos, dragEffect){
+				 dragEffect.setShimText(dragEffect.getX() + 'x' + dragEffect.getY());
+			 }
+		 }
+	 });
+ d.add('draggable'); // "draggable" is the id of the div
+ </script>
+
+ */
+ludo.effect.Drag = new Class({
+    Extends: ludo.effect.Effect,
+
+
+    handle: undefined,
+
+    el: undefined,
+
+
+    minX: undefined,
+
+    minY: undefined,
+
+
+    maxX: undefined,
+
+    maxY: undefined,
+
+
+    minPos: undefined,
+
+    maxPos: undefined,
+
+    directions: 'XY',
+
+
+    unit: 'px',
+
+    dragProcess: {
+        active: false
+    },
+
+    coordinatesToDrag: undefined,
+
+    delay: 0,
+
+    inDelayMode: false,
+
+    els: {},
+
+
+    useShim: false,
+
+
+    autoHideShim: true,
+
+
+    shimCls: undefined,
+
+    mouseYOffset: undefined,
+
+
+    mouseXOffset: undefined,
+
+    fireEffectEvents: true,
+
+    __construct: function (config) {
+        this.parent(config);
+        if (config.el !== undefined) {
+            this.add({
+                el: config.el,
+                handle: config.handle
+            });
+        }
+
+        this.setConfigParams(config, ['useShim', 'autoHideShim', 'directions', 'delay', 'minX', 'maxX', 'minY', 'maxY',
+            'minPos', 'maxPos', 'unit', 'shimCls', 'mouseYOffset', 'mouseXOffset', 'fireEffectEvents']);
+    },
+
+    ludoEvents: function () {
+        this.parent();
+        this.getEventEl().on(ludo.util.getDragMoveEvent(), this.drag.bind(this));
+        this.getEventEl().on(ludo.util.getDragEndEvent(), this.endDrag.bind(this));
+        if (this.useShim) {
+            this.addEvent('start', this.showShim.bind(this));
+            if (this.autoHideShim) {
+                this.addEvent('end', this.hideShim.bind(this));
+            }
+        }
+    },
+
+    /**
+     Add draggable object
+     @function add
+     @param {effect.DraggableNode|String|HTMLDivElement} node
+     @memberof ludo.effect.Effect.prototype
+     @return {effect.DraggableNode}
+     @example
+     dragObject.add({
+			el: 'myDiv',
+			handle : 'myHandle'
+		});
+     handle is optional.
+
+     @example
+     dragObject.add('idOfMyDiv');
+
+     You can also add custom properties:
+
+     @example
+     dragobject.add({
+	 		id: "myReference',
+			el: 'myDiv',
+			column: 'city'
+		});
+     ...
+     ...
+     dragobject.addEvent('before', beforeDrag);
+     ...
+     ...
+     function beforeDrag(dragged){
+	 		console.log(dragged.el);
+	 		console.log(dragged.column);
+	 	}
+     */
+    add: function (node) {
+        node = this.getValidNode(node);
+        var el = $(node.el);
+        this.setPositioning(el);
+
+        var handle = node.handle ? $(node.handle) : el;
+
+        handle.attr("id",  handle.id || 'ludo-' + String.uniqueID());
+        handle.addClass("ludo-drag");
+
+        handle.on(ludo.util.getDragStartEvent(), this.startDrag.bind(this));
+        handle.attr('forId', node.id);
+        this.els[node.id] = Object.merge(node, {
+            el: $(el),
+            handle: handle
+        });
+        return this.els[node.id];
+    },
+
+    /**
+     * Remove node
+     * @function remove
+     * @param {String} id
+     * @return {Boolean} success
+     * @memberof ludo.effect.Effect.prototype
+     */
+    remove: function (id) {
+        if (this.els[id] !== undefined) {
+            var el = $("#" + this.els[id].handle);
+            el.off(ludo.util.getDragStartEvent(), this.startDrag.bind(this));
+            this.els[id] = undefined;
+            return true;
+        }
+        return false;
+    },
+
+    removeAll: function () {
+        var keys = Object.keys(this.els);
+        for (var i = 0; i < keys.length; i++) {
+            this.remove(keys[i]);
+        }
+        this.els = {};
+    },
+
+    getValidNode: function (node) {
+        if (!this.isElConfigObject(node)) {
+            node = {
+                el: $(node)
+            };
+        }
+        if (typeof node.el === 'string') {
+            if (node.el.substr(0, 1) != "#")node.el = "#" + node.el;
+            node.el = $(node.el);
+        }
+        node.id = node.id || node.el.attr("id") || 'ludo-' + String.uniqueID();
+        if (!node.el.attr("id"))node.el.attr("id", node.id);
+        node.el.attr('forId', node.id);
+        return node;
+    },
+
+    isElConfigObject: function (config) {
+        return config.el !== undefined || config.handle !== undefined;
+    },
+
+    setPositioning: function (el) {
+        if (!this.useShim) {
+            el.css('position', 'absolute');
+        } else {
+            var pos = el.css('position');
+            if (!pos || (pos != 'relative' && pos != 'absolute')) {
+                el.css('position', 'relative');
+            }
+        }
+    },
+
+    getById: function (id) {
+        return this.els[id];
+    },
+
+    getIdByEvent: function (e) {
+        var el = $(e.target);
+        if (!el.hasClass('ludo-drag')) {
+            el = el.closest('.ludo-drag');
+        }
+        return el.attr('forId');
+    },
+
+
+    getDragged: function () {
+        return this.els[this.dragProcess.dragged];
+    },
+
+    /**
+     * Returns reference to draggable DOM node
+     * @function getEl
+     * @return {HTMLElement} DOMNode
+     * @memberof ludo.effect.Effect.prototype
+     */
+    getEl: function () {
+        return this.els[this.dragProcess.dragged].el;
+    },
+
+    getShimOrEl: function () {
+        return this.useShim ? this.getShim() : this.getEl();
+    },
+
+    getSizeOf: function (el) {
+        return el.outerWidth !== undefined ? {x: el.outerWidth(), y: el.outerHeight()} : {x: 0, y: 0};
+    },
+
+    getPositionOf: function (el) {
+
+        return $(el).position();
+    },
+
+    setDragCoordinates: function () {
+        this.coordinatesToDrag = {
+            x: 'x', y: 'y'
+        };
+    },
+    startDrag: function (e) {
+        var id = this.getIdByEvent(e);
+
+        var el = this.getById(id).el;
+
+        var size = this.getSizeOf(el);
+        var pos;
+        if (this.useShim) {
+            pos = el.position();
+        } else {
+            var parent = this.getPositionedParent(el);
+            pos = parent ? el.getPosition(parent) : this.getPositionOf(el)
+        }
+
+        var x = pos.left;
+        var y = pos.top;
+        this.dragProcess = {
+            active: true,
+            dragged: id,
+            currentX: x,
+            currentY: y,
+            elX: x,
+            elY: y,
+            width: size.x,
+            height: size.y,
+            mouseX: e.pageX,
+            mouseY: e.pageY
+        };
+
+
+        this.dragProcess.el = this.getShimOrEl();
+
+        this.fireEvent('before', [this.els[id], this, {x: x, y: y}]);
+
+        if (!this.isActive()) {
+            return undefined;
+        }
+
+        this.dragProcess.minX = this.getMinX();
+        this.dragProcess.maxX = this.getMaxX();
+        this.dragProcess.minY = this.getMinY();
+        this.dragProcess.maxY = this.getMaxY();
+        this.dragProcess.dragX = this.canDragAlongX();
+        this.dragProcess.dragY = this.canDragAlongY();
+
+        if (this.delay) {
+            this.setActiveAfterDelay();
+        } else {
+            /**
+             * Event fired before dragging
+             * @event start
+             * @param {effect.DraggableNode} object to be dragged.
+             * @param {ludo.effect.Drag} component
+             * @param {Object} pos(x and y)
+             */
+            this.fireEvent('start', [this.els[id], this, {x: x, y: y}]);
+
+            if (this.fireEffectEvents)ludo.EffectObject.start();
+        }
+
+        return false;
+    },
+
+    getPositionedParent: function (el) {
+
+        var parent = el.parentNode;
+        while (parent) {
+            var pos = parent.getStyle('position');
+            if (pos === 'relative' || pos === 'absolute')return parent;
+            parent = parent.getParent();
+        }
+        return undefined;
+    },
+
+    /**
+     Cancel drag. This method is designed to be called from an event handler
+     attached to the "beforeDrag" event.
+     @function cancelDrag
+     @memberof ludo.effect.Effect.prototype
+     @example
+     // Here, dd is a {{#crossLink "effect.Drag"}}{{/crossLink}} object
+     dd.on('before', function(draggable, dd, pos){
+	 		if(pos.x > 1000 || pos.y > 500){
+	 			dd.cancelDrag();
+			}
+	 	});
+     In this example, dragging will be cancelled when the x position of the mouse
+     is greater than 1000 or if the y position is greater than 500. Another more
+     useful example is this:
+     @example
+     dd.on('before', function(draggable, dd){
+		 	if(!this.isDraggable(draggable)){
+		 		dd.cancelDrag()
+		 	}
+		});
+     Here, we assume that we have an isDraggable method which returns true or false
+     for whether the given node is draggable or not. "draggable" in this example
+     is one of the {{#crossLink "effect.DraggableNode"}}{{/crossLink}} objects added
+     using the {{#crossLink "effect.Drag/add"}}{{/crossLink}} method.
+     */
+
+    cancelDrag: function () {
+        this.dragProcess.active = false;
+        this.dragProcess.el = undefined;
+        if (this.fireEffectEvents)ludo.EffectObject.end();
+    },
+
+    getShimFor: function (el) {
+        return el;
+    },
+
+    setActiveAfterDelay: function () {
+        this.inDelayMode = true;
+        this.dragProcess.active = false;
+        this.startIfMouseNotReleased.delay(this.delay * 1000, this);
+    },
+
+    startIfMouseNotReleased: function () {
+        if (this.inDelayMode) {
+            this.dragProcess.active = true;
+            this.inDelayMode = false;
+            this.fireEvent('start', [this.getDragged(), this, {x: this.getX(), y: this.getY()}]);
+            ludo.EffectObject.start();
+        }
+    },
+
+    drag: function (e) {
+        if (this.dragProcess.active && this.dragProcess.el) {
+            var pos = {
+                x: undefined,
+                y: undefined
+            };
+            if (this.dragProcess.dragX) {
+                pos.x = this.getXDrag(e);
+
+            }
+
+            if (this.dragProcess.dragY) {
+                pos.y = this.getYDrag(e);
+            }
+
+
+            this.move(pos);
+
+            /**
+             * Event fired while dragging. Sends position, example {x:100,y:50}
+             * and reference to effect.Drag as arguments
+             * @event drag
+             * @param {Object} x and y
+             * @param {effect.Drag} this
+             */
+            this.fireEvent('drag', [pos, this.els[this.dragProcess.dragged], this]);
+            if (ludo.util.isTabletOrMobile())return false;
+
+        }
+        return undefined;
+    },
+
+    move: function (pos) {
+        if (pos.x !== undefined) {
+            this.dragProcess.currentX = pos.x;
+            this.dragProcess.el.css('left', pos.x + this.unit);
+        }
+        if (pos.y !== undefined) {
+            this.dragProcess.currentY = pos.y;
+            this.dragProcess.el.css('top', pos.y + this.unit);
+        }
+    },
+
+    /**
+     * Return current x pos
+     * @function getX
+     * @return {Number} x
+     * @memberof ludo.effect.Effect.prototype
+     */
+    getX: function () {
+        return this.dragProcess.currentX;
+    },
+    /**
+     * Return current y pos
+     * @function getY
+     * @return {Number} y
+     * @memberof ludo.effect.Effect.prototype
+     */
+    getY: function () {
+        return this.dragProcess.currentY;
+    },
+
+    getXDrag: function (e) {
+        var posX;
+
+        if (this.mouseXOffset) {
+            posX = e.pageX + this.mouseXOffset;
+        } else {
+            posX = e.pageX - this.dragProcess.mouseX + this.dragProcess.elX;
+        }
+
+        if (posX < this.dragProcess.minX) {
+            posX = this.dragProcess.minX;
+        }
+        if (posX > this.dragProcess.maxX) {
+            posX = this.dragProcess.maxX;
+        }
+        return posX;
+    },
+
+    getYDrag: function (e) {
+        var posY;
+        if (this.mouseYOffset) {
+            posY = e.pageY + this.mouseYOffset;
+        } else {
+            posY = e.pageY - this.dragProcess.mouseY + this.dragProcess.elY;
+        }
+
+        if (posY < this.dragProcess.minY) {
+            posY = this.dragProcess.minY;
+        }
+        if (posY > this.dragProcess.maxY) {
+            posY = this.dragProcess.maxY;
+        }
+        return posY;
+    },
+
+    endDrag: function () {
+        if (this.dragProcess.active) {
+            this.cancelDrag();
+
+            this.fireEvent('end', [
+                this.getDragged(),
+                this,
+                {
+                    x: this.getX(),
+                    y: this.getY()
+                }
+            ]);
+
+        }
+        if (this.inDelayMode)this.inDelayMode = false;
+
+    },
+
+    /**
+     * Set new max X pos
+     * @function setMaxX
+     * @param {Number} x
+     * @memberof ludo.effect.Effect.prototype
+     */
+    setMaxX: function (x) {
+        this.maxX = x;
+    },
+    /**
+     * Set new min X pos
+     * @function setMinX
+     * @param {Number} x
+     * @memberof ludo.effect.Effect.prototype
+     */
+    setMinX: function (x) {
+        this.minX = x;
+    },
+    /**
+     * Set new min Y pos
+     * @function setMinY
+     * @param {Number} y
+     * @memberof ludo.effect.Effect.prototype
+     */
+    setMinY: function (y) {
+        this.minY = y;
+    },
+    /**
+     * Set new max Y pos
+     * @function setMaxY
+     * @param {Number} y
+     * @memberof ludo.effect.Effect.prototype
+     */
+    setMaxY: function (y) {
+        this.maxY = y;
+    },
+    /**
+     * Set new min pos
+     * @function setMinPos
+     * @param {Number} pos
+     * @memberof ludo.effect.Effect.prototype
+     */
+    setMinPos: function (pos) {
+        this.minPos = pos;
+    },
+    /**
+     * Set new max pos
+     * @function setMaxPos
+     * @param {Number} pos
+     * @memberof ludo.effect.Effect.prototype
+     */
+    setMaxPos: function (pos) {
+        this.maxPos = pos;
+    },
+
+    getMaxX: function () {
+        return this.getMaxPos('maxX');
+    },
+
+    getMaxY: function () {
+        return this.getMaxPos('maxY');
+    },
+
+    getMaxPos: function (key) {
+        var max = this.getConfigProperty(key);
+        return max !== undefined ? max : this.maxPos !== undefined ? this.maxPos : 100000;
+    },
+
+    getMinX: function () {
+        var minX = this.getConfigProperty('minX');
+        return minX !== undefined ? minX : this.minPos;
+    },
+
+    getMinY: function () {
+        var dragged = this.getDragged();
+        return dragged && dragged.minY !== undefined ? dragged.minY : this.minY !== undefined ? this.minY : this.minPos;
+    },
+    /**
+     * Return amount dragged in x direction
+     * @function getDraggedX
+     * @return {Number} x
+     * @memberof ludo.effect.Effect.prototype
+     */
+    getDraggedX: function () {
+        return this.getX() - this.dragProcess.elX;
+    },
+    /**
+     * Return amount dragged in y direction
+     * @function getDraggedY
+     * @return {Number} y
+     * @memberof ludo.effect.Effect.prototype
+     */
+    getDraggedY: function () {
+        return this.getY() - this.dragProcess.elY;
+    },
+
+    canDragAlongX: function () {
+        return this.getConfigProperty('directions').indexOf('X') >= 0;
+    },
+    canDragAlongY: function () {
+        return this.getConfigProperty('directions').indexOf('Y') >= 0;
+    },
+
+    getConfigProperty: function (property) {
+        var dragged = this.getDragged();
+        return dragged && dragged[property] !== undefined ? dragged[property] : this[property];
+    },
+
+    /**
+     * Returns width of dragged element
+     * @function getHeight
+     * @return {Number}
+     * @memberof ludo.effect.Effect.prototype
+     */
+    getWidth: function () {
+        return this.dragProcess.width;
+    },
+
+    /**
+     * Returns height of dragged element
+     * @function getHeight
+     * @return {Number}
+     * @memberof ludo.effect.Effect.prototype
+     */
+    getHeight: function () {
+        return this.dragProcess.height;
+    },
+    /**
+     * Returns current left position of dragged
+     * @function getLeft
+     * @return {Number}
+     * @memberof ludo.effect.Effect.prototype
+     */
+    getLeft: function () {
+        return this.dragProcess.currentX;
+    },
+
+    /**
+     * Returns current top/y position of dragged.
+     * @function getTop
+     * @return {Number}
+     * @memberof ludo.effect.Effect.prototype
+     */
+    getTop: function () {
+        return this.dragProcess.currentY;
+    },
+
+    /**
+     * Returns reference to DOM element of shim
+     * @function getShim
+     * @return {HTMLDivElement} shim
+     * @memberof ludo.effect.Effect.prototype
+     */
+    getShim: function () {
+        if (this.shim === undefined) {
+            this.shim = $('<div>');
+            this.shim.addClass('ludo-shim');
+            this.shim.css({
+                position: 'absolute',
+                'z-index': 50000,
+                display: 'none'
+            });
+            $(document.body).append(this.shim);
+
+            if (this.shimCls) {
+                for (var i = 0; i < this.shimCls.length; i++) {
+                    this.shim.addClass(this.shimCls[i]);
+                }
+            }
+
+            this.fireEvent('createShim', this.shim);
+        }
+        return this.shim;
+    },
+
+
+    showShim: function () {
+        this.getShim().css({
+            display: '',
+            left: this.getShimX(),
+            top: this.getShimY(),
+            width: this.getWidth() + this.getShimWidthDiff(),
+            height: this.getHeight() + this.getShimHeightDiff()
+        });
+
+        this.fireEvent('showShim', [this.getShim(), this]);
+    },
+
+    getShimY: function () {
+        if (this.mouseYOffset) {
+            return this.dragProcess.mouseY + this.mouseYOffset;
+        } else {
+            return this.getTop() + ludo.dom.getMH(this.getEl()) - ludo.dom.getMW(this.shim);
+        }
+    },
+
+    getShimX: function () {
+        if (this.mouseXOffset) {
+            return this.dragProcess.mouseX + this.mouseXOffset;
+        } else {
+            return this.getLeft() + ludo.dom.getMW(this.getEl()) - ludo.dom.getMW(this.shim);
+        }
+    },
+
+    getShimWidthDiff: function () {
+        return ludo.dom.getMW(this.getEl()) - ludo.dom.getMBPW(this.shim);
+    },
+    getShimHeightDiff: function () {
+        return ludo.dom.getMH(this.getEl()) - ludo.dom.getMBPH(this.shim);
+    },
+
+    /**
+     * Hide shim
+     * @function hideShim
+     * @memberof ludo.effect.Effect.prototype
+     */
+    hideShim: function () {
+        this.getShim().css('display', 'none');
+    },
+
+    /**
+     * Set text content of shim
+     * @function setShimText
+     * @param {String} text
+     * @memberof ludo.effect.Effect.prototype
+     */
+    setShimText: function (text) {
+        this.getShim().html(text);
+    },
+
+    /**
+     * Fly/Slide dragged element back to it's original position
+     * @function flyBack
+     * @memberof ludo.effect.Effect.prototype
+     */
+    flyBack: function (duration) {
+        this.fly({
+            el: this.getShimOrEl(),
+            duration: duration,
+            from: {x: this.getLeft(), y: this.getTop()},
+            to: {x: this.getStartX(), y: this.getStartY()},
+            onComplete: this.flyBackComplete.bind(this)
+        });
+    },
+
+    /**
+     * Fly/Slide dragged element to position of shim. This will only
+     * work when useShim is set to true.
+     * @function flyToShim
+     * @param {Number} duration in seconds(default = .2)
+     * @memberof ludo.effect.Effect.prototype
+     */
+    flyToShim: function (duration) {
+        this.fly({
+            el: this.getEl(),
+            duration: duration,
+            from: {x: this.getStartX(), y: this.getStartY()},
+            to: {x: this.getLeft(), y: this.getTop()},
+            onComplete: this.flyToShimComplete.bind(this)
+        });
+    },
+
+    getStartX: function () {
+        return this.dragProcess.elX;
+    },
+
+    getStartY: function () {
+        return this.dragProcess.elY;
+    },
+
+    flyBackComplete: function () {
+
+        this.fireEvent('flyBack', [this, this.getShimOrEl()]);
+    },
+
+    flyToShimComplete: function () {
+        this.fireEvent('flyToShim', [this, this.getEl()]);
+    },
+
+    isActive: function () {
+        return this.dragProcess.active;
+    }
 });/* ../ludojs/src/effect/resize.js */
 /***
- * Make component or DOM elements resizable
- * @module effect
- * @class Resize
- * @namespace effect
- * @augments Core
+ * Make View or DOM elements resizable
+ * This class is mostly used internally in LudoJS when views are resizable.
+ * @class ludo.effect.Resize
+ * @namespace ludo.effect
+ * @param {Object} config
+ * @param {boolean} useShim True to use dotted rectangle when resizing. The view or DOM element will be resized on mouse/ up/touch end.
+ * @param {Number} minX minimum x coordinate.
+ * @param {Number} minY minimum y coordinate.
+ * @param {Number} maxX maximum x coordinate.
+ * @param {Number} maxY maximum y coordinate.
+ * @param {Number} minWidth Minimum width.
+ * @param {Number} maxWidth Maximum width.
+ * @param {Number} minHeight Minimum height.
+ * @param {Number} maxHeight Maximum height.
+ * @param {Boolean} preserveAspectRatio Preserve aspect ratio while resizing.
+ * @fires ludo.effect.Resize#start Fired when resizing starts. Param: {String} region
+ * @fires ludo.effect.Resize#resize Fired during resize. CSS coordinates(Object with left,top.width,height) are passed as argument with the event.
+ * @fires ludo.effect.Resize#stop Fired when resize ends. CSS coordinates(Object with left,top.width,height) are passed as argument with the event
  */
 ludo.effect.Resize = new Class({
     Extends:ludo.Core,
-    /**
-     * Use shim
-     * @attribute {Boolean} useShim
-     * @optional
-     */
+
     useShim:true,
     component:undefined,
     els:{
@@ -19048,60 +17717,24 @@ ludo.effect.Resize = new Class({
         applyTo:undefined,
         handle:{}
     },
-    /**
-     * min x position
-     * @attribute {Number} minX
-     * @default undefined
-     */
+
     minX:undefined,
-    /**
-     * max x position
-     * @attribute {Number} maxX
-     * @default undefined
-     */
+
     maxX:undefined,
-    /**
-     * minimum width
-     * @attribute {Number} minWidth
-     * @default undefined
-     */
+
     minWidth:undefined,
-    /**
-     * Maximum width
-     * @attribute {Number} maxWidth
-     * @default undefined
-     */
+
     maxWidth:undefined,
-    /**
-     * min y position
-     * @attribute {Number} minY
-     * @default undefined
-     */
+
     minY:undefined,
-    /**
-     * max x position
-     * @attribute {Number} maxY
-     * @default undefined
-     */
+
     maxY:undefined,
-    /**
-     * minimum height
-     * @attribute {Number} minHeight
-     * @default undefined
-     */
+
     minHeight:undefined,
-    /**
-     * max height
-     * @attribute {Number} maxHeight
-     * @default undefined
-     */
+
     maxHeight:undefined,
 
-    /**
-     * Preserve aspect ratio while resizing
-     * @attribute {Boolean} preserveAspectRatio
-     * @default false
-     */
+
     preserveAspectRatio:false,
 
     aspectRatio:undefined,
@@ -19172,6 +17805,7 @@ ludo.effect.Resize = new Class({
      * @param {String} region
      * @param {String} cssClass
      * @return void
+     * @memberof ludo.effect.Resize.prototype
      */
 
     addHandle:function (region, cssClass) {
@@ -19189,11 +17823,7 @@ ludo.effect.Resize = new Class({
     startResize:function (e) {
 
         var region = $(e.target).attr('region');
-        /**
-         * Fired when starting resize
-         * @event start
-         * @param string region
-         */
+
         this.fireEvent('start', region);
 
 		ludo.EffectObject.start();
@@ -19228,11 +17858,7 @@ ludo.effect.Resize = new Class({
 
     },
 
-    /**
-     * Set min and max width/height based on aspect ratio
-     * @function setMinAndMax
-     * @private
-     */
+
     setMinAndMax:function () {
         var ratio = this.getAspectRatio();
         var d = this.dragProperties;
@@ -19322,11 +17948,7 @@ ludo.effect.Resize = new Class({
         if (this.dragProperties.active) {
             this.dragProperties.current = this.getCurrentCoordinates(e);
             var coordinates = this.getCoordinates();
-            /**
-             * Fired during resize. CSS coordinates are passed as parameter to this event.
-             * @event resize
-             * @param {Object} coordinates
-             */
+
             this.fireEvent('resize', coordinates);
 
             if (this.useShim) {
@@ -19348,12 +17970,7 @@ ludo.effect.Resize = new Class({
         return ret;
     },
 
-    /**
-     * Returns coordinates for current drag operation,
-     * example: {left:100,top:100,width:500,height:400}
-     * @function getCoordinates
-     * @return {Object}
-     */
+
     getCoordinates:function () {
         var d = this.dragProperties;
         var keys = this.resizeKeys[d.region];
@@ -19482,12 +18099,7 @@ ludo.effect.Resize = new Class({
     stopResize:function () {
         if (this.dragProperties.active) {
             this.dragProperties.active = false;
-            /**
-             * Fired when resize is complete.
-             * CSS coordinates are passed as parameter to this event.
-             * @event stop
-             * @param {Object} coordinates
-             */
+
             this.fireEvent('stop', this.getCoordinates());
 			ludo.EffectObject.end();
             this.revertBodyCursor();
@@ -19588,10 +18200,6 @@ ludo.effect.Resize = new Class({
 });/* ../ludojs/src/view/button-bar.js */
 /**
  * Class used to create button bars at bottom of components.
- * This class is instantiated automatically
- * @namespace view
- * @class ButtonBar
- * @augments View
  */
 ludo.view.ButtonBar = new Class({
     Extends:ludo.View,
@@ -19964,6 +18572,8 @@ ludo.view.registerTitleBarButton('minimize', {
  * @param {Boolean} config.minimized True to render the view minimized.
  * @param {Object} config.buttonBar Optional button bar configuration. The button bar is div at the bottom of the view where child views(example buttons) are rendered in a linear horizontal layout.
  * Alignment of button can be set using config.buttonBar.align(left, center or right).<br> Example: <br><code>buttonBar: { align:'left', children:[ {type:'ludo.form.Button', value: 'OK' }]}. </code>.<br>Default alignment is "right"
+ * @fires ludo.FramedView#minimize Fired on mimimize. Argument: ludo.FramedView
+ * @fires ludo.FramedView#maximize Fired on maximize
  */
 ludo.FramedView = new Class({
 	Extends:ludo.View,
@@ -19991,6 +18601,7 @@ ludo.FramedView = new Class({
 	 @config titleBar
 	 @type {Object}
 	 @default undefined
+	 @memberof ludo.FramedView.prototype
 	 @example
 	 	new ludo.Window({
 	 		titleBar:{
@@ -20055,6 +18666,7 @@ ludo.FramedView = new Class({
 	 * Return config of title bar using a method instead of config object. Useful when you need to refer to "this"
 	 * @function getTitleBarConfig
 	 * @return {Object|undefined}
+	 * @memberof ludo.FramedView.prototype
 	 */
 	getTitleBarConfig:function(){
 		return undefined;
@@ -20065,6 +18677,7 @@ ludo.FramedView = new Class({
 	 * "this"
 	 * @function getButtonBarConfig
 	 * @return {Object|undefined}
+	 * @memberof ludo.FramedView.prototype
 	 */
 	getButtonBarConfig:function(){
 		return undefined;
@@ -20124,15 +18737,6 @@ ludo.FramedView = new Class({
 			this.resizer.addEvent('stop', this.saveState.bind(this));
 		}
 		return this.resizer;
-	},
-	/**
-	 * Set new title
-	 * @function setTitle
-	 * @param {String} title
-	 */
-	setTitle:function (title) {
-		this.parent(title);
-        this.fireEvent('setTitle', title);
 	},
 
 	resizeDOM:function () {
@@ -20219,6 +18823,7 @@ ludo.FramedView = new Class({
 	 * Maximize component
 	 * @function maximize
 	 * @return void
+	 * @memberof ludo.FramedView.prototype
 	 */
 	maximize:function () {
         this.state.isMinimized = false;
@@ -20228,11 +18833,6 @@ ludo.FramedView = new Class({
             });
             this.els.body.css('visibility', 'visible');
             this.showResizeHandles();
-            /**
-             * Fired when a component is maximized
-             * @event maximize
-             * @param component this
-             */
             this.fireEvent('maximize', this);
         }
 	},
@@ -20253,6 +18853,7 @@ ludo.FramedView = new Class({
 	 * Minimize component
 	 * @function minimize
 	 * @return void
+	 * @memberof ludo.FramedView.prototype
 	 */
 	minimize:function () {
         this.state.isMinimized = true;
@@ -20264,10 +18865,7 @@ ludo.FramedView = new Class({
             this.hideResizeHandles();
 
             this.layout.height = height;
-            /**
-             * @event minimize
-             * @param Component this
-             */
+
             this.fireEvent('minimize', [this, { height: newHeight }]);
         }
 	},
@@ -20299,6 +18897,7 @@ ludo.FramedView = new Class({
 	 * @function hideButton
 	 * @param id of button
 	 * @return {Boolean} success
+	 * @memberof ludo.FramedView.prototype
 	 */
 	hideButton:function (id) {
         return this.buttonEffect(id, 'hide');
@@ -20308,6 +18907,7 @@ ludo.FramedView = new Class({
 	 * @function showButton
 	 * @param id of button
 	 * @return {Boolean} success
+	 * @memberof ludo.FramedView.prototype
 	 */
 	showButton:function (id) {
         return this.buttonEffect(id, 'show');
@@ -20321,6 +18921,7 @@ ludo.FramedView = new Class({
 	 * @function disableButton
 	 * @param id
 	 * @return {Boolean} success
+	 * @memberof ludo.FramedView.prototype
 	 */
 	disableButton:function (id) {
         return this.buttonEffect(id, 'disable');
@@ -20330,6 +18931,7 @@ ludo.FramedView = new Class({
 	 * @function enableButton
 	 * @param id
 	 * @return {Boolean} success
+	 * @memberof ludo.FramedView.prototype
 	 */
 	enableButton:function (id) {
         return this.buttonEffect(id, 'enable');
@@ -20359,24 +18961,20 @@ ludo.FramedView = new Class({
 	 * Is component resizable
 	 * @function isResizable
 	 * @return {Boolean}
+	 * @memberof ludo.FramedView.prototype
 	 */
 	isResizable:function () {
 		return this.resizable;
 	},
 	stopMove:function (el, drag) {
 		this.getLayout().getRenderer().setPosition(drag.getX(), drag.getY());
-		/**
-		 * Event fired after moving Component
-		 * @event stopmove
-		 * @param {Object} Component
-		 */
+
 		this.fireEvent('stopmove', this);
 	}
 });/* ../ludojs/src/application.js */
 /**
  * A view rendered to document.body with a width and height of 100%
- * @class Application
- * @augments FramedView
+ * @class ludo.Application
  */
 ludo.Application = new Class({
     Extends:ludo.View,
@@ -20555,6 +19153,7 @@ ludo.Window = new Class({
      * @param {Number} x
      * @param {Number} y
      * @return void
+     * @memberof ludo.Window.prototype
      */
     showAt: function (x, y) {
         this.setXY(x, y);
@@ -20580,6 +19179,7 @@ ludo.Window = new Class({
     /**
      * Show window centered on screen
      * @function showCentered
+     * @memberof ludo.Window.prototype
      * @return void
      */
     showCentered: function () {
@@ -20593,8 +19193,8 @@ ludo.Window = new Class({
 });/* ../ludojs/src/data-source/search-parser.js */
 /**
  * Internal class used to parse search into a function
- * @namespace dataSource
- * @class SearchParser
+ * @namespace ludo.dataSource
+ * @class ludo.dataSource.SearchParser
  */
 ludo.dataSource.SearchParser = new Class({
 
@@ -20768,34 +19368,28 @@ ludo.dataSource.SearchParser = new Class({
 /**
  Class created dynamically by dataSource.Collection.
  It is used to search and filter data in a collection.
- @namespace dataSource
- @class CollectionSearch
- @augments Core
+ @namespace ludo.dataSource
+ @class ludo.dataSource.CollectionSearch
+ @param {object} config
+ @param {object} config.delay  Delay in seconds between call to search and execution of search.
+ A delay is useful when using text fields to search. Default : 0
+ @param {Array} config.index Columns in datasource to index for search
+ @fires ludo.dataSource.CollectionSearch#initSearch Fired just before search starts
+ @fires ludo.dataSource.CollectionSearch#search Fired when search is finished
+ @fires ludo.dataSource.CollectionSearch#deleteSearch
  */
 ludo.dataSource.CollectionSearch = new Class({
 	Extends:ludo.Core,
 	dataSource:undefined,
 	searchResult:undefined,
 	searchIndexCreated:false,
-	/**
-	 Delay in seconds between call to search and execution of search.
-	 A delay is useful when using text fields to search.
-	 @config delay
-	 @type {Number}
-	 @default 0
-	 @example
-	 	delay:0
-	 */
+
 	delay:0,
 	searches:undefined,
 	searchBranches:undefined,
 	searchFn:undefined,
 	currentBranch:undefined,
-	/**
-	 Columns in datasource to index for search
-	 @config index
-	 @type Array
-	 */
+
 	index:undefined,
 
 	searchParser:undefined,
@@ -20819,6 +19413,7 @@ ludo.dataSource.CollectionSearch = new Class({
 	 * execute a text search
 	 * @function Search
 	 * @param {String} search
+	 * @memberof ludo.dataSource.CollectionSearch.prototype
 	 */
 	search:function (search) {
 		if (!search && this.searches.length == 0)return;
@@ -20845,6 +19440,7 @@ ludo.dataSource.CollectionSearch = new Class({
 	 @function clear
 	 @chainable
 	 @return {dataSource.CollectionSearch} this
+	 @memberof ludo.dataSource.CollectionSearch.prototype
 	 */
 	clear:function () {
 		this.searches = [];
@@ -20856,12 +19452,9 @@ ludo.dataSource.CollectionSearch = new Class({
 	 * {{#crossLink "dataSource.Collection"}}{{/crossLink}} listens to. It will trigger an update of
 	 * views using the {{#crossLink "dataSource.Collection"}}{{/crossLink}} object as dataSource.
 	 * @function deleteSearch
+	 * @memberof ludo.dataSource.CollectionSearch.prototype
 	 */
 	deleteSearch:function () {
-		/**
-		 * Search executed without any search terms
-		 * @event deleteSearch
-		 */
 		this.fireEvent('deleteSearch');
 		this.searchResult = undefined;
 		this.clear();
@@ -20871,6 +19464,7 @@ ludo.dataSource.CollectionSearch = new Class({
 	 @function where
 	 @param {String|Function} search
 	 @return {dataSource.CollectionSearch} this
+	 @memberof ludo.dataSource.CollectionSearch.prototype
 	 @chainable
 	 @example
 		 var searcher = ludo.get('idOfDataSearch').getSearcher();
@@ -20897,6 +19491,7 @@ ludo.dataSource.CollectionSearch = new Class({
 	 @function or
 	 @param {String|Function} search
 	 @return {dataSource.CollectionSearch} this
+	 @memberof ludo.dataSource.CollectionSearch.prototype
 	 @chainable
 	 @example
 		 var searcher = myDataSource.getSearcher();
@@ -20933,6 +19528,7 @@ ludo.dataSource.CollectionSearch = new Class({
 	 @param {String|Function} search
 	 @return {dataSource.CollectionSearch} this
 	 @chainable
+	 @memberof ludo.dataSource.CollectionSearch.prototype
 	 @example
 		 var searcher = myDataSource.getSearcher();
 		 var populationFn = function(record){
@@ -20976,6 +19572,7 @@ ludo.dataSource.CollectionSearch = new Class({
 	 * @function withIn
 	 * @param {Array} searches
 	 * @chainable
+	 * @memberof ludo.dataSource.CollectionSearch.prototype
 	 * @return {dataSource.CollectionSearch} this
 	 */
 	withIn:function (searches) {
@@ -20989,6 +19586,7 @@ ludo.dataSource.CollectionSearch = new Class({
 	 * Start grouping search items together
 	 * @function branch
 	 * @chainable
+	 * @memberof ludo.dataSource.CollectionSearch.prototype
 	 * @return {dataSource.CollectionSearch} this
 	 */
 	branch:function () {
@@ -20999,6 +19597,7 @@ ludo.dataSource.CollectionSearch = new Class({
 	 * Close group of search items.
 	 * @function branch
 	 * @chainable
+	 * @memberof ludo.dataSource.CollectionSearch.prototype
 	 * @return {endBranch.CollectionSearch} this
 	 */
 	endBranch:function () {
@@ -21016,6 +19615,7 @@ ludo.dataSource.CollectionSearch = new Class({
 	 @function execute
 	 @chainable
 	 @return {dataSource.CollectionSearch} this
+	 @memberof ludo.dataSource.CollectionSearch.prototype
 	 @example
 		 // Assumes that ludo.get('collection') returns a {{#crossLink "dataSource.Collection"}}{{/crossLink}} object
 		 var searcher = ludo.get('collection').getSearcher();
@@ -21081,6 +19681,7 @@ ludo.dataSource.CollectionSearch = new Class({
 	 * Returns false when<br>
 	 *  - search result is undefined because no search has been executed or search has been deleted.
 	 * @function hasData
+	 * @memberof ludo.dataSource.CollectionSearch.prototype
 	 * @return {Boolean}
 	 */
 	hasData:function () {
@@ -21156,6 +19757,7 @@ ludo.dataSource.CollectionSearch = new Class({
 	 * Returns number of records in search result
 	 * @function getCount
 	 * @return {Number}
+	 * @memberof ludo.dataSource.CollectionSearch.prototype
 	 */
 	getCount:function () {
 		return this.searchResult ? this.searchResult.length : 0;
@@ -21169,62 +19771,65 @@ ludo.dataSource.CollectionSearch = new Class({
 /**
  Specification of a drop point node sent to {{#crossLink "effect.DragDrop/addDropTarget"}}{{/crossLink}}.
  You may add your own properties in addition to the ones below.
- @namespace effect
- @class DropPoint
- @constructor
+ @namespace ludo.effect
+ @class ludo.effect.DropPoint
+
  @param {Object} config
  @example
- 	var dd = new ludo.effect.DragDrop();
- 	var el = $('<div>');
- 	dd.addDropTarget({
+ var dd = new ludo.effect.DragDrop();
+ var el = $('<div>');
+ dd.addDropTarget({
  		id:'myDropPoint',
  		el:el,
  		name:'John Doe'
 	});
- 	var el = $('<div>');
-	dd.addDropTarget({
+ var el = $('<div>');
+ dd.addDropTarget({
 		id:'myDropPoint',
 		el:el,
 		name:'Jane Doe'
 	});
- 	dd.addEvent('enterDropTarget', function(node, dd){
+ dd.addEvent('enterDropTarget', function(node, dd){
  		if(node.name === 'John Doe'){
  			dd.setInvalid(); // Triggers an invalidDropTarget event
  		}
  	});
  */
 ludo.effect.DropPoint = new Class({
-	/**
-	 id of node. This attribute is optional
-	 @property id
-	 @type {String}
-	 @default undefined
-	 @optional
-	 */
-	id:undefined,
+    /**
+     id of node. This attribute is optional
+     @property id
+     @type {String}
+     @default undefined
+     @optional
+     @memberof ludo.effect.DropPoint.prototype
+     */
+    id: undefined,
 
-	/**
-	 * Reference to dragable DOM node
-	 * @property el
-	 * @default undefined
-	 * @type {String|HTMLDivElement}
-	 */
-	el:undefined,
+    /**
+     * Reference to dragable DOM node
+     * @property el
+     * @default undefined
+     * @type {String|HTMLDivElement}
+     * @memberof ludo.effect.DropPoint.prototype
+     */
+    el: undefined,
 
-	 /**
-	 Capture regions(north,south, west east) when moving over drop points
-	 @config {Boolean|undefined} captureRegions
-	 @optional
-	 @default false
-	 @example
-	 	captureRegions:true
-	 */
-	captureRegions:undefined
+    /**
+     Capture regions(north,south, west east) when moving over drop points
+     @config {Boolean|undefined} captureRegions
+     @optional
+     @default false
+     @memberof ludo.effect.DropPoint.prototype
+     @example
+     captureRegions:true
+     */
+    captureRegions: undefined
 });/* ../ludojs/src/effect/drag-drop.js */
 /**
  * effect.Drag with support for drop events.
- * @namespace effect
- * @class DragDrop
+ * @namespace ludo.effect
+ * @class ludo.effect.DragDrop
  * @augments effect.Drag
  */
 ludo.effect.DragDrop = new Class({
@@ -22349,11 +20954,10 @@ ludo.ColResize = new Class({
 });/* ../ludojs/src/grid/column-manager.js */
 /**
  Column manager for grids. Grids will listen to events fired by this component. A column manager is usually created by
- sending a "columnManager" config object to the constructor of a grid.Grid view.
- @namespace grid
- @class ColumnManager
+ sending a "columns" array to the constructor of a grid.Grid view.
+ @namespace ludo.grid
+ @class ludo.grid.ColumnManager
  @augments Core
- @constructor
  @param {Object} config
  @example
     columnManager:{
@@ -22388,31 +20992,10 @@ ludo.ColResize = new Class({
 ludo.grid.ColumnManager = new Class({
 	Extends:ludo.Core,
 	type:'grid.ColumnManager',
-	/**
-	 * Always fill view, i.e. dynamically increase with of last visible column when
-	 * total width of visible columns is less than width of the Grid.
-	 * @config fill
-	 * @type {Boolean}
-	 * @default true
-	 */
 	fill:true,
-
-	/**
-	 * Configuration of columns
-	 * @config {Object} columns
-	 * @default {}
-	 */
 	columns:{},
-
 	columnKeys:[],
-
 	statefulProperties:['columns', 'columnKeys'],
-
-	/**
-	 * Internal column lookup. Flat version of this.columns
-	 * @property {Object} columnLookup
-	 * @private
-	 */
 	columnLookup:{},
 
 	__construct:function (config) {
@@ -22490,6 +21073,7 @@ ludo.grid.ColumnManager = new Class({
 	/**
 	 Returns object of visible columns, example:
 	 @function getVisibleColumns
+	 @memberof ludo.grid.ColumnManager.prototype
 	 @return {Object} visible columns
      @example
         {
@@ -22570,6 +21154,7 @@ ludo.grid.ColumnManager = new Class({
 	 * @function isInAGroup
 	 * @param {String} column
 	 * @return {Boolean} is in a group
+	 * memberof ludo.grid.ColumnManager.prototype
 	 */
 	isInAGroup:function (column) {
 		return this.getColumnKey(column, 'group') !== undefined;
@@ -22580,6 +21165,7 @@ ludo.grid.ColumnManager = new Class({
 	 * @function getGroupIdOf
 	 * @param {String} column
 	 * @return {String} group id
+	 * memberof ludo.grid.ColumnManager.prototype
 	 */
 	getGroupIdOf:function (column) {
 		return this.getColumnKey(column, 'group');
@@ -22590,6 +21176,7 @@ ludo.grid.ColumnManager = new Class({
 	 * @function getGroupFor
 	 * @param {String} column
 	 * @return {grid.Column|undefined} parent
+	 * memberof ludo.grid.ColumnManager.prototype
 	 */
 	getGroupFor:function (column) {
 		var id = this.getGroupIdOf(column);
@@ -22747,6 +21334,7 @@ ludo.grid.ColumnManager = new Class({
 	 * @function insertColumnBefore
 	 * @param {String} column id
 	 * @param {String} before column id
+	 * memberof ludo.grid.ColumnManager.prototype
 	 */
 	insertColumnBefore:function (column, before) {
 		this.moveColumn(column, before, 'before');
@@ -22756,6 +21344,7 @@ ludo.grid.ColumnManager = new Class({
 	 * @function insertColumnAfter
 	 * @param {String} column id
 	 * @param {String} after column id
+	 * memberof ludo.grid.ColumnManager.prototype
 	 */
 	insertColumnAfter:function (column, after) {
 		this.moveColumn(column, after, 'after');
@@ -22823,6 +21412,7 @@ ludo.grid.ColumnManager = new Class({
 	 * @param {String} column
 	 * @param {String} as
 	 * @private
+	 * memberof ludo.grid.ColumnManager.prototype
 	 */
 	insertIntoSameGroupAs:function(column, as){
 		var group = this.columnLookup[as].group;
@@ -22847,6 +21437,7 @@ ludo.grid.ColumnManager = new Class({
 	 * @function removeFromGroup
 	 * @param {String} column
 	 * @return {Boolean} success
+	 * memberof ludo.grid.ColumnManager.prototype
 	 */
 	removeFromGroup:function (column) {
 		var group = this.getGroupFor(column);
@@ -22886,10 +21477,7 @@ ludo.grid.ColumnManager = new Class({
 	showColumn:function (column) {
 		if (this.columnExists(column) && this.isHidden([column])) {
 			this.columnLookup[column].hidden = false;
-			/**
-			 * Fired when a column is shown
-			 * @event showcolumn
-			 */
+
 			this.fireEvent('showcolumn', column);
 
 			this.fireEvent('state');
@@ -22948,6 +21536,7 @@ ludo.grid.ColumnManager = new Class({
 	 * @function getColumnsInRow
 	 * @param {Number} rowNumber
 	 * @return {Array} columns
+	 * @memberof ludo.grid.ColumnManager.prototype
 	 */
 	getColumnsInRow:function (rowNumber) {
 		var ret = [];
@@ -23025,11 +21614,18 @@ ludo.grid.RowManager = new Class({
 
 });/* ../ludojs/src/grid/grid.js */
 /**
- @namespace grid
- @class Grid
+ @namespace ludo.grid
+ @class ludo.grid.Grid
  @augments View
- @constructor
+ 
  @param {Object} config
+ @param {Boolean} config.headerMenu Show menu on each column heading.
+ @param {Boolean} config.highlightRecord True to highlight rows on click, default: true
+ @param {Boolean} config.mouseOverEffect True to highlight rows on mouse over, default: true.
+ @param {Object} config.columns Description of columns. See example below for details.
+ @param {Object} config.emptyText Text to show on grid when there are no data, default: "No data"
+ @fires ludo.grid.Grid#click Row clicked. Arguments: 1) The record, i.e. JSON Object, example: { "firstname": "Jane", "lastname": "Johnson" } and 2) name of clicked column, example: "lastname"
+ @fires ludo.grid.Grid#dblclick Row double clicked. Arguments: 1) The record, i.e. JSON Object, example: { "firstname": "Jane", "lastname": "Johnson" } and 2) name of clicked column, example: "lastname"
  @example
 	 children:[
 	 ..
@@ -23109,35 +21705,20 @@ ludo.grid.Grid = new Class({
 	scrollbar:{
 
 	},
-	/**
-	 * true to highlight record on click
-	 * @config highlightRecord
-	 * @type {Boolean}
-	 */
+
 	highlightRecord:true,
 
 	uniqueId:'',
 	activeRecord:{},
 
-	/**
-	 * Show menu when mouse over headers
-	 * @config headerMenu
-	 * @type {Boolean}
-	 * @default true
-	 */
 	headerMenu:true,
 
-	/**
-	 * True to highlight rows while moving mouse over them
-	 * @config mouseOverEffect
-	 * @type {Boolean}
-	 * @default true
-	 */
+
 	mouseOverEffect:true,
 
 	columnManager:undefined,
 
-	/**
+	/*
 	 Column config
 	 @config {Object} columns
 	 @example
@@ -23195,19 +21776,8 @@ ludo.grid.Grid = new Class({
 
 	 */
 	columns:undefined,
-
-	/**
-	 * Row manager config object
-	 * @config {grid.RowManager} rowManager
-	 * @default undefined
-	 */
 	rowManager:undefined,
 
-	/**
-	 * Text to show in the center of the grid when there's no data in the data to show
-	 * @config {String} emptyText
-	 * @default "No data"
-	 */
 	emptyText:'No data',
 
 	defaultDS : 'dataSource.Collection',
@@ -23358,12 +21928,6 @@ ludo.grid.Grid = new Class({
 		var record = this.getRecordByDOM(e.target);
 		if (record) {
 			this.getDataSource().selectRecord(record);
-			/**
-			 * Click on record
-			 * @event click
-			 * @param {Object} Record clicked record
-			 * @param {String} column
-			 */
 			this.fireEvent('click', [record, this.getColumnByDom(e.target)]);
 		}
 	},
@@ -23475,12 +22039,7 @@ ludo.grid.Grid = new Class({
 		var record = this.getRecordByDOM(e.target);
 		if (record) {
 			this.getDataSource().selectRecord(record);
-			/**
-			 * Double click on record
-			 * @event dblclick
-			 * @param {Object} Record clicked record
-			 * @param {String} column
-			 */
+
 			this.fireEvent('dblclick', [record, this.getColumnByDom(e.target)]);
 		}
 	},
@@ -23994,6 +22553,8 @@ ludo.view.ViewPagerNav = new Class({
  * Base class for calendar related classes
  * @namespace calendar
  * @class ludo.calendar.Base
+ *
+ * @fires ludo.calendar.Base#setDate - Arguments Date and ludo.View(the view firing the event)
  */
 ludo.calendar.Base = new Class({
     Extends: ludo.View,
@@ -24039,7 +22600,13 @@ ludo.calendar.Base = new Class({
  * @namespace calendar
  * @class ludo.calendar.Calendar
  * @augments ludo.calendar.Base
- * @type {Class}
+ * @param {Object} config
+ * @param {String} config.inputFormat Date format saved as value(example: d-m-Y). Default is Y-m-d.
+ * @param {String|Date} config.value Initial date.
+ * @param {String|Date} config.date Alias to config.value.
+ * @param {String|Date} config.minDate Optional minimum selectable date
+ * @param {String|Date} config.maxDate Optional maximum selectable date
+ * @fires ludo.calendar.Calendar#setDate - Arguments Date and ludo.View(the view firing the event)
  */
 ludo.calendar.Calendar = new Class({
     Extends:ludo.calendar.Base,
@@ -24176,11 +22743,12 @@ ludo.calendar.Calendar = new Class({
 });/* ../ludojs/src/calendar/days.js */
 
 /**
- * Class used to display days in a month
+ * A View displaying days in a month. It's one of the child views of ludo.calendar.Calendar.
  * @namespace calendar
- * @class Days
- * @augments calendar.Base
+ * @class ludo.calendar.Days
+ * @fires ludo.calendar.Days#setDate - Arguments Date and ludo.View(the view firing the event)
  */
+
 ludo.calendar.Days = new Class({
     Extends:ludo.calendar.Base,
     layout:{
@@ -24561,8 +23129,8 @@ ludo.calendar.Days = new Class({
 });/* ../ludojs/src/calendar/nav-bar.js */
 /**
  * Displays nav-buttons for previous month and year to the left, a calendar.MonthYearSelector in the center and buttons for next month and next year to the right.
- * @namespace calendar
- * @class NavBar
+ * @namespace ludo.calendar
+ * @class ludo.calendar.NavBar
  * @augments calendar.Base
  */
 ludo.calendar.NavBar = new Class({
@@ -24628,9 +23196,6 @@ ludo.calendar.NavBar = new Class({
 });/* ../ludojs/src/calendar/selector.js */
 /**
  * Super class for year and month-selectors
- * @namespace calendar
- * @class Selector
- * @augments calendar.Base
  */
 ludo.calendar.Selector = new Class({
     Extends:ludo.calendar.Base,
@@ -24715,10 +23280,11 @@ ludo.calendar.Selector = new Class({
 });/* ../ludojs/src/calendar/month-selector.js */
 /**
  * Class used to select month for a calendar.
- * @namespace calendar
- * @class MonthSelector
- * @augments calendar.Base
- * @type {Class}
+ * @namespace ludo.calendar
+ * @class ludo.calendar.MonthSelector
+ * @augments ludo.calendar.Base
+ *
+ * @fires ludo.calendar.MonthSelector#setDate - Arguments Date and ludo.View(the view firing the event)
  */
 ludo.calendar.MonthSelector = new Class({
     Extends: ludo.calendar.Base,
@@ -24816,7 +23382,7 @@ ludo.calendar.MonthSelector = new Class({
 /**
  * Display "Today" button inside a calendar. When clicked, date of calendar will be set to today's date.
  * @namespace calendar
- * @class Today
+ * @class ludo.calendar.Today
  * @augments calendar.Base
  */
 ludo.calendar.Today = new Class({
@@ -24850,8 +23416,8 @@ ludo.calendar.Today = new Class({
 });/* ../ludojs/src/calendar/year-selector.js */
 /**
  * Class used to display years in a calendar
- * @namespace calendar
- * @class YearSelector
+ * @namespace ludo.calendar
+ * @class ludo.calendar.YearSelector
  * @augments calendar.Selector
  */
 ludo.calendar.YearSelector = new Class({
@@ -24968,9 +23534,10 @@ ludo.calendar.YearSelector = new Class({
 });/* ../ludojs/src/calendar/month-year-selector.js */
 /**
 * Class used to select month and year for a calendar.
-* @namespace calendar
-* @class MonthYearSelector
-* @augments calendar.Selector
+* @namespace ludo.calendar
+* @class ludo.calendar.MonthYearSelector
+* @augments ludo.calendar.Selector
+* @fires ludo.calendar.MonthYearSelector#setDate - Arguments Date and ludo.View(the view firing the event)
 */
 ludo.calendar.MonthYearSelector = new Class({
     Extends:ludo.calendar.Selector,
@@ -25019,9 +23586,7 @@ ludo.calendar.MonthYearSelector = new Class({
     },
 
     clickMonth:function (e) {
-        console.log(e);
         var el = $(e.currentTarget);
-        console.log(el.attr('month') + ',' + el.attr('year'));
         this.setMonthAndYear(el.attr('month'), el.attr('year'));
         this.sendSetDateEvent();
     },
@@ -25768,8 +24333,17 @@ ludo.calendar.TimePicker = new Class({
 });/* ../ludojs/src/menu/item.js */
 /**
  * Class for menu items. MenuItems are created dynamically from config object(children of ludo.menu.Menu or ludo.menu.Context)
- * @namespace menu
- * @class MenuItem
+ * @namespace ludo.menu
+ * @class ludo.menu.MenuItem
+ * @param {Object} config
+ * @param {String} config.icon Path to Icon for the menu item. If no period sign(.) is found in the icon, the text will be displayed
+ * where the icon should be. example: icon: "myicon.png" to display the icon image, or icon: "!" to display the exclamation mark.
+ * @param {Boolean} disabled True to initially disable the menu item
+ * @param {String} label Text for the menu item
+ * @param {String} action Useful when adding click events to the parent menu. Determine what to do based on the clicked menu item's action attribute.
+ * @param {String} orientation Useful when adding click events to the parent menu. Determine what to do based on the clicked menu item's action attribute.
+ * @param {Boolean} spacer Spacer menu item. Creates a non-clickable spacer between menu items.
+ * @fires ludo.menu.item#click Fired on click. Arguments: 1) ludo.menu.Item
  * @augments View
  */
 ludo.menu.Item = new Class({
@@ -25779,48 +24353,13 @@ ludo.menu.Item = new Class({
     subMenu:null,
     menuItems:[],
     spacer:undefined,
-    /**
-     Path to menu item icon or text placed in the icon placeholder. If icon contains one
-     or more periods(.) it will be consider an image. Otherwise, config.icon will be displayed
-     as plain text
-     @config {String} icon
-     @default undefined
-     @example
-        icon: 'my-icon.jpg'
-     Sets icon to my-icon.jpg
-     @example
-        icon : '!'
-     sets icon to the character "!", i.e. text
-     */
+
     icon:undefined,
     orientation:'vertical',
-    /**
-     * Initially disable the menu item
-     * @config {Boolean} disabled
-     * @default false
-     */
     disabled:false,
 
-    /**
-     * Text for menu item
-     * @config {String} label
-     * @default '' empty string
-     */
     label:'',
-    /**
-     * Useful property if you want to apply only one click event for the menu
-     * and then determine which menu item was clicked. example:
-     *
-     * switch(menuItem.action){
-     *
-     *
-     *
-     * }
-     *
-     * @Attribute {String} action
-     * @type String
-     * @default undefined
-     */
+
     action:undefined,
     record:undefined,
 
@@ -25836,8 +24375,9 @@ ludo.menu.Item = new Class({
         this.setConfigParams(config, ['orientation', 'icon', 'record', 'value', 'label', 'action', 'disabled', 'fire']);
 
         this._html = this._html || this.label;
-        if (this._html === '|') {
-            this.spacer = true;
+        if(this._html == '[')this.spacer = true;
+
+        if (this.spacer) {
             this.layout.height = 1;
 		}else{
 			this.layout.height = this.layout.height || this.orientation === 'vertical' ? 'wrap' : 'matchParent';
@@ -25929,6 +24469,7 @@ ludo.menu.Item = new Class({
      * Disable menu item
      * @function disable
      * @return void
+     * @memberof ludo.menu.Item.prototype
      */
     disable:function () {
         this.disabled = true;
@@ -25939,6 +24480,7 @@ ludo.menu.Item = new Class({
      * Return disable state of menu item
      * @function isDisabled
      * @return {Boolean} disabled
+     * @memberof ludo.menu.Item.prototype
      */
     isDisabled:function () {
         return this.disabled;
@@ -25948,6 +24490,7 @@ ludo.menu.Item = new Class({
      * Enable menu item
      * @function enable
      * @return void
+     * @memberof ludo.menu.Item.prototype
      */
     enable:function () {
         this.disabled = false;
@@ -25997,9 +24540,9 @@ ludo.menu.Item = new Class({
     }
 });/* ../ludojs/src/menu/menu.js */
 /**
- * Menu class
- * @namespace menu
- * @class Menu
+ * A ludo.View with with layout properties set to "type": "menu", orientation:"vertical", "width":"wrap", "height":"wrap"
+ * @namespace ludo.menu
+ * @class ludo.menu.Menu
  * @augments View
  */
 ludo.menu.Menu = new Class({
@@ -26022,11 +24565,17 @@ ludo.menu.Menu = new Class({
 /**
  Context menu class. You can create one or more context menus for a component by using the
  ludo.View.contextMenu config array,
- @namespace menu
- @class Context
+ @namespace ludo.menu
+ @class ludo.menu.Context
  @augments menu.Menu
- @constructor
  @param {Object} config
+ @param {string} config.selector Show context menu only for DOM nodes matching a CSS selector. The context menu will also
+ be shown if a match is found in one of the parent DOM elements. example: selector:'.my-class'
+ @param {string} config.recordType Similar to selector, but focused on JSON data.
+ It asks it's parent view's getRecordByDOM(e.target) (must be implemented), which will return something like { "name": "Oslo", type:"city" }.
+ If config.recordType is "city", the context menu will be shown, otherwise it will not.
+ This is typically useful in tree views and grids.
+
  @example new ludo.Window({
            contextMenu:[{
                selector : '.my-selector',
@@ -26053,45 +24602,14 @@ ludo.menu.Context = new Class({
 		isContext:true
 	},
 
-	renderTo:document.body,
-	/**
-	 Show context menu only for DOM nodes matching a CSS selector. The context menu will also
-	 be shown if a match is found in one of the parent DOM elements.
-	 @attribute selector
-	 @type String
-	 @default undefined
-	 @example {@lang Javascript}
-	 selector : '.selected-records'
-	 */
+	renderTo:undefined,
 	selector:undefined,
 	component:undefined,
 
 	// TODO change this code to record:{ keys that has to match }, example: record:{ type:'country' }
 
-	/**
-	 Show context menu for records with these properties
-	 @config {Object} record
-	 @default undefined
-	 */
 	record:undefined,
-	/**
-	 Show context menu only for records of a specific type. The component creating the context
-	 menu has to have a getRecordByDOM method in order for this to work. These methods are already
-	 implemented for tree.Tree and grid.Grid
-
-	 @attribute recordType
-	 @type String
-	 @default undefined
-	 @example {@lang Javascript}
-	 recordType : 'city'
-	 */
 	recordType:undefined,
-
-	/**
-	 * Add context menu to this DOM element
-	 * @config {String|HTMLElement} contextEl
-	 * @default undefined
-	 */
 	contextEl:undefined,
 
 	__construct:function (config) {
@@ -26099,6 +24617,7 @@ ludo.menu.Context = new Class({
 		this.parent(config);
 		this.setConfigParams(config, ['selector', 'recordType', 'record', 'applyTo','contextEl']);
 		if (this.recordType)this.record = { type:this.recordType };
+
 	},
 
 	ludoDOM:function () {
@@ -26167,6 +24686,7 @@ ludo.menu.Context = new Class({
 	},
 
 	isContextMenuFor:function (record) {
+		if(jQuery.type(record) == "string" && this.record.type == record)return true;
 		for (var key in this.record) {
 			if (this.record.hasOwnProperty(key))
 				if (!record[key] || this.record[key] !== record[key])return false;
@@ -26179,8 +24699,9 @@ ludo.menu.Context = new Class({
 			x:e.pageX,
 			y:e.pageY
 		};
-		var clientWidth = document.body.clientWidth;
-		var clientHeight = document.body.clientHeight;
+		var b = $(document.body);
+		var clientWidth = b.width();
+		var clientHeight = b.height();
 		var size = {
 			x: this.getEl().width(), y: this.getEl().height()
 		};
@@ -26217,8 +24738,8 @@ ludo.menu.Context = new Class({
 	}
 });/* ../ludojs/src/menu/drop-down.js */
 /**
- * @namespace menu
- * @class DropDown
+ * @namespace ludo.menu
+ * @class ludo.menu.DropDown
  * @augments menu.Menu
  *
  */
@@ -26256,53 +24777,27 @@ ludo.menu.DropDown = new Class({
 /**
  Menu button arrow which you can apply to DOM Element to have a menu drop down
  below it.
- @namespace menu
- @class Button
- @augments Core
+ @namespace ludo.menu
+ @class ludo.menu.Button
+ @param {object} config
+ @param {string|HTMLElement} renderTo Render menu button to this DOM node
+ @param {boolean} alwaysVisible Button always visible. When false, it will be visible when mouse enters
+ @param {string} region Position button in this region. Valid values : 'nw','ne','sw' and 'se'
+ @param {object} menu View configuration for menu, example { layout:{}, children:[ { "item 1", "item 2" ]}
+ @
  */
 ludo.menu.Button = new Class({
     Extends: ludo.Core,
     width: 15,
     // TODO refactor this class
-    /**
-     * Render button to this element
-     * @attribute renderTo
-     * @type {String|DOMElement}
-     * @default undefined
-     */
+
     renderTo: undefined,
-
-    /**
-     * Button always visible. When false, it will be visible when mouse enters
-     * parent DOM element and hidden when it leaves it
-     * @attribute alwaysVisible
-     * @type {Boolean}
-     * default false
-     */
     alwaysVisible: false,
-
-    /**
-     * Position button in this region. Valid values : 'nw','ne','sw' and 'se'
-     * @attribute region
-     * @type String
-     * @default 'ne'
-     */
     region: 'ne',
-
     el: undefined,
-
-    /**
-     * Configuration object for the object to show on click on button
-     * @attribute menu
-     * @type {View}
-     * @default undefined
-     */
     menu: undefined,
-
     menuCreated: false,
-
     autoPosition: true,
-
     toggleOnClick: false,
 
     __construct: function (config) {
@@ -26396,7 +24891,7 @@ ludo.menu.Button = new Class({
         this.fireEvent('show', this);
     },
 
-    /**
+    /*
      This method should be called from function added as event handler to "beforeShow"
      @function cancelShow
      @example
@@ -26463,7 +24958,7 @@ ludo.menu.Button = new Class({
 
     show: function () {
         this.okToShowButton = true;
-        /**
+        /*
          * Event fired before button is shown. You can use this event and call
          * the cancel method if there are situations where you don't always want to show the button
          * @event beforeShow
@@ -26504,9 +24999,9 @@ ludo.menu.Button = new Class({
 });/* ../ludojs/src/data-source/tree-collection.js */
 /**
  * Special collection class for tree structures.
- * @namespace dataSource
- * @class TreeCollection
- * @augments dataSource.Collection
+ * @namespace ludo.dataSource
+ * @class ludo.dataSource.TreeCollection
+ * @augments ludo.dataSource.Collection
  */
 ludo.dataSource.TreeCollection = new Class({
 	Extends:ludo.dataSource.Collection,
@@ -26558,8 +25053,8 @@ ludo.dataSource.TreeCollection = new Class({
 });/* ../ludojs/src/tree/tree.js */
 /**
  * Tree widget
- * @namespace tree
- * @class Tree
+ * @namespace ludo.tree
+ * @class ludo.tree.Tree
  */
 ludo.tree.Tree = new Class({
 	Extends:ludo.CollectionView,
@@ -26569,6 +25064,7 @@ ludo.tree.Tree = new Class({
 	/**
 	 String template for nodes in the tree
 	 @config {String|Object}
+	 @memberof ludo.tree.Tree.prototype
 	 @example
 	 	tpl : '{title}
 	 or as an object:
@@ -26608,6 +25104,7 @@ ludo.tree.Tree = new Class({
 	/**
 	 Default values when not present in node.
 	 @config {Object} defaults
+	 @memberof ludo.tree.Tree.prototype
 	 @default undefined
 	 @example
 	 	defaults:{
@@ -26622,6 +25119,7 @@ ludo.tree.Tree = new Class({
 	/**
 	 * Key used to defined nodes inside categories. This key is used for default values and node config
 	 * @config {String} categoryKey
+	 * @memberof ludo.tree.Tree.prototype
 	 * @default "type"
 	 */
 	categoryKey : 'type',
@@ -26629,6 +25127,7 @@ ludo.tree.Tree = new Class({
 	/**
 	 Config of tree node categories
 	 @config {Object} categoryConfig
+	 @memberof ludo.tree.Tree.prototype
 	 @example
 	 	categoryConfig:{
 	 		"database":{
@@ -26980,7 +25479,7 @@ ludo.tree.Tree = new Class({
 /**
  * Class for remote data source.
  * @namespace dataSource
- * @class HTML
+ * @class ludo.dataSource.HTML
  * @augments dataSource.Base
  */
 ludo.dataSource.HTML = new Class({
@@ -27077,9 +25576,8 @@ ludo.dataSource.TreeCollectionSearch = new Class({
 });/* ../ludojs/src/controller/manager.js */
 /**
  * This class connects view modules and controllers
- * @namespace controller
- * @class Manager
- * @augments Core
+ * @namespace ludo.controller
+ * @class ludo.controller.Manager
  */
 ludo.controller.Manager = new Class({
     Extends: ludo.Core,
@@ -27166,7 +25664,7 @@ ludo.controllerManager = new ludo.controller.Manager();/* ../ludojs/src/controll
  * for the component(it's defined in ludo.Core)
  *
  * @namespace controller
- * @class controller.Controller
+ * @class ludo.controller.Controller
  * @augments Core
  */
 
@@ -27298,8 +25796,8 @@ ludo.getController = function (controller) {
 };/* ../ludojs/src/progress/datasource.js */
 /**
  * Data source for progress bars
- * @namespace progress
- * @class DataSource
+ * @namespace ludo.progress
+ * @class ludo.progress.DataSource
  * @augments dataSource.JSON
  */
 ludo.progress.DataSource = new Class({
@@ -27379,7 +25877,7 @@ ludo.progress.DataSource = new Class({
 /**
  * Super class for all progress bar views
  * @namespace progress
- * @class Base
+ * @class ludo.progress.Base
  * @augments View
  */
 ludo.progress.Base = new Class({
@@ -27462,8 +25960,8 @@ ludo.progress.Base = new Class({
 /**
  * Progress bar class
  * @namespace progress
- * @class Bar
- * @augments progress.Base
+ * @class ludo.progress.Bar
+ * @augments ludo.progress.Base
  */
 ludo.progress.Bar = new Class({
     Extends:ludo.progress.Base,
@@ -27595,8 +26093,8 @@ ludo.progress.Bar = new Class({
  * Component used to display text for a progress bar, example
  * Step 1 of 10
  * @namespace progress
- * @class Text
- * @augments progress.Base
+ * @class ludo.progress.Text
+ * @augments ludo.progress.Base
  */
 ludo.progress.Text = new Class({
     Extends:ludo.progress.Base,
@@ -27612,6 +26110,897 @@ ludo.progress.Text = new Class({
      * @type String
      */
     tpl : '{text}'
+});/* ../ludojs/src/form/validator/fns.js */
+ludo.form.validator.required = function(value, required){
+    return !required || value.length > 0;
+};
+
+ludo.form.validator.minLength = function(value, minLength){
+    return value.length === 0 || value.length >= minLength;
+};
+
+ludo.form.validator.maxLength = function(value, maxLength){
+    return value.length === 0 || value.length <= maxLength;
+};
+
+ludo.form.validator.regex = function(value, regex){
+    return value.length === 0 || regex.test(value);
+};
+
+ludo.form.validator.minValue = function(value, minValue){
+    return value.length === 0 || parseInt(value) >= minValue;
+};
+ludo.form.validator.maxValue = function(value, maxValue){
+    return value.length === 0 || parseInt(value) <= maxValue;
+};
+ludo.form.validator.twin = function(value, twin){
+    var cmp = ludo.get(twin);
+    return !cmp || (cmp && value === cmp.value);
+};/* ../ludojs/src/form/element.js */
+/**
+ * Super class for form Views.
+ * This class inherits from <a href="ludo.View.html">ludo.View</a>.
+ * @namespace ludo.form
+ * @class ludo.form.Element
+ * @param {Object} config Configuration when creating the View. These properties and properties from superclass is available
+ * @param {String} config.name Name of element. A call to parentView.getForm().values() will return &lt;name> : &lt;value>.
+ * @param {Boolean} config.required True to apply validation for required. Default:false
+ * @param {Object} config.formCss Optional css styling of the form element. Example: { type:'form.Text', formCss:{ "text-align": right }} to right align text of a text input.
+ * @param {Function} config.validator A Validator function to be executed when value is changed. This function should return true when valid, false when invalid. Current value will be passed to this function.
+ * @param {Function} config.linkWith Creates a link with form element with this id. When two form views are linked, they will always have the same value. When one value is changed, the linked form view is automatically updated.
+ * Example: A link between a form.Seekbar and a form.Number.
+ * Example: { type:'form.Text', placeHolder='Enter Valid Value', validator:function(value){ return value == 'Valid Value' } }
+ *
+ */
+ludo.form.Element = new Class({
+    Extends:ludo.View,
+    /**
+     * Initial value
+     * @config {String|Number} value
+     * @default undefined
+     */
+    value:undefined,
+    onLoadMessage:'',
+    /**
+     * "name" is inherited from ludo.View. It will also be set as name of input element
+     * @attribute name
+     * @type string
+     * @default undefined
+     */
+    name:undefined,
+
+    /**
+     * Custom CSS rules to apply to input element
+     * @attribute formCss
+     * @type Object
+     * @example:  {@lang Javascript}
+     * { border : '1px solid #000' }
+     * @default undefined
+     */
+    formCss:undefined,
+    stretchField:true,
+    required:false,
+    dirtyFlag:false,
+    initialValue:undefined,
+    constructorValue:undefined,
+    /**
+     * Is form element ready for setValue. For combo boxes and select boxes it may
+     * not be ready until available values has been loaded remotely
+     * @property isReady
+     * @type {Boolean}
+     * @private
+     */
+    isReady:true,
+    overflow:'hidden',
+
+    /**
+     * Will not validate unless value is the same as value of the form element with this id
+     * Example of use: Password and Repeat password. It's sufficient to specify "twin" for one of
+     * the views.
+     * @property twin
+     * @type String
+     * @default undefined
+     */
+    twin:undefined,
+
+    /**
+     * Link with a form component with this id. Value of these components will always be the same
+     * Update one and the other component will be updated automatically. It's sufficient
+     * to specify linkWith for one of the two views.
+     * @property linkWith
+     * @type String
+     * @default undefined
+     */
+    linkWith:undefined,
+
+    /**
+     * When using stateful:true, value will be preserved to next visit.
+     * @property statefulProperties
+     * @type Array
+     * @default ['value']
+     */
+    statefulProperties:['value'],
+
+    /**
+     Object of class form.validator.* or a plain validator function
+     When set the isValid method of the validator will be called after standard validation is complete
+     and form element is valid.
+     @property validator
+     @type Object
+     @example
+        validator : { type : 'form.validator.Md5', value : 'MD5 hash of something' }
+     In order to validate this field, the MD5 of form field value must match form.validator.Md5.value
+     @example
+        validator:function(value){
+	 		return value === 'Valid value';
+	 	}
+     is example of simple function used as validator.
+     */
+    validator:undefined,
+    validatorFn:undefined,
+
+    validators:[],
+    submittable:true,
+
+    __construct:function (config) {
+        this.parent(config);
+        var defaultConfig = this.getInheritedFormConfig();
+
+        // TODO change disabled to enabled
+        var keys = ['label', 'suffix', 'formCss', 'validator', 'stretchField', 'required', 'twin', 'disabled','submittable',
+            'value', 'data'];
+        this.setConfigParams(config, keys);
+
+        this.elementId = ('el-' + this.id).trim();
+        this.formCss = defaultConfig.formCss || this.formCss;
+        if (defaultConfig.height && config.height === undefined)this.layout.height = defaultConfig.height;
+
+        if (this.validator) {
+            this.createValidator();
+        }
+        if (config.linkWith !== undefined) {
+            this.setLinkWith(config.linkWith);
+        }
+
+        if (this.dataSource) {
+            this.isReady = false;
+        }
+        this.initialValue = this.constructorValue = this.value;
+        if (!this.name)this.name = 'ludo-form-el-' + String.uniqueID();
+
+
+        ludo.Form.add(this);
+        if(this.required)this.applyValidatorFns(['required']);
+        this.applyValidatorFns(['twin']);
+    },
+
+    ludoDOM:function(){
+        this.parent();
+        this.addInput();
+    },
+
+    applyValidatorFns:function (keys) {
+        for (var i = 0; i < keys.length; i++) {
+            var key = keys[i];
+            if (this[key] !== undefined) {
+                this.validators.push({
+                    fn:ludo.form.validator[key],
+                    key:key
+                });
+            }
+        }
+    },
+
+    createValidator:function () {
+        var fn;
+        if (ludo.util.isFunction(this.validator)) {
+            fn = this.validator;
+        } else {
+            this.validator.applyTo = this;
+            this.validator = ludo._new(this.validator);
+            fn = this.validator.isValid.bind(this.validator);
+        }
+        this.validators.push({
+            fn : fn,key:''
+        });
+    },
+
+    ludoEvents:function () {
+        this.parent();
+
+        if (this.dataSource) {
+            this.getDataSource().addEvent('load', this.setReady.bind(this));
+        }
+
+        var formEl = this.getFormEl();
+
+        if (formEl) {
+            formEl.on('keydown', this.keyDown.bind(this));
+            formEl.on('keypress', this.keyPress.bind(this));
+            formEl.on('keyup', this.keyUp.bind(this));
+            formEl.on('focus', this.focus.bind(this));
+            formEl.on('change', this.change.bind(this));
+            formEl.on('blur', this.blur.bind(this));
+        }
+    },
+
+    __rendered:function () {
+        this.parent();
+
+        if (this.disabled)this.disable();
+
+		if(this.els.formEl){
+			this.els.formEl.attr('name', this.getName());
+			if(this.value !== undefined)this.els.formEl.val(this.value)
+		}
+        if (this.linkWith) {
+            this.createBackLink();
+        }
+		var parentFormManager = this.getParentForm();
+	    if (parentFormManager) {
+			parentFormManager.registerFormElement(this);
+		}
+		this.validate();
+    },
+
+    /**
+     * Enable or disable form element
+     * @param {Boolean} enabled
+     */
+    setEnabled:function(enabled){
+        if(enabled)this.enable(); else this.disable();
+    },
+
+    /**
+     * Disable form element
+     * @function disable
+     * @return void
+     */
+    disable:function () {
+        this.getFormEl().attr('disabled', '1');
+        this.els.label.addClass('ludo-form-label-disabled');
+    },
+    /**
+     * Enable form element
+     * @function enable
+     * @return void
+     */
+    enable:function () {
+        this.getFormEl().removeProperty('disabled');
+        this.els.label.removeClass('ludo-form-label-disabled');
+    },
+
+    getInheritedFormConfig:function () {
+        var cmp = this.getParent();
+        if (cmp) {
+            return cmp.formConfig || {};
+        }
+        return {};
+    },
+
+    ludoCSS:function () {
+        this.parent();
+        this.getEl().addClass('ludo-form-element');
+        if (this.els.formEl) {
+            this.els.formEl.id = this.elementId;
+
+            if (this.formCss) {
+                this.els.formEl.css(this.formCss);
+            }
+        }
+    },
+
+    getFormElId:function () {
+        return this.elementId;
+    },
+
+    getWidth:function () {
+        var ret = this.parent();
+        return ret ? ret : 20;
+    },
+
+    keyUp:function (e) {
+        /**
+         * key up event
+         * @event key_up
+         * @param {String} key
+         * @param {String|Boolean|Object|Number} value
+         * @param {View} this
+         */
+        this.fireEvent('key_up', [ e.key, this.value, this ]);
+    },
+
+    keyDown:function (e) {
+        /**
+         * key down event
+         * @event key_down
+         * @param {String} key
+         * @param {String|Boolean|Object|Number} value
+         * $param {View} this
+         */
+        this.fireEvent('key_down', [ e.key, this.value, this ]);
+    },
+
+    keyPress:function (e) {
+        /**
+         * key press event
+         * @event key_press
+         * @param {String} key
+         * @param {String|Boolean|Object|Number} value
+         * $param {View} this
+         */
+        this.fireEvent('key_press', [ e.key, this.value, this ]);
+    },
+
+    focus:function () {
+        this._focus = true;
+        this.clearInvalid();
+        /**
+         * On focus event
+         * @event focus
+         * @param {String|Boolean|Object|Number} value
+         * $param {View} this
+         */
+        this.fireEvent('focus', [ this.value, this ]);
+    },
+    change:function () {
+        if (this.els.formEl) {
+            this._set(this.els.formEl.val());
+
+        }
+        /**
+         * On change event. This event is fired when value is changed manually
+         * by the user via GUI. The "change" event is followed by a
+         * "valueChange" event.
+         * When value is changed using the setValue method
+         * only the "valueChange" event is fired.
+         *
+         * @event change
+         * @param {String|Boolean|Object|Number} value
+         * $param {View} this
+         */
+        if (this.wasValid)this.fireEvent('change', [ this._get(), this ]);
+    },
+
+    blur:function () {
+        this._focus = false;
+        this.validate();
+        if (this.getFormEl())this.value = this.getValueOfFormEl();
+        this.toggleDirtyFlag();
+        /**
+         * On blur event
+         * @event blur
+         * @param {String|Boolean|Object|Number} value
+         * $param {View} this
+         */
+        this.fireEvent('blur', [ this.value, this ]);
+    },
+
+    getValueOfFormEl:function(){
+        return this.getFormEl().val();
+    },
+
+    toggleDirtyFlag:function(){
+        if (this.value !== this.initialValue) {
+            /**
+             * @event dirty
+             * @description event fired on blur when value is different from it's original value
+             * @param {String} value
+             * @param {Object} ludo.form.* component
+             */
+            this.setDirty();
+            this.fireEvent('dirty', [this.value, this]);
+        } else {
+            /**
+             * @event clean
+             * @description event fired on blur when value is equal to original/start value
+             * @param {String} value
+             * @param {Object} ludo.form.* component
+             */
+            this.setClean();
+            this.fireEvent('clean', [this.value, this]);
+        }
+    },
+
+    hasFocus:function () {
+        return this._focus;
+    },
+    insertJSON:function (data) {
+        this.populate(data);
+    },
+    populate:function () {
+
+    },
+    getLabel:function () {
+        return this.label;
+    },
+    /**
+     * Return current value
+     * @function getValue
+     * @return string
+     */
+    getValue:function () {
+        console.warn("Use of deprecated getValue");
+        console.trace();
+        return this.els.formEl ? this.els.formEl.val() : this.value;
+    },
+
+
+    val:function(val){
+        if(arguments.length == 0){
+            return this._get();
+        }
+        this._set(val);
+    },
+
+    _get:function(){
+        return this.els.formEl ? this.els.formEl.val() : this.value;
+    },
+
+    _set:function(value){
+
+        if (!this.isReady) {
+            if(value)this._set.delay(50, this, value);
+            return;
+        }
+
+        if (value == this.value) {
+            return value;
+        }
+
+        this.setFormElValue(value);
+        this.value = value;
+
+
+
+        this.validate();
+
+        if (this.wasValid) {
+            /**
+             * This event is fired whenever current value is changed, either
+             * manually by user or by calling setValue. When the value is changed
+             * manually by user via GUI, the "change" event is fired first, then
+             * "valueChange" afterwards.
+             * @event valueChange
+             * @param {Object|String|Number} value
+             * @param {form.Element} form component
+             */
+            this.fireEvent('valueChange', [this._get(), this]);
+            if (this.stateful)this.fireEvent('state');
+            if (this.linkWith)this.updateLinked();
+        }
+
+        this.fireEvent('value', value);
+
+        return value;
+    },
+
+    /**
+     * Set new value
+     * @function setValue
+     * @param value
+     * @return void
+     */
+    setValue:function (value) {
+        console.warn("Use of deprecated setValue");
+        console.trace();
+        if (!this.isReady) {
+            if(value)this.val.delay(50, this, value);
+            return;
+        }
+
+        if (value == this.value) {
+            return;
+        }
+
+        this.setFormElValue(value);
+        this.value = value;
+
+
+
+        this.validate();
+
+        if (this.wasValid) {
+            /**
+             * This event is fired whenever current value is changed, either
+             * manually by user or by calling setValue. When the value is changed
+             * manually by user via GUI, the "change" event is fired first, then
+             * "valueChange" afterwards.
+             * @event valueChange
+             * @param {Object|String|Number} value
+             * @param {form.Element} form component
+             */
+            this.fireEvent('valueChange', [this._get(), this]);
+            if (this.stateful)this.fireEvent('state');
+            if (this.linkWith)this.updateLinked();
+        }
+
+        this.fireEvent('value', value);
+    },
+
+    setFormElValue:function(value){
+        if (this.els.formEl && this.els.formEl.val() !== value) {
+            this.els.formEl.val(value);
+            if(this.inlineLabel)this.els.formEl.removeClass('ludo-form-el-inline-label');
+        }
+    },
+
+    /**
+     * Get reference to input element
+     * @function getFormEl
+     * @return DOMElement
+     */
+    getFormEl:function () {
+        return this.els.formEl;
+    },
+    /**
+     * Returns true when value of form element is valid, i.e. larger than minValue, matching regex etc.
+     * @function isValid
+     * @return {Boolean} valid
+     */
+    isValid:function () {
+        if(this.validators.length === 0)return true;
+
+        var val = this.getFormEl() ? this.getValueOfFormEl().trim() : this.value;
+        for (var i = 0; i < this.validators.length; i++) {
+            if (!this.validators[i].fn.apply(this, [val, this[this.validators[i].key]])){
+                return false;
+            }
+        }
+        return true;
+    },
+
+    clearInvalid:function () {
+        this.getEl().removeClass('ludo-form-el-invalid');
+    },
+
+    wasValid:true,
+
+    validate:function () {
+        this.clearInvalid();
+        if (this.isValid()) {
+            this.wasValid = true;
+            /**
+             * Event fired when value of form component is valid. This is fired on blur
+             * @event valid
+             * @param {String} value
+             * @param {Object} component
+             */
+            this.fireEvent('valid', [this.value, this]);
+            return true;
+        } else {
+            this.wasValid = false;
+            /**
+             * Event fired when value of form component is valid. This is fired on blur
+             * @event invalid
+             * @param {String} value
+             * @param {Object} component
+             */
+            this.fireEvent('invalid', [this.value, this]);
+            return false;
+        }
+    },
+
+    isFormElement:function () {
+        return true;
+    },
+
+    /**
+     * Reset / Roll back to last committed value. It could be the value stored by last commit method call
+     * or if the original value/default value of this field.
+     * @function reset
+     * @memberof ludo.form.Element.prototype
+     * @return void
+     */
+    reset:function () {
+        this._set(this.initialValue);
+    },
+
+    /**
+     * Reset value back to the original value sent(constructor value)
+     * @function clear
+     * @memberof ludo.form.Element.prototype
+     */
+    clear:function () {
+        this._set(this.constructorValue);
+    },
+
+    /**
+     * Update initial value to current value. These actions will always trigger a commit<br>
+     * - Form or Model submission
+     * - Fetching new record for a ludo.model.Model
+     * @function commit
+     * @memberOf ludo.form.Element.prototype
+     */
+    commit:function () {
+        if(!this.isReady){
+            this.commit.delay(100, this);
+            return;
+        }
+        this.initialValue = this.value;
+    },
+    /**
+     * Returns true if current value is different from original value
+     * @function isDirty
+     * @return {Boolean} isDirty
+     */
+    isDirty:function () {
+        return this.dirtyFlag;
+    },
+
+    setDirty:function () {
+        this.dirtyFlag = true;
+        this.getEl().addClass('ludo-form-el-dirty');
+    },
+
+    setClean:function () {
+        this.dirtyFlag = false;
+        var el = this.getEl();
+        if(el)el.removeClass('ludo-form-el-dirty');
+    },
+
+    setReady:function () {
+        this.isReady = true;
+    },
+
+    updateLinked:function () {
+        var cmp = this.getLinkWith();
+        if (cmp && cmp.value !== this.value) {
+            cmp._set(this.value);
+        }
+    },
+
+    setLinkWith:function (linkWith) {
+        this.linkWith = linkWith;
+        this.addEvent('valueChange', this.updateLinked.bind(this));
+    },
+
+    createBackLink:function (attempts) {
+        attempts = attempts || 0;
+        var cmp = this.getLinkWith();
+        if (cmp && !cmp.linkWith) {
+            if (this.value === undefined){
+				this.initialValue = this.constructorValue = cmp.value;
+				this._set(cmp.value);
+			}
+            cmp.setLinkWith(this);
+        } else {
+            if (attempts < 100) {
+                this.createBackLink.delay(50, this, attempts + 1);
+            }
+        }
+    },
+
+    addInput: function () {
+        if (!this.inputTag) {
+            return;
+        }
+
+        this.els.inputCell = $('<div class="input-cell"></div>');
+        this.getBody().append(this.els.inputCell);
+        this.els.formEl = $('<' + this.inputTag + '>');
+
+        if (this.inputType) {
+            this.els.formEl.attr('type', this.inputType);
+        }
+        if (this.maxLength) {
+            this.els.formEl.attr('maxlength', this.maxLength);
+        }
+        if (this.readonly) {
+            this.els.formEl.attr('readonly', true);
+        }
+        this.getInputCell().append(this.els.formEl);
+        this.els.formEl.css('width', '100%');
+        this.els.formEl.attr("id", this.getFormElId());
+    },
+
+    getLinkWith:function(){
+        var cmp = ludo.get(this.linkWith);
+        return cmp ? cmp : this.parentComponent ? this.parentComponent.child[this.linkWith] : undefined;
+    },
+
+    getInputCell:function(){
+        return this.els.inputCell;
+    }
+});/* ../ludojs/src/form/label-element.js */
+/**
+ * // TODO this class should be removed. Instead, think of layout for forms and a separate label class
+ * Base class for all form elements with label
+ */
+ludo.form.LabelElement = new Class({
+    Extends: ludo.form.Element,
+
+    fieldTpl: ['<table ', 'cellpadding="0" cellspacing="0" border="0" width="100%">',
+        '<tbody>',
+        '<tr class="input-row">',
+        '<td class="label-cell"><label class="input-label"></label></td>',
+        '<td><div class="input-cell"></div></td>',
+        '<td class="invalid-cell" style="position:relative"><div class="invalid-cell-div"></div></td>',
+        '<td class="suffix-cell" style="display:none"><label></label></td>',
+        '<td class="help-cell" style="display:none"></td>',
+        '</tr>',
+        '</tbody>',
+        '</table>'
+    ],
+
+
+    labelSuffix: ':',
+
+    __construct: function (config) {
+        this.parent(config);
+        this.setConfigParams(config, ['inlineLabel', 'labelSuffix']);
+        if (!this.supportsInlineLabel())this.inlineLabel = undefined;
+
+        console.warn("Use of deprecated ancestor ludo.form.LabelElement");
+        console.trace();
+    },
+
+    ludoEvents: function () {
+        this.parent();
+        if (this.inlineLabel) {
+            var el = this.getFormEl();
+            if (el) {
+                el.on('blur', this.setInlineLabel.bind(this));
+                el.on('focus', this.clearInlineLabel.bind(this));
+                this.addEvent('value', this.clearInlineLabelCls.bind(this));
+            }
+        }
+    },
+
+    ludoDOM: function () {
+        this.parent();
+        this.getBody().html(this.fieldTpl.join(''));
+        this.addInput();
+        this.addLabel();
+        this.setWidthOfLabel();
+
+    },
+
+    __rendered: function () {
+        this.parent();
+        if (this.inlineLabel)this.setInlineLabel();
+    },
+
+    supportsInlineLabel: function () {
+        return true;
+    },
+
+    setInlineLabel: function () {
+        if (!this.inlineLabel)return;
+        var el = this.getFormEl();
+        if (el.val().length === 0) {
+            el.addClass('ludo-form-el-inline-label');
+            el.val(this.inlineLabel);
+        }
+    },
+
+    clear: function () {
+        this.parent();
+        this.setInlineLabel();
+    },
+
+    reset: function () {
+        this.parent();
+        this.setInlineLabel();
+    },
+
+    clearInlineLabel: function () {
+        var el = this.getFormEl();
+        if (el.val() === this.inlineLabel) {
+            el.val('');
+            this.getFormEl().removeClass('ludo-form-el-inline-label');
+        }
+    },
+
+    clearInlineLabelCls: function () {
+        this.getFormEl().removeClass('ludo-form-el-inline-label');
+    },
+
+    getValueOfFormEl: function () {
+        var val = this.getFormEl().val();
+        return this.inlineLabel && this.inlineLabel === val ? '' : val;
+    },
+
+    addLabel: function () {
+        if (this.label !== undefined) {
+            this.getLabelDOM().html(this.label ? this.label + this.labelSuffix : '');
+            this.els.label.attr('for', this.getFormElId());
+        }
+        if (this.suffix) {
+            var s = this.getSuffixCell();
+            s.css('display', '');
+            var label = s.find('label').first();
+            if (label) {
+                label.html(this.suffix);
+                label.attr('for', this.getFormElId());
+            }
+        }
+    },
+
+    setWidthOfLabel: function () {
+        if (this.label === undefined) {
+            this.getLabelDOM().css('display', 'none');
+        } else {
+            this.getLabelDOM().parent().css('width', this.labelWidth);
+        }
+    },
+
+    getLabelDOM: function () {
+        return this.getCell('.input-label', 'label');
+    },
+
+    addInput: function () {
+        if (!this.inputTag) {
+            return;
+        }
+        this.els.formEl = $('<' + this.inputTag + '>');
+
+        if (this.inputType) {
+            this.els.formEl.attr('type', this.inputType);
+        }
+        if (this.maxLength) {
+            this.els.formEl.attr('maxlength', this.maxLength);
+        }
+        if (this.readonly) {
+            this.els.formEl.attr('readonly', true);
+        }
+        this.getInputCell().append(this.els.formEl);
+        if (this.fieldWidth) {
+            this.els.formEl.css('width', this.fieldWidth);
+            this.getInputCell().parent().css('width', (this.fieldWidth + ludo.dom.getMBPW(this.els.formEl)));
+        }
+        this.els.formEl.id = this.getFormElId();
+    },
+
+    getSuffixCell: function () {
+        return this.getCell('.suffix-cell', 'labelSuffix');
+    },
+
+    getInputCell: function () {
+        return this.getCell('.input-cell', 'cellInput');
+    },
+
+    getInputRow: function () {
+        return this.getCell('.input-row', 'inputRow');
+    },
+
+    getCell: function (selector, cacheKey) {
+        if (!this.els[cacheKey]) {
+            this.els[cacheKey] = this.getBody().find(selector + ":first");
+        }
+        return this.els[cacheKey];
+    },
+
+    resizeDOM: function () {
+        this.parent();
+        if (this.els.formEl) {
+            if (this.stretchField) {
+                var width = this.getWidth();
+                if (!isNaN(width) && width > 0) {
+                    width -= (ludo.dom.getMBPW(this.getEl()) + ludo.dom.getMBPW(this.getBody()));
+                } else {
+                    var parent = this.getParent();
+                    if (parent && parent.layout.type !== 'linear' && parent.layout.orientation !== 'horizontal') {
+                        width = parent.getWidth();
+                        width -= (ludo.dom.getMBPW(parent.getEl()) + ludo.dom.getMBPW(parent.getBody()));
+                        width -= (ludo.dom.getMBPW(this.getEl()) + ludo.dom.getMBPW(this.getBody()));
+                    } else {
+                        var c = this.els.container;
+                        width = c.offsetWidth - ludo.dom.getMBPW(this.els.body) - ludo.dom.getPW(c) - ludo.dom.getBW(c);
+                    }
+                }
+                if (this.label !== undefined)width -= this.labelWidth;
+                if (this.suffix)width -= this.getSuffixCell().offsetWidth;
+                if (this.inputTag !== 'select') width -= 5;
+                if (width > 0 && !isNaN(width)) {
+                    this.formFieldWidth = width;
+                    this.getFormEl().css('width', width);
+                }
+            }else{
+
+            }
+        }
+    }
 });/* ../ludojs/src/form/button.js */
 /**
  * Button component
@@ -28083,7 +27472,7 @@ ludo.form.Button = new Class({
 });/* ../ludojs/src/form/toggle-group.js */
 /**
  * @namespace ludo.form
- * @class ToggleGroup
+ * @class ludo.form.ToggleGroup
  * @augments Core
  */
 ludo.form.ToggleGroup = new Class({
@@ -28185,7 +27574,7 @@ It is convenient to place event handlers here instead of adding them to the indi
  Example: create a form.change event to listen to all changes to child form views.
   @param {Array} config.hiddenFields Array with name of form fields. example: hiddenFields:["id"]. There are noe &lt;input type="hidden">
   in ludoJS. Instead, you define hiddenFields which later can be populated using view.getForm().val(key, value).
- @fires ludo.form.Manager#change Event fired when the value of one of the child form view is changed(recursive).
+ @fires ludo.form.Manager#change Event fired when the value of one of the child form view is changed(recursive)., arguments: form.Manager and form.Element(the element changed)
  @fires ludo.form.Manager#valid Event fired when all child form views have a valid value.
  @fires ludo.form.Manager#invalid Event fired when one or more child form views have invalid value.
  @fires ludo.form.Manager#clean A form is considered clean when none of it's values has changed from it's original. Otherwise it's considered dirty. The clean event
@@ -28229,52 +27618,12 @@ ludo.form.Manager = new Class({
     method:undefined,
     url:undefined,
 	currentId:undefined,
-    /**
-     * Autoload data from server on creation
-     * @config {Boolean} autoLoad
-     * @default false
-     */
+
     autoLoad:false,
-    /**
-     Event listeners for the events fired by the form.
-     user.
-     @config {Object} listeners
-     @default undefined
-     @example
-        new ludo.View({
-            form:{
-                "resource": "User",
-                listeners:{
-                    "saved": function(){
-                        new ludo.Notification({ html : 'Your changes has been saved' });
-                    }
-                }
-            },
-            children:[
-                {
-                    type:"form.Text", name:"firstname"
-                },
-                {
-                    type:"form.Text", name:"lastname"
-                }
-            ]
-        });
-     */
+
     listeners:undefined,
 
-    /**
-     Read arguments sent when autoLoad is set to true
-     @config {String|Number} arguments
-     @default undefined
-     @example
-        form:{
-	 		url:'controller.php',
-	 		resource:'Person',
-	 		arguments:100,
-	 		autoLoad:true
-	 	}
-     will send request 'Person/100/read' to controller.php.
-     */
+
     arguments:undefined,
 
 	__construct:function (config) {
@@ -28458,11 +27807,7 @@ ludo.form.Manager = new Class({
 		if (this.dirtyIds.indexOf(elId) == -1) {
 			this.dirtyIds.push(elId);
 		}
-		/**
-		 * @event dirty
-		 * @description Fired when value of one or more form views are different from their original start value
-		 * @param {Object} formComponent
-		 */
+
 		this.fireEvent('dirty', formComponent);
 	},
 
@@ -28470,22 +27815,12 @@ ludo.form.Manager = new Class({
 		this.dirtyIds.erase(formComponent.getId());
 
 		if (this.dirtyIds.length === 0) {
-			/**
-			 * @event clean
-			 * @description Fired when value of all views are equal to their original start value
-			 */
+
 			this.fireEvent('clean');
 		}
 	},
 
 	onChange:function (value, formComponent) {
-		/**
-		 * Event fired when a form element has been changed
-		 * @event change
-		 * @param {ludo.form.Manager} form
-		 * @param {ludo.form.Element} form element
-		 *
-		 */
 		this.fireEvent('change', [this, formComponent])
 	},
 	/**
@@ -28498,13 +27833,7 @@ ludo.form.Manager = new Class({
 	onValid:function (value, formComponent) {
 		this.invalidIds.erase(formComponent.getId());
 		if (this.invalidIds.length == 0) {
-			/**
-			 * @event valid
-			 * @param {Object} form.Manager
-			 * @description form.SubmitButton listens to this event which is fired
-			 * when all form elements inside a view are valid. The submit button will
-			 * be enabled automatically when this event is fired.
-			 */
+
 			this.fireEvent('valid', this);
 		}
 	},
@@ -28521,13 +27850,7 @@ ludo.form.Manager = new Class({
 		if (this.invalidIds.indexOf(elId) == -1) {
 			this.invalidIds.push(elId);
 		}
-		/**
-		 * @event invalid
-		 * @param {Object} form.Manager
-		 * @description form.SubmitButton listens to this event which is fired
-		 * when one or more form elements inside a view is invalid. The submit
-		 * button will be disabled automatically when this event is fired.
-		 */
+
 		this.fireEvent('invalid', this);
 	},
 	/**
@@ -28615,13 +27938,7 @@ ludo.form.Manager = new Class({
 						this.populate(this.record);
 						this.commit();
 
-						/**
-						 * Event fired after data for the form has been read successfully
-						 * To add listeners, use <br>
-						 * ludo.View.getForm().addEvent('success', fn);
-						 * @event read
-						 * @param {Object} JSON response from server
-						 */
+
 						this.fireEvent('read', [request.getResponse(), this.view]);
 						if (this.isValid()) {
 							this.fireEvent('valid');
@@ -28656,13 +27973,7 @@ ludo.form.Manager = new Class({
 				listeners:{
 					"success":function (request) {
 						this.commit();
-						/**
-						 * Event fired after a form has been saved successfully.
-						 * To add listeners, use <br>
-						 * ludo.View.getForm().addEvent('success', fn);
-						 * @event saved
-						 * @param {Object} JSON response from server
-						 */
+
 						this.fireEvent('saved', [request.getResponse(), this.view]);
 
 						this.setCurrentId(request.getResponseData());
@@ -28681,26 +27992,13 @@ ludo.form.Manager = new Class({
 							this.fireEvent('valid');
 						}
 
-						/**
-						 * Event fired after form submission when success parameter in response is false.
-						 * To add listeners, use <br>
-						 * ludo.View.getForm().addEvent('failure', fn);<br>
-						 * @event failure
-						 * @param {Object} JSON response from server
-						 * @param {Object} Component
-						 */
 
 						this.fireEvent('failure', [request.getResponse(), this.view]);
 
 						this.afterRequest();
 					}.bind(this),
 					"error":function (request) {
-						/**
-						 * Server error event. Fired when the server didn't handle the request
-						 * @event servererror
-						 * @param {String} error text
-						 * @param {String} error message
-						 */
+
 						this.fireEvent('servererror', [request.getResponseMessage(), request.getResponseCode()]);
 						this.fireEvent('valid', this);
 
@@ -28713,18 +28011,12 @@ ludo.form.Manager = new Class({
 	},
 
 	afterRequest:function(){
-		/**
-		 * Event fired after read, save and delete requests has been completed with or without failures
-		 * @event requestComplete
-		 */
+
 		this.fireEvent('afterRequest');
 	},
 
 	beforeRequest:function(){
-		/**
-		 * Event fired before read, save and delete request
-		 * @event requestComplete
-		 */
+
 		this.fireEvent('beforeRequest');
 	},
 	
@@ -28771,10 +28063,7 @@ ludo.form.Manager = new Class({
 	},
 
 	newRecord:function(){
-		/**
-		 * Event fired when newRecord is called, i.e. when the form is cleared and currentId unset.
-		 * @event new
-		 */
+
 		this.fireEvent('new');
 		this.currentId = undefined;
 		this.clear();
@@ -28811,20 +28100,17 @@ ludo.form.Manager = new Class({
  * This button will automatically be disabled when a form is invalid, and automatically enabled when it's valid.
  * A form consists of all form elements of parent component, including form elements of child components.
  * @namespace ludo.form
- * @class SubmitButton
+ * @class ludo.form.SubmitButton
  * @augments ludo.form.Button
+ * @param {Object} config
+ * @param {string} config.applyTo Reference to a View. The submit button will call ludo.$(config.applyTo).getForm().submit()
  */
 ludo.form.SubmitButton = new Class({
 	Extends:ludo.form.Button,
 	type:'form.SubmitButton',
 	value:'Submit',
 	disableOnInvalid:true,
-	/**
-	 * Apply submit button to form of this LudoJS component. If not defined, it will be applied
-     * to parent view.
-	 * @config {String|View} applyTo
-	 * @default undefined
-	 */
+
 	applyTo:undefined,
 	__construct:function(config){
 		this.parent(config);
@@ -28866,26 +28152,22 @@ ludo.form.SubmitButton = new Class({
  * Cancel button. This is a pre-configured ludo.form.Button which will close/hide parent view(or view defined in
  * applyTo) on click.
  * Default value of this button is "Cancel".
+ *
+ * This button inherits from <a href="ludo.form.Button">ludo.form.Button</a>.
+ * 
  * @namespace ludo.form
- * @class CancelButton
- * @augments ludo.form.Button
+ * @class ludo.form.CancelButton
+ * @param {Object} config
+ * @param {String|ludo.View} applyTo Apply to this view. The cancel button will then call the hide function of this view. default is parent view.
+ * @param {String} value Button text, default: "Cancel"
+
  */
 ludo.form.CancelButton = new Class({
     Extends:ludo.form.Button,
     type:'form.CancelButton',
-    /**
-     * @attribute value
-     * @description Default value of button
-     * @default 'Cancel'
-     */
+
     value:'Cancel',
 
-	/**
-	 * Apply cancel button to form of this LudoJS component. If not defined, it
-     * will be applied to parent view.
-	 * @config {String|View} applyTo
-	 * @default undefined
-	 */
 	applyTo:undefined,
 
 	__construct:function(config){
@@ -29039,8 +28321,6 @@ ludo.form.Text = new Class({
     },
     /**
      * Return width of input field in pixels.
-     * @function getFieldWidth
-     * @return {Number} width
      */
     getFieldWidth: function () {
         return this.formFieldWidth;
@@ -29049,6 +28329,7 @@ ludo.form.Text = new Class({
      * Focus form element
      * @function focus
      * @return void
+     * @memberof ludo.form.Text.prototype
      */
     focus: function () {
         this.parent();
@@ -29124,11 +28405,13 @@ ludo.form.Text = new Class({
 });
 /* ../ludojs/src/form/combo.js */
 /**
- * A text field with combo button. Click on the combo button will child view beneath the text input
+ * A text field with combo button. Click on the combo button will show child view beneath the text input
  *
- * @namespace ludo.form
- * @class Combo
- * @augments ludo.form.Element
+ * This class extends ludo.form.Text.
+ * @param {Object} config
+ * @param {Object} config.childLayout 
+ *
+ * @class ludo.form.Combo
  */
 ludo.form.Combo = new Class({
     Extends:ludo.form.Text,
@@ -29205,7 +28488,10 @@ ludo.form.Combo = new Class({
 /**
  * Date picker
  * @namespace ludo.form
- * @class Date
+ * @class ludo.form.Date
+ * @param {Object} config
+ * @param {String} inputFormat internal date format, and date format sent on form submission. default: Y-m-d
+ * @param {String} displayFormat date format shown to the viewer, default: Y-m-d
  * @augments ludo.form.Combo
  */
 ludo.form.Date = new Class({
@@ -29213,17 +28499,9 @@ ludo.form.Date = new Class({
     children:[{
        type:'calendar.Calendar'
     }],
-    /**
-     * Display format, example: Y/m/d
-     * @config {String} displayFormat
-     * @default Y-m-d
-     */
+
     displayFormat : 'Y-m-d',
-    /**
-     * Format of date returned by getValue method.
-     * @config {String} inputFormat
-     * @default Y-m-d
-     */
+
     inputFormat : 'Y-m-d',
     childLayout:{
         width:250,height:250
@@ -29331,17 +28609,6 @@ ludo.form.Color = new Class({
 							'setColor':this.receiveColor.bind(this),
 							'render':this.setInitialWidgetValue.bind(this)
 						}
-					},
-					{
-                        name:'slider',
-						title:ludo.language.get('Color Slider'),
-						type:'color.RGBSlider',
-						value:this.value,
-						listeners:{
-							'setColor':this.receiveColor.bind(this),
-							'render':this.setInitialWidgetValue.bind(this)
-						}
-
 					}
 				]
 			}
@@ -29423,11 +28690,9 @@ ludo.form.ResetButton = new Class({
     }
 });/* ../ludojs/src/form/combo-tree.js */
 /**
- * @namespace ludo.form
- * @class ComboTree
+ * @class ludo.form.ComboTree
  * @description A "combo" where you select value from a tree. id of clicked tree node will be set as
  * value.
- * @augments ludo.form.Element
  */
 ludo.form.ComboTree = new Class({
     Extends:ludo.form.Element,
@@ -29438,47 +28703,47 @@ ludo.form.ComboTree = new Class({
      * a simple reference to your own pre-configured tree, example:
      * { width: 500, height: 500, type: 'myApp.tree.Folders'
      * 'myApp.tree.Folders' will here be  class named ludo.myApp.tree.Folders
-     * This is an example of a custom made ludo.tree.Tree:<br>
-     * ludo.chess.view.folder.Tree = new Class({<br>
-     Extends:ludo.tree.Tree,<br>
-     module:'folder.tree',<br>
-     remote:{<br>
-     url:window.ludo.chess.URL,<br>
-     data:{<br>
-     getFolders:1<br>
-     }<br>
-     },<br>
-     nodeTpl:'<img src="' + window.ludo.chess.ROOT + 'images/{icon}"><span>{title}</span>',<br><br>
+     * This is an example of a custom made ludo.tree.Tree:
+     * ludo.chess.view.folder.Tree = new Class({
+     Extends:ludo.tree.Tree,
+     module:'folder.tree',
+     remote:{
+     url:window.ludo.chess.URL,
+     data:{
+     getFolders:1
+     }
+     },
+     nodeTpl:'<img src="' + window.ludo.chess.ROOT + 'images/{icon}"><span>{title}</span>',
 
-     recordConfig:{<br>
-     'folder':{<br>
-     selectable:false,<br>
-     defaults:{<br>
-     icon:'folder.png'<br>
-     }<br>
-     },<br>
-     'database':{<br>
-     selectable:true,<br>
-     defaults:{<br>
-     icon:'database.png'<br>
-     }<br>
-     }<br>
-     },<br><br>
+     recordConfig:{
+     'folder':{
+     selectable:false,
+     defaults:{
+     icon:'folder.png'
+     }
+     },
+     'database':{
+     selectable:true,
+     defaults:{
+     icon:'database.png'
+     }
+     }
+     },
 
-     treeConfig:{<br>
-     defaultValues:{<br>
-     icon:'folder.png'<br>
-     }<br>
-     },<br>
-     <br>
-     ludoEvents:function () {<br>
-     this.parent();<br>
-     this.addEvent('selectrecord', this.selectDatabase.bind(this));<br>
-     },<br>
-     <br>
-     selectDatabase:function (record) {<br>
-     this.fireEvent('selectdatabase', record);<br>
-     }<br>
+     treeConfig:{
+     defaultValues:{
+     icon:'folder.png'
+     }
+     },
+     
+     ludoEvents:function () {
+     this.parent();
+     this.addEvent('selectrecord', this.selectDatabase.bind(this));
+     },
+     
+     selectDatabase:function (record) {
+     this.fireEvent('selectdatabase', record);
+     }
      });
      * @attribute treeConfig
 	 * @type Object
@@ -29809,7 +29074,17 @@ ludo.form.ComboField = new Class({
         this.getBody().append(valueField);
     }
 });/* ../ludojs/src/form/label.js */
-
+/**
+ * Label for a ludo.form View
+ *
+ * A label will be assigned the css class ludo-form-el-invalid when the associated form element has an invalid value(not validated).
+ * By default, this will render it with a red text.
+ * @class ludo.form.Label
+ * @param {Object} config
+ * @param {String} label Text label
+ * @param {String|ludo.form.Element} Reference to a ludo.form View which this label should be associated with.
+ *
+ */
 ludo.form.Label = new Class({
     Extends: ludo.View,
     labelFor:undefined,
@@ -29861,8 +29136,8 @@ ludo.form.Label = new Class({
 /**
  * Text Area field
  * @namespace ludo.form
- * @class Textarea
- * @augments ludo.form.Element
+ * @class ludo.form.Textarea
+ * @augments ludo.form.Text
  */
 ludo.form.Textarea = new Class({
     Extends:ludo.form.Text,
@@ -29884,21 +29159,6 @@ ludo.form.Textarea = new Class({
     },
     resizeDOM:function () {
         this.parent();
-		/*
-        var w;
-        if (!this.label) {
-            w = this.getInnerWidthOfBody();
-            if (w <= 0)return;
-        }else{
-            var p = this.els.formEl.parentNode;
-            w = (p.offsetWidth - ludo.dom.getBW(p) - ludo.dom.getPW(p));
-        }
-
-        if(this.stretchField)w-=10;
-
-        this.els.formEl.setStyle('width', (w - 10) + 'px');
-        */
-
         if (this.layout && this.layout.weight) {
             var height = this.getEl().offsetHeight;
             height -= (ludo.dom.getMBPH(this.getEl()) + ludo.dom.getMBPH(this.getBody()) + ludo.dom.getMH(this.els.formEl.parent()));
@@ -29912,7 +29172,7 @@ ludo.form.Textarea = new Class({
 /**
  * Read only field, used for display only
  * @namespace ludo.form
- * @class DisplayField
+ * @class ludo.form.DisplayField
  * @augments ludo.form.Text
  */
 ludo.form.DisplayField = new Class({
@@ -29976,7 +29236,9 @@ ludo.form.DisplayField = new Class({
 /**
  * Class for checkbox form elements
  * @class ludo.form.Checkbox
- * @augments ludo.form.LabelElement
+ * @param {Object} config
+ * @param {booelan} config.checked Initial checked
+ * @augments ludo.form.Element
  */
 ludo.form.Checkbox = new Class({
     Extends:ludo.form.Element,
@@ -29984,19 +29246,9 @@ ludo.form.Checkbox = new Class({
     inputType:'checkbox',
     stretchField:false,
     labelWidth:undefined,
-    /**
-     * Image to be displayed above the checkbox-/radio button
-     * @attribute image (Path to image).
-     * @type string
-     * @default null
-     */
+
     image:undefined,
-    /**
-     * Initial state
-     * @attribute {Boolean} checked
-     * @type {Boolean}
-     * @default false
-     */
+
     checked:false,
     height:undefined,
     labelSuffix : '',
@@ -30088,6 +29340,7 @@ ludo.form.Checkbox = new Class({
      * Return true if checkbox is checked, false otherwise
      * @function isChecked
      * @return {Boolean} checked
+     * @memberof ludo.form.Checkbox.prototype
      */
     isChecked:function () {
         return this.getFormEl().attr('checked') ? true : false;
@@ -30096,6 +29349,7 @@ ludo.form.Checkbox = new Class({
      * Set checkbox to checked
      * @function check
      * @return void
+     * @memberof ludo.form.Checkbox.prototype
      */
     check:function () {
         if (!this.isChecked()) {
@@ -30134,6 +29388,7 @@ ludo.form.Checkbox = new Class({
      * Set checkbox to checked or unchecked
      * @function setChecked
      * @param {Boolean} checked
+     * @memberof ludo.form.Checkbox.prototype
      */
     setChecked:function (checked) {
         this.setCheckedProperty(checked);
@@ -30156,6 +29411,11 @@ ludo.form.Checkbox = new Class({
         this.toggleDirtyFlag();
     },
 
+    /**
+     * Reset back to original value(checked or unchecked)
+     * @function reset
+     * @memberof ludo.form.Checkbox.prototype
+     */
     reset:function(){
         this.setCheckedProperty(this.initialValue ? true : false);
         this.fireEvent('valueChange', [this._get(), this]);
@@ -30178,9 +29438,12 @@ ludo.form.Checkbox = new Class({
 });/* ../ludojs/src/form/radio.js */
 /**
  * Radio button
+ *
+ * Extends: ludo.form.Checkbox
+ * 
  * @namespace ludo.form
- * @class Radio
- * @augments ludo.form.Checkbox
+ * @class ludo.form.Radio
+
  */
 ludo.form.Radio = new Class({
     Extends:ludo.form.Checkbox,
@@ -30541,11 +29804,12 @@ faultylabs.MD5 = function(data) {
 /**
  Password field
  @namespace ludo.form
- @class Password
+ @class ludo.form.Password
  @augments ludo.form.Text
- @constructor
+ 
  @description Form component for passwords.
  @param {Object} config
+ @param {Boolean} config.md5 True to convert password value to md5. A call to val() will then return md5 of the password.
  @example
  	...
  	children:[
@@ -30558,12 +29822,6 @@ ludo.form.Password = new Class({
 	Extends:ludo.form.Text,
 	type:'form.Password',
 	inputType:'password',
-
-	/**
-	 * Convert password to md5 hash
-	 * getValue method will then return an md5 version of the password
-	 * @attribute {Boolean} md5
-	 */
 	md5:false,
 
 	__construct:function (config) {
@@ -30599,11 +29857,11 @@ ludo.form.Password = new Class({
  not limited in length
  
  @namespace ludo.form
- @class Password
- @augments ludo.form.Text
- @constructor
+ @class ludo.form.StrongPassword
+ @augments ludo.form.Password
  @description Form component for passwords.
  @param {Object} config
+ @param {Number} config.passwordLength Required password length, default = 8
  @example
  ...
  children:[
@@ -30615,12 +29873,7 @@ ludo.form.Password = new Class({
 ludo.form.StrongPassword = new Class({
     Extends: ludo.form.Password,
     regex : '(?=^.{_length_,}$)((?=.*[0-9])|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$',
-    /**
-     * Custom minimum length of password
-     * @config {Number} passwordLength
-     * @default 8
-     * @optional
-     */
+
     passwordLength : 8,
 
     __construct:function(config){
@@ -30638,6 +29891,9 @@ ludo.form.StrongPassword = new Class({
  * @param {Object} config
  * @param {Number} config.minValue Optional minimum value
  * @param {Number} config.maxValue Optional maximum value
+ * @param {Boolean} config.disableWheel Disable chaning values using mouse wheel.
+ * @param {Boolean} config.reverseWheel Reverse wheel. Up = smaller value.
+ * @param {Number} config.shiftIncrement Mouse wheel increment when shift key is pressed. Default = 10.
  */
 ludo.form.Number = new Class({
     Extends:ludo.form.Text,
@@ -30647,31 +29903,10 @@ ludo.form.Number = new Class({
     formCss:{
         'text-align':'right'
     },
-    /**
-     * Stretch is default set to false for numbers
-     * @attribute {Boolean} stretchField
-     */
+
     stretchField:false,
-
-    /**
-     * Disable changing values using mousewheel
-     * @attribute {Boolean} disableWheel
-     * @default false
-     */
     disableWheel:false,
-
-    /**
-     * Reverse wheel, i.e. down for larger value, up  for smaller
-     * @attribute {Boolean} reverseWheel
-     * @default false
-     */
     reverseWheel:false,
-
-    /**
-     * Amount to increment/decrement when using mousewheel while pressing shift-key
-     * @attribute {Number} shiftIncrement
-     * @default 10
-     */
     shiftIncrement:10,
 
     __construct:function (config) {
@@ -30721,12 +29956,7 @@ ludo.form.Number = new Class({
         this.incrementBy(delta >0 ? 1 : -1, e.shift);	// Math.ceil because of a mystery error in either firefox or mootools
         return false;
     },
-    /**
-     * Increment value by
-	 * @function incrementBy
-     * @param {Number} value
-     * @param {Boolean} shift
-     */
+
     incrementBy:function (value, shift) {
         if(!this.value){
             if(this.minValue){
@@ -30747,9 +29977,9 @@ ludo.form.Number = new Class({
     }
 });/* ../ludojs/src/form/email.js */
 /**
+ * A customized ludo.form.Text field with automatic validation of e-mail addresses
  * @namespace ludo.form
- * @class Email
- * @description A customized text field with automatic validation of e-mail addresses
+ * @class ludo.form.Email
  * @augments ludo.form.Text
  */
 ludo.form.Email = new Class({
@@ -30765,8 +29995,12 @@ ludo.form.Email = new Class({
  * to the right of the input fields and you will be able to increment and decrement by
  * using the mouse wheel or by "nudging" the label.
  * @namespace ludo.form
- * @class Spinner
- * @augments ludo.form.Number
+ * @class ludo.form.Spinner
+ * @param {object} config
+ * @param {number} config.minValue min value, default 0
+ * @param {number} config.maxValue max value, default 100
+ * @param {number} config.increment amount of increment by click on arrow buttons or by rolling mouse wheel
+ * @param {number} config.decimals Number of decimals
  */
 ludo.form.Spinner = new Class({
     Extends:ludo.form.Number,
@@ -30775,32 +30009,13 @@ ludo.form.Spinner = new Class({
     inputType:'text',
     stretchField:false,
     regex:undefined,
-    /**
-     * Minimum value
-     * @attribute maxValue
-     * @type int
-     * @default 0
-     */
-    maxValue:100,
-    /**
-     * Minimum value
-     * @attribute {Number} minValue
-     * @default 0
-     */
-    minValue:0,
-    /**
-     * amount of increment by click on arrow buttons or by rolling mouse wheel
-     * @attribute increment
-     * @type int
-     * @default 1
-     */
-    increment:1,
 
-    /**
-     * Number of decimals
-     * @config {Number|undefined} decimals
-     * @default 0
-     */
+    maxValue:100,
+
+    minValue:0,
+
+    increment:1,
+    
     decimals:0,
 
 
@@ -31080,9 +30295,9 @@ ludo.form.Spinner = new Class({
 /**
  Select box (&lt;select>)
  @namespace ludo.form
- @class Select
+ @class ludo.form.Select
  @augments ludo.form.Element
- @constructor
+ 
  @param {Object} config
  @example
 	 {
@@ -31115,7 +30330,7 @@ ludo.form.Spinner = new Class({
 	 }
  */
 ludo.form.Select = new Class({
-    Extends:ludo.form.LabelElement,
+    Extends:ludo.form.Element,
     type:'form.Select',
     labelWidth:100,
     /**
@@ -31238,7 +30453,7 @@ ludo.form.Select = new Class({
 });/* ../ludojs/src/form/filter-text.js */
 /**
  * @namespace ludo.form
- * @class FilterText
+ * @class ludo.form.FilterText
  * @augments ludo.form.Text
  * TODO this class is not working properly loading data from server. fix later
  */
@@ -31282,6 +30497,7 @@ ludo.form.FilterText = new Class({
      * @attribute filterOnServer
      * @type {Boolean}
      * @default false
+     * @memberof ludo.form.FilterText.prototype
      */
     filterOnServer:false,
     /**
@@ -31290,6 +30506,7 @@ ludo.form.FilterText = new Class({
      * @attribute maxDisplayed
      * @type int
      * @default 10
+     * @memberof ludo.form.FilterText.prototype
      */
     maxDisplayed:10,
     /**
@@ -31298,6 +30515,7 @@ ludo.form.FilterText = new Class({
      * @attribute idField
      * @type string
      * @default "id"
+     * @memberof ludo.form.FilterText.prototype
      */
     idField:'id',
     /**
@@ -31306,6 +30524,7 @@ ludo.form.FilterText = new Class({
      * @attribute displayField
      * @type string
      * @default "title"
+     * @memberof ludo.form.FilterText.prototype
      */
     displayField:'title',
     selectedRecord:undefined,
@@ -31498,6 +30717,7 @@ ludo.form.FilterText = new Class({
      *  { success: true, data : { id: 100, title: 'John Doe' } }
      * @function setValue
      * @param {String} value
+     * @memberof ludo.form.FilterText.prototype
      */
     _set:function (value) {
         if (this.remote.url) {
@@ -31853,7 +31073,7 @@ ludo.form.TextFilterContainer = new Class({
 });/* ../ludojs/src/form/radio-group.js */
 /**
  * @namespace ludo.form
- * @class RadioGroup
+ * @class ludo.form.RadioGroup
  * @description class for a group of radio buttons. Config for the radio buttons should be passed to the
  * constructor or loaded remotely. Here's an example of format:
  * [{ value: 1, text : 'my radio', image: 'images/my-radio-image.png' }]
@@ -32533,8 +31753,7 @@ ludo.form.Seekbar = new Class({
     barSize: 2,
 
     el: undefined,
-    elNegative: undefined,
-    elPositive: undefined,
+    
 
     thumb: undefined,
     thumbInner: undefined,
@@ -32574,46 +31793,42 @@ ludo.form.Seekbar = new Class({
 
         this.getBody().append(this.el);
 
-       // this.orientation = this.getWidth() >= this.getHeight() ? 'horizontal' : 'vertical';
-
-        this.elNegative = $('<div class="seekbar-negative" style="position:absolute;z-index:1"></div>');
-        this.elPositive = $('<div class="seekbar-positive" style="position:absolute;z-index:1"></div>');
+        this.els.negative = $('<div class="seekbar-negative" style="position:absolute;z-index:1"></div>');
+        this.els.positive = $('<div class="seekbar-positive" style="position:absolute;z-index:1"></div>');
 
         if (this.negativeColor != undefined) {
-            this.elNegative.css("background-color", this.negativeColor);
+            this.els.negative.css("background-color", this.negativeColor);
         }
         if (this.positiveColor != undefined) {
-            this.elPositive.css("background-color", this.positiveColor);
+            this.els.positive.css("background-color", this.positiveColor);
         }
 
-        this.thumb = $('<div style="position:absolute;z-index:4"></div>');
-        this.thumbInner = $('<div class="seekbar-thumb-needle" style="position:absolute;z-index:5;background-color:' + this.thumbColor + '"></div>');
-        this.thumbOuter = $('<div class="seekbar-thumb" style="position:absolute;z-index:5;width:100%;height:100%;background-color:' + this.thumbColor + '"></div>');
+        this.els.thumb = $('<div style="position:absolute;z-index:4"></div>');
+        this.els.thumbInner = $('<div class="seekbar-thumb-needle" style="position:absolute;z-index:5;background-color:' + this.thumbColor + '"></div>');
+        this.els.thumbOuter = $('<div class="seekbar-thumb" style="position:absolute;z-index:5;width:100%;height:100%;background-color:' + this.thumbColor + '"></div>');
 
         if (this.thumbColor != undefined) {
-            this.thumbInner.css("background-color", this.thumbColor);
-            this.thumbOuter.css("background-color", this.thumbColor);
+            this.els.thumbInner.css("background-color", this.thumbColor);
+            this.els.thumbOuter.css("background-color", this.thumbColor);
 
         }
 
         this.updateAlpha();
 
-        this.thumb.append(this.thumbInner);
-        this.thumb.append(this.thumbOuter);
+        this.els.thumb.append(this.els.thumbInner);
+        this.els.thumb.append(this.els.thumbOuter);
 
-        this.el.append(this.elNegative);
-        this.el.append(this.elPositive);
-        this.el.append(this.thumb);
+        this.el.append(this.els.negative);
+        this.el.append(this.els.positive);
+        this.el.append(this.els.thumb);
 
-        this.eventEl = $('<div style="position:absolute;z-index:3;width:100%;height:100%"></div>');
-        this.el.append(this.eventEl);
-        this.eventEl.on("click", this.clickOnBar.bind(this));
+        this.els.eventEl = $('<div style="position:absolute;z-index:3;width:100%;height:100%"></div>');
+        this.el.append(this.els.eventEl);
+        this.els.eventEl.on("click", this.clickOnBar.bind(this));
 
-        console.log(ludo.util.getDragStartEvent());
-        this.thumb.on(ludo.util.getDragStartEvent(), this.startDragging.bind(this));
+        this.els.thumb.on(ludo.util.getDragStartEvent(), this.startDragging.bind(this));
         $(document.documentElement).on(ludo.util.getDragMoveEvent(), this.drag.bind(this));
         $(document.documentElement).on(ludo.util.getDragEndEvent(), this.endDrag.bind(this));
-
     },
 
     clickOnBar: function (e) {
@@ -32640,7 +31855,7 @@ ludo.form.Seekbar = new Class({
      * @member {function}
      * @inner
      * @param {Number} value Optional, when set, the seekbar will be updated with this value
-     * @memberof ludo.form.Seekbar
+     * @memberof ludo.form.Seekbar.prototype
      * @returns {number}
      * @example
      * // set value
@@ -32697,10 +31912,10 @@ ludo.form.Seekbar = new Class({
         this.thumbSize += this.thumbSize % 2;
         var size = Math.max(this.area.width, this.area.height);
 
-        this.thumbOuter.css({
+        this.els.thumbOuter.css({
             'width': this.thumbSize, 'height': this.thumbSize, 'border-radius': this.thumbSize / 2
         });
-        this.thumb.css({
+        this.els.thumb.css({
             'width': this.thumbSize, 'height': this.thumbSize, 'border-radius': this.thumbSize / 2
         });
 
@@ -32708,7 +31923,7 @@ ludo.form.Seekbar = new Class({
         needleSize += needleSize % 2;
         var pos = (this.thumbSize / 2) - (needleSize / 2);
 
-        this.thumbInner.css({
+        this.els.thumbInner.css({
             width: needleSize, height: needleSize, borderRadius: needleSize / 2, left: pos, top: pos
         });
 
@@ -32719,26 +31934,26 @@ ludo.form.Seekbar = new Class({
         var barPos = (this.thumbSize / 2) - (this.barSize / 2);
         if (this.orientation == 'horizontal') {
 
-            this.elNegative.css({
+            this.els.negative.css({
                 "left": this.valueArea.min, top: barPos, height: this.barSize
             });
-            this.elPositive.css({
+            this.els.positive.css({
                 "left": this.valueArea.min, top: barPos, height: this.barSize
             });
         } else {
 
-            this.elNegative.css({
+            this.els.negative.css({
                 "top": 0, width: this.barSize, left: barPos
             });
 
-            this.elPositive.css({
+            this.els.positive.css({
                 "top": this.valueArea.min, width: this.barSize, left: barPos
             });
         }
         var br = Math.floor(this.barSize / 2) + this.barSize % 2;
 
-        this.elNegative.css("border-radius", br);
-        this.elPositive.css("border-radius", br);
+        this.els.negative.css("border-radius", br);
+        this.els.positive.css("border-radius", br);
 
         this.positionBars();
         this.positionThumb();
@@ -32749,9 +31964,9 @@ ludo.form.Seekbar = new Class({
     positionThumb: function () {
         var pos = this.getValuePos();
         if (this.orientation == 'horizontal') {
-            this.thumb.css("left", pos);
+            this.els.thumb.css("left", pos);
         } else {
-            this.thumb.css("top", pos);
+            this.els.thumb.css("top", pos);
         }
     },
 
@@ -32760,19 +31975,19 @@ ludo.form.Seekbar = new Class({
 
         if (this.orientation == 'horizontal') {
             if(this.reverse){
-                this.elNegative.css({
+                this.els.negative.css({
                     left : pos + this.valueArea.min,
                     width: this.valueArea.size - pos
                 });
 
-                this.elPositive.css(
+                this.els.positive.css(
                     {"left": this.valueArea.min,
                         "width": pos}
                 );
 
             }else{
-                this.elNegative.css("width", pos);
-                this.elPositive.css({"left": pos + this.valueArea.min, "width": this.valueArea.size - pos});
+                this.els.negative.css("width", pos);
+                this.els.positive.css({"left": pos + this.valueArea.min, "width": this.valueArea.size - pos});
 
             }
 
@@ -32781,17 +31996,17 @@ ludo.form.Seekbar = new Class({
         } else {
 
             if(this.reverse){
-                this.elPositive.css({
+                this.els.positive.css({
                     "height" :this.valueArea.size - pos,
                     top:pos + this.valueArea.min
                 });
-                this.elNegative.css({
+                this.els.negative.css({
                     top:this.valueArea.min,
                     height: pos
                 });
             }else{
-                this.elPositive.css("height", pos);
-                this.elNegative.css({
+                this.els.positive.css("height", pos);
+                this.els.negative.css({
                     top: pos + this.valueArea.min,
                     height: this.valueArea.size - pos
                 });
@@ -32817,11 +32032,11 @@ ludo.form.Seekbar = new Class({
     },
 
     startDragging: function (e) {
-        this.thumbOuter.css("opacity", "");
-        this.thumbOuter.addClass("seekbar-thumb-over");
+        this.els.thumbOuter.css("opacity", "");
+        this.els.thumbOuter.addClass("seekbar-thumb-over");
         this.active = true;
 
-        var position = this.thumb.position();
+        var position = this.els.thumb.position();
 
         var x = e.pageX;
         var y = e.pageY;
@@ -32874,9 +32089,9 @@ ludo.form.Seekbar = new Class({
 
         if (this.orientation == 'horizontal') {
 
-            this.thumb.css("left", this.getValuePos());
+            this.els.thumb.css("left", this.getValuePos());
         } else {
-            this.thumb.css("top", this.getValuePos());
+            this.els.thumb.css("top", this.getValuePos());
         }
 
         return false;
@@ -32884,7 +32099,7 @@ ludo.form.Seekbar = new Class({
 
     updateAlpha: function () {
         if (this.thumbAlpha < 1) {
-            this.thumbOuter.css("opacity", this.thumbAlpha);
+            this.els.thumbOuter.css("opacity", this.thumbAlpha);
         }
     },
 
@@ -32893,7 +32108,7 @@ ludo.form.Seekbar = new Class({
 
         this.updateAlpha();
 
-        this.thumbOuter.removeClass("seekbar-thumb-over");
+        this.els.thumbOuter.removeClass("seekbar-thumb-over");
 
         this.active = false;
     }
@@ -32915,10 +32130,19 @@ ludo.form.Seekbar = new Class({
  A PHP implementation of the PHP code of this can be obtained by contacting post[at]dhtmlgoodies.com.
 
  @namespace ludo.form
- @class File
+ @class ludo.form.File
  @augments ludo.form.Element
- @constructor
+ 
  @param {Object} config
+ @param {String} config.labelButton Label for button, default: "Browse"
+ @param {String} config.labelRemove Remove existing file label, default: "Remove"
+ @param {Boolean} config.instantUpload  Upload instantly when selecting file. During upload the form component will be flagged
+ as invalid, i.e. submit button will be disabled during file upload.
+ @param {Number} config.buttonWidth Width of browse button in pixels.
+ @param {String} config.accept Comma separated string of valid extensions, example : 'png,gif,bmp'
+ @fires ludo.form.File#submit Fired after successful file upload. Arguments: 1) {Object} Json from server, 2) ludo.form.File
+ @fires ludo.form.File#submitFail Fired after failed file upload, i.e. server responded with a JSON object where success was false({ "success": false }). Arguments: 1) {Object} Json from server, 2) ludo.form.File
+ @fires ludo.form.File#fail Fired on other failures than submitFail, example: server error. Arguments: 1) String response from server, 2) ludo.form.File
  @example
 	 ...
 	 children:[{
@@ -32969,79 +32193,31 @@ ludo.form.File = new Class({
 	inputTag:'input',
 	inputType:'file',
 
-	/**
-	 * Label of "Browse" button
-	 * @attribute labelButton
-	 * @type String
-	 * @default "Browse"
-	 */
+
 	labelButton:'Browse',
 
-	/**
-	 * Label for "Remove" new file link
-	 * @attribute labelRemove
-	 * @type String
-	 * @default Remove
-	 */
+
 	labelRemove:'Remove',
-	/**
-	 * Label for "Delete" new file link
-	 * @attribute {String} labelDelete
-	 * @default Delete
-	 */
+
 	labelDelete:'Delete',
 
-	/**
-	 * Private property for displayed file name. The file upload component is read only. It will only
-	 * submit a value if a new file has been selected.
-	 * @property valueForDisplay
-	 * @private
-	 */
+
 	valueForDisplay:'',
-	/**
-	 * Upload instantly when selecting file. During upload the form component will be flagged
-	 * as invalid, i.e. submit button will be disabled during file upload.
-	 * @attribute instantUpload
-	 * @type {Boolean}
-	 * @default true
-	 */
+
 	instantUpload:true,
 
 	uploadInProgress:false,
 
-	/**
-	 * false when a file has been selected but not uploaded. Happens
-	 * when instantUpload is set to false
-	 * @property fileUploadComplete
-	 * @type {Boolean}
-	 */
 	fileUploadComplete:true,
 
-	/*
-	 * Property used to identify file upload components
-	 */
+
 	isFileUploadComponent:true,
 
-	/**
-	 * Width of browse button
-	 * @attribute buttonWidth
-	 * @type {Number}
-	 * @default 80
-	 */
+
 	buttonWidth:80,
 
-	/**
-	 * Comma separated string of valid extensions, example : 'png,gif,bmp'
-	 * @attribute accept
-	 * @type String
-	 */
 	accept:undefined,
 
-    /**
-     * Name of resource on server to handle uploaded file.
-     * @config {String} FileUpload
-     * @default 'FileUpload'
-     */
     resource:'FileUpload',
 
 	__construct:function (config) {
@@ -33155,24 +32331,10 @@ ludo.form.File = new Class({
 			var json = JSON.parse(window.frames[this.iframeName].document.body.innerHTML);
 			if (json.success) {
 				this.value = json.response;
-				/**
-				 * Event fired after a successful file upload, i.e. no server errors and json.success in
-				 * response is true
-				 * @event submit
-				 * @param {Object} JSON from server (json.response)
-				 * @param {Object} ludo.form.file
-				 */
 				this.fireEvent('submit', [json.response, this]);
 			} else {
-				/**
-				 * Event fired after an unsuccessful file upload because json.success was false
-				 * @event submitfail
-				 * @param {Object} json from server
-				 * @param {Object} ludo.form.file
-				 */
 				this.fireEvent('submitfail', [json, this]);
 			}
-
 			this.fireEvent('valid', ['', this]);
 		} catch (e) {
 			var html = '';
@@ -33180,13 +32342,6 @@ ludo.form.File = new Class({
 				html = window.frames[this.iframeName].document.body.innerHTML;
 			} catch (e) {
 			}
-			/**
-			 * Event fired when upload failed
-			 * @event fail
-			 * @param {Object} Exception
-			 * @param {String} response from server
-			 * @param {Object} ludo.form.file
-			 */
 			this.fireEvent('fail', [e, html, this]);
 
 		}
@@ -33344,43 +32499,250 @@ ludo.form.File = new Class({
         return false;
     }
 });
-/* ../ludojs/src/form/search-field.js */
+/* ../ludojs/src/form/slider.js */
+/**
+ * Slider form component
+ */
+ludo.form.Slider = new Class({
+    // TODO implement support for min and max, example slider from 0 to 100, min and max from 10 to 90
+    Extends:ludo.form.LabelElement,
+    cssSignature:'ludo-form-slider',
+    type:'form.Slider',
+    fieldTpl:['<table ','cellpadding="0" cellspacing="0" border="0" width="100%">',
+        '<tbody>',
+        '<tr class="input-row">',
+        '<td class="label-cell"><label class="input-label"></label></td>',
+        '<td class="input-cell"></td>',
+        '<td class="suffix-cell" style="display:none"></td>',
+        '<td class="help-cell" style="display:none"></td>',
+        '</tr>',
+        '</tbody>',
+        '</table>'
+    ],
+
+    /* No input element for slider */
+    inputTag:undefined,
+    inputType:undefined,
+
+
+    sliderSize:100,
+
+    direction:'horizontal',
+
+
+    minValue:1,
+
+    maxValue:10,
+
+    height:undefined,
+
+
+    reverse:false,
+
+
+    __construct:function (config) {
+        this.parent(config);
+        this.setConfigParams(config, ['direction','minValue','maxValue','reverse']);
+    },
+
+    __rendered:function () {
+        this.parent();
+        this.moveSliderBackgrounds();
+    },
+
+    moveSliderBackgrounds:function () {
+        var offset = Math.round(this.getHandleSize() / 2);
+        var css = this.getDirection() == 'horizontal' ? ['left','right'] : ['top','bottom'];
+        this.els['bgfirst'].css(css[0], offset + 'px');
+        this.els['bglast'].css(css[1], offset + 'px');
+    },
+
+    addInput:function () {
+        this.parent();
+
+        var el = this.els.slider = $('<div>');
+        this.els.slider.on('click', this.sliderClick.bind(this));
+
+        el.addClass('ludo-form-slider-container');
+        el.addClass('ludo-form-slider-' + this.getDirection());
+        this.getInputCell().append(el);
+
+        this.addSliderBg('first');
+        this.addSliderBg('last');
+
+        this.createSliderHandle();
+    },
+
+    createSliderHandle:function () {
+        this.els.sliderHandle = $('<div class="ludo-form-slider-handle"></div>');
+        this.els.slider.append(this.els.sliderHandle);
+        this.drag = new ludo.effect.Drag(this.getDragConfig());
+    },
+
+    addSliderBg:function (pos) {
+        this.els['bg' + pos] = $('<div class="ludo-form-slider-bg-' + pos + '"></div>');
+        this.els.slider.append(this.els['bg' + pos])
+    },
+
+    getDragConfig:function () {
+        return {
+            el:this.els.sliderHandle,
+            fireEffectEvents:false,
+            directions:this.getDirection() == 'horizontal' ? 'X' : 'Y',
+            listeners:{
+                'drag':this.receivePosition.bind(this)
+            },
+            minPos:0,
+            maxPos:this.getSliderSize()
+        };
+    },
+
+    sliderClick:function (e) {
+        if (!$(e.target).hasClass('ludo-form-slider-handle')) {
+            var pos = this.els.slider.position();
+            var offset = Math.round(this.getHandleSize() / 2);
+            this.receivePosition({
+                x:e.pageX - pos.left - offset,
+                y:e.pageY - pos.top - offset
+            });
+        }
+
+    },
+    receivePosition:function (pos) {
+        this._set(this.pixelToValue(this.getDirection() == 'horizontal' ? pos.x : pos.y));
+        /**
+         * Change event
+         * @event change
+         * @param value of form field
+         * @param Component this
+         */
+        this.fireEvent('change', [ this.value, this ]);
+    },
+
+    pixelToValue:function (px) {
+        var min = this.getMinValue();
+        var max = this.getMaxValue();
+
+        var sliderSize = this.getSliderSize();
+        var ret = Math.round(px / sliderSize * (max - min)) + min;
+        if (this.shouldReverseAxis()) {
+            ret = max - ret;
+        }
+
+        return ret;
+    },
+
+    getDirection:function () {
+        if (this.direction === undefined) {
+            var size = this.getBody().getSize();
+            if (size.x >= size.y) {
+                this.direction = 'horizontal';
+            } else {
+                this.direction = 'vertical';
+            }
+        }
+        return this.direction;
+    },
+
+    getMinValue:function () {
+        return this.minValue;
+    },
+
+    getMaxValue:function () {
+        return this.maxValue;
+    },
+    setValue:function(value){
+        console.warn("Use of deprecated setValue");
+        console.trace();
+    },
+
+    _set:function (value) {
+        if (value > this.getMaxValue()) {
+            value = this.getMaxValue();
+        } else if (value < this.getMinValue()) {
+            value = this.getMinValue();
+        }
+        this.parent(value);
+        this.positionSliderHandle();
+        this.toggleDirtyFlag();
+    },
+
+    resizeDOM:function () {
+        this.parent();
+        if (this.direction == 'horizontal') {
+            this.sliderSize = this.els.slider.width();
+        } else {
+            this.sliderSize = this.getBody().height() - ludo.dom.getMH(this.els.slider);
+            this.els.slider.css('height',  this.getHeight() + 'px');
+        }
+        this.sliderSize -= this.getHandleSize();
+
+        this.positionSliderHandle();
+        this.drag.setMaxPos(this.sliderSize);
+    },
+
+    positionSliderHandle:function () {
+        this.els.sliderHandle.css(this.handleCssProperty, this.getHandlePos() + 'px');
+    },
+
+    getHandlePos:function () {
+        var ret = Math.round((this.value - this.minValue) / (this.maxValue - this.minValue) * this.sliderSize);
+        if (this.shouldReverseAxis()) {
+            ret = this.sliderSize - ret;
+        }
+        return ret;
+    },
+    _shouldReverse:undefined,
+    shouldReverseAxis:function () {
+        if (this._shouldReverse == undefined) {
+            this._shouldReverse = (this.direction == 'horizontal' && this.reverse) || (this.direction == 'vertical' && !this.reverse);
+        }
+        return this._shouldReverse;
+    },
+
+    getSliderSize:function () {
+        return this.sliderSize;
+    },
+
+    getHandleSize:function () {
+        if (this.handleSize === undefined) {
+            var cssProperty = 'height';
+            this.handleCssProperty = 'top';
+            if (this.getDirection() == 'horizontal') {
+                cssProperty = 'width';
+                this.handleCssProperty = 'left';
+            }
+
+            this.handleSize = parseInt(this.els.sliderHandle.css(cssProperty).replace('px', ''));
+        }
+        return this.handleSize;
+    },
+
+    supportsInlineLabel:function(){
+        return false;
+    }
+});/* ../ludojs/src/form/search-field.js */
 /**
  * Form field designed to search in dataSource.Collection
  * @namespace ludo.form
- * @class SearchField
+ * @class ludo.form.SearchField
  * @augments ludo.form.Text
+ * @param {Object} config
+ * @param {ludo.dataSource.Collection} searchIn Collection to search in
+ * @param {Number} delay Delay in seconds after key press before search is executed. Default 0.
+ * @param {Function} searchFn Custom search fn to execute instead of plain text search. Example:
+ * <code>	 	searchFn:function(record){
+	 		return record.value = this.value && record.active === true
+	 	}
+ </code>
+ note that "this" inside the function is a reference to search field.
  */
 ludo.form.SearchField = new Class({
 	Extends:ludo.form.Text,
 	type:'form.SearchField',
-
-	/**
-	 * Collection to search in
-	 * @config {dataSource.Collection} searchIn
-	 * @default undefined
-	 */
 	searchIn:undefined,
-
-	/**
-	 * Delay in seconds from key press to search is executed.
-	 * @config {Number} delay
-	 * @default 0
-	 */
 	delay:0,
-
 	lastValue:undefined,
-
-	/**
-	 Custom search fn to execute instead of plain text search
-	 @config {Function} searchFn
-	 @default undefined
-	 @example
-	 	searchFn:function(record){
-	 		return record.value = this.value && record.active === true
-	 	}
-	 note that "this" inside the function is a reference to search field.
-	 */
 	searchFn:undefined,
 
 	remote:false,
@@ -33441,19 +32803,13 @@ ludo.form.SearchField = new Class({
 /**
  * Base class for form component validators
  * @namespace ludo.form.validator
- * @class Base
+ * @class ludo.form.validator.Base
  * @augments Core
  */
 ludo.form.validator.Base = new Class({
 	Extends:ludo.Core,
 
 	value:undefined,
-
-	/**
-	 * Validator is applied to this component
-	 * @attribute object applyTo
-	 * @default undefined
-	 */
 	applyTo:undefined,
 
 	__construct:function (config) {
@@ -33468,6 +32824,7 @@ ludo.form.validator.Base = new Class({
 	/**
 	 Loading valid value from server.
 	 @function loadValue
+	 @memberof ludo.form.validator.Base.prototype
 	 Request to server example:
 	 @example
 		{
@@ -33510,7 +32867,7 @@ ludo.form.validator.Base = new Class({
  * Md5 validator for form elements
  * When used, the associated form element will be flagged as invalid if MD5(value) doesn't match value of this validator.
  * If no value is sent to the constructor of form.validator.Md5, it will send a request to the server and ask for it.
- * @class Md5
+ * @class ludo.form.validator.Md5
  * @augments ludo.form.validator.Base
  *
  */
@@ -33523,6 +32880,7 @@ ludo.form.validator.Md5 = new Class({
      * md5(formElement.value) matches this value
      * @attribute value
      * @default undefined
+     * @memberof ludo.form.validator.Md5.prototype
      */
     value:undefined,
 
@@ -33534,9 +32892,9 @@ ludo.form.validator.Md5 = new Class({
  * Base class, paging buttons for datasource.Collection
  * Assign a paging element to a data source by sending "id" or config object of
  * the source using the dataSource constructor property
- * @namespace paging
- * @class Button
- * @augments form.Button
+ * @namespace ludo.paging
+ * @class ludo.paging.Button
+ * @augments ludo.form.Button
  */
 ludo.paging.Button = new Class({
     Extends: ludo.form.Button,
@@ -33572,9 +32930,9 @@ ludo.paging.Button = new Class({
 /**
  Button used to navigate to next page in a dataSource.Collection
  @namespace paging
- @class Next
+ @class ludo.paging.Next
  @augments paging.Button
- @constructor
+ 
  @param {Object} config
  @example
  	children:[
@@ -33609,10 +32967,10 @@ ludo.paging.Next = new Class({
 });/* ../ludojs/src/paging/previous.js */
 /**
  Button used to navigate to previous page in a dataSource.Collection
- @namespace paging
- @class Last
- @augments paging.Button
- @constructor
+ @namespace ludo.paging
+ @class ludo.paging.Last
+ @augments ludo.paging.Button
+ 
  @param {Object} config
  @example
  	children:[
@@ -33648,10 +33006,10 @@ ludo.paging.Previous = new Class({
 });/* ../ludojs/src/paging/last.js */
 /**
  Button used to navigate to last page in a dataSource.Collection
- @namespace paging
- @class Last
- @augments paging.Button
- @constructor
+ @namespace ludo.paging
+ @class ludo.paging.Last
+ @augments ludo.paging.Button
+ 
  @param {Object} config
  @example
  	children:[
@@ -33682,10 +33040,10 @@ ludo.paging.Last = new Class({
 });/* ../ludojs/src/paging/first.js */
 /**
  Button used to navigate to first page in a dataSource.Collection
- @namespace paging
- @class First
- @augments paging.Button
- @constructor
+ @namespace ludo.paging
+ @class ludo.paging.First
+ @augments ludo.paging.Button
+ 
  @param {Object} config
  @example
  	children:[
@@ -33721,8 +33079,8 @@ ludo.paging.First = new Class({
 });/* ../ludojs/src/paging/page-input.js */
 /**
  * Text input for navigating to a specific page in a datasource.Collection
- * @namespace paging
- * @class PageInput
+ * @namespace ludo.paging
+ * @class ludo.paging.PageInput
  * @augments form.Number
  */
 ludo.paging.PageInput = new Class({
@@ -33772,9 +33130,7 @@ ludo.paging.PageInput = new Class({
 });/* ../ludojs/src/paging/current-page.js */
 /**
  Displays current page number shown in a collection
- @class paging.TotalPages
- @augments View
- @constructor
+ @class ludo.paging.TotalPages
  @param {Object} config
  @example
  children:[
@@ -33832,9 +33188,7 @@ ludo.paging.CurrentPage = new Class({
 });/* ../ludojs/src/paging/total-pages.js */
 /**
  Displays number of pages in a data source
- @class paging.TotalPages
- @augments View
- @constructor
+ @class ludo.paging.TotalPages
  @param {Object} config
  @example
  children:[
@@ -33870,6 +33224,12 @@ ludo.paging.TotalPages = new Class({
         this.dataSourceEvents();
 	},
 
+
+	resize:function(config){
+		this.parent(config);
+		this.getBody().css('line-height', (this.getBody().height() * 0.8) + 'px');
+	},
+
     dataSourceEvents:function(){
         if(ludo.get(this.dataSource)){
             var ds = this.getDataSource();
@@ -33895,10 +33255,10 @@ ludo.paging.TotalPages = new Class({
  A view containing buttons and views for navigating in a dataSource.Collection.
  default children: ['paging.First','paging.Previous','paging.PageInput','paging.TotalPages','paging.Next','paging.Last']
  You can customize which views to show by using the children constructor property.
- @namespace paging
- @class NavBar
+ @namespace ludo.paging
+ @class ludo.paging.NavBar
  @augments View
- @constructor
+ 
  @param {Object} config
  @example
  	children:[
@@ -33967,8 +33327,8 @@ ludo.paging.NavBar = new Class({
 });/* ../ludojs/src/paging/page-size.js */
 /**
  * Select box for setting page size of a Collection
- * @namespace paging
- * @class PageSize
+ * @namespace ludo.paging
+ * @class ludo.paging.PageSize
  */
 ludo.paging.PageSize = new Class({
 	Extends: ludo.form.Select,
@@ -34002,10 +33362,11 @@ ludo.paging.PageSize = new Class({
 
 });/* ../ludojs/src/panel.js */
 /**
- * A Panel
- * A Panel is a component where the body element is a &lt;fieldset> with a &lt;legend>
- * @class Panel
- * @augments View
+ * A Panel is a View where the body element is a &lt;fieldset> with a &lt;legend>
+ *
+ * @class ludo.Panel
+ * @param {Object} config
+ * @param {String} config.title Legend title
  */
 ludo.Panel = new Class({
 	Extends:ludo.View,
@@ -34014,7 +33375,7 @@ ludo.Panel = new Class({
 	_createDOM:function () {
 		this.parent();
 		this.getEl().addClass('ludo-panel');
-		this.els.legend = new Element('legend');
+		this.els.legend = $('<legend>');
 		this.els.body.append(this.els.legend);
 		this.getEl().addClass('ludo-panel');
 	},
@@ -34072,105 +33433,35 @@ ludo.Panel = new Class({
 		this.parent(title);
 		this.els.legend.html( title);
 	}
-});/* ../ludojs/src/anchor.js */
-/**
- * Anchor Component
- * @class Anchor
- * @augments View
- */
-ludo.Anchor = new Class({
-    Extends:ludo.View,
-    type:'Anchor',
-    height:15,
-    __construct:function (config) {
-        this.parent(config);
-        this.anchorText = config.anchorText;
-    },
-
-    ludoDOM:function () {
-        this.parent();
-        this.els.anchor = new Element('a');
-        this.els.anchor.addClass('ludo-anchor-text');
-        this.els.anchor.html( this._html);
-        this.els.anchor.setProperty('href', '#');
-        this.els.anchor.addEvent('click', this.anchorClick.bind(this));
-        this.getBody().append(this.els.anchor);
-    },
-
-    ludoEvents:function () {
-        this.parent();
-        this.getBody().addEvent('click', this.anchorClick.bind(this))
-    },
-
-    getAnchorTag:function () {
-        return this.els.anchor;
-    },
-
-    anchorClick:function () {
-        /**
-         * Click on anchor
-         * @event click
-         * @param {Object} component
-         */
-        this.fireEvent('click', this);
-        return false;
-    }
-
 });/* ../ludojs/src/dialog/dialog.js */
 /**
  * Basic dialog class and base class for all other dialogs. This class extends
  * <a href="ludo.Window.html">ludo.Window</a>.
  * @class ludo.dialog.Dialog
  * @param {object} config
- * @augments Window
+ * @param {Boolean} config.modal True to make the window modal, default: true
+ * @param {Boolean} config.autoRemove True to destroy the dialog on close. Will remove the dialog from the DOM. Default: true
+ * @param {String} config.buttonConfig Camel case string config for buttons. example: YesNoCancel for three buttons labeled "Yes", "No" and "Cancel"
+ * @param {Boolean} config.autoHideOnBtnClick. True to automatically hide the dialog on click on one of the buttons.
+ * @fires ludo.dialog.Dialog#buttonName buttonName will be the lowercase value of the button without spaces. Example: Button "Yes" will fire a "yes" event.
+ * @augments ludo.Window
+ * @example
+ new ludo.dialog.Dialog({
+              html : 'Do you want to save your work?',
+               buttonConfig : 'YesNoCancel'
+               listeners : {
+                   'yes' : function(){ this.saveWork() },
+                   'no' : function() { this.discardWork() }
+               }
+          });
  */
 ludo.dialog.Dialog = new Class({
 	Extends:ludo.Window,
 	type:'dialog.Dialog',
-	/**
-	 * Show modal version of dialog
-	 * @attribute {Boolean} modal
-	 * @optional
-	 * @default true
-	 */
 	modal:true,
-	/**
-	 * Auto dispose/erase component on close
-	 * @attribute {Boolean} autoRemove
-	 * @optional
-	 * @default true
-	 */
 	autoRemove:true,
-	/**
-	 * Auto hide component on button click. If autoRemove is set to true, the component
-	 * will be deleted
-	 * @attribute {Boolean} autoHideOnBtnClick
-	 * @optional
-	 * @default true
-	 */
 	autoHideOnBtnClick:true,
-
-	/**
-	  Camel case string config for buttons.<br>
-	  example: YesNoCancel for three buttons labeled "Yes", "No" and "Cancel"<br>
-	  Example of use: <br>
-
-	  @attribute {String} buttonConfig
-	  @default undefined
-      @example
-         new ludo.dialog.Dialog({
-              html : 'Do you want to save your work?',
-               buttonConfig : 'YesNoCancel'
-               listeners : {
-                   'yes' : this.saveWork.bind(this),
-                   'no' : this.discardWork.bind(this),
-                   'cancel' : this.hide.bind(this)
-               }
-          });
-	 */
 	buttonConfig:undefined,
-
-
 	movable:true,
 	closable:false,
 	minimizable:false,
@@ -34272,15 +33563,7 @@ ludo.dialog.Dialog = new Class({
 	},
 
 	buttonClick:function (value, button) {
-		/**
-		 * This event is fired when a button is clicked.
-		 * The name of the button is lowercase version of button value with white space removed
-		 * Example: for a button with value "OK", an "ok" event will be sent.
-		 *
-		 * Name of event is value of button in lowercase
-		 * @event buttonvalue
-		 * @param {Object} ludo.View (Parent component of button)
-		 */
+
 		this.fireEvent(button._get().replace(/\s/g, '').toLowerCase(), this);
 		if (this.autoHideOnBtnClick) {
 			this.hide();
@@ -34290,9 +33573,8 @@ ludo.dialog.Dialog = new Class({
 /**
   Standard confirm dialog with default "OK" and "Cancel" buttons
   @namespace dialog
-  @class Confirm
-  @augments Dialog
-  @constructor
+  @class ludo.dialog.Confirm
+  @augments ludo.dialog.Dialog
   @param {Object} config
   @example
  	new ludo.dialog.Confirm({
@@ -34338,11 +33620,11 @@ ludo.dialog.Confirm = new Class({
 
 /* ../ludojs/src/dialog/alert.js */
 /**
+ Alert dialog. This component has by default one button "OK" and will fire an
+ "ok" event when this button is clicked
  @namespace ludo.dialog
  @class ludo.dialog.Alert
- @augments Dialog
- @description Alert dialog. This component has by default one button "OK" and will fire an
- "ok" event when this button is clicked
+ @augments ludo.dialog.Dialog
  @param {Object} config
  @example
 	 new ludo.dialog.Alert(
@@ -34384,8 +33666,8 @@ ludo.dialog.Alert = new Class({
 /* ../ludojs/src/dialog/prompt.js */
 /**
  * Dialog with one text field. Default buttons are "OK" and "Cancel"
- * @namespace dialog
- * @class Prompt
+ * @namespace ludo.dialog
+ * @class ludo.dialog.Prompt
  * @augments Dialog
  */
 ludo.dialog.Prompt = new Class({
@@ -34451,9 +33733,7 @@ ludo.dialog.Prompt = new Class({
 });/* ../ludojs/src/video/video.js */
 /**
  Base class for Video Player components
- @namespace video
- @class Video
- @augments View
+
  */
 ludo.video.Video = new Class({
 	Extends:ludo.View,
@@ -34520,9 +33800,9 @@ ludo.video.Video = new Class({
 /**
  YouTube video player component
  @namespace video
- @class YouTube
+ @class ludo.video.YouTube
  @augments video.Video
- @constructor
+ 
  @param {Object} config
  @example
 	 var win = new ludo.Window({
@@ -34551,9 +33831,9 @@ ludo.video.YouTube = new Class({
 /**
 Class for linear gradients
 @namespace canvas
-@class Gradient
+@class ludo.canvas.Gradient
 @augments canvas.NamedNode
-@constructor
+
 @param {Object} config
 @example
 	var gradient = new ludo.canvas.Gradient({
@@ -34612,8 +33892,8 @@ ludo.canvas.Gradient = new Class({
 /**
  Class for creating Radial Gradients,
  see: http://www.w3.org/TR/SVG/pservers.html#RadialGradientElement
- @namespace canvas
- @class RadialGradient
+ @namespace ludo.canvas
+ @class ludo.canvas.RadialGradient
  @augments canvas.Gradient
  @example
  	var gradient = new ludo.canvas.RadialGradient({
@@ -34656,7 +33936,7 @@ ludo.canvas.RadialGradient = new Class({
 /**
  * Stop tag used by gradients
  * @namespace canvas
- * @class Stop
+ * @class ludo.canvas.Stop
  * @augments ludo.canvas.Node
  */
 ludo.canvas.Stop = new Class({
@@ -34726,9 +34006,9 @@ ludo.canvas.Stop = new Class({
 /**
  Class for dragging {{#crossLink "canvas/Node"}}{{/crossLink}} elements.
  @namespace canvas
- @class Drag
+ @class ludo.canvas.Drag
  @augments effect.Drag
- @constructor
+ 
  @param {Object} config, see {{#crossLink "effect/Drag"}}{{/crossLink}}
  @example
     var canvas = new ludo.canvas.Canvas({
@@ -34930,9 +34210,9 @@ ludo.canvasEventManager = new ludo.canvas.EventManager();/* ../ludojs/src/canvas
  Class for circle tags. It extends canvas.Node by adding setter and getter methods
  for radius, center x and center y.
  @namespace canvas
- @class Circle
+ @class ludo.canvas.Circle
  @augments canvas.Node
- @constructor
+ 
  @param {Object} coordinates
  @param {canvas.NodeConfig} config
  @example
@@ -35021,10 +34301,10 @@ ludo.canvas.Circle = new Class({
 });/* ../ludojs/src/canvas/polyline.js */
 /**
  Class for drawing polylines.
- @namespace canvas
- @class Polyline
+ @namespace ludo.canvas
+ @class ludo.canvas.Polyline
  @augments canvas.NamedNode
- @constructor
+ 
  @param {String} points
  @param {canvas.NodeConfig} config
  @example
@@ -35141,10 +34421,9 @@ ludo.canvas.Polyline = new Class({
 });/* ../ludojs/src/canvas/polygon.js */
 /**
  Class for drawing polygons.
- @namespace canvas
- @class Polygon
+ @namespace ludo.canvas
+ @class ludo.canvas.Polygon
  @augments canvas.Polyline
- @constructor
  @param {String} points
  @param {canvas.NodeConfig} config
  @example
@@ -35156,12 +34435,11 @@ ludo.canvas.Polygon = new Class({
 });/* ../ludojs/src/canvas/ellipse.js */
 /**
  Class for drawing ellipses.
- @namespace canvas
- @class Ellipse
- @augments canvas.NamedNode
- @constructor
+ @namespace ludo.canvas
+ @class ludo.canvas.Ellipse
+ @augments ludo.canvas.NamedNode
  @param {Object} coordinates
- @param {canvas.NodeConfig} config
+ @param {ludo.canvas.NodeConfig} config
  @example
  	var ellipse = new ludo.canvas.Ellipse({ cx:500, cy:425, rx:250, ry:200 }, { paint: paintObject } );
  */
@@ -35271,8 +34549,8 @@ ludo.canvas.Ellipse = new Class({
 });/* ../ludojs/src/canvas/path.js */
 /**
  * Returns a path SVG element which can be adopted to a canvas.
- * @namespace canvas
- * @class Path
+ * @namespace ludo.canvas
+ * @class ludo.canvas.Path
  */
 ludo.canvas.Path = new Class({
     Extends:ludo.canvas.NamedNode,
@@ -35372,11 +34650,11 @@ ludo.canvas.Path = new Class({
 });/* ../ludojs/src/canvas/text.js */
 /**
  * @class ludo.canvas.Text
- * @config {String} text
- * @config {Object} config
- * @config {Object} config.css layout properties
- * @config {Number} config.x left position
- * @config {Number} config.y top position
+ * @param {String} text
+ * @param {Object} config
+ * @param {Object} config.css layout properties
+ * @param {Number} config.x left position
+ * @param {Number} config.y top position
  */
 ludo.canvas.Text = new Class({
 	Extends: ludo.canvas.NamedNode,
@@ -35394,7 +34672,7 @@ ludo.canvas.Text = new Class({
 	},
 
 	/**
-	 * Set text anchor to start, middel, end or inherit
+	 * Set text anchor to start, middle, end or inherit
 	 * @function textAnchor
 	 * @memberof ludo.canvas.Text
 	 * @param anchor
@@ -35408,10 +34686,9 @@ ludo.canvas.Text = new Class({
  Note! Filters will produce raster graphic, not Vector.
  Note! Filters are not supported by IE 9 and lower. (Support is added to IE10).
  Ref: http://caniuse.com/svg-filters
- @namespace canvas
- @class Filter
+ @namespace ludo.canvas
+ @class ludo.canvas.Filter
  @augments canvas.NamedNode
- @constructor
  @param {Object} attributes
  @param {Object} config options
  *
@@ -35520,9 +34797,9 @@ ludo.canvas.Filter = new Class({
 });/* ../ludojs/src/canvas/mask.js */
 /**
  Class for masking of SVG DOM nodes
- @namespace canvas
- @class Mask
- @constructor
+ @namespace ludo.canvas
+ @class ludo.canvas.Mask
+ 
  @param {Object} properties
  @example
 	 var mask = new ludo.canvas.Mask({ id : 'Mask' });
@@ -35547,9 +34824,9 @@ ludo.canvas.Mask = new Class({
 });/* ../ludojs/src/canvas/curtain.js */
 /**
  Special animation class for SVG elements
- @namespace canvas
- @class Curtain
- @constructor
+ @namespace ludo.canvas
+ @class ludo.canvas.Curtain
+ 
  @param {ludo.canvas.Node} node
  @example
 	node.curtain().open('LeftRight');

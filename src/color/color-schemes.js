@@ -356,6 +356,10 @@ ludo.ColorSchemes = new Class({
             "900": "#263238",
             "Black": "#000000",
             "White": "#FFFFFF"
+        },
+
+        "twilight": function(){
+
         }
     }
 });

@@ -3,32 +3,26 @@
  It is used to search and filter data in a collection.
  @namespace ludo.dataSource
  @class ludo.dataSource.CollectionSearch
-
+ @param {object} config
+ @param {object} config.delay  Delay in seconds between call to search and execution of search.
+ A delay is useful when using text fields to search. Default : 0
+ @param {Array} config.index Columns in datasource to index for search
+ @fires ludo.dataSource.CollectionSearch#initSearch Fired just before search starts
+ @fires ludo.dataSource.CollectionSearch#search Fired when search is finished
+ @fires ludo.dataSource.CollectionSearch#deleteSearch
  */
 ludo.dataSource.CollectionSearch = new Class({
 	Extends:ludo.Core,
 	dataSource:undefined,
 	searchResult:undefined,
 	searchIndexCreated:false,
-	/**
-	 Delay in seconds between call to search and execution of search.
-	 A delay is useful when using text fields to search.
-	 @config delay
-	 @type {Number}
-	 @default 0
-	 @example
-	 	delay:0
-	 */
+
 	delay:0,
 	searches:undefined,
 	searchBranches:undefined,
 	searchFn:undefined,
 	currentBranch:undefined,
-	/**
-	 Columns in datasource to index for search
-	 @config index
-	 @type Array
-	 */
+
 	index:undefined,
 
 	searchParser:undefined,
@@ -52,6 +46,7 @@ ludo.dataSource.CollectionSearch = new Class({
 	 * execute a text search
 	 * @function Search
 	 * @param {String} search
+	 * @memberof ludo.dataSource.CollectionSearch.prototype
 	 */
 	search:function (search) {
 		if (!search && this.searches.length == 0)return;
@@ -78,6 +73,7 @@ ludo.dataSource.CollectionSearch = new Class({
 	 @function clear
 	 @chainable
 	 @return {dataSource.CollectionSearch} this
+	 @memberof ludo.dataSource.CollectionSearch.prototype
 	 */
 	clear:function () {
 		this.searches = [];
@@ -89,12 +85,9 @@ ludo.dataSource.CollectionSearch = new Class({
 	 * {{#crossLink "dataSource.Collection"}}{{/crossLink}} listens to. It will trigger an update of
 	 * views using the {{#crossLink "dataSource.Collection"}}{{/crossLink}} object as dataSource.
 	 * @function deleteSearch
+	 * @memberof ludo.dataSource.CollectionSearch.prototype
 	 */
 	deleteSearch:function () {
-		/**
-		 * Search executed without any search terms
-		 * @event deleteSearch
-		 */
 		this.fireEvent('deleteSearch');
 		this.searchResult = undefined;
 		this.clear();
@@ -104,6 +97,7 @@ ludo.dataSource.CollectionSearch = new Class({
 	 @function where
 	 @param {String|Function} search
 	 @return {dataSource.CollectionSearch} this
+	 @memberof ludo.dataSource.CollectionSearch.prototype
 	 @chainable
 	 @example
 		 var searcher = ludo.get('idOfDataSearch').getSearcher();
@@ -130,6 +124,7 @@ ludo.dataSource.CollectionSearch = new Class({
 	 @function or
 	 @param {String|Function} search
 	 @return {dataSource.CollectionSearch} this
+	 @memberof ludo.dataSource.CollectionSearch.prototype
 	 @chainable
 	 @example
 		 var searcher = myDataSource.getSearcher();
@@ -166,6 +161,7 @@ ludo.dataSource.CollectionSearch = new Class({
 	 @param {String|Function} search
 	 @return {dataSource.CollectionSearch} this
 	 @chainable
+	 @memberof ludo.dataSource.CollectionSearch.prototype
 	 @example
 		 var searcher = myDataSource.getSearcher();
 		 var populationFn = function(record){
@@ -209,6 +205,7 @@ ludo.dataSource.CollectionSearch = new Class({
 	 * @function withIn
 	 * @param {Array} searches
 	 * @chainable
+	 * @memberof ludo.dataSource.CollectionSearch.prototype
 	 * @return {dataSource.CollectionSearch} this
 	 */
 	withIn:function (searches) {
@@ -222,6 +219,7 @@ ludo.dataSource.CollectionSearch = new Class({
 	 * Start grouping search items together
 	 * @function branch
 	 * @chainable
+	 * @memberof ludo.dataSource.CollectionSearch.prototype
 	 * @return {dataSource.CollectionSearch} this
 	 */
 	branch:function () {
@@ -232,6 +230,7 @@ ludo.dataSource.CollectionSearch = new Class({
 	 * Close group of search items.
 	 * @function branch
 	 * @chainable
+	 * @memberof ludo.dataSource.CollectionSearch.prototype
 	 * @return {endBranch.CollectionSearch} this
 	 */
 	endBranch:function () {
@@ -249,6 +248,7 @@ ludo.dataSource.CollectionSearch = new Class({
 	 @function execute
 	 @chainable
 	 @return {dataSource.CollectionSearch} this
+	 @memberof ludo.dataSource.CollectionSearch.prototype
 	 @example
 		 // Assumes that ludo.get('collection') returns a {{#crossLink "dataSource.Collection"}}{{/crossLink}} object
 		 var searcher = ludo.get('collection').getSearcher();
@@ -314,6 +314,7 @@ ludo.dataSource.CollectionSearch = new Class({
 	 * Returns false when<br>
 	 *  - search result is undefined because no search has been executed or search has been deleted.
 	 * @function hasData
+	 * @memberof ludo.dataSource.CollectionSearch.prototype
 	 * @return {Boolean}
 	 */
 	hasData:function () {
@@ -389,6 +390,7 @@ ludo.dataSource.CollectionSearch = new Class({
 	 * Returns number of records in search result
 	 * @function getCount
 	 * @return {Number}
+	 * @memberof ludo.dataSource.CollectionSearch.prototype
 	 */
 	getCount:function () {
 		return this.searchResult ? this.searchResult.length : 0;

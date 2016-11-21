@@ -13,12 +13,7 @@ ludo.form.SubmitButton = new Class({
 	type:'form.SubmitButton',
 	value:'Submit',
 	disableOnInvalid:true,
-	/**
-	 * Apply submit button to form of this LudoJS component. If not defined, it will be applied
-     * to parent view.
-	 * @config {String|View} applyTo
-	 * @default undefined
-	 */
+
 	applyTo:undefined,
 	__construct:function(config){
 		this.parent(config);

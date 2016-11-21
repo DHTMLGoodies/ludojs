@@ -1512,7 +1512,6 @@ div.ludo-menu-horizontal-up div.ludo-menu-item-expand {
 div.ludo-tree-tree div.ludo-body{
     overflow-y:auto;
     overflow-x:hidden;
-    background-color:#FFF;
     padding-left:4px;
 }
 
@@ -2473,12 +2472,7 @@ div.ludo-spinbox-arrow-overeffect{
 fieldset{
     padding:0;
     margin:2px;
-}/* ../ludojs/css-source/anchor.css */
-.ludo-anchor-text{
-    text-decoration:underline;
-    color:blue;
-}
-/* ../ludojs/css-source/dialog/dialog.css */
+}/* ../ludojs/css-source/dialog/dialog.css */
 .ludo-dialog-shim{
     position:absolute;
     left:0;
@@ -2651,19 +2645,23 @@ fieldset{
     color:#FFF;
     font-weight:bold;
 }
-.ludo-ocean .ludo-form-button-m-bg-right, .ludo-ocean .ludo-form-button-m-bg-left {
+.ludo-ocean .ludo-form-button-m-bg-right,
+.ludo-ocean .ludo-form-button-m-bg-left {
     background-image: url('../images/ocean-skin/button.png');
 }
 
-.ludo-ocean .ludo-form-button-over .ludo-form-button-m-bg-left, .ludo-ocean .ludo-form-button-over .ludo-form-button-m-bg-right {
+.ludo-ocean .ludo-form-button-over .ludo-form-button-m-bg-left,
+.ludo-ocean .ludo-form-button-over .ludo-form-button-m-bg-right {
     background-image: url('../images/ocean-skin/button-over.png');
 }
 
-.ludo-ocean .ludo-form-button-down .ludo-form-button-m-bg-left, .ludo-ocean .ludo-form-button-down .ludo-form-button-m-bg-right {
+.ludo-ocean .ludo-form-button-down .ludo-form-button-m-bg-left,
+.ludo-ocean .ludo-form-button-down .ludo-form-button-m-bg-right {
     background-image: url('../images/ocean-skin/button-pressed.png');
 }
 
-.ludo-ocean .ludo-form-button-pressed .ludo-form-button-m-bg-left, .ludo-ocean .ludo-form-button-pressed .ludo-form-button-m-bg-right {
+.ludo-ocean .ludo-form-button-pressed .ludo-form-button-m-bg-left,
+.ludo-ocean .ludo-form-button-pressed .ludo-form-button-m-bg-right {
     background-image: url('../images/ocean-skin/button-pressed.png');
 }
 
@@ -2672,11 +2670,13 @@ fieldset{
     cursor: default;
 }
 
-.ludo-ocean div.ludo-form-button-selected .ludo-form-button-m-bg-left, .ludo-ocean div.ludo-form-button-selected .ludo-form-button-m-bg-right {
+.ludo-ocean div.ludo-form-button-selected .ludo-form-button-m-bg-left,
+.ludo-ocean div.ludo-form-button-selected .ludo-form-button-m-bg-right {
     background-image: url('../images/ocean-skin/button-over.png');
 }
 
-.ludo-ocean div.ludo-form-button-disabled .ludo-form-button-m-bg-left, .ludo-ocean div.ludo-form-button-disabled .ludo-form-button-m-bg-right {
+.ludo-ocean div.ludo-form-button-disabled .ludo-form-button-m-bg-left,
+.ludo-ocean div.ludo-form-button-disabled .ludo-form-button-m-bg-right {
     background-image: url('../images/ocean-skin/button-disabled.png') !important;
 }
 
@@ -2820,19 +2820,23 @@ fieldset{
     background-image: url(../images/ocean-skin/expand-menu-horizontal.png);
 }
 
-.ludo-ocean .ludo-form-button-s .ludo-form-button-m-bg-left, .ludo-ocean .ludo-form-button-s .ludo-form-button-m-bg-right {
+.ludo-ocean .ludo-form-button-s .ludo-form-button-m-bg-left,
+.ludo-ocean .ludo-form-button-s .ludo-form-button-m-bg-right {
     background-image: url('../images/ocean-skin/tiny-button.png');
 }
 
-.ludo-ocean .ludo-form-button-s .ludo-form-button-over .ludo-form-button-m-bg-left, .ludo-ocean .ludo-form-button-s .ludo-form-button-over .ludo-form-button-m-bg-right {
+.ludo-ocean .ludo-form-button-s .ludo-form-button-over .ludo-form-button-m-bg-left,
+.ludo-ocean .ludo-form-button-s .ludo-form-button-over .ludo-form-button-m-bg-right {
     background-image: url('../images/ocean-skin/tiny-button-over.png');
 }
 
-.ludo-ocean .ludo-form-button-s .ludo-form-button-down .ludo-form-button-m-bg-left, .ludo-ocean .ludo-form-button-s .ludo-form-button-down .ludo-form-button-m-bg-right {
+.ludo-ocean .ludo-form-button-s .ludo-form-button-down .ludo-form-button-m-bg-left,
+.ludo-ocean .ludo-form-button-s .ludo-form-button-down .ludo-form-button-m-bg-right {
     background-image: url('../images/ocean-skin/tiny-button-down.png');
 }
 
-.ludo-ocean .ludo-form-button-s .ludo-form-button-disabled .ludo-form-button-m-bg-left, .ludo-ocean .ludo-form-button-s .ludo-form-button-disabled .ludo-form-button-m-bg-right {
+.ludo-ocean .ludo-form-button-s .ludo-form-button-disabled .ludo-form-button-m-bg-left,
+.ludo-ocean .ludo-form-button-s .ludo-form-button-disabled .ludo-form-button-m-bg-right {
     background-image: url('../images/ocean-skin/tiny-button-disabled.png');
 }
 

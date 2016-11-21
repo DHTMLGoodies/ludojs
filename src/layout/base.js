@@ -194,6 +194,11 @@ ludo.layout.Base = new Class({
 		this.viewport.absHeight = this.getAvailHeight();
 		this.viewport.width = this.getAvailWidth() - this.viewport.left - this.viewport.right;
 		this.viewport.height = this.getAvailHeight() - this.viewport.top - this.viewport.bottom;
+
+		this.viewport.left = parseInt(this.view.getBody().css('padding-left'));
+		this.viewport.top = parseInt(this.view.getBody().css('padding-top'));
+
+		console.log(this.viewport);
 	},
 
 	previousContentWidth:undefined,

@@ -34,7 +34,7 @@ require_once("../includes/demo-header.php");
             {
                 html : 'C',
                 layout:{
-                    height:150,
+                    height:100,
                     resizable:true
                 }
             }

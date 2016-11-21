@@ -57,8 +57,7 @@ ludo.form.Seekbar = new Class({
     barSize: 2,
 
     el: undefined,
-    elNegative: undefined,
-    elPositive: undefined,
+    
 
     thumb: undefined,
     thumbInner: undefined,
@@ -98,45 +97,42 @@ ludo.form.Seekbar = new Class({
 
         this.getBody().append(this.el);
 
-       // this.orientation = this.getWidth() >= this.getHeight() ? 'horizontal' : 'vertical';
-
-        this.elNegative = $('<div class="seekbar-negative" style="position:absolute;z-index:1"></div>');
-        this.elPositive = $('<div class="seekbar-positive" style="position:absolute;z-index:1"></div>');
+        this.els.negative = $('<div class="seekbar-negative" style="position:absolute;z-index:1"></div>');
+        this.els.positive = $('<div class="seekbar-positive" style="position:absolute;z-index:1"></div>');
 
         if (this.negativeColor != undefined) {
-            this.elNegative.css("background-color", this.negativeColor);
+            this.els.negative.css("background-color", this.negativeColor);
         }
         if (this.positiveColor != undefined) {
-            this.elPositive.css("background-color", this.positiveColor);
+            this.els.positive.css("background-color", this.positiveColor);
         }
 
-        this.thumb = $('<div style="position:absolute;z-index:4"></div>');
-        this.thumbInner = $('<div class="seekbar-thumb-needle" style="position:absolute;z-index:5;background-color:' + this.thumbColor + '"></div>');
-        this.thumbOuter = $('<div class="seekbar-thumb" style="position:absolute;z-index:5;width:100%;height:100%;background-color:' + this.thumbColor + '"></div>');
+        this.els.thumb = $('<div style="position:absolute;z-index:4"></div>');
+        this.els.thumbInner = $('<div class="seekbar-thumb-needle" style="position:absolute;z-index:5;background-color:' + this.thumbColor + '"></div>');
+        this.els.thumbOuter = $('<div class="seekbar-thumb" style="position:absolute;z-index:5;width:100%;height:100%;background-color:' + this.thumbColor + '"></div>');
 
         if (this.thumbColor != undefined) {
-            this.thumbInner.css("background-color", this.thumbColor);
-            this.thumbOuter.css("background-color", this.thumbColor);
+            this.els.thumbInner.css("background-color", this.thumbColor);
+            this.els.thumbOuter.css("background-color", this.thumbColor);
 
         }
 
         this.updateAlpha();
 
-        this.thumb.append(this.thumbInner);
-        this.thumb.append(this.thumbOuter);
+        this.els.thumb.append(this.els.thumbInner);
+        this.els.thumb.append(this.els.thumbOuter);
 
-        this.el.append(this.elNegative);
-        this.el.append(this.elPositive);
-        this.el.append(this.thumb);
+        this.el.append(this.els.negative);
+        this.el.append(this.els.positive);
+        this.el.append(this.els.thumb);
 
-        this.eventEl = $('<div style="position:absolute;z-index:3;width:100%;height:100%"></div>');
-        this.el.append(this.eventEl);
-        this.eventEl.on("click", this.clickOnBar.bind(this));
+        this.els.eventEl = $('<div style="position:absolute;z-index:3;width:100%;height:100%"></div>');
+        this.el.append(this.els.eventEl);
+        this.els.eventEl.on("click", this.clickOnBar.bind(this));
 
-        this.thumb.on(ludo.util.getDragStartEvent(), this.startDragging.bind(this));
+        this.els.thumb.on(ludo.util.getDragStartEvent(), this.startDragging.bind(this));
         $(document.documentElement).on(ludo.util.getDragMoveEvent(), this.drag.bind(this));
         $(document.documentElement).on(ludo.util.getDragEndEvent(), this.endDrag.bind(this));
-
     },
 
     clickOnBar: function (e) {
@@ -220,10 +216,10 @@ ludo.form.Seekbar = new Class({
         this.thumbSize += this.thumbSize % 2;
         var size = Math.max(this.area.width, this.area.height);
 
-        this.thumbOuter.css({
+        this.els.thumbOuter.css({
             'width': this.thumbSize, 'height': this.thumbSize, 'border-radius': this.thumbSize / 2
         });
-        this.thumb.css({
+        this.els.thumb.css({
             'width': this.thumbSize, 'height': this.thumbSize, 'border-radius': this.thumbSize / 2
         });
 
@@ -231,7 +227,7 @@ ludo.form.Seekbar = new Class({
         needleSize += needleSize % 2;
         var pos = (this.thumbSize / 2) - (needleSize / 2);
 
-        this.thumbInner.css({
+        this.els.thumbInner.css({
             width: needleSize, height: needleSize, borderRadius: needleSize / 2, left: pos, top: pos
         });
 
@@ -242,26 +238,26 @@ ludo.form.Seekbar = new Class({
         var barPos = (this.thumbSize / 2) - (this.barSize / 2);
         if (this.orientation == 'horizontal') {
 
-            this.elNegative.css({
+            this.els.negative.css({
                 "left": this.valueArea.min, top: barPos, height: this.barSize
             });
-            this.elPositive.css({
+            this.els.positive.css({
                 "left": this.valueArea.min, top: barPos, height: this.barSize
             });
         } else {
 
-            this.elNegative.css({
+            this.els.negative.css({
                 "top": 0, width: this.barSize, left: barPos
             });
 
-            this.elPositive.css({
+            this.els.positive.css({
                 "top": this.valueArea.min, width: this.barSize, left: barPos
             });
         }
         var br = Math.floor(this.barSize / 2) + this.barSize % 2;
 
-        this.elNegative.css("border-radius", br);
-        this.elPositive.css("border-radius", br);
+        this.els.negative.css("border-radius", br);
+        this.els.positive.css("border-radius", br);
 
         this.positionBars();
         this.positionThumb();
@@ -272,9 +268,9 @@ ludo.form.Seekbar = new Class({
     positionThumb: function () {
         var pos = this.getValuePos();
         if (this.orientation == 'horizontal') {
-            this.thumb.css("left", pos);
+            this.els.thumb.css("left", pos);
         } else {
-            this.thumb.css("top", pos);
+            this.els.thumb.css("top", pos);
         }
     },
 
@@ -283,19 +279,19 @@ ludo.form.Seekbar = new Class({
 
         if (this.orientation == 'horizontal') {
             if(this.reverse){
-                this.elNegative.css({
+                this.els.negative.css({
                     left : pos + this.valueArea.min,
                     width: this.valueArea.size - pos
                 });
 
-                this.elPositive.css(
+                this.els.positive.css(
                     {"left": this.valueArea.min,
                         "width": pos}
                 );
 
             }else{
-                this.elNegative.css("width", pos);
-                this.elPositive.css({"left": pos + this.valueArea.min, "width": this.valueArea.size - pos});
+                this.els.negative.css("width", pos);
+                this.els.positive.css({"left": pos + this.valueArea.min, "width": this.valueArea.size - pos});
 
             }
 
@@ -304,17 +300,17 @@ ludo.form.Seekbar = new Class({
         } else {
 
             if(this.reverse){
-                this.elPositive.css({
+                this.els.positive.css({
                     "height" :this.valueArea.size - pos,
                     top:pos + this.valueArea.min
                 });
-                this.elNegative.css({
+                this.els.negative.css({
                     top:this.valueArea.min,
                     height: pos
                 });
             }else{
-                this.elPositive.css("height", pos);
-                this.elNegative.css({
+                this.els.positive.css("height", pos);
+                this.els.negative.css({
                     top: pos + this.valueArea.min,
                     height: this.valueArea.size - pos
                 });
@@ -340,11 +336,11 @@ ludo.form.Seekbar = new Class({
     },
 
     startDragging: function (e) {
-        this.thumbOuter.css("opacity", "");
-        this.thumbOuter.addClass("seekbar-thumb-over");
+        this.els.thumbOuter.css("opacity", "");
+        this.els.thumbOuter.addClass("seekbar-thumb-over");
         this.active = true;
 
-        var position = this.thumb.position();
+        var position = this.els.thumb.position();
 
         var x = e.pageX;
         var y = e.pageY;
@@ -397,9 +393,9 @@ ludo.form.Seekbar = new Class({
 
         if (this.orientation == 'horizontal') {
 
-            this.thumb.css("left", this.getValuePos());
+            this.els.thumb.css("left", this.getValuePos());
         } else {
-            this.thumb.css("top", this.getValuePos());
+            this.els.thumb.css("top", this.getValuePos());
         }
 
         return false;
@@ -407,7 +403,7 @@ ludo.form.Seekbar = new Class({
 
     updateAlpha: function () {
         if (this.thumbAlpha < 1) {
-            this.thumbOuter.css("opacity", this.thumbAlpha);
+            this.els.thumbOuter.css("opacity", this.thumbAlpha);
         }
     },
 
@@ -416,7 +412,7 @@ ludo.form.Seekbar = new Class({
 
         this.updateAlpha();
 
-        this.thumbOuter.removeClass("seekbar-thumb-over");
+        this.els.thumbOuter.removeClass("seekbar-thumb-over");
 
         this.active = false;
     }

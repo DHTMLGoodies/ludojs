@@ -33,7 +33,6 @@ require_once("../includes/demo-header.php");
         });
 
         ludo.get('rgbCode').val(color.substr(1));
-
     }
 
 

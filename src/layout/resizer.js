@@ -157,8 +157,7 @@ ludo.layout.Resizer = new Class({
         this.el.css({
             left: '', top: '', right: '', bottom: ''
         });
-
-
+        
         if (config.width !== undefined && config.width > 0)this.el.css('width', config.width);
         if (config.height !== undefined && config.height > 0)this.el.css('height', (config.height - ludo.dom.getMBPH(this.el)));
         if (config.left !== undefined)this.el.css('left', config.left);
