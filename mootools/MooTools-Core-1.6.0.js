@@ -1,7 +1,7 @@
 /* MooTools: the javascript framework. license: MIT-style license. copyright: Copyright (c) 2006-2016 [Valerio Proietti](http://mad4milk.net/).*/ 
 /*!
 Web Build: http://mootools.net/core/builder/e7289bd0058c6790cb2b769822285f97
-*/
+*/ 
 /*
 ---
 
