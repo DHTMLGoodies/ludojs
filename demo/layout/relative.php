@@ -257,9 +257,7 @@ require_once("../includes/demo-header.php");
         layout:{
             type:'relative'
         },
-        css:{
-            'background-color':'#FFF'
-        },
+
         children:[
             {
                 layout:{
