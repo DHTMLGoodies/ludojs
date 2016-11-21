@@ -57,7 +57,10 @@ $skin = isset($skin) ? $skin : 'twilight';
         <link rel="stylesheet" href="<?php echo $prefix; ?>../css/ludojs-all.css" type="text/css">
         <?php
     }
+
+
     ?>
+    <script type="text/javascript" src="<?php echo $prefix; ?>code-highlight/code-highlight.js"></script>
     <style type="text/css">
         div.source-code-preview{
             background-color:#FFF;

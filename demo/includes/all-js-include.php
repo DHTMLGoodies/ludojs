@@ -226,5 +226,5 @@
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/tree/tree.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/tree/drag-drop.js"></script>
 
-<script type="text/javascript" src="<?php echo $prefix; ?>code-highlight/code-highlight.js"></script>
+
     
