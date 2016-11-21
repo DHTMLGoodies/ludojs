@@ -10,8 +10,7 @@ $skin = isset($skin) ? $skin : 'twilight';
     <title><?php echo $pageTitle; ?></title>
 
     <script type="text/javascript" src="<?php echo $prefix; ?>../jquery/jquery-3.1.0.min.js"></script>
-    <script type="text/javascript" src="<?php echo $prefix; ?>../mootools/MooTools-Core-1.6.0.js"></script>
-    <script type="text/javascript" src="<?php echo $prefix; ?>../mootools/MooTools-More-1.6.0.js"></script>
+
     <link rel="icon" type="image/gif" href="<?php echo $prefix; ?>../images/favicon.png" />
 
     <style type="text/css">
@@ -22,10 +21,24 @@ $skin = isset($skin) ? $skin : 'twilight';
         height:100%;margin:0;padding:0;
     }
     </style>
-    <!--<script type="text/javascript" src="<?php echo $prefix; ?>../js/ludojs<?php echo isset($_GET['fullSource']) ? "" : "-minified"; ?>.js"></script>-->
+
 
     <?php
-    require_once("all-js-include.php");
+    if(isset($_GET["debug"])){
+        ?>
+        <script type="text/javascript" src="<?php echo $prefix; ?>../mootools/MooTools-Core-1.6.0.js"></script>
+        <script type="text/javascript" src="<?php echo $prefix; ?>../mootools/MooTools-More-1.6.0.js"></script>
+        <?php
+
+        require_once("all-js-include.php");
+    }else {
+        ?>
+       <script type="text/javascript" src="<?php echo $prefix; ?>../js/ludojs<?php echo isset($_GET['fullSource']) ? "" : "-minified"; ?>.js"></script>
+        <?php
+
+    }
+    ?>
+
 
     if(isset($_GET["gray"])){
         ?>

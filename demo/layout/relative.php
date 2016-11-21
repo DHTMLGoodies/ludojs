@@ -269,7 +269,6 @@ require_once("../includes/demo-header.php");
                 },
                 css:{
                     border:'1px solid #C0C0C0',
-                    'background-color':'#f5f5f5',
                     padding:3
                 },
                 children:[
