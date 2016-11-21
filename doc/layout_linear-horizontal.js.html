@@ -109,8 +109,9 @@ ludo.layout.LinearHorizontal = new Class({
 	Extends:ludo.layout.Linear,
 
 	resize:function () {
-		var totalWidth = this.view.getBody().width();
-		var height = this.hasDynamicHeight() ? 'auto' : this.view.getBody().height();
+		var totalWidth = this.viewport.width;
+
+		var height = this.hasDynamicHeight() ? 'auto' : this.viewport.height;
 		if (height == 0) {
 			return;
 		}
@@ -133,7 +134,7 @@ ludo.layout.LinearHorizontal = new Class({
 		var remainingWidth;
 		totalWidth = remainingWidth = totalWidth - totalWidthOfItems;
 
-		var currentLeft = 0;
+		var currentLeft = this.viewport.left;
 		for (i = 0; i &lt; this.view.children.length; i++) {
 			if (this.view.children[i].isVisible()) {
 				var config = { 'height':height, 'left':currentLeft };

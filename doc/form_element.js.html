@@ -112,7 +112,8 @@ Clear cached padding,border and margins.</a></li><li><a href="global.html#clearT
  * @param {Function} config.linkWith Creates a link with form element with this id. When two form views are linked, they will always have the same value. When one value is changed, the linked form view is automatically updated.
  * Example: A link between a form.Seekbar and a form.Number.
  * Example: { type:'form.Text', placeHolder='Enter Valid Value', validator:function(value){ return value == 'Valid Value' } }
- *
+ * @fires ludo.form.Element#enable - Fired on enable, argument: ludo.form.Element
+ * @fires ludo.form.Element#disable - Fired on disable, argument: ludo.form.Element
  */
 ludo.form.Element = new Class({
     Extends:ludo.View,
@@ -320,7 +321,7 @@ ludo.form.Element = new Class({
      */
     disable:function () {
         this.getFormEl().attr('disabled', '1');
-        this.els.label.addClass('ludo-form-label-disabled');
+        this.fireEvent('disable', this);
     },
     /**
      * Enable form element
@@ -328,8 +329,8 @@ ludo.form.Element = new Class({
      * @return void
      */
     enable:function () {
-        this.getFormEl().removeProperty('disabled');
-        this.els.label.removeClass('ludo-form-label-disabled');
+        this.getFormEl().removeAttr('disabled');
+        this.fireEvent('enable', this);
     },
 
     getInheritedFormConfig:function () {

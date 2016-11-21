@@ -38,6 +38,8 @@ ludo.form.Label = new Class({
         if(view){
             view.addEvent('valid', this.onValid.bind(this));
             view.addEvent('invalid', this.onInvalid.bind(this));
+            view.addEvent('enable', this.onEnable.bind(this));
+            view.addEvent('disable', this.onDisable.bind(this));
             if(!view.isValid())
                 this.onInvalid();
         }
@@ -46,6 +48,15 @@ ludo.form.Label = new Class({
     resizeDOM:function(){
         this.parent();
         this.els.label.css('line-height', this.getBody().height() + 'px');
+    },
+
+    onEnable:function(){
+
+        this.getBody().removeClass('ludo-form-label-disabled');
+    },
+
+    onDisable:function(){
+        this.getBody().addClass('ludo-form-label-disabled');
     },
 
     onValid:function(){

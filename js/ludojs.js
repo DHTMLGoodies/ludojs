@@ -1,7 +1,7 @@
-/* Generated Mon Nov 21 20:18:01 CET 2016 */
+/* Generated Mon Nov 21 20:26:26 CET 2016 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.164
+ludoJS - Javascript framework, 1.1.166
 Copyright (C) 2012-2016  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -26150,7 +26150,8 @@ ludo.form.validator.twin = function(value, twin){
  * @param {Function} config.linkWith Creates a link with form element with this id. When two form views are linked, they will always have the same value. When one value is changed, the linked form view is automatically updated.
  * Example: A link between a form.Seekbar and a form.Number.
  * Example: { type:'form.Text', placeHolder='Enter Valid Value', validator:function(value){ return value == 'Valid Value' } }
- *
+ * @fires ludo.form.Element#enable - Fired on enable, argument: ludo.form.Element
+ * @fires ludo.form.Element#disable - Fired on disable, argument: ludo.form.Element
  */
 ludo.form.Element = new Class({
     Extends:ludo.View,
@@ -26358,7 +26359,7 @@ ludo.form.Element = new Class({
      */
     disable:function () {
         this.getFormEl().attr('disabled', '1');
-        this.els.label.addClass('ludo-form-label-disabled');
+        this.fireEvent('disable', this);
     },
     /**
      * Enable form element
@@ -26366,8 +26367,8 @@ ludo.form.Element = new Class({
      * @return void
      */
     enable:function () {
-        this.getFormEl().removeProperty('disabled');
-        this.els.label.removeClass('ludo-form-label-disabled');
+        this.getFormEl().removeAttr('disabled');
+        this.fireEvent('enable', this);
     },
 
     getInheritedFormConfig:function () {
@@ -29114,6 +29115,8 @@ ludo.form.Label = new Class({
         if(view){
             view.addEvent('valid', this.onValid.bind(this));
             view.addEvent('invalid', this.onInvalid.bind(this));
+            view.addEvent('enable', this.onEnable.bind(this));
+            view.addEvent('disable', this.onDisable.bind(this));
             if(!view.isValid())
                 this.onInvalid();
         }
@@ -29122,6 +29125,15 @@ ludo.form.Label = new Class({
     resizeDOM:function(){
         this.parent();
         this.els.label.css('line-height', this.getBody().height() + 'px');
+    },
+
+    onEnable:function(){
+
+        this.getBody().removeClass('ludo-form-label-disabled');
+    },
+
+    onDisable:function(){
+        this.getBody().addClass('ludo-form-label-disabled');
     },
 
     onValid:function(){
@@ -29243,6 +29255,7 @@ ludo.form.DisplayField = new Class({
 ludo.form.Checkbox = new Class({
     Extends:ludo.form.Element,
     type:'form.Checkbox',
+    inputTag : 'input',
     inputType:'checkbox',
     stretchField:false,
     labelWidth:undefined,
@@ -29252,20 +29265,6 @@ ludo.form.Checkbox = new Class({
     checked:false,
     height:undefined,
     labelSuffix : '',
-
-    fieldTpl:['<table ','cellpadding="0" cellspacing="0" border="0" width="100%">',
-        '<tbody>',
-        '<tr class="checkbox-image-row" style="display:none">',
-        '<td colspan="2" class="input-image"></td>',
-        '</tr>',
-        '<tr class="input-row">',
-        '<td class="input-cell" style="width:30px"></td>',
-        '<td><label class="input-label"></label></td>',
-        '<td class="suffix-cell" style="display:none"><label></label></td>',
-        '</tr>',
-        '</tbody>',
-        '</table>'
-    ],
 
     __construct:function (config) {
         config = config || {};
@@ -29283,17 +29282,7 @@ ludo.form.Checkbox = new Class({
     },
 
     addInput:function () {
-        var id = this.getFormElId();
-        var radio;
-        if (Browser.ie && parseInt(Browser.version) < 9) {
-            radio = document.createElement('<input type="' + this.inputType + '" name="' + this.getName() + '" value="' + this.value + '" id="' + id + '">');
-            this.getInputCell().append(radio);
-            this.els.formEl = document.id(radio);
-        } else {
-            radio = this.els.formEl = $('<input type="' + this.inputType + '" id="' + id + '" value="' + this.value + '" name="' + this.getName() + '">');
-            this.getInputCell().append(radio);
-
-        }
+       this.parent();
         this.els.formEl.on('click', this.toggleImage.bind(this));
         if(this.inputType === 'checkbox'){
             this.els.formEl.on('click', this.valueChange.bind(this));

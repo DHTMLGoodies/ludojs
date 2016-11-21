@@ -109,6 +109,7 @@ Clear cached padding,border and margins.</a></li><li><a href="global.html#clearT
 ludo.form.Checkbox = new Class({
     Extends:ludo.form.Element,
     type:'form.Checkbox',
+    inputTag : 'input',
     inputType:'checkbox',
     stretchField:false,
     labelWidth:undefined,
@@ -118,20 +119,6 @@ ludo.form.Checkbox = new Class({
     checked:false,
     height:undefined,
     labelSuffix : '',
-
-    fieldTpl:['&lt;table ','cellpadding="0" cellspacing="0" border="0" width="100%">',
-        '&lt;tbody>',
-        '&lt;tr class="checkbox-image-row" style="display:none">',
-        '&lt;td colspan="2" class="input-image">&lt;/td>',
-        '&lt;/tr>',
-        '&lt;tr class="input-row">',
-        '&lt;td class="input-cell" style="width:30px">&lt;/td>',
-        '&lt;td>&lt;label class="input-label">&lt;/label>&lt;/td>',
-        '&lt;td class="suffix-cell" style="display:none">&lt;label>&lt;/label>&lt;/td>',
-        '&lt;/tr>',
-        '&lt;/tbody>',
-        '&lt;/table>'
-    ],
 
     __construct:function (config) {
         config = config || {};
@@ -149,17 +136,7 @@ ludo.form.Checkbox = new Class({
     },
 
     addInput:function () {
-        var id = this.getFormElId();
-        var radio;
-        if (Browser.ie &amp;&amp; parseInt(Browser.version) &lt; 9) {
-            radio = document.createElement('&lt;input type="' + this.inputType + '" name="' + this.getName() + '" value="' + this.value + '" id="' + id + '">');
-            this.getInputCell().append(radio);
-            this.els.formEl = document.id(radio);
-        } else {
-            radio = this.els.formEl = $('&lt;input type="' + this.inputType + '" id="' + id + '" value="' + this.value + '" name="' + this.getName() + '">');
-            this.getInputCell().append(radio);
-
-        }
+       this.parent();
         this.els.formEl.on('click', this.toggleImage.bind(this));
         if(this.inputType === 'checkbox'){
             this.els.formEl.on('click', this.valueChange.bind(this));

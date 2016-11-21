@@ -2901,7 +2901,7 @@ Collapse bar
 }
 .ludo-twilight .ludo-grid-Grid .ludo-menu-button-active{
     background-color:#535354;
-    border-left:1px solid #424242;
+    border-left:1px solid transparent;
 }
 
 .ludo-twilight .ludo-grid-data-container{
