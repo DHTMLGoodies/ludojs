@@ -45,6 +45,7 @@ ludo.layout.LinearVertical = new Class({
 				var config = {
 					width:cW
 				};
+				
 				if (this.hasLayoutWeight(this.view.children[i])) {
 					if (this.view.children[i].id == this.idLastDynamic) {
 						config.height = remainingHeight;

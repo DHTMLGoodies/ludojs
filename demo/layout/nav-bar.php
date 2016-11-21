@@ -4,13 +4,9 @@ $pageTitle = 'Slide in layout';
 require_once("../includes/demo-header.php");
 ?>
 
-
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/slide-in.js"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/effect/effect.js"></script>
-
 <script type="text/javascript" class="source-code">
     var v = new ludo.Window({
-        title:'Slide in layout demo',
+        title:'NavBar layout demo',
 
         layout:{
             left:10, top:10,
@@ -46,7 +42,7 @@ require_once("../includes/demo-header.php");
                     {
                         id:'navBar',
                         css:{
-                            'border-top':'1px solid #d7d7d7'
+                            'border-top':'1px solid #424242'
                         },
                         layout:{
                             weight:1,
@@ -88,7 +84,7 @@ require_once("../includes/demo-header.php");
                                         sortable:true,
                                         movable:true,
                                         renderer:function (val) {
-                                            return '<span style="color:blue">' + val + '</span>';
+                                            return '<span style="font-weight:bold">' + val + '</span>';
                                         }
                                     },
                                     'capital':{
