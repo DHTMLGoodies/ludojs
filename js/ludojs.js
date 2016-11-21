@@ -1,7 +1,7 @@
-/* Generated Mon Nov 21 20:26:26 CET 2016 */
+/* Generated Mon Nov 21 20:52:52 CET 2016 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.166
+ludoJS - Javascript framework, 1.1.167
 Copyright (C) 2012-2016  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@ Owner of ludoJS.com
 /* MooTools: the javascript framework. license: MIT-style license. copyright: Copyright (c) 2006-2016 [Valerio Proietti](http://mad4milk.net/).*/ 
 /*!
 Web Build: http://mootools.net/core/builder/e7289bd0058c6790cb2b769822285f97
-*/
+*/ 
 /*
 ---
 
@@ -1297,7 +1297,7 @@ this.Options = new Class({
 /*!
 Web Build: http://mootools.net/more/builder/447324cc9ea6344646513d80fe56da74
 */
-/*
+/* 
 ---
 
 script: More.js
@@ -13280,9 +13280,14 @@ ludo.layout.LinearVertical = new Class({
 		var width = this.view.getBody().width();
 		for (i = 0; i < this.view.children.length; i++) {
 			if(!this.view.children[i].isHidden()){
+
+				var w = this.view.children[i].layout.width;
+				var cW = w && !isNaN(w) ? w : width;
+
 				var config = {
-					width:width
+					width:cW
 				};
+				
 				if (this.hasLayoutWeight(this.view.children[i])) {
 					if (this.view.children[i].id == this.idLastDynamic) {
 						config.height = remainingHeight;
