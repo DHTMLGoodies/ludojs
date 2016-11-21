@@ -9,6 +9,23 @@ $skin = isset($skin) ? $skin : 'twilight';
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title><?php echo $pageTitle; ?></title>
 
+    <script type="text/javascript">
+
+        if(location.hostname.indexOf('ludojs.com') >=0){
+            var _gaq = _gaq || [];
+            _gaq.push(['_setAccount', 'UA-34153510-1']);
+            _gaq.push(['_trackPageview']);
+
+            (function() {
+                var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+                ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+            })();
+
+        }
+
+    </script>
+    
     <script type="text/javascript" src="<?php echo $prefix; ?>../jquery/jquery-3.1.0.min.js"></script>
 
     <link rel="icon" type="image/gif" href="<?php echo $prefix; ?>../images/favicon.png" />
