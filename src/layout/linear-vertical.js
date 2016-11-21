@@ -38,8 +38,12 @@ ludo.layout.LinearVertical = new Class({
 		var width = this.view.getBody().width();
 		for (i = 0; i < this.view.children.length; i++) {
 			if(!this.view.children[i].isHidden()){
+
+				var w = this.view.children[i].layout.width;
+				var cW = w && !isNaN(w) ? w : width;
+
 				var config = {
-					width:width
+					width:cW
 				};
 				if (this.hasLayoutWeight(this.view.children[i])) {
 					if (this.view.children[i].id == this.idLastDynamic) {

@@ -34,7 +34,8 @@ require_once("../includes/demo-header.php");
                         size:'l',
                         icon:'../../images/form/menu-icon-large.png',
                         layout:{
-                            height:50
+                            height:50,
+                            width:100
                         },
                         listeners:{
                             'click':function () {
