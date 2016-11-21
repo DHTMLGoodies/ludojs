@@ -27,7 +27,7 @@ require_once("../includes/demo-header.php");
             {
                 id:'relativeView',
                 title:'Relative Layout',
-                // This is the view for the demo
+                // This is the view for the demo,
                 layout:{
                     type:'relative'
                 },
@@ -77,11 +77,10 @@ require_once("../includes/demo-header.php");
                         type : 'form.Number',
                         layout:{
                             centerHorizontal:true,
-
                             absBottom:0,
                             width:50
                         },
-
+                        css:{ 'margin-bottom' : '2px' },
                         linkWith:'greenSlider'
                     },
                     {
@@ -177,7 +176,8 @@ require_once("../includes/demo-header.php");
 
                                 css:{
                                     'line-height' : '20px',
-                                    'text-align': 'center'
+                                    'text-align': 'center',
+                                    'font-size' : '0.8em'
                                 },
                                 layout:{
                                     centerInParent:true,
@@ -206,6 +206,7 @@ require_once("../includes/demo-header.php");
                                 },
 
                                 css:{
+                                    'font-size' : '0.8em',
                                     'line-height' : '20px',
                                     'text-align': 'center'
                                 },
@@ -233,7 +234,7 @@ require_once("../includes/demo-header.php");
 
                                 },
                                 css:{
-                                    'font-size': '0.8em',
+                                    'font-size': '0.7em',
                                     'text-align': 'center'
                                 },
                                 html: 'Complementary'
