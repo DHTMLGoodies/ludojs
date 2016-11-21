@@ -37,7 +37,6 @@ $skin = isset($skin) ? $skin : 'twilight';
         <?php
 
     }
-    ?>
 
 
     if(isset($_GET["gray"])){
