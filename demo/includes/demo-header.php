@@ -10,8 +10,8 @@ $skin = isset($skin) ? $skin : 'twilight';
     <title><?php echo $pageTitle; ?></title>
 
     <script type="text/javascript" src="<?php echo $prefix; ?>../jquery/jquery-3.1.0.min.js"></script>
-    <script type="text/javascript" src="<?php echo $prefix; ?>../mootools/mootools-core-1.6.0.js"></script>
-    <script type="text/javascript" src="<?php echo $prefix; ?>../mootools/mootools-More-1.6.0.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../mootools/Mootools-Core-1.6.0.js"></script>
+    <script type="text/javascript" src="<?php echo $prefix; ?>../mootools/Mootools-More-1.6.0.js"></script>
     <link rel="icon" type="image/gif" href="<?php echo $prefix; ?>../images/favicon.png" />
 
     <style type="text/css">
