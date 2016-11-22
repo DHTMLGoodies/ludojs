@@ -1,11 +1,13 @@
 ludo.layout.Fill = new Class({
-    Extends: ludo.layout.Base,
+    Extends: ludo.layout.Relative,
 
-    resize: function () {
-        var height = this.view.getBody().height();
-        if (height <= 0)return;
-        for (var i = 0; i < this.view.children.length; i++) {
-            this.view.children[i].resize({height: height});
-        }
+
+    addChild: function (child, insertAt, pos) {
+        if (child.layout == undefined)child.layout = {};
+        child.layout.width = child.layout.height = 'matchParent';
+        child.layout.alignParentTop = true;
+        child.layout.alignParentLeft = true;
+
+        return this.parent(child, insertAt, pos);
     }
 });

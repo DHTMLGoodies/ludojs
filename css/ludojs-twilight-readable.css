@@ -2826,6 +2826,7 @@ Collapse bar
     color:#aeb0b0;
 }
 
+
 .ludo-twilight.ludo-calendar-container-days{
     background-color:#535354;
 }
@@ -2872,8 +2873,13 @@ Collapse bar
 .ludo-twilight .ludo-calendar-body-days{
     background-color:#aeb0b0 !important;
     color:#535354;
+
 }
 
+.ludo-twilight .ludo-calendar-body-days td{
+
+    font-size:11px;
+}
 .ludo-twilight .calendar-sunday{
     color:#D32F2F;
 }
