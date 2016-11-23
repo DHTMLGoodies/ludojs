@@ -879,7 +879,7 @@ div.ludo-tab-strip-top div.ludo-body {
 
 .ludo-tab-expand-box{
     position:absolute;
-    z-index:10;
+    z-index:200;
     background-repeat:no-repeat;
     cursor:pointer;
     font-size:10px;
