@@ -1,7 +1,7 @@
-/* Generated Wed Nov 23 21:59:48 CET 2016 */
+/* Generated Wed Nov 23 22:38:43 CET 2016 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.209
+ludoJS - Javascript framework, 1.1.215
 Copyright (C) 2012-2016  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -713,7 +713,7 @@ div.ludo-tab-strip-top .ludo-tab-strip-tab-active .ludo-tab-strip-tab-bg{
 }
 
 .ludo-tab-strip-top {
-    height: 26px;
+    height: 30px;
     padding-bottom: 1px;
 }
 
@@ -725,8 +725,8 @@ div.ludo-tab-strip-top .ludo-tab-strip-tab-active .ludo-tab-strip-tab-bg{
     border-left-width:0;
     border-bottom-width:0;
     border-top-width: 0;
-    height:23px;
-    line-height:22px;
+    height:27px;
+    line-height:24px;
 
 }
 
@@ -745,16 +745,11 @@ div.ludo-tab-strip-top .ludo-tab-strip-tab-active {
     border-right:1px solid #aaa;
 }
 
-div.ludo-tab-strip-left .ludo-tab-strip-tab-active .ludo-tab-strip-tab-bg{
-    border-right-color:transparent;
-}
-
 .ludo-tab-layout-parent-for-tabs-left{
-    right:4px;
+    right:3px;
 }
 
 .ludo-tab-strip-left {
-    border-right: 1px solid;
     padding-right: 1px;
     width: 25px;
 }
@@ -762,12 +757,11 @@ div.ludo-tab-strip-left .ludo-tab-strip-tab-active .ludo-tab-strip-tab-bg{
 .ludo-tab-strip-left .ludo-tab-strip-line {
     right: 0;
     width: 3px;
-
     height: 100%;
     z-index: 11;
 }
 .ludo-tab-strip-tab-left {
-    width: 22px;
+    width: 23px;
     right:0;
     padding-top: 5px;
     padding-bottom: 5px;
@@ -776,13 +770,6 @@ div.ludo-tab-strip-left .ludo-tab-strip-tab-active .ludo-tab-strip-tab-bg{
     border-top-width:0;
     border-left-width:0;
 }
-
-div.ludo-tab-strip-left .ludo-tab-strip-tab-active {
-    width: 22px;
-    border-right:0;
-}
-
-
 
 /********************************************
 Tab strip bottom
@@ -812,7 +799,7 @@ div.ludo-tab-strip-bottom .ludo-tab-strip-tab-active .ludo-tab-strip-tab-bg{
 }
 
 .ludo-tab-strip-bottom {
-    height: 26px;
+    height: 30px;
     padding-top: 1px;
 }
 
@@ -823,8 +810,8 @@ div.ludo-tab-strip-bottom .ludo-tab-strip-tab-active .ludo-tab-strip-tab-bg{
     border-bottom-width: 0;
     border-left-width:0;
     border-top-width:0;
-    height:23px;
-    line-height:21px;
+    height:27px;
+    line-height:23px;
     top:0;
 
 }
@@ -840,7 +827,7 @@ div.ludo-tab-strip-bottom div.ludo-body {
 
 /** Right tabs */
 .ludo-tab-layout-parent-for-tabs-right{
-    left:4px;
+    left:3px;
 }
 
 .ludo-tab-strip-right .ludo-tab-strip-tab-bg{
@@ -868,7 +855,7 @@ div.ludo-tab-strip-right .ludo-tab-strip-tab-active .ludo-tab-strip-tab-bg{
 }
 
 .ludo-tab-strip-tab-right {
-    width: 22px;
+    width: 23px;
     padding-top: 5px;
     padding-bottom: 5px;
     border: 1px solid;
@@ -877,20 +864,19 @@ div.ludo-tab-strip-right .ludo-tab-strip-tab-active .ludo-tab-strip-tab-bg{
     border-left-width:0;
 }
 
-div.ludo-tab-strip-right .ludo-tab-strip-tab-active {
-    border-left-width:0
-}
-
-
 
 div.ludo-tab-strip-top div.ludo-body {
     border-bottom: 0;
 }
 
+div.ludo-tab-strip-right div.ludo-body {
+    border-right-width:0;
+}
+
 .ludo-tab-strip-tab-txt-svg{
     font-family:arial, helvetica, serif;
     font-size:11px;
-    line-height:21px;
+    line-height:19px;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
