@@ -28,6 +28,7 @@ test:
   - list/*.js
   - progress/*.js
   - util/*.js
+  - theme/*.js
 
 serve:
   - ../css/ludojs-blue.css

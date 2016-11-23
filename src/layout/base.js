@@ -1,5 +1,5 @@
 /**
-* Base class for ludoJS layouts
+ * Base class for ludoJS layouts
  * @namespace ludo.layout
  * @class ludo.layout.Base
  * @property {object} viewport
@@ -18,13 +18,14 @@ ludo.layout.Base = new Class({
 	benchmarkTime:false,
 	dependency:{},
 	viewport:undefined,
-    resized:false,
+	resized:false,
 
 	initialize:function (view) {
-        this.id = String.uniqueID();
+		this.id = String.uniqueID();
 		this.view = view;
 		this.viewport = {
-			top:0, left:0,
+			top:parseInt(this.view.getBody().css('padding-top')),
+			left:parseInt(this.view.getBody().css('padding-left')),
 			width:0, height:0,
 			bottom:0, right:0
 		};
@@ -42,17 +43,17 @@ ludo.layout.Base = new Class({
 
 		this.fireEvent('create', [this, this.view]);
 	},
-    /**f
-    * Method executed when adding new child view to a layout
-     * @function addChild
-     * @param {ludo.View} child
-     * @param {ludo.View} insertAt
-     * @optional
-     * @param {String} pos
-     * @optional
-     */
+	/**f
+	 * Method executed when adding new child view to a layout
+	 * @function addChild
+	 * @param {ludo.View} child
+	 * @param {ludo.View} insertAt
+	 * @optional
+	 * @param {String} pos
+	 * @optional
+	 */
 	addChild:function (child, insertAt, pos) {
-        child = this.getValidChild(child);
+		child = this.getValidChild(child);
 		child = this.getNewComponent(child);
 		var parentEl = this.getParentForNewChild(child);
 		parentEl = $(parentEl);
@@ -75,8 +76,8 @@ ludo.layout.Base = new Class({
 			this.view.children = children;
 		} else {
 			this.view.children.push(child);
-            var el = child.getEl();
-            parentEl.append(el);
+			var el = child.getEl();
+			parentEl.append(el);
 		}
 
 		this.onNewChild(child);
@@ -97,22 +98,22 @@ ludo.layout.Base = new Class({
 		}
 		return child;
 	},
-    /**
-    * Return parent DOM element for new child
-     * @function getParentForNewChild
-     * @protected
-     */
+	/**
+	 * Return parent DOM element for new child
+	 * @function getParentForNewChild
+	 * @protected
+	 */
 	getParentForNewChild:function(){
 		return $(this.view.els.body);
 	},
 
 	layoutProperties:['collapsible', 'collapsed'],
 
-    getValidChild:function(child){
-        return child;
-    },
+	getValidChild:function(child){
+		return child;
+	},
 
-    /**
+	/**
 	 * Implementation in sub classes
 	 * @function onNewChild
 	 * @private
@@ -136,7 +137,7 @@ ludo.layout.Base = new Class({
 	addChildEvents:function(){
 
 	},
-    firstResized : false,
+	firstResized : false,
 
 
 	resizeChildren:function () {
@@ -185,20 +186,18 @@ ludo.layout.Base = new Class({
 
 	beforeFirstResize:function(){
 
-    },
+	},
 
 
 
 	storeViewPortSize:function () {
+
+
 		this.viewport.absWidth = this.getAvailWidth();
 		this.viewport.absHeight = this.getAvailHeight();
 		this.viewport.width = this.getAvailWidth() - this.viewport.left - this.viewport.right;
 		this.viewport.height = this.getAvailHeight() - this.viewport.top - this.viewport.bottom;
 
-		this.viewport.left = parseInt(this.view.getBody().css('padding-left'));
-		this.viewport.top = parseInt(this.view.getBody().css('padding-top'));
-
-		console.log(this.viewport);
 	},
 
 	previousContentWidth:undefined,
@@ -288,11 +287,11 @@ ludo.layout.Base = new Class({
 		this.updateViewport(bar.getChangedViewport());
 		this.resize();
 	},
-    /**
-     * Update viewport properties, coordinates of DHTML Container for child views, i.e. body of parent view
-     * @function updateViewport
-     * @param {Object} c
-     */
+	/**
+	 * Update viewport properties, coordinates of DHTML Container for child views, i.e. body of parent view
+	 * @function updateViewport
+	 * @param {Object} c
+	 */
 	updateViewport:function (c) {
 
 		this.viewport[c.key] = c.value;
@@ -311,62 +310,62 @@ ludo.layout.Base = new Class({
 		return this.renderer ? this.renderer : this.createRenderer();
 	},
 
-    /**
-     * Executed when a child is hidden. It set's the internal layout properties width and height to 0(zero)
-     * @function hideChild
-     * @param {ludo.View} child
-     * @private
-     */
-    hideChild:function(child){
-        this.setTemporarySize(child, {
-            width:0,height:0
-        });
-    },
+	/**
+	 * Executed when a child is hidden. It set's the internal layout properties width and height to 0(zero)
+	 * @function hideChild
+	 * @param {ludo.View} child
+	 * @private
+	 */
+	hideChild:function(child){
+		this.setTemporarySize(child, {
+			width:0,height:0
+		});
+	},
 
 
 
-    /**
-     * Executed when a child is minimized. It set's temporary width or properties
-     * @function minimize
-     * @param {ludo.View} child
-     * @param {Object} newSize
-     * @protected
-     */
-    minimize:function(child, newSize){
-        this.setTemporarySize(child, newSize);
-        this.resize();
-    },
+	/**
+	 * Executed when a child is minimized. It set's temporary width or properties
+	 * @function minimize
+	 * @param {ludo.View} child
+	 * @param {Object} newSize
+	 * @protected
+	 */
+	minimize:function(child, newSize){
+		this.setTemporarySize(child, newSize);
+		this.resize();
+	},
 
-    /**
-     * Store temporary size when a child is minimized or hidden
-     * @function setTemporarySize
-     * @param {ludo.View} child
-     * @param {Object} newSize
-     * @protected
-     */
-    setTemporarySize:function(child, newSize){
-        if(newSize.width !== undefined){
-            child.layout.cached_width = child.layout.width;
-            child.layout.width = newSize.width;
-        }else{
-            child.layout.cached_height = child.layout.height;
-            child.layout.height = newSize.height;
-        }
-    },
-    /**
-     * Clear temporary width or height values. This method is executed when a child
-     * is shown or maximized
-     * @function clearTemporaryValues
-     * @param {ludo.View} child
-     * @protected
-     */
-    clearTemporaryValues:function(child){
-        if(child.layout.cached_width !== undefined)child.layout.width = child.layout.cached_width;
-        if(child.layout.cached_height !== undefined)child.layout.height = child.layout.cached_height;
-        child.layout.cached_width = undefined;
-        child.layout.cached_height = undefined;
-        this.resize();
-    },
+	/**
+	 * Store temporary size when a child is minimized or hidden
+	 * @function setTemporarySize
+	 * @param {ludo.View} child
+	 * @param {Object} newSize
+	 * @protected
+	 */
+	setTemporarySize:function(child, newSize){
+		if(newSize.width !== undefined){
+			child.layout.cached_width = child.layout.width;
+			child.layout.width = newSize.width;
+		}else{
+			child.layout.cached_height = child.layout.height;
+			child.layout.height = newSize.height;
+		}
+	},
+	/**
+	 * Clear temporary width or height values. This method is executed when a child
+	 * is shown or maximized
+	 * @function clearTemporaryValues
+	 * @param {ludo.View} child
+	 * @protected
+	 */
+	clearTemporaryValues:function(child){
+		if(child.layout.cached_width !== undefined)child.layout.width = child.layout.cached_width;
+		if(child.layout.cached_height !== undefined)child.layout.height = child.layout.cached_height;
+		child.layout.cached_width = undefined;
+		child.layout.cached_height = undefined;
+		this.resize();
+	},
 
 	getWidthOf:function (child) {
 		return child.layout.width;

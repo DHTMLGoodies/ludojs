@@ -39,11 +39,35 @@ require_once("../includes/demo-header.php");
         },
         children:[
             {
-                type:'form.SearchField',
-                searchIn:ds,
                 layout:{
-                    'height': 25
-                }
+                    type:'linear',
+                    orientation:'horizontal',
+                    height:25
+                },
+                css:{
+                    'padding-left' :2
+                },
+                children:[
+                    {
+                        type:'form.Label',
+                        label:'Search',
+                        labelFor:'searchField',
+                        layout:{
+                            height:'matchParent',
+                            width:50
+                        }
+                    },
+                    {
+                        id:'searchField',
+                        type:'form.SearchField',
+                        searchIn:ds,
+                        layout:{
+                            'height': 25,
+                            weight:1
+                        }
+                    }
+                ]
+
             },
             {
                 type:'tree.Tree',

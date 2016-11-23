@@ -143,7 +143,6 @@ ludo.layout.TextBox = new Class({
             x: bbox.width + bbox.x,
             y: bbox.height + bbox.y
         };
-        console.log(this.size);
     },
     rotate: function () {
         var x = this.size.x;

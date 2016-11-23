@@ -186,7 +186,7 @@ ludo.layout.Tabs = new Class({
             this.tabMenuEl.css(k, s);
 
             if(this.tabPos == 'bottom'){
-                this.tabMenuEl.css('top', this.elLine.height());
+                this.tabMenuEl.css('top', this.elLine.outerHeight());
             }
 
             this.tabMenuEl.css('line-height', s + "px");
@@ -295,7 +295,7 @@ ludo.layout.Tabs = new Class({
     createTabFor: function (child) {
 
         if (this.tabParent == undefined) {
-            this.tabParent = $('<div style="position:absolute"></div>');
+            this.tabParent = $('<div style="position:absolute" class="ludo-tab-layout-parent-for-tabs ludo-tab-layout-parent-for-tabs-' + this.tabPos + '"></div>');
             if (this.tabPos == 'top' || this.tabPos == 'bottom') {
                 this.tabParent.css({
                     height: this.getBody().height(),
@@ -398,15 +398,15 @@ ludo.layout.Tabs = new Class({
         var el = $('<div>');
         this.getBody().append(el);
         el.className = 'ludo-tab-strip-tab ludo-tab-strip-tab-' + this.tabPos;
-        el.html('<div class="ludo-tab-strip-tab-bg-first"></div><div class="ludo-tab-strip-tab-bg-last"></div><span>' + this.getTitleFor(child) + '</span>');
+        el.html('<div class="ludo-tab-strip-tab-bg"></div><span style="z-index:2">' + this.getTitleFor(child) + '</span>');
         return el;
     },
 
     getSVGTabFor: function (child) {
-        var el = $('<div>');
+        var el = $('<div><div class="ludo-tab-strip-tab-bg"></div></div>');
         this.getBody().append(el);
-        el.html('<div class="ludo-tab-strip-tab-bg-first"></div><div class="ludo-tab-strip-tab-bg-last">');
-        var svgEl = $('<div>');
+
+        var svgEl = $('<div style="z-index:2;position:relative">');
         el.append(svgEl);
         var box = new ludo.layout.TextBox({
             renderTo: svgEl,
@@ -488,9 +488,9 @@ ludo.layout.Tabs = new Class({
     getChangedViewport: function () {
         var value;
         if (this.tabPos === 'top' || this.tabPos === 'bottom') {
-            value = this.getEl().outerHeight();
+            value = this.getEl().outerHeight(true);
         } else {
-            value = this.getEl().outerWidth();
+            value = this.getEl().outerWidth(true);
         }
         return {
             key: this.tabPos, value: value

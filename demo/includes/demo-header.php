@@ -25,7 +25,7 @@ $skin = isset($skin) ? $skin : 'twilight';
         }
 
     </script>
-    
+
     <script type="text/javascript" src="<?php echo $prefix; ?>../jquery/jquery-3.1.0.min.js"></script>
 
     <link rel="icon" type="image/gif" href="<?php echo $prefix; ?>../images/favicon.png" />
@@ -56,14 +56,29 @@ $skin = isset($skin) ? $skin : 'twilight';
     }
 
 
-    if(isset($_GET["gray"])){
+    if(isset($_GET['blue'])){
+        $skin = "blue";
         ?>
         <link rel="stylesheet" href="<?php echo $prefix; ?>../css/ludojs.css" type="text/css">
-        <link rel="stylesheet" href="<?php echo $prefix; ?>../css-source/skin/light-gray-skin.css" type="text/css">
+        <link rel="stylesheet" href="<?php echo $prefix; ?>../css-source/skin/blue.css" type="text/css">
         <?php
-    }
 
-    else if(isset($_GET['twilight'])){
+    }else if(isset($_GET['gray'])){
+        $skin = "gray";
+        ?>
+        <link rel="stylesheet" href="<?php echo $prefix; ?>../css/ludojs.css" type="text/css">
+        <link rel="stylesheet" href="<?php echo $prefix; ?>../css-source/skin/gray.css" type="text/css">
+        <?php
+
+    }else if(isset($_GET['light-gray'])){
+        $skin = "light-gray";
+        ?>
+        <link rel="stylesheet" href="<?php echo $prefix; ?>../css/ludojs.css" type="text/css">
+        <link rel="stylesheet" href="<?php echo $prefix; ?>../css-source/skin/light-gray.css" type="text/css">
+        <?php
+
+    }else if(isset($_GET['twilight'])){
+        $skin = "twilight";
         ?>
         <link rel="stylesheet" href="<?php echo $prefix; ?>../css/ludojs.css" type="text/css">
         <link rel="stylesheet" href="<?php echo $prefix; ?>../css-source/skin/twilight.css" type="text/css">

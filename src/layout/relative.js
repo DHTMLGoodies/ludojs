@@ -246,6 +246,9 @@ ludo.layout.Relative = new Class({
 				refC = this.lastChildCoordinates[child.layout.above.id];
 				return function () {
 					c.bottom = refC.bottom + refC.height;
+					console.log(refC.height);
+					console.log(refC.bottom);
+
 				};
 			case 'sameHeightAs':
 				refC = this.lastChildCoordinates[child.layout.sameHeightAs.id];

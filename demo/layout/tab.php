@@ -3,6 +3,7 @@ $sub = true;
 $pageTitle = 'Tab layout';
 require_once("../includes/demo-header.php");
 ?>
+<link rel="stylesheet" type="text/css" href="../../css-source/layout/tab-strip.css">
 
 <script type="text/javascript" class="source-code">
 

@@ -6,10 +6,6 @@ require_once("../includes/demo-header.php");
 
 ?>
 
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/framed-view.js"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/tab-strip.js"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/relative.js"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/tab.js"></script>
 <script type="text/javascript" src="js/CustomGrid.js"></script>
 <style type="text/css">
     body, html {
@@ -260,7 +256,8 @@ new ludo.View({
                         'padding-top':3
                     },
                     layout:{
-                        'closable':true
+                        'closable':true,
+                        type:'fill'
                     },
                     children:[
                         {

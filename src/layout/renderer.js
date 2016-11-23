@@ -195,7 +195,6 @@ ludo.layout.Renderer = new Class({
                     var size = ludo.dom.getWrappedSizeOfView(this.view);
                     this.view.layout.width = size.x;
                     return function () {
-                        console.log('settingwidth to ' + size.x)
                         c.width = size.x;
                     }
 
@@ -251,10 +250,6 @@ ludo.layout.Renderer = new Class({
                 };
             case 'alignRight':
                 return function () {
-
-                    console.log(value.outerWidth());
-                    console.log(c.width);
-
                     c.left = value.offset().left + value.outerWidth() - c.width;
                 };
             case 'alignBottom':

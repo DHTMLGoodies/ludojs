@@ -5,7 +5,7 @@ ludo.layout.Tab = new Class({
 
 	onCreate:function () {
 		this.parent();
-        this.view.getEl().addClass('ludo-layout-tab');
+		this.view.getEl().addClass('ludo-layout-tab');
 		this.addChild(this.getTabs());
 
 		this.updateViewport(this.tabStrip.getChangedViewport());
@@ -80,9 +80,9 @@ ludo.layout.Tab = new Class({
 				this.prepareResize();
 			}
 			this.tabStrip.layoutResizeFn.call(this.visibleChild, this);
-            if(!this.visibleChild.layoutResizeFn){
-                this.prepareResize();
-            }
+			if(!this.visibleChild.layoutResizeFn){
+				this.prepareResize();
+			}
 			this.visibleChild.layoutResizeFn.call(this.visibleChild, this);
 		}
 	},
@@ -114,7 +114,7 @@ ludo.layout.Tab = new Class({
 					absWidth:true
 				};
 		}
-        return undefined;
+		return undefined;
 	},
 
 	isTabs:function (view) {

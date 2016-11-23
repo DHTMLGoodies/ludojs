@@ -629,7 +629,8 @@ form.ComboTree
 
 /**
 tab layout */
-.ludo-ocean .ludo-tab-strip .ludo-body,.ludo-tab-strip-tab {
+.ludo-ocean .ludo-tab-strip .ludo-body,
+.ludo-ocean .ludo-tab-strip-tab {
     background-color: #D7D7D7;
     border-color:#91C7ED;
 }
@@ -638,10 +639,13 @@ tab layout */
     background-color: #B2D5EE;
     border-color:#a5a5a5;
 }
-.ludo-ocean div.ludo-tab-strip-tab-bg-first, .ludo-ocean div.ludo-tab-strip-tab-bg-last {
+.ludo-ocean div.ludo-tab-strip-tab-bg-first,
+.ludo-ocean div.ludo-tab-strip-tab-bg-last {
     border-color:#B2D5EE;
 }
-.ludo-ocean .ludo-tab-strip,div.ludo-tab-strip-left div.ludo-body,.ludo-tab-strip-top {
+.ludo-ocean .ludo-tab-strip,
+.ludo-ocean div.ludo-tab-strip-left div.ludo-body,
+.ludo-ocean .ludo-tab-strip-top {
     border-color:#91C7ED;
 }
 .ludo-ocean div.ludo-tab-strip-tab-active {
