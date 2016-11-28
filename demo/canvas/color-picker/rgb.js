@@ -12,9 +12,7 @@ ludo.colorPicker.RGB = new Class({
         'border-right': '0',
         'border-top': '0'
     },
-    css:{
-        'background-color':'#FFF'
-    },
+
     currentColor:{
         r:255, g:255, b:255
     },

@@ -2,11 +2,9 @@ ludo.colorPicker.ColorScheme = new Class({
 	Extends: ludo.View,
 	useController:true,
 	type:'colorPicker.ColorScheme',
-	css:{
-		'background-color' : '#f5f5f5'
-	},
+
 	elCss:{
-		'border-top': '1px solid #C0C0C0'
+		'border-top': '1px solid #383838'
 	},
 	colorBoxes:[],
 	currentColorCount : undefined,
@@ -44,7 +42,8 @@ ludo.colorPicker.ColorScheme = new Class({
 	},
 
 	boxClick:function(e){
-		this.fireEvent('setColor', e.target.title);
+		console.log($(e.target).attr("title"));
+		this.fireEvent('setColor', $(e.target).attr("title"));
 	},
 
 	generateMonochromaticScheme:function(color){
@@ -84,7 +83,7 @@ ludo.colorPicker.ColorScheme = new Class({
 		if(colors.length !== this.currentColorCount)this.showBoxes(colors.length);
 		for(var i=colors.length-1;i>=0;i--){
 			this.colorBoxes[i].css('backgroundColor', colors[i]);
-			this.colorBoxes[i].title = colors[i];
+			this.colorBoxes[i].attr("title",  colors[i]);
 
 		}
 		this.colors = colors;

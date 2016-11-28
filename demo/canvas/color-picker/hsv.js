@@ -12,9 +12,7 @@ ludo.colorPicker.HSV = new Class({
 		'border-right':'0',
 		'border-top':'0'
 	},
-	css:{
-		'background-color':'#FFF'
-	},
+
 	currentColor:{
 		h:360, s:100, v:100
 	},

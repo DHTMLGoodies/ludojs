@@ -2,10 +2,7 @@ ludo.colorPicker.Picker = new Class({
 	Extends:ludo.View,
 	type:'colorPicker.Picker',
 	useController:true,
-	css:{
-		margin:3,
-		border:'1px solid #C0C0C0'
-	},
+
 
 	currentBrightness : -1,
 	currentSaturation: -1,

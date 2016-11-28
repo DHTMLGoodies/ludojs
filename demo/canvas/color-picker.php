@@ -3,19 +3,6 @@ $sub = true;
 $pageTitle = 'Color Picker using ludo canvas - ludoJS';
 require_once("../includes/demo-header.php");
 ?>
-
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/core.js"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/view.js"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/framed-view.js"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/controller/manager.js"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/color/color.js"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/engine.js"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/node.js"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/mask.js"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/effect/drag.js"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/drag.js"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/canvas.js"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/linear-vertical.js"></script>
 <script type="text/javascript">
     ludo.colorPicker = {};
 </script>
@@ -54,7 +41,7 @@ google_ad_height = 280;
 
 <style type="text/css">
     .ludo-body, div.ludo-framed-view-body {
-        background-color: #FFF;
+
     }
     .default-color-scheme-box{
         margin-top:20px;
@@ -70,9 +57,6 @@ google_ad_height = 280;
         left:200, top:40,
         width:600, height:490,
         title:'Color picker created with SVG',
-        css:{
-            'background-color':'#FFF'
-        },
         layout:{
             type:'relative'
         },

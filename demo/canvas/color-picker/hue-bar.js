@@ -3,9 +3,7 @@ ludo.colorPicker.HueBar = new Class({
     type:'colorPicker.HueBar',
     useController:true,
     colorObj:undefined,
-    css:{
-        'background-color' : '#f5f5f5'
-    },
+
 	currentHue:undefined,
 
 	barHeight : 96, // bar height in percent

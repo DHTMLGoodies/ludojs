@@ -3,7 +3,7 @@ ludo.colorPicker.Codes = new Class({
     title:'Codes',
     minimizable:false,
     css:{
-        'background-color':'#FFF',
+
         border:0
     },
     children:[

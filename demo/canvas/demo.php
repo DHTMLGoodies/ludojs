@@ -49,7 +49,7 @@ google_ad_height = 280;
             'fill-opacity':.8
 
     });
-    canvas.adopt(paint);
+    canvas.append(paint);
     var paintTwo = new ludo.canvas.Paint({
         'fill':'orange',
         'stroke':'#D90000',
@@ -58,12 +58,12 @@ google_ad_height = 280;
         cursor:'pointer'
 
     });
-    canvas.adopt(paintTwo);
+    canvas.append(paintTwo);
 
     var d = new Date();
     for (var i = 0; i < 4; i++) {
         var circle = new ludo.canvas.Node('circle', { cx:180 + (i * 40), cy:130 + (i * 40), r:35 + (i * 3) });
-        canvas.adopt(circle);
+        canvas.append(circle);
         dd.add(circle);
     }
     if (window.console !== undefined)console.log(new Date().getTime() - d.getTime());
@@ -71,7 +71,7 @@ google_ad_height = 280;
     var gradient = new ludo.canvas.Gradient({
         id:'myGradient'
     });
-    canvas.adopt(gradient);
+    canvas.append(gradient);
     gradient.addStop('0%', '#0FF');
     gradient.addStop('100%', '#FFF', 0);
 
@@ -83,34 +83,34 @@ google_ad_height = 280;
     },{
         selectors:'rect,circle'
     });
-    canvas.adopt(paintThree);
+    canvas.append(paintThree);
     circle = new ludo.canvas.Circle({cx:280, cy:280, r:85, "class": paintTwo});
-    canvas.adopt(circle);
+    canvas.append(circle);
 
     dd.add(circle);
     var rect = new ludo.canvas.Rect({x:180, y:100, width:150, height:50, rx:5, ry:5});
-    canvas.adopt(rect);
+    canvas.append(rect);
 
     dd.add({
         el:rect
     });
 
     var polygon = new ludo.canvas.Polygon('200,200 350,350,150,290 140 240', { "class" :paintTwo });
-    canvas.adopt(polygon);
+    canvas.append(polygon);
     dd.add(polygon);
 
     var ellipse = new ludo.canvas.Ellipse({ cx:100, cy:125, rx:50, ry:70 });
-    canvas.adopt(ellipse);
+    canvas.append(ellipse);
     dd.add(ellipse);
 
     var path = new ludo.canvas.Path('M 400 100 L 200 200 Q 350 150 300 100 Z', { "class" :paint })
-    canvas.adopt(path);
+    canvas.append(path);
 
     dd.add(path);
 
 
     var filter = new ludo.canvas.Filter({ id:'myFilter', filterUnits:'userSpaceOnUse'});
-    canvas.adopt(filter);
+    canvas.append(filter);
     filter.add('feGaussianBlur', { "in":"SourceAlpha", "stdDeviation":4, result:"blur"});
     filter.add('feOffset', { "in":"blur", "dx":4, dy:"4", result:"offsetBlur"});
     var light = filter.add('feSpecularLighting', {
@@ -144,18 +144,18 @@ google_ad_height = 280;
     dd.add(topGroup);
 
     var mask = new ludo.canvas.Mask();
-    canvas.adoptDef(mask);
+    canvas.appendDef(mask);
 
     var gr = new ludo.canvas.Gradient({
         id:'gradient2'
     });
-    canvas.adopt(gr);
+    canvas.append(gr);
     gr.addStop('0%', 'white', 0);
     gr.addStop('100%', 'white', 1);
 
     var rect2 = new ludo.canvas.Rect({ x:0,y:0, width:500,height:500, fill:gr });
 
-    mask.adopt(rect2);
+    mask.append(rect2);
     ellipse.applyMask(mask);
 
 
