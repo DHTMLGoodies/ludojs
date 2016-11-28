@@ -5,6 +5,9 @@
  @class ludo.grid.ColumnManager
  @augments Core
  @param {Object} config
+ @fires ludo.grid.ColumnManager#showcolumn Fired when a column is shown. Argument: {String} column name
+ @fires ludo.grid.ColumnManager#hideColumn Fired when a column is hidden. Argument: {String} column name
+ @fires ludo.grid.ColumnManager#moveColumn Fired when a column has been moved. Argument: 1) {String} column moved, 2) {String} new sibling column 3) {String} before or after new sibling
  @example
     columnManager:{
 		columns:{
@@ -200,7 +203,7 @@ ludo.grid.ColumnManager = new Class({
 	 * @function isInAGroup
 	 * @param {String} column
 	 * @return {Boolean} is in a group
-	 * memberof ludo.grid.ColumnManager.prototype
+	 * @memberof ludo.grid.ColumnManager.prototype
 	 */
 	isInAGroup:function (column) {
 		return this.getColumnKey(column, 'group') !== undefined;
@@ -211,7 +214,7 @@ ludo.grid.ColumnManager = new Class({
 	 * @function getGroupIdOf
 	 * @param {String} column
 	 * @return {String} group id
-	 * memberof ludo.grid.ColumnManager.prototype
+	 * @memberof ludo.grid.ColumnManager.prototype
 	 */
 	getGroupIdOf:function (column) {
 		return this.getColumnKey(column, 'group');
@@ -222,7 +225,7 @@ ludo.grid.ColumnManager = new Class({
 	 * @function getGroupFor
 	 * @param {String} column
 	 * @return {grid.Column|undefined} parent
-	 * memberof ludo.grid.ColumnManager.prototype
+	 * @memberof ludo.grid.ColumnManager.prototype
 	 */
 	getGroupFor:function (column) {
 		var id = this.getGroupIdOf(column);
@@ -270,6 +273,7 @@ ludo.grid.ColumnManager = new Class({
 	 * @function isResizable
 	 * @param {String} column
 	 * @return {Boolean}
+	 * @memberof ludo.grid.ColumnManager.prototype
 	 */
 	isResizable:function (column) {
 		var resizable = this.getColumnKey(column, 'resizable') !== false;
@@ -380,7 +384,7 @@ ludo.grid.ColumnManager = new Class({
 	 * @function insertColumnBefore
 	 * @param {String} column id
 	 * @param {String} before column id
-	 * memberof ludo.grid.ColumnManager.prototype
+	 * @memberof ludo.grid.ColumnManager.prototype
 	 */
 	insertColumnBefore:function (column, before) {
 		this.moveColumn(column, before, 'before');
@@ -390,7 +394,7 @@ ludo.grid.ColumnManager = new Class({
 	 * @function insertColumnAfter
 	 * @param {String} column id
 	 * @param {String} after column id
-	 * memberof ludo.grid.ColumnManager.prototype
+	 * @memberof ludo.grid.ColumnManager.prototype
 	 */
 	insertColumnAfter:function (column, after) {
 		this.moveColumn(column, after, 'after');
@@ -434,10 +438,6 @@ ludo.grid.ColumnManager = new Class({
 		}
 		this.columnKeys = ret;
 
-		/**
-		 * Fired when a column has been moved
-		 * @event movecolumn
-		 */
 		this.fireEvent('movecolumn', [column, this.columnKeys[indexAt], beforeOrAfter]);
 		this.fireEvent('state');
 	},
@@ -483,7 +483,7 @@ ludo.grid.ColumnManager = new Class({
 	 * @function removeFromGroup
 	 * @param {String} column
 	 * @return {Boolean} success
-	 * memberof ludo.grid.ColumnManager.prototype
+	 * @memberof ludo.grid.ColumnManager.prototype
 	 */
 	removeFromGroup:function (column) {
 		var group = this.getGroupFor(column);
@@ -499,12 +499,7 @@ ludo.grid.ColumnManager = new Class({
 	hideColumn:function (column) {
 		if (this.columnExists(column) && !this.isHidden(column)) {
 			this.columnLookup[column].hidden = true;
-			/**
-			 * Fired when a column is hidden
-			 * @event hidecolumn
-			 */
 			this.fireEvent('hidecolumn', column);
-
 			this.fireEvent('state');
 		}
 	},

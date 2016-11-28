@@ -2,13 +2,42 @@
  * Tree widget
  * @namespace ludo.tree
  * @class ludo.tree.Tree
+ * @param {Object} config
+ * @param {Object} config.defaults: Default values for properties not present in data, example:
+ * <code>
+ *     defaults: {
+ *     		"icon": "images/icon.gif"
+ *     }
+ * </code>
+ * @param {Object} config.tpl Template strings for how to render nodes in the tree.
+ * Example:
+ * <code>
+ * tpl: '{title}
+ * </code>
+ * which renders JSON like : [{"title": "First node" },{"title": "Second node"}]
+ * as "First node".
+ * You can also have more than one template.
+ * Example:
+ * <code>
+ tpl:{
+	tplKey : 'type',
+	city : 'City : {city}',
+	country : 'Country : {country}
+  }
+ * </code>
+ * for JSON like:
+ * <code>
+ *     [ { type:"country", "country" : "United States" }, { "type": "city", "city": "Washington" }]
+ * </code>
+ * tplKey refers to the "type" attribute. When type is "country", it should use the "country" tpl. When type is "city",
+ * it should use the "city" template.
  */
 ludo.tree.Tree = new Class({
 	Extends:ludo.CollectionView,
     type:'tree.Tree',
 	nodeCache:{},
     renderedRecords: {},
-	/**
+	/*
 	 String template for nodes in the tree
 	 @config {String|Object}
 	 @memberof ludo.tree.Tree.prototype
@@ -48,7 +77,7 @@ ludo.tree.Tree = new Class({
 	},
     defaultDS: 'dataSource.TreeCollection',
 
-	/**
+	/*
 	 Default values when not present in node.
 	 @config {Object} defaults
 	 @memberof ludo.tree.Tree.prototype
@@ -63,7 +92,7 @@ ludo.tree.Tree = new Class({
 	 */
 	defaults:undefined,
 
-	/**
+	/*
 	 * Key used to defined nodes inside categories. This key is used for default values and node config
 	 * @config {String} categoryKey
 	 * @memberof ludo.tree.Tree.prototype
@@ -71,7 +100,7 @@ ludo.tree.Tree = new Class({
 	 */
 	categoryKey : 'type',
 
-	/**
+	/*
 	 Config of tree node categories
 	 @config {Object} categoryConfig
 	 @memberof ludo.tree.Tree.prototype
@@ -290,7 +319,7 @@ ludo.tree.Tree = new Class({
 
 		if (includeContainer)ret.push('</div>');
 
-        /**
+        /*
          * Event fired when a node is created
          * @event createNode
          * @param {String} id of DOM node

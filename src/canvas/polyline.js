@@ -3,7 +3,6 @@
  @namespace ludo.canvas
  @class ludo.canvas.Polyline
  @augments canvas.NamedNode
- 
  @param {String} points
  @param {canvas.NodeConfig} config
  @example
@@ -29,6 +28,7 @@ ludo.canvas.Polyline = new Class({
 	 * @function getPoint
 	 * @param {Number} index
 	 * @return {Object|undefined} x and y
+	 * @memberof ludo.canvas.Polyline.prototype
 	 */
 	getPoint:function(index){
 		if(this.pointArray === undefined)this.buildPointArray();
@@ -46,6 +46,7 @@ ludo.canvas.Polyline = new Class({
 	 @param {Number} index
 	 @param {Number} x
 	 @param {Number} y
+	 @memberof ludo.canvas.Polyline.prototype
 	 @example
 		 var polyline = new ludo.canvas.Polyline('20,20 40,25 60,40 80,120 120,140 200,180');
 	     polyline.setPoint(0,10,5);
@@ -74,6 +75,7 @@ ludo.canvas.Polyline = new Class({
 	 * Get size of polyline (max X - min X) and (max X - min Y)
 	 * @function getSize
 	 * @return {Object} x and y
+	 * @memberof ludo.canvas.Polyline.prototype
 	 */
 	getSize:function(){
 		if(this.size === undefined){
@@ -89,6 +91,7 @@ ludo.canvas.Polyline = new Class({
 	 * Get position of polyline, min X and min Y)
 	 * @function getPosition
 	 * @return {Object} x and y
+	 * @memberof ludo.canvas.Polyline.prototype
 	 */
 	getPosition:function(){
 		if(this.position === undefined){

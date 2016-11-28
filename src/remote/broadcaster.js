@@ -6,9 +6,10 @@
  start, success, failure and serverError. The example below show you how
  to add listeners to these events.
 
-    ludo.remoteBroadcaster.withResource('Person').withService('read').on('success', function(){
-		// Do something
-	});
+ @class ludo.remote.Broadcaster
+ludo.remoteBroadcaster.withResource('Person').withService('read').on('success', function(){
+    // Do something
+});
  */
 ludo.remote.Broadcaster = new Class({
     Extends:Events,
@@ -93,6 +94,7 @@ ludo.remote.Broadcaster = new Class({
      @param {String} eventType
      @param {String} resource
      @param {Function} fn
+     @memberof ludo.remote.Broadcaster.prototype
      @example
         ludo.remoteBroadcaster.addEvent('failure', 'Person', function(response){
             this.getBody().html( response.message');
@@ -116,6 +118,7 @@ ludo.remote.Broadcaster = new Class({
      @param {String} resource
      @param {Array} services
      @param {Function} fn
+     @memberof ludo.remote.Broadcaster.prototype
      @example
         ludo.remoteBroadcaster.addEvent('failure', 'Person', ['save'], function(response){
             this.getBody().html( response.message');
@@ -146,6 +149,7 @@ ludo.remote.Broadcaster = new Class({
      @param {String} eventType
      @param {String} resource
      @param {String} service
+     @memberof ludo.remote.Broadcaster.prototype
      @example
         ludo.remoteBroadcaster.setDefaultMessage('You have registered successfully', 'success', 'User', 'register');
      */
@@ -159,6 +163,7 @@ ludo.remote.Broadcaster = new Class({
      @function withResourceService
      @param {String} resourceAndService
      @return {remote.Broadcaster}
+     @memberof ludo.remote.Broadcaster.prototype
      @example
      ludo.remoteBroadcaster.withResourceService('Person/save').on('success', function(){
 	 		alert('Save success');
@@ -176,6 +181,7 @@ ludo.remote.Broadcaster = new Class({
 	 @function withResource
 	 @param {String} resource
 	 @return {remote.Broadcaster}
+     @memberof ludo.remote.Broadcaster.prototype
 	 @example
 	 	ludo.remoteBroadcaster.withResource('Person').withService('save').on('success', function(){
 	 		alert('Save success');
@@ -192,6 +198,7 @@ ludo.remote.Broadcaster = new Class({
 	 @function withService
 	 @param {String} service
 	 @return {remote.Broadcaster}
+     @memberof ludo.remote.Broadcaster.prototype
 	 @example
 	 	ludo.remoteBroadcaster.withResource('Person').withService('read').
             withService('save').on('success', function(){
@@ -211,6 +218,7 @@ ludo.remote.Broadcaster = new Class({
 	 @param {String|Array} events
 	 @param {Function} fn
 	 @return {remote.Broadcaster}
+     @memberof ludo.remote.Broadcaster.prototype
 	 @example
 	 	ludo.remoteBroadcaster.withResource('Person').withService('read').on('success', function(){
 	 		alert('Save success');

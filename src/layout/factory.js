@@ -10,6 +10,8 @@ ludo.layout.Factory = new Class({
 	 * @function getManager
      * @param {ludo.View} view
      * @return {ludo.layout.Base} manager
+	 * @private
+	 * @memberof ludo.layout.Factory.prototype
      */
 	getManager:function(view){
 		return new ludo.layout[this.getLayoutClass(view)](view);
@@ -20,6 +22,7 @@ ludo.layout.Factory = new Class({
      * @function getLayoutClass
      * @param {ludo.View} view
      * @return {String} className
+	 * @memberof ludo.layout.Factory.prototype
      * @private
      */
 	getLayoutClass:function(view){
@@ -71,6 +74,7 @@ ludo.layout.Factory = new Class({
      * @param {Object} config
      * @return {Object}
      * @private
+	 * @memberof ludo.layout.Factory.prototype
      */
 	getValidLayoutObject:function(view, config){
 
@@ -137,6 +141,7 @@ ludo.layout.Factory = new Class({
      * @param {Object} mergeWith
      * @return {Object}
      * @private
+	 * @memberof ludo.layout.Factory.prototype
      */
 	getMergedLayout:function(layout, mergeWith){
 		for(var key in mergeWith){

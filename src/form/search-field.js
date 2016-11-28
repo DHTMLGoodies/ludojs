@@ -65,6 +65,7 @@ ludo.form.SearchField = new Class({
 	/**
 	 * Executes search in data source
 	 * @function search
+	 * @memberof ludo.form.SearchField.prototype
 	 */
 	search:function () {
 		if(this.remote){

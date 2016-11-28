@@ -25,6 +25,7 @@ ludo.canvas.Gradient = new Class({
 	 @param {String} stopColor
 	 @param {Number|undefined} stopOpacity
 	 @return {ludo.canvas.Stop} stop
+	 @memberof ludo.canvas.Gradient.prototype
 	 @example
 		 var gradient = new ludo.canvas.Gradient({
 			id:'myGradient'
@@ -53,6 +54,7 @@ ludo.canvas.Gradient = new Class({
 	 * @function getStop
 	 * @param {Number} index
 	 * @return {canvas.Stop} stop
+	 * @memberof ludo.canvas.Gradient.prototype
 	 */
 	getStop:function (index) {
 		return this.stopTags[index];

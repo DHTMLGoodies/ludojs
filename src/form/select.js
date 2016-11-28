@@ -2,9 +2,11 @@
  Select box (&lt;select>)
  @namespace ludo.form
  @class ludo.form.Select
- @augments ludo.form.Element
- 
  @param {Object} config
+ @param {String} config.valueKey Name of key used for value, example: "value"
+ @param {String} config.textKey Name of key used for displayed text, example: "text"
+ @param {Object} config.emptyItem. Object shown when no value selected, example: { "text": "Please select", value: "" }
+ @param {Array} config.options. Array of values, example: [{value:1, text: "First item"},{value:2, text:"Second item" }]
  @example
 	 {
 		 type:'form.Select',
@@ -38,57 +40,13 @@
 ludo.form.Select = new Class({
     Extends:ludo.form.Element,
     type:'form.Select',
-    labelWidth:100,
-    /**
-     First option in the select box, usually with an empty value. You should use the same
-     keys for empty item as for the rest of the options. Value is defined by the valueKey property
-     (default "value"), and text by textKey(default "text").
-     @config {Object} emptyItem
-     @default undefined
-     @example
-		 {
-			 id : '',
-			 title : 'Please select an option'
-
-		 }
-     */
     emptyItem:undefined,
-
-    /**
-     Name of column for the values of the select box. This option is useful when populating select box using a collection data source.
-     @config {String} valueKey
-	 @default 'id'
-     @example
-     	valueKey : 'id'
-     */
     valueKey:'value',
-    /**
-     * Name of column for the displayed text of the options in the select box
-	 * @config {String} textKey
-	 * @default 'text'
-     */
     textKey:'text',
-
     inputTag:'select',
     inputType:'',
-    /**
-     * Config of dataSource.Collection object used to populate the select box from external data
-     * @config {Object|ludo.dataSource.Collection} dataSource
-     * @default {}
-     */
 	dataSource:{},
 
-    /**
-     Array of options used to populate the select box
-     @config {Array} options
-     @default undefined
-     @example
-		 options:[
-			 { value:'1',text: 'Option number 1' },
-			 { value:'2','text: Option number 2' },
-			 { value:'3',text: 'Option number 3' }
-		 ]
-     */
     options:undefined,
 
 	defaultDS:'dataSource.Collection',
@@ -147,6 +105,7 @@ ludo.form.Select = new Class({
      * @function addOption
      * @param {String} value
      * @param {String} text
+     * @memberof ludo.form.Select.prototype
      */
     addOption:function (value, text) {
         var option = $('<option value="' + value + '">' + text + '</option>');

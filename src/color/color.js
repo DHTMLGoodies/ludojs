@@ -267,6 +267,7 @@ ludo.color.Color = new Class({
     /**
      * Return rgb code after hue has been adjusted by a number of degrees
      * @function offsetHue
+     * @memberof ludo.color.Color.prototype
      * @param color
      * @param offset
      * @return {String}
@@ -281,6 +282,7 @@ ludo.color.Color = new Class({
     /**
      * Return rgb code after hue has been adjusted by a number of degrees
      * @function offsetBrightness
+     * @memberof ludo.color.Color.prototype
      * @param color
      * @param offset
      * @return {String}
@@ -296,6 +298,7 @@ ludo.color.Color = new Class({
     /**
      * Return rgb code after hue has been adjusted by a number of degrees
      * @function offsetSaturation
+     * @memberof ludo.color.Color.prototype
      * @param color
      * @param offset
      * @return {String}

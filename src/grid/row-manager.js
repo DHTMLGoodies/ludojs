@@ -1,19 +1,25 @@
+/**
+ * Row renderer config for a grid.
+ * @class ludo.grid.RowManager
+ * @param {Object} config
+ * @param {Function} config.rowCls Function returning css class as string for a row. Argument to function: JSON for a row.
+ * @example:
+ * new ludo.grid.Grid({
+ * 	rowManager: {
+ * 		rowCls:function(row){ return "my-css-class" }
+ * 	}
+ *
+ *
+ */
 ludo.grid.RowManager = new Class({
 	Extends: ludo.Core,
 	type : 'grid.RowManager',
 
-	/**
-	 * A function returning css class for current row as string. Current record
-	 * will be passed to function
-	 * @config renderer
-	 * @type {Function}
-	 * @default undefined
-	 */
-	renderer:undefined,
+	rowCls:undefined,
 
 	__construct:function(config){
 		this.parent(config);
-		if(config.renderer)this.renderer = config.renderer;
+		if(config.rowCls)this.rowCls = config.rowCls;
 	}
 
 });

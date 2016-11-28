@@ -131,17 +131,7 @@ ludo.chart.Pie = new Class({
     Extends:ludo.chart.Base,
     fragmentType:'chart.PieSlice',
     rendered:false,
-
-    /**
-     Array of add-ons for the pie chart
-     @config {Array} addOns
-     @example
-         addOns:[
-             {
-                 type:'chart.PieSliceHighlighted'
-             }
-         ]
-     */
+    
     addOns:[],
 
     highlightSize:10,

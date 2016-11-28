@@ -3,21 +3,20 @@
  * Mootools Events class.
  * @namepace ludo
  * @class ludo.Core
+ * @param {Object} config
+ * @param {String} config.name Name
+ * @param {Boolean} config.stateful When set to true, properties set in statefulProperties can be saved to the browsers local storage.
+ * @param {Array} config.statefulProperties Array of stateful properties.
  */
 ludo.Core = new Class({
 	Extends:Events,
 	id:undefined,
-	/**
-	 * NB. The config properties listed below are sent to the constructor when creating the component
-	 * @attribute {string} name
-	 * When creating children dynamically using config objects(see children) below, you can access a child
-	 * by component.child[name] if a name is passed in the config object.
-	 */
+
 	name:undefined,
 
 	module:undefined,
 	submodule:undefined,
-	/**
+	/*
 	 Reference to a specific controller for the component.
 	 The default way is to set useController to true and create a controller in
 	 the same namespace as your component. Then that controller will be registered as controller
@@ -38,7 +37,7 @@ ludo.Core = new Class({
 	 */
 	controller:undefined,
 
-	/**
+	/*
 	 * Find controller and register this component to controller
 	 * attribute {Boolean} userController
 	 * default false
@@ -46,35 +45,17 @@ ludo.Core = new Class({
 	 */
 	useController:false,
 
-	/**
-	 * Save states from session to session. This can be set to true
-	 * for components and views where statefulProperties is defined. The component
-	 * also needs an "id".
-	 * @attribute stateful
-	 * @type {Boolean}
-	 * @default false
-	 * @memberof ludo.Core.prototype
-	 */
+
 	stateful:false,
 
-	/**
-	 * Array of stateful properties. These properties will be saved to
-	 * local storage when "change" event is fired by the component
-	 * @property statefulProperties
-	 * @type Array
-	 * @default undefined
-	 * @memberof ludo.Core.prototype
-	 */
+
 	statefulProperties:undefined,
 
-	/**
-	 * Storage of ludoJS classes this object is depending on
-	 * @property {Object} dependency
-	 * @private
-	 */
+
 	dependency:{},
 
-    /**
+    /*
+    TODO figure out this
      Array of add-ons config objects
      Add-ons are special components which operates on a view. "parentComponent" is sent
      to the constructor of all add-ons and can be saved for later reference.
@@ -198,6 +179,7 @@ ludo.Core = new Class({
 	 * Get url for component
 	 * function getUrl
 	 * return {String|undefined} url
+	 * @memberof ludo.Core.prototype
 	 */
 	getUrl:function () {
 		if (this.url) {

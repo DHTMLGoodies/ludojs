@@ -410,6 +410,7 @@ ludo.grid.Grid = new Class({
 	 Select a record.
 	 @function selectRecord
 	 @param {Object} record
+	 @memberof ludo.grid.Grid.prototype
 	 @example
 	 	grid.selectRecord({ id: 100 } );
 	 */
@@ -758,7 +759,7 @@ ludo.grid.Grid = new Class({
 
 		var renderer = this.columnManager.getRendererFor(col);
 
-		var rowRenderer = this.rowManager ? this.rowManager.renderer : undefined;
+		var rowRenderer = this.rowManager ? this.rowManager.rowCls : undefined;
 		var rowCls = '';
 		for (var i = 0, count = data.length; i < count; i++) {
 			content = data[i][col];

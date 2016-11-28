@@ -51,6 +51,7 @@ ludo.layout.Base = new Class({
 	 * @optional
 	 * @param {String} pos
 	 * @optional
+	 * @memberof ludo.layout.Base.prototype
 	 */
 	addChild:function (child, insertAt, pos) {
 		child = this.getValidChild(child);
@@ -85,12 +86,7 @@ ludo.layout.Base = new Class({
 
 
 		this.addChildEvents(child);
-		/**
-		 * Event fired by layout manager when a new child is added
-		 * @event addChild
-		 * @param {ludo.View} child
-		 * @param {ludo.layout.Base} layout manager
-		 */
+
 		this.fireEvent('addChild', [this, this.view, child]);
 
 		if(this.firstResized){
@@ -102,6 +98,7 @@ ludo.layout.Base = new Class({
 	 * Return parent DOM element for new child
 	 * @function getParentForNewChild
 	 * @protected
+	 * @memberof ludo.layout.Base.prototype
 	 */
 	getParentForNewChild:function(){
 		return $(this.view.els.body);
@@ -117,6 +114,7 @@ ludo.layout.Base = new Class({
 	 * Implementation in sub classes
 	 * @function onNewChild
 	 * @private
+	 * @memberof ludo.layout.Base.prototype
 	 */
 	onNewChild:function (child) {
 		var keys = this.layoutProperties;
@@ -291,6 +289,7 @@ ludo.layout.Base = new Class({
 	 * Update viewport properties, coordinates of DHTML Container for child views, i.e. body of parent view
 	 * @function updateViewport
 	 * @param {Object} c
+	 * @memberof ludo.layout.Base.prototype
 	 */
 	updateViewport:function (c) {
 
@@ -315,6 +314,7 @@ ludo.layout.Base = new Class({
 	 * @function hideChild
 	 * @param {ludo.View} child
 	 * @private
+	 * @memberof ludo.layout.Base.prototype
 	 */
 	hideChild:function(child){
 		this.setTemporarySize(child, {
@@ -330,6 +330,7 @@ ludo.layout.Base = new Class({
 	 * @param {ludo.View} child
 	 * @param {Object} newSize
 	 * @protected
+	 * @memberof ludo.layout.Base.prototype
 	 */
 	minimize:function(child, newSize){
 		this.setTemporarySize(child, newSize);
@@ -342,6 +343,7 @@ ludo.layout.Base = new Class({
 	 * @param {ludo.View} child
 	 * @param {Object} newSize
 	 * @protected
+	 * @memberof ludo.layout.Base.prototype
 	 */
 	setTemporarySize:function(child, newSize){
 		if(newSize.width !== undefined){
@@ -358,6 +360,7 @@ ludo.layout.Base = new Class({
 	 * @function clearTemporaryValues
 	 * @param {ludo.View} child
 	 * @protected
+	 * @memberof ludo.layout.Base.prototype
 	 */
 	clearTemporaryValues:function(child){
 		if(child.layout.cached_width !== undefined)child.layout.width = child.layout.cached_width;

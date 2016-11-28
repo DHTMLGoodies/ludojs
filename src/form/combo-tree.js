@@ -1,13 +1,14 @@
 /**
- * @class ludo.form.ComboTree
- * @description A "combo" where you select value from a tree. id of clicked tree node will be set as
+ * A "combo" where you select value from a tree. id of clicked tree node will be set as
  * value.
+ * @class ludo.form.ComboTree
+ * @param {Object} config
  */
 ludo.form.ComboTree = new Class({
     Extends:ludo.form.Element,
     type:'form.ComboTree',
     cssSignature:'form-combo',
-    /**
+    /*
      * Configuration for tree panel. It can be a new config for ludo.tree.Tree or
      * a simple reference to your own pre-configured tree, example:
      * { width: 500, height: 500, type: 'myApp.tree.Folders'
@@ -60,21 +61,12 @@ ludo.form.ComboTree = new Class({
      */
     treeConfig:undefined,
 
-    /**
-     * Text to display in combo when no value is selected
-     * @attribute emptyText
-	 * @type String
-     * @default '' (empty string);
-     */
+
     emptyText:'',
 
     width:400,
     height:26,
-    /**
-     *
-     * @attribute Object inputConfig
-     *
-     */
+
     inputConfig:{
         fieldWidth:440,
         labelWidth:1,
@@ -315,6 +307,7 @@ ludo.form.ComboTree = new Class({
      * No arguments = Return id of selected record
      * @function getValue
      * @return {String} id (tree.selectedRecord.id);
+     * @memberof ludo.form.ComboTree.prototype
      */
     val:function(value){
         if(arguments.length == 0){
@@ -327,6 +320,7 @@ ludo.form.ComboTree = new Class({
      * Return id of selected record
      * @function getValue
      * @return {String} id (tree.selectedRecord.id);
+     * @memberof ludo.form.ComboTree.prototype
      */
     getValue:function () {
         console.warn("Use of deprecated getValue");
@@ -338,6 +332,7 @@ ludo.form.ComboTree = new Class({
      * Return selected record
      * @function getSelectedRecord
      * @return object record
+     * @memberof ludo.form.ComboTree.prototype
      */
     getSelectedRecord:function () {
         return this.treePanel.children[0].getSelectedRecord();

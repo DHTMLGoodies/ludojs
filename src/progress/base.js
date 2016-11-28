@@ -2,7 +2,10 @@
  * Super class for all progress bar views
  * @namespace progress
  * @class ludo.progress.Base
+ * @param {Object} config
+ * @param {Boolean} config.hideOnFinish Hide View on finish. Default: true
  * @augments View
+ * @fires ludo.progress.Base#finish Fired on finish(100%)
  */
 ludo.progress.Base = new Class({
     Extends:ludo.View,
@@ -10,10 +13,7 @@ ludo.progress.Base = new Class({
     pollFrequence:1,
     url:undefined,
     onLoadMessage:'',
-    /**
-     * Hide progress bar on finish
-     * @attribute {Boolean} hideOnFinish
-     */
+
     hideOnFinish:true,
 
     defaultDS:'progress.DataSource',
@@ -61,6 +61,7 @@ ludo.progress.Base = new Class({
     /**
      * Finish progress bar manually
      * @function finish
+     * @memberof ludo.progress.Base.prototype
      */
     finish:function () {
         this.getDataSource().finish();
@@ -72,7 +73,7 @@ ludo.progress.Base = new Class({
             this.hideAfterDelay();
         }
 
-        /**
+        /*
          * Event fired when progress bar is finished
          * @event render
          * @param Component this

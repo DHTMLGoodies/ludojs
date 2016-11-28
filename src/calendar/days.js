@@ -3,6 +3,8 @@
  * A View displaying days in a month. It's one of the child views of ludo.calendar.Calendar.
  * @namespace calendar
  * @class ludo.calendar.Days
+ * @param {Object} config
+ * @param {String|Date} value Selected date
  * @fires ludo.calendar.Days#setDate - Arguments Date and ludo.View(the view firing the event)
  */
 
@@ -18,10 +20,7 @@ ludo.calendar.Days = new Class({
     sundayFirst:false,
     overflow:'hidden',
     week:undefined,
-    /**
-     * selected date
-     * @property object value
-     */
+
     value:undefined,
     touch:{
         enabled:false
@@ -368,6 +367,7 @@ ludo.calendar.Days = new Class({
      * @function setDate
      * @param {Object} date
      * @return void
+     * @memberof ludo.calendar.Days.prototype
      */
     setDate:function (date) {
         this.date = date;
@@ -377,6 +377,7 @@ ludo.calendar.Days = new Class({
      * Set selected date
      * @function setValue
      * @param {Date} date
+     * @memberof ludo.calendar.Days.prototype
      */
     setValue:function (date) {
         this.removeClsFromSelectedDay();

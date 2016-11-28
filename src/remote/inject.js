@@ -1,11 +1,11 @@
-/**
+/*
  * Class for injecting data to specific resource/service requests
  */
 ludo.remote.Inject = new Class({
 
 	data:{},
 
-	/**
+	/*
 	 Add data to be posted with the next request.
 	 @function add
 	 @param resourceService

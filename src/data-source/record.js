@@ -10,7 +10,7 @@ ludo.dataSource.Record = new Class({
 	record:undefined,
 	collection:undefined,
 
-    /**
+    /*
      * Array of events which should fire update event
      * @property {Array} eventKeys
      * @default undefined
@@ -28,6 +28,7 @@ ludo.dataSource.Record = new Class({
 	 * @param {String} key
 	 * @param {String|Number|Object} value
 	 * @return {dataSource.Record}
+	 * @memberof ludo.dataSource.Record.prototype
 	 */
 	set:function (key, value) {
 		this.fireEvent('beforeUpdate', this.record);
@@ -43,6 +44,7 @@ ludo.dataSource.Record = new Class({
 	 @function get
 	 @param {String} key
 	 @return {String|Number|Object} value
+	 @memberof ludo.dataSource.Record.prototype
 	 */
 	get:function (key) {
 		return this.record[key];
@@ -52,6 +54,7 @@ ludo.dataSource.Record = new Class({
 	 @function setProperties
 	 @param {Object} properties
 	 @return {dataSource.Record|undefined}
+	 @memberof ludo.dataSource.Record.prototype
 	 @example
 	    var collection = new ludo.dataSource.Collection({
 	 		idField:'id'

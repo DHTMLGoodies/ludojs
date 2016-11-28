@@ -2,6 +2,8 @@
  * @namespace ludo.form
  * @class ludo.form.ToggleGroup
  * @augments Core
+ * @fires ludo.form.ToggleGroup#on Fired on button click. Arguments: 1) button value, 2) ludo.form.Button
+ * @fires ludo.form.ToggleGroup#off Fired when button is no longer clicked. Arguments: 1) button value, 2) ludo.form.Button
  */
 ludo.form.ToggleGroup = new Class({
     Extends:ludo.Core,
@@ -33,21 +35,11 @@ ludo.form.ToggleGroup = new Class({
         }
         if (button.isActive()) {
             this.activeButton = button;
-            /**
-             * Turn toggle button on
-             * @event on
-             * @param {String} value, i.e. label of button
-             * @param Component this
-             */
+
             this.fireEvent('on', [button.getValue(), button]);
         } else {
             this.activeButton = undefined;
-            /**
-             * Turn toggle button off
-             * @event off
-             * @param {String} value, i.e. label of button
-             * @param Component this
-             */
+
             this.fireEvent('off', [button.getValue(), button]);
         }
     },
@@ -55,6 +47,7 @@ ludo.form.ToggleGroup = new Class({
      * Turn a button in the toggle group on
 	 * @function turnOn
      * @param button
+     * @memberof ludo.form.ToggleGroup.prototype
      */
     turnOn:function (button) {
         if (button = this.getButton(button)) {
@@ -65,6 +58,7 @@ ludo.form.ToggleGroup = new Class({
      * Turn a button in the toggle group on
 	 * @function turnOff
      * @param button
+     * @memberof ludo.form.ToggleGroup.prototype
      */
     turnOff:function (button) {
         if (button = this.getButton(button)) {

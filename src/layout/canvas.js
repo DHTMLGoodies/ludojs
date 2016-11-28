@@ -17,12 +17,7 @@ ludo.layout.Canvas = new Class({
 
 		this.onNewChild(child);
 		this.addChildEvents(child);
-		/**
-		 * Event fired by layout manager when a new child is added
-		 * @event addChild
-		 * @param {ludo.View} child
-		 * @param {ludo.layout.Base} layout manager
-		 */
+
 		this.fireEvent('addChild', [child, this]);
 
 

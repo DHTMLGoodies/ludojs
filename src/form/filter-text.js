@@ -1,4 +1,4 @@
-/**
+/*
  * @namespace ludo.form
  * @class ludo.form.FilterText
  * @augments ludo.form.Text
@@ -8,7 +8,7 @@ ludo.form.FilterText = new Class({
     Extends:ludo.form.Text,
     type:'form.FilterText',
 
-    /**
+    /*
      * Suggest selected record.
      * @attribute autoComplete
      * @type {Boolean}
@@ -16,20 +16,20 @@ ludo.form.FilterText = new Class({
      */
     autoComplete:true,
 
-    /**
+    /*
      * value and title to display when no records are selected
      * @attribute emptyItem
 	 * @type Object
      */
     emptyItem:{
-        /**
+        /*
          * value of empty item
          * @attribute emptyItem.value
          * @type string
          * @default empty string
          */
         value:'',
-        /**
+        /*
          * display value of empty item
          * @attribute emptyItem.title
          * @type string
@@ -38,7 +38,7 @@ ludo.form.FilterText = new Class({
         title:''
     },
 
-    /**
+    /*
      * When set to true, filtering should be done on the server. When set to false, the script will search initial records sent to constructor using config.data
      * or the records it got from the server during when constructing the component
      * @attribute filterOnServer
@@ -47,7 +47,7 @@ ludo.form.FilterText = new Class({
      * @memberof ludo.form.FilterText.prototype
      */
     filterOnServer:false,
-    /**
+    /*
      * When search for records on the server is enabled or you have sent collection of records to the component on creation using config.data,
      * this property specifies maximum number of filtered records to be displayed below the component. For standard text fields, this property is of no interest.
      * @attribute maxDisplayed
@@ -56,7 +56,7 @@ ludo.form.FilterText = new Class({
      * @memberof ludo.form.FilterText.prototype
      */
     maxDisplayed:10,
-    /**
+    /*
      * "id" field of records used for filtering, this will also be the value of the text field. Example:
      * [{ id: 100, Title: 'Norway' }] will return 100 when calling component.getValue()
      * @attribute idField
@@ -65,7 +65,7 @@ ludo.form.FilterText = new Class({
      * @memberof ludo.form.FilterText.prototype
      */
     idField:'id',
-    /**
+    /*
      * name of "display" field when filtering is enabled. This identified the column used in list box below input field,
      * example: displayField set to "firstname" will be display "John" and "Jane" for these records: [{ id:1, firstname: 'John', lastname: 'Doe' }, {id:2, firstname: 'Jane', lastname: 'Doe'} ]
      * @attribute displayField
@@ -243,7 +243,7 @@ ludo.form.FilterText = new Class({
         console.warn("Use of deprecated getValue");
         console.warn();
     },
-    /**
+    /*
      * Return value of text field. On standard text fields the visible value will be returned. Otherwise the id of selected record will be returned
      * @function getValue
      * @return string value
@@ -257,7 +257,7 @@ ludo.form.FilterText = new Class({
         return this.parent();
     },
 
-    /**
+    /*
      * If record is part of data collection in memory(config.data or remotely loaded records), it will be shown,
      * if remote.url is set it will search for request to the server for the record. The query will look like this:
      * { getRecord : { id: 100 } } and it expects response from server in this format:

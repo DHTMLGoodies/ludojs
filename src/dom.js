@@ -1,4 +1,4 @@
-/**
+/*
  * Class/Object with DOM utility methods.
  * @class ludo.dom
  *
@@ -9,7 +9,7 @@ ludo.dom = {
 		BW:{}, BH:{},
 		MW:{}, MH:{}
 	},
-	/**
+	/*
 	 * Return Margin width (left and right) of DOM element
 	 * Once retrieved, it will be cached for later lookup. Cache
 	 * can be cleared by calling clearCacheStyles
@@ -24,7 +24,7 @@ ludo.dom = {
 		return ludo.dom.cache.MW[el.id];
 	},
 
-	/**
+	/*
 	 * Return Border width (left and right) of DOM element
 	 * Once retrieved, it will be cached for later lookup. Cache
 	 * can be cleared by calling clearCacheStyles
@@ -38,7 +38,7 @@ ludo.dom = {
 		}
 		return ludo.dom.cache.BW[el.id];
 	},
-	/**
+	/*
 	 * Return Padding Width (left and right) of DOM element
 	 * Once retrieved, it will be cached for later lookup. Cache
 	 * can be cleared by calling clearCacheStyles
@@ -53,7 +53,7 @@ ludo.dom = {
 		return ludo.dom.cache.PW[el.id];
 
 	},
-	/**
+	/*
 	 * Return Margin height (top and bottom) of DOM element
 	 * Once retrieved, it will be cached for later lookup. Cache
 	 * can be cleared by calling clearCacheStyles
@@ -69,7 +69,7 @@ ludo.dom = {
 		return ludo.dom.cache.MH[id];
 
 	},
-	/**
+	/*
 	 * Return Border height (top and bottom) of DOM element
 	 * Once retrieved, it will be cached for later lookup. Cache
 	 * can be cleared by calling clearCacheStyles
@@ -84,7 +84,7 @@ ludo.dom = {
 		}
 		return ludo.dom.cache.BH[id];
 	},
-	/**
+	/*
 	 * Return Padding height (top and bottom) of DOM element
 	 * Once retrieved, it will be cached for later lookup. Cache
 	 * can be cleared by calling clearCacheStyles
@@ -110,7 +110,7 @@ ludo.dom = {
 		if(!el.attr("id"))el.attr("id", String.uniqueID());
 	},
 
-	/**
+	/*
 	 * @function clearCacheStyles
 	 * Clear cached padding,border and margins.
 	 */
@@ -122,7 +122,7 @@ ludo.dom = {
 		};
 	},
 
-	/**
+	/*
 	 * Return numeric style value,
 	 * @function getNumericStyle
 	 * @private
@@ -244,7 +244,7 @@ ludo.dom = {
 		}
 	},
 
-	/**
+	/*
 	 * Return measured width of a View
 	 * @function getMeasuredWidth
 	 * @param {ludo.View} view

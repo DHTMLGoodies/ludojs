@@ -1,6 +1,6 @@
 ludo.layout.LinearSpec = new Class({
 
-	/**
+	/*
 	 * vertical to arrange children in rows, horizontal to arrange in columns
 	 * config orientation
 	 * type {String}
@@ -11,7 +11,7 @@ ludo.layout.LinearSpec = new Class({
 	width:undefined,
 
 	height:undefined,
-	/**
+	/*
 	 * When set to a numeric value, the view will have dynamic width when it's a child of a component
 	 * with "rows" or "cols" layout. Example: You have a component with a total width of
 	 * 700 pixels and layout set to "cols". The component has 3 children. Child A has a width of

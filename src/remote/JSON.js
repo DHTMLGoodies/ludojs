@@ -6,6 +6,8 @@
  * the service on the server. Example: For Person with id equals 1, save these data.
  * @namespace ludo.remote
  * @class ludo.remote.JSON
+ * @param {Object} config
+ * @param {String} config.url
  */
 
 /**
@@ -15,16 +17,12 @@
 ludo.remote.JSON = new Class({
     Extends:ludo.remote.Base,
 
-    /**
+    /*
      * Name of resource to request, example: "Person"
      * @config {String} resource
      */
     resource:undefined,
-    /**
-     * Optional url to use for the query instead of global set url.
-     * @config {String} url
-     * optional
-     */
+
     url:undefined,
 
     initialize:function (config) {
@@ -34,6 +32,7 @@ ludo.remote.JSON = new Class({
     /**
      Send request to the server
      @function send
+     @memberof ludo.remote.JSON.prototype
      @param {String} service
      @param {Array} resourceArguments
      @optional
@@ -142,6 +141,7 @@ ludo.remote.JSON = new Class({
      * Return JSON response data from last request.
      * @function getResponseData
      * @return {Object|undefined}
+     * @memberof ludo.remote.JSON.prototype
      */
     getResponseData:function () {
         if(this.remoteData && $.type(this.remoteData) == "array") return this.remoteData;
@@ -155,6 +155,7 @@ ludo.remote.JSON = new Class({
      * Return entire server response of last request.
      * @function getResponse
      * @return {Object|undefined}
+     * @memberof ludo.remote.JSON.prototype
      */
     getResponse:function () {
         return this.remoteData;
@@ -163,6 +164,7 @@ ludo.remote.JSON = new Class({
      * Set name of resource
      * @function setResource
      * @param {String} resource
+     * @memberof ludo.remote.JSON.prototype
      */
     setResource:function(resource){
         this.resource = resource;

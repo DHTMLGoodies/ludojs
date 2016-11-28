@@ -151,6 +151,7 @@ ludo.canvas.View = new Class({
      * Scale SVG element
      * @param {Number} x x-Ratio
      * @param {Number} y y-Ratio
+     * @memberof ludo.canvas.View.prototype
      */
     scale: function (x, y) {
         this.engine.scale(this.getEl(), x, y);

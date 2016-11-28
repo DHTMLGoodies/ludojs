@@ -36,7 +36,7 @@
 ludo.controller.Controller = new Class({
 	Extends:ludo.Core,
 	type:'controller.Controller',
-	/**
+	/*
 	 * Apply controller to components in these modules.
 	 * By default a controller will be set as controller for all component
 	 * within the same namespace (name space is determined by parsing "type" attribute),
@@ -63,7 +63,7 @@ ludo.controller.Controller = new Class({
 	controller:undefined,
 	useController:false,
 
-	/**
+	/*
 	 List of events which will be automatically broadcasted,i.e. re-fired by the controller
 
 	 @property broadcast

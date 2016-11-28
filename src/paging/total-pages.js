@@ -2,6 +2,7 @@
  Displays number of pages in a data source
  @class ludo.paging.TotalPages
  @param {Object} config
+ @param {String}config.tpl Template string. default: '/{pages}'.
  @example
  children:[
  ...
@@ -18,11 +19,7 @@ ludo.paging.TotalPages = new Class({
 	type:'grid.paging.TotalPages',
 	width:25,
 	onLoadMessage:'',
-	/**
-	 * Text template for view. {pages} is replaced by number of pages in data source.
-	 * @attribute {String} tpl
-	 * @default '/{pages}'
-	 */
+
 	tpl:'/{pages}',
 
 	ludoDOM:function () {

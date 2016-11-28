@@ -1,4 +1,5 @@
 /**
+ * TODO specify which form the button belongs to. used for disableOnInvalid
  * Button component
  * The button class extends ludo.form.Element
  * @namespace ludo.form
@@ -6,10 +7,20 @@
  * @param {Object} config
  * @param {Boolean} config.submittable Default: false. When false, the JSON from parentView.getForm().values() will not not include the button.
  * @param {Boolean} config.disabled Default: false. True to initially disable the button
+ * @param {Boolean} config.selected True to set the button initial selected.
  * @param {Boolean} config.toggle When true, the button will remain in it's pressed until a new press on button occurs.
  * @param {String|Object} config.toggleGroup Used for toggling between buttons. Example: { type:'form.Button', toggle:true, toggleGroup:'myGroup',value:'1' }, 
  * { type:'form.Button', toggle:true, toggleGroup:'myGroup',value:'2' }. Here, two buttons are assigned to the same toggleGroup 'myGroup'. When one button is pressed,
  * the other button will be unpressed.
+ * @param {Boolean} config.disableOnInvalid True to automatically disable button when parent form is invalid.
+ * @param {String} config.size Size of button's','m','l' (small, medium or large)
+ * @param {String} config.formRef Id of parent view. disableOnInvalid will be triggred when the form of this view is invalid.
+ * @param {String} config.listeners Event listeners. Example:
+ * <code>
+ *     listeners: {
+ *      'click': function() { }
+ *      }
+ * @fires ludo.form.Button#click Fired on click. Arguments: 1) valud, 2) ludo.form.Button
  */
 ludo.form.Button = new Class({
     Extends:ludo.form.Element,
@@ -18,7 +29,7 @@ ludo.form.Button = new Class({
     inputType:'submit',
     cssSignature:'ludo-form-button',
     name:'',
-    /**
+    /*
      * Text of button
      * @attribute {String} value
      */
@@ -32,15 +43,10 @@ ludo.form.Button = new Class({
     menu:undefined,
     submittable:false,
 
-    /**
-     * Toggle button
-     * @attribute {Boolean} toggle
-     * @memberof ludo.form.Button.prototype
-     * @default false
-     */
+
     toggle:false,
 
-    /**
+    /*
      Assign button to a toggleGroup
      @memberof ludo.form.Button.prototype
      @attribute {Object} toggleGroup
@@ -79,7 +85,7 @@ ludo.form.Button = new Class({
 
     toggleGroup:undefined,
 
-    /**
+    /*
      * Disable button when form of parent component is invalid
      * @memberof ludo.form.Button.prototype
      * @attribute {Boolean} disableOnInvalid
@@ -87,25 +93,18 @@ ludo.form.Button = new Class({
      */
     disableOnInvalid:false,
 
-    /**
+    /*
      * True to initially disable button
      * @attribute {Boolean} disabled
      * @default false
      */
     disabled:false,
-    /**
-     * Is this button by default selected
-     * When parent component is displayed, it will call select() method for first selected button. If no buttons
-     * have config param selected set to true, it will select first
-     * @memberof ludo.form.Button.prototype
-     * @attribute {Boolean} selected
-     * @default false
-     */
+
     selected:false,
 
     overflow:'hidden',
 
-    /**
+    /*
      * Path to button icon
      * @attribute {String} icon
      * @memberof ludo.form.Button.prototype
@@ -115,7 +114,7 @@ ludo.form.Button = new Class({
 
     active:false,
 
-	/**
+	/*
 	 * Size,i.e height of button. Possible values 's', 'm' and 'l' (small,medium, large)
      * @memberof ludo.form.Button.prototype
 	 * @config {String} size
@@ -145,7 +144,7 @@ ludo.form.Button = new Class({
         this.layout.width = this.layout.width || Math.max(len * 10, 80);
 
 
-        this.setConfigParams(config, ['size','menu','icon','toggle','disableOnInvalid','defaultSubmit','disabled','selected']);
+        this.setConfigParams(config, ['size','menu','icon','toggle','disableOnInvalid','defaultSubmit','disabled','selected','formView']);
 
         if (config.toggleGroup !== undefined) {
             if (ludo.util.type(config.toggleGroup) === 'string') {
@@ -212,7 +211,12 @@ ludo.form.Button = new Class({
 
         this.component = this.getParentComponent();
         if(this.component && this.disableOnInvalid){
-            var m = this.component.getForm();
+            var m;
+            if(this.formView != undefined){
+                m = ludo.get(this.formView);
+            }else{
+                 m = this.component.getForm();
+            }
             m.addEvent('valid', this.enable.bind(this));
             m.addEvent('invalid', this.disable.bind(this));
             if(!m.isValid())this.disable();
@@ -366,17 +370,13 @@ ludo.form.Button = new Class({
      * Trigger click on button
      * @function click
      * @return {undefined|Boolean}
+     * @memberof ludo.form.Button.prototype
      */
     click:function () {
         this.focus();
         if (!this.isDisabled()) {
             this.getEl().focus();
-            /**
-             * Click on button event
-             * @event click
-             * @param {String} value, i.e. label of button
-             * @param Component this
-             */
+
             this.fireEvent('click', [this._get(), this]);
 
             if (this.toggle) {
@@ -431,7 +431,7 @@ ludo.form.Button = new Class({
 
     turnOn:function () {
         this.active = true;
-        /**
+        /*
          * Turn toggle button on
          * @event on
          * @param {String} value, i.e. label of button
@@ -443,7 +443,7 @@ ludo.form.Button = new Class({
 
     turnOff:function () {
         this.active = false;
-        /**
+        /*
          * Turn toggle button off
          * @event off
          * @param {String} value, i.e. label of button
@@ -457,6 +457,7 @@ ludo.form.Button = new Class({
      * Return instance of ludo.form.ToggleGroup
      * @function getToggleGroup
      * @return {Object} ludo.form.ToggleGroup
+     * @memberof ludo.form.Button.prototype
      */
     getToggleGroup:function () {
         return this.toggleGroup;

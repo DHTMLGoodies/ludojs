@@ -10,6 +10,7 @@ ludo.effect.Effect = new Class({
 	 Fly/Slide DOM node to a position
 	 @function fly
 	 @param {Object} config
+	 @memberof ludo.effect.Effect.prototype
 	 @example
 	 	<div id="myDiv" style="position:absolute;width:100px;height:100px;border:1px solid #000;background-color:#DEF;left:50px;top:50px"></div>
 		<script type="text/javascript">
@@ -56,6 +57,7 @@ ludo.effect.Effect = new Class({
 	 @param {Number} x
 	 @param {Number} y
 	 @param {Number} seconds
+	 @memberof ludo.effect.Effect.prototype
 	 @example
 
 	 You may also use this method like this:
@@ -80,6 +82,7 @@ ludo.effect.Effect = new Class({
 		 * Fired when animation is completed
 		 * @event animationComplete
 		 * @param {effect.Drag} this
+		 * @memberof ludo.effect.Effect.prototype
 		 */
 
 		this.fireEvent('animationComplete', this);

@@ -17,6 +17,7 @@ ludo.dataSource.HTML = new Class({
 	 * Components using this data-source will be automatically updated
 	 * @function load
 	 * @return void
+	 * @memberof ludo.dataSource.HTML.prototype
 	 */
 	load:function () {
 		this.parent();
@@ -45,12 +46,6 @@ ludo.dataSource.HTML = new Class({
 						this.loadComplete(request.getResponseData(), request.getResponse());
 					}.bind(this),
 					"error":function (request) {
-						/**
-						 * Server error event. Fired when the server didn't handle the request
-						 * @event servererror
-						 * @param {String} error text
-						 * @param {String} error message
-						 */
 						this.fireEvent('servererror', [request.getResponseMessage(), request.getResponseCode()]);
 					}.bind(this)
 				}

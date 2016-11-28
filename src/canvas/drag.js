@@ -42,6 +42,7 @@ ludo.canvas.Drag = new Class({
 	 * @function add
 	 * @param {ludo.effect.DraggableNode} node
 	 * @return {effect.DraggableNode} added node
+	 * @memberof ludo.canvas.Drag.prototype
 	 */
 	add:function (node) {
 		node = this.getValidNode(node);

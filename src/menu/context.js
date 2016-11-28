@@ -84,6 +84,7 @@ ludo.menu.Context = new Class({
 	 * example: record in a tree
 	 * @function getSelectedRecord
 	 * @return object record
+	 * @memberof ludo.menu.Context.prototype
 	 */
 	getSelectedRecord:function () {
 		return this.selectedRecord;

@@ -594,10 +594,23 @@ Collapse bar
 }
 
 /** Form text */
-.ludo-twilight .ludo-form-text-element, .ludo-twilight .ludo-form-text-element input {
+.ludo-twilight .ludo-form-text-element input,
+.ludo-twilight .ludo-form-textarea textarea{
+    background-color:#535354;
+    color:#aeb0b0;
+}
+
+.ludo-twilight .ludo-form-element,
+.ludo-twilight .ludo-form-text-element
+{
     background-color:#535354;
     color:#aeb0b0;
     border-top-color: transparent;
     border-left-color: transparent;
     border-right-color: transparent;
+}
+
+.ludo-twilight div.ludo-form-textarea .ludo-form-text-element{
+
+    border:1px solid #aeb0b0;
 }

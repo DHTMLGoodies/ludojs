@@ -31,6 +31,7 @@ ludo.paging.Next = new Class({
 	/**
 	 * Calls nextPage() method of data source
 	 * @function nextPage
+	 * @memberof ludo.paging.Next.prototype
 	 */
 	nextPage:function () {
 		this.getDataSource().nextPage();

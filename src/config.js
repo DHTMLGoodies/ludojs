@@ -1,7 +1,7 @@
 /**
  Class for config properties of a ludoJS application. You have access to an instance of this class
  via ludo.config.
- @class _Config
+ @class ludo._Config
  @private
  @example
     ludo.config.setUrl('../router.php'); // to set global url
@@ -16,6 +16,7 @@ ludo._Config = new Class({
     /**
      * Reset all config properties back to default values
      * @function reset
+	 * @memberof ludo._Config.prototype
      */
 	reset:function(){
 		this.setDefaultValues();
@@ -36,6 +37,7 @@ ludo._Config = new Class({
      a component.
      @function config
      @param {String} url
+	 @memberof ludo._Config.prototype
      @example
         ludo.config.setUrl('../controller.php');
      */
@@ -46,6 +48,7 @@ ludo._Config = new Class({
      * Return global url
      * @function getUrl
      * @return {String}
+	 * @memberof ludo._Config.prototype
      * */
 	getUrl:function () {
 		return this.storage.url;
@@ -53,6 +56,7 @@ ludo._Config = new Class({
     /**
      * Enable url in format <url>/resource/arg1/arg2/service
      * @function enableModRewriteUrls
+	 * @memberof ludo._Config.prototype
      */
 	enableModRewriteUrls:function () {
 		this.storage.modRewrite = true;
@@ -60,6 +64,7 @@ ludo._Config = new Class({
     /**
      * Disable url's for mod rewrite enabled web servers.
      * @function disableModRewriteUrls
+	 * @memberof ludo._Config.prototype
      */
 	disableModRewriteUrls:function () {
 		this.storage.modRewrite = false;
@@ -67,6 +72,7 @@ ludo._Config = new Class({
     /**
      * Returns true when url's for mod rewrite has been enabled
 	 * @function hasModRewriteUrls
+	 * @memberof ludo._Config.prototype
      * @return {Boolean}
      */
 	hasModRewriteUrls:function () {
@@ -75,6 +81,7 @@ ludo._Config = new Class({
     /**
      * Set default socket url(node.js).
      * @function setSocketUrl
+	 * @memberof ludo._Config.prototype
      * @param url
      */
 	setSocketUrl:function (url) {
@@ -84,6 +91,7 @@ ludo._Config = new Class({
      * Return default socket url
      * @function getSocketUrl
      * @return {String}
+	 * @memberof ludo._Config.prototype
      */
 	getSocketUrl:function () {
 		return this.storage.socketUrl;
@@ -92,6 +100,7 @@ ludo._Config = new Class({
      * Set document root path
      * @function setDocumentRoot
      * @param {String} root
+	 * @memberof ludo._Config.prototype
      */
 	setDocumentRoot:function (root) {
 		this.storage.documentRoot = root === '.' ? '' : root;
@@ -99,6 +108,7 @@ ludo._Config = new Class({
     /**
      * @function getDocumentRoot
      * @return {String}
+	 * @memberof ludo._Config.prototype
      */
 	getDocumentRoot:function () {
 		return this.storage.documentRoot;
@@ -107,6 +117,7 @@ ludo._Config = new Class({
      * Set default upload url for form.File components.
      * @function setFileUploadUrl
      * @param {String} url
+	 * @memberof ludo._Config.prototype
      */
 	setFileUploadUrl:function (url) {
 		this.storage.fileUploadUrl = url;
@@ -114,6 +125,7 @@ ludo._Config = new Class({
     /**
      * @function getFileUploadUrl
      * @return {String}
+	 * @memberof ludo._Config.prototype
      */
 	getFileUploadUrl:function(){
 		return this.storage.fileUploadUrl;

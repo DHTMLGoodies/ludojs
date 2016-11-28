@@ -12,9 +12,21 @@
  * @param {String} config.handColor Color of Arrow Hand indicating selected hours and minutes. default: #669900
  * @param {String} config.handTextColor Color of hour and minute text on the hour/minute hand. default: #FFFFFFF
  * @param {String} config.minuteDotColor Color of small dot inside the hour/minute hand., default: #FFFFFF
+ * @fires ludo.calendar.TimePicker#mode Fired when switching from hours to minutes. Argument: {String} "hours" or "minutes"
+ * @fires ludo.calendar.TimePicker#time Fired when either hours or minutes have been changed.
+ * Example:<code>
+ * var t = new ludo.calendar.TimePicker({
+ *      layout:{width:500,height:500},
+ *      renderTo:document.body,
+ *      listeners:{
+ *          // Listener for the "time" event
+ *          'time' : function(hour, minutes, timeAsString){
+ *              // timeString in format HH:MM, example: 11:48
+ *              console.log(timeAsString);
+ *          }
  *
- * @fires ludo.calendar.TimePicker#time
- * @fires ludo.calendar.TimePicker#mode
+ * });
+ *</code>
  */
 ludo.calendar.TimePicker = new Class({
 
@@ -95,6 +107,8 @@ ludo.calendar.TimePicker = new Class({
 
     /**
      * Show hours
+     * @function restart
+     * @memberof ludo.calendar.TimePicker.prototype
      */
     restart: function () {
         this.showHours();
@@ -107,26 +121,6 @@ ludo.calendar.TimePicker = new Class({
     },
 
     notify: function () {
-        /**
-         * Mode event, arguments can be "hours" or "minutes"
-         * @event ludo.calendar.TimePicker#time
-         * @property {Number} hours Current hours
-         * @property {Number} minutes Current minutes
-         * @property {String} timeString. Time in format HH:MM
-         * @example
-         * var t = new ludo.calendar.TimePicker({
-         *      layout:{width:500,height:500},
-         *      renderTo:document.body,
-         *      listeners:{
-         *          // Listener for the "time" event
-         *          'time' : function(hour, minutes, timeAsString){
-         *              // timeString in format HH:MM, example: 11:48
-         *              console.log(timeAsString);
-         *          }
-         *
-         * });
-         *
-         */
 
         this.fireEvent('time', [this.hours, this.minutes, this.hourPrefixed + ":" + this.minutePrefixed]);
     },
@@ -544,22 +538,7 @@ ludo.calendar.TimePicker = new Class({
         this.needleCircleInnerMinutes.hide();
         this.updateNeedle();
 
-        /**
-         * Mode event, arguments can be "hours" or "minutes"
-         * @event ludo.calendar.TimePicker#mode
-         * @property {string} mode - "hours" when hour is displayed, "minutes" when minutes is displayed
-         * @example
-         * var t = new ludo.calendar.TimePicker({
-         *      layout:{width:500,height:500},
-         *      renderTo:document.body,
-         *      listeners:{
-         *          'mode' : function(mode){
-         *              console.log(mode);
-         *          }
-         *
-         * });
-         *
-         */
+
         this.fireEvent('mode', 'hours');
     },
 

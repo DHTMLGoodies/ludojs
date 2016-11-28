@@ -13,6 +13,7 @@ ludo.dataSource.TreeCollection = new Class({
 	 * @function getChildren
 	 * @param {String} parent id
 	 * @return {Array|undefined} children
+	 * @memberof ludo.dataSource.TreeCollection.prototype
 	 */
 	getChildren:function (parent) {
 		var p = this.findRecord(parent);

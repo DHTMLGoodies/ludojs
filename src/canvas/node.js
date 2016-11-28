@@ -23,11 +23,6 @@ ludo.canvas.Node = new Class({
 	Extends:Events,
 	el:undefined,
 	tagName:undefined,
-
-	/**
-	 * Id of node
-	 * @config {String} id
-	 */
 	id:undefined,
 
 	initialize:function (tagName, properties, text) {
@@ -260,6 +255,7 @@ ludo.canvas.Node = new Class({
 	 * Update text content of node
 	 * @function text
 	 * @param {String} text
+	 * @memberof ludo.canvas.Node.prototype
 	 */
 	text:function (text) {
 		ludo.canvasEngine.text(this.el, text);

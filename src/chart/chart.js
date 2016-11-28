@@ -4,7 +4,7 @@ ludo.chart.Chart = new Class({
 
 	},
 
-    /**
+    /*
      * Class providing data to the chart
      * @config {chart.DataProvider} dataProvider
      * @optional

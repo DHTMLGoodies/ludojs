@@ -31,11 +31,7 @@ ludo.Anchor = new Class({
     },
 
     anchorClick:function () {
-        /**
-         * Click on anchor
-         * @event click
-         * @param {Object} component
-         */
+
         this.fireEvent('click', this);
         return false;
     }

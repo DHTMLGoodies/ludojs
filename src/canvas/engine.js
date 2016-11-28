@@ -1,31 +1,31 @@
 ludo.canvas.Engine = new Class({
-	/**
+	/*
 	 * Transformation cache
 	 * @property tCache
 	 * @type {Object}
 	 * @private
 	 */
 	tCache:{},
-    /**
+    /*
      * Internal cache
      * @property {Object} tCacheStrings
      * @private
      */
 	tCacheStrings:{},
-    /**
+    /*
      * Cache of class names
      * @property {Object} classNameCache
      * @private
      */
     classNameCache:{},
-    /**
+    /*
      * Internal cache
      * @property {Object} tCacheStrings
      * @private
      */
     cache:{},
 
-	/**
+	/*
 	 * Updates a property of a SVG DOM node
 	 * @function set
 	 * @param {HTMLElement} el
@@ -41,7 +41,7 @@ ludo.canvas.Engine = new Class({
 			el.setAttribute(key, value);
 		}
 	},
-	/**
+	/*
 	 * Remove property from node.
 	 * @function remove
 	 * @param {HTMLElement} el
@@ -55,7 +55,7 @@ ludo.canvas.Engine = new Class({
 		}
 	},
 
-	/**
+	/*
 	 * Returns property value of a SVG DOM node
 	 * @function get
 	 * @param {HTMLElement} el
@@ -101,7 +101,7 @@ ludo.canvas.Engine = new Class({
 		el.parentNode.appendChild(el);
 	},
 
-    /**
+    /*
      * Apply rotation to element
      * @function rotate
      * @param {Node} el
@@ -111,7 +111,7 @@ ludo.canvas.Engine = new Class({
 		this.setTransformation(el, 'rotate', rotation);
 	},
 
-    /**
+    /*
      * Rotate around a speific point
      * @function rotateAround
      * @param {Node} el
@@ -249,7 +249,7 @@ ludo.canvas.Engine = new Class({
 		return ret;
 	},
 
-	/**
+	/*
 	 * @function hasTransformationCache
 	 * @private
 	 * @param {Number} id
@@ -279,7 +279,7 @@ ludo.canvas.Engine = new Class({
 		return ret;
 	},
 
-	/**
+	/*
 	 * @function buildTransformationCache
 	 * @private
 	 * @param {HTMLElement} el
@@ -402,7 +402,7 @@ ludo.canvas.Engine = new Class({
 		el.textContent = '';
 	},
 
-    /**
+    /*
      * Degrees to radians method
      * @function toRad
      * @param degrees

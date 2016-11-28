@@ -618,6 +618,10 @@ div.ludo-accordion-title
 {
     position:relative;
     float:left;
+}
+
+.ludo-accordion-titlebar .ludo-framed-view-titlebar-title{
+    width:auto;
 }/* ../ludojs/css-source/layout/tab.css */
 
 
@@ -876,18 +880,36 @@ div.ludo-tab-strip-right div.ludo-body {
     right:0;
     top:0;
     margin-left:4px;
-
 }
+
+.ludo-tab-expand-box-top{
+    background-image:url(../images/layout/tabs-expand-top.png?rnd=3);
+}
+
+.ludo-tab-expand-box-top-over{
+    background-image:url(../images/layout/tabs-expand-top-over.png?rnd=3);
+}
+
+
+.ludo-tab-expand-box-bottom{
+    background-image:url(../images/layout/tabs-expand-bottom.png?rnd=3);
+}
+
+.ludo-tab-expand-box-bottom-over{
+    background-image:url(../images/layout/tabs-expand-bottom-over.png?rnd=3);
+}
+
+
 
 .ludo-tab-close{
     background-repeat:no-repeat;
     background-position:center center;
-    background-image:url(../../images/layout/tab-close.png);
+    background-image:url(../images/layout/tab-close.png);
     position:absolute;
     cursor:pointer;
 }
 .ludo-tab-close-top-over,.ludo-tab-close-bottom-over{
-    background-image:url(../../images/layout/tab-close-over.png);
+    background-image:url(../images/layout/tab-close-over.png);
 }
 .ludo-tab-close-top, .ludo-tab-close-bottom{
     right:2px;
@@ -1192,13 +1214,11 @@ div.ludo-paging-current-page .ludo-body{
 }
 /* ../ludojs/css-source/calendar/calendar.css */
 .ludo-calendar-year-container {
-     background-color:#555;
      padding-bottom:5px;
      padding-top:5px;
      height:20px;;
  }
  .ludo-calendar-month-year-container{
-     background-color:#555;
      padding-top:6px;
      height:20px;;
  }
@@ -2721,7 +2741,7 @@ fieldset{
 
 
 .ludo-light-gray div.ludo-form-button-disabled {
-    color: #555;
+    color: #555555
     cursor: default;
 }
 
@@ -2751,18 +2771,6 @@ fieldset{
 
 /** Tab strip */
 
-.ludo-light-gray div.ludo-tab-strip-tab-bg-last,
-.ludo-light-gray div.ludo-tab-strip-tab-bg-first{
-    display:none !important;
-}
-
-
-
-
-.ludo-light-gray .ludo-tab-strip div.ludo-tab {
-    background-color: #6c9ad1;
-}
-
 /** Bg behind tabs */
 .ludo-light-gray .ludo-tab-strip-bg {
     height: 1px;
@@ -2778,7 +2786,7 @@ fieldset{
 
 /** Resize shim */
 .ludo-light-gray .ludo-shim-resize {
-    border: 1px dashed #777;
+    border: 1px dashed #777777
 }
 
 /* Menu */
@@ -2794,7 +2802,7 @@ fieldset{
 
 
 .ludo-light-gray div.ludo-menu-vertical {
-    background-color: #FFF;
+    background-color: #FFFFFF
 }
 
 .ludo-light-gray .ludo-menu-vertical .ludo-menu-item {
@@ -2807,7 +2815,7 @@ fieldset{
     padding-top: 0;
     padding-bottom: 0;
     margin: 0;
-    color: #000;
+    color: #000000
 
 }
 
@@ -2821,7 +2829,7 @@ fieldset{
 }
 
 .ludo-light-gray .ludo-menu div.ludo-menu-item-spacer-horizontal {
-    background-color: #7fa2c9;
+    background-color: #c6c6c6;
 }
 
 .ludo-light-gray .ludo-menu div.ludo-menu-item-spacer-vertical {
@@ -2832,43 +2840,43 @@ fieldset{
 }
 .ludo-light-gray .ludo-menu-horizontal .ludo-menu-item {
     font-weight: bold;
-    color: #333;
+    color: #333333
 }
 
 
 .ludo-light-gray .ludo-menu-vertical .ludo-menu-item-over {
-    background-color: #FFF;
+    background-color: #FFFFFF
 }
 
 .ludo-light-gray .ludo-menu-horizontal .ludo-menu-item-over {
     background-color: transparent;
-    color: #000;
-    border-color: #000;
+    color: #000000
+    border-color: #000000
 }
 
 .ludo-light-gray .ludo-menu-item-horizontal.ludo-menu-item-over, .ludo-light-gray .ludo-menu-horizontal .ludo-menu-item-active {
     /* background-image: url(../images/light-gray-skin/bg-horizontal-menu-over.png); */
-    background-color:#CCC;
+    background-color:#CCCCCC
 }
 
 .ludo-light-gray .ludo-menu-vertical {
     border: 1px solid #c6c6c6;
     background: url(../images/light-gray-skin/menu-bg-vertical.png) repeat-y;
-    -moz-box-shadow: 1px 1px 4px #555;
-    -webkit-box-shadow: 1px 1px 4px #555;
-    box-shadow: 1px 1px 3px #555;
+    -moz-box-shadow: 1px 1px 4px #555555
+    -webkit-box-shadow: 1px 1px 4px #555555
+    box-shadow: 1px 1px 3px #555555
 }
 
 
 .ludo-light-gray .ludo-menu-vertical .ludo-menu-item-over, .ludo-light-gray .ludo-menu-vertical .ludo-menu-item-active {
-    background-color: #FFF;
+    background-color: #FFFFFF
     border: 1px solid #c6c6c6;
     padding-left: 34px;
     padding-right: 19px;
     padding-top: 1px;
     padding-bottom: 1px;
     border-radius: 2px;
-    color: #000;
+    color: #000000
 }
 
 .ludo-light-gray .ludo-menu-item-vertical-expand {
@@ -2914,7 +2922,7 @@ fieldset{
 }
 
 .ludo-light-gray .ludo-calendar-year, .ludo-light-gray .ludo-calendar-month-year {
-    color: #555;
+    color: #555555
     float: left;
     font-size: 10px;
     padding-left: 10px;
@@ -2925,7 +2933,7 @@ fieldset{
 .ludo-light-gray .ludo-calendar-year-selected {
     background-color: #f5f5f5;
 
-    color: #000;
+    color: #000000
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
     border-bottom-left-radius: 5px;
@@ -2935,7 +2943,7 @@ fieldset{
 
 .ludo-light-gray .ludo-calendar-month-year-selected {
     background-color: #f5f5f5;
-    color: #000;
+    color: #000000
     font-size: 11px;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
@@ -2945,7 +2953,7 @@ fieldset{
 
 .ludo-light-gray .ludo-calendar-year-disabled {
     cursor: default;
-    color: #CCC;
+    color: #c6c6c6;
 }
 
 .ludo-light-gray .ludo-calendar-month-container {
@@ -2958,13 +2966,13 @@ fieldset{
     cursor: pointer;
     float: left;
     font-size: 10px;
-    color: #FFF;
+    color: #FFFFFF
 
 }
 
 .ludo-light-gray .ludo-calendar-month-selected {
     background-color: #f5f5f5;
-    color: #000;
+    color: #000000
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
     font-weight: bold;
@@ -3020,7 +3028,7 @@ fieldset{
 }
 
 .ludo-light-gray .ludo-calendar-body-days {
-    background-color: #FFF;
+    background-color: #FFFFFF
 }
 
 .ludo-light-gray .ludo-calendar-container-days td {
@@ -3031,7 +3039,7 @@ fieldset{
     border-right: 1px solid #c6c6c6;
     text-align: center;
     background-color: #f5f5f5;
-    color: #000;
+    color: #000000
 }
 
 td.calendar-day {
@@ -3044,12 +3052,12 @@ td.calendar-day {
 }
 
 .ludo-light-gray .calendar-day-inactive {
-    color: #999;
+    color: #999999
 }
 
 .ludo-light-gray .ludo-calendar-month-info {
     text-align: center !important;
-    color: #000;
+    color: #000000
     font-size: 10px;
     font-weight: bold;
     border-top: 0;
@@ -3060,7 +3068,7 @@ td.calendar-day {
 }
 
 .ludo-light-gray .calendar-day {
-    border: 1px solid #FFF;
+    border: 1px solid #FFFFFF
 }
 
 .ludo-light-gray .calendar-day-today {
@@ -3078,7 +3086,7 @@ td.calendar-day-selected {
 
 /** form.FilterText component */
 .ludo-light-gray .ludo-form-text-autocomplete-container {
-    background-color: #FFF;
+    background-color: #FFFFFF
 }
 
 /**
@@ -3105,7 +3113,7 @@ form.ComboTree
 .ludo-light-gray .ludo-Filter-Tree-Window .ludo-body {
     padding: 0;
     overflow-y: auto;
-    background-color: #FFF;
+    background-color: #FFFFFF
 }
 
 /** Grid */
@@ -3182,12 +3190,12 @@ tab layout */
 }
 
 .ludo-light-gray .ludo-tab-strip{
-    background-color:#ddd;
+    background-color:#dddddd
 
 }
 .ludo-light-gray .ludo-tab-strip-tab{
     border-color:#aeb0b0;
-    background-color:#ddd;
+    background-color:#dddddd
 }
 
 .ludo-light-gray .ludo-tab-strip-tab-active div.ludo-tab-strip-tab-bg{
@@ -3216,7 +3224,7 @@ tab layout */
 }
 
 .ludo-light-gray .ludo-tab-strip-tab-txt-svg{
-    color:#000;
+    color:#000000
 }
 
 
@@ -3277,7 +3285,7 @@ tab layout */
 }
 
 .ludo-light-gray .ludo-notification{
-    background-color:#AAA;
+    background-color:#AAAAAA
     padding:3px;
     padding-left:5px;
     padding-right:5px;
@@ -3286,12 +3294,12 @@ tab layout */
 }
 
 .ludo-light-gray .ludo-notification .ludo-body{
-    color:#FFF;
+    color:#FFFFFF
     font-size:0.9em;
 }
 
 .ludo-light-gray div.ludo-form-el-invalid label{
-    color:#F00;
+    color:#F00F00
 }
 .ludo-light-gray div.ludo-form-element input{
     height:14px;
@@ -3307,7 +3315,7 @@ tab layout */
 }
 .ludo-light-gray .form-combo-child{
     border:1px solid #d7d7d7;
-    box-shadow: 2px 2px 5px 0 #555;
+    box-shadow: 2px 2px 5px 0 #555555
 }
 .ludo-light-gray .input-row .ludo-menu-button-arrow{
     border-left:1px solid #d7d7d7;

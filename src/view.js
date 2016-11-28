@@ -25,6 +25,12 @@
  @param {String} config.tpl A template for string when inserting JSON Content(the insertJSON method), example: "name:{firstname} {lastname}<br>"
  @param {Boolean} config.alwaysInFront True to make this view always appear in front of the other views.
  @param {Object} config.form Configuration for the form Manager. See <a href="ludo.form.Manager">ludo.form.Manager</a> for details.
+ @fires ludo.View#rendered Fired when view has been rendered on screen. Argument: ludo.View
+ @fires ludo.View#toFront Fired when view has brought to front. Argument: ludo.View
+ @fires ludo.View#hide Fired when view has been hidden using the hide method. Argument: ludo.View
+ @fires ludo.View#show Fired when view is displayed using the show method. Argument. ludo.View
+ @fires ludo.View#beforeshow Fired just before a view is displayed using the show method. Argument: ludo.View
+ @fires ludo.View#resize Fired when a view has been resized.
  // TODO describe data sources
  @example {@lang Javascript}
 	// Example 1: View render to &lt;body> tag
@@ -88,12 +94,7 @@ ludo.View = new Class({
 	form:undefined,
 	layout:undefined,
 	tpl:'',
-	/**
-	 * Default config for ludo.tpl.Parser. ludo.tpl.Parser is a JSON parser which
-	 * converts uses the template defined in tpl and converts JSON into a String.
-	 * If you want to create your own parser, extend ludo.tpl.Parser and change value of JSONParser to the name
-	 * of your class
-	 */
+
 	JSONParser:{ type:'tpl.Parser' },
 	initialItemsObject:[],
 	contextMenu:undefined,
@@ -173,9 +174,10 @@ ludo.View = new Class({
 		this.fireEvent('rendered', this);
 	},
 	/**
-	 * First life cycle step when creating and object
+	 * Constructor for Views.
 	 * @function __construct
 	 * @param {Object} config
+	 * @memberof ludo.View.prototype
 	 */
 	__construct:function (config) {
 		this.parent(config);
@@ -213,6 +215,7 @@ ludo.View = new Class({
 	 This method is typically used when you want to create your own DOM elements.
 	 @memberof ludo.View.prototype
 	 @function ludoDOM
+	 @private
 	 @example
 	 ludoDOM : function() {<br>
 			 this.parent(); // Always call parent ludoDOM
@@ -257,6 +260,7 @@ ludo.View = new Class({
 	 This is the place where you add custom events
 	 @function ludoEvents
 	 @return void
+	 @private
 	 @example
 	 ludoEvents:function(){
 			 this.parent();
@@ -297,6 +301,7 @@ ludo.View = new Class({
 	 * @function insertJSON
 	 * @param {Object} json
 	 * @return void
+	 * @memberof ludo.View.prototype
 	 */
 	JSON:function(json){
 		if (this.tpl) {
@@ -328,6 +333,7 @@ ludo.View = new Class({
 	 * @function html
 	 * @param html
 	 * @type string
+	 * @memberof ludo.View.prototype
 	 * @example
 	 var view = new ludo.View({
 	 	renderTo:document.body,
@@ -361,10 +367,11 @@ ludo.View = new Class({
 	 * Load content from the server. This method will send an Ajax request to the server
 	 * using the properties specified in the remote object or data-source
 	 * @function load
+	 * @memberof ludo.View.prototype
 	 * @return void
 	 */
 	load:function () {
-		/**
+		/*
 		 * This event is fired from the "load" method before a remote request is sent to the server.
 		 * @event beforeload
 		 * @param {String} url
@@ -379,6 +386,7 @@ ludo.View = new Class({
 	 * Get reference to parent component
 	 * @function getParent
 	 * @return {Object} component | null
+	 * @memberof ludo.View.prototype
 	 */
 	getParent:function () {
 		return this.parentComponent ? this.parentComponent : null;
@@ -422,11 +430,9 @@ ludo.View = new Class({
 		if (e && e.target && e.target.tagName.toLowerCase() == 'a') {
 			return;
 		}
-		/** Event fired when a component is activated, i.e. brought to front
-		 * @event activate
-		 * @param {Object} ludo.View
-		 */
+
 		this.fireEvent('activate', this);
+		this.fireEvent('toFront', this);
 		this.setNewZIndex();
 	},
 
@@ -438,8 +444,9 @@ ludo.View = new Class({
 	 * Return reference to components DOM container. A view has two &lt;div> elements, one parent and a child. getEl()
 	 * returns the parent, getBody() returns the child.
 	 * DOM "body" element
-	 * @function getEl()
+	 * @function getEl
 	 * @return {Object} DOMElement
+	 * @memberof ludo.View.prototype
 	 */
 	getEl:function () {
 		return this.els.container ? this.els.container : null;
@@ -463,11 +470,7 @@ ludo.View = new Class({
 		if (!this.hidden && this.getEl().css('display') !== 'none') {
 			this.getEl().css('display', 'none');
 			this.hidden = true;
-			/**
-			 * Fired when a component is hidden using the hide method
-			 * @event hide
-			 * @param {Object} htis
-			 */
+
 			this.resizeParent();
 			this.fireEvent('hide', this);
 		}
@@ -477,6 +480,7 @@ ludo.View = new Class({
 	 * @function hideAfterDelay
 	 * @param {number} seconds
 	 * @default 1
+	 * @memberof ludo.View.prototype
 	 */
 	hideAfterDelay:function (seconds) {
 		this.hide.delay((seconds || 1) * 1000, this);
@@ -495,6 +499,7 @@ ludo.View = new Class({
 	 * Return true if this component is visible
 	 * @function isVisible
 	 * @return {Boolean}
+	 * @memberof ludo.View.prototype
 	 *
 	 */
 	isVisible:function () {
@@ -517,11 +522,7 @@ ludo.View = new Class({
 		if (!this.lifeCycleComplete) {
 			this.remainingLifeCycle();
 		}
-		/**
-		 * Event fired just before a component is shown using the show method
-		 * @event beforeshow
-		 * @param {Object} this
-		 */
+
 		if (!skipEvents)this.fireEvent('beforeshow', this);
 
 		this.setNewZIndex();
@@ -533,11 +534,7 @@ ludo.View = new Class({
 			this.getLayout().getRenderer().resize();
 		}
 
-		/**
-		 * Fired when a component is shown using the show method
-		 * @event show
-		 * @param {Object} this
-		 */
+
 		if (!skipEvents)this.fireEvent('show', this);
 
 
@@ -556,6 +553,7 @@ ludo.View = new Class({
 	 * @function showChild
 	 * @param {String} key
 	 * @return {Boolean} success
+	 * @memberof ludo.View.prototype
 	 */
 	showChild:function (key) {
 		var child = this.getChild(key);
@@ -682,15 +680,11 @@ ludo.View = new Class({
 		this.resizeDOM();
 
 		if (config.height || config.width) {
-			/**
-			 * Event fired when component is resized
-			 * @event resize
-			 */
 			this.fireEvent('resize');
 		}
 		if (this.children.length > 0)this.getLayout().resizeChildren();
 	},
-	/**
+	/*
 	 * Returns true component is collapsible
 	 * @function isCollapsible
 	 * @return {Boolean}

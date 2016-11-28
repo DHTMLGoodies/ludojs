@@ -127,6 +127,38 @@ require_once("../includes/demo-header.php");
                 ]
             },
             {
+                id: 'tab11',
+                title: "Form",
+                layout:{
+                    type:'table',
+                    width:'matchparent',height:'matchParent',
+                    columns:[{
+                        weight:1
+                    }]
+
+                },
+                children:[
+                    {
+                        layout:{row:true},
+                        type:'form.Text',
+                        name:'firstname',
+                        placeholder:'Enter your first name'
+                    },
+                    {
+                        layout:{row:true},
+                        type:'form.Text',
+                        name:'lastname',
+                        placeholder:'Enter your lastname name'
+                    },
+                    {
+                        layout:{row:true},
+                        type:'form.Textarea',
+                        name:'address',
+                        placeholder:'Enter your address'
+                    }
+                ]
+            },
+            {
                 id: 'tab6',
                 title: "Tab 3",
                 html: 'Tab 3'
@@ -151,11 +183,6 @@ require_once("../includes/demo-header.php");
                 title: "Tab 7",
                 html: 'Tab 7'
 
-            },
-            {
-                id: 'tab11',
-                title: "Tab 8",
-                html: 'Tab 8'
             }
         ],
         buttonBar: [

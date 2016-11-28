@@ -7,7 +7,7 @@ ludo.canvas.Effect = new Class({
         this.execute('translate', el, [start.x, start.y],[start.y + x, start.y + y], duration);
     },
 
-    /**
+    /*
      * Animates back to translate(0,0)
      * @function flyBack
      * @param el

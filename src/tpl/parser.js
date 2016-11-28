@@ -20,6 +20,7 @@ ludo.tpl.Parser = new Class({
      * @param {Array} records
      * @param {String} tpl
      * @return {Array} string items
+     * @memberof ludo.tpl.Parser.prototype
      */
     getCompiled:function (records, tpl) {
         if (!ludo.util.isArray(records)) {

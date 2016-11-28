@@ -268,12 +268,7 @@ ludo.form.Spinner = new Class({
     setSpinnerValue:function (value) {
         this.value = this.validateSpinnerValue(value).toFixed(this.decimals);
         this.getFormEl().val(this.value);
-        /**
-         * Change event fired when value is changed
-         * @event change
-         * @param value
-         * @param Component this
-         */
+
         this.fireEvent('change', value, this);
     },
 

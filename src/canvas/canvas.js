@@ -79,6 +79,7 @@ ludo.canvas.Canvas = new Class({
      * Returns height of canvas
      * @function getHeight
      * @return {Number} height
+	 * @memberof ludo.canvas.Canvas.prototype
      */
 	getHeight:function(){
 		return this.height;
@@ -88,6 +89,7 @@ ludo.canvas.Canvas = new Class({
      * Returns width of canvas
      * @function getWidth
      * @return {Number} width
+	 * @memberof ludo.canvas.Canvas.prototype
      */
 	getWidth:function(){
 		return this.width;
@@ -97,6 +99,7 @@ ludo.canvas.Canvas = new Class({
      * Returns center point of canvas as an object with x and y coordinates
      * @function getCenter
      * @return {Object}
+	 * @memberof ludo.canvas.Canvas.prototype
      */
     getCenter:function(){
         return {
@@ -108,16 +111,11 @@ ludo.canvas.Canvas = new Class({
 	/**
 	 * Update view box size
 	 * @function setViewBox
-	 * @param width
-	 * @type {Number}
-	 * @param height
-	 * @type {Number}
-	 * @param x
-	 * @type {Number}
-	 * @optional
-	 * @param y
-	 * @type {Number}
-	 * @optional
+	 * @param {Number} width Viewbox width
+	 * @param {Number} height Viewbox height
+	 * @param {Number} x Optional left/x position
+	 * @param {Number} y Optional top/y position
+	 * @memberof ludo.canvas.Canvas.prototype
 	 */
 	setViewBox:function (width, height, x, y) {
 		this.set('viewBox', (x || 0) + ' ' + (y || 0) + ' ' + width + ' ' + height);
@@ -135,6 +133,7 @@ ludo.canvas.Canvas = new Class({
 	 * Returns reference to &lt;defs> node
 	 * @function getDefs
 	 * @return {canvas.Node} defs node
+	 * @memberof ludo.canvas.Canvas.prototype
 	 */
 	getDefs:function(){
 		if(this.defsNode === undefined){
@@ -149,6 +148,7 @@ ludo.canvas.Canvas = new Class({
 	 * @function appendDef
 	 * @param {canvas.Node|canvas.View} node
 	 * @return {canvas.Node} defs Node
+	 * @memberof ludo.canvas.Canvas.prototype
 	 */
 	appendDef:function(node){
 		return this.getDefs().append(node);

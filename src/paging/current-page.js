@@ -2,6 +2,7 @@
  Displays current page number shown in a collection
  @class ludo.paging.TotalPages
  @param {Object} config
+ @param {String} tpl Template string. default: {page}
  @example
  children:[
  ...
@@ -18,11 +19,7 @@ ludo.paging.CurrentPage = new Class({
 	type:'grid.paging.CurrentPage',
 	width:25,
 	onLoadMessage:'',
-	/**
-	 * Text template for view. {pages} is replaced by number of pages in data source.
-	 * @attribute {String} tpl
-	 * @default '/{pages}'
-	 */
+
 	tpl:'{page}',
 
 	ludoDOM:function () {

@@ -1,5 +1,6 @@
 /**
  * Slider form component
+ * @class ludo.form.Slider.prototype
  */
 ludo.form.Slider = new Class({
     // TODO implement support for min and max, example slider from 0 to 100, min and max from 10 to 90
@@ -108,12 +109,6 @@ ludo.form.Slider = new Class({
     },
     receivePosition:function (pos) {
         this._set(this.pixelToValue(this.getDirection() == 'horizontal' ? pos.x : pos.y));
-        /**
-         * Change event
-         * @event change
-         * @param value of form field
-         * @param Component this
-         */
         this.fireEvent('change', [ this.value, this ]);
     },
 

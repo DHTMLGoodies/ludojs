@@ -1,4 +1,4 @@
-/**
+/*
  Class displaying all messages from remote requests
 
  Extends: ludo.View
@@ -20,7 +20,7 @@ ludo.remote.Message = new Class({
     Extends:ludo.View,
     cls:'ludo-remote-message',
 
-    /**
+    /*
      Listen to these resources and events
      @config {Array|String} listenTo
      @example
@@ -97,7 +97,7 @@ ludo.remote.Message = new Class({
         }
         this.html(response.message);
 
-        /**
+        /*
          * Event fired when message is shown.
          * @event showMessage
          * @param {remote.Message} this

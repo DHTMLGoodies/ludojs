@@ -2,11 +2,7 @@ ludo.tree.SimpleFilterTree = new Class({
     Extends: ludo.View,
     type : 'tree.SimpleFilterTree',
     treeConfig : undefined,
-    /**
-     * Configuration of input field. same as for configuration of form.Text
-     * @attribute {Object} inputConfig
-     * @default {}
-     */
+
     inputConfig : {},
     selectedRecord : undefined,
     layout : {

@@ -37,6 +37,7 @@ ludo.canvas.Filter = new Class({
 	 Set drop shadow
 	 @function setDropShadow
 	 @param {Object} properties
+	 @memberof ludo.canvas.Filter.prototype
 	 @example
 	 	filter.setDropShadow({
 	 		x: 2, y: 2, // Offset
@@ -102,6 +103,7 @@ ludo.canvas.Filter = new Class({
 	 * @function addFeMergeNode
 	 * @param {String} key
 	 * @return {canvas.Node} feMergeNode
+	 * @memberof ludo.canvas.Filter.prototype
 	 */
 	addFeMergeNode:function (key) {
 		if (this.mergeTags[key] === undefined) {

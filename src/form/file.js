@@ -329,10 +329,11 @@ ludo.form.File = new Class({
 	_get:function(){
 		return this.value;
 	},
-	/**
+	/*
 	 * setValue for file inputs is display only. File inputs are readonly
 	 * @function setValue
 	 * @param {Object} value
+	 *
 	 */
 	setValue:function (value) {
 		console.warn("Use of deprecated setValue");
@@ -346,6 +347,7 @@ ludo.form.File = new Class({
 	 * Method without arguments returns the file input value
 	 * @function val
 	 * @param {Object} value
+	 * @memberof ludo.form.File.prototype
 	 */
 	val:function(value){
 		if(arguments.length == 0){

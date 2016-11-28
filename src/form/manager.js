@@ -296,6 +296,7 @@ ludo.form.Manager = new Class({
 	 * Validate form and fire "invalid" or "valid" event
 	 * @function validate
 	 * @return void
+	 * @memberof ludo.form.Manager.prototype
 	 */
 	validate:function () {
 		if (this.invalidIds.length > 0) {
@@ -355,6 +356,7 @@ ludo.form.Manager = new Class({
 	 * Read form values from the server
 	 * @function read
 	 * @param {String|undefined} id
+	 * @memberof ludo.form.Manager
 	 */
 	read:function(id){
 		this.fireEvent('beforeRead');

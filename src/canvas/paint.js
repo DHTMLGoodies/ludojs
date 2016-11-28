@@ -2,7 +2,6 @@
  Class for styling of SVG DOM nodes
  @namespace ludo.canvas
  @class ludo.canvas.Paint
- 
  @param {Object} config
  @example
  	var canvas = new ludo.canvas.Canvas({
@@ -78,6 +77,7 @@ ludo.canvas.Paint = new Class({
 	 @function setStyle
 	 @param {String} style
 	 @param {String|Number}value
+	 @memberof ludo.canvas.Paint.prototype
 	 @example
 	 	var paint = new ludo.canvas.Paint({
 	 		css:{
@@ -120,6 +120,7 @@ ludo.canvas.Paint = new Class({
 	 * @function getStyle
 	 * @param {String} style
 	 * @return {String|Number} value
+	 * @memberof ludo.canvas.Paint.prototype
 	 */
 	getStyle:function (style) {
 		if (this.mappings[style])style = this.mappings[style][0];
@@ -134,6 +135,7 @@ ludo.canvas.Paint = new Class({
 	 * Apply css to a SVG node. This is done by adding CSS class to the node
 	 * @function applyTo
 	 * @param {canvas.Node} node
+	 * @memberof ludo.canvas.Paint.prototype
 	 */
 	applyTo:function (node) {
 		ludo.canvasEngine.addClass(node.el ? node.el : node, this.className);
@@ -143,6 +145,7 @@ ludo.canvas.Paint = new Class({
 	 * Returns class name of Paint object
 	 * @function getClassName
 	 * @return {String} className
+	 * @memberof ludo.canvas.Paint.prototype
 	 */
 	getClassName:function () {
 		return this.className;

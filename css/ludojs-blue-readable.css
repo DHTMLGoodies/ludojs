@@ -618,6 +618,10 @@ div.ludo-accordion-title
 {
     position:relative;
     float:left;
+}
+
+.ludo-accordion-titlebar .ludo-framed-view-titlebar-title{
+    width:auto;
 }/* ../ludojs/css-source/layout/tab.css */
 
 
@@ -876,18 +880,36 @@ div.ludo-tab-strip-right div.ludo-body {
     right:0;
     top:0;
     margin-left:4px;
-
 }
+
+.ludo-tab-expand-box-top{
+    background-image:url(../images/layout/tabs-expand-top.png?rnd=3);
+}
+
+.ludo-tab-expand-box-top-over{
+    background-image:url(../images/layout/tabs-expand-top-over.png?rnd=3);
+}
+
+
+.ludo-tab-expand-box-bottom{
+    background-image:url(../images/layout/tabs-expand-bottom.png?rnd=3);
+}
+
+.ludo-tab-expand-box-bottom-over{
+    background-image:url(../images/layout/tabs-expand-bottom-over.png?rnd=3);
+}
+
+
 
 .ludo-tab-close{
     background-repeat:no-repeat;
     background-position:center center;
-    background-image:url(../../images/layout/tab-close.png);
+    background-image:url(../images/layout/tab-close.png);
     position:absolute;
     cursor:pointer;
 }
 .ludo-tab-close-top-over,.ludo-tab-close-bottom-over{
-    background-image:url(../../images/layout/tab-close-over.png);
+    background-image:url(../images/layout/tab-close-over.png);
 }
 .ludo-tab-close-top, .ludo-tab-close-bottom{
     right:2px;
@@ -1192,13 +1214,11 @@ div.ludo-paging-current-page .ludo-body{
 }
 /* ../ludojs/css-source/calendar/calendar.css */
 .ludo-calendar-year-container {
-     background-color:#555;
      padding-bottom:5px;
      padding-top:5px;
      height:20px;;
  }
  .ludo-calendar-month-year-container{
-     background-color:#555;
      padding-top:6px;
      height:20px;;
  }

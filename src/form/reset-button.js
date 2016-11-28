@@ -10,11 +10,7 @@
  */
 ludo.form.ResetButton = new Class({
     Extends:ludo.form.Button,
-    /**
-     * Value of button
-     * @attribute {String} value
-     * @default 'Reset'
-     */
+
     value:'Reset',
     // TODO create parent class for ResetButton, DeleteButton etc.
     applyTo:undefined,

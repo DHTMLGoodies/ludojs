@@ -29,12 +29,9 @@ ludo.canvas.Curtain = new Class({
 	 * Open curtains, i.e. show element
 	 * @function open
 	 * @param {String} direction (LeftRight, TopBottom, BottomTop or RightLeft),
-	 * @param {Number} duration in seconds
-	 * @optional
-	 * @default 1
-	 * @param {Number} fps (Frames per second)
-	 * @optional
-	 * @default 33
+	 * @param {Number} duration in seconds. Default: 1
+	 * @param {Number} fps (Frames per second). default: 33
+	 * @memberof ludo.canvas.Curtain.prototype
 	 */
 	open:function (direction, duration, fps) {
 		this.onStart();
@@ -47,12 +44,9 @@ ludo.canvas.Curtain = new Class({
 	 * Close curtains, i.e. hide element
 	 * @function close
 	 * @param {String} direction (LeftRight, TopBottom, BottomTop or RightLeft),
-	 * @param {Number} duration in seconds
-	 * @optional
-	 * @default 1
-	 * @param {Number} fps (Frames per second)
-	 * @optional
-	 * @default 33
+	 * @param {Number} duration in seconds. Default: 1
+	 * @param {Number} fps (Frames per second). Default: 33
+	 *  @memberof ludo.canvas.Curtain.prototype
 	 */
 	close:function (direction, duration, fps) {
 		this.onStart();

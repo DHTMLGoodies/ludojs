@@ -47,6 +47,7 @@ ludo.layout.NavBar = new Class({
     /**
      Show menu
      @function show
+     @memberof ludo.layout.NavBar.prototype
      @example
         view.getLayout().show();
      */
@@ -64,6 +65,7 @@ ludo.layout.NavBar = new Class({
     /**
      hide menu
      @function hide
+     @memberof ludo.layout.NavBar.prototype
      @example
         view.getLayout().hide();
      */
@@ -85,6 +87,7 @@ ludo.layout.NavBar = new Class({
     /**
      * Toggle between show and hide
      * @function toggle
+     * @memberof ludo.layout.NavBar.prototype
      */
     toggle:function () {
         this[this.view.layout.active ? 'hide' : 'show']();

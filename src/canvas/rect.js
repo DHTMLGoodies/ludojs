@@ -21,6 +21,7 @@ ludo.canvas.Rect = new Class({
 	 * get actual position on canvas.
 	 * @function getX
 	 * @return {Number} x
+	 * @memberof ludo.canvas.Rect.prototype
 	 */
 	getX:function(){
 		return this.el.x.animVal.value;
@@ -30,6 +31,7 @@ ludo.canvas.Rect = new Class({
 	 * Returns value of 'y' attribute.
 	 * @function getY
 	 * @return {Number} y
+	 * @memberof ludo.canvas.Rect.prototype
 	 */
 	getY:function(){
 		return this.el.y.animVal.value;
@@ -39,6 +41,7 @@ ludo.canvas.Rect = new Class({
 	 * Returns width of rectangle
 	 * @function getWidth
 	 * @return {Number} width
+	 * @memberof ludo.canvas.Rect.prototype
 	 */
 	getWidth:function(){
 		return this.el.width.animVal.value;
@@ -48,6 +51,7 @@ ludo.canvas.Rect = new Class({
 	 * Returns height of rectangle
 	 * @function getWidth
 	 * @return {Number} width
+	 * @memberof ludo.canvas.Rect.prototype
 	 */
 	getHeight:function(){
 		return this.el.height.animVal.value;
@@ -56,6 +60,7 @@ ludo.canvas.Rect = new Class({
 	 * Return x-size of rounded corners
 	 * @function getRx
 	 * @return {Number} rx
+	 * @memberof ludo.canvas.Rect.prototype
 	 */
 	getRx:function(){
 		return this.el.rx.animVal.value;
@@ -65,6 +70,7 @@ ludo.canvas.Rect = new Class({
 	 * Return y-size of rounded corners
 	 * @function getRy
 	 * @return {Number} ry
+	 * @memberof ludo.canvas.Rect.prototype
 	 */
 	getRy:function(){
 		return this.el.ry.animVal.value;
@@ -74,6 +80,7 @@ ludo.canvas.Rect = new Class({
 	 * Set new x coordinate
 	 * @function setX
 	 * @param {Number} x
+	 * @memberof ludo.canvas.Rect.prototype
 	 */
 	setX:function(x){
 		this.set('x', x);
@@ -83,6 +90,7 @@ ludo.canvas.Rect = new Class({
 	 * Set new y coordinate
 	 * @function setY
 	 * @param {Number} y
+	 * @memberof ludo.canvas.Rect.prototype
 	 */
 	setY:function(y){
 		this.set('y', y);
@@ -92,6 +100,7 @@ ludo.canvas.Rect = new Class({
 	 * Set new width
 	 * @function setWidth
 	 * @param {Number} width
+	 * @memberof ludo.canvas.Rect.prototype
 	 */
 	setWidth:function(width){
 		this.set('width', width);
@@ -100,6 +109,7 @@ ludo.canvas.Rect = new Class({
 	 * Set new height
 	 * @function setHeight
 	 * @param {Number} height
+	 * @memberof ludo.canvas.Rect.prototype
 	 */
 	setHeight:function(height){
 		this.set('height', height);
@@ -109,6 +119,7 @@ ludo.canvas.Rect = new Class({
 	 * Set new width of rounded corners
 	 * @function setRx
 	 * @param {Number} rx
+	 * @memberof ludo.canvas.Rect.prototype
 	 */
 	setRx:function(rx){
 		this.set('rx', rx);
@@ -118,6 +129,7 @@ ludo.canvas.Rect = new Class({
 	 * Set new height of rounded corners
 	 * @function setRy
 	 * @param {Number} ry
+	 * @memberof ludo.canvas.Rect.prototype
 	 */
 	setRy:function(ry){
 		this.set('ry', ry);

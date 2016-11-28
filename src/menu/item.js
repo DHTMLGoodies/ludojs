@@ -30,7 +30,7 @@ ludo.menu.Item = new Class({
     action:undefined,
     record:undefined,
 
-    /**
+    /*
      * Fire an event with this name on click
      * @config {String} fire
      * @default undefined

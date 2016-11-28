@@ -21,6 +21,7 @@ ludo.canvas.Circle = new Class({
 	 * Set new radius
 	 * @function setRadius
 	 * @param {Number} radius
+	 * @memberof ludo.canvas.Circle.prototype
 	 */
 	setRadius:function (radius) {
 		this.set('r', radius);
@@ -30,6 +31,7 @@ ludo.canvas.Circle = new Class({
 	 * Return curent radius
 	 * @function getRadius
 	 * @return {String|Number} radius
+	 * @memberof ludo.canvas.Circle.prototype
 	 */
 	getRadius:function () {
 		return this.el.r.animVal.value;
@@ -39,6 +41,7 @@ ludo.canvas.Circle = new Class({
 	 * Set new center X
 	 * @function setCx
 	 * @param {Number} x
+	 * @memberof ludo.canvas.Circle.prototype
 	 */
 	setCx:function (x) {
 		this.set('cx', x);
@@ -47,6 +50,7 @@ ludo.canvas.Circle = new Class({
 	 * Return current center X
 	 * @function getX
 	 * @return {String|Number} cx
+	 * @memberof ludo.canvas.Circle.prototype
 	 */
 	getCx:function () {
 		return this.el.cx.animVal.value;
@@ -56,6 +60,7 @@ ludo.canvas.Circle = new Class({
 	 * Set new center Y
 	 * @function setCy
 	 * @param {Number} y
+	 * @memberof ludo.canvas.Circle.prototype
 	 */
 	setCy:function (y) {
 		this.set('cy', y);
@@ -64,6 +69,7 @@ ludo.canvas.Circle = new Class({
 	 * Return current center Y
 	 * @function getCy
 	 * @return {String|Number} cy
+	 * @memberof ludo.canvas.Circle.prototype
 	 */
 	getCy:function () {
 		return this.el.cy.animVal.value;
@@ -73,6 +79,7 @@ ludo.canvas.Circle = new Class({
 	 * Return position on canvas
 	 * @function getPosition()
 	 * @return {Object} x and y
+	 * @memberof ludo.canvas.Circle.prototype
 	 */
 	getPosition:function(){
 		var translate = this.getTranslate();
@@ -83,6 +90,12 @@ ludo.canvas.Circle = new Class({
 		}
 	},
 
+	/**
+	 * Returns diameter x diameter
+	 * @function getSize
+	 * @returns {{x: number, y: number}}
+	 * @memberof ludo.canvas.Circle.prototype
+     */
 	getSize:function(){
 		var r = this.getRadius();
 		return {

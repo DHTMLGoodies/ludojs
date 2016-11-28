@@ -14,7 +14,7 @@
  * @param {Boolean} config.readonly True to make this form field read only. (Default: false)
  * @param {Boolean} config.selectOnFocus Automatically make the text selected on focus. Default: false
  * @param {Boolean} config.validateKeyStrokes True to run validation after every key stroke(Default: false)
-
+ * @fires ludo.form.Text#key Fired when a key is pressed. Argument: {String} key pressed.
  * @augments ludo.form.Element
  *
  */
@@ -24,36 +24,11 @@ ludo.form.Text = new Class({
     labelWidth: 100,
     defaultValue: '',
     placeholder:'',
-    /**
-     * Max length of input field
-     * @attribute maxLength
-     * @type int
-     * @default undefined
-     */
+
     maxLength: undefined,
 
-    /**
-     * Minimum length of value. invalid event will be fired when
-     * value is too short. The value will be trimmed before checking size
-     * @attribute minLength
-     * @type {Number}
-     * @default undefined
-     */
     minLength: undefined,
-
-    /**
-     * When true, capitalize first letter automatically
-     * @attribute {Boolean} ucFirst
-     * @default false
-     */
     ucFirst: false,
-
-    /**
-     When true, capitalize first letter of every word while typing
-     Note! ucWords is not an option for ludo.form.Textarea
-     @attribute {Boolean} ucWords
-     @default false
-     */
     ucWords: false,
 
     inputType: 'text',
@@ -61,12 +36,6 @@ ludo.form.Text = new Class({
     regex: undefined,
     validateKeyStrokes: false,
     formFieldWidth: undefined,
-
-    /**
-     * True to apply readonly attribute to element
-     * @config {Boolean} readonly
-     * @default false
-     */
     readonly: false,
     selectOnFocus: false,
 
@@ -83,7 +52,7 @@ ludo.form.Text = new Class({
         this.applyValidatorFns(['minLength', 'maxLength', 'regex']);
 
         if(this.layout.height == undefined){
-            this.layout.height = 20;
+            this.layout.height = 'wrap';
         }
 
     },
@@ -114,11 +83,7 @@ ludo.form.Text = new Class({
     },
 
     sendKeyEvent: function () {
-        /**
-         * Event fired when a key is pressed
-         * @event key
-         * @param {String} value
-         */
+
         this.fireEvent('key', this.els.formEl.val());
     },
 
@@ -130,9 +95,7 @@ ludo.form.Text = new Class({
         }
         return undefined;
     },
-    /**
-     * Return width of input field in pixels.
-     */
+
     getFieldWidth: function () {
         return this.formFieldWidth;
     },

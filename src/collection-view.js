@@ -1,14 +1,12 @@
 /**
  * Base class for List and tree.Tree
  * @class ludo.CollectionView
+ * @param {Object} config
+ * @param {String} config.emptyText Text to show on no data
  */
 ludo.CollectionView = new Class({
 	Extends: ludo.View,
-	/**
-	 * Text to display when the tree or list has no data, i.e. when there's no data in data source or when filter returned no data.
-	 * @config {String} emptyText
-	 * @default undefined
-	 */
+
 	emptyText:undefined,
 
 	__construct:function (config) {

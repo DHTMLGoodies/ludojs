@@ -1,4 +1,4 @@
-/**
+/*
  * Class for JSON request proxy. When using a proxy for an URL, Ajax requests to this
  * URL will be queued for some time before sending them all in one go.
  *
@@ -12,7 +12,7 @@ ludo.remote.proxies = {};
 ludo.remote.Proxy = new Class({
 	Extends:Events,
 	type:'remote.Proxy',
-	/**
+	/*
 	 * How long to wait(in seconds) before sending queue of requests to the server.
 	 * @attribute delay
 	 * @type {Number}
@@ -52,7 +52,7 @@ ludo.remote.Proxy = new Class({
 	},
 
 	send:function () {
-		/**
+		/*
 		 * Event fired when progress bar is finished
 		 * @event send
 		 * @param {Array} requests
@@ -99,7 +99,7 @@ ludo.remote.deleteProxy = function (url) {
 ludo.remote.deleteProxies = function () {
 	ludo.remote.proxies = {};
 };
-/**
+/*
  Create a new proxy for an url
  @function ludo.remote.createProxy
  @param {String} url

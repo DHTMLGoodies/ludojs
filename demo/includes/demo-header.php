@@ -63,6 +63,13 @@ $skin = isset($skin) ? $skin : 'twilight';
         <link rel="stylesheet" href="<?php echo $prefix; ?>../css-source/skin/blue.css" type="text/css">
         <?php
 
+    }else if(isset($_GET['generated'])){
+        $skin = "generated";
+        ?>
+        <link rel="stylesheet" href="<?php echo $prefix; ?>../css/ludojs.css" type="text/css">
+        <link rel="stylesheet" href="<?php echo $prefix; ?>../css/ludojs-generated.css" type="text/css">
+        <?php
+
     }else if(isset($_GET['gray'])){
         $skin = "gray";
         ?>

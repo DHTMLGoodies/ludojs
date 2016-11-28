@@ -48,9 +48,6 @@ ludo.view.ButtonBar = new Class({
 		if(this.buttonBarCss){
 			this.getEl().parent().css(this.buttonBarCss);
 		}
-
-        console.log(this.layout);
-
     },
 
 	resizeRenderer:function(){

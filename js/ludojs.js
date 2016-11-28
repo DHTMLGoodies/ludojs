@@ -1,7 +1,7 @@
-/* Generated Wed Nov 23 22:38:43 CET 2016 */
+/* Generated Thu Nov 24 17:03:45 CET 2016 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.215
+ludoJS - Javascript framework, 1.1.227
 Copyright (C) 2012-2016  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -12796,6 +12796,7 @@ ludo.layout.Table = new Class({
         var width = 0;
         var totalWidth = this.view.getBody().width();
         var weightWidth = totalWidth - this.fixedWidth;
+        console.log(this.cols);
         for (var i = colIndex; i < colIndex + colspan; i++) {
             if (this.cols[i].width) {
                 width += this.cols[i].width;
@@ -14129,6 +14130,8 @@ ludo.layout.Tabs = new Class({
     removeTabFor: function (child) {
         this.tabs[child.getId()].remove();
         delete this.tabs[child.getId()];
+        this.tabPositions[child.getId()] = undefined;
+
         this.resizeTabs();
     },
 
@@ -18250,9 +18253,6 @@ ludo.view.ButtonBar = new Class({
 		if(this.buttonBarCss){
 			this.getEl().parent().css(this.buttonBarCss);
 		}
-
-        console.log(this.layout);
-
     },
 
 	resizeRenderer:function(){
@@ -28275,7 +28275,7 @@ ludo.form.Text = new Class({
         this.applyValidatorFns(['minLength', 'maxLength', 'regex']);
 
         if(this.layout.height == undefined){
-            this.layout.height = 20;
+            this.layout.height = 'wrap';
         }
 
     },

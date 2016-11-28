@@ -1,6 +1,7 @@
 /**
  Class for remote HTML requests.
  @namespace remote
+ @class ludo.remote.HTML
 
  */
 ludo.remote.HTML = new Class({
@@ -35,6 +36,7 @@ ludo.remote.HTML = new Class({
 	 * Return JSON response data from last request.
 	 * @function getResponseData
 	 * @return {Object|undefined}
+	 * @memberof ludo.remote.HTML.prototype
 	 */
 	getResponseData:function () {
 		return this.remoteData;
@@ -44,6 +46,7 @@ ludo.remote.HTML = new Class({
 	 * Return entire server response of last request.
 	 * @function getResponse
 	 * @return {Object|undefined}
+	 * @memberof ludo.remote.HTML.prototype
 	 */
 	getResponse:function () {
 		return this.remoteData;

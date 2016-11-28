@@ -3,7 +3,13 @@
  *
  * This class extends ludo.form.Text.
  * @param {Object} config
- * @param {Object} config.childLayout 
+ * @param {Object} config.childLayout Layout for child, example:
+ * <code>
+ * childLayout:{
+            width:300,height:300
+   }
+ *
+ * </code>
  *
  * @class ludo.form.Combo
  */
@@ -16,16 +22,7 @@ ludo.form.Combo = new Class({
 
 	menuButton:undefined,
 
-    /**
-     Custom layout properties of child
-     @config {Object} childLayout
-     @default undefined
-     @example
-        childLayout:{
-            width:300,height:300
-        }
-     Default layout properties will be applied when
-     */
+
     childLayout:undefined,
 
     __construct:function(config){

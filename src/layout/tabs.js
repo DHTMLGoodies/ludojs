@@ -366,6 +366,8 @@ ludo.layout.Tabs = new Class({
     removeTabFor: function (child) {
         this.tabs[child.getId()].remove();
         delete this.tabs[child.getId()];
+        this.tabPositions[child.getId()] = undefined;
+
         this.resizeTabs();
     },
 

@@ -26,3 +26,7 @@ div.ludo-accordion-title
     position:relative;
     float:left;
 }
+
+.ludo-accordion-titlebar .ludo-framed-view-titlebar-title{
+    width:auto;
+}

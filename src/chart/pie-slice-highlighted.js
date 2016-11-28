@@ -4,7 +4,14 @@
  See {{#crossLink "chart/Pie"}}{{/crossLink}} for example of use.
  @namespace ludo.chart
  @class ludo.chart.PieSliceHighlighted
- @type {Class}
+ @param {Object} config
+ @param {Object} config.styles. Example:
+ <code>
+ styles:{
+            'fill' : '#f00'
+        }
+ </code>
+ @param {Number} config.size Highlight size, default: 5
  @example
     {
         type:'pie.Chart',
@@ -24,22 +31,9 @@
 ludo.chart.PieSliceHighlighted = new Class({
     Extends:ludo.chart.AddOn,
     tagName:'path',
-    /**
-     Styling of slice
-     @config {Object} styles
-     @default { 'fill' : '#ccc' }
-     @example
-        styles:{
-            'fill' : '#f00'
-        }
-     */
+
     styles:undefined,
 
-    /**
-     * Size of slice
-     * @config {Number} size
-     * @default 5
-     */
     size : 5,
 
     __construct:function (config) {

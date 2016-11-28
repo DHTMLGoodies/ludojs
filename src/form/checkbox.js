@@ -102,6 +102,7 @@ ludo.form.Checkbox = new Class({
      * Uncheck checkbox
      * @function uncheck
      * @return void
+     * @memberof ludo.form.Checkbox.prototype
      */
     uncheck:function () {
         if (this.isChecked()) {

@@ -155,6 +155,7 @@ ludo.layout.ViewPager = new Class({
      * @function previousPage
      * @param {Boolean} animate Animate transition. Optional parameter, default: true
      * @return {Boolean} success
+     * @memberof ludo.layout.ViewPager.prototype
      */
     previousPage: function (animate) {
         return this.goToPage(this.selectedIndex-1, animate);
@@ -224,6 +225,7 @@ ludo.layout.ViewPager = new Class({
      * @function showPage
      * @param {String} name
      * @return {Boolean} success
+     * @memberof ludo.layout.ViewPager.prototype
      */
     showPage: function (name) {
         var c = this.view.child[name];
@@ -278,12 +280,6 @@ ludo.layout.ViewPager = new Class({
         this.fireEvent('showpage', payload);
 
         if (this.selectedIndex == this.count-1) {
-            /**
-             * Event fired when last card of deck is shown
-             * @event lastpage
-             * @param {layout.Page} this card
-             * @param {View} shown card
-             */
             this.fireEvent('lastpage', payload);
         } else {
             this.fireEvent('notlastpage', payload);

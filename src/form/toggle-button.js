@@ -19,6 +19,7 @@ ludo.form.ToggleButton = new Class({
     /**
      * Trigger click on button
      * @function click
+     * @memberof ludo.form.ToggleButton.prototype
      */
     click:function () {
         this.parent();

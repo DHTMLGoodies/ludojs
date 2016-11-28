@@ -108,7 +108,7 @@ ludo.layout.Card = new Class({
 		return page.layout && page.layout.visible == true;
 	},
 
-	/**
+	/*
 	 * Return reference to previus card of passed card
 	 * @function getPreviousPageOf
 	 * @param {View} view
@@ -124,7 +124,7 @@ ludo.layout.Card = new Class({
 		return index < this.view.children.length - 1 ? this.view.children[index + 1] : undefined;
 	},
 
-	/**
+	/*
 	 * Show previous card of current visible card
 	 * @function showPreviousPage
 	 * @param {Boolean} skipAnimation (optional)
@@ -144,7 +144,7 @@ ludo.layout.Card = new Class({
 		return false;
 	},
 
-	/**
+	/*
 	 * Show next card of current visible card
 	 * @function showNextPage
 	 * @param {Boolean} skipAnimation (optional)
@@ -179,7 +179,7 @@ ludo.layout.Card = new Class({
 		this.visiblePage.getEl().css('zIndex',  zIndex + 100);
 	},
 
-	/**
+	/*
 	 * Show a card with this name
 	 * @function showPage
 	 * @param {String} name
@@ -192,7 +192,7 @@ ludo.layout.Card = new Class({
 		}
 		return false;
 	},
-	/**
+	/*
 	 * Return true if passed card is last card in deck
 	 * @function isLastPage
 	 * @param {View} page
@@ -201,7 +201,7 @@ ludo.layout.Card = new Class({
 	isLastPage:function (page) {
 		return this.view.children.indexOf(page) == this.view.children.length - 1;
 	},
-	/**
+	/*
 	 * Return true if passed card is first card in deck
 	 * @function isFirstPage
 	 * @param  {View} page
@@ -242,7 +242,7 @@ ludo.layout.Card = new Class({
 		this.addValidationEvents();
 
 		if (indexDiff > 0) {
-			/**
+			/*
 			 * Event fired when a higher card than current is shown
 			 * @event higherpage
 			 * @param {layout.Page} this deck
@@ -250,7 +250,7 @@ ludo.layout.Card = new Class({
 			 */
 			this.fireEvent('higherpage', [this, page]);
 		} else if (indexDiff < 0) {
-			/**
+			/*
 			 * Event fired when a lower card than current is shown
 			 * @event lowerpage
 			 * @param {layout.Page} this deck
@@ -259,7 +259,7 @@ ludo.layout.Card = new Class({
 			this.fireEvent('lowerpage', [this, page]);
 		}
 
-		/**
+		/*
 		 * Event fired when a card is shown
 		 * @event showpage
 		 * @param {layout.Page} this deck
@@ -268,7 +268,7 @@ ludo.layout.Card = new Class({
 		this.fireEvent('showpage', [this, this.visiblePage]);
 
 		if (this.isLastPage(page)) {
-			/**
+			/*
 			 * Event fired when last card of deck is shown
 			 * @event lastpage
 			 * @param {layout.Page} this card
@@ -276,7 +276,7 @@ ludo.layout.Card = new Class({
 			 */
 			this.fireEvent('lastpage', [this, page]);
 		} else {
-			/**
+			/*
 			 * Event fired when na card which is not the last card in the deck is shown
 			 * @event notlastpage
 			 * @param {layout.Page} this card
@@ -285,7 +285,7 @@ ludo.layout.Card = new Class({
 			this.fireEvent('notlastpage', [this, page]);
 		}
 		if (this.isFirstPage(page)) {
-			/**
+			/*
 			 * Event fired when first card of deck is shown
 			 * @event firstpage
 			 * @param {layout.Page} this card
@@ -294,7 +294,7 @@ ludo.layout.Card = new Class({
 			this.fireEvent('firstpage', [this, page]);
 		}
 		else {
-			/**
+			/*
 			 * Event fired when a card which is not the first card in the deck is shown
 			 * @event notfirstpage
 			 * @param {layout.Page} this card
@@ -324,7 +324,7 @@ ludo.layout.Card = new Class({
 	setValid:function () {
 		this.fireEvent('valid', this);
 	},
-	/**
+	/*
 	 * Show first card in deck
 	 * @function showFirstPage
 	 * @return void
@@ -332,7 +332,7 @@ ludo.layout.Card = new Class({
 	showFirstPage:function () {
 		if (this.view.children.length > 0)this.view.children[0].show();
 	},
-	/**
+	/*
 	 * Show last card in deck
 	 * @function showLastPage
 	 * @return void
@@ -341,7 +341,7 @@ ludo.layout.Card = new Class({
 		if (this.view.children.length > 0)this.view.children[this.view.children.length - 1].show();
 	},
 
-	/**
+	/*
 	 * Returns true if form of current card is valid
 	 * @function isValid
 	 * @public
@@ -353,7 +353,7 @@ ludo.layout.Card = new Class({
 		}
 		return true;
 	},
-	/**
+	/*
 	 * Return number of cards in deck
 	 * @function getCountPages
 	 * @return {Number} count cards
@@ -361,7 +361,7 @@ ludo.layout.Card = new Class({
 	getCountPages:function () {
 		return this.view.children.length;
 	},
-	/**
+	/*
 	 * Return index of visible card
 	 * @function getIndexOfVisiblePage
 	 * @return {Number} card index
@@ -370,7 +370,7 @@ ludo.layout.Card = new Class({
 		return this.visiblePage ? this.view.children.indexOf(this.visiblePage) : 0;
 	},
 
-	/**
+	/*
 	 * true if first card in deck is shown.
 	 * @function isOnFirstPage
 	 * @return {Boolean} is on first card
@@ -378,7 +378,7 @@ ludo.layout.Card = new Class({
 	isOnFirstPage:function () {
 		return this.getIndexOfVisiblePage() == 0;
 	},
-	/**
+	/*
 	 * true if last card in deck is shown.
 	 * @function isOnLastPage
 	 * @return {Boolean} is on last card
@@ -387,7 +387,7 @@ ludo.layout.Card = new Class({
 		return this.getIndexOfVisiblePage() == this.view.children.length - 1;
 	},
 
-	/**
+	/*
 	 * Returns percentage position of current visible card.
 	 * @function getPercentCompleted
 	 * @return {Number} percent

@@ -3,21 +3,15 @@
  * @namespace ludo.form
  * @class ludo.form.DisplayField
  * @augments ludo.form.Text
+ * @param {Object} config
+ * @param {Object} config.tpl Template string for display field, example: tpl: '<a href="mailto:{value}">{value}</a>'
  */
 ludo.form.DisplayField = new Class({
 	Extends:ludo.form.Element,
 	type:'form.DisplayField',
 	inputTag:'span',
 	inputType:'',
-
-	/** Custom tpl for the display field
-	 @attribute tpl
-	 @type String
-	 @default ''
-	 @example
-	 	tpl:'<a href="mailto:{value}">{value}</a>'
-	 {value} will in this example be replaced by value of DisplayField.
-	 */
+	
 	tpl:'',
 	setValue:function (value) {
 		console.warn("Use of deprecated setValue");

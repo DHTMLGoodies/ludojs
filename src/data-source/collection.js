@@ -3,8 +3,56 @@
  @namespace ludo.dataSource.
  @class ludo.dataSource.Collection
  @augments dataSource.JSON
- 
  @param {Object} config
+ @param {Object} config.sortFn custom sort functions, which should return -1 if record a is smaller than
+ record b and 1 if record b is larger than record a. Example:
+ <code>
+ sortFn:{
+			'population':{
+				'asc' : function(a,b){
+					return parseInt(a.population) < parseInt(b.population) ? -1 : 1
+				},
+				'desc' : function(a,b){
+					return parseInt(a.population) > parseInt(b.population) ? -1 : 1
+				}
+			}
+	 	}
+ </code>
+ @param {String} config.primaryKey Primary key, example: primaryKey: "id"
+ @param {Object} config.paging
+ Example:
+ <code>
+ paging:{
+		 	size:10, // Number of rows per page
+		  	remotePaging:true, // Load only records per page from server, i.e. new request per page
+		  	cache : true, // Store pages in cache, i.e no request if data for page is in cache,
+		  	cacheTimeout:30 // Optional time in second before cache is considered out of date, i.e. new server request
+		}
+ </code>
+ @param {Object} config.searchConfig
+ Example:
+ <code>
+ searchConfig:{
+	 		index:['city','country'],
+	 		delay:.5
+	 	}
+ </code>
+ which makes the record keys/columns "city" and "country" searchable. It waits .5 seconds
+ before the search is executed. This is useful when searching large collections and you
+ want to delay the search until the user has finished entering into a search box.
+ @fires ludo.dataSource.Collection#sort Fires on sort. Arguments: {String} sortedBy key
+ @fires ludo.dataSource.Collection#add Fires when a new record has been added to the collection. Arguments: {Object} record
+ @fires ludo.dataSource.Collection#deselect Fires when a record has been deselected, arguments. {Object} deselected record
+ @fires ludo.dataSource.Collection#select Fires when a record has selected, arguments. {Object} selected record
+ @fires ludo.dataSource.Collection#delete Fires when a record has been deleted, arguments. {Object} deleted record
+ @fires ludo.dataSource.Collection#page Fires on navigation to new page when paging is enabled. Arguments: {Number} page index
+ @fires ludo.dataSource.Collection#previousPage Fires when paging is enabled and navigating to current page -1. No arguments
+ @fires ludo.dataSource.Collection#nextPage Fires when paging is enabled and navigating to current page +1. No arguments
+ @fires ludo.dataSource.Collection#firstPage Fired when navigating to first page.  No arguments
+ @fires ludo.dataSource.Collection#lastPage Fired when navigating to last page.  No arguments
+ @fires ludo.dataSource.Collection#notLastPage Fired when navigating to a page which is not last page.  No arguments
+ @fires ludo.dataSource.Collection#notFirstPage Fired when navigating to a page which is not first page.  No arguments
+ @fires ludo.dataSource.Collection#change Fires when data has been updated or page navigation occurs.
  @example
  	dataSource:{
 		url:'data-source/grid.php',
@@ -27,47 +75,13 @@
  */
 ludo.dataSource.Collection = new Class({
 	Extends:ludo.dataSource.JSON,
-	/**
-	 custom sort functions, which should return -1 if record a is smaller than
-	 record b and 1 if record b is larger than record a.
-	 @config {Function} sortFn
-	 @default {}
-	 @example
-	 	sortFn:{
-			'population':{
-				'asc' : function(a,b){
-					return parseInt(a.population) < parseInt(b.population) ? -1 : 1
-				},
-				'desc' : function(a,b){
-					return parseInt(a.population) > parseInt(b.population) ? -1 : 1
-				}
-			}
-	 	}
-	 */
 	sortFn:{},
 
 	selectedRecords:[],
 
-	/**
-	 * Primary key for records
-	 * @config {String} primaryKey
-	 * @default "id"
-     * @optional
-	 */
 	primaryKey:'id',
 
-	/**
-	 Use paging, i.e. only load a number of records from the server
-	 @attribute {Object} paging
-	 @example
-	 	paging:{
-		 	size:10, // Number of rows per page
-		  	remotePaging:true, // Load only records per page from server, i.e. new request per page
-		  	cache : true, // Store pages in cache, i.e no request if data for page is in cache,
-		  	cacheTimeout:30 // Optional time in second before cache is considered out of date, i.e. new server request
-		}
 
-	 */
 	paging:undefined,
 
 	dataCache:{},
@@ -76,20 +90,7 @@ ludo.dataSource.Collection = new Class({
 		column:undefined,
 		order:undefined
 	},
-	/**
-	 Configuration object for {{#crossLink "dataSource.CollectionSearch"}}{{/crossLink}}. This is
-	 the class which searchs and filters data in the collection.
-	 @config searchConfig
-	 @type Object
-	 @example
-	 	searchConfig:{
-	 		index:['city','country'],
-	 		delay:.5
-	 	}
-	 which makes the record keys/columns "city" and "country" searchable. It waits .5 seconds
-	 before the search is executed. This is useful when searching large collections and you
-	 want to delay the search until the user has finished entering into a search box.
-	 */
+
 	searchConfig:undefined,
 
 	statefulProperties:['sortedBy', 'paging'],
@@ -100,11 +101,7 @@ ludo.dataSource.Collection = new Class({
 
 	uidMap:{},
 
-	/**
-	 * Reference to record to select by default once data has been loaded
-	 * @config {Object|String} selected
-	 * @default undefined
-	 */
+
 	selected:undefined,
 
 	__construct:function (config) {
@@ -145,6 +142,7 @@ ludo.dataSource.Collection = new Class({
 	 * Returns 1) If search is specified: number of records in search result, or 2) number of records in entire collection.
 	 * @function getCount
 	 * @return {Number} count
+	 * @memberof ludo.dataSource.Collection.prototype
 	 */
 	getCount:function () {
 		if (this.paging && this.paging.rows)return this.paging.rows;
@@ -160,6 +158,7 @@ ludo.dataSource.Collection = new Class({
 	 * Resort data-source
 	 * @function sort
 	 * @return void
+	 * @memberof ludo.dataSource.Collection.prototype
 	 */
 	sort:function () {
 		if (this.sortedBy.column && this.sortedBy.order) {
@@ -172,6 +171,7 @@ ludo.dataSource.Collection = new Class({
 	 @function by
 	 @param {String} column
 	 @return {dataSource.Collection} this
+	 @memberof ludo.dataSource.Collection.prototype
 	 @example
 	 	collection.by('country').ascending().sort();
 	 or
@@ -187,6 +187,7 @@ ludo.dataSource.Collection = new Class({
 	 Set sort order to ascending
 	 @function ascending
 	 @return {dataSource.Collection} this
+	 @memberof ludo.dataSource.Collection.prototype
 	 @example
 	 	collection.by('country').ascending().sort();
 	 */
@@ -198,6 +199,7 @@ ludo.dataSource.Collection = new Class({
 	 Set sort order to descending
 	 @function descending
 	 @return {dataSource.Collection} this
+	 @memberof ludo.dataSource.Collection.prototype
 	 @example
 	 	collection.by('country').descending().sort();
 	 */
@@ -215,6 +217,7 @@ ludo.dataSource.Collection = new Class({
 	 @param {String} order
      @optional
 	 @return {dataSource.Collection} this
+	 @memberof ludo.dataSource.Collection.prototype
 	 @example
 	 	grid.getDataSource().sortBy('firstname', 'desc');
 	 which also can be written as
@@ -241,12 +244,7 @@ ludo.dataSource.Collection = new Class({
 			data.sort(this.getSortFnFor(column, order));
 			this.fireEvent('change');
 		}
-		/**
-		 * Event fired when a data has been sorted,
-		 * param example: { column:'country',order:'asc' }
-		 * @event sort
-		 * @param {Object} sortedBy
-		 */
+
 		this.fireEvent('sort', this.sortedBy);
         if(this.paging)this.firePageEvents();
 		this.fireEvent('state');
@@ -258,6 +256,7 @@ ludo.dataSource.Collection = new Class({
 	 * Return current sorted by column
 	 * @function getSortedBy
 	 * @return {String} column
+	 * @memberof ludo.dataSource.Collection.prototype
 	 */
 	getSortedBy:function () {
 		return this.sortedBy.column;
@@ -266,6 +265,7 @@ ludo.dataSource.Collection = new Class({
 	 * Return current sort order (asc|desc)
 	 * @function getSortOrder
 	 * @return {String} order
+	 * @memberof ludo.dataSource.Collection.prototype
 	 */
 	getSortOrder:function () {
 		return this.sortedBy.order;
@@ -302,17 +302,14 @@ ludo.dataSource.Collection = new Class({
 	 * @function addRecord
 	 * @param record
 	 * @return {Object} record
+	 * @memberof ludo.dataSource.Collection.prototype
 	 */
 	addRecord:function (record) {
         this.data = this.data || [];
 		this.data.push(record);
 
 		if(!this.index)this.createIndex();
-		/**
-		 * Event fired when a record is added to the collection
-		 * @event add
-		 * @param {Object} record
-		 */
+
 		this.fireEvent('add', record);
 
 		return this.createRecord(record);
@@ -328,6 +325,7 @@ ludo.dataSource.Collection = new Class({
 	 * @function findRecord
 	 * @param {Object} search
 	 * @return {Object|undefined} record
+	 * @memberof ludo.dataSource.Collection.prototype
 	 */
 	findRecord:function (search) {
 
@@ -375,6 +373,7 @@ ludo.dataSource.Collection = new Class({
 	 * @function findRecords
 	 * @param {Object} search
 	 * @return {Array} records
+	 * @memberof ludo.dataSource.Collection.prototype
 	 */
 	findRecords:function (search) {
 		var ret = [];
@@ -391,10 +390,11 @@ ludo.dataSource.Collection = new Class({
     },
 
 	/**
-	 * Select a specific record
+	 * Select the first record matching search
 	 * @function selectRecord
 	 * @param {Object} search
 	 * @return {Object|undefined} record
+	 * @memberof ludo.dataSource.Collection.prototype
 	 */
 	selectRecord:function (search) {
 		var rec = this.findRecord(search);
@@ -407,10 +407,11 @@ ludo.dataSource.Collection = new Class({
 
 
 	/**
-	 * Select a collection of records
+	 * Select all records matching search
 	 * @function selectRecords
 	 * @param {Object} search
 	 * @return {Array} records
+	 * @memberof ludo.dataSource.Collection.prototype
 	 */
 	selectRecords:function (search) {
 		this.selectedRecords = this.findRecords(search);
@@ -424,6 +425,7 @@ ludo.dataSource.Collection = new Class({
 	 * Select a specific record by index
 	 * @function selectRecordIndex
 	 * @param {number} index
+	 * @memberof ludo.dataSource.Collection.prototype
 	 */
 	selectRecordIndex:function (index) {
 		var data = this._getData();
@@ -451,6 +453,7 @@ ludo.dataSource.Collection = new Class({
 	 * Select previous record. If no record is currently selected, first record will be selected
 	 * @function previous
 	 * @return {Object} record
+	 * @memberof ludo.dataSource.Collection.prototype
 	 */
 	previous:function () {
 		var rec = this.getPreviousOf(this.getSelectedRecord());
@@ -465,6 +468,7 @@ ludo.dataSource.Collection = new Class({
 	 * @function getPreviousOf
 	 * @param {Object} record
 	 * @return {Object} previous record
+	 * @memberof ludo.dataSource.Collection.prototype
 	 */
 	getPreviousOf:function (record) {
 		var data = this._getData();
@@ -480,6 +484,7 @@ ludo.dataSource.Collection = new Class({
 	 * Select next record. If no record is currently selected, first record will be selected
 	 * @function next
 	 * @return {Object} record
+	 * @memberof ludo.dataSource.Collection.prototype
 	 */
 	next:function () {
 		var rec = this.getNextOf(this.getSelectedRecord());
@@ -493,6 +498,7 @@ ludo.dataSource.Collection = new Class({
 	 * @function getNextOf
 	 * @param {Object} record
 	 * @return {Object} next record
+	 * @memberof ludo.dataSource.Collection.prototype
 	 */
 	getNextOf:function (record) {
 		var data = this._getData();
@@ -506,33 +512,18 @@ ludo.dataSource.Collection = new Class({
 
 	_setSelectedRecord:function (rec) {
 		if (this.selectedRecords.length) {
-			/**
-			 * Event fired when a record is selected
-			 * @event deselect
-			 * @param {Object} record
-			 */
+
 			this.fireEvent('deselect', this.selectedRecords[0]);
 		}
 		this.selectedRecords = [rec];
-		/**
-		 Event fired when a record is selected
-		 @event select
-		 @param {Object} record
-		 @example
-		 	...
-		 	listeners:{
-		 		'select' : function(record){
-		 			console.log(record);
-		 		}
-		 	}
-		 */
 		this.fireSelect(Object.clone(rec));
 	},
 
 	/**
-	 * Return selected record
+	 * Return first selected record
 	 * @function getSelectedRecord
 	 * @return {Object|undefined} record
+	 * @memberof ludo.dataSource.Collection.prototype
 	 */
 	getSelectedRecord:function () {
         return this.selectedRecords.length > 0 ? this.selectedRecords[0] : undefined;
@@ -542,6 +533,7 @@ ludo.dataSource.Collection = new Class({
 	 * Return selected records
 	 * @function getSelectedRecords
 	 * @return {Array} records
+	 * @memberof ludo.dataSource.Collection.prototype
 	 */
 	getSelectedRecords:function () {
 		return this.selectedRecords;
@@ -551,6 +543,7 @@ ludo.dataSource.Collection = new Class({
 	 Delete records matching search,
 	 @function deleteRecords
 	 @param {Object} search
+	 @memberof ludo.dataSource.Collection.prototype
 	 @example
 	 	grid.getDataSource().deleteRecords({ country: 'Norway' });
 	 will delete all records from collection where country is equal to "Norway". A delete event
@@ -568,6 +561,7 @@ ludo.dataSource.Collection = new Class({
 	 multiple matches found.
 	 @function deleteRecord
 	 @param {Object} search
+	 @memberof ludo.dataSource.Collection.prototype
 	 @example
 	 	grid.getDataSource().deleteRecord({ country: 'Norway' });
 	 Will delete first found record where country is equal to Norway. It will fire a
@@ -577,11 +571,7 @@ ludo.dataSource.Collection = new Class({
 		var rec = this.findRecord(search);
 		if (rec) {
 			this.data.erase(rec);
-			/**
-			 * Event fired when a record is deleted
-			 * @event delete
-			 * @param {Object} record
-			 */
+
 			this.fireEvent('delete', rec);
 		}
 	},
@@ -590,6 +580,7 @@ ludo.dataSource.Collection = new Class({
 	 Select records from current selected record to record matching search,
 	 @function selectTo
 	 @param {Object} search
+	 @memberof ludo.dataSource.Collection.prototype
 	 @example
 	 	collection.selectRecord({ country: 'Norway' });
 	 	collection.selectTo({country: 'Denmark'});
@@ -627,6 +618,7 @@ ludo.dataSource.Collection = new Class({
 	 * @param {Object} search
 	 * @param {Object} updates
 	 * @return {dataSource.Record} record
+	 * @memberof ludo.dataSource.Collection.prototype
 	 */
 	updateRecord:function (search, updates) {
 		var rec = this.getRecord(search);
@@ -652,14 +644,12 @@ ludo.dataSource.Collection = new Class({
 	 * When paging is enabled, go to previous page.
 	 * fire previousPage event
 	 * @function previousPage
+	 * @memberof ludo.dataSource.Collection.prototype
 	 */
 	previousPage:function () {
 		if (!this.paging || this.isOnFirstPage())return;
 		this.paging.offset -= this.paging.size;
-		/**
-		 * Event fired when moving to previous page
-		 * @event previousPage
-		 */
+
 		this.onPageChange('previousPage');
 	},
 
@@ -667,20 +657,19 @@ ludo.dataSource.Collection = new Class({
 	 * When paging is enabled, go to next page
 	 * fire nextPage event
 	 * @function nextPage
+	 * @memberof ludo.dataSource.Collection.prototype
 	 */
 	nextPage:function () {
 		if (!this.paging || this.isOnLastPage())return;
 		this.paging.offset += this.paging.size;
-		/**
-		 * Event fired when moving to next page
-		 * @event nextPage
-		 */
+
 		this.onPageChange('nextPage');
 	},
 
 	/**
 	 * Go to last page
 	 * @function lastPage
+	 * @memberof ludo.dataSource.Collection.prototype
 	 */
 	lastPage:function () {
 		if (!this.paging || this.isOnLastPage())return;
@@ -691,13 +680,15 @@ ludo.dataSource.Collection = new Class({
 		this.onPageChange('lastPage');
 	},
 
+	/**
+	 * Go to first page
+	 * @function firstPage
+	 * @memberof ludo.dataSource.Collection.prototype
+	 */
 	firstPage:function () {
 		if (!this.paging || this.isOnFirstPage())return;
 		this.paging.offset = 0;
-		/**
-		 * Event fired when moving to first page
-		 * @event firstPage
-		 */
+
 		this.onPageChange('firstPage');
 	},
 
@@ -766,16 +757,10 @@ ludo.dataSource.Collection = new Class({
 
 	firePageEvents:function (skipState) {
 		if (this.isOnLastPage()) {
-			/**
-			 * Event fired when moving to last page
-			 * @event lastPage
-			 */
+
 			this.fireEvent('lastPage');
 		} else {
-			/**
-			 * Event fired when moving to a different page than last page
-			 * @event notLastPage
-			 */
+
 			this.fireEvent('notLastPage');
 		}
 
@@ -783,18 +768,10 @@ ludo.dataSource.Collection = new Class({
 			this.fireEvent('firstPage');
 
 		} else {
-			/**
-			 * Event fired when moving to a different page than last page
-			 * @event notFirstPage
-			 */
+
 			this.fireEvent('notFirstPage');
 		}
 
-		/**
-		 * Event fired when moving to a page
-		 * @event page
-		 * @param {Number} page number
-		 */
 		this.fireEvent('page', this.getPageNumber());
 		if (skipState === undefined)this.fireEvent('state');
 	},
@@ -804,20 +781,23 @@ ludo.dataSource.Collection = new Class({
 	 * @function toPage
 	 * @param {Number} pageNumber
 	 * @return {Boolean} success
+	 * @memberof ludo.dataSource.Collection.prototype
 	 */
 	toPage:function (pageNumber) {
 		if (pageNumber > 0 && pageNumber <= this.getPageCount() && !this.isOnPage(pageNumber)) {
 			this.paging.offset = (pageNumber - 1) * this.paging.size;
-			/**
-			 * Event fired when moving to a specific page
-			 * @event toPage
-			 */
+
 			this.onPageChange('toPage');
 			return true;
 		}
 		return false;
 	},
 
+	/**
+	 * @function setPageSize
+	 * @param {Number} size
+	 * @memberof ludo.dataSource.Collection.prototype
+     */
 	setPageSize:function(size){
 		if(this.paging){
 			this.dataCache = {};
@@ -833,6 +813,7 @@ ludo.dataSource.Collection = new Class({
 	 * @function isOnPage
 	 * @param {Number} pageNumber
 	 * @return {Boolean}
+	 * @memberof ludo.dataSource.Collection.prototype
 	 */
 	isOnPage:function (pageNumber) {
 		return pageNumber == this.getPageNumber();
@@ -842,6 +823,7 @@ ludo.dataSource.Collection = new Class({
 	 * Return current page number
 	 * @function getPageNumber
 	 * @return {Number} page
+	 * @memberof ludo.dataSource.Collection.prototype
 	 */
 	getPageNumber:function () {
         return this.paging ? Math.floor(this.paging.offset / this.paging.size) + 1 : 1;
@@ -851,11 +833,18 @@ ludo.dataSource.Collection = new Class({
 	 * Return number of pages
 	 * @function getPageCount
 	 * @return {Number}
+	 * @memberof ludo.dataSource.Collection.prototype
 	 */
 	getPageCount:function () {
         return this.paging ? Math.ceil(this.getCount() / this.paging.size) : 1;
 	},
 
+	/**
+	 * Return data in collection
+	 * @function getData
+	 * @memberof ludo.dataSource.Collection.prototype
+	 * @returns {Array}
+     */
 	getData:function () {
 		if (this.hasSearchResult()){
 			if (this.paging && this.paging.size) {
@@ -868,6 +857,7 @@ ludo.dataSource.Collection = new Class({
 		}
 		return this.getDataForPage(this.data);
 	},
+
 
 	getDataForPage:function (data) {
 		if (!data || data.length == 0)return [];
@@ -934,6 +924,7 @@ ludo.dataSource.Collection = new Class({
 	 multiple search terms.
 	 @function Search
 	 @param {String} search
+	 @memberof ludo.dataSource.Collection.prototype
 	 @example
 	 	ludo.get('myCollection').search('New York');
 	 	// or with the {{#crossLink "dataSource.CollectionSearch/add"}}{{/crossLink}} method
@@ -949,6 +940,7 @@ ludo.dataSource.Collection = new Class({
 	 * Executes a remote search for records with the given data
 	 * @function remoteSearch
 	 * @param {String|Object} search
+	 * @memberof ludo.dataSource.Collection.prototype
 	 */
 	remoteSearch:function(search){
 		this.postData = this.postData || {};
@@ -974,6 +966,7 @@ ludo.dataSource.Collection = new Class({
 	 * you can use to filter a collection.
 	 * @function getSearcher
 	 * @return {dataSource.CollectionSearch}
+	 * @memberof ludo.dataSource.Collection.prototype
 	 */
 	getSearcher:function () {
 		if (this.searcher === undefined) {
@@ -1004,6 +997,7 @@ ludo.dataSource.Collection = new Class({
 	 @function getById
 	 @param {String|Number|Object} id
 	 @return {Object} record
+	 @memberof ludo.dataSource.Collection.prototype
 	 @example
 	 	var collection = new ludo.dataSource.Collection({
 	 		url : 'get-countries.php',
@@ -1050,6 +1044,7 @@ ludo.dataSource.Collection = new Class({
 	 @function getRecord
 	 @param {String|Object} search
 	 @return {dataSource.Record|undefined}
+	 @memberof ludo.dataSource.Collection.prototype
 	 @example
 		 var collection = new ludo.dataSource.Collection({
 			url : 'get-countries.php',

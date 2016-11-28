@@ -5,6 +5,7 @@
  * constructor or loaded remotely. Here's an example of format:
  * [{ value: 1, text : 'my radio', image: 'images/my-radio-image.png' }]
  * @augments ludo.form.Select
+ * @fires ludo.form.RadioGroup#change Fired on change. Arguments: 1) value, 2) ludo.form.RadioGroup
  */
 ludo.form.RadioGroup = new Class({
     Extends: ludo.form.Select,
@@ -53,7 +54,7 @@ ludo.form.RadioGroup = new Class({
 
     disposeCheckboxes:function(){
         for(var i=0;i<this.checkboxes.length;i++){
-            this.checkboxes[i].dispose();
+            this.checkboxes[i].remove();
         }
         this.checkboxes = [];
     },
@@ -64,12 +65,7 @@ ludo.form.RadioGroup = new Class({
             this.checkboxes[i].toggleImage();
         }
 
-        /**
-         * @event change
-         * @description Value has changed
-         * @param {String} value
-         * @param {Object} this component
-         */
+
         this.fireEvent('change', [ this.value, this ]);
         this.toggleDirtyFlag();
     },
@@ -101,12 +97,17 @@ ludo.form.RadioGroup = new Class({
             this.checkboxes[i].enable();
         }
     },
-    /**
-     * Get value of selected radio input
-     * @function getValue
-     * @return String value
-     */
-    getValue : function() {
+
+    val:function(){
+
+        var radio = this.getCheckedRadio();
+        if(radio){
+            return radio._get();
+        }
+        return undefined;
+    },
+
+    _get : function() {
         var radio = this.getCheckedRadio();
         if(radio){
             return radio._get();
@@ -117,6 +118,7 @@ ludo.form.RadioGroup = new Class({
      * Return reference to selected radio button component
      * @function getCheckedRadio
      * @return {Object} ludo.form.Radio component
+     * @memberof ludo.form.RadioGroup.prototype
      */
     getCheckedRadio : function() {
         for(var i=0;i<this.checkboxes.length;i++){
@@ -131,6 +133,7 @@ ludo.form.RadioGroup = new Class({
      * @function val
      * @param {String} value
      * @return void|string
+     * @memberof ludo.form.RadioGroup.prototype
      */
     val : function(value){
         if(arguments.length == 0){

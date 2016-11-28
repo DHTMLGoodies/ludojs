@@ -268,10 +268,7 @@ ludo.dataSource.CollectionSearch = new Class({
 			this.compileSearch();
             this.performSearch();
 		}
-		/**
-		 * Search executed
-		 * @event search
-		 */
+
 		this.fireEvent('search');
 		return this;
 	},
@@ -296,6 +293,7 @@ ludo.dataSource.CollectionSearch = new Class({
 	/**
 	 * Returns true if search terms or search functions exists.
 	 * @function hasSearchTokens
+	 * @memberof ludo.dataSource.CollectionSearch.prototype
 	 * @return {Boolean}
 	 */
 	hasSearchTokens:function () {

@@ -355,7 +355,7 @@ ludo.effect.Drag = new Class({
         if (this.delay) {
             this.setActiveAfterDelay();
         } else {
-            /**
+            /*
              * Event fired before dragging
              * @event start
              * @param {effect.DraggableNode} object to be dragged.

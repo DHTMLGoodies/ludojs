@@ -1,11 +1,11 @@
-/**
+/*
  Base class for Video Player components
 
  */
 ludo.video.Video = new Class({
 	Extends:ludo.View,
 	type:'video.Video',
-	/**
+	/*
 	 * ID of movie, to show, example an YouTube id
 	 * @attribute movieId
 	 * @type String
@@ -53,7 +53,7 @@ ludo.video.Video = new Class({
 		el.css('overflow', 'hidden');
 		return el;
 	},
-	/**
+	/*
 	 * Load a new movie
 	 * @function loadMovie
 	 * @param {String} movieId

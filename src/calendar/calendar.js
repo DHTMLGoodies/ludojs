@@ -8,6 +8,7 @@
  * @param {String|Date} config.date Alias to config.value.
  * @param {String|Date} config.minDate Optional minimum selectable date
  * @param {String|Date} config.maxDate Optional maximum selectable date
+ * @param {String} config.inputFormat Internal format, default: 'Y-m-d'
  * @fires ludo.calendar.Calendar#setDate - Arguments Date and ludo.View(the view firing the event)
  */
 ludo.calendar.Calendar = new Class({
@@ -23,30 +24,10 @@ ludo.calendar.Calendar = new Class({
         { type:'calendar.Days', name:'days'},
         { type:'calendar.Today', name:'today'}
     ],
-    /**
-     * @attribute inputFormat
-     * @type String
-     * @default Y-m-d
-     */
+
     inputFormat:'Y-m-d',
-
-    /**
-     * Initial date, example: '2012-02-28', "date" is alias to "value"
-     * @attribute date
-     * @type String
-     */
     date:undefined,
-
-    /**
-     * minimum valid date, eg. '2011-01-01'
-     * @attribute {String} minDate
-     */
     minDate:undefined,
-    /**
-     * maximum valid date, eg. '2013-01-01'
-     * @attribute maxDate
-     * @type String
-     */
     maxDate:undefined,
 
     __construct:function (config) {
@@ -65,6 +46,7 @@ ludo.calendar.Calendar = new Class({
      * Set year (4 digits)
      * @function setYear
      * @param {Number} year
+     * @memberof ludo.calendar.Calendar.prototype
      *
      */
     setYear:function (year) {
@@ -85,11 +67,19 @@ ludo.calendar.Calendar = new Class({
      * Returns selected date as Date object
      * @function getDate
      * @return {Object} selected date
+     * @memberof ludo.calendar.Calendar.prototype
      */
     getDate : function(){
         return this.value;
     },
 
+    /**
+     * Set or get date
+     * @function val
+     * @param {String|Date} date
+     * @returns {*}
+     * @memberof ludo.calendar.Calendar.prototype
+     */
     val:function(date, sentByComponent){
         if(arguments.length == 0){
             return this.value.format(this.inputFormat);
@@ -97,17 +87,13 @@ ludo.calendar.Calendar = new Class({
         this.value = Date.parse(date);
         this.fireEvent('change', [this.value, this]);
     },
-    /**
-     * Returns selected date
-     * @function getValue
-     * @return {String} selected date
-     */
+
     getValue:function(){
         console.warn("Use of deprecated calendar.getValue");
         console.trace();
         return this.value.format(this.inputFormat);
     },
-    /**
+    /*
      * Set new current date
 	 * @function setValue
      * @param {Date} date
@@ -123,6 +109,7 @@ ludo.calendar.Calendar = new Class({
      * Set current month
 	 * @function setMonth
      * @param {Number} month (1-12)
+     * @memberof ludo.calendar.Calendar.prototype
 	 * @return void
      */
     setMonth:function (month) {

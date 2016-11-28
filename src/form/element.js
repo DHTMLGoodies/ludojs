@@ -9,43 +9,40 @@
  * @param {Object} config.formCss Optional css styling of the form element. Example: { type:'form.Text', formCss:{ "text-align": right }} to right align text of a text input.
  * @param {Function} config.validator A Validator function to be executed when value is changed. This function should return true when valid, false when invalid. Current value will be passed to this function.
  * @param {Function} config.linkWith Creates a link with form element with this id. When two form views are linked, they will always have the same value. When one value is changed, the linked form view is automatically updated.
+ * @param {String} config.name Name of form element
+ * @param {String|Number} config.value - Initial value for form element.
  * Example: A link between a form.Seekbar and a form.Number.
  * Example: { type:'form.Text', placeHolder='Enter Valid Value', validator:function(value){ return value == 'Valid Value' } }
  * @fires ludo.form.Element#enable - Fired on enable, argument: ludo.form.Element
  * @fires ludo.form.Element#disable - Fired on disable, argument: ludo.form.Element
+ * @fires ludo.form.Element#key_down - Fired on key down. Arguments: key, value, ludo.form.Element
+ * @fires ludo.form.Element#key_up - Fired on key up. Arguments: key, value, ludo.form.Element
+ * @fires ludo.form.Element#key_press - Fired on key up. Arguments: key, value, ludo.form.Element
+ * @fires ludo.form.Element#focus - Fired on focus received. Arguments: value, ludo.form.Element
+ * @fires ludo.form.Element#blur - Fired on blur. Arguments: value, ludo.form.Element
+ * @fires ludo.form.Element#change - Fired on changed value by GUI. Arguments: value, ludo.form.Element
+ * @fires ludo.form.Element#valueChange - Fired on changed value by GUI or the val function. Arguments: value, ludo.form.Element
+ * @fires ludo.form.Element#dirty - Fired on new value which is different from initial. Arguments. value, ludo.form.Element
+ * @fires ludo.form.Element#clean - Fired on new value which is the same as initial. Arguments. value, ludo.form.Element
+ * @fires ludo.form.Element#value - Fired when a new valid value is set. Arguments. value, ludo.form.Element
+ * @fires ludo.form.Element#invalid - Fired when a new value is set which is invalid. Arguments. value, ludo.form.Element
  */
 ludo.form.Element = new Class({
     Extends:ludo.View,
-    /**
-     * Initial value
-     * @config {String|Number} value
-     * @default undefined
-     */
+
     value:undefined,
     onLoadMessage:'',
-    /**
-     * "name" is inherited from ludo.View. It will also be set as name of input element
-     * @attribute name
-     * @type string
-     * @default undefined
-     */
+
     name:undefined,
 
-    /**
-     * Custom CSS rules to apply to input element
-     * @attribute formCss
-     * @type Object
-     * @example:  {@lang Javascript}
-     * { border : '1px solid #000' }
-     * @default undefined
-     */
+
     formCss:undefined,
     stretchField:true,
     required:false,
     dirtyFlag:false,
     initialValue:undefined,
     constructorValue:undefined,
-    /**
+    /*
      * Is form element ready for setValue. For combo boxes and select boxes it may
      * not be ready until available values has been loaded remotely
      * @property isReady
@@ -55,7 +52,7 @@ ludo.form.Element = new Class({
     isReady:true,
     overflow:'hidden',
 
-    /**
+    /*
      * Will not validate unless value is the same as value of the form element with this id
      * Example of use: Password and Repeat password. It's sufficient to specify "twin" for one of
      * the views.
@@ -64,40 +61,8 @@ ludo.form.Element = new Class({
      * @default undefined
      */
     twin:undefined,
-
-    /**
-     * Link with a form component with this id. Value of these components will always be the same
-     * Update one and the other component will be updated automatically. It's sufficient
-     * to specify linkWith for one of the two views.
-     * @property linkWith
-     * @type String
-     * @default undefined
-     */
     linkWith:undefined,
-
-    /**
-     * When using stateful:true, value will be preserved to next visit.
-     * @property statefulProperties
-     * @type Array
-     * @default ['value']
-     */
     statefulProperties:['value'],
-
-    /**
-     Object of class form.validator.* or a plain validator function
-     When set the isValid method of the validator will be called after standard validation is complete
-     and form element is valid.
-     @property validator
-     @type Object
-     @example
-        validator : { type : 'form.validator.Md5', value : 'MD5 hash of something' }
-     In order to validate this field, the MD5 of form field value must match form.validator.Md5.value
-     @example
-        validator:function(value){
-	 		return value === 'Valid value';
-	 	}
-     is example of simple function used as validator.
-     */
     validator:undefined,
     validatorFn:undefined,
 
@@ -208,6 +173,7 @@ ludo.form.Element = new Class({
     /**
      * Enable or disable form element
      * @param {Boolean} enabled
+     * @memberof ludo.form.Element.prototype
      */
     setEnabled:function(enabled){
         if(enabled)this.enable(); else this.disable();
@@ -217,6 +183,7 @@ ludo.form.Element = new Class({
      * Disable form element
      * @function disable
      * @return void
+     * @memberof ludo.form.Element.prototype
      */
     disable:function () {
         this.getFormEl().attr('disabled', '1');
@@ -226,6 +193,7 @@ ludo.form.Element = new Class({
      * Enable form element
      * @function enable
      * @return void
+     * @memberof ludo.form.Element.prototype
      */
     enable:function () {
         this.getFormEl().removeAttr('disabled');
@@ -262,47 +230,21 @@ ludo.form.Element = new Class({
     },
 
     keyUp:function (e) {
-        /**
-         * key up event
-         * @event key_up
-         * @param {String} key
-         * @param {String|Boolean|Object|Number} value
-         * @param {View} this
-         */
         this.fireEvent('key_up', [ e.key, this.value, this ]);
     },
 
     keyDown:function (e) {
-        /**
-         * key down event
-         * @event key_down
-         * @param {String} key
-         * @param {String|Boolean|Object|Number} value
-         * $param {View} this
-         */
+
         this.fireEvent('key_down', [ e.key, this.value, this ]);
     },
 
     keyPress:function (e) {
-        /**
-         * key press event
-         * @event key_press
-         * @param {String} key
-         * @param {String|Boolean|Object|Number} value
-         * $param {View} this
-         */
         this.fireEvent('key_press', [ e.key, this.value, this ]);
     },
 
     focus:function () {
         this._focus = true;
         this.clearInvalid();
-        /**
-         * On focus event
-         * @event focus
-         * @param {String|Boolean|Object|Number} value
-         * $param {View} this
-         */
         this.fireEvent('focus', [ this.value, this ]);
     },
     change:function () {
@@ -310,17 +252,6 @@ ludo.form.Element = new Class({
             this._set(this.els.formEl.val());
 
         }
-        /**
-         * On change event. This event is fired when value is changed manually
-         * by the user via GUI. The "change" event is followed by a
-         * "valueChange" event.
-         * When value is changed using the setValue method
-         * only the "valueChange" event is fired.
-         *
-         * @event change
-         * @param {String|Boolean|Object|Number} value
-         * $param {View} this
-         */
         if (this.wasValid)this.fireEvent('change', [ this._get(), this ]);
     },
 
@@ -329,12 +260,7 @@ ludo.form.Element = new Class({
         this.validate();
         if (this.getFormEl())this.value = this.getValueOfFormEl();
         this.toggleDirtyFlag();
-        /**
-         * On blur event
-         * @event blur
-         * @param {String|Boolean|Object|Number} value
-         * $param {View} this
-         */
+
         this.fireEvent('blur', [ this.value, this ]);
     },
 
@@ -344,21 +270,9 @@ ludo.form.Element = new Class({
 
     toggleDirtyFlag:function(){
         if (this.value !== this.initialValue) {
-            /**
-             * @event dirty
-             * @description event fired on blur when value is different from it's original value
-             * @param {String} value
-             * @param {Object} ludo.form.* component
-             */
             this.setDirty();
             this.fireEvent('dirty', [this.value, this]);
         } else {
-            /**
-             * @event clean
-             * @description event fired on blur when value is equal to original/start value
-             * @param {String} value
-             * @param {Object} ludo.form.* component
-             */
             this.setClean();
             this.fireEvent('clean', [this.value, this]);
         }
@@ -376,17 +290,20 @@ ludo.form.Element = new Class({
     getLabel:function () {
         return this.label;
     },
-    /**
-     * Return current value
-     * @function getValue
-     * @return string
-     */
+
     getValue:function () {
         console.warn("Use of deprecated getValue");
         console.trace();
         return this.els.formEl ? this.els.formEl.val() : this.value;
     },
 
+    /**
+     * Set or get value. If val argument is set, you will set a value, if not current value
+     * will be returned.
+     * @param {String|Number|Array|Object|Boolean} val
+     * @returns {*}
+     * @memberof ludo.form.Element.prototype
+     */
 
     val:function(val){
         if(arguments.length == 0){
@@ -418,15 +335,6 @@ ludo.form.Element = new Class({
         this.validate();
 
         if (this.wasValid) {
-            /**
-             * This event is fired whenever current value is changed, either
-             * manually by user or by calling setValue. When the value is changed
-             * manually by user via GUI, the "change" event is fired first, then
-             * "valueChange" afterwards.
-             * @event valueChange
-             * @param {Object|String|Number} value
-             * @param {form.Element} form component
-             */
             this.fireEvent('valueChange', [this._get(), this]);
             if (this.stateful)this.fireEvent('state');
             if (this.linkWith)this.updateLinked();
@@ -437,7 +345,7 @@ ludo.form.Element = new Class({
         return value;
     },
 
-    /**
+    /*
      * Set new value
      * @function setValue
      * @param value
@@ -463,15 +371,7 @@ ludo.form.Element = new Class({
         this.validate();
 
         if (this.wasValid) {
-            /**
-             * This event is fired whenever current value is changed, either
-             * manually by user or by calling setValue. When the value is changed
-             * manually by user via GUI, the "change" event is fired first, then
-             * "valueChange" afterwards.
-             * @event valueChange
-             * @param {Object|String|Number} value
-             * @param {form.Element} form component
-             */
+
             this.fireEvent('valueChange', [this._get(), this]);
             if (this.stateful)this.fireEvent('state');
             if (this.linkWith)this.updateLinked();
@@ -491,6 +391,7 @@ ludo.form.Element = new Class({
      * Get reference to input element
      * @function getFormEl
      * @return DOMElement
+     * @memberof ludo.form.Element.prototype
      */
     getFormEl:function () {
         return this.els.formEl;
@@ -499,6 +400,7 @@ ludo.form.Element = new Class({
      * Returns true when value of form element is valid, i.e. larger than minValue, matching regex etc.
      * @function isValid
      * @return {Boolean} valid
+     * @memberof ludo.form.Element.prototype
      */
     isValid:function () {
         if(this.validators.length === 0)return true;
@@ -522,22 +424,12 @@ ludo.form.Element = new Class({
         this.clearInvalid();
         if (this.isValid()) {
             this.wasValid = true;
-            /**
-             * Event fired when value of form component is valid. This is fired on blur
-             * @event valid
-             * @param {String} value
-             * @param {Object} component
-             */
+
             this.fireEvent('valid', [this.value, this]);
             return true;
         } else {
             this.wasValid = false;
-            /**
-             * Event fired when value of form component is valid. This is fired on blur
-             * @event invalid
-             * @param {String} value
-             * @param {Object} component
-             */
+
             this.fireEvent('invalid', [this.value, this]);
             return false;
         }
@@ -585,6 +477,7 @@ ludo.form.Element = new Class({
      * Returns true if current value is different from original value
      * @function isDirty
      * @return {Boolean} isDirty
+     * @memberof ludo.form.Element.prototype
      */
     isDirty:function () {
         return this.dirtyFlag;

@@ -13,6 +13,7 @@ ludo.dataSource.JSON = new Class({
      * Components using this data-source will be automatically updated
      * @function load
      * @return void
+     * @memberof ludo.dataSource.JSON.prototype
      */
     load:function () {
         if(!this.url && !this.resource)return;
@@ -35,7 +36,7 @@ ludo.dataSource.JSON = new Class({
                         this.loadComplete(request.getResponseData(), request.getResponse());
                     }.bind(this),
                     "failure":function (request) {
-                        /**
+                        /*
                          * Event fired when success parameter in response from server is false
                          * @event failure
                          * @param {Object} JSON response from server. Error message should be in the "message" property
@@ -45,7 +46,7 @@ ludo.dataSource.JSON = new Class({
                         this.fireEvent('failure', [request.getResponse(), this]);
                     }.bind(this),
                     "error":function (request) {
-                        /**
+                        /*
                          * Server error event. Fired when the server didn't handle the request
                          * @event servererror
                          * @param {String} error text
@@ -61,8 +62,9 @@ ludo.dataSource.JSON = new Class({
     },
 
     /**
-     * Update data source with new date and trigger events "parseData",
+     * Update data source with new data and trigger events "parseData",
      * @param {Array} data
+     * @memberof ludo.dataSource.JSON.prototype
      */
     setData:function(data){
         this.loadComplete(data);

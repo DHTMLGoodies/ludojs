@@ -46,7 +46,7 @@ ludo.form.validator.Base = new Class({
 			"listeners":{
 				"success":  function(request){
 					this.value = request.getData().value;
-					/**
+					/*
 					 * Event fired after validator value has been loaded from server
 					 * @event loadValue
 					 * @param form.validator.Base this

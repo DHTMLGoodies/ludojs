@@ -4,6 +4,8 @@
  * @namespace progress
  * @class ludo.progress.Text
  * @augments ludo.progress.Base
+ * @param {Object} config
+ * @param {String} tpl JSON template, default: "{text}"
  */
 ludo.progress.Text = new Class({
     Extends:ludo.progress.Base,
@@ -13,10 +15,5 @@ ludo.progress.Text = new Class({
     stopped:false,
     hidden:true,
 
-    /**
-     * Template for text content, example {text}.
-     * @property tpl
-     * @type String
-     */
     tpl : '{text}'
 });
