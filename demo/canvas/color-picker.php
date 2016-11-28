@@ -23,10 +23,6 @@ require_once("../includes/demo-header.php");
         margin-left: 5px;
     }
 </style>
-
-
-<h1>Canvas API with Drag And Drop (iPad compatible)</h1>
-
 <script type="text/javascript"><!--
 google_ad_client = "ca-pub-0714236485040063";
 /* LudoJS */
