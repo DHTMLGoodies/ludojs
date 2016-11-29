@@ -1,7 +1,7 @@
-/* Generated Tue Nov 29 18:18:01 CET 2016 */
+/* Generated Tue Nov 29 20:09:34 CET 2016 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.232
+ludoJS - Javascript framework, 1.1.233
 Copyright (C) 2012-2016  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -7879,7 +7879,7 @@ ludo.remote.Shim = new Class({
  @fires ludo.View#show Fired when view is displayed using the show method. Argument. ludo.View
  @fires ludo.View#beforeshow Fired just before a view is displayed using the show method. Argument: ludo.View
  @fires ludo.View#resize Fired when a view has been resized.
- // TODO describe data sources
+
  @example {@lang Javascript}
 	// Example 1: View render to &lt;body> tag
     new ludo.View({
@@ -7893,7 +7893,7 @@ ludo.remote.Shim = new Class({
  		Extends: ludo.View,
  		type : 'myApp.View',
  		__rendered:function(){
- 			this.html('My custom component');
+ 			this.html('My custom view');
 		}
 	}
     children:[{
@@ -8231,9 +8231,9 @@ ludo.View = new Class({
 		}
 	},
 	/**
-	 * Get reference to parent component
+	 * Get reference to parent view
 	 * @function getParent
-	 * @return {Object} component | null
+	 * @return {Object} view | null
 	 * @memberof ludo.View.prototype
 	 */
 	getParent:function () {
@@ -8289,11 +8289,10 @@ ludo.View = new Class({
 	},
 
 	/**
-	 * Return reference to components DOM container. A view has two &lt;div> elements, one parent and a child. getEl()
-	 * returns the parent, getBody() returns the child.
+	 * Return reference to the Views DOM div element.
 	 * DOM "body" element
 	 * @function getEl
-	 * @return {Object} DOMElement
+	 * @return {HTMLElement} DOMElement
 	 * @memberof ludo.View.prototype
 	 */
 	getEl:function () {
@@ -8303,7 +8302,7 @@ ludo.View = new Class({
 	 * Return reference to the "body" div HTML Element.
 	 * @memberof ludo.view.prototype
 	 * @function getBody
-	 * @return {Object} DOMElement
+	 * @return {HTMLElement} DOMElement
 	 */
 	getBody:function () {
 		return this.els.body;
@@ -8312,7 +8311,6 @@ ludo.View = new Class({
 	 * Hides the view
 	 * @function hide
 	 * @memberof ludo.view.prototype
-	 * @return void
 	 */
 	hide:function () {
 		if (!this.hidden && this.getEl().css('display') !== 'none') {
@@ -12200,9 +12198,9 @@ ludo.color.Color = new Class({
      * @returns {object}
      * @memberof ludo.color.Color.prototype
      * @example
-     var util = new ludo.color.Color();
-     console.log(util.rgbColors('#669900');
-     console.log(util.rgbColors({ h: 300, s: 100, v: 50 });
+     * var util = new ludo.color.Color();
+     * console.log(util.rgbColors('#669900');
+     * console.log(util.rgbColors({ h: 300, s: 100, v: 50 });
      *
      *
      */
@@ -12223,9 +12221,9 @@ ludo.color.Color = new Class({
      @return {Object}
      @memberof ludo.color.Color.prototype
      @example {@lang JavaScript}
-        var c = new ludo.color.Color();
-        console.log(c.rgbObject('#FFEEDD');
-        // returns { 'r': 'FF','g' : 'EE', 'b' : 'DD' }
+     * var c = new ludo.color.Color();
+     * console.log(c.rgbObject('#FFEEDD');
+     * // returns { 'r': 'FF','g' : 'EE', 'b' : 'DD' }
      */
     rgbObject:function (rgbColor) {
         rgbColor = rgbColor.replace('#', '');
@@ -12242,6 +12240,10 @@ ludo.color.Color = new Class({
      * @param {number} b
      * @param {number} c
      * @return {string}
+     * @example
+     * var c = new ludo.color.Color();
+     * console.log(c.rgbCode({r:100,g:125,b:200});
+     * console.log(c.rgbCode({h:144,s:45,b:55});
      */
     rgbCode:function (a, b, c) {
         if (b === undefined) {
@@ -12267,6 +12269,9 @@ ludo.color.Color = new Class({
      * @param {Number} green
      * @param {Number} blue
      * @return {String}
+     * @example
+     * var c = new ludo.color.Color();
+     * console.log(c.toRgb(100,14,200));
      */
     toRGB:function (red, green, blue) {
         var r = Math.round(red).toString(16);
@@ -12280,6 +12285,16 @@ ludo.color.Color = new Class({
     toRGBFromObject:function (color) {
         return this.toRGB(color.r, color.g, color.b);
     },
+
+    /**
+     * Converts a RGB color to HSV(Hue, Saturation, Brightness)
+     * @param {String|Object} color
+     * @returns {Object}
+     * @example
+     * var c = new ludo.color.Color();
+     * console.log(c.toHSV('#7e8080'));
+     * // outputs {h: 180, s: 1.5624999999999944, v: 50.19607843137255}
+     */
     toHSV:function (color) {
         if (color.r === undefined)color = this.rgbObject(color);
         return this.toHSVFromRGB(color.r, color.g, color.b);
@@ -12289,13 +12304,17 @@ ludo.color.Color = new Class({
         return this.toHSVFromRGB(color.r, color.g, color.b);
     },
     /**
-     * Converts red,green and blue to hsv h,s v
+     * Converts red,green and blue to HSV(Hue, Saturation, Brightness)
      * @memberof ludo.color.Color.prototype
      * @function toHSVFromRGB
      * @param r
      * @param g
      * @param b
      * @return {Object}
+     * @example
+     * var c = new ludo.color.Color();
+     * var hsv = c.toHSVFromRGB(100,200,10);
+     * console.log(hsv);
      */
     toHSVFromRGB:function (r, g, b) {
         r = r / 255;
@@ -12337,6 +12356,10 @@ ludo.color.Color = new Class({
      * @param s
      * @param v
      * @returns {String}
+     * @example
+     * var c = new ludo.color.Color();
+     * var color = c.hsvToRGBCode(200,40,60);
+     * console.log(color);
      */
     hsvToRGBCode:function (h, s, v) {
         if (s === undefined) {
@@ -12357,12 +12380,12 @@ ludo.color.Color = new Class({
      * @param v
      * @returns {{r: number, g: number, b: number}}
      * @example {@lang JavaScript}
-     var colorUtil = new ludo.color.Color();
-     var hue = 300;
-     var saturation = 40;
-     var brightness = 90;
-     var rgb = colorUtil.hsvToRGB(hue, saturation, brightness);
-     // returns { r: 229, g: 138, b: 229 }
+     * var colorUtil = new ludo.color.Color();
+     * var hue = 300;
+     * var saturation = 40;
+     * var brightness = 90;
+     * var rgb = colorUtil.hsvToRGB(hue, saturation, brightness);
+     *  // returns { r: 229, g: 138, b: 229 }
      */
     hsvToRGB:function (h, s, v) {
         if (s === undefined) {
@@ -12453,6 +12476,11 @@ ludo.color.Color = new Class({
      * @param color
      * @param offset
      * @return {String}
+     * @example
+     * var c = new ludo.color.Color();
+     * var color = '#FF0000'; // red
+     * color = c.offsetHue(color, 10);
+     * console.log(color); // Outputs #FF2A00
      */
     offsetHue:function(color, offset){
         var hsv = this.toHSV(color);
@@ -12468,6 +12496,11 @@ ludo.color.Color = new Class({
      * @param color
      * @param offset
      * @return {String}
+     * @example
+     * var c = new ludo.color.Color();
+     * var color = '#FF0000'; // Bright red with full brightness and saturation
+     * color = c.offsetBrightness(color, -10); // 10 degrees darker
+     * console.log(color); // outputs #E60000
      */
     offsetBrightness:function(color, offset){
         var hsv = this.toHSV(color);
@@ -12478,12 +12511,17 @@ ludo.color.Color = new Class({
     },
 
     /**
-     * Return rgb code after hue has been adjusted by a number of degrees
+     * Return rgb code after saturation(color intensity) has been adjusted. Saturation can be 0-100(no saturation to full saturation)
      * @function offsetSaturation
      * @memberof ludo.color.Color.prototype
-     * @param color
-     * @param offset
+     * @param {Object|String} color
+     * @param {Number} offset
      * @return {String}
+     * @example
+     * var c = new ludo.color.Color();
+     * var color = '#80994d'; // Green color with a saturation of 50
+     * color = c.offsetSaturation(color, 10); // Increase saturation by 10 points
+     * console.log(color); // outputs #85995C
      */
     offsetSaturation:function(color, offset){
         var hsv = this.toHSV(color);
@@ -12709,6 +12747,7 @@ ludo.color.RgbColors = new Class({
  * (300(remaining width) * 2(weight) / 3(total weight))
  * @param {Number} config.row true to create a new row. (Option for child layout)
  * @param {Number} config.vAlign Optional Vertical alignment of View(top|middle|bottom|baseline). Default: "top"(Option for child layout)
+ * @param {Number} config.simple true when there are no colspan or rowspan. When this option is true, you don't need to set row:true to specify new rows.
  * @example
  var w = new ludo.Window({
         title: 'Table layout',
@@ -12755,10 +12794,8 @@ ludo.layout.Table = new Class({
 
     fixedWidth: undefined,
     totalWeight: undefined,
-
-
     countCellsInNextRow: undefined,
-
+    simple:false,
 
     onCreate: function () {
         this.parent();
@@ -12767,6 +12804,7 @@ ludo.layout.Table = new Class({
         this.cols = this.view.layout.columns;
         this.fixedWidth = 0;
         this.totalWeight = 0;
+        this.simple = this.view.layout.simple || this.simple;
         var cols = [];
         for (var i = 0; i < this.cols.length; i++) {
             var col = this.cols[i];
@@ -12790,11 +12828,11 @@ ludo.layout.Table = new Class({
     },
 
     getParentForNewChild: function (child) {
-        if (this.countChildren == 0 || child.layout.row) {
+        if (this.countChildren == 0 || child.layout.row || (this.simple && this.countChildren % this.cols.length == 0)) {
+            console.log('new row ' + this.countChildren);
+            child.layout.row = true;
             this.currentRow = $('<tr></tr>');
             this.tbody.append(this.currentRow);
-            this.countChildren = 0;
-
             this.countCellsInNextRow = this.cols.length;
 
         }
@@ -16663,6 +16701,7 @@ ludo.effect.DraggableNode = new Class({
  * Base class for animations
  * @namespace ludo.effect
  * @class ludo.effect.Effect
+ * @fires ludo.effect.Effect#animationComplete
  */
 ludo.effect.Effect = new Class({
 	Extends: ludo.Core,
@@ -16739,12 +16778,6 @@ ludo.effect.Effect = new Class({
 
 
 	animationComplete:function(onComplete, el){
-		/**
-		 * Fired when animation is completed
-		 * @event animationComplete
-		 * @param {effect.Drag} this
-		 * @memberof ludo.effect.Effect.prototype
-		 */
 
 		this.fireEvent('animationComplete', this);
 
@@ -16906,7 +16939,8 @@ ludo.effect.Effect = new Class({
 
  @fires ludo.effect.Drag#before Event fired before drag starts. Params: 1) Dom element to be dragged, 2) ludo.effect.Drag, 3) {x,y}
  @fires ludo.effect.Drag#start Event when drag starts. Params: 1) Dom element to be dragged, 2) ludo.effect.Drag, 3) {x,y}
- @fires ludo.effect.Drag#end' Event when drag ends. Params: 1) Dom element to be dragged, 2) ludo.effect.Drag, 3) {x,y}
+ @fires ludo.effect.Drag#drag' Event when drag ends. Params: 1) Dom element to be dragged, 2) ludo.effect.Drag, 3) {x,y}
+ @fires ludo.effect.Drag#end' Event when drag ends. Params: 1) {x,y}, 2) dragged node 3) ludo.effect.Drag
  @fires ludo.effect.Drag#showShim' Event fired when shim DOM node is shown. Argument: 1) Shim DOM Node, 2) ludo.effect.Drag
  @fires ludo.effect.Drag#flyToShim' Event fired after flyBack animation is complete. Arguments: 1) ludo.effect.Drag, 2) Shim DOM node
  @fires ludo.effect.Drag#flyBack' Event fired when shim DOM node is shown. Argument: Arguments: 1) ludo.effect.Drag, 2) Shim DOM node
@@ -17235,13 +17269,7 @@ ludo.effect.Drag = new Class({
         if (this.delay) {
             this.setActiveAfterDelay();
         } else {
-            /*
-             * Event fired before dragging
-             * @event start
-             * @param {effect.DraggableNode} object to be dragged.
-             * @param {ludo.effect.Drag} component
-             * @param {Object} pos(x and y)
-             */
+
             this.fireEvent('start', [this.els[id], this, {x: x, y: y}]);
 
             if (this.fireEffectEvents)ludo.EffectObject.start();
@@ -17331,7 +17359,7 @@ ludo.effect.Drag = new Class({
 
             this.move(pos);
 
-            /**
+            /*
              * Event fired while dragging. Sends position, example {x:100,y:50}
              * and reference to effect.Drag as arguments
              * @event drag
@@ -26098,6 +26126,7 @@ ludo.form.validator.twin = function(value, twin){
 /**
  * Super class for form Views.
  * This class inherits from <a href="ludo.View.html">ludo.View</a>.
+ * @module form
  * @namespace ludo.form
  * @class ludo.form.Element
  * @param {Object} config Configuration when creating the View. These properties and properties from superclass is available
@@ -27944,6 +27973,7 @@ ludo.form.CancelButton = new Class({
 /**
  * Text Input View
  * This class inherits from <a href="ludo.form.Element.html">ludo.form.Element</a>.
+ * @module form
  * @namespace ludo.form
  * @class ludo.form.Text
  * @description Form input text
