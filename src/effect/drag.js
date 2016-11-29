@@ -26,7 +26,8 @@
 
  @fires ludo.effect.Drag#before Event fired before drag starts. Params: 1) Dom element to be dragged, 2) ludo.effect.Drag, 3) {x,y}
  @fires ludo.effect.Drag#start Event when drag starts. Params: 1) Dom element to be dragged, 2) ludo.effect.Drag, 3) {x,y}
- @fires ludo.effect.Drag#end' Event when drag ends. Params: 1) Dom element to be dragged, 2) ludo.effect.Drag, 3) {x,y}
+ @fires ludo.effect.Drag#drag' Event when drag ends. Params: 1) Dom element to be dragged, 2) ludo.effect.Drag, 3) {x,y}
+ @fires ludo.effect.Drag#end' Event when drag ends. Params: 1) {x,y}, 2) dragged node 3) ludo.effect.Drag
  @fires ludo.effect.Drag#showShim' Event fired when shim DOM node is shown. Argument: 1) Shim DOM Node, 2) ludo.effect.Drag
  @fires ludo.effect.Drag#flyToShim' Event fired after flyBack animation is complete. Arguments: 1) ludo.effect.Drag, 2) Shim DOM node
  @fires ludo.effect.Drag#flyBack' Event fired when shim DOM node is shown. Argument: Arguments: 1) ludo.effect.Drag, 2) Shim DOM node
@@ -355,13 +356,7 @@ ludo.effect.Drag = new Class({
         if (this.delay) {
             this.setActiveAfterDelay();
         } else {
-            /*
-             * Event fired before dragging
-             * @event start
-             * @param {effect.DraggableNode} object to be dragged.
-             * @param {ludo.effect.Drag} component
-             * @param {Object} pos(x and y)
-             */
+
             this.fireEvent('start', [this.els[id], this, {x: x, y: y}]);
 
             if (this.fireEffectEvents)ludo.EffectObject.start();
@@ -451,7 +446,7 @@ ludo.effect.Drag = new Class({
 
             this.move(pos);
 
-            /**
+            /*
              * Event fired while dragging. Sends position, example {x:100,y:50}
              * and reference to effect.Drag as arguments
              * @event drag

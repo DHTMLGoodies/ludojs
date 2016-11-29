@@ -2,6 +2,7 @@
  * Base class for animations
  * @namespace ludo.effect
  * @class ludo.effect.Effect
+ * @fires ludo.effect.Effect#animationComplete
  */
 ludo.effect.Effect = new Class({
 	Extends: ludo.Core,
@@ -78,12 +79,6 @@ ludo.effect.Effect = new Class({
 
 
 	animationComplete:function(onComplete, el){
-		/**
-		 * Fired when animation is completed
-		 * @event animationComplete
-		 * @param {effect.Drag} this
-		 * @memberof ludo.effect.Effect.prototype
-		 */
 
 		this.fireEvent('animationComplete', this);
 

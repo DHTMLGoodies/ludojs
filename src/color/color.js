@@ -18,9 +18,9 @@ ludo.color.Color = new Class({
      * @returns {object}
      * @memberof ludo.color.Color.prototype
      * @example
-     var util = new ludo.color.Color();
-     console.log(util.rgbColors('#669900');
-     console.log(util.rgbColors({ h: 300, s: 100, v: 50 });
+     * var util = new ludo.color.Color();
+     * console.log(util.rgbColors('#669900');
+     * console.log(util.rgbColors({ h: 300, s: 100, v: 50 });
      *
      *
      */
@@ -41,9 +41,9 @@ ludo.color.Color = new Class({
      @return {Object}
      @memberof ludo.color.Color.prototype
      @example {@lang JavaScript}
-        var c = new ludo.color.Color();
-        console.log(c.rgbObject('#FFEEDD');
-        // returns { 'r': 'FF','g' : 'EE', 'b' : 'DD' }
+     * var c = new ludo.color.Color();
+     * console.log(c.rgbObject('#FFEEDD');
+     * // returns { 'r': 'FF','g' : 'EE', 'b' : 'DD' }
      */
     rgbObject:function (rgbColor) {
         rgbColor = rgbColor.replace('#', '');
@@ -60,6 +60,10 @@ ludo.color.Color = new Class({
      * @param {number} b
      * @param {number} c
      * @return {string}
+     * @example
+     * var c = new ludo.color.Color();
+     * console.log(c.rgbCode({r:100,g:125,b:200});
+     * console.log(c.rgbCode({h:144,s:45,b:55});
      */
     rgbCode:function (a, b, c) {
         if (b === undefined) {
@@ -85,6 +89,9 @@ ludo.color.Color = new Class({
      * @param {Number} green
      * @param {Number} blue
      * @return {String}
+     * @example
+     * var c = new ludo.color.Color();
+     * console.log(c.toRgb(100,14,200));
      */
     toRGB:function (red, green, blue) {
         var r = Math.round(red).toString(16);
@@ -98,6 +105,16 @@ ludo.color.Color = new Class({
     toRGBFromObject:function (color) {
         return this.toRGB(color.r, color.g, color.b);
     },
+
+    /**
+     * Converts a RGB color to HSV(Hue, Saturation, Brightness)
+     * @param {String|Object} color
+     * @returns {Object}
+     * @example
+     * var c = new ludo.color.Color();
+     * console.log(c.toHSV('#7e8080'));
+     * // outputs {h: 180, s: 1.5624999999999944, v: 50.19607843137255}
+     */
     toHSV:function (color) {
         if (color.r === undefined)color = this.rgbObject(color);
         return this.toHSVFromRGB(color.r, color.g, color.b);
@@ -107,13 +124,17 @@ ludo.color.Color = new Class({
         return this.toHSVFromRGB(color.r, color.g, color.b);
     },
     /**
-     * Converts red,green and blue to hsv h,s v
+     * Converts red,green and blue to HSV(Hue, Saturation, Brightness)
      * @memberof ludo.color.Color.prototype
      * @function toHSVFromRGB
      * @param r
      * @param g
      * @param b
      * @return {Object}
+     * @example
+     * var c = new ludo.color.Color();
+     * var hsv = c.toHSVFromRGB(100,200,10);
+     * console.log(hsv);
      */
     toHSVFromRGB:function (r, g, b) {
         r = r / 255;
@@ -155,6 +176,10 @@ ludo.color.Color = new Class({
      * @param s
      * @param v
      * @returns {String}
+     * @example
+     * var c = new ludo.color.Color();
+     * var color = c.hsvToRGBCode(200,40,60);
+     * console.log(color);
      */
     hsvToRGBCode:function (h, s, v) {
         if (s === undefined) {
@@ -175,12 +200,12 @@ ludo.color.Color = new Class({
      * @param v
      * @returns {{r: number, g: number, b: number}}
      * @example {@lang JavaScript}
-     var colorUtil = new ludo.color.Color();
-     var hue = 300;
-     var saturation = 40;
-     var brightness = 90;
-     var rgb = colorUtil.hsvToRGB(hue, saturation, brightness);
-     // returns { r: 229, g: 138, b: 229 }
+     * var colorUtil = new ludo.color.Color();
+     * var hue = 300;
+     * var saturation = 40;
+     * var brightness = 90;
+     * var rgb = colorUtil.hsvToRGB(hue, saturation, brightness);
+     *  // returns { r: 229, g: 138, b: 229 }
      */
     hsvToRGB:function (h, s, v) {
         if (s === undefined) {
@@ -271,6 +296,11 @@ ludo.color.Color = new Class({
      * @param color
      * @param offset
      * @return {String}
+     * @example
+     * var c = new ludo.color.Color();
+     * var color = '#FF0000'; // red
+     * color = c.offsetHue(color, 10);
+     * console.log(color); // Outputs #FF2A00
      */
     offsetHue:function(color, offset){
         var hsv = this.toHSV(color);
@@ -286,6 +316,11 @@ ludo.color.Color = new Class({
      * @param color
      * @param offset
      * @return {String}
+     * @example
+     * var c = new ludo.color.Color();
+     * var color = '#FF0000'; // Bright red with full brightness and saturation
+     * color = c.offsetBrightness(color, -10); // 10 degrees darker
+     * console.log(color); // outputs #E60000
      */
     offsetBrightness:function(color, offset){
         var hsv = this.toHSV(color);
@@ -296,12 +331,17 @@ ludo.color.Color = new Class({
     },
 
     /**
-     * Return rgb code after hue has been adjusted by a number of degrees
+     * Return rgb code after saturation(color intensity) has been adjusted. Saturation can be 0-100(no saturation to full saturation)
      * @function offsetSaturation
      * @memberof ludo.color.Color.prototype
-     * @param color
-     * @param offset
+     * @param {Object|String} color
+     * @param {Number} offset
      * @return {String}
+     * @example
+     * var c = new ludo.color.Color();
+     * var color = '#80994d'; // Green color with a saturation of 50
+     * color = c.offsetSaturation(color, 10); // Increase saturation by 10 points
+     * console.log(color); // outputs #85995C
      */
     offsetSaturation:function(color, offset){
         var hsv = this.toHSV(color);

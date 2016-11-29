@@ -45,9 +45,9 @@
 			</li>
 			
 			<li class="dropdown">
-				<a href="events.list.html" class="dropdown-toggle" data-toggle="dropdown">Events<b class="caret"></b></a>
+				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="global.html#event:drag">event:drag</a></li><li><a href="ludo.effect.Drag.html#event:animationComplete">ludo.effect.Drag#event:animationComplete</a></li><li><a href="ludo.effect.Effect.html#event:animationComplete">ludo.effect.Effect#event:animationComplete</a></li>
+					<li><a href="global.html#toHSV">toHSV</a></li>
 				</ul>
 			</li>
 			
@@ -117,7 +117,7 @@
  @fires ludo.View#show Fired when view is displayed using the show method. Argument. ludo.View
  @fires ludo.View#beforeshow Fired just before a view is displayed using the show method. Argument: ludo.View
  @fires ludo.View#resize Fired when a view has been resized.
- // TODO describe data sources
+
  @example {@lang Javascript}
 	// Example 1: View render to &amp;lt;body> tag
     new ludo.View({
@@ -131,7 +131,7 @@
  		Extends: ludo.View,
  		type : 'myApp.View',
  		__rendered:function(){
- 			this.html('My custom component');
+ 			this.html('My custom view');
 		}
 	}
     children:[{
@@ -469,9 +469,9 @@ ludo.View = new Class({
 		}
 	},
 	/**
-	 * Get reference to parent component
+	 * Get reference to parent view
 	 * @function getParent
-	 * @return {Object} component | null
+	 * @return {Object} view | null
 	 * @memberof ludo.View.prototype
 	 */
 	getParent:function () {
@@ -527,11 +527,10 @@ ludo.View = new Class({
 	},
 
 	/**
-	 * Return reference to components DOM container. A view has two &amp;lt;div> elements, one parent and a child. getEl()
-	 * returns the parent, getBody() returns the child.
+	 * Return reference to the Views DOM div element.
 	 * DOM "body" element
 	 * @function getEl
-	 * @return {Object} DOMElement
+	 * @return {HTMLElement} DOMElement
 	 * @memberof ludo.View.prototype
 	 */
 	getEl:function () {
@@ -541,7 +540,7 @@ ludo.View = new Class({
 	 * Return reference to the "body" div HTML Element.
 	 * @memberof ludo.view.prototype
 	 * @function getBody
-	 * @return {Object} DOMElement
+	 * @return {HTMLElement} DOMElement
 	 */
 	getBody:function () {
 		return this.els.body;
@@ -550,7 +549,6 @@ ludo.View = new Class({
 	 * Hides the view
 	 * @function hide
 	 * @memberof ludo.view.prototype
-	 * @return void
 	 */
 	hide:function () {
 		if (!this.hidden &amp;&amp; this.getEl().css('display') !== 'none') {

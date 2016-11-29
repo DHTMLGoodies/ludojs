@@ -31,7 +31,7 @@
  @fires ludo.View#show Fired when view is displayed using the show method. Argument. ludo.View
  @fires ludo.View#beforeshow Fired just before a view is displayed using the show method. Argument: ludo.View
  @fires ludo.View#resize Fired when a view has been resized.
- // TODO describe data sources
+
  @example {@lang Javascript}
 	// Example 1: View render to &lt;body> tag
     new ludo.View({
@@ -45,7 +45,7 @@
  		Extends: ludo.View,
  		type : 'myApp.View',
  		__rendered:function(){
- 			this.html('My custom component');
+ 			this.html('My custom view');
 		}
 	}
     children:[{
@@ -383,9 +383,9 @@ ludo.View = new Class({
 		}
 	},
 	/**
-	 * Get reference to parent component
+	 * Get reference to parent view
 	 * @function getParent
-	 * @return {Object} component | null
+	 * @return {Object} view | null
 	 * @memberof ludo.View.prototype
 	 */
 	getParent:function () {
@@ -441,11 +441,10 @@ ludo.View = new Class({
 	},
 
 	/**
-	 * Return reference to components DOM container. A view has two &lt;div> elements, one parent and a child. getEl()
-	 * returns the parent, getBody() returns the child.
+	 * Return reference to the Views DOM div element.
 	 * DOM "body" element
 	 * @function getEl
-	 * @return {Object} DOMElement
+	 * @return {HTMLElement} DOMElement
 	 * @memberof ludo.View.prototype
 	 */
 	getEl:function () {
@@ -455,7 +454,7 @@ ludo.View = new Class({
 	 * Return reference to the "body" div HTML Element.
 	 * @memberof ludo.view.prototype
 	 * @function getBody
-	 * @return {Object} DOMElement
+	 * @return {HTMLElement} DOMElement
 	 */
 	getBody:function () {
 		return this.els.body;
@@ -464,7 +463,6 @@ ludo.View = new Class({
 	 * Hides the view
 	 * @function hide
 	 * @memberof ludo.view.prototype
-	 * @return void
 	 */
 	hide:function () {
 		if (!this.hidden && this.getEl().css('display') !== 'none') {

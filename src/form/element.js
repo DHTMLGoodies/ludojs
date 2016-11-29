@@ -1,6 +1,7 @@
 /**
  * Super class for form Views.
  * This class inherits from <a href="ludo.View.html">ludo.View</a>.
+ * @module form
  * @namespace ludo.form
  * @class ludo.form.Element
  * @param {Object} config Configuration when creating the View. These properties and properties from superclass is available

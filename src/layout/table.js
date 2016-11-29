@@ -13,6 +13,7 @@
  * (300(remaining width) * 2(weight) / 3(total weight))
  * @param {Number} config.row true to create a new row. (Option for child layout)
  * @param {Number} config.vAlign Optional Vertical alignment of View(top|middle|bottom|baseline). Default: "top"(Option for child layout)
+ * @param {Number} config.simple true when there are no colspan or rowspan. When this option is true, you don't need to set row:true to specify new rows.
  * @example
  var w = new ludo.Window({
         title: 'Table layout',
@@ -59,10 +60,8 @@ ludo.layout.Table = new Class({
 
     fixedWidth: undefined,
     totalWeight: undefined,
-
-
     countCellsInNextRow: undefined,
-
+    simple:false,
 
     onCreate: function () {
         this.parent();
@@ -71,6 +70,7 @@ ludo.layout.Table = new Class({
         this.cols = this.view.layout.columns;
         this.fixedWidth = 0;
         this.totalWeight = 0;
+        this.simple = this.view.layout.simple || this.simple;
         var cols = [];
         for (var i = 0; i < this.cols.length; i++) {
             var col = this.cols[i];
@@ -94,11 +94,11 @@ ludo.layout.Table = new Class({
     },
 
     getParentForNewChild: function (child) {
-        if (this.countChildren == 0 || child.layout.row) {
+        if (this.countChildren == 0 || child.layout.row || (this.simple && this.countChildren % this.cols.length == 0)) {
+            console.log('new row ' + this.countChildren);
+            child.layout.row = true;
             this.currentRow = $('<tr></tr>');
             this.tbody.append(this.currentRow);
-            this.countChildren = 0;
-
             this.countCellsInNextRow = this.cols.length;
 
         }

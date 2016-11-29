@@ -1,6 +1,7 @@
 /**
  * Text Input View
  * This class inherits from <a href="ludo.form.Element.html">ludo.form.Element</a>.
+ * @module form
  * @namespace ludo.form
  * @class ludo.form.Text
  * @description Form input text

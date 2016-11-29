@@ -90,6 +90,7 @@ require_once("../includes/demo-header.php");
                         title: 'Personal Information',
                         layout: {
                             type: 'table',
+                            simple: true,
                             columns: [
                                 {width: 150}, {weight: 1}
                             ],
@@ -99,19 +100,27 @@ require_once("../includes/demo-header.php");
                             padding: 3
                         },
                         children: [
-                            {type: 'form.Label', label: 'Name:', labelFor: 'name'},
+                            {
+                                type: 'form.Label', label: 'Name:', labelFor: 'name'
+                            },
                             {
                                 type: 'form.Text', placeholder: 'Name', name: 'name'
                             },
-                            {type: 'form.Label', label: 'Email:', labelFor: 'email', layout: {row: true}},
+                            {
+                                type: 'form.Label', label: 'Email:', labelFor: 'email'
+                            },
                             {
                                 type: 'form.Email', placeholder: 'Email address', name: 'email', required: true
                             },
-                            {type: 'form.Label', label: 'Password:', labelFor: 'password', layout: {row: true}},
+                            {
+                                type: 'form.Label', label: 'Password:', labelFor: 'password'
+                            },
                             {
                                 type: 'form.Password', placeHolder: 'Password', name: 'password'
                             },
-                            {type: 'form.Label', label: 'Repeat Password:', labelFor: 'password2', layout: {row: true}},
+                            {
+                                type: 'form.Label', label: 'Repeat Password:', labelFor: 'password2'
+                            },
                             {
                                 type: 'form.Password',
                                 placeHolder: 'Repeat Password',
@@ -128,6 +137,7 @@ require_once("../includes/demo-header.php");
                         title: 'Address details',
                         layout: {
                             type: 'table',
+                            simple: true,
                             columns: [
                                 {width: 150}, {weight: 1}
                             ],
@@ -138,15 +148,15 @@ require_once("../includes/demo-header.php");
                             {
                                 type: 'form.Text', placeholder: 'Address line 1', name: 'addressline1'
                             },
-                            {type: 'form.Label', label: 'Address 2:', labelFor: 'addressline2', layout:{row:true}},
+                            {type: 'form.Label', label: 'Address 2:', labelFor: 'addressline2'},
                             {
                                 type: 'form.Text', placeholder: 'Address line 2', name: 'addressline2'
                             },
-                            {type: 'form.Label', label: 'Town/City:', labelFor: 'city', layout:{row:true}},
+                            {type: 'form.Label', label: 'Town/City:', labelFor: 'city'},
                             {
                                 type: 'form.Text', placeholder: 'Town/City', name: 'city'
                             },
-                            {type: 'form.Label', label: 'Zip/Post code:', labelFor: 'zipcode', layout:{row:true}},
+                            {type: 'form.Label', label: 'Zip/Post code:', labelFor: 'zipcode'},
                             {
                                 type: 'form.Text', placeholder: 'Zip/Post code', name: 'zipcode'
                             }
