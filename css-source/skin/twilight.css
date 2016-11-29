@@ -13,12 +13,16 @@ body.ludo-twilight{
 
 
 .ludo-twilight .ludo-framed-view-titlebar-title{
-    text-align:center;
+
     width:100%;
 }
+
+.ludo-twilight .ludo-window > .ludo-framed-view-titlebar > .ludo-framed-view-titlebar-title{
+    text-align:center;
+}
+
 .ludo-twilight .ludo-framed-view-titlebar{
     background-color:#424242;
-
     font-weight:normal;
     border-bottom:1px solid #383838;
     border-radius:0;
@@ -597,14 +601,14 @@ Collapse bar
 .ludo-twilight .ludo-form-text-element input,
 .ludo-twilight .ludo-form-textarea textarea{
     background-color:#535354;
-    color:#aeb0b0;
+    color:#eee;
 }
 
 .ludo-twilight .ludo-form-element,
 .ludo-twilight .ludo-form-text-element
 {
     background-color:#535354;
-    color:#aeb0b0;
+    color:#eee;
     border-top-color: transparent;
     border-left-color: transparent;
     border-right-color: transparent;
@@ -613,4 +617,21 @@ Collapse bar
 .ludo-twilight div.ludo-form-textarea .ludo-form-text-element{
 
     border:1px solid #aeb0b0;
+}
+
+.ludo-twilight .form-combo-child{
+    border:1px solid #424242;
+}
+
+.ludo-twilight ::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+    color:    #8b8c8c;
+}
+.ludo-twilight :-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    color:    #8b8c8c;
+}
+.ludo-twilight ::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color:    #8b8c8c;
+}
+.ludo-twilight :-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color:    #8b8c8c;
 }

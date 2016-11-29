@@ -40,7 +40,7 @@ myApp.CustomGrid = new Class({
 		'border-bottom':0
 	},
 
-	getClassChildren:function () {
+	__children:function () {
 		return [
 			{
 				height:27,

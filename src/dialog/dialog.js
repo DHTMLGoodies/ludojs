@@ -98,7 +98,7 @@ ludo.dialog.Dialog = new Class({
 		this.parent();
 		this.hideShim();
 		if (this.autoRemove) {
-			this.dispose.delay(1000, this);
+			this.remove.delay(1000, this);
 		}
 	},
 

@@ -88,9 +88,10 @@ ludo.util = {
         view.disposeAllChildren();
 
 		$.each(view.els, function(key){
-			if(key != 'parent' && view.els[key].prop("tagName")){
-				view.els[key].remove();
+
+			if(key != 'parent' && view.els[key] && view.els[key].prop  && view.els[key].prop("tagName")){
 				view.els[key].off();
+				view.els[key].remove();
 			}
 
 		}.bind(view));

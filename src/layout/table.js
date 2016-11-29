@@ -135,13 +135,16 @@ ludo.layout.Table = new Class({
 
     },
 
+    getWrappedHeight:function(){
+        return this.parent() + this.table.outerHeight();
+    },
+
     getWidthOfChild: function (child, colIndex) {
         var colspan = child.layout.colspan ? child.layout.colspan : 1;
         if(child.layout.width)return child.layout.width;
         var width = 0;
         var totalWidth = this.view.getBody().width();
         var weightWidth = totalWidth - this.fixedWidth;
-        console.log(this.cols);
         for (var i = colIndex; i < colIndex + colspan; i++) {
             if (this.cols[i].width) {
                 width += this.cols[i].width;

@@ -70,7 +70,7 @@
 
  */
 ludo.form.File = new Class({
-	Extends:ludo.form.LabelElement,
+	Extends:ludo.form.Element,
 	type:'form.File',
 
 	inputTag:'input',
@@ -118,10 +118,10 @@ ludo.form.File = new Class({
 	__rendered:function () {
 		this.parent();
 
-		var cell = $('<td>');
-		cell.width = this.buttonWidth;
+		var cell = $('<div>');
+		cell.width(this.buttonWidth);
 		cell.css('textAlign', 'right');
-		this.getInputRow().append(cell);
+		this.getBody().append(cell);
 		cell.append(this.getFormEl());
 
 		var btn = new ludo.form.Button({

@@ -1,13 +1,20 @@
 /**
- Form management class. An instance of this class is automatically created for a view if the config.form property is set or after
- after a call to view.getForm() is made.<br>
+ Form management class. An instance of this class is automatically created for a view if the config.form property is set.<br>
  new ludo.View({
  	form:{ ... }
  </code>
- You'll get access to the methods of this class from view.getForm().
+ You'll get access to the methods of this class using view.getForm().
+
+ For demo, see <a href="../demo/form/form-components.php">form-components.php</a>
+
  @namespace ludo.form
  @class ludo.form.Manager
  @param {Object} config
+ @param {Object} config.submit Submit configuration object
+ @param {Object} config.submit.listeners Submit listeners
+ @param {Object} config.read Read data from server configuration object
+ @param {Boolean} config.read.autoload True to autoload form data when rendered.
+ @param {Object} config.read.listeners Read data from server listeners.
  @param {Object} config.listeners The form fires events when something is changed with one of the child form views(recursive).
 It is convenient to place event handlers here instead of adding them to the individual form views.
  Example: create a form.change event to listen to all changes to child form views.
@@ -19,8 +26,52 @@ It is convenient to place event handlers here instead of adding them to the indi
  @fires ludo.form.Manager#clean A form is considered clean when none of it's values has changed from it's original. Otherwise it's considered dirty. The clean event
  is fired when the form is clean.
  @fires ludo.form.Manager#dirty Fired when the form is dirty.
+ @fires ludo.form.Manager#submit.init Fired before form is submitted. The submit. listeners are added via the "submit" object. See example below.
+ @fires ludo.form.Manager#submit.success Fired after successful form submission.
+ @fires ludo.form.Manager#submit.fail Fired after failed form submission.
+ @fires ludo.form.Manager#read.init Fired before loading form data from server. the read. listeners are added via the "read" object. See example below.
+ @fires ludo.form.Manager#read.success Fired after successfully loading data from server
+ @fires ludo.form.Manager#read.fail Fired when loading data from server failed.
  @example
 var view = new ludo.View({
+    form:{
+            hiddenFields: ['id'], // Hidden fields which could be populated using ludo.get('myWindow).getForm().set('id', 100);
+            submit:{
+                url: '../controller.php',
+                data: {
+                    submit:1
+                },
+                listeners:{
+                    'success': function(json, form){
+                        new ludo.dialog.Alert({
+                            title:'Thank you!',
+                            resizable:true,
+                            html:'Thank you. Your data has been saved..'
+                        });
+
+                        form.commit();
+                    },
+                    'fail': function(text, error, form){
+                        // do something on failure
+                    }
+                }
+            },
+
+            read: {
+                autoload:true,  // autoload data on create
+                url: 'form-data.json', // read url
+                keys:['id'], // array of form values to add to the view request
+                listeners:{
+                    'success': function(json, form){
+                        form.clear();
+                        form.populate(json);
+                    },
+                    'fail': function(text, error, form){
+                        // do something on failure
+                    }
+                }
+            }
+    }
 	children:[
 		{ type:'form.Text', label:'First name', name:'firstname' },
 		{ type:'form.Text', label:'Last name', name:'lastname' }
@@ -35,125 +86,136 @@ var json = view.getForm().values();
 
  */
 ludo.form.Manager = new Class({
-	Extends:ludo.Core,
-	/**
-	 * @attribute {ludo.View} view Reference to the forms view
-	 * @memberof ludo.form.Manager.prototype
-	 */
-	view:null,
-	formComponents:[],
-	map:{},
-	fileUploadComponents:[],
-	progressBar:undefined,
-	invalidIds:[],
-	dirtyIds:[],
-	form:{
-		method:'post'
-	},
-	
-	hiddenFields:undefined,
-	hiddenValues:undefined,
+    Extends: ludo.Core,
+    /**
+     * @attribute {ludo.View} view Reference to the forms view
+     * @memberof ludo.form.Manager.prototype
+     */
+    view: null,
+    formComponents: [],
+    map: {},
+    fileUploadComponents: [],
+    progressBar: undefined,
+    invalidIds: [],
+    dirtyIds: [],
 
-    method:undefined,
-    url:undefined,
-	currentId:undefined,
+    hiddenFields: undefined,
+    hiddenValues: undefined,
 
-    autoLoad:false,
+    method: 'post',
+    url: undefined,
+    currentId: undefined,
 
-    listeners:undefined,
+    autoLoad: false,
 
+    listeners: undefined,
 
-    arguments:undefined,
+    configs: undefined,
 
-	__construct:function (config) {
-		this.view = config.view;
-		config.form = config.form || {};
-
-        this.setConfigParams(config.form, ['method', 'url','autoLoad', 'hiddenFields']);
-		this.hiddenValues = {};
+    __construct: function (config) {
+        this.view = config.view;
+        config.form = config.form || {};
 
 
-		this.id = String.uniqueID();
+        this.setConfigParams(config.form, ['method', 'url', 'hiddenFields']);
+        this.hiddenValues = {};
 
-		if (config.form.listeners !== undefined) {
-			this.addEvents(config.form.listeners);
-		}
-		this.getFormElements();
+        this.configs = {};
+        this.configs.submit = config.form.submit || {};
+        this.configs.read = config.form.read || {};
 
-		if(this.autoLoad){
-			this.read(config.form.arguments);
-		}
-	},
+        this.addTypeEvents('submit');
+        this.addTypeEvents('read');
 
-	/**
-	 * Get all form elements, store them in an array and add valid and invalid events to them
-	 * @function getFormElements
-	 * @memberof ludo.form.Manager.prototype
-	 */
-	getFormElements:function () {
-		if (!this.view.isRendered) {
-			this.getFormElements.delay(100, this);
-			return;
-		}
+        this.id = String.uniqueID();
 
-		var children = this.view.getAllChildren();
-		children.push(this.view);
+        if (config.form.listeners !== undefined) {
+            this.addEvents(config.form.listeners);
+        }
+        this.getFormElements();
 
-		var c;
-		for (var i = 0, len = children.length; i < len; i++) {
-			c = children[i];
-			if (c['getProgressBarId'] !== undefined) {
-				this.registerProgressBar(c);
-			}
-			else if (c.isFormElement() && c.submittable) {
-				this.registerFormElement(c);
-			}
-		}
+        if (this.configs.read.autoload) {
+            this.read();
+        }
+    },
 
-		this.fireEvent((this.invalidIds.length == 0) ? 'valid' : 'invalid');
-		this.fireEvent((this.dirtyIds.length == 0) ? 'clean' : 'dirty');
-	},
+    addTypeEvents:function(type){
+        if(this.configs[type].listeners != undefined){
+            $.each(this.configs[type].listeners, function(key, value){
+                this.on(type + '.' + key, value);
+            }.bind(this));
+        }
+    },
 
-	registerFormElement:function (c) {
-		if (this.formComponents.indexOf(c) >= 0) {
-			return;
-		}
+    /**
+     * Get all form elements, store them in an array and add valid and invalid events to them
+     * @function getFormElements
+     * @memberof ludo.form.Manager.prototype
+     */
+    getFormElements: function () {
+        if (!this.view.isRendered) {
+            this.getFormElements.delay(100, this);
+            return;
+        }
 
-		this.map[c.name] = c;
+        var children = this.view.getAllChildren();
+        children.push(this.view);
 
-		if(this.record && this.record[c.name]){
-			c.val(this.record[c.name]);
-		}
+        var c;
+        for (var i = 0, len = children.length; i < len; i++) {
+            c = children[i];
+            if (c['getProgressBarId'] !== undefined) {
+                this.registerProgressBar(c);
+            }
+            else if (c.isFormElement() && c.submittable) {
+                this.registerFormElement(c);
+            }
+        }
 
-		if (c.isFileUploadComponent) {
-			this.fileUploadComponents.push(c);
-		}
-		this.formComponents.push(c);
+        this.fireEvent((this.invalidIds.length == 0) ? 'valid' : 'invalid');
+        this.fireEvent((this.dirtyIds.length == 0) ? 'clean' : 'dirty');
+    },
 
-		c.addEvents({
-			'valid':this.onValid.bind(this),
-			'invalid':this.onInvalid.bind(this),
-			'dirty':this.onDirty.bind(this),
-			'clean':this.onClean.bind(this),
-			'change':this.onChange.bind(this)
-		});
+    registerFormElement: function (c) {
+        if (this.formComponents.indexOf(c) >= 0) {
+            return;
+        }
 
-		if (!c.isValid()) {
-			this.invalidIds.push(c.getId());
-		}
+        this.map[c.name] = c;
 
-		if (c.isDirty()) {
-			this.dirtyIds.push(c.getId());
-		}
-	},
+        if (this.record && this.record[c.name]) {
+            c.val(this.record[c.name]);
+        }
 
-	/**
-	 * Populate form fields with data from JSON object
-	 * @function populate
-	 * @memberof ludo.form.Manager.prototype
-	 * @param {Object} json JSON object
-	 * @example
-	 * var view = new ludo.View({
+        if (c.isFileUploadComponent) {
+            this.fileUploadComponents.push(c);
+        }
+        this.formComponents.push(c);
+
+        c.addEvents({
+            'valid': this.onValid.bind(this),
+            'invalid': this.onInvalid.bind(this),
+            'dirty': this.onDirty.bind(this),
+            'clean': this.onClean.bind(this),
+            'change': this.onChange.bind(this)
+        });
+
+        if (!c.isValid()) {
+            this.invalidIds.push(c.getId());
+        }
+
+        if (c.isDirty()) {
+            this.dirtyIds.push(c.getId());
+        }
+    },
+
+    /**
+     * Populate form fields with data from JSON object
+     * @function populate
+     * @memberof ludo.form.Manager.prototype
+     * @param {Object} json JSON object
+     * @example
+     * var view = new ludo.View({
 	 * 	renderTo:document.body,
 	 * 	layout:{ type:'linear', orientation:'vertical', width:'matchParent', height:'matchParent' },
 	 * 	children:[
@@ -161,378 +223,357 @@ ludo.form.Manager = new Class({
 	 * 		{ type:'form.Text', name:'lastname' }
 	 * 	]
 	 * });
-	 * // Update form views firstname and lastname with values from JSON
-	 * view.getForm.populate({
+     * // Update form views firstname and lastname with values from JSON
+     * view.getForm.populate({
 	 * 	"firstname" : "Jane", "lastname": "Anderson"
 	 * });
-	 *
+     *
      */
-	populate:function(json) {
-		$.each(json, this.set.bind(this));
-	},
+    populate: function (json) {
+        $.each(json, this.set.bind(this));
+    },
 
 
     /**
      * Set value of a form element
      * @function set
-	 * @memberOf ludo.form.Manager.prototype
+     * @memberOf ludo.form.Manager.prototype
      * @param {String} name name of form element
      * @param {String|Number|Object} value
      */
-	set:function(name, value){
-		if(this.map[name]){
-			this.map[name].val(value);
-		}else if(this.hiddenFields != undefined && this.hiddenFields.indexOf(name) != -1){
-			this.hiddenValues[name] = value;
-		}
+    set: function (name, value) {
+        if (this.map[name]) {
+            this.map[name].val(value);
+        } else if (this.hiddenFields != undefined && this.hiddenFields.indexOf(name) != -1) {
+            this.hiddenValues[name] = value;
+        }
 
-	},
+    },
 
-	/**
-	 * Set OR get value of form component.
-	 * Called with two arguments(key and value), a value will be set. Called with one argument(key), value will be returned.
-	 * @function val
-	 * @memberOf ludo.form.Manager.prototype
-	 * @param key
-	 * @param value
-	 * @example
-	 * view.getForm().val('firstname', 'Hannah');
-	 * var firstneame = view.getForm().val('firstname');
+    /**
+     * Set OR get value of form component.
+     * Called with two arguments(key and value), a value will be set. Called with one argument(key), value will be returned.
+     * @function val
+     * @memberOf ludo.form.Manager.prototype
+     * @param key
+     * @param value
+     * @example
+     * view.getForm().val('firstname', 'Hannah');
+     * var firstneame = view.getForm().val('firstname');
      */
-	val:function(key, value){
-		if(arguments.length == 2){
-			this.set(key, value);
-		}
+    val: function (key, value) {
+        if (arguments.length == 2) {
+            this.set(key, value);
+        }
 
-		return this.get(key);
-	},
+        return this.get(key);
+    },
 
-	/**
-	 * Returns values of all form elements in JSON format.
-	 * This method can be called on all views. It will return a JSON containing key-value pairs for all the views form elements(nested, i.e. children, grand children etc)
-	 * @function values
-	 * @memberOf ludo.form.Manager.prototype
-	 * @returns {{}}
+    /**
+     * Returns values of all form elements in JSON format.
+     * This method can be called on all views. It will return a JSON containing key-value pairs for all the views form elements(nested, i.e. children, grand children etc)
+     * @function values
+     * @memberOf ludo.form.Manager.prototype
+     * @returns {{}}
      */
-	values:function(){
-		var ret = {};
-		for (var i = 0; i < this.formComponents.length; i++) {
-			var el = this.formComponents[i];
-			ret[el.getName()] = el.val();
-		}
+    values: function () {
+        var ret = {};
+        for (var i = 0; i < this.formComponents.length; i++) {
+            var el = this.formComponents[i];
+            ret[el.getName()] = el.val();
+        }
 
-		return ret;
-	},
+        return ret;
+    },
 
     /**
      * Return value of form element.
      * @function get
-	 * @memberOf ludo.form.Manager.prototype
+     * @memberOf ludo.form.Manager.prototype
      * @param {String} name Name of form element
      * @return {String|Number|Object}
      */
-	get:function(name){
-		return this.map[name] ? this.map[name].val() : this.hiddenValues[name] != undefined ? this.hiddenValues[name] : undefined;
-	},
+    get: function (name) {
+        return this.map[name] ? this.map[name].val() : this.hiddenValues[name] != undefined ? this.hiddenValues[name] : undefined;
+    },
 
-	registerProgressBar:function (view) {
-		if (!this.progressBar) {
-			this.progressBar = view;
-		}
-	},
+    registerProgressBar: function (view) {
+        if (!this.progressBar) {
+            this.progressBar = view;
+        }
+    },
 
-	onDirty:function (value, formComponent) {
-		var elId = formComponent.getId();
-		if (this.dirtyIds.indexOf(elId) == -1) {
-			this.dirtyIds.push(elId);
-		}
+    onDirty: function (value, formComponent) {
+        var elId = formComponent.getId();
+        if (this.dirtyIds.indexOf(elId) == -1) {
+            this.dirtyIds.push(elId);
+        }
 
-		this.fireEvent('dirty', formComponent);
-	},
+        this.fireEvent('dirty', formComponent);
+    },
 
-	onClean:function (value, formComponent) {
-		this.dirtyIds.erase(formComponent.getId());
+    onClean: function (value, formComponent) {
+        this.dirtyIds.erase(formComponent.getId());
 
-		if (this.dirtyIds.length === 0) {
+        if (this.dirtyIds.length === 0) {
 
-			this.fireEvent('clean');
-		}
-	},
+            this.fireEvent('clean');
+        }
+    },
 
-	onChange:function (value, formComponent) {
-		this.fireEvent('change', [this, formComponent])
-	},
-	/**
-	 * One form element is valid. Fire valid event if all form elements are valid
-	 * @function onValid
-	 * @private
-	 * @param {String} value
-	 * @param {object } formComponent
-	 */
-	onValid:function (value, formComponent) {
-		this.invalidIds.erase(formComponent.getId());
-		if (this.invalidIds.length == 0) {
+    onChange: function (value, formComponent) {
+        this.fireEvent('change', [this, formComponent])
+    },
+    /**
+     * One form element is valid. Fire valid event if all form elements are valid
+     * @function onValid
+     * @private
+     * @param {String} value
+     * @param {object } formComponent
+     */
+    onValid: function (value, formComponent) {
+        this.invalidIds.erase(formComponent.getId());
+        if (this.invalidIds.length == 0) {
 
-			this.fireEvent('valid', this);
-		}
-	},
-	/**
-	 * Set view invalid when a form element inside it is invalid
-	 *
-	 * @function onInvalid
-	 * @private
-	 * @param {String} value
-	 * @param {Object} formComponent
-	 */
-	onInvalid:function (value, formComponent) {
-		var elId = formComponent.getId();
-		if (this.invalidIds.indexOf(elId) == -1) {
-			this.invalidIds.push(elId);
-		}
+            this.fireEvent('valid', this);
+        }
+    },
+    /**
+     * Set view invalid when a form element inside it is invalid
+     *
+     * @function onInvalid
+     * @private
+     * @param {String} value
+     * @param {Object} formComponent
+     */
+    onInvalid: function (value, formComponent) {
+        var elId = formComponent.getId();
+        if (this.invalidIds.indexOf(elId) == -1) {
+            this.invalidIds.push(elId);
+        }
 
-		this.fireEvent('invalid', this);
-	},
-	/**
-	 * Validate form and fire "invalid" or "valid" event
-	 * @function validate
-	 * @return void
-	 * @memberof ludo.form.Manager.prototype
-	 */
-	validate:function () {
-		if (this.invalidIds.length > 0) {
-			this.fireEvent('invalid', this);
-		} else {
-			this.fireEvent('valid', this);
-		}
-	},
-	/**
-	 * Returns true when all child form views are valid
-	 * @function isValid
-	 * @memberOf ludo.form.Manager.prototype
-	 */
-	isValid:function () {
-		return this.invalidIds.length === 0;
-	},
+        this.fireEvent('invalid', this);
+    },
+    /**
+     * Validate form and fire "invalid" or "valid" event
+     * @function validate
+     * @return void
+     * @memberof ludo.form.Manager.prototype
+     */
+    validate: function () {
+        if (this.invalidIds.length > 0) {
+            this.fireEvent('invalid', this);
+        } else {
+            this.fireEvent('valid', this);
+        }
+    },
+    /**
+     * Returns true when all child form views are valid
+     * @function isValid
+     * @memberOf ludo.form.Manager.prototype
+     */
+    isValid: function () {
+        return this.invalidIds.length === 0;
+    },
 
-	/**
-	 * Submit form to server
-	 * @function submit
-	 * @private
-	 */
-	submit:function () {
-		this.save();
-	},
+    /**
+     * Submit form to server
+     * @function submit
+     * @memberof ludo.form.Manager.prototype
+     */
+    submit: function () {
+        this.save();
+    },
 
-	getUnfinishedFileUploadComponent:function () {
-		for (var i = 0; i < this.fileUploadComponents.length; i++) {
-			if (this.fileUploadComponents[i].hasFileToUpload()) {
-				this.fileUploadComponents[i].addEvent('submit', this.save.bind(this));
-				return this.fileUploadComponents[i];
-			}
-		}
-		return undefined;
-	},
+    getUnfinishedFileUploadComponent: function () {
+        for (var i = 0; i < this.fileUploadComponents.length; i++) {
+            if (this.fileUploadComponents[i].hasFileToUpload()) {
+                this.fileUploadComponents[i].addEvent('submit', this.save.bind(this));
+                return this.fileUploadComponents[i];
+            }
+        }
+        return undefined;
+    },
 
-	save:function () {
-		if (this.getUrl() || ludo.config.getUrl()) {
-			var el;
-			if (el = this.getUnfinishedFileUploadComponent()) {
-				el.upload();
-				return;
-			}
+    getUrl: function (type) {
+        if (this.configs[type] && this.configs[type].url)return this.configs[type].url;
+        return this.url;
+    },
 
-			this.fireEvent('invalid');
-			this.fireEvent('beforeSave');
-			this.beforeRequest();
-			this.requestHandler().send('save', this.currentId, this.values(),
-				{
-					"progressBarId":this.getProgressBarId()
-				}
-			);
-		}
-	},
+    dataFor: function (type) {
+        var keys = this.configs[type] && this.configs[type].keys ? this.configs[type].keys : undefined;
+        var data;
+        if(keys == undefined){
+            data = this.values();
 
-	/**
-	 * Read form values from the server
-	 * @function read
-	 * @param {String|undefined} id
-	 * @memberof ludo.form.Manager
-	 */
-	read:function(id){
-		this.fireEvent('beforeRead');
-		this.beforeRequest();
-		this.currentIdToBeSet = id;
-		this.readHandler().sendToServer('read', id);
-	},
+        }else{
+            data = {};
+            for(var i=0;i<keys.length;i++){
+                data[keys[i]] = this.get(keys[i]);
+            }
+        }
+        return Object.merge(data, this.configDataFor(type));
+    },
 
-	_readHandler:undefined,
+    configDataFor: function (type) {
+        return this.configs[type] && this.configs[type].data ? this.configs[type].data : {};
+    },
 
-	readHandler:function(){
-		if(this._readHandler === undefined){
-			this._readHandler = this.getDependency('readHandler', new ludo.remote.JSON({
-				url:this.url,
-				method:this.method ? this.method : 'post',
-				service : 'read',
-				listeners:{
-					"success":function (request) {
-						this.currentId = this.currentIdToBeSet;
-						this.populate(this.record);
-						this.commit();
+    methodFor:function(type){
+        return this.configs[type] && this.configs[type].method ? this.configs[type].method : this.method;
+    },
+
+    save: function () {
+        var url = this.getUrl('submit');
+        if (url) {
+            var el;
+            if (el = this.getUnfinishedFileUploadComponent()) {
+                el.upload();
+                return;
+            }
+
+            this.fireEvent('invalid');
+            this.fireEvent('submit.init');
+            this.beforeRequest();
+
+            $.ajax({
+                url: url,
+                method: this.methodFor('submit'),
+                cache: false,
+                dataType: 'json',
+                data: this.dataFor('submit'),
+                success: function (json) {
+                    console.log(json);
+                    this.fireEvent('submit.success', [json, this]);
+                }.bind(this),
+                fail: function (text, error) {
+                    this.fireEvent('submit.fail', [text, error, this]);
+                }.bind(this)
+            });
+        }
+    },
+
+    /**
+     * Read form values from the server. This method triggers the events read.init and read.success|read.fail.
+     * This method will be called during view creation if read.autoload is set to true.
+     * @function read
+     * @param {String|undefined} id
+     * @memberof ludo.form.Manager
+     * @example
+     var v = new ludo.View({
+         form:{
+            hiddenFields: ['id'],
+            read: {
+                url: 'form-data.json', // read url
+                keys:['id'], // array of form values to add to the view request
+                listeners:{
+                    'success': function(json, form){
+                        form.clear();
+                        form.populate(json);
+                    },
+                    'fail': function(text, error, form){
+                        // do something on failure
+                    }
+                }
+            }
+        }
+     });
+     // load data from server and trigger the listeners above.
+     v.getForm().read();
+     */
+    read: function () {
+        this.fireEvent('read.init');
+        this.beforeRequest();
+        var url = this.getUrl('read');
+        if(url != undefined){
+            $.ajax({
+                url: url,
+                method: this.methodFor('read'),
+                cache: false,
+                dataType: 'json',
+                data: this.dataFor('read'),
+                success: function (json) {
+                    this.fireEvent('read.success', [json, this]);
+                }.bind(this),
+                fail: function (text, error) {
+                    this.fireEvent('read.fail', [text, error, this]);
+                }.bind(this)
+            });
+        }
 
 
-						this.fireEvent('read', [request.getResponse(), this.view]);
-						if (this.isValid()) {
-							this.fireEvent('valid');
-						}
-						this.fireEvent('clean');
+    },
 
-						this.afterRequest();
+    afterRequest: function () {
+        this.fireEvent('afterRequest');
+    },
 
-					}.bind(this),
-					"failure":function (request) {
-						this.fireEvent('failure', [request.getResponse(), this.view]);
-						this.afterRequest();
-					}.bind(this),
-					"error":function (request) {
-						this.fireEvent('servererror', [request.getResponseMessage(), request.getResponseCode()]);
-						this.fireEvent('valid', this);
-						this.afterRequest();
-					}.bind(this)
-				}
-			}));
-		}
-		return this._readHandler;
-	},
+    beforeRequest: function () {
 
-	_request:undefined,
-	requestHandler:function () {
-		if (this._request === undefined) {
-			if (!this.resource)ludo.util.warn("Warning: form does not have a resource property. Falling back to default: 'Form'");
-			this._request = this.createDependency('_request', new ludo.remote.JSON({
-				url:this.url,
-				method:this.method ? this.method : 'post',
-				listeners:{
-					"success":function (request) {
-						this.commit();
+        this.fireEvent('beforeRequest');
+    },
 
-						this.fireEvent('saved', [request.getResponse(), this.view]);
+    getProgressBarId: function () {
+        return this.progressBar ? this.progressBar.getProgressBarId() : undefined;
+    },
 
-						this.setCurrentId(request.getResponseData());
+    /**
+     * Commit all form Views. This will reset the dirty flag. The dirty flag is true when on form view has been updated.
+     * A later call to {@link ludo.form.Manager#reset|reset} will reset all form Views back to the value it had when commit was called.
+     * with a new value.
+     * @function commit
+     * @memberof ludo.form.Manager.prototype
+     */
+    commit: function () {
+        for (var i = 0; i < this.formComponents.length; i++) {
+            this.formComponents[i].commit();
+        }
+    },
 
-						this.fireEvent('success', [request.getResponse(), this.view]);
-						if (this.isValid()) {
-							this.fireEvent('valid');
-						}
-						this.fireEvent('clean');
+    /**
+     * Reset value of all form Views back to it's original value.
+     * @method reset
+     * @memberof ludo.form.Manager.prototype
+     */
+    reset: function () {
+        for (var i = 0; i < this.formComponents.length; i++) {
+            this.formComponents[i].reset();
+        }
+        this.dirtyIds = [];
+        this.fireEvent('clean');
+        this.fireEvent('reset');
+    },
 
-						this.afterRequest();
+    newRecord: function () {
 
-					}.bind(this),
-					"failure":function (request) {
-						if (this.isValid()) {
-							this.fireEvent('valid');
-						}
+        this.fireEvent('new');
+        this.currentId = undefined;
+        this.clear();
+    },
 
+    /**
+     * Clear value of all child form views
+     * @function clear
+     * @memberof ludo.form.Manager.prototype
+     */
+    clear: function () {
+        for (var i = 0; i < this.formComponents.length; i++) {
+            this.formComponents[i].clear();
+        }
 
-						this.fireEvent('failure', [request.getResponse(), this.view]);
+        this.dirtyIds = [];
+        this.fireEvent('clean');
+        this.fireEvent('clear');
+    },
 
-						this.afterRequest();
-					}.bind(this),
-					"error":function (request) {
-
-						this.fireEvent('servererror', [request.getResponseMessage(), request.getResponseCode()]);
-						this.fireEvent('valid', this);
-
-						this.afterRequest();
-					}.bind(this)
-				}
-			}));
-		}
-		return this._request;
-	},
-
-	afterRequest:function(){
-
-		this.fireEvent('afterRequest');
-	},
-
-	beforeRequest:function(){
-
-		this.fireEvent('beforeRequest');
-	},
-	
-	setCurrentId:function(data){
-
-		if(!isNaN(data)){
-			this.currentId = data;
-		}
-		if(ludo.util.isObject(data)){
-			this.currentId = data.id;
-		}
-	},
-
-	getProgressBarId:function () {
-		return this.progressBar ? this.progressBar.getProgressBarId() : undefined;
-	},
-
-	/**
-	 * Commit all form Views. This will reset the dirty flag. The dirty flag is true when on form view has been updated.
-	 * A later call to {@link ludo.form.Manager#reset|reset} will reset all form Views back to the value it had when commit was called.
-	 * with a new value.
-	 * @function commit
-	 * @memberof ludo.form.Manager.prototype
-	 */
-	commit:function () {
-		for (var i = 0; i < this.formComponents.length; i++) {
-			this.formComponents[i].commit();
-		}
-	},
-
-	/**
-	 * Reset value of all form Views back to it's original value. 
-	 * @method reset
-	 * @memberof ludo.form.Manager.prototype
-	 */
-
-	reset:function () {
-		for (var i = 0; i < this.formComponents.length; i++) {
-			this.formComponents[i].reset();
-		}
-		this.dirtyIds = [];
-		this.fireEvent('clean');
-		this.fireEvent('reset');
-	},
-
-	newRecord:function(){
-
-		this.fireEvent('new');
-		this.currentId = undefined;
-		this.clear();
-	},
-
-	/**
-	 * Clear value of all child form views
-	 * @function clear
-	 * @memberof ludo.form.Manager.prototype
-	 */
-	clear:function () {
-		for (var i = 0; i < this.formComponents.length; i++) {
-			this.formComponents[i].clear();
-		}
-
-		this.dirtyIds = [];
-		this.fireEvent('clean');
-		this.fireEvent('clear');
-	},
-
-	/**
-	 * Returns true if a form View has been updated with a new value. This is useful for handling disabling/enabling of buttons
-	 * based on changes made to the form. The dirty flag can be reset by calling the {@link ludo.form.Manager#commit} method. This will
-	 * call commit on all form views.
-	 * @function isDirty
-	 * @memberof ludo.form.Manager.prototype
-	 */
-	isDirty:function () {
-		return this.dirtyIds.length > 0;
-	}
+    /**
+     * Returns true if a form View has been updated with a new value. This is useful for handling disabling/enabling of buttons
+     * based on changes made to the form. The dirty flag can be reset by calling the {@link ludo.form.Manager#commit} method. This will
+     * call commit on all form views.
+     * @function isDirty
+     * @memberof ludo.form.Manager.prototype
+     */
+    isDirty: function () {
+        return this.dirtyIds.length > 0;
+    }
 });

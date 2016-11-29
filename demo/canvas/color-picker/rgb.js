@@ -3,7 +3,10 @@ ludo.colorPicker.RGB = new Class({
     type:'colorPicker.RGB',
     useController:true,
     resizable:false,
-    layout:'rows',
+    layout:{
+        type:'table',
+        columns:[{ width: 30 }, {weight:1}]
+    },
     height:130,
     minimizable:false,
     title:'RGB',
@@ -21,14 +24,26 @@ ludo.colorPicker.RGB = new Class({
         labelWidth:80
     },
     children:[
+        { 
+            type:'form.Label', label:'R', labelFor:'r', height:24
+        },
         {
             type:'form.Number', height:24, minValue:0, maxValue:255, size:4, value:255, name:'r', label:'Red'
+        },
+        {
+            type:'form.Label', label:'G', labelFor:'g', layout: {row: true, height:24 }
         },
         {
             type:'form.Number', height:24, minValue:0, maxValue:255, size:4, value:255, name:'g', label:'Green'
         },
         {
+            type:'form.Label', label:'B', labelFor:'b', layout: {row: true, height:24 }
+        },
+        {
             type:'form.Number', height:24, minValue:0, maxValue:255, size:4, value:255, name:'b', label:'Blue'
+        },
+        {
+            type:'form.Label', label:'RGB', labelFor:'rgb', layout: {row: true, height:24 }
         },
         {
             type:'form.Text', size:10, value:'#FFFFFF', label:'RGB', name:'rgb',

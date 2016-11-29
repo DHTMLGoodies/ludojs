@@ -223,10 +223,10 @@ ludo.form.Button = new Class({
         }
     },
 
-	dispose:function(){
+	remove:function(){
 		this.parent();
 		$(document.body).off('mouseup', this.mouseUpBound);
-		if (this.defaultSubmit) document.id(window).removeEvent('keypress', this.keyPressBound);
+		if (this.defaultSubmit) $(window).off('keypress', this.keyPressBound);
 	},
 
     addLabel:function () {
@@ -358,6 +358,7 @@ ludo.form.Button = new Class({
     },
     mouseUp:function () {
         if (this.isDown && !this.isDisabled()) {
+
             this.getBody().removeClass('ludo-form-button-down');
             this.fireEvent('mouseup', this);
         }

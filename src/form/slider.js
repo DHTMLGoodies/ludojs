@@ -4,7 +4,7 @@
  */
 ludo.form.Slider = new Class({
     // TODO implement support for min and max, example slider from 0 to 100, min and max from 10 to 90
-    Extends:ludo.form.LabelElement,
+    Extends:ludo.form.Element,
     cssSignature:'ludo-form-slider',
     type:'form.Slider',
     fieldTpl:['<table ','cellpadding="0" cellspacing="0" border="0" width="100%">',
@@ -64,7 +64,7 @@ ludo.form.Slider = new Class({
 
         el.addClass('ludo-form-slider-container');
         el.addClass('ludo-form-slider-' + this.getDirection());
-        this.getInputCell().append(el);
+        this.getBody().append(el);
 
         this.addSliderBg('first');
         this.addSliderBg('last');

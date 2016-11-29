@@ -338,8 +338,6 @@ ludo.calendar.Days = new Class({
         if (this.els.monthView && this.isValueMonth()) {
             var el = this.els.monthView.find('.calendar-day-' + this.value.get('date'));
             if (el)el.removeClass('calendar-day-selected');
-        }else{
-            console.log("not same month " + this.isValueMonth());
         }
     },
 

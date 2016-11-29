@@ -2523,12 +2523,16 @@ fieldset{
 
 
 .ludo-twilight .ludo-framed-view-titlebar-title{
-    text-align:center;
+
     width:100%;
 }
+
+.ludo-twilight .ludo-window > .ludo-framed-view-titlebar > .ludo-framed-view-titlebar-title{
+    text-align:center;
+}
+
 .ludo-twilight .ludo-framed-view-titlebar{
     background-color:#424242;
-
     font-weight:normal;
     border-bottom:1px solid #383838;
     border-radius:0;

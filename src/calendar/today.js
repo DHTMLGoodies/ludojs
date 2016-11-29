@@ -20,7 +20,7 @@ ludo.calendar.Today = new Class({
         this.child['today'].addEvent('click', this.setToday.bind(this));
     },
 
-    getClassChildren:function(){
+    __children:function(){
         return [{ name:'today', type:'form.Button', value : ludo.language.get('Today'), layout: { centerInParent:true}}];
     },
 

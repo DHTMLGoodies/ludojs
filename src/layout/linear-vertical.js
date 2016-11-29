@@ -10,10 +10,10 @@ ludo.layout.LinearVertical = new Class({
 		this.parent();
 	},
 	resize:function () {
+
+
 		var availHeight = this.viewport.height;
-		if (availHeight == 0) {
-			return;
-		}
+
 		var totalHeightOfItems = 0;
 		var totalWeight = 0;
 		var height;
@@ -64,7 +64,6 @@ ludo.layout.LinearVertical = new Class({
 					config.top = tm;
 				}
 
-
 				this.resizeChild(this.view.children[i], config);
 				tm += this.view.children[i].getEl().outerHeight(true);
 			}
@@ -76,6 +75,15 @@ ludo.layout.LinearVertical = new Class({
 		child.resize(resize);
 		child.saveState();
 	},
+
+	getWrappedHeight:function(){
+		var h = this.parent();
+		for(var i=0;i<this.view.children.length;i++){
+			h += this.view.children[0].getEl().outerHeight(true);
+		}
+		return h;
+	},
+
 
 	onNewChild:function (child) {
 		this.parent(child);

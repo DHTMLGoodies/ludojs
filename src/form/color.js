@@ -5,7 +5,7 @@ ludo.form.Color = new Class({
 		width:290, height:250
 	},
 
-	getClassChildren:function () {
+	__children:function () {
 		return [
 			{
 				layout:{

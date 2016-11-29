@@ -21,119 +21,151 @@ require_once("../includes/demo-header.php");
 <script type="text/javascript" class="source-code">
 
     var w = new ludo.Window({
-        id:'myWindow',
-        title:'Form components',
-        layout:{
-            type:'tabs',
-            height:550,
-            width:650,
-            left:50,
-            top:30
+        id: 'myWindow',
+        title: 'Form components',
+        layout: {
+            type: 'tabs',
+            height: 550,
+            width: 650,
+            left: 50,
+            top: 30
         },
-        
-        form:{
-            resource : 'StaticUser',
-            autoLoad:true,
-            arguments : 100
-        },
-        children:[
-            {
-                title:'Form',
-                layout:{
-                    type:'linear',
-                    orientation:'horizontal'
+        // Form configuration
+        form: {
+            hiddenFields: ['id'], // Hidden fields which could be populated using ludo.get('myWindow).getForm().set('id', 100);
+            submit: {
+                url: '../controller.php',
+                data: {
+                    submit: 1
                 },
-                children:[
+                listeners: {
+                    'init': function () {
+                        console.log('init');
+                        ludo.get('myWindow').shim().show('Loading data');
+                    },
+                    'success': function (json, form) {
+                        new ludo.dialog.Alert({
+                            title: 'Thank you!',
+                            resizable: true,
+                            html: 'Thank you. Your data has been saved..'
+                        });
+
+                        form.commit();
+                    },
+                    'fail': function (text, error, form) {
+                        // do something on failure
+                    }
+                }
+            },
+
+            read: {
+                autoload: true,  // autoload data on create
+                url: 'form-data.json', // read url
+                keys: ['id'], // array of form values to add to the view request
+                listeners: {
+                    'success': function (json, form) {
+                        form.clear();
+                        form.populate(json);
+
+                    },
+                    'fail': function (text, error, form) {
+                        // do something on failure
+                    }
+                }
+            }
+        },
+        children: [
+            {
+                title: 'Form',
+                layout: {
+                    type: 'linear',
+                    orientation: 'vertical'
+                },
+                children: [
                     {
-                        formConfig:{
-                            labelWidth:130,
-                            inlineLabel:false
+                        elCss: {
+                            border: 0
                         },
-                        weight:1,
-                        layout:'rows',
-                        children:[
-                            { type:'form.Text', 'label':'First name', ucWords:true, stretchField:true, name:'firstname', value:'', required:true },
-                            { type:'form.Text', 'label':'Last name', ucWords:true, stretchField:true, value:'', name:'lastname' },
-                            { type:'form.Email', 'label':'E-mail', stretchField:true, name:'email', value:'' },
-                            { type:'form.Textarea',  label:'Address', ucFirst:true, stretchField:true, name:'address', value:'', weight:1}
+                        type: 'FramedView',
+                        title: 'Personal Information',
+                        layout: {
+                            type: 'table',
+                            columns: [
+                                {width: 150}, {weight: 1}
+                            ],
+                            height: 'wrap'
+                        },
+                        css:{
+                            padding: 3
+                        },
+                        children: [
+                            { type:'form.Label', label: 'Name', labelFor: 'name'},
+                            {
+                                type: 'form.Text', placeholder: 'Name', name: 'name'
+                            },
+                            { type:'form.Label', label: 'Email', labelFor: 'email', layout: {row: true }},
+                            {
+                                type: 'form.Email', placeholder: 'Email address', name: 'email', required: true
+                            },
+                            { type:'form.Label', label: 'Password', labelFor: 'password', layout: {row: true }},
+                            {
+                                type: 'form.Password', placeHolder: 'Password', name: 'password'
+                            },
+                            { type:'form.Label', label: 'Repeat Password', labelFor: 'password2', layout: {row: true }},
+                            {
+                                type: 'form.Password',
+                                placeHolder: 'Repeat Password',
+                                name: 'password2',
+                                twin: 'password'
+                            }
                         ]
                     },
                     {
-                        formConfig:{
-                            labelWidth:130,
-                            inlineLabel:false
+                        elCss: {
+                            border: 0
                         },
-                        weight:1,
-                        overflow:'hidden',
-                        layout:'rows',
-                        children:[
-                            { type:'form.Text', 'label':'Phone', stretchField:true, name:'phone', value:'', required:true },
-                            { type:'form.Text', minLength:4, 'label':'Zip code', stretchField:true, name:'zipcode', value:'' },
-                            { type:'form.Text', name:'city', stretchField:true, 'label':'City', value:'' },
-                            { type:'form.Select', name:'country', id:'country', stretchField:true, 'label':'Country',
-                                valueKey:'id', textKey:'name',
-                                dataSource:{
-                                    resource:'StaticCountries', service:'read', url:'../controller.php'
-                                }},
-                            { type:'form.Date', name:'birth', id:'birth', stretchField:true, 'label':'Born'},
-                            { type:'form.Color', name:'color', id:'color', stretchField:true, 'label':'Favorite color'},
-                            { type:'form.File', inlineLabel:false, name:'picture', label:'Picture', value:'', height:30 },
-                            { type:'form.DisplayField', label:'form.DisplayField', value:'My value',height:30},
-                            { type:'form.RadioGroup',
-                                id:'gender',
-                                name:'gender',
-                                label:'Gender',
-                                options:[
-                                    { value:'female', text:'Female' },
-                                    { value:'male', text:'Male' }
-                                ],
-                                value:'male'
+                        type: 'FramedView',
+                        title: 'Address details',
+                        layout: {
+                            type: 'linear', orientation: 'vertical', height: 'wrap'
+                        },
+                        children: [
+                            {
+                                type: 'form.Text', placeholder: 'Address line 1', name: 'addressline1'
                             },
-                            { type:'form.Seekbar', id:'mySlider', orientation:'horizontal', value:10, minValue:0, maxValue:255, layout: { height: 25 },
-                            listeners: {
-                                'change': function(value){
-                                    ludo.get('numberField').val(Math.round(value));
-                                }
-                            }},
-                            { type:'form.Number', label:'form.Number', minValue:0, maxValue:255, fieldWidth:50, value:10, maxLength:3, suffix:'RGB Color', id: 'numberField'},
-                            { type:'form.Checkbox', label:'I agree', id:"agree"}
-                        ]}
+                            {
+                                type: 'form.Text', placeholder: 'Address line 2', name: 'addressline2'
+                            },
+                            {
+                                type: 'form.Text', placeholder: 'Town/City', name: 'city'
+                            },
+                            {
+                                type: 'form.Text', placeholder: 'Zip/Post code', name: 'zipcode'
+                            }
+                        ]
+
+                    }
                 ]
 
-            },{
-                type:'SourceCodePreview'
+            }, {
+                type: 'SourceCodePreview'
             }
 
         ],
 
-        buttonBar:{
-            align:'left',
-            children:[
-                { type:'form.Button', toggle:true, icon:'../images/icon-left.png', value:'Left', width:80, toggleGroup:'alignment' },
-                { type:'form.Button', toggle:true, icon:'../images/icon-center.png', value:'Center', width:80, toggleGroup:'alignment' },
-                { type:'form.Button', toggle:true, icon:'../images/icon-right.png', value:'Right', width:80, toggleGroup:'alignment' },
+        buttonBar: {
+            children: [
+
                 {
-                    layout:{ weight: 1 }
+                    type: 'form.SubmitButton', width: 80
                 },
                 {
-                    type:'form.SubmitButton', width:80
+                    type: 'form.ResetButton', width: 80
                 },
                 {
-                    type:'form.ResetButton',width:80
-                },
-                {
-                    type:'form.CancelButton', width:80
+                    type: 'form.CancelButton', width: 80
                 }
             ]
-        },
-        listeners:{
-            'submit':function () {
-                new ludo.dialog.Alert({
-                    title:'Thank you!',
-                    resizable:true,
-                    html:'Thank you. Your data has been saved..'
-                })
-            }.bind(this)
         }
     });
 

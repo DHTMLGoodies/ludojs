@@ -110,7 +110,7 @@ ludo.View = new Class({
 		this.__construct(config);
 
 		if (!config.children || !config.children.length) {
-			config.children = this.getClassChildren();
+			config.children = this.__children();
 		}
 
 		if (this.hidden) {
@@ -121,13 +121,13 @@ ludo.View = new Class({
 	},
 
 	/**
-	 * Alternative to the "children" config array. By defining children in getClassChildren, you will have access to "this" referring to
+	 * Alternative to the "children" config array. By defining children in __children, you will have access to "this" referring to
 	 * the View instance. This is a method you override when creating your own Views.
-	 * @function getClassChildren
+	 * @function __children
 	 * @memberof ludo.View.prototype
 	 * @return {Array|children}
 	 */
-	getClassChildren:function () {
+	__children:function () {
 		return this.children;
 	},
 

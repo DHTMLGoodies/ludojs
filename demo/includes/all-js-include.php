@@ -41,6 +41,7 @@
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/text.js"></script>
 
 
+
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/base.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/linear.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/grid.js"></script>
@@ -74,7 +75,7 @@
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/effect/drag-drop.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/effect/resize.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/effect.js"></script>
-
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/drag.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/tpl/parser.js"></script>
 
 
@@ -225,6 +226,12 @@
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/collection-view.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/tree/tree.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/tree/drag-drop.js"></script>
+
+
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/dialog/dialog.js"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/dialog/alert.js"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/dialog/confirm.js"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/dialog/prompt.js"></script>
 
 
     

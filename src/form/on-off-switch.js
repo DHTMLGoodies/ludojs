@@ -2,7 +2,17 @@
  * On off switch
  * @namespace ludo.form
  * @class ludo.form.OnOffSwitch
- * @memberOf ludo.form
+ * @param {Object} config
+ * @param {Number} config.trackBorderWidth Border width of tracks in pixels. Default: 1
+ * @param {Number} config.textSizeRatio Text size ratio. Default: 0.45
+ * @param {String} config.trackColorOn Track color ON. Default: #F57C00
+ * @param {String} config.trackColorOff Track color OFF. Default: #666666
+ * @param {String} config.textColorOn Text Color ON. Default: decided by theme CSS
+ * @param {String} config.textColorOff Text Color OFF. Default: #FFFFFF
+ * @param {String} config.textOn Text On. Default: empty string
+ * @param {String} config.textOff Text Off. Default: empty string
+ * @param {String|Number} config.checkedVal Value when checked. Default: "1"
+ * @param {String|Number} config.uncheckedVal Value when unchecked. Default: ""(empty string)
  *
  */
 ludo.form.OnOffSwitch = new Class({
@@ -13,52 +23,13 @@ ludo.form.OnOffSwitch = new Class({
 
     checked: false,
 
-    /**
-     * @memberof ludo.form.OnOffSwitch.prototype
-     * Border width in pixels. Default is 1
-     * @param {Number} textSizeRatio
-     * @default 1
-     */
     trackBorderWidth: 1,
-
-    /**
-     * @memberof ludo.form.OnOffSwitch.prototype
-     * Text size ratio relative to height. Default is 0.45
-     * @param {Number} textSizeRatio
-     * @default 0.45
-     */
     textSizeRatio: 0.45,
 
-    /**
-     * @memberof ludo.form.OnOffSwitch.prototype
-     * Track color - ON state. Default is orange
-     * @param {string} trackColorOn
-     * @default #F57C00
-     */
     trackColorOn: '#F57C00',
-
-    /**
-     * Track color - OFF state. Default is dark gray
-     * @param {string} trackColorOff
-     * @memberof ludo.form.OnOffSwitch.prototype
-     * @default #666
-     */
     trackColorOff: '#666',
-
-    /**
-     * Text color in on state
-     * @param {string} v
-     * @default #fff
-     * @memberof ludo.form.OnOffSwitch.prototype
-     */
     textColorOn: undefined,
 
-    /**
-     * Text color in off state
-     * @param {string} textColorOff
-     * @default #fff
-     * @memberof ludo.form.OnOffSwitch.prototype
-     */
     textColorOff: '#fff',
 
     el: undefined,
@@ -68,23 +39,8 @@ ludo.form.OnOffSwitch = new Class({
     onTextEl: undefined,
     offTextEl: undefined,
     onOffTrackContainer: undefined,
-
-    /**
-     * Text when switch is turned on
-     * @memberof ludo.form.OnOffSwitch.prototype
-     * @param {string} textOn
-     * @default ""
-     */
     textOn: "",
-
-    /**
-     * @memberof ludo.form.OnOffSwitch.prototype
-     * Text when switch is turned off
-     * @param {string} textOff
-     * @default ""
-     */
     textOff: "",
-
     minX: 0,
     maxX: 0,
 
@@ -96,22 +52,8 @@ ludo.form.OnOffSwitch = new Class({
     dragCurrentX: 0,
     borderSize: 0,
 
-    /**
-     * Value when checked
-     * @memberof ludo.form.OnOffSwitch.prototype
-     * @param {string} checkedVal
-     * @type {string}
-     * @default '1'
-     */
     checkedVal:'1',
 
-    /**
-     * Value when unchecked
-     * @memberof ludo.form.OnOffSwitch.prototype
-     * @param {string} uncheckedVal
-     * @type {string}
-     * @default ''
-     */
     uncheckedVal: '',
 
     __construct:function(config){
@@ -459,6 +401,12 @@ ludo.form.OnOffSwitch = new Class({
         this.change();
     },
 
+    /**
+     * Set or get value
+     * @param val
+     * @returns {*}
+     * @memberof ludo.form.OnOffSwitch.prototype
+     */
     val: function (val) {
         if(arguments.length == 1){
             if(val == this.checkedVal)this.setChecked(true); else this.setChecked(false);

@@ -18,7 +18,7 @@ load:
   - ../../src/layout/menu-container.js
   - ../../src/layout/renderer.js
   - ../../src/layout/canvas.js
-  - ../../src/layout/slide-in.js
+  - ../../src/layout/nav-bar.js
   - ../../src/layout/table.js
   - ../../src/layout/view-pager.js
   - ../../src/menu/context.js
@@ -44,6 +44,7 @@ test:
   - NavBarTest.js
   - TableLayoutTest.js
   - AccordionTest.js
+  - WrapTest.js
 
 serve:
   - ../../css/ludojs-light-gray.css

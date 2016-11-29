@@ -21,8 +21,6 @@ ludo.form.Combo = new Class({
     },
 
 	menuButton:undefined,
-
-
     childLayout:undefined,
 
     __construct:function(config){
@@ -57,6 +55,7 @@ ludo.form.Combo = new Class({
 			listeners:{
 				show:function(){
 					this.fireEvent('showCombo');
+                    this.children[0].getLayout().getRenderer().resize();
 				}.bind(this)
 			}
 		}));

@@ -101,8 +101,8 @@ ludo.colorPicker.Picker = new Class({
 	getBodySize:function(){
 		var b = this.getBody();
 		return {
-			x:b.width()- ludo.dom.getBW(b) - ludo.dom.getPW(b),
-			y:b.height() - ludo.dom.getBH(b) - ludo.dom.getPH(b)
+			x:b.width(),
+			y:b.height()
 		};
 	},
 

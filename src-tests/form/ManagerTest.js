@@ -187,6 +187,84 @@ TestCase("ManagerTest", {
 		assertEquals(2, mgr.formComponents.length);
 	},
 
+	"test should be able to configure submit": function(){
+		var v = this.getViewWithSubmitConfig();
+
+		assertNotUndefined(v.getForm().configs.submit);
+		assertEquals(1, v.getForm().configs.submit.data.submit);
+	},
+	
+	"test should get submit url": function(){
+		var v = this.getViewWithSubmitConfig();
+		
+		// then
+		assertEquals('controller.php', v.getForm().getUrl('submit'));
+	},
+
+	"test should get submit data": function(){
+		var v = this.getViewWithSubmitConfig();
+
+		// when
+		var data = v.getForm().dataFor('submit');
+
+		// then
+		assertEquals(1, data.submit);
+		assertEquals('Alf', data.name);
+		assertEquals('Somewhere 1', data.address);
+	},
+
+	"test should get read data": function(){
+		// given
+		var v = this.getViewWithSubmitConfig();
+		var form = v.getForm();
+		// when
+		var data = v.getForm().dataFor('read');
+
+		// then
+		assertUndefined(data.name);
+		assertEquals(100, data.id);
+		assertEquals(1, data.read);
+	},
+
+
+	getViewWithSubmitConfig:function(){
+		var v= new ludo.View({
+			renderTo:document.body,
+			form:{
+				hiddenFields:['id'],
+				submit:{
+					data:{
+						submit:1
+					},
+					url: 'controller.php',
+					listeners:{
+						'success': function(json, form){
+
+						},
+						'fail' : function(text, error, form){
+
+						}
+					}
+				},
+				read: {
+					data: {
+						read: 1
+					},
+					keys:['id'],
+					url:'controller.php'
+
+				}
+			},
+			children:[
+				{ type:'form.Text', name:'name', value:'Alf' },
+				{ type:'form.Text', name:'address', value:'Somewhere 1' }
+			]
+		});
+		v.getForm().set('id', 100);
+		return v;
+
+	},
+
 
 	"test should be able to update value from form manager":function () {
 		// given

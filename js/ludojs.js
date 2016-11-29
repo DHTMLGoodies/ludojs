@@ -1,7 +1,7 @@
-/* Generated Thu Nov 24 17:03:45 CET 2016 */
+/* Generated Tue Nov 29 13:15:50 CET 2016 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.227
+ludoJS - Javascript framework, 1.1.231
 Copyright (C) 2012-2016  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -3093,7 +3093,7 @@ ludo.factory = new ludo.ObjectFactory();/* ../ludojs/src/config.js */
 /**
  Class for config properties of a ludoJS application. You have access to an instance of this class
  via ludo.config.
- @class _Config
+ @class ludo._Config
  @private
  @example
     ludo.config.setUrl('../router.php'); // to set global url
@@ -3108,6 +3108,7 @@ ludo._Config = new Class({
     /**
      * Reset all config properties back to default values
      * @function reset
+	 * @memberof ludo._Config.prototype
      */
 	reset:function(){
 		this.setDefaultValues();
@@ -3128,6 +3129,7 @@ ludo._Config = new Class({
      a component.
      @function config
      @param {String} url
+	 @memberof ludo._Config.prototype
      @example
         ludo.config.setUrl('../controller.php');
      */
@@ -3138,6 +3140,7 @@ ludo._Config = new Class({
      * Return global url
      * @function getUrl
      * @return {String}
+	 * @memberof ludo._Config.prototype
      * */
 	getUrl:function () {
 		return this.storage.url;
@@ -3145,6 +3148,7 @@ ludo._Config = new Class({
     /**
      * Enable url in format <url>/resource/arg1/arg2/service
      * @function enableModRewriteUrls
+	 * @memberof ludo._Config.prototype
      */
 	enableModRewriteUrls:function () {
 		this.storage.modRewrite = true;
@@ -3152,6 +3156,7 @@ ludo._Config = new Class({
     /**
      * Disable url's for mod rewrite enabled web servers.
      * @function disableModRewriteUrls
+	 * @memberof ludo._Config.prototype
      */
 	disableModRewriteUrls:function () {
 		this.storage.modRewrite = false;
@@ -3159,6 +3164,7 @@ ludo._Config = new Class({
     /**
      * Returns true when url's for mod rewrite has been enabled
 	 * @function hasModRewriteUrls
+	 * @memberof ludo._Config.prototype
      * @return {Boolean}
      */
 	hasModRewriteUrls:function () {
@@ -3167,6 +3173,7 @@ ludo._Config = new Class({
     /**
      * Set default socket url(node.js).
      * @function setSocketUrl
+	 * @memberof ludo._Config.prototype
      * @param url
      */
 	setSocketUrl:function (url) {
@@ -3176,6 +3183,7 @@ ludo._Config = new Class({
      * Return default socket url
      * @function getSocketUrl
      * @return {String}
+	 * @memberof ludo._Config.prototype
      */
 	getSocketUrl:function () {
 		return this.storage.socketUrl;
@@ -3184,6 +3192,7 @@ ludo._Config = new Class({
      * Set document root path
      * @function setDocumentRoot
      * @param {String} root
+	 * @memberof ludo._Config.prototype
      */
 	setDocumentRoot:function (root) {
 		this.storage.documentRoot = root === '.' ? '' : root;
@@ -3191,6 +3200,7 @@ ludo._Config = new Class({
     /**
      * @function getDocumentRoot
      * @return {String}
+	 * @memberof ludo._Config.prototype
      */
 	getDocumentRoot:function () {
 		return this.storage.documentRoot;
@@ -3199,6 +3209,7 @@ ludo._Config = new Class({
      * Set default upload url for form.File components.
      * @function setFileUploadUrl
      * @param {String} url
+	 * @memberof ludo._Config.prototype
      */
 	setFileUploadUrl:function (url) {
 		this.storage.fileUploadUrl = url;
@@ -3206,6 +3217,7 @@ ludo._Config = new Class({
     /**
      * @function getFileUploadUrl
      * @return {String}
+	 * @memberof ludo._Config.prototype
      */
 	getFileUploadUrl:function(){
 		return this.storage.fileUploadUrl;
@@ -3282,21 +3294,20 @@ var Asset = {
  * Mootools Events class.
  * @namepace ludo
  * @class ludo.Core
+ * @param {Object} config
+ * @param {String} config.name Name
+ * @param {Boolean} config.stateful When set to true, properties set in statefulProperties can be saved to the browsers local storage.
+ * @param {Array} config.statefulProperties Array of stateful properties.
  */
 ludo.Core = new Class({
 	Extends:Events,
 	id:undefined,
-	/**
-	 * NB. The config properties listed below are sent to the constructor when creating the component
-	 * @attribute {string} name
-	 * When creating children dynamically using config objects(see children) below, you can access a child
-	 * by component.child[name] if a name is passed in the config object.
-	 */
+
 	name:undefined,
 
 	module:undefined,
 	submodule:undefined,
-	/**
+	/*
 	 Reference to a specific controller for the component.
 	 The default way is to set useController to true and create a controller in
 	 the same namespace as your component. Then that controller will be registered as controller
@@ -3317,7 +3328,7 @@ ludo.Core = new Class({
 	 */
 	controller:undefined,
 
-	/**
+	/*
 	 * Find controller and register this component to controller
 	 * attribute {Boolean} userController
 	 * default false
@@ -3325,35 +3336,17 @@ ludo.Core = new Class({
 	 */
 	useController:false,
 
-	/**
-	 * Save states from session to session. This can be set to true
-	 * for components and views where statefulProperties is defined. The component
-	 * also needs an "id".
-	 * @attribute stateful
-	 * @type {Boolean}
-	 * @default false
-	 * @memberof ludo.Core.prototype
-	 */
+
 	stateful:false,
 
-	/**
-	 * Array of stateful properties. These properties will be saved to
-	 * local storage when "change" event is fired by the component
-	 * @property statefulProperties
-	 * @type Array
-	 * @default undefined
-	 * @memberof ludo.Core.prototype
-	 */
+
 	statefulProperties:undefined,
 
-	/**
-	 * Storage of ludoJS classes this object is depending on
-	 * @property {Object} dependency
-	 * @private
-	 */
+
 	dependency:{},
 
-    /**
+    /*
+    TODO figure out this
      Array of add-ons config objects
      Add-ons are special components which operates on a view. "parentComponent" is sent
      to the constructor of all add-ons and can be saved for later reference.
@@ -3477,6 +3470,7 @@ ludo.Core = new Class({
 	 * Get url for component
 	 * function getUrl
 	 * return {String|undefined} url
+	 * @memberof ludo.Core.prototype
 	 */
 	getUrl:function () {
 		if (this.url) {
@@ -3904,14 +3898,14 @@ ludo.Movable = new Class({
         return this.components[this.dragProperties.jsObjects.target.item.id];
     }
 });/* ../ludojs/src/remote/inject.js */
-/**
+/*
  * Class for injecting data to specific resource/service requests
  */
 ludo.remote.Inject = new Class({
 
 	data:{},
 
-	/**
+	/*
 	 Add data to be posted with the next request.
 	 @function add
 	 @param resourceService
@@ -4086,6 +4080,8 @@ ludo.remote.Base = new Class({
  * the service on the server. Example: For Person with id equals 1, save these data.
  * @namespace ludo.remote
  * @class ludo.remote.JSON
+ * @param {Object} config
+ * @param {String} config.url
  */
 
 /**
@@ -4095,16 +4091,12 @@ ludo.remote.Base = new Class({
 ludo.remote.JSON = new Class({
     Extends:ludo.remote.Base,
 
-    /**
+    /*
      * Name of resource to request, example: "Person"
      * @config {String} resource
      */
     resource:undefined,
-    /**
-     * Optional url to use for the query instead of global set url.
-     * @config {String} url
-     * optional
-     */
+
     url:undefined,
 
     initialize:function (config) {
@@ -4114,6 +4106,7 @@ ludo.remote.JSON = new Class({
     /**
      Send request to the server
      @function send
+     @memberof ludo.remote.JSON.prototype
      @param {String} service
      @param {Array} resourceArguments
      @optional
@@ -4222,6 +4215,7 @@ ludo.remote.JSON = new Class({
      * Return JSON response data from last request.
      * @function getResponseData
      * @return {Object|undefined}
+     * @memberof ludo.remote.JSON.prototype
      */
     getResponseData:function () {
         if(this.remoteData && $.type(this.remoteData) == "array") return this.remoteData;
@@ -4235,6 +4229,7 @@ ludo.remote.JSON = new Class({
      * Return entire server response of last request.
      * @function getResponse
      * @return {Object|undefined}
+     * @memberof ludo.remote.JSON.prototype
      */
     getResponse:function () {
         return this.remoteData;
@@ -4243,6 +4238,7 @@ ludo.remote.JSON = new Class({
      * Set name of resource
      * @function setResource
      * @param {String} resource
+     * @memberof ludo.remote.JSON.prototype
      */
     setResource:function(resource){
         this.resource = resource;
@@ -4252,6 +4248,7 @@ ludo.remote.JSON = new Class({
 /**
  Class for remote HTML requests.
  @namespace remote
+ @class ludo.remote.HTML
 
  */
 ludo.remote.HTML = new Class({
@@ -4286,6 +4283,7 @@ ludo.remote.HTML = new Class({
 	 * Return JSON response data from last request.
 	 * @function getResponseData
 	 * @return {Object|undefined}
+	 * @memberof ludo.remote.HTML.prototype
 	 */
 	getResponseData:function () {
 		return this.remoteData;
@@ -4295,6 +4293,7 @@ ludo.remote.HTML = new Class({
 	 * Return entire server response of last request.
 	 * @function getResponse
 	 * @return {Object|undefined}
+	 * @memberof ludo.remote.HTML.prototype
 	 */
 	getResponse:function () {
 		return this.remoteData;
@@ -4308,9 +4307,10 @@ ludo.remote.HTML = new Class({
  start, success, failure and serverError. The example below show you how
  to add listeners to these events.
 
-    ludo.remoteBroadcaster.withResource('Person').withService('read').on('success', function(){
-		// Do something
-	});
+ @class ludo.remote.Broadcaster
+ludo.remoteBroadcaster.withResource('Person').withService('read').on('success', function(){
+    // Do something
+});
  */
 ludo.remote.Broadcaster = new Class({
     Extends:Events,
@@ -4395,6 +4395,7 @@ ludo.remote.Broadcaster = new Class({
      @param {String} eventType
      @param {String} resource
      @param {Function} fn
+     @memberof ludo.remote.Broadcaster.prototype
      @example
         ludo.remoteBroadcaster.addEvent('failure', 'Person', function(response){
             this.getBody().html( response.message');
@@ -4418,6 +4419,7 @@ ludo.remote.Broadcaster = new Class({
      @param {String} resource
      @param {Array} services
      @param {Function} fn
+     @memberof ludo.remote.Broadcaster.prototype
      @example
         ludo.remoteBroadcaster.addEvent('failure', 'Person', ['save'], function(response){
             this.getBody().html( response.message');
@@ -4448,6 +4450,7 @@ ludo.remote.Broadcaster = new Class({
      @param {String} eventType
      @param {String} resource
      @param {String} service
+     @memberof ludo.remote.Broadcaster.prototype
      @example
         ludo.remoteBroadcaster.setDefaultMessage('You have registered successfully', 'success', 'User', 'register');
      */
@@ -4461,6 +4464,7 @@ ludo.remote.Broadcaster = new Class({
      @function withResourceService
      @param {String} resourceAndService
      @return {remote.Broadcaster}
+     @memberof ludo.remote.Broadcaster.prototype
      @example
      ludo.remoteBroadcaster.withResourceService('Person/save').on('success', function(){
 	 		alert('Save success');
@@ -4478,6 +4482,7 @@ ludo.remote.Broadcaster = new Class({
 	 @function withResource
 	 @param {String} resource
 	 @return {remote.Broadcaster}
+     @memberof ludo.remote.Broadcaster.prototype
 	 @example
 	 	ludo.remoteBroadcaster.withResource('Person').withService('save').on('success', function(){
 	 		alert('Save success');
@@ -4494,6 +4499,7 @@ ludo.remote.Broadcaster = new Class({
 	 @function withService
 	 @param {String} service
 	 @return {remote.Broadcaster}
+     @memberof ludo.remote.Broadcaster.prototype
 	 @example
 	 	ludo.remoteBroadcaster.withResource('Person').withService('read').
             withService('save').on('success', function(){
@@ -4513,6 +4519,7 @@ ludo.remote.Broadcaster = new Class({
 	 @param {String|Array} events
 	 @param {Function} fn
 	 @return {remote.Broadcaster}
+     @memberof ludo.remote.Broadcaster.prototype
 	 @example
 	 	ludo.remoteBroadcaster.withResource('Person').withService('read').on('success', function(){
 	 		alert('Save success');
@@ -4535,33 +4542,33 @@ ludo.remote.Broadcaster = new Class({
 ludo.remoteBroadcaster = new ludo.remote.Broadcaster();
 /* ../ludojs/src/canvas/engine.js */
 ludo.canvas.Engine = new Class({
-	/**
+	/*
 	 * Transformation cache
 	 * @property tCache
 	 * @type {Object}
 	 * @private
 	 */
 	tCache:{},
-    /**
+    /*
      * Internal cache
      * @property {Object} tCacheStrings
      * @private
      */
 	tCacheStrings:{},
-    /**
+    /*
      * Cache of class names
      * @property {Object} classNameCache
      * @private
      */
     classNameCache:{},
-    /**
+    /*
      * Internal cache
      * @property {Object} tCacheStrings
      * @private
      */
     cache:{},
 
-	/**
+	/*
 	 * Updates a property of a SVG DOM node
 	 * @function set
 	 * @param {HTMLElement} el
@@ -4577,7 +4584,7 @@ ludo.canvas.Engine = new Class({
 			el.setAttribute(key, value);
 		}
 	},
-	/**
+	/*
 	 * Remove property from node.
 	 * @function remove
 	 * @param {HTMLElement} el
@@ -4591,7 +4598,7 @@ ludo.canvas.Engine = new Class({
 		}
 	},
 
-	/**
+	/*
 	 * Returns property value of a SVG DOM node
 	 * @function get
 	 * @param {HTMLElement} el
@@ -4637,7 +4644,7 @@ ludo.canvas.Engine = new Class({
 		el.parentNode.appendChild(el);
 	},
 
-    /**
+    /*
      * Apply rotation to element
      * @function rotate
      * @param {Node} el
@@ -4647,7 +4654,7 @@ ludo.canvas.Engine = new Class({
 		this.setTransformation(el, 'rotate', rotation);
 	},
 
-    /**
+    /*
      * Rotate around a speific point
      * @function rotateAround
      * @param {Node} el
@@ -4785,7 +4792,7 @@ ludo.canvas.Engine = new Class({
 		return ret;
 	},
 
-	/**
+	/*
 	 * @function hasTransformationCache
 	 * @private
 	 * @param {Number} id
@@ -4815,7 +4822,7 @@ ludo.canvas.Engine = new Class({
 		return ret;
 	},
 
-	/**
+	/*
 	 * @function buildTransformationCache
 	 * @private
 	 * @param {HTMLElement} el
@@ -4938,7 +4945,7 @@ ludo.canvas.Engine = new Class({
 		el.textContent = '';
 	},
 
-    /**
+    /*
      * Degrees to radians method
      * @function toRad
      * @param degrees
@@ -4988,11 +4995,6 @@ ludo.canvas.Node = new Class({
 	Extends:Events,
 	el:undefined,
 	tagName:undefined,
-
-	/**
-	 * Id of node
-	 * @config {String} id
-	 */
 	id:undefined,
 
 	initialize:function (tagName, properties, text) {
@@ -5225,6 +5227,7 @@ ludo.canvas.Node = new Class({
 	 * Update text content of node
 	 * @function text
 	 * @param {String} text
+	 * @memberof ludo.canvas.Node.prototype
 	 */
 	text:function (text) {
 		ludo.canvasEngine.text(this.el, text);
@@ -5549,6 +5552,7 @@ ludo.canvas.View = new Class({
      * Scale SVG element
      * @param {Number} x x-Ratio
      * @param {Number} y y-Ratio
+     * @memberof ludo.canvas.View.prototype
      */
     scale: function (x, y) {
         this.engine.scale(this.getEl(), x, y);
@@ -5690,6 +5694,7 @@ ludo.canvas.Canvas = new Class({
      * Returns height of canvas
      * @function getHeight
      * @return {Number} height
+	 * @memberof ludo.canvas.Canvas.prototype
      */
 	getHeight:function(){
 		return this.height;
@@ -5699,6 +5704,7 @@ ludo.canvas.Canvas = new Class({
      * Returns width of canvas
      * @function getWidth
      * @return {Number} width
+	 * @memberof ludo.canvas.Canvas.prototype
      */
 	getWidth:function(){
 		return this.width;
@@ -5708,6 +5714,7 @@ ludo.canvas.Canvas = new Class({
      * Returns center point of canvas as an object with x and y coordinates
      * @function getCenter
      * @return {Object}
+	 * @memberof ludo.canvas.Canvas.prototype
      */
     getCenter:function(){
         return {
@@ -5719,16 +5726,11 @@ ludo.canvas.Canvas = new Class({
 	/**
 	 * Update view box size
 	 * @function setViewBox
-	 * @param width
-	 * @type {Number}
-	 * @param height
-	 * @type {Number}
-	 * @param x
-	 * @type {Number}
-	 * @optional
-	 * @param y
-	 * @type {Number}
-	 * @optional
+	 * @param {Number} width Viewbox width
+	 * @param {Number} height Viewbox height
+	 * @param {Number} x Optional left/x position
+	 * @param {Number} y Optional top/y position
+	 * @memberof ludo.canvas.Canvas.prototype
 	 */
 	setViewBox:function (width, height, x, y) {
 		this.set('viewBox', (x || 0) + ' ' + (y || 0) + ' ' + width + ' ' + height);
@@ -5746,6 +5748,7 @@ ludo.canvas.Canvas = new Class({
 	 * Returns reference to &lt;defs> node
 	 * @function getDefs
 	 * @return {canvas.Node} defs node
+	 * @memberof ludo.canvas.Canvas.prototype
 	 */
 	getDefs:function(){
 		if(this.defsNode === undefined){
@@ -5760,6 +5763,7 @@ ludo.canvas.Canvas = new Class({
 	 * @function appendDef
 	 * @param {canvas.Node|canvas.View} node
 	 * @return {canvas.Node} defs Node
+	 * @memberof ludo.canvas.Canvas.prototype
 	 */
 	appendDef:function(node){
 		return this.getDefs().append(node);
@@ -6186,6 +6190,7 @@ ludo.layout.Base = new Class({
 	 * @optional
 	 * @param {String} pos
 	 * @optional
+	 * @memberof ludo.layout.Base.prototype
 	 */
 	addChild:function (child, insertAt, pos) {
 		child = this.getValidChild(child);
@@ -6220,12 +6225,7 @@ ludo.layout.Base = new Class({
 
 
 		this.addChildEvents(child);
-		/**
-		 * Event fired by layout manager when a new child is added
-		 * @event addChild
-		 * @param {ludo.View} child
-		 * @param {ludo.layout.Base} layout manager
-		 */
+
 		this.fireEvent('addChild', [this, this.view, child]);
 
 		if(this.firstResized){
@@ -6237,6 +6237,7 @@ ludo.layout.Base = new Class({
 	 * Return parent DOM element for new child
 	 * @function getParentForNewChild
 	 * @protected
+	 * @memberof ludo.layout.Base.prototype
 	 */
 	getParentForNewChild:function(){
 		return $(this.view.els.body);
@@ -6252,6 +6253,7 @@ ludo.layout.Base = new Class({
 	 * Implementation in sub classes
 	 * @function onNewChild
 	 * @private
+	 * @memberof ludo.layout.Base.prototype
 	 */
 	onNewChild:function (child) {
 		var keys = this.layoutProperties;
@@ -6426,6 +6428,7 @@ ludo.layout.Base = new Class({
 	 * Update viewport properties, coordinates of DHTML Container for child views, i.e. body of parent view
 	 * @function updateViewport
 	 * @param {Object} c
+	 * @memberof ludo.layout.Base.prototype
 	 */
 	updateViewport:function (c) {
 
@@ -6450,6 +6453,7 @@ ludo.layout.Base = new Class({
 	 * @function hideChild
 	 * @param {ludo.View} child
 	 * @private
+	 * @memberof ludo.layout.Base.prototype
 	 */
 	hideChild:function(child){
 		this.setTemporarySize(child, {
@@ -6465,6 +6469,7 @@ ludo.layout.Base = new Class({
 	 * @param {ludo.View} child
 	 * @param {Object} newSize
 	 * @protected
+	 * @memberof ludo.layout.Base.prototype
 	 */
 	minimize:function(child, newSize){
 		this.setTemporarySize(child, newSize);
@@ -6477,6 +6482,7 @@ ludo.layout.Base = new Class({
 	 * @param {ludo.View} child
 	 * @param {Object} newSize
 	 * @protected
+	 * @memberof ludo.layout.Base.prototype
 	 */
 	setTemporarySize:function(child, newSize){
 		if(newSize.width !== undefined){
@@ -6493,6 +6499,7 @@ ludo.layout.Base = new Class({
 	 * @function clearTemporaryValues
 	 * @param {ludo.View} child
 	 * @protected
+	 * @memberof ludo.layout.Base.prototype
 	 */
 	clearTemporaryValues:function(child){
 		if(child.layout.cached_width !== undefined)child.layout.width = child.layout.cached_width;
@@ -6522,6 +6529,8 @@ ludo.layout.Factory = new Class({
 	 * @function getManager
      * @param {ludo.View} view
      * @return {ludo.layout.Base} manager
+	 * @private
+	 * @memberof ludo.layout.Factory.prototype
      */
 	getManager:function(view){
 		return new ludo.layout[this.getLayoutClass(view)](view);
@@ -6532,6 +6541,7 @@ ludo.layout.Factory = new Class({
      * @function getLayoutClass
      * @param {ludo.View} view
      * @return {String} className
+	 * @memberof ludo.layout.Factory.prototype
      * @private
      */
 	getLayoutClass:function(view){
@@ -6583,6 +6593,7 @@ ludo.layout.Factory = new Class({
      * @param {Object} config
      * @return {Object}
      * @private
+	 * @memberof ludo.layout.Factory.prototype
      */
 	getValidLayoutObject:function(view, config){
 
@@ -6649,6 +6660,7 @@ ludo.layout.Factory = new Class({
      * @param {Object} mergeWith
      * @return {Object}
      * @private
+	 * @memberof ludo.layout.Factory.prototype
      */
 	getMergedLayout:function(layout, mergeWith){
 		for(var key in mergeWith){
@@ -6863,6 +6875,7 @@ ludo.dataSource.JSON = new Class({
      * Components using this data-source will be automatically updated
      * @function load
      * @return void
+     * @memberof ludo.dataSource.JSON.prototype
      */
     load:function () {
         if(!this.url && !this.resource)return;
@@ -6885,7 +6898,7 @@ ludo.dataSource.JSON = new Class({
                         this.loadComplete(request.getResponseData(), request.getResponse());
                     }.bind(this),
                     "failure":function (request) {
-                        /**
+                        /*
                          * Event fired when success parameter in response from server is false
                          * @event failure
                          * @param {Object} JSON response from server. Error message should be in the "message" property
@@ -6895,7 +6908,7 @@ ludo.dataSource.JSON = new Class({
                         this.fireEvent('failure', [request.getResponse(), this]);
                     }.bind(this),
                     "error":function (request) {
-                        /**
+                        /*
                          * Server error event. Fired when the server didn't handle the request
                          * @event servererror
                          * @param {String} error text
@@ -6911,8 +6924,9 @@ ludo.dataSource.JSON = new Class({
     },
 
     /**
-     * Update data source with new date and trigger events "parseData",
+     * Update data source with new data and trigger events "parseData",
      * @param {Array} data
+     * @memberof ludo.dataSource.JSON.prototype
      */
     setData:function(data){
         this.loadComplete(data);
@@ -7376,6 +7390,7 @@ ludo.tpl.Parser = new Class({
      * @param {Array} records
      * @param {String} tpl
      * @return {Array} string items
+     * @memberof ludo.tpl.Parser.prototype
      */
     getCompiled:function (records, tpl) {
         if (!ludo.util.isArray(records)) {
@@ -7439,7 +7454,7 @@ ludo.tpl.Parser = new Class({
         return value;
     }
 });/* ../ludojs/src/dom.js */
-/**
+/*
  * Class/Object with DOM utility methods.
  * @class ludo.dom
  *
@@ -7450,7 +7465,7 @@ ludo.dom = {
 		BW:{}, BH:{},
 		MW:{}, MH:{}
 	},
-	/**
+	/*
 	 * Return Margin width (left and right) of DOM element
 	 * Once retrieved, it will be cached for later lookup. Cache
 	 * can be cleared by calling clearCacheStyles
@@ -7465,7 +7480,7 @@ ludo.dom = {
 		return ludo.dom.cache.MW[el.id];
 	},
 
-	/**
+	/*
 	 * Return Border width (left and right) of DOM element
 	 * Once retrieved, it will be cached for later lookup. Cache
 	 * can be cleared by calling clearCacheStyles
@@ -7479,7 +7494,7 @@ ludo.dom = {
 		}
 		return ludo.dom.cache.BW[el.id];
 	},
-	/**
+	/*
 	 * Return Padding Width (left and right) of DOM element
 	 * Once retrieved, it will be cached for later lookup. Cache
 	 * can be cleared by calling clearCacheStyles
@@ -7494,7 +7509,7 @@ ludo.dom = {
 		return ludo.dom.cache.PW[el.id];
 
 	},
-	/**
+	/*
 	 * Return Margin height (top and bottom) of DOM element
 	 * Once retrieved, it will be cached for later lookup. Cache
 	 * can be cleared by calling clearCacheStyles
@@ -7510,7 +7525,7 @@ ludo.dom = {
 		return ludo.dom.cache.MH[id];
 
 	},
-	/**
+	/*
 	 * Return Border height (top and bottom) of DOM element
 	 * Once retrieved, it will be cached for later lookup. Cache
 	 * can be cleared by calling clearCacheStyles
@@ -7525,7 +7540,7 @@ ludo.dom = {
 		}
 		return ludo.dom.cache.BH[id];
 	},
-	/**
+	/*
 	 * Return Padding height (top and bottom) of DOM element
 	 * Once retrieved, it will be cached for later lookup. Cache
 	 * can be cleared by calling clearCacheStyles
@@ -7551,7 +7566,7 @@ ludo.dom = {
 		if(!el.attr("id"))el.attr("id", String.uniqueID());
 	},
 
-	/**
+	/*
 	 * @function clearCacheStyles
 	 * Clear cached padding,border and margins.
 	 */
@@ -7563,7 +7578,7 @@ ludo.dom = {
 		};
 	},
 
-	/**
+	/*
 	 * Return numeric style value,
 	 * @function getNumericStyle
 	 * @private
@@ -7685,7 +7700,7 @@ ludo.dom = {
 		}
 	},
 
-	/**
+	/*
 	 * Return measured width of a View
 	 * @function getMeasuredWidth
 	 * @param {ludo.View} view
@@ -7826,6 +7841,12 @@ ludo.remote.Shim = new Class({
  @param {String} config.tpl A template for string when inserting JSON Content(the insertJSON method), example: "name:{firstname} {lastname}<br>"
  @param {Boolean} config.alwaysInFront True to make this view always appear in front of the other views.
  @param {Object} config.form Configuration for the form Manager. See <a href="ludo.form.Manager">ludo.form.Manager</a> for details.
+ @fires ludo.View#rendered Fired when view has been rendered on screen. Argument: ludo.View
+ @fires ludo.View#toFront Fired when view has brought to front. Argument: ludo.View
+ @fires ludo.View#hide Fired when view has been hidden using the hide method. Argument: ludo.View
+ @fires ludo.View#show Fired when view is displayed using the show method. Argument. ludo.View
+ @fires ludo.View#beforeshow Fired just before a view is displayed using the show method. Argument: ludo.View
+ @fires ludo.View#resize Fired when a view has been resized.
  // TODO describe data sources
  @example {@lang Javascript}
 	// Example 1: View render to &lt;body> tag
@@ -7889,12 +7910,7 @@ ludo.View = new Class({
 	form:undefined,
 	layout:undefined,
 	tpl:'',
-	/**
-	 * Default config for ludo.tpl.Parser. ludo.tpl.Parser is a JSON parser which
-	 * converts uses the template defined in tpl and converts JSON into a String.
-	 * If you want to create your own parser, extend ludo.tpl.Parser and change value of JSONParser to the name
-	 * of your class
-	 */
+
 	JSONParser:{ type:'tpl.Parser' },
 	initialItemsObject:[],
 	contextMenu:undefined,
@@ -7910,7 +7926,7 @@ ludo.View = new Class({
 		this.__construct(config);
 
 		if (!config.children || !config.children.length) {
-			config.children = this.getClassChildren();
+			config.children = this.__children();
 		}
 
 		if (this.hidden) {
@@ -7921,13 +7937,13 @@ ludo.View = new Class({
 	},
 
 	/**
-	 * Alternative to the "children" config array. By defining children in getClassChildren, you will have access to "this" referring to
+	 * Alternative to the "children" config array. By defining children in __children, you will have access to "this" referring to
 	 * the View instance. This is a method you override when creating your own Views.
-	 * @function getClassChildren
+	 * @function __children
 	 * @memberof ludo.View.prototype
 	 * @return {Array|children}
 	 */
-	getClassChildren:function () {
+	__children:function () {
 		return this.children;
 	},
 
@@ -7974,9 +7990,10 @@ ludo.View = new Class({
 		this.fireEvent('rendered', this);
 	},
 	/**
-	 * First life cycle step when creating and object
+	 * Constructor for Views.
 	 * @function __construct
 	 * @param {Object} config
+	 * @memberof ludo.View.prototype
 	 */
 	__construct:function (config) {
 		this.parent(config);
@@ -8014,6 +8031,7 @@ ludo.View = new Class({
 	 This method is typically used when you want to create your own DOM elements.
 	 @memberof ludo.View.prototype
 	 @function ludoDOM
+	 @private
 	 @example
 	 ludoDOM : function() {<br>
 			 this.parent(); // Always call parent ludoDOM
@@ -8058,6 +8076,7 @@ ludo.View = new Class({
 	 This is the place where you add custom events
 	 @function ludoEvents
 	 @return void
+	 @private
 	 @example
 	 ludoEvents:function(){
 			 this.parent();
@@ -8098,6 +8117,7 @@ ludo.View = new Class({
 	 * @function insertJSON
 	 * @param {Object} json
 	 * @return void
+	 * @memberof ludo.View.prototype
 	 */
 	JSON:function(json){
 		if (this.tpl) {
@@ -8129,6 +8149,7 @@ ludo.View = new Class({
 	 * @function html
 	 * @param html
 	 * @type string
+	 * @memberof ludo.View.prototype
 	 * @example
 	 var view = new ludo.View({
 	 	renderTo:document.body,
@@ -8162,10 +8183,11 @@ ludo.View = new Class({
 	 * Load content from the server. This method will send an Ajax request to the server
 	 * using the properties specified in the remote object or data-source
 	 * @function load
+	 * @memberof ludo.View.prototype
 	 * @return void
 	 */
 	load:function () {
-		/**
+		/*
 		 * This event is fired from the "load" method before a remote request is sent to the server.
 		 * @event beforeload
 		 * @param {String} url
@@ -8180,6 +8202,7 @@ ludo.View = new Class({
 	 * Get reference to parent component
 	 * @function getParent
 	 * @return {Object} component | null
+	 * @memberof ludo.View.prototype
 	 */
 	getParent:function () {
 		return this.parentComponent ? this.parentComponent : null;
@@ -8223,11 +8246,9 @@ ludo.View = new Class({
 		if (e && e.target && e.target.tagName.toLowerCase() == 'a') {
 			return;
 		}
-		/** Event fired when a component is activated, i.e. brought to front
-		 * @event activate
-		 * @param {Object} ludo.View
-		 */
+
 		this.fireEvent('activate', this);
+		this.fireEvent('toFront', this);
 		this.setNewZIndex();
 	},
 
@@ -8239,8 +8260,9 @@ ludo.View = new Class({
 	 * Return reference to components DOM container. A view has two &lt;div> elements, one parent and a child. getEl()
 	 * returns the parent, getBody() returns the child.
 	 * DOM "body" element
-	 * @function getEl()
+	 * @function getEl
 	 * @return {Object} DOMElement
+	 * @memberof ludo.View.prototype
 	 */
 	getEl:function () {
 		return this.els.container ? this.els.container : null;
@@ -8264,11 +8286,7 @@ ludo.View = new Class({
 		if (!this.hidden && this.getEl().css('display') !== 'none') {
 			this.getEl().css('display', 'none');
 			this.hidden = true;
-			/**
-			 * Fired when a component is hidden using the hide method
-			 * @event hide
-			 * @param {Object} htis
-			 */
+
 			this.resizeParent();
 			this.fireEvent('hide', this);
 		}
@@ -8278,6 +8296,7 @@ ludo.View = new Class({
 	 * @function hideAfterDelay
 	 * @param {number} seconds
 	 * @default 1
+	 * @memberof ludo.View.prototype
 	 */
 	hideAfterDelay:function (seconds) {
 		this.hide.delay((seconds || 1) * 1000, this);
@@ -8296,6 +8315,7 @@ ludo.View = new Class({
 	 * Return true if this component is visible
 	 * @function isVisible
 	 * @return {Boolean}
+	 * @memberof ludo.View.prototype
 	 *
 	 */
 	isVisible:function () {
@@ -8318,11 +8338,7 @@ ludo.View = new Class({
 		if (!this.lifeCycleComplete) {
 			this.remainingLifeCycle();
 		}
-		/**
-		 * Event fired just before a component is shown using the show method
-		 * @event beforeshow
-		 * @param {Object} this
-		 */
+
 		if (!skipEvents)this.fireEvent('beforeshow', this);
 
 		this.setNewZIndex();
@@ -8334,11 +8350,7 @@ ludo.View = new Class({
 			this.getLayout().getRenderer().resize();
 		}
 
-		/**
-		 * Fired when a component is shown using the show method
-		 * @event show
-		 * @param {Object} this
-		 */
+
 		if (!skipEvents)this.fireEvent('show', this);
 
 
@@ -8357,6 +8369,7 @@ ludo.View = new Class({
 	 * @function showChild
 	 * @param {String} key
 	 * @return {Boolean} success
+	 * @memberof ludo.View.prototype
 	 */
 	showChild:function (key) {
 		var child = this.getChild(key);
@@ -8483,15 +8496,11 @@ ludo.View = new Class({
 		this.resizeDOM();
 
 		if (config.height || config.width) {
-			/**
-			 * Event fired when component is resized
-			 * @event resize
-			 */
 			this.fireEvent('resize');
 		}
 		if (this.children.length > 0)this.getLayout().resizeChildren();
 	},
-	/**
+	/*
 	 * Returns true component is collapsible
 	 * @function isCollapsible
 	 * @return {Boolean}
@@ -8783,7 +8792,7 @@ ludo.View = new Class({
 });
 
 ludo.factory.registerClass('View', ludo.View);/* ../ludojs/src/remote/message.js */
-/**
+/*
  Class displaying all messages from remote requests
 
  Extends: ludo.View
@@ -8805,7 +8814,7 @@ ludo.remote.Message = new Class({
     Extends:ludo.View,
     cls:'ludo-remote-message',
 
-    /**
+    /*
      Listen to these resources and events
      @config {Array|String} listenTo
      @example
@@ -8882,7 +8891,7 @@ ludo.remote.Message = new Class({
         }
         this.html(response.message);
 
-        /**
+        /*
          * Event fired when message is shown.
          * @event showMessage
          * @param {remote.Message} this
@@ -8913,7 +8922,7 @@ ludo.canvas.Effect = new Class({
         this.execute('translate', el, [start.x, start.y],[start.y + x, start.y + y], duration);
     },
 
-    /**
+    /*
      * Animates back to translate(0,0)
      * @function flyBack
      * @param el
@@ -8979,7 +8988,7 @@ ludo.dataSource.Record = new Class({
 	record:undefined,
 	collection:undefined,
 
-    /**
+    /*
      * Array of events which should fire update event
      * @property {Array} eventKeys
      * @default undefined
@@ -8997,6 +9006,7 @@ ludo.dataSource.Record = new Class({
 	 * @param {String} key
 	 * @param {String|Number|Object} value
 	 * @return {dataSource.Record}
+	 * @memberof ludo.dataSource.Record.prototype
 	 */
 	set:function (key, value) {
 		this.fireEvent('beforeUpdate', this.record);
@@ -9012,6 +9022,7 @@ ludo.dataSource.Record = new Class({
 	 @function get
 	 @param {String} key
 	 @return {String|Number|Object} value
+	 @memberof ludo.dataSource.Record.prototype
 	 */
 	get:function (key) {
 		return this.record[key];
@@ -9021,6 +9032,7 @@ ludo.dataSource.Record = new Class({
 	 @function setProperties
 	 @param {Object} properties
 	 @return {dataSource.Record|undefined}
+	 @memberof ludo.dataSource.Record.prototype
 	 @example
 	    var collection = new ludo.dataSource.Collection({
 	 		idField:'id'
@@ -9224,8 +9236,56 @@ ludo.chart.Record = new Class({
  @namespace ludo.dataSource.
  @class ludo.dataSource.Collection
  @augments dataSource.JSON
- 
  @param {Object} config
+ @param {Object} config.sortFn custom sort functions, which should return -1 if record a is smaller than
+ record b and 1 if record b is larger than record a. Example:
+ <code>
+ sortFn:{
+			'population':{
+				'asc' : function(a,b){
+					return parseInt(a.population) < parseInt(b.population) ? -1 : 1
+				},
+				'desc' : function(a,b){
+					return parseInt(a.population) > parseInt(b.population) ? -1 : 1
+				}
+			}
+	 	}
+ </code>
+ @param {String} config.primaryKey Primary key, example: primaryKey: "id"
+ @param {Object} config.paging
+ Example:
+ <code>
+ paging:{
+		 	size:10, // Number of rows per page
+		  	remotePaging:true, // Load only records per page from server, i.e. new request per page
+		  	cache : true, // Store pages in cache, i.e no request if data for page is in cache,
+		  	cacheTimeout:30 // Optional time in second before cache is considered out of date, i.e. new server request
+		}
+ </code>
+ @param {Object} config.searchConfig
+ Example:
+ <code>
+ searchConfig:{
+	 		index:['city','country'],
+	 		delay:.5
+	 	}
+ </code>
+ which makes the record keys/columns "city" and "country" searchable. It waits .5 seconds
+ before the search is executed. This is useful when searching large collections and you
+ want to delay the search until the user has finished entering into a search box.
+ @fires ludo.dataSource.Collection#sort Fires on sort. Arguments: {String} sortedBy key
+ @fires ludo.dataSource.Collection#add Fires when a new record has been added to the collection. Arguments: {Object} record
+ @fires ludo.dataSource.Collection#deselect Fires when a record has been deselected, arguments. {Object} deselected record
+ @fires ludo.dataSource.Collection#select Fires when a record has selected, arguments. {Object} selected record
+ @fires ludo.dataSource.Collection#delete Fires when a record has been deleted, arguments. {Object} deleted record
+ @fires ludo.dataSource.Collection#page Fires on navigation to new page when paging is enabled. Arguments: {Number} page index
+ @fires ludo.dataSource.Collection#previousPage Fires when paging is enabled and navigating to current page -1. No arguments
+ @fires ludo.dataSource.Collection#nextPage Fires when paging is enabled and navigating to current page +1. No arguments
+ @fires ludo.dataSource.Collection#firstPage Fired when navigating to first page.  No arguments
+ @fires ludo.dataSource.Collection#lastPage Fired when navigating to last page.  No arguments
+ @fires ludo.dataSource.Collection#notLastPage Fired when navigating to a page which is not last page.  No arguments
+ @fires ludo.dataSource.Collection#notFirstPage Fired when navigating to a page which is not first page.  No arguments
+ @fires ludo.dataSource.Collection#change Fires when data has been updated or page navigation occurs.
  @example
  	dataSource:{
 		url:'data-source/grid.php',
@@ -9248,47 +9308,13 @@ ludo.chart.Record = new Class({
  */
 ludo.dataSource.Collection = new Class({
 	Extends:ludo.dataSource.JSON,
-	/**
-	 custom sort functions, which should return -1 if record a is smaller than
-	 record b and 1 if record b is larger than record a.
-	 @config {Function} sortFn
-	 @default {}
-	 @example
-	 	sortFn:{
-			'population':{
-				'asc' : function(a,b){
-					return parseInt(a.population) < parseInt(b.population) ? -1 : 1
-				},
-				'desc' : function(a,b){
-					return parseInt(a.population) > parseInt(b.population) ? -1 : 1
-				}
-			}
-	 	}
-	 */
 	sortFn:{},
 
 	selectedRecords:[],
 
-	/**
-	 * Primary key for records
-	 * @config {String} primaryKey
-	 * @default "id"
-     * @optional
-	 */
 	primaryKey:'id',
 
-	/**
-	 Use paging, i.e. only load a number of records from the server
-	 @attribute {Object} paging
-	 @example
-	 	paging:{
-		 	size:10, // Number of rows per page
-		  	remotePaging:true, // Load only records per page from server, i.e. new request per page
-		  	cache : true, // Store pages in cache, i.e no request if data for page is in cache,
-		  	cacheTimeout:30 // Optional time in second before cache is considered out of date, i.e. new server request
-		}
 
-	 */
 	paging:undefined,
 
 	dataCache:{},
@@ -9297,20 +9323,7 @@ ludo.dataSource.Collection = new Class({
 		column:undefined,
 		order:undefined
 	},
-	/**
-	 Configuration object for {{#crossLink "dataSource.CollectionSearch"}}{{/crossLink}}. This is
-	 the class which searchs and filters data in the collection.
-	 @config searchConfig
-	 @type Object
-	 @example
-	 	searchConfig:{
-	 		index:['city','country'],
-	 		delay:.5
-	 	}
-	 which makes the record keys/columns "city" and "country" searchable. It waits .5 seconds
-	 before the search is executed. This is useful when searching large collections and you
-	 want to delay the search until the user has finished entering into a search box.
-	 */
+
 	searchConfig:undefined,
 
 	statefulProperties:['sortedBy', 'paging'],
@@ -9321,11 +9334,7 @@ ludo.dataSource.Collection = new Class({
 
 	uidMap:{},
 
-	/**
-	 * Reference to record to select by default once data has been loaded
-	 * @config {Object|String} selected
-	 * @default undefined
-	 */
+
 	selected:undefined,
 
 	__construct:function (config) {
@@ -9366,6 +9375,7 @@ ludo.dataSource.Collection = new Class({
 	 * Returns 1) If search is specified: number of records in search result, or 2) number of records in entire collection.
 	 * @function getCount
 	 * @return {Number} count
+	 * @memberof ludo.dataSource.Collection.prototype
 	 */
 	getCount:function () {
 		if (this.paging && this.paging.rows)return this.paging.rows;
@@ -9381,6 +9391,7 @@ ludo.dataSource.Collection = new Class({
 	 * Resort data-source
 	 * @function sort
 	 * @return void
+	 * @memberof ludo.dataSource.Collection.prototype
 	 */
 	sort:function () {
 		if (this.sortedBy.column && this.sortedBy.order) {
@@ -9393,6 +9404,7 @@ ludo.dataSource.Collection = new Class({
 	 @function by
 	 @param {String} column
 	 @return {dataSource.Collection} this
+	 @memberof ludo.dataSource.Collection.prototype
 	 @example
 	 	collection.by('country').ascending().sort();
 	 or
@@ -9408,6 +9420,7 @@ ludo.dataSource.Collection = new Class({
 	 Set sort order to ascending
 	 @function ascending
 	 @return {dataSource.Collection} this
+	 @memberof ludo.dataSource.Collection.prototype
 	 @example
 	 	collection.by('country').ascending().sort();
 	 */
@@ -9419,6 +9432,7 @@ ludo.dataSource.Collection = new Class({
 	 Set sort order to descending
 	 @function descending
 	 @return {dataSource.Collection} this
+	 @memberof ludo.dataSource.Collection.prototype
 	 @example
 	 	collection.by('country').descending().sort();
 	 */
@@ -9436,6 +9450,7 @@ ludo.dataSource.Collection = new Class({
 	 @param {String} order
      @optional
 	 @return {dataSource.Collection} this
+	 @memberof ludo.dataSource.Collection.prototype
 	 @example
 	 	grid.getDataSource().sortBy('firstname', 'desc');
 	 which also can be written as
@@ -9462,12 +9477,7 @@ ludo.dataSource.Collection = new Class({
 			data.sort(this.getSortFnFor(column, order));
 			this.fireEvent('change');
 		}
-		/**
-		 * Event fired when a data has been sorted,
-		 * param example: { column:'country',order:'asc' }
-		 * @event sort
-		 * @param {Object} sortedBy
-		 */
+
 		this.fireEvent('sort', this.sortedBy);
         if(this.paging)this.firePageEvents();
 		this.fireEvent('state');
@@ -9479,6 +9489,7 @@ ludo.dataSource.Collection = new Class({
 	 * Return current sorted by column
 	 * @function getSortedBy
 	 * @return {String} column
+	 * @memberof ludo.dataSource.Collection.prototype
 	 */
 	getSortedBy:function () {
 		return this.sortedBy.column;
@@ -9487,6 +9498,7 @@ ludo.dataSource.Collection = new Class({
 	 * Return current sort order (asc|desc)
 	 * @function getSortOrder
 	 * @return {String} order
+	 * @memberof ludo.dataSource.Collection.prototype
 	 */
 	getSortOrder:function () {
 		return this.sortedBy.order;
@@ -9523,17 +9535,14 @@ ludo.dataSource.Collection = new Class({
 	 * @function addRecord
 	 * @param record
 	 * @return {Object} record
+	 * @memberof ludo.dataSource.Collection.prototype
 	 */
 	addRecord:function (record) {
         this.data = this.data || [];
 		this.data.push(record);
 
 		if(!this.index)this.createIndex();
-		/**
-		 * Event fired when a record is added to the collection
-		 * @event add
-		 * @param {Object} record
-		 */
+
 		this.fireEvent('add', record);
 
 		return this.createRecord(record);
@@ -9549,6 +9558,7 @@ ludo.dataSource.Collection = new Class({
 	 * @function findRecord
 	 * @param {Object} search
 	 * @return {Object|undefined} record
+	 * @memberof ludo.dataSource.Collection.prototype
 	 */
 	findRecord:function (search) {
 
@@ -9596,6 +9606,7 @@ ludo.dataSource.Collection = new Class({
 	 * @function findRecords
 	 * @param {Object} search
 	 * @return {Array} records
+	 * @memberof ludo.dataSource.Collection.prototype
 	 */
 	findRecords:function (search) {
 		var ret = [];
@@ -9612,10 +9623,11 @@ ludo.dataSource.Collection = new Class({
     },
 
 	/**
-	 * Select a specific record
+	 * Select the first record matching search
 	 * @function selectRecord
 	 * @param {Object} search
 	 * @return {Object|undefined} record
+	 * @memberof ludo.dataSource.Collection.prototype
 	 */
 	selectRecord:function (search) {
 		var rec = this.findRecord(search);
@@ -9628,10 +9640,11 @@ ludo.dataSource.Collection = new Class({
 
 
 	/**
-	 * Select a collection of records
+	 * Select all records matching search
 	 * @function selectRecords
 	 * @param {Object} search
 	 * @return {Array} records
+	 * @memberof ludo.dataSource.Collection.prototype
 	 */
 	selectRecords:function (search) {
 		this.selectedRecords = this.findRecords(search);
@@ -9645,6 +9658,7 @@ ludo.dataSource.Collection = new Class({
 	 * Select a specific record by index
 	 * @function selectRecordIndex
 	 * @param {number} index
+	 * @memberof ludo.dataSource.Collection.prototype
 	 */
 	selectRecordIndex:function (index) {
 		var data = this._getData();
@@ -9672,6 +9686,7 @@ ludo.dataSource.Collection = new Class({
 	 * Select previous record. If no record is currently selected, first record will be selected
 	 * @function previous
 	 * @return {Object} record
+	 * @memberof ludo.dataSource.Collection.prototype
 	 */
 	previous:function () {
 		var rec = this.getPreviousOf(this.getSelectedRecord());
@@ -9686,6 +9701,7 @@ ludo.dataSource.Collection = new Class({
 	 * @function getPreviousOf
 	 * @param {Object} record
 	 * @return {Object} previous record
+	 * @memberof ludo.dataSource.Collection.prototype
 	 */
 	getPreviousOf:function (record) {
 		var data = this._getData();
@@ -9701,6 +9717,7 @@ ludo.dataSource.Collection = new Class({
 	 * Select next record. If no record is currently selected, first record will be selected
 	 * @function next
 	 * @return {Object} record
+	 * @memberof ludo.dataSource.Collection.prototype
 	 */
 	next:function () {
 		var rec = this.getNextOf(this.getSelectedRecord());
@@ -9714,6 +9731,7 @@ ludo.dataSource.Collection = new Class({
 	 * @function getNextOf
 	 * @param {Object} record
 	 * @return {Object} next record
+	 * @memberof ludo.dataSource.Collection.prototype
 	 */
 	getNextOf:function (record) {
 		var data = this._getData();
@@ -9727,33 +9745,18 @@ ludo.dataSource.Collection = new Class({
 
 	_setSelectedRecord:function (rec) {
 		if (this.selectedRecords.length) {
-			/**
-			 * Event fired when a record is selected
-			 * @event deselect
-			 * @param {Object} record
-			 */
+
 			this.fireEvent('deselect', this.selectedRecords[0]);
 		}
 		this.selectedRecords = [rec];
-		/**
-		 Event fired when a record is selected
-		 @event select
-		 @param {Object} record
-		 @example
-		 	...
-		 	listeners:{
-		 		'select' : function(record){
-		 			console.log(record);
-		 		}
-		 	}
-		 */
 		this.fireSelect(Object.clone(rec));
 	},
 
 	/**
-	 * Return selected record
+	 * Return first selected record
 	 * @function getSelectedRecord
 	 * @return {Object|undefined} record
+	 * @memberof ludo.dataSource.Collection.prototype
 	 */
 	getSelectedRecord:function () {
         return this.selectedRecords.length > 0 ? this.selectedRecords[0] : undefined;
@@ -9763,6 +9766,7 @@ ludo.dataSource.Collection = new Class({
 	 * Return selected records
 	 * @function getSelectedRecords
 	 * @return {Array} records
+	 * @memberof ludo.dataSource.Collection.prototype
 	 */
 	getSelectedRecords:function () {
 		return this.selectedRecords;
@@ -9772,6 +9776,7 @@ ludo.dataSource.Collection = new Class({
 	 Delete records matching search,
 	 @function deleteRecords
 	 @param {Object} search
+	 @memberof ludo.dataSource.Collection.prototype
 	 @example
 	 	grid.getDataSource().deleteRecords({ country: 'Norway' });
 	 will delete all records from collection where country is equal to "Norway". A delete event
@@ -9789,6 +9794,7 @@ ludo.dataSource.Collection = new Class({
 	 multiple matches found.
 	 @function deleteRecord
 	 @param {Object} search
+	 @memberof ludo.dataSource.Collection.prototype
 	 @example
 	 	grid.getDataSource().deleteRecord({ country: 'Norway' });
 	 Will delete first found record where country is equal to Norway. It will fire a
@@ -9798,11 +9804,7 @@ ludo.dataSource.Collection = new Class({
 		var rec = this.findRecord(search);
 		if (rec) {
 			this.data.erase(rec);
-			/**
-			 * Event fired when a record is deleted
-			 * @event delete
-			 * @param {Object} record
-			 */
+
 			this.fireEvent('delete', rec);
 		}
 	},
@@ -9811,6 +9813,7 @@ ludo.dataSource.Collection = new Class({
 	 Select records from current selected record to record matching search,
 	 @function selectTo
 	 @param {Object} search
+	 @memberof ludo.dataSource.Collection.prototype
 	 @example
 	 	collection.selectRecord({ country: 'Norway' });
 	 	collection.selectTo({country: 'Denmark'});
@@ -9848,6 +9851,7 @@ ludo.dataSource.Collection = new Class({
 	 * @param {Object} search
 	 * @param {Object} updates
 	 * @return {dataSource.Record} record
+	 * @memberof ludo.dataSource.Collection.prototype
 	 */
 	updateRecord:function (search, updates) {
 		var rec = this.getRecord(search);
@@ -9873,14 +9877,12 @@ ludo.dataSource.Collection = new Class({
 	 * When paging is enabled, go to previous page.
 	 * fire previousPage event
 	 * @function previousPage
+	 * @memberof ludo.dataSource.Collection.prototype
 	 */
 	previousPage:function () {
 		if (!this.paging || this.isOnFirstPage())return;
 		this.paging.offset -= this.paging.size;
-		/**
-		 * Event fired when moving to previous page
-		 * @event previousPage
-		 */
+
 		this.onPageChange('previousPage');
 	},
 
@@ -9888,20 +9890,19 @@ ludo.dataSource.Collection = new Class({
 	 * When paging is enabled, go to next page
 	 * fire nextPage event
 	 * @function nextPage
+	 * @memberof ludo.dataSource.Collection.prototype
 	 */
 	nextPage:function () {
 		if (!this.paging || this.isOnLastPage())return;
 		this.paging.offset += this.paging.size;
-		/**
-		 * Event fired when moving to next page
-		 * @event nextPage
-		 */
+
 		this.onPageChange('nextPage');
 	},
 
 	/**
 	 * Go to last page
 	 * @function lastPage
+	 * @memberof ludo.dataSource.Collection.prototype
 	 */
 	lastPage:function () {
 		if (!this.paging || this.isOnLastPage())return;
@@ -9912,13 +9913,15 @@ ludo.dataSource.Collection = new Class({
 		this.onPageChange('lastPage');
 	},
 
+	/**
+	 * Go to first page
+	 * @function firstPage
+	 * @memberof ludo.dataSource.Collection.prototype
+	 */
 	firstPage:function () {
 		if (!this.paging || this.isOnFirstPage())return;
 		this.paging.offset = 0;
-		/**
-		 * Event fired when moving to first page
-		 * @event firstPage
-		 */
+
 		this.onPageChange('firstPage');
 	},
 
@@ -9987,16 +9990,10 @@ ludo.dataSource.Collection = new Class({
 
 	firePageEvents:function (skipState) {
 		if (this.isOnLastPage()) {
-			/**
-			 * Event fired when moving to last page
-			 * @event lastPage
-			 */
+
 			this.fireEvent('lastPage');
 		} else {
-			/**
-			 * Event fired when moving to a different page than last page
-			 * @event notLastPage
-			 */
+
 			this.fireEvent('notLastPage');
 		}
 
@@ -10004,18 +10001,10 @@ ludo.dataSource.Collection = new Class({
 			this.fireEvent('firstPage');
 
 		} else {
-			/**
-			 * Event fired when moving to a different page than last page
-			 * @event notFirstPage
-			 */
+
 			this.fireEvent('notFirstPage');
 		}
 
-		/**
-		 * Event fired when moving to a page
-		 * @event page
-		 * @param {Number} page number
-		 */
 		this.fireEvent('page', this.getPageNumber());
 		if (skipState === undefined)this.fireEvent('state');
 	},
@@ -10025,20 +10014,23 @@ ludo.dataSource.Collection = new Class({
 	 * @function toPage
 	 * @param {Number} pageNumber
 	 * @return {Boolean} success
+	 * @memberof ludo.dataSource.Collection.prototype
 	 */
 	toPage:function (pageNumber) {
 		if (pageNumber > 0 && pageNumber <= this.getPageCount() && !this.isOnPage(pageNumber)) {
 			this.paging.offset = (pageNumber - 1) * this.paging.size;
-			/**
-			 * Event fired when moving to a specific page
-			 * @event toPage
-			 */
+
 			this.onPageChange('toPage');
 			return true;
 		}
 		return false;
 	},
 
+	/**
+	 * @function setPageSize
+	 * @param {Number} size
+	 * @memberof ludo.dataSource.Collection.prototype
+     */
 	setPageSize:function(size){
 		if(this.paging){
 			this.dataCache = {};
@@ -10054,6 +10046,7 @@ ludo.dataSource.Collection = new Class({
 	 * @function isOnPage
 	 * @param {Number} pageNumber
 	 * @return {Boolean}
+	 * @memberof ludo.dataSource.Collection.prototype
 	 */
 	isOnPage:function (pageNumber) {
 		return pageNumber == this.getPageNumber();
@@ -10063,6 +10056,7 @@ ludo.dataSource.Collection = new Class({
 	 * Return current page number
 	 * @function getPageNumber
 	 * @return {Number} page
+	 * @memberof ludo.dataSource.Collection.prototype
 	 */
 	getPageNumber:function () {
         return this.paging ? Math.floor(this.paging.offset / this.paging.size) + 1 : 1;
@@ -10072,11 +10066,18 @@ ludo.dataSource.Collection = new Class({
 	 * Return number of pages
 	 * @function getPageCount
 	 * @return {Number}
+	 * @memberof ludo.dataSource.Collection.prototype
 	 */
 	getPageCount:function () {
         return this.paging ? Math.ceil(this.getCount() / this.paging.size) : 1;
 	},
 
+	/**
+	 * Return data in collection
+	 * @function getData
+	 * @memberof ludo.dataSource.Collection.prototype
+	 * @returns {Array}
+     */
 	getData:function () {
 		if (this.hasSearchResult()){
 			if (this.paging && this.paging.size) {
@@ -10089,6 +10090,7 @@ ludo.dataSource.Collection = new Class({
 		}
 		return this.getDataForPage(this.data);
 	},
+
 
 	getDataForPage:function (data) {
 		if (!data || data.length == 0)return [];
@@ -10155,6 +10157,7 @@ ludo.dataSource.Collection = new Class({
 	 multiple search terms.
 	 @function Search
 	 @param {String} search
+	 @memberof ludo.dataSource.Collection.prototype
 	 @example
 	 	ludo.get('myCollection').search('New York');
 	 	// or with the {{#crossLink "dataSource.CollectionSearch/add"}}{{/crossLink}} method
@@ -10170,6 +10173,7 @@ ludo.dataSource.Collection = new Class({
 	 * Executes a remote search for records with the given data
 	 * @function remoteSearch
 	 * @param {String|Object} search
+	 * @memberof ludo.dataSource.Collection.prototype
 	 */
 	remoteSearch:function(search){
 		this.postData = this.postData || {};
@@ -10195,6 +10199,7 @@ ludo.dataSource.Collection = new Class({
 	 * you can use to filter a collection.
 	 * @function getSearcher
 	 * @return {dataSource.CollectionSearch}
+	 * @memberof ludo.dataSource.Collection.prototype
 	 */
 	getSearcher:function () {
 		if (this.searcher === undefined) {
@@ -10225,6 +10230,7 @@ ludo.dataSource.Collection = new Class({
 	 @function getById
 	 @param {String|Number|Object} id
 	 @return {Object} record
+	 @memberof ludo.dataSource.Collection.prototype
 	 @example
 	 	var collection = new ludo.dataSource.Collection({
 	 		url : 'get-countries.php',
@@ -10271,6 +10277,7 @@ ludo.dataSource.Collection = new Class({
 	 @function getRecord
 	 @param {String|Object} search
 	 @return {dataSource.Record|undefined}
+	 @memberof ludo.dataSource.Collection.prototype
 	 @example
 		 var collection = new ludo.dataSource.Collection({
 			url : 'get-countries.php',
@@ -10506,7 +10513,7 @@ ludo.chart.Chart = new Class({
 
 	},
 
-    /**
+    /*
      * Class providing data to the chart
      * @config {chart.DataProvider} dataProvider
      * @optional
@@ -11067,17 +11074,7 @@ ludo.chart.Pie = new Class({
     Extends:ludo.chart.Base,
     fragmentType:'chart.PieSlice',
     rendered:false,
-
-    /**
-     Array of add-ons for the pie chart
-     @config {Array} addOns
-     @example
-         addOns:[
-             {
-                 type:'chart.PieSliceHighlighted'
-             }
-         ]
-     */
+    
     addOns:[],
 
     highlightSize:10,
@@ -11358,7 +11355,14 @@ ludo.chart.AddOn = new Class({
  See {{#crossLink "chart/Pie"}}{{/crossLink}} for example of use.
  @namespace ludo.chart
  @class ludo.chart.PieSliceHighlighted
- @type {Class}
+ @param {Object} config
+ @param {Object} config.styles. Example:
+ <code>
+ styles:{
+            'fill' : '#f00'
+        }
+ </code>
+ @param {Number} config.size Highlight size, default: 5
  @example
     {
         type:'pie.Chart',
@@ -11378,22 +11382,9 @@ ludo.chart.AddOn = new Class({
 ludo.chart.PieSliceHighlighted = new Class({
     Extends:ludo.chart.AddOn,
     tagName:'path',
-    /**
-     Styling of slice
-     @config {Object} styles
-     @default { 'fill' : '#ccc' }
-     @example
-        styles:{
-            'fill' : '#f00'
-        }
-     */
+
     styles:undefined,
 
-    /**
-     * Size of slice
-     * @config {Number} size
-     * @default 5
-     */
     size : 5,
 
     __construct:function (config) {
@@ -11465,7 +11456,6 @@ ludo.chart.PieSliceHighlighted = new Class({
  Class for styling of SVG DOM nodes
  @namespace ludo.canvas
  @class ludo.canvas.Paint
- 
  @param {Object} config
  @example
  	var canvas = new ludo.canvas.Canvas({
@@ -11541,6 +11531,7 @@ ludo.canvas.Paint = new Class({
 	 @function setStyle
 	 @param {String} style
 	 @param {String|Number}value
+	 @memberof ludo.canvas.Paint.prototype
 	 @example
 	 	var paint = new ludo.canvas.Paint({
 	 		css:{
@@ -11583,6 +11574,7 @@ ludo.canvas.Paint = new Class({
 	 * @function getStyle
 	 * @param {String} style
 	 * @return {String|Number} value
+	 * @memberof ludo.canvas.Paint.prototype
 	 */
 	getStyle:function (style) {
 		if (this.mappings[style])style = this.mappings[style][0];
@@ -11597,6 +11589,7 @@ ludo.canvas.Paint = new Class({
 	 * Apply css to a SVG node. This is done by adding CSS class to the node
 	 * @function applyTo
 	 * @param {canvas.Node} node
+	 * @memberof ludo.canvas.Paint.prototype
 	 */
 	applyTo:function (node) {
 		ludo.canvasEngine.addClass(node.el ? node.el : node, this.className);
@@ -11606,6 +11599,7 @@ ludo.canvas.Paint = new Class({
 	 * Returns class name of Paint object
 	 * @function getClassName
 	 * @return {String} className
+	 * @memberof ludo.canvas.Paint.prototype
 	 */
 	getClassName:function () {
 		return this.className;
@@ -11656,6 +11650,7 @@ ludo.canvas.Rect = new Class({
 	 * get actual position on canvas.
 	 * @function getX
 	 * @return {Number} x
+	 * @memberof ludo.canvas.Rect.prototype
 	 */
 	getX:function(){
 		return this.el.x.animVal.value;
@@ -11665,6 +11660,7 @@ ludo.canvas.Rect = new Class({
 	 * Returns value of 'y' attribute.
 	 * @function getY
 	 * @return {Number} y
+	 * @memberof ludo.canvas.Rect.prototype
 	 */
 	getY:function(){
 		return this.el.y.animVal.value;
@@ -11674,6 +11670,7 @@ ludo.canvas.Rect = new Class({
 	 * Returns width of rectangle
 	 * @function getWidth
 	 * @return {Number} width
+	 * @memberof ludo.canvas.Rect.prototype
 	 */
 	getWidth:function(){
 		return this.el.width.animVal.value;
@@ -11683,6 +11680,7 @@ ludo.canvas.Rect = new Class({
 	 * Returns height of rectangle
 	 * @function getWidth
 	 * @return {Number} width
+	 * @memberof ludo.canvas.Rect.prototype
 	 */
 	getHeight:function(){
 		return this.el.height.animVal.value;
@@ -11691,6 +11689,7 @@ ludo.canvas.Rect = new Class({
 	 * Return x-size of rounded corners
 	 * @function getRx
 	 * @return {Number} rx
+	 * @memberof ludo.canvas.Rect.prototype
 	 */
 	getRx:function(){
 		return this.el.rx.animVal.value;
@@ -11700,6 +11699,7 @@ ludo.canvas.Rect = new Class({
 	 * Return y-size of rounded corners
 	 * @function getRy
 	 * @return {Number} ry
+	 * @memberof ludo.canvas.Rect.prototype
 	 */
 	getRy:function(){
 		return this.el.ry.animVal.value;
@@ -11709,6 +11709,7 @@ ludo.canvas.Rect = new Class({
 	 * Set new x coordinate
 	 * @function setX
 	 * @param {Number} x
+	 * @memberof ludo.canvas.Rect.prototype
 	 */
 	setX:function(x){
 		this.set('x', x);
@@ -11718,6 +11719,7 @@ ludo.canvas.Rect = new Class({
 	 * Set new y coordinate
 	 * @function setY
 	 * @param {Number} y
+	 * @memberof ludo.canvas.Rect.prototype
 	 */
 	setY:function(y){
 		this.set('y', y);
@@ -11727,6 +11729,7 @@ ludo.canvas.Rect = new Class({
 	 * Set new width
 	 * @function setWidth
 	 * @param {Number} width
+	 * @memberof ludo.canvas.Rect.prototype
 	 */
 	setWidth:function(width){
 		this.set('width', width);
@@ -11735,6 +11738,7 @@ ludo.canvas.Rect = new Class({
 	 * Set new height
 	 * @function setHeight
 	 * @param {Number} height
+	 * @memberof ludo.canvas.Rect.prototype
 	 */
 	setHeight:function(height){
 		this.set('height', height);
@@ -11744,6 +11748,7 @@ ludo.canvas.Rect = new Class({
 	 * Set new width of rounded corners
 	 * @function setRx
 	 * @param {Number} rx
+	 * @memberof ludo.canvas.Rect.prototype
 	 */
 	setRx:function(rx){
 		this.set('rx', rx);
@@ -11753,6 +11758,7 @@ ludo.canvas.Rect = new Class({
 	 * Set new height of rounded corners
 	 * @function setRy
 	 * @param {Number} ry
+	 * @memberof ludo.canvas.Rect.prototype
 	 */
 	setRy:function(ry){
 		this.set('ry', ry);
@@ -12411,6 +12417,7 @@ ludo.color.Color = new Class({
     /**
      * Return rgb code after hue has been adjusted by a number of degrees
      * @function offsetHue
+     * @memberof ludo.color.Color.prototype
      * @param color
      * @param offset
      * @return {String}
@@ -12425,6 +12432,7 @@ ludo.color.Color = new Class({
     /**
      * Return rgb code after hue has been adjusted by a number of degrees
      * @function offsetBrightness
+     * @memberof ludo.color.Color.prototype
      * @param color
      * @param offset
      * @return {String}
@@ -12440,6 +12448,7 @@ ludo.color.Color = new Class({
     /**
      * Return rgb code after hue has been adjusted by a number of degrees
      * @function offsetSaturation
+     * @memberof ludo.color.Color.prototype
      * @param color
      * @param offset
      * @return {String}
@@ -13481,6 +13490,7 @@ ludo.layout.ViewPager = new Class({
      * @function previousPage
      * @param {Boolean} animate Animate transition. Optional parameter, default: true
      * @return {Boolean} success
+     * @memberof ludo.layout.ViewPager.prototype
      */
     previousPage: function (animate) {
         return this.goToPage(this.selectedIndex-1, animate);
@@ -13550,6 +13560,7 @@ ludo.layout.ViewPager = new Class({
      * @function showPage
      * @param {String} name
      * @return {Boolean} success
+     * @memberof ludo.layout.ViewPager.prototype
      */
     showPage: function (name) {
         var c = this.view.child[name];
@@ -13604,12 +13615,6 @@ ludo.layout.ViewPager = new Class({
         this.fireEvent('showpage', payload);
 
         if (this.selectedIndex == this.count-1) {
-            /**
-             * Event fired when last card of deck is shown
-             * @event lastpage
-             * @param {layout.Page} this card
-             * @param {View} shown card
-             */
             this.fireEvent('lastpage', payload);
         } else {
             this.fireEvent('notlastpage', payload);
@@ -14324,7 +14329,7 @@ ludo.layout.Tabs = new Class({
 ludo.layout.Relative = new Class({
 	Extends:ludo.layout.Base,
 	children:undefined,
-    /**
+    /*
      * Array of valid layout properties
      * @property {Array} layoutFnProperties
      * @private
@@ -14339,15 +14344,8 @@ ludo.layout.Relative = new Class({
 		'fillLeft', 'fillRight', 'fillUp', 'fillDown',
 		'absBottom','absWidth','absHeight','absLeft','absTop','absRight','offsetX','offsetY'
 	],
-    /**
-     * Internal child coordinates set during resize
 
-     */
 	newChildCoordinates:{},
-    /**
-     * Internal storage of child coordinates for last resize
-
-     */
 	lastChildCoordinates:{},
 
 	onCreate:function () {
@@ -14368,7 +14366,7 @@ ludo.layout.Relative = new Class({
 		}
 	},
 
-    /**
+    /*
      * No resize done yet, create resize functions
      * @function prepareResize
      * @private
@@ -14379,19 +14377,13 @@ ludo.layout.Relative = new Class({
      	this.createResizeFunctions();
 	},
 
-    /**
-     * Create/Compile resize functions for each child
-
-     */
 	createResizeFunctions:function () {
 		for (var i = 0; i < this.children.length; i++) {
 			this.children[i].layoutResizeFn = this.getResizeFnFor(this.children[i]);
 		}
 	},
-    /**
-     * Convert layout id references to direct view reference for optimal performance
 
-     */
+
 	fixLayoutReferences:function () {
 		for (var i = 0; i < this.view.children.length; i++) {
 			var c = this.view.children[i];
@@ -14401,10 +14393,7 @@ ludo.layout.Relative = new Class({
 			}
 		}
 	},
-    /**
-     * Return resize function for a child
 
-     */
 	getResizeFnFor:function (child) {
 		var fns = this.getLayoutFnsFor(child);
 		return function (layoutManager) {
@@ -14413,10 +14402,7 @@ ludo.layout.Relative = new Class({
 			}
 		};
 	},
-    /**
-     * Return array of resize function to call when view is resized.
 
-     */
 	getLayoutFnsFor:function (child) {
 		var ret = [];
 		var p = this.layoutFnProperties;
@@ -14429,7 +14415,7 @@ ludo.layout.Relative = new Class({
 		ret.push(this.getLastLayoutFn(child));
 		return ret;
 	},
-    /**
+    /*
      Return one resize function for a child
 
         getLayoutFn(left, view)
@@ -14578,10 +14564,7 @@ ludo.layout.Relative = new Class({
 		}
 		return undefined;
 	},
-    /**
-     * Return special resize function for the properties alignLeft, alignRight, alignTop and alignBottom
 
-     */
 	getAlignmentFn:function (child, alignment, property) {
 		var c = this.newChildCoordinates[child.id];
 		var refC = this.lastChildCoordinates[child.layout[alignment].id];
@@ -14590,9 +14573,8 @@ ludo.layout.Relative = new Class({
 		};
 	},
 
-    /**
+    /*
      * Returns layout function for the width and height layout properties
-
      */
 	getPropertyFn:function (child, property) {
 		var c = this.newChildCoordinates[child.id];
@@ -14627,9 +14609,8 @@ ludo.layout.Relative = new Class({
 
 	posProperties:['left', 'right', 'bottom', 'top'],
 
-    /**
+    /*
      * Final resize function for each child. All the other dynamically created
-
      */
 	getLastLayoutFn:function (child) {
 		return function (lm) {
@@ -14676,7 +14657,7 @@ ludo.layout.Relative = new Class({
 			lm.updateLastCoordinatesFor(child);
 		}
 	},
-    /**
+    /*
      * Update lastChildCoordinates properties for a child after resize is completed
      * @function updateLastCoordinatesFor
      * @param {ludo.View} child
@@ -14694,24 +14675,20 @@ ludo.layout.Relative = new Class({
 		if (lc.bottom === undefined) lc.bottom = this.viewport.height - lc.top - lc.height;
 	},
 
-    /**
-     * Position child at this coordinates
 
-     */
 	positionChild:function (child, property, value) {
 		child.getEl().css(property, value); // style[property] = value + 'px';
 		child[property] = value;
 	},
-    /**
+    /*
      * Creates empty newChildCoordinates and lastChildCoordinates for a child view
-
      */
 	assignDefaultCoordinates:function (child) {
 		this.newChildCoordinates[child.id] = {};
 		this.lastChildCoordinates[child.id] = {};
 	},
 
-    /**
+    /*
      * Before first resize, the internal children array is arranged so that views dependent of
      * other views are resized after the view it's depending on. example: if view "a" has leftOf property
      * set to view "b", then view "b" should be resized and positioned first. This method rearranges
@@ -14763,7 +14740,7 @@ ludo.layout.Relative = new Class({
 	},
 	resizables : {},
 
-    /**
+    /*
      * Create resize handles for resizable children
      * @function createResizables
      * @private
@@ -14789,7 +14766,7 @@ ludo.layout.Relative = new Class({
 		return this.resizables[child.id][direction];
 	},
 
-    /**
+    /*
      * Return resizable handle for a child view
      * @function getResizableFor
      * @param {ludo.View} child
@@ -14818,7 +14795,7 @@ ludo.layout.Relative = new Class({
 		});
 	},
 
-    /**
+    /*
      * Return sibling which may be affected when a child is resized
      * @function getSiblingForResize
      * @param {ludo.View} child
@@ -14839,7 +14816,7 @@ ludo.layout.Relative = new Class({
 		}
 		return undefined;
 	},
-    /**
+    /*
      * Before resize function executed for a resize handle
      * @function beforeResize
      * @param {ludo.layout.Resizer} resize
@@ -14869,7 +14846,7 @@ ludo.layout.Relative = new Class({
 		return value;
 	},
 
-    /**
+    /*
      * Return layout config for a resize handle
      * @function getResizerLayout
      * @param {ludo.View} child
@@ -14894,7 +14871,7 @@ ludo.layout.Relative = new Class({
 		return ret;
 	},
 
-    /**
+    /*
      * Update layout references when a resize handle has been created. example: When a resize handle
      * is added to the left of a child view. The leftOf view of this child is now the resize handle
      * and not another view
@@ -14924,7 +14901,7 @@ ludo.layout.Relative = new Class({
 		return child.layout && child.layout.resize && child.layout.resize.length > 0;
 	},
 
-    /**
+    /*
      * Return a child which should be rearrange because it's layout depends on a next sibling
      * @function getWronglyArrangedChild
      * @return {ludo.View|undefined}
@@ -14944,7 +14921,7 @@ ludo.layout.Relative = new Class({
 		}
 		return undefined;
 	},
-    /**
+    /*
      * Returns true if a child is previous sibling of another child
      * @function isArrangedBefore
      * @param {ludo.View} child
@@ -14956,14 +14933,14 @@ ludo.layout.Relative = new Class({
 		return this.children.indexOf(child) < this.children.indexOf(of);
 	},
 
-    /**
+    /*
      * All the layout options where value is a reference to another child
      * @property depKeys
      * @private
      */
 	depKeys:['above', 'below', 'leftOf', 'rightOf', 'alignLeft', 'alignBottom', 'alignRight', 'alignTop', 'sameWidthAs', 'sameHeightAs'],
 
-    /**
+    /*
      * Return all the siblings a child is depending on for layout
      * @function getDependencies
      * @param {ludo.View} child
@@ -14982,7 +14959,7 @@ ludo.layout.Relative = new Class({
 		}
 		return ret;
 	},
-    /**
+    /*
      * Return direct reference to child
      * @function getReference
      * @param {String|ludo.View} child
@@ -14995,7 +14972,7 @@ ludo.layout.Relative = new Class({
 		return ludo.get(child);
 	},
 
-    /**
+    /*
      * Clear internal children array. When this is done, resize function will be recreated. This happens
      * when a child is removed or when a new child is added
      * @function clearChildren
@@ -15004,7 +14981,7 @@ ludo.layout.Relative = new Class({
 	clearChildren:function () {
 		this.children = undefined;
 	},
-    /**
+    /*
      * Return internal children array
      * @function getChildren
      * @return {Array}
@@ -15014,7 +14991,7 @@ ludo.layout.Relative = new Class({
 		return this.children;
 	},
 
-    /**
+    /*
      * Validate and set required layout properties of new children
      * @function onNewChild
      * @param {ludo.View} child
@@ -15365,12 +15342,7 @@ ludo.layout.Canvas = new Class({
 
 		this.onNewChild(child);
 		this.addChildEvents(child);
-		/**
-		 * Event fired by layout manager when a new child is added
-		 * @event addChild
-		 * @param {ludo.View} child
-		 * @param {ludo.layout.Base} layout manager
-		 */
+
 		this.fireEvent('addChild', [child, this]);
 
 
@@ -15460,6 +15432,7 @@ ludo.layout.NavBar = new Class({
     /**
      Show menu
      @function show
+     @memberof ludo.layout.NavBar.prototype
      @example
         view.getLayout().show();
      */
@@ -15477,6 +15450,7 @@ ludo.layout.NavBar = new Class({
     /**
      hide menu
      @function hide
+     @memberof ludo.layout.NavBar.prototype
      @example
         view.getLayout().hide();
      */
@@ -15498,6 +15472,7 @@ ludo.layout.NavBar = new Class({
     /**
      * Toggle between show and hide
      * @function toggle
+     * @memberof ludo.layout.NavBar.prototype
      */
     toggle:function () {
         this[this.view.layout.active ? 'hide' : 'show']();
@@ -16209,14 +16184,12 @@ ludo.layout.CollapseBar = new Class({
 /**
  * Base class for List and tree.Tree
  * @class ludo.CollectionView
+ * @param {Object} config
+ * @param {String} config.emptyText Text to show on no data
  */
 ludo.CollectionView = new Class({
 	Extends: ludo.View,
-	/**
-	 * Text to display when the tree or list has no data, i.e. when there's no data in data source or when filter returned no data.
-	 * @config {String} emptyText
-	 * @default undefined
-	 */
+
 	emptyText:undefined,
 
 	__construct:function (config) {
@@ -16655,6 +16628,7 @@ ludo.effect.Effect = new Class({
 	 Fly/Slide DOM node to a position
 	 @function fly
 	 @param {Object} config
+	 @memberof ludo.effect.Effect.prototype
 	 @example
 	 	<div id="myDiv" style="position:absolute;width:100px;height:100px;border:1px solid #000;background-color:#DEF;left:50px;top:50px"></div>
 		<script type="text/javascript">
@@ -16701,6 +16675,7 @@ ludo.effect.Effect = new Class({
 	 @param {Number} x
 	 @param {Number} y
 	 @param {Number} seconds
+	 @memberof ludo.effect.Effect.prototype
 	 @example
 
 	 You may also use this method like this:
@@ -16725,6 +16700,7 @@ ludo.effect.Effect = new Class({
 		 * Fired when animation is completed
 		 * @event animationComplete
 		 * @param {effect.Drag} this
+		 * @memberof ludo.effect.Effect.prototype
 		 */
 
 		this.fireEvent('animationComplete', this);
@@ -17216,7 +17192,7 @@ ludo.effect.Drag = new Class({
         if (this.delay) {
             this.setActiveAfterDelay();
         } else {
-            /**
+            /*
              * Event fired before dragging
              * @event start
              * @param {effect.DraggableNode} object to be dragged.
@@ -19637,10 +19613,7 @@ ludo.dataSource.CollectionSearch = new Class({
 			this.compileSearch();
             this.performSearch();
 		}
-		/**
-		 * Search executed
-		 * @event search
-		 */
+
 		this.fireEvent('search');
 		return this;
 	},
@@ -19665,6 +19638,7 @@ ludo.dataSource.CollectionSearch = new Class({
 	/**
 	 * Returns true if search terms or search functions exists.
 	 * @function hasSearchTokens
+	 * @memberof ludo.dataSource.CollectionSearch.prototype
 	 * @return {Boolean}
 	 */
 	hasSearchTokens:function () {
@@ -19833,6 +19807,18 @@ ludo.effect.DropPoint = new Class({
  * @namespace ludo.effect
  * @class ludo.effect.DragDrop
  * @augments effect.Drag
+ * @param {Object} config
+ * @param {Boolean} config.captureRegions. True to capture regions. When set, events like "north", "south", "west" and "east"
+ * will be fired when dragging over drop points.
+ * @fires ludo.effect.Dragdrop#enterDropTarget Fired when entering drop target DOM node. Arguments: 1) DOM dragged 2) DOM drop target, 3) ludo.effect.DragDrop, 4) event.target
+ * @fires ludo.effect.Dragdrop#validDropTarget Fired when entering valid drop target DOM node. Arguments: 1) DOM dragged 2) DOM drop target, 3) ludo.effect.DragDrop, 4) event.target
+ * @fires ludo.effect.Dragdrop#invalidDropTarget Fired when entering invalid drop target DOM node. This happens when you have an event handler on enterDropTarget and
+ * call the setInvalid method. Arguments: 1) DOM dragged 2) DOM drop target, 3) ludo.effect.DragDrop, 4) event.target
+ * @fires ludo.effect.Dragdrop#drop Fired on drop. Arguments: 1) DOM dragged 2) DOM drop target, 3) ludo.effect.DragDrop, 4) event.target
+ * @fires ludo.effect.Dragdrop#north When captureRegions is set, this event is fired when entering north region of a drop point. Same arguments as otehr drop events.
+ * @fires ludo.effect.Dragdrop#south When captureRegions is set, this event is fired when entering south region of a drop point. Same arguments as otehr drop events.
+ * @fires ludo.effect.Dragdrop#west When captureRegions is set, this event is fired when entering west region of a drop point. Same arguments as otehr drop events.
+ * @fires ludo.effect.Dragdrop#east When captureRegions is set, this event is fired when entering east region of a drop point. Same arguments as otehr drop events.
  */
 ludo.effect.DragDrop = new Class({
 	Extends:ludo.effect.Drag,
@@ -19840,17 +19826,9 @@ ludo.effect.DragDrop = new Class({
 	currentDropPoint:undefined,
 	onValidDropPoint:undefined,
 
-	/**
-	 Capture regions when moving over drop points
-	 @config {Boolean|undefined}
-	 @optional
-	 @default false
-	 @example
-	 	captureRegions:true
-	 */
 	captureRegions:false,
 
-	/**
+	/*
 	 * While dragging, always show dragged element this amount of pixels below mouse cursor.
 	 * @config mouseYOffset
 	 * @type {Number|undefined}
@@ -19884,6 +19862,7 @@ ludo.effect.DragDrop = new Class({
 	 * @function remove
 	 * @param {String} id
 	 * @return {Boolean} success
+	 * @memberof ludo.effect.DragDrop.prototype
 	 */
 	remove:function (id) {
 		if (this.els[id] !== undefined) {
@@ -19900,6 +19879,7 @@ ludo.effect.DragDrop = new Class({
 	 * @function addDropTarget
 	 * @param {ludo.effect.DropPoint} node
 	 * @return {ludo.effect.DropPoint} node
+	 * @memberof ludo.effect.DragDrop.prototype
 	 */
 	addDropTarget:function (node) {
 		node = this.getValidNode(node);
@@ -19930,39 +19910,17 @@ ludo.effect.DragDrop = new Class({
 		if (this.isActive()) {
 			this.setCurrentDropPoint(e);
 			this.onValidDropPoint = true;
-			/**
-			 Enter drop point event. This event is fired when dragging is active
-			 and mouse enters a drop point
-			 @event enterDropTarget
-			 @param {effect.DraggableNode} node
-			 @param {effect.DropPoint} node
-			 @param {effect.DragDrop} this
-			 @param {HTMLElement} target
-			 */
+
 			this.fireEvent('enterDropTarget', this.getDropEventArguments(e));
 
 			if (this.onValidDropPoint) {
 				if (this.shouldCaptureRegionsFor(this.currentDropPoint)) {
 					this.setMidPoint();
 				}
-				/**
-				 Enters valid drop point.
-				 @event validDropTarget
-				 @param {effect.DraggableNode} dragged node
-				 @param {effect.DropPoint} drop target
-				 @param {effect.DragDrop} this
-				 @param {HTMLElement} target
-				 */
+
 				this.fireEvent('validDropTarget', this.getDropEventArguments(e));
 			} else {
-				/**
-				 Enters invalid drop point.
-				 @event invalidDropTarget
-				 @param {effect.DraggableNode} dragged node
-				 @param {effect.DropPoint} drop target
-				 @param {effect.DragDrop} this
-				 @param {HTMLElement} target
-				 */
+
 				this.fireEvent('invalidDropTarget', this.getDropEventArguments(e));
 			}
 			return false;
@@ -19990,6 +19948,7 @@ ludo.effect.DragDrop = new Class({
 	 Set drop point invalid. This method is usually used in connection with a listener
 	 for the enterDropTarget event
 	 @function setInvalid
+	 @memberof ludo.effect.DragDrop.prototype
 	 @example
 	 	dd.addEvent('enterDropTarget', function(node, dd){
 			 if(node.name === 'John Doe'){
@@ -20006,14 +19965,6 @@ ludo.effect.DragDrop = new Class({
 	},
 
 	drop:function (e) {
-		/**
-		 drop event caused by mouseup on valid drop point.
-		 @event drop
-		 @param {effect.DraggableNode} dragged node
-		 @param {effect.DropPoint} drop target
-		 @param {effect.DragDrop} this
-		 @param {HTMLElement} target
-		 */
 		if (this.onValidDropPoint)this.fireEvent('drop', this.getDropEventArguments(e));
 	},
 
@@ -20046,48 +19997,19 @@ ludo.effect.DragDrop = new Class({
 		if (this.isActive() && this.onValidDropPoint && this.shouldCaptureRegionsFor(this.currentDropPoint)) {
 			var midPoint = this.midPoint;
 			if (e.pageY < midPoint.y && this.previousRegions.v !== 'n') {
-				/**
-				 Enter north region of a drop point
-				 @event north
-				 @param {effect.DraggableNode} dragged node
-				 @param {effect.DropPoint} drop target
-				 @param {effect.DragDrop} this
-				 @param {HTMLElement} target
-				 */
 				this.fireEvent('north', this.getDropEventArguments(e));
 				this.previousRegions.v = 'n';
 			} else if (e.pageY >= midPoint.y && this.previousRegions.v !== 's') {
-				/**
-				 Enter south region of a drop point
-				 @event south
-				 @param {effect.DraggableNode} dragged node
-				 @param {effect.DropPoint} drop target
-				 @param {effect.DragDrop} this
-				 @param {HTMLElement} target
-				 */
+
 				this.fireEvent('south', this.getDropEventArguments(e));
 				this.previousRegions.v = 's';
 			}
 			if (e.pageX < midPoint.x && this.previousRegions.h !== 'w') {
-				/**
-				 Enter west region of a drop point
-				 @event west
-				 @param {effect.DraggableNode} dragged node
-				 @param {effect.DropPoint} drop target
-				 @param {effect.DragDrop} this
-				 @param {HTMLElement} target
-				 */
+
 				this.fireEvent('west', this.getDropEventArguments(e));
 				this.previousRegions.h = 'w';
 			} else if (e.pageX >= midPoint.x && this.previousRegions.h !== 'e') {
-				/**
-				 Enter east region of a drop point
-				 @event east
-				 @param {effect.DraggableNode} dragged node
-				 @param {effect.DropPoint} drop target
-				 @param {effect.DragDrop} this
-				 @param {HTMLElement} target
-				 */
+
 				this.fireEvent('east', this.getDropEventArguments(e));
 				this.previousRegions.h = 'e';
 			}
@@ -20961,6 +20883,9 @@ ludo.ColResize = new Class({
  @class ludo.grid.ColumnManager
  @augments Core
  @param {Object} config
+ @fires ludo.grid.ColumnManager#showcolumn Fired when a column is shown. Argument: {String} column name
+ @fires ludo.grid.ColumnManager#hideColumn Fired when a column is hidden. Argument: {String} column name
+ @fires ludo.grid.ColumnManager#moveColumn Fired when a column has been moved. Argument: 1) {String} column moved, 2) {String} new sibling column 3) {String} before or after new sibling
  @example
     columnManager:{
 		columns:{
@@ -21156,7 +21081,7 @@ ludo.grid.ColumnManager = new Class({
 	 * @function isInAGroup
 	 * @param {String} column
 	 * @return {Boolean} is in a group
-	 * memberof ludo.grid.ColumnManager.prototype
+	 * @memberof ludo.grid.ColumnManager.prototype
 	 */
 	isInAGroup:function (column) {
 		return this.getColumnKey(column, 'group') !== undefined;
@@ -21167,7 +21092,7 @@ ludo.grid.ColumnManager = new Class({
 	 * @function getGroupIdOf
 	 * @param {String} column
 	 * @return {String} group id
-	 * memberof ludo.grid.ColumnManager.prototype
+	 * @memberof ludo.grid.ColumnManager.prototype
 	 */
 	getGroupIdOf:function (column) {
 		return this.getColumnKey(column, 'group');
@@ -21178,7 +21103,7 @@ ludo.grid.ColumnManager = new Class({
 	 * @function getGroupFor
 	 * @param {String} column
 	 * @return {grid.Column|undefined} parent
-	 * memberof ludo.grid.ColumnManager.prototype
+	 * @memberof ludo.grid.ColumnManager.prototype
 	 */
 	getGroupFor:function (column) {
 		var id = this.getGroupIdOf(column);
@@ -21226,6 +21151,7 @@ ludo.grid.ColumnManager = new Class({
 	 * @function isResizable
 	 * @param {String} column
 	 * @return {Boolean}
+	 * @memberof ludo.grid.ColumnManager.prototype
 	 */
 	isResizable:function (column) {
 		var resizable = this.getColumnKey(column, 'resizable') !== false;
@@ -21336,7 +21262,7 @@ ludo.grid.ColumnManager = new Class({
 	 * @function insertColumnBefore
 	 * @param {String} column id
 	 * @param {String} before column id
-	 * memberof ludo.grid.ColumnManager.prototype
+	 * @memberof ludo.grid.ColumnManager.prototype
 	 */
 	insertColumnBefore:function (column, before) {
 		this.moveColumn(column, before, 'before');
@@ -21346,7 +21272,7 @@ ludo.grid.ColumnManager = new Class({
 	 * @function insertColumnAfter
 	 * @param {String} column id
 	 * @param {String} after column id
-	 * memberof ludo.grid.ColumnManager.prototype
+	 * @memberof ludo.grid.ColumnManager.prototype
 	 */
 	insertColumnAfter:function (column, after) {
 		this.moveColumn(column, after, 'after');
@@ -21390,10 +21316,6 @@ ludo.grid.ColumnManager = new Class({
 		}
 		this.columnKeys = ret;
 
-		/**
-		 * Fired when a column has been moved
-		 * @event movecolumn
-		 */
 		this.fireEvent('movecolumn', [column, this.columnKeys[indexAt], beforeOrAfter]);
 		this.fireEvent('state');
 	},
@@ -21439,7 +21361,7 @@ ludo.grid.ColumnManager = new Class({
 	 * @function removeFromGroup
 	 * @param {String} column
 	 * @return {Boolean} success
-	 * memberof ludo.grid.ColumnManager.prototype
+	 * @memberof ludo.grid.ColumnManager.prototype
 	 */
 	removeFromGroup:function (column) {
 		var group = this.getGroupFor(column);
@@ -21455,12 +21377,7 @@ ludo.grid.ColumnManager = new Class({
 	hideColumn:function (column) {
 		if (this.columnExists(column) && !this.isHidden(column)) {
 			this.columnLookup[column].hidden = true;
-			/**
-			 * Fired when a column is hidden
-			 * @event hidecolumn
-			 */
 			this.fireEvent('hidecolumn', column);
-
 			this.fireEvent('state');
 		}
 	},
@@ -21596,22 +21513,28 @@ ludo.grid.ColumnManager = new Class({
 		return column !== to;
 	}
 });/* ../ludojs/src/grid/row-manager.js */
+/**
+ * Row renderer config for a grid.
+ * @class ludo.grid.RowManager
+ * @param {Object} config
+ * @param {Function} config.rowCls Function returning css class as string for a row. Argument to function: JSON for a row.
+ * @example:
+ * new ludo.grid.Grid({
+ * 	rowManager: {
+ * 		rowCls:function(row){ return "my-css-class" }
+ * 	}
+ *
+ *
+ */
 ludo.grid.RowManager = new Class({
 	Extends: ludo.Core,
 	type : 'grid.RowManager',
 
-	/**
-	 * A function returning css class for current row as string. Current record
-	 * will be passed to function
-	 * @config renderer
-	 * @type {Function}
-	 * @default undefined
-	 */
-	renderer:undefined,
+	rowCls:undefined,
 
 	__construct:function(config){
 		this.parent(config);
-		if(config.renderer)this.renderer = config.renderer;
+		if(config.rowCls)this.rowCls = config.rowCls;
 	}
 
 });/* ../ludojs/src/grid/grid.js */
@@ -22027,6 +21950,7 @@ ludo.grid.Grid = new Class({
 	 Select a record.
 	 @function selectRecord
 	 @param {Object} record
+	 @memberof ludo.grid.Grid.prototype
 	 @example
 	 	grid.selectRecord({ id: 100 } );
 	 */
@@ -22375,7 +22299,7 @@ ludo.grid.Grid = new Class({
 
 		var renderer = this.columnManager.getRendererFor(col);
 
-		var rowRenderer = this.rowManager ? this.rowManager.renderer : undefined;
+		var rowRenderer = this.rowManager ? this.rowManager.rowCls : undefined;
 		var rowCls = '';
 		for (var i = 0, count = data.length; i < count; i++) {
 			content = data[i][col];
@@ -22608,6 +22532,7 @@ ludo.calendar.Base = new Class({
  * @param {String|Date} config.date Alias to config.value.
  * @param {String|Date} config.minDate Optional minimum selectable date
  * @param {String|Date} config.maxDate Optional maximum selectable date
+ * @param {String} config.inputFormat Internal format, default: 'Y-m-d'
  * @fires ludo.calendar.Calendar#setDate - Arguments Date and ludo.View(the view firing the event)
  */
 ludo.calendar.Calendar = new Class({
@@ -22623,30 +22548,10 @@ ludo.calendar.Calendar = new Class({
         { type:'calendar.Days', name:'days'},
         { type:'calendar.Today', name:'today'}
     ],
-    /**
-     * @attribute inputFormat
-     * @type String
-     * @default Y-m-d
-     */
+
     inputFormat:'Y-m-d',
-
-    /**
-     * Initial date, example: '2012-02-28', "date" is alias to "value"
-     * @attribute date
-     * @type String
-     */
     date:undefined,
-
-    /**
-     * minimum valid date, eg. '2011-01-01'
-     * @attribute {String} minDate
-     */
     minDate:undefined,
-    /**
-     * maximum valid date, eg. '2013-01-01'
-     * @attribute maxDate
-     * @type String
-     */
     maxDate:undefined,
 
     __construct:function (config) {
@@ -22665,6 +22570,7 @@ ludo.calendar.Calendar = new Class({
      * Set year (4 digits)
      * @function setYear
      * @param {Number} year
+     * @memberof ludo.calendar.Calendar.prototype
      *
      */
     setYear:function (year) {
@@ -22685,11 +22591,19 @@ ludo.calendar.Calendar = new Class({
      * Returns selected date as Date object
      * @function getDate
      * @return {Object} selected date
+     * @memberof ludo.calendar.Calendar.prototype
      */
     getDate : function(){
         return this.value;
     },
 
+    /**
+     * Set or get date
+     * @function val
+     * @param {String|Date} date
+     * @returns {*}
+     * @memberof ludo.calendar.Calendar.prototype
+     */
     val:function(date, sentByComponent){
         if(arguments.length == 0){
             return this.value.format(this.inputFormat);
@@ -22697,17 +22611,13 @@ ludo.calendar.Calendar = new Class({
         this.value = Date.parse(date);
         this.fireEvent('change', [this.value, this]);
     },
-    /**
-     * Returns selected date
-     * @function getValue
-     * @return {String} selected date
-     */
+
     getValue:function(){
         console.warn("Use of deprecated calendar.getValue");
         console.trace();
         return this.value.format(this.inputFormat);
     },
-    /**
+    /*
      * Set new current date
 	 * @function setValue
      * @param {Date} date
@@ -22723,6 +22633,7 @@ ludo.calendar.Calendar = new Class({
      * Set current month
 	 * @function setMonth
      * @param {Number} month (1-12)
+     * @memberof ludo.calendar.Calendar.prototype
 	 * @return void
      */
     setMonth:function (month) {
@@ -22748,6 +22659,8 @@ ludo.calendar.Calendar = new Class({
  * A View displaying days in a month. It's one of the child views of ludo.calendar.Calendar.
  * @namespace calendar
  * @class ludo.calendar.Days
+ * @param {Object} config
+ * @param {String|Date} value Selected date
  * @fires ludo.calendar.Days#setDate - Arguments Date and ludo.View(the view firing the event)
  */
 
@@ -22763,10 +22676,7 @@ ludo.calendar.Days = new Class({
     sundayFirst:false,
     overflow:'hidden',
     week:undefined,
-    /**
-     * selected date
-     * @property object value
-     */
+
     value:undefined,
     touch:{
         enabled:false
@@ -23113,6 +23023,7 @@ ludo.calendar.Days = new Class({
      * @function setDate
      * @param {Object} date
      * @return void
+     * @memberof ludo.calendar.Days.prototype
      */
     setDate:function (date) {
         this.date = date;
@@ -23122,6 +23033,7 @@ ludo.calendar.Days = new Class({
      * Set selected date
      * @function setValue
      * @param {Date} date
+     * @memberof ludo.calendar.Days.prototype
      */
     setValue:function (date) {
         this.removeClsFromSelectedDay();
@@ -23403,7 +23315,7 @@ ludo.calendar.Today = new Class({
         this.child['today'].addEvent('click', this.setToday.bind(this));
     },
 
-    getClassChildren:function(){
+    __children:function(){
         return [{ name:'today', type:'form.Button', value : ludo.language.get('Today'), layout: { centerInParent:true}}];
     },
 
@@ -23769,9 +23681,21 @@ ludo.geometry = {
  * @param {String} config.handColor Color of Arrow Hand indicating selected hours and minutes. default: #669900
  * @param {String} config.handTextColor Color of hour and minute text on the hour/minute hand. default: #FFFFFFF
  * @param {String} config.minuteDotColor Color of small dot inside the hour/minute hand., default: #FFFFFF
+ * @fires ludo.calendar.TimePicker#mode Fired when switching from hours to minutes. Argument: {String} "hours" or "minutes"
+ * @fires ludo.calendar.TimePicker#time Fired when either hours or minutes have been changed.
+ * Example:<code>
+ * var t = new ludo.calendar.TimePicker({
+ *      layout:{width:500,height:500},
+ *      renderTo:document.body,
+ *      listeners:{
+ *          // Listener for the "time" event
+ *          'time' : function(hour, minutes, timeAsString){
+ *              // timeString in format HH:MM, example: 11:48
+ *              console.log(timeAsString);
+ *          }
  *
- * @fires ludo.calendar.TimePicker#time
- * @fires ludo.calendar.TimePicker#mode
+ * });
+ *</code>
  */
 ludo.calendar.TimePicker = new Class({
 
@@ -23852,6 +23776,8 @@ ludo.calendar.TimePicker = new Class({
 
     /**
      * Show hours
+     * @function restart
+     * @memberof ludo.calendar.TimePicker.prototype
      */
     restart: function () {
         this.showHours();
@@ -23864,26 +23790,6 @@ ludo.calendar.TimePicker = new Class({
     },
 
     notify: function () {
-        /**
-         * Mode event, arguments can be "hours" or "minutes"
-         * @event ludo.calendar.TimePicker#time
-         * @property {Number} hours Current hours
-         * @property {Number} minutes Current minutes
-         * @property {String} timeString. Time in format HH:MM
-         * @example
-         * var t = new ludo.calendar.TimePicker({
-         *      layout:{width:500,height:500},
-         *      renderTo:document.body,
-         *      listeners:{
-         *          // Listener for the "time" event
-         *          'time' : function(hour, minutes, timeAsString){
-         *              // timeString in format HH:MM, example: 11:48
-         *              console.log(timeAsString);
-         *          }
-         *
-         * });
-         *
-         */
 
         this.fireEvent('time', [this.hours, this.minutes, this.hourPrefixed + ":" + this.minutePrefixed]);
     },
@@ -24301,22 +24207,7 @@ ludo.calendar.TimePicker = new Class({
         this.needleCircleInnerMinutes.hide();
         this.updateNeedle();
 
-        /**
-         * Mode event, arguments can be "hours" or "minutes"
-         * @event ludo.calendar.TimePicker#mode
-         * @property {string} mode - "hours" when hour is displayed, "minutes" when minutes is displayed
-         * @example
-         * var t = new ludo.calendar.TimePicker({
-         *      layout:{width:500,height:500},
-         *      renderTo:document.body,
-         *      listeners:{
-         *          'mode' : function(mode){
-         *              console.log(mode);
-         *          }
-         *
-         * });
-         *
-         */
+
         this.fireEvent('mode', 'hours');
     },
 
@@ -24365,7 +24256,7 @@ ludo.menu.Item = new Class({
     action:undefined,
     record:undefined,
 
-    /**
+    /*
      * Fire an event with this name on click
      * @config {String} fire
      * @default undefined
@@ -24650,6 +24541,7 @@ ludo.menu.Context = new Class({
 	 * example: record in a tree
 	 * @function getSelectedRecord
 	 * @return object record
+	 * @memberof ludo.menu.Context.prototype
 	 */
 	getSelectedRecord:function () {
 		return this.selectedRecord;
@@ -25014,6 +24906,7 @@ ludo.dataSource.TreeCollection = new Class({
 	 * @function getChildren
 	 * @param {String} parent id
 	 * @return {Array|undefined} children
+	 * @memberof ludo.dataSource.TreeCollection.prototype
 	 */
 	getChildren:function (parent) {
 		var p = this.findRecord(parent);
@@ -25057,13 +24950,42 @@ ludo.dataSource.TreeCollection = new Class({
  * Tree widget
  * @namespace ludo.tree
  * @class ludo.tree.Tree
+ * @param {Object} config
+ * @param {Object} config.defaults: Default values for properties not present in data, example:
+ * <code>
+ *     defaults: {
+ *     		"icon": "images/icon.gif"
+ *     }
+ * </code>
+ * @param {Object} config.tpl Template strings for how to render nodes in the tree.
+ * Example:
+ * <code>
+ * tpl: '{title}
+ * </code>
+ * which renders JSON like : [{"title": "First node" },{"title": "Second node"}]
+ * as "First node".
+ * You can also have more than one template.
+ * Example:
+ * <code>
+ tpl:{
+	tplKey : 'type',
+	city : 'City : {city}',
+	country : 'Country : {country}
+  }
+ * </code>
+ * for JSON like:
+ * <code>
+ *     [ { type:"country", "country" : "United States" }, { "type": "city", "city": "Washington" }]
+ * </code>
+ * tplKey refers to the "type" attribute. When type is "country", it should use the "country" tpl. When type is "city",
+ * it should use the "city" template.
  */
 ludo.tree.Tree = new Class({
 	Extends:ludo.CollectionView,
     type:'tree.Tree',
 	nodeCache:{},
     renderedRecords: {},
-	/**
+	/*
 	 String template for nodes in the tree
 	 @config {String|Object}
 	 @memberof ludo.tree.Tree.prototype
@@ -25103,7 +25025,7 @@ ludo.tree.Tree = new Class({
 	},
     defaultDS: 'dataSource.TreeCollection',
 
-	/**
+	/*
 	 Default values when not present in node.
 	 @config {Object} defaults
 	 @memberof ludo.tree.Tree.prototype
@@ -25118,7 +25040,7 @@ ludo.tree.Tree = new Class({
 	 */
 	defaults:undefined,
 
-	/**
+	/*
 	 * Key used to defined nodes inside categories. This key is used for default values and node config
 	 * @config {String} categoryKey
 	 * @memberof ludo.tree.Tree.prototype
@@ -25126,7 +25048,7 @@ ludo.tree.Tree = new Class({
 	 */
 	categoryKey : 'type',
 
-	/**
+	/*
 	 Config of tree node categories
 	 @config {Object} categoryConfig
 	 @memberof ludo.tree.Tree.prototype
@@ -25345,7 +25267,7 @@ ludo.tree.Tree = new Class({
 
 		if (includeContainer)ret.push('</div>');
 
-        /**
+        /*
          * Event fired when a node is created
          * @event createNode
          * @param {String} id of DOM node
@@ -25497,6 +25419,7 @@ ludo.dataSource.HTML = new Class({
 	 * Components using this data-source will be automatically updated
 	 * @function load
 	 * @return void
+	 * @memberof ludo.dataSource.HTML.prototype
 	 */
 	load:function () {
 		this.parent();
@@ -25525,12 +25448,6 @@ ludo.dataSource.HTML = new Class({
 						this.loadComplete(request.getResponseData(), request.getResponse());
 					}.bind(this),
 					"error":function (request) {
-						/**
-						 * Server error event. Fired when the server didn't handle the request
-						 * @event servererror
-						 * @param {String} error text
-						 * @param {String} error message
-						 */
 						this.fireEvent('servererror', [request.getResponseMessage(), request.getResponseCode()]);
 					}.bind(this)
 				}
@@ -25673,7 +25590,7 @@ ludo.controllerManager = new ludo.controller.Manager();/* ../ludojs/src/controll
 ludo.controller.Controller = new Class({
 	Extends:ludo.Core,
 	type:'controller.Controller',
-	/**
+	/*
 	 * Apply controller to components in these modules.
 	 * By default a controller will be set as controller for all component
 	 * within the same namespace (name space is determined by parsing "type" attribute),
@@ -25700,7 +25617,7 @@ ludo.controller.Controller = new Class({
 	controller:undefined,
 	useController:false,
 
-	/**
+	/*
 	 List of events which will be automatically broadcasted,i.e. re-fired by the controller
 
 	 @property broadcast
@@ -25880,7 +25797,10 @@ ludo.progress.DataSource = new Class({
  * Super class for all progress bar views
  * @namespace progress
  * @class ludo.progress.Base
+ * @param {Object} config
+ * @param {Boolean} config.hideOnFinish Hide View on finish. Default: true
  * @augments View
+ * @fires ludo.progress.Base#finish Fired on finish(100%)
  */
 ludo.progress.Base = new Class({
     Extends:ludo.View,
@@ -25888,10 +25808,7 @@ ludo.progress.Base = new Class({
     pollFrequence:1,
     url:undefined,
     onLoadMessage:'',
-    /**
-     * Hide progress bar on finish
-     * @attribute {Boolean} hideOnFinish
-     */
+
     hideOnFinish:true,
 
     defaultDS:'progress.DataSource',
@@ -25939,6 +25856,7 @@ ludo.progress.Base = new Class({
     /**
      * Finish progress bar manually
      * @function finish
+     * @memberof ludo.progress.Base.prototype
      */
     finish:function () {
         this.getDataSource().finish();
@@ -25950,7 +25868,7 @@ ludo.progress.Base = new Class({
             this.hideAfterDelay();
         }
 
-        /**
+        /*
          * Event fired when progress bar is finished
          * @event render
          * @param Component this
@@ -26097,6 +26015,8 @@ ludo.progress.Bar = new Class({
  * @namespace progress
  * @class ludo.progress.Text
  * @augments ludo.progress.Base
+ * @param {Object} config
+ * @param {String} tpl JSON template, default: "{text}"
  */
 ludo.progress.Text = new Class({
     Extends:ludo.progress.Base,
@@ -26106,11 +26026,6 @@ ludo.progress.Text = new Class({
     stopped:false,
     hidden:true,
 
-    /**
-     * Template for text content, example {text}.
-     * @property tpl
-     * @type String
-     */
     tpl : '{text}'
 });/* ../ludojs/src/form/validator/fns.js */
 ludo.form.validator.required = function(value, required){
@@ -26150,43 +26065,40 @@ ludo.form.validator.twin = function(value, twin){
  * @param {Object} config.formCss Optional css styling of the form element. Example: { type:'form.Text', formCss:{ "text-align": right }} to right align text of a text input.
  * @param {Function} config.validator A Validator function to be executed when value is changed. This function should return true when valid, false when invalid. Current value will be passed to this function.
  * @param {Function} config.linkWith Creates a link with form element with this id. When two form views are linked, they will always have the same value. When one value is changed, the linked form view is automatically updated.
+ * @param {String} config.name Name of form element
+ * @param {String|Number} config.value - Initial value for form element.
  * Example: A link between a form.Seekbar and a form.Number.
  * Example: { type:'form.Text', placeHolder='Enter Valid Value', validator:function(value){ return value == 'Valid Value' } }
  * @fires ludo.form.Element#enable - Fired on enable, argument: ludo.form.Element
  * @fires ludo.form.Element#disable - Fired on disable, argument: ludo.form.Element
+ * @fires ludo.form.Element#key_down - Fired on key down. Arguments: key, value, ludo.form.Element
+ * @fires ludo.form.Element#key_up - Fired on key up. Arguments: key, value, ludo.form.Element
+ * @fires ludo.form.Element#key_press - Fired on key up. Arguments: key, value, ludo.form.Element
+ * @fires ludo.form.Element#focus - Fired on focus received. Arguments: value, ludo.form.Element
+ * @fires ludo.form.Element#blur - Fired on blur. Arguments: value, ludo.form.Element
+ * @fires ludo.form.Element#change - Fired on changed value by GUI. Arguments: value, ludo.form.Element
+ * @fires ludo.form.Element#valueChange - Fired on changed value by GUI or the val function. Arguments: value, ludo.form.Element
+ * @fires ludo.form.Element#dirty - Fired on new value which is different from initial. Arguments. value, ludo.form.Element
+ * @fires ludo.form.Element#clean - Fired on new value which is the same as initial. Arguments. value, ludo.form.Element
+ * @fires ludo.form.Element#value - Fired when a new valid value is set. Arguments. value, ludo.form.Element
+ * @fires ludo.form.Element#invalid - Fired when a new value is set which is invalid. Arguments. value, ludo.form.Element
  */
 ludo.form.Element = new Class({
     Extends:ludo.View,
-    /**
-     * Initial value
-     * @config {String|Number} value
-     * @default undefined
-     */
+
     value:undefined,
     onLoadMessage:'',
-    /**
-     * "name" is inherited from ludo.View. It will also be set as name of input element
-     * @attribute name
-     * @type string
-     * @default undefined
-     */
+
     name:undefined,
 
-    /**
-     * Custom CSS rules to apply to input element
-     * @attribute formCss
-     * @type Object
-     * @example:  {@lang Javascript}
-     * { border : '1px solid #000' }
-     * @default undefined
-     */
+
     formCss:undefined,
     stretchField:true,
     required:false,
     dirtyFlag:false,
     initialValue:undefined,
     constructorValue:undefined,
-    /**
+    /*
      * Is form element ready for setValue. For combo boxes and select boxes it may
      * not be ready until available values has been loaded remotely
      * @property isReady
@@ -26196,7 +26108,7 @@ ludo.form.Element = new Class({
     isReady:true,
     overflow:'hidden',
 
-    /**
+    /*
      * Will not validate unless value is the same as value of the form element with this id
      * Example of use: Password and Repeat password. It's sufficient to specify "twin" for one of
      * the views.
@@ -26205,40 +26117,8 @@ ludo.form.Element = new Class({
      * @default undefined
      */
     twin:undefined,
-
-    /**
-     * Link with a form component with this id. Value of these components will always be the same
-     * Update one and the other component will be updated automatically. It's sufficient
-     * to specify linkWith for one of the two views.
-     * @property linkWith
-     * @type String
-     * @default undefined
-     */
     linkWith:undefined,
-
-    /**
-     * When using stateful:true, value will be preserved to next visit.
-     * @property statefulProperties
-     * @type Array
-     * @default ['value']
-     */
     statefulProperties:['value'],
-
-    /**
-     Object of class form.validator.* or a plain validator function
-     When set the isValid method of the validator will be called after standard validation is complete
-     and form element is valid.
-     @property validator
-     @type Object
-     @example
-        validator : { type : 'form.validator.Md5', value : 'MD5 hash of something' }
-     In order to validate this field, the MD5 of form field value must match form.validator.Md5.value
-     @example
-        validator:function(value){
-	 		return value === 'Valid value';
-	 	}
-     is example of simple function used as validator.
-     */
     validator:undefined,
     validatorFn:undefined,
 
@@ -26349,6 +26229,7 @@ ludo.form.Element = new Class({
     /**
      * Enable or disable form element
      * @param {Boolean} enabled
+     * @memberof ludo.form.Element.prototype
      */
     setEnabled:function(enabled){
         if(enabled)this.enable(); else this.disable();
@@ -26358,6 +26239,7 @@ ludo.form.Element = new Class({
      * Disable form element
      * @function disable
      * @return void
+     * @memberof ludo.form.Element.prototype
      */
     disable:function () {
         this.getFormEl().attr('disabled', '1');
@@ -26367,6 +26249,7 @@ ludo.form.Element = new Class({
      * Enable form element
      * @function enable
      * @return void
+     * @memberof ludo.form.Element.prototype
      */
     enable:function () {
         this.getFormEl().removeAttr('disabled');
@@ -26403,47 +26286,21 @@ ludo.form.Element = new Class({
     },
 
     keyUp:function (e) {
-        /**
-         * key up event
-         * @event key_up
-         * @param {String} key
-         * @param {String|Boolean|Object|Number} value
-         * @param {View} this
-         */
         this.fireEvent('key_up', [ e.key, this.value, this ]);
     },
 
     keyDown:function (e) {
-        /**
-         * key down event
-         * @event key_down
-         * @param {String} key
-         * @param {String|Boolean|Object|Number} value
-         * $param {View} this
-         */
+
         this.fireEvent('key_down', [ e.key, this.value, this ]);
     },
 
     keyPress:function (e) {
-        /**
-         * key press event
-         * @event key_press
-         * @param {String} key
-         * @param {String|Boolean|Object|Number} value
-         * $param {View} this
-         */
         this.fireEvent('key_press', [ e.key, this.value, this ]);
     },
 
     focus:function () {
         this._focus = true;
         this.clearInvalid();
-        /**
-         * On focus event
-         * @event focus
-         * @param {String|Boolean|Object|Number} value
-         * $param {View} this
-         */
         this.fireEvent('focus', [ this.value, this ]);
     },
     change:function () {
@@ -26451,17 +26308,6 @@ ludo.form.Element = new Class({
             this._set(this.els.formEl.val());
 
         }
-        /**
-         * On change event. This event is fired when value is changed manually
-         * by the user via GUI. The "change" event is followed by a
-         * "valueChange" event.
-         * When value is changed using the setValue method
-         * only the "valueChange" event is fired.
-         *
-         * @event change
-         * @param {String|Boolean|Object|Number} value
-         * $param {View} this
-         */
         if (this.wasValid)this.fireEvent('change', [ this._get(), this ]);
     },
 
@@ -26470,12 +26316,7 @@ ludo.form.Element = new Class({
         this.validate();
         if (this.getFormEl())this.value = this.getValueOfFormEl();
         this.toggleDirtyFlag();
-        /**
-         * On blur event
-         * @event blur
-         * @param {String|Boolean|Object|Number} value
-         * $param {View} this
-         */
+
         this.fireEvent('blur', [ this.value, this ]);
     },
 
@@ -26485,21 +26326,9 @@ ludo.form.Element = new Class({
 
     toggleDirtyFlag:function(){
         if (this.value !== this.initialValue) {
-            /**
-             * @event dirty
-             * @description event fired on blur when value is different from it's original value
-             * @param {String} value
-             * @param {Object} ludo.form.* component
-             */
             this.setDirty();
             this.fireEvent('dirty', [this.value, this]);
         } else {
-            /**
-             * @event clean
-             * @description event fired on blur when value is equal to original/start value
-             * @param {String} value
-             * @param {Object} ludo.form.* component
-             */
             this.setClean();
             this.fireEvent('clean', [this.value, this]);
         }
@@ -26517,17 +26346,20 @@ ludo.form.Element = new Class({
     getLabel:function () {
         return this.label;
     },
-    /**
-     * Return current value
-     * @function getValue
-     * @return string
-     */
+
     getValue:function () {
         console.warn("Use of deprecated getValue");
         console.trace();
         return this.els.formEl ? this.els.formEl.val() : this.value;
     },
 
+    /**
+     * Set or get value. If val argument is set, you will set a value, if not current value
+     * will be returned.
+     * @param {String|Number|Array|Object|Boolean} val
+     * @returns {*}
+     * @memberof ludo.form.Element.prototype
+     */
 
     val:function(val){
         if(arguments.length == 0){
@@ -26559,15 +26391,6 @@ ludo.form.Element = new Class({
         this.validate();
 
         if (this.wasValid) {
-            /**
-             * This event is fired whenever current value is changed, either
-             * manually by user or by calling setValue. When the value is changed
-             * manually by user via GUI, the "change" event is fired first, then
-             * "valueChange" afterwards.
-             * @event valueChange
-             * @param {Object|String|Number} value
-             * @param {form.Element} form component
-             */
             this.fireEvent('valueChange', [this._get(), this]);
             if (this.stateful)this.fireEvent('state');
             if (this.linkWith)this.updateLinked();
@@ -26578,7 +26401,7 @@ ludo.form.Element = new Class({
         return value;
     },
 
-    /**
+    /*
      * Set new value
      * @function setValue
      * @param value
@@ -26604,15 +26427,7 @@ ludo.form.Element = new Class({
         this.validate();
 
         if (this.wasValid) {
-            /**
-             * This event is fired whenever current value is changed, either
-             * manually by user or by calling setValue. When the value is changed
-             * manually by user via GUI, the "change" event is fired first, then
-             * "valueChange" afterwards.
-             * @event valueChange
-             * @param {Object|String|Number} value
-             * @param {form.Element} form component
-             */
+
             this.fireEvent('valueChange', [this._get(), this]);
             if (this.stateful)this.fireEvent('state');
             if (this.linkWith)this.updateLinked();
@@ -26632,6 +26447,7 @@ ludo.form.Element = new Class({
      * Get reference to input element
      * @function getFormEl
      * @return DOMElement
+     * @memberof ludo.form.Element.prototype
      */
     getFormEl:function () {
         return this.els.formEl;
@@ -26640,6 +26456,7 @@ ludo.form.Element = new Class({
      * Returns true when value of form element is valid, i.e. larger than minValue, matching regex etc.
      * @function isValid
      * @return {Boolean} valid
+     * @memberof ludo.form.Element.prototype
      */
     isValid:function () {
         if(this.validators.length === 0)return true;
@@ -26663,22 +26480,12 @@ ludo.form.Element = new Class({
         this.clearInvalid();
         if (this.isValid()) {
             this.wasValid = true;
-            /**
-             * Event fired when value of form component is valid. This is fired on blur
-             * @event valid
-             * @param {String} value
-             * @param {Object} component
-             */
+
             this.fireEvent('valid', [this.value, this]);
             return true;
         } else {
             this.wasValid = false;
-            /**
-             * Event fired when value of form component is valid. This is fired on blur
-             * @event invalid
-             * @param {String} value
-             * @param {Object} component
-             */
+
             this.fireEvent('invalid', [this.value, this]);
             return false;
         }
@@ -26726,6 +26533,7 @@ ludo.form.Element = new Class({
      * Returns true if current value is different from original value
      * @function isDirty
      * @return {Boolean} isDirty
+     * @memberof ludo.form.Element.prototype
      */
     isDirty:function () {
         return this.dirtyFlag;
@@ -26807,205 +26615,38 @@ ludo.form.Element = new Class({
     }
 });/* ../ludojs/src/form/label-element.js */
 /**
- * // TODO this class should be removed. Instead, think of layout for forms and a separate label class
- * Base class for all form elements with label
+ * Class which render two child views, one label and one form field. This is a convenient class
  */
 ludo.form.LabelElement = new Class({
-    Extends: ludo.form.Element,
-
-    fieldTpl: ['<table ', 'cellpadding="0" cellspacing="0" border="0" width="100%">',
-        '<tbody>',
-        '<tr class="input-row">',
-        '<td class="label-cell"><label class="input-label"></label></td>',
-        '<td><div class="input-cell"></div></td>',
-        '<td class="invalid-cell" style="position:relative"><div class="invalid-cell-div"></div></td>',
-        '<td class="suffix-cell" style="display:none"><label></label></td>',
-        '<td class="help-cell" style="display:none"></td>',
-        '</tr>',
-        '</tbody>',
-        '</table>'
-    ],
-
-
-    labelSuffix: ':',
+    Extends: ludo.View,
+    layout:{
+        type:'linear',
+        orientation:'horizontal'
+    },
 
     __construct: function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['inlineLabel', 'labelSuffix']);
-        if (!this.supportsInlineLabel())this.inlineLabel = undefined;
+        this.setConfigParams(config, ['label', 'field']);
 
-        console.warn("Use of deprecated ancestor ludo.form.LabelElement");
-        console.trace();
+        if(!this.label.type)this.label.type='form.Label';
+        this.label.labelFor = this.field.name;
+
     },
 
-    ludoEvents: function () {
-        this.parent();
-        if (this.inlineLabel) {
-            var el = this.getFormEl();
-            if (el) {
-                el.on('blur', this.setInlineLabel.bind(this));
-                el.on('focus', this.clearInlineLabel.bind(this));
-                this.addEvent('value', this.clearInlineLabelCls.bind(this));
-            }
-        }
-    },
-
-    ludoDOM: function () {
-        this.parent();
-        this.getBody().html(this.fieldTpl.join(''));
-        this.addInput();
-        this.addLabel();
-        this.setWidthOfLabel();
-
+    __children:function(){
+        return [
+            this.label,
+            this.field
+        ]
     },
 
     __rendered: function () {
         this.parent();
-        if (this.inlineLabel)this.setInlineLabel();
-    },
-
-    supportsInlineLabel: function () {
-        return true;
-    },
-
-    setInlineLabel: function () {
-        if (!this.inlineLabel)return;
-        var el = this.getFormEl();
-        if (el.val().length === 0) {
-            el.addClass('ludo-form-el-inline-label');
-            el.val(this.inlineLabel);
-        }
-    },
-
-    clear: function () {
-        this.parent();
-        this.setInlineLabel();
-    },
-
-    reset: function () {
-        this.parent();
-        this.setInlineLabel();
-    },
-
-    clearInlineLabel: function () {
-        var el = this.getFormEl();
-        if (el.val() === this.inlineLabel) {
-            el.val('');
-            this.getFormEl().removeClass('ludo-form-el-inline-label');
-        }
-    },
-
-    clearInlineLabelCls: function () {
-        this.getFormEl().removeClass('ludo-form-el-inline-label');
-    },
-
-    getValueOfFormEl: function () {
-        var val = this.getFormEl().val();
-        return this.inlineLabel && this.inlineLabel === val ? '' : val;
-    },
-
-    addLabel: function () {
-        if (this.label !== undefined) {
-            this.getLabelDOM().html(this.label ? this.label + this.labelSuffix : '');
-            this.els.label.attr('for', this.getFormElId());
-        }
-        if (this.suffix) {
-            var s = this.getSuffixCell();
-            s.css('display', '');
-            var label = s.find('label').first();
-            if (label) {
-                label.html(this.suffix);
-                label.attr('for', this.getFormElId());
-            }
-        }
-    },
-
-    setWidthOfLabel: function () {
-        if (this.label === undefined) {
-            this.getLabelDOM().css('display', 'none');
-        } else {
-            this.getLabelDOM().parent().css('width', this.labelWidth);
-        }
-    },
-
-    getLabelDOM: function () {
-        return this.getCell('.input-label', 'label');
-    },
-
-    addInput: function () {
-        if (!this.inputTag) {
-            return;
-        }
-        this.els.formEl = $('<' + this.inputTag + '>');
-
-        if (this.inputType) {
-            this.els.formEl.attr('type', this.inputType);
-        }
-        if (this.maxLength) {
-            this.els.formEl.attr('maxlength', this.maxLength);
-        }
-        if (this.readonly) {
-            this.els.formEl.attr('readonly', true);
-        }
-        this.getInputCell().append(this.els.formEl);
-        if (this.fieldWidth) {
-            this.els.formEl.css('width', this.fieldWidth);
-            this.getInputCell().parent().css('width', (this.fieldWidth + ludo.dom.getMBPW(this.els.formEl)));
-        }
-        this.els.formEl.id = this.getFormElId();
-    },
-
-    getSuffixCell: function () {
-        return this.getCell('.suffix-cell', 'labelSuffix');
-    },
-
-    getInputCell: function () {
-        return this.getCell('.input-cell', 'cellInput');
-    },
-
-    getInputRow: function () {
-        return this.getCell('.input-row', 'inputRow');
-    },
-
-    getCell: function (selector, cacheKey) {
-        if (!this.els[cacheKey]) {
-            this.els[cacheKey] = this.getBody().find(selector + ":first");
-        }
-        return this.els[cacheKey];
-    },
-
-    resizeDOM: function () {
-        this.parent();
-        if (this.els.formEl) {
-            if (this.stretchField) {
-                var width = this.getWidth();
-                if (!isNaN(width) && width > 0) {
-                    width -= (ludo.dom.getMBPW(this.getEl()) + ludo.dom.getMBPW(this.getBody()));
-                } else {
-                    var parent = this.getParent();
-                    if (parent && parent.layout.type !== 'linear' && parent.layout.orientation !== 'horizontal') {
-                        width = parent.getWidth();
-                        width -= (ludo.dom.getMBPW(parent.getEl()) + ludo.dom.getMBPW(parent.getBody()));
-                        width -= (ludo.dom.getMBPW(this.getEl()) + ludo.dom.getMBPW(this.getBody()));
-                    } else {
-                        var c = this.els.container;
-                        width = c.offsetWidth - ludo.dom.getMBPW(this.els.body) - ludo.dom.getPW(c) - ludo.dom.getBW(c);
-                    }
-                }
-                if (this.label !== undefined)width -= this.labelWidth;
-                if (this.suffix)width -= this.getSuffixCell().offsetWidth;
-                if (this.inputTag !== 'select') width -= 5;
-                if (width > 0 && !isNaN(width)) {
-                    this.formFieldWidth = width;
-                    this.getFormEl().css('width', width);
-                }
-            }else{
-
-            }
-        }
     }
+
 });/* ../ludojs/src/form/button.js */
 /**
+ * TODO specify which form the button belongs to. used for disableOnInvalid
  * Button component
  * The button class extends ludo.form.Element
  * @namespace ludo.form
@@ -27013,10 +26654,20 @@ ludo.form.LabelElement = new Class({
  * @param {Object} config
  * @param {Boolean} config.submittable Default: false. When false, the JSON from parentView.getForm().values() will not not include the button.
  * @param {Boolean} config.disabled Default: false. True to initially disable the button
+ * @param {Boolean} config.selected True to set the button initial selected.
  * @param {Boolean} config.toggle When true, the button will remain in it's pressed until a new press on button occurs.
  * @param {String|Object} config.toggleGroup Used for toggling between buttons. Example: { type:'form.Button', toggle:true, toggleGroup:'myGroup',value:'1' }, 
  * { type:'form.Button', toggle:true, toggleGroup:'myGroup',value:'2' }. Here, two buttons are assigned to the same toggleGroup 'myGroup'. When one button is pressed,
  * the other button will be unpressed.
+ * @param {Boolean} config.disableOnInvalid True to automatically disable button when parent form is invalid.
+ * @param {String} config.size Size of button's','m','l' (small, medium or large)
+ * @param {String} config.formRef Id of parent view. disableOnInvalid will be triggred when the form of this view is invalid.
+ * @param {String} config.listeners Event listeners. Example:
+ * <code>
+ *     listeners: {
+ *      'click': function() { }
+ *      }
+ * @fires ludo.form.Button#click Fired on click. Arguments: 1) valud, 2) ludo.form.Button
  */
 ludo.form.Button = new Class({
     Extends:ludo.form.Element,
@@ -27025,7 +26676,7 @@ ludo.form.Button = new Class({
     inputType:'submit',
     cssSignature:'ludo-form-button',
     name:'',
-    /**
+    /*
      * Text of button
      * @attribute {String} value
      */
@@ -27039,15 +26690,10 @@ ludo.form.Button = new Class({
     menu:undefined,
     submittable:false,
 
-    /**
-     * Toggle button
-     * @attribute {Boolean} toggle
-     * @memberof ludo.form.Button.prototype
-     * @default false
-     */
+
     toggle:false,
 
-    /**
+    /*
      Assign button to a toggleGroup
      @memberof ludo.form.Button.prototype
      @attribute {Object} toggleGroup
@@ -27086,7 +26732,7 @@ ludo.form.Button = new Class({
 
     toggleGroup:undefined,
 
-    /**
+    /*
      * Disable button when form of parent component is invalid
      * @memberof ludo.form.Button.prototype
      * @attribute {Boolean} disableOnInvalid
@@ -27094,25 +26740,18 @@ ludo.form.Button = new Class({
      */
     disableOnInvalid:false,
 
-    /**
+    /*
      * True to initially disable button
      * @attribute {Boolean} disabled
      * @default false
      */
     disabled:false,
-    /**
-     * Is this button by default selected
-     * When parent component is displayed, it will call select() method for first selected button. If no buttons
-     * have config param selected set to true, it will select first
-     * @memberof ludo.form.Button.prototype
-     * @attribute {Boolean} selected
-     * @default false
-     */
+
     selected:false,
 
     overflow:'hidden',
 
-    /**
+    /*
      * Path to button icon
      * @attribute {String} icon
      * @memberof ludo.form.Button.prototype
@@ -27122,7 +26761,7 @@ ludo.form.Button = new Class({
 
     active:false,
 
-	/**
+	/*
 	 * Size,i.e height of button. Possible values 's', 'm' and 'l' (small,medium, large)
      * @memberof ludo.form.Button.prototype
 	 * @config {String} size
@@ -27152,7 +26791,7 @@ ludo.form.Button = new Class({
         this.layout.width = this.layout.width || Math.max(len * 10, 80);
 
 
-        this.setConfigParams(config, ['size','menu','icon','toggle','disableOnInvalid','defaultSubmit','disabled','selected']);
+        this.setConfigParams(config, ['size','menu','icon','toggle','disableOnInvalid','defaultSubmit','disabled','selected','formView']);
 
         if (config.toggleGroup !== undefined) {
             if (ludo.util.type(config.toggleGroup) === 'string') {
@@ -27219,7 +26858,12 @@ ludo.form.Button = new Class({
 
         this.component = this.getParentComponent();
         if(this.component && this.disableOnInvalid){
-            var m = this.component.getForm();
+            var m;
+            if(this.formView != undefined){
+                m = ludo.get(this.formView);
+            }else{
+                 m = this.component.getForm();
+            }
             m.addEvent('valid', this.enable.bind(this));
             m.addEvent('invalid', this.disable.bind(this));
             if(!m.isValid())this.disable();
@@ -27373,17 +27017,13 @@ ludo.form.Button = new Class({
      * Trigger click on button
      * @function click
      * @return {undefined|Boolean}
+     * @memberof ludo.form.Button.prototype
      */
     click:function () {
         this.focus();
         if (!this.isDisabled()) {
             this.getEl().focus();
-            /**
-             * Click on button event
-             * @event click
-             * @param {String} value, i.e. label of button
-             * @param Component this
-             */
+
             this.fireEvent('click', [this._get(), this]);
 
             if (this.toggle) {
@@ -27438,7 +27078,7 @@ ludo.form.Button = new Class({
 
     turnOn:function () {
         this.active = true;
-        /**
+        /*
          * Turn toggle button on
          * @event on
          * @param {String} value, i.e. label of button
@@ -27450,7 +27090,7 @@ ludo.form.Button = new Class({
 
     turnOff:function () {
         this.active = false;
-        /**
+        /*
          * Turn toggle button off
          * @event off
          * @param {String} value, i.e. label of button
@@ -27464,6 +27104,7 @@ ludo.form.Button = new Class({
      * Return instance of ludo.form.ToggleGroup
      * @function getToggleGroup
      * @return {Object} ludo.form.ToggleGroup
+     * @memberof ludo.form.Button.prototype
      */
     getToggleGroup:function () {
         return this.toggleGroup;
@@ -27477,6 +27118,8 @@ ludo.form.Button = new Class({
  * @namespace ludo.form
  * @class ludo.form.ToggleGroup
  * @augments Core
+ * @fires ludo.form.ToggleGroup#on Fired on button click. Arguments: 1) button value, 2) ludo.form.Button
+ * @fires ludo.form.ToggleGroup#off Fired when button is no longer clicked. Arguments: 1) button value, 2) ludo.form.Button
  */
 ludo.form.ToggleGroup = new Class({
     Extends:ludo.Core,
@@ -27508,21 +27151,11 @@ ludo.form.ToggleGroup = new Class({
         }
         if (button.isActive()) {
             this.activeButton = button;
-            /**
-             * Turn toggle button on
-             * @event on
-             * @param {String} value, i.e. label of button
-             * @param Component this
-             */
+
             this.fireEvent('on', [button.getValue(), button]);
         } else {
             this.activeButton = undefined;
-            /**
-             * Turn toggle button off
-             * @event off
-             * @param {String} value, i.e. label of button
-             * @param Component this
-             */
+
             this.fireEvent('off', [button.getValue(), button]);
         }
     },
@@ -27530,6 +27163,7 @@ ludo.form.ToggleGroup = new Class({
      * Turn a button in the toggle group on
 	 * @function turnOn
      * @param button
+     * @memberof ludo.form.ToggleGroup.prototype
      */
     turnOn:function (button) {
         if (button = this.getButton(button)) {
@@ -27540,6 +27174,7 @@ ludo.form.ToggleGroup = new Class({
      * Turn a button in the toggle group on
 	 * @function turnOff
      * @param button
+     * @memberof ludo.form.ToggleGroup.prototype
      */
     turnOff:function (button) {
         if (button = this.getButton(button)) {
@@ -27860,6 +27495,7 @@ ludo.form.Manager = new Class({
 	 * Validate form and fire "invalid" or "valid" event
 	 * @function validate
 	 * @return void
+	 * @memberof ludo.form.Manager.prototype
 	 */
 	validate:function () {
 		if (this.invalidIds.length > 0) {
@@ -27919,6 +27555,7 @@ ludo.form.Manager = new Class({
 	 * Read form values from the server
 	 * @function read
 	 * @param {String|undefined} id
+	 * @memberof ludo.form.Manager
 	 */
 	read:function(id){
 		this.fireEvent('beforeRead');
@@ -28206,7 +27843,7 @@ ludo.form.CancelButton = new Class({
  * @param {Boolean} config.readonly True to make this form field read only. (Default: false)
  * @param {Boolean} config.selectOnFocus Automatically make the text selected on focus. Default: false
  * @param {Boolean} config.validateKeyStrokes True to run validation after every key stroke(Default: false)
-
+ * @fires ludo.form.Text#key Fired when a key is pressed. Argument: {String} key pressed.
  * @augments ludo.form.Element
  *
  */
@@ -28216,36 +27853,11 @@ ludo.form.Text = new Class({
     labelWidth: 100,
     defaultValue: '',
     placeholder:'',
-    /**
-     * Max length of input field
-     * @attribute maxLength
-     * @type int
-     * @default undefined
-     */
+
     maxLength: undefined,
 
-    /**
-     * Minimum length of value. invalid event will be fired when
-     * value is too short. The value will be trimmed before checking size
-     * @attribute minLength
-     * @type {Number}
-     * @default undefined
-     */
     minLength: undefined,
-
-    /**
-     * When true, capitalize first letter automatically
-     * @attribute {Boolean} ucFirst
-     * @default false
-     */
     ucFirst: false,
-
-    /**
-     When true, capitalize first letter of every word while typing
-     Note! ucWords is not an option for ludo.form.Textarea
-     @attribute {Boolean} ucWords
-     @default false
-     */
     ucWords: false,
 
     inputType: 'text',
@@ -28253,12 +27865,6 @@ ludo.form.Text = new Class({
     regex: undefined,
     validateKeyStrokes: false,
     formFieldWidth: undefined,
-
-    /**
-     * True to apply readonly attribute to element
-     * @config {Boolean} readonly
-     * @default false
-     */
     readonly: false,
     selectOnFocus: false,
 
@@ -28306,11 +27912,7 @@ ludo.form.Text = new Class({
     },
 
     sendKeyEvent: function () {
-        /**
-         * Event fired when a key is pressed
-         * @event key
-         * @param {String} value
-         */
+
         this.fireEvent('key', this.els.formEl.val());
     },
 
@@ -28322,9 +27924,7 @@ ludo.form.Text = new Class({
         }
         return undefined;
     },
-    /**
-     * Return width of input field in pixels.
-     */
+
     getFieldWidth: function () {
         return this.formFieldWidth;
     },
@@ -28412,7 +28012,13 @@ ludo.form.Text = new Class({
  *
  * This class extends ludo.form.Text.
  * @param {Object} config
- * @param {Object} config.childLayout 
+ * @param {Object} config.childLayout Layout for child, example:
+ * <code>
+ * childLayout:{
+            width:300,height:300
+   }
+ *
+ * </code>
  *
  * @class ludo.form.Combo
  */
@@ -28425,16 +28031,7 @@ ludo.form.Combo = new Class({
 
 	menuButton:undefined,
 
-    /**
-     Custom layout properties of child
-     @config {Object} childLayout
-     @default undefined
-     @example
-        childLayout:{
-            width:300,height:300
-        }
-     Default layout properties will be applied when
-     */
+
     childLayout:undefined,
 
     __construct:function(config){
@@ -28584,7 +28181,7 @@ ludo.form.Color = new Class({
 		width:290, height:250
 	},
 
-	getClassChildren:function () {
+	__children:function () {
 		return [
 			{
 				layout:{
@@ -28657,11 +28254,7 @@ ludo.form.Color = new Class({
  */
 ludo.form.ResetButton = new Class({
     Extends:ludo.form.Button,
-    /**
-     * Value of button
-     * @attribute {String} value
-     * @default 'Reset'
-     */
+
     value:'Reset',
     // TODO create parent class for ResetButton, DeleteButton etc.
     applyTo:undefined,
@@ -28693,15 +28286,16 @@ ludo.form.ResetButton = new Class({
     }
 });/* ../ludojs/src/form/combo-tree.js */
 /**
- * @class ludo.form.ComboTree
- * @description A "combo" where you select value from a tree. id of clicked tree node will be set as
+ * A "combo" where you select value from a tree. id of clicked tree node will be set as
  * value.
+ * @class ludo.form.ComboTree
+ * @param {Object} config
  */
 ludo.form.ComboTree = new Class({
     Extends:ludo.form.Element,
     type:'form.ComboTree',
     cssSignature:'form-combo',
-    /**
+    /*
      * Configuration for tree panel. It can be a new config for ludo.tree.Tree or
      * a simple reference to your own pre-configured tree, example:
      * { width: 500, height: 500, type: 'myApp.tree.Folders'
@@ -28754,21 +28348,12 @@ ludo.form.ComboTree = new Class({
      */
     treeConfig:undefined,
 
-    /**
-     * Text to display in combo when no value is selected
-     * @attribute emptyText
-	 * @type String
-     * @default '' (empty string);
-     */
+
     emptyText:'',
 
     width:400,
     height:26,
-    /**
-     *
-     * @attribute Object inputConfig
-     *
-     */
+
     inputConfig:{
         fieldWidth:440,
         labelWidth:1,
@@ -29009,6 +28594,7 @@ ludo.form.ComboTree = new Class({
      * No arguments = Return id of selected record
      * @function getValue
      * @return {String} id (tree.selectedRecord.id);
+     * @memberof ludo.form.ComboTree.prototype
      */
     val:function(value){
         if(arguments.length == 0){
@@ -29021,6 +28607,7 @@ ludo.form.ComboTree = new Class({
      * Return id of selected record
      * @function getValue
      * @return {String} id (tree.selectedRecord.id);
+     * @memberof ludo.form.ComboTree.prototype
      */
     getValue:function () {
         console.warn("Use of deprecated getValue");
@@ -29032,6 +28619,7 @@ ludo.form.ComboTree = new Class({
      * Return selected record
      * @function getSelectedRecord
      * @return object record
+     * @memberof ludo.form.ComboTree.prototype
      */
     getSelectedRecord:function () {
         return this.treePanel.children[0].getSelectedRecord();
@@ -29092,7 +28680,7 @@ ludo.form.Label = new Class({
     Extends: ludo.View,
     labelFor:undefined,
     label:undefined,
-
+    type:'form.Label',
 
     __construct:function(config){
         this.parent(config);
@@ -29188,21 +28776,15 @@ ludo.form.Textarea = new Class({
  * @namespace ludo.form
  * @class ludo.form.DisplayField
  * @augments ludo.form.Text
+ * @param {Object} config
+ * @param {Object} config.tpl Template string for display field, example: tpl: '<a href="mailto:{value}">{value}</a>'
  */
 ludo.form.DisplayField = new Class({
 	Extends:ludo.form.Element,
 	type:'form.DisplayField',
 	inputTag:'span',
 	inputType:'',
-
-	/** Custom tpl for the display field
-	 @attribute tpl
-	 @type String
-	 @default ''
-	 @example
-	 	tpl:'<a href="mailto:{value}">{value}</a>'
-	 {value} will in this example be replaced by value of DisplayField.
-	 */
+	
 	tpl:'',
 	setValue:function (value) {
 		console.warn("Use of deprecated setValue");
@@ -29351,6 +28933,7 @@ ludo.form.Checkbox = new Class({
      * Uncheck checkbox
      * @function uncheck
      * @return void
+     * @memberof ludo.form.Checkbox.prototype
      */
     uncheck:function () {
         if (this.isChecked()) {
@@ -30249,12 +29832,7 @@ ludo.form.Spinner = new Class({
     setSpinnerValue:function (value) {
         this.value = this.validateSpinnerValue(value).toFixed(this.decimals);
         this.getFormEl().val(this.value);
-        /**
-         * Change event fired when value is changed
-         * @event change
-         * @param value
-         * @param Component this
-         */
+
         this.fireEvent('change', value, this);
     },
 
@@ -30287,9 +29865,11 @@ ludo.form.Spinner = new Class({
  Select box (&lt;select>)
  @namespace ludo.form
  @class ludo.form.Select
- @augments ludo.form.Element
- 
  @param {Object} config
+ @param {String} config.valueKey Name of key used for value, example: "value"
+ @param {String} config.textKey Name of key used for displayed text, example: "text"
+ @param {Object} config.emptyItem. Object shown when no value selected, example: { "text": "Please select", value: "" }
+ @param {Array} config.options. Array of values, example: [{value:1, text: "First item"},{value:2, text:"Second item" }]
  @example
 	 {
 		 type:'form.Select',
@@ -30323,57 +29903,13 @@ ludo.form.Spinner = new Class({
 ludo.form.Select = new Class({
     Extends:ludo.form.Element,
     type:'form.Select',
-    labelWidth:100,
-    /**
-     First option in the select box, usually with an empty value. You should use the same
-     keys for empty item as for the rest of the options. Value is defined by the valueKey property
-     (default "value"), and text by textKey(default "text").
-     @config {Object} emptyItem
-     @default undefined
-     @example
-		 {
-			 id : '',
-			 title : 'Please select an option'
-
-		 }
-     */
     emptyItem:undefined,
-
-    /**
-     Name of column for the values of the select box. This option is useful when populating select box using a collection data source.
-     @config {String} valueKey
-	 @default 'id'
-     @example
-     	valueKey : 'id'
-     */
     valueKey:'value',
-    /**
-     * Name of column for the displayed text of the options in the select box
-	 * @config {String} textKey
-	 * @default 'text'
-     */
     textKey:'text',
-
     inputTag:'select',
     inputType:'',
-    /**
-     * Config of dataSource.Collection object used to populate the select box from external data
-     * @config {Object|ludo.dataSource.Collection} dataSource
-     * @default {}
-     */
 	dataSource:{},
 
-    /**
-     Array of options used to populate the select box
-     @config {Array} options
-     @default undefined
-     @example
-		 options:[
-			 { value:'1',text: 'Option number 1' },
-			 { value:'2','text: Option number 2' },
-			 { value:'3',text: 'Option number 3' }
-		 ]
-     */
     options:undefined,
 
 	defaultDS:'dataSource.Collection',
@@ -30432,6 +29968,7 @@ ludo.form.Select = new Class({
      * @function addOption
      * @param {String} value
      * @param {String} text
+     * @memberof ludo.form.Select.prototype
      */
     addOption:function (value, text) {
         var option = $('<option value="' + value + '">' + text + '</option>');
@@ -30442,7 +29979,7 @@ ludo.form.Select = new Class({
         this.parent();
     }
 });/* ../ludojs/src/form/filter-text.js */
-/**
+/*
  * @namespace ludo.form
  * @class ludo.form.FilterText
  * @augments ludo.form.Text
@@ -30452,7 +29989,7 @@ ludo.form.FilterText = new Class({
     Extends:ludo.form.Text,
     type:'form.FilterText',
 
-    /**
+    /*
      * Suggest selected record.
      * @attribute autoComplete
      * @type {Boolean}
@@ -30460,20 +29997,20 @@ ludo.form.FilterText = new Class({
      */
     autoComplete:true,
 
-    /**
+    /*
      * value and title to display when no records are selected
      * @attribute emptyItem
 	 * @type Object
      */
     emptyItem:{
-        /**
+        /*
          * value of empty item
          * @attribute emptyItem.value
          * @type string
          * @default empty string
          */
         value:'',
-        /**
+        /*
          * display value of empty item
          * @attribute emptyItem.title
          * @type string
@@ -30482,7 +30019,7 @@ ludo.form.FilterText = new Class({
         title:''
     },
 
-    /**
+    /*
      * When set to true, filtering should be done on the server. When set to false, the script will search initial records sent to constructor using config.data
      * or the records it got from the server during when constructing the component
      * @attribute filterOnServer
@@ -30491,7 +30028,7 @@ ludo.form.FilterText = new Class({
      * @memberof ludo.form.FilterText.prototype
      */
     filterOnServer:false,
-    /**
+    /*
      * When search for records on the server is enabled or you have sent collection of records to the component on creation using config.data,
      * this property specifies maximum number of filtered records to be displayed below the component. For standard text fields, this property is of no interest.
      * @attribute maxDisplayed
@@ -30500,7 +30037,7 @@ ludo.form.FilterText = new Class({
      * @memberof ludo.form.FilterText.prototype
      */
     maxDisplayed:10,
-    /**
+    /*
      * "id" field of records used for filtering, this will also be the value of the text field. Example:
      * [{ id: 100, Title: 'Norway' }] will return 100 when calling component.getValue()
      * @attribute idField
@@ -30509,7 +30046,7 @@ ludo.form.FilterText = new Class({
      * @memberof ludo.form.FilterText.prototype
      */
     idField:'id',
-    /**
+    /*
      * name of "display" field when filtering is enabled. This identified the column used in list box below input field,
      * example: displayField set to "firstname" will be display "John" and "Jane" for these records: [{ id:1, firstname: 'John', lastname: 'Doe' }, {id:2, firstname: 'Jane', lastname: 'Doe'} ]
      * @attribute displayField
@@ -30687,7 +30224,7 @@ ludo.form.FilterText = new Class({
         console.warn("Use of deprecated getValue");
         console.warn();
     },
-    /**
+    /*
      * Return value of text field. On standard text fields the visible value will be returned. Otherwise the id of selected record will be returned
      * @function getValue
      * @return string value
@@ -30701,7 +30238,7 @@ ludo.form.FilterText = new Class({
         return this.parent();
     },
 
-    /**
+    /*
      * If record is part of data collection in memory(config.data or remotely loaded records), it will be shown,
      * if remote.url is set it will search for request to the server for the record. The query will look like this:
      * { getRecord : { id: 100 } } and it expects response from server in this format:
@@ -31069,6 +30606,7 @@ ludo.form.TextFilterContainer = new Class({
  * constructor or loaded remotely. Here's an example of format:
  * [{ value: 1, text : 'my radio', image: 'images/my-radio-image.png' }]
  * @augments ludo.form.Select
+ * @fires ludo.form.RadioGroup#change Fired on change. Arguments: 1) value, 2) ludo.form.RadioGroup
  */
 ludo.form.RadioGroup = new Class({
     Extends: ludo.form.Select,
@@ -31117,7 +30655,7 @@ ludo.form.RadioGroup = new Class({
 
     disposeCheckboxes:function(){
         for(var i=0;i<this.checkboxes.length;i++){
-            this.checkboxes[i].dispose();
+            this.checkboxes[i].remove();
         }
         this.checkboxes = [];
     },
@@ -31128,12 +30666,7 @@ ludo.form.RadioGroup = new Class({
             this.checkboxes[i].toggleImage();
         }
 
-        /**
-         * @event change
-         * @description Value has changed
-         * @param {String} value
-         * @param {Object} this component
-         */
+
         this.fireEvent('change', [ this.value, this ]);
         this.toggleDirtyFlag();
     },
@@ -31165,12 +30698,17 @@ ludo.form.RadioGroup = new Class({
             this.checkboxes[i].enable();
         }
     },
-    /**
-     * Get value of selected radio input
-     * @function getValue
-     * @return String value
-     */
-    getValue : function() {
+
+    val:function(){
+
+        var radio = this.getCheckedRadio();
+        if(radio){
+            return radio._get();
+        }
+        return undefined;
+    },
+
+    _get : function() {
         var radio = this.getCheckedRadio();
         if(radio){
             return radio._get();
@@ -31181,6 +30719,7 @@ ludo.form.RadioGroup = new Class({
      * Return reference to selected radio button component
      * @function getCheckedRadio
      * @return {Object} ludo.form.Radio component
+     * @memberof ludo.form.RadioGroup.prototype
      */
     getCheckedRadio : function() {
         for(var i=0;i<this.checkboxes.length;i++){
@@ -31195,6 +30734,7 @@ ludo.form.RadioGroup = new Class({
      * @function val
      * @param {String} value
      * @return void|string
+     * @memberof ludo.form.RadioGroup.prototype
      */
     val : function(value){
         if(arguments.length == 0){
@@ -32178,7 +31718,7 @@ ludo.form.Seekbar = new Class({
 
  */
 ludo.form.File = new Class({
-	Extends:ludo.form.LabelElement,
+	Extends:ludo.form.Element,
 	type:'form.File',
 
 	inputTag:'input',
@@ -32226,10 +31766,10 @@ ludo.form.File = new Class({
 	__rendered:function () {
 		this.parent();
 
-		var cell = $('<td>');
-		cell.width = this.buttonWidth;
+		var cell = $('<div>');
+		cell.width(this.buttonWidth);
 		cell.css('textAlign', 'right');
-		this.getInputRow().append(cell);
+		this.getBody().append(cell);
 		cell.append(this.getFormEl());
 
 		var btn = new ludo.form.Button({
@@ -32437,10 +31977,11 @@ ludo.form.File = new Class({
 	_get:function(){
 		return this.value;
 	},
-	/**
+	/*
 	 * setValue for file inputs is display only. File inputs are readonly
 	 * @function setValue
 	 * @param {Object} value
+	 *
 	 */
 	setValue:function (value) {
 		console.warn("Use of deprecated setValue");
@@ -32454,6 +31995,7 @@ ludo.form.File = new Class({
 	 * Method without arguments returns the file input value
 	 * @function val
 	 * @param {Object} value
+	 * @memberof ludo.form.File.prototype
 	 */
 	val:function(value){
 		if(arguments.length == 0){
@@ -32493,10 +32035,11 @@ ludo.form.File = new Class({
 /* ../ludojs/src/form/slider.js */
 /**
  * Slider form component
+ * @class ludo.form.Slider.prototype
  */
 ludo.form.Slider = new Class({
     // TODO implement support for min and max, example slider from 0 to 100, min and max from 10 to 90
-    Extends:ludo.form.LabelElement,
+    Extends:ludo.form.Element,
     cssSignature:'ludo-form-slider',
     type:'form.Slider',
     fieldTpl:['<table ','cellpadding="0" cellspacing="0" border="0" width="100%">',
@@ -32556,7 +32099,7 @@ ludo.form.Slider = new Class({
 
         el.addClass('ludo-form-slider-container');
         el.addClass('ludo-form-slider-' + this.getDirection());
-        this.getInputCell().append(el);
+        this.getBody().append(el);
 
         this.addSliderBg('first');
         this.addSliderBg('last');
@@ -32601,12 +32144,6 @@ ludo.form.Slider = new Class({
     },
     receivePosition:function (pos) {
         this._set(this.pixelToValue(this.getDirection() == 'horizontal' ? pos.x : pos.y));
-        /**
-         * Change event
-         * @event change
-         * @param value of form field
-         * @param Component this
-         */
         this.fireEvent('change', [ this.value, this ]);
     },
 
@@ -32780,6 +32317,7 @@ ludo.form.SearchField = new Class({
 	/**
 	 * Executes search in data source
 	 * @function search
+	 * @memberof ludo.form.SearchField.prototype
 	 */
 	search:function () {
 		if(this.remote){
@@ -32839,7 +32377,7 @@ ludo.form.validator.Base = new Class({
 			"listeners":{
 				"success":  function(request){
 					this.value = request.getData().value;
-					/**
+					/*
 					 * Event fired after validator value has been loaded from server
 					 * @event loadValue
 					 * @param form.validator.Base this
@@ -32951,6 +32489,7 @@ ludo.paging.Next = new Class({
 	/**
 	 * Calls nextPage() method of data source
 	 * @function nextPage
+	 * @memberof ludo.paging.Next.prototype
 	 */
 	nextPage:function () {
 		this.getDataSource().nextPage();
@@ -33123,6 +32662,7 @@ ludo.paging.PageInput = new Class({
  Displays current page number shown in a collection
  @class ludo.paging.TotalPages
  @param {Object} config
+ @param {String} tpl Template string. default: {page}
  @example
  children:[
  ...
@@ -33139,11 +32679,7 @@ ludo.paging.CurrentPage = new Class({
 	type:'grid.paging.CurrentPage',
 	width:25,
 	onLoadMessage:'',
-	/**
-	 * Text template for view. {pages} is replaced by number of pages in data source.
-	 * @attribute {String} tpl
-	 * @default '/{pages}'
-	 */
+
 	tpl:'{page}',
 
 	ludoDOM:function () {
@@ -33181,6 +32717,7 @@ ludo.paging.CurrentPage = new Class({
  Displays number of pages in a data source
  @class ludo.paging.TotalPages
  @param {Object} config
+ @param {String}config.tpl Template string. default: '/{pages}'.
  @example
  children:[
  ...
@@ -33197,11 +32734,7 @@ ludo.paging.TotalPages = new Class({
 	type:'grid.paging.TotalPages',
 	width:25,
 	onLoadMessage:'',
-	/**
-	 * Text template for view. {pages} is replaced by number of pages in data source.
-	 * @attribute {String} tpl
-	 * @default '/{pages}'
-	 */
+
 	tpl:'/{pages}',
 
 	ludoDOM:function () {
@@ -33659,7 +33192,8 @@ ludo.dialog.Alert = new Class({
  * Dialog with one text field. Default buttons are "OK" and "Cancel"
  * @namespace ludo.dialog
  * @class ludo.dialog.Prompt
- * @augments Dialog
+ * @augments ludo.dialog.Dialog
+ * @param {Object} config
  */
 ludo.dialog.Prompt = new Class({
     Extends: ludo.dialog.Dialog,
@@ -33698,23 +33232,22 @@ ludo.dialog.Prompt = new Class({
         this.input = this.addChild(inputConfig);
         this.input.focus();
     },
+
     /**
      * Return value of input field
-     * @function getValue
+     * @function val
      * @return String value
+     * @memberof ludo.dialog.Prompt
      */
+    val: function(){
+        return this.input.val();
+    },
+
     getValue : function(){
         return this.input.getValue()
     },
 
     buttonClick : function(value, button){
-        /**
-         * Event fired on when clicking on dialog button
-         * @event lowercase name of button with white space removed
-         * @param {String} value of input field
-         * @param {Object} ludo.dialog.Prompt
-         *
-         */
         this.fireEvent(button.value.toLowerCase(), [this.getValue(), this]);
         if (this.autoHideOnBtnClick) {
             this.hide();
@@ -33722,14 +33255,14 @@ ludo.dialog.Prompt = new Class({
     }
 
 });/* ../ludojs/src/video/video.js */
-/**
+/*
  Base class for Video Player components
 
  */
 ludo.video.Video = new Class({
 	Extends:ludo.View,
 	type:'video.Video',
-	/**
+	/*
 	 * ID of movie, to show, example an YouTube id
 	 * @attribute movieId
 	 * @type String
@@ -33777,7 +33310,7 @@ ludo.video.Video = new Class({
 		el.css('overflow', 'hidden');
 		return el;
 	},
-	/**
+	/*
 	 * Load a new movie
 	 * @function loadMovie
 	 * @param {String} movieId
@@ -33846,6 +33379,7 @@ ludo.canvas.Gradient = new Class({
 	 @param {String} stopColor
 	 @param {Number|undefined} stopOpacity
 	 @return {ludo.canvas.Stop} stop
+	 @memberof ludo.canvas.Gradient.prototype
 	 @example
 		 var gradient = new ludo.canvas.Gradient({
 			id:'myGradient'
@@ -33874,6 +33408,7 @@ ludo.canvas.Gradient = new Class({
 	 * @function getStop
 	 * @param {Number} index
 	 * @return {canvas.Stop} stop
+	 * @memberof ludo.canvas.Gradient.prototype
 	 */
 	getStop:function (index) {
 		return this.stopTags[index];
@@ -33941,6 +33476,7 @@ ludo.canvas.Stop = new Class({
 	 Set new offset
 	 @function setOffset
 	 @param {String} offset
+	 @memberof ludo.canvas.Stop.prototype
 	 @example
 	 	gradient.getStop(0).setOffset('10%');
 	 */
@@ -33951,6 +33487,7 @@ ludo.canvas.Stop = new Class({
 	 Set new stop color
 	 @function setStopColor
 	 @param {String} stopColor
+	 @memberof ludo.canvas.Stop.prototype
 	 @example
 	 	gradient.getStop(0).setStopColor('#FFFFFF');
 	 */
@@ -33962,6 +33499,7 @@ ludo.canvas.Stop = new Class({
 	 * Returns value of offset attribute
 	 * @function getOffset
 	 * @return {String} offset
+	 * @memberof ludo.canvas.Stop.prototype
 	 */
 	getOffset:function(){
 		return this.get('offset');
@@ -33971,6 +33509,7 @@ ludo.canvas.Stop = new Class({
 	 * Returns value of stop-color attribute
 	 * @function getStopColor
 	 * @return {String} stop color
+	 * @memberof ludo.canvas.Stop.prototype
 	 */
 	getStopColor:function(){
 		return this.get('stop-color');
@@ -33980,6 +33519,7 @@ ludo.canvas.Stop = new Class({
 	 * Set new stop opacity(0 = transparent, 1 = full opacity)
 	 * @function setStopOpacity
 	 * @param {Number} stopOpacity
+	 * @memberof ludo.canvas.Stop.prototype
 	 */
 	setStopOpacity:function(stopOpacity){
 		this.set('stop-opacity', stopOpacity);
@@ -33989,6 +33529,7 @@ ludo.canvas.Stop = new Class({
 	 * Returns value of stop-opacity property
 	 * @function getStopOpacity
 	 * @return {Number} stop opacity
+	 * @memberof ludo.canvas.Stop.prototype
 	 */
 	getStopOpacity:function(){
 		return this.get('stop-opacity');
@@ -34038,6 +33579,7 @@ ludo.canvas.Drag = new Class({
 	 * @function add
 	 * @param {ludo.effect.DraggableNode} node
 	 * @return {effect.DraggableNode} added node
+	 * @memberof ludo.canvas.Drag.prototype
 	 */
 	add:function (node) {
 		node = this.getValidNode(node);
@@ -34220,6 +33762,7 @@ ludo.canvas.Circle = new Class({
 	 * Set new radius
 	 * @function setRadius
 	 * @param {Number} radius
+	 * @memberof ludo.canvas.Circle.prototype
 	 */
 	setRadius:function (radius) {
 		this.set('r', radius);
@@ -34229,6 +33772,7 @@ ludo.canvas.Circle = new Class({
 	 * Return curent radius
 	 * @function getRadius
 	 * @return {String|Number} radius
+	 * @memberof ludo.canvas.Circle.prototype
 	 */
 	getRadius:function () {
 		return this.el.r.animVal.value;
@@ -34238,6 +33782,7 @@ ludo.canvas.Circle = new Class({
 	 * Set new center X
 	 * @function setCx
 	 * @param {Number} x
+	 * @memberof ludo.canvas.Circle.prototype
 	 */
 	setCx:function (x) {
 		this.set('cx', x);
@@ -34246,6 +33791,7 @@ ludo.canvas.Circle = new Class({
 	 * Return current center X
 	 * @function getX
 	 * @return {String|Number} cx
+	 * @memberof ludo.canvas.Circle.prototype
 	 */
 	getCx:function () {
 		return this.el.cx.animVal.value;
@@ -34255,6 +33801,7 @@ ludo.canvas.Circle = new Class({
 	 * Set new center Y
 	 * @function setCy
 	 * @param {Number} y
+	 * @memberof ludo.canvas.Circle.prototype
 	 */
 	setCy:function (y) {
 		this.set('cy', y);
@@ -34263,6 +33810,7 @@ ludo.canvas.Circle = new Class({
 	 * Return current center Y
 	 * @function getCy
 	 * @return {String|Number} cy
+	 * @memberof ludo.canvas.Circle.prototype
 	 */
 	getCy:function () {
 		return this.el.cy.animVal.value;
@@ -34272,6 +33820,7 @@ ludo.canvas.Circle = new Class({
 	 * Return position on canvas
 	 * @function getPosition()
 	 * @return {Object} x and y
+	 * @memberof ludo.canvas.Circle.prototype
 	 */
 	getPosition:function(){
 		var translate = this.getTranslate();
@@ -34282,6 +33831,12 @@ ludo.canvas.Circle = new Class({
 		}
 	},
 
+	/**
+	 * Returns diameter x diameter
+	 * @function getSize
+	 * @returns {{x: number, y: number}}
+	 * @memberof ludo.canvas.Circle.prototype
+     */
 	getSize:function(){
 		var r = this.getRadius();
 		return {
@@ -34295,7 +33850,6 @@ ludo.canvas.Circle = new Class({
  @namespace ludo.canvas
  @class ludo.canvas.Polyline
  @augments canvas.NamedNode
- 
  @param {String} points
  @param {canvas.NodeConfig} config
  @example
@@ -34321,6 +33875,7 @@ ludo.canvas.Polyline = new Class({
 	 * @function getPoint
 	 * @param {Number} index
 	 * @return {Object|undefined} x and y
+	 * @memberof ludo.canvas.Polyline.prototype
 	 */
 	getPoint:function(index){
 		if(this.pointArray === undefined)this.buildPointArray();
@@ -34338,6 +33893,7 @@ ludo.canvas.Polyline = new Class({
 	 @param {Number} index
 	 @param {Number} x
 	 @param {Number} y
+	 @memberof ludo.canvas.Polyline.prototype
 	 @example
 		 var polyline = new ludo.canvas.Polyline('20,20 40,25 60,40 80,120 120,140 200,180');
 	     polyline.setPoint(0,10,5);
@@ -34366,6 +33922,7 @@ ludo.canvas.Polyline = new Class({
 	 * Get size of polyline (max X - min X) and (max X - min Y)
 	 * @function getSize
 	 * @return {Object} x and y
+	 * @memberof ludo.canvas.Polyline.prototype
 	 */
 	getSize:function(){
 		if(this.size === undefined){
@@ -34381,6 +33938,7 @@ ludo.canvas.Polyline = new Class({
 	 * Get position of polyline, min X and min Y)
 	 * @function getPosition
 	 * @return {Object} x and y
+	 * @memberof ludo.canvas.Polyline.prototype
 	 */
 	getPosition:function(){
 		if(this.position === undefined){
@@ -34431,6 +33989,7 @@ ludo.canvas.Polygon = new Class({
  @augments ludo.canvas.NamedNode
  @param {Object} coordinates
  @param {ludo.canvas.NodeConfig} config
+ @memberof ludo.canvas.Ellipse.prototype
  @example
  	var ellipse = new ludo.canvas.Ellipse({ cx:500, cy:425, rx:250, ry:200 }, { paint: paintObject } );
  */
@@ -34442,6 +34001,7 @@ ludo.canvas.Ellipse = new Class({
 	 * Set new x-radius
 	 * @function setRadiusX
 	 * @param {Number} radius
+	 * @memberof ludo.canvas.Ellipse.prototype
 	 */
 	setRadiusX:function (radius) {
 		this.set('rx', radius);
@@ -34451,6 +34011,7 @@ ludo.canvas.Ellipse = new Class({
 	 * Set new y-radius
 	 * @function setRadiusY
 	 * @param {Number} radius
+	 * @memberof ludo.canvas.Ellipse.prototype
 	 */
 	setRadiusY:function (radius) {
 		this.set('ry', radius);
@@ -34460,6 +34021,7 @@ ludo.canvas.Ellipse = new Class({
 	 * Return curent radius
 	 * @function getRadiusX
 	 * @return {String|Number} x-radius
+	 * @memberof ludo.canvas.Ellipse.prototype
 	 */
 	getRadiusX:function () {
 		return this.el.rx.animVal.value;
@@ -34469,6 +34031,7 @@ ludo.canvas.Ellipse = new Class({
 	 * Return curent y-radius
 	 * @function getRadiusY
 	 * @return {String|Number} y-radius
+	 * @memberof ludo.canvas.Ellipse.prototype
 	 */
 	getRadiusY:function () {
 		return this.el.ry.animVal.value;
@@ -34478,6 +34041,7 @@ ludo.canvas.Ellipse = new Class({
 	 * Set new center X
 	 * @function setCx
 	 * @param {Number} x
+	 * @memberof ludo.canvas.Ellipse.prototype
 	 */
 	setCx:function (x) {
 		this.set('cx', x);
@@ -34486,6 +34050,7 @@ ludo.canvas.Ellipse = new Class({
 	 * Return current center X
 	 * @function getX
 	 * @return {String|Number} cx
+	 * @memberof ludo.canvas.Ellipse.prototype
 	 */
 	getCx:function () {
 		return this.el.cx.animVal.value;
@@ -34495,6 +34060,7 @@ ludo.canvas.Ellipse = new Class({
 	 * Set new center Y
 	 * @function setCy
 	 * @param {Number} y
+	 * @memberof ludo.canvas.Ellipse.prototype
 	 */
 	setCy:function (y) {
 		this.set('cy', y);
@@ -34503,6 +34069,7 @@ ludo.canvas.Ellipse = new Class({
 	 * Return current center Y
 	 * @function getCy
 	 * @return {String|Number} cy
+	 * @memberof ludo.canvas.Ellipse.prototype
 	 */
 	getCy:function () {
 		return this.el.cy.animVal.value;
@@ -34512,6 +34079,7 @@ ludo.canvas.Ellipse = new Class({
 	 * Return position on canvas
 	 * @function getPosition()
 	 * @return {Object} x and y
+	 * @memberof ludo.canvas.Ellipse.prototype
 	 */
 	getPosition:function () {
 		var translate = this.getTranslate();
@@ -34525,6 +34093,7 @@ ludo.canvas.Ellipse = new Class({
 	 Return size of ellipse
 	 @function getSize
 	 @return {Object} x and y
+	 @memberof ludo.canvas.Ellipse.prototype
 	 @example
 	 	var ellipse = new ludo.canvas.Ellipse({ cx:500, cy:425, rx:250, ry:200 });
 	 	var size = ellipse.geSize(); // will return {x: 500, y: 400}
@@ -34601,6 +34170,7 @@ ludo.canvas.Path = new Class({
      * Get size of polyline (max X - min X) and (max X - min Y)
      * @function getSize
      * @return {Object} x and y
+     * @memberof ludo.canvas.Path.prototype
      */
     getSize:function () {
         if (this.size === undefined) {
@@ -34711,6 +34281,7 @@ ludo.canvas.Filter = new Class({
 	 Set drop shadow
 	 @function setDropShadow
 	 @param {Object} properties
+	 @memberof ludo.canvas.Filter.prototype
 	 @example
 	 	filter.setDropShadow({
 	 		x: 2, y: 2, // Offset
@@ -34776,6 +34347,7 @@ ludo.canvas.Filter = new Class({
 	 * @function addFeMergeNode
 	 * @param {String} key
 	 * @return {canvas.Node} feMergeNode
+	 * @memberof ludo.canvas.Filter.prototype
 	 */
 	addFeMergeNode:function (key) {
 		if (this.mergeTags[key] === undefined) {
@@ -34844,12 +34416,9 @@ ludo.canvas.Curtain = new Class({
 	 * Open curtains, i.e. show element
 	 * @function open
 	 * @param {String} direction (LeftRight, TopBottom, BottomTop or RightLeft),
-	 * @param {Number} duration in seconds
-	 * @optional
-	 * @default 1
-	 * @param {Number} fps (Frames per second)
-	 * @optional
-	 * @default 33
+	 * @param {Number} duration in seconds. Default: 1
+	 * @param {Number} fps (Frames per second). default: 33
+	 * @memberof ludo.canvas.Curtain.prototype
 	 */
 	open:function (direction, duration, fps) {
 		this.onStart();
@@ -34862,12 +34431,9 @@ ludo.canvas.Curtain = new Class({
 	 * Close curtains, i.e. hide element
 	 * @function close
 	 * @param {String} direction (LeftRight, TopBottom, BottomTop or RightLeft),
-	 * @param {Number} duration in seconds
-	 * @optional
-	 * @default 1
-	 * @param {Number} fps (Frames per second)
-	 * @optional
-	 * @default 33
+	 * @param {Number} duration in seconds. Default: 1
+	 * @param {Number} fps (Frames per second). Default: 33
+	 *  @memberof ludo.canvas.Curtain.prototype
 	 */
 	close:function (direction, duration, fps) {
 		this.onStart();

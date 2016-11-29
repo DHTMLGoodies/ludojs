@@ -13,7 +13,7 @@ ludo.form.Label = new Class({
     Extends: ludo.View,
     labelFor:undefined,
     label:undefined,
-
+    type:'form.Label',
 
     __construct:function(config){
         this.parent(config);
