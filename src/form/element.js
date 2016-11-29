@@ -441,6 +441,13 @@ ludo.form.Element = new Class({
     },
 
     /**
+     * Alias to reset
+     * @memberof ludo.form.Element.prototype
+     */
+    rollback:function(){
+        this.reset();
+    },
+    /**
      * Reset / Roll back to last committed value. It could be the value stored by last commit method call
      * or if the original value/default value of this field.
      * @function reset

@@ -325,6 +325,30 @@
 
         <tr>
             
+                <td class="name"><code>populate</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>True to automatically populate form fields with JSON from server.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
                 <td class="name"><code>listeners</code></td>
             
 
@@ -624,7 +648,7 @@ var json = view.getForm().values();</pre>
 		<ul class="dummy">
 			<li>
 				<a href="form_manager.js.html">form/manager.js</a>,
-				 <a href="form_manager.js.html#sunlight-1-line-94">line 94</a>
+				 <a href="form_manager.js.html#sunlight-1-line-95">line 95</a>
 			</li>
 		</ul>
 	</dd>
@@ -651,171 +675,6 @@ var json = view.getForm().values();</pre>
             
 <hr>
 <dt>
-    <h4 class="name" id=".read"><span class="type-signature">&lt;static> </span>read<span class="signature">(id)</span><span class="type-signature"></span></h4>
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        <p>Read form values from the server. This method triggers the events read.init and read.success|read.fail.<br>This method will be called during view creation if read.autoload is set to true.</p>
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>id</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-|
-
-<span class="param-type">undefined</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="form_manager.js.html">form/manager.js</a>,
-				 <a href="form_manager.js.html#sunlight-1-line-456">line 456</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-        <h5>Example</h5>
-        
-    <pre class="sunlight-highlight-javascript">var v = new ludo.View({
-         form:{
-            hiddenFields: [&#x27;id&#x27;],
-            read: {
-                url: &#x27;form-data.json&#x27;, // read url
-                keys:[&#x27;id&#x27;], // array of form values to add to the view request
-                listeners:{
-                    &#x27;success&#x27;: function(json, form){
-                        form.clear();
-                        form.populate(json);
-                    },
-                    &#x27;fail&#x27;: function(text, error, form){
-                        // do something on failure
-                    }
-                }
-            }
-        }
-     });
-     // load data from server and trigger the listeners above.
-     v.getForm().read();</pre>
-
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
     <h4 class="name" id="clear"><span class="type-signature"></span>clear<span class="signature">()</span><span class="type-signature"></span></h4>
     
 </dt>
@@ -823,7 +682,7 @@ var json = view.getForm().values();</pre>
 
     
     <div class="description">
-        <p>Clear value of all child form views</p>
+        <p>Clear value of all child form views back to blank or default view value</p>
     </div>
     
 
@@ -870,7 +729,7 @@ var json = view.getForm().values();</pre>
 		<ul class="dummy">
 			<li>
 				<a href="form_manager.js.html">form/manager.js</a>,
-				 <a href="form_manager.js.html#sunlight-1-line-554">line 554</a>
+				 <a href="form_manager.js.html#sunlight-1-line-568">line 568</a>
 			</li>
 		</ul>
 	</dd>
@@ -957,7 +816,7 @@ var json = view.getForm().values();</pre>
 		<ul class="dummy">
 			<li>
 				<a href="form_manager.js.html">form/manager.js</a>,
-				 <a href="form_manager.js.html#sunlight-1-line-520">line 520</a>
+				 <a href="form_manager.js.html#sunlight-1-line-525">line 525</a>
 			</li>
 		</ul>
 	</dd>
@@ -1094,7 +953,7 @@ var json = view.getForm().values();</pre>
 		<ul class="dummy">
 			<li>
 				<a href="form_manager.js.html">form/manager.js</a>,
-				 <a href="form_manager.js.html#sunlight-1-line-289">line 289</a>
+				 <a href="form_manager.js.html#sunlight-1-line-290">line 290</a>
 			</li>
 		</ul>
 	</dd>
@@ -1207,7 +1066,7 @@ var json = view.getForm().values();</pre>
 		<ul class="dummy">
 			<li>
 				<a href="form_manager.js.html">form/manager.js</a>,
-				 <a href="form_manager.js.html#sunlight-1-line-150">line 150</a>
+				 <a href="form_manager.js.html#sunlight-1-line-151">line 151</a>
 			</li>
 		</ul>
 	</dd>
@@ -1294,7 +1153,7 @@ var json = view.getForm().values();</pre>
 		<ul class="dummy">
 			<li>
 				<a href="form_manager.js.html">form/manager.js</a>,
-				 <a href="form_manager.js.html#sunlight-1-line-569">line 569</a>
+				 <a href="form_manager.js.html#sunlight-1-line-583">line 583</a>
 			</li>
 		</ul>
 	</dd>
@@ -1381,7 +1240,7 @@ var json = view.getForm().values();</pre>
 		<ul class="dummy">
 			<li>
 				<a href="form_manager.js.html">form/manager.js</a>,
-				 <a href="form_manager.js.html#sunlight-1-line-370">line 370</a>
+				 <a href="form_manager.js.html#sunlight-1-line-371">line 371</a>
 			</li>
 		</ul>
 	</dd>
@@ -1518,7 +1377,7 @@ var json = view.getForm().values();</pre>
 		<ul class="dummy">
 			<li>
 				<a href="form_manager.js.html">form/manager.js</a>,
-				 <a href="form_manager.js.html#sunlight-1-line-212">line 212</a>
+				 <a href="form_manager.js.html#sunlight-1-line-213">line 213</a>
 			</li>
 		</ul>
 	</dd>
@@ -1568,14 +1427,14 @@ view.getForm.populate({
             
 <hr>
 <dt>
-    <h4 class="name" id="reset"><span class="type-signature"></span>reset<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="read"><span class="type-signature"></span>read<span class="signature">()</span><span class="type-signature"></span></h4>
     
 </dt>
 <dd>
 
     
     <div class="description">
-        <p>Reset value of all form Views back to it's original value.</p>
+        <p>Read form values from the server. This method triggers the events read.init and read.success|read.fail.<br>This method will be called during view creation if read.autoload is set to true.</p>
     </div>
     
 
@@ -1622,7 +1481,206 @@ view.getForm.populate({
 		<ul class="dummy">
 			<li>
 				<a href="form_manager.js.html">form/manager.js</a>,
-				 <a href="form_manager.js.html#sunlight-1-line-533">line 533</a>
+				 <a href="form_manager.js.html#sunlight-1-line-457">line 457</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">var v = new ludo.View({
+         form:{
+            hiddenFields: [&#x27;id&#x27;],
+            read: {
+                url: &#x27;form-data.json&#x27;, // read url
+                keys:[&#x27;id&#x27;], // array of form values to add to the view request
+                listeners:{
+                    &#x27;success&#x27;: function(json, form){
+                        form.clear();
+                        form.populate(json);
+                    },
+                    &#x27;fail&#x27;: function(text, error, form){
+                        // do something on failure
+                    }
+                }
+            }
+        }
+     });
+     // load data from server and trigger the listeners above.
+     v.getForm().read();</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="reset"><span class="type-signature"></span>reset<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Reset value of all form Views back to it's commited value.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="form_manager.js.html">form/manager.js</a>,
+				 <a href="form_manager.js.html#sunlight-1-line-547">line 547</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="rollback"><span class="type-signature"></span>rollback<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Alias to reset</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="form_manager.js.html">form/manager.js</a>,
+				 <a href="form_manager.js.html#sunlight-1-line-539">line 539</a>
 			</li>
 		</ul>
 	</dd>
@@ -1789,7 +1847,7 @@ view.getForm.populate({
 		<ul class="dummy">
 			<li>
 				<a href="form_manager.js.html">form/manager.js</a>,
-				 <a href="form_manager.js.html#sunlight-1-line-237">line 237</a>
+				 <a href="form_manager.js.html#sunlight-1-line-238">line 238</a>
 			</li>
 		</ul>
 	</dd>
@@ -1876,7 +1934,7 @@ view.getForm.populate({
 		<ul class="dummy">
 			<li>
 				<a href="form_manager.js.html">form/manager.js</a>,
-				 <a href="form_manager.js.html#sunlight-1-line-379">line 379</a>
+				 <a href="form_manager.js.html#sunlight-1-line-380">line 380</a>
 			</li>
 		</ul>
 	</dd>
@@ -2025,7 +2083,7 @@ view.getForm.populate({
 		<ul class="dummy">
 			<li>
 				<a href="form_manager.js.html">form/manager.js</a>,
-				 <a href="form_manager.js.html#sunlight-1-line-253">line 253</a>
+				 <a href="form_manager.js.html#sunlight-1-line-254">line 254</a>
 			</li>
 		</ul>
 	</dd>
@@ -2055,7 +2113,7 @@ view.getForm.populate({
         <h5>Example</h5>
         
     <pre class="sunlight-highlight-javascript">view.getForm().val(&#x27;firstname&#x27;, &#x27;Hannah&#x27;);
-var firstneame = view.getForm().val(&#x27;firstname&#x27;);</pre>
+var firstname = view.getForm().val(&#x27;firstname&#x27;);</pre>
 
 
     
@@ -2119,7 +2177,7 @@ var firstneame = view.getForm().val(&#x27;firstname&#x27;);</pre>
 		<ul class="dummy">
 			<li>
 				<a href="form_manager.js.html">form/manager.js</a>,
-				 <a href="form_manager.js.html#sunlight-1-line-357">line 357</a>
+				 <a href="form_manager.js.html#sunlight-1-line-358">line 358</a>
 			</li>
 		</ul>
 	</dd>
@@ -2217,7 +2275,7 @@ var firstneame = view.getForm().val(&#x27;firstname&#x27;);</pre>
 		<ul class="dummy">
 			<li>
 				<a href="form_manager.js.html">form/manager.js</a>,
-				 <a href="form_manager.js.html#sunlight-1-line-272">line 272</a>
+				 <a href="form_manager.js.html#sunlight-1-line-273">line 273</a>
 			</li>
 		</ul>
 	</dd>

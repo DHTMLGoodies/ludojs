@@ -50,11 +50,11 @@ require_once("../includes/demo-header.php");
             read: {
                 autoload: true,  // autoload data on create
                 url: 'form-data.json', // read url
+                populate: true, 
                 keys: ['id'], // array of form values to add to the view request
                 listeners: {
                     'success': function (json, form) {
-                        form.clear();
-                        form.populate(json);
+                        
 
                     },
                     'fail': function (text, error, form) {

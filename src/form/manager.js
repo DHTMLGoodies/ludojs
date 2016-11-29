@@ -14,6 +14,7 @@
  @param {Object} config.submit.listeners Submit listeners
  @param {Object} config.read Read data from server configuration object
  @param {Boolean} config.read.autoload True to autoload form data when rendered.
+ @param {Boolean} config.read.populate True to automatically populate form fields with JSON from server.
  @param {Object} config.read.listeners Read data from server listeners.
  @param {Object} config.listeners The form fires events when something is changed with one of the child form views(recursive).
 It is convenient to place event handlers here instead of adding them to the individual form views.
@@ -172,8 +173,8 @@ ludo.form.Manager = new Class({
             }
         }
 
-        this.fireEvent((this.invalidIds.length == 0) ? 'valid' : 'invalid');
-        this.fireEvent((this.dirtyIds.length == 0) ? 'clean' : 'dirty');
+        this.fireEvent((this.invalidIds.length == 0) ? 'valid' : 'invalid', this);
+        this.fireEvent((this.dirtyIds.length == 0) ? 'clean' : 'dirty', this);
     },
 
     registerFormElement: function (c) {
@@ -259,7 +260,7 @@ ludo.form.Manager = new Class({
      * @param value
      * @example
      * view.getForm().val('firstname', 'Hannah');
-     * var firstneame = view.getForm().val('firstname');
+     * var firstname = view.getForm().val('firstname');
      */
     val: function (key, value) {
         if (arguments.length == 2) {
@@ -433,7 +434,7 @@ ludo.form.Manager = new Class({
             }
 
             this.fireEvent('invalid');
-            this.fireEvent('submit.init');
+            this.fireEvent('submit.init', this);
             this.beforeRequest();
 
             $.ajax({
@@ -457,8 +458,7 @@ ludo.form.Manager = new Class({
      * Read form values from the server. This method triggers the events read.init and read.success|read.fail.
      * This method will be called during view creation if read.autoload is set to true.
      * @function read
-     * @param {String|undefined} id
-     * @memberof ludo.form.Manager
+     * @memberof ludo.form.Manager.prototype
      * @example
      var v = new ludo.View({
          form:{
@@ -482,7 +482,7 @@ ludo.form.Manager = new Class({
      v.getForm().read();
      */
     read: function () {
-        this.fireEvent('read.init');
+        this.fireEvent('read.init', this);
         this.beforeRequest();
         var url = this.getUrl('read');
         if(url != undefined){
@@ -493,6 +493,11 @@ ludo.form.Manager = new Class({
                 dataType: 'json',
                 data: this.dataFor('read'),
                 success: function (json) {
+                    if(this.configs.read.populate){
+                        this.clear();
+                        this.populate(json);
+                        this.commit();
+                    }
                     this.fireEvent('read.success', [json, this]);
                 }.bind(this),
                 fail: function (text, error) {
@@ -530,8 +535,17 @@ ludo.form.Manager = new Class({
         }
     },
 
+
     /**
-     * Reset value of all form Views back to it's original value.
+     * Alias to reset
+     * @method rollback
+     * @memberof ludo.form.Manager.prototype
+     */
+    rollback:function(){
+        this.reset();  
+    },
+    /**
+     * Reset value of all form Views back to it's commited value.
      * @method reset
      * @memberof ludo.form.Manager.prototype
      */
@@ -540,8 +554,8 @@ ludo.form.Manager = new Class({
             this.formComponents[i].reset();
         }
         this.dirtyIds = [];
-        this.fireEvent('clean');
-        this.fireEvent('reset');
+        this.fireEvent('clean', this);
+        this.fireEvent('reset', this);
     },
 
     newRecord: function () {
@@ -552,7 +566,7 @@ ludo.form.Manager = new Class({
     },
 
     /**
-     * Clear value of all child form views
+     * Clear value of all child form views back to blank or default view value
      * @function clear
      * @memberof ludo.form.Manager.prototype
      */
