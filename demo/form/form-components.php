@@ -5,18 +5,7 @@ require_once("../includes/demo-header.php");
 ?>
 
 <style type="text/css">
-    .ludo-form-text-element input, .ludo-form-text-element textarea {
-        border: 0;
-        padding: 0;
-        outline: none;
-    }
-
-    .ludo-form-text-element {
-        border: 1px solid #ccc;
-        background-color: #FFF;
-        padding: 1px;
-    }
-
+    
 </style>
 <script type="text/javascript" class="source-code">
 

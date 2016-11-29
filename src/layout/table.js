@@ -95,7 +95,6 @@ ludo.layout.Table = new Class({
 
     getParentForNewChild: function (child) {
         if (this.countChildren == 0 || child.layout.row || (this.simple && this.countChildren % this.cols.length == 0)) {
-            console.log('new row ' + this.countChildren);
             child.layout.row = true;
             this.currentRow = $('<tr></tr>');
             this.tbody.append(this.currentRow);

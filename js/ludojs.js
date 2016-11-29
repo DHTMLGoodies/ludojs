@@ -1,7 +1,7 @@
-/* Generated Tue Nov 29 20:09:34 CET 2016 */
+/* Generated Tue Nov 29 20:46:52 CET 2016 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.233
+ludoJS - Javascript framework, 1.1.234
 Copyright (C) 2012-2016  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -12829,7 +12829,6 @@ ludo.layout.Table = new Class({
 
     getParentForNewChild: function (child) {
         if (this.countChildren == 0 || child.layout.row || (this.simple && this.countChildren % this.cols.length == 0)) {
-            console.log('new row ' + this.countChildren);
             child.layout.row = true;
             this.currentRow = $('<tr></tr>');
             this.tbody.append(this.currentRow);

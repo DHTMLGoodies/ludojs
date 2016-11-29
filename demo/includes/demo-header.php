@@ -106,7 +106,7 @@ $skin = isset($skin) ? $skin : 'twilight';
             padding:5px;
         }
         .ludo-twilight div.source-code-preview{
-            background-color:#fff;
+            background-color:#424242;
         }
         .source-code-preview-parent .ludo-body{
             color:#333;
@@ -115,10 +115,87 @@ $skin = isset($skin) ? $skin : 'twilight';
             border-top:1px solid #ddd;
             background-color:#aaa;
         }
+
+        
+        .h-keywords{
+            color:#000080;
+            font-weight:bold;
+        }
+        .h-configs{
+            color:#660e7a;
+            font-weight:bold;
+        }
+        .h-numbers{
+            color:#00F;
+        }
+        .h-text{
+            color:#008000;
+        }
+        .h-comments{
+            color:#888;
+        }
+        .h-methods{
+            color:#7a7a2b;
+        }
+        .h-variables{
+            color:#458383;
+        }
+
+
         .ludo-twilight .source-code-preview-parent{
             border-top:1px solid #424242;
             background-color:#aaa;
         }
+
+        .ludo-twilight .source-code-preview{
+            color:#629755;
+            font-size:1.1em;
+
+        }
+
+        .ludo-twilight .h-keywords{
+            color:#cc7832;
+        }
+
+        .ludo-twilight .h-configs{
+            color:#ffc66d;
+        }
+
+        .ludo-twilight .h-comments{
+            color:#aaa;
+        }
+        .ludo-twilight .h-numbers{
+            color:#6897bb;
+        }
+
+        .ludo-twilight .h-text{
+            color:#629755;
+        }
+
+        .ludo-twilight .h-methods{
+            color:#ffc66d;
+        }
+        /**
+            cls:{
+        keyWords:"h-keywords",
+        configs:"h-configs",
+        numbers:"h-numbers2",
+        text:"h-text",
+        comments:"h-comments",
+        methods:"h-methods",
+        variables:"h-variables"           
+    },
+    
+    styling:{
+        keyWords:{ color:'#000080', 'font-weight':'bold' },
+        configs:{ color:'#660e7a', 'font-weight':'bold' },
+        numbers:{ color:'#00F' },
+        text:{ color:'#008000' },
+        comments:{ color:'#888' },
+        methods:{ color:'#7a7a2b' },
+        variables:{ color:'#458383' }
+    },
+    
     </style>
 
 

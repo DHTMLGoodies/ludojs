@@ -2,6 +2,16 @@ ludo.CodeHighlight = new Class({
     previewEl:undefined,
     clipboardPath : '/dhtmlgoodies/dg-web-tools/api/demo/code-highlight/',
 
+    cls:{
+        keyWords:"h-keywords",
+        configs:"h-configs",
+        numbers:"h-numbers",
+        text:"h-text",
+        comments:"h-comments",
+        methods:"h-methods",
+        variables:"h-variables"
+    },
+
     styling:{
         keyWords:{ color:'#000080', 'font-weight':'bold' },
         configs:{ color:'#660e7a', 'font-weight':'bold' },
@@ -271,9 +281,11 @@ ludo.CodeHighlight = new Class({
         var styling = this.styling[keyWord];
         var ret = ['<span style="'];
         for (var prop in styling) {
-            ret.push(prop + ':' + styling[prop] + ';');
+            // ret.push(prop + ':' + styling[prop] + ';');
         }
-        ret.push('">');
+        ret.push('"');
+        ret.push(' class="' + this.cls[keyWord] + '"');
+        ret.push('>');
         return ret.join('');
     }
 });

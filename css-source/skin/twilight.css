@@ -13,7 +13,7 @@ body.ludo-twilight{
 
 
 .ludo-twilight .ludo-framed-view-titlebar-title{
-
+    line-height:24px;
     width:100%;
 }
 
@@ -608,6 +608,7 @@ Collapse bar
 .ludo-twilight .ludo-form-text-element
 {
     background-color:#535354;
+    border-color:#7a7a7a;
     color:#eee;
     border-top-color: transparent;
     border-left-color: transparent;
