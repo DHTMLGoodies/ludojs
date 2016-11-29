@@ -1,7 +1,7 @@
-/* Generated Tue Nov 29 13:15:50 CET 2016 */
+/* Generated Tue Nov 29 18:18:01 CET 2016 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.231
+ludoJS - Javascript framework, 1.1.232
 Copyright (C) 2012-2016  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -2696,9 +2696,10 @@ ludo.util = {
         view.disposeAllChildren();
 
 		$.each(view.els, function(key){
-			if(key != 'parent' && view.els[key].prop("tagName")){
-				view.els[key].remove();
+
+			if(key != 'parent' && view.els[key] && view.els[key].prop  && view.els[key].prop("tagName")){
 				view.els[key].off();
+				view.els[key].remove();
 			}
 
 		}.bind(view));
@@ -6150,372 +6151,403 @@ ludo.layout.Resizer = new Class({
  * code <code>view.addChild()</code>. Arguments: 1) Layout, 2) parent view, 3) child
  */
 ludo.layout.Base = new Class({
-	Extends:Events,
-	view:null,
-	tabStrip:null,
-	resizables:[],
-	benchmarkTime:false,
-	dependency:{},
-	viewport:undefined,
-	resized:false,
+    Extends: Events,
+    view: null,
+    tabStrip: null,
+    resizables: [],
+    benchmarkTime: false,
+    dependency: {},
+    viewport: undefined,
+    resized: false,
 
-	initialize:function (view) {
-		this.id = String.uniqueID();
-		this.view = view;
-		this.viewport = {
-			top:parseInt(this.view.getBody().css('padding-top')),
-			left:parseInt(this.view.getBody().css('padding-left')),
-			width:0, height:0,
-			bottom:0, right:0
-		};
-		if(view.getBody())this.onCreate();
+    hasWrapWidth: undefined,
+    hasWrapHeight: undefined,
 
-	},
+    initialize: function (view) {
+        this.id = String.uniqueID();
+        this.view = view;
+        this.viewport = {
+            top: parseInt(this.view.getBody().css('padding-top')),
+            left: parseInt(this.view.getBody().css('padding-left')),
+            width: 0, height: 0,
+            bottom: 0, right: 0
+        };
+        if (view.getBody())this.onCreate();
 
-	onCreate:function () {
-		if (this.view.layout.collapseBar) {
-			this.addCollapseBars();
-		}
-		if(this.view.layout.listeners != undefined){
-			this.addEvents(this.view.layout.listeners);
-		}
-
-		this.fireEvent('create', [this, this.view]);
-	},
-	/**f
-	 * Method executed when adding new child view to a layout
-	 * @function addChild
-	 * @param {ludo.View} child
-	 * @param {ludo.View} insertAt
-	 * @optional
-	 * @param {String} pos
-	 * @optional
-	 * @memberof ludo.layout.Base.prototype
-	 */
-	addChild:function (child, insertAt, pos) {
-		child = this.getValidChild(child);
-		child = this.getNewComponent(child);
-		var parentEl = this.getParentForNewChild(child);
-		parentEl = $(parentEl);
-		if (insertAt) {
-			var children = [];
-			for (var i = 0; i < this.view.children.length; i++) {
-				if (pos == 'after') {
-					children.push(this.view.children[i]);
-					parentEl.append(this.view.children[i].getEl());
-				}
-				if (this.view.children[i].getId() == insertAt.getId()) {
-					children.push(child);
-					parentEl.append(child.getEl());
-				}
-				if (pos == 'before') {
-					children.push(this.view.children[i]);
-					parentEl.append(this.view.children[i].getEl());
-				}
-			}
-			this.view.children = children;
-		} else {
-			this.view.children.push(child);
-			var el = child.getEl();
-			parentEl.append(el);
-		}
-
-		this.onNewChild(child);
+        this.hasWrapWidth = view.layout.width == 'wrap';
+        this.hasWrapHeight = view.layout.height == 'wrap';
 
 
+    },
 
-		this.addChildEvents(child);
+    onCreate: function () {
+        if (this.view.layout.collapseBar) {
+            this.addCollapseBars();
+        }
+        if (this.view.layout.listeners != undefined) {
+            this.addEvents(this.view.layout.listeners);
+        }
 
-		this.fireEvent('addChild', [this, this.view, child]);
+        this.fireEvent('create', [this, this.view]);
+    },
+    /**f
+     * Method executed when adding new child view to a layout
+     * @function addChild
+     * @param {ludo.View} child
+     * @param {ludo.View} insertAt
+     * @optional
+     * @param {String} pos
+     * @optional
+     * @memberof ludo.layout.Base.prototype
+     */
+    addChild: function (child, insertAt, pos) {
+        child = this.getValidChild(child);
+        child = this.getNewComponent(child);
+        var parentEl = this.getParentForNewChild(child);
+        parentEl = $(parentEl);
+        if (insertAt) {
+            var children = [];
+            for (var i = 0; i < this.view.children.length; i++) {
+                if (pos == 'after') {
+                    children.push(this.view.children[i]);
+                    parentEl.append(this.view.children[i].getEl());
+                }
+                if (this.view.children[i].getId() == insertAt.getId()) {
+                    children.push(child);
+                    parentEl.append(child.getEl());
+                }
+                if (pos == 'before') {
+                    children.push(this.view.children[i]);
+                    parentEl.append(this.view.children[i].getEl());
+                }
+            }
+            this.view.children = children;
+        } else {
+            this.view.children.push(child);
+            var el = child.getEl();
+            parentEl.append(el);
+        }
 
-		if(this.firstResized){
-			this.fireEvent('addChildRuntime', [this, this.view, child])
-		}
-		return child;
-	},
-	/**
-	 * Return parent DOM element for new child
-	 * @function getParentForNewChild
-	 * @protected
-	 * @memberof ludo.layout.Base.prototype
-	 */
-	getParentForNewChild:function(){
-		return $(this.view.els.body);
-	},
-
-	layoutProperties:['collapsible', 'collapsed'],
-
-	getValidChild:function(child){
-		return child;
-	},
-
-	/**
-	 * Implementation in sub classes
-	 * @function onNewChild
-	 * @private
-	 * @memberof ludo.layout.Base.prototype
-	 */
-	onNewChild:function (child) {
-		var keys = this.layoutProperties;
-		for (var i = 0; i < keys.length; i++) {
-			if (child.layout[keys[i]] === undefined && child[keys[i]] !== undefined) {
-				child.layout[keys[i]] = child[keys[i]];
-			}
-		}
-		if(child.layout.collapseTo !== undefined){
-			var view = ludo.get(child.layout.collapseTo);
-			if(view){
-				var bar = view.getLayout().getCollapseBar(child.layout.collapsible);
-				if(bar)bar.addView(child);
-			}
-		}
-	},
-
-	addChildEvents:function(){
-
-	},
-	firstResized : false,
-
-
-	resizeChildren:function () {
-
-		if (this.benchmarkTime) {
-			var start = new Date().getTime();
-		}
-		if (this.view.isHidden()) {
-			return;
-		}
-		if (this.idLastDynamic === undefined) {
-			this.setIdOfLastChildWithDynamicWeight();
-		}
-
-		this.storeViewPortSize();
-
-		if(!this.firstResized){
-			this.beforeFirstResize();
-
-		}
-
-		this.resize();
+        this.onNewChild(child);
 
 
-		if(!this.firstResized){
-			this.fireEvent('rendered', [this, this.view]);
-			this.afterRendered();
-			this.firstResized = true;
-		}
+        this.addChildEvents(child);
+
+        this.fireEvent('addChild', [this, this.view, child]);
+
+        if (this.firstResized) {
+            this.fireEvent('addChildRuntime', [this, this.view, child])
+        }
+        return child;
+    },
+    /**
+     * Return parent DOM element for new child
+     * @function getParentForNewChild
+     * @protected
+     * @memberof ludo.layout.Base.prototype
+     */
+    getParentForNewChild: function () {
+        return $(this.view.els.body);
+    },
+
+    layoutProperties: ['collapsible', 'collapsed'],
+
+    getValidChild: function (child) {
+        return child;
+    },
+
+    /**
+     * Implementation in sub classes
+     * @function onNewChild
+     * @private
+     * @memberof ludo.layout.Base.prototype
+     */
+    onNewChild: function (child) {
+        var keys = this.layoutProperties;
+        for (var i = 0; i < keys.length; i++) {
+            if (child.layout[keys[i]] === undefined && child[keys[i]] !== undefined) {
+                child.layout[keys[i]] = child[keys[i]];
+            }
+        }
+        if (child.layout.collapseTo !== undefined) {
+            var view = ludo.get(child.layout.collapseTo);
+            if (view) {
+                var bar = view.getLayout().getCollapseBar(child.layout.collapsible);
+                if (bar)bar.addView(child);
+            }
+        }
+    },
+
+    addChildEvents: function () {
+
+    },
+    firstResized: false,
 
 
-		if (this.benchmarkTime) {
-			ludo.util.log("Time for resize(" + this.view.layout.type + "): " + (new Date().getTime() - start));
-		}
+    resizeChildren: function () {
+
+        if (this.benchmarkTime) {
+            var start = new Date().getTime();
+        }
+        if (this.view.isHidden()) {
+            return;
+        }
+        if (this.idLastDynamic === undefined) {
+            this.setIdOfLastChildWithDynamicWeight();
+        }
+
+        this.storeViewPortSize();
+
+        if (!this.firstResized) {
+            this.beforeFirstResize();
+
+        }
+
+        this.resize();
 
 
-	},
+        if (!this.firstResized) {
 
-	afterRendered:function(){
+            this.firstResized = true;
 
-	},
+            if (this.hasWrapHeight) {
+                this.view.layout.height = this.viewport.height = this.getWrappedHeight();
+            }
+            if (this.hasWrapWidth) {
+                this.view.layout.width = this.viewport.width = this.getWrappedWidth();
+            }
 
-	hasBeenRendered:function(){
-		return this.firstResized;
-	},
+            if (this.hasWrapHeight || this.hasWrapWidth) {
+                this.view.resize({
+                    height: this.view.layout.height,
+                    width: this.view.layout.width
+                });
+                this.storeViewPortSize();
+                this.hasWrapWidth = false;
+                this.hasWrapHeight = false;
+            }
 
-	beforeFirstResize:function(){
-
-	},
-
-
-
-	storeViewPortSize:function () {
-
-
-		this.viewport.absWidth = this.getAvailWidth();
-		this.viewport.absHeight = this.getAvailHeight();
-		this.viewport.width = this.getAvailWidth() - this.viewport.left - this.viewport.right;
-		this.viewport.height = this.getAvailHeight() - this.viewport.top - this.viewport.bottom;
-
-	},
-
-	previousContentWidth:undefined,
-
-	idLastDynamic:undefined,
-
-	setIdOfLastChildWithDynamicWeight:function () {
-		for (var i = this.view.children.length - 1; i >= 0; i--) {
-			if (this.hasLayoutWeight(this.view.children[i])) {
-				this.idLastDynamic = this.view.children[i].id;
-				return;
-			}
-		}
-		this.idLastDynamic = 'NA';
-	},
-
-	hasLayoutWeight:function (child) {
-		return child.layout !== undefined && child.layout.weight !== undefined;
-	},
-
-	getNewComponent:function (config) {
-		config.renderTo = this.view.getBody();
-		config.type = config.type || this.view.cType;
-		config.parentComponent = this.view;
-		return ludo.factory.create(config);
-	},
-
-	isLastSibling:function (child) {
-		var children = this.view.initialItemsObject;
-		if (children.length) {
-			return children[children.length - 1].id == child.id;
-		} else {
-			return this.view.children[this.view.children.length - 1].id == child.id;
-		}
-	},
-
-	prepareView:function () {
-
-	},
-
-	resize:function () {
-		var config = {};
-		config.width = this.view.getBody().width();
-		if (config.width < 0) {
-			config.width = undefined;
-		}
-		for (var i = 0; i < this.view.children.length; i++) {
-			this.view.children[i].resize(config);
-		}
-	},
-
-	getAvailWidth:function () {
-		return this.view.getBody().width();
-	},
-
-	getAvailHeight:function () {
-		return this.view.getBody().height();
-	},
-
-	addCollapseBars:function () {
-		var pos = this.view.layout.collapseBar;
-		if (!ludo.util.isArray(pos))pos = [pos];
-		for (var i = 0; i < pos.length; i++) {
-			this.addChild(this.getCollapseBar(pos[i]));
-		}
-	},
-
-	collapseBars:{},
-	getCollapseBar:function (position) {
-		position = position || 'left';
-		if (this.collapseBars[position] === undefined) {
-			var bar = this.collapseBars[position] = new ludo.layout.CollapseBar({
-				position:position,
-				parentComponent:this.view,
-				parentLayout:this.view.layout,
-				listeners:{
-					'show':this.toggleCollapseBar.bind(this),
-					'hide':this.toggleCollapseBar.bind(this)
-				}
-			});
-			this.updateViewport(bar.getChangedViewport());
-		}
-		return this.collapseBars[position];
-	},
-
-	toggleCollapseBar:function (bar) {
-		this.updateViewport(bar.getChangedViewport());
-		this.resize();
-	},
-	/**
-	 * Update viewport properties, coordinates of DHTML Container for child views, i.e. body of parent view
-	 * @function updateViewport
-	 * @param {Object} c
-	 * @memberof ludo.layout.Base.prototype
-	 */
-	updateViewport:function (c) {
-
-		this.viewport[c.key] = c.value;
-	},
-
-	createRenderer:function(){
-		if(this.renderer === undefined){
-			this.renderer = this.dependency['renderer'] = new ludo.layout.Renderer({
-				view:this.view
-			});
-		}
-		return this.renderer;
-	},
-
-	getRenderer:function(){
-		return this.renderer ? this.renderer : this.createRenderer();
-	},
-
-	/**
-	 * Executed when a child is hidden. It set's the internal layout properties width and height to 0(zero)
-	 * @function hideChild
-	 * @param {ludo.View} child
-	 * @private
-	 * @memberof ludo.layout.Base.prototype
-	 */
-	hideChild:function(child){
-		this.setTemporarySize(child, {
-			width:0,height:0
-		});
-	},
+            this.fireEvent('rendered', [this, this.view]);
+            this.afterRendered();
+        }
 
 
+        if (this.benchmarkTime) {
+            ludo.util.log("Time for resize(" + this.view.layout.type + "): " + (new Date().getTime() - start));
+        }
 
-	/**
-	 * Executed when a child is minimized. It set's temporary width or properties
-	 * @function minimize
-	 * @param {ludo.View} child
-	 * @param {Object} newSize
-	 * @protected
-	 * @memberof ludo.layout.Base.prototype
-	 */
-	minimize:function(child, newSize){
-		this.setTemporarySize(child, newSize);
-		this.resize();
-	},
 
-	/**
-	 * Store temporary size when a child is minimized or hidden
-	 * @function setTemporarySize
-	 * @param {ludo.View} child
-	 * @param {Object} newSize
-	 * @protected
-	 * @memberof ludo.layout.Base.prototype
-	 */
-	setTemporarySize:function(child, newSize){
-		if(newSize.width !== undefined){
-			child.layout.cached_width = child.layout.width;
-			child.layout.width = newSize.width;
-		}else{
-			child.layout.cached_height = child.layout.height;
-			child.layout.height = newSize.height;
-		}
-	},
-	/**
-	 * Clear temporary width or height values. This method is executed when a child
-	 * is shown or maximized
-	 * @function clearTemporaryValues
-	 * @param {ludo.View} child
-	 * @protected
-	 * @memberof ludo.layout.Base.prototype
-	 */
-	clearTemporaryValues:function(child){
-		if(child.layout.cached_width !== undefined)child.layout.width = child.layout.cached_width;
-		if(child.layout.cached_height !== undefined)child.layout.height = child.layout.cached_height;
-		child.layout.cached_width = undefined;
-		child.layout.cached_height = undefined;
-		this.resize();
-	},
+    },
 
-	getWidthOf:function (child) {
-		return child.layout.width;
-	},
+    afterRendered: function () {
 
-	getHeightOf:function (child) {
-		return child.layout.height;
-	}
+    },
+
+    hasBeenRendered: function () {
+        return this.firstResized;
+    },
+
+    beforeFirstResize: function () {
+
+    },
+
+    getWrappedHeight: function () {
+        return this.view.getEl().outerHeight(true) - this.view.getBody().height();
+    },
+
+    getWrappedWidth: function () {
+        return 0;
+    },
+
+
+    storeViewPortSize: function () {
+
+
+        this.viewport.absWidth = this.getAvailWidth();
+        this.viewport.absHeight = this.getAvailHeight();
+        this.viewport.width = this.getAvailWidth() - this.viewport.left - this.viewport.right;
+        this.viewport.height = this.getAvailHeight() - this.viewport.top - this.viewport.bottom;
+
+    },
+
+    previousContentWidth: undefined,
+
+    idLastDynamic: undefined,
+
+    setIdOfLastChildWithDynamicWeight: function () {
+        for (var i = this.view.children.length - 1; i >= 0; i--) {
+            if (this.hasLayoutWeight(this.view.children[i])) {
+                this.idLastDynamic = this.view.children[i].id;
+                return;
+            }
+        }
+        this.idLastDynamic = 'NA';
+    },
+
+    hasLayoutWeight: function (child) {
+        return child.layout !== undefined && child.layout.weight !== undefined;
+    },
+
+    getNewComponent: function (config) {
+        config.renderTo = this.view.getBody();
+        config.type = config.type || this.view.cType;
+        config.parentComponent = this.view;
+        return ludo.factory.create(config);
+    },
+
+    isLastSibling: function (child) {
+        var children = this.view.initialItemsObject;
+        if (children.length) {
+            return children[children.length - 1].id == child.id;
+        } else {
+            return this.view.children[this.view.children.length - 1].id == child.id;
+        }
+    },
+
+    prepareView: function () {
+
+    },
+
+    resize: function () {
+        var config = {};
+        config.width = this.view.getBody().width();
+        if (config.width < 0) {
+            config.width = undefined;
+        }
+        for (var i = 0; i < this.view.children.length; i++) {
+            this.view.children[i].resize(config);
+        }
+    },
+
+    getAvailWidth: function () {
+        return this.view.getBody().width();
+    },
+
+    getAvailHeight: function () {
+        return this.view.getBody().height();
+    },
+
+    addCollapseBars: function () {
+        var pos = this.view.layout.collapseBar;
+        if (!ludo.util.isArray(pos))pos = [pos];
+        for (var i = 0; i < pos.length; i++) {
+            this.addChild(this.getCollapseBar(pos[i]));
+        }
+    },
+
+    collapseBars: {},
+    getCollapseBar: function (position) {
+        position = position || 'left';
+        if (this.collapseBars[position] === undefined) {
+            var bar = this.collapseBars[position] = new ludo.layout.CollapseBar({
+                position: position,
+                parentComponent: this.view,
+                parentLayout: this.view.layout,
+                listeners: {
+                    'show': this.toggleCollapseBar.bind(this),
+                    'hide': this.toggleCollapseBar.bind(this)
+                }
+            });
+            this.updateViewport(bar.getChangedViewport());
+        }
+        return this.collapseBars[position];
+    },
+
+    toggleCollapseBar: function (bar) {
+        this.updateViewport(bar.getChangedViewport());
+        this.resize();
+    },
+    /**
+     * Update viewport properties, coordinates of DHTML Container for child views, i.e. body of parent view
+     * @function updateViewport
+     * @param {Object} c
+     * @memberof ludo.layout.Base.prototype
+     */
+    updateViewport: function (c) {
+
+        this.viewport[c.key] = c.value;
+    },
+
+    createRenderer: function () {
+        if (this.renderer === undefined) {
+            this.renderer = this.dependency['renderer'] = new ludo.layout.Renderer({
+                view: this.view
+            });
+        }
+        return this.renderer;
+    },
+
+    getRenderer: function () {
+        return this.renderer ? this.renderer : this.createRenderer();
+    },
+
+    /**
+     * Executed when a child is hidden. It set's the internal layout properties width and height to 0(zero)
+     * @function hideChild
+     * @param {ludo.View} child
+     * @private
+     * @memberof ludo.layout.Base.prototype
+     */
+    hideChild: function (child) {
+        this.setTemporarySize(child, {
+            width: 0, height: 0
+        });
+    },
+
+
+    /**
+     * Executed when a child is minimized. It set's temporary width or properties
+     * @function minimize
+     * @param {ludo.View} child
+     * @param {Object} newSize
+     * @protected
+     * @memberof ludo.layout.Base.prototype
+     */
+    minimize: function (child, newSize) {
+        this.setTemporarySize(child, newSize);
+        this.resize();
+    },
+
+    /**
+     * Store temporary size when a child is minimized or hidden
+     * @function setTemporarySize
+     * @param {ludo.View} child
+     * @param {Object} newSize
+     * @protected
+     * @memberof ludo.layout.Base.prototype
+     */
+    setTemporarySize: function (child, newSize) {
+        if (newSize.width !== undefined) {
+            child.layout.cached_width = child.layout.width;
+            child.layout.width = newSize.width;
+        } else {
+            child.layout.cached_height = child.layout.height;
+            child.layout.height = newSize.height;
+        }
+    },
+    /**
+     * Clear temporary width or height values. This method is executed when a child
+     * is shown or maximized
+     * @function clearTemporaryValues
+     * @param {ludo.View} child
+     * @protected
+     * @memberof ludo.layout.Base.prototype
+     */
+    clearTemporaryValues: function (child) {
+        if (child.layout.cached_width !== undefined)child.layout.width = child.layout.cached_width;
+        if (child.layout.cached_height !== undefined)child.layout.height = child.layout.cached_height;
+        child.layout.cached_width = undefined;
+        child.layout.cached_height = undefined;
+        this.resize();
+    },
+
+    getWidthOf: function (child) {
+        return child.layout.width;
+    },
+
+    getHeightOf: function (child) {
+        return child.layout.height;
+    }
 });/* ../ludojs/src/layout/factory.js */
 /**
  * Factory class for layout managers
@@ -12799,13 +12831,16 @@ ludo.layout.Table = new Class({
 
     },
 
+    getWrappedHeight:function(){
+        return this.parent() + this.table.outerHeight();
+    },
+
     getWidthOfChild: function (child, colIndex) {
         var colspan = child.layout.colspan ? child.layout.colspan : 1;
         if(child.layout.width)return child.layout.width;
         var width = 0;
         var totalWidth = this.view.getBody().width();
         var weightWidth = totalWidth - this.fixedWidth;
-        console.log(this.cols);
         for (var i = colIndex; i < colIndex + colspan; i++) {
             if (this.cols[i].width) {
                 width += this.cols[i].width;
@@ -13254,10 +13289,10 @@ ludo.layout.LinearVertical = new Class({
 		this.parent();
 	},
 	resize:function () {
+
+
 		var availHeight = this.viewport.height;
-		if (availHeight == 0) {
-			return;
-		}
+
 		var totalHeightOfItems = 0;
 		var totalWeight = 0;
 		var height;
@@ -13308,7 +13343,6 @@ ludo.layout.LinearVertical = new Class({
 					config.top = tm;
 				}
 
-
 				this.resizeChild(this.view.children[i], config);
 				tm += this.view.children[i].getEl().outerHeight(true);
 			}
@@ -13320,6 +13354,15 @@ ludo.layout.LinearVertical = new Class({
 		child.resize(resize);
 		child.saveState();
 	},
+
+	getWrappedHeight:function(){
+		var h = this.parent();
+		for(var i=0;i<this.view.children.length;i++){
+			h += this.view.children[0].getEl().outerHeight(true);
+		}
+		return h;
+	},
+
 
 	onNewChild:function (child) {
 		this.parent(child);
@@ -22994,8 +23037,6 @@ ludo.calendar.Days = new Class({
         if (this.els.monthView && this.isValueMonth()) {
             var el = this.els.monthView.find('.calendar-day-' + this.value.get('date'));
             if (el)el.removeClass('calendar-day-selected');
-        }else{
-            console.log("not same month " + this.isValueMonth());
         }
     },
 
@@ -26615,14 +26656,42 @@ ludo.form.Element = new Class({
     }
 });/* ../ludojs/src/form/label-element.js */
 /**
- * Class which render two child views, one label and one form field. This is a convenient class
+ * Class which render two child views, one label and one form field. This is a convenient class for rendering
+ * a form field with a label to the left.
+ *
+ * This class renders the views in a linear horizontal layout.
+ *
+ * @class ludo.form.LabelElement
+ * @param {Object} config
+ * @param {Object} config.label Configuration for ludo.form.Label
+ * @param {Object} config.field Configuration for a form field
+ * @example:
+*  var labelElement = new ludo.form.LabelElement({
+    label:{
+        label:'myLabel',
+        type:'form.Label',
+        layout:{
+            width:70
+        }
+    },
+    field:{
+        type:'form.Number',
+        name:'myField',
+        minValue:0,
+        maxValue:255
+    },
+    renderTo:document.body,
+    layout:{
+        width:200,
+        height:50
+    }
+});
  */
 ludo.form.LabelElement = new Class({
     Extends: ludo.View,
-    layout:{
-        type:'linear',
-        orientation:'horizontal'
-    },
+
+    label:undefined,
+    field:undefined,
 
     __construct: function (config) {
         this.parent(config);
@@ -26631,6 +26700,9 @@ ludo.form.LabelElement = new Class({
         if(!this.label.type)this.label.type='form.Label';
         this.label.labelFor = this.field.name;
 
+        this.layout = this.layout || {};
+        this.layout.type = 'linear';
+        this.layout.orientation = 'horizontal';
     },
 
     __children:function(){
@@ -26870,10 +26942,10 @@ ludo.form.Button = new Class({
         }
     },
 
-	dispose:function(){
+	remove:function(){
 		this.parent();
 		$(document.body).off('mouseup', this.mouseUpBound);
-		if (this.defaultSubmit) document.id(window).removeEvent('keypress', this.keyPressBound);
+		if (this.defaultSubmit) $(window).off('keypress', this.keyPressBound);
 	},
 
     addLabel:function () {
@@ -27005,6 +27077,7 @@ ludo.form.Button = new Class({
     },
     mouseUp:function () {
         if (this.isDown && !this.isDisabled()) {
+
             this.getBody().removeClass('ludo-form-button-down');
             this.fireEvent('mouseup', this);
         }
@@ -27198,15 +27271,22 @@ ludo.form.ToggleGroup = new Class({
     }
 });/* ../ludojs/src/form/manager.js */
 /**
- Form management class. An instance of this class is automatically created for a view if the config.form property is set or after
- after a call to view.getForm() is made.<br>
+ Form management class. An instance of this class is automatically created for a view if the config.form property is set.<br>
  new ludo.View({
  	form:{ ... }
  </code>
- You'll get access to the methods of this class from view.getForm().
+ You'll get access to the methods of this class using view.getForm().
+
+ For demo, see <a href="../demo/form/form-components.php">form-components.php</a>
+
  @namespace ludo.form
  @class ludo.form.Manager
  @param {Object} config
+ @param {Object} config.submit Submit configuration object
+ @param {Object} config.submit.listeners Submit listeners
+ @param {Object} config.read Read data from server configuration object
+ @param {Boolean} config.read.autoload True to autoload form data when rendered.
+ @param {Object} config.read.listeners Read data from server listeners.
  @param {Object} config.listeners The form fires events when something is changed with one of the child form views(recursive).
 It is convenient to place event handlers here instead of adding them to the individual form views.
  Example: create a form.change event to listen to all changes to child form views.
@@ -27218,8 +27298,52 @@ It is convenient to place event handlers here instead of adding them to the indi
  @fires ludo.form.Manager#clean A form is considered clean when none of it's values has changed from it's original. Otherwise it's considered dirty. The clean event
  is fired when the form is clean.
  @fires ludo.form.Manager#dirty Fired when the form is dirty.
+ @fires ludo.form.Manager#submit.init Fired before form is submitted. The submit. listeners are added via the "submit" object. See example below.
+ @fires ludo.form.Manager#submit.success Fired after successful form submission.
+ @fires ludo.form.Manager#submit.fail Fired after failed form submission.
+ @fires ludo.form.Manager#read.init Fired before loading form data from server. the read. listeners are added via the "read" object. See example below.
+ @fires ludo.form.Manager#read.success Fired after successfully loading data from server
+ @fires ludo.form.Manager#read.fail Fired when loading data from server failed.
  @example
 var view = new ludo.View({
+    form:{
+            hiddenFields: ['id'], // Hidden fields which could be populated using ludo.get('myWindow).getForm().set('id', 100);
+            submit:{
+                url: '../controller.php',
+                data: {
+                    submit:1
+                },
+                listeners:{
+                    'success': function(json, form){
+                        new ludo.dialog.Alert({
+                            title:'Thank you!',
+                            resizable:true,
+                            html:'Thank you. Your data has been saved..'
+                        });
+
+                        form.commit();
+                    },
+                    'fail': function(text, error, form){
+                        // do something on failure
+                    }
+                }
+            },
+
+            read: {
+                autoload:true,  // autoload data on create
+                url: 'form-data.json', // read url
+                keys:['id'], // array of form values to add to the view request
+                listeners:{
+                    'success': function(json, form){
+                        form.clear();
+                        form.populate(json);
+                    },
+                    'fail': function(text, error, form){
+                        // do something on failure
+                    }
+                }
+            }
+    }
 	children:[
 		{ type:'form.Text', label:'First name', name:'firstname' },
 		{ type:'form.Text', label:'Last name', name:'lastname' }
@@ -27234,125 +27358,136 @@ var json = view.getForm().values();
 
  */
 ludo.form.Manager = new Class({
-	Extends:ludo.Core,
-	/**
-	 * @attribute {ludo.View} view Reference to the forms view
-	 * @memberof ludo.form.Manager.prototype
-	 */
-	view:null,
-	formComponents:[],
-	map:{},
-	fileUploadComponents:[],
-	progressBar:undefined,
-	invalidIds:[],
-	dirtyIds:[],
-	form:{
-		method:'post'
-	},
-	
-	hiddenFields:undefined,
-	hiddenValues:undefined,
+    Extends: ludo.Core,
+    /**
+     * @attribute {ludo.View} view Reference to the forms view
+     * @memberof ludo.form.Manager.prototype
+     */
+    view: null,
+    formComponents: [],
+    map: {},
+    fileUploadComponents: [],
+    progressBar: undefined,
+    invalidIds: [],
+    dirtyIds: [],
 
-    method:undefined,
-    url:undefined,
-	currentId:undefined,
+    hiddenFields: undefined,
+    hiddenValues: undefined,
 
-    autoLoad:false,
+    method: 'post',
+    url: undefined,
+    currentId: undefined,
 
-    listeners:undefined,
+    autoLoad: false,
 
+    listeners: undefined,
 
-    arguments:undefined,
+    configs: undefined,
 
-	__construct:function (config) {
-		this.view = config.view;
-		config.form = config.form || {};
-
-        this.setConfigParams(config.form, ['method', 'url','autoLoad', 'hiddenFields']);
-		this.hiddenValues = {};
+    __construct: function (config) {
+        this.view = config.view;
+        config.form = config.form || {};
 
 
-		this.id = String.uniqueID();
+        this.setConfigParams(config.form, ['method', 'url', 'hiddenFields']);
+        this.hiddenValues = {};
 
-		if (config.form.listeners !== undefined) {
-			this.addEvents(config.form.listeners);
-		}
-		this.getFormElements();
+        this.configs = {};
+        this.configs.submit = config.form.submit || {};
+        this.configs.read = config.form.read || {};
 
-		if(this.autoLoad){
-			this.read(config.form.arguments);
-		}
-	},
+        this.addTypeEvents('submit');
+        this.addTypeEvents('read');
 
-	/**
-	 * Get all form elements, store them in an array and add valid and invalid events to them
-	 * @function getFormElements
-	 * @memberof ludo.form.Manager.prototype
-	 */
-	getFormElements:function () {
-		if (!this.view.isRendered) {
-			this.getFormElements.delay(100, this);
-			return;
-		}
+        this.id = String.uniqueID();
 
-		var children = this.view.getAllChildren();
-		children.push(this.view);
+        if (config.form.listeners !== undefined) {
+            this.addEvents(config.form.listeners);
+        }
+        this.getFormElements();
 
-		var c;
-		for (var i = 0, len = children.length; i < len; i++) {
-			c = children[i];
-			if (c['getProgressBarId'] !== undefined) {
-				this.registerProgressBar(c);
-			}
-			else if (c.isFormElement() && c.submittable) {
-				this.registerFormElement(c);
-			}
-		}
+        if (this.configs.read.autoload) {
+            this.read();
+        }
+    },
 
-		this.fireEvent((this.invalidIds.length == 0) ? 'valid' : 'invalid');
-		this.fireEvent((this.dirtyIds.length == 0) ? 'clean' : 'dirty');
-	},
+    addTypeEvents:function(type){
+        if(this.configs[type].listeners != undefined){
+            $.each(this.configs[type].listeners, function(key, value){
+                this.on(type + '.' + key, value);
+            }.bind(this));
+        }
+    },
 
-	registerFormElement:function (c) {
-		if (this.formComponents.indexOf(c) >= 0) {
-			return;
-		}
+    /**
+     * Get all form elements, store them in an array and add valid and invalid events to them
+     * @function getFormElements
+     * @memberof ludo.form.Manager.prototype
+     */
+    getFormElements: function () {
+        if (!this.view.isRendered) {
+            this.getFormElements.delay(100, this);
+            return;
+        }
 
-		this.map[c.name] = c;
+        var children = this.view.getAllChildren();
+        children.push(this.view);
 
-		if(this.record && this.record[c.name]){
-			c.val(this.record[c.name]);
-		}
+        var c;
+        for (var i = 0, len = children.length; i < len; i++) {
+            c = children[i];
+            if (c['getProgressBarId'] !== undefined) {
+                this.registerProgressBar(c);
+            }
+            else if (c.isFormElement() && c.submittable) {
+                this.registerFormElement(c);
+            }
+        }
 
-		if (c.isFileUploadComponent) {
-			this.fileUploadComponents.push(c);
-		}
-		this.formComponents.push(c);
+        this.fireEvent((this.invalidIds.length == 0) ? 'valid' : 'invalid');
+        this.fireEvent((this.dirtyIds.length == 0) ? 'clean' : 'dirty');
+    },
 
-		c.addEvents({
-			'valid':this.onValid.bind(this),
-			'invalid':this.onInvalid.bind(this),
-			'dirty':this.onDirty.bind(this),
-			'clean':this.onClean.bind(this),
-			'change':this.onChange.bind(this)
-		});
+    registerFormElement: function (c) {
+        if (this.formComponents.indexOf(c) >= 0) {
+            return;
+        }
 
-		if (!c.isValid()) {
-			this.invalidIds.push(c.getId());
-		}
+        this.map[c.name] = c;
 
-		if (c.isDirty()) {
-			this.dirtyIds.push(c.getId());
-		}
-	},
+        if (this.record && this.record[c.name]) {
+            c.val(this.record[c.name]);
+        }
 
-	/**
-	 * Populate form fields with data from JSON object
-	 * @function populate
-	 * @memberof ludo.form.Manager.prototype
-	 * @param {Object} json JSON object
-	 * @example
-	 * var view = new ludo.View({
+        if (c.isFileUploadComponent) {
+            this.fileUploadComponents.push(c);
+        }
+        this.formComponents.push(c);
+
+        c.addEvents({
+            'valid': this.onValid.bind(this),
+            'invalid': this.onInvalid.bind(this),
+            'dirty': this.onDirty.bind(this),
+            'clean': this.onClean.bind(this),
+            'change': this.onChange.bind(this)
+        });
+
+        if (!c.isValid()) {
+            this.invalidIds.push(c.getId());
+        }
+
+        if (c.isDirty()) {
+            this.dirtyIds.push(c.getId());
+        }
+    },
+
+    /**
+     * Populate form fields with data from JSON object
+     * @function populate
+     * @memberof ludo.form.Manager.prototype
+     * @param {Object} json JSON object
+     * @example
+     * var view = new ludo.View({
 	 * 	renderTo:document.body,
 	 * 	layout:{ type:'linear', orientation:'vertical', width:'matchParent', height:'matchParent' },
 	 * 	children:[
@@ -27360,380 +27495,359 @@ ludo.form.Manager = new Class({
 	 * 		{ type:'form.Text', name:'lastname' }
 	 * 	]
 	 * });
-	 * // Update form views firstname and lastname with values from JSON
-	 * view.getForm.populate({
+     * // Update form views firstname and lastname with values from JSON
+     * view.getForm.populate({
 	 * 	"firstname" : "Jane", "lastname": "Anderson"
 	 * });
-	 *
+     *
      */
-	populate:function(json) {
-		$.each(json, this.set.bind(this));
-	},
+    populate: function (json) {
+        $.each(json, this.set.bind(this));
+    },
 
 
     /**
      * Set value of a form element
      * @function set
-	 * @memberOf ludo.form.Manager.prototype
+     * @memberOf ludo.form.Manager.prototype
      * @param {String} name name of form element
      * @param {String|Number|Object} value
      */
-	set:function(name, value){
-		if(this.map[name]){
-			this.map[name].val(value);
-		}else if(this.hiddenFields != undefined && this.hiddenFields.indexOf(name) != -1){
-			this.hiddenValues[name] = value;
-		}
+    set: function (name, value) {
+        if (this.map[name]) {
+            this.map[name].val(value);
+        } else if (this.hiddenFields != undefined && this.hiddenFields.indexOf(name) != -1) {
+            this.hiddenValues[name] = value;
+        }
 
-	},
+    },
 
-	/**
-	 * Set OR get value of form component.
-	 * Called with two arguments(key and value), a value will be set. Called with one argument(key), value will be returned.
-	 * @function val
-	 * @memberOf ludo.form.Manager.prototype
-	 * @param key
-	 * @param value
-	 * @example
-	 * view.getForm().val('firstname', 'Hannah');
-	 * var firstneame = view.getForm().val('firstname');
+    /**
+     * Set OR get value of form component.
+     * Called with two arguments(key and value), a value will be set. Called with one argument(key), value will be returned.
+     * @function val
+     * @memberOf ludo.form.Manager.prototype
+     * @param key
+     * @param value
+     * @example
+     * view.getForm().val('firstname', 'Hannah');
+     * var firstneame = view.getForm().val('firstname');
      */
-	val:function(key, value){
-		if(arguments.length == 2){
-			this.set(key, value);
-		}
+    val: function (key, value) {
+        if (arguments.length == 2) {
+            this.set(key, value);
+        }
 
-		return this.get(key);
-	},
+        return this.get(key);
+    },
 
-	/**
-	 * Returns values of all form elements in JSON format.
-	 * This method can be called on all views. It will return a JSON containing key-value pairs for all the views form elements(nested, i.e. children, grand children etc)
-	 * @function values
-	 * @memberOf ludo.form.Manager.prototype
-	 * @returns {{}}
+    /**
+     * Returns values of all form elements in JSON format.
+     * This method can be called on all views. It will return a JSON containing key-value pairs for all the views form elements(nested, i.e. children, grand children etc)
+     * @function values
+     * @memberOf ludo.form.Manager.prototype
+     * @returns {{}}
      */
-	values:function(){
-		var ret = {};
-		for (var i = 0; i < this.formComponents.length; i++) {
-			var el = this.formComponents[i];
-			ret[el.getName()] = el.val();
-		}
+    values: function () {
+        var ret = {};
+        for (var i = 0; i < this.formComponents.length; i++) {
+            var el = this.formComponents[i];
+            ret[el.getName()] = el.val();
+        }
 
-		return ret;
-	},
+        return ret;
+    },
 
     /**
      * Return value of form element.
      * @function get
-	 * @memberOf ludo.form.Manager.prototype
+     * @memberOf ludo.form.Manager.prototype
      * @param {String} name Name of form element
      * @return {String|Number|Object}
      */
-	get:function(name){
-		return this.map[name] ? this.map[name].val() : this.hiddenValues[name] != undefined ? this.hiddenValues[name] : undefined;
-	},
+    get: function (name) {
+        return this.map[name] ? this.map[name].val() : this.hiddenValues[name] != undefined ? this.hiddenValues[name] : undefined;
+    },
 
-	registerProgressBar:function (view) {
-		if (!this.progressBar) {
-			this.progressBar = view;
-		}
-	},
+    registerProgressBar: function (view) {
+        if (!this.progressBar) {
+            this.progressBar = view;
+        }
+    },
 
-	onDirty:function (value, formComponent) {
-		var elId = formComponent.getId();
-		if (this.dirtyIds.indexOf(elId) == -1) {
-			this.dirtyIds.push(elId);
-		}
+    onDirty: function (value, formComponent) {
+        var elId = formComponent.getId();
+        if (this.dirtyIds.indexOf(elId) == -1) {
+            this.dirtyIds.push(elId);
+        }
 
-		this.fireEvent('dirty', formComponent);
-	},
+        this.fireEvent('dirty', formComponent);
+    },
 
-	onClean:function (value, formComponent) {
-		this.dirtyIds.erase(formComponent.getId());
+    onClean: function (value, formComponent) {
+        this.dirtyIds.erase(formComponent.getId());
 
-		if (this.dirtyIds.length === 0) {
+        if (this.dirtyIds.length === 0) {
 
-			this.fireEvent('clean');
-		}
-	},
+            this.fireEvent('clean');
+        }
+    },
 
-	onChange:function (value, formComponent) {
-		this.fireEvent('change', [this, formComponent])
-	},
-	/**
-	 * One form element is valid. Fire valid event if all form elements are valid
-	 * @function onValid
-	 * @private
-	 * @param {String} value
-	 * @param {object } formComponent
-	 */
-	onValid:function (value, formComponent) {
-		this.invalidIds.erase(formComponent.getId());
-		if (this.invalidIds.length == 0) {
+    onChange: function (value, formComponent) {
+        this.fireEvent('change', [this, formComponent])
+    },
+    /**
+     * One form element is valid. Fire valid event if all form elements are valid
+     * @function onValid
+     * @private
+     * @param {String} value
+     * @param {object } formComponent
+     */
+    onValid: function (value, formComponent) {
+        this.invalidIds.erase(formComponent.getId());
+        if (this.invalidIds.length == 0) {
 
-			this.fireEvent('valid', this);
-		}
-	},
-	/**
-	 * Set view invalid when a form element inside it is invalid
-	 *
-	 * @function onInvalid
-	 * @private
-	 * @param {String} value
-	 * @param {Object} formComponent
-	 */
-	onInvalid:function (value, formComponent) {
-		var elId = formComponent.getId();
-		if (this.invalidIds.indexOf(elId) == -1) {
-			this.invalidIds.push(elId);
-		}
+            this.fireEvent('valid', this);
+        }
+    },
+    /**
+     * Set view invalid when a form element inside it is invalid
+     *
+     * @function onInvalid
+     * @private
+     * @param {String} value
+     * @param {Object} formComponent
+     */
+    onInvalid: function (value, formComponent) {
+        var elId = formComponent.getId();
+        if (this.invalidIds.indexOf(elId) == -1) {
+            this.invalidIds.push(elId);
+        }
 
-		this.fireEvent('invalid', this);
-	},
-	/**
-	 * Validate form and fire "invalid" or "valid" event
-	 * @function validate
-	 * @return void
-	 * @memberof ludo.form.Manager.prototype
-	 */
-	validate:function () {
-		if (this.invalidIds.length > 0) {
-			this.fireEvent('invalid', this);
-		} else {
-			this.fireEvent('valid', this);
-		}
-	},
-	/**
-	 * Returns true when all child form views are valid
-	 * @function isValid
-	 * @memberOf ludo.form.Manager.prototype
-	 */
-	isValid:function () {
-		return this.invalidIds.length === 0;
-	},
+        this.fireEvent('invalid', this);
+    },
+    /**
+     * Validate form and fire "invalid" or "valid" event
+     * @function validate
+     * @return void
+     * @memberof ludo.form.Manager.prototype
+     */
+    validate: function () {
+        if (this.invalidIds.length > 0) {
+            this.fireEvent('invalid', this);
+        } else {
+            this.fireEvent('valid', this);
+        }
+    },
+    /**
+     * Returns true when all child form views are valid
+     * @function isValid
+     * @memberOf ludo.form.Manager.prototype
+     */
+    isValid: function () {
+        return this.invalidIds.length === 0;
+    },
 
-	/**
-	 * Submit form to server
-	 * @function submit
-	 * @private
-	 */
-	submit:function () {
-		this.save();
-	},
+    /**
+     * Submit form to server
+     * @function submit
+     * @memberof ludo.form.Manager.prototype
+     */
+    submit: function () {
+        this.save();
+    },
 
-	getUnfinishedFileUploadComponent:function () {
-		for (var i = 0; i < this.fileUploadComponents.length; i++) {
-			if (this.fileUploadComponents[i].hasFileToUpload()) {
-				this.fileUploadComponents[i].addEvent('submit', this.save.bind(this));
-				return this.fileUploadComponents[i];
-			}
-		}
-		return undefined;
-	},
+    getUnfinishedFileUploadComponent: function () {
+        for (var i = 0; i < this.fileUploadComponents.length; i++) {
+            if (this.fileUploadComponents[i].hasFileToUpload()) {
+                this.fileUploadComponents[i].addEvent('submit', this.save.bind(this));
+                return this.fileUploadComponents[i];
+            }
+        }
+        return undefined;
+    },
 
-	save:function () {
-		if (this.getUrl() || ludo.config.getUrl()) {
-			var el;
-			if (el = this.getUnfinishedFileUploadComponent()) {
-				el.upload();
-				return;
-			}
+    getUrl: function (type) {
+        if (this.configs[type] && this.configs[type].url)return this.configs[type].url;
+        return this.url;
+    },
 
-			this.fireEvent('invalid');
-			this.fireEvent('beforeSave');
-			this.beforeRequest();
-			this.requestHandler().send('save', this.currentId, this.values(),
-				{
-					"progressBarId":this.getProgressBarId()
-				}
-			);
-		}
-	},
+    dataFor: function (type) {
+        var keys = this.configs[type] && this.configs[type].keys ? this.configs[type].keys : undefined;
+        var data;
+        if(keys == undefined){
+            data = this.values();
 
-	/**
-	 * Read form values from the server
-	 * @function read
-	 * @param {String|undefined} id
-	 * @memberof ludo.form.Manager
-	 */
-	read:function(id){
-		this.fireEvent('beforeRead');
-		this.beforeRequest();
-		this.currentIdToBeSet = id;
-		this.readHandler().sendToServer('read', id);
-	},
+        }else{
+            data = {};
+            for(var i=0;i<keys.length;i++){
+                data[keys[i]] = this.get(keys[i]);
+            }
+        }
+        return Object.merge(data, this.configDataFor(type));
+    },
 
-	_readHandler:undefined,
+    configDataFor: function (type) {
+        return this.configs[type] && this.configs[type].data ? this.configs[type].data : {};
+    },
 
-	readHandler:function(){
-		if(this._readHandler === undefined){
-			this._readHandler = this.getDependency('readHandler', new ludo.remote.JSON({
-				url:this.url,
-				method:this.method ? this.method : 'post',
-				service : 'read',
-				listeners:{
-					"success":function (request) {
-						this.currentId = this.currentIdToBeSet;
-						this.populate(this.record);
-						this.commit();
+    methodFor:function(type){
+        return this.configs[type] && this.configs[type].method ? this.configs[type].method : this.method;
+    },
+
+    save: function () {
+        var url = this.getUrl('submit');
+        if (url) {
+            var el;
+            if (el = this.getUnfinishedFileUploadComponent()) {
+                el.upload();
+                return;
+            }
+
+            this.fireEvent('invalid');
+            this.fireEvent('submit.init');
+            this.beforeRequest();
+
+            $.ajax({
+                url: url,
+                method: this.methodFor('submit'),
+                cache: false,
+                dataType: 'json',
+                data: this.dataFor('submit'),
+                success: function (json) {
+                    console.log(json);
+                    this.fireEvent('submit.success', [json, this]);
+                }.bind(this),
+                fail: function (text, error) {
+                    this.fireEvent('submit.fail', [text, error, this]);
+                }.bind(this)
+            });
+        }
+    },
+
+    /**
+     * Read form values from the server. This method triggers the events read.init and read.success|read.fail.
+     * This method will be called during view creation if read.autoload is set to true.
+     * @function read
+     * @param {String|undefined} id
+     * @memberof ludo.form.Manager
+     * @example
+     var v = new ludo.View({
+         form:{
+            hiddenFields: ['id'],
+            read: {
+                url: 'form-data.json', // read url
+                keys:['id'], // array of form values to add to the view request
+                listeners:{
+                    'success': function(json, form){
+                        form.clear();
+                        form.populate(json);
+                    },
+                    'fail': function(text, error, form){
+                        // do something on failure
+                    }
+                }
+            }
+        }
+     });
+     // load data from server and trigger the listeners above.
+     v.getForm().read();
+     */
+    read: function () {
+        this.fireEvent('read.init');
+        this.beforeRequest();
+        var url = this.getUrl('read');
+        if(url != undefined){
+            $.ajax({
+                url: url,
+                method: this.methodFor('read'),
+                cache: false,
+                dataType: 'json',
+                data: this.dataFor('read'),
+                success: function (json) {
+                    this.fireEvent('read.success', [json, this]);
+                }.bind(this),
+                fail: function (text, error) {
+                    this.fireEvent('read.fail', [text, error, this]);
+                }.bind(this)
+            });
+        }
 
 
-						this.fireEvent('read', [request.getResponse(), this.view]);
-						if (this.isValid()) {
-							this.fireEvent('valid');
-						}
-						this.fireEvent('clean');
+    },
 
-						this.afterRequest();
+    afterRequest: function () {
+        this.fireEvent('afterRequest');
+    },
 
-					}.bind(this),
-					"failure":function (request) {
-						this.fireEvent('failure', [request.getResponse(), this.view]);
-						this.afterRequest();
-					}.bind(this),
-					"error":function (request) {
-						this.fireEvent('servererror', [request.getResponseMessage(), request.getResponseCode()]);
-						this.fireEvent('valid', this);
-						this.afterRequest();
-					}.bind(this)
-				}
-			}));
-		}
-		return this._readHandler;
-	},
+    beforeRequest: function () {
 
-	_request:undefined,
-	requestHandler:function () {
-		if (this._request === undefined) {
-			if (!this.resource)ludo.util.warn("Warning: form does not have a resource property. Falling back to default: 'Form'");
-			this._request = this.createDependency('_request', new ludo.remote.JSON({
-				url:this.url,
-				method:this.method ? this.method : 'post',
-				listeners:{
-					"success":function (request) {
-						this.commit();
+        this.fireEvent('beforeRequest');
+    },
 
-						this.fireEvent('saved', [request.getResponse(), this.view]);
+    getProgressBarId: function () {
+        return this.progressBar ? this.progressBar.getProgressBarId() : undefined;
+    },
 
-						this.setCurrentId(request.getResponseData());
+    /**
+     * Commit all form Views. This will reset the dirty flag. The dirty flag is true when on form view has been updated.
+     * A later call to {@link ludo.form.Manager#reset|reset} will reset all form Views back to the value it had when commit was called.
+     * with a new value.
+     * @function commit
+     * @memberof ludo.form.Manager.prototype
+     */
+    commit: function () {
+        for (var i = 0; i < this.formComponents.length; i++) {
+            this.formComponents[i].commit();
+        }
+    },
 
-						this.fireEvent('success', [request.getResponse(), this.view]);
-						if (this.isValid()) {
-							this.fireEvent('valid');
-						}
-						this.fireEvent('clean');
+    /**
+     * Reset value of all form Views back to it's original value.
+     * @method reset
+     * @memberof ludo.form.Manager.prototype
+     */
+    reset: function () {
+        for (var i = 0; i < this.formComponents.length; i++) {
+            this.formComponents[i].reset();
+        }
+        this.dirtyIds = [];
+        this.fireEvent('clean');
+        this.fireEvent('reset');
+    },
 
-						this.afterRequest();
+    newRecord: function () {
 
-					}.bind(this),
-					"failure":function (request) {
-						if (this.isValid()) {
-							this.fireEvent('valid');
-						}
+        this.fireEvent('new');
+        this.currentId = undefined;
+        this.clear();
+    },
 
+    /**
+     * Clear value of all child form views
+     * @function clear
+     * @memberof ludo.form.Manager.prototype
+     */
+    clear: function () {
+        for (var i = 0; i < this.formComponents.length; i++) {
+            this.formComponents[i].clear();
+        }
 
-						this.fireEvent('failure', [request.getResponse(), this.view]);
+        this.dirtyIds = [];
+        this.fireEvent('clean');
+        this.fireEvent('clear');
+    },
 
-						this.afterRequest();
-					}.bind(this),
-					"error":function (request) {
-
-						this.fireEvent('servererror', [request.getResponseMessage(), request.getResponseCode()]);
-						this.fireEvent('valid', this);
-
-						this.afterRequest();
-					}.bind(this)
-				}
-			}));
-		}
-		return this._request;
-	},
-
-	afterRequest:function(){
-
-		this.fireEvent('afterRequest');
-	},
-
-	beforeRequest:function(){
-
-		this.fireEvent('beforeRequest');
-	},
-	
-	setCurrentId:function(data){
-
-		if(!isNaN(data)){
-			this.currentId = data;
-		}
-		if(ludo.util.isObject(data)){
-			this.currentId = data.id;
-		}
-	},
-
-	getProgressBarId:function () {
-		return this.progressBar ? this.progressBar.getProgressBarId() : undefined;
-	},
-
-	/**
-	 * Commit all form Views. This will reset the dirty flag. The dirty flag is true when on form view has been updated.
-	 * A later call to {@link ludo.form.Manager#reset|reset} will reset all form Views back to the value it had when commit was called.
-	 * with a new value.
-	 * @function commit
-	 * @memberof ludo.form.Manager.prototype
-	 */
-	commit:function () {
-		for (var i = 0; i < this.formComponents.length; i++) {
-			this.formComponents[i].commit();
-		}
-	},
-
-	/**
-	 * Reset value of all form Views back to it's original value. 
-	 * @method reset
-	 * @memberof ludo.form.Manager.prototype
-	 */
-
-	reset:function () {
-		for (var i = 0; i < this.formComponents.length; i++) {
-			this.formComponents[i].reset();
-		}
-		this.dirtyIds = [];
-		this.fireEvent('clean');
-		this.fireEvent('reset');
-	},
-
-	newRecord:function(){
-
-		this.fireEvent('new');
-		this.currentId = undefined;
-		this.clear();
-	},
-
-	/**
-	 * Clear value of all child form views
-	 * @function clear
-	 * @memberof ludo.form.Manager.prototype
-	 */
-	clear:function () {
-		for (var i = 0; i < this.formComponents.length; i++) {
-			this.formComponents[i].clear();
-		}
-
-		this.dirtyIds = [];
-		this.fireEvent('clean');
-		this.fireEvent('clear');
-	},
-
-	/**
-	 * Returns true if a form View has been updated with a new value. This is useful for handling disabling/enabling of buttons
-	 * based on changes made to the form. The dirty flag can be reset by calling the {@link ludo.form.Manager#commit} method. This will
-	 * call commit on all form views.
-	 * @function isDirty
-	 * @memberof ludo.form.Manager.prototype
-	 */
-	isDirty:function () {
-		return this.dirtyIds.length > 0;
-	}
+    /**
+     * Returns true if a form View has been updated with a new value. This is useful for handling disabling/enabling of buttons
+     * based on changes made to the form. The dirty flag can be reset by calling the {@link ludo.form.Manager#commit} method. This will
+     * call commit on all form views.
+     * @function isDirty
+     * @memberof ludo.form.Manager.prototype
+     */
+    isDirty: function () {
+        return this.dirtyIds.length > 0;
+    }
 });/* ../ludojs/src/form/submit-button.js */
 /**
  * Special Button for form submission.
@@ -28030,8 +28144,6 @@ ludo.form.Combo = new Class({
     },
 
 	menuButton:undefined,
-
-
     childLayout:undefined,
 
     __construct:function(config){
@@ -28066,6 +28178,7 @@ ludo.form.Combo = new Class({
 			listeners:{
 				show:function(){
 					this.fireEvent('showCombo');
+                    this.children[0].getLayout().getRenderer().resize();
 				}.bind(this)
 			}
 		}));
@@ -28096,77 +28209,78 @@ ludo.form.Combo = new Class({
  */
 ludo.form.Date = new Class({
     Extends: ludo.form.Combo,
-    children:[{
-       type:'calendar.Calendar'
+    children: [{
+        type: 'calendar.Calendar'
     }],
 
-    displayFormat : 'Y-m-d',
+    displayFormat: 'Y-m-d',
+    inputFormat: 'Y-m-d',
 
-    inputFormat : 'Y-m-d',
     childLayout:{
-        width:250,height:250
+        width: 250, height: 250
     },
 
-    __construct:function(config){
+    __construct: function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['displayFormat','inputFormat']);
+        this.setConfigParams(config, ['displayFormat', 'inputFormat']);
 
         this.displayFormat = this.displayFormat.replace(/([a-z])/gi, '%$1');
         this.inputFormat = this.inputFormat.replace(/([a-z])/gi, '%$1');
-        this.value = this.value ? ludo.util.parseDate(this.value, this.inputFormat) :undefined;
+        this.value = this.value ? ludo.util.parseDate(this.value, this.inputFormat) : undefined;
         this.initialValue = this.constructorValue = this.value;
     },
 
 
-    __rendered:function(){
+    __rendered: function () {
         this.parent();
         this.setFormElValue(this.value);
     },
 
-    addChild:function(child){
+    addChild: function (child) {
+
         child.value = this.value || new Date();
 
         this.parent(child);
-        this.children[0].addEvent('change', function(date){
+        this.children[0].addEvent('change', function (date) {
             this._set(ludo.util.parseDate(date, this.inputFormat));
             this.blur();
         }.bind(this));
     },
-    ludoEvents:function(){
+    ludoEvents: function () {
         this.parent();
-        this.addEvent('showCombo', function(){
+        this.addEvent('showCombo', function () {
             this.children[0].setDate(this.value ? ludo.util.parseDate(this.value, this.displayFormat) : new Date());
         }.bind(this));
 
     },
 
-    setValue:function(value){
+    setValue: function (value) {
         console.warn("Use of deprecated setValue");
         console.trace();
         value = value ? ludo.util.parseDate(value, this.displayFormat) : value;
-        if(value && value.getYear && isNaN(value.getYear()))value = undefined;
+        if (value && value.getYear && isNaN(value.getYear()))value = undefined;
         this.parent(value);
     },
-    getValue:function(){
+    getValue: function () {
         console.warn("Use of deprecated getValue");
         console.trace();
         return this.value ? ludo.util.parseDate(this.value, this.displayFormat).format(this.inputFormat) : undefined;
     },
 
-    val:function(value){
-        if(arguments.length == 0){
+    val: function (value) {
+        if (arguments.length == 0) {
             return this.value ? ludo.util.parseDate(this.value, this.displayFormat).format(this.inputFormat) : undefined;
-        }  
+        }
         this._set(value);
     },
-    
-    _set:function(value){
+
+    _set: function (value) {
         value = value ? ludo.util.parseDate(value, this.displayFormat) : value;
-        if(value && value.getYear && isNaN(value.getYear()))value = undefined;
+        if (value && value.getYear && isNaN(value.getYear()))value = undefined;
         this.parent(value);
     },
-    
-    setFormElValue:function(value){
+
+    setFormElValue: function (value) {
         if (this.els.formEl && this.els.formEl.val() !== value) {
             value = value ? ludo.util.isString(value) ? value : value.format(this.displayFormat) : '';
             this.els.formEl.val(value);
@@ -30761,7 +30875,17 @@ ludo.form.RadioGroup = new Class({
  * On off switch
  * @namespace ludo.form
  * @class ludo.form.OnOffSwitch
- * @memberOf ludo.form
+ * @param {Object} config
+ * @param {Number} config.trackBorderWidth Border width of tracks in pixels. Default: 1
+ * @param {Number} config.textSizeRatio Text size ratio. Default: 0.45
+ * @param {String} config.trackColorOn Track color ON. Default: #F57C00
+ * @param {String} config.trackColorOff Track color OFF. Default: #666666
+ * @param {String} config.textColorOn Text Color ON. Default: decided by theme CSS
+ * @param {String} config.textColorOff Text Color OFF. Default: #FFFFFF
+ * @param {String} config.textOn Text On. Default: empty string
+ * @param {String} config.textOff Text Off. Default: empty string
+ * @param {String|Number} config.checkedVal Value when checked. Default: "1"
+ * @param {String|Number} config.uncheckedVal Value when unchecked. Default: ""(empty string)
  *
  */
 ludo.form.OnOffSwitch = new Class({
@@ -30772,52 +30896,13 @@ ludo.form.OnOffSwitch = new Class({
 
     checked: false,
 
-    /**
-     * @memberof ludo.form.OnOffSwitch.prototype
-     * Border width in pixels. Default is 1
-     * @param {Number} textSizeRatio
-     * @default 1
-     */
     trackBorderWidth: 1,
-
-    /**
-     * @memberof ludo.form.OnOffSwitch.prototype
-     * Text size ratio relative to height. Default is 0.45
-     * @param {Number} textSizeRatio
-     * @default 0.45
-     */
     textSizeRatio: 0.45,
 
-    /**
-     * @memberof ludo.form.OnOffSwitch.prototype
-     * Track color - ON state. Default is orange
-     * @param {string} trackColorOn
-     * @default #F57C00
-     */
     trackColorOn: '#F57C00',
-
-    /**
-     * Track color - OFF state. Default is dark gray
-     * @param {string} trackColorOff
-     * @memberof ludo.form.OnOffSwitch.prototype
-     * @default #666
-     */
     trackColorOff: '#666',
-
-    /**
-     * Text color in on state
-     * @param {string} v
-     * @default #fff
-     * @memberof ludo.form.OnOffSwitch.prototype
-     */
     textColorOn: undefined,
 
-    /**
-     * Text color in off state
-     * @param {string} textColorOff
-     * @default #fff
-     * @memberof ludo.form.OnOffSwitch.prototype
-     */
     textColorOff: '#fff',
 
     el: undefined,
@@ -30827,23 +30912,8 @@ ludo.form.OnOffSwitch = new Class({
     onTextEl: undefined,
     offTextEl: undefined,
     onOffTrackContainer: undefined,
-
-    /**
-     * Text when switch is turned on
-     * @memberof ludo.form.OnOffSwitch.prototype
-     * @param {string} textOn
-     * @default ""
-     */
     textOn: "",
-
-    /**
-     * @memberof ludo.form.OnOffSwitch.prototype
-     * Text when switch is turned off
-     * @param {string} textOff
-     * @default ""
-     */
     textOff: "",
-
     minX: 0,
     maxX: 0,
 
@@ -30855,22 +30925,8 @@ ludo.form.OnOffSwitch = new Class({
     dragCurrentX: 0,
     borderSize: 0,
 
-    /**
-     * Value when checked
-     * @memberof ludo.form.OnOffSwitch.prototype
-     * @param {string} checkedVal
-     * @type {string}
-     * @default '1'
-     */
     checkedVal:'1',
 
-    /**
-     * Value when unchecked
-     * @memberof ludo.form.OnOffSwitch.prototype
-     * @param {string} uncheckedVal
-     * @type {string}
-     * @default ''
-     */
     uncheckedVal: '',
 
     __construct:function(config){
@@ -31218,6 +31274,12 @@ ludo.form.OnOffSwitch = new Class({
         this.change();
     },
 
+    /**
+     * Set or get value
+     * @param val
+     * @returns {*}
+     * @memberof ludo.form.OnOffSwitch.prototype
+     */
     val: function (val) {
         if(arguments.length == 1){
             if(val == this.checkedVal)this.setChecked(true); else this.setChecked(false);
@@ -33058,7 +33120,7 @@ ludo.dialog.Dialog = new Class({
 		this.parent();
 		this.hideShim();
 		if (this.autoRemove) {
-			this.dispose.delay(1000, this);
+			this.remove.delay(1000, this);
 		}
 	},
 
