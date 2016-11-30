@@ -457,8 +457,8 @@ ludo.grid.ColumnManager = new Class({
 	 * @function insertIntoSameGroupAs
 	 * @param {String} column
 	 * @param {String} as
-	 * @private
 	 * memberof ludo.grid.ColumnManager.prototype
+	 * @private
 	 */
 	insertIntoSameGroupAs:function(column, as){
 		var group = this.columnLookup[as].group;
