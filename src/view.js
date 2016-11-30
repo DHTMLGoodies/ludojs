@@ -605,7 +605,7 @@ ludo.View = new Class({
 	 */
 	setTitle:function (title) {
 		this.title = title;
-		this.fireEvent('setTitle', this);
+		this.fireEvent('setTitle', [title, this]);
 	},
 
 	/**

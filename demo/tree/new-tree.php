@@ -27,7 +27,15 @@ require_once("../includes/demo-header.php");
     function newSubFolder() {
 
     }
-    var ds = new ludo.dataSource.TreeCollection({ url:'../resources/tree-data-source.php', requestId:'getTree','id' : 'myDataSource' });
+    var ds = new ludo.dataSource.TreeCollection(
+        {
+            url:'../resources/tree-data-source.php',
+            requestId:'getTree',
+            'id' : 'myDataSource',
+            dataHandler:function(json){
+                return json.response;
+            }
+        });
 
     var w = new ludo.Window({
         title:'Tree demo - Random countries and cities (20000 nodes)',

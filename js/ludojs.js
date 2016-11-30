@@ -1,7 +1,7 @@
-/* Generated Tue Nov 29 20:46:52 CET 2016 */
+/* Generated Wed Nov 30 15:29:33 CET 2016 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.234
+ludoJS - Javascript framework, 1.1.238
 Copyright (C) 2012-2016  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -6174,8 +6174,8 @@ ludo.layout.Base = new Class({
         };
         if (view.getBody())this.onCreate();
 
-        this.hasWrapWidth = view.layout.width == 'wrap';
-        this.hasWrapHeight = view.layout.height == 'wrap';
+        this.hasWrapWidth = !view.layout.weight && view.layout.width == 'wrap';
+        this.hasWrapHeight = !view.layout.weight &&  view.layout.height == 'wrap';
 
 
     },
@@ -6546,7 +6546,10 @@ ludo.layout.Base = new Class({
     },
 
     getHeightOf: function (child) {
-        return child.layout.height;
+        if(child.layout.height == 'wrap'){
+            child.layout.height = child.getEl().outerHeight(true);
+        }
+        return isNaN(child.layout.height) ? child.getEl().outerHeight(true) : child.layout.height;
     }
 });/* ../ludojs/src/layout/factory.js */
 /**
@@ -6709,73 +6712,30 @@ ludo.layoutFactory = new ludo.layout.Factory();/* ../ludojs/src/data-source/base
  * Base class for data sources
  * @namespace dataSource
  * @class ludo.dataSource.Base
- * @augments ludo.Core
+ * @augments ludo.Core, 'resource', 'service', 'arguments'
+ * @param {String} url URL for the data source
+ * @param {Object} postData Data to post with the request, example: postData: { getUsers: ' }
+ * @param {Boolean} autoload Load data from server when the datasource is instantiated.
+ * @param {Boolean} singleton True to make a data source singleton. This is something you do if you create
+ * your own data sources and only want one instance of it. To make this work, your datasource needs to have a
+ * type attribute. Example:
+ * <code>
+ *     myApp.dataSource.Countries = new Class({ type:'datasourceCountries'
+ * </code>
+ * @param {Function} dataHandler Custom function which receives data from server and returns data in appropriate format for the data source.
+ * If this function returns false, it will trigger the fail event.
  */
 ludo.dataSource.Base = new Class({
 	Extends:ludo.Core,
-	/**
-	 * Accept only one data-source of this type. You also need to specify the
-	 * "type" property which will be used as key in the global SINGELTON cache
-	 * By using singletons, you don't have to do multiple requests to the server
-	 * @attribute singleton
-	 * @type {Boolean}
-	 */
 	singleton:false,
-	/**
-	 * Remote url. If not set, global url will be used
-	 * @attribute url
-	 * @type {String}
-	 * @optional
-	 */
 	url:undefined,
-	/**
-	 * Remote postData sent with request, example:
-	 * postData: { getUsers: 1 }
-	 * @attribute postData
-	 * @type {Object}
-	 */
-	postData:{},
-
+	postData:undefined,
 	data:undefined,
-
-	/**
-	 * Load data from external source on creation
-	 * @attribute autoload
-	 * @type {Boolean}
-	 * @default true
-	 */
 	autoload:true,
-	/**
-	 * Name of resource to request on the server
-	 * @config resource
-	 * @type String
-	 * @default ''
-	 */
-	resource:'',
-	/**
-	 * Name of service to request on the server
-	 * @config service
-	 * @type String
-	 * @default ''
-	 */
-	service:'',
-	/**
-	 Array of arguments to send to resource on server
-	 @config arguments
-	 @type Array
-	 @default ''
-	 Here are some examples:
-
-	 Create a data source for server resource "Person", service name "load" and id : "1". You will then set these config properties:
-
-	 @example
-		 "resource": "Person",
-		 "service": "load",
-		 "arguments": [1]
-	 */
-	arguments:undefined,
+	method:'post',
 
 	inLoadMode:false,
+	dataHandler:undefined,
 
 	/**
 	 Config of shim to show when content is being loaded form server. This config
@@ -6803,12 +6763,27 @@ ludo.dataSource.Base = new Class({
 
 	__construct:function (config) {
 		this.parent(config);
-		this.setConfigParams(config, ['url', 'postData', 'autoload', 'resource', 'service', 'arguments', 'data', 'shim']);
+		this.setConfigParams(config, ['method', 'url', 'autoload', 'data', 'shim','dataHandler']);
 
-		if (this.arguments && !ludo.util.isArray(this.arguments)) {
-			this.arguments = [this.arguments];
+		if(this.postData == undefined){
+			this.postData = {};
+		}
+		if(config.postData != undefined){
+			this.postData = Object.merge(this.postData, config.postData);
 		}
 
+		if(this.dataHandler == undefined){
+			this.dataHandler = function(json){
+				return jQuery.isArray(json) ? json : json.response != undefined ? json.response : json.data != undefined ? json.data : false;
+			}
+		}
+
+
+
+	},
+
+	setPostData:function(key, value){
+		this.postData[key] = value;
 	},
 
 	ludoEvents:function () {
@@ -6824,11 +6799,41 @@ ludo.dataSource.Base = new Class({
 	 * @param {Object} data
 	 * @optional
 	 */
-	sendRequest:function (service, arguments, data) {
+	sendRequest:function (data) {
 		this.arguments = arguments;
 		this.beforeLoad();
-		this.requestHandler().send(service, arguments, data);
+
+		this.fireEvent('init', this);
+
+		$.ajax({
+			url: this.url,
+			method: 'post',
+			cache: false,
+			dataType: 'json',
+			data: data,
+			success: function (json) {
+
+				var data = this.dataHandler(json);
+
+				if(data === false){
+					this.fireEvent('fail', ['Validation error', 'Validation error', this]);
+				}else{
+					this.loadComplete(data, json);
+					this.fireEvent('success', [json, this]);
+
+				}
+			}.bind(this),
+			fail: function (text, error) {
+				this.fireEvent('fail', [text, error, this]);
+			}.bind(this)
+		});
 	},
+
+
+	setData:function(data){
+
+	},
+
 	/**
 	 * Has data loaded from server
 	 * @function hasData
@@ -6896,7 +6901,7 @@ ludo.dataSource.Base = new Class({
  * Class for remote data source.
  * @namespace ludo.dataSource
  * @class ludo.dataSource.JSON
- * @augments dataSource.Base
+ * @augments ludo.dataSource.Base
  */
 ludo.dataSource.JSON = new Class({
     Extends:ludo.dataSource.Base,
@@ -6912,47 +6917,7 @@ ludo.dataSource.JSON = new Class({
     load:function () {
         if(!this.url && !this.resource)return;
         this.parent();
-        this.sendRequest(this.service, this.arguments, this.getPostData());
-    },
-
-    _request:undefined,
-	requestHandler:function(){
-        if(this._request === undefined){
-            this._request = new ludo.remote.JSON({
-                url:this.url,
-                resource: this.resource,
-				shim:this.shim,
-                listeners:{
-                    "beforeload": function(request){
-                        this.fireEvent("beforeload", request);
-                    },
-                    "success":function (request) {
-                        this.loadComplete(request.getResponseData(), request.getResponse());
-                    }.bind(this),
-                    "failure":function (request) {
-                        /*
-                         * Event fired when success parameter in response from server is false
-                         * @event failure
-                         * @param {Object} JSON response from server. Error message should be in the "message" property
-                         * @param {ludo.dataSource.JSON} this
-                         *
-                         */
-                        this.fireEvent('failure', [request.getResponse(), this]);
-                    }.bind(this),
-                    "error":function (request) {
-                        /*
-                         * Server error event. Fired when the server didn't handle the request
-                         * @event servererror
-                         * @param {String} error text
-                         * @param {String} error message
-                         */
-                        this.fireEvent('servererror', [request.getResponseMessage(), request.getResponseCode()]);
-                    }.bind(this)
-                }
-            });
-
-        }
-        return this._request;
+        this.sendRequest(this.getPostData());
     },
 
     /**
@@ -8453,7 +8418,7 @@ ludo.View = new Class({
 	 */
 	setTitle:function (title) {
 		this.title = title;
-		this.fireEvent('setTitle', this);
+		this.fireEvent('setTitle', [title, this]);
 	},
 
 	/**
@@ -10139,8 +10104,8 @@ ludo.dataSource.Collection = new Class({
 
 	loadComplete:function (data, json) {
 		// TODO refactor this
-		if (this.paging && json.rows !==undefined)this.paging.rows = json.rows;
-		if (this.paging && json.response && json.response.rows !==undefined)this.paging.rows = json.response.rows;
+		if (json != undefined && this.paging && json.rows !==undefined)this.paging.rows = json.rows;
+		if (json != undefined && this.paging && json.response && json.response.rows !==undefined)this.paging.rows = json.response.rows;
 		this.parent(data, json);
 
 		this.fireEvent('count', this.getCount());
@@ -13330,6 +13295,8 @@ ludo.layout.LinearVertical = new Class({
 
 		var availHeight = this.viewport.height;
 
+
+
 		var totalHeightOfItems = 0;
 		var totalWeight = 0;
 		var height;
@@ -13350,6 +13317,8 @@ ludo.layout.LinearVertical = new Class({
         var remainingHeight;
 		var stretchHeight = remainingHeight = (availHeight - totalHeightOfItems);
 
+
+		console.log(stretchHeight + ',' + totalHeightOfItems);
 
 		var width = this.view.getBody().width();
 		for (i = 0; i < this.view.children.length; i++) {
@@ -26203,7 +26172,7 @@ ludo.form.Element = new Class({
             'value', 'data'];
         this.setConfigParams(config, keys);
 
-        this.elementId = ('el-' + this.id).trim();
+        this.elementId = ('el-' + this.name).trim();
         this.formCss = defaultConfig.formCss || this.formCss;
         if (defaultConfig.height && config.height === undefined)this.layout.height = defaultConfig.height;
 
@@ -26564,6 +26533,13 @@ ludo.form.Element = new Class({
         return true;
     },
 
+    /**
+     * Alias to reset
+     * @memberof ludo.form.Element.prototype
+     */
+    rollback:function(){
+        this.reset();
+    },
     /**
      * Reset / Roll back to last committed value. It could be the value stored by last commit method call
      * or if the original value/default value of this field.
@@ -27314,6 +27290,7 @@ ludo.form.ToggleGroup = new Class({
  @param {Object} config.submit.listeners Submit listeners
  @param {Object} config.read Read data from server configuration object
  @param {Boolean} config.read.autoload True to autoload form data when rendered.
+ @param {Boolean} config.read.populate True to automatically populate form fields with JSON from server.
  @param {Object} config.read.listeners Read data from server listeners.
  @param {Object} config.listeners The form fires events when something is changed with one of the child form views(recursive).
 It is convenient to place event handlers here instead of adding them to the individual form views.
@@ -27472,8 +27449,8 @@ ludo.form.Manager = new Class({
             }
         }
 
-        this.fireEvent((this.invalidIds.length == 0) ? 'valid' : 'invalid');
-        this.fireEvent((this.dirtyIds.length == 0) ? 'clean' : 'dirty');
+        this.fireEvent((this.invalidIds.length == 0) ? 'valid' : 'invalid', this);
+        this.fireEvent((this.dirtyIds.length == 0) ? 'clean' : 'dirty', this);
     },
 
     registerFormElement: function (c) {
@@ -27559,7 +27536,7 @@ ludo.form.Manager = new Class({
      * @param value
      * @example
      * view.getForm().val('firstname', 'Hannah');
-     * var firstneame = view.getForm().val('firstname');
+     * var firstname = view.getForm().val('firstname');
      */
     val: function (key, value) {
         if (arguments.length == 2) {
@@ -27733,7 +27710,7 @@ ludo.form.Manager = new Class({
             }
 
             this.fireEvent('invalid');
-            this.fireEvent('submit.init');
+            this.fireEvent('submit.init', this);
             this.beforeRequest();
 
             $.ajax({
@@ -27757,8 +27734,7 @@ ludo.form.Manager = new Class({
      * Read form values from the server. This method triggers the events read.init and read.success|read.fail.
      * This method will be called during view creation if read.autoload is set to true.
      * @function read
-     * @param {String|undefined} id
-     * @memberof ludo.form.Manager
+     * @memberof ludo.form.Manager.prototype
      * @example
      var v = new ludo.View({
          form:{
@@ -27782,7 +27758,7 @@ ludo.form.Manager = new Class({
      v.getForm().read();
      */
     read: function () {
-        this.fireEvent('read.init');
+        this.fireEvent('read.init', this);
         this.beforeRequest();
         var url = this.getUrl('read');
         if(url != undefined){
@@ -27793,6 +27769,11 @@ ludo.form.Manager = new Class({
                 dataType: 'json',
                 data: this.dataFor('read'),
                 success: function (json) {
+                    if(this.configs.read.populate){
+                        this.clear();
+                        this.populate(json);
+                        this.commit();
+                    }
                     this.fireEvent('read.success', [json, this]);
                 }.bind(this),
                 fail: function (text, error) {
@@ -27830,8 +27811,17 @@ ludo.form.Manager = new Class({
         }
     },
 
+
     /**
-     * Reset value of all form Views back to it's original value.
+     * Alias to reset
+     * @method rollback
+     * @memberof ludo.form.Manager.prototype
+     */
+    rollback:function(){
+        this.reset();  
+    },
+    /**
+     * Reset value of all form Views back to it's commited value.
      * @method reset
      * @memberof ludo.form.Manager.prototype
      */
@@ -27840,8 +27830,8 @@ ludo.form.Manager = new Class({
             this.formComponents[i].reset();
         }
         this.dirtyIds = [];
-        this.fireEvent('clean');
-        this.fireEvent('reset');
+        this.fireEvent('clean', this);
+        this.fireEvent('reset', this);
     },
 
     newRecord: function () {
@@ -27852,7 +27842,7 @@ ludo.form.Manager = new Class({
     },
 
     /**
-     * Clear value of all child form views
+     * Clear value of all child form views back to blank or default view value
      * @function clear
      * @memberof ludo.form.Manager.prototype
      */

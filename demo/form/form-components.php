@@ -30,9 +30,10 @@ require_once("../includes/demo-header.php");
                 listeners: {
                     'init': function () {
                         console.log('init');
-                        ludo.get('myWindow').shim().show('Loading data');
+                        ludo.get('myWindow').shim().show('Saving data');
                     },
                     'success': function (json, form) {
+                        ludo.get('myWindow').shim().hide();
                         new ludo.dialog.Alert({
                             title: 'Thank you!',
                             resizable: true,
@@ -124,6 +125,9 @@ require_once("../includes/demo-header.php");
                         },
                         type: 'FramedView',
                         title: 'Address details',
+                        css: {
+                            padding: 3
+                        },
                         layout: {
                             type: 'table',
                             simple: true,
@@ -148,6 +152,42 @@ require_once("../includes/demo-header.php");
                             {type: 'form.Label', label: 'Zip/Post code:', labelFor: 'zipcode'},
                             {
                                 type: 'form.Text', placeholder: 'Zip/Post code', name: 'zipcode'
+                            },
+                            {
+                                type:'form.Label', label:'Country:', labelFor:'country'
+                            },
+                            {
+                                type:'form.Select',
+                                id:'country',
+                                name:'country',
+                                dataSource:{
+                                    url:'../data/countries.json'
+                                },
+                                textKey:'name',
+                                valueKey:'code',
+                                emptyItem:{
+                                    name:'Please select country',
+                                    code:''
+                                }
+                            },
+                            {
+                                type:'form.Label', label:'Gender:', labelFor:'gender',
+                                layout:{
+                                    height:30
+                                }
+                            },
+                            {
+                                type:'form.OnOffSwitch',
+                                textOn:'Female',
+                                textOff:'Male',
+                                layout:{
+                                    width:100,height:30
+                                },
+                                valueOn:'F',
+                                valueOff:'M',
+                                trackColorOn:'#C2185B',
+                                trackColorOff:'#1976D2'
+
                             }
                         ]
 

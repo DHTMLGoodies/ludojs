@@ -2,73 +2,30 @@
  * Base class for data sources
  * @namespace dataSource
  * @class ludo.dataSource.Base
- * @augments ludo.Core
+ * @augments ludo.Core, 'resource', 'service', 'arguments'
+ * @param {String} url URL for the data source
+ * @param {Object} postData Data to post with the request, example: postData: { getUsers: ' }
+ * @param {Boolean} autoload Load data from server when the datasource is instantiated.
+ * @param {Boolean} singleton True to make a data source singleton. This is something you do if you create
+ * your own data sources and only want one instance of it. To make this work, your datasource needs to have a
+ * type attribute. Example:
+ * <code>
+ *     myApp.dataSource.Countries = new Class({ type:'datasourceCountries'
+ * </code>
+ * @param {Function} dataHandler Custom function which receives data from server and returns data in appropriate format for the data source.
+ * If this function returns false, it will trigger the fail event.
  */
 ludo.dataSource.Base = new Class({
 	Extends:ludo.Core,
-	/**
-	 * Accept only one data-source of this type. You also need to specify the
-	 * "type" property which will be used as key in the global SINGELTON cache
-	 * By using singletons, you don't have to do multiple requests to the server
-	 * @attribute singleton
-	 * @type {Boolean}
-	 */
 	singleton:false,
-	/**
-	 * Remote url. If not set, global url will be used
-	 * @attribute url
-	 * @type {String}
-	 * @optional
-	 */
 	url:undefined,
-	/**
-	 * Remote postData sent with request, example:
-	 * postData: { getUsers: 1 }
-	 * @attribute postData
-	 * @type {Object}
-	 */
-	postData:{},
-
+	postData:undefined,
 	data:undefined,
-
-	/**
-	 * Load data from external source on creation
-	 * @attribute autoload
-	 * @type {Boolean}
-	 * @default true
-	 */
 	autoload:true,
-	/**
-	 * Name of resource to request on the server
-	 * @config resource
-	 * @type String
-	 * @default ''
-	 */
-	resource:'',
-	/**
-	 * Name of service to request on the server
-	 * @config service
-	 * @type String
-	 * @default ''
-	 */
-	service:'',
-	/**
-	 Array of arguments to send to resource on server
-	 @config arguments
-	 @type Array
-	 @default ''
-	 Here are some examples:
-
-	 Create a data source for server resource "Person", service name "load" and id : "1". You will then set these config properties:
-
-	 @example
-		 "resource": "Person",
-		 "service": "load",
-		 "arguments": [1]
-	 */
-	arguments:undefined,
+	method:'post',
 
 	inLoadMode:false,
+	dataHandler:undefined,
 
 	/**
 	 Config of shim to show when content is being loaded form server. This config
@@ -96,12 +53,27 @@ ludo.dataSource.Base = new Class({
 
 	__construct:function (config) {
 		this.parent(config);
-		this.setConfigParams(config, ['url', 'postData', 'autoload', 'resource', 'service', 'arguments', 'data', 'shim']);
+		this.setConfigParams(config, ['method', 'url', 'autoload', 'data', 'shim','dataHandler']);
 
-		if (this.arguments && !ludo.util.isArray(this.arguments)) {
-			this.arguments = [this.arguments];
+		if(this.postData == undefined){
+			this.postData = {};
+		}
+		if(config.postData != undefined){
+			this.postData = Object.merge(this.postData, config.postData);
 		}
 
+		if(this.dataHandler == undefined){
+			this.dataHandler = function(json){
+				return jQuery.isArray(json) ? json : json.response != undefined ? json.response : json.data != undefined ? json.data : false;
+			}
+		}
+
+
+
+	},
+
+	setPostData:function(key, value){
+		this.postData[key] = value;
 	},
 
 	ludoEvents:function () {
@@ -117,11 +89,41 @@ ludo.dataSource.Base = new Class({
 	 * @param {Object} data
 	 * @optional
 	 */
-	sendRequest:function (service, arguments, data) {
+	sendRequest:function (data) {
 		this.arguments = arguments;
 		this.beforeLoad();
-		this.requestHandler().send(service, arguments, data);
+
+		this.fireEvent('init', this);
+
+		$.ajax({
+			url: this.url,
+			method: 'post',
+			cache: false,
+			dataType: 'json',
+			data: data,
+			success: function (json) {
+
+				var data = this.dataHandler(json);
+
+				if(data === false){
+					this.fireEvent('fail', ['Validation error', 'Validation error', this]);
+				}else{
+					this.loadComplete(data, json);
+					this.fireEvent('success', [json, this]);
+
+				}
+			}.bind(this),
+			fail: function (text, error) {
+				this.fireEvent('fail', [text, error, this]);
+			}.bind(this)
+		});
 	},
+
+
+	setData:function(data){
+
+	},
+
 	/**
 	 * Has data loaded from server
 	 * @function hasData

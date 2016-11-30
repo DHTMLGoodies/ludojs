@@ -79,7 +79,7 @@ ludo.form.Element = new Class({
             'value', 'data'];
         this.setConfigParams(config, keys);
 
-        this.elementId = ('el-' + this.id).trim();
+        this.elementId = ('el-' + this.name).trim();
         this.formCss = defaultConfig.formCss || this.formCss;
         if (defaultConfig.height && config.height === undefined)this.layout.height = defaultConfig.height;
 

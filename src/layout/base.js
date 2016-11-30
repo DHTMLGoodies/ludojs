@@ -34,8 +34,8 @@ ludo.layout.Base = new Class({
         };
         if (view.getBody())this.onCreate();
 
-        this.hasWrapWidth = view.layout.width == 'wrap';
-        this.hasWrapHeight = view.layout.height == 'wrap';
+        this.hasWrapWidth = !view.layout.weight && view.layout.width == 'wrap';
+        this.hasWrapHeight = !view.layout.weight &&  view.layout.height == 'wrap';
 
 
     },
@@ -406,6 +406,9 @@ ludo.layout.Base = new Class({
     },
 
     getHeightOf: function (child) {
-        return child.layout.height;
+        if(child.layout.height == 'wrap'){
+            child.layout.height = child.getEl().outerHeight(true);
+        }
+        return isNaN(child.layout.height) ? child.getEl().outerHeight(true) : child.layout.height;
     }
 });

@@ -348,6 +348,11 @@ Collapse bar
 
 /** Grid **/
 
+
+.ludo-twilight  .ludo-grid-Grid .ludo-body {
+    background-color: transparent;
+}
+
 .ludo-twilight .ludo-grid div.ludo-resize-handle-active{
     background-color: transparent;
 
@@ -374,6 +379,9 @@ Collapse bar
     color:#000;
 }
 
+.ludo-twilight .ludo-container-frame{
+    border-color:#424242;
+}
 
 /** grid **/
 
@@ -560,9 +568,7 @@ Collapse bar
     border-radius:999px;
 }
 
-.ludo-twilight .ludo-tree-selected-node{
-    color:#FFF;
-}
+
 
 /** Paging buttons **/
 
@@ -635,4 +641,41 @@ Collapse bar
 }
 .ludo-twilight :-ms-input-placeholder { /* Internet Explorer 10-11 */
     color:    #8b8c8c;
+}
+
+.ludo-twilight select{
+    background-color:#535354;
+    color:#eee;
+}
+
+/**
+Tree
+*/
+.ludo-twilight .ludo-tree-selected-node{
+    color:#FFF;
+}
+.ludo-twilight .ludo-tree-node-expand{
+    background-image:url(../images/twilight-skin/tree-expand.png);
+}
+
+.ludo-twilight .ludo-tree-node-collapse{
+    background-image:url(../images/twilight-skin/tree-collapse.png);
+}
+
+
+.ludo-twilight .ludo-tree-node{
+    background-image: url(../images/twilight-skin/tree-dots-2.png);
+}
+
+.ludo-twilight div.ludo-tree-node-last-sibling{
+    background-image:url(../images/twilight-skin/tree-dots-last-node-2.png);
+}
+
+
+/**
+On Off Switch */
+
+.ludo-twilight .on-off-switch-track,
+.ludo-twilight .on-off-switch-track-off{
+    border-color:#aeb0b0;
 }

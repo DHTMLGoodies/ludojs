@@ -14,6 +14,8 @@ ludo.layout.LinearVertical = new Class({
 
 		var availHeight = this.viewport.height;
 
+
+
 		var totalHeightOfItems = 0;
 		var totalWeight = 0;
 		var height;
@@ -34,6 +36,8 @@ ludo.layout.LinearVertical = new Class({
         var remainingHeight;
 		var stretchHeight = remainingHeight = (availHeight - totalHeightOfItems);
 
+
+		console.log(stretchHeight + ',' + totalHeightOfItems);
 
 		var width = this.view.getBody().width();
 		for (i = 0; i < this.view.children.length; i++) {

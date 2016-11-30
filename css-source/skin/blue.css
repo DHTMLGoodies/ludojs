@@ -254,29 +254,6 @@
     /** Border between buttons in title bar can be set here */
 }
 
-/** Tab strip */
-
-.ludo-blue .ludo-tab-strip {
-    background-color: #d1e7ff;
-}
-
-.ludo-blue .ludo-tab-strip div.ludo-tab {
-    background-color: #6c9ad1;
-
-}
-
-/** Bg behind tabs */
-.ludo-blue .ludo-tab-strip-bg {
-    height: 1px;
-    background-color: #a6cbf5;
-}
-
-.ludo-blue .ludo-tab-strip div.ludo-tab-active {
-    height: 21px;
-    border-left: 1px solid #a6cbf5;
-    border-top: 1px solid #a6cbf5;
-    border-right: 1px solid #a6cbf5;
-}
 
 /** Resize shim */
 .ludo-blue .ludo-shim-resize {
@@ -662,16 +639,37 @@ form.ComboTree
 
 /**
 tab layout */
+
+/** Tab strip */
+.ludo-blue div.ludo-tab-strip-tab-bg{
+    border-bottom-color:#a6cbf5;
+}
+.ludo-blue div.ludo-tab-strip-tab-active .ludo-tab-strip-tab-bg{
+    border-bottom-color:#FFF;
+}
 .ludo-blue .ludo-tab-strip {
+    background-color: #d1e7ff;
+}
+
+.ludo-blue .ludo-tab-strip div.ludo-tab {
+    background-color: #6c9ad1;
 
 }
 
-.ludo-blue div.ludo-tab-strip-tab-bg-last,
-.ludo-blue div.ludo-tab-strip-tab-bg-first{
-    display:none !important;
-    border-color:#F00;
+.ludo-blue .ludo-tab-strip-tab span{
+    line-height:28px;
 }
 
+.ludo-blue .ludo-tab-strip-bg {
+    background-color: #a6cbf5;
+}
+
+.ludo-blue .ludo-tab-strip div.ludo-tab-active {
+
+    border-left: 1px solid #a6cbf5;
+    border-top: 1px solid #a6cbf5;
+    border-right: 1px solid #a6cbf5;
+}
 
 .ludo-blue .ludo-tab-strip .ludo-body, .ludo-blue .ludo-tab-strip-tab {
     background-color: #d1e7ff;
@@ -683,14 +681,6 @@ tab layout */
     border-color: #a3c7f0;
 }
 
-.ludo-blue .ludo-tab-strip-tab-top .ludo-tab-strip-line{
-    border-bottom-width: 1px;
-}
-
-.ludo-blue div.ludo-tab-strip-tab-bg-first, .ludo-blue div.ludo-tab-strip-tab-bg-last {
-    border-color: #EBF0F5;
-}
-
 .ludo-blue .ludo-tab-strip,
 .ludo-blue div.ludo-tab-strip-left div.ludo-body,
 .ludo-blue .ludo-tab-strip-top {
@@ -699,11 +689,8 @@ tab layout */
 
 .ludo-blue div.ludo-tab-strip-tab-active {
     background-color: #fff;
-    z-index:999999!important;
+
 }
-
-
-
 
 .ludo-blue .ludo-layout-tabstrip {
     background-color: #a6cbf5;
@@ -713,56 +700,13 @@ tab layout */
     background-color: #FFF;
 }
 
-.ludo-blue .ludo-tab-close-top,
-.ludo-blue .ludo-tab-close-bottom{
-    top:0;
-    height:22px;
-}
-
-.ludo-blue .ludo-tab-close-left,
-.ludo-blue .ludo-tab-close-right{
-    height:22px;
-    width:22px;
-}
-
 .ludo-blue .ludo-tab-close-left{
     top:0;
 }
 
-
 .ludo-blue .ludo-tab-close-right{
     bottom:0;
 }
-
-
-.ludo-blue .ludo-tab-strip-tab-top {
-    border: 1px solid #A6CBF5;
-    border-right: 1px solid #A6CBF5;
-    border-bottom: 1px solid #A6CBF5;
-    border-top-width:0;
-    border-left-width:0;
-}
-
-.ludo-blue .ludo-tab-strip-tab-bottom {
-    border: 1px solid #A6CBF5;
-    border-right: 1px solid #A6CBF5;
-    border-top: 1px solid #A6CBF5;
-    border-top-width:0;
-}
-
-.ludo-blue .ludo-tab-strip-tab-left {
-    border: 1px solid #A6CBF5;
-    border-right-width:0;
-    border-bottom: 1px solid #A6CBF5;
-    border-top-width:0;
-}
-
-.ludo-blue .ludo-tab-strip-tab-right {
-    border: 1px solid #A6CBF5;
-    border-left: 1px solid #A6CBF5;
-    border-bottom: 1px solid #A6CBF5;
-}
-
 
 .ludo-blue .ludo-tab-expand-box{
     width:auto;
