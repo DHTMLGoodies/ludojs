@@ -5,6 +5,7 @@ ludo.colorPicker.RGB = new Class({
     resizable:false,
     layout:{
         type:'table',
+        simple:true,
         columns:[{ width: 30 }, {weight:1}]
     },
     height:130,
@@ -15,13 +16,12 @@ ludo.colorPicker.RGB = new Class({
         'border-right': '0',
         'border-top': '0'
     },
+    css:{
+        padding:3
+    },
 
     currentColor:{
         r:255, g:255, b:255
-    },
-    formConfig:{
-        fieldWidth:60,
-        labelWidth:80
     },
     children:[
         { 
@@ -31,19 +31,19 @@ ludo.colorPicker.RGB = new Class({
             type:'form.Number', height:24, minValue:0, maxValue:255, size:4, value:255, name:'r', label:'Red'
         },
         {
-            type:'form.Label', label:'G', labelFor:'g', layout: {row: true, height:24 }
+            type:'form.Label', label:'G', labelFor:'g', layout: { height:24 }
         },
         {
             type:'form.Number', height:24, minValue:0, maxValue:255, size:4, value:255, name:'g', label:'Green'
         },
         {
-            type:'form.Label', label:'B', labelFor:'b', layout: {row: true, height:24 }
+            type:'form.Label', label:'B', labelFor:'b', layout: { height:24 }
         },
         {
             type:'form.Number', height:24, minValue:0, maxValue:255, size:4, value:255, name:'b', label:'Blue'
         },
         {
-            type:'form.Label', label:'RGB', labelFor:'rgb', layout: {row: true, height:24 }
+            type:'form.Label', label:'RGB', labelFor:'rgb', layout: { height:24 }
         },
         {
             type:'form.Text', size:10, value:'#FFFFFF', label:'RGB', name:'rgb',

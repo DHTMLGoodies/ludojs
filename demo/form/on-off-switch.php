@@ -61,7 +61,7 @@ require_once("../includes/demo-header.php");
                         label: 'Heater',
                         id: 'heater',
                         fieldWidth: 350,
-                        type: 'form.OnOffSwitch',
+                        type: 'form.OnOff',
                         layout: {
                             height: 30,
                             width:60
@@ -101,7 +101,7 @@ require_once("../includes/demo-header.php");
                                 ludo.get('heater').toggle();
                             }
                         },
-                        value: 'Call OnOffSwitch toggle method'
+                        value: 'Call OnOff toggle method'
                     }
                 ]
 

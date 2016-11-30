@@ -177,15 +177,15 @@ require_once("../includes/demo-header.php");
                                 }
                             },
                             {
-                                type:'form.OnOffSwitch',
+                                type:'form.OnOff',
                                 name:'gender',
                                 textOn:'Female',
                                 textOff:'Male',
                                 layout:{
                                     width:100,height:30
                                 },
-                                checkedVal:'F',
-                                uncheckedVal:'M',
+                                valOn:'F',
+                                valOff:'M',
                                 trackColorOn:'#C2185B',
                                 trackColorOff:'#1976D2'
 

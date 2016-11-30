@@ -4,6 +4,7 @@ ludo.colorPicker.HSV = new Class({
 	useController:true,
 	layout:{
 		type:'table',
+		simple:true,
 		columns:[{ width: 30 }, {weight:1}]
 	},
 	resizable:false,
@@ -19,10 +20,10 @@ ludo.colorPicker.HSV = new Class({
 	currentColor:{
 		h:360, s:100, v:100
 	},
-	formConfig:{
-		fieldWidth:60,
-		labelWidth:80
+	css:{
+		padding:3
 	},
+
 	children:[
 		{
 			type:'form.Label', layout: {height: 24}, label: 'H', labelFor:'h'
@@ -31,13 +32,13 @@ ludo.colorPicker.HSV = new Class({
 			type:'form.Number', height:24, minValue:0, maxValue:360, value:360, name:'h', label:'H'
 		},
 		{
-			type:'form.Label', layout: {height: 24, row:true}, label: 'S', labelFor:'h'
+			type:'form.Label', layout: {height: 24 }, label: 'S', labelFor:'h'
 		},
 		{
 			type:'form.Number', height:24, minValue:0, maxValue:100, value:100, name:'s', label:'S'
 		},
 		{
-			type:'form.Label', layout: {height: 24, row:true}, label: 'V', labelFor:'v'
+			type:'form.Label', layout: {height: 24}, label: 'V', labelFor:'v'
 		},
 		{
 			type:'form.Number', height:24, minValue:0, maxValue:100, value:100, name:'v', label:'V'

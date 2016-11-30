@@ -1,7 +1,10 @@
 /**
- * On off switch
+ * Displays a customizable On/Off Switch.
+ *
+ * For a demo, see <a href="../demo/form/form-components.php">form-components.php</a>
+ *
  * @namespace ludo.form
- * @class ludo.form.OnOffSwitch
+ * @class ludo.form.OnOff
  * @param {Object} config
  * @param {Number} config.trackBorderWidth Border width of tracks in pixels. Default: 1
  * @param {Number} config.textSizeRatio Text size ratio. Default: 0.45
@@ -11,11 +14,12 @@
  * @param {String} config.textColorOff Text Color OFF. Default: #FFFFFF
  * @param {String} config.textOn Text On. Default: empty string
  * @param {String} config.textOff Text Off. Default: empty string
- * @param {String|Number} config.checkedVal Value when checked. Default: "1"
- * @param {String|Number} config.uncheckedVal Value when unchecked. Default: ""(empty string)
+ * @param {String|Number} config.valOn Value when checked. Default: "1"
+ * @param {String|Number} config.valOff Value when unchecked. Default: ""(empty string)
+ * @param {Boolean} config.checked True to make the switch initial checked.
  *
  */
-ludo.form.OnOffSwitch = new Class({
+ludo.form.OnOff = new Class({
     Extends: ludo.form.Element,
 
     listener: undefined,
@@ -52,15 +56,15 @@ ludo.form.OnOffSwitch = new Class({
     dragCurrentX: 0,
     borderSize: 0,
 
-    checkedVal:'1',
+    valOn:'1',
 
-    uncheckedVal: '',
+    valOff: '',
 
     __construct:function(config){
         this.parent(config);
         this.setConfigParams(config, ["textOn", "textOff", "trackColorOn", "trackColorOff",
             "textColorOn", "textColorOff", "listeners", "trackBorderColor", "textSizeRatio","checked",
-        "checkedVal","uncheckedVal"]);
+        "valOn","valOff"]);
     },
 
     ludoDOM:function(){
@@ -380,13 +384,13 @@ ludo.form.OnOffSwitch = new Class({
         if(checked != this.checked){
             this.checked = checked;
             this.fireEvent('change', [this._get(), this]);
-            this._set(this.checked ? this.checkedVal : this.uncheckedVal);
+            this._set(this.checked ? this.valOn : this.valOff);
             this.change();
         }
     },
 
     _get:function(){
-        return this.checked ? this.checkedVal: this.uncheckedVal;
+        return this.checked ? this.valOn: this.valOff;
     },
     
     toggle: function () {
@@ -397,7 +401,7 @@ ludo.form.OnOffSwitch = new Class({
             this.checked = false;
             this.animateLeft();
         }
-        this._set(this.checked ? this.checkedVal : this.uncheckedVal);
+        this._set(this.checked ? this.valOn : this.valOff);
         this.change();
     },
 
@@ -405,11 +409,11 @@ ludo.form.OnOffSwitch = new Class({
      * Set or get value
      * @param val
      * @returns {*}
-     * @memberof ludo.form.OnOffSwitch.prototype
+     * @memberof ludo.form.OnOff.prototype
      */
     val: function (val) {
         if(arguments.length == 1){
-            if(val == this.checkedVal)this.setChecked(true); else this.setChecked(false);
+            if(val == this.valOn)this.setChecked(true); else this.setChecked(false);
         }
         return this._get();
     }

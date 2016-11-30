@@ -45,7 +45,7 @@ test:
   - CheckboxTest.js
   - ColorTest.js
   - GeneralFormTests.js
-  - OnOffSwitchTest.js
+  - OnOffTest.js
 
 plugin:
  - name: "coverage"

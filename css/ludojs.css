@@ -1,7 +1,7 @@
-/* Generated Wed Nov 30 15:29:33 CET 2016 */
+/* Generated Wed Nov 30 18:49:23 CET 2016 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.238
+ludoJS - Javascript framework, 1.1.240
 Copyright (C) 2012-2016  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -2269,7 +2269,7 @@ div.ludo-spinbox-arrow-overeffect{
 	width: 100%;
 	height:1px;
 	background-color:#c9d8fc;
-}/* ../ludojs/css-source/form/on-off-switch.css */
+}/* ../ludojs/css-source/form/on-off.css */
 .on-off-switch{
     position:relative;
     cursor:pointer;

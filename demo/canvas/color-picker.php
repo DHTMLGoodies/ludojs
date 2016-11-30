@@ -21,6 +21,7 @@ require_once("../includes/demo-header.php");
         height: 70px;
         margin-top: 5px;
         margin-left: 5px;
+        border-radius:2px;
     }
 </style>
 <script type="text/javascript"><!--
@@ -49,12 +50,12 @@ google_ad_height = 280;
 
     var win = new ludo.Window({
         id:'canvasWindow',
-        minWidth:100, minHeight:100,
-        left:200, top:40,
-        width:600, height:490,
         title:'Color picker created with SVG',
         layout:{
-            type:'relative'
+            type:'relative',
+            left:20, top:40,
+            width:600, height:490,
+            minWidth:300, minHeight:400,
         },
         children:[
             {
