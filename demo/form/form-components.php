@@ -178,13 +178,14 @@ require_once("../includes/demo-header.php");
                             },
                             {
                                 type:'form.OnOffSwitch',
+                                name:'gender',
                                 textOn:'Female',
                                 textOff:'Male',
                                 layout:{
                                     width:100,height:30
                                 },
-                                valueOn:'F',
-                                valueOff:'M',
+                                checkedVal:'F',
+                                uncheckedVal:'M',
                                 trackColorOn:'#C2185B',
                                 trackColorOff:'#1976D2'
 
