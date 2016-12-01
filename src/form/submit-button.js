@@ -25,6 +25,7 @@ ludo.form.SubmitButton = new Class({
 		this.applyTo = this.applyTo ? ludo.get(this.applyTo) : this.getParentComponent();
 
 		if (this.applyTo) {
+
             var form = this.applyTo.getForm();
 			form.addEvent('valid', this.enable.bind(this));
 			form.addEvent('invalid', this.disable.bind(this));

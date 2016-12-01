@@ -14,7 +14,7 @@ ludo.chart.Base = new Class({
         fps:33
     },
 
-    addOns:undefined,
+    plugins:undefined,
 
     fragmentMap:{},
 
@@ -52,7 +52,7 @@ ludo.chart.Base = new Class({
         this.fragmentMap[record.getUID()] = f;
         this.fragments.push(f);
 
-		//this.relayEvents(f, ['mouseenter','mouseleave']);
+		this.relayEvents(f, ['mouseenter','mouseleave']);
 
         return f;
     },

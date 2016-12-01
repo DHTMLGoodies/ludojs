@@ -1,7 +1,7 @@
-/* Generated Wed Nov 30 18:49:23 CET 2016 */
+/* Generated Thu Dec 1 9:40:29 CET 2016 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.240
+ludoJS - Javascript framework, 1.1.244
 Copyright (C) 2012-2016  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -3352,12 +3352,12 @@ ludo.Core = new Class({
      Add-ons are special components which operates on a view. "parentComponent" is sent
      to the constructor of all add-ons and can be saved for later reference.
 
-     @config addOns
+     @config plugins
      @type {Array}
 	 @memberof ludo.Core.prototype
      @example
         new ludo.View({<br>
-		   addOns : [ { type : 'plugins.Sound' }]
+		   plugins : [ { type : 'plugins.Sound' }]
 	  	 });
 
      Add event
@@ -3365,13 +3365,13 @@ ludo.Core = new Class({
         this.getParent().addEvent('someEvent', this.playSound.bind(this));
      Which will cause the plugin to play a sound when "someEvent" is fired by parent component.
      */
-    addOns:undefined,
+    plugins:undefined,
 
     
 	initialize:function (config) {
 		config = config || {};
 		this.lifeCycle(config);
-        this.applyAddOns();
+        this.applyplugins();
 	},
 
 	lifeCycle:function(config){
@@ -3379,17 +3379,17 @@ ludo.Core = new Class({
 		this.ludoEvents();
 	},
 
-    applyAddOns:function(){
-        if (this.addOns) {
-            for (var i = 0; i < this.addOns.length; i++) {
-                this.addOns[i].parentComponent = this;
-                this.addOns[i] = this.createDependency('addOns' + i, this.addOns[i]);
+    applyplugins:function(){
+        if (this.plugins) {
+            for (var i = 0; i < this.plugins.length; i++) {
+                this.plugins[i].parentComponent = this;
+                this.plugins[i] = this.createDependency('plugins' + i, this.plugins[i]);
             }
         }
     },
 
 	__construct:function(config){
-        this.setConfigParams(config, ['url','name','controller','module','submodule','stateful','id','useController','addOns']);
+        this.setConfigParams(config, ['url','name','controller','module','submodule','stateful','id','useController','plugins']);
 
 		// TODO new code 2016 - custom functions
 		if(config != undefined){
@@ -6845,7 +6845,7 @@ ludo.dataSource.Base = new Class({
 	/**
 	 * Return data loaded from server
 	 * @function getData
-	 * @return object data from server, example: { success:true, data:[]}
+	 * @return {Object|Array}
 	 */
 	getData:function () {
 		return this.data;
@@ -7955,7 +7955,7 @@ ludo.View = new Class({
 
 		if (config.children) {
 			for (var i = 0; i < config.children.length; i++) {
-				config.children[i].id = config.children[i].id || 'ludo-' + String.uniqueID();
+				config.children[i].id = config.children[i].id || config.children[i].name || 'ludo-' + String.uniqueID();
 			}
 			this.initialItemsObject = config.children;
 			this.addChildren(config.children);
@@ -10716,7 +10716,7 @@ ludo.chart.Base = new Class({
         fps:33
     },
 
-    addOns:undefined,
+    plugins:undefined,
 
     fragmentMap:{},
 
@@ -11037,7 +11037,7 @@ ludo.chart.PieSlice = new Class({
                                         fillRight:true,
                                         fillUp:true
                                     },
-                                    addOns:[
+                                    plugins:[
                                         {
                                             type:'chart.PieSliceHighlighted'
                                         }
@@ -11070,7 +11070,7 @@ ludo.chart.Pie = new Class({
     fragmentType:'chart.PieSlice',
     rendered:false,
     
-    addOns:[],
+    plugins:[],
 
     highlightSize:10,
 
@@ -11361,7 +11361,7 @@ ludo.chart.AddOn = new Class({
  @example
     {
         type:'pie.Chart',
-        addOns:[
+        plugins:[
             {
                 type:'chart.PieSliceHighlighted',
                 size : 5,
@@ -13317,9 +13317,6 @@ ludo.layout.LinearVertical = new Class({
         var remainingHeight;
 		var stretchHeight = remainingHeight = (availHeight - totalHeightOfItems);
 
-
-		console.log(stretchHeight + ',' + totalHeightOfItems);
-
 		var width = this.view.getBody().width();
 		for (i = 0; i < this.view.children.length; i++) {
 			if(!this.view.children[i].isHidden()){
@@ -14553,8 +14550,6 @@ ludo.layout.Relative = new Class({
 				refC = this.lastChildCoordinates[child.layout.above.id];
 				return function () {
 					c.bottom = refC.bottom + refC.height;
-					console.log(refC.height);
-					console.log(refC.bottom);
 
 				};
 			case 'sameHeightAs':
@@ -14715,7 +14710,7 @@ ludo.layout.Relative = new Class({
 	updateLastCoordinatesFor:function (child) {
 		var lc = this.lastChildCoordinates[child.id];
 		var el = child.getEl();
-		var pos = el.position();
+		var pos = el.position == undefined ? { left: el.offsetLeft, top: el.offsetTop } : el.position();
 		if (lc.left === undefined) lc.left = pos.left > 0 ? pos.left : 0;
 		if (lc.top === undefined) lc.top = pos.top > 0 ? pos.top : 0;
 		if (lc.width === undefined) lc.width = el.width != undefined ? el.width() : el.offsetWidth;
@@ -21374,8 +21369,8 @@ ludo.grid.ColumnManager = new Class({
 	 * @function insertIntoSameGroupAs
 	 * @param {String} column
 	 * @param {String} as
-	 * @private
 	 * memberof ludo.grid.ColumnManager.prototype
+	 * @private
 	 */
 	insertIntoSameGroupAs:function(column, as){
 		var group = this.columnLookup[as].group;
@@ -26164,10 +26159,14 @@ ludo.form.Element = new Class({
     submittable:true,
 
     __construct:function (config) {
+        
+
         this.parent(config);
         var defaultConfig = this.getInheritedFormConfig();
 
         // TODO change disabled to enabled
+
+
         var keys = ['label', 'suffix', 'formCss', 'validator', 'stretchField', 'required', 'twin', 'disabled','submittable',
             'value', 'data'];
         this.setConfigParams(config, keys);
@@ -27720,7 +27719,6 @@ ludo.form.Manager = new Class({
                 dataType: 'json',
                 data: this.dataFor('submit'),
                 success: function (json) {
-                    console.log(json);
                     this.fireEvent('submit.success', [json, this]);
                 }.bind(this),
                 fail: function (text, error) {
@@ -27894,6 +27892,7 @@ ludo.form.SubmitButton = new Class({
 		this.applyTo = this.applyTo ? ludo.get(this.applyTo) : this.getParentComponent();
 
 		if (this.applyTo) {
+
             var form = this.applyTo.getForm();
 			form.addEvent('valid', this.enable.bind(this));
 			form.addEvent('invalid', this.disable.bind(this));
@@ -28835,6 +28834,7 @@ ludo.form.Label = new Class({
     addInvalidEvents:function(){
         if(!this.labelFor)return;
         var view = ludo.get(this.labelFor);
+
         if(view){
             view.addEvent('valid', this.onValid.bind(this));
             view.addEvent('invalid', this.onInvalid.bind(this));
@@ -28851,7 +28851,6 @@ ludo.form.Label = new Class({
     },
 
     onEnable:function(){
-
         this.getBody().removeClass('ludo-form-label-disabled');
     },
 
@@ -29953,7 +29952,6 @@ ludo.form.Spinner = new Class({
     },
     incrementBy:function (value, shiftKey) {
         value = value * (shiftKey ? this.shiftIncrement : this.increment);
-            console.log(value);
         this.setSpinnerValue(parseInt(this._get()) + value);
     },
     validateSpinnerValue:function (value) {

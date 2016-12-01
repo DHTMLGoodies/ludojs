@@ -15,7 +15,7 @@
  @example
     {
         type:'pie.Chart',
-        addOns:[
+        plugins:[
             {
                 type:'chart.PieSliceHighlighted',
                 size : 5,

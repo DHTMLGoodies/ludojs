@@ -71,10 +71,14 @@ ludo.form.Element = new Class({
     submittable:true,
 
     __construct:function (config) {
+        
+
         this.parent(config);
         var defaultConfig = this.getInheritedFormConfig();
 
         // TODO change disabled to enabled
+
+
         var keys = ['label', 'suffix', 'formCss', 'validator', 'stretchField', 'required', 'twin', 'disabled','submittable',
             'value', 'data'];
         this.setConfigParams(config, keys);

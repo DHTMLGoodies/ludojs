@@ -1,6 +1,5 @@
 load:
-  - ../../mootools/mootools-core-1.4.5.js
-  - ../../mootools/mootools-more-1.4.0.1.js
+  - ../../jquery/jquery-3.1.0.min.js
   - ../../js/ludojs.js
 
   - ../../src/core.js
@@ -11,7 +10,7 @@ load:
   - ../../src/layout/canvas.js
   - ../../src/canvas/node.js
   - ../../src/canvas/named-node.js
-  - ../../src/canvas/element.js
+  - ../../src/canvas/view.js
   - ../../src/canvas/canvas.js
   - ../../src/canvas/engine.js
 
@@ -27,10 +26,12 @@ load:
   - ../../src/chart/pie.js
   - ../../src/chart/pie-slice.js
   - ../../src/chart/gauge.js
+  - ../../src/chart/data-source.js
 
 test:
   - ChartTest.js
   - DataProviderTest.js
+  - ChartDataTest.js
   - TooltipTest.js
   - GaugeTest.js
 

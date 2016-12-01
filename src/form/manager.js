@@ -444,7 +444,6 @@ ludo.form.Manager = new Class({
                 dataType: 'json',
                 data: this.dataFor('submit'),
                 success: function (json) {
-                    console.log(json);
                     this.fireEvent('submit.success', [json, this]);
                 }.bind(this),
                 fail: function (text, error) {

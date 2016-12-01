@@ -94,7 +94,7 @@ require_once("../includes/demo-header.php");
                                 type: 'form.Label', label: 'Name:', labelFor: 'name'
                             },
                             {
-                                type: 'form.Text', placeholder: 'Name', name: 'name'
+                                type: 'form.Text', placeholder: 'Name', name: 'name', required:true
                             },
                             {
                                 type: 'form.Label', label: 'Email:', labelFor: 'email'
@@ -106,7 +106,7 @@ require_once("../includes/demo-header.php");
                                 type: 'form.Label', label: 'Password:', labelFor: 'password'
                             },
                             {
-                                type: 'form.Password', placeHolder: 'Password', name: 'password'
+                                type: 'form.Password', placeHolder: 'Password', name: 'password', twin:'password2'
                             },
                             {
                                 type: 'form.Label', label: 'Repeat Password:', labelFor: 'password2'
@@ -114,8 +114,8 @@ require_once("../includes/demo-header.php");
                             {
                                 type: 'form.Password',
                                 placeHolder: 'Repeat Password',
-                                name: 'password2',
-                                twin: 'password'
+                                name: 'password2'
+
                             }
                         ]
                     },
@@ -205,13 +205,13 @@ require_once("../includes/demo-header.php");
             children: [
 
                 {
-                    type: 'form.SubmitButton', width: 80
+                    type: 'form.SubmitButton', width: 80, applyTo: 'myWindow'
                 },
                 {
-                    type: 'form.ResetButton', width: 80
+                    type: 'form.ResetButton', width: 80, applyTo: 'myWindow'
                 },
                 {
-                    type: 'form.CancelButton', width: 80
+                    type: 'form.CancelButton', width: 80, applyTo: 'myWindow'
                 }
             ]
         }

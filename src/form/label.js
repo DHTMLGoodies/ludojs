@@ -35,6 +35,7 @@ ludo.form.Label = new Class({
     addInvalidEvents:function(){
         if(!this.labelFor)return;
         var view = ludo.get(this.labelFor);
+
         if(view){
             view.addEvent('valid', this.onValid.bind(this));
             view.addEvent('invalid', this.onInvalid.bind(this));
@@ -51,7 +52,6 @@ ludo.form.Label = new Class({
     },
 
     onEnable:function(){
-
         this.getBody().removeClass('ludo-form-label-disabled');
     },
 

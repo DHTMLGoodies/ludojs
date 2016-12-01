@@ -2511,8 +2511,19 @@ fieldset{
 }body.ludo-twilight{
     background-color:#282828;
     -webkit-font-smoothing: antialiased;
+
 }
 
+.ludo-twilight input,
+.ludo-twilight textarea,
+.ludo-twilight label,
+.ludo-twilight span
+.ludo-twilight div
+{
+
+    font-family: Roboto, Helvetica, Arial, sans-serif !important;
+
+}
 .ludo-twilight .ludo-body{
     color:#aeb0b0;
 }
@@ -3188,4 +3199,9 @@ On Off Switch */
 .ludo-twilight .on-off-switch-track,
 .ludo-twilight .on-off-switch-track-off{
     border-color:#aeb0b0;
+}
+
+/** Label */
+.ludo-twilight .ludo-form-el-invalid label{
+    color:#EF9A9A;
 }

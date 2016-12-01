@@ -60,12 +60,12 @@ ludo.Core = new Class({
      Add-ons are special components which operates on a view. "parentComponent" is sent
      to the constructor of all add-ons and can be saved for later reference.
 
-     @config addOns
+     @config plugins
      @type {Array}
 	 @memberof ludo.Core.prototype
      @example
         new ludo.View({<br>
-		   addOns : [ { type : 'plugins.Sound' }]
+		   plugins : [ { type : 'plugins.Sound' }]
 	  	 });
 
      Add event
@@ -73,13 +73,13 @@ ludo.Core = new Class({
         this.getParent().addEvent('someEvent', this.playSound.bind(this));
      Which will cause the plugin to play a sound when "someEvent" is fired by parent component.
      */
-    addOns:undefined,
+    plugins:undefined,
 
     
 	initialize:function (config) {
 		config = config || {};
 		this.lifeCycle(config);
-        this.applyAddOns();
+        this.applyplugins();
 	},
 
 	lifeCycle:function(config){
@@ -87,17 +87,17 @@ ludo.Core = new Class({
 		this.ludoEvents();
 	},
 
-    applyAddOns:function(){
-        if (this.addOns) {
-            for (var i = 0; i < this.addOns.length; i++) {
-                this.addOns[i].parentComponent = this;
-                this.addOns[i] = this.createDependency('addOns' + i, this.addOns[i]);
+    applyplugins:function(){
+        if (this.plugins) {
+            for (var i = 0; i < this.plugins.length; i++) {
+                this.plugins[i].parentComponent = this;
+                this.plugins[i] = this.createDependency('plugins' + i, this.plugins[i]);
             }
         }
     },
 
 	__construct:function(config){
-        this.setConfigParams(config, ['url','name','controller','module','submodule','stateful','id','useController','addOns']);
+        this.setConfigParams(config, ['url','name','controller','module','submodule','stateful','id','useController','plugins']);
 
 		// TODO new code 2016 - custom functions
 		if(config != undefined){
@@ -279,7 +279,7 @@ ludo.Core = new Class({
 	saveState:function () {
 		this.fireEvent('state');
 	},
-
+	
 	createDependency:function(key, config){
 		this.dependency[key] = ludo.util.isLudoJSConfig(config) ? ludo._new(config) : config;
 		return this.dependency[key];

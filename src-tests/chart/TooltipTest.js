@@ -11,7 +11,7 @@ TestCase("TooltipTest", {
 		c.fireEvent('mouseenter', { page : {x:0,y:0}});
 
 		// then
-		assertEquals('First label', c.addOns[0].getParsedHtml());
+		assertEquals('First label', c.plugins[0].getParsedHtml());
 	},
 
 	getChartWithTooltip:function (tooltipConfig) {
@@ -30,7 +30,7 @@ TestCase("TooltipTest", {
 			children:[
 				{
 					type:'chart.Pie',
-					addOns:[tooltipConfig
+					plugins:[tooltipConfig
 					]
 				}
 			]

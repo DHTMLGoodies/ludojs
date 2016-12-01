@@ -1,9 +1,12 @@
+/**
+ * @class ludo.chart.Chart
+ * @namespace ludo.chart
+ */
 ludo.chart.Chart = new Class({
 	Extends: ludo.View,
 	css:{
 
 	},
-
     /*
      * Class providing data to the chart
      * @config {chart.DataProvider} dataProvider
@@ -16,7 +19,6 @@ ludo.chart.Chart = new Class({
 		this.parent(config);
 		this.layout.type = 'Canvas';
 		this.setConfigParams(config, ['dataProvider']);
-        this.css.backgroundColor = '#fff';
 
         if(!this.dataProvider){
             this.dataProvider = this.createDependency('dataProvider',

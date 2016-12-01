@@ -1,6 +1,6 @@
 /**
- * Special SVG 'g' element which can be positioned and
- * sized using the layout.Canvas layout model.
+ * SVG Group DOM node which can be positioned as a child view
+ * in the relative layout.
  * @namespace canvas
  * @class ludo.canvas.Group
  */

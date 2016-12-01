@@ -115,7 +115,7 @@ TestCase("ChartTest", {
             ],
             children:[{
                 type:'chart.Base',
-                addOns:[
+                plugins:[
                     {
                         type : 'chart.CustomAddOn'
                     }
@@ -124,13 +124,13 @@ TestCase("ChartTest", {
         });
 
         // when
-        var addOns = c.children[0].addOns;
+        var plugins = c.children[0].plugins;
 
         // then
-        assertNotUndefined(addOns);
-        assertEquals(1, addOns.length);
-        assertEquals('chart.CustomAddOn', addOns[0].type);
-        assertEquals(c.children[0], addOns[0].getParent());
+        assertNotUndefined(plugins);
+        assertEquals(1, plugins.length);
+        assertEquals('chart.CustomAddOn', plugins[0].type);
+        assertEquals(c.children[0], plugins[0].getParent());
 
     },
 

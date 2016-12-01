@@ -99,7 +99,7 @@
                                         fillRight:true,
                                         fillUp:true
                                     },
-                                    addOns:[
+                                    plugins:[
                                         {
                                             type:'chart.PieSliceHighlighted'
                                         }
@@ -132,7 +132,7 @@ ludo.chart.Pie = new Class({
     fragmentType:'chart.PieSlice',
     rendered:false,
     
-    addOns:[],
+    plugins:[],
 
     highlightSize:10,
 

@@ -232,6 +232,7 @@
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/dialog/alert.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/dialog/confirm.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/dialog/prompt.js"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/theme/themes.js"></script>
 
 
     

@@ -142,7 +142,7 @@ ludo.View = new Class({
 
 		if (config.children) {
 			for (var i = 0; i < config.children.length; i++) {
-				config.children[i].id = config.children[i].id || 'ludo-' + String.uniqueID();
+				config.children[i].id = config.children[i].id || config.children[i].name || 'ludo-' + String.uniqueID();
 			}
 			this.initialItemsObject = config.children;
 			this.addChildren(config.children);

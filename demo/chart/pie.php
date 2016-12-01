@@ -28,7 +28,7 @@ require_once("../includes/demo-header.php");
             type:'tab'
         },
         css:{
-            'background-color':'#fff',
+
             'border-top':0
         },
         children:[
@@ -50,8 +50,7 @@ require_once("../includes/demo-header.php");
                         form:{
                             listeners:{
                                 'change': function(manager){
-                                    var data = provider.getData();
-                                    var values = manager.getValues();
+                                    var values = manager.values();
                                     var i = 0;
                                     var records = provider.getRecords();
 
@@ -61,7 +60,6 @@ require_once("../includes/demo-header.php");
                                         }
                                         i++;
                                     }
-
                                 }
                             }
                         },
@@ -84,7 +82,7 @@ require_once("../includes/demo-header.php");
                             leftOf:'form'
                         },
                         css:{
-                            'border-right' : '1px solid #d7d7d7'
+                            'border-right' : '1px solid ' + ludo.$C('border')
                         },
                         type:'chart.Chart',
                         id:'chart',
@@ -95,6 +93,7 @@ require_once("../includes/demo-header.php");
                                 type:'chart.Pie',
                                 id:'pie',
                                 highlightSize:7,
+
                                 animate:true,
                                 layout:{
                                     above:'labels',
@@ -102,14 +101,17 @@ require_once("../includes/demo-header.php");
                                     fillRight:true,
                                     fillUp:true
                                 },
-                                addOns:[
+                                plugins:[
                                     {
                                         type:'chart.PieSliceHighlighted',
                                         size:5
                                     },
                                     {
                                         type:'chart.Tooltip',
-                                        tpl:'<p><b>{label}</b> : {percent}%<br>{value} of {sum}'
+                                        tpl:'<p><b>{label}</b> : {percent}%<br>{value} of {sum}',
+                                        textStyles:{
+                                            'font-size':'12px'
+                                        }
                                     }
                                 ]
                             },
@@ -117,6 +119,11 @@ require_once("../includes/demo-header.php");
                                 name:'labels',
                                 id:'labels',
                                 type:'chart.Labels',
+                                textStyles:{
+                                    'fill': ludo.$C('text'),
+                                    'font-size':'13px',
+                                    'font-weight' : 'normal'
+                                },
                                 layout:{
                                     alignParentBottom:true,
                                     height:40,

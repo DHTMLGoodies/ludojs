@@ -1,14 +1,22 @@
 ludo.theme.Themes = new Class({
+    currentTheme:undefined,
 
     themes: {
         twilight: {
             c100 : '#ffffff',
             c200 : '#eeeeee',
             c300 : '#aeb0b0',
-            c400 : '#535353',
-            c500: '#424242',
-            c600: '#383838',
-            c700:'#282828'
+            c400 : '#8b8c8c',
+            c500 : '#535353',
+            c600: '#424242',
+            c700: '#383838',
+            c800:'#282828',
+            c900:'#282828',
+
+
+            border: '#424242',
+            background: '#535353',
+            text : '#aeb0b0'
         },
         blue : {
             c100:'#ffffff',
@@ -16,7 +24,13 @@ ludo.theme.Themes = new Class({
             c300: '#c6e1ff',
             c400: '#a6cbf5',
             c500:'#354150',
-            c600:'#000000'
+            c600:'#000000',
+
+
+            border: '#a6cbf5',
+            background: '#535353',
+            text : '#000000'
+
         },
         "light-gray": {
             c100 : '#FFFFFF',
@@ -27,9 +41,80 @@ ludo.theme.Themes = new Class({
             c600 : '#AAAAAA',
             c700 : '#777777',
             c800 : '#555555',
-            c900 : '#000000'
+            c900 : '#000000',
+
+
+            border: '#d7d7d7',
+            background: '#FFFFFF',
+            text : '#555555'
+        }
+    },
+
+    addTheme:function(name, colors){
+        this.themes[name] = colors;
+    },
+
+    setTheme:function(theme){
+
+        if(this.themes[theme] == undefined){
+            console.warn("Undefined theme " + theme);
 
         }
+
+        var current = this.getCurrentTheme();
+
+        if(current == theme)return;
+
+        if(current){
+            $(document.body).removeClass("ludo-" + this.currentTheme);
+        }
+
+        this.currentTheme = theme;
+
+        $(document.body).addClass("ludo-" + theme);
+    },
+
+    getCurrentTheme:function(){
+        if(this.currentTheme == undefined){
+            var b = $(document.body);
+            jQuery.each(this.themes, function(theme){
+                var cls = 'ludo-' + theme;
+                if(b.hasClass(cls)){
+                    this.currentTheme = theme;
+                }
+            }.bind(this));
+        }
+
+        return this.currentTheme;
+    },
+
+    color:function(colorName){
+        var theme = this.getCurrentTheme();
+        if(!theme)return undefined;
+        if(this.themes[theme] != undefined){
+            return this.themes[theme][colorName];
+        }
+
+        return undefined;
+    },
+    
+    clear:function(){
+        this.currentTheme = undefined;
     }
 
 });
+
+/**
+ * Instance of ludo.theme.Themes.
+ * Used to update theme on demand
+ * @type {Class|Type}
+ */
+ludo.Theme = new ludo.theme.Themes();
+
+
+/**
+ * Function which returns theme color
+ * @function ludo.$C
+ * @param {String} color Name of color
+ */
+ludo.$C = ludo.Theme.color.bind(ludo.Theme);

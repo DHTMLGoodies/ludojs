@@ -256,7 +256,6 @@ ludo.form.Spinner = new Class({
     },
     incrementBy:function (value, shiftKey) {
         value = value * (shiftKey ? this.shiftIncrement : this.increment);
-            console.log(value);
         this.setSpinnerValue(parseInt(this._get()) + value);
     },
     validateSpinnerValue:function (value) {

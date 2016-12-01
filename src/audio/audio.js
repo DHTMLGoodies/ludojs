@@ -6,7 +6,6 @@ ludo.audio.Audio = new Class({
 
     initialize:function () {
         this.html5 = this.supportsHTML5Audio();
-        console.log(this.html5);
     },
 
     createBgSound:function () {

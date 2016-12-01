@@ -127,6 +127,7 @@ ludo.canvas.Canvas = new Class({
 	createDescription:function(){
 		this.append(new ludo.canvas.Node('desc', {}, this.description ));
 	},
+	
 	defsNode:undefined,
 
 	/**
