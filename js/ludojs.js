@@ -1,7 +1,7 @@
-/* Generated Fri Dec 2 18:59:18 CET 2016 */
+/* Generated Fri Dec 2 19:03:08 CET 2016 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.250
+ludoJS - Javascript framework, 1.1.251
 Copyright (C) 2012-2016  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -10279,6 +10279,8 @@ ludo.chart.Pie = new Class({
     __construct:function(config){
         this.parent(config);
         this.setConfigParams(config, ['highlightSize']);
+
+
     },
 
     getHighlightSize:function(){
@@ -10286,7 +10288,13 @@ ludo.chart.Pie = new Class({
     },
 
     render:function(){
-        this.animate();
+
+
+        if(this.getDataSource().hasData()){
+            this.animate();
+        }
+        this.getDataSource().on('load', this.render.bind(this));
+
     },
 
     getRadius:function(){
@@ -10295,7 +10303,7 @@ ludo.chart.Pie = new Class({
 
     animate:function(){
 
-
+        console.log('render');
         var r = this.getRecords();
         if(!r)return;
         var e = new ludo.canvas.Effect();

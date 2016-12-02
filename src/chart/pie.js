@@ -139,6 +139,8 @@ ludo.chart.Pie = new Class({
     __construct:function(config){
         this.parent(config);
         this.setConfigParams(config, ['highlightSize']);
+
+
     },
 
     getHighlightSize:function(){
@@ -146,7 +148,13 @@ ludo.chart.Pie = new Class({
     },
 
     render:function(){
-        this.animate();
+
+
+        if(this.getDataSource().hasData()){
+            this.animate();
+        }
+        this.getDataSource().on('load', this.render.bind(this));
+
     },
 
     getRadius:function(){
@@ -155,7 +163,7 @@ ludo.chart.Pie = new Class({
 
     animate:function(){
 
-
+        console.log('render');
         var r = this.getRecords();
         if(!r)return;
         var e = new ludo.canvas.Effect();
