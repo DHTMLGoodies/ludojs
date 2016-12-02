@@ -1,7 +1,7 @@
-/* Generated Fri Dec 2 19:03:08 CET 2016 */
+/* Generated Fri Dec 2 19:14:02 CET 2016 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.251
+ludoJS - Javascript framework, 1.1.252
 Copyright (C) 2012-2016  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -7065,7 +7065,7 @@ ludo.dataSource.JSON = new Class({
 
 
     parseNewData:function (data) {
-        
+
 		this.parent();
 		var firstLoad = !this.data;
 		this.data = data;
@@ -9923,14 +9923,17 @@ ludo.chart.Base = new Class({
     __construct:function (config) {
         this.parent(config);
         this.setConfigParams(config, ['animation']);
+        this.getDataSource().on('load', this.create.bind(this))
+        if(this.getDataSource().hasData()){
+            this.create();
 
-        this.create.delay(50, this);
+        }
     },
 
     ludoEvents:function () {
         this.parent();
-        var dp = this.dataProvider();
-        dp.addEvent('createRecord', this.createFragment.bind(this));
+        var dp = this.getDataSource();
+
         dp.addEvent('update', this.update.bind(this));
     },
 
@@ -9942,6 +9945,7 @@ ludo.chart.Base = new Class({
     },
 
     createFragment:function (record) {
+
         var f = this.createDependency('fragment' + this.fragments.length,
             {
                 type:this.fragmentType,
@@ -10290,10 +10294,8 @@ ludo.chart.Pie = new Class({
     render:function(){
 
 
-        if(this.getDataSource().hasData()){
-            this.animate();
-        }
-        this.getDataSource().on('load', this.render.bind(this));
+        this.animate();
+
 
     },
 
@@ -10302,8 +10304,6 @@ ludo.chart.Pie = new Class({
     },
 
     animate:function(){
-
-        console.log('render');
         var r = this.getRecords();
         if(!r)return;
         var e = new ludo.canvas.Effect();
