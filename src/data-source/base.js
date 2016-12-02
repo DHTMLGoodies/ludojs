@@ -101,28 +101,7 @@ ludo.dataSource.Base = new Class({
 
 		this.fireEvent('init', this);
 
-		$.ajax({
-			url: this.url,
-			method: 'post',
-			cache: false,
-			dataType: 'json',
-			data: data,
-			success: function (json) {
 
-				var data = this.dataHandler(json);
-
-				if(data === false){
-					this.fireEvent('fail', ['Validation error', 'Validation error', this]);
-				}else{
-					this.parseNewData(data, json);
-					this.fireEvent('success', [json, this]);
-
-				}
-			}.bind(this),
-			fail: function (text, error) {
-				this.fireEvent('fail', [text, error, this]);
-			}.bind(this)
-		});
 	},
 
 

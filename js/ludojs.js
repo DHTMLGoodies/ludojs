@@ -1,7 +1,7 @@
-/* Generated Fri Dec 2 19:15:51 CET 2016 */
+/* Generated Fri Dec 2 19:38:16 CET 2016 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.253
+ludoJS - Javascript framework, 1.1.254
 Copyright (C) 2012-2016  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -6935,28 +6935,7 @@ ludo.dataSource.Base = new Class({
 
 		this.fireEvent('init', this);
 
-		$.ajax({
-			url: this.url,
-			method: 'post',
-			cache: false,
-			dataType: 'json',
-			data: data,
-			success: function (json) {
 
-				var data = this.dataHandler(json);
-
-				if(data === false){
-					this.fireEvent('fail', ['Validation error', 'Validation error', this]);
-				}else{
-					this.parseNewData(data, json);
-					this.fireEvent('success', [json, this]);
-
-				}
-			}.bind(this),
-			fail: function (text, error) {
-				this.fireEvent('fail', [text, error, this]);
-			}.bind(this)
-		});
 	},
 
 
@@ -7052,6 +7031,32 @@ ludo.dataSource.JSON = new Class({
         if(!this.url && !this.resource)return;
         this.parent();
         this.sendRequest(this.getPostData());
+    },
+
+    sendRequest:function(data){
+        this.parent();
+        $.ajax({
+            url: this.url,
+            method: 'post',
+            cache: false,
+            dataType: 'json',
+            data: data,
+            success: function (json) {
+
+                var data = this.dataHandler(json);
+
+                if(data === false){
+                    this.fireEvent('fail', ['Validation error', 'Validation error', this]);
+                }else{
+                    this.parseNewData(data, json);
+                    this.fireEvent('success', [json, this]);
+
+                }
+            }.bind(this),
+            fail: function (text, error) {
+                this.fireEvent('fail', [text, error, this]);
+            }.bind(this)
+        });
     },
 
     /**
@@ -25793,6 +25798,21 @@ ludo.dataSource.HTML = new Class({
 		return 'HTML';
 	},
 
+	sendRequest:function(data){
+		$.ajax({
+			url: this.url,
+			data: data,
+			success: function(data){
+				this.parseNewData(data);
+				this.fireEvent('success', [data, this]);
+			}.bind(this),
+			fail:function(text, error){
+				this.fireEvent('fail', [text, error, this]);
+			}.bind(this),
+			dataType: 'html'
+		});
+	},
+
 	/**
 	 * Reload data from server
 	 * Components using this data-source will be automatically updated
@@ -25801,12 +25821,14 @@ ludo.dataSource.HTML = new Class({
 	 * @memberof ludo.dataSource.HTML.prototype
 	 */
 	load:function () {
+
 		this.parent();
 		this.sendRequest(this.service, this.arguments, this.getPostData());
 
 	},
 
 	parseNewData:function (html) {
+		console.log(html);
 		this.parent();
 		this.data = html;
 		this.fireEvent('load', this.data);

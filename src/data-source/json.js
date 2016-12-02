@@ -21,6 +21,32 @@ ludo.dataSource.JSON = new Class({
         this.sendRequest(this.getPostData());
     },
 
+    sendRequest:function(data){
+        this.parent();
+        $.ajax({
+            url: this.url,
+            method: 'post',
+            cache: false,
+            dataType: 'json',
+            data: data,
+            success: function (json) {
+
+                var data = this.dataHandler(json);
+
+                if(data === false){
+                    this.fireEvent('fail', ['Validation error', 'Validation error', this]);
+                }else{
+                    this.parseNewData(data, json);
+                    this.fireEvent('success', [json, this]);
+
+                }
+            }.bind(this),
+            fail: function (text, error) {
+                this.fireEvent('fail', [text, error, this]);
+            }.bind(this)
+        });
+    },
+
     /**
      * Update data source with new data and trigger events "parseData",
      * @param {Array} data
