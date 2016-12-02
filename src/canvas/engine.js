@@ -414,14 +414,18 @@ ludo.canvas.Engine = new Class({
 
     getPointAtDegreeOffset:function(from, degrees, size){
         var radians = ludo.canvasEngine.toRadians(degrees);
-        var x = Math.cos(radians);
-        var y = Math.sin(radians);
+		return this.getPointAtRadianOffset(from, radians, size);
+    },
 
-        return {
-            x : from.x + (size * x),
-            y : from.y + (size * y)
-        }
-    }
+	getPointAtRadianOffset:function(from, radians, size){
+		var x = Math.cos(radians);
+		var y = Math.sin(radians);
+
+		return {
+			x : from.x + (size * x),
+			y : from.y + (size * y)
+		}
+	}
 
 });
 ludo.canvasEngine = new ludo.canvas.Engine();

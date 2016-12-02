@@ -1,7 +1,7 @@
-/* Generated Thu Dec 1 9:40:29 CET 2016 */
+/* Generated Fri Dec 2 18:50:35 CET 2016 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.244
+ludoJS - Javascript framework, 1.1.249
 Copyright (C) 2012-2016  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -3571,7 +3571,7 @@ ludo.Core = new Class({
 	saveState:function () {
 		this.fireEvent('state');
 	},
-
+	
 	createDependency:function(key, config){
 		this.dependency[key] = ludo.util.isLudoJSConfig(config) ? ludo._new(config) : config;
 		return this.dependency[key];
@@ -3597,7 +3597,128 @@ ludo.Core = new Class({
 			this.fireEvent.call(this, event, Array.prototype.slice.call(arguments));
 		}.bind(this);
 	}
-});/* ../ludojs/src/movable.js */
+});/* ../ludojs/src/theme/themes.js */
+ludo.theme.Themes = new Class({
+    currentTheme:undefined,
+
+    themes: {
+        twilight: {
+            c100 : '#ffffff',
+            c200 : '#eeeeee',
+            c300 : '#aeb0b0',
+            c400 : '#8b8c8c',
+            c500 : '#535353',
+            c600: '#424242',
+            c700: '#383838',
+            c800:'#282828',
+            c900:'#282828',
+
+
+            border: '#424242',
+            background: '#535353',
+            text : '#aeb0b0'
+        },
+        blue : {
+            c100:'#ffffff',
+            c200: '#d1e7ff',
+            c300: '#c6e1ff',
+            c400: '#a6cbf5',
+            c500:'#354150',
+            c600:'#000000',
+
+
+            border: '#a6cbf5',
+            background: '#535353',
+            text : '#000000'
+
+        },
+        "light-gray": {
+            c100 : '#FFFFFF',
+            c200 : '#f5f5f5',
+            c300 : '#e2e2e2',
+            c400 : '#d7d7d7',
+            c500 : '#c6c6c6',
+            c600 : '#AAAAAA',
+            c700 : '#777777',
+            c800 : '#555555',
+            c900 : '#000000',
+
+
+            border: '#d7d7d7',
+            background: '#FFFFFF',
+            text : '#555555'
+        }
+    },
+
+    addTheme:function(name, colors){
+        this.themes[name] = colors;
+    },
+
+    setTheme:function(theme){
+
+        if(this.themes[theme] == undefined){
+            console.warn("Undefined theme " + theme);
+
+        }
+
+        var current = this.getCurrentTheme();
+
+        if(current == theme)return;
+
+        if(current){
+            $(document.body).removeClass("ludo-" + this.currentTheme);
+        }
+
+        this.currentTheme = theme;
+
+        $(document.body).addClass("ludo-" + theme);
+    },
+
+    getCurrentTheme:function(){
+        if(this.currentTheme == undefined){
+            var b = $(document.body);
+            jQuery.each(this.themes, function(theme){
+                var cls = 'ludo-' + theme;
+                if(b.hasClass(cls)){
+                    this.currentTheme = theme;
+                }
+            }.bind(this));
+        }
+
+        return this.currentTheme;
+    },
+
+    color:function(colorName){
+        var theme = this.getCurrentTheme();
+        if(!theme)return undefined;
+        if(this.themes[theme] != undefined){
+            return this.themes[theme][colorName];
+        }
+
+        return undefined;
+    },
+    
+    clear:function(){
+        this.currentTheme = undefined;
+    }
+
+});
+
+/**
+ * Instance of ludo.theme.Themes.
+ * Used to update theme on demand
+ * @type {Class|Type}
+ */
+ludo.Theme = new ludo.theme.Themes();
+
+
+/**
+ * Function which returns theme color
+ * @function ludo.$C
+ * @param {String} color Name of color
+ */
+ludo.$C = ludo.Theme.color.bind(ludo.Theme);
+/* ../ludojs/src/movable.js */
 ludo.Movable = new Class({
     Extends : Events,
     sources : {},
@@ -4958,14 +5079,18 @@ ludo.canvas.Engine = new Class({
 
     getPointAtDegreeOffset:function(from, degrees, size){
         var radians = ludo.canvasEngine.toRadians(degrees);
-        var x = Math.cos(radians);
-        var y = Math.sin(radians);
+		return this.getPointAtRadianOffset(from, radians, size);
+    },
 
-        return {
-            x : from.x + (size * x),
-            y : from.y + (size * y)
-        }
-    }
+	getPointAtRadianOffset:function(from, radians, size){
+		var x = Math.cos(radians);
+		var y = Math.sin(radians);
+
+		return {
+			x : from.x + (size * x),
+			y : from.y + (size * y)
+		}
+	}
 
 });
 ludo.canvasEngine = new ludo.canvas.Engine();
@@ -5261,11 +5386,9 @@ ludo.canvas.Node = new Class({
 	},
 
 	setStyles:function(styles){
-		for(var key in styles){
-			if(styles.hasOwnProperty(key)){
-				ludo.canvasEngine.css(this.el, key, styles[key]);
-			}
-		}
+		$.each(styles, function(key, value){
+			ludo.canvasEngine.css(this.el, key, value);
+		}.bind(this));
 	},
 
 	/**
@@ -5743,6 +5866,7 @@ ludo.canvas.Canvas = new Class({
 	createDescription:function(){
 		this.append(new ludo.canvas.Node('desc', {}, this.description ));
 	},
+	
 	defsNode:undefined,
 
 	/**
@@ -6745,6 +6869,7 @@ ludo.dataSource.Base = new Class({
 	 "txt" specifies which text to display inside the shim. "txt" can be
 	 either a string or a function returning a string.
 	 @config {Object} shim
+	 @memberof ludo.dataSource.Base.prototype
 	 @example
 	 	shim:{
 			renderTo:ludo.get('myView').getBody(),
@@ -6763,7 +6888,7 @@ ludo.dataSource.Base = new Class({
 
 	__construct:function (config) {
 		this.parent(config);
-		this.setConfigParams(config, ['method', 'url', 'autoload', 'data', 'shim','dataHandler']);
+		this.setConfigParams(config, ['method', 'url', 'autoload', 'shim','dataHandler']);
 
 		if(this.postData == undefined){
 			this.postData = {};
@@ -6776,6 +6901,10 @@ ludo.dataSource.Base = new Class({
 			this.dataHandler = function(json){
 				return jQuery.isArray(json) ? json : json.response != undefined ? json.response : json.data != undefined ? json.data : false;
 			}
+		}
+
+		if(config.data != undefined){
+			this.setData(config.data);
 		}
 
 
@@ -6792,6 +6921,7 @@ ludo.dataSource.Base = new Class({
 
 	/**
 	 * Send a new request
+	 * @memberof ludo.dataSource.Base.prototype
 	 * @function sendRequest
 	 * @param {String} service
 	 * @param {Array} arguments
@@ -6818,7 +6948,7 @@ ludo.dataSource.Base = new Class({
 				if(data === false){
 					this.fireEvent('fail', ['Validation error', 'Validation error', this]);
 				}else{
-					this.loadComplete(data, json);
+					this.parseNewData(data, json);
 					this.fireEvent('success', [json, this]);
 
 				}
@@ -6838,6 +6968,7 @@ ludo.dataSource.Base = new Class({
 	 * Has data loaded from server
 	 * @function hasData
 	 * @return {Boolean}
+	 * @memberof ludo.dataSource.Base.prototype
 	 */
 	hasData:function () {
 		return (this.data !== undefined);
@@ -6846,6 +6977,7 @@ ludo.dataSource.Base = new Class({
 	 * Return data loaded from server
 	 * @function getData
 	 * @return {Object|Array}
+	 * @memberof ludo.dataSource.Base.prototype
 	 */
 	getData:function () {
 		return this.data;
@@ -6860,6 +6992,7 @@ ludo.dataSource.Base = new Class({
 	 * Return data-source type(HTML or JSON)
 	 * @function getSourceType
 	 * @return string source type
+	 * @memberof ludo.dataSource.Base.prototype
 	 */
 	getSourceType:function () {
 		return 'JSON';
@@ -6878,6 +7011,7 @@ ludo.dataSource.Base = new Class({
 	 * Load content from a specific url
 	 * @function loadUrl
 	 * @param url
+	 * @memberof ludo.dataSource.Base.prototype
 	 */
 	loadUrl:function (url) {
 		this.url = url;
@@ -6885,7 +7019,7 @@ ludo.dataSource.Base = new Class({
 		this.load();
 	},
 
-	loadComplete:function () {
+	parseNewData:function () {
 		this.inLoadMode = false;
 	},
 
@@ -6926,11 +7060,11 @@ ludo.dataSource.JSON = new Class({
      * @memberof ludo.dataSource.JSON.prototype
      */
     setData:function(data){
-        this.loadComplete(data);
+        this.parseNewData(data);
     },
 
 
-    loadComplete:function (data) {
+    parseNewData:function (data) {
         
 		this.parent();
 		var firstLoad = !this.data;
@@ -9225,1289 +9359,341 @@ ludo.chart.Record = new Class({
     leave:function(){
         this.fireEvent('leave', this);
     }
-});/* ../ludojs/src/data-source/collection.js */
+});/* ../ludojs/src/chart/data-source.js */
 /**
- Data source collection
- @namespace ludo.dataSource.
- @class ludo.dataSource.Collection
- @augments dataSource.JSON
- @param {Object} config
- @param {Object} config.sortFn custom sort functions, which should return -1 if record a is smaller than
- record b and 1 if record b is larger than record a. Example:
- <code>
- sortFn:{
-			'population':{
-				'asc' : function(a,b){
-					return parseInt(a.population) < parseInt(b.population) ? -1 : 1
-				},
-				'desc' : function(a,b){
-					return parseInt(a.population) > parseInt(b.population) ? -1 : 1
-				}
-			}
-	 	}
- </code>
- @param {String} config.primaryKey Primary key, example: primaryKey: "id"
- @param {Object} config.paging
- Example:
- <code>
- paging:{
-		 	size:10, // Number of rows per page
-		  	remotePaging:true, // Load only records per page from server, i.e. new request per page
-		  	cache : true, // Store pages in cache, i.e no request if data for page is in cache,
-		  	cacheTimeout:30 // Optional time in second before cache is considered out of date, i.e. new server request
-		}
- </code>
- @param {Object} config.searchConfig
- Example:
- <code>
- searchConfig:{
-	 		index:['city','country'],
-	 		delay:.5
-	 	}
- </code>
- which makes the record keys/columns "city" and "country" searchable. It waits .5 seconds
- before the search is executed. This is useful when searching large collections and you
- want to delay the search until the user has finished entering into a search box.
- @fires ludo.dataSource.Collection#sort Fires on sort. Arguments: {String} sortedBy key
- @fires ludo.dataSource.Collection#add Fires when a new record has been added to the collection. Arguments: {Object} record
- @fires ludo.dataSource.Collection#deselect Fires when a record has been deselected, arguments. {Object} deselected record
- @fires ludo.dataSource.Collection#select Fires when a record has selected, arguments. {Object} selected record
- @fires ludo.dataSource.Collection#delete Fires when a record has been deleted, arguments. {Object} deleted record
- @fires ludo.dataSource.Collection#page Fires on navigation to new page when paging is enabled. Arguments: {Number} page index
- @fires ludo.dataSource.Collection#previousPage Fires when paging is enabled and navigating to current page -1. No arguments
- @fires ludo.dataSource.Collection#nextPage Fires when paging is enabled and navigating to current page +1. No arguments
- @fires ludo.dataSource.Collection#firstPage Fired when navigating to first page.  No arguments
- @fires ludo.dataSource.Collection#lastPage Fired when navigating to last page.  No arguments
- @fires ludo.dataSource.Collection#notLastPage Fired when navigating to a page which is not last page.  No arguments
- @fires ludo.dataSource.Collection#notFirstPage Fired when navigating to a page which is not first page.  No arguments
- @fires ludo.dataSource.Collection#change Fires when data has been updated or page navigation occurs.
- @example
- 	dataSource:{
-		url:'data-source/grid.php',
-		id:'myDataSource',
-		paging:{
-			size:12,
-			remotePaging:false,
-			cache:false,
-			cacheTimeout:1000
-		},
-		searchConfig:{
-			index:['capital', 'country']
-		},
-		listeners:{
-			select:function (record) {
-				console.log(record);
-			}
-		}
-	}
+ * Data source for charts
+ *
+ * The chart data source expects an array of objects, example:
+ * 
+ * <code>
+ * [
+ { id: 1, label:'John', value:100 },
+ { id: 2, label:'Jane', value:245 },
+ { id: 3, label:'Martin', value:37 },
+ { id: 4, label:'Mary', value:99 },
+ { id: 5, label:'Johnny', value:127 },
+ { id: 6, label:'Catherine', value:55 },
+ { id: 7, label:'Tommy', value:18 }
+ ]   
+ *     
+ * </code>
+ * The chart data source will add some special properties to the records.
+ * Example: "Jane" in the data above will be something like:
+ * <code>
+ * {
+ *      id:'1', name: 'Jane', value, 245,
+ *      \_\_color: '#4719D2'
+ *      \_\_colorOver: '#5629E1'
+ *      \_\_count : 7,
+ *      \_\_fraction:0.35976505139500736,
+ *      \_\_sum : 681
+ *      \_\_index: 1,
+ *      \_\_percent: 36,
+ *      \_\_angle : 0.92264101427013,
+ *      \_\_radians : 2.2604704849618193,
+ *      \_\_uid : "chart-node-iw7znu0v"
+ * }
+ * </code>
+ *
+ * where \_\_color is the records assigned color and \_\_colorOver is it's color when highlighted.
+ * You can set this properties manually in your data. When not set, LudoJS will use colors from a color scheme.
+ * \_\_count is the total number or records in the array.
+ * \_\_sum is sum(values) in the array.
+ * \_\_fraction is record.value / record.\_\_sum
+ * \_\_index is the index of Jane in the array(John has index 0, Jane index 1, Martin index 2 and so on).
+ * \_\_percent is the rounded value of \_\_fraction * 100
+ * \_\_angle is mostly for internal use and represents this records start angle in radians when all records fill a circle.
+ * \_\_radians is how many radians of a circle this record fills. A circle has Math.PI * 2 radians. \_\_angle and radians
+ * are only set when values are numeric.
+ *
+ *
+ * @class ludo.chart.DataSource
+ * @param {Object} config
+ * @param {Array} config.data Pie chart data.
+ * @param {String} config.url Get chart data from this url. config.data will not be set when you use an url.
+ * @param {Function} config.valueOf Function which returns value of a node. Two arguments are sent to this method: 1) the record,
+ * 2) The View asking for the value. Example
+ * <code>
+ *     valueOf:function(record, caller){
+ *          return record.value;
+ *     }
+ * </code>
+ * @param {Function} config.textOf Function which returns text of a node. The record and caller are sent to this function.
+ * You can return different texts based on the type attribute of the caller. example:
+ * <code>
+ * textOf:function(record, caller){
+        if(caller.type == 'chart.Tooltip'){ // return text for the tooltip
+            return record.label + ': '+ record.value  + ' (' + record.__percent + '%)';
+        }
+        // Default text
+        return record.label;
+    }
+ *
+ * </code>
+ * @param {String} config.valueKey the key in the data for value, default: 'value'
+ * @example
+ *     var dataSource = new ludo.chart.DataSource({
+        data:[
+            { id: 1, label:'John', value:100 },
+            { id: 2, label:'Jane', value:245 },
+            { id: 3, label:'Martin', value:37 },
+            { id: 4, label:'Mary', value:99 },
+            { id: 5, label:'Johnny', value:127 },
+            { id: 6, label:'Catherine', value:55 },
+            { id: 7, label:'Tommy', value:18 }
+        ],
+
+        textOf:function(record, caller){
+            if(caller.type == 'chart.Tooltip'){ // Text for the tooltip
+                return record.label + ': '+ record.value  + ' (' + record.__percent + '%)';
+            }
+            // Default text
+            return record.label;
+        },
+
+        valueOf:function(record, caller){
+            return record.value;
+        }
+
+    });
  */
-ludo.dataSource.Collection = new Class({
-	Extends:ludo.dataSource.JSON,
-	sortFn:{},
+ludo.chart.DataSource = new Class({
+    Extends: ludo.dataSource.JSON,
+    type: 'chart.DataSource',
+    map: undefined,
 
-	selectedRecords:[],
+    valueOf: undefined,
+    textOf: undefined,
+    valueKey:'value',
 
-	primaryKey:'id',
+    startAngle: 0,
 
+    color:'#1976D2',
 
-	paging:undefined,
+    colorOf: undefined,
+    colorOverOf: undefined,
 
-	dataCache:{},
+    colorUtilObj : undefined,
 
-	sortedBy:{
-		column:undefined,
-		order:undefined
-	},
+    count:undefined,
 
-	searchConfig:undefined,
-
-	statefulProperties:['sortedBy', 'paging'],
-
-	index:undefined,
-
-	searcherType:'dataSource.CollectionSearch',
-
-	uidMap:{},
-
-
-	selected:undefined,
-
-	__construct:function (config) {
-		this.parent(config);
-        this.setConfigParams(config, ['searchConfig','sortFn','primaryKey','sortedBy','paging','selected']);
-
-		if (this.primaryKey && !ludo.util.isArray(this.primaryKey))this.primaryKey = [this.primaryKey];
-		if (this.paging) {
-			this.paging.offset = this.paging.offset || 0;
-			this.paging.initialOffset = this.paging.offset;
-			if (this.paging.initialOffset !== undefined) {
-				this.fireEvent('page', (this.paging.initialOffset / this.paging.size) + 1);
-			}
-			if (this.isCacheEnabled()) {
-				this.addEvent('load', this.populateCache.bind(this));
-			}
-		}
-
-		this.addEvent('parsedata', this.createIndex.bind(this));
-
-
-		if(this.selected){
-			this.addEvent('firstLoad', this.setInitialSelected.bind(this));
-		}
-
-		if(this.data && !this.index)this.createIndex();
-	},
-
-	hasRemoteSearch:function(){
-		return this.paging && this.paging.remotePaging;
-	},
-
-	setInitialSelected:function(){
-		this.selectRecord(this.selected);
-	},
-
-	/**
-	 * Returns 1) If search is specified: number of records in search result, or 2) number of records in entire collection.
-	 * @function getCount
-	 * @return {Number} count
-	 * @memberof ludo.dataSource.Collection.prototype
-	 */
-	getCount:function () {
-		if (this.paging && this.paging.rows)return this.paging.rows;
-		if (this.searcher && this.searcher.hasData())return this.searcher.getCount();
-		return this.data ? this.data.length : 0;
-	},
-
-	isCacheEnabled:function () {
-		return this.paging && this.paging['remotePaging'] && this.paging.cache;
-	},
-
-	/**
-	 * Resort data-source
-	 * @function sort
-	 * @return void
-	 * @memberof ludo.dataSource.Collection.prototype
-	 */
-	sort:function () {
-		if (this.sortedBy.column && this.sortedBy.order) {
-			this.sortBy(this.sortedBy.column, this.sortedBy.order);
-		}
-	},
-
-	/**
-	 Set sorted by column
-	 @function by
-	 @param {String} column
-	 @return {dataSource.Collection} this
-	 @memberof ludo.dataSource.Collection.prototype
-	 @example
-	 	collection.by('country').ascending().sort();
-	 or
-	 @example
-	 	collection.by('country').sort();
-	 */
-	by:function(column){
-		this.sortedBy.column = column;
-		this.sortedBy.order = this.getSortOrderFor(column);
-		return this;
-	},
-	/**
-	 Set sort order to ascending
-	 @function ascending
-	 @return {dataSource.Collection} this
-	 @memberof ludo.dataSource.Collection.prototype
-	 @example
-	 	collection.by('country').ascending().sort();
-	 */
-	ascending:function(){
-		this.sortedBy.order = 'asc';
-		return this;
-	},
-	/**
-	 Set sort order to descending
-	 @function descending
-	 @return {dataSource.Collection} this
-	 @memberof ludo.dataSource.Collection.prototype
-	 @example
-	 	collection.by('country').descending().sort();
-	 */
-	descending:function(){
-		this.sortedBy.order = 'desc';
-		return this;
-	},
-
-	/**
-	 Sort by column and order
-
-	 The second argument(order) is optional
-	 @function sortBy
-	 @param {String} column
-	 @param {String} order
-     @optional
-	 @return {dataSource.Collection} this
-	 @memberof ludo.dataSource.Collection.prototype
-	 @example
-	 	grid.getDataSource().sortBy('firstname', 'desc');
-	 which also can be written as
-	 @example
-	 	grid.getDataSource().by('firstname').descending().sort();
-	 */
-	sortBy:function (column, order) {
-        order = order || this.getSortOrderFor(column);
-
-		this.sortedBy = {
-			column:column,
-			order:order
-		};
-
-		if (this.paging) {
-			this.paging.offset = this.paging.initialOffset || 0;
-			this.fireEvent('page', Math.round(this.paging.offset / this.paging.size) + 1);
-		}
-
-		if (this.shouldSortOnServer()) {
-			this.loadOrGetFromCache();
-		} else {
-			var data = this._getData();
-			data.sort(this.getSortFnFor(column, order));
-			this.fireEvent('change');
-		}
-
-		this.fireEvent('sort', this.sortedBy);
-        if(this.paging)this.firePageEvents();
-		this.fireEvent('state');
-
-		return this;
-	},
-
-	/**
-	 * Return current sorted by column
-	 * @function getSortedBy
-	 * @return {String} column
-	 * @memberof ludo.dataSource.Collection.prototype
-	 */
-	getSortedBy:function () {
-		return this.sortedBy.column;
-	},
-	/**
-	 * Return current sort order (asc|desc)
-	 * @function getSortOrder
-	 * @return {String} order
-	 * @memberof ludo.dataSource.Collection.prototype
-	 */
-	getSortOrder:function () {
-		return this.sortedBy.order;
-	},
-
-	shouldSortOnServer:function () {
-		return this.paging && this.paging.remotePaging;
-	},
-
-	getSortFnFor:function (column, order) {
-		if (this.sortFn[column] !== undefined) {
-			return this.sortFn[column][order];
-		}
-		if (order === 'asc') {
-			return function (a, b) {
-				return a[column] + '_' + a[this.primaryKey] < b[column] + '_' + b[this.primaryKey] ? -1 : 1
-			};
-		} else {
-			return function (a, b) {
-				return a[column] + '_' + a[this.primaryKey] < b[column] + '_' +  b[this.primaryKey] ? 1 : -1
-			};
-		}
-	},
-
-	getSortOrderFor:function (column) {
-		if (this.sortedBy.column === column) {
-			return this.sortedBy.order === 'asc' ? 'desc' : 'asc';
-		}
-		return 'asc';
-	},
-
-	/**
-	 * Add a record to data-source
-	 * @function addRecord
-	 * @param record
-	 * @return {Object} record
-	 * @memberof ludo.dataSource.Collection.prototype
-	 */
-	addRecord:function (record) {
-        this.data = this.data || [];
-		this.data.push(record);
-
-		if(!this.index)this.createIndex();
-
-		this.fireEvent('add', record);
-
-		return this.createRecord(record);
-	},
-
-	/**
-	 * Returns plain object for a record from search. To get a
-	 * {{#crossLink "dataSource.Record"}}{{/crossLink}} object
-	 * use {{#crossLink "dataSource.Collection/getRecord"}}{{/crossLink}}
-	 *
-	 * collection.find({ capital : 'Oslo' });
-	 *
-	 * @function findRecord
-	 * @param {Object} search
-	 * @return {Object|undefined} record
-	 * @memberof ludo.dataSource.Collection.prototype
-	 */
-	findRecord:function (search) {
-
-		if (!this.data)return undefined;
-		if(search['getUID'] !== undefined)search = search.getUID();
-
-		if(search.uid)search = search.uid;
-		var rec = this.getById(search);
-		if(rec)return rec;
-
-		var searchMethod = ludo.util.isObject(search) ? 'isRecordMatchingSearch' : 'hasMatchInPrimaryKey';
-
-
-		for (var i = 0; i < this.data.length; i++) {
-			if (this[searchMethod](this.data[i], search)) {
-				return this.data[i];
-			}
-		}
-		return undefined;
-	},
-
-	isRecordMatchingSearch:function (record, search) {
-		for (var key in search) {
-			if (search.hasOwnProperty(key)) {
-				if (record[key] !== search[key]) {
-					return false;
-				}
-			}
-		}
-		return true;
-	},
-
-	hasMatchInPrimaryKey:function(record, search){
-		if(this.primaryKey){
-			for(var j=0;j<this.primaryKey.length;j++){
-				if(record[this.primaryKey[j]]  === search)return true;
-			}
-		}
-		return false;
-	},
-
-	/**
-	 * Find specific records, example:
-	 * var records = collection.findRecords({ country:'Norway'});
-	 * @function findRecords
-	 * @param {Object} search
-	 * @return {Array} records
-	 * @memberof ludo.dataSource.Collection.prototype
-	 */
-	findRecords:function (search) {
-		var ret = [];
-		for (var i = 0; i < this.data.length; i++) {
-			if (this.isRecordMatchingSearch(this.data[i], search)) {
-				ret.push(this.data[i]);
-			}
-		}
-		return ret;
-	},
-
-    getLinearData:function(){
-        return this.data;
-    },
-
-	/**
-	 * Select the first record matching search
-	 * @function selectRecord
-	 * @param {Object} search
-	 * @return {Object|undefined} record
-	 * @memberof ludo.dataSource.Collection.prototype
-	 */
-	selectRecord:function (search) {
-		var rec = this.findRecord(search);
-		if (rec) {
-			this._setSelectedRecord(rec);
-			return rec;
-		}
-		return undefined;
-	},
-
-
-	/**
-	 * Select all records matching search
-	 * @function selectRecords
-	 * @param {Object} search
-	 * @return {Array} records
-	 * @memberof ludo.dataSource.Collection.prototype
-	 */
-	selectRecords:function (search) {
-		this.selectedRecords = this.findRecords(search);
-		for (var i = 0; i < this.selectedRecords.length; i++) {
-			this.fireSelect(this.selectedRecords[i]);
-		}
-		return this.selectedRecords;
-	},
-
-	/**
-	 * Select a specific record by index
-	 * @function selectRecordIndex
-	 * @param {number} index
-	 * @memberof ludo.dataSource.Collection.prototype
-	 */
-	selectRecordIndex:function (index) {
-		var data = this._getData();
-		if (data.length && index >= 0 && index < data.length) {
-			var rec = data[index];
-			this._setSelectedRecord(rec);
-			return rec;
-		}
-		return undefined;
-	},
-
-	_getData:function () {
-		if (this.hasSearchResult())return this.searcher.getData();
-		return this.data;
-	},
-
-	getRecordByIndex:function (index) {
-		if (this.data.length && index >= 0 && index < this.data.length) {
-			return this.data[index];
-		}
-		return undefined;
-	},
-
-	/**
-	 * Select previous record. If no record is currently selected, first record will be selected
-	 * @function previous
-	 * @return {Object} record
-	 * @memberof ludo.dataSource.Collection.prototype
-	 */
-	previous:function () {
-		var rec = this.getPreviousOf(this.getSelectedRecord());
-		if (rec) {
-			this._setSelectedRecord(rec);
-		}
-		return rec;
-	},
-
-	/**
-	 * Returns previous record of given record
-	 * @function getPreviousOf
-	 * @param {Object} record
-	 * @return {Object} previous record
-	 * @memberof ludo.dataSource.Collection.prototype
-	 */
-	getPreviousOf:function (record) {
-		var data = this._getData();
-		if (record) {
-			var index = data.indexOf(record);
-            return index > 0 ? data[index-1] : undefined;
-		} else {
-            return data.length > 0 ? data[0] : undefined;
-		}
-	},
-
-	/**
-	 * Select next record. If no record is currently selected, first record will be selected
-	 * @function next
-	 * @return {Object} record
-	 * @memberof ludo.dataSource.Collection.prototype
-	 */
-	next:function () {
-		var rec = this.getNextOf(this.getSelectedRecord());
-		if (rec) {
-			this._setSelectedRecord(rec);
-		}
-		return rec;
-	},
-	/**
-	 * Returns next record of given record.
-	 * @function getNextOf
-	 * @param {Object} record
-	 * @return {Object} next record
-	 * @memberof ludo.dataSource.Collection.prototype
-	 */
-	getNextOf:function (record) {
-		var data = this._getData();
-		if (record) {
-			var index = data.indexOf(record);
-            return index < data.length - 1 ? data[index+1] : undefined;
-		} else {
-            return data.length > 0 ? data[0] : undefined;
-		}
-	},
-
-	_setSelectedRecord:function (rec) {
-		if (this.selectedRecords.length) {
-
-			this.fireEvent('deselect', this.selectedRecords[0]);
-		}
-		this.selectedRecords = [rec];
-		this.fireSelect(Object.clone(rec));
-	},
-
-	/**
-	 * Return first selected record
-	 * @function getSelectedRecord
-	 * @return {Object|undefined} record
-	 * @memberof ludo.dataSource.Collection.prototype
-	 */
-	getSelectedRecord:function () {
-        return this.selectedRecords.length > 0 ? this.selectedRecords[0] : undefined;
-	},
-
-	/**
-	 * Return selected records
-	 * @function getSelectedRecords
-	 * @return {Array} records
-	 * @memberof ludo.dataSource.Collection.prototype
-	 */
-	getSelectedRecords:function () {
-		return this.selectedRecords;
-	},
-
-	/**
-	 Delete records matching search,
-	 @function deleteRecords
-	 @param {Object} search
-	 @memberof ludo.dataSource.Collection.prototype
-	 @example
-	 	grid.getDataSource().deleteRecords({ country: 'Norway' });
-	 will delete all records from collection where country is equal to "Norway". A delete event
-	 will be fired for each deleted record.
-	 */
-	deleteRecords:function (search) {
-		var records = this.findRecords(search);
-		for (var i = 0; i < records.length; i++) {
-			this.data.erase(records[i]);
-			this.fireEvent('delete', records[i]);
-		}
-	},
-	/**
-	 Delete a single record. Deletes first match when
-	 multiple matches found.
-	 @function deleteRecord
-	 @param {Object} search
-	 @memberof ludo.dataSource.Collection.prototype
-	 @example
-	 	grid.getDataSource().deleteRecord({ country: 'Norway' });
-	 Will delete first found record where country is equal to Norway. It will fire a
-	 delete event if a record is found and deleted.
-	 */
-	deleteRecord:function (search) {
-		var rec = this.findRecord(search);
-		if (rec) {
-			this.data.erase(rec);
-
-			this.fireEvent('delete', rec);
-		}
-	},
-
-	/**
-	 Select records from current selected record to record matching search,
-	 @function selectTo
-	 @param {Object} search
-	 @memberof ludo.dataSource.Collection.prototype
-	 @example
-	 	collection.selectRecord({ country: 'Norway' });
-	 	collection.selectTo({country: 'Denmark'});
-	 	var selectedRecords = collection.getSelectedRecords();
-	 */
-	selectTo:function (search) {
-		var selected = this.getSelectedRecord();
-		if (!selected) {
-			this.selectRecord(search);
-			return;
-		}
-		var rec = this.findRecord(search);
-		if (rec) {
-			this.selectedRecords = [];
-			var index = this.data.indexOf(rec);
-			var indexSelected = this.data.indexOf(selected);
-			var i;
-			if (index > indexSelected) {
-				for (i = indexSelected; i <= index; i++) {
-					this.selectedRecords.push(this.data[i]);
-					this.fireSelect(this.data[i]);
-				}
-			} else {
-				for (i = indexSelected; i >= index; i--) {
-					this.selectedRecords.push(this.data[i]);
-					this.fireSelect(this.data[i]);
-				}
-			}
-		}
-	},
-
-	/**
-	 * Update a record
-	 * @function updateRecord
-	 * @param {Object} search
-	 * @param {Object} updates
-	 * @return {dataSource.Record} record
-	 * @memberof ludo.dataSource.Collection.prototype
-	 */
-	updateRecord:function (search, updates) {
-		var rec = this.getRecord(search);
-		if (rec) {
-			rec.setProperties(updates);
-		}
-		return rec;
-	},
-
-	getPostData:function () {
-		if (!this.paging) {
-			return this.parent();
-		}
-		var ret = this.postData || {};
-		ret._paging = {
-			size:this.paging.size,
-			offset:this.paging.offset
-		};
-		ret._sort = this.sortedBy;
-		return ret;
-	},
-	/**
-	 * When paging is enabled, go to previous page.
-	 * fire previousPage event
-	 * @function previousPage
-	 * @memberof ludo.dataSource.Collection.prototype
-	 */
-	previousPage:function () {
-		if (!this.paging || this.isOnFirstPage())return;
-		this.paging.offset -= this.paging.size;
-
-		this.onPageChange('previousPage');
-	},
-
-	/**
-	 * When paging is enabled, go to next page
-	 * fire nextPage event
-	 * @function nextPage
-	 * @memberof ludo.dataSource.Collection.prototype
-	 */
-	nextPage:function () {
-		if (!this.paging || this.isOnLastPage())return;
-		this.paging.offset += this.paging.size;
-
-		this.onPageChange('nextPage');
-	},
-
-	/**
-	 * Go to last page
-	 * @function lastPage
-	 * @memberof ludo.dataSource.Collection.prototype
-	 */
-	lastPage:function () {
-		if (!this.paging || this.isOnLastPage())return;
-		var count = this.getCount();
-		var decr = count % this.paging.size;
-		if(decr === 0) decr = this.paging.size;
-		this.paging.offset = count - decr;
-		this.onPageChange('lastPage');
-	},
-
-	/**
-	 * Go to first page
-	 * @function firstPage
-	 * @memberof ludo.dataSource.Collection.prototype
-	 */
-	firstPage:function () {
-		if (!this.paging || this.isOnFirstPage())return;
-		this.paging.offset = 0;
-
-		this.onPageChange('firstPage');
-	},
-
-	isOnFirstPage:function () {
-		if (!this.paging)return true;
-		return this.paging.offset === undefined || this.paging.offset === 0;
-	},
-
-	isOnLastPage:function () {
-		return this.paging.size + this.paging.offset >= this.getCount();
-	},
-
-	onPageChange:function (event) {
-		if (this.paging['remotePaging']) {
-			this.loadOrGetFromCache();
-		}
-		this.fireEvent('change');
-		this.fireEvent(event);
-		this.firePageEvents();
-	},
-
-	loadOrGetFromCache:function () {
-		if (this.isDataInCache()) {
-			this.data = this.dataCache[this.getCacheKey()].data;
-			this.fireEvent('change');
-		} else {
-			this.load();
-		}
-	},
-
-	populateCache:function () {
-		if (this.isCacheEnabled()) {
-			this.dataCache[this.getCacheKey()] = {
-				data:this.data,
-				time:new Date().getTime()
-			}
-		}
-	},
-
-	isDataInCache:function () {
-		return this.dataCache[this.getCacheKey()] !== undefined && !this.isCacheOutOfDate();
-	},
-
-    clearCache:function(){
-        this.dataCache = {};
-    },
-
-	isCacheOutOfDate:function () {
-		if (!this.paging['cacheTimeout'])return false;
-
-		var created = this.dataCache[this.getCacheKey()].time;
-		return created + (this.paging['cacheTimeout'] * 1000) < (new Date().getTime());
-	},
-
-	getCacheKey:function () {
-		var keys = [
-			'key', this.paging.offset, this.sortedBy.column, this.sortedBy.order
-		];
-		if (this.searcher !== undefined && this.searcher.hasData())keys.push(this.searcher.searchToString());
-		return keys.join('|');
-	},
-
-    hasData:function(){
-        return this.data != undefined && this.data.length > 0;
-    },
-
-	firePageEvents:function (skipState) {
-		if (this.isOnLastPage()) {
-
-			this.fireEvent('lastPage');
-		} else {
-
-			this.fireEvent('notLastPage');
-		}
-
-		if (this.isOnFirstPage()) {
-			this.fireEvent('firstPage');
-
-		} else {
-
-			this.fireEvent('notFirstPage');
-		}
-
-		this.fireEvent('page', this.getPageNumber());
-		if (skipState === undefined)this.fireEvent('state');
-	},
-
-	/**
-	 * Go to a specific page
-	 * @function toPage
-	 * @param {Number} pageNumber
-	 * @return {Boolean} success
-	 * @memberof ludo.dataSource.Collection.prototype
-	 */
-	toPage:function (pageNumber) {
-		if (pageNumber > 0 && pageNumber <= this.getPageCount() && !this.isOnPage(pageNumber)) {
-			this.paging.offset = (pageNumber - 1) * this.paging.size;
-
-			this.onPageChange('toPage');
-			return true;
-		}
-		return false;
-	},
-
-	/**
-	 * @function setPageSize
-	 * @param {Number} size
-	 * @memberof ludo.dataSource.Collection.prototype
-     */
-	setPageSize:function(size){
-		if(this.paging){
-			this.dataCache = {};
-			this.paging.size = parseInt(size);
-			this.paging.offset = 0;
-
-			this.onPageChange('toPage');
-		}
-	},
-
-	/**
-	 * True if on given page
-	 * @function isOnPage
-	 * @param {Number} pageNumber
-	 * @return {Boolean}
-	 * @memberof ludo.dataSource.Collection.prototype
-	 */
-	isOnPage:function (pageNumber) {
-		return pageNumber == this.getPageNumber();
-	},
-
-	/**
-	 * Return current page number
-	 * @function getPageNumber
-	 * @return {Number} page
-	 * @memberof ludo.dataSource.Collection.prototype
-	 */
-	getPageNumber:function () {
-        return this.paging ? Math.floor(this.paging.offset / this.paging.size) + 1 : 1;
-	},
-
-	/**
-	 * Return number of pages
-	 * @function getPageCount
-	 * @return {Number}
-	 * @memberof ludo.dataSource.Collection.prototype
-	 */
-	getPageCount:function () {
-        return this.paging ? Math.ceil(this.getCount() / this.paging.size) : 1;
-	},
-
-	/**
-	 * Return data in collection
-	 * @function getData
-	 * @memberof ludo.dataSource.Collection.prototype
-	 * @returns {Array}
-     */
-	getData:function () {
-		if (this.hasSearchResult()){
-			if (this.paging && this.paging.size) {
-				return this.getDataForPage(this.searcher.getData());
-			}
-			return this.searcher.getData();
-		}
-		if (!this.paging || this.paging.remotePaging) {
-			return this.parent();
-		}
-		return this.getDataForPage(this.data);
-	},
-
-
-	getDataForPage:function (data) {
-		if (!data || data.length == 0)return [];
-		var offset = this.paging.initialOffset || this.paging.offset;
-		if (offset > data.length) {
-			this.toPage(this.getPageCount());
-			offset = (this.getPageCount() - 1) * this.paging.size;
-		}
-		this.resetInitialOffset.delay(200, this);
-		return data.slice(offset, Math.min(data.length, offset + this.paging.size));
-	},
-
-	resetInitialOffset:function () {
-		this.paging.initialOffset = undefined;
-	},
-
-	loadComplete:function (data, json) {
-		// TODO refactor this
-		if (json != undefined && this.paging && json.rows !==undefined)this.paging.rows = json.rows;
-		if (json != undefined && this.paging && json.response && json.response.rows !==undefined)this.paging.rows = json.response.rows;
-		this.parent(data, json);
-
-		this.fireEvent('count', this.getCount());
-		if (this.shouldSortAfterLoad()) {
-			this.sort();
-		} else {
-			this.fireEvent('change');
-		}
-		if (this.paging !== undefined) {
-			this.firePageEvents(true);
-		}
-	},
-
-	createIndex:function () {
-		this.index = {};
-		this.indexBranch(this.data);
-	},
-
-	indexBranch:function(branch, parent){
-		for (var i = 0; i < branch.length; i++) {
-			this.indexRecord(branch[i], parent);
-			if(branch[i].children && branch[i].children.length)this.indexBranch(branch[i].children, branch[i]);
-		}
-	},
-
-	indexRecord:function(record, parent){
-		if(!this.index)this.createIndex();
-		if(parent)record.parentUid = parent.uid;
-		var pk = this.getPrimaryKeyIndexFor(record);
-		if(pk)this.index[pk] = record;
-		if(!record.uid)record.uid = ['uid_', String.uniqueID()].join('');
-		this.index[record.uid] = record;
-	},
-
-	shouldSortAfterLoad:function(){
-		if(this.paging && this.paging.remotePaging)return false;
-		return this.sortedBy !== undefined && this.sortedBy.column && this.sortedBy.order;
-	},
-
-	/**
-	 Filter collection based on given search term. To filter on multiple search terms, you should
-	 get a reference to the {{#crossLink "dataSource.CollectionSearch"}}{{/crossLink}} object and
-	 use the available {{#crossLink "dataSource.CollectionSearch"}}{{/crossLink}} methods to add
-	 multiple search terms.
-	 @function Search
-	 @param {String} search
-	 @memberof ludo.dataSource.Collection.prototype
-	 @example
-	 	ludo.get('myCollection').search('New York');
-	 	// or with the {{#crossLink "dataSource.CollectionSearch/add"}}{{/crossLink}} method
-	 	var searcher = ludo.get('myCollection').getSearcher();
-	 	searcher.where('New York').execute();
-	 	searcher.execute();
-	 */
-	search:function (search) {
-		this.getSearcher().search(search);
-	},
-
-	/**
-	 * Executes a remote search for records with the given data
-	 * @function remoteSearch
-	 * @param {String|Object} search
-	 * @memberof ludo.dataSource.Collection.prototype
-	 */
-	remoteSearch:function(search){
-		this.postData = this.postData || {};
-		this.postData.search = search;
-		this.toPage(1);
-		this.load();
-	},
-
-	afterSearch:function(){
-		var searcher = this.getSearcher();
-		this.fireEvent('count', searcher.hasData() ? searcher.getCount() : this.getCount());
-		if (this.paging !== undefined) {
-			this.paging.offset = 0;
-			this.firePageEvents(true);
-			this.fireEvent('pageCount', this.getPageCount());
-		}
-		this.fireEvent('change');
-	},
-
-	searcher:undefined,
-	/**
-	 * Returns a {{#crossLink "dataSource.CollectionSearch"}}{{/crossLink}} object which
-	 * you can use to filter a collection.
-	 * @function getSearcher
-	 * @return {dataSource.CollectionSearch}
-	 * @memberof ludo.dataSource.Collection.prototype
-	 */
-	getSearcher:function () {
-		if (this.searcher === undefined) {
-			this.searchConfig = this.searchConfig || {};
-			var config = Object.merge({
-				type:this.searcherType,
-				dataSource:this
-			}, this.searchConfig);
-			this.searcher = ludo._new(config);
-			this.addSearcherEvents();
-		}
-		return this.searcher;
-	},
-
-	addSearcherEvents:function(){
-		this.searcher.addEvent('search', this.afterSearch.bind(this));
-		this.searcher.addEvent('deleteSearch', this.afterSearch.bind(this));
-	},
-
-	hasSearchResult:function(){
-		return this.searcher !== undefined && this.searcher.hasData();
-	},
-	/**
-	 Return record by id or undefined if not found. Records are indexed by id. This method
-	 gives you quick access to a record by it's id. The method returns a reference to the
-	 actual record. You can use Object.clone(record) to create a copy of it in case you
-	 want to update the record but not make those changes to the collection.
-	 @function getById
-	 @param {String|Number|Object} id
-	 @return {Object} record
-	 @memberof ludo.dataSource.Collection.prototype
-	 @example
-	 	var collection = new ludo.dataSource.Collection({
-	 		url : 'get-countries.php',
-	 		primaryKey:'country'
-	 	});
-	 	var record = collection.getById('Japan'); // Returns record for Japan if it exists.
-	 You can also define multiple keys as id
-	 @example
-		 var collection = new ludo.dataSource.Collection({
-			url : 'get-countries.php',
-			primaryKey:['id', 'country']
-		 });
-	   	 var record = collection.getById({ id:1, country:'Japan' });
-	 This is especially useful when you have a {{#crossLink "dataSource.TreeCollection"}}{{/crossLink}}
-	 where child nodes may have same numeric id as it's parent.
-	 @example
-	 	{ id:1, type:'country', title : 'Japan',
-	 	 	children:[ { id:1, type:'city', title:'Tokyo }]
-	 By setting primaryKey to ['id', 'type'] will make it possible to distinguish between countries and cities.
-	 */
-	getById:function(id){
-		if(this.index[id] !== undefined){
-			return this.index[id];
-		}
-
-		if(this.primaryKey.length===1){
-			return this.index[id];
-		}else{
-			var key = [];
-			for(var i=0;i<this.primaryKey.length;i++){
-				key.push(id[this.primaryKey[i]]);
-			}
-			return this.index[key.join('')];
-		}
-	},
-
-	recordObjects:{},
-
-	/**
-	 Returns {{#crossLink "dataSource.Record"}}{{/crossLink}} object for a record.
-	 If you want to update a record, you should
-	 first get a reference to {{#crossLink "dataSource.Record"}}{{/crossLink}} and then call one
-	 of it's methods.
-	 @function getRecord
-	 @param {String|Object} search
-	 @return {dataSource.Record|undefined}
-	 @memberof ludo.dataSource.Collection.prototype
-	 @example
-		 var collection = new ludo.dataSource.Collection({
-			url : 'get-countries.php',
-			primaryKey:'country'
-		 });
-	 	 collection.getRecord('Japan').set('capital', 'tokyo');
-	 */
-	getRecord:function(search){
-		var rec = this.findRecord(search);
-		if(rec){
-			return this.createRecord(rec);
-		}
-		return undefined;
-	},
-
-	createRecord:function(data){
-		var id = data.uid;
-		if(!this.recordObjects[id]){
-			this.recordObjects[id] = this.recordInstance(data, this);
-			this.addRecordEvents(this.recordObjects[id]);
-		}
-		return this.recordObjects[id];
-	},
-
-    recordInstance:function(data){
-        return new ludo.dataSource.Record(data, this);
-    },
-
-	addRecordEvents:function(record){
-		record.addEvent('update', this.onRecordUpdate.bind(this));
-		record.addEvent('remove', this.onRecordDispose.bind(this));
-		record.addEvent('select', this.selectRecord.bind(this));
-	},
-
-    fireSelect:function(record){
-        this.fireEvent('select', record);
-    },
-
-	onRecordUpdate:function(record){
-		this.indexRecord(record);
-		this.fireEvent('update', record);
-	},
-
-	onRecordDispose:function(record){
-		var branch = this.getBranchFor(record);
-		if(branch){
-			var index = branch.indexOf(record);
-			if(index !== -1){
-				branch.splice(index,1);
-			}
-			this.removeFromIndex(record);
-			this.fireEvent('remove', record);
-		}
-	},
-
-	getBranchFor:function(record){
-		if(record.parentUid){
-			var parent = this.findRecord(record.parentUid);
-			return parent ? parent.children : undefined;
-		}else{
-			return this.data;
-		}
-	},
-
-	removeFromIndex:function(record){
-		this.recordObjects[record.uid] = undefined;
-		this.index[record.uid] = undefined;
-		var pk = this.getPrimaryKeyIndexFor(record);
-		if(pk)this.index[pk] = undefined;
-	},
-
-	getPrimaryKeyIndexFor:function(record){
-		if(this.primaryKey){
-			var key = [];
-			for(var j=0;j<this.primaryKey.length;j++){
-				key.push(record[this.primaryKey[j]]);
-			}
-			return key.join('');
-		}
-		return undefined;
-	}
-});
-
-ludo.factory.registerClass('dataSource.Collection', ludo.dataSource.Collection);/* ../ludojs/src/chart/data-provider.js */
-/**
- * Special data source for charts
- * @namespace ludo.chart
- * @class ludo.chart.DataProvider
- * @augments dataSource.Collection
- */
-ludo.chart.DataProvider = new Class({
-    Extends:ludo.dataSource.Collection,
-    type:'chart.DataProvider',
-    sum:undefined,
-    recordValues:{},
-    records:[],
-    startColor:'#561AD9',
-    startAngle: 270,
     highlighted:undefined,
 
-    __construct:function (config) {
+    selectedRecord:undefined,
+
+    __construct: function (config) {
+        this.setConfigParams(config, ['valueKey','color']);
         this.parent(config);
-        this.setConfigParams(config, ['startColor']);
-    },
 
-    ludoEvents:function () {
-        this.parent();
-        this.addEvent('parsedata', this.setRecordValues.bind(this));
-        if (this.data) {
-            this.setRecordValues();
+        if(this.valueOf == undefined){
+            console.warn("Method valueOf(record, caller) not implemented in chart data source");
+        }
+        if(this.textOf == undefined){
+            console.warn("Method textOf(record, caller) not implemented in chart data source");
         }
     },
 
-    get:function (id) {
-        return this.getRecord(id);
+    parseNewData: function (data) {
+        this.data = data;
+        this.map = {};
+        this.count = this.getCount();
+        this.parseChartBranch(this.data);
+        this.parent(this.data);
     },
 
-    setValue:function (id, value) {
-        var rec = this.getRecord(id);
-        if (rec)rec.setValue(value);
+    update: function (record) {
+        this.count = this.getCount();
+        this.parseChartBranch((this.data));
+        this.fireEvent('update', [record, this]);
     },
 
-    getValue:function (id) {
-        var rec = this.getRecord(id);
-        return rec ? rec.get('value') : undefined;
+    sum: function (branch) {
+        var sum = 0;
+        jQuery.each(branch, function (key, node) {
+            sum += (this.value(node) || 0);
+        }.bind(this));
+        return sum;
     },
 
-    createIndex:function () {
-        this.sum = 0;
-        this.parent();
-    },
-
-    indexRecord:function (record, parent) {
-        this.sum += record.value - (this.recordValues[record.uid] ? this.recordValues[record.uid] : 0);
-        this.parent(record, parent);
-        this.recordValues[record.uid] = record.value;
-        this.createRecord(record);
-    },
-
-
-    getSum:function () {
-        return this.sum;
-    },
-
-    addRecordEvents:function (record) {
-        this.parent(record);
-    },
-
-    indexOf:function (record) {
-        return this.records.indexOf(record);
-    },
-
-    getSumOf:function (start, end) {
-        var ret = 0;
-        for (var i = 0; i <= end; i++) {
-            ret += this.records[i].getValue();
-        }
-        return ret;
-    },
-
-    createRecord:function (data) {
-        var rec = this.parent(data);
-        if (this.records.indexOf(rec) === -1) {
-            this.records.push(rec);
-            this.fireEvent('createRecord', rec);
-            rec.addEvent('focus', this.focus.bind(this));
-            rec.addEvent('blur', this.blur.bind(this));
-            rec.addEvent('enter', this.enter.bind(this));
-            rec.addEvent('leave', this.leave.bind(this));
-        }
-        return rec;
-    },
-
-    hasRecords:function () {
-        return this.records.length > 0;
-    },
-
-    getRecords:function () {
-        return this.records;
-    },
-
-    color:function () {
-        return this.getDependency('color', { type:'color.Color' });
-    },
-
-    setRecordValues:function () {
-        var color = this.startColor;
-        var r = this.getRecords();
-        for (var i = 0; i < r.length; i++) {
-            if (!r[i].get('color')) {
-                r[i].set('color', color);
-                r[i].set('color-over', this.color().brighten(color, 7));
-                color = this.color().offsetHue(this.startColor, (i + 1) * (360 / (r.length + 1)));
+    getCount:function(){
+         var count = 0;
+        jQuery.each(this.data, function(key, node){
+            count++;
+            if(node.children != undefined){
+                count += this.getCount(node.children);
             }
-        }
-    },
-    focused:undefined,
-    focus:function(record){
-        if(this.focused)this.focused.blur();
-        this.focused = record;
-        this.fireEvent('focus', record);
+        }.bind(this));
+
+        return count;
     },
 
-    blur:function(record){
-        this.fireEvent('blur', record);
-        this.focused = undefined;
+    updateValues:function(branch, parent){
+
+        jQuery.each(branch, function (key, node) {
+            var val = this.value(node);
+
+            if(val == undefined || !isNaN(val)){
+                if(node.children != undefined){
+                    val = this.sum(node.children);
+                    var vk = this.valueKey;
+
+                    if(vk != undefined){
+                        node[vk] = val;
+                    }
+                }
+            }
+        }.bind(this));
+    },
+
+    parseChartBranch: function (branch, parent) {
+
+        this.updateValues(branch,parent);
+
+        var sum = this.sum(branch);
+        var angle = parent && parent.angle ? parent.angle : 0;
+        var i = 0;
+        jQuery.each(branch, function (key, node) {
+            node.__sum = sum;
+            var val = this.value(node);
+            if(val == undefined || !isNaN(val)){
+                if(val != undefined){
+                    node.__fraction = val / sum;
+                    node.__percent = Math.round(node.__fraction * 100);
+                    node.__radians = ludo.geometry.degreesToRadians(node.__fraction * 360);
+                    node.__angle = angle;
+                    node.__count = this.count;
+                    angle += node.__radians;
+                }
+            }
+
+            if(node.index == undefined){
+                node.__index = i++;
+            }
+            if(node.__color == undefined){
+                if(this.colorOf != undefined){
+                    node.__color = this.colorOf(node);
+                    if(this.colorOverOf != undefined){
+                        node.__colorOver = this.colorOverOf(node);
+                    }
+                }else{
+                    this.setColor(node);
+                }
+            }
+
+            if(node.id == undefined){
+                node.id = 'chart-node-' + String.uniqueID();
+            }
+            if(node.__uid == undefined){
+                node.__uid = 'chart-node-' + String.uniqueID();
+            }
+            this.map[node.id] = node;
+
+            if(node.children != undefined){
+                this.parseChartBranch(node.children, node);
+            }
+
+        }.bind(this));
+    },
+
+    val:function(id, value){
+        if(arguments.length == 2){
+            if(this.valueKey != undefined){
+                var rec = this.byId(id);
+                if(rec){
+                    rec[this.valueKey] = value;
+                    this.update(rec);
+                }
+
+            }
+        }else{
+            return this.valueOf(this.byId(id));
+        }
+    },
+
+    byId: function (id) {
+        if (this.map != undefined) {
+            return this.map[id];
+        }
+        return undefined;
     },
 
     enter:function(record){
-        if(this.highlighted){
-            this.highlighted.blur();
-        }
-        this.fireEvent('enter', record);
         this.highlighted = record;
+        this.fireEvent('enter', [record, this]);
+        this.fireEvent('enter' + record.__uid, [record, this]);
     },
 
     leave:function(record){
-        this.fireEvent('leave', record);
-        this.highlighted = undefined;
+        this.fireEvent('leave', [record, this]);
+        this.fireEvent('leave' + record.__uid, [record, this]);
     },
 
-    recordInstance:function(data){
-        return new ludo.chart.Record(data, this);
+    select:function(record){
+        if(this.selectedRecord != undefined){
+            this.fireEvent('blur', [this.selectedRecord, this]);
+            this.fireEvent('blur' + this.selectedRecord.__uid, [this.selectedRecord, this]);
+        }
+        this.selectedRecord = record;
+        this.fireEvent('select', [record, this]);
+        this.fireEvent('select' + record.__uid, [record, this]);
     },
 
-	getHighlighted:function(){
-		return this.highlighted;
-	}
+    value:function(record, caller){
+        var val = this.valueOf != undefined ? this.valueOf(record, caller) : undefined;
+        if(val == undefined && this.valueKey != undefined){
+            return record[this.valueKey];
+        }
+        return val;
+    },
+
+    isSelected:function(record){
+        return this.selectedRecord == record;
+    },
+
+    hasData:function(){
+        return this.data && this.data.length > 0;
+    },
+
+    setColor:function(record){
+        var u = false;
+        if(record.__color == undefined){
+            record.__color = this.color;
+            u = true;
+        }
+
+        if(record.__colorOver == undefined){
+            record.__colorOver = this.colorUtil().brighten(record.__color, 7);
+            if(record.__colorOver == record.__color){
+                record.__color = this.colorUtil().darken(record.__color, 7);
+            }
+            u = true;
+        }
+        if(u){
+
+            this.color = this.colorUtil().offsetHue(record.__color, (360 / (record.__count + 1)));
+        }
+    },
+
+    colorUtil:function(){
+        if(this.colorUtilObj == undefined){
+            this.colorUtilObj = new ludo.color.Color();
+        }
+        return this.colorUtilObj;
+    },
+
+    getHighlighted:function(){
+        return this.highlighted;
+    }
 });/* ../ludojs/src/chart/chart.js */
+/**
+ * @class ludo.chart.Chart
+ * @namespace ludo.chart
+ */
 ludo.chart.Chart = new Class({
 	Extends: ludo.View,
 	css:{
 
 	},
-
     /*
      * Class providing data to the chart
      * @config {chart.DataProvider} dataProvider
@@ -10519,17 +9705,6 @@ ludo.chart.Chart = new Class({
 	__construct:function(config){
 		this.parent(config);
 		this.layout.type = 'Canvas';
-		this.setConfigParams(config, ['dataProvider']);
-        this.css.backgroundColor = '#fff';
-
-        if(!this.dataProvider){
-            this.dataProvider = this.createDependency('dataProvider',
-                {
-                    type : 'chart.DataProvider',
-                    data : config.data
-                }
-            );
-        }
 	},
 
 	updateChildren:function(){
@@ -10541,6 +9716,11 @@ ludo.chart.Chart = new Class({
 	getRecords:function(){
 		return this.dataProvider.getRecords();
 	},
+
+	insertJSON:function(){
+
+	},
+
 
     getDataProvider:function(){
         return this.dataProvider;
@@ -10557,25 +9737,31 @@ ludo.chart.Fragment = new Class({
     nodes:[],
 
     rendering:{},
-
+    
     __construct:function (config) {
         this.parent(config);
         this.setConfigParams(config, ['record','parentComponent']);
         this.createNodes();
+
     },
 
     createNodes:function(){
 
     },
 
+    getDataSource:function(){
+        return this.getParent().getDataSource();
+    },
+
     ludoEvents:function(){
         this.parent();
         this.getParent().dataProvider().addEvent('update', this.update.bind(this));
 
-        this.record.addEvent('focus', this.focus.bind(this));
-        this.record.addEvent('blur', this.blur.bind(this));
-        this.record.addEvent('enter', this.enter.bind(this));
-        this.record.addEvent('leave', this.leave.bind(this));
+        var ds = this.getDataSource();
+        ds.on('select' + this.record.__uid, this.focus.bind(this));
+        ds.on('blur' + this.record.__uid, this.blur.bind(this));
+        ds.on('enter' + this.record.__uid, this.enter.bind(this));
+        ds.on('leave' + this.record.__uid, this.leave.bind(this));
     },
 
     getParent:function(){
@@ -10591,14 +9777,14 @@ ludo.chart.Fragment = new Class({
         this.nodes.push(node);
 
         if(node.mouseenter != undefined){
-            node.mouseenter(this.record.enter.bind(this.record));
-            node.mouseleave(this.record.leave.bind(this.record));
+            node.mouseenter(this.enterNode.bind(this));
+            node.mouseleave(this.leaveNode.bind(this));
         }else{
-            node.on('mouseenter', this.record.enter.bind(this.record));
-            node.on('mouseleave', this.record.leave.bind(this.record));
+            node.on('mouseenter', this.enterNode.bind(this));
+            node.on('mouseleave', this.leaveNode.bind(this));
 
         }
-        node.on('click', this.record.click.bind(this.record));
+        node.on('click', this.clickNode.bind(this));
 
         node.css('cursor','pointer');
 
@@ -10607,6 +9793,18 @@ ludo.chart.Fragment = new Class({
 		this.relayEvents(node, ['mouseenter','mouseleave']);
 
         return node;
+    },
+
+    enterNode:function(){
+        this.getDataSource().enter(this.record);
+    },
+
+    leaveNode:function(){
+        this.getDataSource().leave(this.record);
+    },
+
+    clickNode:function(){
+        this.getDataSource().select(this.record);
     },
 
     createStyle:function(styles){
@@ -10656,8 +9854,8 @@ ludo.chart.Fragment = new Class({
     }
 });/* ../ludojs/src/canvas/group.js */
 /**
- * Special SVG 'g' element which can be positioned and
- * sized using the layout.Canvas layout model.
+ * SVG Group DOM node which can be positioned as a child view
+ * in the relative layout.
  * @namespace canvas
  * @class ludo.canvas.Group
  */
@@ -10751,10 +9949,10 @@ ludo.chart.Base = new Class({
                 parentComponent:this
             });
 
-        this.fragmentMap[record.getUID()] = f;
+        this.fragmentMap[record.__uid] = f;
         this.fragments.push(f);
 
-		//this.relayEvents(f, ['mouseenter','mouseleave']);
+		this.relayEvents(f, ['mouseenter','mouseleave']);
 
         return f;
     },
@@ -10768,11 +9966,15 @@ ludo.chart.Base = new Class({
     },
 
     getRecords:function () {
-        return this.getParent().getDataProvider().getRecords();
+        return this.getParent().getDataSource().getData();
     },
 
     dataProvider:function () {
-        return this.parentComponent.getDataProvider();
+        return this.parentComponent.getDataSource();
+    },
+
+    getDataSource:function(){
+        return this.parentComponent.getDataSource();
     },
 
     getCenter:function () {
@@ -10791,7 +9993,7 @@ ludo.chart.Base = new Class({
 
     create:function(){
 
-        if(this.dataProvider().hasRecords()){
+        if(this.dataProvider().hasData()){
             this.createFragments();
         }
         this.render();
@@ -10807,7 +10009,7 @@ ludo.chart.Base = new Class({
     },
 
     getFragmentFor:function(record){
-        return this.fragmentMap[record.getUID()];
+        return this.fragmentMap[record.__uid];
     },
 
     onResize:function(){
@@ -10833,16 +10035,16 @@ ludo.chart.PieSlice = new Class({
     getSliceStyle:function () {
         return {
             'stroke-location':'inside',
-            'fill':this.record.get('color'),
+            'fill':this.record.__color,
             'stroke-linejoin':'round',
             'stroke':'#ffffff',
             'cursor':'pointer'
         };
     },
 
-    set:function (radius, angle, degrees) {
+    set:function (radius, angle, radians) {
         this.nodes[0].set('d', this.getPath({
-            radius:radius, angle:angle, degrees:degrees
+            radius:radius, angle:angle, radians:radians
         }));
     },
 
@@ -10852,19 +10054,19 @@ ludo.chart.PieSlice = new Class({
         
         var path = ['M ' + center.x + ' ' + center.y];
 
-        if(config.angle > 360) config.angle -= 360;
+        if(config.angle > Math.PI * 2) config.angle -=  Math.PI;
 
-        var point1 = ludo.canvasEngine.getPointAtDegreeOffset(center, config.angle, config.radius);
+        var point1 = ludo.canvasEngine.getPointAtRadianOffset(center, config.angle, config.radius);
 
         path.push('L ' + point1.x + ' ' + point1.y);
         path.push('M ' + point1.x + ' ' + point1.y);
 
         path.push('A ' + config.radius + ' ' + config.radius);
         path.push('0');
-        path.push(config.degrees > 180 ? '1' : '0');
+        path.push(config.radians > Math.PI ? '1' : '0');
         path.push('1');
 
-        var point2 = ludo.canvasEngine.getPointAtDegreeOffset(center, config.angle + config.degrees, config.radius);
+        var point2 = ludo.canvasEngine.getPointAtRadianOffset(center, config.angle + config.radians, config.radius);
         path.push(point2.x + ' ' + point2.y);
         path.push('L ' + center.x + ' ' + center.y);
 
@@ -10887,31 +10089,31 @@ ludo.chart.PieSlice = new Class({
     },
 
     centerOffset:function(offset){
-        var angle = this.record.getAngle() + (this.record.getDegrees() / 2 );
-        return ludo.canvasEngine.getPointAtDegreeOffset({ x:0, y: 0}, angle, offset);
+        var angle = this.record.__angle + (this.record.__radians / 2 );
+        return ludo.canvasEngine.getPointAtRadianOffset({ x:0, y: 0}, angle, offset);
     },
 
     enter:function(){
-        this.nodes[0].css('fill', this.record.get('color-over'));
+        this.nodes[0].css('fill', this.record.__colorOver);
     },
 
     leave:function(){
-        this.nodes[0].css('fill', this.record.get('color'));
+        this.nodes[0].css('fill', this.record.__color);
     },
 
     update:function(){
         var radius = this.getParent().getRadius();
 
 
-        if(Math.round(radius) == Math.round(this.rendering.radius) && this.rendering.angle == this.record.getAngle() && this.rendering.degrees == this.record.getDegrees()){
+        if(Math.round(radius) == Math.round(this.rendering.radius) && this.rendering.angle == this.record.__angle && this.rendering.radians == this.record.__radians){
             return;
         }
 
         var e = new ludo.canvas.Effect();
 
         var config = e.getEffectConfig(
-            [this.rendering.radius,this.rendering.angle, this.rendering.degrees ],
-            [radius, this.record.getAngle(), this.record.getDegrees()],
+            [this.rendering.radius,this.rendering.angle, this.rendering.radians ],
+            [radius, this.record.__angle, this.record.__radians],
             1
         );
 
@@ -10926,7 +10128,7 @@ ludo.chart.PieSlice = new Class({
             {
                 radius : this.rendering.radius,
                 angle: this.rendering.angle + config.steps[1],
-                degrees : this.rendering.degrees + config.steps[2],
+                radians : this.rendering.radians + config.steps[2],
                 center : config.center
             }
 
@@ -11096,32 +10298,35 @@ ludo.chart.Pie = new Class({
         var r = this.getRecords();
 
         var radius = e.getEffectConfig([0], [this.getRadius()], 1);
-        var degrees = [];
-        var currentDegrees = [];
+        var radians = [];
+        var currentRadians = [];
 
         for(var i=0;i< r.length;i++){
-            degrees.push(e.getEffectConfig([0], [r[i].getDegrees()], 1).steps[0]);
-            currentDegrees.push(0);
+            radians.push(e.getEffectConfig([0], [r[i].__radians], 1).steps[0]);
+            currentRadians.push(0);
         }
+
+
         this.rendered = false;
-        this.executeAnimation({
+        var anim = {
             startAngle:this.dataProvider().startAngle,
             radius: radius.steps[0],
             currentRadius:0,
-            degrees: degrees,
-            currentDegrees:currentDegrees,
+            radians: radians,
+            currentRadians:currentRadians,
             count: radius.count
-        }, 0);
+        };
+        this.executeAnimation(anim, 0);
     },
 
     executeAnimation:function(config, currentStep){
         config.currentRadius += config.radius;
 
         var angle = config.startAngle;
-        for(var i=0;i<config.degrees.length;i++){
-            config.currentDegrees[i] += config.degrees[i];
-            this.fragments[i].set(config.currentRadius, angle, config.currentDegrees[i]);
-            angle += config.currentDegrees[i];
+        for(var i=0;i<config.radians.length;i++){
+            config.currentRadians[i] += config.radians[i];
+            this.fragments[i].set(config.currentRadius, angle, config.currentRadians[i]);
+            angle += config.currentRadians[i];
 
         }
         if(currentStep < config.count - 1){
@@ -11145,7 +10350,7 @@ ludo.chart.Pie = new Class({
         var radius = this.getRadius();
 
         for(var i=0;i< r.length;i++){
-            this.fragments[i].set(radius, r[i].getAngle(), r[i].getDegrees());
+            this.fragments[i].set(radius, r[i].__angle, r[i].__radians);
         }
     }
 });/* ../ludojs/src/chart/labels.js */
@@ -11256,7 +10461,7 @@ ludo.chart.Label = new Class({
         this.colorBox.setStyles(this.getBoxStyles());
 
 
-        this.textNode = new ludo.canvas.Text(this.record.getLabel(), {
+        this.textNode = new ludo.canvas.Text(this.getDataSource().textOf(this.record, this), {
             x:colorBoxCoords.x + colorBoxCoords.width + 3, y : this.getYForText()
         });
         this.textNode.setStyles(this.getTextStyles());
@@ -11301,7 +10506,7 @@ ludo.chart.Label = new Class({
 
     getBoxStyles:function () {
         var ret = this.getParent().boxStyles || {};
-        ret.fill = this.record.get('color');
+        ret.fill = this.record.__color;
         return ret;
     },
 
@@ -11318,7 +10523,7 @@ ludo.chart.Label = new Class({
 
     getBoxStylesOver:function(){
         var ret = this.getParent().boxStylesOver || {  };
-        if(!ret['fill'])ret['fill'] = this.record.get('color-over');
+        if(!ret['fill'])ret['fill'] = this.record.__colorOver;
         return ret;
     },
 
@@ -11342,6 +10547,10 @@ ludo.chart.AddOn = new Class({
 
     getParent:function(){
         return this.parentComponent;
+    },
+
+    getDataSource: function(){
+        return this.parentComponent.getDataSource();
     }
 });/* ../ludojs/src/chart/pie-slice-highlighted.js */
 /**
@@ -11378,7 +10587,14 @@ ludo.chart.PieSliceHighlighted = new Class({
     Extends:ludo.chart.AddOn,
     tagName:'path',
 
-    styles:undefined,
+    styles:{
+        'stroke':'#ffffff',
+        'fill' : '#ffffff',
+        'stroke-location':'inside',
+        'fill-opacity' : .5,
+        'stroke-opacity' : .8,
+        'stroke-width' : 1
+    },
 
     size : 5,
 
@@ -11400,30 +10616,31 @@ ludo.chart.PieSliceHighlighted = new Class({
 
     ludoEvents:function () {
         this.parent();
-        var p = this.getParent().dataProvider();
+        var p = this.getParent().getDataSource();
         p.addEvents({
             'enter' : this.show.bind(this),
             'leave' : this.hide.bind(this),
-            'focus' : this.focus.bind(this),
+            'select' : this.focus.bind(this),
             'blur' : this.blur.bind(this)
         });
     },
 
     show:function (record) {
-        if(!this.getParent().rendered)return;
 
+        if(!this.getParent().rendered)return;
         var f = this.getParent().getFragmentFor(record);
 
         var path = f.getPath({
             radius:this.getParent().getRadius() + this.size,
-            angle:record.getAngle(),
-            degrees:record.getDegrees()
+            angle:record.__angle,
+            radians:record.__radians
         });
         this.node.set('d', path);
-        if(!this.styles){
-            this.node.setStyles({ fill : record.get('color')});
-        }
-        if (record.isFocused()) {
+
+        this.node.css('fill', record.__colorOver);
+
+
+        if (this.getParent().getDataSource().isSelected(record)) {
             var t = f.nodes[0].getTranslate();
             this.node.translate(t);
         }else{
@@ -11925,6 +11142,7 @@ ludo.canvas.TextBox = new Class({
 });/* ../ludojs/src/chart/tooltip.js */
 ludo.chart.Tooltip = new Class({
 	Extends:ludo.chart.AddOn,
+	type: 'chart.Tooltip',
 	tpl:'{label}: {value}',
 	shown:false,
 
@@ -11959,6 +11177,8 @@ ludo.chart.Tooltip = new Class({
 			'mouseenter':this.show.bind(this),
 			'mouseleave':this.hide.bind(this)
 		});
+
+
 
 		this.getParent().getNode().on("mouseenter", this.show.bind(this));
 		this.getParent().getNode().on("mouseleave", this.hide.bind(this));
@@ -11998,8 +11218,8 @@ ludo.chart.Tooltip = new Class({
 	},
 	
 	show:function (e) {
-
 		var rec = this.getRecord();
+
 		if(rec == undefined){
 			this.hide();
 			return;
@@ -12008,11 +11228,11 @@ ludo.chart.Tooltip = new Class({
 		this.node.show();
 		this.shown = true;
 
-		this.offset = this.getParent().getParent().getBody().position();
+		this.offset = this.getParent().getParent().getBody().offset();
 
 		this.textBox.setText(this.getParsedHtml());
 
-		this.rect.css('stroke', this.getRecord().get('color'));
+		this.rect.css('stroke', this.getRecord().__color);
 
 		this.size = this.textBox.getNode().getSize();
 		this.size.x +=7;
@@ -12044,33 +11264,12 @@ ludo.chart.Tooltip = new Class({
 	},
 
 	getParsedHtml:function () {
-		var match = this.tpl.match(/\{(.*?)\}/gm);
-		var ret = this.tpl;
-
 		var rec = this.getRecord();
-
-		for(var i=0;i<match.length;i++){
-			var key = match[i].substr(1, match[i].length-2);
-			var method = 'get' + key.substr(0,1).toUpperCase() + key.substr(1);
-
-			var val = rec[method] !== undefined ? rec[method]() : rec.get(key);
-
-			var provider = this.getParent().dataProvider();
-			if(val === undefined && provider && provider['method']){
-				val = this.getParent().dataProvider()['method']();
-			}
-
-			if(!isNaN(val) && val % 1 !== 0){
-				val = val.toFixed(1);
-			}
-
-			ret = ret.replace(match[i], val);
-		}
-		return ret;
+		return this.getDataSource().textOf(rec, this);
 	},
 
 	getRecord:function () {
-		return this.getParent().dataProvider().getHighlighted();
+		return this.getDataSource().getHighlighted();
 	}
 
 });
@@ -12134,17 +11333,21 @@ ludo.ludoDB.Factory = new Class({
             resource:'LudoJS',
             url:this.getUrl()
         });
-        req.addEvent('success', this.loadComplete.bind(this));
+        req.addEvent('success', this.parseNewData.bind(this));
         req.send('form', arguments);
     },
 
-    loadComplete:function (req) {
+    parseNewData:function (req) {
         this.fireEvent('load', req.getResponseData());
     }
 
 });/* ../ludojs/src/color/color.js */
 /**
- * Color Utility functions
+ * A class with a lot of color conversion functions.
+ *
+ * With this class, you can convert between RGB and HSV, darken and brighten colors,
+ * increase and decrease saturation and brightness of a color etc.
+ * 
  * @class ludo.color.Color
  * @example {@lang JavaScript}
  * var util = new ludo.color.Color();
@@ -12254,6 +11457,7 @@ ludo.color.Color = new Class({
     /**
      * Converts a RGB color to HSV(Hue, Saturation, Brightness)
      * @param {String|Object} color
+     * @memberof ludo.color.Color.prototype
      * @returns {Object}
      * @example
      * var c = new ludo.color.Color();
@@ -19777,7 +18981,1138 @@ ludo.dataSource.CollectionSearch = new Class({
 	searchToString:function () {
 		return this.hasData() ? '' : '';
 	}
-});/* ../ludojs/src/effect/drop-point.js */
+});/* ../ludojs/src/data-source/collection.js */
+/**
+ Data source collection
+ @namespace ludo.dataSource.
+ @class ludo.dataSource.Collection
+ @augments dataSource.JSON
+ @param {Object} config
+ @param {Object} config.sortFn custom sort functions, which should return -1 if record a is smaller than
+ record b and 1 if record b is larger than record a. Example:
+ <code>
+ sortFn:{
+			'population':{
+				'asc' : function(a,b){
+					return parseInt(a.population) < parseInt(b.population) ? -1 : 1
+				},
+				'desc' : function(a,b){
+					return parseInt(a.population) > parseInt(b.population) ? -1 : 1
+				}
+			}
+	 	}
+ </code>
+ @param {String} config.primaryKey Primary key, example: primaryKey: "id"
+ @param {Object} config.paging
+ Example:
+ <code>
+ paging:{
+		 	size:10, // Number of rows per page
+		  	remotePaging:true, // Load only records per page from server, i.e. new request per page
+		  	cache : true, // Store pages in cache, i.e no request if data for page is in cache,
+		  	cacheTimeout:30 // Optional time in second before cache is considered out of date, i.e. new server request
+		}
+ </code>
+ @param {Object} config.searchConfig
+ Example:
+ <code>
+ searchConfig:{
+	 		index:['city','country'],
+	 		delay:.5
+	 	}
+ </code>
+ which makes the record keys/columns "city" and "country" searchable. It waits .5 seconds
+ before the search is executed. This is useful when searching large collections and you
+ want to delay the search until the user has finished entering into a search box.
+ @fires ludo.dataSource.Collection#sort Fires on sort. Arguments: {String} sortedBy key
+ @fires ludo.dataSource.Collection#add Fires when a new record has been added to the collection. Arguments: {Object} record
+ @fires ludo.dataSource.Collection#deselect Fires when a record has been deselected, arguments. {Object} deselected record
+ @fires ludo.dataSource.Collection#select Fires when a record has selected, arguments. {Object} selected record
+ @fires ludo.dataSource.Collection#delete Fires when a record has been deleted, arguments. {Object} deleted record
+ @fires ludo.dataSource.Collection#page Fires on navigation to new page when paging is enabled. Arguments: {Number} page index
+ @fires ludo.dataSource.Collection#previousPage Fires when paging is enabled and navigating to current page -1. No arguments
+ @fires ludo.dataSource.Collection#nextPage Fires when paging is enabled and navigating to current page +1. No arguments
+ @fires ludo.dataSource.Collection#firstPage Fired when navigating to first page.  No arguments
+ @fires ludo.dataSource.Collection#lastPage Fired when navigating to last page.  No arguments
+ @fires ludo.dataSource.Collection#notLastPage Fired when navigating to a page which is not last page.  No arguments
+ @fires ludo.dataSource.Collection#notFirstPage Fired when navigating to a page which is not first page.  No arguments
+ @fires ludo.dataSource.Collection#change Fires when data has been updated or page navigation occurs.
+ @example
+ 	dataSource:{
+		url:'data-source/grid.php',
+		id:'myDataSource',
+		paging:{
+			size:12,
+			remotePaging:false,
+			cache:false,
+			cacheTimeout:1000
+		},
+		searchConfig:{
+			index:['capital', 'country']
+		},
+		listeners:{
+			select:function (record) {
+				console.log(record);
+			}
+		}
+	}
+ */
+ludo.dataSource.Collection = new Class({
+	Extends:ludo.dataSource.JSON,
+	sortFn:{},
+
+	selectedRecords:[],
+
+	primaryKey:'id',
+
+
+	paging:undefined,
+
+	dataCache:{},
+
+	sortedBy:{
+		column:undefined,
+		order:undefined
+	},
+
+	searchConfig:undefined,
+
+	statefulProperties:['sortedBy', 'paging'],
+
+	index:undefined,
+
+	searcherType:'dataSource.CollectionSearch',
+
+	uidMap:{},
+
+
+	selected:undefined,
+
+	__construct:function (config) {
+		this.parent(config);
+        this.setConfigParams(config, ['searchConfig','sortFn','primaryKey','sortedBy','paging','selected']);
+
+		if (this.primaryKey && !ludo.util.isArray(this.primaryKey))this.primaryKey = [this.primaryKey];
+		if (this.paging) {
+			this.paging.offset = this.paging.offset || 0;
+			this.paging.initialOffset = this.paging.offset;
+			if (this.paging.initialOffset !== undefined) {
+				this.fireEvent('page', (this.paging.initialOffset / this.paging.size) + 1);
+			}
+			if (this.isCacheEnabled()) {
+				this.addEvent('load', this.populateCache.bind(this));
+			}
+		}
+
+		this.addEvent('parsedata', this.createIndex.bind(this));
+
+
+		if(this.selected){
+			this.addEvent('firstLoad', this.setInitialSelected.bind(this));
+		}
+
+		if(this.data && !this.index)this.createIndex();
+	},
+
+	hasRemoteSearch:function(){
+		return this.paging && this.paging.remotePaging;
+	},
+
+	setInitialSelected:function(){
+		this.selectRecord(this.selected);
+	},
+
+	/**
+	 * Returns 1) If search is specified: number of records in search result, or 2) number of records in entire collection.
+	 * @function getCount
+	 * @return {Number} count
+	 * @memberof ludo.dataSource.Collection.prototype
+	 */
+	getCount:function () {
+		if (this.paging && this.paging.rows)return this.paging.rows;
+		if (this.searcher && this.searcher.hasData())return this.searcher.getCount();
+		return this.data ? this.data.length : 0;
+	},
+
+	isCacheEnabled:function () {
+		return this.paging && this.paging['remotePaging'] && this.paging.cache;
+	},
+
+	/**
+	 * Resort data-source
+	 * @function sort
+	 * @return void
+	 * @memberof ludo.dataSource.Collection.prototype
+	 */
+	sort:function () {
+		if (this.sortedBy.column && this.sortedBy.order) {
+			this.sortBy(this.sortedBy.column, this.sortedBy.order);
+		}
+	},
+
+	/**
+	 Set sorted by column
+	 @function by
+	 @param {String} column
+	 @return {dataSource.Collection} this
+	 @memberof ludo.dataSource.Collection.prototype
+	 @example
+	 	collection.by('country').ascending().sort();
+	 or
+	 @example
+	 	collection.by('country').sort();
+	 */
+	by:function(column){
+		this.sortedBy.column = column;
+		this.sortedBy.order = this.getSortOrderFor(column);
+		return this;
+	},
+	/**
+	 Set sort order to ascending
+	 @function ascending
+	 @return {dataSource.Collection} this
+	 @memberof ludo.dataSource.Collection.prototype
+	 @example
+	 	collection.by('country').ascending().sort();
+	 */
+	ascending:function(){
+		this.sortedBy.order = 'asc';
+		return this;
+	},
+	/**
+	 Set sort order to descending
+	 @function descending
+	 @return {dataSource.Collection} this
+	 @memberof ludo.dataSource.Collection.prototype
+	 @example
+	 	collection.by('country').descending().sort();
+	 */
+	descending:function(){
+		this.sortedBy.order = 'desc';
+		return this;
+	},
+
+	/**
+	 Sort by column and order
+
+	 The second argument(order) is optional
+	 @function sortBy
+	 @param {String} column
+	 @param {String} order
+     @optional
+	 @return {dataSource.Collection} this
+	 @memberof ludo.dataSource.Collection.prototype
+	 @example
+	 	grid.getDataSource().sortBy('firstname', 'desc');
+	 which also can be written as
+	 @example
+	 	grid.getDataSource().by('firstname').descending().sort();
+	 */
+	sortBy:function (column, order) {
+        order = order || this.getSortOrderFor(column);
+
+		this.sortedBy = {
+			column:column,
+			order:order
+		};
+
+		if (this.paging) {
+			this.paging.offset = this.paging.initialOffset || 0;
+			this.fireEvent('page', Math.round(this.paging.offset / this.paging.size) + 1);
+		}
+
+		if (this.shouldSortOnServer()) {
+			this.loadOrGetFromCache();
+		} else {
+			var data = this._getData();
+			data.sort(this.getSortFnFor(column, order));
+			this.fireEvent('change');
+		}
+
+		this.fireEvent('sort', this.sortedBy);
+        if(this.paging)this.firePageEvents();
+		this.fireEvent('state');
+
+		return this;
+	},
+
+	/**
+	 * Return current sorted by column
+	 * @function getSortedBy
+	 * @return {String} column
+	 * @memberof ludo.dataSource.Collection.prototype
+	 */
+	getSortedBy:function () {
+		return this.sortedBy.column;
+	},
+	/**
+	 * Return current sort order (asc|desc)
+	 * @function getSortOrder
+	 * @return {String} order
+	 * @memberof ludo.dataSource.Collection.prototype
+	 */
+	getSortOrder:function () {
+		return this.sortedBy.order;
+	},
+
+	shouldSortOnServer:function () {
+		return this.paging && this.paging.remotePaging;
+	},
+
+	getSortFnFor:function (column, order) {
+		if (this.sortFn[column] !== undefined) {
+			return this.sortFn[column][order];
+		}
+		if (order === 'asc') {
+			return function (a, b) {
+				return a[column] + '_' + a[this.primaryKey] < b[column] + '_' + b[this.primaryKey] ? -1 : 1
+			};
+		} else {
+			return function (a, b) {
+				return a[column] + '_' + a[this.primaryKey] < b[column] + '_' +  b[this.primaryKey] ? 1 : -1
+			};
+		}
+	},
+
+	getSortOrderFor:function (column) {
+		if (this.sortedBy.column === column) {
+			return this.sortedBy.order === 'asc' ? 'desc' : 'asc';
+		}
+		return 'asc';
+	},
+
+	/**
+	 * Add a record to data-source
+	 * @function addRecord
+	 * @param record
+	 * @return {Object} record
+	 * @memberof ludo.dataSource.Collection.prototype
+	 */
+	addRecord:function (record) {
+        this.data = this.data || [];
+		this.data.push(record);
+
+		if(!this.index)this.createIndex();
+
+		this.fireEvent('add', record);
+
+		return this.createRecord(record);
+	},
+
+	/**
+	 * Returns plain object for a record from search. To get a
+	 * {{#crossLink "dataSource.Record"}}{{/crossLink}} object
+	 * use {{#crossLink "dataSource.Collection/getRecord"}}{{/crossLink}}
+	 *
+	 * collection.find({ capital : 'Oslo' });
+	 *
+	 * @function findRecord
+	 * @param {Object} search
+	 * @return {Object|undefined} record
+	 * @memberof ludo.dataSource.Collection.prototype
+	 */
+	findRecord:function (search) {
+
+		if (!this.data)return undefined;
+		if(search['getUID'] !== undefined)search = search.getUID();
+
+		if(search.uid)search = search.uid;
+		var rec = this.getById(search);
+		if(rec)return rec;
+
+		var searchMethod = ludo.util.isObject(search) ? 'isRecordMatchingSearch' : 'hasMatchInPrimaryKey';
+
+
+		for (var i = 0; i < this.data.length; i++) {
+			if (this[searchMethod](this.data[i], search)) {
+				return this.data[i];
+			}
+		}
+		return undefined;
+	},
+
+	isRecordMatchingSearch:function (record, search) {
+		for (var key in search) {
+			if (search.hasOwnProperty(key)) {
+				if (record[key] !== search[key]) {
+					return false;
+				}
+			}
+		}
+		return true;
+	},
+
+	hasMatchInPrimaryKey:function(record, search){
+		if(this.primaryKey){
+			for(var j=0;j<this.primaryKey.length;j++){
+				if(record[this.primaryKey[j]]  === search)return true;
+			}
+		}
+		return false;
+	},
+
+	/**
+	 * Find specific records, example:
+	 * var records = collection.findRecords({ country:'Norway'});
+	 * @function findRecords
+	 * @param {Object} search
+	 * @return {Array} records
+	 * @memberof ludo.dataSource.Collection.prototype
+	 */
+	findRecords:function (search) {
+		var ret = [];
+		for (var i = 0; i < this.data.length; i++) {
+			if (this.isRecordMatchingSearch(this.data[i], search)) {
+				ret.push(this.data[i]);
+			}
+		}
+		return ret;
+	},
+
+    getLinearData:function(){
+        return this.data;
+    },
+
+	/**
+	 * Select the first record matching search
+	 * @function selectRecord
+	 * @param {Object} search
+	 * @return {Object|undefined} record
+	 * @memberof ludo.dataSource.Collection.prototype
+	 */
+	selectRecord:function (search) {
+		var rec = this.findRecord(search);
+		if (rec) {
+			this._setSelectedRecord(rec);
+			return rec;
+		}
+		return undefined;
+	},
+
+
+	/**
+	 * Select all records matching search
+	 * @function selectRecords
+	 * @param {Object} search
+	 * @return {Array} records
+	 * @memberof ludo.dataSource.Collection.prototype
+	 */
+	selectRecords:function (search) {
+		this.selectedRecords = this.findRecords(search);
+		for (var i = 0; i < this.selectedRecords.length; i++) {
+			this.fireSelect(this.selectedRecords[i]);
+		}
+		return this.selectedRecords;
+	},
+
+	/**
+	 * Select a specific record by index
+	 * @function selectRecordIndex
+	 * @param {number} index
+	 * @memberof ludo.dataSource.Collection.prototype
+	 */
+	selectRecordIndex:function (index) {
+		var data = this._getData();
+		if (data.length && index >= 0 && index < data.length) {
+			var rec = data[index];
+			this._setSelectedRecord(rec);
+			return rec;
+		}
+		return undefined;
+	},
+
+	_getData:function () {
+		if (this.hasSearchResult())return this.searcher.getData();
+		return this.data;
+	},
+
+	getRecordByIndex:function (index) {
+		if (this.data.length && index >= 0 && index < this.data.length) {
+			return this.data[index];
+		}
+		return undefined;
+	},
+
+	/**
+	 * Select previous record. If no record is currently selected, first record will be selected
+	 * @function previous
+	 * @return {Object} record
+	 * @memberof ludo.dataSource.Collection.prototype
+	 */
+	previous:function () {
+		var rec = this.getPreviousOf(this.getSelectedRecord());
+		if (rec) {
+			this._setSelectedRecord(rec);
+		}
+		return rec;
+	},
+
+	/**
+	 * Returns previous record of given record
+	 * @function getPreviousOf
+	 * @param {Object} record
+	 * @return {Object} previous record
+	 * @memberof ludo.dataSource.Collection.prototype
+	 */
+	getPreviousOf:function (record) {
+		var data = this._getData();
+		if (record) {
+			var index = data.indexOf(record);
+            return index > 0 ? data[index-1] : undefined;
+		} else {
+            return data.length > 0 ? data[0] : undefined;
+		}
+	},
+
+	/**
+	 * Select next record. If no record is currently selected, first record will be selected
+	 * @function next
+	 * @return {Object} record
+	 * @memberof ludo.dataSource.Collection.prototype
+	 */
+	next:function () {
+		var rec = this.getNextOf(this.getSelectedRecord());
+		if (rec) {
+			this._setSelectedRecord(rec);
+		}
+		return rec;
+	},
+	/**
+	 * Returns next record of given record.
+	 * @function getNextOf
+	 * @param {Object} record
+	 * @return {Object} next record
+	 * @memberof ludo.dataSource.Collection.prototype
+	 */
+	getNextOf:function (record) {
+		var data = this._getData();
+		if (record) {
+			var index = data.indexOf(record);
+            return index < data.length - 1 ? data[index+1] : undefined;
+		} else {
+            return data.length > 0 ? data[0] : undefined;
+		}
+	},
+
+	_setSelectedRecord:function (rec) {
+		if (this.selectedRecords.length) {
+
+			this.fireEvent('deselect', this.selectedRecords[0]);
+		}
+		this.selectedRecords = [rec];
+		this.fireSelect(Object.clone(rec));
+	},
+
+	/**
+	 * Return first selected record
+	 * @function getSelectedRecord
+	 * @return {Object|undefined} record
+	 * @memberof ludo.dataSource.Collection.prototype
+	 */
+	getSelectedRecord:function () {
+        return this.selectedRecords.length > 0 ? this.selectedRecords[0] : undefined;
+	},
+
+	/**
+	 * Return selected records
+	 * @function getSelectedRecords
+	 * @return {Array} records
+	 * @memberof ludo.dataSource.Collection.prototype
+	 */
+	getSelectedRecords:function () {
+		return this.selectedRecords;
+	},
+
+	/**
+	 Delete records matching search,
+	 @function deleteRecords
+	 @param {Object} search
+	 @memberof ludo.dataSource.Collection.prototype
+	 @example
+	 	grid.getDataSource().deleteRecords({ country: 'Norway' });
+	 will delete all records from collection where country is equal to "Norway". A delete event
+	 will be fired for each deleted record.
+	 */
+	deleteRecords:function (search) {
+		var records = this.findRecords(search);
+		for (var i = 0; i < records.length; i++) {
+			this.data.erase(records[i]);
+			this.fireEvent('delete', records[i]);
+		}
+	},
+	/**
+	 Delete a single record. Deletes first match when
+	 multiple matches found.
+	 @function deleteRecord
+	 @param {Object} search
+	 @memberof ludo.dataSource.Collection.prototype
+	 @example
+	 	grid.getDataSource().deleteRecord({ country: 'Norway' });
+	 Will delete first found record where country is equal to Norway. It will fire a
+	 delete event if a record is found and deleted.
+	 */
+	deleteRecord:function (search) {
+		var rec = this.findRecord(search);
+		if (rec) {
+			this.data.erase(rec);
+
+			this.fireEvent('delete', rec);
+		}
+	},
+
+	/**
+	 Select records from current selected record to record matching search,
+	 @function selectTo
+	 @param {Object} search
+	 @memberof ludo.dataSource.Collection.prototype
+	 @example
+	 	collection.selectRecord({ country: 'Norway' });
+	 	collection.selectTo({country: 'Denmark'});
+	 	var selectedRecords = collection.getSelectedRecords();
+	 */
+	selectTo:function (search) {
+		var selected = this.getSelectedRecord();
+		if (!selected) {
+			this.selectRecord(search);
+			return;
+		}
+		var rec = this.findRecord(search);
+		if (rec) {
+			this.selectedRecords = [];
+			var index = this.data.indexOf(rec);
+			var indexSelected = this.data.indexOf(selected);
+			var i;
+			if (index > indexSelected) {
+				for (i = indexSelected; i <= index; i++) {
+					this.selectedRecords.push(this.data[i]);
+					this.fireSelect(this.data[i]);
+				}
+			} else {
+				for (i = indexSelected; i >= index; i--) {
+					this.selectedRecords.push(this.data[i]);
+					this.fireSelect(this.data[i]);
+				}
+			}
+		}
+	},
+
+	/**
+	 * Update a record
+	 * @function updateRecord
+	 * @param {Object} search
+	 * @param {Object} updates
+	 * @return {dataSource.Record} record
+	 * @memberof ludo.dataSource.Collection.prototype
+	 */
+	updateRecord:function (search, updates) {
+		var rec = this.getRecord(search);
+		if (rec) {
+			rec.setProperties(updates);
+		}
+		return rec;
+	},
+
+	getPostData:function () {
+		if (!this.paging) {
+			return this.parent();
+		}
+		var ret = this.postData || {};
+		ret._paging = {
+			size:this.paging.size,
+			offset:this.paging.offset
+		};
+		ret._sort = this.sortedBy;
+		return ret;
+	},
+	/**
+	 * When paging is enabled, go to previous page.
+	 * fire previousPage event
+	 * @function previousPage
+	 * @memberof ludo.dataSource.Collection.prototype
+	 */
+	previousPage:function () {
+		if (!this.paging || this.isOnFirstPage())return;
+		this.paging.offset -= this.paging.size;
+
+		this.onPageChange('previousPage');
+	},
+
+	/**
+	 * When paging is enabled, go to next page
+	 * fire nextPage event
+	 * @function nextPage
+	 * @memberof ludo.dataSource.Collection.prototype
+	 */
+	nextPage:function () {
+		if (!this.paging || this.isOnLastPage())return;
+		this.paging.offset += this.paging.size;
+
+		this.onPageChange('nextPage');
+	},
+
+	/**
+	 * Go to last page
+	 * @function lastPage
+	 * @memberof ludo.dataSource.Collection.prototype
+	 */
+	lastPage:function () {
+		if (!this.paging || this.isOnLastPage())return;
+		var count = this.getCount();
+		var decr = count % this.paging.size;
+		if(decr === 0) decr = this.paging.size;
+		this.paging.offset = count - decr;
+		this.onPageChange('lastPage');
+	},
+
+	/**
+	 * Go to first page
+	 * @function firstPage
+	 * @memberof ludo.dataSource.Collection.prototype
+	 */
+	firstPage:function () {
+		if (!this.paging || this.isOnFirstPage())return;
+		this.paging.offset = 0;
+
+		this.onPageChange('firstPage');
+	},
+
+	isOnFirstPage:function () {
+		if (!this.paging)return true;
+		return this.paging.offset === undefined || this.paging.offset === 0;
+	},
+
+	isOnLastPage:function () {
+		return this.paging.size + this.paging.offset >= this.getCount();
+	},
+
+	onPageChange:function (event) {
+		if (this.paging['remotePaging']) {
+			this.loadOrGetFromCache();
+		}
+		this.fireEvent('change');
+		this.fireEvent(event);
+		this.firePageEvents();
+	},
+
+	loadOrGetFromCache:function () {
+		if (this.isDataInCache()) {
+			this.data = this.dataCache[this.getCacheKey()].data;
+			this.fireEvent('change');
+		} else {
+			this.load();
+		}
+	},
+
+	populateCache:function () {
+		if (this.isCacheEnabled()) {
+			this.dataCache[this.getCacheKey()] = {
+				data:this.data,
+				time:new Date().getTime()
+			}
+		}
+	},
+
+	isDataInCache:function () {
+		return this.dataCache[this.getCacheKey()] !== undefined && !this.isCacheOutOfDate();
+	},
+
+    clearCache:function(){
+        this.dataCache = {};
+    },
+
+	isCacheOutOfDate:function () {
+		if (!this.paging['cacheTimeout'])return false;
+
+		var created = this.dataCache[this.getCacheKey()].time;
+		return created + (this.paging['cacheTimeout'] * 1000) < (new Date().getTime());
+	},
+
+	getCacheKey:function () {
+		var keys = [
+			'key', this.paging.offset, this.sortedBy.column, this.sortedBy.order
+		];
+		if (this.searcher !== undefined && this.searcher.hasData())keys.push(this.searcher.searchToString());
+		return keys.join('|');
+	},
+
+    hasData:function(){
+        return this.data != undefined && this.data.length > 0;
+    },
+
+	firePageEvents:function (skipState) {
+		if (this.isOnLastPage()) {
+
+			this.fireEvent('lastPage');
+		} else {
+
+			this.fireEvent('notLastPage');
+		}
+
+		if (this.isOnFirstPage()) {
+			this.fireEvent('firstPage');
+
+		} else {
+
+			this.fireEvent('notFirstPage');
+		}
+
+		this.fireEvent('page', this.getPageNumber());
+		if (skipState === undefined)this.fireEvent('state');
+	},
+
+	/**
+	 * Go to a specific page
+	 * @function toPage
+	 * @param {Number} pageNumber
+	 * @return {Boolean} success
+	 * @memberof ludo.dataSource.Collection.prototype
+	 */
+	toPage:function (pageNumber) {
+		if (pageNumber > 0 && pageNumber <= this.getPageCount() && !this.isOnPage(pageNumber)) {
+			this.paging.offset = (pageNumber - 1) * this.paging.size;
+
+			this.onPageChange('toPage');
+			return true;
+		}
+		return false;
+	},
+
+	/**
+	 * @function setPageSize
+	 * @param {Number} size
+	 * @memberof ludo.dataSource.Collection.prototype
+     */
+	setPageSize:function(size){
+		if(this.paging){
+			this.dataCache = {};
+			this.paging.size = parseInt(size);
+			this.paging.offset = 0;
+
+			this.onPageChange('toPage');
+		}
+	},
+
+	/**
+	 * True if on given page
+	 * @function isOnPage
+	 * @param {Number} pageNumber
+	 * @return {Boolean}
+	 * @memberof ludo.dataSource.Collection.prototype
+	 */
+	isOnPage:function (pageNumber) {
+		return pageNumber == this.getPageNumber();
+	},
+
+	/**
+	 * Return current page number
+	 * @function getPageNumber
+	 * @return {Number} page
+	 * @memberof ludo.dataSource.Collection.prototype
+	 */
+	getPageNumber:function () {
+        return this.paging ? Math.floor(this.paging.offset / this.paging.size) + 1 : 1;
+	},
+
+	/**
+	 * Return number of pages
+	 * @function getPageCount
+	 * @return {Number}
+	 * @memberof ludo.dataSource.Collection.prototype
+	 */
+	getPageCount:function () {
+        return this.paging ? Math.ceil(this.getCount() / this.paging.size) : 1;
+	},
+
+	/**
+	 * Return data in collection
+	 * @function getData
+	 * @memberof ludo.dataSource.Collection.prototype
+	 * @returns {Array}
+     */
+	getData:function () {
+		if (this.hasSearchResult()){
+			if (this.paging && this.paging.size) {
+				return this.getDataForPage(this.searcher.getData());
+			}
+			return this.searcher.getData();
+		}
+		if (!this.paging || this.paging.remotePaging) {
+			return this.parent();
+		}
+		return this.getDataForPage(this.data);
+	},
+
+
+	getDataForPage:function (data) {
+		if (!data || data.length == 0)return [];
+		var offset = this.paging.initialOffset || this.paging.offset;
+		if (offset > data.length) {
+			this.toPage(this.getPageCount());
+			offset = (this.getPageCount() - 1) * this.paging.size;
+		}
+		this.resetInitialOffset.delay(200, this);
+		return data.slice(offset, Math.min(data.length, offset + this.paging.size));
+	},
+
+	resetInitialOffset:function () {
+		this.paging.initialOffset = undefined;
+	},
+
+	parseNewData:function (data, json) {
+		// TODO refactor this
+		if (json != undefined && this.paging && json.rows !==undefined)this.paging.rows = json.rows;
+		if (json != undefined && this.paging && json.response && json.response.rows !==undefined)this.paging.rows = json.response.rows;
+		this.parent(data, json);
+
+		this.fireEvent('count', this.getCount());
+		if (this.shouldSortAfterLoad()) {
+			this.sort();
+		} else {
+			this.fireEvent('change');
+		}
+		if (this.paging !== undefined) {
+			this.firePageEvents(true);
+		}
+	},
+
+	createIndex:function () {
+		this.index = {};
+		this.indexBranch(this.data);
+	},
+
+	indexBranch:function(branch, parent){
+		for (var i = 0; i < branch.length; i++) {
+			this.indexRecord(branch[i], parent);
+			if(branch[i].children && branch[i].children.length)this.indexBranch(branch[i].children, branch[i]);
+		}
+	},
+
+	indexRecord:function(record, parent){
+		if(!this.index)this.createIndex();
+		if(parent)record.parentUid = parent.uid;
+		var pk = this.getPrimaryKeyIndexFor(record);
+		if(pk)this.index[pk] = record;
+		if(!record.uid)record.uid = ['uid_', String.uniqueID()].join('');
+		this.index[record.uid] = record;
+	},
+
+	shouldSortAfterLoad:function(){
+		if(this.paging && this.paging.remotePaging)return false;
+		return this.sortedBy !== undefined && this.sortedBy.column && this.sortedBy.order;
+	},
+
+	/**
+	 Filter collection based on given search term. To filter on multiple search terms, you should
+	 get a reference to the {{#crossLink "dataSource.CollectionSearch"}}{{/crossLink}} object and
+	 use the available {{#crossLink "dataSource.CollectionSearch"}}{{/crossLink}} methods to add
+	 multiple search terms.
+	 @function Search
+	 @param {String} search
+	 @memberof ludo.dataSource.Collection.prototype
+	 @example
+	 	ludo.get('myCollection').search('New York');
+	 	// or with the {{#crossLink "dataSource.CollectionSearch/add"}}{{/crossLink}} method
+	 	var searcher = ludo.get('myCollection').getSearcher();
+	 	searcher.where('New York').execute();
+	 	searcher.execute();
+	 */
+	search:function (search) {
+		this.getSearcher().search(search);
+	},
+
+	/**
+	 * Executes a remote search for records with the given data
+	 * @function remoteSearch
+	 * @param {String|Object} search
+	 * @memberof ludo.dataSource.Collection.prototype
+	 */
+	remoteSearch:function(search){
+		this.postData = this.postData || {};
+		this.postData.search = search;
+		this.toPage(1);
+		this.load();
+	},
+
+	afterSearch:function(){
+		var searcher = this.getSearcher();
+		this.fireEvent('count', searcher.hasData() ? searcher.getCount() : this.getCount());
+		if (this.paging !== undefined) {
+			this.paging.offset = 0;
+			this.firePageEvents(true);
+			this.fireEvent('pageCount', this.getPageCount());
+		}
+		this.fireEvent('change');
+	},
+
+	searcher:undefined,
+	/**
+	 * Returns a {{#crossLink "dataSource.CollectionSearch"}}{{/crossLink}} object which
+	 * you can use to filter a collection.
+	 * @function getSearcher
+	 * @return {dataSource.CollectionSearch}
+	 * @memberof ludo.dataSource.Collection.prototype
+	 */
+	getSearcher:function () {
+		if (this.searcher === undefined) {
+			this.searchConfig = this.searchConfig || {};
+			var config = Object.merge({
+				type:this.searcherType,
+				dataSource:this
+			}, this.searchConfig);
+			this.searcher = ludo._new(config);
+			this.addSearcherEvents();
+		}
+		return this.searcher;
+	},
+
+	addSearcherEvents:function(){
+		this.searcher.addEvent('search', this.afterSearch.bind(this));
+		this.searcher.addEvent('deleteSearch', this.afterSearch.bind(this));
+	},
+
+	hasSearchResult:function(){
+		return this.searcher !== undefined && this.searcher.hasData();
+	},
+	/**
+	 Return record by id or undefined if not found. Records are indexed by id. This method
+	 gives you quick access to a record by it's id. The method returns a reference to the
+	 actual record. You can use Object.clone(record) to create a copy of it in case you
+	 want to update the record but not make those changes to the collection.
+	 @function getById
+	 @param {String|Number|Object} id
+	 @return {Object} record
+	 @memberof ludo.dataSource.Collection.prototype
+	 @example
+	 	var collection = new ludo.dataSource.Collection({
+	 		url : 'get-countries.php',
+	 		primaryKey:'country'
+	 	});
+	 	var record = collection.getById('Japan'); // Returns record for Japan if it exists.
+	 You can also define multiple keys as id
+	 @example
+		 var collection = new ludo.dataSource.Collection({
+			url : 'get-countries.php',
+			primaryKey:['id', 'country']
+		 });
+	   	 var record = collection.getById({ id:1, country:'Japan' });
+	 This is especially useful when you have a {{#crossLink "dataSource.TreeCollection"}}{{/crossLink}}
+	 where child nodes may have same numeric id as it's parent.
+	 @example
+	 	{ id:1, type:'country', title : 'Japan',
+	 	 	children:[ { id:1, type:'city', title:'Tokyo }]
+	 By setting primaryKey to ['id', 'type'] will make it possible to distinguish between countries and cities.
+	 */
+	getById:function(id){
+		if(this.index[id] !== undefined){
+			return this.index[id];
+		}
+
+		if(this.primaryKey.length===1){
+			return this.index[id];
+		}else{
+			var key = [];
+			for(var i=0;i<this.primaryKey.length;i++){
+				key.push(id[this.primaryKey[i]]);
+			}
+			return this.index[key.join('')];
+		}
+	},
+
+	recordObjects:{},
+
+	/**
+	 Returns {{#crossLink "dataSource.Record"}}{{/crossLink}} object for a record.
+	 If you want to update a record, you should
+	 first get a reference to {{#crossLink "dataSource.Record"}}{{/crossLink}} and then call one
+	 of it's methods.
+	 @function getRecord
+	 @param {String|Object} search
+	 @return {dataSource.Record|undefined}
+	 @memberof ludo.dataSource.Collection.prototype
+	 @example
+		 var collection = new ludo.dataSource.Collection({
+			url : 'get-countries.php',
+			primaryKey:'country'
+		 });
+	 	 collection.getRecord('Japan').set('capital', 'tokyo');
+	 */
+	getRecord:function(search){
+		var rec = this.findRecord(search);
+		if(rec){
+			return this.createRecord(rec);
+		}
+		return undefined;
+	},
+
+	createRecord:function(data){
+		var id = data.uid;
+		if(!this.recordObjects[id]){
+			this.recordObjects[id] = this.recordInstance(data, this);
+			this.addRecordEvents(this.recordObjects[id]);
+		}
+		return this.recordObjects[id];
+	},
+
+    recordInstance:function(data){
+        return new ludo.dataSource.Record(data, this);
+    },
+
+	addRecordEvents:function(record){
+		record.addEvent('update', this.onRecordUpdate.bind(this));
+		record.addEvent('remove', this.onRecordDispose.bind(this));
+		record.addEvent('select', this.selectRecord.bind(this));
+	},
+
+    fireSelect:function(record){
+        this.fireEvent('select', record);
+    },
+
+	onRecordUpdate:function(record){
+		this.indexRecord(record);
+		this.fireEvent('update', record);
+	},
+
+	onRecordDispose:function(record){
+		var branch = this.getBranchFor(record);
+		if(branch){
+			var index = branch.indexOf(record);
+			if(index !== -1){
+				branch.splice(index,1);
+			}
+			this.removeFromIndex(record);
+			this.fireEvent('remove', record);
+		}
+	},
+
+	getBranchFor:function(record){
+		if(record.parentUid){
+			var parent = this.findRecord(record.parentUid);
+			return parent ? parent.children : undefined;
+		}else{
+			return this.data;
+		}
+	},
+
+	removeFromIndex:function(record){
+		this.recordObjects[record.uid] = undefined;
+		this.index[record.uid] = undefined;
+		var pk = this.getPrimaryKeyIndexFor(record);
+		if(pk)this.index[pk] = undefined;
+	},
+
+	getPrimaryKeyIndexFor:function(record){
+		if(this.primaryKey){
+			var key = [];
+			for(var j=0;j<this.primaryKey.length;j++){
+				key.push(record[this.primaryKey[j]]);
+			}
+			return key.join('');
+		}
+		return undefined;
+	}
+});
+
+ludo.factory.registerClass('dataSource.Collection', ludo.dataSource.Collection);/* ../ludojs/src/effect/drop-point.js */
 /**
  Specification of a drop point node sent to {{#crossLink "effect.DragDrop/addDropTarget"}}{{/crossLink}}.
  You may add your own properties in addition to the ones below.
@@ -25459,7 +25794,7 @@ ludo.dataSource.HTML = new Class({
 
 	},
 
-	loadComplete:function (html) {
+	parseNewData:function (html) {
 		this.parent();
 		this.data = html;
 		this.fireEvent('load', this.data);
@@ -25477,7 +25812,7 @@ ludo.dataSource.HTML = new Class({
 						this.fireEvent("beforeload", request);
 					},
 					"success":function (request) {
-						this.loadComplete(request.getResponseData(), request.getResponse());
+						this.parseNewData(request.getResponseData(), request.getResponse());
 					}.bind(this),
 					"error":function (request) {
 						this.fireEvent('servererror', [request.getResponseMessage(), request.getResponseCode()]);
@@ -25787,7 +26122,7 @@ ludo.progress.DataSource = new Class({
 		});
 	},
 
-    loadComplete:function (data) {
+    parseNewData:function (data) {
         this.fireEvent('load', data);
         if(data.percent<100 && !this.stopped){
             this.load.delay(this.pollFrequence * 1000, this);
@@ -29680,6 +30015,10 @@ ludo.form.Number = new Class({
             this._set(value);
 			this.fireEvent('change', [ value, this ]);
         }
+    },
+
+    _get:function(){
+        return parseInt(this.parent());
     }
 });/* ../ludojs/src/form/email.js */
 /**
@@ -31822,7 +32161,7 @@ ludo.form.File = new Class({
 
 	uploadInProgress:false,
 
-	fileUploadComplete:true,
+	fileUpparseNewData:true,
 
 
 	isFileUploadComponent:true,
@@ -31928,7 +32267,7 @@ ludo.form.File = new Class({
 			position:'absolute'
 		});
 		this.getEl().append(el);
-		el.on('load', this.onUploadComplete.bind(this));
+		el.on('load', this.onUpparseNewData.bind(this));
 
 	},
 
@@ -31936,8 +32275,8 @@ ludo.form.File = new Class({
 		return 'iframe-' + this.getId();
 	},
 
-	onUploadComplete:function () {
-		this.fileUploadComplete = true;
+	onUpparseNewData:function () {
+		this.fileUpparseNewData = true;
 		if (window.frames[this.iframeName].location.href.indexOf('http:') == -1) {
 			return;
 		}
@@ -31998,7 +32337,7 @@ ludo.form.File = new Class({
 
 	selectFile:function () {
 		this.value = this.valueForDisplay = this.getFormEl().get('value');
-		this.fileUploadComplete = false;
+		this.fileUpparseNewData = false;
 		this.displayFileName();
 		this.setDirty();
 		if (this.instantUpload) {
@@ -32031,7 +32370,7 @@ ludo.form.File = new Class({
 			} else {
 				ci.addClass('ludo-input-file-name-new-file');
 			}
-			if (!this.fileUploadComplete) {
+			if (!this.fileUpparseNewData) {
 				ci.addClass('ludo-input-file-name-not-uploaded');
 			}
 			deleteLink.html( html);
@@ -32104,7 +32443,7 @@ ludo.form.File = new Class({
 	},
 
 	hasFileToUpload:function () {
-		return !this.fileUploadComplete;
+		return !this.fileUpparseNewData;
 	},
 
 	blur:function () {

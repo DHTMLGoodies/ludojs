@@ -40,7 +40,7 @@ ludo.progress.DataSource = new Class({
 		});
 	},
 
-    loadComplete:function (data) {
+    parseNewData:function (data) {
         this.fireEvent('load', data);
         if(data.percent<100 && !this.stopped){
             this.load.delay(this.pollFrequence * 1000, this);

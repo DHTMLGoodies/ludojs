@@ -27,11 +27,11 @@ ludo.dataSource.JSON = new Class({
      * @memberof ludo.dataSource.JSON.prototype
      */
     setData:function(data){
-        this.loadComplete(data);
+        this.parseNewData(data);
     },
 
 
-    loadComplete:function (data) {
+    parseNewData:function (data) {
         
 		this.parent();
 		var firstLoad = !this.data;

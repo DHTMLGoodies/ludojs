@@ -8,16 +8,16 @@ ludo.chart.PieSlice = new Class({
     getSliceStyle:function () {
         return {
             'stroke-location':'inside',
-            'fill':this.record.get('color'),
+            'fill':this.record.__color,
             'stroke-linejoin':'round',
             'stroke':'#ffffff',
             'cursor':'pointer'
         };
     },
 
-    set:function (radius, angle, degrees) {
+    set:function (radius, angle, radians) {
         this.nodes[0].set('d', this.getPath({
-            radius:radius, angle:angle, degrees:degrees
+            radius:radius, angle:angle, radians:radians
         }));
     },
 
@@ -27,19 +27,19 @@ ludo.chart.PieSlice = new Class({
         
         var path = ['M ' + center.x + ' ' + center.y];
 
-        if(config.angle > 360) config.angle -= 360;
+        if(config.angle > Math.PI * 2) config.angle -=  Math.PI;
 
-        var point1 = ludo.canvasEngine.getPointAtDegreeOffset(center, config.angle, config.radius);
+        var point1 = ludo.canvasEngine.getPointAtRadianOffset(center, config.angle, config.radius);
 
         path.push('L ' + point1.x + ' ' + point1.y);
         path.push('M ' + point1.x + ' ' + point1.y);
 
         path.push('A ' + config.radius + ' ' + config.radius);
         path.push('0');
-        path.push(config.degrees > 180 ? '1' : '0');
+        path.push(config.radians > Math.PI ? '1' : '0');
         path.push('1');
 
-        var point2 = ludo.canvasEngine.getPointAtDegreeOffset(center, config.angle + config.degrees, config.radius);
+        var point2 = ludo.canvasEngine.getPointAtRadianOffset(center, config.angle + config.radians, config.radius);
         path.push(point2.x + ' ' + point2.y);
         path.push('L ' + center.x + ' ' + center.y);
 
@@ -62,31 +62,31 @@ ludo.chart.PieSlice = new Class({
     },
 
     centerOffset:function(offset){
-        var angle = this.record.getAngle() + (this.record.getDegrees() / 2 );
-        return ludo.canvasEngine.getPointAtDegreeOffset({ x:0, y: 0}, angle, offset);
+        var angle = this.record.__angle + (this.record.__radians / 2 );
+        return ludo.canvasEngine.getPointAtRadianOffset({ x:0, y: 0}, angle, offset);
     },
 
     enter:function(){
-        this.nodes[0].css('fill', this.record.get('color-over'));
+        this.nodes[0].css('fill', this.record.__colorOver);
     },
 
     leave:function(){
-        this.nodes[0].css('fill', this.record.get('color'));
+        this.nodes[0].css('fill', this.record.__color);
     },
 
     update:function(){
         var radius = this.getParent().getRadius();
 
 
-        if(Math.round(radius) == Math.round(this.rendering.radius) && this.rendering.angle == this.record.getAngle() && this.rendering.degrees == this.record.getDegrees()){
+        if(Math.round(radius) == Math.round(this.rendering.radius) && this.rendering.angle == this.record.__angle && this.rendering.radians == this.record.__radians){
             return;
         }
 
         var e = new ludo.canvas.Effect();
 
         var config = e.getEffectConfig(
-            [this.rendering.radius,this.rendering.angle, this.rendering.degrees ],
-            [radius, this.record.getAngle(), this.record.getDegrees()],
+            [this.rendering.radius,this.rendering.angle, this.rendering.radians ],
+            [radius, this.record.__angle, this.record.__radians],
             1
         );
 
@@ -101,7 +101,7 @@ ludo.chart.PieSlice = new Class({
             {
                 radius : this.rendering.radius,
                 angle: this.rendering.angle + config.steps[1],
-                degrees : this.rendering.degrees + config.steps[2],
+                radians : this.rendering.radians + config.steps[2],
                 center : config.center
             }
 

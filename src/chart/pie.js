@@ -158,32 +158,35 @@ ludo.chart.Pie = new Class({
         var r = this.getRecords();
 
         var radius = e.getEffectConfig([0], [this.getRadius()], 1);
-        var degrees = [];
-        var currentDegrees = [];
+        var radians = [];
+        var currentRadians = [];
 
         for(var i=0;i< r.length;i++){
-            degrees.push(e.getEffectConfig([0], [r[i].getDegrees()], 1).steps[0]);
-            currentDegrees.push(0);
+            radians.push(e.getEffectConfig([0], [r[i].__radians], 1).steps[0]);
+            currentRadians.push(0);
         }
+
+
         this.rendered = false;
-        this.executeAnimation({
+        var anim = {
             startAngle:this.dataProvider().startAngle,
             radius: radius.steps[0],
             currentRadius:0,
-            degrees: degrees,
-            currentDegrees:currentDegrees,
+            radians: radians,
+            currentRadians:currentRadians,
             count: radius.count
-        }, 0);
+        };
+        this.executeAnimation(anim, 0);
     },
 
     executeAnimation:function(config, currentStep){
         config.currentRadius += config.radius;
 
         var angle = config.startAngle;
-        for(var i=0;i<config.degrees.length;i++){
-            config.currentDegrees[i] += config.degrees[i];
-            this.fragments[i].set(config.currentRadius, angle, config.currentDegrees[i]);
-            angle += config.currentDegrees[i];
+        for(var i=0;i<config.radians.length;i++){
+            config.currentRadians[i] += config.radians[i];
+            this.fragments[i].set(config.currentRadius, angle, config.currentRadians[i]);
+            angle += config.currentRadians[i];
 
         }
         if(currentStep < config.count - 1){
@@ -207,7 +210,7 @@ ludo.chart.Pie = new Class({
         var radius = this.getRadius();
 
         for(var i=0;i< r.length;i++){
-            this.fragments[i].set(radius, r[i].getAngle(), r[i].getDegrees());
+            this.fragments[i].set(radius, r[i].__angle, r[i].__radians);
         }
     }
 });

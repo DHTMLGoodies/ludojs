@@ -21,7 +21,7 @@ ludo.chart.Label = new Class({
         this.colorBox.setStyles(this.getBoxStyles());
 
 
-        this.textNode = new ludo.canvas.Text(this.record.getLabel(), {
+        this.textNode = new ludo.canvas.Text(this.getDataSource().textOf(this.record, this), {
             x:colorBoxCoords.x + colorBoxCoords.width + 3, y : this.getYForText()
         });
         this.textNode.setStyles(this.getTextStyles());
@@ -66,7 +66,7 @@ ludo.chart.Label = new Class({
 
     getBoxStyles:function () {
         var ret = this.getParent().boxStyles || {};
-        ret.fill = this.record.get('color');
+        ret.fill = this.record.__color;
         return ret;
     },
 
@@ -83,7 +83,7 @@ ludo.chart.Label = new Class({
 
     getBoxStylesOver:function(){
         var ret = this.getParent().boxStylesOver || {  };
-        if(!ret['fill'])ret['fill'] = this.record.get('color-over');
+        if(!ret['fill'])ret['fill'] = this.record.__colorOver;
         return ret;
     },
 

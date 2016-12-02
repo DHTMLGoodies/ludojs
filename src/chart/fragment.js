@@ -4,25 +4,31 @@ ludo.chart.Fragment = new Class({
     nodes:[],
 
     rendering:{},
-
+    
     __construct:function (config) {
         this.parent(config);
         this.setConfigParams(config, ['record','parentComponent']);
         this.createNodes();
+
     },
 
     createNodes:function(){
 
     },
 
+    getDataSource:function(){
+        return this.getParent().getDataSource();
+    },
+
     ludoEvents:function(){
         this.parent();
         this.getParent().dataProvider().addEvent('update', this.update.bind(this));
 
-        this.record.addEvent('focus', this.focus.bind(this));
-        this.record.addEvent('blur', this.blur.bind(this));
-        this.record.addEvent('enter', this.enter.bind(this));
-        this.record.addEvent('leave', this.leave.bind(this));
+        var ds = this.getDataSource();
+        ds.on('select' + this.record.__uid, this.focus.bind(this));
+        ds.on('blur' + this.record.__uid, this.blur.bind(this));
+        ds.on('enter' + this.record.__uid, this.enter.bind(this));
+        ds.on('leave' + this.record.__uid, this.leave.bind(this));
     },
 
     getParent:function(){
@@ -38,14 +44,14 @@ ludo.chart.Fragment = new Class({
         this.nodes.push(node);
 
         if(node.mouseenter != undefined){
-            node.mouseenter(this.record.enter.bind(this.record));
-            node.mouseleave(this.record.leave.bind(this.record));
+            node.mouseenter(this.enterNode.bind(this));
+            node.mouseleave(this.leaveNode.bind(this));
         }else{
-            node.on('mouseenter', this.record.enter.bind(this.record));
-            node.on('mouseleave', this.record.leave.bind(this.record));
+            node.on('mouseenter', this.enterNode.bind(this));
+            node.on('mouseleave', this.leaveNode.bind(this));
 
         }
-        node.on('click', this.record.click.bind(this.record));
+        node.on('click', this.clickNode.bind(this));
 
         node.css('cursor','pointer');
 
@@ -54,6 +60,18 @@ ludo.chart.Fragment = new Class({
 		this.relayEvents(node, ['mouseenter','mouseleave']);
 
         return node;
+    },
+
+    enterNode:function(){
+        this.getDataSource().enter(this.record);
+    },
+
+    leaveNode:function(){
+        this.getDataSource().leave(this.record);
+    },
+
+    clickNode:function(){
+        this.getDataSource().select(this.record);
     },
 
     createStyle:function(styles){

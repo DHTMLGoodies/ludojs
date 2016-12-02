@@ -32,7 +32,14 @@ ludo.chart.PieSliceHighlighted = new Class({
     Extends:ludo.chart.AddOn,
     tagName:'path',
 
-    styles:undefined,
+    styles:{
+        'stroke':'#ffffff',
+        'fill' : '#ffffff',
+        'stroke-location':'inside',
+        'fill-opacity' : .5,
+        'stroke-opacity' : .8,
+        'stroke-width' : 1
+    },
 
     size : 5,
 
@@ -54,30 +61,31 @@ ludo.chart.PieSliceHighlighted = new Class({
 
     ludoEvents:function () {
         this.parent();
-        var p = this.getParent().dataProvider();
+        var p = this.getParent().getDataSource();
         p.addEvents({
             'enter' : this.show.bind(this),
             'leave' : this.hide.bind(this),
-            'focus' : this.focus.bind(this),
+            'select' : this.focus.bind(this),
             'blur' : this.blur.bind(this)
         });
     },
 
     show:function (record) {
-        if(!this.getParent().rendered)return;
 
+        if(!this.getParent().rendered)return;
         var f = this.getParent().getFragmentFor(record);
 
         var path = f.getPath({
             radius:this.getParent().getRadius() + this.size,
-            angle:record.getAngle(),
-            degrees:record.getDegrees()
+            angle:record.__angle,
+            radians:record.__radians
         });
         this.node.set('d', path);
-        if(!this.styles){
-            this.node.setStyles({ fill : record.get('color')});
-        }
-        if (record.isFocused()) {
+
+        this.node.css('fill', record.__colorOver);
+
+
+        if (this.getParent().getDataSource().isSelected(record)) {
             var t = f.nodes[0].getTranslate();
             this.node.translate(t);
         }else{

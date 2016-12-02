@@ -874,7 +874,7 @@ ludo.dataSource.Collection = new Class({
 		this.paging.initialOffset = undefined;
 	},
 
-	loadComplete:function (data, json) {
+	parseNewData:function (data, json) {
 		// TODO refactor this
 		if (json != undefined && this.paging && json.rows !==undefined)this.paging.rows = json.rows;
 		if (json != undefined && this.paging && json.response && json.response.rows !==undefined)this.paging.rows = json.response.rows;

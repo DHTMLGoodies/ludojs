@@ -57,11 +57,11 @@ ludo.ludoDB.Factory = new Class({
             resource:'LudoJS',
             url:this.getUrl()
         });
-        req.addEvent('success', this.loadComplete.bind(this));
+        req.addEvent('success', this.parseNewData.bind(this));
         req.send('form', arguments);
     },
 
-    loadComplete:function (req) {
+    parseNewData:function (req) {
         this.fireEvent('load', req.getResponseData());
     }
 

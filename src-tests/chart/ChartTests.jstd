@@ -4,6 +4,8 @@ load:
 
   - ../../src/core.js
   - ../../src/color/color.js
+  - ../../src/data-source/base.js
+  - ../../src/data-source/json.js
   - ../../src/data-source/collection.js
   - ../../src/data-source/record.js
   - ../../src/layout/relative.js

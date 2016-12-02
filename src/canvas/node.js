@@ -288,11 +288,9 @@ ludo.canvas.Node = new Class({
 	},
 
 	setStyles:function(styles){
-		for(var key in styles){
-			if(styles.hasOwnProperty(key)){
-				ludo.canvasEngine.css(this.el, key, styles[key]);
-			}
-		}
+		$.each(styles, function(key, value){
+			ludo.canvasEngine.css(this.el, key, value);
+		}.bind(this));
 	},
 
 	/**

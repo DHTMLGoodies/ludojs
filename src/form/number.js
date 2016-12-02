@@ -89,5 +89,9 @@ ludo.form.Number = new Class({
             this._set(value);
 			this.fireEvent('change', [ value, this ]);
         }
+    },
+
+    _get:function(){
+        return parseInt(this.parent());
     }
 });

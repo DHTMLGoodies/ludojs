@@ -28,6 +28,9 @@ section,
 summary {
     display: block;
 }
+code{
+    white-space:pre;
+}
 audio,
 canvas,
 progress,

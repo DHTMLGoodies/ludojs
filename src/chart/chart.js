@@ -18,16 +18,6 @@ ludo.chart.Chart = new Class({
 	__construct:function(config){
 		this.parent(config);
 		this.layout.type = 'Canvas';
-		this.setConfigParams(config, ['dataProvider']);
-
-        if(!this.dataProvider){
-            this.dataProvider = this.createDependency('dataProvider',
-                {
-                    type : 'chart.DataProvider',
-                    data : config.data
-                }
-            );
-        }
 	},
 
 	updateChildren:function(){
@@ -39,6 +29,11 @@ ludo.chart.Chart = new Class({
 	getRecords:function(){
 		return this.dataProvider.getRecords();
 	},
+
+	insertJSON:function(){
+
+	},
+
 
     getDataProvider:function(){
         return this.dataProvider;

@@ -35,6 +35,7 @@ ludo.dataSource.Base = new Class({
 	 "txt" specifies which text to display inside the shim. "txt" can be
 	 either a string or a function returning a string.
 	 @config {Object} shim
+	 @memberof ludo.dataSource.Base.prototype
 	 @example
 	 	shim:{
 			renderTo:ludo.get('myView').getBody(),
@@ -53,7 +54,7 @@ ludo.dataSource.Base = new Class({
 
 	__construct:function (config) {
 		this.parent(config);
-		this.setConfigParams(config, ['method', 'url', 'autoload', 'data', 'shim','dataHandler']);
+		this.setConfigParams(config, ['method', 'url', 'autoload', 'shim','dataHandler']);
 
 		if(this.postData == undefined){
 			this.postData = {};
@@ -66,6 +67,10 @@ ludo.dataSource.Base = new Class({
 			this.dataHandler = function(json){
 				return jQuery.isArray(json) ? json : json.response != undefined ? json.response : json.data != undefined ? json.data : false;
 			}
+		}
+
+		if(config.data != undefined){
+			this.setData(config.data);
 		}
 
 
@@ -82,6 +87,7 @@ ludo.dataSource.Base = new Class({
 
 	/**
 	 * Send a new request
+	 * @memberof ludo.dataSource.Base.prototype
 	 * @function sendRequest
 	 * @param {String} service
 	 * @param {Array} arguments
@@ -108,7 +114,7 @@ ludo.dataSource.Base = new Class({
 				if(data === false){
 					this.fireEvent('fail', ['Validation error', 'Validation error', this]);
 				}else{
-					this.loadComplete(data, json);
+					this.parseNewData(data, json);
 					this.fireEvent('success', [json, this]);
 
 				}
@@ -128,6 +134,7 @@ ludo.dataSource.Base = new Class({
 	 * Has data loaded from server
 	 * @function hasData
 	 * @return {Boolean}
+	 * @memberof ludo.dataSource.Base.prototype
 	 */
 	hasData:function () {
 		return (this.data !== undefined);
@@ -136,6 +143,7 @@ ludo.dataSource.Base = new Class({
 	 * Return data loaded from server
 	 * @function getData
 	 * @return {Object|Array}
+	 * @memberof ludo.dataSource.Base.prototype
 	 */
 	getData:function () {
 		return this.data;
@@ -150,6 +158,7 @@ ludo.dataSource.Base = new Class({
 	 * Return data-source type(HTML or JSON)
 	 * @function getSourceType
 	 * @return string source type
+	 * @memberof ludo.dataSource.Base.prototype
 	 */
 	getSourceType:function () {
 		return 'JSON';
@@ -168,6 +177,7 @@ ludo.dataSource.Base = new Class({
 	 * Load content from a specific url
 	 * @function loadUrl
 	 * @param url
+	 * @memberof ludo.dataSource.Base.prototype
 	 */
 	loadUrl:function (url) {
 		this.url = url;
@@ -175,7 +185,7 @@ ludo.dataSource.Base = new Class({
 		this.load();
 	},
 
-	loadComplete:function () {
+	parseNewData:function () {
 		this.inLoadMode = false;
 	},
 

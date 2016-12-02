@@ -220,6 +220,7 @@
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/chart/chart.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/chart/pie.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/chart/labels.js"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/chart/data-source.js"></script>
 
 
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/movable.js"></script>

@@ -91,7 +91,7 @@ ludo.form.File = new Class({
 
 	uploadInProgress:false,
 
-	fileUploadComplete:true,
+	fileUpparseNewData:true,
 
 
 	isFileUploadComponent:true,
@@ -197,7 +197,7 @@ ludo.form.File = new Class({
 			position:'absolute'
 		});
 		this.getEl().append(el);
-		el.on('load', this.onUploadComplete.bind(this));
+		el.on('load', this.onUpparseNewData.bind(this));
 
 	},
 
@@ -205,8 +205,8 @@ ludo.form.File = new Class({
 		return 'iframe-' + this.getId();
 	},
 
-	onUploadComplete:function () {
-		this.fileUploadComplete = true;
+	onUpparseNewData:function () {
+		this.fileUpparseNewData = true;
 		if (window.frames[this.iframeName].location.href.indexOf('http:') == -1) {
 			return;
 		}
@@ -267,7 +267,7 @@ ludo.form.File = new Class({
 
 	selectFile:function () {
 		this.value = this.valueForDisplay = this.getFormEl().get('value');
-		this.fileUploadComplete = false;
+		this.fileUpparseNewData = false;
 		this.displayFileName();
 		this.setDirty();
 		if (this.instantUpload) {
@@ -300,7 +300,7 @@ ludo.form.File = new Class({
 			} else {
 				ci.addClass('ludo-input-file-name-new-file');
 			}
-			if (!this.fileUploadComplete) {
+			if (!this.fileUpparseNewData) {
 				ci.addClass('ludo-input-file-name-not-uploaded');
 			}
 			deleteLink.html( html);
@@ -373,7 +373,7 @@ ludo.form.File = new Class({
 	},
 
 	hasFileToUpload:function () {
-		return !this.fileUploadComplete;
+		return !this.fileUpparseNewData;
 	},
 
 	blur:function () {

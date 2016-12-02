@@ -1,5 +1,9 @@
 /**
- * Color Utility functions
+ * A class with a lot of color conversion functions.
+ *
+ * With this class, you can convert between RGB and HSV, darken and brighten colors,
+ * increase and decrease saturation and brightness of a color etc.
+ * 
  * @class ludo.color.Color
  * @example {@lang JavaScript}
  * var util = new ludo.color.Color();
@@ -109,6 +113,7 @@ ludo.color.Color = new Class({
     /**
      * Converts a RGB color to HSV(Hue, Saturation, Brightness)
      * @param {String|Object} color
+     * @memberof ludo.color.Color.prototype
      * @returns {Object}
      * @example
      * var c = new ludo.color.Color();

@@ -1,5 +1,6 @@
 ludo.chart.Tooltip = new Class({
 	Extends:ludo.chart.AddOn,
+	type: 'chart.Tooltip',
 	tpl:'{label}: {value}',
 	shown:false,
 
@@ -34,6 +35,8 @@ ludo.chart.Tooltip = new Class({
 			'mouseenter':this.show.bind(this),
 			'mouseleave':this.hide.bind(this)
 		});
+
+
 
 		this.getParent().getNode().on("mouseenter", this.show.bind(this));
 		this.getParent().getNode().on("mouseleave", this.hide.bind(this));
@@ -73,8 +76,8 @@ ludo.chart.Tooltip = new Class({
 	},
 	
 	show:function (e) {
-
 		var rec = this.getRecord();
+
 		if(rec == undefined){
 			this.hide();
 			return;
@@ -83,11 +86,11 @@ ludo.chart.Tooltip = new Class({
 		this.node.show();
 		this.shown = true;
 
-		this.offset = this.getParent().getParent().getBody().position();
+		this.offset = this.getParent().getParent().getBody().offset();
 
 		this.textBox.setText(this.getParsedHtml());
 
-		this.rect.css('stroke', this.getRecord().get('color'));
+		this.rect.css('stroke', this.getRecord().__color);
 
 		this.size = this.textBox.getNode().getSize();
 		this.size.x +=7;
@@ -119,33 +122,12 @@ ludo.chart.Tooltip = new Class({
 	},
 
 	getParsedHtml:function () {
-		var match = this.tpl.match(/\{(.*?)\}/gm);
-		var ret = this.tpl;
-
 		var rec = this.getRecord();
-
-		for(var i=0;i<match.length;i++){
-			var key = match[i].substr(1, match[i].length-2);
-			var method = 'get' + key.substr(0,1).toUpperCase() + key.substr(1);
-
-			var val = rec[method] !== undefined ? rec[method]() : rec.get(key);
-
-			var provider = this.getParent().dataProvider();
-			if(val === undefined && provider && provider['method']){
-				val = this.getParent().dataProvider()['method']();
-			}
-
-			if(!isNaN(val) && val % 1 !== 0){
-				val = val.toFixed(1);
-			}
-
-			ret = ret.replace(match[i], val);
-		}
-		return ret;
+		return this.getDataSource().textOf(rec, this);
 	},
 
 	getRecord:function () {
-		return this.getParent().dataProvider().getHighlighted();
+		return this.getDataSource().getHighlighted();
 	}
 
 });

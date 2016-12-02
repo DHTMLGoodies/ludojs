@@ -8,5 +8,9 @@ ludo.chart.AddOn = new Class({
 
     getParent:function(){
         return this.parentComponent;
+    },
+
+    getDataSource: function(){
+        return this.parentComponent.getDataSource();
     }
 });

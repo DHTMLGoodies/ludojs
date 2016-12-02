@@ -1,0 +1,10 @@
+[
+  { "id": 1, "label":"Oslo", "value":958378 },
+  { "id": 2, "label":"Bergen", "value":250420 },
+  { "id": 3, "label":"Trondheim", "value":175068 },
+  { "id": 4, "label":"Stavanger", "value":129300 },
+  { "id": 5, "label":"Drammen", "value":108636 },
+  { "id": 6, "label":"Kristiansand", "value":60583 },
+  { "id": 7, "label":"Sandnes", "value":58964 },
+  { "id": 8, "label":"Ålesund", "value":50917 }
+]

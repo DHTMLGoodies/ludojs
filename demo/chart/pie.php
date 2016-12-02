@@ -5,17 +5,22 @@ require_once("../includes/demo-header.php");
 ?>
 
 <script type="text/javascript" class="source-code">
+    
 
-    var provider = new ludo.chart.DataProvider({
-        data:[
-            { label:'John', value:100 },
-            { label:'Jane', value:245 },
-            { label:'Martin', value:37 },
-            { label:'Mary', value:99 },
-            { label:'Johnny', value:127 },
-            { label:'Catherine', value:55 },
-            { label:'Tommy', value:18 }
-        ]
+    var dataSource = new ludo.chart.DataSource({
+        url : '../data/pie-chart-data.json',
+        textOf:function(record, caller){
+            if(caller == undefined)console.trace();
+            if(caller && caller.type == 'chart.Tooltip'){
+                return record.label + ': '+ record.value  + ' (' + record.__percent + '%)';
+            }
+            return record.label;
+        },
+
+        valueOf:function(record, caller){
+            return record.value;
+        }
+
     });
 
     var w = new ludo.Window({
@@ -39,54 +44,14 @@ require_once("../includes/demo-header.php");
                 },
                 children:[
                     {
-                        name : 'form',
-                        layout:{
-                            alignParentRight:true,
-                            width:200,
-                            fillDown:true,
-                            type:'linear',
-                            orientation:'vertical'
-                        },
-                        form:{
-                            listeners:{
-                                'change': function(manager){
-                                    var values = manager.values();
-                                    var i = 0;
-                                    var records = provider.getRecords();
-
-                                    for(var key in values){
-                                        if(values.hasOwnProperty(key)){
-                                            records[i].setValue(parseInt(values[key]));
-                                        }
-                                        i++;
-                                    }
-                                }
-                            }
-                        },
-                        children:[
-                            { type:'form.Text', minValue:5, required:true, name:'item0', label:'John', value:100, color:'#000088' },
-                            { type:'form.Text', minValue:5, required:true, label:'Jane', value:245 },
-                            { type:'form.Text', minValue:5, required:true, label:'Martin', value:37 },
-                            { type:'form.Text', minValue:5, required:true, label:'Mary', value:99 },
-                            { type:'form.Text', minValue:5, required:true, label:'Johnny', value:127 },
-                            { type:'form.Text', minValue:5, required:true, label:'Catherine', value:55 },
-                            { type:'form.Text', minValue:5, required:true,  label:'Tommy', value:18 }
-                        ]
-                    },
-                    {
 
                         layout:{
-                            top:0,
-                            fillLeft:true,
-                            fillDown:true,
-                            leftOf:'form'
-                        },
-                        css:{
-                            'border-right' : '1px solid ' + ludo.$C('border')
+                            width:'matchParent',
+                            height:'matchParent'
                         },
                         type:'chart.Chart',
                         id:'chart',
-                        dataProvider:provider,
+                        dataSource:dataSource,
                         children:[
                             {
                                 name : 'pie',
@@ -96,10 +61,9 @@ require_once("../includes/demo-header.php");
 
                                 animate:true,
                                 layout:{
-                                    above:'labels',
-                                    left:0,
-                                    fillRight:true,
-                                    fillUp:true
+                                    leftOf:'labels',
+                                    fillLeft:true,
+                                    height:'matchParent'
                                 },
                                 plugins:[
                                     {
@@ -121,14 +85,13 @@ require_once("../includes/demo-header.php");
                                 type:'chart.Labels',
                                 textStyles:{
                                     'fill': ludo.$C('text'),
-                                    'font-size':'13px',
+                                    'font-size':'14px',
                                     'font-weight' : 'normal'
                                 },
                                 layout:{
-                                    alignParentBottom:true,
-                                    height:40,
-                                    left:0,
-                                    fillRight:true
+                                    alignParentRight:true,
+                                    width:120,
+                                    height:'matchParent'
                                 }
                             }
                         ]

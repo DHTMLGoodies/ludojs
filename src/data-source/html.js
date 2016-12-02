@@ -25,7 +25,7 @@ ludo.dataSource.HTML = new Class({
 
 	},
 
-	loadComplete:function (html) {
+	parseNewData:function (html) {
 		this.parent();
 		this.data = html;
 		this.fireEvent('load', this.data);
@@ -43,7 +43,7 @@ ludo.dataSource.HTML = new Class({
 						this.fireEvent("beforeload", request);
 					},
 					"success":function (request) {
-						this.loadComplete(request.getResponseData(), request.getResponse());
+						this.parseNewData(request.getResponseData(), request.getResponse());
 					}.bind(this),
 					"error":function (request) {
 						this.fireEvent('servererror', [request.getResponseMessage(), request.getResponseCode()]);
