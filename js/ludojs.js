@@ -1,7 +1,7 @@
-/* Generated Fri Dec 2 19:38:16 CET 2016 */
+/* Generated Fri Dec 2 20:01:23 CET 2016 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.254
+ludoJS - Javascript framework, 1.1.256
 Copyright (C) 2012-2016  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -12352,7 +12352,27 @@ ludo.layout.Accordion = new Class({
     }
 });/* ../ludojs/src/layout/linear.js */
 /**
- * Abstract base class for linear layouts
+ * Superclass for the linear vertical and linear horizontal layout.
+ * 
+ * Use the orientation attribute to choose between horizontal and vertical.
+ * 
+ * For dynamic sized child views, use the weight attribute instead of height/width.
+ *
+ * The reserved words **matchParent** and **wrap** can be used for height when rendered vertically, and
+ * width when rendered horizontally. **matchParent** means same size as parent, while **wrap** will use
+ * minimum width/height.
+ * 
+ * @class layout.layout.Linear
+ * @example
+ * layout:{
+ * 		type:'linear',
+ * 		orientation:'vertical',
+ * 		height:'matchParent', width:'matchParent'	
+ * },
+ * children:[
+ * 	{ html: 'First view', layout: { height: 30 }},
+ * 	{ html: 'Second View', layout: { weight: 1 }}
+ * ]
  */
 ludo.layout.Linear = new Class({
 	Extends:ludo.layout.Base,
@@ -12422,7 +12442,7 @@ ludo.layout.Linear = new Class({
 /**
  * This class arranges child views in a row layout.
  * @namespace ludo.layout
- * @class ludo.layout.LinearVertical
+ * @class ludo.layout.LinearHorizontal
  *
  */
 ludo.layout.LinearHorizontal = new Class({
@@ -13034,7 +13054,10 @@ ludo.layout.ViewPager = new Class({
     }
 });
 /* ../ludojs/src/layout/tabs.js */
-/* TODO should be able to update tab title when view title is changed */
+/**
+ * @class ludo.Layout.Tabs
+ * 
+ */
 ludo.layout.Tabs = new Class({
     Extends: ludo.View,
     type: 'layout.Tabs',
@@ -14437,6 +14460,10 @@ ludo.layout.Tab = new Class({
 		this.fireEvent('removeChild', child);
 	}
 });/* ../ludojs/src/layout/fill.js */
+/**
+ * Layout for one single child spanning entire body of parent view
+ * @class ludo.layout.Fill
+ */
 ludo.layout.Fill = new Class({
     Extends: ludo.layout.Relative,
 

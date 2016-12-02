@@ -1,4 +1,7 @@
-/* TODO should be able to update tab title when view title is changed */
+/**
+ * @class ludo.Layout.Tabs
+ * 
+ */
 ludo.layout.Tabs = new Class({
     Extends: ludo.View,
     type: 'layout.Tabs',

@@ -1,5 +1,25 @@
 /**
- * Abstract base class for linear layouts
+ * Superclass for the linear vertical and linear horizontal layout.
+ * 
+ * Use the orientation attribute to choose between horizontal and vertical.
+ * 
+ * For dynamic sized child views, use the weight attribute instead of height/width.
+ *
+ * The reserved words **matchParent** and **wrap** can be used for height when rendered vertically, and
+ * width when rendered horizontally. **matchParent** means same size as parent, while **wrap** will use
+ * minimum width/height.
+ * 
+ * @class layout.layout.Linear
+ * @example
+ * layout:{
+ * 		type:'linear',
+ * 		orientation:'vertical',
+ * 		height:'matchParent', width:'matchParent'	
+ * },
+ * children:[
+ * 	{ html: 'First view', layout: { height: 30 }},
+ * 	{ html: 'Second View', layout: { weight: 1 }}
+ * ]
  */
 ludo.layout.Linear = new Class({
 	Extends:ludo.layout.Base,

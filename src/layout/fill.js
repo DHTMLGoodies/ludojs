@@ -1,3 +1,7 @@
+/**
+ * Layout for one single child spanning entire body of parent view
+ * @class ludo.layout.Fill
+ */
 ludo.layout.Fill = new Class({
     Extends: ludo.layout.Relative,
 
