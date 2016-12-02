@@ -32,7 +32,7 @@ ludo.dataSource.JSON = new Class({
 
 
     parseNewData:function (data) {
-        
+
 		this.parent();
 		var firstLoad = !this.data;
 		this.data = data;

@@ -150,10 +150,8 @@ ludo.chart.Pie = new Class({
     render:function(){
 
 
-        if(this.getDataSource().hasData()){
-            this.animate();
-        }
-        this.getDataSource().on('load', this.render.bind(this));
+        this.animate();
+
 
     },
 
@@ -162,8 +160,6 @@ ludo.chart.Pie = new Class({
     },
 
     animate:function(){
-
-        console.log('render');
         var r = this.getRecords();
         if(!r)return;
         var e = new ludo.canvas.Effect();

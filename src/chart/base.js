@@ -23,14 +23,17 @@ ludo.chart.Base = new Class({
     __construct:function (config) {
         this.parent(config);
         this.setConfigParams(config, ['animation']);
+        this.getDataSource().on('load', this.create.bind(this))
+        if(this.getDataSource().hasData()){
+            this.create();
 
-        this.create.delay(50, this);
+        }
     },
 
     ludoEvents:function () {
         this.parent();
-        var dp = this.dataProvider();
-        dp.addEvent('createRecord', this.createFragment.bind(this));
+        var dp = this.getDataSource();
+
         dp.addEvent('update', this.update.bind(this));
     },
 
@@ -42,6 +45,7 @@ ludo.chart.Base = new Class({
     },
 
     createFragment:function (record) {
+
         var f = this.createDependency('fragment' + this.fragments.length,
             {
                 type:this.fragmentType,
