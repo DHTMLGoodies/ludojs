@@ -8,7 +8,7 @@ require_once("../includes/demo-header.php");
     
 
     var dataSource = new ludo.chart.DataSource({
-        url : '../data/pie-chart-data.json',
+        url : ,
         textOf:function(record, caller){
             if(caller == undefined)console.trace();
             if(caller && caller.type == 'chart.Tooltip'){

@@ -154,8 +154,11 @@ ludo.chart.Pie = new Class({
     },
 
     animate:function(){
-        var e = new ludo.canvas.Effect();
+
+
         var r = this.getRecords();
+        if(!r)return;
+        var e = new ludo.canvas.Effect();
 
         var radius = e.getEffectConfig([0], [this.getRadius()], 1);
         var radians = [];
