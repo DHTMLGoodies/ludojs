@@ -1,7 +1,7 @@
-/* Generated Fri Dec 2 19:14:02 CET 2016 */
+/* Generated Fri Dec 2 19:15:51 CET 2016 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.252
+ludoJS - Javascript framework, 1.1.253
 Copyright (C) 2012-2016  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -11237,6 +11237,7 @@ ludo.chart.Tooltip = new Class({
 		}
 
 		this.node.show();
+		this.node.toFront();
 		this.shown = true;
 
 		this.offset = this.getParent().getParent().getBody().offset();

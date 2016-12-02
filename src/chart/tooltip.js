@@ -84,6 +84,7 @@ ludo.chart.Tooltip = new Class({
 		}
 
 		this.node.show();
+		this.node.toFront();
 		this.shown = true;
 
 		this.offset = this.getParent().getParent().getBody().offset();
