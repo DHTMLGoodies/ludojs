@@ -1,7 +1,7 @@
-/* Generated Thu Dec 8 13:10:41 CET 2016 */
+/* Generated Thu Dec 8 13:33:47 CET 2016 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.261
+ludoJS - Javascript framework, 1.1.262
 Copyright (C) 2012-2016  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -4796,6 +4796,7 @@ ludo.canvas.Engine = new Class({
      * @param {Number} y
      */
     rotateAround:function(el, rotation, x, y){
+		console.log('rotate around');
         this.setTransformation(el, 'rotate', rotation + ' ' + x + ' ' + y);
     },
 
@@ -11637,10 +11638,9 @@ ludo.chart.Text = new Class({
         }else{
             x = size.x * this.anchor[0];
             y = size.y * this.anchor[1] + (bbox.height / 2);
-
         }
 
-        this.n.translate(x, y);
+        this.n.setTransformation('translate', x + ' ' + y);
 
         if(this.rotate){
             this.n.rotate(this.rotate, x, y);

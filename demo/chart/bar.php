@@ -159,7 +159,7 @@ require_once("../includes/demo-header.php");
                                     'left': {
                                         stroke: '#aeb0b0',
                                         fill:'none'
-                                        
+
                                     },
                                     'bottom':{
                                         stroke: '#aeb0b0'

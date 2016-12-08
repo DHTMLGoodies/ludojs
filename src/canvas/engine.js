@@ -131,6 +131,7 @@ ludo.canvas.Engine = new Class({
      * @param {Number} y
      */
     rotateAround:function(el, rotation, x, y){
+		console.log('rotate around');
         this.setTransformation(el, 'rotate', rotation + ' ' + x + ' ' + y);
     },
 

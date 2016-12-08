@@ -90,10 +90,9 @@ ludo.chart.Text = new Class({
         }else{
             x = size.x * this.anchor[0];
             y = size.y * this.anchor[1] + (bbox.height / 2);
-
         }
 
-        this.n.translate(x, y);
+        this.n.setTransformation('translate', x + ' ' + y);
 
         if(this.rotate){
             this.n.rotate(this.rotate, x, y);
