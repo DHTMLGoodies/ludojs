@@ -1,7 +1,7 @@
-/* Generated Thu Dec 8 13:33:47 CET 2016 */
+/* Generated Thu Dec 8 14:25:43 CET 2016 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.262
+ludoJS - Javascript framework, 1.1.263
 Copyright (C) 2012-2016  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -4796,7 +4796,6 @@ ludo.canvas.Engine = new Class({
      * @param {Number} y
      */
     rotateAround:function(el, rotation, x, y){
-		console.log('rotate around');
         this.setTransformation(el, 'rotate', rotation + ' ' + x + ' ' + y);
     },
 
@@ -10122,11 +10121,15 @@ ludo.chart.Base = new Class({
      */
     ds : undefined,
 
+    easing:undefined,
+    duration: 300,
+
     __construct: function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['animate', 'bgColor']);
+        this.setConfigParams(config, ['animate', 'bgColor','duration']);
         this.ds = this.getDataSource();
 
+        this.easing = config.easing || ludo.canvas.easing.outSine;
         this.ds.on('load', this.create.bind(this));
         if (this.getDataSource().hasData()) {
             this.create();
@@ -11681,9 +11684,11 @@ ludo.chart.BarLabels = new Class({
 
     textNodes:undefined,
 
+    padding:0,
+
     __construct:function(config){
         this.parent(config);
-        this.setConfigParams(config, ['orientation', 'styling']);
+        this.setConfigParams(config, ['orientation', 'styling','padding']);
         if(this.orientation==undefined)this.orientation = 'horizontal';
         this.styling = this.styling || {};
         this.textNodes = [];
@@ -11691,6 +11696,7 @@ ludo.chart.BarLabels = new Class({
     },
 
     render:function(){
+        this.parent();
         var len = this.getDataSource().length();
         for(var i=0;i<len;i++){
             this.getTextNode(i);
@@ -11721,8 +11727,10 @@ ludo.chart.BarLabels = new Class({
             var height = size.y / len;
             for(i=0;i<len;i++){
                 el = this.getTextNode(i);
-                el.attr('x', size.x);
-                el.attr('y', size.y - (i*height) - (height/2));
+                el.attr('x', size.x - this.padding);
+                el.attr('y', (i*height) + (height/2));
+
+
             }
         }
     },
@@ -11740,6 +11748,7 @@ ludo.chart.BarLabels = new Class({
                 el.textAnchor('middle');
             }else{
                 el.textAnchor('end');
+                el.attr('alignment-baseline', 'middle');
             }
             el.css(this.styling);
             this.append(el);
@@ -11801,6 +11810,10 @@ ludo.chart.BarValues = new Class({
             var pos = this.getPos(val);
             el.attr('x', pos.x);
             el.attr('y', pos.y);
+
+            if(i==this.count-1){
+                el.textAnchor('end');
+            }
         }
     },
 
@@ -11816,7 +11829,7 @@ ludo.chart.BarValues = new Class({
         var ret = {x: 0, y: 0};
         var ratio = (val - this.min) / (this.max - this.min);
         if (this.orientation == 'horizontal') {
-            ret.x = this.size.x - (this.size.x * ratio);
+            ret.x = (this.size.x * ratio);
             ret.y = this.size.y / 2 + this.padding;
         } else {
             ret.x = this.size.x - this.padding;
@@ -11849,6 +11862,9 @@ ludo.chart.BarValues = new Class({
  * @param {Object} config
  * @param {String} config.orientation Bar chart orientation, __horizontal__ or __vertical__
  * @param {Number} config.barSize Fraction width of bars, default: 0.8
+ * @param {Boolean} config.animate True to enable animation
+ * @param {Function} config.easing Easing method to use. default: ludo.canvas.easing.outSine
+ * @param {Function} config.duration Animation duration in ms(1/1000s). Default: 300
  */
 ludo.chart.Bar = new Class({
 
@@ -11860,7 +11876,7 @@ ludo.chart.Bar = new Class({
 
     outline: undefined,
     lines: undefined,
-
+    animationDuration : 500,
     __construct: function (config) {
         this.parent(config);
         this.setConfigParams(config, ['outline', 'lines', 'orientation']);
@@ -12018,10 +12034,22 @@ ludo.chart.Bar = new Class({
                 b.attr('y', s.y);
                 b.animate({
                         'height': height
-                    }, 300, ludo.canvas.Easing.inOutSine, undefined,
+                    }, this.duration, ludo.canvas.easing.inOutSine, undefined,
                     function (node, delta, time, changes) {
                         node.set('y', s.y - changes.height);
                     });
+            }else{
+
+                var width = (s.x * r);
+                b.attr('width', 0);
+
+                b.animate({
+                        'width': width
+                    }, this.duration, this.easing, undefined,
+                    function (node, delta, time, changes) {
+
+                    });
+
             }
         }
 
@@ -12045,7 +12073,9 @@ ludo.chart.Bar = new Class({
 
             var r = (val - min) / (max - min);
 
+
             if (this.orientation == 'horizontal') {
+
                 var x = availSize * i / d.length;
                 var height = (s.y * r);
 
@@ -12055,6 +12085,7 @@ ludo.chart.Bar = new Class({
                 b.attr('height', height);
             } else {
                 b.attr('height', size);
+                b.attr('width', s.x * r);
                 b.attr('y', (i * availSize) + offset);
             }
 
@@ -35866,7 +35897,7 @@ ludo.canvas.Animation = new Class({
 
     fn:function(node, properties, duration, easing, complete, stepFn){
         
-        easing = easing || ludo.canvas.Easing.inSine;
+        easing = easing || ludo.canvas.easing.inSine;
 
         var changes = {};
         var start = {};
@@ -35946,7 +35977,7 @@ ludo.canvas.Animation = new Class({
 
 ludo.canvasAnimation = new ludo.canvas.Animation();
 
-ludo.canvas.Easing = {
+ludo.canvas.easing = {
 
     /**
      *

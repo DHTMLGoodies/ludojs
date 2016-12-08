@@ -40,7 +40,7 @@ require_once("../includes/demo-header.php");
         circle.animate({
                 translate: [300,300],
                 r: 20
-            }, 2000, ludo.canvas.Easing.inOutQuad,
+            }, 2000, ludo.canvas.easing.inOutQuad,
             function () {
                 secondAnimation.call();
             },
@@ -56,7 +56,7 @@ require_once("../includes/demo-header.php");
         circle.animate({
                 translate: [0, 0],
                 r: 5
-            }, 2000, ludo.canvas.Easing.inOutQuad,
+            }, 2000, ludo.canvas.easing.inOutQuad,
             function () {
                 firstAnimation.call();
             },
@@ -73,7 +73,7 @@ require_once("../includes/demo-header.php");
     var rectAnim = function(){
         rect.animate({
             translate:[0,500]
-        },1500, ludo.canvas.Easing.inCubic,
+        },1500, ludo.canvas.easing.inCubic,
             function(){
                 rectAnim2.call();
             }

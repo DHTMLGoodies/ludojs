@@ -7,7 +7,7 @@ ludo.canvas.Animation = new Class({
 
     fn:function(node, properties, duration, easing, complete, stepFn){
         
-        easing = easing || ludo.canvas.Easing.inSine;
+        easing = easing || ludo.canvas.easing.inSine;
 
         var changes = {};
         var start = {};
@@ -87,7 +87,7 @@ ludo.canvas.Animation = new Class({
 
 ludo.canvasAnimation = new ludo.canvas.Animation();
 
-ludo.canvas.Easing = {
+ludo.canvas.easing = {
 
     /**
      *

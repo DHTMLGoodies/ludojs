@@ -19,11 +19,15 @@ ludo.chart.Base = new Class({
      */
     ds : undefined,
 
+    easing:undefined,
+    duration: 300,
+
     __construct: function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['animate', 'bgColor']);
+        this.setConfigParams(config, ['animate', 'bgColor','duration']);
         this.ds = this.getDataSource();
 
+        this.easing = config.easing || ludo.canvas.easing.outSine;
         this.ds.on('load', this.create.bind(this));
         if (this.getDataSource().hasData()) {
             this.create();

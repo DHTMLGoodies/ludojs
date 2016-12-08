@@ -3,6 +3,9 @@
  * @param {Object} config
  * @param {String} config.orientation Bar chart orientation, __horizontal__ or __vertical__
  * @param {Number} config.barSize Fraction width of bars, default: 0.8
+ * @param {Boolean} config.animate True to enable animation
+ * @param {Function} config.easing Easing method to use. default: ludo.canvas.easing.outSine
+ * @param {Function} config.duration Animation duration in ms(1/1000s). Default: 300
  */
 ludo.chart.Bar = new Class({
 
@@ -14,7 +17,7 @@ ludo.chart.Bar = new Class({
 
     outline: undefined,
     lines: undefined,
-
+    animationDuration : 500,
     __construct: function (config) {
         this.parent(config);
         this.setConfigParams(config, ['outline', 'lines', 'orientation']);
@@ -172,10 +175,22 @@ ludo.chart.Bar = new Class({
                 b.attr('y', s.y);
                 b.animate({
                         'height': height
-                    }, 300, ludo.canvas.Easing.inOutSine, undefined,
+                    }, this.duration, ludo.canvas.easing.inOutSine, undefined,
                     function (node, delta, time, changes) {
                         node.set('y', s.y - changes.height);
                     });
+            }else{
+
+                var width = (s.x * r);
+                b.attr('width', 0);
+
+                b.animate({
+                        'width': width
+                    }, this.duration, this.easing, undefined,
+                    function (node, delta, time, changes) {
+
+                    });
+
             }
         }
 
@@ -199,7 +214,9 @@ ludo.chart.Bar = new Class({
 
             var r = (val - min) / (max - min);
 
+
             if (this.orientation == 'horizontal') {
+
                 var x = availSize * i / d.length;
                 var height = (s.y * r);
 
@@ -209,6 +226,7 @@ ludo.chart.Bar = new Class({
                 b.attr('height', height);
             } else {
                 b.attr('height', size);
+                b.attr('width', s.x * r);
                 b.attr('y', (i * availSize) + offset);
             }
 

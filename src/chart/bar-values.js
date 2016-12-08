@@ -48,6 +48,10 @@ ludo.chart.BarValues = new Class({
             var pos = this.getPos(val);
             el.attr('x', pos.x);
             el.attr('y', pos.y);
+
+            if(i==this.count-1){
+                el.textAnchor('end');
+            }
         }
     },
 
@@ -63,7 +67,7 @@ ludo.chart.BarValues = new Class({
         var ret = {x: 0, y: 0};
         var ratio = (val - this.min) / (this.max - this.min);
         if (this.orientation == 'horizontal') {
-            ret.x = this.size.x - (this.size.x * ratio);
+            ret.x = (this.size.x * ratio);
             ret.y = this.size.y / 2 + this.padding;
         } else {
             ret.x = this.size.x - this.padding;

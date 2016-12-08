@@ -13,9 +13,11 @@ ludo.chart.BarLabels = new Class({
 
     textNodes:undefined,
 
+    padding:0,
+
     __construct:function(config){
         this.parent(config);
-        this.setConfigParams(config, ['orientation', 'styling']);
+        this.setConfigParams(config, ['orientation', 'styling','padding']);
         if(this.orientation==undefined)this.orientation = 'horizontal';
         this.styling = this.styling || {};
         this.textNodes = [];
@@ -23,6 +25,7 @@ ludo.chart.BarLabels = new Class({
     },
 
     render:function(){
+        this.parent();
         var len = this.getDataSource().length();
         for(var i=0;i<len;i++){
             this.getTextNode(i);
@@ -53,8 +56,10 @@ ludo.chart.BarLabels = new Class({
             var height = size.y / len;
             for(i=0;i<len;i++){
                 el = this.getTextNode(i);
-                el.attr('x', size.x);
-                el.attr('y', size.y - (i*height) - (height/2));
+                el.attr('x', size.x - this.padding);
+                el.attr('y', (i*height) + (height/2));
+
+
             }
         }
     },
@@ -72,6 +77,7 @@ ludo.chart.BarLabels = new Class({
                 el.textAnchor('middle');
             }else{
                 el.textAnchor('end');
+                el.attr('alignment-baseline', 'middle');
             }
             el.css(this.styling);
             this.append(el);
