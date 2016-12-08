@@ -8,26 +8,27 @@ require_once("../includes/demo-header.php");
 
 
     var dataSource = new ludo.chart.DataSource({
-        url : '../data/bar-chart-data.json',
+        url : '../data/bar-chart-data-nested.json',
         textOf:function(record, caller){
             if(caller == undefined)console.trace();
-            return record.fruit;
+            return record.country;
         },
 
         valueOf:function(record, caller){
+           // console.log(record);
             return record.people;
         },
 
         getText:function(caller){
             switch(caller.id){
-                case 'labelFruit': return "Nicest Fruit";
-                case "labelPeople": return "People"
+                case 'labelsLeft': return "People";
+                case "labelsTop": return "Male Population"
             }
             return "";
         },
 
         max:function(){
-            return this.maxVal + 10 - (this.maxVal % 10);
+            return this.maxVal + 10000 - (this.maxVal % 10000);
         },
 
         min:function(){
@@ -35,18 +36,19 @@ require_once("../includes/demo-header.php");
         },
 
         value:function(value, caller){
+            console.log(value);
             return value;
         },
 
         // Function returning increments for lines, labels
         increments:function(minVal, maxVal, caller){
             // may also return an array like [0,10,20,30,40,50,60]
-            return 10;
+            return 20000;
         }
 
 
     });
-
+    var d = new Date();
     var w = new ludo.Window({
         title:'Bar chart',
         layout:{
@@ -55,8 +57,7 @@ require_once("../includes/demo-header.php");
             height:500,
             left:20,
             top:20,
-            type:'tab',
-            tabs:'left'
+            type:'tab'
         },
         children:[
             {
@@ -79,7 +80,7 @@ require_once("../includes/demo-header.php");
                         dataSource:dataSource,
                         children:[
                             {
-                                id:'labelFruit',
+                                id:'labelsLeft',
                                 type:'chart.Text',
                                 styling:{
                                     fill : '#aeb0b0',
@@ -95,7 +96,7 @@ require_once("../includes/demo-header.php");
                                 rotate:'left'
                             },
                             {
-                                id:'labelPeople',
+                                id:'labelsTop',
                                 type:'chart.Text',
                                 anchor:[0.5,0.5],
                                 styling:{
@@ -103,22 +104,22 @@ require_once("../includes/demo-header.php");
                                     'font-size' : '20px'
                                 },
                                 layout:{
-                                    rightOf:'labelFruit',
+                                    rightOf:'labelsLeft',
                                     fillRight:true,
-                                    alignParentBottom:true,
+                                    alignParentTop:true,
                                     height:50,
                                     alignParentLeft:true
                                 }
                             },
                             {
-                                id:'barLabels',
-                                type:'chart.BarLabels',
+                                id:'barValues',
                                 orientation:'vertical',
+                                type:'chart.BarValues',
                                 layout:{
-                                    rightOf:'labelFruit',
-                                    fillUp:true,
-                                    bottom:80,
-                                    width:60
+                                    rightOf:'labelsLeft',
+                                    below:'labelsTop',
+                                    bottom:30,
+                                    width:50
                                 },
                                 padding:4,
                                 styling:{
@@ -127,12 +128,11 @@ require_once("../includes/demo-header.php");
                                 }
                             },
                             {
-                                id:'barValues',
-                                type:'chart.BarValues',
-                                orientation:'horizontal',
+                                id:'barLabels',
+                                type:'chart.BarLabels',
                                 layout:{
-                                    above:'labelPeople',
-                                    rightOf:'barLabels',
+                                    alignParentBottom:true,
+                                    rightOf:'barValues',
                                     fillRight:true,
                                     height:30
                                 },
@@ -145,15 +145,14 @@ require_once("../includes/demo-header.php");
                                 name : 'bar',
                                 type:'chart.Bar',
                                 animate:true,
-                                orientation:'vertical',
                                 id:'bar',
                                 bgColor:'#424242',
-                                barSize:0.7, // Fraction bar width
+                                barSize:0.9, // Fraction bar width
                                 layout:{
-                                    rightOf:'barLabels',
+                                    rightOf:'barValues',
                                     fillRight:true,
-                                    fillUp:true,
-                                    above:'barValues'
+                                    below:'labelsTop',
+                                    above:'barLabels'
                                 },
                                 lines:{
                                     stroke: '#535353'
@@ -188,6 +187,7 @@ require_once("../includes/demo-header.php");
         ]
     });
 
+    console.log('time to render: ' + (new Date().getTime() - d.getTime()));
 </script>
 </body>
 </html>

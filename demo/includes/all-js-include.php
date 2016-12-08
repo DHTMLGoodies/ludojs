@@ -228,6 +228,7 @@
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/chart/text.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/chart/bar-labels.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/chart/bar-values.js"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/chart/bar-item.js"></script>
 
 
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/movable.js"></script>

@@ -1,0 +1,39 @@
+[
+  {
+    "country": "United Kingdom",
+    "children": [
+      { "name":"0-14", "people" : 5000 }, { "name":"15-64", "people" : 20000 }, { "name":"65-", "people" : 4000 }
+    ]
+  },
+  {
+    "country": "Germany",
+    "children": [
+      { "name":"0-14", "people" : 6000 }, { "name":"15-64", "people" : 29000 }, { "name":"65-", "people" : 4000 }
+    ]
+  },
+  {
+    "country": "Mexico",
+    "children": [
+      { "name":"0-14", "people" : 17000 }, { "name":"15-64", "people" : 31000 }, { "name":"65-", "people" : 2000 }
+    ]
+  },
+  {
+    "country": "Russia",
+    "children": [
+      { "name":"0-14", "people" : 13000 }, { "name":"15-64", "people" : 50000 }, { "name":"65-", "people" : 5000 }
+    ]
+  },
+  {
+    "country": "Brazil",
+    "children": [
+      { "name":"0-14", "people" : 25000 }, { "name":"15-64", "people" : 55000 }, { "name":"65-", "people" : 4000 }
+    ]
+  },
+  {
+    "country": "United States",
+    "children": [
+      { "name":"0-14", "people" : 30000 }, { "name":"15-64", "people" : 90000 }, { "name":"65-", "people" : 15000 }
+    ]
+  }
+
+]

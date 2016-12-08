@@ -1,11 +1,12 @@
 /**
- * Bar Chart
+ * Bar Chart component
  * @param {Object} config
  * @param {String} config.orientation Bar chart orientation, __horizontal__ or __vertical__
  * @param {Number} config.barSize Fraction width of bars, default: 0.8
- * @param {Boolean} config.animate True to enable animation
+ * @param {Boolean} config.animate True to initially animate the chart, default: false
  * @param {Function} config.easing Easing method to use. default: ludo.canvas.easing.outSine
  * @param {Function} config.duration Animation duration in ms(1/1000s). Default: 300
+ * @param {Boolean} config.stacked Stack child data items
  */
 ludo.chart.Bar = new Class({
 
@@ -18,9 +19,12 @@ ludo.chart.Bar = new Class({
     outline: undefined,
     lines: undefined,
     animationDuration : 500,
+
+    fragmentType : 'chart.BarItem',
+    
     __construct: function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['outline', 'lines', 'orientation']);
+        this.setConfigParams(config, ['outline', 'lines', 'orientation','stacked']);
 
         this.barSize = config.barSize || .8;
         this.lineIncrement = config.lineIncrement || 10;
@@ -39,7 +43,6 @@ ludo.chart.Bar = new Class({
         this.createBars();
         this.createOutline();
         this.resizeElements();
-
     },
 
     createBars: function () {
@@ -49,36 +52,50 @@ ludo.chart.Bar = new Class({
         }
     },
 
-
     getBar: function (index, record) {
 
         if (this.nodes.bars[index] == undefined) {
-            var c = {
-                x: 0, y: 0, width: 0, height: 0
-            };
 
+            if(record.children != undefined){
+                var a = [];
+                for(var i=0;i<record.children.length;i++){
+                    a.push(this.getBarRect(record.children[i]));
+                }
+                this.nodes.bars.push(a);
+            }else{
+                var el = this.getBarRect(record);
+                this.nodes.bars.push(el);
 
-            var el = new ludo.canvas.Rect(c);
-            this.nodes.barMap[record.id] = el;
-            this.nodes.bars.push(el);
-            this.append(el);
-            el.css('fill', record.__color);
-            el.on('click', this.fn('selectId', record));
-
-            if (record.__stroke != undefined) {
-                el.css('stroke', record.__stroke);
             }
 
-            if (el.mouseenter != undefined) {
-                el.mouseenter(this.fn('enterId', record));
-                el.mouseleave(this.fn('leaveId', record));
-            } else {
-                el.on('mouseenter', this.fn('enterId', record));
-                el.on('mouseleave', this.fn('leaveId', record));
-            }
         }
 
         return this.nodes.bars[index];
+    },
+
+    getBarRect:function(record){
+        var c = {
+            x: 0, y: 0, width: 0, height: 0
+        };
+        var el = new ludo.canvas.Rect(c);
+        this.nodes.barMap[record.id] = el;
+
+        this.append(el);
+        el.css('fill', record.__color);
+        el.on('click', this.fn('selectId', record));
+
+        if (record.__stroke != undefined) {
+            el.css('stroke', record.__stroke);
+        }
+
+        if (el.mouseenter != undefined) {
+            el.mouseenter(this.fn('enterId', record));
+            el.mouseleave(this.fn('leaveId', record));
+        } else {
+            el.on('mouseenter', this.fn('enterId', record));
+            el.on('mouseleave', this.fn('leaveId', record));
+        }
+        return el;
     },
 
     enter: function (record) {
@@ -160,6 +177,7 @@ ludo.chart.Bar = new Class({
 
     renderAnimation: function () {
 
+
         var d = this.ds.getData();
         var s = this.getSize();
         var min = this.ds.min();
@@ -197,7 +215,19 @@ ludo.chart.Bar = new Class({
     },
 
     resizeBars: function () {
+
         var d = this.ds.getData();
+        for (var i = 0; i < d.length; i++) {
+
+            var b = this.getBar(i, d[i]);
+
+            this.resizeBar(b, d, i);
+
+        }
+    },
+
+    resizeBar:function(b, d, index){
+
 
         var s = this.getSize();
         var min = this.ds.min();
@@ -207,30 +237,28 @@ ludo.chart.Bar = new Class({
         var size = availSize * this.barSize;
         var offset = (availSize - size ) / 2;
 
-        for (var i = 0; i < d.length; i++) {
+        var val = this.ds.valueOf(d[index], this);
 
-            var b = this.getBar(i, d[i]);
-            var val = this.ds.valueOf(d[i], this);
-
-            var r = (val - min) / (max - min);
+        var r = (val - min) / (max - min);
 
 
-            if (this.orientation == 'horizontal') {
+        if (this.orientation == 'horizontal') {
+            var x = availSize * i / d.length;
+            var height = (s.y * r);
 
-                var x = availSize * i / d.length;
-                var height = (s.y * r);
 
-                b.attr('width', size);
-                b.attr('x', (i * availSize) + offset);
-                b.attr('y', s.y - height);
-                b.attr('height', height);
-            } else {
-                b.attr('height', size);
-                b.attr('width', s.x * r);
-                b.attr('y', (i * availSize) + offset);
-            }
+            b.attr('width', size);
+            b.attr('x', (index * availSize) + offset);
+            b.attr('y', s.y - height);
+            b.attr('height', height);
 
+        } else {
+            b.attr('height', size);
+            b.attr('width', s.x * r);
+            b.attr('y', (index * availSize) + offset);
         }
+
+
     },
 
     resizeLines: function () {

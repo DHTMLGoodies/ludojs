@@ -144,12 +144,16 @@ ludo.chart.DataSource = new Class({
      */
     maxVal:undefined,
 
+    maxValAgr:undefined,
+
     /**
      * Min value in data array
      * @property {Number} minVal
      * @mamberof ludo.chart.DataSource.prototype
      */
     minVal:undefined,
+
+    minValAgr:undefined,
 
     _increments:undefined,
     increments:undefined,
@@ -176,7 +180,9 @@ ludo.chart.DataSource = new Class({
         this.map = {};
         this.startAngle = 0;
         this.minVal = undefined;
+        this.minValAgr = undefined;
         this.maxVal = undefined;
+        this.maxValAgr = undefined;
         this.count = this.getCount(this.data);
         this.parseChartBranch(this.data);
         this.updateIncrements();
@@ -243,20 +249,49 @@ ludo.chart.DataSource = new Class({
             }
 
             if(val != undefined && !isNaN(val)){
-                if(this.maxVal == undefined){
-                    this.maxVal = val;
-                }else{
-                    this.maxVal = Math.max(this.maxVal, val);
+                if(node.children == undefined){
+                    this.setMax(val);
+                    this.setMin(val);
                 }
-
-                if(this.minVal == undefined){
-                    this.minVal = val;
-                }else{
-                    this.minVal = Math.min(this.minVal,val);
-                }
+                this.setMinAgr(val);
+                this.setMaxAgr(val);
             }
         }.bind(this));
     },
+
+    setMax:function(val){
+        if(this.maxVal == undefined){
+            this.maxVal = val;
+        }else{
+            this.maxVal = Math.max(this.maxVal, val);
+        }
+    },
+
+    setMaxAgr:function(val){
+        if(this.maxValAgr == undefined){
+            this.maxValAgr = val;
+        }else{
+            this.maxValAgr = Math.max(this.maxValAgr, val);
+        }
+    },
+
+    setMin:function(val){
+        if(this.minVal == undefined){
+            this.minVal = val;
+        }else{
+            this.minVal = Math.min(this.minVal,val);
+        }
+    },
+
+    setMinAgr:function(val){
+        if(this.minValAgr == undefined){
+            this.minValAgr = val;
+        }else{
+            this.minValAgr = Math.min(this.minValAgr,val);
+        }
+    },
+
+
 
     parseChartBranch: function (branch, parent) {
 
@@ -272,6 +307,8 @@ ludo.chart.DataSource = new Class({
                 if(val != undefined){
                     node.__min = this.minVal;
                     node.__max = this.maxVal;
+                    node.__maxAgr = this.maxValAgr;
+                    node.__minAgr = this.minValAgr;
                     node.__fraction = val / sum;
                     node.__percent = Math.round(node.__fraction * 100);
                     node.__radians = ludo.geometry.degreesToRadians(node.__fraction * 360);

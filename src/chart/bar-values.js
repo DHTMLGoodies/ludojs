@@ -24,6 +24,7 @@ ludo.chart.BarValues = new Class({
     },
 
     render: function () {
+        this.parent();
         this.resizeNodes();
     },
 

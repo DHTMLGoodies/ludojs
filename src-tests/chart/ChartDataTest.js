@@ -183,6 +183,83 @@ TestCase("ChartDataTest", {
 
     },
 
+    "test should find max val when nested": function(){
+        // given
+        var d = this.getDataSourceNested();
+
+        // then
+        assertEquals(90000, d.maxVal);
+        assertEquals(135000, d.maxValAgr);
+    },
+
+
+    getDataSourceNested:function(){
+
+        return new ludo.chart.DataSource({
+
+            textOf:function(record, caller){
+                return record.country;
+            },
+
+            valueOf:function(record, caller){
+                return record.people;
+            },
+
+            getText:function(caller){
+                switch(caller.id){
+                    case 'labelsLeft': return "People";
+                    case "labelsTop": return "Male Population"
+                }
+                return "";
+            },
+            data: [
+                {
+                    "id": "uk",
+                    "country": "United Kingdom",
+                    "children": [
+                        { "name":"0-14", "people" : 5000 }, { "name":"15-64", "people" : 20000 }, { "name":"65-", "people" : 4000 }
+                    ]
+                },
+                {
+                    "id" : "de",
+                    "country": "Germany",
+                    "children": [
+                        { "name":"0-14", "people" : 6000 }, { "name":"15-64", "people" : 29000 }, { "name":"65-", "people" : 4000 }
+                    ]
+                },
+                {
+                    "id": "mx",
+                    "country": "Mexico",
+                    "children": [
+                        { "name":"0-14", "people" : 17000 }, { "name":"15-64", "people" : 31000 }, { "name":"65-", "people" : 2000 }
+                    ]
+                },
+                {
+                    "id": "ru",
+                    "country": "Russia",
+                    "children": [
+                        { "name":"0-14", "people" : 13000 }, { "name":"15-64", "people" : 50000 }, { "name":"65-", "people" : 5000 }
+                    ]
+                },
+                {
+                    "id" : "br",
+                    "country": "Brazil",
+                    "children": [
+                        { "name":"0-14", "people" : 25000 }, { "name":"15-64", "people" : 55000 }, { "name":"65-", "people" : 4000 }
+                    ]
+                },
+                {
+                    "id": "us",
+                    "country": "United States",
+                    "children": [
+                        { "name":"0-14", "people" : 30000 }, { "name":"15-64", "people" : 90000 }, { "name":"65-", "people" : 15000 }
+                    ]
+                }
+
+            ]
+        })
+
+    },
 
     getDataSource:function(){
 
@@ -251,7 +328,7 @@ TestCase("ChartDataTest", {
         assertNotUndefined(eventRecord);
         assertEquals(11, eventRecord.id);
     },
-    
+
 
     getDataSource2:function(){
 
@@ -264,7 +341,7 @@ TestCase("ChartDataTest", {
             valueOf:function(record, caller){
                 return record.value;
             },
-            
+
             valueKey:'value',
 
             data:[
