@@ -30,11 +30,14 @@
  *      \_\_angle : 0.92264101427013,
  *      \_\_radians : 2.2604704849618193,
  *      \_\_uid : "chart-node-iw7znu0v"
+ *      \_\_min : 18
+ *      \_\_max : 245
  * }
  * </code>
  *
  * where \_\_color is the records assigned color and \_\_colorOver is it's color when highlighted.
  * You can set this properties manually in your data. When not set, LudoJS will use colors from a color scheme.
+ * You can also set \_\_stroke and \_\_strokeOver for stroke colors.
  * \_\_count is the total number or records in the array.
  * \_\_sum is sum(values) in the array.
  * \_\_fraction is record.value / record.\_\_sum
@@ -43,6 +46,8 @@
  * \_\_angle is mostly for internal use and represents this records start angle in radians when all records fill a circle.
  * \_\_radians is how many radians of a circle this record fills. A circle has Math.PI * 2 radians. \_\_angle and radians
  * are only set when values are numeric.
+ * |_|_min is the lowest value of all records
+ * |_|_max is the highest value of all records.
  *
  *
  * @class ludo.chart.DataSource
@@ -69,6 +74,16 @@
  *
  * </code>
  * @param {String} config.valueKey the key in the data for value, default: 'value'
+ * @param {Function} getText Function returning text. Argument to this function: The View asking for the text, example, a ludo.chart.Text
+ * @param {Function} max Function returning max value for the chart. This is optional. If not set, it will return the maximum value found in the data array.
+ * For bar charts, you might want to use this to return a higher value, example: <code>max:function(){ return this.maxVal + 20 }</code>.
+ * @param {Function} min Function returning min value for the chart. Default: minimum(0, data arrays minimum value)
+ * @param {Function} value. Function returning a value for display. Arguments. 1) value, 2) caller. Example for a label, you might want to return 10 instead of value 10 000 000.
+ * @param {Function} increments. Function returning increments for lines, labels etc. This function may return an array of values(example: for a chart with values form 0-100, this function
+ * may return [0,10,20,30,40,50,60,70,80,90,100]. This function may also return a numeric value, example: 10 instead of the array. Three arguments are sent to this function: 1) the data arrays
+ * minimum value, 2) the data arrays maximum value and 3) The caller, i.e. the SVG view asking for the increments.
+ * @param {Function} strokeOf Optional function returning stroke color for chart item, Arguments: 1) chart record, 2) caller
+ * @param {Function} strokeOverOf Optional function returning mouse over stroke color for chart item, Arguments: 1) chart record, 2) caller
  * @example
  *     var dataSource = new ludo.chart.DataSource({
         data:[
@@ -111,6 +126,9 @@ ludo.chart.DataSource = new Class({
     colorOf: undefined,
     colorOverOf: undefined,
 
+    strokeOf:undefined,
+    strokeOverOf:undefined,
+
     colorUtilObj : undefined,
 
     count:undefined,
@@ -119,8 +137,25 @@ ludo.chart.DataSource = new Class({
 
     selectedRecord:undefined,
 
+    /**
+     * Max value in data array
+     * @property {Number} maxVal
+     * @mamberof ludo.chart.DataSource.prototype
+     */
+    maxVal:undefined,
+
+    /**
+     * Min value in data array
+     * @property {Number} minVal
+     * @mamberof ludo.chart.DataSource.prototype
+     */
+    minVal:undefined,
+
+    _increments:undefined,
+    increments:undefined,
+
     __construct: function (config) {
-        this.setConfigParams(config, ['valueKey','color']);
+        this.setConfigParams(config, ['valueKey','color','valueOf', 'textOf', 'getText','max','min','increments','strokeOf', 'strokeOverOf']);
         this.parent(config);
 
         if(this.valueOf == undefined){
@@ -132,17 +167,42 @@ ludo.chart.DataSource = new Class({
     },
 
     parseNewData: function (data) {
-        this.data = data;
-        this.map = {};
-        this.count = this.getCount();
-        this.parseChartBranch(this.data);
+        this.handleData(data);
         this.parent(this.data);
     },
 
+    handleData:function(data){
+        this.data = data;
+        this.map = {};
+        this.startAngle = 0;
+        this.minVal = undefined;
+        this.maxVal = undefined;
+        this.count = this.getCount(this.data);
+        this.parseChartBranch(this.data);
+        this.updateIncrements();
+    },
+
     update: function (record) {
-        this.count = this.getCount();
-        this.parseChartBranch((this.data));
+        this.handleData(this.data);
         this.fireEvent('update', [record, this]);
+    },
+
+    updateIncrements:function(){
+        if(this.increments == undefined)return;
+        var inc = this.increments(this.minVal, this.maxVal, this);
+        if(jQuery.isArray(inc)){
+            this._increments = inc;
+        }else{
+            this._increments = [];
+            for(var i=this.min(), len = this.max(); i<=len; i+=inc){
+                this._increments.push(i);
+            }
+        }
+
+    },
+
+    getIncrements:function(){
+        return this._increments;
     },
 
     sum: function (branch) {
@@ -153,11 +213,12 @@ ludo.chart.DataSource = new Class({
         return sum;
     },
 
-    getCount:function(){
+    getCount:function(data){
+
          var count = 0;
-        jQuery.each(this.data, function(key, node){
+        jQuery.each(data, function(key, node){
             count++;
-            if(node.children != undefined){
+            if(node.children != undefined && jQuery.isArray(node.children)){
                 count += this.getCount(node.children);
             }
         }.bind(this));
@@ -180,6 +241,20 @@ ludo.chart.DataSource = new Class({
                     }
                 }
             }
+
+            if(val != undefined && !isNaN(val)){
+                if(this.maxVal == undefined){
+                    this.maxVal = val;
+                }else{
+                    this.maxVal = Math.max(this.maxVal, val);
+                }
+
+                if(this.minVal == undefined){
+                    this.minVal = val;
+                }else{
+                    this.minVal = Math.min(this.minVal,val);
+                }
+            }
         }.bind(this));
     },
 
@@ -195,6 +270,8 @@ ludo.chart.DataSource = new Class({
             var val = this.value(node);
             if(val == undefined || !isNaN(val)){
                 if(val != undefined){
+                    node.__min = this.minVal;
+                    node.__max = this.maxVal;
                     node.__fraction = val / sum;
                     node.__percent = Math.round(node.__fraction * 100);
                     node.__radians = ludo.geometry.degreesToRadians(node.__fraction * 360);
@@ -207,16 +284,10 @@ ludo.chart.DataSource = new Class({
             if(node.index == undefined){
                 node.__index = i++;
             }
-            if(node.__color == undefined){
-                if(this.colorOf != undefined){
-                    node.__color = this.colorOf(node);
-                    if(this.colorOverOf != undefined){
-                        node.__colorOver = this.colorOverOf(node);
-                    }
-                }else{
-                    this.setColor(node);
-                }
-            }
+
+            this.setColor(node);
+
+
 
             if(node.id == undefined){
                 node.id = 'chart-node-' + String.uniqueID();
@@ -255,15 +326,27 @@ ludo.chart.DataSource = new Class({
         return undefined;
     },
 
+    enterId:function(id){
+        this.enter(this.map[id]);    
+    },
+    
     enter:function(record){
         this.highlighted = record;
         this.fireEvent('enter', [record, this]);
         this.fireEvent('enter' + record.__uid, [record, this]);
     },
 
+    leaveId:function(id){
+        this.leave(this.map[id]);    
+    },
+    
     leave:function(record){
         this.fireEvent('leave', [record, this]);
         this.fireEvent('leave' + record.__uid, [record, this]);
+    },
+    
+    selectId:function(id){
+        this.select(this.map[id]);    
     },
 
     select:function(record){
@@ -294,8 +377,14 @@ ludo.chart.DataSource = new Class({
 
     setColor:function(record){
         var u = false;
+
         if(record.__color == undefined){
-            record.__color = this.color;
+
+            if(this.colorOf != undefined){
+                record.__color = this.colorOf(record);
+            }else{
+                record.__color = this.color;
+            }
             u = true;
         }
 
@@ -306,8 +395,14 @@ ludo.chart.DataSource = new Class({
             }
             u = true;
         }
-        if(u){
 
+        if(record.__stroke == undefined && this.strokeOf != undefined){
+            record.__stroke = this.strokeOf(record, this);
+        }
+        if(record.__strokeOver == undefined && this.strokeOverOf != undefined){
+            record.__strokeOver = this.strokeOverOf(record, this);
+        }
+        if(u){
             this.color = this.colorUtil().offsetHue(record.__color, (360 / (record.__count + 1)));
         }
     },
@@ -321,5 +416,21 @@ ludo.chart.DataSource = new Class({
 
     getHighlighted:function(){
         return this.highlighted;
+    },
+
+    getText:function(caller){
+
+    },
+
+    length:function(){
+        return this.data.length;
+    },
+
+    max:function(){
+        return this.maxVal;
+    },
+
+    min:function(){
+        return Math.min(0, this.minVal);
     }
 });

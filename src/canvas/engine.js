@@ -25,6 +25,17 @@ ludo.canvas.Engine = new Class({
      */
     cache:{},
 
+	attr:function(el, key, value){
+		if (key.substring(0, 6) == "xlink:") {
+			if(value['id']!==undefined)value = '#' + value.getId();
+			el.setAttributeNS("http://www.w3.org/1999/xlink", key.substring(6), value);
+		} else {
+			if(value['id']!==undefined)value = 'url(#' + value.getId() + ')';
+			el.setAttribute(key, value);
+		}
+
+	},
+
 	/*
 	 * Updates a property of a SVG DOM node
 	 * @function set
@@ -185,7 +196,21 @@ ludo.canvas.Engine = new Class({
 		}
 		return el.transform.baseVal.getItem(0);
 	},
+	
+	svgElement:undefined,
+	
+	getSVGElement:function(el){
+		if(el.ownerSVGElement)return el.ownerSVGElement;
+		if(this.svgElement == undefined){
+			this.svgElement = document.createElementNS("http://www.w3.org/2000/svg", 'svg');
+		}
+		return this.svgElement;
+	},
 
+	getNormalizedMatrix:function(el){
+
+	},
+	
 	setTransformation:function (el, transformation, value) {
 		var id = this.get(el, 'id');
 		this.buildTransformationCacheIfNotExists(el, id);

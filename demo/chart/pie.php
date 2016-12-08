@@ -82,7 +82,7 @@ require_once("../includes/demo-header.php");
                             {
                                 name:'labels',
                                 id:'labels',
-                                type:'chart.Labels',
+                                type:'chart.LabelList',
                                 textStyles:{
                                     'fill': ludo.$C('text'),
                                     'font-size':'14px',

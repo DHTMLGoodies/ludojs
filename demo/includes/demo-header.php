@@ -43,8 +43,7 @@ $skin = isset($skin) ? $skin : 'twilight';
     <?php
     if(isset($_GET["debug"])){
         ?>
-        <script type="text/javascript" src="<?php echo $prefix; ?>../mootools/MooTools-Core-1.6.0.js"></script>
-        <script type="text/javascript" src="<?php echo $prefix; ?>../mootools/MooTools-More-1.6.0.js"></script>
+
         <?php
 
         require_once("all-js-include.php");

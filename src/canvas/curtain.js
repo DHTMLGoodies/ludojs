@@ -51,7 +51,7 @@ ludo.canvas.Curtain = new Class({
 	close:function (direction, duration, fps) {
 		this.onStart();
 		this.action = 'close';
-		this.getAnimation().animate(this.getCoordinates(direction, true), duration, fps);
+		this.getAnimation().animateOld(this.getCoordinates(direction, true), duration, fps);
 	},
 
 	onStart:function(){

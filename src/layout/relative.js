@@ -58,6 +58,7 @@ ludo.layout.Relative = new Class({
      * @private
      */
 	layoutFnProperties:[
+		'bottom','right',
 		'width', 'height',
 		'alignParentTop', 'alignParentBottom', 'alignParentLeft', 'alignParentRight',
 		'leftOf', 'rightOf', 'below', 'above',
@@ -153,12 +154,16 @@ ludo.layout.Relative = new Class({
 	getLayoutFn:function (property, child) {
 		var c = this.newChildCoordinates[child.id];
 		var refC;
+
 		switch (property) {
 			case 'top':
 			case 'left':
+			case 'bottom':
+			case 'right':
 				return function () {
 					c[property] = child.layout[property];
 				}.bind(child);
+
             case 'offsetX':
                 return function(){
                     c.left += child.layout[property];

@@ -50,11 +50,21 @@ ludo.chart.PieSlice = new Class({
 
     focus:function(){
         var coords = this.centerOffset(this.getParent().getHighlightSize());
-        this.node().engine().effect().fly(this.node().getEl(), coords.x, coords.y,.1);
+
+        this.node().animate({
+            translate: [coords.x, coords.y]
+        }, 100);
+
+      //  this.node().engine().effect().fly(this.node().getEl(), coords.x, coords.y,.1);
     },
 
     blur:function(){
-        this.node().engine().effect().flyBack(this.node().getEl(),.1);
+
+
+        this.node().animate({
+            translate: [0,0]
+        }, 100);
+
     },
 
     node:function(){

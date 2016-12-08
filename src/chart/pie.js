@@ -148,18 +148,14 @@ ludo.chart.Pie = new Class({
     },
 
     render:function(){
-
-
-        this.animate();
-
-
+        this.renderAnimation();
     },
 
     getRadius:function(){
         return this.parent() - 20;
     },
 
-    animate:function(){
+    renderAnimation:function(){
         var r = this.getRecords();
         if(!r)return;
         var e = new ludo.canvas.Effect();

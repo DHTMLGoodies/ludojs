@@ -7,6 +7,9 @@
  */
 
 ?>
+<script type="text/javascript" src="<?php echo $prefix; ?>../mootools/MooTools-Core-1.6.0.js"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../mootools/MooTools-More-1.6.0.js"></script>
+
 
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/ludo.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/util.js"></script>
@@ -19,6 +22,7 @@
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/util/geometry.js"></script>
 
 
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/animation.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/engine.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/view.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/event-manager.js"></script>
@@ -144,7 +148,6 @@
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/progress/text.js"></script>
 
 
-
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/card/button.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/card/finish-button.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/card/next-button.js"></script>
@@ -210,7 +213,6 @@
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/chart/base.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/chart/data-provider.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/chart/fragment.js"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/chart/label.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/chart/needle.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/chart/pie-slice.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/chart/pie-slice-highlighted.js"></script>
@@ -219,8 +221,13 @@
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/chart/gauge.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/chart/chart.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/chart/pie.js"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/chart/labels.js"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/chart/label-list.js"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/chart/label-list-item.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/chart/data-source.js"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/chart/bar.js"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/chart/text.js"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/chart/bar-labels.js"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/chart/bar-values.js"></script>
 
 
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/movable.js"></script>

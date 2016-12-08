@@ -39,6 +39,13 @@ ludo.canvas.Group = new Class({
         }
     },
 
+    getCenter:function(){
+        var s = this.getSize();
+        return {
+            x : s.x / 2, y: s.y / 2
+        }
+    },
+
     isHidden:function () {
         return false;
     }

@@ -91,6 +91,36 @@ TestCase("ChartDataTest", {
 
     },
 
+    "test should be able to get increments": function(){
+        // given
+        var d = this.getDataSource();
+
+        // when
+        var increments = d.getIncrements();
+
+        // then
+        assertNotUndefined(increments);
+
+        assertEquals(0, increments[0]);
+        assertEquals(10, increments[1]);
+        assertEquals(21, increments.length);
+
+    },
+
+    "test should find max": function(){
+
+        // given
+        var d = this.getDataSource();
+
+        // when
+        var data = d.getData();
+
+
+        // then
+        assertEquals(200, data[0].__max);
+        assertEquals(200, data[1].__max);
+    },
+
     "test should fire enter event": function(){
         // given
         var d = this.getDataSource();
@@ -166,6 +196,10 @@ TestCase("ChartDataTest", {
                 return record.value;
             },
 
+            increments:function(minValue, maxValue, caller){
+                return 10;
+            },
+
             valueKey:'value',
 
             data:[
@@ -230,7 +264,7 @@ TestCase("ChartDataTest", {
             valueOf:function(record, caller){
                 return record.value;
             },
-
+            
             valueKey:'value',
 
             data:[

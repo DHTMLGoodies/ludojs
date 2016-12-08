@@ -1,7 +1,7 @@
-/* Generated Fri Dec 2 20:01:23 CET 2016 */
+/* Generated Thu Dec 8 13:10:41 CET 2016 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.256
+ludoJS - Javascript framework, 1.1.261
 Copyright (C) 2012-2016  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -4690,6 +4690,17 @@ ludo.canvas.Engine = new Class({
      */
     cache:{},
 
+	attr:function(el, key, value){
+		if (key.substring(0, 6) == "xlink:") {
+			if(value['id']!==undefined)value = '#' + value.getId();
+			el.setAttributeNS("http://www.w3.org/1999/xlink", key.substring(6), value);
+		} else {
+			if(value['id']!==undefined)value = 'url(#' + value.getId() + ')';
+			el.setAttribute(key, value);
+		}
+
+	},
+
 	/*
 	 * Updates a property of a SVG DOM node
 	 * @function set
@@ -4850,7 +4861,21 @@ ludo.canvas.Engine = new Class({
 		}
 		return el.transform.baseVal.getItem(0);
 	},
+	
+	svgElement:undefined,
+	
+	getSVGElement:function(el){
+		if(el.ownerSVGElement)return el.ownerSVGElement;
+		if(this.svgElement == undefined){
+			this.svgElement = document.createElementNS("http://www.w3.org/2000/svg", 'svg');
+		}
+		return this.svgElement;
+	},
 
+	getNormalizedMatrix:function(el){
+
+	},
+	
 	setTransformation:function (el, transformation, value) {
 		var id = this.get(el, 'id');
 		this.buildTransformationCacheIfNotExists(el, id);
@@ -5100,7 +5125,7 @@ ludo.canvasEngine = new ludo.canvas.Engine();
  Class for creating SVG DOM Nodes
  @namespace ludo.canvas
  @class ludo.canvas.Node
- 
+
  @param {String} tag
  @param {Object} properties
  @optional
@@ -5118,406 +5143,460 @@ ludo.canvasEngine = new ludo.canvas.Engine();
 
  */
 ludo.canvas.Node = new Class({
-	Extends:Events,
-	el:undefined,
-	tagName:undefined,
-	id:undefined,
+    Extends: Events,
+    el: undefined,
+    tagName: undefined,
+    id: undefined,
 
-	initialize:function (tagName, properties, text) {
-		properties = properties || {};
-		properties.id = this.id = properties.id || 'ludo-svg-node-' + String.uniqueID();
-		if (tagName !== undefined)this.tagName = tagName;
-		this.createNode(this.tagName, properties);
-		if (text !== undefined) {
-			ludo.canvasEngine.text(this.el, text);
-		}
-	},
+    mat: undefined,
 
-	createNode:function (el, properties) {
-		if (properties !== undefined) {
-			if (typeof el == "string") {
-				el = this.createNode(el);
-			}
-			Object.each(properties, function (value, key) {
-				if (value['getUrl'] !== undefined) {
-					value = value.getUrl();
-				}
-				if(key == 'css'){
-					ludo.canvasEngine.css(el, value);
-				}
-				else if (key.substring(0, 6) == "xlink:") {
-					el.setAttributeNS("http://www.w3.org/1999/xlink", key.substring(6), value);
-				} else {
-					el.setAttribute(key, value);
-				}
-			});
-		} else {
-			el = document.createElementNS("http://www.w3.org/2000/svg", el);
-		}
-		this.el = el;
-		el.style && (el.style.webkitTapHighlightColor = "rgba(0,0,0,0)");
-		return el;
-	},
+    initialize: function (tagName, properties, text) {
+        properties = properties || {};
+        properties.id = this.id = properties.id || 'ludo-svg-node-' + String.uniqueID();
+        if (tagName !== undefined)this.tagName = tagName;
+        this.createNode(this.tagName, properties);
+        if (text !== undefined) {
+            ludo.canvasEngine.text(this.el, text);
+        }
 
-	getEl:function () {
-		return this.el;
-	},
+        this.mat = {
+            translate: undefined,
+            _translate: [0,0],
+            rotate: undefined,
+            scale: undefined,
+            skewX: undefined,
+            skewY: undefined
+        };
+    },
 
-    engine:function(){
+    createNode: function (el, properties) {
+        if (properties !== undefined) {
+            if (typeof el == "string") {
+                el = this.createNode(el);
+            }
+            Object.each(properties, function (value, key) {
+                if (value['getUrl'] !== undefined) {
+                    value = value.getUrl();
+                }
+                if (key == 'css') {
+                    ludo.canvasEngine.css(el, value);
+                }
+                else if (key.substring(0, 6) == "xlink:") {
+                    el.setAttributeNS("http://www.w3.org/1999/xlink", key.substring(6), value);
+                } else {
+                    el.setAttribute(key, value);
+                }
+            });
+        } else {
+            el = document.createElementNS("http://www.w3.org/2000/svg", el);
+        }
+        this.el = el;
+        el.style && (el.style.webkitTapHighlightColor = "rgba(0,0,0,0)");
+        return el;
+    },
+
+    getEl: function () {
+        return this.el;
+    },
+
+    engine: function () {
         return ludo.canvasEngine;
     },
 
-	addEvents:function(events){
-		for(var key in events){
-			if(events.hasOwnProperty(key)){
-				this.on(key, events[key]);
-			}
-		}
-	},
+    addEvents: function (events) {
+        for (var key in events) {
+            if (events.hasOwnProperty(key)) {
+                this.on(key, events[key]);
+            }
+        }
+    },
 
-	on:function (event, fn) {
+    on: function (event, fn) {
 
-		switch (event.toLowerCase()) {
-			case 'mouseenter':
-				ludo.canvasEventManager.addMouseEnter(this, fn);
-				break;
-			case 'mouseleave':
-				ludo.canvasEventManager.addMouseLeave(this, fn);
-				break;
+        switch (event.toLowerCase()) {
+            case 'mouseenter':
+                ludo.canvasEventManager.addMouseEnter(this, fn);
+                break;
+            case 'mouseleave':
+                ludo.canvasEventManager.addMouseLeave(this, fn);
+                break;
             default:
-				this._addEvent(event, this.getDOMEventFn(event, fn), this.el);
+                this._addEvent(event, this.getDOMEventFn(event, fn), this.el);
                 this.addEvent(event, fn);
-		}
-	},
-	/**
-	 * Add event to DOM element
-	 * el is optional, default this.el
-	 * @function _addEvent
-	 * @param {String} ev
-	 * @param {Function} fn
-	 * @param {Object} el
-	 * @private
-	 * @memberof ludo.canvas.Node.prototype
-	 */
-	_addEvent:(function () {
-		if (document.addEventListener) {
-			return function (ev, fn, el) {
-				if (el == undefined)el = this.el;
-				el.addEventListener(ev, fn, false);
-			}
-		} else {
-			return function (ev, fn, el) {
-				if (el == undefined)el = this.el;
-				el.attachEvent("on" + ev, fn);
-			}
-		}
-	})(),
-	getDOMEventFn:function (eventName, fn) {
-		return  function (e) {
-			e = e || window.event;
+        }
+    },
+    /**
+     * Add event to DOM element
+     * el is optional, default this.el
+     * @function _addEvent
+     * @param {String} ev
+     * @param {Function} fn
+     * @param {Object} el
+     * @private
+     * @memberof ludo.canvas.Node.prototype
+     */
+    _addEvent: (function () {
+        if (document.addEventListener) {
+            return function (ev, fn, el) {
+                if (el == undefined)el = this.el;
+                el.addEventListener(ev, fn, false);
+            }
+        } else {
+            return function (ev, fn, el) {
+                if (el == undefined)el = this.el;
+                el.attachEvent("on" + ev, fn);
+            }
+        }
+    })(),
+    getDOMEventFn: function (eventName, fn) {
+        return function (e) {
+            e = e || window.event;
 
-			var target = e.target || e.srcElement;
-			while (target && target.nodeType == 3) target = target.parentNode;
-			target = target['correspondingUseElement'] || target;
-			e = {
-				target:target,
-				pageX: (e.pageX != null) ? e.pageX : e.clientX + document.scrollLeft,
-				pageY: (e.pageY != null) ? e.pageY : e.clientY + document.scrollTop,
-				clientX:(e.pageX != null) ? e.pageX - window.pageXOffset : e.clientX,
-				clientY:(e.pageY != null) ? e.pageY - window.pageYOffset : e.clientY,
-				event:e
-			};
-			if (fn) {
-				fn.call(this, e, this, fn);
-			}
-			return false;
-		}.bind(this);
-	},
+            var target = e.target || e.srcElement;
+            while (target && target.nodeType == 3) target = target.parentNode;
+            target = target['correspondingUseElement'] || target;
+            e = {
+                target: target,
+                pageX: (e.pageX != null) ? e.pageX : e.clientX + document.scrollLeft,
+                pageY: (e.pageY != null) ? e.pageY : e.clientY + document.scrollTop,
+                clientX: (e.pageX != null) ? e.pageX - window.pageXOffset : e.clientX,
+                clientY: (e.pageY != null) ? e.pageY - window.pageYOffset : e.clientY,
+                event: e
+            };
+            if (fn) {
+                fn.call(this, e, this, fn);
+            }
+            return false;
+        }.bind(this);
+    },
 
-	/**
-	 * append a new node
-	 * @function append
-	 * @param {canvas.View|canvas.Node} node node
-	 * @return {canvas.Node} parent
-	 * @memberof ludo.canvas.Node.prototype
-	 */
-	append:function (node) {
-		this.el.appendChild(node.getEl());
-		node.parentNode = this;
-		return this;
-	},
+    /**
+     * append a new node
+     * @function append
+     * @param {canvas.View|canvas.Node} node node
+     * @return {canvas.Node} parent
+     * @memberof ludo.canvas.Node.prototype
+     */
+    append: function (node) {
+        this.el.appendChild(node.getEl());
+        node.parentNode = this;
+        return this;
+    },
 
-	parent:function () {
-		return this.parentNode;
-	},
+    parent: function () {
+        return this.parentNode;
+    },
 
-    show:function(){
+    show: function () {
         ludo.canvasEngine.show(this.el);
     },
 
-    hide:function(){
+    hide: function () {
         ludo.canvasEngine.hide(this.el);
     },
 
-	setProperties:function(p){
-		for(var key in p){
-			if(p.hasOwnProperty(key)){
-				this.set(key, p[key]);
-			}
-		}
-	},
-
-	set:function (key, value) {
-		ludo.canvasEngine.set(this.el, key, value);
-	},
-
-	remove:function(key){
-		ludo.canvasEngine.remove(this.el, key);
-	},
-
-	get:function (key) {
-		return ludo.canvasEngine.get(this.el, key);
-	},
-
-	getTransformation:function (key) {
-		return ludo.canvasEngine.getTransformation(this.el, key);
-	},
-
-	setTransformation:function (key, value) {
-		ludo.canvasEngine.setTransformation(this.el, key, value);
-	},
-
-	translate:function (x, y) {
-        if(y === undefined){
-            y = x.y;
-            x = x.x;
+    setProperties: function (p) {
+        for (var key in p) {
+            if (p.hasOwnProperty(key)) {
+                this.set(key, p[key]);
+            }
         }
-		ludo.canvasEngine.setTransformation(this.el, 'translate', x + ' ' + y);
-	},
+    },
 
-	getTranslate:function () {
-		return ludo.canvasEngine.getTransformation(this.el, 'translate');
-	},
+    attr: function (key, value) {
+        ludo.canvasEngine.attr(this.el, key, value);
+    },
 
-    rotate:function(rotation, x, y){
+    set: function (key, value) {
+        ludo.canvasEngine.set(this.el, key, value);
+    },
+
+    remove: function (key) {
+        ludo.canvasEngine.remove(this.el, key);
+    },
+
+    get: function (key) {
+        return ludo.canvasEngine.get(this.el, key);
+    },
+
+    getTransformation: function (key) {
+        return ludo.canvasEngine.getTransformation(this.el, key);
+    },
+
+    setTransformation: function (key, value) {
+        ludo.canvasEngine.setTransformation(this.el, key, value);
+    },
+
+    commitTranslation:function(){
+        this.mat._translate[0] = this.mat.translate[0];
+        this.mat._translate[1] = this.mat.translate[1];
+    },
+
+    translate: function (x, y) {
+        this.mat.translate = [x + this.mat._translate[0],y + this.mat._translate[1]];
+        this.updateMatrix();
+    },
+
+    getTranslate: function () {
+        return this.mat.translate || [this.mat._translate[0],this.mat._translate[1]];
+    },
+
+    /**
+     * Apply filter to node
+     * @function applyFilter
+     * @param {canvas.Filter} filter
+     * @memberof ludo.canvas.Node.prototype
+     */
+    applyFilter: function (filter) {
+        this.set('filter', filter.getUrl());
+    },
+    /**
+     * Apply mask to node
+     * @function addMask
+     * @param {canvas.Node} mask
+     * @memberof ludo.canvas.Node.prototype
+     */
+    applyMask: function (mask) {
+        this.set('mask', mask.getUrl());
+    },
+
+    /**
+     * Apply clip path to node
+     * @function applyClipPath
+     * @param {canvas.Node} clip
+     * @memberof ludo.canvas.Node.prototype
+     */
+    applyClipPath: function (clip) {
+        this.set('clip-path', clip.getUrl());
+    },
+
+    /**
+     Create url reference
+     @function url
+     @param {String} key
+     @memberof ludo.canvas.Node.prototype
+     @param {canvas.Node|String} to
+     @example
+     node.url('filter', filterObj); // sets node property filter="url(#&lt;filterObj->id>)"
+     node.url('mask', 'MyMask'); // sets node property mask="url(#MyMask)"
+     */
+    url: function (key, to) {
+        this.set(key, to['getUrl'] !== undefined ? to.getUrl() : 'url(#' + to + ')');
+    },
+
+    href: function (url) {
+        ludo.canvasEngine.set(this.el, 'xlink:href', url);
+    },
+    /**
+     * Update text content of node
+     * @function text
+     * @param {String} text
+     * @memberof ludo.canvas.Node.prototype
+     */
+    text: function (text) {
+        ludo.canvasEngine.text(this.el, text);
+    },
+    /**
+     Adds a new child DOM node
+     @function add
+     @param {String} tagName
+     @param {Object} properties
+     @param {String} text content
+     @optional
+     @return {ludo.canvas.Node} added node
+     @memberof ludo.canvas.Node.prototype
+     @example
+     var filter = new ludo.canvas.Filter();
+     filter.add('feGaussianBlur', { 'stdDeviation' : 2, result:'blur'  });
+     */
+    add: function (tagName, properties, text) {
+        var node = new ludo.canvas.Node(tagName, properties, text);
+        this.append(node);
+        return node;
+    },
+
+    css: function (key, value) {
+        if ($.type(key) == "string") {
+            ludo.canvasEngine.css(this.el, key, value);
+        } else {
+            this.setStyles(key);
+        }
+    },
+
+    setStyles: function (styles) {
+        $.each(styles, function (key, value) {
+            ludo.canvasEngine.css(this.el, key, value);
+        }.bind(this));
+    },
+
+    /**
+     * Add css class to SVG node
+     * @function addClass
+     * @param {String} className
+     * @memberof ludo.canvas.Node.prototype
+     */
+    addClass: function (className) {
+        ludo.canvasEngine.addClass(this.el, className);
+    },
+    /**
+     Returns true if svg node has given css class name
+     @function hasClass
+     @param {String} className
+     @return {Boolean}
+     @memberof ludo.canvas.Node.prototype
+     @example
+     var node = new ludo.canvas.Node('rect', { id:'myId2'});
+     node.addClass('myClass');
+     alert(node.hasClass('myClass'));
+     */
+    hasClass: function (className) {
+        return ludo.canvasEngine.hasClass(this.el, className);
+    },
+    /**
+     Remove css class name from css Node
+     @function removeClass
+     @param {String} className
+     @memberof ludo.canvas.Node.prototype
+     @example
+     var node = new ludo.canvas.Node('rect', { id:'myId2'});
+     node.addClass('myClass');
+     node.addClass('secondClass');
+     node.removeClass('myClass');
+     */
+    removeClass: function (className) {
+        ludo.canvasEngine.removeClass(this.el, className);
+    },
+
+    getId: function () {
+        return this.id;
+    },
+
+    getUrl: function () {
+        return 'url(#' + this.id + ')';
+    },
+    /**
+     * Returns bounding box of el as an object with x,y, width and height.
+     * @function getBBox
+     * @return {Object}
+     * @memberof ludo.canvas.Node.prototype
+     */
+    getBBox: function () {
+        return this.el.getBBox();
+    },
+
+    /**
+     * Returns rectangular size of element, i.e. bounding box width - bounding box x and
+     * bounding box width - bounding box y. Values are returned as { x : 100, y : 150 }
+     * where x is width and y is height.
+     * @function getSize
+     * @return {Object} size x and y
+     * @memberof ludo.canvas.Node.prototype
+     */
+    getSize: function () {
+        var b = this.getBBox();
+        return {
+            x: b.width - b.x,
+            y: b.height - b.y
+        };
+    },
+
+    /**
+     * The nearest ancestor 'svg' element. Null if the given element is the outermost svg element.
+     * @function getCanvas
+     * @return {ludo.canvas.Node.el} svg
+     * @memberof ludo.canvas.Node.prototype
+     */
+    getCanvas: function () {
+        return this.el.ownerSVGElement;
+    },
+    /**
+     * The element which established the current viewport. Often, the nearest ancestor ‘svg’ element. Null if the given element is the outermost svg element
+     * @function getViewPort
+     * @return {ludo.canvas.Node.el} svg
+     * @memberof ludo.canvas.Node.prototype
+     */
+    getViewPort: function () {
+        return this.el.viewPortElement;
+    },
+
+    scale: function (x, y) {
+        this.mat.scale = [x, y];
+        this.updateMatrix();
+        // ludo.canvasEngine.scale(this.el, width, height);
+    },
+
+    rotate: function (rotation, x, y) {
+
         ludo.canvasEngine[x !== undefined ? 'rotateAround' : 'rotate'](this.el, rotation, x, y);
     },
 
-	/**
-	 * Apply filter to node
-	 * @function applyFilter
-	 * @param {canvas.Filter} filter
-	 * @memberof ludo.canvas.Node.prototype
-	 */
-	applyFilter:function (filter) {
-		this.set('filter', filter.getUrl());
-	},
-	/**
-	 * Apply mask to node
-	 * @function addMask
-	 * @param {canvas.Node} mask
-	 * @memberof ludo.canvas.Node.prototype
-	 */
-	applyMask:function (mask) {
-		this.set('mask', mask.getUrl());
-	},
 
-	/**
-	 * Apply clip path to node
-	 * @function applyClipPath
-	 * @param {canvas.Node} clip
-	 * @memberof ludo.canvas.Node.prototype
-	 */
-	applyClipPath:function(clip){
-		this.set('clip-path', clip.getUrl());
-	},
+    updateMatrix: function () {
 
-	/**
-	 Create url reference
-	 @function url
-	 @param {String} key
-	 @memberof ludo.canvas.Node.prototype
-	 @param {canvas.Node|String} to
-	 @example
-	 node.url('filter', filterObj); // sets node property filter="url(#&lt;filterObj->id>)"
-	 node.url('mask', 'MyMask'); // sets node property mask="url(#MyMask)"
-	 */
-	url:function (key, to) {
-		this.set(key, to['getUrl'] !== undefined ? to.getUrl() : 'url(#' + to + ')');
-	},
+        var m = this.getMatrix();
 
-	href:function (url) {
-		ludo.canvasEngine.set(this.el, 'xlink:href', url);
-	},
-	/**
-	 * Update text content of node
-	 * @function text
-	 * @param {String} text
-	 * @memberof ludo.canvas.Node.prototype
-	 */
-	text:function (text) {
-		ludo.canvasEngine.text(this.el, text);
-	},
-	/**
-	 Adds a new child DOM node
-	 @function add
-	 @param {String} tagName
-	 @param {Object} properties
-	 @param {String} text content
-	 @optional
-	 @return {ludo.canvas.Node} added node
-	 @memberof ludo.canvas.Node.prototype
-	 @example
-	 var filter = new ludo.canvas.Filter();
-	 filter.add('feGaussianBlur', { 'stdDeviation' : 2, result:'blur'  });
-	 */
-	add:function (tagName, properties, text) {
-		var node = new ludo.canvas.Node(tagName, properties, text);
-		this.append(node);
-		return node;
-	},
+        /**
+         *  this.mat = {
+            translate: undefined,
+            rotate: undefined,
+            scale: undefined,
+            skewX: undefined,
+            skewY: undefined
+        };
 
-	css:function (key, value) {
-		if($.type(key) == "string"){
-			ludo.canvasEngine.css(this.el, key, value);
-		}else{
-			this.setStyles(key);
-		}
-	},
+         */
+        if(this.mat.translate)m = m.translate(this.mat.translate[0], this.mat.translate[1]);
+        if(this.mat.scale)m = m.scale(this.mat.scale[0], this.mat.scale[1]);
 
-	setStyles:function(styles){
-		$.each(styles, function(key, value){
-			ludo.canvasEngine.css(this.el, key, value);
-		}.bind(this));
-	},
+        ludo.canvasEngine.getTransformObject(this.el).setMatrix(m);
+    },
 
-	/**
-	 * Add css class to SVG node
-	 * @function addClass
-	 * @param {String} className
-	 * @memberof ludo.canvas.Node.prototype
-	 */
-	addClass:function (className) {
-		ludo.canvasEngine.addClass(this.el, className);
-	},
-	/**
-	 Returns true if svg node has given css class name
-	 @function hasClass
-	 @param {String} className
-	 @return {Boolean}
-	 @memberof ludo.canvas.Node.prototype
-	 @example
-	 var node = new ludo.canvas.Node('rect', { id:'myId2'});
-	 node.addClass('myClass');
-	 alert(node.hasClass('myClass'));
-	 */
-	hasClass:function (className) {
-		return ludo.canvasEngine.hasClass(this.el, className);
-	},
-	/**
-	 Remove css class name from css Node
-	 @function removeClass
-	 @param {String} className
-	 @memberof ludo.canvas.Node.prototype
-	 @example
-	 var node = new ludo.canvas.Node('rect', { id:'myId2'});
-	 node.addClass('myClass');
-	 node.addClass('secondClass');
-	 node.removeClass('myClass');
-	 */
-	removeClass:function (className) {
-		ludo.canvasEngine.removeClass(this.el, className);
-	},
+    empty: function () {
+        ludo.canvasEngine.empty(this.getEl());
+    },
 
-	getId:function () {
-		return this.id;
-	},
+    _curtain: undefined,
+    curtain: function (config) {
+        if (this._curtain === undefined) {
+            this._curtain = new ludo.canvas.Curtain(this, config);
+        }
+        return this._curtain;
+    },
 
-	getUrl:function () {
-		return 'url(#' + this.id + ')';
-	},
-	/**
-	 * Returns bounding box of el as an object with x,y, width and height.
-	 * @function getBBox
-	 * @return {Object}
-	 * @memberof ludo.canvas.Node.prototype
-	 */
-	getBBox:function () {
-		return this.el.getBBox();
-	},
 
-	/**
-	 * Returns rectangular size of element, i.e. bounding box width - bounding box x and
-	 * bounding box width - bounding box y. Values are returned as { x : 100, y : 150 }
-	 * where x is width and y is height.
-	 * @function getSize
-	 * @return {Object} size x and y
-	 * @memberof ludo.canvas.Node.prototype
-	 */
-	getSize:function(){
-		var b = this.getBBox();
-		return {
-			x :b.width - b.x,
-			y :b.height - b.y
-		};
-	},
+    animate: function (properties, duration, easing, complete, stepFn) {
+        ludo.canvasAnimation.fn(this, properties, duration, easing, complete, stepFn);
+    },
 
-	/**
-	 * The nearest ancestor 'svg' element. Null if the given element is the outermost svg element.
-	 * @function getCanvas
-	 * @return {ludo.canvas.Node.el} svg
-	 * @memberof ludo.canvas.Node.prototype
-	 */
-	getCanvas:function () {
-		return this.el.ownerSVGElement;
-	},
-	/**
-	 * The element which established the current viewport. Often, the nearest ancestor ‘svg’ element. Null if the given element is the outermost svg element
-	 * @function getViewPort
-	 * @return {ludo.canvas.Node.el} svg
-	 * @memberof ludo.canvas.Node.prototype
-	 */
-	getViewPort:function () {
-		return this.el.viewPortElement;
-	},
+    _animation: undefined,
 
-	scale:function (width, height) {
-		ludo.canvasEngine.scale(this.el, width, height);
-	},
-	setTransformMatrix:function (el, a, b, c, d, e, f) {
-		this.setTransformMatrix(this.el, a, b, c, d, e, f);
-	},
+    animateOld: function (properties, duration, fps) {
+        this.animation().animate(properties, duration, fps);
+    },
 
-	empty:function(){
-		ludo.canvasEngine.empty(this.getEl());
-	},
+    animation: function () {
+        if (this._animation === undefined) {
+            this._animation = new ludo.canvas.Animation(this.getEl());
+        }
+        return this._animation;
+    },
 
-	_curtain:undefined,
-	curtain:function(config){
-		if(this._curtain === undefined){
-			this._curtain = new ludo.canvas.Curtain(this, config);
-		}
-		return this._curtain;
-	},
-
-	_animation:undefined,
-	animate:function(properties, duration, fps){
-		this.animation().animate(properties,duration,fps);
-	},
-
-	animation:function(){
-		if(this._animation === undefined){
-			this._animation = new ludo.canvas.Animation(this.getEl());
-		}
-		return this._animation;
-	},
-
-    toFront:function(){
+    toFront: function () {
         ludo.canvasEngine.toFront(this.getEl());
     },
 
-    toBack:function(){
+    toBack: function () {
         ludo.canvasEngine.toBack(this.getEl());
+    },
+
+    matrix: undefined,
+
+    getMatrix: function () {
+        if (this.matrix == undefined) {
+            var owner = ludo.canvasEngine.getSVGElement(this.getEl());
+            this.matrix = owner.createSVGMatrix();
+        }
+        return this.matrix;
     }
 });
 
@@ -9397,11 +9476,14 @@ ludo.chart.Record = new Class({
  *      \_\_angle : 0.92264101427013,
  *      \_\_radians : 2.2604704849618193,
  *      \_\_uid : "chart-node-iw7znu0v"
+ *      \_\_min : 18
+ *      \_\_max : 245
  * }
  * </code>
  *
  * where \_\_color is the records assigned color and \_\_colorOver is it's color when highlighted.
  * You can set this properties manually in your data. When not set, LudoJS will use colors from a color scheme.
+ * You can also set \_\_stroke and \_\_strokeOver for stroke colors.
  * \_\_count is the total number or records in the array.
  * \_\_sum is sum(values) in the array.
  * \_\_fraction is record.value / record.\_\_sum
@@ -9410,6 +9492,8 @@ ludo.chart.Record = new Class({
  * \_\_angle is mostly for internal use and represents this records start angle in radians when all records fill a circle.
  * \_\_radians is how many radians of a circle this record fills. A circle has Math.PI * 2 radians. \_\_angle and radians
  * are only set when values are numeric.
+ * |_|_min is the lowest value of all records
+ * |_|_max is the highest value of all records.
  *
  *
  * @class ludo.chart.DataSource
@@ -9436,6 +9520,16 @@ ludo.chart.Record = new Class({
  *
  * </code>
  * @param {String} config.valueKey the key in the data for value, default: 'value'
+ * @param {Function} getText Function returning text. Argument to this function: The View asking for the text, example, a ludo.chart.Text
+ * @param {Function} max Function returning max value for the chart. This is optional. If not set, it will return the maximum value found in the data array.
+ * For bar charts, you might want to use this to return a higher value, example: <code>max:function(){ return this.maxVal + 20 }</code>.
+ * @param {Function} min Function returning min value for the chart. Default: minimum(0, data arrays minimum value)
+ * @param {Function} value. Function returning a value for display. Arguments. 1) value, 2) caller. Example for a label, you might want to return 10 instead of value 10 000 000.
+ * @param {Function} increments. Function returning increments for lines, labels etc. This function may return an array of values(example: for a chart with values form 0-100, this function
+ * may return [0,10,20,30,40,50,60,70,80,90,100]. This function may also return a numeric value, example: 10 instead of the array. Three arguments are sent to this function: 1) the data arrays
+ * minimum value, 2) the data arrays maximum value and 3) The caller, i.e. the SVG view asking for the increments.
+ * @param {Function} strokeOf Optional function returning stroke color for chart item, Arguments: 1) chart record, 2) caller
+ * @param {Function} strokeOverOf Optional function returning mouse over stroke color for chart item, Arguments: 1) chart record, 2) caller
  * @example
  *     var dataSource = new ludo.chart.DataSource({
         data:[
@@ -9478,6 +9572,9 @@ ludo.chart.DataSource = new Class({
     colorOf: undefined,
     colorOverOf: undefined,
 
+    strokeOf:undefined,
+    strokeOverOf:undefined,
+
     colorUtilObj : undefined,
 
     count:undefined,
@@ -9486,8 +9583,25 @@ ludo.chart.DataSource = new Class({
 
     selectedRecord:undefined,
 
+    /**
+     * Max value in data array
+     * @property {Number} maxVal
+     * @mamberof ludo.chart.DataSource.prototype
+     */
+    maxVal:undefined,
+
+    /**
+     * Min value in data array
+     * @property {Number} minVal
+     * @mamberof ludo.chart.DataSource.prototype
+     */
+    minVal:undefined,
+
+    _increments:undefined,
+    increments:undefined,
+
     __construct: function (config) {
-        this.setConfigParams(config, ['valueKey','color']);
+        this.setConfigParams(config, ['valueKey','color','valueOf', 'textOf', 'getText','max','min','increments','strokeOf', 'strokeOverOf']);
         this.parent(config);
 
         if(this.valueOf == undefined){
@@ -9499,17 +9613,42 @@ ludo.chart.DataSource = new Class({
     },
 
     parseNewData: function (data) {
-        this.data = data;
-        this.map = {};
-        this.count = this.getCount();
-        this.parseChartBranch(this.data);
+        this.handleData(data);
         this.parent(this.data);
     },
 
+    handleData:function(data){
+        this.data = data;
+        this.map = {};
+        this.startAngle = 0;
+        this.minVal = undefined;
+        this.maxVal = undefined;
+        this.count = this.getCount(this.data);
+        this.parseChartBranch(this.data);
+        this.updateIncrements();
+    },
+
     update: function (record) {
-        this.count = this.getCount();
-        this.parseChartBranch((this.data));
+        this.handleData(this.data);
         this.fireEvent('update', [record, this]);
+    },
+
+    updateIncrements:function(){
+        if(this.increments == undefined)return;
+        var inc = this.increments(this.minVal, this.maxVal, this);
+        if(jQuery.isArray(inc)){
+            this._increments = inc;
+        }else{
+            this._increments = [];
+            for(var i=this.min(), len = this.max(); i<=len; i+=inc){
+                this._increments.push(i);
+            }
+        }
+
+    },
+
+    getIncrements:function(){
+        return this._increments;
     },
 
     sum: function (branch) {
@@ -9520,11 +9659,12 @@ ludo.chart.DataSource = new Class({
         return sum;
     },
 
-    getCount:function(){
+    getCount:function(data){
+
          var count = 0;
-        jQuery.each(this.data, function(key, node){
+        jQuery.each(data, function(key, node){
             count++;
-            if(node.children != undefined){
+            if(node.children != undefined && jQuery.isArray(node.children)){
                 count += this.getCount(node.children);
             }
         }.bind(this));
@@ -9547,6 +9687,20 @@ ludo.chart.DataSource = new Class({
                     }
                 }
             }
+
+            if(val != undefined && !isNaN(val)){
+                if(this.maxVal == undefined){
+                    this.maxVal = val;
+                }else{
+                    this.maxVal = Math.max(this.maxVal, val);
+                }
+
+                if(this.minVal == undefined){
+                    this.minVal = val;
+                }else{
+                    this.minVal = Math.min(this.minVal,val);
+                }
+            }
         }.bind(this));
     },
 
@@ -9562,6 +9716,8 @@ ludo.chart.DataSource = new Class({
             var val = this.value(node);
             if(val == undefined || !isNaN(val)){
                 if(val != undefined){
+                    node.__min = this.minVal;
+                    node.__max = this.maxVal;
                     node.__fraction = val / sum;
                     node.__percent = Math.round(node.__fraction * 100);
                     node.__radians = ludo.geometry.degreesToRadians(node.__fraction * 360);
@@ -9574,16 +9730,10 @@ ludo.chart.DataSource = new Class({
             if(node.index == undefined){
                 node.__index = i++;
             }
-            if(node.__color == undefined){
-                if(this.colorOf != undefined){
-                    node.__color = this.colorOf(node);
-                    if(this.colorOverOf != undefined){
-                        node.__colorOver = this.colorOverOf(node);
-                    }
-                }else{
-                    this.setColor(node);
-                }
-            }
+
+            this.setColor(node);
+
+
 
             if(node.id == undefined){
                 node.id = 'chart-node-' + String.uniqueID();
@@ -9622,15 +9772,27 @@ ludo.chart.DataSource = new Class({
         return undefined;
     },
 
+    enterId:function(id){
+        this.enter(this.map[id]);    
+    },
+    
     enter:function(record){
         this.highlighted = record;
         this.fireEvent('enter', [record, this]);
         this.fireEvent('enter' + record.__uid, [record, this]);
     },
 
+    leaveId:function(id){
+        this.leave(this.map[id]);    
+    },
+    
     leave:function(record){
         this.fireEvent('leave', [record, this]);
         this.fireEvent('leave' + record.__uid, [record, this]);
+    },
+    
+    selectId:function(id){
+        this.select(this.map[id]);    
     },
 
     select:function(record){
@@ -9661,8 +9823,14 @@ ludo.chart.DataSource = new Class({
 
     setColor:function(record){
         var u = false;
+
         if(record.__color == undefined){
-            record.__color = this.color;
+
+            if(this.colorOf != undefined){
+                record.__color = this.colorOf(record);
+            }else{
+                record.__color = this.color;
+            }
             u = true;
         }
 
@@ -9673,8 +9841,14 @@ ludo.chart.DataSource = new Class({
             }
             u = true;
         }
-        if(u){
 
+        if(record.__stroke == undefined && this.strokeOf != undefined){
+            record.__stroke = this.strokeOf(record, this);
+        }
+        if(record.__strokeOver == undefined && this.strokeOverOf != undefined){
+            record.__strokeOver = this.strokeOverOf(record, this);
+        }
+        if(u){
             this.color = this.colorUtil().offsetHue(record.__color, (360 / (record.__count + 1)));
         }
     },
@@ -9688,6 +9862,22 @@ ludo.chart.DataSource = new Class({
 
     getHighlighted:function(){
         return this.highlighted;
+    },
+
+    getText:function(caller){
+
+    },
+
+    length:function(){
+        return this.data.length;
+    },
+
+    max:function(){
+        return this.maxVal;
+    },
+
+    min:function(){
+        return Math.min(0, this.minVal);
     }
 });/* ../ludojs/src/chart/chart.js */
 /**
@@ -9899,137 +10089,183 @@ ludo.canvas.Group = new Class({
         }
     },
 
+    getCenter:function(){
+        var s = this.getSize();
+        return {
+            x : s.x / 2, y: s.y / 2
+        }
+    },
+
     isHidden:function () {
         return false;
     }
 });/* ../ludojs/src/chart/base.js */
 ludo.chart.Base = new Class({
-    Extends:ludo.canvas.Group,
-    fragments:[],
-    fragmentType:'chart.Fragment',
+    Extends: ludo.canvas.Group,
+    fragments: [],
+    fragmentType: 'chart.Fragment',
+    highlighted: undefined,
+    focused: undefined,
+    plugins: undefined,
+
+    fragmentMap: {},
+
+    rendered: false,
+    bgColor: undefined,
+    bgRect: undefined,
+
     /**
-     * Reference to current highlighted record
-     * @property {dataSource.Record} record
-     * @private
+     * Reference to datasource
+     * @property {ludo.chart.DataSource} ds
+     * @memberof ludo.chart.Base.prototype
      */
-    highlighted:undefined,
-    focused:undefined,
-    animation:{
-        duration:1,
-        fps:33
-    },
+    ds : undefined,
 
-    plugins:undefined,
-
-    fragmentMap:{},
-
-    rendered:false,
-
-    __construct:function (config) {
+    __construct: function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['animation']);
-        this.getDataSource().on('load', this.create.bind(this))
-        if(this.getDataSource().hasData()){
-            this.create();
+        this.setConfigParams(config, ['animate', 'bgColor']);
+        this.ds = this.getDataSource();
 
+        this.ds.on('load', this.create.bind(this));
+        if (this.getDataSource().hasData()) {
+            this.create();
         }
+
+        this.ds.on('update', this.onResize.bind(this));
+
+        this.ds.on('select', this.select.bind(this));
+        this.ds.on('blur', this.blur.bind(this));
+        this.ds.on('enter', this.enter.bind(this));
+        this.ds.on('leave', this.leave.bind(this));
     },
 
-    ludoEvents:function () {
+    select:function(record){
+    },
+
+    blur:function(record){
+    },
+
+    enter:function(record){
+    },
+
+    leave:function(record){
+    },
+
+    ludoEvents: function () {
         this.parent();
         var dp = this.getDataSource();
 
         dp.addEvent('update', this.update.bind(this));
     },
 
-    createFragments:function () {
+    createFragments: function () {
+
+        if (this.fragmentType == undefined)return;
         var records = this.getRecords();
         for (var i = 0; i < records.length; i++) {
             this.createFragment(records[i]);
         }
     },
 
-    createFragment:function (record) {
+    createFragment: function (record) {
 
         var f = this.createDependency('fragment' + this.fragments.length,
             {
-                type:this.fragmentType,
-                record:record,
-                parentComponent:this
+                type: this.fragmentType,
+                record: record,
+                parentComponent: this
             });
 
         this.fragmentMap[record.__uid] = f;
         this.fragments.push(f);
 
-		this.relayEvents(f, ['mouseenter','mouseleave']);
+        this.relayEvents(f, ['mouseenter', 'mouseleave']);
 
         return f;
     },
 
-    getFragments:function () {
+    getFragments: function () {
         return this.fragments;
     },
 
-    getParent:function () {
+    getParent: function () {
         return this.parentComponent;
     },
 
-    getRecords:function () {
+    getRecords: function () {
         return this.getParent().getDataSource().getData();
     },
 
-    dataProvider:function () {
+    dataProvider: function () {
         return this.parentComponent.getDataSource();
     },
 
-    getDataSource:function(){
+    getDataSource: function () {
         return this.parentComponent.getDataSource();
     },
 
-    getCenter:function () {
+    getCenter: function () {
         var size = this.getSize();
-        
         return {
-            x:size.x / 2,
-            y:size.y / 2
+            x: size.x / 2,
+            y: size.y / 2
         }
     },
 
-    getRadius:function () {
+    getRadius: function () {
         var c = this.getCenter();
         return Math.min(c.x, c.y);
     },
 
-    create:function(){
-
-        if(this.dataProvider().hasData()){
+    create: function () {
+        if (this.dataProvider().hasData()) {
             this.createFragments();
         }
         this.render();
         this.rendered = true;
+
+        if(this.animate){
+            this.renderAnimation();
+        }
     },
 
-    render:function () {
+    renderAnimation:function(){
 
     },
 
-    update:function (record) {
+    render: function () {
+        if (this.bgColor != undefined) {
+            var s = this.getSize();
+            this.bgRect = new ludo.canvas.Rect({
+                    x: 0, y: 0, width: s.x, height: s.y
+                }
+            );
+            this.bgRect.css('fill', this.bgColor);
+            this.append(this.bgRect);
+        }
+    },
+
+    update: function (record) {
         this.fireEvent('update', record);
     },
 
-    getFragmentFor:function(record){
+    getFragmentFor: function (record) {
         return this.fragmentMap[record.__uid];
     },
 
-    onResize:function(){
-
+    onResize: function () {
+        if (this.bgRect != undefined) {
+            var s = this.getSize();
+            this.bgRect.attr('width', s.x);
+            this.bgRect.attr('height', s.y);
+        }
     },
 
-	getCanvas:function(){
-		return this.parentComponent.getCanvas();
-	},
+    getCanvas: function () {
+        return this.parentComponent.getCanvas();
+    },
 
-    getSquareSize:function(){
+    getSquareSize: function () {
         var size = this.getSize();
         return Math.min(size.x, size.y);
     }
@@ -10086,11 +10322,21 @@ ludo.chart.PieSlice = new Class({
 
     focus:function(){
         var coords = this.centerOffset(this.getParent().getHighlightSize());
-        this.node().engine().effect().fly(this.node().getEl(), coords.x, coords.y,.1);
+
+        this.node().animate({
+            translate: [coords.x, coords.y]
+        }, 100);
+
+      //  this.node().engine().effect().fly(this.node().getEl(), coords.x, coords.y,.1);
     },
 
     blur:function(){
-        this.node().engine().effect().flyBack(this.node().getEl(),.1);
+
+
+        this.node().animate({
+            translate: [0,0]
+        }, 100);
+
     },
 
     node:function(){
@@ -10297,18 +10543,14 @@ ludo.chart.Pie = new Class({
     },
 
     render:function(){
-
-
-        this.animate();
-
-
+        this.renderAnimation();
     },
 
     getRadius:function(){
         return this.parent() - 20;
     },
 
-    animate:function(){
+    renderAnimation:function(){
         var r = this.getRecords();
         if(!r)return;
         var e = new ludo.canvas.Effect();
@@ -10369,7 +10611,7 @@ ludo.chart.Pie = new Class({
             this.fragments[i].set(radius, r[i].__angle, r[i].__radians);
         }
     }
-});/* ../ludojs/src/chart/labels.js */
+});/* ../ludojs/src/chart/label-list.js */
 /**
  * Class displaying labels for a chart. See
  * {{#crossLink "chart/Pie"}}{{/crossLink}} for example on how to add labels
@@ -10380,7 +10622,7 @@ ludo.chart.Pie = new Class({
  * than height, the labels will be displayed vertically. If height is greater
  * than width, the labels will be rendered vertically.
  * @namespace ludo.chart
- * @class ludo.chart.Labels
+ * @class ludo.chart.LabelList
  * @param {Object} config
  * @param {Object} config.textStyles CSS styling of text, default:  { fill:'#000000', 'font-size' : '13px', 'font-weight' : 'normal' }
  * @param {Object} config.textStylesOver CSS styling on mouse over, default: { 'font-weight': 'bold' }
@@ -10391,10 +10633,10 @@ ludo.chart.Pie = new Class({
  * labels will be displayed horizontally, side by side. Otherwise, they will be
  * displayed vertically.
  */
-ludo.chart.Labels = new Class({
+ludo.chart.LabelList = new Class({
     Extends:ludo.chart.Base,
 
-    fragmentType:'chart.Label',
+    fragmentType:'chart.LabelListItem',
     textStyles:undefined,
     textStylesOver:undefined,
     boxStyles:undefined,
@@ -10453,8 +10695,8 @@ ludo.chart.Labels = new Class({
             this.fragments[i].node().translate(2, top[i] + offset);
         }
     }
-});/* ../ludojs/src/chart/label.js */
-ludo.chart.Label = new Class({
+});/* ../ludojs/src/chart/label-list-item.js */
+ludo.chart.LabelListItem = new Class({
     Extends:ludo.chart.Fragment,
 
 
@@ -10656,6 +10898,7 @@ ludo.chart.PieSliceHighlighted = new Class({
         this.node.css('fill', record.__colorOver);
 
 
+
         if (this.getParent().getDataSource().isSelected(record)) {
             var t = f.nodes[0].getTranslate();
             this.node.translate(t);
@@ -10672,12 +10915,23 @@ ludo.chart.PieSliceHighlighted = new Class({
     focus:function (record) {
         var f = this.getParent().getFragmentFor(record);
         var coords = f.centerOffset(this.getParent().getHighlightSize());
-        this.node.translate(0,0);
-        this.node.engine().effect().fly(this.node.getEl(), coords.x, coords.y,.1);
+        
+        
+        
+        this.node.updateMatrix();
+
+        this.node.animate({
+            translate:[coords.x,coords.y]
+        },100);
     },
 
     blur:function(){
-        this.node.engine().effect().flyBack(this.node.getEl(),.1);
+
+        this.node.animate({
+            translate:[0,0]
+        },100);
+
+
     }
 });/* ../ludojs/src/canvas/paint.js */
 /**
@@ -11213,9 +11467,9 @@ ludo.chart.Tooltip = new Class({
 		this.node.append(this.rect);
 
 		this.textBox = new ludo.canvas.TextBox();
+		this.node.append(this.textBox);
 		this.textBox.getNode().translate(4, 0);
 		this.textBox.getNode().css(this.getTextStyles());
-		this.node.append(this.textBox);
 	},
 
 	getBoxStyling:function(){
@@ -11290,7 +11544,576 @@ ludo.chart.Tooltip = new Class({
 	}
 
 });
-/* ../ludojs/src/ludo-db/factory.js */
+/* ../ludojs/src/chart/text.js */
+/**
+ * Displays SVG text for charts
+ * @class ludo.chart.Text
+ * @param {Object} config
+ * @param {Number} rotate Optional rotation in degrees(clockwise)
+ * @param {String} text Optional text. If not set, the datasource should implement the method getText(caller) where caller is the
+ * SVG View asking for the text, example, ludo.chart.Text view
+ * @param {Object} styling SVG CSS attributes for the text https://developer.mozilla.org/en-US/docs/Web/SVG/Element/text
+ * @param {Array} anchor horizontal and vertical anchor of text, example [0.5, 0.5] for center center. First item in the array
+ * is horizontal anchor, where 0 is left, 0.5 center and 1 right. The second one is vertical where 0 is top, 0.5 middle and 1 bottom.
+ * @type {Type}
+ */
+ludo.chart.Text = new Class({
+    Extends: ludo.chart.Base,
+    type: 'chart.Text',
+    rotate: undefined,
+    text: undefined,
+    styling: undefined,
+    fragmentType: undefined,
+    anchor: undefined,
+    n: undefined,
+
+    textSizeRatio:undefined,
+    
+
+    __construct: function (config) {
+        this.parent(config);
+        this.setConfigParams(config, ['rotate', 'text', 'styling', 'anchor']);
+        if (this.anchor == undefined) {
+            this.anchor = [0.5, 0.5];
+        }
+        if(this.rotate == 'left') this.rotate = -90;
+        if(this.rotate == 'right') this.rotate = 90;
+        if(this.rotate == 'flip') this.rotate = 180;
+
+        if(this.styling == undefined){
+            this.styling = {};
+        }
+
+    },
+
+    create: function () {
+        this.parent();
+
+        if (this.text == undefined) {
+            this.text = this.getDataSource().getText(this);
+        }
+        
+        this.n = new ludo.canvas.Text(this.text, {});
+        
+        this.n.attr('alignment-baseline', 'after-edge');
+        
+        this.n.css(this.styling);
+        if (this.anchor[0] > 0) {
+            this.n.textAnchor(this.anchor[0] == .5 ? 'middle' : 'end');
+        }
+        this.append(this.n);
+
+
+        this.resizeText();
+    },
+
+    onResize:function(){
+        this.parent();
+        this.resizeText();
+    },
+
+    resizeText:function(){
+        var bbox = this.n.getBBox();
+        var size = this.getSize();
+
+        this.n.rotate(0,0,0);
+        var x = 0;
+        var y = 0;
+
+        if(this.rotate == -90){
+            y = size.y - (this.anchor[0] * size.y);
+            x = size.x * this.anchor[1];
+            x += (bbox.height / 2);
+
+        }else if(this.rotate == 90){
+            y = (this.anchor[0] * size.y);
+            x = size.x - (size.x * this.anchor[1]);
+            x -= (bbox.height * (1 - this.anchor[1]));
+
+        }else if(this.rotate == 180){
+            x = size.x - (size.x * this.anchor[0]);
+            y = size.y - (size.y * this.anchor[1] + (bbox.height / 2));
+
+        }else{
+            x = size.x * this.anchor[0];
+            y = size.y * this.anchor[1] + (bbox.height / 2);
+
+        }
+
+        this.n.translate(x, y);
+
+        if(this.rotate){
+            this.n.rotate(this.rotate, x, y);
+        }
+
+    },
+
+    rect:function(){
+        var s = this.getSize();
+        return this.rotate == 90 || this.rotate == -90 ? { x : s.y, y : s.x } : s;
+    },
+
+    center:function(){
+        var r = this.rect();
+        return {
+            x : r.x / 2, y: r.y / 2
+        }
+    },
+
+    update: function () {
+        this.parent();
+        this.resizeText();
+    }
+
+});/* ../ludojs/src/chart/bar-labels.js */
+/**
+ * Displays bar labels for a bar chart
+ * @class ludo.chart.BarLabels
+ * @param {Object} config
+ * @param {Object} config.styling Text styling for the labels.
+ */
+ludo.chart.BarLabels = new Class({
+    Extends: ludo.chart.Base,
+    fragmentType:undefined,
+
+    orientation : undefined,
+    styling:undefined,
+
+    textNodes:undefined,
+
+    __construct:function(config){
+        this.parent(config);
+        this.setConfigParams(config, ['orientation', 'styling']);
+        if(this.orientation==undefined)this.orientation = 'horizontal';
+        this.styling = this.styling || {};
+        this.textNodes = [];
+
+    },
+
+    render:function(){
+        var len = this.getDataSource().length();
+        for(var i=0;i<len;i++){
+            this.getTextNode(i);
+        }
+        this.resizeBarLabels();
+
+    },
+
+    onResize:function(){
+        this.parent();
+        this.resizeBarLabels();
+    },
+
+    resizeBarLabels:function(){
+        var size = this.getSize();
+        var len = this.getDataSource().length();
+        var i,el;
+        if(this.orientation == 'horizontal'){
+            var width = size.x / len;
+            var y = this.getCenter().y;
+            for(i=0;i<len;i++){
+                el = this.getTextNode(i);
+                el.attr('x', (width * i) + (width / 2));
+                el.attr('y', y);
+            }
+        }else{
+
+            var height = size.y / len;
+            for(i=0;i<len;i++){
+                el = this.getTextNode(i);
+                el.attr('x', size.x);
+                el.attr('y', size.y - (i*height) - (height/2));
+            }
+        }
+    },
+
+
+    getTextNode:function(index){
+        var ds = this.getDataSource();
+        var rec = ds.data[index];
+
+        if(this.textNodes[index] == undefined){
+
+            var el = new ludo.canvas.Text("", {});
+            this.textNodes.push(el);
+            if(this.orientation == 'horizontal'){
+                el.textAnchor('middle');
+            }else{
+                el.textAnchor('end');
+            }
+            el.css(this.styling);
+            this.append(el);
+        }
+
+        this.textNodes[index].text(this.getDataSource().textOf(rec, this));
+
+        return this.textNodes[index];
+
+    }
+});/* ../ludojs/src/chart/bar-values.js */
+ludo.chart.BarValues = new Class({
+    Extends: ludo.chart.Base,
+    type: 'chart.BarValues ',
+    fragmentType: undefined,
+
+    orientation: undefined,
+    styling: undefined,
+    nodes: undefined,
+
+    min: undefined,
+    max: undefined,
+    count: undefined,
+    size: undefined,
+
+    increment: 10,
+    padding: 0,
+
+    __construct: function (config) {
+        this.parent(config);
+        this.setConfigParams(config, ['orientation', 'styling', 'padding']);
+        if (this.orientation == undefined)this.orientation = 'horizontal';
+        this.styling = this.styling || {};
+        this.nodes = [];
+    },
+
+    render: function () {
+        this.resizeNodes();
+    },
+
+    onResize: function () {
+        this.parent();
+        this.resizeNodes();
+    },
+
+
+    resizeNodes: function () {
+        var ds = this.ds;
+
+        this.min = ds.min();
+        this.max = ds.max();
+        this.count = this.getCount();
+        this.size = this.getSize();
+
+        for (var i = 0; i < this.count; i++) {
+            var el = this.getNode(i);
+            var val = this.val(i);
+            el.text(val);
+            var pos = this.getPos(val);
+            el.attr('x', pos.x);
+            el.attr('y', pos.y);
+        }
+    },
+
+    val: function (index) {
+        return this.ds.getIncrements()[index];
+    },
+
+    getCount: function () {
+        return this.ds.getIncrements().length;
+    },
+
+    getPos: function (val) {
+        var ret = {x: 0, y: 0};
+        var ratio = (val - this.min) / (this.max - this.min);
+        if (this.orientation == 'horizontal') {
+            ret.x = this.size.x - (this.size.x * ratio);
+            ret.y = this.size.y / 2 + this.padding;
+        } else {
+            ret.x = this.size.x - this.padding;
+            ret.y = this.size.y - (this.size.y * ratio);
+        }
+
+        return ret;
+    },
+
+    getNode: function (index) {
+        if (this.nodes[index] == undefined) {
+            var el = new ludo.canvas.Text("", {});
+            this.nodes.push(el);
+            if (this.orientation == 'horizontal') {
+                el.textAnchor('middle');
+            } else {
+                el.textAnchor('end');
+                el.attr('alignment-baseline', 'middle');
+            }
+            el.css(this.styling);
+            this.append(el);
+        }
+        return this.nodes[index];
+
+    }
+
+});/* ../ludojs/src/chart/bar.js */
+/**
+ * Bar Chart
+ * @param {Object} config
+ * @param {String} config.orientation Bar chart orientation, __horizontal__ or __vertical__
+ * @param {Number} config.barSize Fraction width of bars, default: 0.8
+ */
+ludo.chart.Bar = new Class({
+
+    Extends: ludo.chart.Base,
+
+    nodes: undefined,
+    orientation: 'horizontal',
+    barSize: undefined,
+
+    outline: undefined,
+    lines: undefined,
+
+    __construct: function (config) {
+        this.parent(config);
+        this.setConfigParams(config, ['outline', 'lines', 'orientation']);
+
+        this.barSize = config.barSize || .8;
+        this.lineIncrement = config.lineIncrement || 10;
+        this.nodes = {
+            outline: {},
+            lines: undefined,
+            bars: [],
+            barMap: {}
+        };
+    },
+
+    render: function () {
+        this.parent();
+
+        this.createLines();
+        this.createBars();
+        this.createOutline();
+        this.resizeElements();
+
+    },
+
+    createBars: function () {
+        var d = this.ds.getData();
+        for (var i = 0; i < d.length; i++) {
+            this.getBar(i, d[i]);
+        }
+    },
+
+
+    getBar: function (index, record) {
+
+        if (this.nodes.bars[index] == undefined) {
+            var c = {
+                x: 0, y: 0, width: 0, height: 0
+            };
+
+
+            var el = new ludo.canvas.Rect(c);
+            this.nodes.barMap[record.id] = el;
+            this.nodes.bars.push(el);
+            this.append(el);
+            el.css('fill', record.__color);
+            el.on('click', this.fn('selectId', record));
+
+            if (record.__stroke != undefined) {
+                el.css('stroke', record.__stroke);
+            }
+
+            if (el.mouseenter != undefined) {
+                el.mouseenter(this.fn('enterId', record));
+                el.mouseleave(this.fn('leaveId', record));
+            } else {
+                el.on('mouseenter', this.fn('enterId', record));
+                el.on('mouseleave', this.fn('leaveId', record));
+            }
+        }
+
+        return this.nodes.bars[index];
+    },
+
+    enter: function (record) {
+        this.nodes.barMap[record.id].css('fill', record.__colorOver);
+    },
+
+    leave: function (record) {
+        this.nodes.barMap[record.id].css('fill', record.__color);
+    },
+
+    fn: function (name, record) {
+        var ds = this.ds;
+        return function () {
+            ds[name](record.id);
+        };
+    },
+
+    createOutline: function () {
+        if (!this.outline)return;
+        var s = this.getSize();
+        if (this.outline.left || this.outline.bottom || this.outline.top || this.outline.right) {
+
+            jQuery.each(this.outline, function (key, styles) {
+                var pos = {
+                    x1: 0, y1: 0, x2: 0, y2: 0
+                };
+
+                var el = this.outline[key] = new ludo.canvas.Node('line', pos);
+                el.css(styles);
+                this.append(el);
+            }.bind(this));
+        } else {
+
+            var el = this.outline['around'] = new ludo.canvas.Rect({
+                x: 0, y: 0, width: s.x, height: s.y
+            });
+            el.css(this.outline);
+            this.append(el);
+        }
+    },
+
+    getLine: function (index) {
+        if (this.nodes.lines[index] == undefined) {
+            var el = new ludo.canvas.Node('line', {x1: 0, y1: 0, x2: 0, y2: 0});
+            this.append(el);
+            this.nodes.lines.push(el);
+        }
+        return this.nodes.lines[index];
+    },
+
+    createLines: function () {
+        if (this.lines == undefined)return;
+
+        var inc = this.ds.getIncrements();
+
+        this.nodes.lines = [];
+
+        for (var i = 0; i < inc.length; i++) {
+            var el = this.getLine(i);
+            el.css(this.lines);
+        }
+    },
+
+    onResize: function () {
+        this.parent();
+        this.resizeElements();
+    },
+
+    resizeElements: function () {
+        this.resizeOutline();
+        this.resizeLines();
+        this.resizeBars();
+
+        jQuery.each(this.nodes.outline, function (key, el) {
+            el.toFront();
+        });
+
+    },
+
+    renderAnimation: function () {
+
+        var d = this.ds.getData();
+        var s = this.getSize();
+        var min = this.ds.min();
+        var max = this.ds.max();
+
+        for (var i = 0; i < d.length; i++) {
+            var b = this.getBar(i, d[i]);
+            var val = this.ds.valueOf(d[i], this);
+            var r = (val - min) / (max - min);
+            if (this.orientation == 'horizontal') {
+                var height = (s.y * r);
+                b.attr('height', 0);
+                b.attr('y', s.y);
+                b.animate({
+                        'height': height
+                    }, 300, ludo.canvas.Easing.inOutSine, undefined,
+                    function (node, delta, time, changes) {
+                        node.set('y', s.y - changes.height);
+                    });
+            }
+        }
+
+    },
+
+    resizeBars: function () {
+        var d = this.ds.getData();
+
+        var s = this.getSize();
+        var min = this.ds.min();
+        var max = this.ds.max();
+
+        var availSize = this.orientation == 'horizontal' ? s.x / d.length : s.y / d.length;
+        var size = availSize * this.barSize;
+        var offset = (availSize - size ) / 2;
+
+        for (var i = 0; i < d.length; i++) {
+
+            var b = this.getBar(i, d[i]);
+            var val = this.ds.valueOf(d[i], this);
+
+            var r = (val - min) / (max - min);
+
+            if (this.orientation == 'horizontal') {
+                var x = availSize * i / d.length;
+                var height = (s.y * r);
+
+                b.attr('width', size);
+                b.attr('x', (i * availSize) + offset);
+                b.attr('y', s.y - height);
+                b.attr('height', height);
+            } else {
+                b.attr('height', size);
+                b.attr('y', (i * availSize) + offset);
+            }
+
+        }
+    },
+
+    resizeLines: function () {
+        if (this.lines == undefined)return;
+
+        var inc = this.ds.getIncrements();
+        var s = this.getSize();
+        var min = this.ds.min();
+        var max = this.ds.max();
+
+        for (var i = 0; i < inc.length; i++) {
+            var r = (inc[i] - min) / (max - min);
+            var l = this.getLine(i);
+            if (this.orientation == 'horizontal') {
+                l.attr('x2', s.x);
+                l.attr('y1', s.y * r);
+                l.attr('y2', s.y * r);
+            } else {
+                l.attr('y2', s.y);
+                l.attr('x1', s.x * r);
+                l.attr('x2', s.x * r);
+            }
+        }
+    },
+
+    resizeOutline: function () {
+        var s = this.getSize();
+        jQuery.each(this.outline, function (key, el) {
+            switch (key) {
+                case 'around':
+                    el.css({
+                        width: s.x, height: s.y
+                    });
+                    break;
+                case 'left':
+                    el.attr('y2', s.y);
+                    break;
+                case 'right':
+                    el.attr('x2', s.x);
+                    el.attr('x1', s.x);
+                    el.attr('y2', s.y);
+                    break;
+                case 'top':
+                    el.attr('x2', s.x);
+                    break;
+                case 'bottom':
+                    el.attr('x2', s.x);
+                    el.attr('y1', s.y);
+                    el.attr('y2', s.y);
+                    break;
+            }
+        }.bind(this));
+    }
+
+});/* ../ludojs/src/ludo-db/factory.js */
 /**
  Factory for automatic creation of children from server ludoDB config. This class is used
  internally by ludoJS when you specify a ludoDB config object in your view configuration.
@@ -13625,6 +14448,7 @@ ludo.layout.Relative = new Class({
      * @private
      */
 	layoutFnProperties:[
+		'bottom','right',
 		'width', 'height',
 		'alignParentTop', 'alignParentBottom', 'alignParentLeft', 'alignParentRight',
 		'leftOf', 'rightOf', 'below', 'above',
@@ -13720,12 +14544,16 @@ ludo.layout.Relative = new Class({
 	getLayoutFn:function (property, child) {
 		var c = this.newChildCoordinates[child.id];
 		var refC;
+
 		switch (property) {
 			case 'top':
 			case 'left':
+			case 'bottom':
+			case 'right':
 				return function () {
 					c[property] = child.layout[property];
 				}.bind(child);
+
             case 'offsetX':
                 return function(){
                     c.left += child.layout[property];
@@ -34921,7 +35749,7 @@ ludo.canvas.Curtain = new Class({
 	close:function (direction, duration, fps) {
 		this.onStart();
 		this.action = 'close';
-		this.getAnimation().animate(this.getCoordinates(direction, true), duration, fps);
+		this.getAnimation().animateOld(this.getCoordinates(direction, true), duration, fps);
 	},
 
 	onStart:function(){
@@ -35029,89 +35857,239 @@ ludo.canvas.Curtain = new Class({
 	}
 
 });/* ../ludojs/src/canvas/animation.js */
+/**
+ * Created by alfmagne1 on 07/12/2016.
+ */
 ludo.canvas.Animation = new Class({
-	Extends: Events,
-	fps:33,
-	el:undefined,
 
-	initialize:function(el){
-		this.el = el;
-	},
+    animationRate:13,
 
-	animate:function(properties, duration, fps){
-		duration = duration || 1;
-		fps = fps || 33;
-		this.execute(this.getAnimationSteps(properties,duration,fps), 0);
+    fn:function(node, properties, duration, easing, complete, stepFn){
+        
+        easing = easing || ludo.canvas.Easing.inSine;
 
-	},
+        var changes = {};
+        var start = {};
+        var special = {};
 
-	execute:function(steps, current){
-		var step = steps.values[current];
+        jQuery.each(properties, function(key, value){
+            special[key] = true;
 
-		if(current < steps.values.length - 1){
-			this.execute.delay(steps.fps, this, [steps, current+1]);
-		}
+            switch(key){
+                case 'translate':
+                    var cur = node.getTranslate();
+                    changes[key] = [
+                        value[0] - cur[0], value[1] - cur[1]
+                    ];
+                    start[key] = cur;
+                    break;
+                case 'rotate':
+                case 'scale':
 
-		for(var i=0;i<step.length;i++){
-			if(step[i].key === 'width' || step[i].key === 'height' && step[i].value < 0){
-				step[i].value = 0;
-			}
-			if(this.el.set == undefined){
-				ludo.canvasEngine.set(this.el, step[i].key, step[i].value);
-			}else{
-				this.el.set(step[i].key, step[i].value);
+                default:
+                    var current = parseInt(node.get(key));
+                    changes[key] = value - current;
+                    start[key] = current;
+                    special[key] = false;
+            }
 
-			}
-		}
+        });
 
-		if(current === steps.values.length -1 ){
-			this.fireEvent('finish', this);
-		}
+        var r = this.animationRate;
 
-	},
-    // TODO this should be available not only to canvas
-	getAnimationSteps:function(properties, duration, fps){
+        var fn = function(t,d){
+            var loopChanges;
+            if(t<d){
+                fn.delay(r, fn, [t+1,d]);
+            }
+            var delta = t>=d ? 1 : easing(t, 0, 1, d);
+            jQuery.each(changes, function(key, value){
 
-		var count = duration * fps;
-		var ret = [];
-		var inc = this.getIncrements(properties, duration, fps);
+                if(special[key]){
+                    switch(key){
+                        case 'translate':
+                            var x = start[key][0] + (delta * value[0]);
+                            var y = start[key][1] + (delta * value[1]);
+                            node.translate(x,y);
+                            break;
 
-		var currentValues = {};
 
-		for(var key in properties){
-			if(properties.hasOwnProperty(key)){
-				for(var i=0;i<=count;i++){
-					if(!ret[i])ret[i] = [];
-					if(!currentValues[key]){
-						currentValues[key] = properties[key].from;
-					}
+                    }
+                } else{
+                    var val = start[key] + (value * delta);
+                    ludo.canvasEngine.set(node.el, key, val);
+                    if(stepFn != undefined){
+                        if(loopChanges == undefined){
+                            loopChanges = {};
+                        }
+                        loopChanges[key] = value * delta;
+                    }
+                }
 
-					var value = currentValues[key];
-					if(properties[key].units)value += properties[key].units;
+            });
 
-					ret[i].push({
-						key:key, value: value
-					});
+            if(stepFn != undefined){
+                stepFn.call(node, node, delta, t/d, loopChanges);
+            }
+            if(t>=d){
+                if(complete!=undefined){
+                    complete.call(node);
+                }
+            }
+        };
 
-					currentValues[key] += inc[key];
-				}
-			}
-		}
+        fn.call(fn, 0, duration / this.animationRate);
+    }
 
-		return {
-			values : ret,
-			fps : fps
-		};
-	},
 
-	getIncrements:function(properties, duration, fps){
-		var count = duration * fps;
-		var ret = {};
-		for(var key in properties){
-			if(properties.hasOwnProperty(key)){
-				ret[key] = (properties[key].to - properties[key].from) / count;
-			}
-		}
-		return ret;
-	}
 });
+
+ludo.canvasAnimation = new ludo.canvas.Animation();
+
+ludo.canvas.Easing = {
+
+    /**
+     *
+     * @param t current time
+     * @param b start value
+     * @param c change in value
+     * @param d duration
+     * @returns {*}
+     */
+    linear: function (t, b, c, d) {
+        return c * t / d + b;
+    },
+
+    inQuad: function (t, b, c, d) {
+        t /= d;
+        return c * t * t + b;
+    },
+
+    outQuad: function (t, b, c, d) {
+        t /= d;
+        return -c * t * (t - 2) + b;
+    },
+
+    inOutQuad: function (t, b, c, d) {
+        t /= d / 2;
+        if (t < 1) return c / 2 * t * t + b;
+        t--;
+        return -c / 2 * (t * (t - 2) - 1) + b;
+    },
+
+
+    inCubic: function (t, b, c, d) {
+        t /= d;
+        return c * t * t * t + b;
+    },
+
+    outCubic: function (t, b, c, d) {
+        t /= d;
+        t--;
+        return c * (t * t * t + 1) + b;
+    },
+
+    inOutCubic: function (t, b, c, d) {
+        t /= d / 2;
+        if (t < 1) return c / 2 * t * t * t + b;
+        t -= 2;
+        return c / 2 * (t * t * t + 2) + b;
+    },
+
+    inQuart: function (t, b, c, d) {
+        t /= d;
+        return c * t * t * t * t + b;
+    },
+
+    outQuart: function (t, b, c, d) {
+        t /= d;
+        t--;
+        return -c * (t * t * t * t - 1) + b;
+    },
+
+    inOutQuart: function (t, b, c, d) {
+        t /= d / 2;
+        if (t < 1) return c / 2 * t * t * t * t + b;
+        t -= 2;
+        return -c / 2 * (t * t * t * t - 2) + b;
+    },
+
+    inQuint: function (t, b, c, d) {
+        t /= d;
+        return c * t * t * t * t * t + b;
+    },
+
+    outQuint: function (t, b, c, d) {
+        t /= d;
+        t--;
+        return c * (t * t * t * t * t + 1) + b;
+    },
+
+    inOutQuint: function (t, b, c, d) {
+        t /= d / 2;
+        if (t < 1) return c / 2 * t * t * t * t * t + b;
+        t -= 2;
+        return c / 2 * (t * t * t * t * t + 2) + b;
+    },
+
+
+    inSine: function (t, b, c, d) {
+        return -c * Math.cos(t / d * (Math.PI / 2)) + c + b;
+    },
+
+
+    // sinusoidal easing out - decelerating to zero velocity
+    outSine: function (t, b, c, d) {
+        return c * Math.sin(t / d * (Math.PI / 2)) + b;
+    },
+
+    // sinusoidal easing in/out - accelerating until halfway, then decelerating
+    inOutSine: function (t, b, c, d) {
+        return -c / 2 * (Math.cos(Math.PI * t / d) - 1) + b;
+    },
+
+    // exponential easing in - accelerating from zero velocity
+    inExpo: function (t, b, c, d) {
+        return c * Math.pow(2, 10 * (t / d - 1)) + b;
+    },
+
+
+    // exponential easing out - decelerating to zero velocity
+    outExpo: function (t, b, c, d) {
+        return c * ( -Math.pow(2, -10 * t / d) + 1 ) + b;
+    },
+
+
+    // exponential easing in/out - accelerating until halfway, then decelerating
+    inOutExpo: function (t, b, c, d) {
+        t /= d / 2;
+        if (t < 1) return c / 2 * Math.pow(2, 10 * (t - 1)) + b;
+        t--;
+        return c / 2 * ( -Math.pow(2, -10 * t) + 2 ) + b;
+    },
+
+    // circular easing in - accelerating from zero velocity
+    inCirc: function (t, b, c, d) {
+        t /= d;
+        return -c * (Math.sqrt(1 - t * t) - 1) + b;
+    },
+
+
+    // circular easing out - decelerating to zero velocity
+    outCirc: function (t, b, c, d) {
+        t /= d;
+        t--;
+        return c * Math.sqrt(1 - t * t) + b;
+    },
+
+
+    // circular easing in/out - acceleration until halfway, then deceleration
+    inOutCirc: function (t, b, c, d) {
+        t /= d / 2;
+        if (t < 1) return -c / 2 * (Math.sqrt(1 - t * t) - 1) + b;
+        t -= 2;
+        return c / 2 * (Math.sqrt(1 - t * t) + 1) + b;
+    }
+
+
+};

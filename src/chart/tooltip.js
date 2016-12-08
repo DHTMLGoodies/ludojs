@@ -55,9 +55,9 @@ ludo.chart.Tooltip = new Class({
 		this.node.append(this.rect);
 
 		this.textBox = new ludo.canvas.TextBox();
+		this.node.append(this.textBox);
 		this.textBox.getNode().translate(4, 0);
 		this.textBox.getNode().css(this.getTextStyles());
-		this.node.append(this.textBox);
 	},
 
 	getBoxStyling:function(){
