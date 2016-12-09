@@ -1,7 +1,7 @@
-/* Generated Fri Dec 9 19:29:31 CET 2016 */
+/* Generated Fri Dec 9 22:52:53 CET 2016 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.267
+ludoJS - Javascript framework, 1.1.268
 Copyright (C) 2012-2016  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -10309,9 +10309,7 @@ ludo.chart.Base = new Class({
 
         this.easing = config.easing || ludo.canvas.easing.outSine;
         this.ds.on('load', this.create.bind(this));
-        if (this.getDataSource().hasData()) {
-            this.create();
-        }
+
 
         this.ds.on('update', this.onResize.bind(this));
 
@@ -10338,6 +10336,8 @@ ludo.chart.Base = new Class({
         var dp = this.getDataSource();
 
         dp.addEvent('update', this.update.bind(this));
+
+
     },
 
     createFragments: function () {
@@ -10457,6 +10457,20 @@ ludo.chart.Base = new Class({
     getSquareSize: function () {
         var size = this.getSize();
         return Math.min(size.x, size.y);
+    },
+
+
+    dataRendered:false,
+
+    resize:function(coordinates){
+        this.parent(coordinates);
+
+        if (!this.dataRendered && this.getDataSource().hasData()) {
+            this.create();
+            this.dataRendered = true;
+        }
+
+
     }
 });/* ../ludojs/src/chart/pie-slice.js */
 ludo.chart.PieSlice = new Class({
