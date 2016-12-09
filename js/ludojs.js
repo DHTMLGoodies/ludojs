@@ -1,24 +1,3 @@
-/* Generated Fri Dec 9 14:19:36 CET 2016 */
-/************************************************************************************************************
-@fileoverview
-ludoJS - Javascript framework, 1.1.264
-Copyright (C) 2012-2016  ludoJS.com, Alf Magne Kalleland
-This library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Lesser General Public
-License as published by the Free Software Foundation; either
-version 2.1 of the License, or (at your option) any later version.
-This library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Lesser General Public License for more details.
-You should have received a copy of the GNU Lesser General Public
-License along with this library; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-ludoJS.com., hereby disclaims all copyright interest in this script
-written by Alf Magne Kalleland.
-Alf Magne Kalleland, 2016
-Owner of ludoJS.com
-************************************************************************************************************/
 /* ../ludojs/src/../mootools/MooTools-Core-1.6.0.js */
 /* MooTools: the javascript framework. license: MIT-style license. copyright: Copyright (c) 2006-2016 [Valerio Proietti](http://mad4milk.net/).*/ 
 /*!
@@ -12283,7 +12262,7 @@ ludo.chart.BarItem = new Class({
 
 
         var curX = this.area.x;
-        var curY = this.area.y;
+        var curY = 0;
         var orientation = this.parentComponent.orientation;
 
         var stacked = this.parentComponent.stacked;
@@ -12305,8 +12284,8 @@ ludo.chart.BarItem = new Class({
             if (orientation == 'horizontal') {
                 var h = this.area.height * r;
                 n.attr('height', h);
-                n.attr('y', this.area.height - h);
-                if(!stacked)curX += curWidth;else curY -=h;
+                n.attr('y', this.area.height - curY - h);
+                if(!stacked)curX += curWidth;else curY+= h;
             } else {
                 n.attr('width', this.area.width * r);
                 if(!stacked)curY += curHeight;else curX += this.area.width * r;

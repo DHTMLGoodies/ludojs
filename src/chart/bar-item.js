@@ -31,7 +31,7 @@ ludo.chart.BarItem = new Class({
 
 
         var curX = this.area.x;
-        var curY = this.area.y;
+        var curY = 0;
         var orientation = this.parentComponent.orientation;
 
         var stacked = this.parentComponent.stacked;
@@ -53,8 +53,8 @@ ludo.chart.BarItem = new Class({
             if (orientation == 'horizontal') {
                 var h = this.area.height * r;
                 n.attr('height', h);
-                n.attr('y', this.area.height - h);
-                if(!stacked)curX += curWidth;else curY -=h;
+                n.attr('y', this.area.height - curY - h);
+                if(!stacked)curX += curWidth;else curY+= h;
             } else {
                 n.attr('width', this.area.width * r);
                 if(!stacked)curY += curHeight;else curX += this.area.width * r;
