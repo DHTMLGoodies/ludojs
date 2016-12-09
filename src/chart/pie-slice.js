@@ -29,7 +29,7 @@ ludo.chart.PieSlice = new Class({
 
         if(config.angle > Math.PI * 2) config.angle -=  Math.PI;
 
-        var point1 = ludo.canvasEngine.getPointAtRadianOffset(center, config.angle, config.radius);
+        var point1 = ludo.svg.getPointAtRadianOffset(center, config.angle, config.radius);
 
         path.push('L ' + point1.x + ' ' + point1.y);
         path.push('M ' + point1.x + ' ' + point1.y);
@@ -39,7 +39,7 @@ ludo.chart.PieSlice = new Class({
         path.push(config.radians > Math.PI ? '1' : '0');
         path.push('1');
 
-        var point2 = ludo.canvasEngine.getPointAtRadianOffset(center, config.angle + config.radians, config.radius);
+        var point2 = ludo.svg.getPointAtRadianOffset(center, config.angle + config.radians, config.radius);
         path.push(point2.x + ' ' + point2.y);
         path.push('L ' + center.x + ' ' + center.y);
 
@@ -59,8 +59,6 @@ ludo.chart.PieSlice = new Class({
     },
 
     blur:function(){
-
-
         this.node().animate({
             translate: [0,0]
         }, 100);
@@ -73,7 +71,7 @@ ludo.chart.PieSlice = new Class({
 
     centerOffset:function(offset){
         var angle = this.record.__angle + (this.record.__radians / 2 );
-        return ludo.canvasEngine.getPointAtRadianOffset({ x:0, y: 0}, angle, offset);
+        return ludo.svg.getPointAtRadianOffset({ x:0, y: 0}, angle, offset);
     },
 
     enter:function(){

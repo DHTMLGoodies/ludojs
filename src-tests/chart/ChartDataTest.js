@@ -189,8 +189,9 @@ TestCase("ChartDataTest", {
 
         // then
         assertEquals(90000, d.maxVal);
-        assertEquals(135000, d.maxValAgr);
+        assertEquals(135000, d.maxValAggr);
     },
+
 
 
     getDataSourceNested:function(){

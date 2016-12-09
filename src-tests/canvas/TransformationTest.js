@@ -94,7 +94,7 @@ TestCase("TransformationTest", {
 		node.setTransformation('translate', '20 30');
 		rotation = node.getTransformation('rotate');
 
-		var actual = ludo.canvasEngine.get(node.getEl(), 'transform');
+		var actual = ludo.svg.get(node.getEl(), 'transform');
 
 		// then
 		assertEquals(25, rotation.degrees);
@@ -111,7 +111,7 @@ TestCase("TransformationTest", {
 		});
 
 		// when
-		var keys = ludo.canvasEngine.getTransformationKeys(node.getEl());
+		var keys = ludo.svg.getTransformationKeys(node.getEl());
 
 		// then
 		assertEquals('rotate', keys[0]);
@@ -127,8 +127,8 @@ TestCase("TransformationTest", {
 		});
 
 		// when
-		ludo.canvasEngine.buildTransformationCache(node.getEl());
-		var cache = ludo.canvasEngine.getTCache(node.getEl());
+		ludo.svg.buildTransformationCache(node.getEl());
+		var cache = ludo.svg.getTCache(node.getEl());
 
 		assertNotUndefined(cache['rotate']);
 		assertEquals(20, cache['rotate'].values[0]);
@@ -149,9 +149,9 @@ TestCase("TransformationTest", {
 
 		});
 
-		ludo.canvasEngine.buildTransformationCache(node.getEl());
+		ludo.svg.buildTransformationCache(node.getEl());
 		// when
-		var cacheString = ludo.canvasEngine.getTransformationAsText('myNode');
+		var cacheString = ludo.svg.getTransformationAsText('myNode');
 
 		// then
 		assertEquals(transformation, cacheString);

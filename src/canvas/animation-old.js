@@ -26,7 +26,7 @@ ludo.canvas.Animation = new Class({
                 step[i].value = 0;
             }
             if (this.el.set == undefined) {
-                ludo.canvasEngine.set(this.el, step[i].key, step[i].value);
+                ludo.svg.set(this.el, step[i].key, step[i].value);
             } else {
                 this.el.set(step[i].key, step[i].value);
 

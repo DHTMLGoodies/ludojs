@@ -33,7 +33,7 @@ ludo.canvas.Node = new Class({
         if (tagName !== undefined)this.tagName = tagName;
         this.createNode(this.tagName, properties);
         if (text !== undefined) {
-            ludo.canvasEngine.text(this.el, text);
+            ludo.svg.text(this.el, text);
         }
 
         this.mat = {
@@ -56,7 +56,7 @@ ludo.canvas.Node = new Class({
                     value = value.getUrl();
                 }
                 if (key == 'css') {
-                    ludo.canvasEngine.css(el, value);
+                    ludo.svg.css(el, value);
                 }
                 else if (key.substring(0, 6) == "xlink:") {
                     el.setAttributeNS("http://www.w3.org/1999/xlink", key.substring(6), value);
@@ -77,7 +77,7 @@ ludo.canvas.Node = new Class({
     },
 
     engine: function () {
-        return ludo.canvasEngine;
+        return ludo.svg;
     },
 
     addEvents: function (events) {
@@ -165,11 +165,11 @@ ludo.canvas.Node = new Class({
     },
 
     show: function () {
-        ludo.canvasEngine.show(this.el);
+        ludo.svg.show(this.el);
     },
 
     hide: function () {
-        ludo.canvasEngine.hide(this.el);
+        ludo.svg.hide(this.el);
     },
 
     setProperties: function (p) {
@@ -181,27 +181,27 @@ ludo.canvas.Node = new Class({
     },
 
     attr: function (key, value) {
-        ludo.canvasEngine.attr(this.el, key, value);
+        ludo.svg.attr(this.el, key, value);
     },
 
     set: function (key, value) {
-        ludo.canvasEngine.set(this.el, key, value);
+        ludo.svg.set(this.el, key, value);
     },
 
     remove: function (key) {
-        ludo.canvasEngine.remove(this.el, key);
+        ludo.svg.remove(this.el, key);
     },
 
     get: function (key) {
-        return ludo.canvasEngine.get(this.el, key);
+        return ludo.svg.get(this.el, key);
     },
 
     getTransformation: function (key) {
-        return ludo.canvasEngine.getTransformation(this.el, key);
+        return ludo.svg.getTransformation(this.el, key);
     },
 
     setTransformation: function (key, value) {
-        ludo.canvasEngine.setTransformation(this.el, key, value);
+        ludo.svg.setTransformation(this.el, key, value);
     },
 
     commitTranslation:function(){
@@ -262,7 +262,7 @@ ludo.canvas.Node = new Class({
     },
 
     href: function (url) {
-        ludo.canvasEngine.set(this.el, 'xlink:href', url);
+        ludo.svg.set(this.el, 'xlink:href', url);
     },
     /**
      * Update text content of node
@@ -271,7 +271,7 @@ ludo.canvas.Node = new Class({
      * @memberof ludo.canvas.Node.prototype
      */
     text: function (text) {
-        ludo.canvasEngine.text(this.el, text);
+        ludo.svg.text(this.el, text);
     },
     /**
      Adds a new child DOM node
@@ -294,7 +294,7 @@ ludo.canvas.Node = new Class({
 
     css: function (key, value) {
         if ($.type(key) == "string") {
-            ludo.canvasEngine.css(this.el, key, value);
+            ludo.svg.css(this.el, key, value);
         } else {
             this.setStyles(key);
         }
@@ -302,7 +302,7 @@ ludo.canvas.Node = new Class({
 
     setStyles: function (styles) {
         $.each(styles, function (key, value) {
-            ludo.canvasEngine.css(this.el, key, value);
+            ludo.svg.css(this.el, key, value);
         }.bind(this));
     },
 
@@ -313,7 +313,7 @@ ludo.canvas.Node = new Class({
      * @memberof ludo.canvas.Node.prototype
      */
     addClass: function (className) {
-        ludo.canvasEngine.addClass(this.el, className);
+        ludo.svg.addClass(this.el, className);
     },
     /**
      Returns true if svg node has given css class name
@@ -327,7 +327,7 @@ ludo.canvas.Node = new Class({
      alert(node.hasClass('myClass'));
      */
     hasClass: function (className) {
-        return ludo.canvasEngine.hasClass(this.el, className);
+        return ludo.svg.hasClass(this.el, className);
     },
     /**
      Remove css class name from css Node
@@ -341,7 +341,7 @@ ludo.canvas.Node = new Class({
      node.removeClass('myClass');
      */
     removeClass: function (className) {
-        ludo.canvasEngine.removeClass(this.el, className);
+        ludo.svg.removeClass(this.el, className);
     },
 
     getId: function () {
@@ -399,12 +399,12 @@ ludo.canvas.Node = new Class({
     scale: function (x, y) {
         this.mat.scale = [x, y];
         this.updateMatrix();
-        // ludo.canvasEngine.scale(this.el, width, height);
+        // ludo.svg.scale(this.el, width, height);
     },
 
     rotate: function (rotation, x, y) {
 
-        ludo.canvasEngine[x !== undefined ? 'rotateAround' : 'rotate'](this.el, rotation, x, y);
+        ludo.svg[x !== undefined ? 'rotateAround' : 'rotate'](this.el, rotation, x, y);
     },
 
 
@@ -425,11 +425,11 @@ ludo.canvas.Node = new Class({
         if(this.mat.translate)m = m.translate(this.mat.translate[0], this.mat.translate[1]);
         if(this.mat.scale)m = m.scale(this.mat.scale[0], this.mat.scale[1]);
 
-        ludo.canvasEngine.getTransformObject(this.el).setMatrix(m);
+        ludo.svg.getTransformObject(this.el).setMatrix(m);
     },
 
     empty: function () {
-        ludo.canvasEngine.empty(this.getEl());
+        ludo.svg.empty(this.getEl());
     },
 
     _curtain: undefined,
@@ -459,18 +459,18 @@ ludo.canvas.Node = new Class({
     },
 
     toFront: function () {
-        ludo.canvasEngine.toFront(this.getEl());
+        ludo.svg.toFront(this.getEl());
     },
 
     toBack: function () {
-        ludo.canvasEngine.toBack(this.getEl());
+        ludo.svg.toBack(this.getEl());
     },
 
     matrix: undefined,
 
     getMatrix: function () {
         if (this.matrix == undefined) {
-            var owner = ludo.canvasEngine.getSVGElement(this.getEl());
+            var owner = ludo.svg.getSVGElement(this.getEl());
             this.matrix = owner.createSVGMatrix();
         }
         return this.matrix;

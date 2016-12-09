@@ -21,7 +21,8 @@ ludo.chart.Bar = new Class({
     animationDuration : 500,
 
     fragmentType : 'chart.BarItem',
-    
+    stacked:false,
+
     __construct: function (config) {
         this.parent(config);
         this.setConfigParams(config, ['outline', 'lines', 'orientation','stacked']);
@@ -36,74 +37,26 @@ ludo.chart.Bar = new Class({
         };
     },
 
-    render: function () {
+    renderBackgroundItems: function () {
         this.parent();
 
         this.createLines();
-        this.createBars();
         this.createOutline();
+    },
+
+
+    render:function(){
+        this.parent();
         this.resizeElements();
-    },
 
-    createBars: function () {
-        var d = this.ds.getData();
-        for (var i = 0; i < d.length; i++) {
-            this.getBar(i, d[i]);
-        }
-    },
-
-    getBar: function (index, record) {
-
-        if (this.nodes.bars[index] == undefined) {
-
-            if(record.children != undefined){
-                var a = [];
-                for(var i=0;i<record.children.length;i++){
-                    a.push(this.getBarRect(record.children[i]));
-                }
-                this.nodes.bars.push(a);
-            }else{
-                var el = this.getBarRect(record);
-                this.nodes.bars.push(el);
-
-            }
-
-        }
-
-        return this.nodes.bars[index];
-    },
-
-    getBarRect:function(record){
-        var c = {
-            x: 0, y: 0, width: 0, height: 0
-        };
-        var el = new ludo.canvas.Rect(c);
-        this.nodes.barMap[record.id] = el;
-
-        this.append(el);
-        el.css('fill', record.__color);
-        el.on('click', this.fn('selectId', record));
-
-        if (record.__stroke != undefined) {
-            el.css('stroke', record.__stroke);
-        }
-
-        if (el.mouseenter != undefined) {
-            el.mouseenter(this.fn('enterId', record));
-            el.mouseleave(this.fn('leaveId', record));
-        } else {
-            el.on('mouseenter', this.fn('enterId', record));
-            el.on('mouseleave', this.fn('leaveId', record));
-        }
-        return el;
     },
 
     enter: function (record) {
-        this.nodes.barMap[record.id].css('fill', record.__colorOver);
+        
     },
 
     leave: function (record) {
-        this.nodes.barMap[record.id].css('fill', record.__color);
+
     },
 
     fn: function (name, record) {
@@ -172,93 +125,40 @@ ludo.chart.Bar = new Class({
         jQuery.each(this.nodes.outline, function (key, el) {
             el.toFront();
         });
-
     },
 
     renderAnimation: function () {
-
-
-        var d = this.ds.getData();
-        var s = this.getSize();
-        var min = this.ds.min();
-        var max = this.ds.max();
-
-        for (var i = 0; i < d.length; i++) {
-            var b = this.getBar(i, d[i]);
-            var val = this.ds.valueOf(d[i], this);
-            var r = (val - min) / (max - min);
-            if (this.orientation == 'horizontal') {
-                var height = (s.y * r);
-                b.attr('height', 0);
-                b.attr('y', s.y);
-                b.animate({
-                        'height': height
-                    }, this.duration, ludo.canvas.easing.inOutSine, undefined,
-                    function (node, delta, time, changes) {
-                        node.set('y', s.y - changes.height);
-                    });
-            }else{
-
-                var width = (s.x * r);
-                b.attr('width', 0);
-
-                b.animate({
-                        'width': width
-                    }, this.duration, this.easing, undefined,
-                    function (node, delta, time, changes) {
-
-                    });
-
-            }
-        }
-
+        jQuery.each(this.fragments, function(index, fr){
+            fr.animate();
+        });
     },
 
     resizeBars: function () {
-
-        var d = this.ds.getData();
-        for (var i = 0; i < d.length; i++) {
-
-            var b = this.getBar(i, d[i]);
-
-            this.resizeBar(b, d, i);
-
-        }
-    },
-
-    resizeBar:function(b, d, index){
-
-
         var s = this.getSize();
-        var min = this.ds.min();
-        var max = this.ds.max();
-
+        var d = this.ds.getData();
+        var a = { x : 0, y:0 ,width:s.x,height:s.y};
         var availSize = this.orientation == 'horizontal' ? s.x / d.length : s.y / d.length;
-        var size = availSize * this.barSize;
-        var offset = (availSize - size ) / 2;
 
-        var val = this.ds.valueOf(d[index], this);
-
-        var r = (val - min) / (max - min);
-
-
-        if (this.orientation == 'horizontal') {
-            var x = availSize * i / d.length;
-            var height = (s.y * r);
-
-
-            b.attr('width', size);
-            b.attr('x', (index * availSize) + offset);
-            b.attr('y', s.y - height);
-            b.attr('height', height);
-
-        } else {
-            b.attr('height', size);
-            b.attr('width', s.x * r);
-            b.attr('y', (index * availSize) + offset);
+        var insetX = 0;
+        var insetY = 0;
+        if(this.orientation == 'horizontal'){
+            a.width = (s.x / d.length) * this.barSize;
+            insetX = (availSize - a.width) / 2;
+        }else{
+            a.height =(s.y / d.length) * this.barSize;
+            insetY = (availSize - a.height) / 2;
         }
+        
+        for (var i = 0; i < d.length; i++) {
+            
+            this.fragments[i].setArea(a.x + insetX,a.y + insetY,a.width,a.height);
 
-
+            if(this.orientation == 'horizontal'){
+                a.x += availSize;
+            }else{
+                a.y += availSize;
+            }
+        }
     },
 
     resizeLines: function () {
@@ -281,12 +181,14 @@ ludo.chart.Bar = new Class({
                 l.attr('x1', s.x * r);
                 l.attr('x2', s.x * r);
             }
+
         }
     },
 
     resizeOutline: function () {
         var s = this.getSize();
         jQuery.each(this.outline, function (key, el) {
+            el.toFront();
             switch (key) {
                 case 'around':
                     el.css({

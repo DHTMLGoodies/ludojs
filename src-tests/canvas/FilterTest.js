@@ -62,7 +62,7 @@ TestCase("FilterTest", {
 	assertProperty:function (filter, tag, property, expected, index) {
 		index = index || 0;
 		var node = filter.el.getElementsByTagName(tag)[index];
-		var val =  ludo.canvasEngine.get(node, property);
+		var val =  ludo.svg.get(node, property);
 		assertEquals(property + ' wrong', expected, val);
 	},
 

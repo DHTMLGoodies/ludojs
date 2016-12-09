@@ -120,6 +120,9 @@ ludo.chart.Base = new Class({
     },
 
     create: function () {
+
+        this.renderBackgroundItems();
+
         if (this.dataProvider().hasData()) {
             this.createFragments();
         }
@@ -135,7 +138,7 @@ ludo.chart.Base = new Class({
 
     },
 
-    render: function () {
+    renderBackgroundItems:function(){
         if (this.bgColor != undefined) {
             var s = this.getSize();
             this.bgRect = new ludo.canvas.Rect({
@@ -145,6 +148,10 @@ ludo.chart.Base = new Class({
             this.bgRect.css('fill', this.bgColor);
             this.append(this.bgRect);
         }
+    },
+
+    render: function () {
+
     },
 
     update: function (record) {

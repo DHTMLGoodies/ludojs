@@ -138,7 +138,7 @@ ludo.canvas.Paint = new Class({
 	 * @memberof ludo.canvas.Paint.prototype
 	 */
 	applyTo:function (node) {
-		ludo.canvasEngine.addClass(node.el ? node.el : node, this.className);
+		ludo.svg.addClass(node.el ? node.el : node, this.className);
 	},
 
 	/**

@@ -4,12 +4,15 @@ ludo.chart.Fragment = new Class({
     nodes:[],
 
     rendering:{},
-    
+
+    ds:undefined,
+
     __construct:function (config) {
         this.parent(config);
         this.setConfigParams(config, ['record','parentComponent']);
         this.createNodes();
 
+        this.ds = this.parentComponent.ds;
     },
 
     createNodes:function(){
@@ -25,10 +28,17 @@ ludo.chart.Fragment = new Class({
         this.getParent().dataProvider().addEvent('update', this.update.bind(this));
 
         var ds = this.getDataSource();
-        ds.on('select' + this.record.__uid, this.focus.bind(this));
-        ds.on('blur' + this.record.__uid, this.blur.bind(this));
-        ds.on('enter' + this.record.__uid, this.enter.bind(this));
-        ds.on('leave' + this.record.__uid, this.leave.bind(this));
+
+        var recs = this.record.children != undefined ? this.record.children: [this.record];
+
+        jQuery.each(recs, function(index, record){
+            ds.on('select' + record.__uid, this.focus.bind(this));
+            ds.on('blur' + record.__uid, this.blur.bind(this));
+            ds.on('enter' + record.__uid, this.enter.bind(this));
+            ds.on('leave' + record.__uid, this.leave.bind(this));
+        }.bind(this));
+
+
     },
 
     getParent:function(){
@@ -63,15 +73,15 @@ ludo.chart.Fragment = new Class({
     },
 
     enterNode:function(){
-        this.getDataSource().enter(this.record);
+        this.ds.enter(this.record);
     },
 
     leaveNode:function(){
-        this.getDataSource().leave(this.record);
+        this.ds.leave(this.record);
     },
 
     clickNode:function(){
-        this.getDataSource().select(this.record);
+        this.ds.select(this.record);
     },
 
     createStyle:function(styles){
@@ -118,5 +128,9 @@ ludo.chart.Fragment = new Class({
 
     getRecord:function(){
         return this.record;
+    },
+
+    animate:function(){
+        
     }
 });

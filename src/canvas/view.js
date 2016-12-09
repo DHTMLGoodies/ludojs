@@ -26,7 +26,7 @@ ludo.canvas.View = new Class({
 
     tag: undefined,
 
-    engine: ludo.canvasEngine,
+    engine: ludo.svg,
 
     p: undefined,
 

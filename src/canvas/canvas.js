@@ -127,7 +127,28 @@ ludo.canvas.Canvas = new Class({
 	createDescription:function(){
 		this.append(new ludo.canvas.Node('desc', {}, this.description ));
 	},
-	
+
+
+	/**
+	 * Create a SVG Stylesheet
+	 * @param {String} className
+	 * @param {Object} styles
+	 * @memberof ludo.canvas.Canvas.prototype
+	 * @example
+	 * svg.addStyleSheet('box', { fill : '#669900', stroke: '#000' });
+	 * // Use the class
+	 * var rect = new ludo.canvas.Rect({
+     *   	x:0,y:0,width:500,height:500
+     * });
+	 * svg.append(rect);
+	 * rect.addClass('box');
+     */
+	addStyleSheet:function(className, styles){
+		var p = new ludo.canvas.Paint(styles, { className : className });
+		this.appendDef(p);
+	},
+
+
 	defsNode:undefined,
 
 	/**

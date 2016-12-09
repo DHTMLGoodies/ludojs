@@ -1,6 +1,6 @@
 ludo.chart.BarValues = new Class({
     Extends: ludo.chart.Base,
-    type: 'chart.BarValues ',
+    type: 'chart.BarValues',
     fragmentType: undefined,
 
     orientation: undefined,
@@ -45,7 +45,7 @@ ludo.chart.BarValues = new Class({
         for (var i = 0; i < this.count; i++) {
             var el = this.getNode(i);
             var val = this.val(i);
-            el.text(val);
+            el.text(this.ds.valueForDisplay(val, this));
             var pos = this.getPos(val);
             el.attr('x', pos.x);
             el.attr('y', pos.y);

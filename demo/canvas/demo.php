@@ -24,7 +24,7 @@ google_ad_height = 280;
 <script type="text/javascript">
     var dd = new ludo.canvas.Drag();
     dd.addEvent('before', function (dragged) {
-        ludo.canvasEngine.toFront(dragged.el.getEl());
+        ludo.svg.toFront(dragged.el.getEl());
     });
 
     var win = new ludo.Window({

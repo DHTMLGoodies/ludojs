@@ -20,8 +20,8 @@ require_once("../includes/demo-header.php");
 
         getText:function(caller){
             switch(caller.id){
-                case 'labelsLeft': return "People";
-                case "labelsTop": return "Nicest Fruit"
+                case 'labelFruit': return "Nicest Fruit";
+                case "labelPeople": return "People"
             }
             return "";
         },
@@ -46,7 +46,7 @@ require_once("../includes/demo-header.php");
 
 
     });
-    var d = new Date();
+
     var w = new ludo.Window({
         title:'Bar chart',
         layout:{
@@ -55,7 +55,8 @@ require_once("../includes/demo-header.php");
             height:500,
             left:20,
             top:20,
-            type:'tab'
+            type:'tab',
+            tabs:'left'
         },
         children:[
             {
@@ -78,7 +79,7 @@ require_once("../includes/demo-header.php");
                         dataSource:dataSource,
                         children:[
                             {
-                                id:'labelsLeft',
+                                id:'labelFruit',
                                 type:'chart.Text',
                                 styling:{
                                     fill : '#aeb0b0',
@@ -94,7 +95,7 @@ require_once("../includes/demo-header.php");
                                 rotate:'left'
                             },
                             {
-                                id:'labelsTop',
+                                id:'labelPeople',
                                 type:'chart.Text',
                                 anchor:[0.5,0.5],
                                 styling:{
@@ -102,22 +103,22 @@ require_once("../includes/demo-header.php");
                                     'font-size' : '20px'
                                 },
                                 layout:{
-                                    rightOf:'labelsLeft',
+                                    rightOf:'labelFruit',
                                     fillRight:true,
-                                    alignParentTop:true,
+                                    alignParentBottom:true,
                                     height:50,
                                     alignParentLeft:true
                                 }
                             },
                             {
-                                id:'barValues',
+                                id:'barLabels',
+                                type:'chart.BarLabels',
                                 orientation:'vertical',
-                                type:'chart.BarValues',
                                 layout:{
-                                    rightOf:'labelsLeft',
-                                    below:'labelsTop',
-                                    above:'barLabels',
-                                    width:30
+                                    rightOf:'labelFruit',
+                                    fillUp:true,
+                                    bottom:80,
+                                    width:60
                                 },
                                 padding:4,
                                 styling:{
@@ -126,11 +127,12 @@ require_once("../includes/demo-header.php");
                                 }
                             },
                             {
-                                id:'barLabels',
-                                type:'chart.BarLabels',
+                                id:'barValues',
+                                type:'chart.BarValues',
+                                orientation:'horizontal',
                                 layout:{
-                                    alignParentBottom:true,
-                                    rightOf:'barValues',
+                                    above:'labelPeople',
+                                    rightOf:'barLabels',
                                     fillRight:true,
                                     height:30
                                 },
@@ -143,14 +145,15 @@ require_once("../includes/demo-header.php");
                                 name : 'bar',
                                 type:'chart.Bar',
                                 animate:true,
+                                orientation:'vertical',
                                 id:'bar',
                                 bgColor:'#424242',
                                 barSize:0.9, // Fraction bar width
                                 layout:{
-                                    rightOf:'barValues',
+                                    rightOf:'barLabels',
                                     fillRight:true,
-                                    below:'labelsTop',
-                                    above:'barLabels'
+                                    fillUp:true,
+                                    above:'barValues'
                                 },
                                 lines:{
                                     stroke: '#535353'
@@ -185,7 +188,6 @@ require_once("../includes/demo-header.php");
         ]
     });
 
-    console.log('time to render: ' + (new Date().getTime() - d.getTime()));
 </script>
 </body>
 </html>

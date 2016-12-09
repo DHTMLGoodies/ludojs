@@ -1,9 +1,19 @@
 /**
- * Class displaying labels for a chart. See
- * {{#crossLink "chart/Pie"}}{{/crossLink}} for example on how to add labels
- * to your chart. How labels are displayed(side by side or beneath each other)
- * depends on the orientation attribute OR
- * the size of the area assigned to the labels. You can set orientation to
+ * Displays a list of labels for chart data (color box + label).
+ *
+ * The Label List fetches it's label from the <a href="ludo.chart.DataSource.html">data source</a> textOf function, and the
+ * color from the items \_\_color attribute or from the data source colorOf function.
+ *
+ * When chart data are nested like
+ *
+ * <code>
+ * { "course": "Math", "children": [ { "age": "0-14", "value": 100 }, { "age": "15-19", "value" : "150" } ] }
+ * </code>
+ *
+ * Labels for "0-14" and "15-19" will be shown(i.e. the leaf nodes).
+ *
+ * How labels are rendered(side by side or beneath each other) is set by the orientation attribute OR
+ * the size of the area designated to the labels. You can set orientation to
  * "vertical" or "horizontal". If orientation is not set and width is greater
  * than height, the labels will be displayed vertically. If height is greater
  * than width, the labels will be rendered vertically.
@@ -21,7 +31,7 @@
  */
 ludo.chart.LabelList = new Class({
     Extends:ludo.chart.Base,
-
+    type:'chart.LabelList',
     fragmentType:'chart.LabelListItem',
     textStyles:undefined,
     textStylesOver:undefined,
@@ -80,5 +90,13 @@ ludo.chart.LabelList = new Class({
         for(i=0;i<this.fragments.length;i++){
             this.fragments[i].node().translate(2, top[i] + offset);
         }
+    },
+
+    getRecords:function(){
+        var recs = this.parent();
+        if(recs.length > 0 && recs[0].children != undefined){
+            return recs[0].children;
+        }
+        return recs;
     }
 });

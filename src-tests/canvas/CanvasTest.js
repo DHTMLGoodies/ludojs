@@ -137,7 +137,7 @@ TestCase("CanvasTest", {
 			renderTo:w
 		});
 		// then
-		assertEquals(w.getBody().attr("id"), ludo.canvasEngine.get(canvas.getEl().parentNode, "id"));
+		assertEquals(w.getBody().attr("id"), ludo.svg.get(canvas.getEl().parentNode, "id"));
 	},
 
 	"test should be able to create canvas by calling view.getCanvas":function(){

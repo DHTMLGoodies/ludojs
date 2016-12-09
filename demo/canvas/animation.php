@@ -17,6 +17,19 @@ require_once("../includes/demo-header.php");
     });
 
     var c = v.getCanvas();
+    c.addStyleSheet('box', {
+        fill: '#445566'
+    });
+
+    var rect = new ludo.canvas.Rect({
+        x:0,y:0,width:500,height:500
+    });
+    rect.css({
+        'stroke' : '#ff0000'
+    });
+    rect.addClass('box');
+
+    c.append(rect);
 
     var circle = new ludo.canvas.Circle({
         cx: 100, cy: 110, r: 5

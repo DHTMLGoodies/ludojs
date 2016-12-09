@@ -438,7 +438,7 @@ ludo.canvas.Engine = new Class({
     },
 
     getPointAtDegreeOffset:function(from, degrees, size){
-        var radians = ludo.canvasEngine.toRadians(degrees);
+        var radians = ludo.svg.toRadians(degrees);
 		return this.getPointAtRadianOffset(from, radians, size);
     },
 
@@ -453,5 +453,5 @@ ludo.canvas.Engine = new Class({
 	}
 
 });
-ludo.canvasEngine = new ludo.canvas.Engine();
+ludo.svg = new ludo.canvas.Engine();
 

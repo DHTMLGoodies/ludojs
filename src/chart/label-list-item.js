@@ -1,6 +1,6 @@
 ludo.chart.LabelListItem = new Class({
     Extends:ludo.chart.Fragment,
-
+    type:'chart.LabelListItem',
 
 
     createNodes:function () {

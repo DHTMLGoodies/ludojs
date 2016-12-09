@@ -19,7 +19,7 @@ ludo.canvas.Effect = new Class({
     },
 
     getTranslate:function(el){
-        var ret = ludo.canvasEngine.getTransformation(el, 'translate');
+        var ret = ludo.svg.getTransformation(el, 'translate');
         if(!ret)ret = {
             x:0,y:0
         };
@@ -37,7 +37,7 @@ ludo.canvas.Effect = new Class({
             current[i] += increments[i];
         }
 
-        ludo.canvasEngine.setTransformation(el, property, current.join(' '));
+        ludo.svg.setTransformation(el, property, current.join(' '));
         stepIndex ++;
         if(stepIndex < countSteps){
             this.executeStep.delay(this.fps, this, [

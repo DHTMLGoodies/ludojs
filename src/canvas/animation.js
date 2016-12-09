@@ -58,7 +58,7 @@ ludo.canvas.Animation = new Class({
                     }
                 } else{
                     var val = start[key] + (value * delta);
-                    ludo.canvasEngine.set(node.el, key, val);
+                    ludo.svg.set(node.el, key, val);
                     if(stepFn != undefined){
                         if(loopChanges == undefined){
                             loopChanges = {};

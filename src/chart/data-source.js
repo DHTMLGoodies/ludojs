@@ -2,7 +2,7 @@
  * Data source for charts
  *
  * The chart data source expects an array of objects, example:
- * 
+ *
  * <code>
  * [
  { id: 1, label:'John', value:100 },
@@ -12,9 +12,31 @@
  { id: 5, label:'Johnny', value:127 },
  { id: 6, label:'Catherine', value:55 },
  { id: 7, label:'Tommy', value:18 }
- ]   
- *     
+ ]
+ *
  * </code>
+ *
+ * Some charts(example bar charts) accepts nested data, example:
+ *
+ * <code>
+ *
+ * [
+ * {
+ *      "country": "United Kingdom",
+ *      "children": [
+ *          { "name":"0-14", "people" : 5000 }, { "name":"15-64", "people" : 20000 }, { "name":"65-", "people" : 4000 }
+ *      ]
+ * },
+ * {
+ *      "country": "Germany",
+ *      "children": [
+ *          { "name":"0-14", "people" : 6000 }, { "name":"15-64", "people" : 29000 }, { "name":"65-", "people" : 4000 }
+ *      ]
+ * }
+ * ]
+ *
+ * </code>
+ *
  * The chart data source will add some special properties to the records.
  * Example: "Jane" in the data above will be something like:
  * <code>
@@ -31,7 +53,9 @@
  *      \_\_radians : 2.2604704849618193,
  *      \_\_uid : "chart-node-iw7znu0v"
  *      \_\_min : 18
+ *      \_\_minAgr : 18
  *      \_\_max : 245
+ *      \_\_maxAggr : 245
  * }
  * </code>
  *
@@ -46,9 +70,30 @@
  * \_\_angle is mostly for internal use and represents this records start angle in radians when all records fill a circle.
  * \_\_radians is how many radians of a circle this record fills. A circle has Math.PI * 2 radians. \_\_angle and radians
  * are only set when values are numeric.
- * |_|_min is the lowest value of all records
- * |_|_max is the highest value of all records.
+ * \_\_min is the minimum value found in the data set
+ * \_\_max is the max value found in the data set.
+ * \_\_maxAggr is useful for nested data sets. It is set to max(child values) in the data set. For non-nested sets, it will
+ * have the same value as \_\_max. Example: for
+ * * <code>
  *
+ * [
+ * {
+ *      "country": "United Kingdom",
+ *      "children": [
+ *          { "name":"0-14", "people" : 5000 }, { "name":"15-64", "people" : 20000 }, { "name":"65-", "people" : 4000 }
+ *      ]
+ * },
+ * {
+ *      "country": "Germany",
+ *      "children": [
+ *          { "name":"0-14", "people" : 6000 }, { "name":"15-64", "people" : 29000 }, { "name":"65-", "people" : 4000 }
+ *      ]
+ * }
+ * ]
+ *
+ * </code>
+ *
+ * \_\_maxAggr will be 39000(Sum children of Germany), while \_\_max will be 29000.
  *
  * @class ludo.chart.DataSource
  * @param {Object} config
@@ -82,6 +127,15 @@
  * @param {Function} increments. Function returning increments for lines, labels etc. This function may return an array of values(example: for a chart with values form 0-100, this function
  * may return [0,10,20,30,40,50,60,70,80,90,100]. This function may also return a numeric value, example: 10 instead of the array. Three arguments are sent to this function: 1) the data arrays
  * minimum value, 2) the data arrays maximum value and 3) The caller, i.e. the SVG view asking for the increments.
+ * @param {Function } valueForDisplay Optional function returning value to display in a view. Arguments: 1) value, 2) caller. Let's say you have a
+ * data source with values in millions, example: Population in countries. For the chart.BarValues view, you might want to display number of millians, i.e.
+ * 10 instead of 10000000. This can be done with a valueForDisplay function:
+ * <code>
+ *     valueForDisplay:function(value, caller){
+ *          if(caller.type == 'chart.BarValues')return Math.round(value / 1000000) + " mill";
+ *          return value;
+ *     }
+ * </code>
  * @param {Function} strokeOf Optional function returning stroke color for chart item, Arguments: 1) chart record, 2) caller
  * @param {Function} strokeOverOf Optional function returning mouse over stroke color for chart item, Arguments: 1) chart record, 2) caller
  * @example
@@ -117,55 +171,77 @@ ludo.chart.DataSource = new Class({
 
     valueOf: undefined,
     textOf: undefined,
-    valueKey:'value',
+    valueKey: 'value',
 
     startAngle: 0,
 
-    color:'#1976D2',
+    color: '#1976D2',
 
     colorOf: undefined,
     colorOverOf: undefined,
 
-    strokeOf:undefined,
-    strokeOverOf:undefined,
+    strokeOf: undefined,
+    strokeOverOf: undefined,
 
-    colorUtilObj : undefined,
+    colorUtilObj: undefined,
 
-    count:undefined,
+    count: undefined,
 
-    highlighted:undefined,
+    highlighted: undefined,
 
-    selectedRecord:undefined,
+    selectedRecord: undefined,
 
     /**
      * Max value in data array
      * @property {Number} maxVal
      * @mamberof ludo.chart.DataSource.prototype
      */
-    maxVal:undefined,
+    maxVal: undefined,
 
-    maxValAgr:undefined,
+
+    /**
+     * Aggregated max value in the data array. Sum value of child data.
+     * @property {Number} maxValAggr
+     * @mamberof ludo.chart.DataSource.prototype
+     * @example
+     * [
+     * {
+     *      "country": "United Kingdom",
+     *      "children": [
+     *          { "name":"0-14", "people" : 5000 }, { "name":"15-64", "people" : 20000 }, { "name":"65-", "people" : 4000 }
+     *      ]
+     * },
+     * {
+     *      "country": "Germany",
+     *      "children": [
+     *          { "name":"0-14", "people" : 6000 }, { "name":"15-64", "people" : 29000 }, { "name":"65-", "people" : 4000 }
+     *      ]
+     * }
+     * ]
+     * // maxValAggr will here be 39000 (Sum children of "Germany").
+     */
+    maxValAggr: undefined,
 
     /**
      * Min value in data array
      * @property {Number} minVal
      * @mamberof ludo.chart.DataSource.prototype
      */
-    minVal:undefined,
+    minVal: undefined,
 
-    minValAgr:undefined,
+    minValAgr: undefined,
 
-    _increments:undefined,
-    increments:undefined,
+    _increments: undefined,
+    increments: undefined,
 
     __construct: function (config) {
-        this.setConfigParams(config, ['valueKey','color','valueOf', 'textOf', 'getText','max','min','increments','strokeOf', 'strokeOverOf']);
+        this.setConfigParams(config, ['valueKey', 'color', 'valueOf', 'textOf', 'getText', 'max', 'min', 'increments', 'strokeOf', 'strokeOverOf','valueForDisplay']);
         this.parent(config);
 
-        if(this.valueOf == undefined){
+        if (this.valueOf == undefined) {
             console.warn("Method valueOf(record, caller) not implemented in chart data source");
         }
-        if(this.textOf == undefined){
+        if (this.textOf == undefined) {
             console.warn("Method textOf(record, caller) not implemented in chart data source");
         }
     },
@@ -175,14 +251,14 @@ ludo.chart.DataSource = new Class({
         this.parent(this.data);
     },
 
-    handleData:function(data){
+    handleData: function (data) {
         this.data = data;
         this.map = {};
         this.startAngle = 0;
         this.minVal = undefined;
         this.minValAgr = undefined;
         this.maxVal = undefined;
-        this.maxValAgr = undefined;
+        this.maxValAggr = undefined;
         this.count = this.getCount(this.data);
         this.parseChartBranch(this.data);
         this.updateIncrements();
@@ -193,38 +269,38 @@ ludo.chart.DataSource = new Class({
         this.fireEvent('update', [record, this]);
     },
 
-    updateIncrements:function(){
-        if(this.increments == undefined)return;
+    updateIncrements: function () {
+        if (this.increments == undefined)return;
         var inc = this.increments(this.minVal, this.maxVal, this);
-        if(jQuery.isArray(inc)){
+        if (jQuery.isArray(inc)) {
             this._increments = inc;
-        }else{
+        } else {
             this._increments = [];
-            for(var i=this.min(), len = this.max(); i<=len; i+=inc){
+            for (var i = this.min(), len = this.max(); i <= len; i += inc) {
                 this._increments.push(i);
             }
         }
 
     },
 
-    getIncrements:function(){
+    getIncrements: function () {
         return this._increments;
     },
 
     sum: function (branch) {
         var sum = 0;
         jQuery.each(branch, function (key, node) {
-            sum += (this.value(node) || 0);
+            sum += (this.value(node, this) || 0);
         }.bind(this));
         return sum;
     },
 
-    getCount:function(data){
+    getCount: function (data) {
 
-         var count = 0;
-        jQuery.each(data, function(key, node){
+        var count = 0;
+        jQuery.each(data, function (key, node) {
             count++;
-            if(node.children != undefined && jQuery.isArray(node.children)){
+            if (node.children != undefined && jQuery.isArray(node.children)) {
                 count += this.getCount(node.children);
             }
         }.bind(this));
@@ -232,24 +308,24 @@ ludo.chart.DataSource = new Class({
         return count;
     },
 
-    updateValues:function(branch, parent){
+    updateValues: function (branch, parent) {
 
         jQuery.each(branch, function (key, node) {
-            var val = this.value(node);
+            var val = this.value(node, this);
 
-            if(val == undefined || !isNaN(val)){
-                if(node.children != undefined){
+            if (val == undefined || !isNaN(val)) {
+                if (node.children != undefined) {
                     val = this.sum(node.children);
                     var vk = this.valueKey;
 
-                    if(vk != undefined){
+                    if (vk != undefined) {
                         node[vk] = val;
                     }
                 }
             }
 
-            if(val != undefined && !isNaN(val)){
-                if(node.children == undefined){
+            if (val != undefined && !isNaN(val)) {
+                if (node.children == undefined) {
                     this.setMax(val);
                     this.setMin(val);
                 }
@@ -259,55 +335,54 @@ ludo.chart.DataSource = new Class({
         }.bind(this));
     },
 
-    setMax:function(val){
-        if(this.maxVal == undefined){
+    setMax: function (val) {
+        if (this.maxVal == undefined) {
             this.maxVal = val;
-        }else{
+        } else {
             this.maxVal = Math.max(this.maxVal, val);
         }
     },
 
-    setMaxAgr:function(val){
-        if(this.maxValAgr == undefined){
-            this.maxValAgr = val;
-        }else{
-            this.maxValAgr = Math.max(this.maxValAgr, val);
+    setMaxAgr: function (val) {
+        if (this.maxValAggr == undefined) {
+            this.maxValAggr = val;
+        } else {
+            this.maxValAggr = Math.max(this.maxValAggr, val);
         }
     },
 
-    setMin:function(val){
-        if(this.minVal == undefined){
+    setMin: function (val) {
+        if (this.minVal == undefined) {
             this.minVal = val;
-        }else{
-            this.minVal = Math.min(this.minVal,val);
+        } else {
+            this.minVal = Math.min(this.minVal, val);
         }
     },
 
-    setMinAgr:function(val){
-        if(this.minValAgr == undefined){
+    setMinAgr: function (val) {
+        if (this.minValAgr == undefined) {
             this.minValAgr = val;
-        }else{
-            this.minValAgr = Math.min(this.minValAgr,val);
+        } else {
+            this.minValAgr = Math.min(this.minValAgr, val);
         }
     },
-
 
 
     parseChartBranch: function (branch, parent) {
 
-        this.updateValues(branch,parent);
+        this.updateValues(branch, parent);
 
         var sum = this.sum(branch);
         var angle = parent && parent.angle ? parent.angle : 0;
         var i = 0;
         jQuery.each(branch, function (key, node) {
             node.__sum = sum;
-            var val = this.value(node);
-            if(val == undefined || !isNaN(val)){
-                if(val != undefined){
+            var val = this.value(node, this);
+            if (val == undefined || !isNaN(val)) {
+                if (val != undefined) {
                     node.__min = this.minVal;
                     node.__max = this.maxVal;
-                    node.__maxAgr = this.maxValAgr;
+                    node.__maxAggr = this.maxValAggr;
                     node.__minAgr = this.minValAgr;
                     node.__fraction = val / sum;
                     node.__percent = Math.round(node.__fraction * 100);
@@ -318,40 +393,39 @@ ludo.chart.DataSource = new Class({
                 }
             }
 
-            if(node.index == undefined){
+            if (node.index == undefined) {
                 node.__index = i++;
             }
 
             this.setColor(node);
 
 
-
-            if(node.id == undefined){
+            if (node.id == undefined) {
                 node.id = 'chart-node-' + String.uniqueID();
             }
-            if(node.__uid == undefined){
+            if (node.__uid == undefined) {
                 node.__uid = 'chart-node-' + String.uniqueID();
             }
             this.map[node.id] = node;
 
-            if(node.children != undefined){
+            if (node.children != undefined) {
                 this.parseChartBranch(node.children, node);
             }
 
         }.bind(this));
     },
 
-    val:function(id, value){
-        if(arguments.length == 2){
-            if(this.valueKey != undefined){
+    val: function (id, value) {
+        if (arguments.length == 2) {
+            if (this.valueKey != undefined) {
                 var rec = this.byId(id);
-                if(rec){
+                if (rec) {
                     rec[this.valueKey] = value;
                     this.update(rec);
                 }
 
             }
-        }else{
+        } else {
             return this.valueOf(this.byId(id));
         }
     },
@@ -363,31 +437,31 @@ ludo.chart.DataSource = new Class({
         return undefined;
     },
 
-    enterId:function(id){
-        this.enter(this.map[id]);    
+    enterId: function (id) {
+        this.enter(this.map[id]);
     },
-    
-    enter:function(record){
+
+    enter: function (record) {
         this.highlighted = record;
         this.fireEvent('enter', [record, this]);
         this.fireEvent('enter' + record.__uid, [record, this]);
     },
 
-    leaveId:function(id){
-        this.leave(this.map[id]);    
+    leaveId: function (id) {
+        this.leave(this.map[id]);
     },
-    
-    leave:function(record){
+
+    leave: function (record) {
         this.fireEvent('leave', [record, this]);
         this.fireEvent('leave' + record.__uid, [record, this]);
     },
-    
-    selectId:function(id){
-        this.select(this.map[id]);    
+
+    selectId: function (id) {
+        this.select(this.map[id]);
     },
 
-    select:function(record){
-        if(this.selectedRecord != undefined){
+    select: function (record) {
+        if (this.selectedRecord != undefined) {
             this.fireEvent('blur', [this.selectedRecord, this]);
             this.fireEvent('blur' + this.selectedRecord.__uid, [this.selectedRecord, this]);
         }
@@ -396,78 +470,81 @@ ludo.chart.DataSource = new Class({
         this.fireEvent('select' + record.__uid, [record, this]);
     },
 
-    value:function(record, caller){
+    value: function (record, caller) {
         var val = this.valueOf != undefined ? this.valueOf(record, caller) : undefined;
-        if(val == undefined && this.valueKey != undefined){
+        if (val == undefined && this.valueKey != undefined) {
             return record[this.valueKey];
         }
         return val;
     },
 
-    isSelected:function(record){
+    isSelected: function (record) {
         return this.selectedRecord == record;
     },
 
-    hasData:function(){
+    hasData: function () {
         return this.data && this.data.length > 0;
     },
 
-    setColor:function(record){
+    setColor: function (record) {
         var u = false;
 
-        if(record.__color == undefined){
-
-            if(this.colorOf != undefined){
+        if (record.__color == undefined) {
+            if (this.colorOf != undefined) {
                 record.__color = this.colorOf(record);
-            }else{
+            } else {
                 record.__color = this.color;
             }
             u = true;
         }
 
-        if(record.__colorOver == undefined){
+        if (record.__colorOver == undefined) {
             record.__colorOver = this.colorUtil().brighten(record.__color, 7);
-            if(record.__colorOver == record.__color){
+            if (record.__colorOver == record.__color) {
                 record.__color = this.colorUtil().darken(record.__color, 7);
             }
             u = true;
         }
 
-        if(record.__stroke == undefined && this.strokeOf != undefined){
+        if (record.__stroke == undefined && this.strokeOf != undefined) {
             record.__stroke = this.strokeOf(record, this);
         }
-        if(record.__strokeOver == undefined && this.strokeOverOf != undefined){
+        if (record.__strokeOver == undefined && this.strokeOverOf != undefined) {
             record.__strokeOver = this.strokeOverOf(record, this);
         }
-        if(u){
+        if (u) {
             this.color = this.colorUtil().offsetHue(record.__color, (360 / (record.__count + 1)));
         }
     },
 
-    colorUtil:function(){
-        if(this.colorUtilObj == undefined){
+    colorUtil: function () {
+        if (this.colorUtilObj == undefined) {
             this.colorUtilObj = new ludo.color.Color();
         }
         return this.colorUtilObj;
     },
 
-    getHighlighted:function(){
+    getHighlighted: function () {
         return this.highlighted;
     },
 
-    getText:function(caller){
+    getText: function (caller) {
 
     },
 
-    length:function(){
+    length: function () {
         return this.data.length;
     },
 
-    max:function(){
+    max: function () {
         return this.maxVal;
     },
 
-    min:function(){
+    min: function () {
         return Math.min(0, this.minVal);
+    },
+
+    valueForDisplay:function(value){
+        return value;
     }
 });

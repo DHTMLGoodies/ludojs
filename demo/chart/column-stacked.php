@@ -27,7 +27,7 @@ require_once("../includes/demo-header.php");
         /** Return texts for chart Text views chart.Text */
         getText:function(caller){
             switch(caller.id){
-                case 'labelsLeft': return "Country";
+                case 'labelsLeft': return "People";
                 case "labelsTop": return "Male Population"
             }
             return "";
@@ -124,11 +124,9 @@ require_once("../includes/demo-header.php");
                                 }
                             },
                             {
-                                id:'barLabels',
-                                type:'chart.BarLabels',
-
-
+                                id:'barValues',
                                 orientation:'vertical',
+                                type:'chart.BarValues',
                                 layout:{
                                     rightOf:'labelsLeft',
                                     below:'labelsTop',
@@ -142,11 +140,11 @@ require_once("../includes/demo-header.php");
                                 }
                             },
                             {
-                                id:'barValues',
-                                type:'chart.BarValues',
+                                id:'barLabels',
+                                type:'chart.BarLabels',
                                 layout:{
                                     alignParentBottom:true,
-                                    rightOf:'barLabels',
+                                    rightOf:'barValues',
                                     fillRight:true,
                                     height:30
                                 },
@@ -161,14 +159,14 @@ require_once("../includes/demo-header.php");
                                 type:'chart.Bar',
                                 stacked:true,
                                 animate:true,
-                                orientation:'vertical',
+                                orientation:'horizontal',
                                 bgColor:'#424242',
-                                barSize:0.5, // Fraction bar width
+                                barSize:0.7, // Fraction bar width
                                 layout:{
-                                    rightOf:'barLabels',
+                                    rightOf:'barValues',
                                     fillRight:true,
                                     below:'labelsTop',
-                                    above:'barValues'
+                                    above:'barLabels'
                                 },
                                 lines:{
                                     stroke: '#535353'
@@ -199,7 +197,7 @@ require_once("../includes/demo-header.php");
                                 layout:{
                                     alignParentRight:true,
                                     width:200,
-                                    alignParentTop:true,
+                                    below:'labelsTop',
                                     height:30,
                                     offsetX: 10, offsetY: 10
                                 },
