@@ -29,9 +29,7 @@ ludo.chart.Base = new Class({
 
         this.easing = config.easing || ludo.canvas.easing.outSine;
         this.ds.on('load', this.create.bind(this));
-        if (this.getDataSource().hasData()) {
-            this.create();
-        }
+
 
         this.ds.on('update', this.onResize.bind(this));
 
@@ -58,6 +56,8 @@ ludo.chart.Base = new Class({
         var dp = this.getDataSource();
 
         dp.addEvent('update', this.update.bind(this));
+
+
     },
 
     createFragments: function () {
@@ -177,5 +177,19 @@ ludo.chart.Base = new Class({
     getSquareSize: function () {
         var size = this.getSize();
         return Math.min(size.x, size.y);
+    },
+
+
+    dataRendered:false,
+
+    resize:function(coordinates){
+        this.parent(coordinates);
+
+        if (!this.dataRendered && this.getDataSource().hasData()) {
+            this.create();
+            this.dataRendered = true;
+        }
+
+
     }
 });

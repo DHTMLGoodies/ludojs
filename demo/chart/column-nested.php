@@ -8,201 +8,239 @@ require_once("../includes/demo-header.php");
 
 
     var dataSource = new ludo.chart.DataSource({
-        url : '../data/bar-chart-data-nested.json',
-
         // Return text label for chart data.
-        textOf:function(record, caller){
+        textOf: function (record, caller) {
             if(caller.type == 'chart.LabelListItem'){
-                return record.name + ' yr';
+                return record.gender + " 0-14yrs"
             }
-            return record.country;
+            return record.gender || record.name;
+        },
+
+        // Displays textual verson of a value. Returning value + '%'.
+        // Used in the labels to the left of the column chart
+        valueForDisplay:function(value, caller){
+            return value + "%";
         },
 
         // Return chart value for chart data. The data source doesn't know our data, so
         // this tells the data source where to get the value.
-        valueOf:function(record){
-            return record.people != undefined ? record.people : undefined;
+        valueOf: function (record) {
+            return record.percent;
         },
 
         /** Return texts for chart Text views chart.Text */
-        getText:function(caller){
-            switch(caller.id){
-                case 'labelsLeft': return "People";
-                case "labelsTop": return "Male Population"
+        getText: function (caller) {
+            switch (caller.id) {
+                case 'labelsLeft':
+                    return "Percent";
+                case "labelsTop":
+                    return "What those kids are doing"
             }
             return "";
         },
 
-        max:function(){ // Function returning max value for the y axis of the bar chart
-            return this.maxVal + 40000 - (this.maxVal % 20000);
+
+        max: function () { // Displaying percent in the chart, so max should be 100
+            return 100;
         },
 
-        min:function(){ // Function returning min value for the y axis
+        min: function () { // Mininum percent is 0
             return 0;
         },
 
-        valueForDisplay:function(value, caller){
-            if(caller.type == 'chart.BarValues')return Math.round(value / 1000) + " mill";
-            return value;
-        },
-
-        colorOf:function(record){ // Return color codes for the chart items.
-            if(record.name == '0-14')return '#E64A19';
-            if(record.name == '15-64')return '#039BE5';
-            if(record.name == '65-')return '#43A047';
+        colorOf: function (record) { // Return color codes for the chart items.
+            if (record.gender == 'girls')return '#E64A19';
+            if (record.gender == 'boys')return '#039BE5';
             return '#F00';
         },
 
         // Function returning increments for lines and labels
-        increments:function(minVal, maxVal, caller){
-            return 20000;
-        }
+        increments: function (minVal, maxVal, caller) {
+            return 10;
+        },
+
+        data: [
+
+            {
+                "name": "Skateboarding",
+                "children": [
+                    {"gender": "boys", "percent": 38},
+                    {"gender": "girls", "percent": 24}
+                ]
+            },
+            {
+                "name": "Bike riding",
+                "children": [
+                    {"gender": "boys", "percent": 76},
+                    {"gender": "girls", "percent": 57}
+                ]
+            },
+            {
+                "name": "Watching TV",
+                "children": [
+                    {"gender": "boys", "percent": 100},
+                    {"gender": "girls", "percent": 100}
+                ]
+            },
+            {
+                "name": "Computer Games",
+                "children": [
+                    {"gender": "boys", "percent": 80},
+                    {"gender": "girls", "percent": 60}
+                ]
+            },
+            {
+                "name": "Arts and Crafts",
+                "children": [
+                    {"gender": "boys", "percent": 36},
+                    {"gender": "girls", "percent": 58}
+                ]
+            }
+        ]
 
 
     });
     var d = new Date();
     var w = new ludo.Window({
-        title:'Bar chart',
-        layout:{
-            minWidth:500,minHeight:400,
-            width:700,
-            height:500,
-            left:20,
-            top:20,
-            type:'tab'
+        title: 'Bar chart',
+        layout: {
+            minWidth: 500, minHeight: 400,
+            width: 700,
+            height: 500,
+            left: 20,
+            top: 20,
+            type: 'tab'
         },
-        children:[
+        children: [
             {
-                title:'Chart',
-                layout:{
-                    type:'relative'
+                title: 'Chart',
+                layout: {
+                    type: 'relative'
                 },
-                css:{
-                    'padding-right' : 10
+                css: {
+                    'padding-right': 10
                 },
-                children:[
+                children: [
                     {
 
-                        layout:{
-                            width:'matchParent',
-                            height:'matchParent'
+                        layout: {
+                            width: 'matchParent',
+                            height: 'matchParent'
                         },
-                        type:'chart.Chart',
-                        id:'chart',
-                        dataSource:dataSource,
-                        children:[
+                        type: 'chart.Chart',
+                        id: 'chart',
+                        dataSource: dataSource,
+                        children: [
                             {
-                                id:'labelsLeft',
-                                type:'chart.Text',
-                                styling:{
-                                    fill : '#aeb0b0',
-                                    'font-size' : '24px'
+                                id: 'labelsLeft',
+                                type: 'chart.Text',
+                                styling: {
+                                    fill: '#aeb0b0',
+                                    'font-size': '24px'
                                 },
-                                anchor:[0.5, 0.5],
+                                anchor: [0.5, 0.5],
                                 layout: {
                                     width: 60,
-                                    bottom:50,
-                                    fillUp:true,
+                                    bottom: 50,
+                                    fillUp: true,
                                     alignParentLeft: true
                                 },
-                                rotate:'left'
+                                rotate: 'left'
                             },
                             {
-                                id:'labelsTop',
-                                type:'chart.Text',
-                                anchor:[0.5,0.5],
-                                styling:{
+                                id: 'labelsTop',
+                                type: 'chart.Text',
+                                anchor: [0.5, 0.5],
+                                styling: {
                                     'fill': '#aeb0b0',
-                                    'font-size' : '20px'
+                                    'font-size': '20px'
                                 },
-                                layout:{
-                                    rightOf:'labelsLeft',
-                                    fillRight:true,
-                                    alignParentTop:true,
-                                    height:50,
-                                    alignParentLeft:true
+                                layout: {
+                                    rightOf: 'labelsLeft',
+                                    fillRight: true,
+                                    alignParentTop: true,
+                                    height: 50,
+                                    alignParentLeft: true
                                 }
                             },
                             {
-                                id:'barValues',
-                                orientation:'vertical',
-                                type:'chart.BarValues',
-                                layout:{
-                                    rightOf:'labelsLeft',
-                                    below:'labelsTop',
-                                    bottom:30,
-                                    width:50
+                                id: 'barValues',
+                                orientation: 'vertical',
+                                type: 'chart.BarValues',
+                                layout: {
+                                    rightOf: 'labelsLeft',
+                                    below: 'labelsTop',
+                                    bottom: 30,
+                                    width: 30
                                 },
-                                padding:4,
-                                styling:{
+                                padding: 4,
+                                styling: {
                                     'fill': '#aeb0b0',
-                                    'font-size' : '12px'
+                                    'font-size': '12px'
                                 }
                             },
                             {
-                                id:'barLabels',
-                                type:'chart.BarLabels',
-                                layout:{
-                                    alignParentBottom:true,
-                                    rightOf:'barValues',
-                                    fillRight:true,
-                                    height:30
+                                id: 'barLabels',
+                                type: 'chart.BarLabels',
+                                layout: {
+                                    alignParentBottom: true,
+                                    rightOf: 'barValues',
+                                    fillRight: true,
+                                    height: 30
                                 },
-                                styling:{
+                                styling: {
                                     'fill': '#aeb0b0',
-                                    'font-size' : '12px'
+                                    'font-size': '12px'
                                 }
                             },
                             {
-                                name : 'bar',
-                                id:'bar',
-                                type:'chart.Bar',
-                                animate:true,
-                                orientation:'horizontal',
-                                bgColor:'#424242',
-                                barSize:0.9, // Fraction bar width
-                                layout:{
-                                    rightOf:'barValues',
-                                    fillRight:true,
-                                    below:'labelsTop',
-                                    above:'barLabels'
+                                name: 'bar',
+                                id: 'bar',
+                                type: 'chart.Bar',
+                                animate: true,
+                                orientation: 'horizontal',
+                                bgColor: '#424242',
+                                barSize: 0.7, // Fraction bar width
+                                layout: {
+                                    rightOf: 'barValues',
+                                    fillRight: true,
+                                    below: 'labelsTop',
+                                    above: 'barLabels'
                                 },
-                                lines:{
+                                lines: {
                                     stroke: '#535353'
                                 },
-                                outline:{
+                                outline: {
                                     'left': {
                                         stroke: '#aeb0b0',
-                                        fill:'none'
+                                        fill: 'none'
 
                                     },
-                                    'bottom':{
+                                    'bottom': {
                                         stroke: '#aeb0b0'
                                     },
-                                    'top':{
+                                    'top': {
                                         stroke: '#535353'
                                     },
-                                    'right':{
+                                    'right': {
                                         stroke: '#535353'
                                     }
                                 },
-                                plugins:[
-
-                                ]
+                                plugins: []
                             },
 
                             {
-                                type:'chart.LabelList',
-                                layout:{
-                                    rightOf:'barValues',
-                                    width:200,
-                                    below:'labelsTop',
-                                    height:30,
-                                    offsetX: 10, offsetY: 10
+                                type: 'chart.LabelList',
+                                layout: {
+                                    rightOf: 'barValues',
+                                    width: 200,
+                                    below: 'labelsTop',
+                                    height: 22,
+                                    offsetX: 5, offsetY: 5
                                 },
-                                textStyles:{
-                                    fill:'#aeb0b0',
-                                    'font-size' : '11px'
+                                textStyles: {
+                                    fill: '#aeb0b0',
+                                    'font-size': '11px'
                                 }
                             }
                         ]
@@ -210,7 +248,7 @@ require_once("../includes/demo-header.php");
                 ]
             },
             {
-                type:'SourceCodePreview'
+                type: 'SourceCodePreview'
             }
         ]
     });
