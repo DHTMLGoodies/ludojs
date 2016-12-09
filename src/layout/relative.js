@@ -58,7 +58,7 @@ ludo.layout.Relative = new Class({
      * @private
      */
 	layoutFnProperties:[
-		'bottom','right',
+		'bottom','right','top','left',
 		'width', 'height',
 		'alignParentTop', 'alignParentBottom', 'alignParentLeft', 'alignParentRight',
 		'leftOf', 'rightOf', 'below', 'above',

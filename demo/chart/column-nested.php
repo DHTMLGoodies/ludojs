@@ -150,7 +150,7 @@ require_once("../includes/demo-header.php");
                             {
                                 id: 'labelsTop',
                                 type: 'chart.Text',
-                                anchor: [0.5, 0.5],
+                                anchor: [0.5, 0.3],
                                 styling: {
                                     'fill': '#aeb0b0',
                                     'font-size': '20px'
@@ -159,7 +159,7 @@ require_once("../includes/demo-header.php");
                                     rightOf: 'labelsLeft',
                                     fillRight: true,
                                     alignParentTop: true,
-                                    height: 50,
+                                    height: 70,
                                     alignParentLeft: true
                                 }
                             },
@@ -232,11 +232,13 @@ require_once("../includes/demo-header.php");
                             {
                                 type: 'chart.LabelList',
                                 layout: {
-                                    rightOf: 'barValues',
-                                    width: 200,
-                                    below: 'labelsTop',
-                                    height: 22,
-                                    offsetX: 5, offsetY: 5
+                                    alignParentTop:true,
+                                    alignTop:'bar',
+                                    alignRight:'bar',
+                                    offsetY:5,
+                                    offsetX : -5,
+                                    width: 180,
+                                    height: 22
                                 },
                                 textStyles: {
                                     fill: '#aeb0b0',
