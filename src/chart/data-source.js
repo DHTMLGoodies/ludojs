@@ -56,6 +56,7 @@
  *      \_\_minAgr : 18
  *      \_\_max : 245
  *      \_\_maxAggr : 245
+ *      \_\_parent: undefined
  * }
  * </code>
  *
@@ -95,6 +96,8 @@
  *
  * \_\_maxAggr will be 39000(Sum children of Germany), while \_\_max will be 29000.
  *
+ * \_\_parent will for child items contain a reference to parent id which can be retrieved using dataSource.byId(id)
+ *
  * @class ludo.chart.DataSource
  * @param {Object} config
  * @param {Array} config.data Pie chart data.
@@ -119,15 +122,15 @@
  *
  * </code>
  * @param {String} config.valueKey the key in the data for value, default: 'value'
- * @param {Function} getText Function returning text. Argument to this function: The View asking for the text, example, a ludo.chart.Text
- * @param {Function} max Function returning max value for the chart. This is optional. If not set, it will return the maximum value found in the data array.
+ * @param {Function} config.getText Function returning text. Argument to this function: The View asking for the text, example, a ludo.chart.Text
+ * @param {Function} config.max Function returning max value for the chart. This is optional. If not set, it will return the maximum value found in the data array.
  * For bar charts, you might want to use this to return a higher value, example: <code>max:function(){ return this.maxVal + 20 }</code>.
- * @param {Function} min Function returning min value for the chart. Default: minimum(0, data arrays minimum value)
- * @param {Function} value. Function returning a value for display. Arguments. 1) value, 2) caller. Example for a label, you might want to return 10 instead of value 10 000 000.
- * @param {Function} increments. Function returning increments for lines, labels etc. This function may return an array of values(example: for a chart with values form 0-100, this function
+ * @param {Function} config.min Function returning min value for the chart. Default: minimum(0, data arrays minimum value)
+ * @param {Function} config.value. Function returning a value for display. Arguments. 1) value, 2) caller. Example for a label, you might want to return 10 instead of value 10 000 000.
+ * @param {Function} config.increments. Function returning increments for lines, labels etc. This function may return an array of values(example: for a chart with values form 0-100, this function
  * may return [0,10,20,30,40,50,60,70,80,90,100]. This function may also return a numeric value, example: 10 instead of the array. Three arguments are sent to this function: 1) the data arrays
  * minimum value, 2) the data arrays maximum value and 3) The caller, i.e. the SVG view asking for the increments.
- * @param {Function } valueForDisplay Optional function returning value to display in a view. Arguments: 1) value, 2) caller. Let's say you have a
+ * @param {Function } config.valueForDisplay Optional function returning value to display in a view. Arguments: 1) value, 2) caller. Let's say you have a
  * data source with values in millions, example: Population in countries. For the chart.BarValues view, you might want to display number of millians, i.e.
  * 10 instead of 10000000. This can be done with a valueForDisplay function:
  * <code>
@@ -136,8 +139,9 @@
  *          return value;
  *     }
  * </code>
- * @param {Function} strokeOf Optional function returning stroke color for chart item, Arguments: 1) chart record, 2) caller
- * @param {Function} strokeOverOf Optional function returning mouse over stroke color for chart item, Arguments: 1) chart record, 2) caller
+ * @param {Function} config.strokeOf Optional function returning stroke color for chart item, Arguments: 1) chart record, 2) caller
+ * @param {Function} config.strokeOverOf Optional function returning mouse over stroke color for chart item, Arguments: 1) chart record, 2) caller
+ * @param {String} config.childKey Key for child arrays, default: "children"
  * @example
  *     var dataSource = new ludo.chart.DataSource({
         data:[
@@ -161,7 +165,6 @@
         valueOf:function(record, caller){
             return record.value;
         }
-
     });
  */
 ludo.chart.DataSource = new Class({
@@ -172,6 +175,7 @@ ludo.chart.DataSource = new Class({
     valueOf: undefined,
     textOf: undefined,
     valueKey: 'value',
+    childKey:'children',
 
     startAngle: 0,
 
@@ -235,7 +239,7 @@ ludo.chart.DataSource = new Class({
     increments: undefined,
 
     __construct: function (config) {
-        this.setConfigParams(config, ['valueKey', 'color', 'valueOf', 'textOf', 'getText', 'max', 'min', 'increments', 'strokeOf', 'strokeOverOf','valueForDisplay']);
+        this.setConfigParams(config, ['childKey', 'valueKey', 'color', 'valueOf', 'textOf', 'getText', 'max', 'min', 'increments', 'strokeOf', 'strokeOverOf','valueForDisplay']);
         this.parent(config);
 
         if (this.valueOf == undefined) {
@@ -300,8 +304,8 @@ ludo.chart.DataSource = new Class({
         var count = 0;
         jQuery.each(data, function (key, node) {
             count++;
-            if (node.children != undefined && jQuery.isArray(node.children)) {
-                count += this.getCount(node.children);
+            if (node[this.childKey] != undefined && jQuery.isArray(node[this.childKey])) {
+                count += this.getCount(node[this.childKey]);
             }
         }.bind(this));
 
@@ -314,8 +318,8 @@ ludo.chart.DataSource = new Class({
             var val = this.value(node, this);
 
             if (val == undefined || !isNaN(val)) {
-                if (node.children != undefined) {
-                    val = this.sum(node.children);
+                if (node[this.childKey] != undefined) {
+                    val = this.sum(node[this.childKey]);
                     var vk = this.valueKey;
 
                     if (vk != undefined) {
@@ -325,7 +329,7 @@ ludo.chart.DataSource = new Class({
             }
 
             if (val != undefined && !isNaN(val)) {
-                if (node.children == undefined) {
+                if (node[this.childKey] == undefined) {
                     this.setMax(val);
                     this.setMin(val);
                 }
@@ -397,6 +401,9 @@ ludo.chart.DataSource = new Class({
                 node.__index = i++;
             }
 
+            if(parent != undefined){
+                node.__parent = parent.id;
+            }
             this.setColor(node);
 
 
@@ -408,8 +415,8 @@ ludo.chart.DataSource = new Class({
             }
             this.map[node.id] = node;
 
-            if (node.children != undefined) {
-                this.parseChartBranch(node.children, node);
+            if (node[this.childKey] != undefined) {
+                this.parseChartBranch(node[this.childKey], node);
             }
 
         }.bind(this));

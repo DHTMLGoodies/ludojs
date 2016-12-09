@@ -2,7 +2,7 @@ ludo.chart.Fragment = new Class({
     Extends:ludo.Core,
     record:undefined,
     nodes:[],
-
+    map:undefined,
     rendering:{},
 
     ds:undefined,
@@ -10,9 +10,11 @@ ludo.chart.Fragment = new Class({
     __construct:function (config) {
         this.parent(config);
         this.setConfigParams(config, ['record','parentComponent']);
+        this.map = {};
         this.createNodes();
 
         this.ds = this.parentComponent.ds;
+
     },
 
     createNodes:function(){
@@ -45,13 +47,20 @@ ludo.chart.Fragment = new Class({
         return this.parentComponent;
     },
 
-    createNode:function(tagName, properties, text){
+    createNode:function(tagName, properties, text, record){
         var node;
 
         node = new ludo.canvas.Node(tagName, properties, text);
 
         this.dependency['node-' + this.nodes.length] = node;
         this.nodes.push(node);
+
+        if(record != undefined){
+
+            node.attr("ludojs-svg-id", record.id);
+            
+            this.map[record.id] = node;
+        }
 
         if(node.mouseenter != undefined){
             node.mouseenter(this.enterNode.bind(this));
@@ -72,16 +81,25 @@ ludo.chart.Fragment = new Class({
         return node;
     },
 
-    enterNode:function(){
-        this.ds.enter(this.record);
+    enterNode:function(e){
+        this.dsEvent(e, 'enter');
     },
 
-    leaveNode:function(){
-        this.ds.leave(this.record);
+    leaveNode:function(e){
+        this.dsEvent(e, 'leave');
     },
 
-    clickNode:function(){
-        this.ds.select(this.record);
+    clickNode:function(e){
+        this.dsEvent(e, 'select');
+    },
+
+    dsEvent:function(e, method){
+        var id = ludo.svg.attr(e.target, "ludojs-svg-id");
+        if(id){
+            this.ds[method + 'Id'](id);
+        }else{
+            this.ds[method](this.record);
+        }
     },
 
     createStyle:function(styles){

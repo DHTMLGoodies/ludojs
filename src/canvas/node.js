@@ -136,8 +136,8 @@ ludo.canvas.Node = new Class({
                 target: target,
                 pageX: (e.pageX != null) ? e.pageX : e.clientX + document.scrollLeft,
                 pageY: (e.pageY != null) ? e.pageY : e.clientY + document.scrollTop,
-                clientX: (e.pageX != null) ? e.pageX - window.pageXOffset : e.clientX,
-                clientY: (e.pageY != null) ? e.pageY - window.pageYOffset : e.clientY,
+                clientX: e.offsetX != undefined ? e.offsetX : (e.pageX != null) ? e.pageX - window.pageXOffset : e.clientX,
+                clientY: e.offsetY != undefined ? e.offsetY: (e.pageY != null) ? e.pageY - window.pageYOffset : e.clientY,
                 event: e
             };
             if (fn) {
@@ -181,6 +181,7 @@ ludo.canvas.Node = new Class({
     },
 
     attr: function (key, value) {
+        if(arguments.length == 1)return this.get(key);
         ludo.svg.attr(this.el, key, value);
     },
 

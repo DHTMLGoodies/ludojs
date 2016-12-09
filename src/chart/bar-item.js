@@ -18,7 +18,7 @@ ludo.chart.BarItem = new Class({
         jQuery.each(recs, function (i, record) {
             var n = this.createNode('rect', {
                 x: 0, y: 0, width: 0, height: 0
-            });
+            }, undefined, record);
             n.css('fill', record.__color);
         }.bind(this));
     },
@@ -43,7 +43,7 @@ ludo.chart.BarItem = new Class({
         for (var i = 0; i < this.nodes.length; i++) {
             var n = this.nodes[i];
             n.set('x', curX);
-            n.set('y', curY);
+            n.set('y', y);
             n.set('width', curWidth);
             n.set('height', curHeight);
 
@@ -77,16 +77,16 @@ ludo.chart.BarItem = new Class({
         return (val - min) / (max - min);
     },
 
-    enter: function () {
-        this.nodes[0].css('fill', this.record.__colorOver);
+    enter: function (record) {
+        this.map[record.id].css('fill', record.__colorOver);
     },
 
-    leave: function () {
-        this.nodes[0].css('fill', this.record.__color);
+    leave: function (record) {
+        this.map[record.id].css('fill', record.__color);
     },
 
-    click: function () {
-        this.ds('select', this.record);
+    click: function (record) {
+
     },
 
     animate: function () {

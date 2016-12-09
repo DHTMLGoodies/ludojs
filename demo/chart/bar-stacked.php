@@ -48,8 +48,8 @@ require_once("../includes/demo-header.php");
 
         colorOf:function(record){ // Return color codes for the chart items.
             if(record.name == '0-14')return '#E64A19';
-            if(record.name == '15-64')return '#F57C00';
-            if(record.name == '65-')return '#689F38';
+            if(record.name == '15-64')return '#039BE5';
+            if(record.name == '65-')return '#43A047';
             return '#F00';
         },
 

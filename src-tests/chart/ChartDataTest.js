@@ -192,6 +192,16 @@ TestCase("ChartDataTest", {
         assertEquals(135000, d.maxValAggr);
     },
 
+    "test should find parent id": function(){
+        // given
+        var d = this.getDataSource2();
+
+        // when
+        var rec = d.byId(11);
+
+        // then
+        assertEquals(1, rec.__parent);
+    },
 
 
     getDataSourceNested:function(){

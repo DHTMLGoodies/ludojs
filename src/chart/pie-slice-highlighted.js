@@ -84,11 +84,9 @@ ludo.chart.PieSliceHighlighted = new Class({
 
         this.node.css('fill', record.__colorOver);
 
-
-
         if (this.getParent().getDataSource().isSelected(record)) {
             var t = f.nodes[0].getTranslate();
-            this.node.translate(t);
+            this.node.translate(t[0], t[1]);
         }else{
             this.node.translate(0,0);
         }
@@ -102,9 +100,7 @@ ludo.chart.PieSliceHighlighted = new Class({
     focus:function (record) {
         var f = this.getParent().getFragmentFor(record);
         var coords = f.centerOffset(this.getParent().getHighlightSize());
-        
-        
-        
+
         this.node.updateMatrix();
 
         this.node.animate({

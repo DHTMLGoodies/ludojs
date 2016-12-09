@@ -1,108 +1,182 @@
 <?php
 $sub = true;
-$pageTitle = 'Bar Chart - ludoJS';
+$pageTitle = 'SVG Animation - Easing - ludoJS';
 require_once("../includes/demo-header.php");
 ?>
 
 <script type="text/javascript" class="source-code">
 
-    var v = new ludo.View({
+    var easing = ludo.canvas.easing.linear;
+
+    function setEasing(e){
+
+        easing = ludo.canvas.easing[e];
+    }
+
+    var v = new ludo.FramedView({
+        title: 'SVG Animations Illustrated',
         renderTo: document.body,
         layout: {
-            width: 'matchParent', height: 'matchParent'
+            width: 'matchParent', height: 'matchParent',
+            type:'linear',
+            orientation:'vertical'
         },
-        css: {
-            'background-color': '#eee'
-        }
+        children:[
+            {
+                layout:{
+                    height:30,
+                    type:'table',
+                    columns:[
+                        { width: 100},
+                        { weight: 1}
+
+                    ]
+                },
+                css:{
+                    padding:3
+                },
+                children:[
+                    {type:'form.Label', label: 'Select Easing:' },
+                    {
+                        type:'form.Select', name:'easing',
+                        valueKey:'easing', textKey : 'easing',
+                        dataSource:{
+                            data:[
+                                { easing : 'linear' },
+                                { easing: 'inQuad' },
+                                { easing: 'outQuad' },
+                                { easing: 'inOutQuad' },
+                                { easing: 'inCubic' },
+                                { easing: 'outCubic' },
+                                { easing: 'inOutCubic' },
+                                { easing: 'inQuart' },
+                                { easing: 'outQuart' },
+                                { easing: 'inOutQuart' },
+                                { easing: 'inQuint' },
+                                { easing: 'outQuint' },
+                                { easing: 'inOutQuint' },
+                                { easing: 'inSine' },
+                                { easing: 'outSine' },
+                                { easing: 'inOutSine' },
+                                { easing: 'inExpo' },
+                                { easing: 'outExpo' },
+                                { easing: 'inOutExpo' },
+                                { easing: 'inCirc' },
+                                { easing: 'outCirc' },
+                                { easing: 'inOutCirc' }
+                            ]
+                        },
+                        listeners:{
+                            'change': function(value){
+                                setEasing(value);
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                id:'svgView',
+                css: {
+                    'background-color': '#aeb0b0'
+                },
+                layout:{
+                    weight:1
+                }
+            }
+
+        ]
+
+
+
     });
 
-    var c = v.getCanvas();
+    var c = ludo.$('svgView').getCanvas();
     c.addStyleSheet('box', {
-        fill: '#445566'
+        fill: '#669900'
     });
 
-    var rect = new ludo.canvas.Rect({
-        x:0,y:0,width:500,height:500
+    var t = new ludo.canvas.Text('Click to run Animation', {
+        x:c.width/2, y:c.height / 2
     });
-    rect.css({
-        'stroke' : '#ff0000'
-    });
-    rect.addClass('box');
 
-    c.append(rect);
+    t.css({
+        'font-size' : '22px', fill:'#FFF'
+    });
+    t.textAnchor('middle');
+    c.append(t);
+
+
+    c.addStyleSheet('illustration', {
+        fill: '#E57373', 'fill-opacity' : 1
+    });
 
     var circle = new ludo.canvas.Circle({
-        cx: 100, cy: 110, r: 5
+        cx: 100, cy: 110, r: 10
     });
-    circle.css({
-        fill: '#660000'
-    });
+    circle.addClass('box');
     c.append(circle);
 
-    var rect = new ludo.canvas.Rect({
-        x: 400, y: 50, width: 100, height: 100
-    });
-    rect.css({
-        'fill': '#669900'
-    });
-    c.append(rect);
+    var illustrationNodes = [];
+    var illIndex = 0;
 
+    function getIllustrationNode(){
+        var node;
+        if(illIndex >= illustrationNodes.length){
+            node = new ludo.canvas.Circle({ cx:0,cy:0, r: 3 });
+            node.addClass('illustration');
+            c.append(node);
+            illustrationNodes.push(node);
+            circle.toFront();
+        }else{
+            node = illustrationNodes[illIndex];
+        }
+        illIndex++;
+        return node;
+    }
 
+    function moveIllustrationNodes(){
 
-    var firstAnimation = function(){
+        var x = circle.attr('cx');
+        var y = circle.attr('cy');
+        for(var i=0;i<illustrationNodes.length;i++){
+            illustrationNodes[i].attr('cx', x);
+            illustrationNodes[i].attr('cy', y);
+        }
+        circle.toFront();
+    }
+
+    c.node.on('click', function(e){
+
+        var x = e.clientX;
+        var y = e.clientY;
+
+        illIndex = 0;
+
+        moveIllustrationNodes();
         circle.animate({
-                translate: [300,300],
-                r: 20
-            }, 2000, ludo.canvas.easing.inOutQuad,
-            function () {
-                secondAnimation.call();
+                cx:x, cy:y
+            }, 600, easing,
+            function (node) {
+
             },
-            function (node, delta, elapsed0To1) {
+            function (node, vals) {
                 // console.log(delta);
+                var n = getIllustrationNode();
+                n.attr('cx', vals.cx);
+                n.attr('cy', vals.cy);
+
 
             }
         );
+    });
 
-    };
-
-    var secondAnimation = function(){
-        circle.animate({
-                translate: [0, 0],
-                r: 5
-            }, 2000, ludo.canvas.easing.inOutQuad,
-            function () {
-                firstAnimation.call();
-            },
-            function (node, delta, elapsed0To1) {
-                // console.log(delta);
-
-            }
-        );
-    };
-
-    firstAnimation.call();
+    function getEasing(){
+        return easing;
+    }
 
 
-    var rectAnim = function(){
-        rect.animate({
-            translate:[0,500]
-        },1500, ludo.canvas.easing.inCubic,
-            function(){
-                rectAnim2.call();
-            }
-        );
-    };
 
-    var rectAnim2 = function(){
-        rect.animate({
-            translate:[0,0]
-        },1500, undefined,
-            function(){
-                rectAnim.call();
-            })
-    };
 
-    rectAnim.call();
 
 
 

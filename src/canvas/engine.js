@@ -26,6 +26,7 @@ ludo.canvas.Engine = new Class({
     cache:{},
 
 	attr:function(el, key, value){
+		if(arguments.length == 2)return this.get(el, key);
 		if (key.substring(0, 6) == "xlink:") {
 			if(value['id']!==undefined)value = '#' + value.getId();
 			el.setAttributeNS("http://www.w3.org/1999/xlink", key.substring(6), value);

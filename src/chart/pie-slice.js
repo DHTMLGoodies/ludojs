@@ -75,6 +75,7 @@ ludo.chart.PieSlice = new Class({
     },
 
     enter:function(){
+        console.log('enter');
         this.nodes[0].css('fill', this.record.__colorOver);
     },
 

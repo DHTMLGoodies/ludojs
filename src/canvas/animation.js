@@ -39,7 +39,7 @@ ludo.canvas.Animation = new Class({
         var r = this.animationRate;
 
         var fn = function(t,d){
-            var loopChanges;
+            var vals;
             if(t<d){
                 fn.delay(r, fn, [t+1,d]);
             }
@@ -60,17 +60,17 @@ ludo.canvas.Animation = new Class({
                     var val = start[key] + (value * delta);
                     ludo.svg.set(node.el, key, val);
                     if(stepFn != undefined){
-                        if(loopChanges == undefined){
-                            loopChanges = {};
+                        if(vals == undefined){
+                            vals = {};
                         }
-                        loopChanges[key] = value * delta;
+                        vals[key] = val;
                     }
                 }
 
             });
 
             if(stepFn != undefined){
-                stepFn.call(node, node, delta, t/d, loopChanges);
+                stepFn.call(node, node, vals, delta, t/d);
             }
             if(t>=d){
                 if(complete!=undefined){
@@ -172,12 +172,10 @@ ludo.canvas.easing = {
         t -= 2;
         return c / 2 * (t * t * t * t * t + 2) + b;
     },
-
-
+    
     inSine: function (t, b, c, d) {
         return -c * Math.cos(t / d * (Math.PI / 2)) + c + b;
     },
-
 
     // sinusoidal easing out - decelerating to zero velocity
     outSine: function (t, b, c, d) {

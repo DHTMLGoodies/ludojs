@@ -1,3 +1,24 @@
+/* Generated Fri Dec 9 19:29:31 CET 2016 */
+/************************************************************************************************************
+@fileoverview
+ludoJS - Javascript framework, 1.1.267
+Copyright (C) 2012-2016  ludoJS.com, Alf Magne Kalleland
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 2.1 of the License, or (at your option) any later version.
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+You should have received a copy of the GNU Lesser General Public
+License along with this library; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ludoJS.com., hereby disclaims all copyright interest in this script
+written by Alf Magne Kalleland.
+Alf Magne Kalleland, 2016
+Owner of ludoJS.com
+************************************************************************************************************/
 /* ../ludojs/src/../mootools/MooTools-Core-1.6.0.js */
 /* MooTools: the javascript framework. license: MIT-style license. copyright: Copyright (c) 2006-2016 [Valerio Proietti](http://mad4milk.net/).*/ 
 /*!
@@ -4670,6 +4691,7 @@ ludo.canvas.Engine = new Class({
     cache:{},
 
 	attr:function(el, key, value){
+		if(arguments.length == 2)return this.get(el, key);
 		if (key.substring(0, 6) == "xlink:") {
 			if(value['id']!==undefined)value = '#' + value.getId();
 			el.setAttributeNS("http://www.w3.org/1999/xlink", key.substring(6), value);
@@ -5238,8 +5260,8 @@ ludo.canvas.Node = new Class({
                 target: target,
                 pageX: (e.pageX != null) ? e.pageX : e.clientX + document.scrollLeft,
                 pageY: (e.pageY != null) ? e.pageY : e.clientY + document.scrollTop,
-                clientX: (e.pageX != null) ? e.pageX - window.pageXOffset : e.clientX,
-                clientY: (e.pageY != null) ? e.pageY - window.pageYOffset : e.clientY,
+                clientX: e.offsetX != undefined ? e.offsetX : (e.pageX != null) ? e.pageX - window.pageXOffset : e.clientX,
+                clientY: e.offsetY != undefined ? e.offsetY: (e.pageY != null) ? e.pageY - window.pageYOffset : e.clientY,
                 event: e
             };
             if (fn) {
@@ -5283,6 +5305,7 @@ ludo.canvas.Node = new Class({
     },
 
     attr: function (key, value) {
+        if(arguments.length == 1)return this.get(key);
         ludo.svg.attr(this.el, key, value);
     },
 
@@ -9502,6 +9525,7 @@ ludo.chart.Record = new Class({
  *      \_\_minAgr : 18
  *      \_\_max : 245
  *      \_\_maxAggr : 245
+ *      \_\_parent: undefined
  * }
  * </code>
  *
@@ -9541,6 +9565,8 @@ ludo.chart.Record = new Class({
  *
  * \_\_maxAggr will be 39000(Sum children of Germany), while \_\_max will be 29000.
  *
+ * \_\_parent will for child items contain a reference to parent id which can be retrieved using dataSource.byId(id)
+ *
  * @class ludo.chart.DataSource
  * @param {Object} config
  * @param {Array} config.data Pie chart data.
@@ -9565,15 +9591,15 @@ ludo.chart.Record = new Class({
  *
  * </code>
  * @param {String} config.valueKey the key in the data for value, default: 'value'
- * @param {Function} getText Function returning text. Argument to this function: The View asking for the text, example, a ludo.chart.Text
- * @param {Function} max Function returning max value for the chart. This is optional. If not set, it will return the maximum value found in the data array.
+ * @param {Function} config.getText Function returning text. Argument to this function: The View asking for the text, example, a ludo.chart.Text
+ * @param {Function} config.max Function returning max value for the chart. This is optional. If not set, it will return the maximum value found in the data array.
  * For bar charts, you might want to use this to return a higher value, example: <code>max:function(){ return this.maxVal + 20 }</code>.
- * @param {Function} min Function returning min value for the chart. Default: minimum(0, data arrays minimum value)
- * @param {Function} value. Function returning a value for display. Arguments. 1) value, 2) caller. Example for a label, you might want to return 10 instead of value 10 000 000.
- * @param {Function} increments. Function returning increments for lines, labels etc. This function may return an array of values(example: for a chart with values form 0-100, this function
+ * @param {Function} config.min Function returning min value for the chart. Default: minimum(0, data arrays minimum value)
+ * @param {Function} config.value. Function returning a value for display. Arguments. 1) value, 2) caller. Example for a label, you might want to return 10 instead of value 10 000 000.
+ * @param {Function} config.increments. Function returning increments for lines, labels etc. This function may return an array of values(example: for a chart with values form 0-100, this function
  * may return [0,10,20,30,40,50,60,70,80,90,100]. This function may also return a numeric value, example: 10 instead of the array. Three arguments are sent to this function: 1) the data arrays
  * minimum value, 2) the data arrays maximum value and 3) The caller, i.e. the SVG view asking for the increments.
- * @param {Function } valueForDisplay Optional function returning value to display in a view. Arguments: 1) value, 2) caller. Let's say you have a
+ * @param {Function } config.valueForDisplay Optional function returning value to display in a view. Arguments: 1) value, 2) caller. Let's say you have a
  * data source with values in millions, example: Population in countries. For the chart.BarValues view, you might want to display number of millians, i.e.
  * 10 instead of 10000000. This can be done with a valueForDisplay function:
  * <code>
@@ -9582,8 +9608,9 @@ ludo.chart.Record = new Class({
  *          return value;
  *     }
  * </code>
- * @param {Function} strokeOf Optional function returning stroke color for chart item, Arguments: 1) chart record, 2) caller
- * @param {Function} strokeOverOf Optional function returning mouse over stroke color for chart item, Arguments: 1) chart record, 2) caller
+ * @param {Function} config.strokeOf Optional function returning stroke color for chart item, Arguments: 1) chart record, 2) caller
+ * @param {Function} config.strokeOverOf Optional function returning mouse over stroke color for chart item, Arguments: 1) chart record, 2) caller
+ * @param {String} config.childKey Key for child arrays, default: "children"
  * @example
  *     var dataSource = new ludo.chart.DataSource({
         data:[
@@ -9607,7 +9634,6 @@ ludo.chart.Record = new Class({
         valueOf:function(record, caller){
             return record.value;
         }
-
     });
  */
 ludo.chart.DataSource = new Class({
@@ -9618,6 +9644,7 @@ ludo.chart.DataSource = new Class({
     valueOf: undefined,
     textOf: undefined,
     valueKey: 'value',
+    childKey:'children',
 
     startAngle: 0,
 
@@ -9681,7 +9708,7 @@ ludo.chart.DataSource = new Class({
     increments: undefined,
 
     __construct: function (config) {
-        this.setConfigParams(config, ['valueKey', 'color', 'valueOf', 'textOf', 'getText', 'max', 'min', 'increments', 'strokeOf', 'strokeOverOf','valueForDisplay']);
+        this.setConfigParams(config, ['childKey', 'valueKey', 'color', 'valueOf', 'textOf', 'getText', 'max', 'min', 'increments', 'strokeOf', 'strokeOverOf','valueForDisplay']);
         this.parent(config);
 
         if (this.valueOf == undefined) {
@@ -9746,8 +9773,8 @@ ludo.chart.DataSource = new Class({
         var count = 0;
         jQuery.each(data, function (key, node) {
             count++;
-            if (node.children != undefined && jQuery.isArray(node.children)) {
-                count += this.getCount(node.children);
+            if (node[this.childKey] != undefined && jQuery.isArray(node[this.childKey])) {
+                count += this.getCount(node[this.childKey]);
             }
         }.bind(this));
 
@@ -9760,8 +9787,8 @@ ludo.chart.DataSource = new Class({
             var val = this.value(node, this);
 
             if (val == undefined || !isNaN(val)) {
-                if (node.children != undefined) {
-                    val = this.sum(node.children);
+                if (node[this.childKey] != undefined) {
+                    val = this.sum(node[this.childKey]);
                     var vk = this.valueKey;
 
                     if (vk != undefined) {
@@ -9771,7 +9798,7 @@ ludo.chart.DataSource = new Class({
             }
 
             if (val != undefined && !isNaN(val)) {
-                if (node.children == undefined) {
+                if (node[this.childKey] == undefined) {
                     this.setMax(val);
                     this.setMin(val);
                 }
@@ -9843,6 +9870,9 @@ ludo.chart.DataSource = new Class({
                 node.__index = i++;
             }
 
+            if(parent != undefined){
+                node.__parent = parent.id;
+            }
             this.setColor(node);
 
 
@@ -9854,8 +9884,8 @@ ludo.chart.DataSource = new Class({
             }
             this.map[node.id] = node;
 
-            if (node.children != undefined) {
-                this.parseChartBranch(node.children, node);
+            if (node[this.childKey] != undefined) {
+                this.parseChartBranch(node[this.childKey], node);
             }
 
         }.bind(this));
@@ -10046,7 +10076,7 @@ ludo.chart.Fragment = new Class({
     Extends:ludo.Core,
     record:undefined,
     nodes:[],
-
+    map:undefined,
     rendering:{},
 
     ds:undefined,
@@ -10054,9 +10084,11 @@ ludo.chart.Fragment = new Class({
     __construct:function (config) {
         this.parent(config);
         this.setConfigParams(config, ['record','parentComponent']);
+        this.map = {};
         this.createNodes();
 
         this.ds = this.parentComponent.ds;
+
     },
 
     createNodes:function(){
@@ -10089,13 +10121,20 @@ ludo.chart.Fragment = new Class({
         return this.parentComponent;
     },
 
-    createNode:function(tagName, properties, text){
+    createNode:function(tagName, properties, text, record){
         var node;
 
         node = new ludo.canvas.Node(tagName, properties, text);
 
         this.dependency['node-' + this.nodes.length] = node;
         this.nodes.push(node);
+
+        if(record != undefined){
+
+            node.attr("ludojs-svg-id", record.id);
+            
+            this.map[record.id] = node;
+        }
 
         if(node.mouseenter != undefined){
             node.mouseenter(this.enterNode.bind(this));
@@ -10116,16 +10155,25 @@ ludo.chart.Fragment = new Class({
         return node;
     },
 
-    enterNode:function(){
-        this.ds.enter(this.record);
+    enterNode:function(e){
+        this.dsEvent(e, 'enter');
     },
 
-    leaveNode:function(){
-        this.ds.leave(this.record);
+    leaveNode:function(e){
+        this.dsEvent(e, 'leave');
     },
 
-    clickNode:function(){
-        this.ds.select(this.record);
+    clickNode:function(e){
+        this.dsEvent(e, 'select');
+    },
+
+    dsEvent:function(e, method){
+        var id = ludo.svg.attr(e.target, "ludojs-svg-id");
+        if(id){
+            this.ds[method + 'Id'](id);
+        }else{
+            this.ds[method](this.record);
+        }
     },
 
     createStyle:function(styles){
@@ -10488,6 +10536,7 @@ ludo.chart.PieSlice = new Class({
     },
 
     enter:function(){
+        console.log('enter');
         this.nodes[0].css('fill', this.record.__colorOver);
     },
 
@@ -11054,11 +11103,9 @@ ludo.chart.PieSliceHighlighted = new Class({
 
         this.node.css('fill', record.__colorOver);
 
-
-
         if (this.getParent().getDataSource().isSelected(record)) {
             var t = f.nodes[0].getTranslate();
-            this.node.translate(t);
+            this.node.translate(t[0], t[1]);
         }else{
             this.node.translate(0,0);
         }
@@ -11072,9 +11119,7 @@ ludo.chart.PieSliceHighlighted = new Class({
     focus:function (record) {
         var f = this.getParent().getFragmentFor(record);
         var coords = f.centerOffset(this.getParent().getHighlightSize());
-        
-        
-        
+
         this.node.updateMatrix();
 
         this.node.animate({
@@ -12161,7 +12206,8 @@ ludo.chart.Bar = new Class({
             a.height =(s.y / d.length) * this.barSize;
             insetY = (availSize - a.height) / 2;
         }
-        
+
+
         for (var i = 0; i < d.length; i++) {
             
             this.fragments[i].setArea(a.x + insetX,a.y + insetY,a.width,a.height);
@@ -12249,7 +12295,7 @@ ludo.chart.BarItem = new Class({
         jQuery.each(recs, function (i, record) {
             var n = this.createNode('rect', {
                 x: 0, y: 0, width: 0, height: 0
-            });
+            }, undefined, record);
             n.css('fill', record.__color);
         }.bind(this));
     },
@@ -12274,7 +12320,7 @@ ludo.chart.BarItem = new Class({
         for (var i = 0; i < this.nodes.length; i++) {
             var n = this.nodes[i];
             n.set('x', curX);
-            n.set('y', curY);
+            n.set('y', y);
             n.set('width', curWidth);
             n.set('height', curHeight);
 
@@ -12308,16 +12354,16 @@ ludo.chart.BarItem = new Class({
         return (val - min) / (max - min);
     },
 
-    enter: function () {
-        this.nodes[0].css('fill', this.record.__colorOver);
+    enter: function (record) {
+        this.map[record.id].css('fill', record.__colorOver);
     },
 
-    leave: function () {
-        this.nodes[0].css('fill', this.record.__color);
+    leave: function (record) {
+        this.map[record.id].css('fill', record.__color);
     },
 
-    click: function () {
-        this.ds('select', this.record);
+    click: function (record) {
+
     },
 
     animate: function () {
@@ -36154,7 +36200,7 @@ ludo.canvas.Animation = new Class({
         var r = this.animationRate;
 
         var fn = function(t,d){
-            var loopChanges;
+            var vals;
             if(t<d){
                 fn.delay(r, fn, [t+1,d]);
             }
@@ -36175,17 +36221,17 @@ ludo.canvas.Animation = new Class({
                     var val = start[key] + (value * delta);
                     ludo.svg.set(node.el, key, val);
                     if(stepFn != undefined){
-                        if(loopChanges == undefined){
-                            loopChanges = {};
+                        if(vals == undefined){
+                            vals = {};
                         }
-                        loopChanges[key] = value * delta;
+                        vals[key] = val;
                     }
                 }
 
             });
 
             if(stepFn != undefined){
-                stepFn.call(node, node, delta, t/d, loopChanges);
+                stepFn.call(node, node, vals, delta, t/d);
             }
             if(t>=d){
                 if(complete!=undefined){
@@ -36287,12 +36333,10 @@ ludo.canvas.easing = {
         t -= 2;
         return c / 2 * (t * t * t * t * t + 2) + b;
     },
-
-
+    
     inSine: function (t, b, c, d) {
         return -c * Math.cos(t / d * (Math.PI / 2)) + c + b;
     },
-
 
     // sinusoidal easing out - decelerating to zero velocity
     outSine: function (t, b, c, d) {

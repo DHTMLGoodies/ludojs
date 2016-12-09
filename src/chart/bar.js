@@ -148,7 +148,8 @@ ludo.chart.Bar = new Class({
             a.height =(s.y / d.length) * this.barSize;
             insetY = (availSize - a.height) / 2;
         }
-        
+
+
         for (var i = 0; i < d.length; i++) {
             
             this.fragments[i].setArea(a.x + insetX,a.y + insetY,a.width,a.height);
