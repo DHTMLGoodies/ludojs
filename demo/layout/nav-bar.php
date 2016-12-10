@@ -59,7 +59,7 @@ require_once("../includes/demo-header.php");
                                 elCss:{
                                     border:0,
                                     padding:2,
-                                    'border-right':'1px solid #d7d7d7'
+                                    'border-right':'1px solid #424242'
                                 },
                                 children:[
                                     {
