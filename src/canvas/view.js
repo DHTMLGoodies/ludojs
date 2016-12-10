@@ -38,6 +38,10 @@ ludo.canvas.View = new Class({
         this.node = new ludo.canvas.Node(this.tag, this.attr);
     },
 
+    $:function(tag, properties){
+        return new ludo.canvas.Node(tag, properties);
+    },
+
     /**
      * Return canvas node for this element
      * @function getNode

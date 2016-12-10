@@ -1,0 +1,206 @@
+[
+  {
+    "month": "Jan",
+    "products": [
+      {
+        "name": "Product A",
+        "sales": 145
+      },
+      {
+        "name": "Product B",
+        "sales": 84
+      },
+      {
+        "name": "Product C",
+        "sales": 107
+      }
+    ]
+  },
+  {
+    "month": "Feb",
+    "products": [
+      {
+        "name": "Product A",
+        "sales": 104
+      },
+      {
+        "name": "Product B",
+        "sales": 80
+      },
+      {
+        "name": "Product C",
+        "sales": 120
+      }
+    ]
+  },
+  {
+    "month": "Mar",
+    "products": [
+      {
+        "name": "Product A",
+        "sales": 99
+      },
+      {
+        "name": "Product B",
+        "sales": 88
+      },
+      {
+        "name": "Product C",
+        "sales": 119
+      }
+    ]
+  },
+  {
+    "month": "Apr",
+    "products": [
+      {
+        "name": "Product A",
+        "sales": 89
+      },
+      {
+        "name": "Product B",
+        "sales": 84
+      },
+      {
+        "name": "Product C",
+        "sales": 124
+      }
+    ]
+  },
+  {
+    "month": "May",
+    "products": [
+      {
+        "name": "Product A",
+        "sales": 100
+      },
+      {
+        "name": "Product B",
+        "sales": 77
+      },
+      {
+        "name": "Product C",
+        "sales": 114
+      }
+    ]
+  },
+  {
+    "month": "Jun",
+    "products": [
+      {
+        "name": "Product A",
+        "sales": 89
+      },
+      {
+        "name": "Product B",
+        "sales": 81
+      },
+      {
+        "name": "Product C",
+        "sales": 128
+      }
+    ]
+  },
+  {
+    "month": "Jul",
+    "products": [
+      {
+        "name": "Product A",
+        "sales": 109
+      },
+      {
+        "name": "Product B",
+        "sales": 80
+      },
+      {
+        "name": "Product C",
+        "sales": 119
+      }
+    ]
+  },
+  {
+    "month": "Aug",
+    "products": [
+      {
+        "name": "Product A",
+        "sales": 102
+      },
+      {
+        "name": "Product B",
+        "sales": 74
+      },
+      {
+        "name": "Product C",
+        "sales": 129
+      }
+    ]
+  },
+  {
+    "month": "Sep",
+    "products": [
+      {
+        "name": "Product A",
+        "sales": 115
+      },
+      {
+        "name": "Product B",
+        "sales": 79
+      },
+      {
+        "name": "Product C",
+        "sales": 135
+      }
+    ]
+  },
+  {
+    "month": "Oct",
+    "products": [
+      {
+        "name": "Product A",
+        "sales": 113
+      },
+      {
+        "name": "Product B",
+        "sales": 75
+      },
+      {
+        "name": "Product C",
+        "sales": 142
+      }
+    ]
+  },
+  {
+    "month": "Nov",
+    "products": [
+      {
+        "name": "Product A",
+        "sales": 120
+      },
+      {
+        "name": "Product B",
+        "sales": 80
+      },
+      {
+        "name": "Product C",
+        "sales": 140
+      }
+    ]
+  },
+  {
+    "month": "Dec",
+    "products": [
+      {
+        "name": "Product A",
+        "sales": 190
+      },
+      {
+        "name": "Product B",
+        "sales": 120
+      },
+      {
+        "name": "Product C",
+        "sales": 145
+      }
+    ]
+  }
+]

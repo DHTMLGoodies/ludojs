@@ -4,6 +4,12 @@
 ludo.canvas.Animation = new Class({
 
     animationRate:13,
+    color:undefined,
+
+    colorUtil:function(){
+        if(this.color == undefined)this.color = new ludo.color.Color();
+        return this.color;
+    },
 
     fn:function(node, properties, duration, easing, complete, stepFn){
         
@@ -17,6 +23,26 @@ ludo.canvas.Animation = new Class({
             special[key] = true;
 
             switch(key){
+                case 'fill':
+                case 'stroke':
+                case 'stop-color':
+                    var clr = node.attr(key) || '#000000';
+                    if(clr.length == 4) clr = clr + clr.substr(1);
+                    console.log(clr);
+                    var u = this.colorUtil();
+                    var rgb = u.rgbColors(clr);
+                    var to = u.rgbColors(value);
+
+                    changes[key] = [
+                        to.r - rgb.r, to.g - rgb.g, to.b - rgb.b
+                    ];
+                    start[key] = rgb;
+
+                    console.log(changes);
+                    console.log(start);
+                    break;
+
+
                 case 'translate':
                     var cur = node.getTranslate();
                     changes[key] = [
@@ -34,7 +60,7 @@ ludo.canvas.Animation = new Class({
                     special[key] = false;
             }
 
-        });
+        }.bind(this));
 
         var r = this.animationRate;
 
@@ -48,6 +74,14 @@ ludo.canvas.Animation = new Class({
 
                 if(special[key]){
                     switch(key){
+                        case 'stroke':
+                        case 'fill':
+                        case 'stop-color':
+                            var r = start[key].r + (delta * value[0]);
+                            var g = start[key].g + (delta * value[1]);
+                            var b = start[key].b + (delta * value[2]);
+                            node.set(key, 'rgb(' + r + ',' + g +',' + b+ ')');
+                            break;
                         case 'translate':
                             var x = start[key][0] + (delta * value[0]);
                             var y = start[key][1] + (delta * value[1]);

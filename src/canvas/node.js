@@ -441,7 +441,15 @@ ludo.canvas.Node = new Class({
         return this._curtain;
     },
 
-
+    /**
+     * Animate SVG node
+     * @param {Object} properties Properties to animate, example: { x: 100, width: 100 }
+     * @param {Number} duration Duration in milliseconds(1/1000s)
+     * @param {Function} easing Reference to ludo.canvas.easing easing function, example: ludo.canvas.easing.linear
+     * @param {Function} complete Function to execute on complete
+     * @param {Function} stepFn Function executed after each animation step
+     * @memberof ludo.canvas.Node.prototype
+     */
     animate: function (properties, duration, easing, complete, stepFn) {
         ludo.canvasAnimation.fn(this, properties, duration, easing, complete, stepFn);
     },
