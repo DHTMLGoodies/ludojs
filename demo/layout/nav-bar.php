@@ -17,7 +17,7 @@ require_once("../includes/demo-header.php");
         },
         children:[
             {
-                title:'Slide In Demo',
+                title:'NavBar demo',
                 layout:{
 
                     type:'linear',
