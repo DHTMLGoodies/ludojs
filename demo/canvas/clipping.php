@@ -59,15 +59,18 @@ require_once("../includes/demo-header.php");
     var rect = new ludo.canvas.Rect({
         x:0,y:0,width:w,height:h
     });
-    rect.css('fill', '#222');
+    rect.css('fill', '#918777');
     g.append(rect);
 
 
     // Loop creating circles and lines
     var x,y, lastX,lastY;
+    var lastColor;
     for(var i=0;i<20;i++){
         x = Math.random() * (w - 20);
         y = Math.random() * (h - 20);
+
+
 
         if(lastX != undefined){
             var l = c.$('line', {
@@ -75,7 +78,7 @@ require_once("../includes/demo-header.php");
                 x2: x, y2: y
             });
             l.css({
-                stroke: color, 'stroke-width' : 5
+                stroke: lastColor, 'stroke-width' : 5
             });
             g.append(l);
         }
@@ -88,6 +91,7 @@ require_once("../includes/demo-header.php");
         circle.css('fill', color);
         g.append(circle);
 
+        lastColor = color;
         color = colorUtil.offsetHue(color, Math.random() * 20);
 
         lastX = x;
