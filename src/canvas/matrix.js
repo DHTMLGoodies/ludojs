@@ -17,6 +17,24 @@ ludo.canvas.Matrix = new Class({
         this.currentRotation = [0,0,0];
     },
 
+    getScale:function(){
+        var m = this.getSVGMatrix();
+        return [m.a, m.d];
+    },
+
+    setScale:function(x,y){
+        this.matrix = this.getSVGMatrix();
+        this.matrix.a = x;
+        this.matrix.d = arguments.length == 1 ? x : y;
+        this.update();
+
+    },
+
+    scale:function(x,y){
+        this.matrix = this.getSVGMatrix.scale(x,this.arguments.length == 1 ? x : y);
+        this.update();
+    },
+
     getTranslate: function () {
         var m = this.getSVGMatrix();
         return [m.e, m.f];
@@ -50,7 +68,7 @@ ludo.canvas.Matrix = new Class({
 
         if(degrees < 0)degrees+=360;
         degrees  = degrees % 360;
-        
+
         this.getSVGMatrix();
 
         if (arguments.length > 1) {

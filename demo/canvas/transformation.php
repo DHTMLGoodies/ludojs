@@ -29,6 +29,8 @@ require_once("../includes/demo-header.php");
     // Get reference to SVG surface
     var c = ludo.$('demoView').getCanvas();
 
+
+    // Rotation of rectangle
     var c2 = c.$('circle', { cx: 100, cy: 100, r : 20});
     c2.css('fill', '#000');
     c.append(c2);
@@ -40,6 +42,7 @@ require_once("../includes/demo-header.php");
     rect.rotate(20, 100, 100);
 
 
+    // Translate circle
     var circle = c.$('circle', { cx: 200, cy: 150, r: 50 });
     c.append(circle);
     circle.css({ fill: '#006699'});
@@ -50,6 +53,9 @@ require_once("../includes/demo-header.php");
     circle2.css({ fill: '#006699', 'fill-opacity' : 0.5});
 
 
+    /**
+     * Create polygon and animate translation transform
+     */
     var polygon = c.$('polygon', {points: '10 10 100 20 150 100'});
     polygon.css('fill', '#660099');
     c.append(polygon);
@@ -58,6 +64,9 @@ require_once("../includes/demo-header.php");
         translate: [500,400]
     }, 300);
 
+    /**
+     * Create rectangle and run rotation animation
+     */
     var rect2 = c.$('rect', { x : 0, y: 0, width: 120, height: 100});
     rect2.css({ fill : '#669900' });
     c.append(rect2);
@@ -73,6 +82,7 @@ require_once("../includes/demo-header.php");
     animate();
 
 
+    /** Create Ellipse and animate it */
     var ellipse = c.$('ellipse', {
         cx: 600,cy:150,
         rx:50,ry:50
@@ -85,19 +95,50 @@ require_once("../includes/demo-header.php");
     });
     c.append(ellipse);
 
+    // First animation function, animates x radius
     function animateEllipseX(){
         ellipse.animate({
             rx: 100, ry: 50
         }, 1500, ludo.canvas.easing.bounce, animateEllipseY);
     }
-
+    // Second animation function animating y radius.
     function animateEllipseY(){
         ellipse.animate({
             rx: 50, ry: 100
         }, 1500, ludo.canvas.easing.bow, animateEllipseX);
     }
-
+    // Run first animation function which triggers second on complete
     animateEllipseX();
+
+    /**
+     * Scaling transformation
+     */
+
+    var rect3 = c.$('rect', {
+        x:50,y:400, width:100,height:150
+    });
+    rect3.css({
+        fill:'#64B5F6',
+        'fill-opacity': 0.5
+    });
+    c.append(rect3);
+
+    var rect4 = c.$('rect', {
+        x:0,y:0, width:100,height:200
+    });
+    rect4.css({
+        fill:'#64B5F6',
+        'fill-opacity': 0.5
+    });
+    c.append(rect4);
+
+    rect4.setTranslate(50,350);
+
+    rect4.translate(-25,-25);
+    rect4.setScale(1.5,1.5);
+
+
+
 
     </script>
 </body>

@@ -1,7 +1,7 @@
-/* Generated Tue Dec 13 12:16:00 CET 2016 */
+/* Generated Tue Dec 13 18:29:48 CET 2016 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.270
+ludoJS - Javascript framework, 1.1.272
 Copyright (C) 2012-2016  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -4665,317 +4665,17 @@ ludo.remoteBroadcaster = new ludo.remote.Broadcaster();
 /* ../ludojs/src/canvas/engine.js */
 ludo.canvas.Engine = new Class({
 	/*
-	 * Transformation cache
-	 * @property tCache
-	 * @type {Object}
-	 * @private
-	 */
-	tCache:{},
-    /*
-     * Internal cache
-     * @property {Object} tCacheStrings
-     * @private
-     */
-	tCacheStrings:{},
-    /*
-     * Cache of class names
-     * @property {Object} classNameCache
-     * @private
-     */
-    classNameCache:{},
-    /*
-     * Internal cache
-     * @property {Object} tCacheStrings
-     * @private
-     */
-    cache:{},
-
-	positions:{},
-
-	attr:function(el, key, value){
-		if(arguments.length == 2)return this.get(el, key);
-		this.set(el, key, value);
-	},
-
-	/*
-	 * Updates a property of a SVG DOM node
-	 * @function set
-	 * @param {HTMLElement} el
-	 * @param {String} key
-	 * @param {String} value
-	 */
-	set:function (el, key, value) {
-		if (key.substring(0, 6) == "xlink:") {
-            if(value['id']!==undefined)value = '#' + value.getId();
-			el.setAttributeNS("http://www.w3.org/1999/xlink", key.substring(6), value);
-		} else {
-            if(value['id']!==undefined)value = 'url(#' + value.getId() + ')';
-			el.setAttribute(key, value);
-		}
-	},
-	/*
-	 * Remove property from node.
-	 * @function remove
-	 * @param {HTMLElement} el
-	 * @param {String} key
-	 */
-	remove:function(el, key){
-		if (key.substring(0, 6) == "xlink:") {
-			el.removeAttributeNS("http://www.w3.org/1999/xlink", key.substring(6));
-		}else{
-			el.removeAttribute(key);
-		}
-	},
-
-	/*
 	 * Returns property value of a SVG DOM node
 	 * @function get
 	 * @param {HTMLElement} el
 	 * @param {String} key
 	 */
 	get:function (el, key) {
-
 		if (key.substring(0, 6) == "xlink:") {
 			return el.getAttributeNS("http://www.w3.org/1999/xlink", key.substring(6));
 		} else {
 			return el.getAttribute(key);
 		}
-	},
-
-    /*
-     * Apply rotation to element
-     * @function rotate
-     * @param {Node} el
-     * @param {Number} rotation
-     */
-	rotate:function (el, rotation) {
-		this.setTransformation(el, 'rotate', rotation);
-	},
-
-    /*
-     * Rotate around a speific point
-     * @function rotateAround
-     * @param {Node} el
-     * @param {Number} rotation
-     * @param {Number} x
-     * @param {Number} y
-     */
-    rotateAround:function(el, rotation, x, y){
-        this.setTransformation(el, 'rotate', rotation + ' ' + x + ' ' + y);
-    },
-
-	skewX:function (el, degrees) {
-		this.getTransformObject(el);
-		el.transform.baseVal.getItem(0).setSkewX(degrees);
-	},
-
-	skewY:function (el, degrees) {
-		this.getTransformObject(el);
-		el.transform.baseVal.getItem(0).setSkewY(degrees);
-	},
-	
-	translate:function(el, x, y){
-		this.setTransformation(el, 'translate', x + ' ' + y);
-	},
-
-	getCurrentCache:function(el, key){
-		return this.cache[el.id]!==undefined && this.cache[el.id][key]!==undefined ? this.cache[el.id][key] : [0,0];
-	},
-
-	scale:function(el, width, height){
-		height = height || width;
-		this.setTransformation(el, 'scale', width + ' ' + height);
-	},
-
-	getTransformObject:function(el){
-		if(el.transform.baseVal.numberOfItems ==0){
-			var owner;
-			if(el.ownerSVGElement){
-				owner = el.ownerSVGElement;
-			}else{
-				owner = document.createElementNS("http://www.w3.org/2000/svg", 'svg');
-			}
-			var t = owner.createSVGTransform();
-			el.transform.baseVal.appendItem(t);
-		}
-		return el.transform.baseVal.getItem(0);
-	},
-	
-	svgElement:undefined,
-	
-	getSVGElement:function(el){
-		if(el.ownerSVGElement)return el.ownerSVGElement;
-		if(this.svgElement == undefined){
-			this.svgElement = document.createElementNS("http://www.w3.org/2000/svg", 'svg');
-		}
-		return this.svgElement;
-	},
-
-	getNormalizedMatrix:function(el){
-
-	},
-	
-	setTransformation:function (el, transformation, value) {
-		var id = this.get(el, 'id');
-		this.buildTransformationCacheIfNotExists(el, id);
-		this.updateTransformationCache(id, transformation, value);
-		this.set(el, 'transform', this.getTransformationAsText(id));
-	},
-
-	updateTransformationCache:function (id, transformation, value) {
-		value = value.toString();
-		if (isNaN(value)) {
-			value = value.replace(/,/g, ' ');
-			value = value.replace(/\s+/g, ' ');
-		}
-		var values = value.split(/\s/g);
-		this.tCache[id][transformation] = {
-			values:values,
-			readable:this.getValidReturn(transformation, values)
-		};
-		this.tCacheStrings[id] = undefined;
-	},
-
-	clearTransformation:function (el) {
-		if (Browser.ie) {
-			el.setAttribute('transform', null);
-		} else {
-			el.removeAttribute('transform');
-		}
-		this.clearTransformationCache(el);
-	},
-
-	clearTransformationCache:function(el){
-		this.tCache[this.get(el, 'id')] = undefined;
-	},
-
-	getTransformation:function (el, key) {
-		var id = this.get(el, 'id');
-		this.buildTransformationCacheIfNotExists(el, id);
-		return this.tCache[id][key] ? this.tCache[id][key].readable : undefined;
-	},
-
-	buildTransformationCacheIfNotExists:function (el, id) {
-		if (!this.hasTransformationCache(id)) {
-			this.buildTransformationCache(el, id);
-		}
-	},
-
-	getTransformationValues:function (el, key) {
-		var ret = [];
-		key = key.toLowerCase();
-		var t = (this.get(el, 'transform') || '').toLowerCase();
-		var pos = t.indexOf(key);
-		if (pos >= 0) {
-			t = t.substr(pos);
-			var start = t.indexOf('(') + 1;
-			var end = t.indexOf(')');
-			var tr = t.substring(start, end);
-			tr = tr.replace(/,/g, ' ');
-			tr = tr.replace(/\s+/g, ' ');
-			return tr.split(/[,\s]/g);
-		}
-		return ret;
-	},
-
-	/*
-	 * @function hasTransformationCache
-	 * @private
-	 * @param {Number} id
-	 * @return {Boolean}
-	 */
-	hasTransformationCache:function (id) {
-		return this.tCache[id] !== undefined;
-	},
-
-	getValidReturn:function (transformation, values) {
-		var ret = {};
-		switch (transformation) {
-			case 'skewX':
-			case 'skewY':
-				ret = values[0];
-				break;
-			case 'rotate':
-				ret.degrees = values[0];
-				ret.cx = values[1] ? values[1] : 0;
-				ret.cy = values[2] ? values[2] : 0;
-				break;
-			default:
-				ret.x = parseFloat(values[0]);
-				ret.y = values[1] ? parseFloat(values[1]) : ret.x;
-
-		}
-		return ret;
-	},
-
-	/*
-	 * @function buildTransformationCache
-	 * @private
-	 * @param {HTMLElement} el
-	 * @param {String} id
-	 */
-	buildTransformationCache:function (el, id) {
-		id = id || this.get(el, 'id');
-
-		this.tCache[id] = {};
-		var keys = this.getTransformationKeys(el);
-
-		for (var i = 0; i < keys.length; i++) {
-			var values = this.getTransformationValues(el, keys[i]);
-			this.tCache[id][keys[i]] = {
-				values:values,
-				readable:this.getValidReturn(keys[i], values)
-			};
-		}
-	},
-
-	getTransformationKeys:function (el) {
-		var ret = [];
-		var t = this.get(el, 'transform') || '';
-
-		var tokens = t.split(/\(/g);
-		for (var i = 0; i < tokens.length-1; i++) {
-			ret.push(tokens[i].replace(/[^a-z]/gi, ''));
-		}
-		return ret;
-	},
-
-	getTCache:function (el) {
-		return this.tCache[this.get(el, 'id')];
-	},
-
-	getTransformationAsText:function(id){
-		if(this.tCacheStrings[id] === undefined && this.tCache[id]!==undefined){
-			this.buildCacheString(id);
-		}
-		return this.tCacheStrings[id];
-	},
-
-	buildCacheString:function(id){
-		this.tCacheStrings[id] = '';
-		var keys = Object.keys(this.tCache[id]);
-		for(var i=0;i<keys.length;i++){
-			this.tCacheStrings[id] += keys[i] + '(' + this.tCache[id][keys[i]].values.join(' ') + ') ';
-		}
-		this.tCacheStrings[id] = this.tCacheStrings[id].trim();
-	},
-	
-	getId:function(el){
-		if(!el.getAttribute('id')){
-			el.setAttribute('id', String.uniqueID());
-		}
-		return el.getAttribute('id');
-	},
-
-    effect:function(){
-        if(ludo.canvas.effectObject === undefined){
-            ludo.canvas.effectObject = new ludo.canvas.Effect();
-        }
-        return ludo.canvas.effectObject;
-    },
-
-	empty:function(el){
-		el.textContent = '';
 	}
 });
 ludo.svg = new ludo.canvas.Engine();
@@ -5033,8 +4733,6 @@ ludo.canvas.Node = new Class({
      * @private
      */
     tCacheStrings:undefined,
-    
-
 
     initialize: function (tagName, properties, text) {
 
@@ -5090,10 +4788,6 @@ ludo.canvas.Node = new Class({
         return this.el;
     },
 
-    engine: function () {
-        return ludo.svg;
-    },
-
     addEvents: function (events) {
         for (var key in events) {
             if (events.hasOwnProperty(key)) {
@@ -5102,6 +4796,12 @@ ludo.canvas.Node = new Class({
         }
     },
 
+    /**
+     * Add DOM events to SVG node
+     * @param {String} event
+     * @param {Function} fn
+     * @memberof ludo.canvas.Node.prototype
+     */
     on: function (event, fn) {
 
         switch (event.toLowerCase()) {
@@ -5178,14 +4878,29 @@ ludo.canvas.Node = new Class({
         return this.parentNode;
     },
 
+    /**
+     * Show SVG node, i.e. set display css property to ''
+     * @function show
+     * @memberof ludo.canvas.Node.prototype
+     */
     show: function () {
         this.css('display','');
     },
 
+    /**
+     * Hides SVG node, i.e. set display css property to 'none'
+     * @function hide
+     * @memberof ludo.canvas.Node.prototype
+     */
     hide: function () {
         this.css('display','none');
     },
 
+    /**
+     * Returns true if SVG node is hidden
+     * @returns {boolean}
+     * @memberof ludo.canvas.Node.prototype
+     */
     isHidden: function () {
         return this.css('display') == 'none';
     },
@@ -5198,11 +4913,28 @@ ludo.canvas.Node = new Class({
         }
     },
 
+    /**
+     * Set or get attribute.
+     * @param {String} key
+     * @param {String|Number|ludo.canvas.Node} value
+     * @returns {*}
+     * @memberof ludo.canvas.Node.prototype
+     * @example
+     * var x = node.attr("x"); // Get attribute
+     * node.attr("x", 100); // Sets attribute
+     */
     attr: function (key, value) {
         if (arguments.length == 1)return this.get(key);
         this.set(key, value);
     },
 
+    /**
+     * Set SVG node attribute. If a ludo.canvas.Node object is sent as value, the set function will
+     * set an url attribute( url(#<id>).
+     * @param {String} key
+     * @param {String|Number|ludo.canvas.Node} value
+     * @memberof ludo.canvas.Node.prototype
+     */
     set: function (key, value) {
         this._attr[key] = value;
         this.dirty = true;
@@ -5216,10 +4948,30 @@ ludo.canvas.Node = new Class({
         }
     },
 
+    /**
+     * Remove SVG attribute
+     * @param {String} key
+     * @memberof ludo.canvas.Node.prototype
+     */
+    removeAttr:function(key){
+        if (key.substring(0, 6) == "xlink:") {
+            this.el.removeAttributeNS("http://www.w3.org/1999/xlink", key.substring(6));
+        }else{
+            this.el.removeAttribute(key);
+        }
+    },
+
     remove: function (key) {
+        console.trace();
         ludo.svg.remove(this.el, key);
     },
 
+    /**
+     * Get SVG attribute
+     * @param {String} key
+     * @returns {*}
+     * @memberof ludo.canvas.Node.prototype
+     */
     get: function (key) {
         if (key.substring(0, 6) == "xlink:") {
             return this.el.getAttributeNS("http://www.w3.org/1999/xlink", key.substring(6));
@@ -5228,123 +4980,14 @@ ludo.canvas.Node = new Class({
         }
     },
 
-    getTransformation: function (key) {
-        return ludo.svg.getTransformation(this.el, key);
-    },
-
-    setTransformation: function (key, value) {
-        var id = this._attr['id'];
-        this.buildTransformationCacheIfNotExists();
-        this.updateTransformationCache(key, value);
-        this.set('transform', this.getTransformationAsText());
-    },
-
-    getTransformationAsText:function(id){
-        if(this.tCacheStrings === undefined && this.tCache!==undefined){
-            this.buildCacheString();
-        }
-        return this.tCacheStrings;
-    },
-
-    buildCacheString:function(){
-        this.tCacheStrings= '';
-        jQuery.each(this.tCache, function(key, value){
-            this.tCacheStrings+= key + '(' + value.values.join(' ') + ') ';
-        }.bind(this));
-        this.tCacheStrings = this.tCacheStrings.trim();
-    },
-
-    buildTransformationCacheIfNotExists:function () {
-        if (!this.hasTransformationCache()) {
-            this.buildTransformationCache();
-        }
-    },
-
-    buildTransformationCache:function () {
-
-
-        this.tCache = {};
-        var keys = this.getTransformationKeys();
-
-        for (var i = 0; i < keys.length; i++) {
-            var values = this.getTransformationValues(keys[i]);
-            this.tCache[keys[i]] = {
-                values:values,
-                readable:this.getValidReturn(keys[i], values)
-            };
-        }
-    },
-
-    getValidReturn:function (transformation, values) {
-        var ret = {};
-        switch (transformation) {
-            case 'skewX':
-            case 'skewY':
-                ret = values[0];
-                break;
-            case 'rotate':
-                ret.degrees = values[0];
-                ret.cx = values[1] ? values[1] : 0;
-                ret.cy = values[2] ? values[2] : 0;
-                break;
-            default:
-                ret.x = parseFloat(values[0]);
-                ret.y = values[1] ? parseFloat(values[1]) : ret.x;
-
-        }
-        return ret;
-    },
-
-    getTransformationValues:function (key) {
-        var ret = [];
-        key = key.toLowerCase();
-        var t = (this.get('transform') || '').toLowerCase();
-        var pos = t.indexOf(key);
-        if (pos >= 0) {
-            t = t.substr(pos);
-            var start = t.indexOf('(') + 1;
-            var end = t.indexOf(')');
-            var tr = t.substring(start, end);
-            tr = tr.replace(/,/g, ' ');
-            tr = tr.replace(/\s+/g, ' ');
-            return tr.split(/[,\s]/g);
-        }
-        return ret;
-    },
-
-    getTransformationKeys:function () {
-        var ret = [];
-        var t = this.get('transform') || '';
-
-        var tokens = t.split(/\(/g);
-        for (var i = 0; i < tokens.length-1; i++) {
-            ret.push(tokens[i].replace(/[^a-z]/gi, ''));
-        }
-        return ret;
-    },
-
-    updateTransformationCache:function (transformation, value) {
-        value = value.toString();
-        if (isNaN(value)) {
-            value = value.replace(/,/g, ' ');
-            value = value.replace(/\s+/g, ' ');
-        }
-        var values = value.split(/\s/g);
-        this.tCache[transformation] = {
-            values:values,
-            readable:this.getValidReturn(transformation, values)
-        };
-        this.tCacheString = undefined;
-    },
-
-    hasTransformationCache:function (id) {
-        return this.tCache[id] !== undefined;
-    },
-
-    commitTranslation: function () {
-        this.mat._translate[0] = this.mat.translate[0];
-        this.mat._translate[1] = this.mat.translate[1];
-    },
+    /**
+     * Returns x and y translation, i.e. translated x and y coordinates
+     * @function getTranslate
+     * @memberof ludo.canvas.Node.prototype
+     * @returns {Array}
+     * @example
+     * var translate = node.getTranslate(); // returns [x,y], example; [100,150]
+     */
 
     getTranslate: function () {
         return this._getMatrix().getTranslate();
@@ -5394,7 +5037,7 @@ ludo.canvas.Node = new Class({
     },
 
     href: function (url) {
-        ludo.svg.set(this.el, 'xlink:href', url);
+        this.set('xlink:href', url);
     },
     /**
      * Update text content of node
@@ -5424,6 +5067,16 @@ ludo.canvas.Node = new Class({
         return node;
     },
 
+
+    /**
+     * Set or get CSS property
+     * @param {String}} key
+     * @param {String|Number} value
+     * @returns {*}
+     * @example
+     * var stroke = node.css('stroke'); // Get stroke css attribute
+     * node.css('stroke', '#FFFFFF'); // set stroke css property
+     */
     css: function (key, value) {
         if(arguments.length == 1 && jQuery.type(key) == 'string'){
             return this.el.style[String.camelCase(key)];
@@ -5513,6 +5166,15 @@ ludo.canvas.Node = new Class({
         return 'url(#' + this.id + ')';
     },
 
+    /**
+     * Returns nodes position relative to parent
+     * @function position()
+     * @returns {Object}
+     * @memberof ludo.canvas.Node.prototype
+     * @example
+     * var pos = node.position(); // returns {x: 100, y: 200 }
+     *
+     */
     position: function () {
         var bbox = this.getBBox();
 
@@ -5535,6 +5197,13 @@ ludo.canvas.Node = new Class({
         }
     },
 
+    /**
+     * Returns nodes position relative to top SVG element
+     * @memberof ludo.canvas.Node.prototype
+     * @returns {Object}
+     * @example
+     * var pos = node.offset(); // returns {x: 100, y: 200 }
+     */
     offset: function () {
         var pos = this.position();
 
@@ -5628,7 +5297,7 @@ ludo.canvas.Node = new Class({
             }
         }
 
-        p = p.replace(/[^0-9\.\s]/g, ' ')
+        p = p.replace(/[^0-9\.\s]/g, ' ');
         p = p.replace(/\s+/g, ' ');
 
 
@@ -5650,12 +5319,6 @@ ludo.canvas.Node = new Class({
             width: maxX - minX,
             height: maxY - minY
         };
-
-
-        console.log(p);
-
-        console.log( this._bbox );
-
     },
 
     /**
@@ -5693,28 +5356,96 @@ ludo.canvas.Node = new Class({
         return this.el.viewPortElement;
     },
 
+    /**
+     * Returns rotation as a [degrees, x, y]
+     * @function getRotate
+     * @memberof ludo.canvas.Node.prototype
+     * @returns {Array}
+     */
+
     getRotate:function(){
         return this._getMatrix().getRotation();
     },
 
+    /**
+     * Set scale
+     * @function setScale
+     * @param {Number} x
+     * @param {Number} y (Optional y scale, assumes x if not set)
+     * @memberof ludo.canvas.Node.prototype
+     */
+
+    setScale:function(x,y){
+        this._getMatrix().setScale(x,y);
+    },
+
+    /**
+     * Scale SVG node. The difference between scale and setScale is that scale adds to existing
+     * scale values
+     * @function scale
+     * @param {Number} x
+     * @param {Number} y
+     * @memberof ludo.canvas.Node.prototype
+     */
     scale: function (x, y) {
-        this.mat.scale = [x, y];
-        this.updateMatrix();
-        // ludo.svg.scale(this.el, width, height);
+        this._getMatrix().scale(x,y);
     },
 
-    setRotate:function(rotation, x, y){
-        this._getMatrix().setRotation(rotation, x,y);
+    /**
+     * Set rotation
+     * @function setRotate
+     * @param {Number} degrees Rotation in degrees
+     * @param {Number} x Optional x coordinate to rotate about
+     * @param {Number} y Optional x coordinate to rotate about
+     * @memberof ludo.canvas.Node.prototype
+     * @example
+     * node.rotate(100); // Rotation is 100
+     * node.rotate(50); // Rotation is 50
+     */
+    setRotate:function(degrees, x, y){
+        this._getMatrix().setRotation(degrees, x,y);
     },
 
-    rotate: function (rotation, x, y) {
-        this._getMatrix().rotate(rotation, x,y);
+    /**
+     * Rotate SVG node
+     * @functino rotate
+     * @param {Number} degrees Rotation in degrees
+     * @param {Number} x Optional x coordinate to rotate about
+     * @param {Number} y Optional x coordinate to rotate about
+     * @memberof ludo.canvas.Node.prototype
+     * @example
+     * node.rotate(100); // Rotation is 100
+     * node.rotate(50); // Rotation is 150
+     */
+    rotate: function (degrees, x, y) {
+        this._getMatrix().rotate(degrees, x,y);
     },
 
+
+    /**
+     * Set SVG translation(movement in x and y direction)
+     * @function setTranslate
+     * @param {Number} x
+     * @param {Number} y
+     * @memberof ludo.canvas.Node.prototype
+     * @example
+     * node.setTranslate(500,100);
+     * node.setTranslate(550,200); // Node is offset by 550x200 ( second translation overwrites first)
+     */
     setTranslate:function(x,y){
         this._getMatrix().setTranslate(x,y);
     },
-    
+
+    /**
+     * Translate SVG node(movement in x and y direction)
+     * @function translate
+     * @param {Number} x
+     * @param {Number} y
+     * @memberof ludo.canvas.Node.prototype
+     * @example
+     * node.setTranslate(500,100);
+     * node.setTranslate(550,200); // Node is offset by 1050x300 (first translation + second)
+     */
     translate: function (x, y) {
         this._getMatrix().translate(x,y);
 
@@ -5726,42 +5457,6 @@ ludo.canvas.Node = new Class({
             this._matrix = new ludo.canvas.Matrix(this);
         }
         return this._matrix;
-    },
-
-
-    updateMatrix: function () {
-
-        var m = this.getMatrix();
-
-        console.log(m);
-        /**
-         *  this.mat = {
-            translate: undefined,
-            rotate: undefined,
-            scale: undefined,
-            skewX: undefined,
-            skewY: undefined
-        };
-
-         */
-        if (this.mat.translate)m = m.translate(this.mat.translate[0], this.mat.translate[1]);
-        if (this.mat.scale)m = m.scale(this.mat.scale[0], this.mat.scale[1]);
-
-        this.getTransformObject().setMatrix(m);
-    },
-
-    getTransformObject:function(){
-        if(this.el.transform.baseVal.numberOfItems ==0){
-            var owner;
-            if(this.el.ownerSVGElement){
-                owner = this.el.ownerSVGElement;
-            }else{
-                owner = document.createElementNS("http://www.w3.org/2000/svg", 'svg');
-            }
-            var t = owner.createSVGTransform();
-            this.el.transform.baseVal.appendItem(t);
-        }
-        return this.el.transform.baseVal.getItem(0);
     },
 
     empty: function () {
@@ -5791,10 +5486,6 @@ ludo.canvas.Node = new Class({
 
     _animation: undefined,
 
-    animateOld: function (properties, duration, fps) {
-        this.animation().animate(properties, duration, fps);
-    },
-
     animation: function () {
         if (this._animation === undefined) {
             this._animation = new ludo.canvas.Animation(this.getEl());
@@ -5802,6 +5493,11 @@ ludo.canvas.Node = new Class({
         return this._animation;
     },
 
+    /**
+     * Bring nodes to front (z index)
+     * @function toFront
+     * @memberof ludo.canvas.Node.prototype
+     */
     toFront:function () {
         if (Browser['ie'])this._toFront.delay(20, this); else this._toFront();
     },
@@ -5810,22 +5506,17 @@ ludo.canvas.Node = new Class({
         this.el.parentNode.appendChild(this.el);
     },
 
+    /**
+     * Bring nodes to back (z index)
+     * @function toFront
+     * @memberof ludo.canvas.Node.prototype
+     */
     toBack:function () {
         if (Browser['ie']) this._toBack.delay(20, this); else this._toBack();
     },
 
-    _toBack:function (el) {
+    _toBack:function () {
         this.el.parentNode.insertBefore(this.el, this.el.parentNode.firstChild);
-    },
-
-    matrix: undefined,
-
-    getMatrix: function () {
-        if (this.matrix == undefined) {
-            var owner = ludo.svg.getSVGElement(this.getEl());
-            this.matrix = owner.createSVGMatrix();
-        }
-        return this.matrix;
     }
 });
 
@@ -5890,7 +5581,7 @@ ludo.canvas.View = new Class({
     },
 
     set: function (key, value) {
-        this.engine.set(this.getEl(), key, value);
+        this.node.set(key, value);
     },
 
     /**
@@ -5906,7 +5597,7 @@ ludo.canvas.View = new Class({
      alert(element.get('x1')); // outputs 100
      */
     get: function (key) {
-        return this.engine.get(this.getEl(), key);
+        return this.node.get( key);
     },
 
     /**
@@ -5915,7 +5606,7 @@ ludo.canvas.View = new Class({
      * @memberof ludo.canvas.View.prototype
      */
     html: function (html) {
-        this.engine.html(this.getEl(), html);
+        this.node.html(html);
     },
 
     /**
@@ -5925,7 +5616,7 @@ ludo.canvas.View = new Class({
      * @memberof ludo.canvas.View.prototype
      */
     rotate: function (degrees) {
-        this.engine.rotate(this.getEl(), degrees);
+        this.node.rotate(degrees);
     },
 
     /**
@@ -5934,7 +5625,7 @@ ludo.canvas.View = new Class({
      * @memberof ludo.canvas.View.prototype
      */
     toFront: function () {
-        this.engine.toFront(this.getEl());
+        this.node.toFront();
     },
 
     /**
@@ -5943,7 +5634,7 @@ ludo.canvas.View = new Class({
      * @memberof ludo.canvas.View.prototype
      */
     toBack: function () {
-        this.engine.toBack(this.getEl());
+        this.node.toBack();
     },
 
     /**
@@ -5953,7 +5644,7 @@ ludo.canvas.View = new Class({
      * @memberof ludo.canvas.View.prototype
      */
     skewX: function (degrees) {
-        this.engine.skewX(this.getEl(), degrees);
+        this.node.skewX(degrees);
     },
 
     /**
@@ -5963,7 +5654,7 @@ ludo.canvas.View = new Class({
      * @memberof ludo.canvas.View.prototype
      */
     skewY: function (degrees) {
-        this.engine.skewY(this.getEl(), degrees);
+        this.node.skewY(degrees);
     },
 
     /**
@@ -5972,7 +5663,7 @@ ludo.canvas.View = new Class({
      * @memberof ludo.canvas.View.prototype
      */
     hide:function(){
-        this.engine.hide(this.getEl());
+        this.node.hide();
     },
 
     /**
@@ -5981,7 +5672,7 @@ ludo.canvas.View = new Class({
      * @memberof ludo.canvas.View.prototype
      */
     show:function(){
-        this.engine.show(this.getEl());
+        this.node.show();
     },
 
     /**
@@ -5991,7 +5682,7 @@ ludo.canvas.View = new Class({
      * @memberof ludo.canvas.View.prototype
      */
     scale: function (x, y) {
-        this.engine.scale(this.getEl(), x, y);
+        this.node.scale(x, y);
     },
 
     /**
@@ -6001,14 +5692,7 @@ ludo.canvas.View = new Class({
      * @memberof ludo.canvas.View.prototype
      */
     css: function (key, value) {
-        if (arguments.length == 1) {
-            $.each(key, function (a, b) {
-                this.engine.css(this.getEl(), a, b);
-            }.bind(this))
-        } else {
-            this.engine.css(this.getEl(), key, value);
-
-        }
+        this.node.css(key, value);
     },
 
     /**
@@ -10397,7 +10081,7 @@ ludo.chart.Fragment = new Class({
     },
 
     dsEvent:function(e, method){
-        var id = ludo.svg.attr(e.target, "ludojs-svg-id");
+        var id = ludo.svg.get(e.target, "ludojs-svg-id");
         var rec = this.record;
         if(id){
             this.ds[method + 'Id'](id);
@@ -36613,11 +36297,7 @@ ludo.canvas.Animation = new Class({
                         to.r - rgb.r, to.g - rgb.g, to.b - rgb.b
                     ];
                     start[key] = rgb;
-
                     break;
-
-                
-
                 case 'translate':
                     var cur = node.getTranslate();
                     changes[key] = [
@@ -36921,6 +36601,24 @@ ludo.canvas.Matrix = new Class({
         this.currentRotation = [0,0,0];
     },
 
+    getScale:function(){
+        var m = this.getSVGMatrix();
+        return [m.a, m.d];
+    },
+
+    setScale:function(x,y){
+        this.matrix = this.getSVGMatrix();
+        this.matrix.a = x;
+        this.matrix.d = arguments.length == 1 ? x : y;
+        this.update();
+
+    },
+
+    scale:function(x,y){
+        this.matrix = this.getSVGMatrix.scale(x,this.arguments.length == 1 ? x : y);
+        this.update();
+    },
+
     getTranslate: function () {
         var m = this.getSVGMatrix();
         return [m.e, m.f];
@@ -36954,7 +36652,7 @@ ludo.canvas.Matrix = new Class({
 
         if(degrees < 0)degrees+=360;
         degrees  = degrees % 360;
-        
+
         this.getSVGMatrix();
 
         if (arguments.length > 1) {

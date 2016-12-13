@@ -90,7 +90,7 @@ ludo.chart.Fragment = new Class({
     },
 
     dsEvent:function(e, method){
-        var id = ludo.svg.attr(e.target, "ludojs-svg-id");
+        var id = ludo.svg.get(e.target, "ludojs-svg-id");
         var rec = this.record;
         if(id){
             this.ds[method + 'Id'](id);

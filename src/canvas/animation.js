@@ -44,11 +44,7 @@ ludo.canvas.Animation = new Class({
                         to.r - rgb.r, to.g - rgb.g, to.b - rgb.b
                     ];
                     start[key] = rgb;
-
                     break;
-
-                
-
                 case 'translate':
                     var cur = node.getTranslate();
                     changes[key] = [

@@ -57,7 +57,7 @@ ludo.canvas.View = new Class({
     },
 
     set: function (key, value) {
-        this.engine.set(this.getEl(), key, value);
+        this.node.set(key, value);
     },
 
     /**
@@ -73,7 +73,7 @@ ludo.canvas.View = new Class({
      alert(element.get('x1')); // outputs 100
      */
     get: function (key) {
-        return this.engine.get(this.getEl(), key);
+        return this.node.get( key);
     },
 
     /**
@@ -82,7 +82,7 @@ ludo.canvas.View = new Class({
      * @memberof ludo.canvas.View.prototype
      */
     html: function (html) {
-        this.engine.html(this.getEl(), html);
+        this.node.html(html);
     },
 
     /**
@@ -92,7 +92,7 @@ ludo.canvas.View = new Class({
      * @memberof ludo.canvas.View.prototype
      */
     rotate: function (degrees) {
-        this.engine.rotate(this.getEl(), degrees);
+        this.node.rotate(degrees);
     },
 
     /**
@@ -101,7 +101,7 @@ ludo.canvas.View = new Class({
      * @memberof ludo.canvas.View.prototype
      */
     toFront: function () {
-        this.engine.toFront(this.getEl());
+        this.node.toFront();
     },
 
     /**
@@ -110,7 +110,7 @@ ludo.canvas.View = new Class({
      * @memberof ludo.canvas.View.prototype
      */
     toBack: function () {
-        this.engine.toBack(this.getEl());
+        this.node.toBack();
     },
 
     /**
@@ -120,7 +120,7 @@ ludo.canvas.View = new Class({
      * @memberof ludo.canvas.View.prototype
      */
     skewX: function (degrees) {
-        this.engine.skewX(this.getEl(), degrees);
+        this.node.skewX(degrees);
     },
 
     /**
@@ -130,7 +130,7 @@ ludo.canvas.View = new Class({
      * @memberof ludo.canvas.View.prototype
      */
     skewY: function (degrees) {
-        this.engine.skewY(this.getEl(), degrees);
+        this.node.skewY(degrees);
     },
 
     /**
@@ -139,7 +139,7 @@ ludo.canvas.View = new Class({
      * @memberof ludo.canvas.View.prototype
      */
     hide:function(){
-        this.engine.hide(this.getEl());
+        this.node.hide();
     },
 
     /**
@@ -148,7 +148,7 @@ ludo.canvas.View = new Class({
      * @memberof ludo.canvas.View.prototype
      */
     show:function(){
-        this.engine.show(this.getEl());
+        this.node.show();
     },
 
     /**
@@ -158,7 +158,7 @@ ludo.canvas.View = new Class({
      * @memberof ludo.canvas.View.prototype
      */
     scale: function (x, y) {
-        this.engine.scale(this.getEl(), x, y);
+        this.node.scale(x, y);
     },
 
     /**
@@ -168,14 +168,7 @@ ludo.canvas.View = new Class({
      * @memberof ludo.canvas.View.prototype
      */
     css: function (key, value) {
-        if (arguments.length == 1) {
-            $.each(key, function (a, b) {
-                this.engine.css(this.getEl(), a, b);
-            }.bind(this))
-        } else {
-            this.engine.css(this.getEl(), key, value);
-
-        }
+        this.node.css(key, value);
     },
 
     /**

@@ -8,7 +8,44 @@ require_once("../includes/demo-header.php");
 
 
     var dataSource = new ludo.chart.DataSource({
-        url : '../data/bar-chart-data.json',
+        data:[
+            {
+                "id":"apple",
+                "fruit": "Apple",
+                "people": 35,
+                "__color": "#D32F2F"
+            },
+            {
+                "id": "orange",
+                "fruit": "Orange",
+                "people": 33,
+                "__color": "#FF8A65"
+            },
+            {
+                "id" : "banana",
+                "fruit": "Banana",
+                "people": 9,
+                "__color": "#FDD835"
+            },
+            {
+                "id" : "kiwi",
+                "fruit": "Kiwi",
+                "people": 24,
+                "__color": "#1B5E20"
+            },
+            {
+                "id": "blueberry",
+                "fruit": "Blueberry",
+                "people": 40,
+                "__color": "#0D47A1"
+            },
+            {
+                "id": "grapes",
+                "fruit": "Grapes",
+                "people": 6,
+                "__color": "#689F38"
+            }
+        ],
         textOf:function(record, caller){
 
             if(caller.type == 'chart.Tooltip'){
