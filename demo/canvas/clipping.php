@@ -18,7 +18,7 @@ require_once("../includes/demo-header.php");
         children:[
             {
                 id:'demoView',
-                title:'clipping demo'
+                title:'Clipping Demo'
             },
             {
                 type:'SourceCodePreview'

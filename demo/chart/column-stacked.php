@@ -15,6 +15,9 @@ require_once("../includes/demo-header.php");
             if(caller.type == 'chart.LabelListItem'){
                 return record.name + ' yr';
             }
+            if(caller.type == 'chart.Tooltip'){
+                return '<p><b>{parent.country}</b><br><b>Age: {record.name}</b><br>People: {record.people}</p>';
+            }
             return record.country;
         },
 
@@ -188,7 +191,12 @@ require_once("../includes/demo-header.php");
                                     }
                                 },
                                 plugins:[
-
+                                    {
+                                        type:'chart.Tooltip',
+                                        textStyles:{
+                                            'font-size':'12px'
+                                        }
+                                    }
                                 ]
                             },
 

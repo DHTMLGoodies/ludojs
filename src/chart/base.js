@@ -120,10 +120,10 @@ ludo.chart.Base = new Class({
     },
 
     create: function () {
-
         this.renderBackgroundItems();
 
-        if (this.dataProvider().hasData()) {
+        if (this.getDataSource().hasData()) {
+            this.dataRendered = true;
             this.createFragments();
         }
         this.render();
@@ -186,10 +186,20 @@ ludo.chart.Base = new Class({
         this.parent(coordinates);
 
         if (!this.dataRendered && this.getDataSource().hasData()) {
+
             this.create();
-            this.dataRendered = true;
         }
+    },
+    
+    onFragmentAction:function(action, fragment, record, node, event){
+        this.fireEvent(action, [fragment, record, node, event]);
+    },
 
+    getTooltipPosition:function(){
+        return 'left';
+    },
 
+    tooltipAtMouseCursor:function(){
+        return false;
     }
 });

@@ -48,7 +48,7 @@ ludo.layout.Canvas = new Class({
 	positionChild:function (child, property, value) {
 		child[property] = value;
 		this.currentTranslate[property] = value;
-		child['node'].translate(this.currentTranslate.left, this.currentTranslate.top);
+		child['node'].setTranslate(this.currentTranslate.left, this.currentTranslate.top);
 	},
 
 	currentTranslate:{

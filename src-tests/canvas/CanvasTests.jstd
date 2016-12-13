@@ -1,15 +1,24 @@
 load:
-  - ../../mootools/mootools-core-1.4.5.js
-  - ../../mootools/mootools-more-1.4.0.1.js
+  - ../../jquery/jquery-3.1.0.min.js
   - ../../js/ludojs.js
+  - ../../js/ludojs.js
+  - ../../src/canvas/engine.js
   - ../../src/canvas/curtain.js
   - ../../src/canvas/node.js
   - ../../src/canvas/named-node.js
-  - ../../src/canvas/element.js
+  - ../../src/canvas/view.js
   - ../../src/canvas/canvas.js
   - ../../src/canvas/rect.js
   - ../../src/canvas/text-box.js
   - ../../src/canvas/animation.js
+  - ../../src/canvas/paint.js
+  - ../../src/canvas/rect.js
+  - ../../src/canvas/circle.js
+  - ../../src/canvas/path.js
+  - ../../src/canvas/filter.js
+  - ../../src/canvas/ellipse.js
+  - ../../src/canvas/circle.js
+  - ../../src/canvas/matrix.js
 
 test:
   - DraggingTest.js
@@ -31,6 +40,7 @@ test:
   - TextBoxTest.js
   - CurtainTest.js
   - AnimationTest.js
+  - DomMethods.js
 
 plugin:
  - name: "coverage"

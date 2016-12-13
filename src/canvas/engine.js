@@ -25,16 +25,11 @@ ludo.canvas.Engine = new Class({
      */
     cache:{},
 
+	positions:{},
+
 	attr:function(el, key, value){
 		if(arguments.length == 2)return this.get(el, key);
-		if (key.substring(0, 6) == "xlink:") {
-			if(value['id']!==undefined)value = '#' + value.getId();
-			el.setAttributeNS("http://www.w3.org/1999/xlink", key.substring(6), value);
-		} else {
-			if(value['id']!==undefined)value = 'url(#' + value.getId() + ')';
-			el.setAttribute(key, value);
-		}
-
+		this.set(el, key, value);
 	},
 
 	/*
@@ -82,37 +77,6 @@ ludo.canvas.Engine = new Class({
 		}
 	},
 
-	text:function (el, text) {
-		el.textContent = text;
-	},
-
-	show:function (el) {
-        this.css(el, 'display','');
-	},
-
-	hide:function (el) {
-        this.css(el, 'display','none');
-	},
-
-	moveTo:function (el, x, y) {
-		el.setAttribute('x', x);
-		el.setAttribute('y', y);
-	},
-
-	toBack:function (el) {
-		if (Browser['ie']) this._toBack.delay(20, this, el); else this._toBack(el);
-	},
-	_toBack:function (el) {
-		el.parentNode.insertBefore(el, el.parentNode.firstChild);
-	},
-
-	toFront:function (el) {
-		if (Browser['ie'])this._toFront.delay(20, this, el); else this._toFront(el);
-	},
-	_toFront:function (el) {
-		el.parentNode.appendChild(el);
-	},
-
     /*
      * Apply rotation to element
      * @function rotate
@@ -144,14 +108,7 @@ ludo.canvas.Engine = new Class({
 		this.getTransformObject(el);
 		el.transform.baseVal.getItem(0).setSkewY(degrees);
 	},
-
-	getCenter:function (el) {
-		return {
-			x:this.getWidth(el) / 2,
-			y:this.getHeight(el) / 2
-		}
-	},
-
+	
 	translate:function(el, x, y){
 		this.setTransformation(el, 'translate', x + ' ' + y);
 	},
@@ -163,25 +120,6 @@ ludo.canvas.Engine = new Class({
 	scale:function(el, width, height){
 		height = height || width;
 		this.setTransformation(el, 'scale', width + ' ' + height);
-	},
-
-	applyTransformationToMatrix:function(el, transformation, x, y){
-		var t = this.getTransformObject(el);
-		var c = this.getCurrentCache(el, transformation);
-		if(y!==undefined){
-			t.setMatrix(t.matrix[transformation](x - c[0], y - c[1]));
-		}else{
-			t.setMatrix(t.matrix[transformation](x - c[0]));
-		}
-		if(this.cache[el.id]=== undefined)this.cache[el.id] = {};
-		if(transformation === 'scale'){
-			x--;y--;
-		}
-		this.cache[el.id][transformation] = [x,y];
-	},
-
-	setTransformMatrix:function(el, a,b,c,d,e,f){
-		this.getTransformObject(el).setMatrix(a,b,c,d,e,f);
 	},
 
 	getTransformObject:function(el){
@@ -356,60 +294,7 @@ ludo.canvas.Engine = new Class({
 		}
 		this.tCacheStrings[id] = this.tCacheStrings[id].trim();
 	},
-
-	css:function(el, key, value){
-		if(arguments.length < 3){
-			$.each(key, function(attr, val){
-				el.style[String.camelCase(attr)] = val;
-			});
-		}else{
-			el.style[String.camelCase(key)] = value;
-
-		}
-	},
-
-	addClass:function(el, className){
-		if(!this.hasClass(el, className)){
-			var id = this.getId(el);
-			this.classNameCache[id].push(className);
-			this.updateNodeClassNameById(el, id);
-		}
-		var cls = el.getAttribute('class');
-		if(cls){
-			cls = cls.split(/\s/g);
-			if(cls.indexOf(className)>=0)return;
-            cls.push(className);
-            this.set(el, 'class', cls.join(' '));
-		}else{
-			this.set(el, 'class', className);
-		}
-	},
-
-	hasClass:function(el, className){
-		var id = this.getId(el);
-		if(!this.classNameCache[id]){
-			var cls = el.getAttribute('class');
-			if(cls){
-				this.classNameCache[id] = cls.split(/\s/g);
-			}else{
-				this.classNameCache[id] = [];
-			}
-		}
-		return this.classNameCache[id].indexOf(className)>=0;
-	},
-
-	removeClass:function(el, className){
-		if(this.hasClass(el, className)){
-			var id = this.getId(el);
-			this.classNameCache[id].erase(className);
-			this.updateNodeClassNameById(el, id);
-		}
-	},
-
-	updateNodeClassNameById:function(el, id){
-		this.set(el, 'class', this.classNameCache[id].join(' '));
-	},
-
+	
 	getId:function(el){
 		if(!el.getAttribute('id')){
 			el.setAttribute('id', String.uniqueID());
@@ -426,33 +311,9 @@ ludo.canvas.Engine = new Class({
 
 	empty:function(el){
 		el.textContent = '';
-	},
-
-    /*
-     * Degrees to radians method
-     * @function toRad
-     * @param degrees
-     * @return {Number}
-     */
-    toRadians:function(degrees){
-        return degrees * Math.PI / 180;
-    },
-
-    getPointAtDegreeOffset:function(from, degrees, size){
-        var radians = ludo.svg.toRadians(degrees);
-		return this.getPointAtRadianOffset(from, radians, size);
-    },
-
-	getPointAtRadianOffset:function(from, radians, size){
-		var x = Math.cos(radians);
-		var y = Math.sin(radians);
-
-		return {
-			x : from.x + (size * x),
-			y : from.y + (size * y)
-		}
 	}
-
 });
 ludo.svg = new ludo.canvas.Engine();
+
+
 

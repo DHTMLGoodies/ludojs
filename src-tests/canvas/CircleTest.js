@@ -40,11 +40,11 @@ TestCase("CircleTest", {
 		circle.translate(100,120);
 
 		// when
-		var pos = circle.getPosition();
+		var pos = circle.position();
 
 		// then
-		assertEquals(500-200+100, pos.x);
-		assertEquals(420-200+120, pos.y);
+		assertEquals(500-200+100, pos.left);
+		assertEquals(420-200+120, pos.top);
 
 		// when
 		var size = circle.getSize();

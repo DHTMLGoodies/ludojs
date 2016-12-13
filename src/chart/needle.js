@@ -36,7 +36,7 @@ ludo.chart.Needle = new Class({
     resize:function(){
         this.path.set('d', this.getPath());
         var center = this.getParent().getCenter();
-        this.nodes[0].translate(center.x,center.y);
+        this.nodes[0].setTranslate(center.x,center.y);
         this.nodes[0].rotate(this.getAngle(this.record.getValue()), 0, 0);
     }
 });

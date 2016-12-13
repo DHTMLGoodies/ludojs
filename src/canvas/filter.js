@@ -83,10 +83,10 @@ ludo.canvas.Filter = new Class({
 		var o = this.mergeTagsOrder;
 		for(var i=0;i<o.length;i++){
 			if(this.mergeTags[o[i]] !== undefined){
-				ludo.svg.toFront(this.mergeTags[o[i]].el);
+				this.mergeTags[o[i]].toFront();
 			}
 		}
-		ludo.svg.toFront(m.el);
+		m.toFront();
 	},
 	mergeTag:undefined,
 	getMergeTag:function () {

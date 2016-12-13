@@ -12,9 +12,7 @@ ludo.chart.Fragment = new Class({
         this.setConfigParams(config, ['record','parentComponent']);
         this.map = {};
         this.createNodes();
-
         this.ds = this.parentComponent.ds;
-
     },
 
     createNodes:function(){
@@ -27,7 +25,7 @@ ludo.chart.Fragment = new Class({
 
     ludoEvents:function(){
         this.parent();
-        this.getParent().dataProvider().addEvent('update', this.update.bind(this));
+        this.getParent().getDataSource().addEvent('update', this.update.bind(this));
 
         var ds = this.getDataSource();
 
@@ -39,8 +37,6 @@ ludo.chart.Fragment = new Class({
             ds.on('enter' + record.__uid, this.enter.bind(this));
             ds.on('leave' + record.__uid, this.leave.bind(this));
         }.bind(this));
-
-
     },
 
     getParent:function(){
@@ -95,11 +91,19 @@ ludo.chart.Fragment = new Class({
 
     dsEvent:function(e, method){
         var id = ludo.svg.attr(e.target, "ludojs-svg-id");
+        var rec = this.record;
         if(id){
             this.ds[method + 'Id'](id);
+            rec = this.ds.byId(id);
         }else{
             this.ds[method](this.record);
         }
+
+        this.parentComponent.onFragmentAction(method, this, rec, this.map[rec.id], e);
+    },
+    
+    getEventNode:function(e){
+        return e.target;
     },
 
     createStyle:function(styles){

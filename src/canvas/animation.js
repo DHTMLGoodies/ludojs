@@ -1,34 +1,41 @@
 /**
- * Created by alfmagne1 on 07/12/2016.
+ * Animation of SVG DOM Nodes
+ * @class ludo.canvas.Animation
+ * @example
+ * circle.animate({
+ *      cx : 100, cy: 100, r: 10
+ * }, 200,
+ * ludo.canvas.easing.outCubic,
+ * function(){ console.log('finished') }
+ * );
  */
 ludo.canvas.Animation = new Class({
 
-    animationRate:13,
-    color:undefined,
+    animationRate: 13,
+    color: undefined,
 
-    colorUtil:function(){
-        if(this.color == undefined)this.color = new ludo.color.Color();
+    colorUtil: function () {
+        if (this.color == undefined)this.color = new ludo.color.Color();
         return this.color;
     },
 
-    fn:function(node, properties, duration, easing, complete, stepFn){
-        
+    fn: function (node, properties, duration, easing, complete, stepFn) {
+
         easing = easing || ludo.canvas.easing.inSine;
 
         var changes = {};
         var start = {};
         var special = {};
 
-        jQuery.each(properties, function(key, value){
+        jQuery.each(properties, function (key, value) {
             special[key] = true;
 
-            switch(key){
+            switch (key) {
                 case 'fill':
                 case 'stroke':
                 case 'stop-color':
                     var clr = node.attr(key) || '#000000';
-                    if(clr.length == 4) clr = clr + clr.substr(1);
-                    console.log(clr);
+                    if (clr.length == 4) clr = clr + clr.substr(1);
                     var u = this.colorUtil();
                     var rgb = u.rgbColors(clr);
                     var to = u.rgbColors(value);
@@ -38,10 +45,9 @@ ludo.canvas.Animation = new Class({
                     ];
                     start[key] = rgb;
 
-                    console.log(changes);
-                    console.log(start);
                     break;
 
+                
 
                 case 'translate':
                     var cur = node.getTranslate();
@@ -51,6 +57,12 @@ ludo.canvas.Animation = new Class({
                     start[key] = cur;
                     break;
                 case 'rotate':
+                    var c = node.getRotate();
+                    changes[key] = [
+                        value[0] - c[0], value[1], value[2]
+                    ];
+                    start[key] = c[0];
+                    break;
                 case 'scale':
 
                 default:
@@ -64,37 +76,48 @@ ludo.canvas.Animation = new Class({
 
         var r = this.animationRate;
 
-        var fn = function(t,d){
+        var fn = function (t, d) {
             var vals;
-            if(t<d){
-                fn.delay(r, fn, [t+1,d]);
+            if (t < d) {
+                fn.delay(r, fn, [t + 1, d]);
             }
-            var delta = t>=d ? 1 : easing(t, 0, 1, d);
-            jQuery.each(changes, function(key, value){
+            var delta = t >= d ? 1 : easing(t, 0, 1, d);
+            var x,y;
+            jQuery.each(changes, function (key, value) {
 
-                if(special[key]){
-                    switch(key){
+                if (special[key]) {
+                    switch (key) {
                         case 'stroke':
                         case 'fill':
                         case 'stop-color':
                             var r = start[key].r + (delta * value[0]);
                             var g = start[key].g + (delta * value[1]);
                             var b = start[key].b + (delta * value[2]);
-                            node.set(key, 'rgb(' + r + ',' + g +',' + b+ ')');
+                            node.set(key, 'rgb(' + r + ',' + g + ',' + b + ')');
                             break;
                         case 'translate':
-                            var x = start[key][0] + (delta * value[0]);
-                            var y = start[key][1] + (delta * value[1]);
-                            node.translate(x,y);
+                            x = start[key][0] + (delta * value[0]);
+                            y = start[key][1] + (delta * value[1]);
+                            node.setTranslate(x, y);
+                            break;
+                        case 'rotate':
+                            var d = start[key] + (delta * value[0]);
+
+                            x = value[1];
+                            y = value[2];
+                            d = d % 360;
+
+                            node.setRotate(d,x,y);
+
                             break;
 
 
                     }
-                } else{
+                } else {
                     var val = start[key] + (value * delta);
-                    ludo.svg.set(node.el, key, val);
-                    if(stepFn != undefined){
-                        if(vals == undefined){
+                    node.set(key, val);
+                    if (stepFn != undefined) {
+                        if (vals == undefined) {
                             vals = {};
                         }
                         vals[key] = val;
@@ -103,11 +126,11 @@ ludo.canvas.Animation = new Class({
 
             });
 
-            if(stepFn != undefined){
-                stepFn.call(node, node, vals, delta, t/d);
+            if (stepFn != undefined) {
+                stepFn.call(node, node, vals, delta, t / d);
             }
-            if(t>=d){
-                if(complete!=undefined){
+            if (t >= d) {
+                if (complete != undefined) {
                     complete.call(node);
                 }
             }
@@ -206,7 +229,7 @@ ludo.canvas.easing = {
         t -= 2;
         return c / 2 * (t * t * t * t * t + 2) + b;
     },
-    
+
     inSine: function (t, b, c, d) {
         return -c * Math.cos(t / d * (Math.PI / 2)) + c + b;
     },
@@ -262,6 +285,49 @@ ludo.canvas.easing = {
         if (t < 1) return -c / 2 * (Math.sqrt(1 - t * t) - 1) + b;
         t -= 2;
         return c / 2 * (Math.sqrt(1 - t * t) + 1) + b;
+    },
+
+    /**
+     *
+     * @param t current time
+     * @param b start value
+     * @param c change in value
+     * @param d duration
+     * @returns {*}
+     */
+
+    bounce: function (t, b, c, d) {
+        var progress = t / d;
+        progress = 1 - ludo.canvas.easing._bounce(1 - progress);
+        return c * progress + b;
+    },
+
+    bow:function(t,b,c,d){
+        var progress = ludo.canvas.easing._back(t/d, 1.5);
+        return c * progress + b;
+    },
+
+    elastic:function(t,b,c,d){
+        var progress = ludo.canvas.easing._elastic(t/d, 1.5);
+        return c * progress + b;
+    },
+
+    _elastic:function(progress, x){
+        return Math.pow(2, 10 * (progress-1)) * Math.cos(20*Math.PI*x/3*progress)
+
+    },
+
+    _bounce: function (progress) {
+        for(var a = 0, b = 1; 1; a += b, b /= 2) {
+            if (progress >= (7 - 4 * a) / 11) {
+                return -Math.pow((11 - 6 * a - 11 * progress) / 4, 2) + Math.pow(b, 2);
+            }
+        }
+    },
+
+    _back:function(progress, x){
+        return Math.pow(progress, 2) * ((x + 1) * progress - x)
+
     }
 
 

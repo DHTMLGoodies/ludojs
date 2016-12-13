@@ -215,5 +215,12 @@ ludo.chart.Pie = new Class({
         for(var i=0;i< r.length;i++){
             this.fragments[i].set(radius, r[i].__angle, r[i].__radians);
         }
+    },
+
+    tooltipAtMouseCursor:function(){
+        return true;
+    },
+    getTooltipPosition:function(){
+        return 'above';
     }
 });

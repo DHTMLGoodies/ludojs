@@ -10,7 +10,9 @@ require_once("../includes/demo-header.php");
     var dataSource = new ludo.chart.DataSource({
         url : '../data/bar-chart-data.json',
         textOf:function(record, caller){
-            if(caller == undefined)console.trace();
+            if(caller.type == 'chart.Tooltip'){
+                return '<p><b>' + record.fruit +'<br>' + record.people + ' of ' + record.__sum + ' people(' + record.__percent + '%)</p>';
+            }
             return record.fruit;
         },
 
@@ -172,7 +174,12 @@ require_once("../includes/demo-header.php");
                                     }
                                 },
                                 plugins:[
-
+                                    {
+                                        type:'chart.Tooltip',
+                                        textStyles:{
+                                            'font-size':'12px'
+                                        }
+                                    }
                                 ]
                             }
                         ]

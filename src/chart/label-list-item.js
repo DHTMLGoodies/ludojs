@@ -18,13 +18,13 @@ ludo.chart.LabelListItem = new Class({
         g.append(this.colorBox);
 
 
-        this.colorBox.setStyles(this.getBoxStyles());
+        this.colorBox.css(this.getBoxStyles());
 
 
         this.textNode = new ludo.canvas.Text(this.getDataSource().textOf(this.record, this), {
             x:colorBoxCoords.x + colorBoxCoords.width + 3, y : this.getYForText()
         });
-        this.textNode.setStyles(this.getTextStyles());
+        this.textNode.css(this.getTextStyles());
         g.append(this.textNode);
         this.setSize();
 
@@ -88,12 +88,12 @@ ludo.chart.LabelListItem = new Class({
     },
 
     enter:function () {
-        this.textNode.setStyles(this.getTextStylesOver());
-        this.colorBox.setStyles(this.getBoxStylesOver());
+        this.textNode.css(this.getTextStylesOver());
+        this.colorBox.css(this.getBoxStylesOver());
     },
 
     leave:function () {
-        this.textNode.setStyles(this.getTextStyles());
-        this.colorBox.setStyles(this.getBoxStyles());
+        this.textNode.css(this.getTextStyles());
+        this.colorBox.css(this.getBoxStyles());
     }
 });

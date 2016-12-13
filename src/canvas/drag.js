@@ -27,14 +27,15 @@
 */
 ludo.canvas.Drag = new Class({
 	Extends:ludo.effect.Drag,
-
+	
 	ludoEvents:function () {
 		this.parent();
 		this.addEvent('before', this.setStartTranslate.bind(this));
 	},
 
 	setStartTranslate:function (node) {
-		this.dragProcess.startTranslate = node.el.getTransformation('translate') || {x:0, y:0};
+
+		this.dragProcess.startTranslate = this.getPositionOf(node.el);
 	},
 
 	/**
@@ -85,30 +86,16 @@ ludo.canvas.Drag = new Class({
 
 		return id;
 	},
-    transformationExists:false,
     startDrag:function(e){
         this.parent(e);
-
-        this.transformationExists = this.hasTransformation();
-    },
-
-    hasTransformation:function(){
-        //
-        var translate = this.els[this.dragProcess.dragged].el.get('transform');
-        if(translate){
-            var items = translate.split(/\s([a-z])/g);
-            if(items.length > 1)return true;
-            if(items.length === 0)return false;
-            return items[0].split(/\(/g)[0] !== 'translate';
-        }
-        return false;
+        this.dragProcess.startTranslate = this.els[this.dragProcess.dragged].el.getTranslate();
     },
 
 	move:function (pos) {
 		var node = this.els[this.dragProcess.dragged].el;
 		var translate = {
-			x:this.dragProcess.startTranslate.x,
-			y:this.dragProcess.startTranslate.y
+			x:this.dragProcess.startTranslate[0],
+			y:this.dragProcess.startTranslate[1]
 		};
 
 
@@ -120,28 +107,21 @@ ludo.canvas.Drag = new Class({
 			translate.y = pos.y;
 			this.dragProcess.currentY = pos.y;
 		}
-		// return node.translate(translate.x, translate.y);
-        if(this.transformationExists){
-			node.translate(translate.x, translate.y);
-            node.setTransformation('translate', translate.x + ' ' + translate.y);
-        }else{
-            node.el.setAttribute('transform', ['translate(', translate.x, ' ', translate.y, ')'].join('') );
-            this.lastTranslate = translate;
-        }
+		node.translate(translate.x, translate.y);
+
+
 	},
 
     endDrag:function(e){
         if (this.dragProcess.active) {
-            if(this.lastTranslate !== undefined){
-                var node = this.els[this.dragProcess.dragged].el;
-                node.setTransformation('translate', this.lastTranslate.x + ' ' + this.lastTranslate.y);
-            }
             this.parent(e);
         }
     },
 
 	getPositionOf:function (node) {
-		var ret =  node.getTransformation('translate') || {x:0, y:0}
-		return { left:ret.x, top: ret.y };
+		var t = node.getTranslate();
+		return {
+			left : t[0], top: t[1]
+		};
 	}
 });

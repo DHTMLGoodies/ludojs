@@ -67,7 +67,7 @@ TestCase("NodeTest", {
 		var node = new ludo.canvas.Node('rect', { id:'myId'});
 
 		// when
-		ludo.svg.addClass(node.el, 'myClass');
+		node.addClass('myClass');
 
 		// then
 		assertEquals('myClass', node.get('class'));
@@ -77,12 +77,12 @@ TestCase("NodeTest", {
 		// given
 		var node = new ludo.canvas.Node('rect', { id:'myId2'});
 		// then
-		assertFalse(ludo.svg.hasClass(node.el, 'myClass'));
+		assertFalse(node.hasClass('myClass'));
 
 		// when
 		node.addClass('myClass');
 		// then
-		assertTrue(ludo.svg.hasClass(node.el, 'myClass'));
+		assertTrue(node.hasClass('myClass'));
 	},
 
 	"test should be able to remove css class":function () {
@@ -95,8 +95,8 @@ TestCase("NodeTest", {
 		node.removeClass('myClass');
 
 		// then
-		assertFalse(ludo.svg.hasClass(node.el, 'myClass'));
-		assertTrue(ludo.svg.hasClass(node.el, 'secondClass'));
+		assertFalse(node.hasClass('myClass'));
+		assertTrue(node.hasClass('secondClass'));
 	},
 
 	"test should always assign id": function(){

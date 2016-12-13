@@ -42,6 +42,7 @@ require_once("../includes/demo-header.php");
                         valueKey:'easing', textKey : 'easing',
                         dataSource:{
                             data:[
+
                                 { easing : 'linear' },
                                 { easing: 'inQuad' },
                                 { easing: 'outQuad' },
@@ -63,7 +64,11 @@ require_once("../includes/demo-header.php");
                                 { easing: 'inOutExpo' },
                                 { easing: 'inCirc' },
                                 { easing: 'outCirc' },
-                                { easing: 'inOutCirc' }
+                                { easing: 'inOutCirc' },
+                                { easing: 'bounce' },
+                                { easing: 'bow' },
+                                { easing: 'elastic' }
+
                             ]
                         },
                         listeners:{
@@ -155,7 +160,7 @@ require_once("../includes/demo-header.php");
         moveIllustrationNodes();
         circle.animate({
                 cx:x, cy:y
-            }, 600, easing,
+            }, 1200, easing,
             function (node) {
 
             },

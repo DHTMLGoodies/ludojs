@@ -27,18 +27,45 @@ ludo.canvas.Node = new Class({
 
     mat: undefined,
 
+    dirty: undefined,
+
+    _bbox: undefined,
+
+    _attr: undefined,
+
+    classNameCache:[],
+
+    /*
+     * Transformation cache
+     * @property tCache
+     * @type {Object}
+     * @private
+     */
+    tCache:{},
+    /*
+     * Internal cache
+     * @property {Object} tCacheStrings
+     * @private
+     */
+    tCacheStrings:undefined,
+    
+
+
     initialize: function (tagName, properties, text) {
+
+        this._attr = {};
+
         properties = properties || {};
         properties.id = this.id = properties.id || 'ludo-svg-node-' + String.uniqueID();
         if (tagName !== undefined)this.tagName = tagName;
         this.createNode(this.tagName, properties);
         if (text !== undefined) {
-            ludo.svg.text(this.el, text);
+            this.text(text);
         }
 
         this.mat = {
-            translate: undefined,
-            _translate: [0,0],
+            translate: [0, 0],
+            _translate: [0, 0],
             rotate: undefined,
             scale: undefined,
             skewX: undefined,
@@ -51,6 +78,7 @@ ludo.canvas.Node = new Class({
             if (typeof el == "string") {
                 el = this.createNode(el);
             }
+            var that = this;
             Object.each(properties, function (value, key) {
                 if (value['getUrl'] !== undefined) {
                     value = value.getUrl();
@@ -62,6 +90,7 @@ ludo.canvas.Node = new Class({
                     el.setAttributeNS("http://www.w3.org/1999/xlink", key.substring(6), value);
                 } else {
                     el.setAttribute(key, value);
+                    that._attr[key] = value;
                 }
             });
         } else {
@@ -137,7 +166,7 @@ ludo.canvas.Node = new Class({
                 pageX: (e.pageX != null) ? e.pageX : e.clientX + document.scrollLeft,
                 pageY: (e.pageY != null) ? e.pageY : e.clientY + document.scrollTop,
                 clientX: e.offsetX != undefined ? e.offsetX : (e.pageX != null) ? e.pageX - window.pageXOffset : e.clientX,
-                clientY: e.offsetY != undefined ? e.offsetY: (e.pageY != null) ? e.pageY - window.pageYOffset : e.clientY,
+                clientY: e.offsetY != undefined ? e.offsetY : (e.pageY != null) ? e.pageY - window.pageYOffset : e.clientY,
                 event: e
             };
             if (fn) {
@@ -165,11 +194,15 @@ ludo.canvas.Node = new Class({
     },
 
     show: function () {
-        ludo.svg.show(this.el);
+        this.css('display','');
     },
 
     hide: function () {
-        ludo.svg.hide(this.el);
+        this.css('display','none');
+    },
+
+    isHidden: function () {
+        return this.css('display') == 'none';
     },
 
     setProperties: function (p) {
@@ -181,12 +214,21 @@ ludo.canvas.Node = new Class({
     },
 
     attr: function (key, value) {
-        if(arguments.length == 1)return this.get(key);
-        ludo.svg.attr(this.el, key, value);
+        if (arguments.length == 1)return this.get(key);
+        this.set(key, value);
     },
 
     set: function (key, value) {
-        ludo.svg.set(this.el, key, value);
+        this._attr[key] = value;
+        this.dirty = true;
+
+        if (key.substring(0, 6) == "xlink:") {
+            if(value['id']!==undefined)value = '#' + value.getId();
+            this.el.setAttributeNS("http://www.w3.org/1999/xlink", key.substring(6), value);
+        } else {
+            if(value['id']!==undefined)value = 'url(#' + value.getId() + ')';
+            this.el.setAttribute(key, value);
+        }
     },
 
     remove: function (key) {
@@ -194,7 +236,11 @@ ludo.canvas.Node = new Class({
     },
 
     get: function (key) {
-        return ludo.svg.get(this.el, key);
+        if (key.substring(0, 6) == "xlink:") {
+            return this.el.getAttributeNS("http://www.w3.org/1999/xlink", key.substring(6));
+        } else {
+            return this.el.getAttribute(key);
+        }
     },
 
     getTransformation: function (key) {
@@ -202,21 +248,121 @@ ludo.canvas.Node = new Class({
     },
 
     setTransformation: function (key, value) {
-        ludo.svg.setTransformation(this.el, key, value);
+        var id = this._attr['id'];
+        this.buildTransformationCacheIfNotExists();
+        this.updateTransformationCache(key, value);
+        this.set('transform', this.getTransformationAsText());
     },
 
-    commitTranslation:function(){
+    getTransformationAsText:function(id){
+        if(this.tCacheStrings === undefined && this.tCache!==undefined){
+            this.buildCacheString();
+        }
+        return this.tCacheStrings;
+    },
+
+    buildCacheString:function(){
+        this.tCacheStrings= '';
+        jQuery.each(this.tCache, function(key, value){
+            this.tCacheStrings+= key + '(' + value.values.join(' ') + ') ';
+        }.bind(this));
+        this.tCacheStrings = this.tCacheStrings.trim();
+    },
+
+    buildTransformationCacheIfNotExists:function () {
+        if (!this.hasTransformationCache()) {
+            this.buildTransformationCache();
+        }
+    },
+
+    buildTransformationCache:function () {
+
+
+        this.tCache = {};
+        var keys = this.getTransformationKeys();
+
+        for (var i = 0; i < keys.length; i++) {
+            var values = this.getTransformationValues(keys[i]);
+            this.tCache[keys[i]] = {
+                values:values,
+                readable:this.getValidReturn(keys[i], values)
+            };
+        }
+    },
+
+    getValidReturn:function (transformation, values) {
+        var ret = {};
+        switch (transformation) {
+            case 'skewX':
+            case 'skewY':
+                ret = values[0];
+                break;
+            case 'rotate':
+                ret.degrees = values[0];
+                ret.cx = values[1] ? values[1] : 0;
+                ret.cy = values[2] ? values[2] : 0;
+                break;
+            default:
+                ret.x = parseFloat(values[0]);
+                ret.y = values[1] ? parseFloat(values[1]) : ret.x;
+
+        }
+        return ret;
+    },
+
+    getTransformationValues:function (key) {
+        var ret = [];
+        key = key.toLowerCase();
+        var t = (this.get('transform') || '').toLowerCase();
+        var pos = t.indexOf(key);
+        if (pos >= 0) {
+            t = t.substr(pos);
+            var start = t.indexOf('(') + 1;
+            var end = t.indexOf(')');
+            var tr = t.substring(start, end);
+            tr = tr.replace(/,/g, ' ');
+            tr = tr.replace(/\s+/g, ' ');
+            return tr.split(/[,\s]/g);
+        }
+        return ret;
+    },
+
+    getTransformationKeys:function () {
+        var ret = [];
+        var t = this.get('transform') || '';
+
+        var tokens = t.split(/\(/g);
+        for (var i = 0; i < tokens.length-1; i++) {
+            ret.push(tokens[i].replace(/[^a-z]/gi, ''));
+        }
+        return ret;
+    },
+
+    updateTransformationCache:function (transformation, value) {
+        value = value.toString();
+        if (isNaN(value)) {
+            value = value.replace(/,/g, ' ');
+            value = value.replace(/\s+/g, ' ');
+        }
+        var values = value.split(/\s/g);
+        this.tCache[transformation] = {
+            values:values,
+            readable:this.getValidReturn(transformation, values)
+        };
+        this.tCacheString = undefined;
+    },
+
+    hasTransformationCache:function (id) {
+        return this.tCache[id] !== undefined;
+    },
+
+    commitTranslation: function () {
         this.mat._translate[0] = this.mat.translate[0];
         this.mat._translate[1] = this.mat.translate[1];
     },
 
-    translate: function (x, y) {
-        this.mat.translate = [x + this.mat._translate[0],y + this.mat._translate[1]];
-        this.updateMatrix();
-    },
-
     getTranslate: function () {
-        return this.mat.translate || [this.mat._translate[0],this.mat._translate[1]];
+        return this._getMatrix().getTranslate();
     },
 
     /**
@@ -272,7 +418,7 @@ ludo.canvas.Node = new Class({
      * @memberof ludo.canvas.Node.prototype
      */
     text: function (text) {
-        ludo.svg.text(this.el, text);
+        this.el.textContent = text;
     },
     /**
      Adds a new child DOM node
@@ -294,17 +440,17 @@ ludo.canvas.Node = new Class({
     },
 
     css: function (key, value) {
-        if ($.type(key) == "string") {
-            ludo.svg.css(this.el, key, value);
-        } else {
-            this.setStyles(key);
+        if(arguments.length == 1 && jQuery.type(key) == 'string'){
+            return this.el.style[String.camelCase(key)];
         }
-    },
-
-    setStyles: function (styles) {
-        $.each(styles, function (key, value) {
-            ludo.svg.css(this.el, key, value);
-        }.bind(this));
+        else if(arguments.length == 1){
+            var el = this.el;
+            $.each(key, function(attr, val){
+                el.style[String.camelCase(attr)] = val;
+            });
+        }else{
+            this.el.style[String.camelCase(key)] = value;
+        }
     },
 
     /**
@@ -314,7 +460,19 @@ ludo.canvas.Node = new Class({
      * @memberof ludo.canvas.Node.prototype
      */
     addClass: function (className) {
-        ludo.svg.addClass(this.el, className);
+        if(!this.hasClass(className)){
+            this.classNameCache.push(className);
+            this.updateNodeClassNameById();
+        }
+        var cls = this.el.getAttribute('class');
+        if(cls){
+            cls = cls.split(/\s/g);
+            if(cls.indexOf(className)>=0)return;
+            cls.push(className);
+            this.set('class', cls.join(' '));
+        }else{
+            this.set('class', className);
+        }
     },
     /**
      Returns true if svg node has given css class name
@@ -327,9 +485,18 @@ ludo.canvas.Node = new Class({
      node.addClass('myClass');
      alert(node.hasClass('myClass'));
      */
-    hasClass: function (className) {
-        return ludo.svg.hasClass(this.el, className);
+    hasClass:function(className){
+        if(!this.classNameCache){
+            var cls = this.el.getAttribute('class');
+            if(cls){
+                this.classNameCache = cls.split(/\s/g);
+            }else{
+                this.classNameCache = [];
+            }
+        }
+        return this.classNameCache.indexOf(className)>=0;
     },
+
     /**
      Remove css class name from css Node
      @function removeClass
@@ -341,8 +508,16 @@ ludo.canvas.Node = new Class({
      node.addClass('secondClass');
      node.removeClass('myClass');
      */
-    removeClass: function (className) {
-        ludo.svg.removeClass(this.el, className);
+    removeClass:function(className){
+        if(this.hasClass(className)){
+            var id = this._attr['id'];
+            this.classNameCache.erase(className);
+            this.updateNodeClassNameById();
+        }
+    },
+
+    updateNodeClassNameById:function(){
+        this.set('class', this.classNameCache.join(' '));
     },
 
     getId: function () {
@@ -352,6 +527,45 @@ ludo.canvas.Node = new Class({
     getUrl: function () {
         return 'url(#' + this.id + ')';
     },
+
+    position: function () {
+        var bbox = this.getBBox();
+
+        if (this.tagName == 'g') {
+            if(this._matrix != undefined){
+                var translate = this._matrix.getTranslate();
+                return {
+                    left: translate[0],
+                    top: translate[1]
+                }
+            }else{
+                return { left:0, top:0 };
+            }
+
+        }
+
+        return {
+            left: bbox.x + this.mat.translate[0],
+            top: bbox.y + this.mat.translate[1]
+        }
+    },
+
+    offset: function () {
+        var pos = this.position();
+
+        var p = this.parentNode;
+        while (p && p.tagName != 'svg') {
+            var parentPos = p.position();
+            pos.left += parentPos.left;
+            pos.top += parentPos.top;
+            p = p.parentNode;
+        }
+
+        return pos;
+
+
+    },
+
     /**
      * Returns bounding box of el as an object with x,y, width and height.
      * @function getBBox
@@ -359,7 +573,104 @@ ludo.canvas.Node = new Class({
      * @memberof ludo.canvas.Node.prototype
      */
     getBBox: function () {
-        return this.el.getBBox();
+
+        if (this.tagName == 'g') {
+            return this.el.getBBox();
+        }
+        if (this._bbox == undefined || this.dirty) {
+            var attr = this._attr;
+
+            switch (this.tagName) {
+                case 'rect':
+                    this._bbox = {
+                        x: attr.x,
+                        y: attr.y,
+                        width: attr.width,
+                        height: attr.height
+                    };
+                    break;
+                case 'circle':
+                    this._bbox = {
+                        x: attr.cx - attr.r,
+                        y: attr.cy - attr.r,
+                        width: attr.r * 2,
+                        height: attr.r * 2
+                    };
+                    break;
+                case 'ellipse':
+                    this._bbox = {
+                        x: attr.cx - attr.rx,
+                        y: attr.cy - attr.ry,
+                        width: attr.rx * 2,
+                        height: attr.ry * 2
+                    };
+                    break;
+                case 'path':
+                    this._setBBoxOfPath('d');
+                    break;
+                case 'polyline':
+                case 'polygon':
+                    this._setBBoxOfPath('points');
+                    break;
+                default:
+                    this._bbox = {x: 0, y: 0, width: 0, height: 0};
+
+
+            }
+        }
+
+        return this._bbox;
+    },
+
+    _setBBoxOfPath:function(property){
+        var p = this._attr[property];
+        p = p.replace(/,/g, ' ');
+        p = p.replace(/([a-z])/g, '$1 ');
+        p = p.replace(/\s+/g, ' ');
+
+        if(property == 'd'){
+
+            if(this.el.getBoundingClientRect != undefined){
+                var r = this.el.getBoundingClientRect();
+                if(r != undefined){
+                    this._bbox = {
+                        x: r.left, y: r.top,
+                        width: r.width,
+                        height: r.height
+                    };
+                    return;
+                }
+            }
+        }
+
+        p = p.replace(/[^0-9\.\s]/g, ' ')
+        p = p.replace(/\s+/g, ' ');
+
+
+        p = p.trim();
+        var points = p.split(/\s/g);
+        var minX, minY, maxX, maxY;
+        for (var i = 0; i < points.length; i += 2) {
+            var x = parseInt(points[i]);
+            var y = parseInt(points[i + 1]);
+
+            if (minX == undefined || x < minX)minX = x;
+            if (maxX == undefined || x > maxX)maxX = x;
+            if (minY == undefined || y < minY)minY = y;
+            if (maxY == undefined || y > maxY)maxY = y;
+        }
+
+        this._bbox = {
+            x: minX, y: minY,
+            width: maxX - minX,
+            height: maxY - minY
+        };
+
+
+        console.log(p);
+
+        console.log( this._bbox );
+
     },
 
     /**
@@ -397,15 +708,39 @@ ludo.canvas.Node = new Class({
         return this.el.viewPortElement;
     },
 
+    getRotate:function(){
+        return this._getMatrix().getRotation();
+    },
+
     scale: function (x, y) {
         this.mat.scale = [x, y];
         this.updateMatrix();
         // ludo.svg.scale(this.el, width, height);
     },
 
-    rotate: function (rotation, x, y) {
+    setRotate:function(rotation, x, y){
+        this._getMatrix().setRotation(rotation, x,y);
+    },
 
-        ludo.svg[x !== undefined ? 'rotateAround' : 'rotate'](this.el, rotation, x, y);
+    rotate: function (rotation, x, y) {
+        this._getMatrix().rotate(rotation, x,y);
+    },
+
+    setTranslate:function(x,y){
+        this._getMatrix().setTranslate(x,y);
+    },
+    
+    translate: function (x, y) {
+        this._getMatrix().translate(x,y);
+
+    },
+
+    _matrix:undefined,
+    _getMatrix:function(){
+        if(this._matrix == undefined){
+            this._matrix = new ludo.canvas.Matrix(this);
+        }
+        return this._matrix;
     },
 
 
@@ -413,6 +748,7 @@ ludo.canvas.Node = new Class({
 
         var m = this.getMatrix();
 
+        console.log(m);
         /**
          *  this.mat = {
             translate: undefined,
@@ -423,14 +759,28 @@ ludo.canvas.Node = new Class({
         };
 
          */
-        if(this.mat.translate)m = m.translate(this.mat.translate[0], this.mat.translate[1]);
-        if(this.mat.scale)m = m.scale(this.mat.scale[0], this.mat.scale[1]);
+        if (this.mat.translate)m = m.translate(this.mat.translate[0], this.mat.translate[1]);
+        if (this.mat.scale)m = m.scale(this.mat.scale[0], this.mat.scale[1]);
 
-        ludo.svg.getTransformObject(this.el).setMatrix(m);
+        this.getTransformObject().setMatrix(m);
+    },
+
+    getTransformObject:function(){
+        if(this.el.transform.baseVal.numberOfItems ==0){
+            var owner;
+            if(this.el.ownerSVGElement){
+                owner = this.el.ownerSVGElement;
+            }else{
+                owner = document.createElementNS("http://www.w3.org/2000/svg", 'svg');
+            }
+            var t = owner.createSVGTransform();
+            this.el.transform.baseVal.appendItem(t);
+        }
+        return this.el.transform.baseVal.getItem(0);
     },
 
     empty: function () {
-        ludo.svg.empty(this.getEl());
+        this.el.textContent = '';
     },
 
     _curtain: undefined,
@@ -467,12 +817,20 @@ ludo.canvas.Node = new Class({
         return this._animation;
     },
 
-    toFront: function () {
-        ludo.svg.toFront(this.getEl());
+    toFront:function () {
+        if (Browser['ie'])this._toFront.delay(20, this); else this._toFront();
     },
 
-    toBack: function () {
-        ludo.svg.toBack(this.getEl());
+    _toFront:function () {
+        this.el.parentNode.appendChild(this.el);
+    },
+
+    toBack:function () {
+        if (Browser['ie']) this._toBack.delay(20, this); else this._toBack();
+    },
+
+    _toBack:function (el) {
+        this.el.parentNode.insertBefore(this.el, this.el.parentNode.firstChild);
     },
 
     matrix: undefined,

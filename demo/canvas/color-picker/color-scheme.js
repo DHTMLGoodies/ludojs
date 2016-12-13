@@ -42,7 +42,6 @@ ludo.colorPicker.ColorScheme = new Class({
 	},
 
 	boxClick:function(e){
-		console.log($(e.target).attr("title"));
 		this.fireEvent('setColor', $(e.target).attr("title"));
 	},
 

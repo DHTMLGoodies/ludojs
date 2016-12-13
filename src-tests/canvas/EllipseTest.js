@@ -30,11 +30,11 @@ TestCase("EllipseTest", {
 		ellipse.translate(100, 120);
 
 		// when
-		var pos = ellipse.getPosition();
+		var pos = ellipse.position();
 
 		// then
-		assertEquals(500 - 250 + 100, pos.x);
-		assertEquals(425 - 200 + 120, pos.y);
+		assertEquals(500 - 250 + 100, pos.left);
+		assertEquals(425 - 200 + 120, pos.top);
 
 		// when
 		var size = ellipse.getSize();

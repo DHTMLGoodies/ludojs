@@ -79,6 +79,7 @@ ludo.colorPicker.HueBar = new Class({
 	},
 
 	dragSlider:function(pos){
+		
 		pos.y -= this.currentBarHeight * (this.topMargin / 100);
 		pos.y += this.getSliderHeight() / 2;
 		var hue = 360 - (pos.y * 360 / (this.currentBarHeight * this.barHeight / 100));

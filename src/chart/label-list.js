@@ -70,7 +70,7 @@ ludo.chart.LabelList = new Class({
         var offset = (size.x - totalWidth) / 2;
         var offsetY = (size.y - this.fragments[0].getSize().y) / 2;
         for(i=0;i<this.fragments.length;i++){
-            this.fragments[i].node().translate(left[i] + offset, offsetY);
+            this.fragments[i].node().setTranslate(left[i] + offset, offsetY);
         }
     },
 
@@ -88,7 +88,7 @@ ludo.chart.LabelList = new Class({
         var offset = (size.y - totalHeight) / 2;
 
         for(i=0;i<this.fragments.length;i++){
-            this.fragments[i].node().translate(2, top[i] + offset);
+            this.fragments[i].node().setTranslate(2, top[i] + offset);
         }
     },
 

@@ -31,6 +31,8 @@ ludo.canvas.Canvas = new Class({
 		if(this.title)this.createTitle();
 		if(this.description)this.createDescription();
 
+		ludo.canvas.setGlobalMatrix(this.node.el);
+
 		if (this.renderTo !== undefined) {
 			if(this.renderTo.getBody !== undefined){
 				this.view = this.renderTo;

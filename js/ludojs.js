@@ -1,7 +1,7 @@
-/* Generated Sat Dec 10 18:43:06 CET 2016 */
+/* Generated Tue Dec 13 12:16:00 CET 2016 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.269
+ludoJS - Javascript framework, 1.1.270
 Copyright (C) 2012-2016  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -4690,16 +4690,11 @@ ludo.canvas.Engine = new Class({
      */
     cache:{},
 
+	positions:{},
+
 	attr:function(el, key, value){
 		if(arguments.length == 2)return this.get(el, key);
-		if (key.substring(0, 6) == "xlink:") {
-			if(value['id']!==undefined)value = '#' + value.getId();
-			el.setAttributeNS("http://www.w3.org/1999/xlink", key.substring(6), value);
-		} else {
-			if(value['id']!==undefined)value = 'url(#' + value.getId() + ')';
-			el.setAttribute(key, value);
-		}
-
+		this.set(el, key, value);
 	},
 
 	/*
@@ -4747,37 +4742,6 @@ ludo.canvas.Engine = new Class({
 		}
 	},
 
-	text:function (el, text) {
-		el.textContent = text;
-	},
-
-	show:function (el) {
-        this.css(el, 'display','');
-	},
-
-	hide:function (el) {
-        this.css(el, 'display','none');
-	},
-
-	moveTo:function (el, x, y) {
-		el.setAttribute('x', x);
-		el.setAttribute('y', y);
-	},
-
-	toBack:function (el) {
-		if (Browser['ie']) this._toBack.delay(20, this, el); else this._toBack(el);
-	},
-	_toBack:function (el) {
-		el.parentNode.insertBefore(el, el.parentNode.firstChild);
-	},
-
-	toFront:function (el) {
-		if (Browser['ie'])this._toFront.delay(20, this, el); else this._toFront(el);
-	},
-	_toFront:function (el) {
-		el.parentNode.appendChild(el);
-	},
-
     /*
      * Apply rotation to element
      * @function rotate
@@ -4809,14 +4773,7 @@ ludo.canvas.Engine = new Class({
 		this.getTransformObject(el);
 		el.transform.baseVal.getItem(0).setSkewY(degrees);
 	},
-
-	getCenter:function (el) {
-		return {
-			x:this.getWidth(el) / 2,
-			y:this.getHeight(el) / 2
-		}
-	},
-
+	
 	translate:function(el, x, y){
 		this.setTransformation(el, 'translate', x + ' ' + y);
 	},
@@ -4828,25 +4785,6 @@ ludo.canvas.Engine = new Class({
 	scale:function(el, width, height){
 		height = height || width;
 		this.setTransformation(el, 'scale', width + ' ' + height);
-	},
-
-	applyTransformationToMatrix:function(el, transformation, x, y){
-		var t = this.getTransformObject(el);
-		var c = this.getCurrentCache(el, transformation);
-		if(y!==undefined){
-			t.setMatrix(t.matrix[transformation](x - c[0], y - c[1]));
-		}else{
-			t.setMatrix(t.matrix[transformation](x - c[0]));
-		}
-		if(this.cache[el.id]=== undefined)this.cache[el.id] = {};
-		if(transformation === 'scale'){
-			x--;y--;
-		}
-		this.cache[el.id][transformation] = [x,y];
-	},
-
-	setTransformMatrix:function(el, a,b,c,d,e,f){
-		this.getTransformObject(el).setMatrix(a,b,c,d,e,f);
 	},
 
 	getTransformObject:function(el){
@@ -5021,60 +4959,7 @@ ludo.canvas.Engine = new Class({
 		}
 		this.tCacheStrings[id] = this.tCacheStrings[id].trim();
 	},
-
-	css:function(el, key, value){
-		if(arguments.length < 3){
-			$.each(key, function(attr, val){
-				el.style[String.camelCase(attr)] = val;
-			});
-		}else{
-			el.style[String.camelCase(key)] = value;
-
-		}
-	},
-
-	addClass:function(el, className){
-		if(!this.hasClass(el, className)){
-			var id = this.getId(el);
-			this.classNameCache[id].push(className);
-			this.updateNodeClassNameById(el, id);
-		}
-		var cls = el.getAttribute('class');
-		if(cls){
-			cls = cls.split(/\s/g);
-			if(cls.indexOf(className)>=0)return;
-            cls.push(className);
-            this.set(el, 'class', cls.join(' '));
-		}else{
-			this.set(el, 'class', className);
-		}
-	},
-
-	hasClass:function(el, className){
-		var id = this.getId(el);
-		if(!this.classNameCache[id]){
-			var cls = el.getAttribute('class');
-			if(cls){
-				this.classNameCache[id] = cls.split(/\s/g);
-			}else{
-				this.classNameCache[id] = [];
-			}
-		}
-		return this.classNameCache[id].indexOf(className)>=0;
-	},
-
-	removeClass:function(el, className){
-		if(this.hasClass(el, className)){
-			var id = this.getId(el);
-			this.classNameCache[id].erase(className);
-			this.updateNodeClassNameById(el, id);
-		}
-	},
-
-	updateNodeClassNameById:function(el, id){
-		this.set(el, 'class', this.classNameCache[id].join(' '));
-	},
-
+	
 	getId:function(el){
 		if(!el.getAttribute('id')){
 			el.setAttribute('id', String.uniqueID());
@@ -5091,35 +4976,11 @@ ludo.canvas.Engine = new Class({
 
 	empty:function(el){
 		el.textContent = '';
-	},
-
-    /*
-     * Degrees to radians method
-     * @function toRad
-     * @param degrees
-     * @return {Number}
-     */
-    toRadians:function(degrees){
-        return degrees * Math.PI / 180;
-    },
-
-    getPointAtDegreeOffset:function(from, degrees, size){
-        var radians = ludo.svg.toRadians(degrees);
-		return this.getPointAtRadianOffset(from, radians, size);
-    },
-
-	getPointAtRadianOffset:function(from, radians, size){
-		var x = Math.cos(radians);
-		var y = Math.sin(radians);
-
-		return {
-			x : from.x + (size * x),
-			y : from.y + (size * y)
-		}
 	}
-
 });
 ludo.svg = new ludo.canvas.Engine();
+
+
 
 /* ../ludojs/src/canvas/node.js */
 /**
@@ -5151,18 +5012,45 @@ ludo.canvas.Node = new Class({
 
     mat: undefined,
 
+    dirty: undefined,
+
+    _bbox: undefined,
+
+    _attr: undefined,
+
+    classNameCache:[],
+
+    /*
+     * Transformation cache
+     * @property tCache
+     * @type {Object}
+     * @private
+     */
+    tCache:{},
+    /*
+     * Internal cache
+     * @property {Object} tCacheStrings
+     * @private
+     */
+    tCacheStrings:undefined,
+    
+
+
     initialize: function (tagName, properties, text) {
+
+        this._attr = {};
+
         properties = properties || {};
         properties.id = this.id = properties.id || 'ludo-svg-node-' + String.uniqueID();
         if (tagName !== undefined)this.tagName = tagName;
         this.createNode(this.tagName, properties);
         if (text !== undefined) {
-            ludo.svg.text(this.el, text);
+            this.text(text);
         }
 
         this.mat = {
-            translate: undefined,
-            _translate: [0,0],
+            translate: [0, 0],
+            _translate: [0, 0],
             rotate: undefined,
             scale: undefined,
             skewX: undefined,
@@ -5175,6 +5063,7 @@ ludo.canvas.Node = new Class({
             if (typeof el == "string") {
                 el = this.createNode(el);
             }
+            var that = this;
             Object.each(properties, function (value, key) {
                 if (value['getUrl'] !== undefined) {
                     value = value.getUrl();
@@ -5186,6 +5075,7 @@ ludo.canvas.Node = new Class({
                     el.setAttributeNS("http://www.w3.org/1999/xlink", key.substring(6), value);
                 } else {
                     el.setAttribute(key, value);
+                    that._attr[key] = value;
                 }
             });
         } else {
@@ -5261,7 +5151,7 @@ ludo.canvas.Node = new Class({
                 pageX: (e.pageX != null) ? e.pageX : e.clientX + document.scrollLeft,
                 pageY: (e.pageY != null) ? e.pageY : e.clientY + document.scrollTop,
                 clientX: e.offsetX != undefined ? e.offsetX : (e.pageX != null) ? e.pageX - window.pageXOffset : e.clientX,
-                clientY: e.offsetY != undefined ? e.offsetY: (e.pageY != null) ? e.pageY - window.pageYOffset : e.clientY,
+                clientY: e.offsetY != undefined ? e.offsetY : (e.pageY != null) ? e.pageY - window.pageYOffset : e.clientY,
                 event: e
             };
             if (fn) {
@@ -5289,11 +5179,15 @@ ludo.canvas.Node = new Class({
     },
 
     show: function () {
-        ludo.svg.show(this.el);
+        this.css('display','');
     },
 
     hide: function () {
-        ludo.svg.hide(this.el);
+        this.css('display','none');
+    },
+
+    isHidden: function () {
+        return this.css('display') == 'none';
     },
 
     setProperties: function (p) {
@@ -5305,12 +5199,21 @@ ludo.canvas.Node = new Class({
     },
 
     attr: function (key, value) {
-        if(arguments.length == 1)return this.get(key);
-        ludo.svg.attr(this.el, key, value);
+        if (arguments.length == 1)return this.get(key);
+        this.set(key, value);
     },
 
     set: function (key, value) {
-        ludo.svg.set(this.el, key, value);
+        this._attr[key] = value;
+        this.dirty = true;
+
+        if (key.substring(0, 6) == "xlink:") {
+            if(value['id']!==undefined)value = '#' + value.getId();
+            this.el.setAttributeNS("http://www.w3.org/1999/xlink", key.substring(6), value);
+        } else {
+            if(value['id']!==undefined)value = 'url(#' + value.getId() + ')';
+            this.el.setAttribute(key, value);
+        }
     },
 
     remove: function (key) {
@@ -5318,7 +5221,11 @@ ludo.canvas.Node = new Class({
     },
 
     get: function (key) {
-        return ludo.svg.get(this.el, key);
+        if (key.substring(0, 6) == "xlink:") {
+            return this.el.getAttributeNS("http://www.w3.org/1999/xlink", key.substring(6));
+        } else {
+            return this.el.getAttribute(key);
+        }
     },
 
     getTransformation: function (key) {
@@ -5326,21 +5233,121 @@ ludo.canvas.Node = new Class({
     },
 
     setTransformation: function (key, value) {
-        ludo.svg.setTransformation(this.el, key, value);
+        var id = this._attr['id'];
+        this.buildTransformationCacheIfNotExists();
+        this.updateTransformationCache(key, value);
+        this.set('transform', this.getTransformationAsText());
     },
 
-    commitTranslation:function(){
+    getTransformationAsText:function(id){
+        if(this.tCacheStrings === undefined && this.tCache!==undefined){
+            this.buildCacheString();
+        }
+        return this.tCacheStrings;
+    },
+
+    buildCacheString:function(){
+        this.tCacheStrings= '';
+        jQuery.each(this.tCache, function(key, value){
+            this.tCacheStrings+= key + '(' + value.values.join(' ') + ') ';
+        }.bind(this));
+        this.tCacheStrings = this.tCacheStrings.trim();
+    },
+
+    buildTransformationCacheIfNotExists:function () {
+        if (!this.hasTransformationCache()) {
+            this.buildTransformationCache();
+        }
+    },
+
+    buildTransformationCache:function () {
+
+
+        this.tCache = {};
+        var keys = this.getTransformationKeys();
+
+        for (var i = 0; i < keys.length; i++) {
+            var values = this.getTransformationValues(keys[i]);
+            this.tCache[keys[i]] = {
+                values:values,
+                readable:this.getValidReturn(keys[i], values)
+            };
+        }
+    },
+
+    getValidReturn:function (transformation, values) {
+        var ret = {};
+        switch (transformation) {
+            case 'skewX':
+            case 'skewY':
+                ret = values[0];
+                break;
+            case 'rotate':
+                ret.degrees = values[0];
+                ret.cx = values[1] ? values[1] : 0;
+                ret.cy = values[2] ? values[2] : 0;
+                break;
+            default:
+                ret.x = parseFloat(values[0]);
+                ret.y = values[1] ? parseFloat(values[1]) : ret.x;
+
+        }
+        return ret;
+    },
+
+    getTransformationValues:function (key) {
+        var ret = [];
+        key = key.toLowerCase();
+        var t = (this.get('transform') || '').toLowerCase();
+        var pos = t.indexOf(key);
+        if (pos >= 0) {
+            t = t.substr(pos);
+            var start = t.indexOf('(') + 1;
+            var end = t.indexOf(')');
+            var tr = t.substring(start, end);
+            tr = tr.replace(/,/g, ' ');
+            tr = tr.replace(/\s+/g, ' ');
+            return tr.split(/[,\s]/g);
+        }
+        return ret;
+    },
+
+    getTransformationKeys:function () {
+        var ret = [];
+        var t = this.get('transform') || '';
+
+        var tokens = t.split(/\(/g);
+        for (var i = 0; i < tokens.length-1; i++) {
+            ret.push(tokens[i].replace(/[^a-z]/gi, ''));
+        }
+        return ret;
+    },
+
+    updateTransformationCache:function (transformation, value) {
+        value = value.toString();
+        if (isNaN(value)) {
+            value = value.replace(/,/g, ' ');
+            value = value.replace(/\s+/g, ' ');
+        }
+        var values = value.split(/\s/g);
+        this.tCache[transformation] = {
+            values:values,
+            readable:this.getValidReturn(transformation, values)
+        };
+        this.tCacheString = undefined;
+    },
+
+    hasTransformationCache:function (id) {
+        return this.tCache[id] !== undefined;
+    },
+
+    commitTranslation: function () {
         this.mat._translate[0] = this.mat.translate[0];
         this.mat._translate[1] = this.mat.translate[1];
     },
 
-    translate: function (x, y) {
-        this.mat.translate = [x + this.mat._translate[0],y + this.mat._translate[1]];
-        this.updateMatrix();
-    },
-
     getTranslate: function () {
-        return this.mat.translate || [this.mat._translate[0],this.mat._translate[1]];
+        return this._getMatrix().getTranslate();
     },
 
     /**
@@ -5396,7 +5403,7 @@ ludo.canvas.Node = new Class({
      * @memberof ludo.canvas.Node.prototype
      */
     text: function (text) {
-        ludo.svg.text(this.el, text);
+        this.el.textContent = text;
     },
     /**
      Adds a new child DOM node
@@ -5418,17 +5425,17 @@ ludo.canvas.Node = new Class({
     },
 
     css: function (key, value) {
-        if ($.type(key) == "string") {
-            ludo.svg.css(this.el, key, value);
-        } else {
-            this.setStyles(key);
+        if(arguments.length == 1 && jQuery.type(key) == 'string'){
+            return this.el.style[String.camelCase(key)];
         }
-    },
-
-    setStyles: function (styles) {
-        $.each(styles, function (key, value) {
-            ludo.svg.css(this.el, key, value);
-        }.bind(this));
+        else if(arguments.length == 1){
+            var el = this.el;
+            $.each(key, function(attr, val){
+                el.style[String.camelCase(attr)] = val;
+            });
+        }else{
+            this.el.style[String.camelCase(key)] = value;
+        }
     },
 
     /**
@@ -5438,7 +5445,19 @@ ludo.canvas.Node = new Class({
      * @memberof ludo.canvas.Node.prototype
      */
     addClass: function (className) {
-        ludo.svg.addClass(this.el, className);
+        if(!this.hasClass(className)){
+            this.classNameCache.push(className);
+            this.updateNodeClassNameById();
+        }
+        var cls = this.el.getAttribute('class');
+        if(cls){
+            cls = cls.split(/\s/g);
+            if(cls.indexOf(className)>=0)return;
+            cls.push(className);
+            this.set('class', cls.join(' '));
+        }else{
+            this.set('class', className);
+        }
     },
     /**
      Returns true if svg node has given css class name
@@ -5451,9 +5470,18 @@ ludo.canvas.Node = new Class({
      node.addClass('myClass');
      alert(node.hasClass('myClass'));
      */
-    hasClass: function (className) {
-        return ludo.svg.hasClass(this.el, className);
+    hasClass:function(className){
+        if(!this.classNameCache){
+            var cls = this.el.getAttribute('class');
+            if(cls){
+                this.classNameCache = cls.split(/\s/g);
+            }else{
+                this.classNameCache = [];
+            }
+        }
+        return this.classNameCache.indexOf(className)>=0;
     },
+
     /**
      Remove css class name from css Node
      @function removeClass
@@ -5465,8 +5493,16 @@ ludo.canvas.Node = new Class({
      node.addClass('secondClass');
      node.removeClass('myClass');
      */
-    removeClass: function (className) {
-        ludo.svg.removeClass(this.el, className);
+    removeClass:function(className){
+        if(this.hasClass(className)){
+            var id = this._attr['id'];
+            this.classNameCache.erase(className);
+            this.updateNodeClassNameById();
+        }
+    },
+
+    updateNodeClassNameById:function(){
+        this.set('class', this.classNameCache.join(' '));
     },
 
     getId: function () {
@@ -5476,6 +5512,45 @@ ludo.canvas.Node = new Class({
     getUrl: function () {
         return 'url(#' + this.id + ')';
     },
+
+    position: function () {
+        var bbox = this.getBBox();
+
+        if (this.tagName == 'g') {
+            if(this._matrix != undefined){
+                var translate = this._matrix.getTranslate();
+                return {
+                    left: translate[0],
+                    top: translate[1]
+                }
+            }else{
+                return { left:0, top:0 };
+            }
+
+        }
+
+        return {
+            left: bbox.x + this.mat.translate[0],
+            top: bbox.y + this.mat.translate[1]
+        }
+    },
+
+    offset: function () {
+        var pos = this.position();
+
+        var p = this.parentNode;
+        while (p && p.tagName != 'svg') {
+            var parentPos = p.position();
+            pos.left += parentPos.left;
+            pos.top += parentPos.top;
+            p = p.parentNode;
+        }
+
+        return pos;
+
+
+    },
+
     /**
      * Returns bounding box of el as an object with x,y, width and height.
      * @function getBBox
@@ -5483,7 +5558,104 @@ ludo.canvas.Node = new Class({
      * @memberof ludo.canvas.Node.prototype
      */
     getBBox: function () {
-        return this.el.getBBox();
+
+        if (this.tagName == 'g') {
+            return this.el.getBBox();
+        }
+        if (this._bbox == undefined || this.dirty) {
+            var attr = this._attr;
+
+            switch (this.tagName) {
+                case 'rect':
+                    this._bbox = {
+                        x: attr.x,
+                        y: attr.y,
+                        width: attr.width,
+                        height: attr.height
+                    };
+                    break;
+                case 'circle':
+                    this._bbox = {
+                        x: attr.cx - attr.r,
+                        y: attr.cy - attr.r,
+                        width: attr.r * 2,
+                        height: attr.r * 2
+                    };
+                    break;
+                case 'ellipse':
+                    this._bbox = {
+                        x: attr.cx - attr.rx,
+                        y: attr.cy - attr.ry,
+                        width: attr.rx * 2,
+                        height: attr.ry * 2
+                    };
+                    break;
+                case 'path':
+                    this._setBBoxOfPath('d');
+                    break;
+                case 'polyline':
+                case 'polygon':
+                    this._setBBoxOfPath('points');
+                    break;
+                default:
+                    this._bbox = {x: 0, y: 0, width: 0, height: 0};
+
+
+            }
+        }
+
+        return this._bbox;
+    },
+
+    _setBBoxOfPath:function(property){
+        var p = this._attr[property];
+        p = p.replace(/,/g, ' ');
+        p = p.replace(/([a-z])/g, '$1 ');
+        p = p.replace(/\s+/g, ' ');
+
+        if(property == 'd'){
+
+            if(this.el.getBoundingClientRect != undefined){
+                var r = this.el.getBoundingClientRect();
+                if(r != undefined){
+                    this._bbox = {
+                        x: r.left, y: r.top,
+                        width: r.width,
+                        height: r.height
+                    };
+                    return;
+                }
+            }
+        }
+
+        p = p.replace(/[^0-9\.\s]/g, ' ')
+        p = p.replace(/\s+/g, ' ');
+
+
+        p = p.trim();
+        var points = p.split(/\s/g);
+        var minX, minY, maxX, maxY;
+        for (var i = 0; i < points.length; i += 2) {
+            var x = parseInt(points[i]);
+            var y = parseInt(points[i + 1]);
+
+            if (minX == undefined || x < minX)minX = x;
+            if (maxX == undefined || x > maxX)maxX = x;
+            if (minY == undefined || y < minY)minY = y;
+            if (maxY == undefined || y > maxY)maxY = y;
+        }
+
+        this._bbox = {
+            x: minX, y: minY,
+            width: maxX - minX,
+            height: maxY - minY
+        };
+
+
+        console.log(p);
+
+        console.log( this._bbox );
+
     },
 
     /**
@@ -5521,15 +5693,39 @@ ludo.canvas.Node = new Class({
         return this.el.viewPortElement;
     },
 
+    getRotate:function(){
+        return this._getMatrix().getRotation();
+    },
+
     scale: function (x, y) {
         this.mat.scale = [x, y];
         this.updateMatrix();
         // ludo.svg.scale(this.el, width, height);
     },
 
-    rotate: function (rotation, x, y) {
+    setRotate:function(rotation, x, y){
+        this._getMatrix().setRotation(rotation, x,y);
+    },
 
-        ludo.svg[x !== undefined ? 'rotateAround' : 'rotate'](this.el, rotation, x, y);
+    rotate: function (rotation, x, y) {
+        this._getMatrix().rotate(rotation, x,y);
+    },
+
+    setTranslate:function(x,y){
+        this._getMatrix().setTranslate(x,y);
+    },
+    
+    translate: function (x, y) {
+        this._getMatrix().translate(x,y);
+
+    },
+
+    _matrix:undefined,
+    _getMatrix:function(){
+        if(this._matrix == undefined){
+            this._matrix = new ludo.canvas.Matrix(this);
+        }
+        return this._matrix;
     },
 
 
@@ -5537,6 +5733,7 @@ ludo.canvas.Node = new Class({
 
         var m = this.getMatrix();
 
+        console.log(m);
         /**
          *  this.mat = {
             translate: undefined,
@@ -5547,14 +5744,28 @@ ludo.canvas.Node = new Class({
         };
 
          */
-        if(this.mat.translate)m = m.translate(this.mat.translate[0], this.mat.translate[1]);
-        if(this.mat.scale)m = m.scale(this.mat.scale[0], this.mat.scale[1]);
+        if (this.mat.translate)m = m.translate(this.mat.translate[0], this.mat.translate[1]);
+        if (this.mat.scale)m = m.scale(this.mat.scale[0], this.mat.scale[1]);
 
-        ludo.svg.getTransformObject(this.el).setMatrix(m);
+        this.getTransformObject().setMatrix(m);
+    },
+
+    getTransformObject:function(){
+        if(this.el.transform.baseVal.numberOfItems ==0){
+            var owner;
+            if(this.el.ownerSVGElement){
+                owner = this.el.ownerSVGElement;
+            }else{
+                owner = document.createElementNS("http://www.w3.org/2000/svg", 'svg');
+            }
+            var t = owner.createSVGTransform();
+            this.el.transform.baseVal.appendItem(t);
+        }
+        return this.el.transform.baseVal.getItem(0);
     },
 
     empty: function () {
-        ludo.svg.empty(this.getEl());
+        this.el.textContent = '';
     },
 
     _curtain: undefined,
@@ -5591,12 +5802,20 @@ ludo.canvas.Node = new Class({
         return this._animation;
     },
 
-    toFront: function () {
-        ludo.svg.toFront(this.getEl());
+    toFront:function () {
+        if (Browser['ie'])this._toFront.delay(20, this); else this._toFront();
     },
 
-    toBack: function () {
-        ludo.svg.toBack(this.getEl());
+    _toFront:function () {
+        this.el.parentNode.appendChild(this.el);
+    },
+
+    toBack:function () {
+        if (Browser['ie']) this._toBack.delay(20, this); else this._toBack();
+    },
+
+    _toBack:function (el) {
+        this.el.parentNode.insertBefore(this.el, this.el.parentNode.firstChild);
     },
 
     matrix: undefined,
@@ -5862,6 +6081,8 @@ ludo.canvas.Canvas = new Class({
 
 		if(this.title)this.createTitle();
 		if(this.description)this.createDescription();
+
+		ludo.canvas.setGlobalMatrix(this.node.el);
 
 		if (this.renderTo !== undefined) {
 			if(this.renderTo.getBody !== undefined){
@@ -10098,9 +10319,7 @@ ludo.chart.Fragment = new Class({
         this.setConfigParams(config, ['record','parentComponent']);
         this.map = {};
         this.createNodes();
-
         this.ds = this.parentComponent.ds;
-
     },
 
     createNodes:function(){
@@ -10113,7 +10332,7 @@ ludo.chart.Fragment = new Class({
 
     ludoEvents:function(){
         this.parent();
-        this.getParent().dataProvider().addEvent('update', this.update.bind(this));
+        this.getParent().getDataSource().addEvent('update', this.update.bind(this));
 
         var ds = this.getDataSource();
 
@@ -10125,8 +10344,6 @@ ludo.chart.Fragment = new Class({
             ds.on('enter' + record.__uid, this.enter.bind(this));
             ds.on('leave' + record.__uid, this.leave.bind(this));
         }.bind(this));
-
-
     },
 
     getParent:function(){
@@ -10181,11 +10398,19 @@ ludo.chart.Fragment = new Class({
 
     dsEvent:function(e, method){
         var id = ludo.svg.attr(e.target, "ludojs-svg-id");
+        var rec = this.record;
         if(id){
             this.ds[method + 'Id'](id);
+            rec = this.ds.byId(id);
         }else{
             this.ds[method](this.record);
         }
+
+        this.parentComponent.onFragmentAction(method, this, rec, this.map[rec.id], e);
+    },
+    
+    getEventNode:function(e){
+        return e.target;
     },
 
     createStyle:function(styles){
@@ -10412,10 +10637,10 @@ ludo.chart.Base = new Class({
     },
 
     create: function () {
-
         this.renderBackgroundItems();
 
-        if (this.dataProvider().hasData()) {
+        if (this.getDataSource().hasData()) {
+            this.dataRendered = true;
             this.createFragments();
         }
         this.render();
@@ -10478,11 +10703,21 @@ ludo.chart.Base = new Class({
         this.parent(coordinates);
 
         if (!this.dataRendered && this.getDataSource().hasData()) {
+
             this.create();
-            this.dataRendered = true;
         }
+    },
+    
+    onFragmentAction:function(action, fragment, record, node, event){
+        this.fireEvent(action, [fragment, record, node, event]);
+    },
 
+    getTooltipPosition:function(){
+        return 'left';
+    },
 
+    tooltipAtMouseCursor:function(){
+        return false;
     }
 });/* ../ludojs/src/chart/pie-slice.js */
 ludo.chart.PieSlice = new Class({
@@ -10490,7 +10725,7 @@ ludo.chart.PieSlice = new Class({
 
     createNodes:function(){
         var style = this.createStyle(this.getSliceStyle());
-        this.createNode('path', { "class":style });
+        this.createNode('path', { "class":style }, undefined, this.record);
     },
     getSliceStyle:function () {
         return {
@@ -10516,7 +10751,7 @@ ludo.chart.PieSlice = new Class({
 
         if(config.angle > Math.PI * 2) config.angle -=  Math.PI;
 
-        var point1 = ludo.svg.getPointAtRadianOffset(center, config.angle, config.radius);
+        var point1 = ludo.geometry.getPointDistanceFrom(center.x, center.y, config.angle, config.radius);
 
         path.push('L ' + point1.x + ' ' + point1.y);
         path.push('M ' + point1.x + ' ' + point1.y);
@@ -10526,7 +10761,7 @@ ludo.chart.PieSlice = new Class({
         path.push(config.radians > Math.PI ? '1' : '0');
         path.push('1');
 
-        var point2 = ludo.svg.getPointAtRadianOffset(center, config.angle + config.radians, config.radius);
+        var point2 = ludo.geometry.getPointDistanceFrom(center.x, center.y, config.angle + config.radians, config.radius);
         path.push(point2.x + ' ' + point2.y);
         path.push('L ' + center.x + ' ' + center.y);
 
@@ -10558,7 +10793,7 @@ ludo.chart.PieSlice = new Class({
 
     centerOffset:function(offset){
         var angle = this.record.__angle + (this.record.__radians / 2 );
-        return ludo.svg.getPointAtRadianOffset({ x:0, y: 0}, angle, offset);
+        return ludo.geometry.getPointDistanceFrom(0,0, angle, offset);
     },
 
     enter:function(){
@@ -10824,6 +11059,13 @@ ludo.chart.Pie = new Class({
         for(var i=0;i< r.length;i++){
             this.fragments[i].set(radius, r[i].__angle, r[i].__radians);
         }
+    },
+
+    tooltipAtMouseCursor:function(){
+        return true;
+    },
+    getTooltipPosition:function(){
+        return 'above';
     }
 });/* ../ludojs/src/chart/label-list.js */
 /**
@@ -10898,7 +11140,7 @@ ludo.chart.LabelList = new Class({
         var offset = (size.x - totalWidth) / 2;
         var offsetY = (size.y - this.fragments[0].getSize().y) / 2;
         for(i=0;i<this.fragments.length;i++){
-            this.fragments[i].node().translate(left[i] + offset, offsetY);
+            this.fragments[i].node().setTranslate(left[i] + offset, offsetY);
         }
     },
 
@@ -10916,7 +11158,7 @@ ludo.chart.LabelList = new Class({
         var offset = (size.y - totalHeight) / 2;
 
         for(i=0;i<this.fragments.length;i++){
-            this.fragments[i].node().translate(2, top[i] + offset);
+            this.fragments[i].node().setTranslate(2, top[i] + offset);
         }
     },
 
@@ -10948,13 +11190,13 @@ ludo.chart.LabelListItem = new Class({
         g.append(this.colorBox);
 
 
-        this.colorBox.setStyles(this.getBoxStyles());
+        this.colorBox.css(this.getBoxStyles());
 
 
         this.textNode = new ludo.canvas.Text(this.getDataSource().textOf(this.record, this), {
             x:colorBoxCoords.x + colorBoxCoords.width + 3, y : this.getYForText()
         });
-        this.textNode.setStyles(this.getTextStyles());
+        this.textNode.css(this.getTextStyles());
         g.append(this.textNode);
         this.setSize();
 
@@ -11018,18 +11260,18 @@ ludo.chart.LabelListItem = new Class({
     },
 
     enter:function () {
-        this.textNode.setStyles(this.getTextStylesOver());
-        this.colorBox.setStyles(this.getBoxStylesOver());
+        this.textNode.css(this.getTextStylesOver());
+        this.colorBox.css(this.getBoxStylesOver());
     },
 
     leave:function () {
-        this.textNode.setStyles(this.getTextStyles());
-        this.colorBox.setStyles(this.getBoxStyles());
+        this.textNode.css(this.getTextStyles());
+        this.colorBox.css(this.getBoxStyles());
     }
 });/* ../ludojs/src/chart/add-on.js */
 ludo.chart.AddOn = new Class({
     Extends: ludo.Core,
-
+    
     __construct:function(config){
         this.parent(config);
         this.parentComponent = config.parentComponent;
@@ -11131,9 +11373,9 @@ ludo.chart.PieSliceHighlighted = new Class({
 
         if (this.getParent().getDataSource().isSelected(record)) {
             var t = f.nodes[0].getTranslate();
-            this.node.translate(t[0], t[1]);
+            this.node.setTranslate(t[0], t[1]);
         }else{
-            this.node.translate(0,0);
+            this.node.setTranslate(0,0);
         }
         this.node.show();
     },
@@ -11652,6 +11894,7 @@ ludo.chart.Tooltip = new Class({
 		x:0,y:0
 	},
 
+	arrowSize:5,
 	/*
 	 * Styling of box where the tooltip is rendered
 	 * @config {Object} boxStyles
@@ -11666,37 +11909,54 @@ ludo.chart.Tooltip = new Class({
 	 */
 	textStyles:{},
 
+	record:undefined,
+
+	_autoLeave:undefined,
+
 	__construct:function (config) {
 		this.parent(config);
 		this.setConfigParams(config, ['tpl','boxStyles','textStyles']);
 		this.createDOM();
 
+		var p = this.getParent();
+
+		p.on('enter', this.show.bind(this));
+		p.on('leave', this.autoHide.bind(this));
+		
+		if(p.tooltipAtMouseCursor()){
+			this.getParent().getNode().on('mousemove', this.move.bind(this));
+		}else{
+
+		}
+
+		/*
+
 		this.getParent().addEvents({
 			'mouseenter':this.show.bind(this),
 			'mouseleave':this.hide.bind(this)
 		});
-
-
-
+		
 		this.getParent().getNode().on("mouseenter", this.show.bind(this));
 		this.getParent().getNode().on("mouseleave", this.hide.bind(this));
 		this.getParent().getNode().on('mousemove', this.move.bind(this));
+		*/
 	},
 
 	createDOM:function () {
 		this.node = new ludo.canvas.Node('g');
-		this.getParent().append(this.node);
+		this.getParent().getCanvas().append(this.node);
 		this.node.hide();
 		this.node.toFront.delay(50, this.node);
 
-		this.rect = new ludo.canvas.Rect({ x:0, y:0, rx:2, ry:2 });
+		this.rect = new ludo.canvas.Path();
 		this.rect.css(this.getBoxStyling());
+		this.rect.set('stroke-linejoin', 'round');
 
 		this.node.append(this.rect);
 
 		this.textBox = new ludo.canvas.TextBox();
 		this.node.append(this.textBox);
-		this.textBox.getNode().translate(4, 0);
+		this.textBox.getNode().setTranslate(4, 0);
 		this.textBox.getNode().css(this.getTextStyles());
 	},
 
@@ -11715,34 +11975,168 @@ ludo.chart.Tooltip = new Class({
 		return ret;
 	},
 	
-	show:function (e) {
-		var rec = this.getRecord();
+	show:function (fragment, rec, node, event) {
+
+		this._autoLeave = false;
+		if(rec == this.record)return;
+
+		this.record = rec;
 
 		if(rec == undefined){
 			this.hide();
 			return;
 		}
 
+		var animate = !this.node.isHidden();
+		this.node.set('fill-opacity', 1);
+		this.rect.set('fill-opacity', 1);
 		this.node.show();
 		this.node.toFront();
 		this.shown = true;
 
-		this.offset = this.getParent().getParent().getBody().offset();
-
 		this.textBox.setText(this.getParsedHtml());
 
-		this.rect.css('stroke', this.getRecord().__color);
+		this.rect.css('stroke', this.record.__color);
 
-		this.size = this.textBox.getNode().getSize();
-		this.size.x +=7;
-		this.size.y +=10;
-		this.rect.set('width', this.size.x);
-		this.rect.set('height', this.size.y);
+		this.updateRect(fragment, xy);
 
 		this.rect.show();
 
-		this.move(e);
+		var followMouse = this.getParent().tooltipAtMouseCursor();
+		var xy;
+		if(followMouse){
+			this.move(event);
+		}else {
+			xy = this.getXY(fragment, node);
+
+			if(animate){
+				this.node.animate({
+					'translate' : [xy.x, xy.y]
+				}, 100)
+			}else{
+				this.node.setTranslate(xy.x, xy.y);
+			}
+		}
+
+
 	},
+
+	autoHide:function(){
+		this._autoLeave = true;
+		this.autoHideAfterDelay.delay(2000,this);
+	},
+
+	autoHideAfterDelay:function(){
+		if(!this._autoLeave)return;
+		this.node.hide();
+		this.record = undefined;
+	},
+
+	updateRect:function(fragment, pos){
+		this.size = this.textBox.getNode().getSize();
+		this.size.x +=7;
+		this.size.y +=10;
+
+
+		var middle = this.size.x / 2;
+		var middleY = this.size.y / 2;
+
+
+		var p;
+		var tp = this.getParent().getTooltipPosition();
+
+		switch(tp){
+			case 'above':
+				p = [
+					this.size.x, 0,
+					this.size.x, this.size.y,
+					middle + this.arrowSize, this.size.y,
+					middle, this.size.y + this.arrowSize,
+					middle - this.arrowSize, this.size.y,
+					0, this.size.y,
+					0, 0];
+				break;
+			case 'left':
+				p = [
+					this.size.x, 0,
+					this.size.x, middleY - this.arrowSize,
+					this.size.x + this.arrowSize, middleY,
+					this.size.x, middleY + this.arrowSize,
+					this.size.x, this.size.y,
+					0, this.size.y,
+					0,0
+				];
+
+
+				break;
+			case 'right':
+				p = [
+					this.size.x, 0,
+					this.size.x, this.size.y,
+					0, this.size.y,
+					0, middleY + this.arrowSize,
+					0 - this.arrowSize, middleY,
+					0, middleY - this.arrowSize,
+					0,0
+				];
+				break;
+
+			default:
+				p = [
+					this.size.x, 0,
+					this.size.x, this.size.y,
+					0, this.size.y,
+					0,0
+				];
+		}
+
+
+
+		this.rect.setPath('M 0 0 L ' + p.join(' ') + " Z");
+
+	},
+
+	getXY:function(fragment, target){
+
+		var bounds = target.getBBox();
+
+		var size = this.rect.getBBox();
+
+		var pos = target.offset();
+
+		var tp = this.getParent().getTooltipPosition();
+
+		switch(tp){
+			case 'left':
+				return {
+					x: pos.left - size.width,
+					y: pos.top + bounds.height / 2 - size.height / 2
+				};
+
+			case 'right':
+				return {
+					x: pos.left + bounds.width + this.arrowSize,
+					y: pos.top + bounds.height / 2 - size.height / 2
+				};
+
+
+			default:
+				return {
+					x: pos.left + bounds.width / 2 - size.width / 2,
+					y: pos.top - size.height
+				};
+
+
+
+
+		}
+
+	},
+
+	move:function(event){
+		this.node.setTranslate(event.clientX - (this.size.x / 2), event.clientY - this.size.y - 15);
+	},
+
 
 	hide:function () {
 		this.node.hide();
@@ -11750,25 +12144,30 @@ ludo.chart.Tooltip = new Class({
 		this.shown = false;
 	},
 
-	move:function (e) {
-		if (this.shown) {
-			var pos = {
-				x:e.pageX - this.offset.left - this.size.x - 10,
-				y:e.pageY - this.offset.top - this.size.y - 5
-			};
-			if(pos.x < 0)pos.x += (this.size.x + 20);
-			if(pos.y < 0)pos.y += (this.size.y + 10);
-			this.node.translate(pos.x, pos.y);
-		}
-	},
-
 	getParsedHtml:function () {
-		var rec = this.getRecord();
-		return this.getDataSource().textOf(rec, this);
+		var text = this.getDataSource().textOf(this.record, this);;
+
+		jQuery.each(this.record, function(key, value){
+			var r = new RegExp("{record\." + key + "}", "g");
+			text = text.replace(r, value);
+		});
+
+		if(this.record.__parent && text.indexOf('parent.') >= 0){
+
+			var p = this.getDataSource().byId(this.record.__parent);
+			jQuery.each(p, function(key, value){
+				var r = new RegExp("{parent\." + key + "}", "g");
+				text = text.replace(r, value);
+			});
+
+		}
+
+		text = text.replace(/{.*?}/g, '');
+		return text
 	},
 
 	getRecord:function () {
-		return this.getDataSource().getHighlighted();
+		return this.record;
 	}
 
 });
@@ -11844,7 +12243,7 @@ ludo.chart.Text = new Class({
         var bbox = this.n.getBBox();
         var size = this.getSize();
 
-        this.n.rotate(0,0,0);
+        this.n.setRotate(0,0,0);
         var x = 0;
         var y = 0;
 
@@ -11867,11 +12266,13 @@ ludo.chart.Text = new Class({
             y = size.y * this.anchor[1] + (bbox.height / 2);
         }
 
-        this.n.setTransformation('translate', x + ' ' + y);
+
 
         if(this.rotate){
-            this.n.rotate(this.rotate, x, y);
+            this.n.setRotate(this.rotate, x, y);
         }
+
+        this.n.setTranslate(x,y);
 
     },
 
@@ -12298,6 +12699,10 @@ ludo.chart.Bar = new Class({
                     break;
             }
         }.bind(this));
+    },
+
+    getTooltipPosition:function(){
+        return this.orientation == 'horizontal' ? 'above': 'right';
     }
 
 });/* ../ludojs/src/chart/bar-item.js */
@@ -12358,12 +12763,11 @@ ludo.chart.BarItem = new Class({
                 n.attr('height', h);
                 n.attr('y', this.area.height - curY - h);
                 if(!stacked)curX += curWidth;else curY+= h;
+
             } else {
                 n.attr('width', this.area.width * r);
                 if(!stacked)curY += curHeight;else curX += this.area.width * r;
             }
-
-
         }
 
     },
@@ -12436,8 +12840,6 @@ ludo.chart.BarItem = new Class({
             }
 
         }
-
-
     }
 
 
@@ -15821,7 +16223,7 @@ ludo.layout.Canvas = new Class({
 	positionChild:function (child, property, value) {
 		child[property] = value;
 		this.currentTranslate[property] = value;
-		child['node'].translate(this.currentTranslate.left, this.currentTranslate.top);
+		child['node'].setTranslate(this.currentTranslate.left, this.currentTranslate.top);
 	},
 
 	currentTranslate:{
@@ -35203,14 +35605,15 @@ ludo.canvas.Stop = new Class({
 */
 ludo.canvas.Drag = new Class({
 	Extends:ludo.effect.Drag,
-
+	
 	ludoEvents:function () {
 		this.parent();
 		this.addEvent('before', this.setStartTranslate.bind(this));
 	},
 
 	setStartTranslate:function (node) {
-		this.dragProcess.startTranslate = node.el.getTransformation('translate') || {x:0, y:0};
+
+		this.dragProcess.startTranslate = this.getPositionOf(node.el);
 	},
 
 	/**
@@ -35261,30 +35664,16 @@ ludo.canvas.Drag = new Class({
 
 		return id;
 	},
-    transformationExists:false,
     startDrag:function(e){
         this.parent(e);
-
-        this.transformationExists = this.hasTransformation();
-    },
-
-    hasTransformation:function(){
-        //
-        var translate = this.els[this.dragProcess.dragged].el.get('transform');
-        if(translate){
-            var items = translate.split(/\s([a-z])/g);
-            if(items.length > 1)return true;
-            if(items.length === 0)return false;
-            return items[0].split(/\(/g)[0] !== 'translate';
-        }
-        return false;
+        this.dragProcess.startTranslate = this.els[this.dragProcess.dragged].el.getTranslate();
     },
 
 	move:function (pos) {
 		var node = this.els[this.dragProcess.dragged].el;
 		var translate = {
-			x:this.dragProcess.startTranslate.x,
-			y:this.dragProcess.startTranslate.y
+			x:this.dragProcess.startTranslate[0],
+			y:this.dragProcess.startTranslate[1]
 		};
 
 
@@ -35296,29 +35685,22 @@ ludo.canvas.Drag = new Class({
 			translate.y = pos.y;
 			this.dragProcess.currentY = pos.y;
 		}
-		// return node.translate(translate.x, translate.y);
-        if(this.transformationExists){
-			node.translate(translate.x, translate.y);
-            node.setTransformation('translate', translate.x + ' ' + translate.y);
-        }else{
-            node.el.setAttribute('transform', ['translate(', translate.x, ' ', translate.y, ')'].join('') );
-            this.lastTranslate = translate;
-        }
+		node.translate(translate.x, translate.y);
+
+
 	},
 
     endDrag:function(e){
         if (this.dragProcess.active) {
-            if(this.lastTranslate !== undefined){
-                var node = this.els[this.dragProcess.dragged].el;
-                node.setTransformation('translate', this.lastTranslate.x + ' ' + this.lastTranslate.y);
-            }
             this.parent(e);
         }
     },
 
 	getPositionOf:function (node) {
-		var ret =  node.getTransformation('translate') || {x:0, y:0}
-		return { left:ret.x, top: ret.y };
+		var t = node.getTranslate();
+		return {
+			left : t[0], top: t[1]
+		};
 	}
 });/* ../ludojs/src/canvas/event-manager.js */
 ludo.canvas.EventManager = new Class({
@@ -35966,10 +36348,10 @@ ludo.canvas.Filter = new Class({
 		var o = this.mergeTagsOrder;
 		for(var i=0;i<o.length;i++){
 			if(this.mergeTags[o[i]] !== undefined){
-				ludo.svg.toFront(this.mergeTags[o[i]].el);
+				this.mergeTags[o[i]].toFront();
 			}
 		}
-		ludo.svg.toFront(m.el);
+		m.toFront();
 	},
 	mergeTag:undefined,
 	getMergeTag:function () {
@@ -36186,36 +36568,43 @@ ludo.canvas.Curtain = new Class({
 
 });/* ../ludojs/src/canvas/animation.js */
 /**
- * Created by alfmagne1 on 07/12/2016.
+ * Animation of SVG DOM Nodes
+ * @class ludo.canvas.Animation
+ * @example
+ * circle.animate({
+ *      cx : 100, cy: 100, r: 10
+ * }, 200,
+ * ludo.canvas.easing.outCubic,
+ * function(){ console.log('finished') }
+ * );
  */
 ludo.canvas.Animation = new Class({
 
-    animationRate:13,
-    color:undefined,
+    animationRate: 13,
+    color: undefined,
 
-    colorUtil:function(){
-        if(this.color == undefined)this.color = new ludo.color.Color();
+    colorUtil: function () {
+        if (this.color == undefined)this.color = new ludo.color.Color();
         return this.color;
     },
 
-    fn:function(node, properties, duration, easing, complete, stepFn){
-        
+    fn: function (node, properties, duration, easing, complete, stepFn) {
+
         easing = easing || ludo.canvas.easing.inSine;
 
         var changes = {};
         var start = {};
         var special = {};
 
-        jQuery.each(properties, function(key, value){
+        jQuery.each(properties, function (key, value) {
             special[key] = true;
 
-            switch(key){
+            switch (key) {
                 case 'fill':
                 case 'stroke':
                 case 'stop-color':
                     var clr = node.attr(key) || '#000000';
-                    if(clr.length == 4) clr = clr + clr.substr(1);
-                    console.log(clr);
+                    if (clr.length == 4) clr = clr + clr.substr(1);
                     var u = this.colorUtil();
                     var rgb = u.rgbColors(clr);
                     var to = u.rgbColors(value);
@@ -36225,10 +36614,9 @@ ludo.canvas.Animation = new Class({
                     ];
                     start[key] = rgb;
 
-                    console.log(changes);
-                    console.log(start);
                     break;
 
+                
 
                 case 'translate':
                     var cur = node.getTranslate();
@@ -36238,6 +36626,12 @@ ludo.canvas.Animation = new Class({
                     start[key] = cur;
                     break;
                 case 'rotate':
+                    var c = node.getRotate();
+                    changes[key] = [
+                        value[0] - c[0], value[1], value[2]
+                    ];
+                    start[key] = c[0];
+                    break;
                 case 'scale':
 
                 default:
@@ -36251,37 +36645,48 @@ ludo.canvas.Animation = new Class({
 
         var r = this.animationRate;
 
-        var fn = function(t,d){
+        var fn = function (t, d) {
             var vals;
-            if(t<d){
-                fn.delay(r, fn, [t+1,d]);
+            if (t < d) {
+                fn.delay(r, fn, [t + 1, d]);
             }
-            var delta = t>=d ? 1 : easing(t, 0, 1, d);
-            jQuery.each(changes, function(key, value){
+            var delta = t >= d ? 1 : easing(t, 0, 1, d);
+            var x,y;
+            jQuery.each(changes, function (key, value) {
 
-                if(special[key]){
-                    switch(key){
+                if (special[key]) {
+                    switch (key) {
                         case 'stroke':
                         case 'fill':
                         case 'stop-color':
                             var r = start[key].r + (delta * value[0]);
                             var g = start[key].g + (delta * value[1]);
                             var b = start[key].b + (delta * value[2]);
-                            node.set(key, 'rgb(' + r + ',' + g +',' + b+ ')');
+                            node.set(key, 'rgb(' + r + ',' + g + ',' + b + ')');
                             break;
                         case 'translate':
-                            var x = start[key][0] + (delta * value[0]);
-                            var y = start[key][1] + (delta * value[1]);
-                            node.translate(x,y);
+                            x = start[key][0] + (delta * value[0]);
+                            y = start[key][1] + (delta * value[1]);
+                            node.setTranslate(x, y);
+                            break;
+                        case 'rotate':
+                            var d = start[key] + (delta * value[0]);
+
+                            x = value[1];
+                            y = value[2];
+                            d = d % 360;
+
+                            node.setRotate(d,x,y);
+
                             break;
 
 
                     }
-                } else{
+                } else {
                     var val = start[key] + (value * delta);
-                    ludo.svg.set(node.el, key, val);
-                    if(stepFn != undefined){
-                        if(vals == undefined){
+                    node.set(key, val);
+                    if (stepFn != undefined) {
+                        if (vals == undefined) {
                             vals = {};
                         }
                         vals[key] = val;
@@ -36290,11 +36695,11 @@ ludo.canvas.Animation = new Class({
 
             });
 
-            if(stepFn != undefined){
-                stepFn.call(node, node, vals, delta, t/d);
+            if (stepFn != undefined) {
+                stepFn.call(node, node, vals, delta, t / d);
             }
-            if(t>=d){
-                if(complete!=undefined){
+            if (t >= d) {
+                if (complete != undefined) {
                     complete.call(node);
                 }
             }
@@ -36393,7 +36798,7 @@ ludo.canvas.easing = {
         t -= 2;
         return c / 2 * (t * t * t * t * t + 2) + b;
     },
-    
+
     inSine: function (t, b, c, d) {
         return -c * Math.cos(t / d * (Math.PI / 2)) + c + b;
     },
@@ -36449,7 +36854,161 @@ ludo.canvas.easing = {
         if (t < 1) return -c / 2 * (Math.sqrt(1 - t * t) - 1) + b;
         t -= 2;
         return c / 2 * (Math.sqrt(1 - t * t) + 1) + b;
+    },
+
+    /**
+     *
+     * @param t current time
+     * @param b start value
+     * @param c change in value
+     * @param d duration
+     * @returns {*}
+     */
+
+    bounce: function (t, b, c, d) {
+        var progress = t / d;
+        progress = 1 - ludo.canvas.easing._bounce(1 - progress);
+        return c * progress + b;
+    },
+
+    bow:function(t,b,c,d){
+        var progress = ludo.canvas.easing._back(t/d, 1.5);
+        return c * progress + b;
+    },
+
+    elastic:function(t,b,c,d){
+        var progress = ludo.canvas.easing._elastic(t/d, 1.5);
+        return c * progress + b;
+    },
+
+    _elastic:function(progress, x){
+        return Math.pow(2, 10 * (progress-1)) * Math.cos(20*Math.PI*x/3*progress)
+
+    },
+
+    _bounce: function (progress) {
+        for(var a = 0, b = 1; 1; a += b, b /= 2) {
+            if (progress >= (7 - 4 * a) / 11) {
+                return -Math.pow((11 - 6 * a - 11 * progress) / 4, 2) + Math.pow(b, 2);
+            }
+        }
+    },
+
+    _back:function(progress, x){
+        return Math.pow(progress, 2) * ((x + 1) * progress - x)
+
     }
 
 
+};
+/* ../ludojs/src/canvas/matrix.js */
+ludo.canvas.Matrix = new Class({
+
+    a: 1, b: 0, c: 0, d: 1, e: 0, f: 0,
+
+    _translateCommited: [0, 0],
+
+    matrix: undefined,
+
+    node: undefined,
+
+    transformationObject: undefined,
+
+    currentRotation:undefined,
+
+    initialize: function (node) {
+        this.node = node;
+        this.currentRotation = [0,0,0];
+    },
+
+    getTranslate: function () {
+        var m = this.getSVGMatrix();
+        return [m.e, m.f];
+    },
+
+    setTranslate:function(x,y){
+        this.matrix = this.getSVGMatrix();
+        this.matrix.e = x;
+        this.matrix.f = y;
+        this.update();
+    },
+
+    translate: function (x, y) {
+        this.matrix = this.getSVGMatrix().translate(x,y);
+        this.update();
+    },
+
+    getRotation:function(){
+        return this.currentRotation;
+    },
+
+    setRotation:function(degrees, x, y){
+        if(this.currentRotation != undefined){
+            var a = this.currentRotation;
+            this.rotate(-a[0], a[1], a[2]);
+        }
+        this.rotate(degrees, x, y);
+    },
+
+    rotate: function (degrees, x, y) {
+
+        if(degrees < 0)degrees+=360;
+        degrees  = degrees % 360;
+        
+        this.getSVGMatrix();
+
+        if (arguments.length > 1) {
+            this.matrix = this.matrix.translate(x, y);
+        }
+
+        this.matrix = this.matrix.rotate(degrees, x, y);
+
+        if (arguments.length > 1) {
+            this.matrix = this.matrix.translate(-x, -y);
+        }
+
+        this.currentRotation[0] = degrees;
+        this.currentRotation[1] = x;
+        this.currentRotation[2] = y;
+        this.update();
+    },
+
+    commitTranslate: function () {
+        this._translateCommited[0] = this.e;
+        this._translateCommited[1] = this.f;
+    },
+
+    getSVGMatrix: function () {
+        if (this.matrix == undefined) {
+            this.matrix = ludo.canvas.SVGElement.createSVGMatrix();
+        }
+        return this.matrix;
+    },
+
+    update: function () {
+        this.getTransformObject().setMatrix(this.matrix);
+    },
+
+    getTransformObject: function () {
+        if (this.transformationObject == undefined) {
+            if (this.node.el.transform.baseVal.numberOfItems == 0) {
+                var owner;
+                if (this.node.el.ownerSVGElement) {
+                    owner = this.node.el.ownerSVGElement;
+                } else {
+                    owner = document.createElementNS("http://www.w3.org/2000/svg", 'svg');
+                }
+                var t = owner.createSVGTransform();
+                this.node.el.transform.baseVal.appendItem(t);
+            }
+            this.transformationObject = this.node.el.transform.baseVal.getItem(0);
+        }
+
+        return this.transformationObject;
+    }
+});
+
+ludo.canvas.setGlobalMatrix = function (canvas) {
+    ludo.canvas.SVGElement = canvas;
+    ludo.canvas.globalMatrix = canvas.createSVGMatrix();
 };

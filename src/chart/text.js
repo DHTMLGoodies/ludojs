@@ -69,7 +69,7 @@ ludo.chart.Text = new Class({
         var bbox = this.n.getBBox();
         var size = this.getSize();
 
-        this.n.rotate(0,0,0);
+        this.n.setRotate(0,0,0);
         var x = 0;
         var y = 0;
 
@@ -92,11 +92,13 @@ ludo.chart.Text = new Class({
             y = size.y * this.anchor[1] + (bbox.height / 2);
         }
 
-        this.n.setTransformation('translate', x + ' ' + y);
+
 
         if(this.rotate){
-            this.n.rotate(this.rotate, x, y);
+            this.n.setRotate(this.rotate, x, y);
         }
+
+        this.n.setTranslate(x,y);
 
     },
 

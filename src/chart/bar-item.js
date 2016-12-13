@@ -55,12 +55,11 @@ ludo.chart.BarItem = new Class({
                 n.attr('height', h);
                 n.attr('y', this.area.height - curY - h);
                 if(!stacked)curX += curWidth;else curY+= h;
+
             } else {
                 n.attr('width', this.area.width * r);
                 if(!stacked)curY += curHeight;else curX += this.area.width * r;
             }
-
-
         }
 
     },
@@ -133,8 +132,6 @@ ludo.chart.BarItem = new Class({
             }
 
         }
-
-
     }
 
 

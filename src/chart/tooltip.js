@@ -12,6 +12,7 @@ ludo.chart.Tooltip = new Class({
 		x:0,y:0
 	},
 
+	arrowSize:5,
 	/*
 	 * Styling of box where the tooltip is rendered
 	 * @config {Object} boxStyles
@@ -26,37 +27,54 @@ ludo.chart.Tooltip = new Class({
 	 */
 	textStyles:{},
 
+	record:undefined,
+
+	_autoLeave:undefined,
+
 	__construct:function (config) {
 		this.parent(config);
 		this.setConfigParams(config, ['tpl','boxStyles','textStyles']);
 		this.createDOM();
 
+		var p = this.getParent();
+
+		p.on('enter', this.show.bind(this));
+		p.on('leave', this.autoHide.bind(this));
+		
+		if(p.tooltipAtMouseCursor()){
+			this.getParent().getNode().on('mousemove', this.move.bind(this));
+		}else{
+
+		}
+
+		/*
+
 		this.getParent().addEvents({
 			'mouseenter':this.show.bind(this),
 			'mouseleave':this.hide.bind(this)
 		});
-
-
-
+		
 		this.getParent().getNode().on("mouseenter", this.show.bind(this));
 		this.getParent().getNode().on("mouseleave", this.hide.bind(this));
 		this.getParent().getNode().on('mousemove', this.move.bind(this));
+		*/
 	},
 
 	createDOM:function () {
 		this.node = new ludo.canvas.Node('g');
-		this.getParent().append(this.node);
+		this.getParent().getCanvas().append(this.node);
 		this.node.hide();
 		this.node.toFront.delay(50, this.node);
 
-		this.rect = new ludo.canvas.Rect({ x:0, y:0, rx:2, ry:2 });
+		this.rect = new ludo.canvas.Path();
 		this.rect.css(this.getBoxStyling());
+		this.rect.set('stroke-linejoin', 'round');
 
 		this.node.append(this.rect);
 
 		this.textBox = new ludo.canvas.TextBox();
 		this.node.append(this.textBox);
-		this.textBox.getNode().translate(4, 0);
+		this.textBox.getNode().setTranslate(4, 0);
 		this.textBox.getNode().css(this.getTextStyles());
 	},
 
@@ -75,34 +93,168 @@ ludo.chart.Tooltip = new Class({
 		return ret;
 	},
 	
-	show:function (e) {
-		var rec = this.getRecord();
+	show:function (fragment, rec, node, event) {
+
+		this._autoLeave = false;
+		if(rec == this.record)return;
+
+		this.record = rec;
 
 		if(rec == undefined){
 			this.hide();
 			return;
 		}
 
+		var animate = !this.node.isHidden();
+		this.node.set('fill-opacity', 1);
+		this.rect.set('fill-opacity', 1);
 		this.node.show();
 		this.node.toFront();
 		this.shown = true;
 
-		this.offset = this.getParent().getParent().getBody().offset();
-
 		this.textBox.setText(this.getParsedHtml());
 
-		this.rect.css('stroke', this.getRecord().__color);
+		this.rect.css('stroke', this.record.__color);
 
-		this.size = this.textBox.getNode().getSize();
-		this.size.x +=7;
-		this.size.y +=10;
-		this.rect.set('width', this.size.x);
-		this.rect.set('height', this.size.y);
+		this.updateRect(fragment, xy);
 
 		this.rect.show();
 
-		this.move(e);
+		var followMouse = this.getParent().tooltipAtMouseCursor();
+		var xy;
+		if(followMouse){
+			this.move(event);
+		}else {
+			xy = this.getXY(fragment, node);
+
+			if(animate){
+				this.node.animate({
+					'translate' : [xy.x, xy.y]
+				}, 100)
+			}else{
+				this.node.setTranslate(xy.x, xy.y);
+			}
+		}
+
+
 	},
+
+	autoHide:function(){
+		this._autoLeave = true;
+		this.autoHideAfterDelay.delay(2000,this);
+	},
+
+	autoHideAfterDelay:function(){
+		if(!this._autoLeave)return;
+		this.node.hide();
+		this.record = undefined;
+	},
+
+	updateRect:function(fragment, pos){
+		this.size = this.textBox.getNode().getSize();
+		this.size.x +=7;
+		this.size.y +=10;
+
+
+		var middle = this.size.x / 2;
+		var middleY = this.size.y / 2;
+
+
+		var p;
+		var tp = this.getParent().getTooltipPosition();
+
+		switch(tp){
+			case 'above':
+				p = [
+					this.size.x, 0,
+					this.size.x, this.size.y,
+					middle + this.arrowSize, this.size.y,
+					middle, this.size.y + this.arrowSize,
+					middle - this.arrowSize, this.size.y,
+					0, this.size.y,
+					0, 0];
+				break;
+			case 'left':
+				p = [
+					this.size.x, 0,
+					this.size.x, middleY - this.arrowSize,
+					this.size.x + this.arrowSize, middleY,
+					this.size.x, middleY + this.arrowSize,
+					this.size.x, this.size.y,
+					0, this.size.y,
+					0,0
+				];
+
+
+				break;
+			case 'right':
+				p = [
+					this.size.x, 0,
+					this.size.x, this.size.y,
+					0, this.size.y,
+					0, middleY + this.arrowSize,
+					0 - this.arrowSize, middleY,
+					0, middleY - this.arrowSize,
+					0,0
+				];
+				break;
+
+			default:
+				p = [
+					this.size.x, 0,
+					this.size.x, this.size.y,
+					0, this.size.y,
+					0,0
+				];
+		}
+
+
+
+		this.rect.setPath('M 0 0 L ' + p.join(' ') + " Z");
+
+	},
+
+	getXY:function(fragment, target){
+
+		var bounds = target.getBBox();
+
+		var size = this.rect.getBBox();
+
+		var pos = target.offset();
+
+		var tp = this.getParent().getTooltipPosition();
+
+		switch(tp){
+			case 'left':
+				return {
+					x: pos.left - size.width,
+					y: pos.top + bounds.height / 2 - size.height / 2
+				};
+
+			case 'right':
+				return {
+					x: pos.left + bounds.width + this.arrowSize,
+					y: pos.top + bounds.height / 2 - size.height / 2
+				};
+
+
+			default:
+				return {
+					x: pos.left + bounds.width / 2 - size.width / 2,
+					y: pos.top - size.height
+				};
+
+
+
+
+		}
+
+	},
+
+	move:function(event){
+		this.node.setTranslate(event.clientX - (this.size.x / 2), event.clientY - this.size.y - 15);
+	},
+
 
 	hide:function () {
 		this.node.hide();
@@ -110,25 +262,30 @@ ludo.chart.Tooltip = new Class({
 		this.shown = false;
 	},
 
-	move:function (e) {
-		if (this.shown) {
-			var pos = {
-				x:e.pageX - this.offset.left - this.size.x - 10,
-				y:e.pageY - this.offset.top - this.size.y - 5
-			};
-			if(pos.x < 0)pos.x += (this.size.x + 20);
-			if(pos.y < 0)pos.y += (this.size.y + 10);
-			this.node.translate(pos.x, pos.y);
-		}
-	},
-
 	getParsedHtml:function () {
-		var rec = this.getRecord();
-		return this.getDataSource().textOf(rec, this);
+		var text = this.getDataSource().textOf(this.record, this);;
+
+		jQuery.each(this.record, function(key, value){
+			var r = new RegExp("{record\." + key + "}", "g");
+			text = text.replace(r, value);
+		});
+
+		if(this.record.__parent && text.indexOf('parent.') >= 0){
+
+			var p = this.getDataSource().byId(this.record.__parent);
+			jQuery.each(p, function(key, value){
+				var r = new RegExp("{parent\." + key + "}", "g");
+				text = text.replace(r, value);
+			});
+
+		}
+
+		text = text.replace(/{.*?}/g, '');
+		return text
 	},
 
 	getRecord:function () {
-		return this.getDataSource().getHighlighted();
+		return this.record;
 	}
 
 });

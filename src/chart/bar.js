@@ -214,6 +214,10 @@ ludo.chart.Bar = new Class({
                     break;
             }
         }.bind(this));
+    },
+
+    getTooltipPosition:function(){
+        return this.orientation == 'horizontal' ? 'above': 'right';
     }
 
 });

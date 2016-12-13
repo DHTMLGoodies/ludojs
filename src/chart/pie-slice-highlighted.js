@@ -86,9 +86,9 @@ ludo.chart.PieSliceHighlighted = new Class({
 
         if (this.getParent().getDataSource().isSelected(record)) {
             var t = f.nodes[0].getTranslate();
-            this.node.translate(t[0], t[1]);
+            this.node.setTranslate(t[0], t[1]);
         }else{
-            this.node.translate(0,0);
+            this.node.setTranslate(0,0);
         }
         this.node.show();
     },
