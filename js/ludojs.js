@@ -1,7 +1,7 @@
-/* Generated Wed Dec 14 13:49:27 CET 2016 */
+/* Generated Wed Dec 14 16:40:31 CET 2016 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.275
+ludoJS - Javascript framework, 1.1.276
 Copyright (C) 2012-2016  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -10023,6 +10023,8 @@ ludo.chart.Fragment = new Class({
 
     area:undefined,
 
+    points:undefined,
+
     __construct:function (config) {
         this.parent(config);
         this.setConfigParams(config, ['record','parentComponent']);
@@ -10030,8 +10032,8 @@ ludo.chart.Fragment = new Class({
             x: 0, y: 0, width: 0, height: 0
         };
         this.map = {};
-        this.createNodes();
         this.ds = this.parentComponent.ds;
+        this.createNodes();
 
 
     },
@@ -10130,7 +10132,6 @@ ludo.chart.Fragment = new Class({
     resize:function(width,height){
         this.area.width = width;
         this.area.height = height;
-        console.log(width,height);
     },
 
     getEventNode:function(e){
@@ -11658,18 +11659,6 @@ ludo.chart.Tooltip = new Class({
         } else {
 
         }
-
-        /*
-
-         this.getParent().addEvents({
-         'mouseenter':this.show.bind(this),
-         'mouseleave':this.hide.bind(this)
-         });
-
-         this.getParent().getNode().on("mouseenter", this.show.bind(this));
-         this.getParent().getNode().on("mouseleave", this.hide.bind(this));
-         this.getParent().getNode().on('mousemove', this.move.bind(this));
-         */
     },
 
     createDOM: function () {
@@ -12585,10 +12574,53 @@ ludo.chart.Line = new Class({
     type:'chart.Line',
 
     lineStyles:undefined,
-    
+
+    currentHighlighted:undefined,
+
+    parentPos:undefined,
+
     __construct:function(config){
         this.parent(config);
         this.setConfigParams(config, ["lineStyles"]);
+
+        this.node.on("mousemove", this.mousemove.bind(this));
+
+
+    },
+
+    mousemove:function(e){
+
+        if(this.parentPos == undefined){
+            this.parentPos = this.node.position();
+        }
+        var closest;
+        var s = new Date().getTime();
+
+        var x = e.clientX - this.parentPos.left;
+        var y = e.clientY - this.parentPos.top;
+
+        var distance = 0;
+        var selected = undefined;
+
+        jQuery.each(this.points, function(record, pos){
+            var xOff = pos[0] - x;
+            xOff*=xOff;
+            distance = ludo.geometry.distanceBetweenPoints(0, y, xOff, pos[1]);
+            if(closest == undefined || distance < closest){
+                closest = distance;
+                selected = record;
+            }
+        });
+
+        if(selected != this.currentHighlighted){
+            if(this.currentHighlighted){
+                this.ds.leaveId(this.currentHighlighted);
+            }
+            this.ds.enterId(selected);
+            this.currentHighlighted = selected;
+        }
+
+        // console.log(new Date().getTime() - s);
     },
 
     resizeElements:function(){
@@ -12621,6 +12653,14 @@ ludo.chart.Line = new Class({
         });
         
         
+    },
+
+    setPoint:function(record, x, y){
+        if(this.points == undefined){
+            this.points = {};
+        }
+
+        this.points[record.id] = [x,y];
     }
 
 });/* ../ludojs/src/chart/line-item.js */
@@ -12645,11 +12685,19 @@ ludo.chart.LineItem = new Class({
         this.dots = [];
 
         var c = this.record.getChildren();
-        jQuery.each(c, function(index, child){
-            var d = new ludo.chart.LineDot(this.record);
-            this.getParent().append(d);
+        for(var i=0;i<c.length;i++){
+            var d = new ludo.chart.LineDot(
+                {
+                    record:c[i],
+                    ds : this.ds,
+                    renderTo: this.getParent(),
+                    parentComponent:this
+                });
             this.dots.push(d);
-        }.bind(this));
+        }
+    },
+
+    dsEvent:function(){
 
     },
 
@@ -12722,8 +12770,13 @@ ludo.chart.LineItem = new Class({
     },
 
     positionDots:function(){
+        var p = this.getParent();
+        var recs = this.record.getChildren();
         jQuery.each(this.dots, function(index, dot){
-            dot.position(this.xPos(index), this.yPos(index));
+            var x = this.xPos(index);
+            var y = this.yPos(index);
+            dot.position(x, y);
+            p.setPoint(recs[index], x, y);
         }.bind(this));
     }
 
@@ -12830,33 +12883,87 @@ ludo.canvas.Path = new Class({
  * Created by alfmagne1 on 14/12/2016.
  */
 ludo.chart.LineDot = new Class({
-    Extends:ludo.canvas.Path,
+    Extend: Events,
     type:'chart.LineDot',
 
     shape:undefined,
     record:undefined,
     size:8,
+    ds:undefined,
 
-    initialize:function(record, properties){
-        this.parent(undefined, properties);
-        this.record = record;
+    node:undefined,
+    
+    nodeHighlight:undefined,
+    renderTo:undefined,
+
+    x:undefined,
+    y:undefined,
+
+    parentComponent:undefined,
+
+    initialize:function(props){
+        this.record = props.record;
         this.shape = 'circle';
+        this.renderTo = props.renderTo;
+        this.parentComponent = props.parentComponent;
+
+        this.node = new ludo.canvas.Path();
 
         switch(this.shape){
             case 'circle':
-                this.attr("stroke-linejoin", "round");
-                this.attr("stroke-linecap", "round");
-                this.attr("stroke-width", this.size);
-                this.css("stroke", this.record.__color);
-                this.css("cursor", "pointer");
+                this.node.attr("stroke-linejoin", "round");
+                this.node.attr("stroke-linecap", "round");
+                this.node.attr("stroke-width", this.size);
+                this.node.css("stroke", this.record.__color);
+                this.node.css("cursor", "pointer");
                 break;
 
         }
 
+        this.renderTo.append(this.node);
+        
+
+
+        this.ds = props.ds;
+
+        this.ds.on("enter" + this.record.__uid, this.enter.bind(this));
+        this.ds.on("leave" + this.record.__uid, this.leave.bind(this));
 
     },
 
+    enter:function(){
+        if(this.nodeHighlight == undefined){
+            this.nodeHighlight = new ludo.canvas.Circle({
+                r : this.size
+            });
+            this.nodeHighlight.css({
+               'stroke-opacity': 0.5,
+                fill:'none',
+                'stroke-width' : 2,
+                stroke: this.record.__color
+
+            });
+
+
+            this.renderTo.append(this.nodeHighlight);
+        }
+        this.nodeHighlight.set("cx", this.x);
+        this.nodeHighlight.set("cy", this.y);
+        this.nodeHighlight.show();
+        
+ 
+
+        this.parentComponent.parentComponent.onFragmentAction('enter', this.parentComponent, this.record, this.nodeHighlight, {});
+        
+    },
+
+    leave:function(){
+        this.nodeHighlight.hide();
+    },
+
+
     position:function(x,y){
+        this.x = x; this.y = y;
         var p;
         switch(this.shape){
             case 'circle':
@@ -12865,8 +12972,16 @@ ludo.chart.LineDot = new Class({
         }
 
         if(p){
-            this.set("d", p);
+            this.node.set("d", p);
         }
+    },
+
+    hide:function(){
+        this.node.hide();
+    },
+
+    show:function(){
+        this.node.show();
     }
 });/* ../ludojs/src/ludo-db/factory.js */
 /**

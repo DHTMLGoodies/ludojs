@@ -6,12 +6,18 @@ require_once("../includes/demo-header.php");
 
 <script type="text/javascript" class="source-code">
 
+    // Static month array
+    var months = ["January","February", "March", "April","May","June","July","August","September","October","November","December"];
 
     var dataSource = new ludo.chart.DataSource({
         url : '../data/climate.json',
         childKey:'monthlyAvg',
         // Return text label for chart data.
         textOf:function(record, caller){
+            if(caller.type == 'chart.Tooltip'){
+                return '<p><b>{parent.city}</b><br>' + months[record.__index] + '<br>Low: {record.low} °C<br>High: {record.high} °C<br>Avg: '
+                    + (record.low + (record.high - record.low)/ 2) + '°C</p>';
+            }
             if(caller.type == 'chart.LabelListItem'){
                 return record.city;
             }
@@ -197,7 +203,17 @@ require_once("../includes/demo-header.php");
                                     }
                                 },
                                 plugins:[
-
+                                    {
+                                        type:'chart.Tooltip',
+                                        textStyles:{
+                                            'font-size':'12px',
+                                            'fill': '#aeb0b0'
+                                        },
+                                        boxStyles:{
+                                            'fill': '#222',
+                                            'fill-opacity': 0.8
+                                        }
+                                    }
                                 ]
                             }
                         ]

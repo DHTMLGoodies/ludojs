@@ -46,18 +46,6 @@ ludo.chart.Tooltip = new Class({
         } else {
 
         }
-
-        /*
-
-         this.getParent().addEvents({
-         'mouseenter':this.show.bind(this),
-         'mouseleave':this.hide.bind(this)
-         });
-
-         this.getParent().getNode().on("mouseenter", this.show.bind(this));
-         this.getParent().getNode().on("mouseleave", this.hide.bind(this));
-         this.getParent().getNode().on('mousemove', this.move.bind(this));
-         */
     },
 
     createDOM: function () {

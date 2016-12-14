@@ -19,11 +19,19 @@ ludo.chart.LineItem = new Class({
         this.dots = [];
 
         var c = this.record.getChildren();
-        jQuery.each(c, function(index, child){
-            var d = new ludo.chart.LineDot(this.record);
-            this.getParent().append(d);
+        for(var i=0;i<c.length;i++){
+            var d = new ludo.chart.LineDot(
+                {
+                    record:c[i],
+                    ds : this.ds,
+                    renderTo: this.getParent(),
+                    parentComponent:this
+                });
             this.dots.push(d);
-        }.bind(this));
+        }
+    },
+
+    dsEvent:function(){
 
     },
 
@@ -96,8 +104,13 @@ ludo.chart.LineItem = new Class({
     },
 
     positionDots:function(){
+        var p = this.getParent();
+        var recs = this.record.getChildren();
         jQuery.each(this.dots, function(index, dot){
-            dot.position(this.xPos(index), this.yPos(index));
+            var x = this.xPos(index);
+            var y = this.yPos(index);
+            dot.position(x, y);
+            p.setPoint(recs[index], x, y);
         }.bind(this));
     }
 
