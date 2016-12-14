@@ -215,7 +215,7 @@ require_once("../includes/demo-header.php");
                                         },
                                         boxStyles:{
                                             'fill': '#222',
-                                            'fill-opacity': 0.8
+                                            'fill-opacity': 0.9
                                         }
                                     }
                                 ]

@@ -57,12 +57,13 @@ ludo.chart.Tooltip = new Class({
         this.rect = new ludo.canvas.Path();
         this.rect.css(this.getBoxStyling());
         this.rect.set('stroke-linejoin', 'round');
+        this.rect.set('stroke-linecap', 'round');
 
         this.node.append(this.rect);
 
         this.textBox = new ludo.canvas.TextBox();
         this.node.append(this.textBox);
-        this.textBox.getNode().setTranslate(4, 0);
+        this.textBox.getNode().setTranslate(6, 2);
         this.textBox.getNode().css(this.getTextStyles());
     },
 
@@ -118,7 +119,7 @@ ludo.chart.Tooltip = new Class({
             if (animate) {
                 this.node.animate({
                     'translate': [xy.x, xy.y]
-                }, 100)
+                }, 100, ludo.canvas.easing.outSine)
             } else {
                 this.node.setTranslate(xy.x, xy.y);
             }
@@ -140,8 +141,8 @@ ludo.chart.Tooltip = new Class({
 
     updateRect: function (fragment, pos) {
         this.size = this.textBox.getNode().getSize();
-        this.size.x += 7;
-        this.size.y += 10;
+        this.size.x += 12;
+        this.size.y += 15;
 
 
         var middle = this.size.x / 2;
@@ -249,7 +250,7 @@ ludo.chart.Tooltip = new Class({
 
     getParsedHtml: function () {
         var text = this.getDataSource().textOf(this.record, this);
-        ;
+
 
         jQuery.each(this.record, function (key, value) {
             var r = new RegExp("{record\." + key + "}", "g");
