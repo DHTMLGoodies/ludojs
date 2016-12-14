@@ -22,9 +22,11 @@ ludo.chart.Base = new Class({
     easing:undefined,
     duration: 300,
 
+    data:undefined,
+
     __construct: function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['animate', 'bgColor','duration']);
+        this.setConfigParams(config, ['animate', 'bgColor','duration','data']);
         this.ds = this.getDataSource();
 
         this.easing = config.easing || ludo.canvas.easing.outSine;
@@ -186,9 +188,13 @@ ludo.chart.Base = new Class({
         this.parent(coordinates);
 
         if (!this.dataRendered && this.getDataSource().hasData()) {
-
             this.create();
         }
+        
+        var size = this.getSize();
+        jQuery.each(this.fragments, function(key, fragment){
+            fragment.resize(size.x, size.y); 
+        });
     },
     
     onFragmentAction:function(action, fragment, record, node, event){

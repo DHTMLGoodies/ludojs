@@ -97,9 +97,7 @@ ludo.chart.Text = new Class({
         if(this.rotate){
             this.n.setRotate(this.rotate, x, y);
         }
-
         this.n.setTranslate(x,y);
-
     },
 
     rect:function(){

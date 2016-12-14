@@ -154,7 +154,7 @@ require_once("../includes/demo-header.php");
                                     below:'labelsTop',
                                     above:'barLabels'
                                 },
-                                lines:{
+                                bgLines:{
                                     stroke: '#535353'
                                 },
                                 outline:{

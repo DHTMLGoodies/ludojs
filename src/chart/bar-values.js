@@ -42,9 +42,12 @@ ludo.chart.BarValues = new Class({
         this.count = this.getCount();
         this.size = this.getSize();
 
+ 
+
         for (var i = 0; i < this.count; i++) {
             var el = this.getNode(i);
             var val = this.val(i);
+
             el.text(this.ds.valueForDisplay(val, this));
             var pos = this.getPos(val);
             el.attr('x', pos.x);

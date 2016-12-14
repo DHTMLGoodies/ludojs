@@ -47,7 +47,6 @@ require_once("../includes/demo-header.php");
             }
         ],
         textOf:function(record, caller){
-
             if(caller.type == 'chart.Tooltip'){
                 return '<p><b>{record.fruit}<br>{record.people} people({record.__percent}%)</p>';
             }

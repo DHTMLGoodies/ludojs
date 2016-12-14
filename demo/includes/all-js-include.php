@@ -232,6 +232,7 @@
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/chart/bar-item.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/chart/line.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/chart/line-item.js"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/chart/line-dot.js"></script>
 
 
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/movable.js"></script>

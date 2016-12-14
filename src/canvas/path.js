@@ -57,12 +57,7 @@ ludo.canvas.Path = new Class({
         var points = this.pointString.replace(/,/g, ' ').replace(/\s+/g, ' ');
         this.pointArray = points.split(/([A-Z\s])/g).erase(" ").erase("");
     },
-    /**
-     * Get size of polyline (max X - min X) and (max X - min Y)
-     * @function getSize
-     * @return {Object} x and y
-     * @memberof ludo.canvas.Path.prototype
-     */
+
     getSize:function () {
         if (this.size === undefined) {
             var minMax = this.getMinAndMax();

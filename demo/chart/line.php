@@ -1,6 +1,6 @@
 <?php
 $sub = true;
-$pageTitle = 'Stacked Bar Chart - ludoJS';
+$pageTitle = 'Line Chart - ludoJS';
 require_once("../includes/demo-header.php");
 ?>
 
@@ -8,69 +8,59 @@ require_once("../includes/demo-header.php");
 
 
     var dataSource = new ludo.chart.DataSource({
-        url : '../data/bar-chart-data-nested.json',
-
+        url : '../data/climate.json',
+        childKey:'monthlyAvg',
         // Return text label for chart data.
         textOf:function(record, caller){
             if(caller.type == 'chart.LabelListItem'){
-                return record.name + ' yr';
+                return record.city;
             }
-            return record.country;
+            return record.month;
         },
 
         // Return chart value for chart data. The data source doesn't know our data, so
         // this tells the data source where to get the value.
-        valueOf:function(record){
-            return record.people != undefined ? record.people : undefined;
+        valueOf:function(record, caller){
+            return record.low + (record.high - record.low)/2;
         },
 
         /** Return texts for chart Text views chart.Text */
         getText:function(caller){
             switch(caller.id){
-                case 'labelsLeft': return "Temperature (°C)";
-                case "labelsTop": return "Male Population"
+                case 'labelsLeft': return "Average Temperature (°C)";
+                case "labelsTop": return "City Temperature"
             }
             return "";
         },
 
         max:function(){ // Function returning max value for the y axis of the bar chart
-            return this.maxValAggr + 40000 - (this.maxValAggr % 20000);
+            return this.maxVal + 5 - (this.maxVal % 5);
         },
 
         min:function(){ // Function returning min value for the y axis
-            return 0;
+            return this.minVal - 5 + ((5 - this.minVal) % 5);
         },
 
         valueForDisplay:function(value, caller){
-            if(caller.type == 'chart.BarValues')return Math.round(value / 1000) + " mill";
+            if(caller.type == 'chart.BarValues')return value + '°C'
             return value;
         },
-
-        colorOf:function(record){ // Return color codes for the chart items.
-            if(record.name == '0-14')return '#E64A19';
-            if(record.name == '15-64')return '#039BE5';
-            if(record.name == '65-')return '#43A047';
-            return '#F00';
-        },
-
         // Function returning increments for lines and labels
         increments:function(minVal, maxVal, caller){
-            return 20000;
+            return 5;
         }
 
 
     });
     var d = new Date();
-    var w = new ludo.Window({
-        title:'Bar chart',
+    var w = new ludo.FramedView({
+        title:'Line Chart',
         layout:{
-            minWidth:500,minHeight:400,
-            width:700,
-            height:500,
-            left:20,
-            top:20,
-            type:'tab'
+            width:'matchParent',height:'matchParent',
+            type:'tab',
+            tabs:'left'
         },
+        renderTo:document.body,
         children:[
             {
                 title:'Chart',
@@ -100,12 +90,26 @@ require_once("../includes/demo-header.php");
                                 },
                                 anchor:[0.5, 0.5],
                                 layout: {
-                                    width: 40,
+                                    width: 50,
                                     bottom:50,
                                     fillUp:true,
                                     alignParentLeft: true
                                 },
                                 rotate:'left'
+                            },
+                            {
+                                id:'labelsRight',
+                                type:'chart.LabelList',
+                                layout:{
+                                    alignParentRight:true,
+                                    width:180,
+                                    height:'matchParent'
+                                },
+                                textStyles:{
+                                    'fill': ludo.$C('text'),
+                                    'font-size':'14px',
+                                    'font-weight' : 'normal'
+                                }
                             },
                             {
                                 id:'labelsTop',
@@ -117,7 +121,7 @@ require_once("../includes/demo-header.php");
                                 },
                                 layout:{
                                     rightOf:'labelsLeft',
-                                    fillRight:true,
+                                    leftOf:'labelsRight',
                                     alignParentTop:true,
                                     height:50,
                                     alignParentLeft:true
@@ -142,10 +146,12 @@ require_once("../includes/demo-header.php");
                             {
                                 id:'barLabels',
                                 type:'chart.BarLabels',
+                                // Static labels instead of getting them from the data source.
+                                data:["Jan","Feb", "Mar", "Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
                                 layout:{
                                     alignParentBottom:true,
+                                    leftOf:'labelsRight',
                                     rightOf:'barValues',
-                                    fillRight:true,
                                     height:30
                                 },
                                 styling:{
@@ -156,7 +162,7 @@ require_once("../includes/demo-header.php");
                             {
                                 name : 'bar',
                                 id:'bar',
-                                type:'chart.Bar',
+                                type:'chart.Line',
                                 stacked:true,
                                 animate:true,
                                 orientation:'horizontal',
@@ -164,11 +170,14 @@ require_once("../includes/demo-header.php");
                                 barSize:0.7, // Fraction bar width
                                 layout:{
                                     rightOf:'barValues',
-                                    fillRight:true,
+                                    leftOf:'labelsRight',
                                     below:'labelsTop',
                                     above:'barLabels'
                                 },
-                                lines:{
+                                lineStyles:{
+                                    'stroke-width' : 2
+                                },
+                                bgLines:{
                                     stroke: '#535353'
                                 },
                                 outline:{
@@ -190,21 +199,6 @@ require_once("../includes/demo-header.php");
                                 plugins:[
 
                                 ]
-                            },
-
-                            {
-                                type:'chart.LabelList',
-                                layout:{
-                                    alignParentRight:true,
-                                    width:200,
-                                    below:'labelsTop',
-                                    height:30,
-                                    offsetX: 10, offsetY: 10
-                                },
-                                textStyles:{
-                                    fill:'#aeb0b0',
-                                    'font-size' : '11px'
-                                }
                             }
                         ]
                     }

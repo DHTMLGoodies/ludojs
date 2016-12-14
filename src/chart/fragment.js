@@ -7,12 +7,23 @@ ludo.chart.Fragment = new Class({
 
     ds:undefined,
 
+    area:undefined,
+
     __construct:function (config) {
         this.parent(config);
         this.setConfigParams(config, ['record','parentComponent']);
+        this.area = {
+            x: 0, y: 0, width: 0, height: 0
+        };
         this.map = {};
         this.createNodes();
         this.ds = this.parentComponent.ds;
+
+
+    },
+
+    getNode:function(){
+        return this.nodes[0];
     },
 
     createNodes:function(){
@@ -101,7 +112,13 @@ ludo.chart.Fragment = new Class({
 
         this.parentComponent.onFragmentAction(method, this, rec, this.map[rec.id], e);
     },
-    
+
+    resize:function(width,height){
+        this.area.width = width;
+        this.area.height = height;
+        console.log(width,height);
+    },
+
     getEventNode:function(e){
         return e.target;
     },

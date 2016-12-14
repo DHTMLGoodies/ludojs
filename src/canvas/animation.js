@@ -19,6 +19,19 @@ ludo.canvas.Animation = new Class({
         return this.color;
     },
 
+    getPathSegments:function(path){
+        path = path.replace(/,/g, " ");
+        path = path.replace(/\s+/g, " ");
+        var tokens = path.split(/\s/g);
+        jQuery.each(tokens, function(index, value){
+           if(!isNaN(value)){
+               tokens[index] = parseFloat(value);
+           }
+        });
+
+        return tokens;
+    },
+
     fn: function (node, properties, duration, easing, complete, stepFn) {
 
         easing = easing || ludo.canvas.easing.inSine;
@@ -31,6 +44,20 @@ ludo.canvas.Animation = new Class({
             special[key] = true;
 
             switch (key) {
+                
+                case "d":
+                    var p = node.attr("d");
+
+                    start[key] = this.getPathSegments(p);
+                    changes[key] = this.getPathSegments(value);
+
+                    jQuery.each(changes[key], function(index, value){
+                        if(!isNaN(value)){
+                            changes[key][index] = value - start[key][index];
+
+                        }
+                    });
+                    break;
                 case 'fill':
                 case 'stroke':
                 case 'stop-color':
@@ -83,6 +110,20 @@ ludo.canvas.Animation = new Class({
 
                 if (special[key]) {
                     switch (key) {
+                        case 'd':
+                            var v = [];
+
+                            jQuery.each(start[key], function(index, v2){
+                                if(isNaN(v2)){
+                                    v.push(v2);
+                                }else{
+                                    v.push(v2 + (value[index] * delta))
+                                }
+                            });
+
+                            node.set("d", v.join(" "));
+
+                            break;
                         case 'stroke':
                         case 'fill':
                         case 'stop-color':

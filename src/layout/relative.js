@@ -346,6 +346,13 @@ ludo.layout.Relative = new Class({
             if(child.layout.above && child.layout.below){
                 c.height = lm.viewport.height - c.bottom - c.top;
             }
+
+			if(child.layout.leftOf && child.layout.rightOf){
+				c.width = lm.viewport.width - c.right - c.left;
+			}
+
+
+
 			if(child.isHidden()){
 				c.width = 0;
 				c.height = 0;
@@ -355,10 +362,12 @@ ludo.layout.Relative = new Class({
 				height:c.height !== lc.height ? c.height : undefined
 			});
 
-			if(c['right'] !== undefined && c.width){
+
+			if(c.right !== undefined && c.width){
 				c.left = lm.viewport.absWidth - c.right - c.width;
-				c['right'] = undefined;
+				c.right = undefined;
 			}
+
 			if(c.bottom !== undefined && c.height){
 				c.top = lm.viewport.absHeight - c.bottom - c.height;
 				c.bottom = undefined;

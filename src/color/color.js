@@ -310,7 +310,7 @@ ludo.color.Color = new Class({
     offsetHue:function(color, offset){
         var hsv = this.toHSV(color);
         hsv.h += offset;
-        if(hsv.h >= 360) hsv.h -= 360;
+        hsv.h = hsv.h % 360;
         return this.rgbCode(hsv);
     },
 

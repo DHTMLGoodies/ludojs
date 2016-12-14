@@ -174,7 +174,7 @@ ludo.canvas.View = new Class({
     /**
      * Append child node
      * @function append
-     * @param {canvas.View|canvas.Node} node
+     * @param {ludo.canvas.View|ludo.canvas.Node} node
      * @return {canvas.View} parent
      * @memberof ludo.canvas.View.prototype
      */

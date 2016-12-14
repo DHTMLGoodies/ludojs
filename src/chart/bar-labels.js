@@ -41,7 +41,7 @@ ludo.chart.BarLabels = new Class({
 
     resizeBarLabels:function(){
         var size = this.getSize();
-        var len = this.getDataSource().length();
+        var len = this.length();
         var i,el;
         if(this.orientation == 'horizontal'){
             var width = size.x / len;
@@ -58,16 +58,13 @@ ludo.chart.BarLabels = new Class({
                 el = this.getTextNode(i);
                 el.attr('x', size.x - this.padding);
                 el.attr('y', (i*height) + (height/2));
-
-
             }
         }
     },
 
 
     getTextNode:function(index){
-        var ds = this.getDataSource();
-        var rec = ds.data[index];
+
 
         if(this.textNodes[index] == undefined){
 
@@ -83,9 +80,20 @@ ludo.chart.BarLabels = new Class({
             this.append(el);
         }
 
-        this.textNodes[index].text(this.getDataSource().textOf(rec, this));
-
+        this.textNodes[index].text(this.getText(index));
         return this.textNodes[index];
 
+    },
+
+    getText:function(index){
+        if(this.data != undefined)return this.data[index];
+        var ds = this.getDataSource();
+        var rec = ds.data[index];
+        return ds.textOf(rec, this)
+    },
+    
+    length:function(){
+        if(this.data != undefined)return this.data.length;
+        return this.getDataSource().length;
     }
 });

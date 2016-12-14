@@ -543,7 +543,7 @@ ludo.canvas.Node = new Class({
      */
     getBBox: function () {
 
-        if (this.tagName == 'g') {
+        if (this.tagName == 'g' ||this.tagName=='text') {
             return this.el.getBBox();
         }
         if (this._bbox == undefined || this.dirty) {

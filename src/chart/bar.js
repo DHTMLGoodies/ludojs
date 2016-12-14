@@ -25,7 +25,7 @@ ludo.chart.Bar = new Class({
 
     __construct: function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['outline', 'lines', 'orientation','stacked']);
+        this.setConfigParams(config, ['outline', 'bgLines', 'orientation','stacked']);
 
         this.barSize = config.barSize || .8;
         this.lineIncrement = config.lineIncrement || 10;
@@ -100,7 +100,7 @@ ludo.chart.Bar = new Class({
     },
 
     createLines: function () {
-        if (this.lines == undefined)return;
+        if (this.bgLines == undefined)return;
 
         var inc = this.ds.getIncrements();
 
@@ -108,7 +108,7 @@ ludo.chart.Bar = new Class({
 
         for (var i = 0; i < inc.length; i++) {
             var el = this.getLine(i);
-            el.css(this.lines);
+            el.css(this.bgLines);
         }
     },
 
@@ -119,7 +119,7 @@ ludo.chart.Bar = new Class({
 
     resizeElements: function () {
         this.resizeOutline();
-        this.resizeLines();
+        this.resizeBgLines();
         this.resizeBars();
 
         jQuery.each(this.nodes.outline, function (key, el) {
@@ -162,8 +162,8 @@ ludo.chart.Bar = new Class({
         }
     },
 
-    resizeLines: function () {
-        if (this.lines == undefined)return;
+    resizeBgLines: function () {
+        if (this.bgLines == undefined)return;
 
         var inc = this.ds.getIncrements();
         var s = this.getSize();

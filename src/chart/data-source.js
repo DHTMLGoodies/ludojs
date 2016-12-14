@@ -37,7 +37,7 @@
  *
  * </code>
  *
- * The chart data source will add some special properties to the records.
+ * The chart data source will add some special properties and functions to the records.
  * Example: "Jane" in the data above will be something like:
  * <code>
  * {
@@ -57,6 +57,8 @@
  *      \_\_max : 245
  *      \_\_maxAggr : 245
  *      \_\_parent: undefined
+ *      getChildren:function()
+ *      getParent():function()
  * }
  * </code>
  *
@@ -98,6 +100,8 @@
  *
  * \_\_parent will for child items contain a reference to parent id which can be retrieved using dataSource.byId(id)
  *
+ * getParent() returns a reference to parent record if set, it will return undefined otherwise.
+ * getChildren() returns reference to child data array, example the children array of Germany in the example above
  * @class ludo.chart.DataSource
  * @param {Object} config
  * @param {Array} config.data Pie chart data.
@@ -180,6 +184,7 @@ ludo.chart.DataSource = new Class({
     startAngle: 0,
 
     color: '#1976D2',
+        
 
     colorOf: undefined,
     colorOverOf: undefined,
@@ -241,6 +246,7 @@ ludo.chart.DataSource = new Class({
     __construct: function (config) {
         this.setConfigParams(config, ['childKey', 'valueKey', 'color', 'valueOf', 'textOf', 'getText', 'max', 'min', 'increments', 'strokeOf', 'strokeOverOf','valueForDisplay']);
         this.parent(config);
+
 
         if (this.valueOf == undefined) {
             console.warn("Method valueOf(record, caller) not implemented in chart data source");
@@ -392,10 +398,10 @@ ludo.chart.DataSource = new Class({
                     node.__percent = Math.round(node.__fraction * 100);
                     node.__radians = ludo.geometry.degreesToRadians(node.__fraction * 360);
                     node.__angle = angle;
-                    node.__count = this.count;
                     angle += node.__radians;
                 }
             }
+            node.__count = this.count;
 
             if (node.index == undefined) {
                 node.__index = i++;
@@ -403,6 +409,12 @@ ludo.chart.DataSource = new Class({
 
             if(parent != undefined){
                 node.__parent = parent.id;
+
+                node.getParent = function(){
+                    return parent;
+                }
+            }else{
+                node.getParent = function(){ return undefined; }
             }
             this.setColor(node);
 
@@ -418,6 +430,17 @@ ludo.chart.DataSource = new Class({
             if (node[this.childKey] != undefined) {
                 this.parseChartBranch(node[this.childKey], node);
             }
+
+            var c = this.childKey;
+            node.getChildren = function(){
+                return node[c];
+            };
+
+            node.getChild = function(index){
+                return node[c][index];
+            }
+
+
 
         }.bind(this));
     },
