@@ -77,7 +77,7 @@ ludo.chart.LineItem = new Class({
 
         this.nodes[0].animate({
             'd' : newPath
-        }, 200, undefined, this.showDots.bind(this));
+        }, 500, ludo.canvas.easing.outSine, this.showDots.bind(this));
     },
 
     hideDots:function(){

@@ -1,7 +1,7 @@
-/* Generated Tue Dec 13 19:43:03 CET 2016 */
+/* Generated Wed Dec 14 13:49:27 CET 2016 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.273
+ludoJS - Javascript framework, 1.1.275
 Copyright (C) 2012-2016  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -5228,7 +5228,7 @@ ludo.canvas.Node = new Class({
      */
     getBBox: function () {
 
-        if (this.tagName == 'g') {
+        if (this.tagName == 'g' ||this.tagName=='text') {
             return this.el.getBBox();
         }
         if (this._bbox == undefined || this.dirty) {
@@ -5698,7 +5698,7 @@ ludo.canvas.View = new Class({
     /**
      * Append child node
      * @function append
-     * @param {canvas.View|canvas.Node} node
+     * @param {ludo.canvas.View|ludo.canvas.Node} node
      * @return {canvas.View} parent
      * @memberof ludo.canvas.View.prototype
      */
@@ -9423,7 +9423,7 @@ ludo.chart.Record = new Class({
  *
  * </code>
  *
- * The chart data source will add some special properties to the records.
+ * The chart data source will add some special properties and functions to the records.
  * Example: "Jane" in the data above will be something like:
  * <code>
  * {
@@ -9443,6 +9443,8 @@ ludo.chart.Record = new Class({
  *      \_\_max : 245
  *      \_\_maxAggr : 245
  *      \_\_parent: undefined
+ *      getChildren:function()
+ *      getParent():function()
  * }
  * </code>
  *
@@ -9484,6 +9486,8 @@ ludo.chart.Record = new Class({
  *
  * \_\_parent will for child items contain a reference to parent id which can be retrieved using dataSource.byId(id)
  *
+ * getParent() returns a reference to parent record if set, it will return undefined otherwise.
+ * getChildren() returns reference to child data array, example the children array of Germany in the example above
  * @class ludo.chart.DataSource
  * @param {Object} config
  * @param {Array} config.data Pie chart data.
@@ -9566,6 +9570,7 @@ ludo.chart.DataSource = new Class({
     startAngle: 0,
 
     color: '#1976D2',
+        
 
     colorOf: undefined,
     colorOverOf: undefined,
@@ -9627,6 +9632,7 @@ ludo.chart.DataSource = new Class({
     __construct: function (config) {
         this.setConfigParams(config, ['childKey', 'valueKey', 'color', 'valueOf', 'textOf', 'getText', 'max', 'min', 'increments', 'strokeOf', 'strokeOverOf','valueForDisplay']);
         this.parent(config);
+
 
         if (this.valueOf == undefined) {
             console.warn("Method valueOf(record, caller) not implemented in chart data source");
@@ -9778,10 +9784,10 @@ ludo.chart.DataSource = new Class({
                     node.__percent = Math.round(node.__fraction * 100);
                     node.__radians = ludo.geometry.degreesToRadians(node.__fraction * 360);
                     node.__angle = angle;
-                    node.__count = this.count;
                     angle += node.__radians;
                 }
             }
+            node.__count = this.count;
 
             if (node.index == undefined) {
                 node.__index = i++;
@@ -9789,6 +9795,12 @@ ludo.chart.DataSource = new Class({
 
             if(parent != undefined){
                 node.__parent = parent.id;
+
+                node.getParent = function(){
+                    return parent;
+                }
+            }else{
+                node.getParent = function(){ return undefined; }
             }
             this.setColor(node);
 
@@ -9804,6 +9816,17 @@ ludo.chart.DataSource = new Class({
             if (node[this.childKey] != undefined) {
                 this.parseChartBranch(node[this.childKey], node);
             }
+
+            var c = this.childKey;
+            node.getChildren = function(){
+                return node[c];
+            };
+
+            node.getChild = function(index){
+                return node[c][index];
+            }
+
+
 
         }.bind(this));
     },
@@ -9998,12 +10021,23 @@ ludo.chart.Fragment = new Class({
 
     ds:undefined,
 
+    area:undefined,
+
     __construct:function (config) {
         this.parent(config);
         this.setConfigParams(config, ['record','parentComponent']);
+        this.area = {
+            x: 0, y: 0, width: 0, height: 0
+        };
         this.map = {};
         this.createNodes();
         this.ds = this.parentComponent.ds;
+
+
+    },
+
+    getNode:function(){
+        return this.nodes[0];
     },
 
     createNodes:function(){
@@ -10092,7 +10126,13 @@ ludo.chart.Fragment = new Class({
 
         this.parentComponent.onFragmentAction(method, this, rec, this.map[rec.id], e);
     },
-    
+
+    resize:function(width,height){
+        this.area.width = width;
+        this.area.height = height;
+        console.log(width,height);
+    },
+
     getEventNode:function(e){
         return e.target;
     },
@@ -10223,9 +10263,11 @@ ludo.chart.Base = new Class({
     easing:undefined,
     duration: 300,
 
+    data:undefined,
+
     __construct: function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['animate', 'bgColor','duration']);
+        this.setConfigParams(config, ['animate', 'bgColor','duration','data']);
         this.ds = this.getDataSource();
 
         this.easing = config.easing || ludo.canvas.easing.outSine;
@@ -10387,9 +10429,13 @@ ludo.chart.Base = new Class({
         this.parent(coordinates);
 
         if (!this.dataRendered && this.getDataSource().hasData()) {
-
             this.create();
         }
+        
+        var size = this.getSize();
+        jQuery.each(this.fragments, function(key, fragment){
+            fragment.resize(size.x, size.y); 
+        });
     },
     
     onFragmentAction:function(action, fragment, record, node, event){
@@ -11953,9 +11999,7 @@ ludo.chart.Text = new Class({
         if(this.rotate){
             this.n.setRotate(this.rotate, x, y);
         }
-
         this.n.setTranslate(x,y);
-
     },
 
     rect:function(){
@@ -12019,7 +12063,7 @@ ludo.chart.BarLabels = new Class({
 
     resizeBarLabels:function(){
         var size = this.getSize();
-        var len = this.getDataSource().length();
+        var len = this.length();
         var i,el;
         if(this.orientation == 'horizontal'){
             var width = size.x / len;
@@ -12036,16 +12080,13 @@ ludo.chart.BarLabels = new Class({
                 el = this.getTextNode(i);
                 el.attr('x', size.x - this.padding);
                 el.attr('y', (i*height) + (height/2));
-
-
             }
         }
     },
 
 
     getTextNode:function(index){
-        var ds = this.getDataSource();
-        var rec = ds.data[index];
+
 
         if(this.textNodes[index] == undefined){
 
@@ -12061,10 +12102,21 @@ ludo.chart.BarLabels = new Class({
             this.append(el);
         }
 
-        this.textNodes[index].text(this.getDataSource().textOf(rec, this));
-
+        this.textNodes[index].text(this.getText(index));
         return this.textNodes[index];
 
+    },
+
+    getText:function(index){
+        if(this.data != undefined)return this.data[index];
+        var ds = this.getDataSource();
+        var rec = ds.data[index];
+        return ds.textOf(rec, this)
+    },
+    
+    length:function(){
+        if(this.data != undefined)return this.data.length;
+        return this.getDataSource().length;
     }
 });/* ../ludojs/src/chart/bar-values.js */
 ludo.chart.BarValues = new Class({
@@ -12111,9 +12163,12 @@ ludo.chart.BarValues = new Class({
         this.count = this.getCount();
         this.size = this.getSize();
 
+ 
+
         for (var i = 0; i < this.count; i++) {
             var el = this.getNode(i);
             var val = this.val(i);
+
             el.text(this.ds.valueForDisplay(val, this));
             var pos = this.getPos(val);
             el.attr('x', pos.x);
@@ -12192,7 +12247,7 @@ ludo.chart.Bar = new Class({
 
     __construct: function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['outline', 'lines', 'orientation','stacked']);
+        this.setConfigParams(config, ['outline', 'bgLines', 'orientation','stacked']);
 
         this.barSize = config.barSize || .8;
         this.lineIncrement = config.lineIncrement || 10;
@@ -12267,7 +12322,7 @@ ludo.chart.Bar = new Class({
     },
 
     createLines: function () {
-        if (this.lines == undefined)return;
+        if (this.bgLines == undefined)return;
 
         var inc = this.ds.getIncrements();
 
@@ -12275,7 +12330,7 @@ ludo.chart.Bar = new Class({
 
         for (var i = 0; i < inc.length; i++) {
             var el = this.getLine(i);
-            el.css(this.lines);
+            el.css(this.bgLines);
         }
     },
 
@@ -12286,7 +12341,7 @@ ludo.chart.Bar = new Class({
 
     resizeElements: function () {
         this.resizeOutline();
-        this.resizeLines();
+        this.resizeBgLines();
         this.resizeBars();
 
         jQuery.each(this.nodes.outline, function (key, el) {
@@ -12329,8 +12384,8 @@ ludo.chart.Bar = new Class({
         }
     },
 
-    resizeLines: function () {
-        if (this.lines == undefined)return;
+    resizeBgLines: function () {
+        if (this.bgLines == undefined)return;
 
         var inc = this.ds.getIncrements();
         var s = this.getSize();
@@ -12396,14 +12451,12 @@ ludo.chart.BarItem = new Class({
 
     __construct: function (config) {
         this.parent(config);
-        this.area = {
-            x: 0, y: 0, width: 0, height: 0
-        };
+
     },
 
     createNodes: function () {
 
-        var recs = this.record.children != undefined ? this.record.children : [this.record];
+        var recs = this.record[this.ds.childKey]!= undefined ? this.record[this.ds.childKey] : [this.record];
 
         jQuery.each(recs, function (i, record) {
             var n = this.createNode('rect', {
@@ -12525,6 +12578,296 @@ ludo.chart.BarItem = new Class({
     }
 
 
+});/* ../ludojs/src/chart/line.js */
+ludo.chart.Line = new Class({
+    Extends: ludo.chart.Bar,
+    fragmentType: 'chart.LineItem',
+    type:'chart.Line',
+
+    lineStyles:undefined,
+    
+    __construct:function(config){
+        this.parent(config);
+        this.setConfigParams(config, ["lineStyles"]);
+    },
+
+    resizeElements:function(){
+        this.resizeOutline();
+        this.resizeBgLines();
+        this.resizeLines();
+        jQuery.each(this.nodes.outline, function (key, el) {
+            el.toFront();
+        });
+
+    },
+
+    createFragments:function(){
+        this.parent();
+
+        if(this.lineStyles != undefined){
+            var s = this.lineStyles;
+            jQuery.each(this.fragments, function(key, fragment){
+                fragment.getNode().css(s);
+            });
+        }
+
+    },
+
+    resizeLines:function(){
+        var size = this.getSize();
+
+        jQuery.each(this.fragments, function(key, fragment){
+            fragment.resize(size.x, size.y);
+        });
+        
+        
+    }
+
+});/* ../ludojs/src/chart/line-item.js */
+ludo.chart.LineItem = new Class({
+
+    Extends: ludo.chart.Fragment,
+    type:'chart.LineItem',
+
+    dots:undefined,
+
+
+    createNodes:function(){
+        this.parent();
+        var n = this.createNode('path', {
+            'd' : this.getPath()
+        });
+        n.css("fill","none");
+        n.attr("stroke", this.record.__color);
+        n.attr("stroke-linejoin", "round");
+        n.attr("stroke-linecap", "round");
+
+        this.dots = [];
+
+        var c = this.record.getChildren();
+        jQuery.each(c, function(index, child){
+            var d = new ludo.chart.LineDot(this.record);
+            this.getParent().append(d);
+            this.dots.push(d);
+        }.bind(this));
+
+    },
+
+    getPath:function(zero){
+        var len = this.record.getChildren().length;
+
+        var p = ["M"];
+
+        for(var i=0;i<len;i++){
+            if(i>0)p.push("L");
+            p.push(this.xPos(i));
+            p.push(zero ? this.area.height : this.yPos(i));
+        }
+
+        return p.join(" ");
+    },
+
+    resize:function(width,height){
+        this.parent(width,height);
+
+        this.nodes[0].set("d", this.getPath());
+
+        this.positionDots();
+    },
+
+    xPos:function(index){
+        var len = this.record.getChildren().length;
+        var colWidth = this.area.width / len;
+        return colWidth * index + (colWidth / 2);
+    },
+
+    yPos:function(index){
+
+        if(!this.ds)return this.area.height;
+
+        var val = this.ds.valueOf(this.record.getChild(index), this);
+        var min = this.ds.min();
+        var max = this.ds.max();
+        return this.area.height - ((val - min ) / (max- min) * this.area.height);
+    },
+
+
+
+    animate:function(){
+        this.nodes[0].set('d', this.getPath(true));
+
+
+        this.hideDots();
+
+        var newPath = this.getPath();
+
+        this.nodes[0].animate({
+            'd' : newPath
+        }, 500, ludo.canvas.easing.outSine, this.showDots.bind(this));
+    },
+
+    hideDots:function(){
+        jQuery.each(this.dots, function(index, dot){
+            dot.hide();
+        });
+    },
+
+    showDots:function(){
+        jQuery.each(this.dots, function(index, dot){
+
+            dot.show();
+        }.bind(this));
+
+        this.positionDots();
+    },
+
+    positionDots:function(){
+        jQuery.each(this.dots, function(index, dot){
+            dot.position(this.xPos(index), this.yPos(index));
+        }.bind(this));
+    }
+
+
+});/* ../ludojs/src/canvas/path.js */
+/**
+ * Returns a path SVG element which can be adopted to a canvas.
+ * @namespace ludo.canvas
+ * @class ludo.canvas.Path
+ */
+ludo.canvas.Path = new Class({
+    Extends:ludo.canvas.NamedNode,
+    tagName:'path',
+    pointString:undefined,
+    pointArray:undefined,
+    size:undefined,
+    position:undefined,
+
+    initialize:function (points, properties) {
+        properties = properties || {};
+        if (points) {
+            points = this.getValidPointString(points);
+            properties.d = points;
+        }
+        this.parent(properties);
+        this.pointString = points;
+    },
+
+    getValidPointString:function (points) {
+        return points.replace(/([A-Z])/g, '$1 ').trim().replace(/,/g, ' ').replace(/\s+/g, ' ');
+    },
+
+    setPath:function (path) {
+        this.pointString = this.getValidPointString(path);
+        this.pointArray = undefined;
+        this.set('d', this.pointString);
+    },
+
+    getPoint:function (index) {
+        if (this.pointArray === undefined)this.buildPointArray();
+        index *= 3;
+        return {
+            x:this.pointArray[index + 1],
+            y:this.pointArray[index + 2]
+        };
+    },
+
+    setPoint:function (index, x, y) {
+        if (this.pointArray === undefined)this.buildPointArray();
+        index *= 3;
+        if (index < this.pointArray.length - 3) {
+            this.pointArray[index + 1] = x;
+            this.pointArray[index + 2] = y;
+            this.pointString = this.pointArray.join(' ');
+            this.set('d', this.pointString);
+            this.size = undefined;
+            this.position = undefined;
+        }
+    },
+
+    buildPointArray:function () {
+        var points = this.pointString.replace(/,/g, ' ').replace(/\s+/g, ' ');
+        this.pointArray = points.split(/([A-Z\s])/g).erase(" ").erase("");
+    },
+
+    getSize:function () {
+        if (this.size === undefined) {
+            var minMax = this.getMinAndMax();
+            this.size = {
+                x:Math.abs(minMax.maxX - minMax.minX),
+                y:Math.abs(minMax.maxY - minMax.minY)
+            };
+        }
+        return this.size;
+    },
+
+    getPosition:function () {
+        if (this.position === undefined) {
+            var minMax = this.getMinAndMax();
+            this.position = {
+                x:minMax.minX,
+                y:minMax.minY
+            };
+        }
+        return this.position;
+    },
+
+    getMinAndMax:function () {
+        if (this.pointArray === undefined)this.buildPointArray();
+        var p = this.pointArray;
+        var x = [];
+        var y = [];
+        for (var i = 0; i < p.length - 2; i += 3) {
+            x.push(p[i + 1]);
+            y.push(p[i + 2]);
+        }
+        return {
+            minX:Math.min.apply(this, x), minY:Math.min.apply(this, y),
+            maxX:Math.max.apply(this, x), maxY:Math.max.apply(this, y)
+        };
+    }
+});/* ../ludojs/src/chart/line-dot.js */
+/**
+ * Created by alfmagne1 on 14/12/2016.
+ */
+ludo.chart.LineDot = new Class({
+    Extends:ludo.canvas.Path,
+    type:'chart.LineDot',
+
+    shape:undefined,
+    record:undefined,
+    size:8,
+
+    initialize:function(record, properties){
+        this.parent(undefined, properties);
+        this.record = record;
+        this.shape = 'circle';
+
+        switch(this.shape){
+            case 'circle':
+                this.attr("stroke-linejoin", "round");
+                this.attr("stroke-linecap", "round");
+                this.attr("stroke-width", this.size);
+                this.css("stroke", this.record.__color);
+                this.css("cursor", "pointer");
+                break;
+
+        }
+
+
+    },
+
+    position:function(x,y){
+        var p;
+        switch(this.shape){
+            case 'circle':
+                 p = "M " + x + " " + y + " L " + x + " " + y;
+                break;
+        }
+
+        if(p){
+            this.set("d", p);
+        }
+    }
 });/* ../ludojs/src/ludo-db/factory.js */
 /**
  Factory for automatic creation of children from server ludoDB config. This class is used
@@ -12906,7 +13249,7 @@ ludo.color.Color = new Class({
     offsetHue:function(color, offset){
         var hsv = this.toHSV(color);
         hsv.h += offset;
-        if(hsv.h >= 360) hsv.h -= 360;
+        hsv.h = hsv.h % 360;
         return this.rgbCode(hsv);
     },
 
@@ -15148,6 +15491,13 @@ ludo.layout.Relative = new Class({
             if(child.layout.above && child.layout.below){
                 c.height = lm.viewport.height - c.bottom - c.top;
             }
+
+			if(child.layout.leftOf && child.layout.rightOf){
+				c.width = lm.viewport.width - c.right - c.left;
+			}
+
+
+
 			if(child.isHidden()){
 				c.width = 0;
 				c.height = 0;
@@ -15157,10 +15507,12 @@ ludo.layout.Relative = new Class({
 				height:c.height !== lc.height ? c.height : undefined
 			});
 
-			if(c['right'] !== undefined && c.width){
+
+			if(c.right !== undefined && c.width){
 				c.left = lm.viewport.absWidth - c.right - c.width;
-				c['right'] = undefined;
+				c.right = undefined;
 			}
+
 			if(c.bottom !== undefined && c.height){
 				c.top = lm.viewport.absHeight - c.bottom - c.height;
 				c.bottom = undefined;
@@ -15903,6 +16255,7 @@ ludo.layout.Canvas = new Class({
 	 * @private
 	 */
 	positionChild:function (child, property, value) {
+
 		child[property] = value;
 		this.currentTranslate[property] = value;
 		child['node'].setTranslate(this.currentTranslate.left, this.currentTranslate.top);
@@ -35809,108 +36162,6 @@ ludo.canvas.Ellipse = new Class({
 			y:this.getRadiusY() * 2
 		}
 	}
-});/* ../ludojs/src/canvas/path.js */
-/**
- * Returns a path SVG element which can be adopted to a canvas.
- * @namespace ludo.canvas
- * @class ludo.canvas.Path
- */
-ludo.canvas.Path = new Class({
-    Extends:ludo.canvas.NamedNode,
-    tagName:'path',
-    pointString:undefined,
-    pointArray:undefined,
-    size:undefined,
-    position:undefined,
-
-    initialize:function (points, properties) {
-        properties = properties || {};
-        if (points) {
-            points = this.getValidPointString(points);
-            properties.d = points;
-        }
-        this.parent(properties);
-        this.pointString = points;
-    },
-
-    getValidPointString:function (points) {
-        return points.replace(/([A-Z])/g, '$1 ').trim().replace(/,/g, ' ').replace(/\s+/g, ' ');
-    },
-
-    setPath:function (path) {
-        this.pointString = this.getValidPointString(path);
-        this.pointArray = undefined;
-        this.set('d', this.pointString);
-    },
-
-    getPoint:function (index) {
-        if (this.pointArray === undefined)this.buildPointArray();
-        index *= 3;
-        return {
-            x:this.pointArray[index + 1],
-            y:this.pointArray[index + 2]
-        };
-    },
-
-    setPoint:function (index, x, y) {
-        if (this.pointArray === undefined)this.buildPointArray();
-        index *= 3;
-        if (index < this.pointArray.length - 3) {
-            this.pointArray[index + 1] = x;
-            this.pointArray[index + 2] = y;
-            this.pointString = this.pointArray.join(' ');
-            this.set('d', this.pointString);
-            this.size = undefined;
-            this.position = undefined;
-        }
-    },
-
-    buildPointArray:function () {
-        var points = this.pointString.replace(/,/g, ' ').replace(/\s+/g, ' ');
-        this.pointArray = points.split(/([A-Z\s])/g).erase(" ").erase("");
-    },
-    /**
-     * Get size of polyline (max X - min X) and (max X - min Y)
-     * @function getSize
-     * @return {Object} x and y
-     * @memberof ludo.canvas.Path.prototype
-     */
-    getSize:function () {
-        if (this.size === undefined) {
-            var minMax = this.getMinAndMax();
-            this.size = {
-                x:Math.abs(minMax.maxX - minMax.minX),
-                y:Math.abs(minMax.maxY - minMax.minY)
-            };
-        }
-        return this.size;
-    },
-
-    getPosition:function () {
-        if (this.position === undefined) {
-            var minMax = this.getMinAndMax();
-            this.position = {
-                x:minMax.minX,
-                y:minMax.minY
-            };
-        }
-        return this.position;
-    },
-
-    getMinAndMax:function () {
-        if (this.pointArray === undefined)this.buildPointArray();
-        var p = this.pointArray;
-        var x = [];
-        var y = [];
-        for (var i = 0; i < p.length - 2; i += 3) {
-            x.push(p[i + 1]);
-            y.push(p[i + 2]);
-        }
-        return {
-            minX:Math.min.apply(this, x), minY:Math.min.apply(this, y),
-            maxX:Math.max.apply(this, x), maxY:Math.max.apply(this, y)
-        };
-    }
 });/* ../ludojs/src/canvas/text.js */
 /**
  * @class ludo.canvas.Text
@@ -36270,6 +36521,19 @@ ludo.canvas.Animation = new Class({
         return this.color;
     },
 
+    getPathSegments:function(path){
+        path = path.replace(/,/g, " ");
+        path = path.replace(/\s+/g, " ");
+        var tokens = path.split(/\s/g);
+        jQuery.each(tokens, function(index, value){
+           if(!isNaN(value)){
+               tokens[index] = parseFloat(value);
+           }
+        });
+
+        return tokens;
+    },
+
     fn: function (node, properties, duration, easing, complete, stepFn) {
 
         easing = easing || ludo.canvas.easing.inSine;
@@ -36282,6 +36546,20 @@ ludo.canvas.Animation = new Class({
             special[key] = true;
 
             switch (key) {
+                
+                case "d":
+                    var p = node.attr("d");
+
+                    start[key] = this.getPathSegments(p);
+                    changes[key] = this.getPathSegments(value);
+
+                    jQuery.each(changes[key], function(index, value){
+                        if(!isNaN(value)){
+                            changes[key][index] = value - start[key][index];
+
+                        }
+                    });
+                    break;
                 case 'fill':
                 case 'stroke':
                 case 'stop-color':
@@ -36334,6 +36612,20 @@ ludo.canvas.Animation = new Class({
 
                 if (special[key]) {
                     switch (key) {
+                        case 'd':
+                            var v = [];
+
+                            jQuery.each(start[key], function(index, v2){
+                                if(isNaN(v2)){
+                                    v.push(v2);
+                                }else{
+                                    v.push(v2 + (value[index] * delta))
+                                }
+                            });
+
+                            node.set("d", v.join(" "));
+
+                            break;
                         case 'stroke':
                         case 'fill':
                         case 'stop-color':
