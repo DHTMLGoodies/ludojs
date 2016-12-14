@@ -146,6 +146,7 @@
  * @param {Function} config.strokeOf Optional function returning stroke color for chart item, Arguments: 1) chart record, 2) caller
  * @param {Function} config.strokeOverOf Optional function returning mouse over stroke color for chart item, Arguments: 1) chart record, 2) caller
  * @param {String} config.childKey Key for child arrays, default: "children"
+ * @param {Function} config.shouldInheritColor Optional function returning true if color should be inherited from parent record. Input: record, 2: caller
  * @example
  *     var dataSource = new ludo.chart.DataSource({
         data:[
@@ -184,7 +185,7 @@ ludo.chart.DataSource = new Class({
     startAngle: 0,
 
     color: '#1976D2',
-        
+
 
     colorOf: undefined,
     colorOverOf: undefined,
@@ -244,7 +245,7 @@ ludo.chart.DataSource = new Class({
     increments: undefined,
 
     __construct: function (config) {
-        this.setConfigParams(config, ['childKey', 'valueKey', 'color', 'valueOf', 'textOf', 'getText', 'max', 'min', 'increments', 'strokeOf', 'strokeOverOf','valueForDisplay']);
+        this.setConfigParams(config, ['shouldInheritColor', 'childKey', 'valueKey', 'color', 'valueOf', 'textOf', 'getText', 'max', 'min', 'increments', 'strokeOf', 'strokeOverOf','valueForDisplay']);
         this.parent(config);
 
 
@@ -416,7 +417,7 @@ ludo.chart.DataSource = new Class({
             }else{
                 node.getParent = function(){ return undefined; }
             }
-            this.setColor(node);
+
 
 
             if (node.id == undefined) {
@@ -427,9 +428,6 @@ ludo.chart.DataSource = new Class({
             }
             this.map[node.id] = node;
 
-            if (node[this.childKey] != undefined) {
-                this.parseChartBranch(node[this.childKey], node);
-            }
 
             var c = this.childKey;
             node.getChildren = function(){
@@ -438,6 +436,12 @@ ludo.chart.DataSource = new Class({
 
             node.getChild = function(index){
                 return node[c][index];
+            };
+
+            this.setColor(node);
+
+            if (node[this.childKey] != undefined) {
+                this.parseChartBranch(node[this.childKey], node);
             }
 
 
@@ -519,6 +523,17 @@ ludo.chart.DataSource = new Class({
     setColor: function (record) {
         var u = false;
 
+        if(this.shouldInheritColor(record) && record.__parent){
+            var p = record.getParent();
+            record.__color = p.__color;
+            record.__colorOver = p.__colorOver;
+            record.__stroke = p.__stroke;
+            record.__strokeOver = p.__strokeOver;
+            this.color = this.colorUtil().offsetHue(this.color, (360 / (record.__count + 1)));
+            return;
+        }
+
+
         if (record.__color == undefined) {
             if (this.colorOf != undefined) {
                 record.__color = this.colorOf(record);
@@ -576,5 +591,56 @@ ludo.chart.DataSource = new Class({
 
     valueForDisplay:function(value){
         return value;
+    },
+
+    shouldInheritColor:function(){
+        return false;
     }
 });
+
+/*
+
+ Average high °C (°F)	−42.5
+ (−44.5)	−35.4
+ (−31.7)	−20.8
+ (−5.4)	−3.7
+ (25.3)	9.1
+ (48.4)	20.0
+ (68)	22.7
+ (72.9)	18.2
+ (64.8)	8.9
+ (48)	−9.2
+ (15.4)	−30.7
+ (−23.3)	−42
+ (−44)	−8.8
+ (16.2)
+ Daily mean °C (°F)	−46.4
+ (−51.5)	−42
+ (−44)	−31.2
+ (−24.2)	−13.6
+ (7.5)	2.7
+ (36.9)	12.6
+ (54.7)	14.9
+ (58.8)	10.3
+ (50.5)	2.3
+ (36.1)	−14.8
+ (5.4)	−35.2
+ (−31.4)	−45.5
+ (−49.9)	−15.5
+ (4.1)
+ Average low °C (°F)	−50
+ (−58)	−47.3
+ (−53.1)	−40
+ (−40)	−23.9
+ (−11)	−4.7
+ (23.5)	4.0
+ (39.2)	6.2
+ (43.2)	2.6
+ (36.7)	−3.7
+ (25.3)	−20.4
+ (−4.7)	−39.3
+ (−38.7)	−48.8
+ (−55.8)	−22.1
+ (−7.8)
+ 
+ */

@@ -15,7 +15,7 @@ require_once("../includes/demo-header.php");
         // Return text label for chart data.
         textOf:function(record, caller){
             if(caller.type == 'chart.Tooltip'){
-                return '<p><b>{parent.city}</b><br>' + months[record.__index] + '<br>Low: {record.low} °C<br>High: {record.high} °C<br>Avg: '
+                return '<p><b>{parent.city}</b> ({parent.country})<br>' + months[record.__index] + '<br>Low: {record.low} °C<br>High: {record.high} °C<br>Avg: '
                     + (record.low + (record.high - record.low)/ 2) + '°C</p>';
             }
             if(caller.type == 'chart.LabelListItem'){
@@ -26,8 +26,12 @@ require_once("../includes/demo-header.php");
 
         // Return chart value for chart data. The data source doesn't know our data, so
         // this tells the data source where to get the value.
-        valueOf:function(record, caller){
+        valueOf:function(record){
             return record.low + (record.high - record.low)/2;
+        },
+        
+        shouldInheritColor:function(record, caller){
+            return record.rainfall != undefined;
         },
 
         /** Return texts for chart Text views chart.Text */
@@ -40,7 +44,7 @@ require_once("../includes/demo-header.php");
         },
 
         max:function(){ // Function returning max value for the y axis of the bar chart
-            return this.maxVal + 5 - (this.maxVal % 5);
+            return this.maxVal + 15 - (this.maxVal % 5);
         },
 
         min:function(){ // Function returning min value for the y axis

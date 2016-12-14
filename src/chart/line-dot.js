@@ -33,7 +33,7 @@ ludo.chart.LineDot = new Class({
                 this.node.attr("stroke-linejoin", "round");
                 this.node.attr("stroke-linecap", "round");
                 this.node.attr("stroke-width", this.size);
-                this.node.css("stroke", this.record.__color);
+                this.node.css("stroke", this.record.getParent().__color);
                 this.node.css("cursor", "pointer");
                 break;
 
@@ -59,7 +59,7 @@ ludo.chart.LineDot = new Class({
                'stroke-opacity': 0.5,
                 fill:'none',
                 'stroke-width' : 2,
-                stroke: this.record.__color
+                stroke: this.record.getParent().__color
 
             });
 
@@ -70,8 +70,6 @@ ludo.chart.LineDot = new Class({
         this.nodeHighlight.set("cy", this.y);
         this.nodeHighlight.show();
         
- 
-
         this.parentComponent.parentComponent.onFragmentAction('enter', this.parentComponent, this.record, this.nodeHighlight, {});
         
     },

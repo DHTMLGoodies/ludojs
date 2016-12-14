@@ -80,6 +80,10 @@ ludo.geometry = {
         brng = 360 - brng;
 
         return brng;
+    },
+
+    isWithinBox:function(x,y,boxX,boxY,boxWidth,boxHeight){
+        return x >= boxX && y >= boxY && x<= x + boxWidth && y <= y + boxHeight;
     }
 
 

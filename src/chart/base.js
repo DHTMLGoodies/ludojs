@@ -24,6 +24,8 @@ ludo.chart.Base = new Class({
 
     data:undefined,
 
+    entered:undefined,
+
     __construct: function (config) {
         this.parent(config);
         this.setConfigParams(config, ['animate', 'bgColor','duration','data']);
@@ -58,9 +60,8 @@ ludo.chart.Base = new Class({
         var dp = this.getDataSource();
 
         dp.addEvent('update', this.update.bind(this));
-
-
     },
+
 
     createFragments: function () {
 

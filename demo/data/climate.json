@@ -726,5 +726,72 @@
         "rainfall": 30.8
       }
     ]
+  },
+  {
+    "id": 64,
+    "city": "Omyakon",
+    "country": "Russia",
+    "monthlyAvg": [
+      {
+        "high": -42,
+        "low": -50,
+        "rainfall": 1
+      },
+      {
+        "high": -35,
+        "low": -53,
+        "rainfall": 35.8
+      },
+      {
+        "high": -21,
+        "low": -40,
+        "rainfall": 30.1
+      },
+      {
+        "high": -4,
+        "low": -24,
+        "rainfall": 19.7
+      },
+      {
+        "high": 9,
+        "low": 3,
+        "rainfall": 39.2
+      },
+      {
+        "high": 20,
+        "low": 4,
+        "rainfall": 27.3
+      },
+      {
+        "high": 22,
+        "low": 6,
+        "rainfall": 40.1
+      },
+      {
+        "high": 18,
+        "low": 3,
+        "rainfall": 49.4
+      },
+      {
+        "high": 9,
+        "low": -4,
+        "rainfall": 22.1
+      },
+      {
+        "high": -9,
+        "low": -20,
+        "rainfall": 46.9
+      },
+      {
+        "high": -31,
+        "low": -40,
+        "rainfall": 32.1
+      },
+      {
+        "high": -42,
+        "low": -49,
+        "rainfall": 30.8
+      }
+    ]
   }
 ]
