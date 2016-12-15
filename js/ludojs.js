@@ -1,7 +1,7 @@
-/* Generated Thu Dec 15 15:42:08 CET 2016 */
+/* Generated Thu Dec 15 15:53:16 CET 2016 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.286
+ludoJS - Javascript framework, 1.1.287
 Copyright (C) 2012-2016  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -10551,9 +10551,9 @@ ludo.chart.Base = new Class({
                 x: 0, y: 0, width: 0, height: 0
             });
             this.clipPath.append(this.clipRect);
-            this.getChartNode().applyClipPath(this.clipPath);
         }
 
+        this.getChartNode().applyClipPath(this.clipPath);
         var r = this.clipRect;
         r.set('x',0);
         r.set('y',0);
@@ -10584,8 +10584,13 @@ ludo.chart.Base = new Class({
                 anim.height = s.y;
                 break;
         }
-        this.clipRect.animate(anim, duration);
+        this.clipRect.animate(anim, duration, undefined,
+        this.removeClipPath.bind(this));
 
+    },
+
+    removeClipPath:function(){
+        this.getChartNode().removeAttr('clip-path');
     }
 });/* ../ludojs/src/chart/pie-slice.js */
 ludo.chart.PieSlice = new Class({

@@ -243,9 +243,9 @@ ludo.chart.Base = new Class({
                 x: 0, y: 0, width: 0, height: 0
             });
             this.clipPath.append(this.clipRect);
-            this.getChartNode().applyClipPath(this.clipPath);
         }
 
+        this.getChartNode().applyClipPath(this.clipPath);
         var r = this.clipRect;
         r.set('x',0);
         r.set('y',0);
@@ -276,7 +276,12 @@ ludo.chart.Base = new Class({
                 anim.height = s.y;
                 break;
         }
-        this.clipRect.animate(anim, duration);
+        this.clipRect.animate(anim, duration, undefined,
+        this.removeClipPath.bind(this));
 
+    },
+
+    removeClipPath:function(){
+        this.getChartNode().removeAttr('clip-path');
     }
 });
