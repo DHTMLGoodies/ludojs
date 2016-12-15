@@ -87,14 +87,12 @@ require_once("../includes/demo-header.php");
 
     });
 
-    var w = new ludo.Window({
+    var w = new ludo.FramedView({
         title:'Bar chart',
+        renderTo:document.body,
         layout:{
-            minWidth:500,minHeight:400,
-            width:700,
-            height:500,
-            left:20,
-            top:20,
+            width:'matchParent',
+            height:'matchParent',
             type:'tab',
             tabs:'left'
         },

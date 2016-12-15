@@ -277,6 +277,7 @@ ludo.layout.Relative = new Class({
 				return function (lm) {
 					if (c.bottom !== undefined) {
 						c.height = lm.viewport.absHeight - c.bottom - lm.viewport.top;
+						
 					}
 				};
 			case 'alignLeft':

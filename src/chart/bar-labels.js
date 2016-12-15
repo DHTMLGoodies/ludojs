@@ -35,14 +35,15 @@ ludo.chart.BarLabels = new Class({
     },
 
     onResize:function(){
-        this.parent();
         this.resizeBarLabels();
     },
 
     resizeBarLabels:function(){
         var size = this.getSize();
+
         var len = this.length();
         var i,el;
+
         if(this.orientation == 'horizontal'){
             var width = size.x / len;
             var y = this.getCenter().y;
@@ -52,12 +53,14 @@ ludo.chart.BarLabels = new Class({
                 el.attr('y', y);
             }
         }else{
-
+            console.log(len);
             var height = size.y / len;
             for(i=0;i<len;i++){
                 el = this.getTextNode(i);
                 el.attr('x', size.x - this.padding);
                 el.attr('y', (i*height) + (height/2));
+
+
             }
         }
     },
@@ -94,6 +97,6 @@ ludo.chart.BarLabels = new Class({
     
     length:function(){
         if(this.data != undefined)return this.data.length;
-        return this.getDataSource().length;
+        return this.getDataSource().length();
     }
 });

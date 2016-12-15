@@ -69,6 +69,7 @@ ludo.chart.Text = new Class({
         var bbox = this.n.getBBox();
         var size = this.getSize();
 
+        
         this.n.setRotate(0,0,0);
         var x = 0;
         var y = 0;

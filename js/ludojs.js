@@ -1,7 +1,7 @@
-/* Generated Thu Dec 15 15:02:28 CET 2016 */
+/* Generated Thu Dec 15 15:27:42 CET 2016 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.282
+ludoJS - Javascript framework, 1.1.284
 Copyright (C) 2012-2016  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -12098,6 +12098,7 @@ ludo.chart.Text = new Class({
         var bbox = this.n.getBBox();
         var size = this.getSize();
 
+        
         this.n.setRotate(0,0,0);
         var x = 0;
         var y = 0;
@@ -12184,14 +12185,15 @@ ludo.chart.BarLabels = new Class({
     },
 
     onResize:function(){
-        this.parent();
         this.resizeBarLabels();
     },
 
     resizeBarLabels:function(){
         var size = this.getSize();
+
         var len = this.length();
         var i,el;
+
         if(this.orientation == 'horizontal'){
             var width = size.x / len;
             var y = this.getCenter().y;
@@ -12201,12 +12203,14 @@ ludo.chart.BarLabels = new Class({
                 el.attr('y', y);
             }
         }else{
-
+            console.log(len);
             var height = size.y / len;
             for(i=0;i<len;i++){
                 el = this.getTextNode(i);
                 el.attr('x', size.x - this.padding);
                 el.attr('y', (i*height) + (height/2));
+
+
             }
         }
     },
@@ -12243,7 +12247,7 @@ ludo.chart.BarLabels = new Class({
     
     length:function(){
         if(this.data != undefined)return this.data.length;
-        return this.getDataSource().length;
+        return this.getDataSource().length();
     }
 });/* ../ludojs/src/chart/bar-values.js */
 ludo.chart.BarValues = new Class({
@@ -15689,6 +15693,7 @@ ludo.layout.Relative = new Class({
 				return function (lm) {
 					if (c.bottom !== undefined) {
 						c.height = lm.viewport.absHeight - c.bottom - lm.viewport.top;
+						
 					}
 				};
 			case 'alignLeft':
