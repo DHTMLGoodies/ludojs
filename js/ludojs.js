@@ -1,7 +1,7 @@
-/* Generated Thu Dec 15 15:39:22 CET 2016 */
+/* Generated Thu Dec 15 15:42:08 CET 2016 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.285
+ludoJS - Javascript framework, 1.1.286
 Copyright (C) 2012-2016  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -9590,7 +9590,7 @@ ludo.chart.DataSource = new Class({
     /**
      * Max value in data array
      * @property {Number} maxVal
-     * @mamberof ludo.chart.DataSource.prototype
+     * @memberof ludo.chart.DataSource.prototype
      */
     maxVal: undefined,
 
@@ -9598,7 +9598,7 @@ ludo.chart.DataSource = new Class({
     /**
      * Aggregated max value in the data array. Sum value of child data.
      * @property {Number} maxValAggr
-     * @mamberof ludo.chart.DataSource.prototype
+     * @memberof ludo.chart.DataSource.prototype
      * @example
      * [
      * {
@@ -9621,7 +9621,7 @@ ludo.chart.DataSource = new Class({
     /**
      * Min value in data array
      * @property {Number} minVal
-     * @mamberof ludo.chart.DataSource.prototype
+     * @memberof ludo.chart.DataSource.prototype
      */
     minVal: undefined,
 
@@ -25903,14 +25903,11 @@ ludo.geometry = {
         if (angle < 0) {
             angle += 360;
         }
-
         angle = ((angle - 90) + 360) % 360;
-
         return angle;
-
     },
 
-    cosSinBetweenLocations:function(lat1, long1, lat2, long2) {
+    cosSinBetween:function(lat1, long1, lat2, long2) {
         var dLon = (long2 - long1);
 
         var y = Math.sin(dLon) * Math.cos(lat2);
@@ -25926,7 +25923,7 @@ ludo.geometry = {
         return { x: Math.cos(brng), y: Math.sin(brng) };
     },
 
-    bearingBetweenLocations: function (lat1, long1, lat2, long2) {
+    bearing: function (lat1, long1, lat2, long2) {
         var dLon = (long2 - long1);
 
         var y = Math.sin(dLon) * Math.cos(lat2);
