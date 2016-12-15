@@ -54,7 +54,7 @@
 			<li class="dropdown">
 				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="global.html#css">css</a></li><li><a href="global.html#maxVal">maxVal</a></li><li><a href="global.html#maxValAggr">maxValAggr</a></li><li><a href="global.html#minVal">minVal</a></li>
+					<li><a href="global.html#css">css</a></li>
 				</ul>
 			</li>
 			
@@ -122,7 +122,7 @@
 <p><code></p>
 <p>[<br>{<br>     &quot;country&quot;: &quot;United Kingdom&quot;,<br>     &quot;children&quot;: [<br>         { &quot;name&quot;:&quot;0-14&quot;, &quot;people&quot; : 5000 }, { &quot;name&quot;:&quot;15-64&quot;, &quot;people&quot; : 20000 }, { &quot;name&quot;:&quot;65-&quot;, &quot;people&quot; : 4000 }<br>     ]<br>},<br>{<br>     &quot;country&quot;: &quot;Germany&quot;,<br>     &quot;children&quot;: [<br>         { &quot;name&quot;:&quot;0-14&quot;, &quot;people&quot; : 6000 }, { &quot;name&quot;:&quot;15-64&quot;, &quot;people&quot; : 29000 }, { &quot;name&quot;:&quot;65-&quot;, &quot;people&quot; : 4000 }<br>     ]<br>}<br>]</p>
 <p></code></p>
-<p>The chart data source will add some special properties to the records.<br>Example: &quot;Jane&quot; in the data above will be something like:<br><code><br>{<br>     id:'1', name: 'Jane', value, 245,<br>     __color: '#4719D2'<br>     __colorOver: '#5629E1'<br>     __count : 7,<br>     __fraction:0.35976505139500736,<br>     __sum : 681<br>     __index: 1,<br>     __percent: 36,<br>     __angle : 0.92264101427013,<br>     __radians : 2.2604704849618193,<br>     __uid : &quot;chart-node-iw7znu0v&quot;<br>     __min : 18<br>     __minAgr : 18<br>     __max : 245<br>     __maxAggr : 245<br>     __parent: undefined<br>}<br></code></p>
+<p>The chart data source will add some special properties and functions to the records.<br>Example: &quot;Jane&quot; in the data above will be something like:<br><code><br>{<br>     id:'1', name: 'Jane', value, 245,<br>     __color: '#4719D2'<br>     __colorOver: '#5629E1'<br>     __count : 7,<br>     __fraction:0.35976505139500736,<br>     __sum : 681<br>     __index: 1,<br>     __percent: 36,<br>     __angle : 0.92264101427013,<br>     __radians : 2.2604704849618193,<br>     __uid : &quot;chart-node-iw7znu0v&quot;<br>     __min : 18<br>     __minAgr : 18<br>     __max : 245<br>     __maxAggr : 245<br>     __parent: undefined<br>     getChildren:function()<br>     getParent():function()<br>}<br></code></p>
 <p>where __color is the records assigned color and __colorOver is it's color when highlighted.<br>You can set this properties manually in your data. When not set, LudoJS will use colors from a color scheme.<br>You can also set __stroke and __strokeOver for stroke colors.<br>__count is the total number or records in the array.<br>__sum is sum(values) in the array.<br>__fraction is record.value / record.__sum<br>__index is the index of Jane in the array(John has index 0, Jane index 1, Martin index 2 and so on).<br>__percent is the rounded value of __fraction <em> 100<br>__angle is mostly for internal use and represents this records start angle in radians when all records fill a circle.<br>__radians is how many radians of a circle this record fills. A circle has Math.PI </em> 2 radians. __angle and radians<br>are only set when values are numeric.<br>__min is the minimum value found in the data set<br>__max is the max value found in the data set.<br>__maxAggr is useful for nested data sets. It is set to max(child values) in the data set. For non-nested sets, it will<br>have the same value as __max. Example: for</p>
 <ul>
 <li><code></li>
@@ -131,6 +131,7 @@
 <p></code></p>
 <p>__maxAggr will be 39000(Sum children of Germany), while __max will be 29000.</p>
 <p>__parent will for child items contain a reference to parent id which can be retrieved using dataSource.byId(id)</p>
+<p>getParent() returns a reference to parent record if set, it will return undefined otherwise.<br>getChildren() returns reference to child data array, example the children array of Germany in the example above</p>
     </div>
     
 
@@ -542,6 +543,30 @@
         </tr>
 
     
+
+        <tr>
+            
+                <td class="name"><code>shouldInheritColor</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Optional function returning true if color should be inherited from parent record. Input: record, 2: caller</p></td>
+        </tr>
+
+    
     </tbody>
 </table>
 
@@ -661,6 +686,399 @@
     
 
     
+        <h3 class="subsection-title">Members</h3>
+
+        <dl>
+            
+<hr>
+<dt class="name" id="maxVal">
+    <h4 id="maxVal"><span class="type-signature"></span>maxVal<span class="type-signature"></span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Max value in data array</p>
+    </div>
+    
+
+    
+
+    
+<dl class="details">
+    
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    <dl>
+
+<table class="props table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>maxVal</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+</dl>
+
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="chart_data-source.js.html">chart/data-source.js</a>,
+				 <a href="chart_data-source.js.html#sunlight-1-line-209">line 209</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id="maxValAggr">
+    <h4 id="maxValAggr"><span class="type-signature"></span>maxValAggr<span class="type-signature"></span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Aggregated max value in the data array. Sum value of child data.</p>
+    </div>
+    
+
+    
+
+    
+<dl class="details">
+    
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    <dl>
+
+<table class="props table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>maxValAggr</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+</dl>
+
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="chart_data-source.js.html">chart/data-source.js</a>,
+				 <a href="chart_data-source.js.html#sunlight-1-line-233">line 233</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">[
+{
+     &quot;country&quot;: &quot;United Kingdom&quot;,
+     &quot;children&quot;: [
+         { &quot;name&quot;:&quot;0-14&quot;, &quot;people&quot; : 5000 }, { &quot;name&quot;:&quot;15-64&quot;, &quot;people&quot; : 20000 }, { &quot;name&quot;:&quot;65-&quot;, &quot;people&quot; : 4000 }
+     ]
+},
+{
+     &quot;country&quot;: &quot;Germany&quot;,
+     &quot;children&quot;: [
+         { &quot;name&quot;:&quot;0-14&quot;, &quot;people&quot; : 6000 }, { &quot;name&quot;:&quot;15-64&quot;, &quot;people&quot; : 29000 }, { &quot;name&quot;:&quot;65-&quot;, &quot;people&quot; : 4000 }
+     ]
+}
+]
+// maxValAggr will here be 39000 (Sum children of &quot;Germany&quot;).</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id="minVal">
+    <h4 id="minVal"><span class="type-signature"></span>minVal<span class="type-signature"></span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Min value in data array</p>
+    </div>
+    
+
+    
+
+    
+<dl class="details">
+    
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    <dl>
+
+<table class="props table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>minVal</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+</dl>
+
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="chart_data-source.js.html">chart/data-source.js</a>,
+				 <a href="chart_data-source.js.html#sunlight-1-line-240">line 240</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        </dl>
+    
 
     
 
@@ -715,7 +1133,7 @@
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.2</a>
 	
-		on Tue Dec 13th 2016
+		on Thu Dec 15th 2016
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

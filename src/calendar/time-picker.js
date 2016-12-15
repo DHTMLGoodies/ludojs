@@ -441,13 +441,13 @@ ludo.calendar.TimePicker = new Class({
         hour = hour % 12;
         var degrees = 360 / 12 * hour;
         degrees -= (360 * 3 / 12);
-        return ludo.geometry.degreesToRadians(degrees);
+        return ludo.geometry.toRadians(degrees);
     },
 
     getMinuteAngle: function (minute) {
         var degrees = 360 / 60 * minute;
         degrees -= 90;
-        return ludo.geometry.degreesToRadians(degrees);
+        return ludo.geometry.toRadians(degrees);
     },
 
     positionMinute: function (index) {

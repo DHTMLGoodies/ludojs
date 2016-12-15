@@ -1,11 +1,11 @@
 
 ludo.geometry = {
 
-    degreesToRadians: function (degrees) {
+    toRadians: function (degrees) {
         return (degrees * Math.PI) / 180;
     },
 
-    radiansToDegrees: function (radians) {
+    toDegrees: function (radians) {
         return radians * (180 / Math.PI);
     },
 
@@ -19,7 +19,7 @@ ludo.geometry = {
     },
 
     getPoint: function (originX, originY, degreesFromOrigin, distance) {
-        return this.getPointDistanceFrom(originX, originY, this.degreesToRadians(degreesFromOrigin), distance);
+        return this.getPointDistanceFrom(originX, originY, this.toRadians(degreesFromOrigin), distance);
     },
 
     distanceBetweenPoints: function (x1, y1, x2, y2) {
@@ -39,19 +39,16 @@ ludo.geometry = {
     // @function getAngleFrom
     // @memberOf ludo.geometry
     getAngleFrom: function (fromX, fromY, toX, toY) {
-        var angle = this.radiansToDegrees(Math.atan2(fromY - toY, fromX - toX));
+        var angle = this.toDegrees(Math.atan2(fromY - toY, fromX - toX));
 
         if (angle < 0) {
             angle += 360;
         }
-
         angle = ((angle - 90) + 360) % 360;
-
         return angle;
-
     },
 
-    cosSinBetweenLocations:function(lat1, long1, lat2, long2) {
+    cosSinBetween:function(lat1, long1, lat2, long2) {
         var dLon = (long2 - long1);
 
         var y = Math.sin(dLon) * Math.cos(lat2);
@@ -62,12 +59,12 @@ ludo.geometry = {
 
         // TODO this should be moved out
         // Temporary fix since 0 degrees(NORTH) is right in view
-        brng -= this.degreesToRadians(90);
+        brng -= this.toRadians(90);
 
         return { x: Math.cos(brng), y: Math.sin(brng) };
     },
 
-    bearingBetweenLocations: function (lat1, long1, lat2, long2) {
+    bearing: function (lat1, long1, lat2, long2) {
         var dLon = (long2 - long1);
 
         var y = Math.sin(dLon) * Math.cos(lat2);
@@ -75,7 +72,7 @@ ludo.geometry = {
             * Math.cos(lat2) * Math.cos(dLon);
 
         var brng = Math.atan2(y, x);
-        brng = this.radiansToDegrees(brng);
+        brng = this.toDegrees(brng);
         brng = (brng + 360) % 360;
         brng = 360 - brng;
 

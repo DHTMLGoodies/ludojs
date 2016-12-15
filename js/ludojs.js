@@ -1,7 +1,7 @@
-/* Generated Thu Dec 15 15:27:42 CET 2016 */
+/* Generated Thu Dec 15 15:39:22 CET 2016 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.284
+ludoJS - Javascript framework, 1.1.285
 Copyright (C) 2012-2016  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -9783,7 +9783,7 @@ ludo.chart.DataSource = new Class({
                     node.__minAgr = this.minValAgr;
                     node.__fraction = val / sum;
                     node.__percent = Math.round(node.__fraction * 100);
-                    node.__radians = ludo.geometry.degreesToRadians(node.__fraction * 360);
+                    node.__radians = ludo.geometry.toRadians(node.__fraction * 360);
                     node.__angle = angle;
                     angle += node.__radians;
                 }
@@ -25860,11 +25860,11 @@ ludo.calendar.MonthYearSelector = new Class({
 
 ludo.geometry = {
 
-    degreesToRadians: function (degrees) {
+    toRadians: function (degrees) {
         return (degrees * Math.PI) / 180;
     },
 
-    radiansToDegrees: function (radians) {
+    toDegrees: function (radians) {
         return radians * (180 / Math.PI);
     },
 
@@ -25878,7 +25878,7 @@ ludo.geometry = {
     },
 
     getPoint: function (originX, originY, degreesFromOrigin, distance) {
-        return this.getPointDistanceFrom(originX, originY, this.degreesToRadians(degreesFromOrigin), distance);
+        return this.getPointDistanceFrom(originX, originY, this.toRadians(degreesFromOrigin), distance);
     },
 
     distanceBetweenPoints: function (x1, y1, x2, y2) {
@@ -25898,7 +25898,7 @@ ludo.geometry = {
     // @function getAngleFrom
     // @memberOf ludo.geometry
     getAngleFrom: function (fromX, fromY, toX, toY) {
-        var angle = this.radiansToDegrees(Math.atan2(fromY - toY, fromX - toX));
+        var angle = this.toDegrees(Math.atan2(fromY - toY, fromX - toX));
 
         if (angle < 0) {
             angle += 360;
@@ -25921,7 +25921,7 @@ ludo.geometry = {
 
         // TODO this should be moved out
         // Temporary fix since 0 degrees(NORTH) is right in view
-        brng -= this.degreesToRadians(90);
+        brng -= this.toRadians(90);
 
         return { x: Math.cos(brng), y: Math.sin(brng) };
     },
@@ -25934,7 +25934,7 @@ ludo.geometry = {
             * Math.cos(lat2) * Math.cos(dLon);
 
         var brng = Math.atan2(y, x);
-        brng = this.radiansToDegrees(brng);
+        brng = this.toDegrees(brng);
         brng = (brng + 360) % 360;
         brng = 360 - brng;
 
@@ -26390,13 +26390,13 @@ ludo.calendar.TimePicker = new Class({
         hour = hour % 12;
         var degrees = 360 / 12 * hour;
         degrees -= (360 * 3 / 12);
-        return ludo.geometry.degreesToRadians(degrees);
+        return ludo.geometry.toRadians(degrees);
     },
 
     getMinuteAngle: function (minute) {
         var degrees = 360 / 60 * minute;
         degrees -= 90;
-        return ludo.geometry.degreesToRadians(degrees);
+        return ludo.geometry.toRadians(degrees);
     },
 
     positionMinute: function (index) {

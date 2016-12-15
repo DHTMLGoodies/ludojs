@@ -204,7 +204,7 @@ ludo.chart.DataSource = new Class({
     /**
      * Max value in data array
      * @property {Number} maxVal
-     * @mamberof ludo.chart.DataSource.prototype
+     * @memberof ludo.chart.DataSource.prototype
      */
     maxVal: undefined,
 
@@ -212,7 +212,7 @@ ludo.chart.DataSource = new Class({
     /**
      * Aggregated max value in the data array. Sum value of child data.
      * @property {Number} maxValAggr
-     * @mamberof ludo.chart.DataSource.prototype
+     * @memberof ludo.chart.DataSource.prototype
      * @example
      * [
      * {
@@ -235,7 +235,7 @@ ludo.chart.DataSource = new Class({
     /**
      * Min value in data array
      * @property {Number} minVal
-     * @mamberof ludo.chart.DataSource.prototype
+     * @memberof ludo.chart.DataSource.prototype
      */
     minVal: undefined,
 
@@ -397,7 +397,7 @@ ludo.chart.DataSource = new Class({
                     node.__minAgr = this.minValAgr;
                     node.__fraction = val / sum;
                     node.__percent = Math.round(node.__fraction * 100);
-                    node.__radians = ludo.geometry.degreesToRadians(node.__fraction * 360);
+                    node.__radians = ludo.geometry.toRadians(node.__fraction * 360);
                     node.__angle = angle;
                     angle += node.__radians;
                 }

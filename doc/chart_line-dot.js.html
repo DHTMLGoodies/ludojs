@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>LudoJS Source: form/textarea.js</title>
+	<title>LudoJS Source: chart/line-dot.js</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -86,45 +86,122 @@
 		<div id="main">
 			
 
-		<h1 class="page-title">Source: form/textarea.js</h1>
+		<h1 class="page-title">Source: chart/line-dot.js</h1>
     
 <section>
     <article>
         <pre
             class="sunlight-highlight-javascript linenums">/**
- * Text Area field
- * @namespace ludo.form
- * @class ludo.form.Textarea
- * @augments ludo.form.Text
+ * Created by alfmagne1 on 14/12/2016.
  */
-ludo.form.Textarea = new Class({
-    Extends:ludo.form.Text,
-    type:'form.Textarea',
-    inputType:undefined,
-    inputTag:'textarea',
-    overflow:'hidden',
+ludo.chart.LineDot = new Class({
+    Extend: Events,
+    type:'chart.LineDot',
 
-    __construct:function (config) {
-        this.parent(config);
-        this.ucWords = false;
-    },
+    shape:undefined,
+    record:undefined,
+    size:8,
+    ds:undefined,
 
-    __rendered:function(){
-        this.parent();
-        this.els.formEl.css({
-            paddingRight:0,paddingTop:0
-        });
-    },
-    resizeDOM:function () {
-        this.parent();
-        if (this.layout &amp;&amp; this.layout.weight) {
-            var height = this.getEl().offsetHeight;
-            height -= (ludo.dom.getMBPH(this.getEl()) + ludo.dom.getMBPH(this.getBody()) + ludo.dom.getMH(this.els.formEl.parent()));
-			height -=1;
-            if (height > 0) {
-                this.els.formEl.style.height = height+'px';
-            }
+    node:undefined,
+    
+    nodeHighlight:undefined,
+    renderTo:undefined,
+
+    x:undefined,
+    y:undefined,
+
+    parentComponent:undefined,
+
+    initialize:function(props){
+        this.record = props.record;
+        this.shape = 'circle';
+        this.renderTo = props.renderTo;
+        this.parentComponent = props.parentComponent;
+
+        this.node = new ludo.canvas.Path();
+
+        switch(this.shape){
+            case 'circle':
+                this.node.attr("stroke-linejoin", "round");
+                this.node.attr("stroke-linecap", "round");
+                this.node.attr("stroke-width", this.size);
+                this.node.css("stroke", this.record.getParent().__color);
+                this.node.css("cursor", "pointer");
+                break;
+
         }
+
+        this.renderTo.append(this.node);
+        
+
+
+        this.ds = props.ds;
+
+        this.ds.on("enter" + this.record.__uid, this.enter.bind(this));
+        this.ds.on("leave" + this.record.__uid, this.leave.bind(this));
+
+    },
+
+    enter:function(){
+        if(this.nodeHighlight == undefined){
+            this.nodeHighlight = new ludo.canvas.Circle({
+                r : this.size * 1.6
+            });
+            this.nodeHighlight.css({
+               'stroke-opacity': 0.5,
+                fill:this.record.getParent().__color,
+                'stroke-width' : 0,
+                stroke: 'none',
+                'fill-opacity' : 0.3
+
+            });
+
+
+            this.renderTo.append(this.nodeHighlight);
+            this.node.toFront();
+        }
+        this.nodeHighlight.set("cx", this.x);
+        this.nodeHighlight.set("cy", this.y);
+        this.nodeHighlight.show();
+
+        this.parentComponent.parentComponent.onFragmentAction('enter', this.parentComponent, this.record, this.nodeHighlight, {});
+
+        this.node.animate({
+            'stroke-width' : this.size * 1.2
+        },100);
+
+        console.log(this.node.el);
+    },
+
+    leave:function(){
+        this.nodeHighlight.hide();
+        this.node.animate({
+            'stroke-width': this.size
+        },100);
+    },
+
+
+    position:function(x,y){
+        this.x = x; this.y = y;
+        var p;
+        switch(this.shape){
+            case 'circle':
+                 p = "M " + x + " " + y + " L " + x + " " + y;
+                break;
+        }
+
+        if(p){
+            this.node.set("d", p);
+        }
+    },
+
+    hide:function(){
+        this.node.hide();
+    },
+
+    show:function(){
+        this.node.show();
     }
 });</pre>
     </article>
