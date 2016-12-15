@@ -24,7 +24,7 @@ ludo.chart.LineItem = new Class({
                 {
                     record:c[i],
                     ds : this.ds,
-                    renderTo: this.getParent(),
+                    renderTo: this.getParent().getChartNode(),
                     parentComponent:this
                 });
             this.dots.push(d);

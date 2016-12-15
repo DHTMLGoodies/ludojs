@@ -17,18 +17,23 @@ ludo.chart.Base = new Class({
      * @property {ludo.chart.DataSource} ds
      * @memberof ludo.chart.Base.prototype
      */
-    ds : undefined,
+    ds: undefined,
 
-    easing:undefined,
+    easing: undefined,
     duration: 300,
 
-    data:undefined,
+    data: undefined,
 
-    entered:undefined,
+    entered: undefined,
+
+    chartNode: undefined,
+
+    clipPath: undefined,
+    clipRect: undefined,
 
     __construct: function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['animate', 'bgColor','duration','data']);
+        this.setConfigParams(config, ['animate', 'bgColor', 'duration', 'data']);
         this.ds = this.getDataSource();
 
         this.easing = config.easing || ludo.canvas.easing.outSine;
@@ -43,16 +48,25 @@ ludo.chart.Base = new Class({
         this.ds.on('leave', this.leave.bind(this));
     },
 
-    select:function(record){
+    getChartNode: function () {
+        if (this.chartNode == undefined) {
+            var c = this.getCanvas();
+            this.chartNode = c.$('g');
+            this.append(this.chartNode);
+        }
+        return this.chartNode;
     },
 
-    blur:function(record){
+    select: function (record) {
     },
 
-    enter:function(record){
+    blur: function (record) {
     },
 
-    leave:function(record){
+    enter: function (record) {
+    },
+
+    leave: function (record) {
     },
 
     ludoEvents: function () {
@@ -132,16 +146,16 @@ ludo.chart.Base = new Class({
         this.render();
         this.rendered = true;
 
-        if(this.animate){
+        if (this.animate) {
             this.renderAnimation();
         }
     },
 
-    renderAnimation:function(){
+    renderAnimation: function () {
 
     },
 
-    renderBackgroundItems:function(){
+    renderBackgroundItems: function () {
         if (this.bgColor != undefined) {
             var s = this.getSize();
             this.bgRect = new ludo.canvas.Rect({
@@ -183,30 +197,86 @@ ludo.chart.Base = new Class({
     },
 
 
-    dataRendered:false,
+    dataRendered: false,
 
-    resize:function(coordinates){
+    resize: function (coordinates) {
         this.parent(coordinates);
 
         if (!this.dataRendered && this.getDataSource().hasData()) {
             this.create();
         }
-        
+
         var size = this.getSize();
-        jQuery.each(this.fragments, function(key, fragment){
-            fragment.resize(size.x, size.y); 
+        jQuery.each(this.fragments, function (key, fragment) {
+            fragment.resize(size.x, size.y);
         });
     },
-    
-    onFragmentAction:function(action, fragment, record, node, event){
+
+    onFragmentAction: function (action, fragment, record, node, event) {
         this.fireEvent(action, [fragment, record, node, event]);
     },
 
-    getTooltipPosition:function(){
+    getTooltipPosition: function () {
         return 'left';
     },
 
-    tooltipAtMouseCursor:function(){
+    tooltipAtMouseCursor: function () {
         return false;
+    },
+
+
+    /**
+     * Chart reveal animation.
+     * @param {String} direction direction for the animation, 'left', 'right', 'up' or 'down'. Default: 'right'
+     * @param {Number} duration animation duration in milliseconds, default: 600
+     * @memberof ludo.chart.Base.prototype
+     */
+    reveal: function (direction, duration) {
+        direction = direction || 'right';
+        duration = duration || 600;
+        var s = this.getSize();
+        var c = this.getCanvas();
+        if (this.clipPath == undefined) {
+            this.clipPath = c.$('clipPath');
+            c.appendDef(this.clipPath);
+            this.clipRect = c.$('rect', {
+                x: 0, y: 0, width: 0, height: 0
+            });
+            this.clipPath.append(this.clipRect);
+            this.getChartNode().applyClipPath(this.clipPath);
+        }
+
+        var r = this.clipRect;
+        r.set('x',0);
+        r.set('y',0);
+        r.set('width',0);
+        r.set('height',0);
+
+        var anim = {};
+
+        switch(direction){
+            case 'right':
+                r.set('height', s.y);
+                anim.width = s.x;break;
+            case 'up':
+                r.set('y', s.y);
+                r.set('width', s.x);
+                anim.height = s.y;
+                anim.y = 0;
+                break;
+            case 'left':
+                r.set('x', s.x);
+                r.set('height', s.y);
+                anim.x = 0;
+                anim.width = s.x;
+                break;
+            case 'down':
+                r.set('width', s.x);
+                r.set('height', 0);
+                anim.height = s.y;
+                break;
+        }
+        this.clipRect.animate(anim, duration);
+
     }
 });

@@ -75,6 +75,12 @@ ludo.chart.Line = new Class({
 
     },
 
+
+    renderAnimation:function(){
+        this.reveal();    
+    },
+
+
     resizeLines:function(){
         var size = this.getSize();
 
