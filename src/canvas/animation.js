@@ -34,6 +34,8 @@ ludo.canvas.Animation = new Class({
 
     fn: function (node, properties, duration, easing, complete, stepFn) {
 
+        duration = duration || 400;
+        
         easing = easing || ludo.canvas.easing.inSine;
 
         var changes = {};
@@ -93,6 +95,7 @@ ludo.canvas.Animation = new Class({
                     changes[key] = value - current;
                     start[key] = current;
                     special[key] = false;
+
             }
 
         }.bind(this));

@@ -1,7 +1,7 @@
-/* Generated Wed Dec 14 18:33:28 CET 2016 */
+/* Generated Thu Dec 15 14:37:46 CET 2016 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.280
+ludoJS - Javascript framework, 1.1.281
 Copyright (C) 2012-2016  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -13002,29 +13002,39 @@ ludo.chart.LineDot = new Class({
     enter:function(){
         if(this.nodeHighlight == undefined){
             this.nodeHighlight = new ludo.canvas.Circle({
-                r : this.size
+                r : this.size * 1.6
             });
             this.nodeHighlight.css({
                'stroke-opacity': 0.5,
-                fill:'none',
-                'stroke-width' : 2,
-                stroke: this.record.getParent().__color
+                fill:this.record.getParent().__color,
+                'stroke-width' : 0,
+                stroke: 'none',
+                'fill-opacity' : 0.3
 
             });
 
 
             this.renderTo.append(this.nodeHighlight);
+            this.node.toFront();
         }
         this.nodeHighlight.set("cx", this.x);
         this.nodeHighlight.set("cy", this.y);
         this.nodeHighlight.show();
-        
+
         this.parentComponent.parentComponent.onFragmentAction('enter', this.parentComponent, this.record, this.nodeHighlight, {});
-        
+
+        this.node.animate({
+            'stroke-width' : this.size * 1.2
+        },100);
+
+        console.log(this.node.el);
     },
 
     leave:function(){
         this.nodeHighlight.hide();
+        this.node.animate({
+            'stroke-width': this.size
+        },100);
     },
 
 
@@ -36721,6 +36731,8 @@ ludo.canvas.Animation = new Class({
 
     fn: function (node, properties, duration, easing, complete, stepFn) {
 
+        duration = duration || 400;
+        
         easing = easing || ludo.canvas.easing.inSine;
 
         var changes = {};
@@ -36780,6 +36792,7 @@ ludo.canvas.Animation = new Class({
                     changes[key] = value - current;
                     start[key] = current;
                     special[key] = false;
+
             }
 
         }.bind(this));

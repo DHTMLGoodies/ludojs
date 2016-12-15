@@ -53,29 +53,39 @@ ludo.chart.LineDot = new Class({
     enter:function(){
         if(this.nodeHighlight == undefined){
             this.nodeHighlight = new ludo.canvas.Circle({
-                r : this.size
+                r : this.size * 1.6
             });
             this.nodeHighlight.css({
                'stroke-opacity': 0.5,
-                fill:'none',
-                'stroke-width' : 2,
-                stroke: this.record.getParent().__color
+                fill:this.record.getParent().__color,
+                'stroke-width' : 0,
+                stroke: 'none',
+                'fill-opacity' : 0.3
 
             });
 
 
             this.renderTo.append(this.nodeHighlight);
+            this.node.toFront();
         }
         this.nodeHighlight.set("cx", this.x);
         this.nodeHighlight.set("cy", this.y);
         this.nodeHighlight.show();
-        
+
         this.parentComponent.parentComponent.onFragmentAction('enter', this.parentComponent, this.record, this.nodeHighlight, {});
-        
+
+        this.node.animate({
+            'stroke-width' : this.size * 1.2
+        },100);
+
+        console.log(this.node.el);
     },
 
     leave:function(){
         this.nodeHighlight.hide();
+        this.node.animate({
+            'stroke-width': this.size
+        },100);
     },
 
 
