@@ -1,70 +1,110 @@
 /**
- * Created by alfmagne1 on 14/12/2016.
+ * Rendering Chart Shapes/Dots
  */
 ludo.chart.LineDot = new Class({
     Extend: Events,
-    type:'chart.LineDot',
+    type: 'chart.LineDot',
 
-    shape:undefined,
-    record:undefined,
-    size:8,
-    ds:undefined,
+    shape: undefined,
+    record: undefined,
+    size: 8,
+    ds: undefined,
 
-    node:undefined,
-    
-    nodeHighlight:undefined,
-    renderTo:undefined,
+    node: undefined,
 
-    x:undefined,
-    y:undefined,
+    nodeHighlight: undefined,
+    renderTo: undefined,
 
-    parentComponent:undefined,
+    x: undefined,
+    y: undefined,
 
-    initialize:function(props){
+    parentComponent: undefined,
+
+    showDots: true,
+
+
+    initialize: function (props) {
+        this.ds = props.ds;
+
         this.record = props.record;
-        this.shape = 'circle';
+        this.shape = this.ds.shapeOf(this.record) || this.record.__shape || 'circle';
         this.renderTo = props.renderTo;
         this.parentComponent = props.parentComponent;
+        this.showDots = this.parentComponent.getParent().showDots;
 
-        this.node = new ludo.canvas.Path();
+        this.node = this.getNewNode();
 
-        switch(this.shape){
+        this.node.attr("stroke-width", 0);
+        this.node.css("cursor", "pointer");
+        this.node.css("fill", this.record.getParent().__color);
+        this.node.css("stroke", this.record.getParent().__stroke);
+
+        switch (this.shape) {
             case 'circle':
-                this.node.attr("stroke-linejoin", "round");
-                this.node.attr("stroke-linecap", "round");
-                this.node.attr("stroke-width", this.size);
-                this.node.css("stroke", this.record.getParent().__color);
-                this.node.css("cursor", "pointer");
+                this.node.attr('r', this.size / 2);
+                break;
+            default:
+                this.node.set('d', this.getPath());
                 break;
 
         }
 
         this.renderTo.append(this.node);
-        
+
+        if (!this.showDots) {
+            this.node.set("fill-opacity", 0);
+            this.node.set("stroke-opacity", 0);
+        }
 
 
-        this.ds = props.ds;
+
 
         this.ds.on("enter" + this.record.__uid, this.enter.bind(this));
         this.ds.on("leave" + this.record.__uid, this.leave.bind(this));
 
     },
 
-    enter:function(){
-        if(this.nodeHighlight == undefined){
+    getPath: function (highlighted) {
+        var min = -(this.size / 2);
+        var max = (this.size / 2);
+        if (highlighted) {
+            min *= 1.4;
+            max *= 1.4;
+        }
+        switch (this.shape) {
+            case 'rect':
+                return ['M', min, min, 'L', max, min, max, max, min, max, min, min].join(' ');
+            case 'triangle':
+                return ['M', 0, min, 'L', max, max, min, max, 0, min].join(' ');
+            case 'rotatedrect':
+                return ['M', min,0, 0,min, max,0, 0,max, min, 0].join(' ');
+
+        }
+    },
+
+    getNewNode: function () {
+        switch (this.shape) {
+            case 'circle':
+                return new ludo.canvas.Circle();
+            default:
+                return new ludo.canvas.Path();
+        }
+    },
+
+
+    enter: function () {
+        if (this.nodeHighlight == undefined) {
             this.nodeHighlight = new ludo.canvas.Circle({
-                r : this.size * 1.6
+                r: this.size * 1.6
             });
             this.nodeHighlight.css({
-               'stroke-opacity': 0.5,
-                fill:this.record.getParent().__color,
-                'stroke-width' : 0,
+                'stroke-opacity': 0.5,
+                fill: this.record.getParent().__color,
+                'stroke-width': 0,
                 stroke: 'none',
-                'fill-opacity' : 0.3
+                'fill-opacity': 0.3
 
             });
-
-
             this.renderTo.append(this.nodeHighlight);
             this.node.toFront();
         }
@@ -72,42 +112,67 @@ ludo.chart.LineDot = new Class({
         this.nodeHighlight.set("cy", this.y);
         this.nodeHighlight.show();
 
+        this.node.css('stroke', this.record.getParent().__stroke);
+        this.node.set('stroke-width', 1);
+
+        var anim = {};
+        switch (this.shape) {
+            case 'circle':
+                anim.r = this.size * 0.7;
+                break;
+            default:
+                anim.d = this.getPath(true);
+                break;
+
+        }
+
+
+        if (!this.showDots) {
+            anim["fill-opacity"] = 1;
+            anim["stroke-opacity"] = 1;
+        }
+
         this.parentComponent.parentComponent.onFragmentAction('enter', this.parentComponent, this.record, this.nodeHighlight, {});
 
-        this.node.animate({
-            'stroke-width' : this.size * 1.2
-        },100);
-
-        console.log(this.node.el);
+        this.node.animate(anim, 100);
     },
 
-    leave:function(){
+    leave: function () {
         this.nodeHighlight.hide();
-        this.node.animate({
-            'stroke-width': this.size
-        },100);
-    },
-
-
-    position:function(x,y){
-        this.x = x; this.y = y;
-        var p;
-        switch(this.shape){
+        var anim = {};
+        this.node.set('stroke-width', 0);
+        switch (this.shape) {
             case 'circle':
-                 p = "M " + x + " " + y + " L " + x + " " + y;
+                anim.r = this.size / 2;
+                break;
+            default:
+                anim.d = this.getPath(false);
                 break;
         }
 
-        if(p){
-            this.node.set("d", p);
+        if (!this.showDots) {
+            anim["fill-opacity"] = 0;
+            anim["stroke-opacity"] = 0;
+        }
+        this.node.animate(anim, 100);
+    },
+
+
+    position: function (x, y) {
+        this.x = x;
+        this.y = y;
+        this.node.setTranslate(x, y);
+
+        if (this.nodeHighlight) {
+            this.nodeHighlight.setTranslate(x, y);
         }
     },
 
-    hide:function(){
+    hide: function () {
         this.node.hide();
     },
 
-    show:function(){
+    show: function () {
         this.node.show();
     }
 });

@@ -89,11 +89,11 @@ ludo.chart.Base = new Class({
     createFragment: function (record) {
 
         var f = this.createDependency('fragment' + this.fragments.length,
-            {
+            Object.merge({
                 type: this.fragmentType,
                 record: record,
                 parentComponent: this
-            });
+            }, this.getFragmentProperties()));
 
         this.fragmentMap[record.__uid] = f;
         this.fragments.push(f);
@@ -101,6 +101,10 @@ ludo.chart.Base = new Class({
         this.relayEvents(f, ['mouseenter', 'mouseleave']);
 
         return f;
+    },
+
+    getFragmentProperties:function(){
+        return {};
     },
 
     getFragments: function () {
@@ -112,7 +116,7 @@ ludo.chart.Base = new Class({
     },
 
     getRecords: function () {
-        return this.getParent().getDataSource().getData();
+        return this.getParent().getDataSource().getData(this);
     },
 
     dataProvider: function () {

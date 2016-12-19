@@ -42,7 +42,7 @@ require_once("../includes/demo-header.php");
         },
 
         valueForDisplay:function(value, caller){
-            if(caller.type == 'chart.BarValues')return Math.round(value / 1000) + " mill";
+            if(caller.type == 'chart.ChartValues')return Math.round(value / 1000) + " mill";
             return value;
         },
 
@@ -124,7 +124,7 @@ require_once("../includes/demo-header.php");
                             },
                             {
                                 id:'barLabels',
-                                type:'chart.BarLabels',
+                                type:'chart.ChartLabels',
 
 
                                 orientation:'vertical',
@@ -142,7 +142,7 @@ require_once("../includes/demo-header.php");
                             },
                             {
                                 id:'barValues',
-                                type:'chart.BarValues',
+                                type:'chart.ChartValues',
                                 layout:{
                                     alignParentBottom:true,
                                     rightOf:'barLabels',

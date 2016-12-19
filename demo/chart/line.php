@@ -43,7 +43,7 @@ require_once("../includes/demo-header.php");
             return "";
         },
 
-        max:function(){ // Function returning max value for the y axis of the bar chart
+        max:function(){ // Function returning max value for the y axis of the line chart
             return this.maxVal + 15 - (this.maxVal % 5);
         },
 
@@ -52,12 +52,16 @@ require_once("../includes/demo-header.php");
         },
 
         valueForDisplay:function(value, caller){
-            if(caller.type == 'chart.BarValues')return value + '°C'
+            if(caller.type == 'chart.ChartValues')return value + '°C'
             return value;
         },
         // Function returning increments for lines and labels
         increments:function(minVal, maxVal, caller){
             return 5;
+        },
+
+        strokeOf:function(record, caller){
+            return '#424242';
         }
 
 
@@ -140,7 +144,7 @@ require_once("../includes/demo-header.php");
                             {
                                 id:'barValues',
                                 orientation:'vertical',
-                                type:'chart.BarValues',
+                                type:'chart.ChartValues',
                                 layout:{
                                     rightOf:'labelsLeft',
                                     below:'labelsTop',
@@ -155,7 +159,7 @@ require_once("../includes/demo-header.php");
                             },
                             {
                                 id:'barLabels',
-                                type:'chart.BarLabels',
+                                type:'chart.ChartLabels',
                                 // Static labels instead of getting them from the data source.
                                 data:["Jan","Feb", "Mar", "Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
                                 layout:{
@@ -173,11 +177,11 @@ require_once("../includes/demo-header.php");
                                 name : 'bar',
                                 id:'bar',
                                 type:'chart.Line',
+                                showDots:true,
                                 stacked:true,
                                 animate:true,
                                 orientation:'horizontal',
                                 bgColor:'#424242',
-                                barSize:0.7, // Fraction bar width
                                 layout:{
                                     rightOf:'barValues',
                                     leftOf:'labelsRight',
@@ -192,18 +196,18 @@ require_once("../includes/demo-header.php");
                                 },
                                 outline:{
                                     'left': {
-                                        stroke: '#aeb0b0',
+                                        stroke: '#666',
                                         fill:'none'
 
                                     },
                                     'bottom':{
-                                        stroke: '#aeb0b0'
+                                        stroke: '#666'
                                     },
                                     'top':{
-                                        stroke: '#535353'
+                                        stroke: '#333'
                                     },
                                     'right':{
-                                        stroke: '#535353'
+                                        stroke: '#333'
                                     }
                                 },
                                 plugins:[

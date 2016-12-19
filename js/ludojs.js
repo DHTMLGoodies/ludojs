@@ -1,7 +1,7 @@
-/* Generated Thu Dec 15 15:53:16 CET 2016 */
+/* Generated Mon Dec 19 11:21:39 CET 2016 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.287
+ludoJS - Javascript framework, 1.1.289
 Copyright (C) 2012-2016  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -9521,11 +9521,11 @@ ludo.chart.Record = new Class({
  * may return [0,10,20,30,40,50,60,70,80,90,100]. This function may also return a numeric value, example: 10 instead of the array. Three arguments are sent to this function: 1) the data arrays
  * minimum value, 2) the data arrays maximum value and 3) The caller, i.e. the SVG view asking for the increments.
  * @param {Function } config.valueForDisplay Optional function returning value to display in a view. Arguments: 1) value, 2) caller. Let's say you have a
- * data source with values in millions, example: Population in countries. For the chart.BarValues view, you might want to display number of millians, i.e.
+ * data source with values in millions, example: Population in countries. For the chart.ChartValues view, you might want to display number of millians, i.e.
  * 10 instead of 10000000. This can be done with a valueForDisplay function:
  * <code>
  *     valueForDisplay:function(value, caller){
- *          if(caller.type == 'chart.BarValues')return Math.round(value / 1000000) + " mill";
+ *          if(caller.type == 'chart.ChartValues')return Math.round(value / 1000000) + " mill";
  *          return value;
  *     }
  * </code>
@@ -9533,6 +9533,8 @@ ludo.chart.Record = new Class({
  * @param {Function} config.strokeOverOf Optional function returning mouse over stroke color for chart item, Arguments: 1) chart record, 2) caller
  * @param {String} config.childKey Key for child arrays, default: "children"
  * @param {Function} config.shouldInheritColor Optional function returning true if color should be inherited from parent record. Input: record, 2: caller
+ * @param {Function} config.shapeOf Optional function returning shape of a record. This is used when rendering dots for the line chart. Default shape is "circle". Can also be
+ * "rect", "triangle" or path to an image.
  * @example
  *     var dataSource = new ludo.chart.DataSource({
         data:[
@@ -9594,6 +9596,9 @@ ludo.chart.DataSource = new Class({
      */
     maxVal: undefined,
 
+    dataFor:undefined,
+    sortFn:undefined,
+
 
     /**
      * Aggregated max value in the data array. Sum value of child data.
@@ -9631,7 +9636,7 @@ ludo.chart.DataSource = new Class({
     increments: undefined,
 
     __construct: function (config) {
-        this.setConfigParams(config, ['shouldInheritColor', 'childKey', 'valueKey', 'color', 'valueOf', 'textOf', 'getText', 'max', 'min', 'increments', 'strokeOf', 'strokeOverOf','valueForDisplay']);
+        this.setConfigParams(config, ['shapeOf', 'dataFor', 'sortFn', 'shouldInheritColor', 'childKey', 'valueKey', 'color', 'valueOf', 'textOf', 'getText', 'max', 'min', 'increments', 'strokeOf', 'strokeOverOf','valueForDisplay']);
         this.parent(config);
 
 
@@ -9658,6 +9663,9 @@ ludo.chart.DataSource = new Class({
         this.maxValAggr = undefined;
         this.count = this.getCount(this.data);
         this.parseChartBranch(this.data);
+        if(this.sortFn != undefined){
+            this.sortBranch(this.data);
+        }
         this.updateIncrements();
     },
 
@@ -9764,8 +9772,23 @@ ludo.chart.DataSource = new Class({
         }
     },
 
+    sortBranch:function(branch, parent){
+        if(parent != undefined && this.sortFn != undefined) {
+            var fn = this.sortFn(parent, this);
+            if(fn != undefined){
+                branch = branch.sort(fn);
+            }
+        }
+        jQuery.each(branch, function(index, node){
+            node.__index = index;
+            if(node[this.childKey] != undefined){
+                this.sortBranch(node[this.childKey], node);
+            }
+        }.bind(this));
+    },
 
     parseChartBranch: function (branch, parent) {
+
 
         this.updateValues(branch, parent);
 
@@ -9906,6 +9929,11 @@ ludo.chart.DataSource = new Class({
         return this.data && this.data.length > 0;
     },
 
+    shapes: [
+        'circle','rect', 'triangle','rotatedrect'
+    ],
+    shapeIndex:0,
+
     setColor: function (record) {
         var u = false;
 
@@ -9915,10 +9943,15 @@ ludo.chart.DataSource = new Class({
             record.__colorOver = p.__colorOver;
             record.__stroke = p.__stroke;
             record.__strokeOver = p.__strokeOver;
+            record.__shape = p.__shape;
             this.color = this.colorUtil().offsetHue(this.color, (360 / (record.__count + 1)));
             return;
         }
 
+        if(record.__shape == undefined){
+            record.__shape = this.shapes[this.shapeIndex++];
+            this.shapeIndex = this.shapeIndex % this.shapes.length;
+        }
 
         if (record.__color == undefined) {
             if (this.colorOf != undefined) {
@@ -9981,55 +10014,20 @@ ludo.chart.DataSource = new Class({
 
     shouldInheritColor:function(){
         return false;
+    },
+
+    getData:function(caller){
+        var allData = this.parent();
+        var d = this.dataFor != undefined ? this.dataFor(caller, allData) : undefined;
+        return d ? d : allData;
+    },
+
+    shapeOf:function(){
+        return undefined;
     }
 });
 
-/*
-
- Average high °C (°F)	−42.5
- (−44.5)	−35.4
- (−31.7)	−20.8
- (−5.4)	−3.7
- (25.3)	9.1
- (48.4)	20.0
- (68)	22.7
- (72.9)	18.2
- (64.8)	8.9
- (48)	−9.2
- (15.4)	−30.7
- (−23.3)	−42
- (−44)	−8.8
- (16.2)
- Daily mean °C (°F)	−46.4
- (−51.5)	−42
- (−44)	−31.2
- (−24.2)	−13.6
- (7.5)	2.7
- (36.9)	12.6
- (54.7)	14.9
- (58.8)	10.3
- (50.5)	2.3
- (36.1)	−14.8
- (5.4)	−35.2
- (−31.4)	−45.5
- (−49.9)	−15.5
- (4.1)
- Average low °C (°F)	−50
- (−58)	−47.3
- (−53.1)	−40
- (−40)	−23.9
- (−11)	−4.7
- (23.5)	4.0
- (39.2)	6.2
- (43.2)	2.6
- (36.7)	−3.7
- (25.3)	−20.4
- (−4.7)	−39.3
- (−38.7)	−48.8
- (−55.8)	−22.1
- (−7.8)
- 
- *//* ../ludojs/src/chart/chart.js */
+/* ../ludojs/src/chart/chart.js */
 /**
  * Parent View for all Charts. You build the charts by adding child views(ludo.chart.*).
  * Child views are always rendered using a <a href="layout.Relative.html">relative</a> layout model.
@@ -10101,11 +10099,10 @@ ludo.chart.Fragment = new Class({
         this.ds = this.parentComponent.ds;
         this.createNodes();
 
-
     },
 
     getNode:function(){
-        return this.nodes[0];
+        return this.nodes[this.nodes.length-1];
     },
 
     createNodes:function(){
@@ -10397,11 +10394,11 @@ ludo.chart.Base = new Class({
     createFragment: function (record) {
 
         var f = this.createDependency('fragment' + this.fragments.length,
-            {
+            Object.merge({
                 type: this.fragmentType,
                 record: record,
                 parentComponent: this
-            });
+            }, this.getFragmentProperties()));
 
         this.fragmentMap[record.__uid] = f;
         this.fragments.push(f);
@@ -10409,6 +10406,10 @@ ludo.chart.Base = new Class({
         this.relayEvents(f, ['mouseenter', 'mouseleave']);
 
         return f;
+    },
+
+    getFragmentProperties:function(){
+        return {};
     },
 
     getFragments: function () {
@@ -10420,7 +10421,7 @@ ludo.chart.Base = new Class({
     },
 
     getRecords: function () {
-        return this.getParent().getDataSource().getData();
+        return this.getParent().getDataSource().getData(this);
     },
 
     dataProvider: function () {
@@ -11759,9 +11760,7 @@ ludo.chart.Tooltip = new Class({
     tpl: '{label}: {value}',
     shown: false,
 
-    offset: {
-        x: 0, y: 0
-    },
+    offset: undefined,
 
     size: {
         x: 0, y: 0
@@ -11786,8 +11785,11 @@ ludo.chart.Tooltip = new Class({
 
     _autoLeave: undefined,
 
+
+
     __construct: function (config) {
         this.parent(config);
+        this.offset = {x: 0,y:0};
         this.setConfigParams(config, ['tpl', 'boxStyles', 'textStyles']);
         this.createDOM();
 
@@ -11870,7 +11872,9 @@ ludo.chart.Tooltip = new Class({
             this.move(event);
         } else {
             xy = this.getXY(fragment, node);
-
+            if(this.offset.x != 0 || this.offset.y != 0){
+                this.updateRect(fragment);
+            }
             if (animate) {
                 this.node.animate({
                     'translate': [xy.x, xy.y]
@@ -11900,9 +11904,15 @@ ludo.chart.Tooltip = new Class({
         this.size.y += 15;
 
 
-        var middle = this.size.x / 2;
+        var middle = this.size.x / 2 + this.offset.x;
         var middleY = this.size.y / 2;
 
+        if(middle + this.arrowSize > this.size.x){
+            middle -= ((middle + this.arrowSize ) - this.size.x);
+        }
+        if(middle < 0){
+            middle = 0;
+        }
 
         var p;
         var tp = this.getParent().getTooltipPosition();
@@ -11953,11 +11963,16 @@ ludo.chart.Tooltip = new Class({
         }
 
 
+
+
         this.rect.setPath('M 0 0 L ' + p.join(' ') + " Z");
 
     },
 
     getXY: function (fragment, target) {
+
+        this.offset.x = 0;
+        this.offset.y = 0;
 
         var bounds = target.getBBox();
 
@@ -11982,8 +11997,16 @@ ludo.chart.Tooltip = new Class({
 
 
             default:
+
+                var x = pos.left + bounds.width / 2 - size.width / 2;
+                var aw = this.getParent().getCanvas().width;
+                var overflow = (x + size.width) - aw;
+                if(overflow > 0){
+                    this.offset.x = overflow;
+                    x-=overflow;
+                }
                 return {
-                    x: pos.left + bounds.width / 2 - size.width / 2,
+                    x: x,
                     y: pos.top - size.height
                 };
 
@@ -12152,85 +12175,93 @@ ludo.chart.Text = new Class({
         this.resizeText();
     }
 
-});/* ../ludojs/src/chart/bar-labels.js */
+});/* ../ludojs/src/chart/chart-labels.js */
 /**
  * Displays bar labels for a bar chart
- * @class ludo.chart.BarLabels
+ * @class ludo.chart.ChartLabels
  * @param {Object} config
  * @param {Object} config.styling Text styling for the labels.
  */
-ludo.chart.BarLabels = new Class({
+ludo.chart.ChartLabels = new Class({
     Extends: ludo.chart.Base,
-    fragmentType:undefined,
+    fragmentType: undefined,
+    type: 'chart.ChartLabels',
 
-    orientation : undefined,
-    styling:undefined,
+    orientation: undefined,
+    styling: undefined,
 
-    textNodes:undefined,
+    textNodes: undefined,
 
-    padding:0,
+    padding: 0,
 
-    __construct:function(config){
+    __construct: function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['orientation', 'styling','padding']);
-        if(this.orientation==undefined)this.orientation = 'horizontal';
+        this.setConfigParams(config, ['orientation', 'styling', 'padding']);
+        if (this.orientation == undefined)this.orientation = 'horizontal';
         this.styling = this.styling || {};
         this.textNodes = [];
 
     },
 
-    render:function(){
+    render: function () {
         this.parent();
         var len = this.getDataSource().length();
-        for(var i=0;i<len;i++){
+        for (var i = 0; i < len; i++) {
             this.getTextNode(i);
         }
-        this.resizeBarLabels();
+        this.resizeChartLabels();
 
     },
 
-    onResize:function(){
-        this.resizeBarLabels();
+    onResize: function () {
+        this.resizeChartLabels();
     },
 
-    resizeBarLabels:function(){
+    resizeChartLabels: function () {
         var size = this.getSize();
 
         var len = this.length();
-        var i,el;
+        var i, el;
 
-        if(this.orientation == 'horizontal'){
+        if (this.orientation == 'horizontal') {
             var width = size.x / len;
             var y = this.getCenter().y;
-            for(i=0;i<len;i++){
+            for (i = 0; i < len; i++) {
                 el = this.getTextNode(i);
-                el.attr('x', (width * i) + (width / 2));
-                el.attr('y', y);
+                if (el) {
+                    el.attr('x', (width * i) + (width / 2));
+                    el.attr('y', y);
+
+                }
             }
-        }else{
-            console.log(len);
+        } else {
             var height = size.y / len;
-            for(i=0;i<len;i++){
+            for (i = 0; i < len; i++) {
                 el = this.getTextNode(i);
-                el.attr('x', size.x - this.padding);
-                el.attr('y', (i*height) + (height/2));
+                if (el) {
+                    el.attr('x', size.x - this.padding);
+                    el.attr('y', (i * height) + (height / 2));
 
-
+                }
             }
         }
     },
 
 
-    getTextNode:function(index){
-
-
-        if(this.textNodes[index] == undefined){
-
+    getTextNode: function (index) {
+        var txt = this.getText(index);
+        if (!txt){
+            if(this.textNodes[index] == undefined){
+                this.textNodes.push(undefined);
+            }
+            return undefined;
+        }
+        if (this.textNodes[index] == undefined) {
             var el = new ludo.canvas.Text("", {});
             this.textNodes.push(el);
-            if(this.orientation == 'horizontal'){
+            if (this.orientation == 'horizontal') {
                 el.textAnchor('middle');
-            }else{
+            } else {
                 el.textAnchor('end');
                 el.attr('alignment-baseline', 'middle');
             }
@@ -12238,26 +12269,25 @@ ludo.chart.BarLabels = new Class({
             this.append(el);
         }
 
-        this.textNodes[index].text(this.getText(index));
+        this.textNodes[index].text(txt);
         return this.textNodes[index];
 
     },
 
-    getText:function(index){
-        if(this.data != undefined)return this.data[index];
-        var ds = this.getDataSource();
-        var rec = ds.data[index];
-        return ds.textOf(rec, this)
+    getText: function (index) {
+        if (this.data != undefined)return this.data[index];
+        var rec = this.ds.getData(this)[index];
+        return this.ds.textOf(rec, this)
     },
-    
-    length:function(){
-        if(this.data != undefined)return this.data.length;
-        return this.getDataSource().length();
+
+    length: function () {
+        if (this.data != undefined)return this.data.length;
+        return this.getDataSource().getData(this).length;
     }
-});/* ../ludojs/src/chart/bar-values.js */
-ludo.chart.BarValues = new Class({
+});/* ../ludojs/src/chart/chart-values.js */
+ludo.chart.ChartValues = new Class({
     Extends: ludo.chart.Base,
-    type: 'chart.BarValues',
+    type: 'chart.ChartValues',
     fragmentType: undefined,
 
     orientation: undefined,
@@ -12358,6 +12388,8 @@ ludo.chart.BarValues = new Class({
 });/* ../ludojs/src/chart/bar.js */
 /**
  * Bar Chart component
+ * @class ludo.chart.Bar
+ * @augments ludo.chart.Base
  * @param {Object} config
  * @param {String} config.orientation Bar chart orientation, __horizontal__ or __vertical__
  * @param {Number} config.barSize Fraction width of bars, default: 0.8
@@ -12715,6 +12747,18 @@ ludo.chart.BarItem = new Class({
 
 
 });/* ../ludojs/src/chart/line.js */
+/**
+ * Line Chart View
+ * This SVG View renders a line chart. This view should be a child of ludo.chart.Chart.
+ *
+ * This class extends ludo.chart.Bar
+ *
+ * @class ludo.chart.Line
+ * @augments ludo.chart.Bar
+ * @param {Object} config
+ * @param {Object} config.lineStyles
+ * @param {Boolean} config.showDots
+ */
 ludo.chart.Line = new Class({
     Extends: ludo.chart.Bar,
     fragmentType: 'chart.LineItem',
@@ -12725,14 +12769,16 @@ ludo.chart.Line = new Class({
     currentHighlighted:undefined,
 
     parentPos:undefined,
-
+    showDots:true,
+    revealAnim:true,
+    
+    halfInset:true,
+    
     __construct:function(config){
         this.parent(config);
-        this.setConfigParams(config, ["lineStyles"]);
+        this.setConfigParams(config, ["lineStyles","showDots"]);
 
         this.node.on("mousemove", this.mousemove.bind(this));
-
-
     },
 
     mousemove:function(e){
@@ -12794,7 +12840,11 @@ ludo.chart.Line = new Class({
 
 
     renderAnimation:function(){
-        this.reveal();    
+        if(this.revealAnim){
+            this.reveal();
+        }else{
+            this.parent();
+        }
     },
 
 
@@ -12816,6 +12866,18 @@ ludo.chart.Line = new Class({
         this.points[record.id] = [x,y];
     }
 
+});/* ../ludojs/src/chart/area.js */
+ludo.chart.Area = new Class({
+    Extends: ludo.chart.Line,
+    type:'chart.Area',
+    showDots:false,
+    revealAnim:false,
+    halfInset:false,
+    getFragmentProperties:function(){
+        return {
+            filled: true
+        }
+    }
 });/* ../ludojs/src/chart/line-item.js */
 ludo.chart.LineItem = new Class({
 
@@ -12823,17 +12885,35 @@ ludo.chart.LineItem = new Class({
     type:'chart.LineItem',
 
     dots:undefined,
+    filled:false,
 
+    __construct:function(config){
+        if(config.filled != undefined)this.filled = config.filled;
+        this.parent(config);
+
+
+    },
 
     createNodes:function(){
         this.parent();
+
+        if(this.filled){
+            var bg = this.createNode('path', {
+               d: this.getPath(false, true)
+            });
+            bg.css("fill", this.record.__color);
+            bg.css("fill-opacity", 0.3);
+        }
+
         var n = this.createNode('path', {
-            'd' : this.getPath()
+            'd' : this.getPath(false, false)
         });
-        n.css("fill","none");
+        n.css("fill", "none");
         n.attr("stroke", this.record.__color);
         n.attr("stroke-linejoin", "round");
         n.attr("stroke-linecap", "round");
+
+
 
         this.dots = [];
 
@@ -12854,16 +12934,28 @@ ludo.chart.LineItem = new Class({
 
     },
 
-    getPath:function(zero){
+    getPath:function(zero, filled){
         var len = this.record.getChildren().length;
 
         var p = ["M"];
 
         for(var i=0;i<len;i++){
             if(i>0)p.push("L");
+            if(i==0 && filled){
+                p.push(this.xPos(i));
+                p.push(this.area.height);
+            }
             p.push(this.xPos(i));
             p.push(zero ? this.area.height : this.yPos(i));
+
+            if(i==len-1 && filled){
+                p.push(this.xPos(i));
+                p.push(this.area.height);
+                p.push(" Z");
+            }
         }
+
+
 
         return p.join(" ");
     },
@@ -12871,40 +12963,51 @@ ludo.chart.LineItem = new Class({
     resize:function(width,height){
         this.parent(width,height);
 
-        this.nodes[0].set("d", this.getPath());
+        if(this.filled){
+            this.nodes[0].set("d", this.getPath(false, true));
+        }
+        this.nodes[this.nodes.length-1].set("d", this.getPath());
 
         this.positionDots();
     },
 
     xPos:function(index){
+        var c = this.parentComponent.halfInset;
         var len = this.record.getChildren().length;
+        if(!c)len--;
         var colWidth = this.area.width / len;
-        return colWidth * index + (colWidth / 2);
+        var x = colWidth * index;
+        if(!!c)x+=(colWidth / 2);
+        return x;
     },
 
     yPos:function(index){
-
         if(!this.ds)return this.area.height;
-
         var val = this.ds.valueOf(this.record.getChild(index), this);
         var min = this.ds.min();
         var max = this.ds.max();
         return this.area.height - ((val - min ) / (max- min) * this.area.height);
     },
-
-
-
+    
     animate:function(){
-        this.nodes[0].set('d', this.getPath(true));
+        this.nodes[this.nodes.length-1].set('d', this.getPath(true));
 
-
+        if(this.filled){
+            this.nodes[0].set('d', this.getPath(true, true));
+        }
         this.hideDots();
 
         var newPath = this.getPath();
 
-        this.nodes[0].animate({
+        this.nodes[this.nodes.length-1].animate({
             'd' : newPath
         }, 500, ludo.canvas.easing.outSine, this.showDots.bind(this));
+
+        if(this.filled){
+            this.nodes[0].animate({
+                'd' : this.getPath(false, true)
+            }, 500, ludo.canvas.easing.outSine);
+        }
     },
 
     hideDots:function(){
@@ -13033,72 +13136,112 @@ ludo.canvas.Path = new Class({
     }
 });/* ../ludojs/src/chart/line-dot.js */
 /**
- * Created by alfmagne1 on 14/12/2016.
+ * Rendering Chart Shapes/Dots
  */
 ludo.chart.LineDot = new Class({
     Extend: Events,
-    type:'chart.LineDot',
+    type: 'chart.LineDot',
 
-    shape:undefined,
-    record:undefined,
-    size:8,
-    ds:undefined,
+    shape: undefined,
+    record: undefined,
+    size: 8,
+    ds: undefined,
 
-    node:undefined,
-    
-    nodeHighlight:undefined,
-    renderTo:undefined,
+    node: undefined,
 
-    x:undefined,
-    y:undefined,
+    nodeHighlight: undefined,
+    renderTo: undefined,
 
-    parentComponent:undefined,
+    x: undefined,
+    y: undefined,
 
-    initialize:function(props){
+    parentComponent: undefined,
+
+    showDots: true,
+
+
+    initialize: function (props) {
+        this.ds = props.ds;
+
         this.record = props.record;
-        this.shape = 'circle';
+        this.shape = this.ds.shapeOf(this.record) || this.record.__shape || 'circle';
         this.renderTo = props.renderTo;
         this.parentComponent = props.parentComponent;
+        this.showDots = this.parentComponent.getParent().showDots;
 
-        this.node = new ludo.canvas.Path();
+        this.node = this.getNewNode();
 
-        switch(this.shape){
+        this.node.attr("stroke-width", 0);
+        this.node.css("cursor", "pointer");
+        this.node.css("fill", this.record.getParent().__color);
+        this.node.css("stroke", this.record.getParent().__stroke);
+
+        switch (this.shape) {
             case 'circle':
-                this.node.attr("stroke-linejoin", "round");
-                this.node.attr("stroke-linecap", "round");
-                this.node.attr("stroke-width", this.size);
-                this.node.css("stroke", this.record.getParent().__color);
-                this.node.css("cursor", "pointer");
+                this.node.attr('r', this.size / 2);
+                break;
+            default:
+                this.node.set('d', this.getPath());
                 break;
 
         }
 
         this.renderTo.append(this.node);
-        
+
+        if (!this.showDots) {
+            this.node.set("fill-opacity", 0);
+            this.node.set("stroke-opacity", 0);
+        }
 
 
-        this.ds = props.ds;
+
 
         this.ds.on("enter" + this.record.__uid, this.enter.bind(this));
         this.ds.on("leave" + this.record.__uid, this.leave.bind(this));
 
     },
 
-    enter:function(){
-        if(this.nodeHighlight == undefined){
+    getPath: function (highlighted) {
+        var min = -(this.size / 2);
+        var max = (this.size / 2);
+        if (highlighted) {
+            min *= 1.4;
+            max *= 1.4;
+        }
+        switch (this.shape) {
+            case 'rect':
+                return ['M', min, min, 'L', max, min, max, max, min, max, min, min].join(' ');
+            case 'triangle':
+                return ['M', 0, min, 'L', max, max, min, max, 0, min].join(' ');
+            case 'rotatedrect':
+                return ['M', min,0, 0,min, max,0, 0,max, min, 0].join(' ');
+
+        }
+    },
+
+    getNewNode: function () {
+        switch (this.shape) {
+            case 'circle':
+                return new ludo.canvas.Circle();
+            default:
+                return new ludo.canvas.Path();
+        }
+    },
+
+
+    enter: function () {
+        if (this.nodeHighlight == undefined) {
             this.nodeHighlight = new ludo.canvas.Circle({
-                r : this.size * 1.6
+                r: this.size * 1.6
             });
             this.nodeHighlight.css({
-               'stroke-opacity': 0.5,
-                fill:this.record.getParent().__color,
-                'stroke-width' : 0,
+                'stroke-opacity': 0.5,
+                fill: this.record.getParent().__color,
+                'stroke-width': 0,
                 stroke: 'none',
-                'fill-opacity' : 0.3
+                'fill-opacity': 0.3
 
             });
-
-
             this.renderTo.append(this.nodeHighlight);
             this.node.toFront();
         }
@@ -13106,42 +13249,67 @@ ludo.chart.LineDot = new Class({
         this.nodeHighlight.set("cy", this.y);
         this.nodeHighlight.show();
 
+        this.node.css('stroke', this.record.getParent().__stroke);
+        this.node.set('stroke-width', 1);
+
+        var anim = {};
+        switch (this.shape) {
+            case 'circle':
+                anim.r = this.size * 0.7;
+                break;
+            default:
+                anim.d = this.getPath(true);
+                break;
+
+        }
+
+
+        if (!this.showDots) {
+            anim["fill-opacity"] = 1;
+            anim["stroke-opacity"] = 1;
+        }
+
         this.parentComponent.parentComponent.onFragmentAction('enter', this.parentComponent, this.record, this.nodeHighlight, {});
 
-        this.node.animate({
-            'stroke-width' : this.size * 1.2
-        },100);
-
-        console.log(this.node.el);
+        this.node.animate(anim, 100);
     },
 
-    leave:function(){
+    leave: function () {
         this.nodeHighlight.hide();
-        this.node.animate({
-            'stroke-width': this.size
-        },100);
-    },
-
-
-    position:function(x,y){
-        this.x = x; this.y = y;
-        var p;
-        switch(this.shape){
+        var anim = {};
+        this.node.set('stroke-width', 0);
+        switch (this.shape) {
             case 'circle':
-                 p = "M " + x + " " + y + " L " + x + " " + y;
+                anim.r = this.size / 2;
+                break;
+            default:
+                anim.d = this.getPath(false);
                 break;
         }
 
-        if(p){
-            this.node.set("d", p);
+        if (!this.showDots) {
+            anim["fill-opacity"] = 0;
+            anim["stroke-opacity"] = 0;
+        }
+        this.node.animate(anim, 100);
+    },
+
+
+    position: function (x, y) {
+        this.x = x;
+        this.y = y;
+        this.node.setTranslate(x, y);
+
+        if (this.nodeHighlight) {
+            this.nodeHighlight.setTranslate(x, y);
         }
     },
 
-    hide:function(){
+    hide: function () {
         this.node.hide();
     },
 
-    show:function(){
+    show: function () {
         this.node.show();
     }
 });/* ../ludojs/src/ludo-db/factory.js */

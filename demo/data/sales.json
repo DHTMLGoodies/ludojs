@@ -1,206 +1,93 @@
 [
   {
-    "month": "Jan",
-    "products": [
-      {
-        "name": "Product A",
-        "sales": 145
-      },
-      {
-        "name": "Product B",
-        "sales": 84
-      },
-      {
-        "name": "Product C",
-        "sales": 107
-      }
-    ]
-  },
-  {
-    "month": "Feb",
-    "products": [
-      {
-        "name": "Product A",
-        "sales": 104
-      },
-      {
-        "name": "Product B",
-        "sales": 80
-      },
-      {
-        "name": "Product C",
-        "sales": 120
-      }
-    ]
-  },
-  {
-    "month": "Mar",
-    "products": [
-      {
-        "name": "Product A",
-        "sales": 99
-      },
-      {
-        "name": "Product B",
-        "sales": 88
-      },
-      {
-        "name": "Product C",
-        "sales": 119
-      }
-    ]
-  },
-  {
-    "month": "Apr",
-    "products": [
-      {
-        "name": "Product A",
-        "sales": 89
-      },
-      {
-        "name": "Product B",
-        "sales": 84
-      },
-      {
-        "name": "Product C",
-        "sales": 124
-      }
-    ]
-  },
-  {
-    "month": "May",
-    "products": [
-      {
-        "name": "Product A",
-        "sales": 100
-      },
-      {
-        "name": "Product B",
-        "sales": 77
-      },
-      {
-        "name": "Product C",
-        "sales": 114
-      }
-    ]
-  },
-  {
-    "month": "Jun",
-    "products": [
-      {
-        "name": "Product A",
-        "sales": 89
-      },
-      {
-        "name": "Product B",
-        "sales": 81
-      },
-      {
-        "name": "Product C",
-        "sales": 128
-      }
-    ]
-  },
-  {
-    "month": "Jul",
-    "products": [
-      {
-        "name": "Product A",
-        "sales": 109
-      },
-      {
-        "name": "Product B",
-        "sales": 80
-      },
-      {
-        "name": "Product C",
-        "sales": 119
-      }
-    ]
-  },
-  {
-    "month": "Aug",
-    "products": [
-      {
-        "name": "Product A",
-        "sales": 102
-      },
-      {
-        "name": "Product B",
-        "sales": 74
-      },
-      {
-        "name": "Product C",
-        "sales": 129
-      }
-    ]
-  },
-  {
-    "month": "Sep",
-    "products": [
-      {
-        "name": "Product A",
-        "sales": 115
-      },
-      {
-        "name": "Product B",
-        "sales": 79
-      },
-      {
-        "name": "Product C",
-        "sales": 135
-      }
-    ]
-  },
-  {
-    "month": "Oct",
-    "products": [
-      {
-        "name": "Product A",
-        "sales": 113
-      },
-      {
-        "name": "Product B",
-        "sales": 75
-      },
-      {
-        "name": "Product C",
-        "sales": 142
-      }
-    ]
-  },
-  {
-    "month": "Nov",
-    "products": [
-      {
-        "name": "Product A",
-        "sales": 120
-      },
-      {
-        "name": "Product B",
-        "sales": 80
-      },
-      {
-        "name": "Product C",
-        "sales": 140
-      }
-    ]
-  },
-  {
-    "month": "Dec",
-    "products": [
-      {
-        "name": "Product A",
-        "sales": 190
-      },
-      {
-        "name": "Product B",
-        "sales": 120
-      },
-      {
-        "name": "Product C",
-        "sales": 145
-      }
+    "id": 1,
+    "name": "Product A",
+    "sales": [
+      { "units": 100 },
+      { "units": 140 },
+      { "units": 120 },
+      { "units": 110 },
+      { "units": 105 },
+      { "units": 99 },
+      { "units": 77 },
+      { "units": 94 },
+      { "units": 124 },
+      { "units": 134 },
+      { "units": 141 },
+      { "units": 165 }
     ]
   }
 ]
+
+/*
+
+{ "month" : "12/14/2016", 	"price" : 115.19 },	
+{ "month" : "12/13/2016", 	"price" : 115.19 },	
+{ "month" : "12/12/2016", 	"price" : 113.3 },	
+{ "month" : "12/09/2016", 	"price" : 113.95 },	
+{ "month" : "12/08/2016", 	"price" : 112.12 },	
+{ "month" : "12/07/2016", 	"price" : 111.03 },	
+{ "month" : "12/06/2016", 	"price" : 109.95 },	
+{ "month" : "12/05/2016", 	"price": 109.11 },		
+{ "month" : "12/02/2016", 	"price" : 109.9 },	
+{ "month" : "12/01/2016", 	"price": 109.49 },		
+{ "month" : "11/30/2016", 	"price" : 110.52 },	
+{ "month" : "11/29/2016", 	"price" : 111.46 },	
+{ "month" : "11/28/2016", 	"price": 111.57 },		
+{ "month" : "11/25/2016", 	"price" : 111.79 },	
+{ "month" : "11/23/2016", 	"price" : 111.23 },	
+{ "month" : "11/22/2016", 	"price" : 111.8 },	
+{ "month" : "11/21/2016", 	"price" : 111.73 },	
+{ "month" : "11/18/2016", 	"price" : 110.06 },	
+{ "month" : "11/17/2016", 	"price" : 109.95 },	
+{ "month" : "11/16/2016", 	"price" : 109.99 },	
+{ "month" : "11/15/2016", 	"price": 107.11 },	
+{ "month" : "11/14/2016", 	"price": 105.71 },	
+{ "month" : "11/11/2016", 	"price" : 108.43 },	
+{ "month" : "11/10/2016", 	"price" : 107.79 },	
+{ "month" : "11/09/2016", 	"price" : 110.88 },	
+{ "month" : "11/08/2016", 	"price" : 111.06 },	
+{ "month" : "11/07/2016", 	"price" : 110.41 },	
+{ "month" : "11/04/2016", 	"price" : 108.84 },	
+{ "month" : "11/03/2016", 	"price" : 109.83 },	
+{ "month" : "11/02/2016", 	"price" : 111.59 },	
+{ "month" : "11/01/2016", 	"price" : 111.49 },	
+{ "month": "10/31/2016", "price" : 113.54 },	
+{ "month": "10/28/2016", "price" : 113.72 },	
+{ "month": "10/27/2016", "price" : 114.48 },	
+{ "month": "10/26/2016", "price" : 115.59 },	
+{ "month": "10/25/2016", "price" : 118.25 },	
+{ "month": "10/24/2016", 117.1	117.74	117	117.65	
+{ "month": "10/21/2016", "price" : 116.6 },	
+{ "month": "10/20/2016", "price" : 117.06 },	
+{ "month": "10/19/2016", "price" : 117.12 },	
+{ "month": "10/18/2016", "price" : 117.47 },	
+{ "month": "10/17/2016", "price" : 117.55 },	
+{ "month": "10/14/2016", "price" : 117.63 },	
+{ "month": "10/13/2016", "price" : 116.98 },	
+{ "month": "10/12/2016", "price" : 117.34 },	
+{ "month": "10/11/2016", "price" : 116.3 },	
+{ "month": "10/10/2016", "price" : 116.05 },	
+{ "month": "10/07/2016", "price" : 114.06 },	
+{ "month": "10/06/2016", "price" : 113.89 },	
+{ "month": "10/05/2016", "price" : 113.05 },	
+{ "month": "10/04/2016", 113.06	114.31	112.63	113	
+{ "month": "10/03/2016", "price" : 112.52 },	
+{ "month": "09/30/2016", "price" : 113.05 },	
+{ "month": "09/29/2016", "price" : 112.18 },	
+{ "month": "09/28/2016", "price" : 113.95 },	
+{ "month": "09/27/2016", 113	113.18	112.34	113.09	
+{ "month": "09/26/2016", "price" : 112.88 },	
+{ "month": "09/23/2016", "price" : 112.71 },	
+{ "month": "09/22/2016", 114.35	114.94	114	114.62	
+{ "month": "09/21/2016", 113.85	113.989	112.441	113.55	
+{ "month": "09/20/2016", "price" : 113.57 },	
+{ "month": "09/19/2016", "price" : 113.58 },	
+{ "month": "09/16/2016", "price" : 114.92 },	
+{ "month": "09/15/2016", "price" : 115.57 },	
+{ "month": "09/14/2016", "price" : 111.77 }
+	]
+
+
+Read more: http://www.nasdaq.com/symbol/aapl/historical#ixzz4Sx8jLjns
+*/

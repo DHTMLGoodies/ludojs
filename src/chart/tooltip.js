@@ -4,9 +4,7 @@ ludo.chart.Tooltip = new Class({
     tpl: '{label}: {value}',
     shown: false,
 
-    offset: {
-        x: 0, y: 0
-    },
+    offset: undefined,
 
     size: {
         x: 0, y: 0
@@ -31,8 +29,11 @@ ludo.chart.Tooltip = new Class({
 
     _autoLeave: undefined,
 
+
+
     __construct: function (config) {
         this.parent(config);
+        this.offset = {x: 0,y:0};
         this.setConfigParams(config, ['tpl', 'boxStyles', 'textStyles']);
         this.createDOM();
 
@@ -115,7 +116,9 @@ ludo.chart.Tooltip = new Class({
             this.move(event);
         } else {
             xy = this.getXY(fragment, node);
-
+            if(this.offset.x != 0 || this.offset.y != 0){
+                this.updateRect(fragment);
+            }
             if (animate) {
                 this.node.animate({
                     'translate': [xy.x, xy.y]
@@ -145,9 +148,15 @@ ludo.chart.Tooltip = new Class({
         this.size.y += 15;
 
 
-        var middle = this.size.x / 2;
+        var middle = this.size.x / 2 + this.offset.x;
         var middleY = this.size.y / 2;
 
+        if(middle + this.arrowSize > this.size.x){
+            middle -= ((middle + this.arrowSize ) - this.size.x);
+        }
+        if(middle < 0){
+            middle = 0;
+        }
 
         var p;
         var tp = this.getParent().getTooltipPosition();
@@ -198,11 +207,16 @@ ludo.chart.Tooltip = new Class({
         }
 
 
+
+
         this.rect.setPath('M 0 0 L ' + p.join(' ') + " Z");
 
     },
 
     getXY: function (fragment, target) {
+
+        this.offset.x = 0;
+        this.offset.y = 0;
 
         var bounds = target.getBBox();
 
@@ -227,8 +241,16 @@ ludo.chart.Tooltip = new Class({
 
 
             default:
+
+                var x = pos.left + bounds.width / 2 - size.width / 2;
+                var aw = this.getParent().getCanvas().width;
+                var overflow = (x + size.width) - aw;
+                if(overflow > 0){
+                    this.offset.x = overflow;
+                    x-=overflow;
+                }
                 return {
-                    x: pos.left + bounds.width / 2 - size.width / 2,
+                    x: x,
                     y: pos.top - size.height
                 };
 

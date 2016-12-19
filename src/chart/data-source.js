@@ -135,11 +135,11 @@
  * may return [0,10,20,30,40,50,60,70,80,90,100]. This function may also return a numeric value, example: 10 instead of the array. Three arguments are sent to this function: 1) the data arrays
  * minimum value, 2) the data arrays maximum value and 3) The caller, i.e. the SVG view asking for the increments.
  * @param {Function } config.valueForDisplay Optional function returning value to display in a view. Arguments: 1) value, 2) caller. Let's say you have a
- * data source with values in millions, example: Population in countries. For the chart.BarValues view, you might want to display number of millians, i.e.
+ * data source with values in millions, example: Population in countries. For the chart.ChartValues view, you might want to display number of millians, i.e.
  * 10 instead of 10000000. This can be done with a valueForDisplay function:
  * <code>
  *     valueForDisplay:function(value, caller){
- *          if(caller.type == 'chart.BarValues')return Math.round(value / 1000000) + " mill";
+ *          if(caller.type == 'chart.ChartValues')return Math.round(value / 1000000) + " mill";
  *          return value;
  *     }
  * </code>
@@ -147,6 +147,8 @@
  * @param {Function} config.strokeOverOf Optional function returning mouse over stroke color for chart item, Arguments: 1) chart record, 2) caller
  * @param {String} config.childKey Key for child arrays, default: "children"
  * @param {Function} config.shouldInheritColor Optional function returning true if color should be inherited from parent record. Input: record, 2: caller
+ * @param {Function} config.shapeOf Optional function returning shape of a record. This is used when rendering dots for the line chart. Default shape is "circle". Can also be
+ * "rect", "triangle" or path to an image.
  * @example
  *     var dataSource = new ludo.chart.DataSource({
         data:[
@@ -208,6 +210,9 @@ ludo.chart.DataSource = new Class({
      */
     maxVal: undefined,
 
+    dataFor:undefined,
+    sortFn:undefined,
+
 
     /**
      * Aggregated max value in the data array. Sum value of child data.
@@ -245,7 +250,7 @@ ludo.chart.DataSource = new Class({
     increments: undefined,
 
     __construct: function (config) {
-        this.setConfigParams(config, ['shouldInheritColor', 'childKey', 'valueKey', 'color', 'valueOf', 'textOf', 'getText', 'max', 'min', 'increments', 'strokeOf', 'strokeOverOf','valueForDisplay']);
+        this.setConfigParams(config, ['shapeOf', 'dataFor', 'sortFn', 'shouldInheritColor', 'childKey', 'valueKey', 'color', 'valueOf', 'textOf', 'getText', 'max', 'min', 'increments', 'strokeOf', 'strokeOverOf','valueForDisplay']);
         this.parent(config);
 
 
@@ -272,6 +277,9 @@ ludo.chart.DataSource = new Class({
         this.maxValAggr = undefined;
         this.count = this.getCount(this.data);
         this.parseChartBranch(this.data);
+        if(this.sortFn != undefined){
+            this.sortBranch(this.data);
+        }
         this.updateIncrements();
     },
 
@@ -378,8 +386,23 @@ ludo.chart.DataSource = new Class({
         }
     },
 
+    sortBranch:function(branch, parent){
+        if(parent != undefined && this.sortFn != undefined) {
+            var fn = this.sortFn(parent, this);
+            if(fn != undefined){
+                branch = branch.sort(fn);
+            }
+        }
+        jQuery.each(branch, function(index, node){
+            node.__index = index;
+            if(node[this.childKey] != undefined){
+                this.sortBranch(node[this.childKey], node);
+            }
+        }.bind(this));
+    },
 
     parseChartBranch: function (branch, parent) {
+
 
         this.updateValues(branch, parent);
 
@@ -520,6 +543,11 @@ ludo.chart.DataSource = new Class({
         return this.data && this.data.length > 0;
     },
 
+    shapes: [
+        'circle','rect', 'triangle','rotatedrect'
+    ],
+    shapeIndex:0,
+
     setColor: function (record) {
         var u = false;
 
@@ -529,10 +557,15 @@ ludo.chart.DataSource = new Class({
             record.__colorOver = p.__colorOver;
             record.__stroke = p.__stroke;
             record.__strokeOver = p.__strokeOver;
+            record.__shape = p.__shape;
             this.color = this.colorUtil().offsetHue(this.color, (360 / (record.__count + 1)));
             return;
         }
 
+        if(record.__shape == undefined){
+            record.__shape = this.shapes[this.shapeIndex++];
+            this.shapeIndex = this.shapeIndex % this.shapes.length;
+        }
 
         if (record.__color == undefined) {
             if (this.colorOf != undefined) {
@@ -595,52 +628,16 @@ ludo.chart.DataSource = new Class({
 
     shouldInheritColor:function(){
         return false;
+    },
+
+    getData:function(caller){
+        var allData = this.parent();
+        var d = this.dataFor != undefined ? this.dataFor(caller, allData) : undefined;
+        return d ? d : allData;
+    },
+
+    shapeOf:function(){
+        return undefined;
     }
 });
 
-/*
-
- Average high °C (°F)	−42.5
- (−44.5)	−35.4
- (−31.7)	−20.8
- (−5.4)	−3.7
- (25.3)	9.1
- (48.4)	20.0
- (68)	22.7
- (72.9)	18.2
- (64.8)	8.9
- (48)	−9.2
- (15.4)	−30.7
- (−23.3)	−42
- (−44)	−8.8
- (16.2)
- Daily mean °C (°F)	−46.4
- (−51.5)	−42
- (−44)	−31.2
- (−24.2)	−13.6
- (7.5)	2.7
- (36.9)	12.6
- (54.7)	14.9
- (58.8)	10.3
- (50.5)	2.3
- (36.1)	−14.8
- (5.4)	−35.2
- (−31.4)	−45.5
- (−49.9)	−15.5
- (4.1)
- Average low °C (°F)	−50
- (−58)	−47.3
- (−53.1)	−40
- (−40)	−23.9
- (−11)	−4.7
- (23.5)	4.0
- (39.2)	6.2
- (43.2)	2.6
- (36.7)	−3.7
- (25.3)	−20.4
- (−4.7)	−39.3
- (−38.7)	−48.8
- (−55.8)	−22.1
- (−7.8)
- 
- */

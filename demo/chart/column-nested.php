@@ -166,7 +166,7 @@ require_once("../includes/demo-header.php");
                             {
                                 id: 'barValues',
                                 orientation: 'vertical',
-                                type: 'chart.BarValues',
+                                type: 'chart.ChartValues',
                                 layout: {
                                     rightOf: 'labelsLeft',
                                     below: 'labelsTop',
@@ -181,7 +181,7 @@ require_once("../includes/demo-header.php");
                             },
                             {
                                 id: 'barLabels',
-                                type: 'chart.BarLabels',
+                                type: 'chart.ChartLabels',
                                 layout: {
                                     alignParentBottom: true,
                                     rightOf: 'barValues',

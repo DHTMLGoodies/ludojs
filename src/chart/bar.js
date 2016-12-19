@@ -1,5 +1,7 @@
 /**
  * Bar Chart component
+ * @class ludo.chart.Bar
+ * @augments ludo.chart.Base
  * @param {Object} config
  * @param {String} config.orientation Bar chart orientation, __horizontal__ or __vertical__
  * @param {Number} config.barSize Fraction width of bars, default: 0.8

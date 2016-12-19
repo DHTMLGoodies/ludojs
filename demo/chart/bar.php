@@ -150,7 +150,7 @@ require_once("../includes/demo-header.php");
                             },
                             {
                                 id:'barLabels',
-                                type:'chart.BarLabels',
+                                type:'chart.ChartLabels',
                                 orientation:'vertical',
                                 layout:{
                                     rightOf:'labelFruit',
@@ -166,7 +166,7 @@ require_once("../includes/demo-header.php");
                             },
                             {
                                 id:'barValues',
-                                type:'chart.BarValues',
+                                type:'chart.ChartValues',
                                 orientation:'horizontal',
                                 layout:{
                                     above:'labelPeople',

@@ -21,11 +21,10 @@ ludo.chart.Fragment = new Class({
         this.ds = this.parentComponent.ds;
         this.createNodes();
 
-
     },
 
     getNode:function(){
-        return this.nodes[0];
+        return this.nodes[this.nodes.length-1];
     },
 
     createNodes:function(){

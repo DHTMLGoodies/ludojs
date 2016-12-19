@@ -1,3 +1,15 @@
+/**
+ * Line Chart View
+ * This SVG View renders a line chart. This view should be a child of ludo.chart.Chart.
+ *
+ * This class extends ludo.chart.Bar
+ *
+ * @class ludo.chart.Line
+ * @augments ludo.chart.Bar
+ * @param {Object} config
+ * @param {Object} config.lineStyles
+ * @param {Boolean} config.showDots
+ */
 ludo.chart.Line = new Class({
     Extends: ludo.chart.Bar,
     fragmentType: 'chart.LineItem',
@@ -8,14 +20,16 @@ ludo.chart.Line = new Class({
     currentHighlighted:undefined,
 
     parentPos:undefined,
-
+    showDots:true,
+    revealAnim:true,
+    
+    halfInset:true,
+    
     __construct:function(config){
         this.parent(config);
-        this.setConfigParams(config, ["lineStyles"]);
+        this.setConfigParams(config, ["lineStyles","showDots"]);
 
         this.node.on("mousemove", this.mousemove.bind(this));
-
-
     },
 
     mousemove:function(e){
@@ -77,7 +91,11 @@ ludo.chart.Line = new Class({
 
 
     renderAnimation:function(){
-        this.reveal();    
+        if(this.revealAnim){
+            this.reveal();
+        }else{
+            this.parent();
+        }
     },
 
 
