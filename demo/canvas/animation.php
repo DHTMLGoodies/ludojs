@@ -160,19 +160,16 @@ require_once("../includes/demo-header.php");
         moveIllustrationNodes();
         circle.animate({
                 cx:x, cy:y
-            }, 1200, easing,
-            function (node) {
-
-            },
-            function (node, vals) {
-                // console.log(delta);
+            }, {
+                duration:1200,
+            easing:easing,
+            progress:function(progress, vals){
                 var n = getIllustrationNode();
                 n.attr('cx', vals.cx);
                 n.attr('cy', vals.cy);
 
-
             }
-        );
+        } );
     });
 
     function getEasing(){

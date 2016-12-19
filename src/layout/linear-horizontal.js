@@ -34,6 +34,7 @@ ludo.layout.LinearHorizontal = new Class({
 		totalWidth = remainingWidth = totalWidth - totalWidthOfItems;
 
 		var currentLeft = this.viewport.left;
+
 		for (i = 0; i < this.view.children.length; i++) {
 			if (this.view.children[i].isVisible()) {
 				var config = { 'height':height, 'left':currentLeft };

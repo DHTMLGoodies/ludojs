@@ -19,23 +19,36 @@ require_once("../includes/demo-header.php");
             type:'linear',
             orientation:'horizontal'
         },
+        css:{
+            padding:5
+        },
         children:[
             {
                 html : 'A',
                 layout:{
                     width:200,
                     resizable:true
+                },
+                css:{
+                    'border' : '1px solid ' + ludo.$C('border')
                 }
             },
             {
                 html : 'B, weight: 1',
-                weight:1
+                weight:1,
+                css:{
+                    'border' : '1px solid ' + ludo.$C('border')
+
+                }
             },
             {
                 html : 'C',
                 layout:{
                     width:150,
                     resizable:true
+                },
+                css:{
+                    'border' : '1px solid ' + ludo.$C('border')
                 }
             }
         ],

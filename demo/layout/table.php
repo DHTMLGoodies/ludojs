@@ -21,9 +21,6 @@ require_once("../includes/demo-header.php");
             width: 600, height: 600,
             type: 'tabs'
         },
-        css: {
-            'border-top': 0
-        },
         children: [
             {
                 title: 'Demo',

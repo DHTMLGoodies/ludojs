@@ -28,7 +28,8 @@ require_once("../includes/demo-header.php");
                         type:'form.Button',
                         value:'Toggle Menu',
                         size:'l',
-                        icon:'../../images/form/menu-icon-large.png',
+                        icon:'../../images/twilight-skin/menu-icon-large.png',
+                        iconPressed:'../../images/twilight-skin/menu-icon-large-pressed.png',
                         layout:{
                             height:50,
                             width:100

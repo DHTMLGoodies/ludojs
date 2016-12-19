@@ -20,6 +20,9 @@
  *     listeners: {
  *      'click': function() { }
  *      }
+ * </code>
+ * @param {String} config.icon Path to icon image placed left to button text.
+ * @param {String} config.iconPressed Path to icon image displayed when button is pressed.
  * @fires ludo.form.Button#click Fired on click. Arguments: 1) valud, 2) ludo.form.Button
  */
 ludo.form.Button = new Class({
@@ -111,6 +114,7 @@ ludo.form.Button = new Class({
      * @default undefined
      */
     icon:undefined,
+    iconPressed:undefined,
 
     active:false,
 
@@ -144,7 +148,7 @@ ludo.form.Button = new Class({
         this.layout.width = this.layout.width || Math.max(len * 10, 80);
 
 
-        this.setConfigParams(config, ['size','menu','icon','toggle','disableOnInvalid','defaultSubmit','disabled','selected','formView']);
+        this.setConfigParams(config, ['size','menu','icon','toggle','disableOnInvalid','defaultSubmit','disabled','selected','formView','iconPressed']);
 
         if (config.toggleGroup !== undefined) {
             if (ludo.util.type(config.toggleGroup) === 'string') {
@@ -354,6 +358,11 @@ ludo.form.Button = new Class({
 			this.isDown = true;
             this.getBody().addClass('ludo-form-button-down');
             this.fireEvent('mousedown', this);
+
+            if(this.els.icon && this.iconPressed){
+                this.els.icon.css('background-image', 'url(' + this.iconPressed + ')');
+
+            }
         }
     },
     mouseUp:function () {
@@ -362,6 +371,12 @@ ludo.form.Button = new Class({
             this.getBody().removeClass('ludo-form-button-down');
             this.fireEvent('mouseup', this);
         }
+
+        if(this.els.icon && this.icon){
+            this.els.icon.css('background-image', 'url(' + this.icon + ')');
+
+        }
+
     },
 
     clickAfterDelay:function () {

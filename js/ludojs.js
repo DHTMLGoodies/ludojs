@@ -1,7 +1,7 @@
-/* Generated Mon Dec 19 17:24:27 CET 2016 */
+/* Generated Mon Dec 19 20:28:42 CET 2016 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.291
+ludoJS - Javascript framework, 1.1.295
 Copyright (C) 2012-2016  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -4757,7 +4757,7 @@ ludo.canvas.Node = new Class({
                     value = value.getUrl();
                 }
                 if (key == 'css') {
-                    ludo.svg.css(el, value);
+                    this.css(value);
                 }
                 else if (key.substring(0, 6) == "xlink:") {
                     el.setAttributeNS("http://www.w3.org/1999/xlink", key.substring(6), value);
@@ -4765,7 +4765,7 @@ ludo.canvas.Node = new Class({
                     el.setAttribute(key, value);
                     that._attr[key] = value;
                 }
-            });
+            }.bind(this));
         } else {
             el = document.createElementNS("http://www.w3.org/2000/svg", el);
         }
@@ -6348,6 +6348,9 @@ ludo.layout.Base = new Class({
             width: 0, height: 0,
             bottom: 0, right: 0
         };
+
+
+
         if (view.getBody())this.onCreate();
 
         this.hasWrapWidth = !view.layout.weight && view.layout.width == 'wrap';
@@ -6357,6 +6360,8 @@ ludo.layout.Base = new Class({
     },
 
     onCreate: function () {
+
+
         if (this.view.layout.collapseBar) {
             this.addCollapseBars();
         }
@@ -6377,6 +6382,9 @@ ludo.layout.Base = new Class({
      * @memberof ludo.layout.Base.prototype
      */
     addChild: function (child, insertAt, pos) {
+
+
+
         child = this.getValidChild(child);
         child = this.getNewComponent(child);
         var parentEl = this.getParentForNewChild(child);
@@ -6537,12 +6545,12 @@ ludo.layout.Base = new Class({
 
 
     storeViewPortSize: function () {
-
-
         this.viewport.absWidth = this.getAvailWidth();
         this.viewport.absHeight = this.getAvailHeight();
-        this.viewport.width = this.getAvailWidth() - this.viewport.left - this.viewport.right;
-        this.viewport.height = this.getAvailHeight() - this.viewport.top - this.viewport.bottom;
+        this.viewport.width = this.getAvailWidth();
+        this.viewport.height = this.getAvailHeight();
+        //this.viewport.width = this.getAvailWidth() - this.viewport.left - this.viewport.right;
+        //this.viewport.height = this.getAvailHeight() - this.viewport.top - this.viewport.bottom;
 
     },
 
@@ -8241,19 +8249,7 @@ ludo.View = new Class({
 			this.contextMenu = undefined;
 		}
 
-		if (this.cls) {
-			this.getEl().addClass(this.cls);
-		}
-		if (this.bodyCls)this.getBody().addClass(this.bodyCls);
-		if (this.type)this.getEl().addClass('ludo-' + (this.type.replace(/\./g, '-').toLowerCase()));
-		if (this.css)this.getBody().css(this.css);
-		if (this.elCss)this.getEl().css(this.elCss);
 
-		if (this.frame) {
-			this.getEl().addClass('ludo-container-frame');
-			this.getBody().addClass('ludo-body-frame');
-		}
-		if (this.cssSignature !== undefined)this.getEl().addClass(this.cssSignature);
 	},
 
 	ludoCSS:function () {
@@ -8420,6 +8416,21 @@ ludo.View = new Class({
 		if (ludo.util.isTabletOrMobile()) {
 			this.els.container.addClass('ludo-view-mobile');
 		}
+
+
+		if (this.cls) {
+			this.els.container.addClass(this.cls);
+		}
+		if (this.bodyCls)this.els.body.addClass(this.bodyCls);
+		if (this.type)this.els.container.addClass('ludo-' + (this.type.replace(/\./g, '-').toLowerCase()));
+		if (this.css)this.els.body.css(this.css);
+		if (this.elCss)this.els.container.css(this.elCss);
+
+		if (this.frame) {
+			this.els.container.addClass('ludo-container-frame');
+			this.els.body.addClass('ludo-body-frame');
+		}
+		if (this.cssSignature !== undefined)this.els.container.addClass(this.cssSignature);
 
 		this.setContent();
 	},
@@ -14455,6 +14466,7 @@ ludo.layout.Linear = new Class({
     onCreate:function(){
         // TODO refactor this.
         this.view.getBody().css('overflow', 'hidden');
+        this.view.getBody().css('position', 'relative');
         this.parent();
     },
 
@@ -14550,6 +14562,7 @@ ludo.layout.LinearHorizontal = new Class({
 		totalWidth = remainingWidth = totalWidth - totalWidthOfItems;
 
 		var currentLeft = this.viewport.left;
+
 		for (i = 0; i < this.view.children.length; i++) {
 			if (this.view.children[i].isVisible()) {
 				var config = { 'height':height, 'left':currentLeft };
@@ -29230,6 +29243,9 @@ ludo.form.LabelElement = new Class({
  *     listeners: {
  *      'click': function() { }
  *      }
+ * </code>
+ * @param {String} config.icon Path to icon image placed left to button text.
+ * @param {String} config.iconPressed Path to icon image displayed when button is pressed.
  * @fires ludo.form.Button#click Fired on click. Arguments: 1) valud, 2) ludo.form.Button
  */
 ludo.form.Button = new Class({
@@ -29321,6 +29337,7 @@ ludo.form.Button = new Class({
      * @default undefined
      */
     icon:undefined,
+    iconPressed:undefined,
 
     active:false,
 
@@ -29354,7 +29371,7 @@ ludo.form.Button = new Class({
         this.layout.width = this.layout.width || Math.max(len * 10, 80);
 
 
-        this.setConfigParams(config, ['size','menu','icon','toggle','disableOnInvalid','defaultSubmit','disabled','selected','formView']);
+        this.setConfigParams(config, ['size','menu','icon','toggle','disableOnInvalid','defaultSubmit','disabled','selected','formView','iconPressed']);
 
         if (config.toggleGroup !== undefined) {
             if (ludo.util.type(config.toggleGroup) === 'string') {
@@ -29564,6 +29581,11 @@ ludo.form.Button = new Class({
 			this.isDown = true;
             this.getBody().addClass('ludo-form-button-down');
             this.fireEvent('mousedown', this);
+
+            if(this.els.icon && this.iconPressed){
+                this.els.icon.css('background-image', 'url(' + this.iconPressed + ')');
+
+            }
         }
     },
     mouseUp:function () {
@@ -29572,6 +29594,12 @@ ludo.form.Button = new Class({
             this.getBody().removeClass('ludo-form-button-down');
             this.fireEvent('mouseup', this);
         }
+
+        if(this.els.icon && this.icon){
+            this.els.icon.css('background-image', 'url(' + this.icon + ')');
+
+        }
+
     },
 
     clickAfterDelay:function () {
@@ -37216,7 +37244,7 @@ ludo.canvas.Animation = new Class({
                 } else {
                     var val = start[key] + (value * delta);
                     node.set(key, val);
-                    if (options.step != undefined) {
+                    if (options.progress != undefined) {
                         if (vals == undefined) {
                             vals = {};
                         }
@@ -37227,10 +37255,12 @@ ludo.canvas.Animation = new Class({
             }.bind(this));
 
             if (options.step != undefined) {
+
                 options.step.call(node, node, vals, delta, t / d);
             }
+
             if(options.progress != undefined){
-                options.progress.call(node, t/d);
+                options.progress.call(node, t/d, vals);
             }
             if (t >= d) {
                 if (options.complete != undefined) {

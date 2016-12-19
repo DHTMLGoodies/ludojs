@@ -40,7 +40,7 @@ require_once("../includes/demo-header.php");
     function animate(){
         // Example of queued animation
         c2.animate({
-                translate: ['+500', '+500'],
+                translate: ['+300', '+300'],
                 fill: '#669900',
                 r: 20
             }, {
@@ -48,7 +48,7 @@ require_once("../includes/demo-header.php");
                 easing:ludo.canvas.easing.bounce
             }
         ).animate({
-                translate: ['+100'],
+                translate: ['-100'],
                 r:5
             }, {
                 duration: 500
@@ -58,11 +58,11 @@ require_once("../includes/demo-header.php");
             r: 15,
             fill: '#689F38'
         }).animate({
-            translate:['-200','-300'],
+            translate:['-100','200'],
             r:35,
             fill: '#FBC02D'
         }, { duration: 1200 }).animate({
-            translate:['-200','400']
+            translate:['-100','50']
         }).animate({
             'r' : 400,
             'fill': '#00695C',

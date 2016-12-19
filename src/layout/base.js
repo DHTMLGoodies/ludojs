@@ -32,6 +32,9 @@ ludo.layout.Base = new Class({
             width: 0, height: 0,
             bottom: 0, right: 0
         };
+
+
+
         if (view.getBody())this.onCreate();
 
         this.hasWrapWidth = !view.layout.weight && view.layout.width == 'wrap';
@@ -41,6 +44,8 @@ ludo.layout.Base = new Class({
     },
 
     onCreate: function () {
+
+
         if (this.view.layout.collapseBar) {
             this.addCollapseBars();
         }
@@ -61,6 +66,9 @@ ludo.layout.Base = new Class({
      * @memberof ludo.layout.Base.prototype
      */
     addChild: function (child, insertAt, pos) {
+
+
+
         child = this.getValidChild(child);
         child = this.getNewComponent(child);
         var parentEl = this.getParentForNewChild(child);
@@ -221,12 +229,12 @@ ludo.layout.Base = new Class({
 
 
     storeViewPortSize: function () {
-
-
         this.viewport.absWidth = this.getAvailWidth();
         this.viewport.absHeight = this.getAvailHeight();
-        this.viewport.width = this.getAvailWidth() - this.viewport.left - this.viewport.right;
-        this.viewport.height = this.getAvailHeight() - this.viewport.top - this.viewport.bottom;
+        this.viewport.width = this.getAvailWidth();
+        this.viewport.height = this.getAvailHeight();
+        //this.viewport.width = this.getAvailWidth() - this.viewport.left - this.viewport.right;
+        //this.viewport.height = this.getAvailHeight() - this.viewport.top - this.viewport.bottom;
 
     },
 

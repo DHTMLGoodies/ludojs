@@ -237,19 +237,7 @@ ludo.View = new Class({
 			this.contextMenu = undefined;
 		}
 
-		if (this.cls) {
-			this.getEl().addClass(this.cls);
-		}
-		if (this.bodyCls)this.getBody().addClass(this.bodyCls);
-		if (this.type)this.getEl().addClass('ludo-' + (this.type.replace(/\./g, '-').toLowerCase()));
-		if (this.css)this.getBody().css(this.css);
-		if (this.elCss)this.getEl().css(this.elCss);
 
-		if (this.frame) {
-			this.getEl().addClass('ludo-container-frame');
-			this.getBody().addClass('ludo-body-frame');
-		}
-		if (this.cssSignature !== undefined)this.getEl().addClass(this.cssSignature);
 	},
 
 	ludoCSS:function () {
@@ -416,6 +404,21 @@ ludo.View = new Class({
 		if (ludo.util.isTabletOrMobile()) {
 			this.els.container.addClass('ludo-view-mobile');
 		}
+
+
+		if (this.cls) {
+			this.els.container.addClass(this.cls);
+		}
+		if (this.bodyCls)this.els.body.addClass(this.bodyCls);
+		if (this.type)this.els.container.addClass('ludo-' + (this.type.replace(/\./g, '-').toLowerCase()));
+		if (this.css)this.els.body.css(this.css);
+		if (this.elCss)this.els.container.css(this.elCss);
+
+		if (this.frame) {
+			this.els.container.addClass('ludo-container-frame');
+			this.els.body.addClass('ludo-body-frame');
+		}
+		if (this.cssSignature !== undefined)this.els.container.addClass(this.cssSignature);
 
 		this.setContent();
 	},

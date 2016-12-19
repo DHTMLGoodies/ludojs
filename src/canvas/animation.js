@@ -215,7 +215,7 @@ ludo.canvas.Animation = new Class({
                 } else {
                     var val = start[key] + (value * delta);
                     node.set(key, val);
-                    if (options.step != undefined) {
+                    if (options.progress != undefined) {
                         if (vals == undefined) {
                             vals = {};
                         }
@@ -226,10 +226,12 @@ ludo.canvas.Animation = new Class({
             }.bind(this));
 
             if (options.step != undefined) {
+
                 options.step.call(node, node, vals, delta, t / d);
             }
+
             if(options.progress != undefined){
-                options.progress.call(node, t/d);
+                options.progress.call(node, t/d, vals);
             }
             if (t >= d) {
                 if (options.complete != undefined) {

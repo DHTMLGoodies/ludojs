@@ -72,7 +72,7 @@ ludo.canvas.Node = new Class({
                     value = value.getUrl();
                 }
                 if (key == 'css') {
-                    ludo.svg.css(el, value);
+                    this.css(value);
                 }
                 else if (key.substring(0, 6) == "xlink:") {
                     el.setAttributeNS("http://www.w3.org/1999/xlink", key.substring(6), value);
@@ -80,7 +80,7 @@ ludo.canvas.Node = new Class({
                     el.setAttribute(key, value);
                     that._attr[key] = value;
                 }
-            });
+            }.bind(this));
         } else {
             el = document.createElementNS("http://www.w3.org/2000/svg", el);
         }
