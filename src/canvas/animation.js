@@ -13,6 +13,14 @@ ludo.canvas.Animation = new Class({
 
     animationRate: 13,
     color: undefined,
+    _queue:undefined,
+
+    benchmark:false,
+    initialize:function(){
+        this._queue = {};
+
+    },
+
 
     colorUtil: function () {
         if (this.color == undefined)this.color = new ludo.color.Color();
@@ -31,16 +39,51 @@ ludo.canvas.Animation = new Class({
 
         return tokens;
     },
+    
+    animate:function(node, properties,options){
+        if(this.color == undefined)this.colorUtil();
+        this.queue({ node: node, properties:properties, options: options });
+    },
 
-    fn: function (node, properties, duration, easing, complete, stepFn) {
+    queue:function(animation){
+        animation.__finish = this.next.bind(this);
+        animation.id = animation.node.id;
 
-        duration = duration || 400;
-        
-        easing = easing || ludo.canvas.easing.inSine;
+
+        var hasQueue = this.hasQueue(animation);
+        var shouldQueue = animation.options.queue != undefined ?  animation.options.queue :  true;
+
+        if(this._queue[animation.id] == undefined){
+            this._queue[animation.id] = [];
+        }
+
+        this._queue[animation.id].push(animation);
+
+        if(!shouldQueue || !hasQueue){
+            this.fn.call(this, animation);
+        }
+    },
+
+    hasQueue:function(animation){
+
+        return this._queue[animation.id] != undefined && this._queue[animation.id].length > 0;
+    },
+
+
+
+    fn: function (animation) {
+        var node = animation.node;
+
+        var properties = animation.properties;
+        var options = animation.options;
+
+        var duration = options.duration || 400;
+        var easing = options.easing || ludo.canvas.easing.inSine;
 
         var changes = {};
         var start = {};
         var special = {};
+        var finishedFn = animation.__finish;
 
         jQuery.each(properties, function (key, value) {
             special[key] = true;
@@ -64,6 +107,7 @@ ludo.canvas.Animation = new Class({
                 case 'stroke':
                 case 'stop-color':
                     var clr = node.attr(key) || '#000000';
+
                     if (clr.length == 4) clr = clr + clr.substr(1);
                     var u = this.colorUtil();
                     var rgb = u.rgbColors(clr);
@@ -75,11 +119,15 @@ ludo.canvas.Animation = new Class({
                     start[key] = rgb;
                     break;
                 case 'translate':
-                    var cur = node.getTranslate();
+                    var add = jQuery.type(value[0]) == 'string' && (/[+\-]/.test(value[0]));
+                    value[0] = parseInt(value[0]);
+                    value[1] = value[1] ? parseInt(value[1]) : 0;
+                    var cur = add ? [0,0] : node.getTranslate();
                     changes[key] = [
                         value[0] - cur[0], value[1] - cur[1]
                     ];
-                    start[key] = cur;
+                    start[key] = node.getTranslate();
+                    special[key] = true;
                     break;
                 case 'rotate':
                     var c = node.getRotate();
@@ -91,9 +139,14 @@ ludo.canvas.Animation = new Class({
                 case 'scale':
 
                 default:
-                    var current = parseInt(node.get(key));
+                    var current = parseFloat(node.get(key));
+                    if(isNaN(current)){
+                        current = 1;
+                    }
+
                     changes[key] = value - current;
                     start[key] = current;
+
                     special[key] = false;
 
             }
@@ -103,12 +156,25 @@ ludo.canvas.Animation = new Class({
         var r = this.animationRate;
 
         var fn = function (t, d) {
-            var vals;
             if (t < d) {
-                fn.delay(r, fn, [t + 1, d]);
+                fn.delay(r, this, [t + 1, d]);
             }
-            var delta = t >= d ? 1 : easing(t, 0, 1, d);
+
+
+            var bt;
+            if(this.benchmark){
+                bt = new Date().getTime();
+            }
+            var vals;
+
+            if(t == 0 && options.start != undefined){
+                options.start.call(node);
+            }
+
+            if(t > d)t = d;
+            var delta = easing(t, 0, 1, d);
             var x,y;
+
             jQuery.each(changes, function (key, value) {
 
                 if (special[key]) {
@@ -123,17 +189,15 @@ ludo.canvas.Animation = new Class({
                                     v.push(v2 + (value[index] * delta))
                                 }
                             });
-
                             node.set("d", v.join(" "));
-
                             break;
                         case 'stroke':
                         case 'fill':
                         case 'stop-color':
-                            var r = start[key].r + (delta * value[0]);
-                            var g = start[key].g + (delta * value[1]);
-                            var b = start[key].b + (delta * value[2]);
-                            node.set(key, 'rgb(' + r + ',' + g + ',' + b + ')');
+                            var r = Math.round(start[key].r + (delta * value[0]));
+                            var g = Math.round(start[key].g + (delta * value[1]));
+                            var b = Math.round(start[key].b + (delta * value[2]));
+                            node.set(key, this.color.toRGB(r,g,b));
                             break;
                         case 'translate':
                             x = start[key][0] + (delta * value[0]);
@@ -142,21 +206,16 @@ ludo.canvas.Animation = new Class({
                             break;
                         case 'rotate':
                             var d = start[key] + (delta * value[0]);
-
                             x = value[1];
                             y = value[2];
                             d = d % 360;
-
                             node.setRotate(d,x,y);
-
                             break;
-
-
                     }
                 } else {
                     var val = start[key] + (value * delta);
                     node.set(key, val);
-                    if (stepFn != undefined) {
+                    if (options.step != undefined) {
                         if (vals == undefined) {
                             vals = {};
                         }
@@ -164,19 +223,43 @@ ludo.canvas.Animation = new Class({
                     }
                 }
 
-            });
+            }.bind(this));
 
-            if (stepFn != undefined) {
-                stepFn.call(node, node, vals, delta, t / d);
+            if (options.step != undefined) {
+                options.step.call(node, node, vals, delta, t / d);
+            }
+            if(options.progress != undefined){
+                options.progress.call(node, t/d);
             }
             if (t >= d) {
-                if (complete != undefined) {
-                    complete.call(node);
+                if (options.complete != undefined) {
+                    options.complete.call(node);
                 }
-            }
-        };
 
-        fn.call(fn, 0, duration / this.animationRate);
+                finishedFn.call(ludo.canvasAnimation , animation);
+            }
+
+            if(this.benchmark){
+                console.log('time ' + (new Date().getTime() - bt));
+            }
+
+        }.bind(this);
+        animation.startTime = new Date().getTime();
+        fn.call(this, 1, Math.ceil(duration / this.animationRate));
+    },
+    
+    next:function(anim){
+        if(this.benchmark){
+            console.log('elapsed: ' + (new Date().getTime() - anim.startTime));
+        }
+        var index = this._queue[anim.id].indexOf(anim);
+        if(index >= 0){
+            this._queue[anim.id].splice(index,1);
+        }
+
+        if(this._queue[anim.id].length > 0){
+            this.fn(this._queue[anim.id][0]);
+        }
     }
 
 

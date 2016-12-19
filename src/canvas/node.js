@@ -58,7 +58,7 @@ ludo.canvas.Node = new Class({
         if (text !== undefined) {
             this.text(text);
         }
-        
+
     },
 
     createNode: function (el, properties) {
@@ -780,16 +780,56 @@ ludo.canvas.Node = new Class({
     },
 
     /**
-     * Animate SVG node
+     * Function to animate SVG properties such as radius, x,y, colors etc.
+     *
+     * When animating colors, set colors using the set function and not the css function since CSS fill and stroke has highest priority.
+     *
+     * For demos, see
+     * <a href="../demo/canvas/animation.php">animation.php</a>
+     * <a href="../demo/canvas/animation.php">queued-animation.php</a>
+     * <a href="../demo/canvas/animation.php">transformation.php</a>
+     * <a href="../demo/canvas/animation.php">clipping.php</a>
+     * <a href="../demo/canvas/animation.php">masking.php</a>
+     * @function animate
      * @param {Object} properties Properties to animate, example: { x: 100, width: 100 }
-     * @param {Number} duration Duration in milliseconds(1/1000s)
-     * @param {Function} easing Reference to ludo.canvas.easing easing function, example: ludo.canvas.easing.linear
-     * @param {Function} complete Function to execute on complete
-     * @param {Function} stepFn Function executed after each animation step
+     * @param {Object} options Animation options
+     * @param {Object} options.duration - Animation duration in milliseconds, default: 400/1000seconds
+     * @param {Function} options.easing Reference to ludo.canvas.easing easing function, example: ludo.canvas.easing.linear
+     * @param {Function} options.complete Function to execute on complete
+     * @param {Function} options.progress Function executed after each animation step. Argument: completed from 0 to 1
+     * @param {Boolean} options.queue True to queue animations for this SVG element. Default: true
      * @memberof ludo.canvas.Node.prototype
+     * @example
+     * // Animating using properties and options objects.
+     * circle.animate({
+     *      'cx': 100, cy: 100
+     * },{
+     *      easing: ludo.canvas.easing.bounce,
+     *      duration: 1000,
+     *      complete:function(){
+     *          console.log('Animation complete');
+     *      },
+     *      progress:function(t){ // float from 0 to 1
+     *          console.log('Progress: ' + Math.round(t*100) + '%');
+     *      }
+     * });
+     *
+     * // or with duration, easing and complete function as parameters.
+     * circle.animate({
+     *      'cx': 100, cy: 100
+     * }, 400, ludo.canvas.easing.bounce, function(){ console.log('finished') });
+     *
+     *
      */
-    animate: function (properties, duration, easing, complete, stepFn) {
-        ludo.canvasAnimation.fn(this, properties, duration, easing, complete, stepFn);
+    animate: function (properties, options, easing, complete) {
+        var opt = {};
+        if(!jQuery.isPlainObject(options)){
+            opt.duration = options;
+            opt.easing = easing;
+            opt.complete = complete;
+        }else opt = options;
+        ludo.canvasAnimation.animate(this, properties, opt);
+        return this;
     },
 
     _animation: undefined,

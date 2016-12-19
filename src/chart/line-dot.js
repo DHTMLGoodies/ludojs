@@ -2,7 +2,7 @@
  * Rendering Chart Shapes/Dots
  */
 ludo.chart.LineDot = new Class({
-    Extend: Events,
+    Extends: Events,
     type: 'chart.LineDot',
 
     shape: undefined,
@@ -56,28 +56,32 @@ ludo.chart.LineDot = new Class({
             this.node.set("stroke-opacity", 0);
         }
 
-
-
-
         this.ds.on("enter" + this.record.__uid, this.enter.bind(this));
         this.ds.on("leave" + this.record.__uid, this.leave.bind(this));
 
     },
 
     getPath: function (highlighted) {
-        var min = -(this.size / 2);
-        var max = (this.size / 2);
+
+        var s = this.size;
+        if(this.shape == 'rotatedrect'){
+            s = Math.sqrt((s*s) + (s*s));
+        }
+
+        var min = -(s / 2);
+        var max = (s / 2);
         if (highlighted) {
             min *= 1.4;
             max *= 1.4;
         }
         switch (this.shape) {
             case 'rect':
+
                 return ['M', min, min, 'L', max, min, max, max, min, max, min, min].join(' ');
             case 'triangle':
                 return ['M', 0, min, 'L', max, max, min, max, 0, min].join(' ');
             case 'rotatedrect':
-                return ['M', min,0, 0,min, max,0, 0,max, min, 0].join(' ');
+                return ['M', min,0, "L", 0,min, max,0, 0,max, min, 0].join(' ');
 
         }
     },
@@ -134,6 +138,7 @@ ludo.chart.LineDot = new Class({
         this.parentComponent.parentComponent.onFragmentAction('enter', this.parentComponent, this.record, this.nodeHighlight, {});
 
         this.node.animate(anim, 100);
+        this.fireEvent('enter', this);
     },
 
     leave: function () {
@@ -154,6 +159,7 @@ ludo.chart.LineDot = new Class({
             anim["stroke-opacity"] = 0;
         }
         this.node.animate(anim, 100);
+        this.fireEvent('leave', this);
     },
 
 
@@ -164,7 +170,6 @@ ludo.chart.LineDot = new Class({
 
         if (this.nodeHighlight) {
             this.nodeHighlight.setTranslate(x, y);
-            console.log(this.nodeHighlight.el);
         }
     },
 

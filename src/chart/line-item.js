@@ -46,11 +46,26 @@ ludo.chart.LineItem = new Class({
                     parentComponent:this
                 });
             this.dots.push(d);
+            d.on('enter', this.enterDot.bind(this));
+            d.on('leave', this.leaveDot.bind(this));
         }
     },
 
     dsEvent:function(){
 
+    },
+
+    enterDot:function(){
+        if(this.nodes.length == 1){
+            this.nodes[0].css('stroke-width', 3);
+
+        }
+    },
+
+    leaveDot:function(){
+        if(this.nodes.length == 1){
+            this.nodes[0].css('stroke-width', 2);
+        }
     },
 
     getPath:function(zero, filled){
