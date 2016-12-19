@@ -95,7 +95,7 @@ ludo.chart.LineDot = new Class({
     enter: function () {
         if (this.nodeHighlight == undefined) {
             this.nodeHighlight = new ludo.canvas.Circle({
-                r: this.size * 1.6
+                r: this.size * 1.6,cx:0,cy:0
             });
             this.nodeHighlight.css({
                 'stroke-opacity': 0.5,
@@ -108,8 +108,7 @@ ludo.chart.LineDot = new Class({
             this.renderTo.append(this.nodeHighlight);
             this.node.toFront();
         }
-        this.nodeHighlight.set("cx", this.x);
-        this.nodeHighlight.set("cy", this.y);
+        this.nodeHighlight.setTranslate(this.x,this.y);
         this.nodeHighlight.show();
 
         this.node.css('stroke', this.record.getParent().__stroke);
@@ -165,6 +164,7 @@ ludo.chart.LineDot = new Class({
 
         if (this.nodeHighlight) {
             this.nodeHighlight.setTranslate(x, y);
+            console.log(this.nodeHighlight.el);
         }
     },
 

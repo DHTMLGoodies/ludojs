@@ -1,7 +1,7 @@
-/* Generated Mon Dec 19 11:21:39 CET 2016 */
+/* Generated Mon Dec 19 11:52:21 CET 2016 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.289
+ludoJS - Javascript framework, 1.1.290
 Copyright (C) 2012-2016  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -4710,8 +4710,6 @@ ludo.canvas.Node = new Class({
     tagName: undefined,
     id: undefined,
 
-    mat: undefined,
-
     dirty: undefined,
 
     _bbox: undefined,
@@ -4745,15 +4743,7 @@ ludo.canvas.Node = new Class({
         if (text !== undefined) {
             this.text(text);
         }
-
-        this.mat = {
-            translate: [0, 0],
-            _translate: [0, 0],
-            rotate: undefined,
-            scale: undefined,
-            skewX: undefined,
-            skewY: undefined
-        };
+        
     },
 
     createNode: function (el, properties) {
@@ -5190,10 +5180,13 @@ ludo.canvas.Node = new Class({
             }
 
         }
-
+        var off = [0,0];
+        if(this._matrix != undefined){
+            off = this._matrix.getTranslate();
+        }
         return {
-            left: bbox.x + this.mat.translate[0],
-            top: bbox.y + this.mat.translate[1]
+            left: bbox.x + off[0],
+            top: bbox.y + off[1]
         }
     },
 
@@ -11979,7 +11972,7 @@ ludo.chart.Tooltip = new Class({
         var size = this.rect.getBBox();
 
         var pos = target.offset();
-
+        
         var tp = this.getParent().getTooltipPosition();
 
         switch (tp) {
@@ -13232,7 +13225,7 @@ ludo.chart.LineDot = new Class({
     enter: function () {
         if (this.nodeHighlight == undefined) {
             this.nodeHighlight = new ludo.canvas.Circle({
-                r: this.size * 1.6
+                r: this.size * 1.6,cx:0,cy:0
             });
             this.nodeHighlight.css({
                 'stroke-opacity': 0.5,
@@ -13245,8 +13238,7 @@ ludo.chart.LineDot = new Class({
             this.renderTo.append(this.nodeHighlight);
             this.node.toFront();
         }
-        this.nodeHighlight.set("cx", this.x);
-        this.nodeHighlight.set("cy", this.y);
+        this.nodeHighlight.setTranslate(this.x,this.y);
         this.nodeHighlight.show();
 
         this.node.css('stroke', this.record.getParent().__stroke);
@@ -13302,6 +13294,7 @@ ludo.chart.LineDot = new Class({
 
         if (this.nodeHighlight) {
             this.nodeHighlight.setTranslate(x, y);
+            console.log(this.nodeHighlight.el);
         }
     },
 

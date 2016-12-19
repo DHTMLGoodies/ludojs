@@ -25,8 +25,6 @@ ludo.canvas.Node = new Class({
     tagName: undefined,
     id: undefined,
 
-    mat: undefined,
-
     dirty: undefined,
 
     _bbox: undefined,
@@ -60,15 +58,7 @@ ludo.canvas.Node = new Class({
         if (text !== undefined) {
             this.text(text);
         }
-
-        this.mat = {
-            translate: [0, 0],
-            _translate: [0, 0],
-            rotate: undefined,
-            scale: undefined,
-            skewX: undefined,
-            skewY: undefined
-        };
+        
     },
 
     createNode: function (el, properties) {
@@ -505,10 +495,13 @@ ludo.canvas.Node = new Class({
             }
 
         }
-
+        var off = [0,0];
+        if(this._matrix != undefined){
+            off = this._matrix.getTranslate();
+        }
         return {
-            left: bbox.x + this.mat.translate[0],
-            top: bbox.y + this.mat.translate[1]
+            left: bbox.x + off[0],
+            top: bbox.y + off[1]
         }
     },
 

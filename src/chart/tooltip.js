@@ -223,7 +223,7 @@ ludo.chart.Tooltip = new Class({
         var size = this.rect.getBBox();
 
         var pos = target.offset();
-
+        
         var tp = this.getParent().getTooltipPosition();
 
         switch (tp) {
