@@ -798,6 +798,8 @@ ludo.canvas.Node = new Class({
      * @param {Function} options.complete Function to execute on complete
      * @param {Function} options.progress Function executed after each animation step. Argument: completed from 0 to 1
      * @param {Boolean} options.queue True to queue animations for this SVG element. Default: true
+     * @param {Function} options.validate Option function called before each step of the animation. If this function returns false, the animation will stop.
+     * Arguments: 1) unique id of animation 2) unique id of latest animation for this SVG element. Useful if new animation should stop old animation.
      * @memberof ludo.canvas.Node.prototype
      * @example
      * // Animating using properties and options objects.

@@ -14,11 +14,11 @@ ludo.canvas.Animation = new Class({
     animationRate: 13,
     color: undefined,
     _queue:undefined,
-
+    _animationIds:undefined,
     benchmark:false,
     initialize:function(){
         this._queue = {};
-
+        this._animationIds = {};
     },
 
 
@@ -48,7 +48,9 @@ ludo.canvas.Animation = new Class({
     queue:function(animation){
         animation.__finish = this.next.bind(this);
         animation.id = animation.node.id;
+        animation.animationId = String.uniqueID();
 
+        this._animationIds[animation.id] = animation.animationId;
 
         var hasQueue = this.hasQueue(animation);
         var shouldQueue = animation.options.queue != undefined ?  animation.options.queue :  true;
@@ -57,7 +59,9 @@ ludo.canvas.Animation = new Class({
             this._queue[animation.id] = [];
         }
 
-        this._queue[animation.id].push(animation);
+        if(shouldQueue){
+            this._queue[animation.id].push(animation);
+        }
 
         if(!shouldQueue || !hasQueue){
             this.fn.call(this, animation);
@@ -156,10 +160,18 @@ ludo.canvas.Animation = new Class({
         var r = this.animationRate;
 
         var fn = function (t, d) {
+
+            if(options.validate != undefined){
+                var success = options.validate.call(this, animation.animationId, this._animationIds[animation.id]);
+                if(!success){
+                    finishedFn.call(ludo.canvasAnimation , animation);
+                    return;
+                }
+            }
+
             if (t < d) {
                 fn.delay(r, this, [t + 1, d]);
             }
-
 
             var bt;
             if(this.benchmark){
@@ -170,6 +182,8 @@ ludo.canvas.Animation = new Class({
             if(t == 0 && options.start != undefined){
                 options.start.call(node);
             }
+
+
 
             if(t > d)t = d;
             var delta = easing(t, 0, 1, d);

@@ -137,7 +137,10 @@ ludo.chart.LineDot = new Class({
 
         this.parentComponent.parentComponent.onFragmentAction('enter', this.parentComponent, this.record, this.nodeHighlight, {});
 
-        this.node.animate(anim, 100);
+        this.node.animate(anim, {
+            duration:100,
+            validate:function(a,b){ return a == b }
+        });
         this.fireEvent('enter', this);
     },
 
@@ -158,7 +161,12 @@ ludo.chart.LineDot = new Class({
             anim["fill-opacity"] = 0;
             anim["stroke-opacity"] = 0;
         }
-        this.node.animate(anim, 100);
+        this.node.animate(anim, {
+            duration:100,
+            validate:function(a,b){
+                return a == b;
+            }
+        });
         this.fireEvent('leave', this);
     },
 

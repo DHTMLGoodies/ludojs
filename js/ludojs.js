@@ -1,7 +1,7 @@
-/* Generated Mon Dec 19 20:28:42 CET 2016 */
+/* Generated Mon Dec 19 20:48:22 CET 2016 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.295
+ludoJS - Javascript framework, 1.1.296
 Copyright (C) 2012-2016  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -5483,6 +5483,8 @@ ludo.canvas.Node = new Class({
      * @param {Function} options.complete Function to execute on complete
      * @param {Function} options.progress Function executed after each animation step. Argument: completed from 0 to 1
      * @param {Boolean} options.queue True to queue animations for this SVG element. Default: true
+     * @param {Function} options.validate Option function called before each step of the animation. If this function returns false, the animation will stop.
+     * Arguments: 1) unique id of animation 2) unique id of latest animation for this SVG element. Useful if new animation should stop old animation.
      * @memberof ludo.canvas.Node.prototype
      * @example
      * // Animating using properties and options objects.
@@ -11922,7 +11924,13 @@ ludo.chart.Tooltip = new Class({
             if (animate) {
                 this.node.animate({
                     'translate': [xy.x, xy.y]
-                }, 100, ludo.canvas.easing.outSine)
+                }, {
+                    duration:100,
+                    queue:false,
+                    validate:function(a,b){
+                        return a == b;
+                    }
+                })
             } else {
                 this.node.setTranslate(xy.x, xy.y);
             }
@@ -13333,7 +13341,10 @@ ludo.chart.LineDot = new Class({
 
         this.parentComponent.parentComponent.onFragmentAction('enter', this.parentComponent, this.record, this.nodeHighlight, {});
 
-        this.node.animate(anim, 100);
+        this.node.animate(anim, {
+            duration:100,
+            validate:function(a,b){ return a == b }
+        });
         this.fireEvent('enter', this);
     },
 
@@ -13354,7 +13365,12 @@ ludo.chart.LineDot = new Class({
             anim["fill-opacity"] = 0;
             anim["stroke-opacity"] = 0;
         }
-        this.node.animate(anim, 100);
+        this.node.animate(anim, {
+            duration:100,
+            validate:function(a,b){
+                return a == b;
+            }
+        });
         this.fireEvent('leave', this);
     },
 
@@ -37043,11 +37059,11 @@ ludo.canvas.Animation = new Class({
     animationRate: 13,
     color: undefined,
     _queue:undefined,
-
+    _animationIds:undefined,
     benchmark:false,
     initialize:function(){
         this._queue = {};
-
+        this._animationIds = {};
     },
 
 
@@ -37077,7 +37093,9 @@ ludo.canvas.Animation = new Class({
     queue:function(animation){
         animation.__finish = this.next.bind(this);
         animation.id = animation.node.id;
+        animation.animationId = String.uniqueID();
 
+        this._animationIds[animation.id] = animation.animationId;
 
         var hasQueue = this.hasQueue(animation);
         var shouldQueue = animation.options.queue != undefined ?  animation.options.queue :  true;
@@ -37086,7 +37104,9 @@ ludo.canvas.Animation = new Class({
             this._queue[animation.id] = [];
         }
 
-        this._queue[animation.id].push(animation);
+        if(shouldQueue){
+            this._queue[animation.id].push(animation);
+        }
 
         if(!shouldQueue || !hasQueue){
             this.fn.call(this, animation);
@@ -37185,10 +37205,18 @@ ludo.canvas.Animation = new Class({
         var r = this.animationRate;
 
         var fn = function (t, d) {
+
+            if(options.validate != undefined){
+                var success = options.validate.call(this, animation.animationId, this._animationIds[animation.id]);
+                if(!success){
+                    finishedFn.call(ludo.canvasAnimation , animation);
+                    return;
+                }
+            }
+
             if (t < d) {
                 fn.delay(r, this, [t + 1, d]);
             }
-
 
             var bt;
             if(this.benchmark){
@@ -37199,6 +37227,8 @@ ludo.canvas.Animation = new Class({
             if(t == 0 && options.start != undefined){
                 options.start.call(node);
             }
+
+
 
             if(t > d)t = d;
             var delta = easing(t, 0, 1, d);

@@ -122,7 +122,13 @@ ludo.chart.Tooltip = new Class({
             if (animate) {
                 this.node.animate({
                     'translate': [xy.x, xy.y]
-                }, 100, ludo.canvas.easing.outSine)
+                }, {
+                    duration:100,
+                    queue:false,
+                    validate:function(a,b){
+                        return a == b;
+                    }
+                })
             } else {
                 this.node.setTranslate(xy.x, xy.y);
             }
