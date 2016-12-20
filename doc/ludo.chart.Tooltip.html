@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>LudoJS Source: view/shim.js</title>
+	<title>LudoJS Class: Tooltip</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -81,87 +81,314 @@
 <div class="row">
 
 	
-	<div class="col-md-12">
+	<div class="col-md-8">
 	
 		<div id="main">
 			
 
-		<h1 class="page-title">Source: view/shim.js</h1>
-    
+	<h1 class="page-title">ludo.chart.Tooltip</h1>
 <section>
-    <article>
-        <pre
-            class="sunlight-highlight-javascript linenums">/**
- * Render a shim
 
- */
-ludo.view.Shim = new Class({
-    txt:'Loading content...',
-    el:undefined,
-    shim:undefined,
-    renderTo:undefined,
+<header>
+    
+        <h2>
+            <span class="ancestors"><a href="ludo.chart.html">.chart</a>.</span>
+        
 
-    initialize:function (config) {
-        if (config.txt)this.txt = config.txt;
-        this.renderTo = config.renderTo;
-    },
+        </h2>
+        
+    
+</header>
 
-    getEl:function () {
-        if (this.el === undefined) {
-            this.el = $('&lt;div class="ludo-shim-loading" style="display:none">' + this.getText(this.txt) + "&lt;/div>");
-            this.getRenderTo().append(this.el);
-        }
-        return this.el;
-    },
 
-    getShim:function () {
-        if (this.shim === undefined) {
-			if(ludo.util.isString(this.renderTo))this.renderTo = ludo.get(this.renderTo).getEl();
-            this.shim = $('&lt;div class="ludo-loader-shim" style="display:none">&lt;/div>');
-            this.getRenderTo().append(this.shim);
+<article>
+    <div class="container-overview">
+    
+        
+<hr>
+<dt>
+    <h4 class="name" id="Tooltip"><span class="type-signature"></span>new ludo.chart.Tooltip<span class="signature">(config)</span><span class="type-signature"></span></h4>
+    
+</dt>
+<dd>
 
-        }
-        return this.shim;
-    },
+    
+    <div class="description">
+        <p>Chart tooltip module<br>You create a tooltip module by adding it as plugins to one<br>of your chart views.</p>
+<p>The text of the tooltip is populated from the textOf method of<br><a href="ludo.chart.DataSource.html">ludo.chart.DataSource</a>.</p>
+<p>Example:<br><code><br>textOf:function(record, caller){<br>            // Text for the tooltip module<br>            if(caller.type == 'chart.Tooltip'){<br>                return '<p><b>{parent.name}</b><br>' + record.date + '<br>Share Price: {record.price}</p>';<br>            }<br>            // Text for all others.<br>            return record.date;<br>        },<br>    </code></p>
+<p>textOf is a function returning text to chart views. Many views ask this method<br>for data, so a test on caller.type or caller.id is usually required.</p>
+<p>Simple HTML tags like &lt;b&gt;, &lt;strong&gt; &lt;i&gt;, &lt;em&gt; and &lt;br&gt;<br>in the returned text is allowed.</p>
+    </div>
+    
 
-	getRenderTo:function(){
-		if(ludo.util.isString(this.renderTo)){
-			var view = ludo.get(this.renderTo);
-			if(!view)return undefined;
-			this.renderTo = ludo.get(this.renderTo).getEl();
-		}
-		return this.renderTo;
-	},
+    
 
-    show:function (txt) {
-		this.getEl().html(this.getText(( txt &amp;&amp; !ludo.util.isObject(txt) ) ? txt : this.txt));
-        this.css('');
-		this.resizeShim();
-    },
+    
 
-	resizeShim:function(){
-		var span = $(this.el).find('span');
-		var width = (span.width() + 5);
-		this.el.css('width',  width + 'px');
-		this.el.css('marginLeft',  (Math.round(width/2) * -1) + 'px');
-	},
+    
+    
+        <h5>Parameters:</h5>
+        
 
-	getText:function(txt){
-		txt = ludo.util.isFunction(txt) ? txt.call() : txt ? txt : '';
-		return '&lt;span>' + txt + '&lt;/span>';
-	},
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
 
-    hide:function () {
-        this.css('none');
-    },
-    css:function (d) {
-        this.getShim().css('display',  d);
-        this.getEl().css('display',  d === '' &amp;&amp; this.txt ? '' : 'none');
-    }
-});</pre>
-    </article>
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>config</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <h6 class="method-params-label method-subparams-label">Properties</h6>
+                
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>type</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Always set to chart.Tooltip</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>textStyles</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Text styling</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>boxStyles</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Styling of tooltip box</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>animationDuration</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Animation duration in ms, default: 200</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="chart_tooltip.js.html">chart/tooltip.js</a>,
+				 <a href="chart_tooltip.js.html#sunlight-1-line-1">line 1</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
 </section>
-
 
 
 
@@ -171,6 +398,10 @@ ludo.view.Shim = new Class({
 
 	<div class="clearfix"></div>
 
+	
+		<div class="col-md-3">
+			<div id="toc" class="col-md-3 hidden-xs hidden-sm hidden-md"></div>
+		</div>
 	
 
 </div>

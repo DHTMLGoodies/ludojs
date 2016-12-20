@@ -154,8 +154,10 @@ ludo.canvas.TextBox = new Class({
 
     getDefaultTagProperties:function () {
         return {
+            '<strong>':{ 'font-weight':'bold' },
             '<b>':{ 'font-weight':'bold' },
-            '<em>':{ 'font-style':'italic' }
+            '<em>':{ 'font-style':'italic' },
+            '<i>':{ 'font-style':'italic' }
         };
     }
 

@@ -57,6 +57,10 @@
  *      \_\_max : 245
  *      \_\_maxAggr : 245
  *      \_\_parent: undefined
+ *      \_\_indexStartVal: undefined
+ *      \_\_indexFraction: undefined
+ *      \_\_indexSum: undefined
+ *
  *      getChildren:function()
  *      getParent():function()
  * }
@@ -99,6 +103,12 @@
  * \_\_maxAggr will be 39000(Sum children of Germany), while \_\_max will be 29000.
  *
  * \_\_parent will for child items contain a reference to parent id which can be retrieved using dataSource.byId(id)
+ *
+ *  \_\_indexStartVal stores the sum of previous records with the same index as this one. In the example with countries above,
+ *  , the value for { "name":"0-14", "people" : 6000 } will be 5000, since the first child of United Kingdom has value 5000.
+ *  This value is used when rendering stacked area charts.
+ *
+ *  \_\_indexFraction stores the size of this record divided by the sum of all records with the same index.
  *
  * getParent() returns a reference to parent record if set, it will return undefined otherwise.
  * getChildren() returns reference to child data array, example the children array of Germany in the example above
@@ -149,6 +159,15 @@
  * @param {Function} config.shouldInheritColor Optional function returning true if color should be inherited from parent record. Input: record, 2: caller
  * @param {Function} config.shapeOf Optional function returning shape of a record. This is used when rendering dots for the line chart. Default shape is "circle". Can also be
  * "rect", "triangle" or path to an image.
+ * @param {Number} config.minBrightness Optional minimum brightness(0-100) when setting colors.
+ * @param {Number} config.maxBrightness Optional maximum brightness(0-100) when setting colors.
+ * @param {Number} config.minSaturation Optional minimum saturation/color intensity(0-100) when setting colors.
+ * @param {Number} config.maxSaturation Optional maximum saturation/color intensity(0-100) when setting colors.
+ * @param {Function} config.indexStartValueOf Optional function returning sum value of all previous records
+ * with same index. By default, it returns record.\_\_indexStartVal. Example for { "name":"0-14", "people" : 6000 }
+ * above it will return 5000, since this is index 0 and the child of United Kingdom with same index has value 5000.
+ * This function is used in <a href="../demo/chart/area-world-population-distribution.php">the area chart demo</a> where
+ * the chart is configured to render percentage values.
  * @example
  *     var dataSource = new ludo.chart.DataSource({
         data:[

@@ -149,6 +149,10 @@ require_once("../includes/demo-header.php");
         },
 
         indexStartValueOf:function(record){
+            // Since the area chart is stacked, each item will build
+            // on top of the previous one. We're rendering percentages, so
+            // start value of record will be sum fraction of previous ones(0-1)
+            // multiplied by 100.
             return record.__indexStartFraction * 100;
         },
 
@@ -175,15 +179,18 @@ require_once("../includes/demo-header.php");
             return "";
         },
 
-        max:function(){ // Function returning max value for the y axis of the line chart
+        max:function(){
+            // Max is 100%
             return 100;
         },
 
         min:function(){ // Function returning min value for the y axis
+            // Minimum is 0%
             return 0;
         },
 
         valueForDisplay:function(value, caller){
+            // If the calling view is of type chart.chartValue, we return value + '%'
             if(caller.type == 'chart.ChartValues'){
                 return value + ' %';
             }
@@ -195,6 +202,7 @@ require_once("../includes/demo-header.php");
         },
 
         strokeOf:function(record, caller){
+            // Same color as background
             return '#424242';
         },
 

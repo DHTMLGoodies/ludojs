@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>LudoJS Source: view/shim.js</title>
+	<title>LudoJS Class: Base</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -81,87 +81,430 @@
 <div class="row">
 
 	
-	<div class="col-md-12">
+	<div class="col-md-8">
 	
 		<div id="main">
 			
 
-		<h1 class="page-title">Source: view/shim.js</h1>
-    
+	<h1 class="page-title">ludo.chart.Base</h1>
 <section>
-    <article>
-        <pre
-            class="sunlight-highlight-javascript linenums">/**
- * Render a shim
 
- */
-ludo.view.Shim = new Class({
-    txt:'Loading content...',
-    el:undefined,
-    shim:undefined,
-    renderTo:undefined,
+<header>
+    
+        <h2>
+            <span class="ancestors"><a href="ludo.chart.html">.chart</a>.</span>
+        
 
-    initialize:function (config) {
-        if (config.txt)this.txt = config.txt;
-        this.renderTo = config.renderTo;
-    },
+        </h2>
+        
+    
+</header>
 
-    getEl:function () {
-        if (this.el === undefined) {
-            this.el = $('&lt;div class="ludo-shim-loading" style="display:none">' + this.getText(this.txt) + "&lt;/div>");
-            this.getRenderTo().append(this.el);
-        }
-        return this.el;
-    },
 
-    getShim:function () {
-        if (this.shim === undefined) {
-			if(ludo.util.isString(this.renderTo))this.renderTo = ludo.get(this.renderTo).getEl();
-            this.shim = $('&lt;div class="ludo-loader-shim" style="display:none">&lt;/div>');
-            this.getRenderTo().append(this.shim);
+<article>
+    <div class="container-overview">
+    
+        
+<hr>
+<dt>
+    <h4 class="name" id="Base"><span class="type-signature"></span>new ludo.chart.Base<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+</dt>
+<dd>
 
-        }
-        return this.shim;
-    },
+    
+    <div class="description">
+        <p>Base class for charts</p>
+    </div>
+    
 
-	getRenderTo:function(){
-		if(ludo.util.isString(this.renderTo)){
-			var view = ludo.get(this.renderTo);
-			if(!view)return undefined;
-			this.renderTo = ludo.get(this.renderTo).getEl();
-		}
-		return this.renderTo;
-	},
+    
 
-    show:function (txt) {
-		this.getEl().html(this.getText(( txt &amp;&amp; !ludo.util.isObject(txt) ) ? txt : this.txt));
-        this.css('');
-		this.resizeShim();
-    },
+    
 
-	resizeShim:function(){
-		var span = $(this.el).find('span');
-		var width = (span.width() + 5);
-		this.el.css('width',  width + 'px');
-		this.el.css('marginLeft',  (Math.round(width/2) * -1) + 'px');
-	},
+    
+    
 
-	getText:function(txt){
-		txt = ludo.util.isFunction(txt) ? txt.call() : txt ? txt : '';
-		return '&lt;span>' + txt + '&lt;/span>';
-	},
+    
+<dl class="details">
+    
 
-    hide:function () {
-        this.css('none');
-    },
-    css:function (d) {
-        this.getShim().css('display',  d);
-        this.getEl().css('display',  d === '' &amp;&amp; this.txt ? '' : 'none');
-    }
-});</pre>
-    </article>
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="chart_base.js.html">chart/base.js</a>,
+				 <a href="chart_base.js.html#sunlight-1-line-1">line 1</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Members</h3>
+
+        <dl>
+            
+<hr>
+<dt class="name" id="ds">
+    <h4 id="ds"><span class="type-signature"></span>ds<span class="type-signature"></span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Reference to datasource</p>
+    </div>
+    
+
+    
+
+    
+<dl class="details">
+    
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    <dl>
+
+<table class="props table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>ds</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="ludo.chart.DataSource.html">ludo.chart.DataSource</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+</dl>
+
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="chart_base.js.html">chart/base.js</a>,
+				 <a href="chart_base.js.html#sunlight-1-line-24">line 24</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        </dl>
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        <dl>
+            
+<hr>
+<dt>
+    <h4 class="name" id="reveal"><span class="type-signature"></span>reveal<span class="signature">(direction, duration)</span><span class="type-signature"></span></h4>
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Chart reveal animation.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>direction</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>direction for the animation, 'left', 'right', 'up' or 'down'. Default: 'right'</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>duration</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>animation duration in milliseconds, default: 600</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="chart_base.js.html">chart/base.js</a>,
+				 <a href="chart_base.js.html#sunlight-1-line-256">line 256</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        </dl>
+    
+
+    
+
+    
+</article>
+
 </section>
-
 
 
 
@@ -171,6 +514,10 @@ ludo.view.Shim = new Class({
 
 	<div class="clearfix"></div>
 
+	
+		<div class="col-md-3">
+			<div id="toc" class="col-md-3 hidden-xs hidden-sm hidden-md"></div>
+		</div>
 	
 
 </div>

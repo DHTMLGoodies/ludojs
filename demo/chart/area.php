@@ -203,6 +203,7 @@ require_once("../includes/demo-header.php");
                                 plugins:[
                                     {
                                         type:'chart.Tooltip',
+                                        animationDuration:2, // too many points, so really low duration
                                         textStyles:{
                                             'font-size':'12px',
                                             'fill': '#aeb0b0'

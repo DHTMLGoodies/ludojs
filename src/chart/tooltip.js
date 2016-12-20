@@ -1,3 +1,49 @@
+/**
+ * Chart tooltip module
+ * You create a tooltip module by adding it as plugins to one
+ * of your chart views.
+ *
+ * The text of the tooltip is populated from the textOf method of
+ * <a href="ludo.chart.DataSource.html">ludo.chart.DataSource</a>.
+ *
+ * Example:
+ * <code>
+ * textOf:function(record, caller){
+            // Text for the tooltip module
+            if(caller.type == 'chart.Tooltip'){
+                return '<p><b>{parent.name}</b><br>' + record.date + '<br>Share Price: {record.price}</p>';
+            }
+            // Text for all others.
+            return record.date;
+        },
+    </code>
+ *
+ * textOf is a function returning text to chart views. Many views ask this method
+ * for data, so a test on caller.type or caller.id is usually required.
+ * 
+ * Simple HTML tags like &lt;b>, &lt;strong> &lt;i>, &lt;em> and &lt;br>
+ * in the returned text is allowed.
+ *
+ * @class ludo.chart.Tooltip
+ * @param {Object} config
+ * @param {Object} config.type Always set to chart.Tooltip
+ * @param {Object} config.textStyles Text styling
+ * @param {Object} config.boxStyles Styling of tooltip box
+ * @param {Number} config.animationDuration Animation duration in ms, default: 200
+ * @example:
+ * plugins:[
+ *  {
+ *      type:'chart.Tooltip',
+ *      textStyles:{
+ *          'font-size': '12px',
+ *          'fill': '#aeb0b0'
+ *      },
+ *      boxStyles:{
+ *          fill:'#222',
+ *          'fill-opacity': 0.9
+ *      }
+ * ]
+ */
 ludo.chart.Tooltip = new Class({
     Extends: ludo.chart.AddOn,
     type: 'chart.Tooltip',

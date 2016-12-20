@@ -1,7 +1,7 @@
-/* Generated Tue Dec 20 20:22:27 CET 2016 */
+/* Generated Tue Dec 20 22:12:32 CET 2016 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.299
+ludoJS - Javascript framework, 1.1.300
 Copyright (C) 2012-2016  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -9911,6 +9911,10 @@ ludo.color.Color = new Class({
  *      \_\_max : 245
  *      \_\_maxAggr : 245
  *      \_\_parent: undefined
+ *      \_\_indexStartVal: undefined
+ *      \_\_indexFraction: undefined
+ *      \_\_indexSum: undefined
+ *
  *      getChildren:function()
  *      getParent():function()
  * }
@@ -9953,6 +9957,12 @@ ludo.color.Color = new Class({
  * \_\_maxAggr will be 39000(Sum children of Germany), while \_\_max will be 29000.
  *
  * \_\_parent will for child items contain a reference to parent id which can be retrieved using dataSource.byId(id)
+ *
+ *  \_\_indexStartVal stores the sum of previous records with the same index as this one. In the example with countries above,
+ *  , the value for { "name":"0-14", "people" : 6000 } will be 5000, since the first child of United Kingdom has value 5000.
+ *  This value is used when rendering stacked area charts.
+ *
+ *  \_\_indexFraction stores the size of this record divided by the sum of all records with the same index.
  *
  * getParent() returns a reference to parent record if set, it will return undefined otherwise.
  * getChildren() returns reference to child data array, example the children array of Germany in the example above
@@ -10003,6 +10013,15 @@ ludo.color.Color = new Class({
  * @param {Function} config.shouldInheritColor Optional function returning true if color should be inherited from parent record. Input: record, 2: caller
  * @param {Function} config.shapeOf Optional function returning shape of a record. This is used when rendering dots for the line chart. Default shape is "circle". Can also be
  * "rect", "triangle" or path to an image.
+ * @param {Number} config.minBrightness Optional minimum brightness(0-100) when setting colors.
+ * @param {Number} config.maxBrightness Optional maximum brightness(0-100) when setting colors.
+ * @param {Number} config.minSaturation Optional minimum saturation/color intensity(0-100) when setting colors.
+ * @param {Number} config.maxSaturation Optional maximum saturation/color intensity(0-100) when setting colors.
+ * @param {Function} config.indexStartValueOf Optional function returning sum value of all previous records
+ * with same index. By default, it returns record.\_\_indexStartVal. Example for { "name":"0-14", "people" : 6000 }
+ * above it will return 5000, since this is index 0 and the child of United Kingdom with same index has value 5000.
+ * This function is used in <a href="../demo/chart/area-world-population-distribution.php">the area chart demo</a> where
+ * the chart is configured to render percentage values.
  * @example
  *     var dataSource = new ludo.chart.DataSource({
         data:[
@@ -12371,12 +12390,60 @@ ludo.canvas.TextBox = new Class({
 
     getDefaultTagProperties:function () {
         return {
+            '<strong>':{ 'font-weight':'bold' },
             '<b>':{ 'font-weight':'bold' },
-            '<em>':{ 'font-style':'italic' }
+            '<em>':{ 'font-style':'italic' },
+            '<i>':{ 'font-style':'italic' }
         };
     }
 
 });/* ../ludojs/src/chart/tooltip.js */
+/**
+ * Chart tooltip module
+ * You create a tooltip module by adding it as plugins to one
+ * of your chart views.
+ *
+ * The text of the tooltip is populated from the textOf method of
+ * <a href="ludo.chart.DataSource.html">ludo.chart.DataSource</a>.
+ *
+ * Example:
+ * <code>
+ * textOf:function(record, caller){
+            // Text for the tooltip module
+            if(caller.type == 'chart.Tooltip'){
+                return '<p><b>{parent.name}</b><br>' + record.date + '<br>Share Price: {record.price}</p>';
+            }
+            // Text for all others.
+            return record.date;
+        },
+    </code>
+ *
+ * textOf is a function returning text to chart views. Many views ask this method
+ * for data, so a test on caller.type or caller.id is usually required.
+ * 
+ * Simple HTML tags like &lt;b>, &lt;strong> &lt;i>, &lt;em> and &lt;br>
+ * in the returned text is allowed.
+ *
+ * @class ludo.chart.Tooltip
+ * @param {Object} config
+ * @param {Object} config.type Always set to chart.Tooltip
+ * @param {Object} config.textStyles Text styling
+ * @param {Object} config.boxStyles Styling of tooltip box
+ * @param {Number} config.animationDuration Animation duration in ms, default: 200
+ * @example:
+ * plugins:[
+ *  {
+ *      type:'chart.Tooltip',
+ *      textStyles:{
+ *          'font-size': '12px',
+ *          'fill': '#aeb0b0'
+ *      },
+ *      boxStyles:{
+ *          fill:'#222',
+ *          'fill-opacity': 0.9
+ *      }
+ * ]
+ */
 ludo.chart.Tooltip = new Class({
     Extends: ludo.chart.AddOn,
     type: 'chart.Tooltip',
