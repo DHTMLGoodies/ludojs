@@ -30,7 +30,6 @@ ludo.dataSource.JSON = new Class({
             dataType: 'json',
             data: data,
             success: function (json) {
-
                 var data = this.dataHandler(json);
 
                 if(data === false){
@@ -42,6 +41,7 @@ ludo.dataSource.JSON = new Class({
                 }
             }.bind(this),
             fail: function (text, error) {
+
                 this.fireEvent('fail', [text, error, this]);
             }.bind(this)
         });

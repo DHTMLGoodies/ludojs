@@ -18,7 +18,7 @@ ludo.chart.Fragment = new Class({
             x: 0, y: 0, width: 0, height: 0
         };
         this.map = {};
-        this.ds = this.parentComponent.ds;
+        this.ds = this.parentComponent.getDataSource();
         this.createNodes();
 
     },
@@ -30,25 +30,28 @@ ludo.chart.Fragment = new Class({
     createNodes:function(){
 
     },
-
+    
     getDataSource:function(){
         return this.getParent().getDataSource();
     },
 
     ludoEvents:function(){
         this.parent();
-        this.getParent().getDataSource().addEvent('update', this.update.bind(this));
+        this.ds.addEvent('update', this.update.bind(this));
 
         var ds = this.getDataSource();
 
         var recs = this.record.children != undefined ? this.record.children: [this.record];
 
-        jQuery.each(recs, function(index, record){
-            ds.on('select' + record.__uid, this.focus.bind(this));
-            ds.on('blur' + record.__uid, this.blur.bind(this));
-            ds.on('enter' + record.__uid, this.enter.bind(this));
-            ds.on('leave' + record.__uid, this.leave.bind(this));
-        }.bind(this));
+        if(this.parentComponent.interactive){
+            jQuery.each(recs, function(index, record){
+                ds.on('select' + record.__uid, this.focus.bind(this));
+                ds.on('blur' + record.__uid, this.blur.bind(this));
+                ds.on('enter' + record.__uid, this.enter.bind(this));
+                ds.on('leave' + record.__uid, this.leave.bind(this));
+            }.bind(this));
+        }
+
     },
 
     getParent:function(){

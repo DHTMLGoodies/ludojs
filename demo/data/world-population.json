@@ -1,0 +1,121 @@
+[
+  {
+    "region": "Africa",
+    "period": [
+        {"year": "1500", "population": 86},
+        {"year": "1600", "population": 114},
+        {"year": "1700", "population": 106},
+        {"year": "1750", "population": 106},
+        {"year": "1800", "population": 107},
+        {"year": "1850", "population": 111},
+        {"year": "1900", "population": 133},
+        {"year": "1950", "population": 221},
+        {"year": "1999", "population": 973},
+        {"year": "2008", "population": 86},
+        {"year": "2010", "population": 1022 },
+        {"year": "2012", "population": 1052 },
+        {"year": "2050", "population": 2478 }
+
+    ]
+  },
+  {
+    "region": "Asia",
+    "period": [
+
+        {"year": "1500", "population": 282},
+        {"year": "1600", "population": 350},
+        {"year": "1700", "population": 411},
+        {"year": "1750", "population": 502},
+        {"year": "1800", "population": 635},
+        {"year": "1850", "population": 809},
+        {"year": "1900", "population": 947},
+        {"year": "1950", "population": 1402},
+        {"year": "1999", "population": 3700},
+        {"year": "2008", "population": 4054},
+        {"year": "2010", "population": 4164 },
+        {"year": "2012", "population": 4250 },
+        {"year": "2050", "population": 5267 }
+
+    ]
+  },
+  {
+    "region": "Europe",
+    "period": [
+
+        {"year": "1500", "population": 168},
+        {"year": "1600", "population": 170},
+        {"year": "1700", "population": 178},
+        {"year": "1750", "population": 190},
+        {"year": "1800", "population": 203},
+        {"year": "1850", "population": 276},
+        {"year": "1900", "population": 408},
+        {"year": "1950", "population": 547},
+        {"year": "1999", "population": 675},
+        {"year": "2008", "population": 732},
+        {"year": "2010", "population": 738 },
+        {"year": "2012", "population": 740 },
+        {"year": "2050", "population": 734 }
+
+    ]
+  },
+  {
+    "region": "Latin America",
+    "period": [
+
+        {"year": "1500", "population": 40},
+        {"year": "1600", "population": 20},
+        {"year": "1700", "population": 10},
+        {"year": "1750", "population": 16},
+        {"year": "1800", "population": 24},
+        {"year": "1850", "population": 38},
+        {"year": "1900", "population": 74},
+        {"year": "1950", "population": 167},
+        {"year": "1999", "population": 508},
+        {"year": "2008", "population": 577},
+        {"year": "2010", "population": 590 },
+        {"year": "2012", "population": 603 },
+        {"year": "2050", "population": 784 }
+
+    ]
+  },
+  {
+    "region": "North America",
+    "period": [
+
+        {"year": "1500", "population": 6},
+        {"year": "1600", "population": 3},
+        {"year": "1700", "population": 2},
+        {"year": "1750", "population": 2},
+        {"year": "1800", "population": 7},
+        {"year": "1850", "population": 26},
+        {"year": "1900", "population": 82},
+        {"year": "1950", "population": 172},
+        {"year": "1999", "population": 312},
+        {"year": "2008", "population": 337},
+        {"year": "2010", "population": 345 },
+        {"year": "2012", "population": 351 },
+        {"year": "2050", "population": 433 }
+
+    ]
+  },
+  {
+    "region": "Oceania",
+    "period": [
+
+        {"year": "1500", "population": 3},
+        {"year": "1600", "population": 3},
+        {"year": "1700", "population": 3},
+        {"year": "1750", "population": 2},
+        {"year": "1800", "population": 2},
+        {"year": "1850", "population": 2},
+        {"year": "1900", "population": 6},
+        {"year": "1950", "population": 13},
+        {"year": "1999", "population": 30},
+        {"year": "2008", "population": 34},
+        {"year": "2010", "population": 37 },
+        {"year": "2012", "population": 38 },
+        {"year": "2050", "population": 57 }
+
+    ]
+  }
+]

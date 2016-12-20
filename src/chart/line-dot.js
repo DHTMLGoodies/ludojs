@@ -56,16 +56,19 @@ ludo.chart.LineDot = new Class({
             this.node.set("stroke-opacity", 0);
         }
 
-        this.ds.on("enter" + this.record.__uid, this.enter.bind(this));
-        this.ds.on("leave" + this.record.__uid, this.leave.bind(this));
+        if (this.parentComponent.getParent().interactive) {
+            this.ds.on("enter" + this.record.__uid, this.enter.bind(this));
+            this.ds.on("leave" + this.record.__uid, this.leave.bind(this));
+
+        }
 
     },
 
     getPath: function (highlighted) {
 
         var s = this.size;
-        if(this.shape == 'rotatedrect'){
-            s = Math.sqrt((s*s) + (s*s));
+        if (this.shape == 'rotatedrect') {
+            s = Math.sqrt((s * s) + (s * s));
         }
 
         var min = -(s / 2);
@@ -81,7 +84,7 @@ ludo.chart.LineDot = new Class({
             case 'triangle':
                 return ['M', 0, min, 'L', max, max, min, max, 0, min].join(' ');
             case 'rotatedrect':
-                return ['M', min,0, "L", 0,min, max,0, 0,max, min, 0].join(' ');
+                return ['M', min, 0, "L", 0, min, max, 0, 0, max, min, 0].join(' ');
 
         }
     },
@@ -99,7 +102,7 @@ ludo.chart.LineDot = new Class({
     enter: function () {
         if (this.nodeHighlight == undefined) {
             this.nodeHighlight = new ludo.canvas.Circle({
-                r: this.size * 1.6,cx:0,cy:0
+                r: this.size * 1.6, cx: 0, cy: 0
             });
             this.nodeHighlight.css({
                 'stroke-opacity': 0.5,
@@ -112,7 +115,7 @@ ludo.chart.LineDot = new Class({
             this.renderTo.append(this.nodeHighlight);
             this.node.toFront();
         }
-        this.nodeHighlight.setTranslate(this.x,this.y);
+        this.nodeHighlight.setTranslate(this.x, this.y);
         this.nodeHighlight.show();
 
         this.node.css('stroke', this.record.getParent().__stroke);
@@ -138,8 +141,10 @@ ludo.chart.LineDot = new Class({
         this.parentComponent.parentComponent.onFragmentAction('enter', this.parentComponent, this.record, this.nodeHighlight, {});
 
         this.node.animate(anim, {
-            duration:100,
-            validate:function(a,b){ return a == b }
+            duration: 100,
+            validate: function (a, b) {
+                return a == b
+            }
         });
         this.fireEvent('enter', this);
     },
@@ -162,8 +167,8 @@ ludo.chart.LineDot = new Class({
             anim["stroke-opacity"] = 0;
         }
         this.node.animate(anim, {
-            duration:100,
-            validate:function(a,b){
+            duration: 100,
+            validate: function (a, b) {
                 return a == b;
             }
         });

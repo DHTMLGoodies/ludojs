@@ -129,11 +129,7 @@ ludo.chart.Bar = new Class({
         });
     },
 
-    renderAnimation: function () {
-        jQuery.each(this.fragments, function(index, fr){
-            fr.animate();
-        });
-    },
+
 
     resizeBars: function () {
         var s = this.getSize();
@@ -171,6 +167,8 @@ ludo.chart.Bar = new Class({
         var s = this.getSize();
         var min = this.ds.min();
         var max = this.ds.max();
+
+
 
         for (var i = 0; i < inc.length; i++) {
             var r = (inc[i] - min) / (max - min);

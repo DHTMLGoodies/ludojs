@@ -110,6 +110,27 @@ ludo.color.Color = new Class({
         return this.toRGB(color.r, color.g, color.b);
     },
 
+    brightness:function(color, brightness){
+        if(arguments.length == 1){
+
+            return this.toHSV(color).v;
+        }else{
+            var hsv = this.toHSV(color);
+            hsv.v = brightness;
+            return this.rgbCode(hsv);
+        }
+    },
+
+    saturation:function(color, saturation){
+        if(arguments.length == 1){
+            return this.toHSV(color).s;
+        }else{
+            var hsv = this.toHSV(color);
+            hsv.s = saturation;
+            return this.rgbCode(hsv);
+        }
+    },
+
     /**
      * Converts a RGB color to HSV(Hue, Saturation, Brightness)
      * @param {String|Object} color

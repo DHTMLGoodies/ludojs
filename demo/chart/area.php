@@ -65,6 +65,10 @@ require_once("../includes/demo-header.php");
 
         dataFor:function(caller, data){
             return caller.type == 'chart.ChartLabels' ? data[0].getChildren() :  data;
+        },
+
+        strokeOf:function(record, caller){
+            return '#424242';
         }
 
 

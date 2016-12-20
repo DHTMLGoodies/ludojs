@@ -379,6 +379,232 @@ TestCase("ChartDataTest", {
             ]
         });
 
+    },
+
+    "test should get sum for index": function(){
+        var ds = this.getPopulationDataSource();
+
+        var record = ds.data[0].getChildren()[0];
+
+        assertEquals(86+282+168+40+6+3, record.__indexSum);
+        assertEquals(86+282+168+40+6+3, ds.data[2].getChildren()[0].__indexSum);
+
+    },
+
+    "tests should get index fraction": function(){
+
+        var ds = this.getPopulationDataSource();
+
+        var record = ds.data[0].getChildren()[0];
+
+        assertEquals(86 / (86+282+168+40+6+3), record.__indexFraction);
+    },
+
+    "test should get index start value": function(){
+        var ds = this.getPopulationDataSource();
+        assertEquals(0, ds.data[0].getChildren()[0].__indexStartVal);
+        assertEquals(86, ds.data[1].getChildren()[0].__indexStartVal);
+        assertEquals(114, ds.data[1].getChildren()[1].__indexStartVal);
+        assertEquals(86+282, ds.data[2].getChildren()[0].__indexStartVal);
+    },
+
+    "test should find start fraction": function(){
+
+        var ds = this.getPopulationDataSource();
+
+        var record = ds.data[1].getChildren()[2];
+
+        assertEquals(record.__indexStartVal / record.__indexSum, record.__indexStartFraction);
+    },
+
+    "test should set max sum indexes": function(){
+        var ds = this.getPopulationDataSource();
+
+        assertEquals(2478+5267+734+784+433+57, ds.maxIndexSum());
+    },
+
+
+    getPopulationDataSource:function(){
+        return new ludo.chart.DataSource({
+            id:'dataSource',
+            data:[
+                {   /* One item for each area  */
+                    "region": "Africa",
+                    "period": [
+                        {"year": "1500", "population": 86}, /* Point */
+                        {"year": "1600", "population": 114},
+                        {"year": "1700", "population": 106},
+                        {"year": "1750", "population": 106},
+                        {"year": "1800", "population": 107},
+                        {"year": "1850", "population": 111},
+                        {"year": "1900", "population": 133},
+                        {"year": "1950", "population": 221},
+                        {"year": "1999", "population": 973},
+                        {"year": "2008", "population": 86},
+                        {"year": "2010", "population": 1022 },
+                        {"year": "2012", "population": 1052 },
+                        {"year": "2050", "population": 2478 }
+                    ]
+                },
+                {
+                    "region": "Asia",
+                    "period": [
+
+                        {"year": "1500", "population": 282},
+                        {"year": "1600", "population": 350},
+                        {"year": "1700", "population": 411},
+                        {"year": "1750", "population": 502},
+                        {"year": "1800", "population": 635},
+                        {"year": "1850", "population": 809},
+                        {"year": "1900", "population": 947},
+                        {"year": "1950", "population": 1402},
+                        {"year": "1999", "population": 3700},
+                        {"year": "2008", "population": 4054},
+                        {"year": "2010", "population": 4164 },
+                        {"year": "2012", "population": 4250 },
+                        {"year": "2050", "population": 5267 }
+
+                    ]
+                },
+                {
+                    "region": "Europe",
+                    "period": [
+
+                        {"year": "1500", "population": 168},
+                        {"year": "1600", "population": 170},
+                        {"year": "1700", "population": 178},
+                        {"year": "1750", "population": 190},
+                        {"year": "1800", "population": 203},
+                        {"year": "1850", "population": 276},
+                        {"year": "1900", "population": 408},
+                        {"year": "1950", "population": 547},
+                        {"year": "1999", "population": 675},
+                        {"year": "2008", "population": 732},
+                        {"year": "2010", "population": 738 },
+                        {"year": "2012", "population": 740 },
+                        {"year": "2050", "population": 734 }
+
+                    ]
+                },
+                {
+                    "region": "Latin America",
+                    "period": [
+
+                        {"year": "1500", "population": 40},
+                        {"year": "1600", "population": 20},
+                        {"year": "1700", "population": 10},
+                        {"year": "1750", "population": 16},
+                        {"year": "1800", "population": 24},
+                        {"year": "1850", "population": 38},
+                        {"year": "1900", "population": 74},
+                        {"year": "1950", "population": 167},
+                        {"year": "1999", "population": 508},
+                        {"year": "2008", "population": 577},
+                        {"year": "2010", "population": 590 },
+                        {"year": "2012", "population": 603 },
+                        {"year": "2050", "population": 784 }
+
+                    ]
+                },
+                {
+                    "region": "North America",
+                    "period": [
+
+                        {"year": "1500", "population": 6},
+                        {"year": "1600", "population": 3},
+                        {"year": "1700", "population": 2},
+                        {"year": "1750", "population": 2},
+                        {"year": "1800", "population": 7},
+                        {"year": "1850", "population": 26},
+                        {"year": "1900", "population": 82},
+                        {"year": "1950", "population": 172},
+                        {"year": "1999", "population": 312},
+                        {"year": "2008", "population": 337},
+                        {"year": "2010", "population": 345 },
+                        {"year": "2012", "population": 351 },
+                        {"year": "2050", "population": 433 }
+
+                    ]
+                },
+                {
+                    "region": "Oceania",
+                    "period": [
+
+                        {"year": "1500", "population": 3},
+                        {"year": "1600", "population": 3},
+                        {"year": "1700", "population": 3},
+                        {"year": "1750", "population": 2},
+                        {"year": "1800", "population": 2},
+                        {"year": "1850", "population": 2},
+                        {"year": "1900", "population": 6},
+                        {"year": "1950", "population": 13},
+                        {"year": "1999", "population": 30},
+                        {"year": "2008", "population": 34},
+                        {"year": "2010", "population": 37 },
+                        {"year": "2012", "population": 38 },
+                        {"year": "2050", "population": 57 }
+
+                    ]
+                }
+            ],
+            childKey:'period',
+
+            // Return chart value for chart data. The data source doesn't know our data, so
+            // this tells the data source where to get the value.
+            valueOf:function(record){
+                return record.population;
+            },
+
+            shouldInheritColor:function(record, caller){
+                return true;
+            },
+
+
+            max:function(){ // Function returning max value for the y axis of the line chart
+                return 6000;
+            },
+
+            min:function(){ // Function returning min value for the y axis
+                return 0;
+            },
+
+            valueForDisplay:function(value, caller){
+                if(caller.type == 'chart.ChartValues'){
+                    if(value >= 1000)return value/1000 + " Bill";
+                    return value + ' Mill'
+                }
+                return value;
+            },
+            // Function returning increments for lines and labels
+            increments:function(){
+                return 500;
+            },
+
+            colorOf:function(record){
+                switch(record.region){
+                    case 'North America': return '#C2185B'
+                    case 'Europe': return '#1976D2'
+                    case 'Asia': return '#FBC02D'
+                    case 'Africa': return '#616161'
+                    case 'Oceania': return '#AFB42B'
+                    default:return undefined;
+                }
+            },
+
+            maxSaturation:70,
+            minBrightness:90,
+
+            strokeOf:function(record, caller){
+                return '#424242';
+            },
+
+            dataFor:function(caller, data){
+                if(caller.type == 'chart.ChartLabels'){
+                    return data[0].getChildren();
+                }
+                return data;
+            }
+        });
     }
 
 

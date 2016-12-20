@@ -1,0 +1,57 @@
+[{
+  "name": "average",
+  "period": [
+    {
+      "year": "1500",
+      "population": 97.5
+    },
+    {
+      "year": "1600",
+      "population": 110
+    },
+    {
+      "year": "1700",
+      "population": 118.33333333333333
+    },
+    {
+      "year": "1750",
+      "population": 136.33333333333334
+    },
+    {
+      "year": "1800",
+      "population": 163
+    },
+    {
+      "year": "1850",
+      "population": 210.33333333333334
+    },
+    {
+      "year": "1900",
+      "population": 275
+    },
+    {
+      "year": "1950",
+      "population": 420.3333333333333
+    },
+    {
+      "year": "1999",
+      "population": 1033
+    },
+    {
+      "year": "2008",
+      "population": 970
+    },
+    {
+      "year": "2010",
+      "population": 1149.3333333333333
+    },
+    {
+      "year": "2012",
+      "population": 1172.3333333333333
+    },
+    {
+      "year": "2050",
+      "population": 1625.5
+    }
+  ]
+}]

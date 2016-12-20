@@ -172,7 +172,7 @@ ludo.chart.Pie = new Class({
 
         this.rendered = false;
         var anim = {
-            startAngle:this.dataProvider().startAngle,
+            startAngle:this.ds.startAngle,
             radius: radius.steps[0],
             currentRadius:0,
             radians: radians,

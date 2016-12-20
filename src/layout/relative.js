@@ -219,8 +219,6 @@ ludo.layout.Relative = new Class({
 			case 'rightOf':
 				refC = this.lastChildCoordinates[child.layout.rightOf.id];
 				return function () {
-                    // TODO refactor this so that Math.max is no longer needed
-					// c.left = Math.max(0, refC.left) + refC.width;
 					c.left = refC.left + refC.width;
 				};
 			case 'below':

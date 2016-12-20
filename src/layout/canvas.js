@@ -54,6 +54,24 @@ ludo.layout.Canvas = new Class({
 
 	currentTranslate:{
 		left:0,top:0
+	},
+
+	zIndexAdjusted:false,
+	resize:function(){
+		this.parent();
+
+		if(!this.zIndexAdjusted){
+			this.zIndexAdjusted = true;
+			console.log("Adjusting");
+
+			for (var i = 0; i < this.children.length; i++) {
+				if(this.children[i].layout.zIndex != undefined){
+					console.log("appending " + this.children[i].id, this.children[i].node.el);
+					this.view.getCanvas().append(this.children[i]);
+				}
+			}
+		}
+
 	}
 
 

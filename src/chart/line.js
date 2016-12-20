@@ -27,8 +27,9 @@ ludo.chart.Line = new Class({
     
     __construct:function(config){
         this.parent(config);
-        this.setConfigParams(config, ["lineStyles","showDots"]);
+        this.setConfigParams(config, ["halfInset","lineStyles","showDots"]);
 
+        
         this.node.on("mousemove", this.mousemove.bind(this));
     },
 
@@ -48,7 +49,7 @@ ludo.chart.Line = new Class({
 
         jQuery.each(this.points, function(record, pos){
             var xOff = pos[0] - x;
-            xOff*=xOff;
+            xOff*=(xOff*xOff);
             distance = ludo.geometry.distanceBetweenPoints(0, y, xOff, pos[1]);
             if(closest == undefined || distance < closest){
                 closest = distance;
@@ -63,8 +64,6 @@ ludo.chart.Line = new Class({
             this.ds.enterId(selected);
             this.currentHighlighted = selected;
         }
-
-        // console.log(new Date().getTime() - s);
     },
 
     resizeElements:function(){
@@ -90,13 +89,7 @@ ludo.chart.Line = new Class({
     },
 
 
-    renderAnimation:function(){
-        if(this.revealAnim){
-            this.reveal();
-        }else{
-            this.parent();
-        }
-    },
+
 
 
     resizeLines:function(){

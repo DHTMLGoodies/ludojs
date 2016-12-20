@@ -1,7 +1,7 @@
-/* Generated Mon Dec 19 20:48:22 CET 2016 */
+/* Generated Tue Dec 20 20:14:28 CET 2016 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.296
+ludoJS - Javascript framework, 1.1.298
 Copyright (C) 2012-2016  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -7104,7 +7104,6 @@ ludo.dataSource.JSON = new Class({
             dataType: 'json',
             data: data,
             success: function (json) {
-
                 var data = this.dataHandler(json);
 
                 if(data === false){
@@ -7116,6 +7115,7 @@ ludo.dataSource.JSON = new Class({
                 }
             }.bind(this),
             fail: function (text, error) {
+
                 this.fireEvent('fail', [text, error, this]);
             }.bind(this)
         });
@@ -9429,7 +9429,429 @@ ludo.chart.Record = new Class({
     leave:function(){
         this.fireEvent('leave', this);
     }
-});/* ../ludojs/src/chart/data-source.js */
+});/* ../ludojs/src/color/color.js */
+/**
+ * A class with a lot of color conversion functions.
+ *
+ * With this class, you can convert between RGB and HSV, darken and brighten colors,
+ * increase and decrease saturation and brightness of a color etc.
+ * 
+ * @class ludo.color.Color
+ * @example {@lang JavaScript}
+ * var util = new ludo.color.Color();
+ * var rgbCode = '#669900';
+ * var rgbObject = util.rgbObject(rgbCode);
+ *
+ */
+ludo.color.Color = new Class({
+
+    /**
+     * Converting color into RGB Object. This method accepts color in HSV format({h:120,s:40,v:100})
+     * and in string format(RGB), example: '#669900'
+     * @memberof ludo.color.prototype
+     * @function rgbColors
+     * @param {object|String} a
+     * @returns {object}
+     * @memberof ludo.color.Color.prototype
+     * @example
+     * var util = new ludo.color.Color();
+     * console.log(util.rgbColors('#669900');
+     * console.log(util.rgbColors({ h: 300, s: 100, v: 50 });
+     *
+     *
+     */
+    rgbColors:function (a) {
+        if (a.substr !== undefined) {
+            return this.rgbObject(a);
+        }
+        if (a.h !== undefined) {
+            return this.hsvToRGB(a.h, a.s, a.v);
+        }
+        return undefined;
+    },
+    /**
+     Converts rgb color string to rgb color object
+     @public
+     @param {string} rgbColor
+     @memberof ludo.color
+     @return {Object}
+     @memberof ludo.color.Color.prototype
+     @example {@lang JavaScript}
+     * var c = new ludo.color.Color();
+     * console.log(c.rgbObject('#FFEEDD');
+     * // returns { 'r': 'FF','g' : 'EE', 'b' : 'DD' }
+     */
+    rgbObject:function (rgbColor) {
+        rgbColor = rgbColor.replace('#', '');
+        return {
+            r:rgbColor.substr(0, 2).toInt(16),
+            g:rgbColor.substr(2, 2).toInt(16),
+            b:rgbColor.substr(4, 2).toInt(16)
+        };
+    },
+    /**
+     * Converts RGB or HSV color object to rgb code
+     * @memberof ludo.color.Color.prototype
+     * @param {number} a
+     * @param {number} b
+     * @param {number} c
+     * @return {string}
+     * @example
+     * var c = new ludo.color.Color();
+     * console.log(c.rgbCode({r:100,g:125,b:200});
+     * console.log(c.rgbCode({h:144,s:45,b:55});
+     */
+    rgbCode:function (a, b, c) {
+        if (b === undefined) {
+            if (a.r !== undefined) {
+                b = a.g;
+                c = a.b;
+                a = a.r;
+            }
+            else if (a.h !== undefined) {
+                var color = this.hsvToRGB(a.h, a.s, a.v);
+                a = color.r;
+                b = color.g;
+                c = color.b;
+            }
+        }
+        return this.toRGB(a, b, c);
+    },
+    /**
+     * Converts rgb object to rgb string
+     * @memberof ludo.color.Color.prototype
+     * @function toRGB
+     * @param {Number} red
+     * @param {Number} green
+     * @param {Number} blue
+     * @return {String}
+     * @example
+     * var c = new ludo.color.Color();
+     * console.log(c.toRgb(100,14,200));
+     */
+    toRGB:function (red, green, blue) {
+        var r = Math.round(red).toString(16);
+        var g = Math.round(green).toString(16);
+        var b = Math.round(blue).toString(16);
+        if (r.length === 1)r = ['0', r].join('');
+        if (g.length === 1)g = ['0', g].join('');
+        if (b.length === 1)b = ['0', b].join('');
+        return ['#', r, g, b].join('').toUpperCase();
+    },
+    toRGBFromObject:function (color) {
+        return this.toRGB(color.r, color.g, color.b);
+    },
+
+    brightness:function(color, brightness){
+        if(arguments.length == 1){
+
+            return this.toHSV(color).v;
+        }else{
+            var hsv = this.toHSV(color);
+            hsv.v = brightness;
+            return this.rgbCode(hsv);
+        }
+    },
+
+    saturation:function(color, saturation){
+        if(arguments.length == 1){
+            return this.toHSV(color).s;
+        }else{
+            var hsv = this.toHSV(color);
+            hsv.s = saturation;
+            return this.rgbCode(hsv);
+        }
+    },
+
+    /**
+     * Converts a RGB color to HSV(Hue, Saturation, Brightness)
+     * @param {String|Object} color
+     * @memberof ludo.color.Color.prototype
+     * @returns {Object}
+     * @example
+     * var c = new ludo.color.Color();
+     * console.log(c.toHSV('#7e8080'));
+     * // outputs {h: 180, s: 1.5624999999999944, v: 50.19607843137255}
+     */
+    toHSV:function (color) {
+        if (color.r === undefined)color = this.rgbObject(color);
+        return this.toHSVFromRGB(color.r, color.g, color.b);
+    },
+    toHSVFromRGBCode:function (rgbColor) {
+        var color = this.rgbObject(rgbColor);
+        return this.toHSVFromRGB(color.r, color.g, color.b);
+    },
+    /**
+     * Converts red,green and blue to HSV(Hue, Saturation, Brightness)
+     * @memberof ludo.color.Color.prototype
+     * @function toHSVFromRGB
+     * @param r
+     * @param g
+     * @param b
+     * @return {Object}
+     * @example
+     * var c = new ludo.color.Color();
+     * var hsv = c.toHSVFromRGB(100,200,10);
+     * console.log(hsv);
+     */
+    toHSVFromRGB:function (r, g, b) {
+        r = r / 255;
+        g = g / 255;
+        b = b / 255;
+        var max = Math.max(r, g, b), min = Math.min(r, g, b);
+        var h, s;
+
+        var d = max - min;
+        s = max == 0 ? 0 : d / max;
+
+        if (max == min) {
+            h = 0;
+        } else {
+            switch (max) {
+                case r:
+                    h = (g - b) / d + (g < b ? 6 : 0);
+                    break;
+                case g:
+                    h = (b - r) / d + 2;
+                    break;
+                case b:
+                    h = (r - g) / d + 4;
+                    break;
+            }
+            h /= 6;
+        }
+        return {
+            h:h * 360,
+            s:s * 100,
+            v:max * 100
+        };
+    },
+
+    /**
+     * Converts Hue,Saturation,Brightness to RGB Code
+     * @memberof ludo.color.Color.prototype
+     * @param h
+     * @param s
+     * @param v
+     * @returns {String}
+     * @example
+     * var c = new ludo.color.Color();
+     * var color = c.hsvToRGBCode(200,40,60);
+     * console.log(color);
+     */
+    hsvToRGBCode:function (h, s, v) {
+        if (s === undefined) {
+            s = h.s;
+            v = h.v;
+            h = h.h;
+        }
+        var rgb = this.hsvToRGB(h, s, v);
+        return this.toRGB(rgb.r, rgb.g, rgb.b);
+    },
+
+
+    /**
+     * Converts HSV(Hue, Saturation, Brightness) to RGB(red, green, blue).
+     * @memberof ludo.color.Color.prototype
+     * @param h
+     * @param s
+     * @param v
+     * @returns {{r: number, g: number, b: number}}
+     * @example {@lang JavaScript}
+     * var colorUtil = new ludo.color.Color();
+     * var hue = 300;
+     * var saturation = 40;
+     * var brightness = 90;
+     * var rgb = colorUtil.hsvToRGB(hue, saturation, brightness);
+     *  // returns { r: 229, g: 138, b: 229 }
+     */
+    hsvToRGB:function (h, s, v) {
+        if (s === undefined) {
+            s = h.s;
+            v = h.v;
+            h = h.h;
+        }
+        h /= 360;
+        s /= 100;
+        v /= 100;
+
+        var r, g, b;
+
+        var i = Math.floor(h * 6);
+        var f = h * 6 - i;
+        var p = v * (1 - s);
+        var q = v * (1 - f * s);
+        var t = v * (1 - (1 - f) * s);
+
+        switch (i % 6) {
+            case 0:
+                r = v;
+                g = t;
+                b = p;
+                break;
+            case 1:
+                r = q;
+                g = v;
+                b = p;
+                break;
+            case 2:
+                r = p;
+                g = v;
+                b = t;
+                break;
+            case 3:
+                r = p;
+                g = q;
+                b = v;
+                break;
+            case 4:
+                r = t;
+                g = p;
+                b = v;
+                break;
+            case 5:
+                r = v;
+                g = p;
+                b = q;
+                break;
+        }
+        return{
+            r:r * 255,
+            g:g * 255,
+            b:b * 255
+        };
+    },
+
+    hslToRgb:function (h, s, l) {
+        var r, g, b;
+
+        if (s == 0) {
+            r = g = b = l; // achromatic
+        } else {
+            function hue2rgb(p, q, t) {
+                if (t < 0) t += 1;
+                if (t > 1) t -= 1;
+                if (t < 1 / 6) return p + (q - p) * 6 * t;
+                if (t < 1 / 2) return q;
+                if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+                return p;
+            }
+
+            var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+            var p = 2 * l - q;
+            r = hue2rgb(p, q, h + 1 / 3);
+            g = hue2rgb(p, q, h);
+            b = hue2rgb(p, q, h - 1 / 3);
+        }
+
+        return { r:r * 255, g:g * 255, b:b * 255 }
+    },
+
+    /**
+     * Return rgb code after hue has been adjusted by a number of degrees
+     * @function offsetHue
+     * @memberof ludo.color.Color.prototype
+     * @param color
+     * @param offset
+     * @return {String}
+     * @example
+     * var c = new ludo.color.Color();
+     * var color = '#FF0000'; // red
+     * color = c.offsetHue(color, 10);
+     * console.log(color); // Outputs #FF2A00
+     */
+    offsetHue:function(color, offset){
+        var hsv = this.toHSV(color);
+        hsv.h += offset;
+        hsv.h = hsv.h % 360;
+        return this.rgbCode(hsv);
+    },
+
+    /**
+     * Return rgb code after hue has been adjusted by a number of degrees
+     * @function offsetBrightness
+     * @memberof ludo.color.Color.prototype
+     * @param color
+     * @param offset
+     * @return {String}
+     * @example
+     * var c = new ludo.color.Color();
+     * var color = '#FF0000'; // Bright red with full brightness and saturation
+     * color = c.offsetBrightness(color, -10); // 10 degrees darker
+     * console.log(color); // outputs #E60000
+     */
+    offsetBrightness:function(color, offset){
+        var hsv = this.toHSV(color);
+        hsv.v += offset;
+        if(hsv.v > 100) hsv.v = 100;
+        if(hsv.v < 0)hsv.v = 0;
+        return this.rgbCode(hsv);
+    },
+
+    /**
+     * Return rgb code after saturation(color intensity) has been adjusted. Saturation can be 0-100(no saturation to full saturation)
+     * @function offsetSaturation
+     * @memberof ludo.color.Color.prototype
+     * @param {Object|String} color
+     * @param {Number} offset
+     * @return {String}
+     * @example
+     * var c = new ludo.color.Color();
+     * var color = '#80994d'; // Green color with a saturation of 50
+     * color = c.offsetSaturation(color, 10); // Increase saturation by 10 points
+     * console.log(color); // outputs #85995C
+     */
+    offsetSaturation:function(color, offset){
+        var hsv = this.toHSV(color);
+        hsv.s += offset;
+        if(hsv.s > 100) hsv.s = 100;
+        if(hsv.s < 0)hsv.s = 0;
+        return this.rgbCode(hsv);
+    },
+
+    /**
+     * Returns a brighter color.
+     * @memberof ludo.color.Color.prototype
+     * @param {String|Object} color
+     * @param {number} percent
+     * @returns {String}
+     * @example
+     * var util = new ludo.color.Color();
+     * var color = '#669900';
+     * var brighterColor = util.brighten(color, 10);
+     * console.log(brighterColor); // outputs #76A811;
+     * color = '#AAAAAA';
+     * brighterColor = util.brighten(color, 10);
+     * console.log(brighterColor); // outputs #BBBBBB;
+     */
+    brighten:function(color, percent){
+        var hsv = this.toHSV(color);
+        color = this.offsetBrightness(color, hsv.v * percent/100);
+        color = this.offsetSaturation(color, hsv.s * percent/100 * -1);
+        return color;
+    },
+
+    /**
+     * Brightens a color
+     * @memberof ludo.color.Color.prototype
+     * @param color
+     * @param percent
+     * @returns {String}
+     * @example
+     var c = new ludo.color.Color();
+     var color = '#BBBBBB';
+     var darker = c.darken(color, 10);
+     console.log(darker); // outputs #A8A8A8
+     */
+    darken:function(color, percent){
+        var hsv = this.toHSV(color);
+        color = this.offsetBrightness(color, hsv.v * percent/100 * -1);
+        color = this.offsetSaturation(color, hsv.s * percent/100);
+        return color;
+    }
+});
+
+/* ../ludojs/src/chart/data-source.js */
 /**
  * Data source for charts
  *
@@ -9614,7 +10036,7 @@ ludo.chart.DataSource = new Class({
     valueOf: undefined,
     textOf: undefined,
     valueKey: 'value',
-    childKey:'children',
+    childKey: 'children',
 
     startAngle: 0,
 
@@ -9642,8 +10064,10 @@ ludo.chart.DataSource = new Class({
      */
     maxVal: undefined,
 
-    dataFor:undefined,
-    sortFn:undefined,
+    dataFor: undefined,
+    sortFn: undefined,
+
+    _maxIndexSum:undefined,
 
 
     /**
@@ -9681,9 +10105,18 @@ ludo.chart.DataSource = new Class({
     _increments: undefined,
     increments: undefined,
 
+    minBrightness: undefined,
+    maxBrightness: undefined,
+    minSaturation: undefined,
+    maxSaturation: undefined,
+
+
     __construct: function (config) {
-        this.setConfigParams(config, ['shapeOf', 'dataFor', 'sortFn', 'shouldInheritColor', 'childKey', 'valueKey', 'color', 'valueOf', 'textOf', 'getText', 'max', 'min', 'increments', 'strokeOf', 'strokeOverOf','valueForDisplay']);
+        this.setConfigParams(config, ['indexStartValueOf', 'minBrightness', 'maxBrightness', 'minSaturation',
+            'maxSaturation', 'shapeOf', 'dataFor', 'sortFn', 'shouldInheritColor', 'childKey', 'valueKey',
+            'color', 'valueOf', 'textOf', 'getText', 'max', 'min', 'increments', 'strokeOf', 'strokeOverOf', 'valueForDisplay']);
         this.parent(config);
+
 
 
         if (this.valueOf == undefined) {
@@ -9708,11 +10141,17 @@ ludo.chart.DataSource = new Class({
         this.maxVal = undefined;
         this.maxValAggr = undefined;
         this.count = this.getCount(this.data);
+
+
         this.parseChartBranch(this.data);
-        if(this.sortFn != undefined){
+        this.setSumIndexes(this.data);
+
+        if (this.sortFn != undefined) {
             this.sortBranch(this.data);
         }
         this.updateIncrements();
+
+
     },
 
     update: function (record) {
@@ -9818,16 +10257,16 @@ ludo.chart.DataSource = new Class({
         }
     },
 
-    sortBranch:function(branch, parent){
-        if(parent != undefined && this.sortFn != undefined) {
+    sortBranch: function (branch, parent) {
+        if (parent != undefined && this.sortFn != undefined) {
             var fn = this.sortFn(parent, this);
-            if(fn != undefined){
+            if (fn != undefined) {
                 branch = branch.sort(fn);
             }
         }
-        jQuery.each(branch, function(index, node){
+        jQuery.each(branch, function (index, node) {
             node.__index = index;
-            if(node[this.childKey] != undefined){
+            if (node[this.childKey] != undefined) {
                 this.sortBranch(node[this.childKey], node);
             }
         }.bind(this));
@@ -9844,18 +10283,18 @@ ludo.chart.DataSource = new Class({
         jQuery.each(branch, function (key, node) {
             node.__sum = sum;
             var val = this.value(node, this);
-            if (val == undefined || !isNaN(val)) {
-                if (val != undefined) {
-                    node.__min = this.minVal;
-                    node.__max = this.maxVal;
-                    node.__maxAggr = this.maxValAggr;
-                    node.__minAgr = this.minValAgr;
-                    node.__fraction = val / sum;
-                    node.__percent = Math.round(node.__fraction * 100);
-                    node.__radians = ludo.geometry.toRadians(node.__fraction * 360);
-                    node.__angle = angle;
-                    angle += node.__radians;
-                }
+            if (!isNaN(val)) {
+
+                node.__min = this.minVal;
+                node.__max = this.maxVal;
+                node.__maxAggr = this.maxValAggr;
+                node.__minAgr = this.minValAgr;
+                node.__fraction = val / sum;
+                node.__percent = Math.round(node.__fraction * 100);
+                node.__radians = ludo.geometry.toRadians(node.__fraction * 360);
+                node.__angle = angle;
+                angle += node.__radians;
+
             }
             node.__count = this.count;
 
@@ -9863,16 +10302,17 @@ ludo.chart.DataSource = new Class({
                 node.__index = i++;
             }
 
-            if(parent != undefined){
+            if (parent != undefined) {
                 node.__parent = parent.id;
 
-                node.getParent = function(){
+                node.getParent = function () {
                     return parent;
                 }
-            }else{
-                node.getParent = function(){ return undefined; }
+            } else {
+                node.getParent = function () {
+                    return undefined;
+                }
             }
-
 
 
             if (node.id == undefined) {
@@ -9885,11 +10325,11 @@ ludo.chart.DataSource = new Class({
 
 
             var c = this.childKey;
-            node.getChildren = function(){
+            node.getChildren = function () {
                 return node[c];
             };
 
-            node.getChild = function(index){
+            node.getChild = function (index) {
                 return node[c][index];
             };
 
@@ -9900,8 +10340,55 @@ ludo.chart.DataSource = new Class({
             }
 
 
-
         }.bind(this));
+
+
+
+        return branch;
+    },
+
+    setSumIndexes:function(data){
+        var children = data[0].getChildren();
+        if(children == undefined)return;
+        var sumIndexes = [];
+        jQuery.each(data, function(index, record){
+
+
+            var c = record.getChildren();
+            if(c && c.length){
+                jQuery.each(c, function(i, childRecord){
+                    childRecord.__val = this.valueOf(childRecord, this) || 0;
+
+                    if(sumIndexes.length == i){
+                        sumIndexes.push(0);
+                    }
+                    childRecord.__indexStartVal = sumIndexes[i];
+                    sumIndexes[i] += childRecord.__val;
+                }.bind(this));
+            }
+        }.bind(this));
+
+        this._maxIndexSum = undefined;
+
+        jQuery.each(data, function(index, record){
+            var c = record.getChildren();
+            if(c && c.length){
+                jQuery.each(c, function(i, childRecord){
+                    if(this._maxIndexSum == undefined){
+                        this._maxIndexSum = sumIndexes[i];
+                    }else{
+                        this._maxIndexSum = Math.max(this._maxIndexSum, sumIndexes[i]);
+                    }
+                    childRecord.__indexSum = sumIndexes[i];
+                    childRecord.__indexFraction = childRecord.__val / sumIndexes[i];
+                    childRecord.__indexStartFraction = childRecord.__indexStartVal / sumIndexes[i];
+                }.bind(this));
+            }
+        }.bind(this));
+    },
+
+    maxIndexSum:function(){
+        return this._maxIndexSum;
     },
 
     val: function (id, value) {
@@ -9976,25 +10463,57 @@ ludo.chart.DataSource = new Class({
     },
 
     shapes: [
-        'circle','rect', 'triangle','rotatedrect'
+        'circle', 'rect', 'triangle', 'rotatedrect'
     ],
-    shapeIndex:0,
+    shapeIndex: 0,
+
+    sumBy: function (search, key) {
+        return this._sumBy(this.data, search, key);
+    },
+
+    _sumBy: function (array, search, key) {
+        var sum = 0;
+
+        jQuery.each(array, function (index, record) {
+            if (this.isMatching(record, search)) {
+                sum += record[key];
+            }
+            var children = record.getChildren();
+            if (children && children.length > 0) {
+                sum += this._sumBy(children, search, key, sum);
+            }
+
+        }.bind(this));
+
+        return sum;
+
+    },
+
+    isMatching: function (record, search) {
+        for (var key in search) {
+            if (record[key] == undefined)return false;
+            if (record[key] != search[key])return false;
+        }
+        return true;
+
+    },
 
     setColor: function (record) {
         var u = false;
 
-        if(this.shouldInheritColor(record) && record.__parent){
+        if (this.shouldInheritColor(record) && record.__parent) {
             var p = record.getParent();
             record.__color = p.__color;
             record.__colorOver = p.__colorOver;
             record.__stroke = p.__stroke;
             record.__strokeOver = p.__strokeOver;
             record.__shape = p.__shape;
+
             this.color = this.colorUtil().offsetHue(this.color, (360 / (record.__count + 1)));
             return;
         }
 
-        if(record.__shape == undefined){
+        if (record.__shape == undefined) {
             record.__shape = this.shapes[this.shapeIndex++];
             this.shapeIndex = this.shapeIndex % this.shapes.length;
         }
@@ -10002,7 +10521,8 @@ ludo.chart.DataSource = new Class({
         if (record.__color == undefined) {
             if (this.colorOf != undefined) {
                 record.__color = this.colorOf(record);
-            } else {
+            }
+            if (!record.__color) {
                 record.__color = this.color;
             }
             u = true;
@@ -10022,8 +10542,42 @@ ludo.chart.DataSource = new Class({
         if (record.__strokeOver == undefined && this.strokeOverOf != undefined) {
             record.__strokeOver = this.strokeOverOf(record, this);
         }
+
+        this.adjustColor(record);
+
+
         if (u) {
             this.color = this.colorUtil().offsetHue(record.__color, (360 / (record.__count + 1)));
+        }
+    },
+
+    adjustColor: function (record) {
+        var b, s;
+        var u = this.colorUtil();
+        if (this.minBrightness != undefined) {
+            b = u.brightness(record.__color);
+            if (b < this.minBrightness) {
+                record.__color = u.brightness(record.__color, this.minBrightness);
+            }
+        }
+        if (this.maxBrightness != undefined) {
+            b = u.brightness(record.__color);
+            if (b > this.maxBrightness) {
+                record.__color = u.brightness(record.__color, this.maxBrightness);
+            }
+        }
+
+        if (this.minSaturation != undefined) {
+            s = u.saturation(record.__color);
+            if (s < this.minSaturation) {
+                record.__color = u.saturation(record.__color, this.minSaturation);
+            }
+        }
+        if (this.maxSaturation != undefined) {
+            s = u.saturation(record.__color);
+            if (s > this.maxSaturation) {
+                record.__color = u.saturation(record.__color, this.maxSaturation);
+            }
         }
     },
 
@@ -10054,22 +10608,27 @@ ludo.chart.DataSource = new Class({
         return Math.min(0, this.minVal);
     },
 
-    valueForDisplay:function(value){
+    valueForDisplay: function (value) {
         return value;
     },
 
-    shouldInheritColor:function(){
+    shouldInheritColor: function () {
         return false;
     },
 
-    getData:function(caller){
+    getData: function (caller) {
+        caller = caller || this;
         var allData = this.parent();
         var d = this.dataFor != undefined ? this.dataFor(caller, allData) : undefined;
         return d ? d : allData;
     },
 
-    shapeOf:function(){
+    shapeOf: function () {
         return undefined;
+    },
+
+    indexStartValueOf:function(record){
+        return record.__indexStartVal || 0;
     }
 });
 
@@ -10085,13 +10644,6 @@ ludo.chart.Chart = new Class({
 	css:{
 
 	},
-    /*
-     * Class providing data to the chart
-     * @config {chart.DataProvider} dataProvider
-     * @optional
-     * @default undefined
-     */
-    dataProvider:undefined,
 
 	__construct:function(config){
 		this.parent(config);
@@ -10099,23 +10651,14 @@ ludo.chart.Chart = new Class({
 	},
 
 	updateChildren:function(){
-		for(var i=0;i<this.children.length;i++){
-			if(this.children[i].rendered && this.children[i].update)this.children[i].onResize();
-		}
-	},
-
-	getRecords:function(){
-		return this.dataProvider.getRecords();
+		jQuery.each(this.children, function(index, child){
+			if(child.rendered && child.update)child.onResize();
+		});
 	},
 
 	insertJSON:function(){
 
 	},
-
-
-    getDataProvider:function(){
-        return this.dataProvider;
-    },
 
     resize:function(config){
         this.parent(config);
@@ -10142,7 +10685,7 @@ ludo.chart.Fragment = new Class({
             x: 0, y: 0, width: 0, height: 0
         };
         this.map = {};
-        this.ds = this.parentComponent.ds;
+        this.ds = this.parentComponent.getDataSource();
         this.createNodes();
 
     },
@@ -10154,25 +10697,28 @@ ludo.chart.Fragment = new Class({
     createNodes:function(){
 
     },
-
+    
     getDataSource:function(){
         return this.getParent().getDataSource();
     },
 
     ludoEvents:function(){
         this.parent();
-        this.getParent().getDataSource().addEvent('update', this.update.bind(this));
+        this.ds.addEvent('update', this.update.bind(this));
 
         var ds = this.getDataSource();
 
         var recs = this.record.children != undefined ? this.record.children: [this.record];
 
-        jQuery.each(recs, function(index, record){
-            ds.on('select' + record.__uid, this.focus.bind(this));
-            ds.on('blur' + record.__uid, this.blur.bind(this));
-            ds.on('enter' + record.__uid, this.enter.bind(this));
-            ds.on('leave' + record.__uid, this.leave.bind(this));
-        }.bind(this));
+        if(this.parentComponent.interactive){
+            jQuery.each(recs, function(index, record){
+                ds.on('select' + record.__uid, this.focus.bind(this));
+                ds.on('blur' + record.__uid, this.blur.bind(this));
+                ds.on('enter' + record.__uid, this.enter.bind(this));
+                ds.on('leave' + record.__uid, this.leave.bind(this));
+            }.bind(this));
+        }
+
     },
 
     getParent:function(){
@@ -10349,6 +10895,10 @@ ludo.canvas.Group = new Class({
         return false;
     }
 });/* ../ludojs/src/chart/base.js */
+/**
+ * Base class for charts
+ * @class ludo.chart.Base
+ */
 ludo.chart.Base = new Class({
     Extends: ludo.canvas.Group,
     fragments: [],
@@ -10382,14 +10932,21 @@ ludo.chart.Base = new Class({
     clipPath: undefined,
     clipRect: undefined,
 
+    dataSource:undefined,
+
+    interactive:true,
+
+    revealAnim : false,
+    revealAnimDirection: 'right',
+    revealAnimDuration: 500,
+
     __construct: function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['animate', 'bgColor', 'duration', 'data']);
+        this.setConfigParams(config, ['revealAnim', 'revealAnimDirection', 'revealAnimDuration', 'interactive', 'dataSource', 'animate', 'bgColor', 'duration', 'data']);
         this.ds = this.getDataSource();
 
         this.easing = config.easing || ludo.canvas.easing.outSine;
         this.ds.on('load', this.create.bind(this));
-
 
         this.ds.on('update', this.onResize.bind(this));
 
@@ -10404,6 +10961,12 @@ ludo.chart.Base = new Class({
             var c = this.getCanvas();
             this.chartNode = c.$('g');
             this.append(this.chartNode);
+            var x = this.layout.xOffset || 0;
+            var y = this.layout.yOffset || 0;
+            if(x != 0 || y != 0){
+                this.chartNode.setTranslate(x,y);
+            }
+
         }
         return this.chartNode;
     },
@@ -10467,15 +11030,11 @@ ludo.chart.Base = new Class({
     },
 
     getRecords: function () {
-        return this.getParent().getDataSource().getData(this);
-    },
-
-    dataProvider: function () {
-        return this.parentComponent.getDataSource();
+        return this.ds.getData(this);
     },
 
     getDataSource: function () {
-        return this.parentComponent.getDataSource();
+        return this.dataSource ? this.dataSource : this.parentComponent.getDataSource();
     },
 
     getCenter: function () {
@@ -10494,7 +11053,7 @@ ludo.chart.Base = new Class({
     create: function () {
         this.renderBackgroundItems();
 
-        if (this.getDataSource().hasData()) {
+        if (this.ds.hasData()) {
             this.dataRendered = true;
             this.createFragments();
         }
@@ -10507,6 +11066,17 @@ ludo.chart.Base = new Class({
     },
 
     renderAnimation: function () {
+
+
+        if(this.revealAnim){
+            this.reveal();
+        }else{
+            jQuery.each(this.fragments, function(index, fr){
+                fr.animate();
+            });
+        }
+
+
 
     },
 
@@ -10557,7 +11127,7 @@ ludo.chart.Base = new Class({
     resize: function (coordinates) {
         this.parent(coordinates);
 
-        if (!this.dataRendered && this.getDataSource().hasData()) {
+        if (!this.dataRendered && this.ds.hasData()) {
             this.create();
         }
 
@@ -10582,13 +11152,14 @@ ludo.chart.Base = new Class({
 
     /**
      * Chart reveal animation.
+     * @function reveal
      * @param {String} direction direction for the animation, 'left', 'right', 'up' or 'down'. Default: 'right'
      * @param {Number} duration animation duration in milliseconds, default: 600
      * @memberof ludo.chart.Base.prototype
      */
     reveal: function (direction, duration) {
-        direction = direction || 'right';
-        duration = duration || 600;
+        direction = this.revealAnimDirection || 'right';
+        duration = this.revealAnimDuration || 600;
         var s = this.getSize();
         var c = this.getCanvas();
         if (this.clipPath == undefined) {
@@ -10631,8 +11202,14 @@ ludo.chart.Base = new Class({
                 anim.height = s.y;
                 break;
         }
-        this.clipRect.animate(anim, duration, undefined,
-        this.removeClipPath.bind(this));
+        this.clipRect.animate(
+            anim,
+            {
+                duration: duration,
+                easing: ludo.canvas.easing.inSine,
+                complete: this.removeClipPath.bind(this)
+            }
+        );
 
     },
 
@@ -10936,7 +11513,7 @@ ludo.chart.Pie = new Class({
 
         this.rendered = false;
         var anim = {
-            startAngle:this.dataProvider().startAngle,
+            startAngle:this.ds.startAngle,
             radius: radius.steps[0],
             currentRadius:0,
             radians: radians,
@@ -11831,13 +12408,15 @@ ludo.chart.Tooltip = new Class({
 
     _autoLeave: undefined,
 
+    animationDuration:100,
 
 
     __construct: function (config) {
         this.parent(config);
         this.offset = {x: 0,y:0};
-        this.setConfigParams(config, ['tpl', 'boxStyles', 'textStyles']);
+        this.setConfigParams(config, ['tpl', 'boxStyles', 'textStyles','animationDuration']);
         this.createDOM();
+
 
         var p = this.getParent();
 
@@ -11925,7 +12504,7 @@ ludo.chart.Tooltip = new Class({
                 this.node.animate({
                     'translate': [xy.x, xy.y]
                 }, {
-                    duration:100,
+                    duration:this.animationDuration,
                     queue:false,
                     validate:function(a,b){
                         return a == b;
@@ -12569,11 +13148,7 @@ ludo.chart.Bar = new Class({
         });
     },
 
-    renderAnimation: function () {
-        jQuery.each(this.fragments, function(index, fr){
-            fr.animate();
-        });
-    },
+
 
     resizeBars: function () {
         var s = this.getSize();
@@ -12611,6 +13186,8 @@ ludo.chart.Bar = new Class({
         var s = this.getSize();
         var min = this.ds.min();
         var max = this.ds.max();
+
+
 
         for (var i = 0; i < inc.length; i++) {
             var r = (inc[i] - min) / (max - min);
@@ -12828,8 +13405,9 @@ ludo.chart.Line = new Class({
     
     __construct:function(config){
         this.parent(config);
-        this.setConfigParams(config, ["lineStyles","showDots"]);
+        this.setConfigParams(config, ["halfInset","lineStyles","showDots"]);
 
+        
         this.node.on("mousemove", this.mousemove.bind(this));
     },
 
@@ -12849,7 +13427,7 @@ ludo.chart.Line = new Class({
 
         jQuery.each(this.points, function(record, pos){
             var xOff = pos[0] - x;
-            xOff*=xOff;
+            xOff*=(xOff*xOff);
             distance = ludo.geometry.distanceBetweenPoints(0, y, xOff, pos[1]);
             if(closest == undefined || distance < closest){
                 closest = distance;
@@ -12864,8 +13442,6 @@ ludo.chart.Line = new Class({
             this.ds.enterId(selected);
             this.currentHighlighted = selected;
         }
-
-        // console.log(new Date().getTime() - s);
     },
 
     resizeElements:function(){
@@ -12891,13 +13467,7 @@ ludo.chart.Line = new Class({
     },
 
 
-    renderAnimation:function(){
-        if(this.revealAnim){
-            this.reveal();
-        }else{
-            this.parent();
-        }
-    },
+
 
 
     resizeLines:function(){
@@ -12925,6 +13495,14 @@ ludo.chart.Area = new Class({
     showDots:false,
     revealAnim:false,
     halfInset:false,
+    areaStyles:undefined,
+    
+    
+    __construct:function(config){
+        if(config.areaStyles != undefined)this.areaStyles = config.areaStyles;
+        this.parent(config);    
+    },
+    
     getFragmentProperties:function(){
         return {
             filled: true
@@ -12934,157 +13512,187 @@ ludo.chart.Area = new Class({
 ludo.chart.LineItem = new Class({
 
     Extends: ludo.chart.Fragment,
-    type:'chart.LineItem',
+    type: 'chart.LineItem',
 
-    dots:undefined,
-    filled:false,
+    dots: undefined,
+    filled: false,
 
-    __construct:function(config){
-        if(config.filled != undefined)this.filled = config.filled;
+    __construct: function (config) {
+        if (config.filled != undefined)this.filled = config.filled;
         this.parent(config);
-
-
     },
 
-    createNodes:function(){
+    createNodes: function () {
         this.parent();
 
-        if(this.filled){
+        if (this.filled) {
             var bg = this.createNode('path', {
-               d: this.getPath(false, true)
+                d: this.getPath(false, true)
             });
             bg.css("fill", this.record.__color);
             bg.css("fill-opacity", 0.3);
+
+            var s = this.getParent().areaStyles;
+            if(s != undefined)
+                bg.css(s);
+            
         }
 
+
+
         var n = this.createNode('path', {
-            'd' : this.getPath(false, false)
+            'd': this.getPath(false, false)
         });
         n.css("fill", "none");
         n.attr("stroke", this.record.__color);
         n.attr("stroke-linejoin", "round");
-        n.attr("stroke-linecap", "round");
-
 
 
         this.dots = [];
 
         var c = this.record.getChildren();
-        for(var i=0;i<c.length;i++){
+        for (var i = 0; i < c.length; i++) {
             var d = new ludo.chart.LineDot(
                 {
-                    record:c[i],
-                    ds : this.ds,
+                    record: c[i],
+                    ds: this.ds,
                     renderTo: this.getParent().getChartNode(),
-                    parentComponent:this
+                    parentComponent: this
                 });
             this.dots.push(d);
-            d.on('enter', this.enterDot.bind(this));
-            d.on('leave', this.leaveDot.bind(this));
+
+            if (this.parentComponent.interactive) {
+                d.on('enter', this.enterDot.bind(this));
+                d.on('leave', this.leaveDot.bind(this));
+
+            }
+
+
         }
     },
 
-    dsEvent:function(){
+    dsEvent: function () {
 
     },
 
-    enterDot:function(){
-        if(this.nodes.length == 1){
+    enterDot: function () {
+        if (this.nodes.length == 1) {
             this.nodes[0].css('stroke-width', 3);
 
         }
     },
 
-    leaveDot:function(){
-        if(this.nodes.length == 1){
+    leaveDot: function () {
+        if (this.nodes.length == 1) {
             this.nodes[0].css('stroke-width', 2);
         }
     },
 
-    getPath:function(zero, filled){
-        var len = this.record.getChildren().length;
+    getPath: function (zero, filled) {
+        var len = this.length();
 
         var p = ["M"];
 
-        for(var i=0;i<len;i++){
-            if(i>0)p.push("L");
-            if(i==0 && filled){
-                p.push(this.xPos(i));
-                p.push(this.area.height);
+
+        var stacked = this.getParent().stacked;
+
+        for (var i = 0; i < len; i++) {
+            if (i > 0)p.push("L");
+            var x = this.xPos(i);
+            if (i == 0 && filled) {
+                if(stacked){
+                    for(var j=len-1;j>=0;j--){
+                        p.push(this.xPos(j));
+                        p.push(zero ? this.area.height : this.yPos(j, true))
+                    }
+                }else{
+                    p.push(x);
+                    p.push(this.area.height);
+                }
             }
-            p.push(this.xPos(i));
+            p.push(x);
             p.push(zero ? this.area.height : this.yPos(i));
 
-            if(i==len-1 && filled){
-                p.push(this.xPos(i));
-                p.push(this.area.height);
+            if (i == len - 1 && filled) {
+                if(!stacked){
+                    p.push(this.xPos(i));
+                    p.push(this.area.height);
+
+                }
                 p.push(" Z");
             }
         }
 
 
-
         return p.join(" ");
     },
 
-    resize:function(width,height){
-        this.parent(width,height);
+    resize: function (width, height) {
+        this.parent(width, height);
 
-        if(this.filled){
+        if (this.filled) {
             this.nodes[0].set("d", this.getPath(false, true));
         }
-        this.nodes[this.nodes.length-1].set("d", this.getPath());
+        this.nodes[this.nodes.length - 1].set("d", this.getPath());
 
         this.positionDots();
     },
 
-    xPos:function(index){
+    xPos: function (index) {
         var c = this.parentComponent.halfInset;
-        var len = this.record.getChildren().length;
-        if(!c)len--;
+        var len = this.length();
+        if (!c)len--;
         var colWidth = this.area.width / len;
         var x = colWidth * index;
-        if(!!c)x+=(colWidth / 2);
+        if (!!c)x += (colWidth / 2);
         return x;
     },
 
-    yPos:function(index){
-        if(!this.ds)return this.area.height;
-        var val = this.ds.valueOf(this.record.getChild(index), this);
+    yPos: function (index, startVal) {
+        if (!this.ds)return this.area.height;
+        var rec = this.record.getChild(index);
+        var val = this.ds.valueOf(rec, this);
+        if(this.parentComponent.stacked){
+            if(startVal){
+                val = this.ds.indexStartValueOf(rec);
+            }else{
+                val += this.ds.indexStartValueOf(rec);
+            }
+        }
         var min = this.ds.min();
         var max = this.ds.max();
-        return this.area.height - ((val - min ) / (max- min) * this.area.height);
+        return this.area.height - ((val - min ) / (max - min) * this.area.height);
     },
-    
-    animate:function(){
-        this.nodes[this.nodes.length-1].set('d', this.getPath(true));
 
-        if(this.filled){
+    animate: function () {
+        this.nodes[this.nodes.length - 1].set('d', this.getPath(true));
+
+        if (this.filled) {
             this.nodes[0].set('d', this.getPath(true, true));
         }
         this.hideDots();
 
         var newPath = this.getPath();
 
-        this.nodes[this.nodes.length-1].animate({
-            'd' : newPath
+        this.nodes[this.nodes.length - 1].animate({
+            'd': newPath
         }, 500, ludo.canvas.easing.outSine, this.showDots.bind(this));
 
-        if(this.filled){
+        if (this.filled) {
             this.nodes[0].animate({
-                'd' : this.getPath(false, true)
+                'd': this.getPath(false, true)
             }, 500, ludo.canvas.easing.outSine);
         }
     },
 
-    hideDots:function(){
-        jQuery.each(this.dots, function(index, dot){
+    hideDots: function () {
+        jQuery.each(this.dots, function (index, dot) {
             dot.hide();
         });
     },
 
-    showDots:function(){
-        jQuery.each(this.dots, function(index, dot){
+    showDots: function () {
+        jQuery.each(this.dots, function (index, dot) {
 
             dot.show();
         }.bind(this));
@@ -13092,15 +13700,19 @@ ludo.chart.LineItem = new Class({
         this.positionDots();
     },
 
-    positionDots:function(){
+    positionDots: function () {
         var p = this.getParent();
         var recs = this.record.getChildren();
-        jQuery.each(this.dots, function(index, dot){
+        jQuery.each(this.dots, function (index, dot) {
             var x = this.xPos(index);
             var y = this.yPos(index);
             dot.position(x, y);
             p.setPoint(recs[index], x, y);
         }.bind(this));
+    },
+
+    length: function () {
+        return this.record.getChildren != undefined ? this.record.getChildren().length : this.record.length;
     }
 
 
@@ -13260,16 +13872,19 @@ ludo.chart.LineDot = new Class({
             this.node.set("stroke-opacity", 0);
         }
 
-        this.ds.on("enter" + this.record.__uid, this.enter.bind(this));
-        this.ds.on("leave" + this.record.__uid, this.leave.bind(this));
+        if (this.parentComponent.getParent().interactive) {
+            this.ds.on("enter" + this.record.__uid, this.enter.bind(this));
+            this.ds.on("leave" + this.record.__uid, this.leave.bind(this));
+
+        }
 
     },
 
     getPath: function (highlighted) {
 
         var s = this.size;
-        if(this.shape == 'rotatedrect'){
-            s = Math.sqrt((s*s) + (s*s));
+        if (this.shape == 'rotatedrect') {
+            s = Math.sqrt((s * s) + (s * s));
         }
 
         var min = -(s / 2);
@@ -13285,7 +13900,7 @@ ludo.chart.LineDot = new Class({
             case 'triangle':
                 return ['M', 0, min, 'L', max, max, min, max, 0, min].join(' ');
             case 'rotatedrect':
-                return ['M', min,0, "L", 0,min, max,0, 0,max, min, 0].join(' ');
+                return ['M', min, 0, "L", 0, min, max, 0, 0, max, min, 0].join(' ');
 
         }
     },
@@ -13303,7 +13918,7 @@ ludo.chart.LineDot = new Class({
     enter: function () {
         if (this.nodeHighlight == undefined) {
             this.nodeHighlight = new ludo.canvas.Circle({
-                r: this.size * 1.6,cx:0,cy:0
+                r: this.size * 1.6, cx: 0, cy: 0
             });
             this.nodeHighlight.css({
                 'stroke-opacity': 0.5,
@@ -13316,7 +13931,7 @@ ludo.chart.LineDot = new Class({
             this.renderTo.append(this.nodeHighlight);
             this.node.toFront();
         }
-        this.nodeHighlight.setTranslate(this.x,this.y);
+        this.nodeHighlight.setTranslate(this.x, this.y);
         this.nodeHighlight.show();
 
         this.node.css('stroke', this.record.getParent().__stroke);
@@ -13342,8 +13957,10 @@ ludo.chart.LineDot = new Class({
         this.parentComponent.parentComponent.onFragmentAction('enter', this.parentComponent, this.record, this.nodeHighlight, {});
 
         this.node.animate(anim, {
-            duration:100,
-            validate:function(a,b){ return a == b }
+            duration: 100,
+            validate: function (a, b) {
+                return a == b
+            }
         });
         this.fireEvent('enter', this);
     },
@@ -13366,8 +13983,8 @@ ludo.chart.LineDot = new Class({
             anim["stroke-opacity"] = 0;
         }
         this.node.animate(anim, {
-            duration:100,
-            validate:function(a,b){
+            duration: 100,
+            validate: function (a, b) {
                 return a == b;
             }
         });
@@ -13391,6 +14008,74 @@ ludo.chart.LineDot = new Class({
 
     show: function () {
         this.node.show();
+    }
+});/* ../ludojs/src/chart/outline.js */
+ludo.chart.Outline = new Class({
+    Extends: ludo.chart.Base,
+    fragmentType:undefined,
+    outline:undefined,
+
+    __construct:function(config){
+        this.parent(config);
+        this.setConfigParams(config, ['outline']);
+        this.createOutline();
+    },
+
+    onResize:function(){
+        this.parent();
+
+
+
+        var s = this.getSize();
+        jQuery.each(this.outline, function (key, el) {
+            el.toFront();
+            switch (key) {
+                case 'around':
+                    el.css({
+                        width: s.x, height: s.y
+                    });
+                    break;
+                case 'left':
+                    el.attr('y2', s.y);
+                    break;
+                case 'right':
+                    el.attr('x2', s.x);
+                    el.attr('x1', s.x);
+                    el.attr('y2', s.y);
+                    break;
+                case 'top':
+                    el.attr('x2', s.x);
+                    break;
+                case 'bottom':
+                    el.attr('x2', s.x);
+                    el.attr('y1', s.y);
+                    el.attr('y2', s.y);
+                    break;
+            }
+        }.bind(this));
+    },
+
+    createOutline: function () {
+        var s = this.getSize();
+        if (this.outline.left || this.outline.bottom || this.outline.top || this.outline.right) {
+
+            jQuery.each(this.outline, function (key, styles) {
+                var pos = {
+                    x1: 0, y1: 0, x2: 0, y2: 0
+                };
+
+                var el = this.outline[key] = new ludo.canvas.Node('line', pos);
+                el.css(styles);
+                this.append(el);
+            }.bind(this));
+        } else {
+
+            var el = this.outline['around'] = new ludo.canvas.Rect({
+                x: 0, y: 0, width: s.x, height: s.y
+            });
+            el.css(this.outline);
+            this.append(el);
+        }
     }
 });/* ../ludojs/src/ludo-db/factory.js */
 /**
@@ -13460,408 +14145,7 @@ ludo.ludoDB.Factory = new Class({
         this.fireEvent('load', req.getResponseData());
     }
 
-});/* ../ludojs/src/color/color.js */
-/**
- * A class with a lot of color conversion functions.
- *
- * With this class, you can convert between RGB and HSV, darken and brighten colors,
- * increase and decrease saturation and brightness of a color etc.
- * 
- * @class ludo.color.Color
- * @example {@lang JavaScript}
- * var util = new ludo.color.Color();
- * var rgbCode = '#669900';
- * var rgbObject = util.rgbObject(rgbCode);
- *
- */
-ludo.color.Color = new Class({
-
-    /**
-     * Converting color into RGB Object. This method accepts color in HSV format({h:120,s:40,v:100})
-     * and in string format(RGB), example: '#669900'
-     * @memberof ludo.color.prototype
-     * @function rgbColors
-     * @param {object|String} a
-     * @returns {object}
-     * @memberof ludo.color.Color.prototype
-     * @example
-     * var util = new ludo.color.Color();
-     * console.log(util.rgbColors('#669900');
-     * console.log(util.rgbColors({ h: 300, s: 100, v: 50 });
-     *
-     *
-     */
-    rgbColors:function (a) {
-        if (a.substr !== undefined) {
-            return this.rgbObject(a);
-        }
-        if (a.h !== undefined) {
-            return this.hsvToRGB(a.h, a.s, a.v);
-        }
-        return undefined;
-    },
-    /**
-     Converts rgb color string to rgb color object
-     @public
-     @param {string} rgbColor
-     @memberof ludo.color
-     @return {Object}
-     @memberof ludo.color.Color.prototype
-     @example {@lang JavaScript}
-     * var c = new ludo.color.Color();
-     * console.log(c.rgbObject('#FFEEDD');
-     * // returns { 'r': 'FF','g' : 'EE', 'b' : 'DD' }
-     */
-    rgbObject:function (rgbColor) {
-        rgbColor = rgbColor.replace('#', '');
-        return {
-            r:rgbColor.substr(0, 2).toInt(16),
-            g:rgbColor.substr(2, 2).toInt(16),
-            b:rgbColor.substr(4, 2).toInt(16)
-        };
-    },
-    /**
-     * Converts RGB or HSV color object to rgb code
-     * @memberof ludo.color.Color.prototype
-     * @param {number} a
-     * @param {number} b
-     * @param {number} c
-     * @return {string}
-     * @example
-     * var c = new ludo.color.Color();
-     * console.log(c.rgbCode({r:100,g:125,b:200});
-     * console.log(c.rgbCode({h:144,s:45,b:55});
-     */
-    rgbCode:function (a, b, c) {
-        if (b === undefined) {
-            if (a.r !== undefined) {
-                b = a.g;
-                c = a.b;
-                a = a.r;
-            }
-            else if (a.h !== undefined) {
-                var color = this.hsvToRGB(a.h, a.s, a.v);
-                a = color.r;
-                b = color.g;
-                c = color.b;
-            }
-        }
-        return this.toRGB(a, b, c);
-    },
-    /**
-     * Converts rgb object to rgb string
-     * @memberof ludo.color.Color.prototype
-     * @function toRGB
-     * @param {Number} red
-     * @param {Number} green
-     * @param {Number} blue
-     * @return {String}
-     * @example
-     * var c = new ludo.color.Color();
-     * console.log(c.toRgb(100,14,200));
-     */
-    toRGB:function (red, green, blue) {
-        var r = Math.round(red).toString(16);
-        var g = Math.round(green).toString(16);
-        var b = Math.round(blue).toString(16);
-        if (r.length === 1)r = ['0', r].join('');
-        if (g.length === 1)g = ['0', g].join('');
-        if (b.length === 1)b = ['0', b].join('');
-        return ['#', r, g, b].join('').toUpperCase();
-    },
-    toRGBFromObject:function (color) {
-        return this.toRGB(color.r, color.g, color.b);
-    },
-
-    /**
-     * Converts a RGB color to HSV(Hue, Saturation, Brightness)
-     * @param {String|Object} color
-     * @memberof ludo.color.Color.prototype
-     * @returns {Object}
-     * @example
-     * var c = new ludo.color.Color();
-     * console.log(c.toHSV('#7e8080'));
-     * // outputs {h: 180, s: 1.5624999999999944, v: 50.19607843137255}
-     */
-    toHSV:function (color) {
-        if (color.r === undefined)color = this.rgbObject(color);
-        return this.toHSVFromRGB(color.r, color.g, color.b);
-    },
-    toHSVFromRGBCode:function (rgbColor) {
-        var color = this.rgbObject(rgbColor);
-        return this.toHSVFromRGB(color.r, color.g, color.b);
-    },
-    /**
-     * Converts red,green and blue to HSV(Hue, Saturation, Brightness)
-     * @memberof ludo.color.Color.prototype
-     * @function toHSVFromRGB
-     * @param r
-     * @param g
-     * @param b
-     * @return {Object}
-     * @example
-     * var c = new ludo.color.Color();
-     * var hsv = c.toHSVFromRGB(100,200,10);
-     * console.log(hsv);
-     */
-    toHSVFromRGB:function (r, g, b) {
-        r = r / 255;
-        g = g / 255;
-        b = b / 255;
-        var max = Math.max(r, g, b), min = Math.min(r, g, b);
-        var h, s;
-
-        var d = max - min;
-        s = max == 0 ? 0 : d / max;
-
-        if (max == min) {
-            h = 0;
-        } else {
-            switch (max) {
-                case r:
-                    h = (g - b) / d + (g < b ? 6 : 0);
-                    break;
-                case g:
-                    h = (b - r) / d + 2;
-                    break;
-                case b:
-                    h = (r - g) / d + 4;
-                    break;
-            }
-            h /= 6;
-        }
-        return {
-            h:h * 360,
-            s:s * 100,
-            v:max * 100
-        };
-    },
-
-    /**
-     * Converts Hue,Saturation,Brightness to RGB Code
-     * @memberof ludo.color.Color.prototype
-     * @param h
-     * @param s
-     * @param v
-     * @returns {String}
-     * @example
-     * var c = new ludo.color.Color();
-     * var color = c.hsvToRGBCode(200,40,60);
-     * console.log(color);
-     */
-    hsvToRGBCode:function (h, s, v) {
-        if (s === undefined) {
-            s = h.s;
-            v = h.v;
-            h = h.h;
-        }
-        var rgb = this.hsvToRGB(h, s, v);
-        return this.toRGB(rgb.r, rgb.g, rgb.b);
-    },
-
-
-    /**
-     * Converts HSV(Hue, Saturation, Brightness) to RGB(red, green, blue).
-     * @memberof ludo.color.Color.prototype
-     * @param h
-     * @param s
-     * @param v
-     * @returns {{r: number, g: number, b: number}}
-     * @example {@lang JavaScript}
-     * var colorUtil = new ludo.color.Color();
-     * var hue = 300;
-     * var saturation = 40;
-     * var brightness = 90;
-     * var rgb = colorUtil.hsvToRGB(hue, saturation, brightness);
-     *  // returns { r: 229, g: 138, b: 229 }
-     */
-    hsvToRGB:function (h, s, v) {
-        if (s === undefined) {
-            s = h.s;
-            v = h.v;
-            h = h.h;
-        }
-        h /= 360;
-        s /= 100;
-        v /= 100;
-
-        var r, g, b;
-
-        var i = Math.floor(h * 6);
-        var f = h * 6 - i;
-        var p = v * (1 - s);
-        var q = v * (1 - f * s);
-        var t = v * (1 - (1 - f) * s);
-
-        switch (i % 6) {
-            case 0:
-                r = v;
-                g = t;
-                b = p;
-                break;
-            case 1:
-                r = q;
-                g = v;
-                b = p;
-                break;
-            case 2:
-                r = p;
-                g = v;
-                b = t;
-                break;
-            case 3:
-                r = p;
-                g = q;
-                b = v;
-                break;
-            case 4:
-                r = t;
-                g = p;
-                b = v;
-                break;
-            case 5:
-                r = v;
-                g = p;
-                b = q;
-                break;
-        }
-        return{
-            r:r * 255,
-            g:g * 255,
-            b:b * 255
-        };
-    },
-
-    hslToRgb:function (h, s, l) {
-        var r, g, b;
-
-        if (s == 0) {
-            r = g = b = l; // achromatic
-        } else {
-            function hue2rgb(p, q, t) {
-                if (t < 0) t += 1;
-                if (t > 1) t -= 1;
-                if (t < 1 / 6) return p + (q - p) * 6 * t;
-                if (t < 1 / 2) return q;
-                if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
-                return p;
-            }
-
-            var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-            var p = 2 * l - q;
-            r = hue2rgb(p, q, h + 1 / 3);
-            g = hue2rgb(p, q, h);
-            b = hue2rgb(p, q, h - 1 / 3);
-        }
-
-        return { r:r * 255, g:g * 255, b:b * 255 }
-    },
-
-    /**
-     * Return rgb code after hue has been adjusted by a number of degrees
-     * @function offsetHue
-     * @memberof ludo.color.Color.prototype
-     * @param color
-     * @param offset
-     * @return {String}
-     * @example
-     * var c = new ludo.color.Color();
-     * var color = '#FF0000'; // red
-     * color = c.offsetHue(color, 10);
-     * console.log(color); // Outputs #FF2A00
-     */
-    offsetHue:function(color, offset){
-        var hsv = this.toHSV(color);
-        hsv.h += offset;
-        hsv.h = hsv.h % 360;
-        return this.rgbCode(hsv);
-    },
-
-    /**
-     * Return rgb code after hue has been adjusted by a number of degrees
-     * @function offsetBrightness
-     * @memberof ludo.color.Color.prototype
-     * @param color
-     * @param offset
-     * @return {String}
-     * @example
-     * var c = new ludo.color.Color();
-     * var color = '#FF0000'; // Bright red with full brightness and saturation
-     * color = c.offsetBrightness(color, -10); // 10 degrees darker
-     * console.log(color); // outputs #E60000
-     */
-    offsetBrightness:function(color, offset){
-        var hsv = this.toHSV(color);
-        hsv.v += offset;
-        if(hsv.v > 100) hsv.v = 100;
-        if(hsv.v < 0)hsv.v = 0;
-        return this.rgbCode(hsv);
-    },
-
-    /**
-     * Return rgb code after saturation(color intensity) has been adjusted. Saturation can be 0-100(no saturation to full saturation)
-     * @function offsetSaturation
-     * @memberof ludo.color.Color.prototype
-     * @param {Object|String} color
-     * @param {Number} offset
-     * @return {String}
-     * @example
-     * var c = new ludo.color.Color();
-     * var color = '#80994d'; // Green color with a saturation of 50
-     * color = c.offsetSaturation(color, 10); // Increase saturation by 10 points
-     * console.log(color); // outputs #85995C
-     */
-    offsetSaturation:function(color, offset){
-        var hsv = this.toHSV(color);
-        hsv.s += offset;
-        if(hsv.s > 100) hsv.s = 100;
-        if(hsv.s < 0)hsv.s = 0;
-        return this.rgbCode(hsv);
-    },
-
-    /**
-     * Returns a brighter color.
-     * @memberof ludo.color.Color.prototype
-     * @param {String|Object} color
-     * @param {number} percent
-     * @returns {String}
-     * @example
-     * var util = new ludo.color.Color();
-     * var color = '#669900';
-     * var brighterColor = util.brighten(color, 10);
-     * console.log(brighterColor); // outputs #76A811;
-     * color = '#AAAAAA';
-     * brighterColor = util.brighten(color, 10);
-     * console.log(brighterColor); // outputs #BBBBBB;
-     */
-    brighten:function(color, percent){
-        var hsv = this.toHSV(color);
-        color = this.offsetBrightness(color, hsv.v * percent/100);
-        color = this.offsetSaturation(color, hsv.s * percent/100 * -1);
-        return color;
-    },
-
-    /**
-     * Brightens a color
-     * @memberof ludo.color.Color.prototype
-     * @param color
-     * @param percent
-     * @returns {String}
-     * @example
-     var c = new ludo.color.Color();
-     var color = '#BBBBBB';
-     var darker = c.darken(color, 10);
-     console.log(darker); // outputs #A8A8A8
-     */
-    darken:function(color, percent){
-        var hsv = this.toHSV(color);
-        color = this.offsetBrightness(color, hsv.v * percent/100 * -1);
-        color = this.offsetSaturation(color, hsv.s * percent/100);
-        return color;
-    }
-});
-
-/* ../ludojs/src/color/base.js */
+});/* ../ludojs/src/color/base.js */
 ludo.color.Base = new Class({
 	Extends: ludo.View,
 
@@ -15890,8 +16174,6 @@ ludo.layout.Relative = new Class({
 			case 'rightOf':
 				refC = this.lastChildCoordinates[child.layout.rightOf.id];
 				return function () {
-                    // TODO refactor this so that Math.max is no longer needed
-					// c.left = Math.max(0, refC.left) + refC.width;
 					c.left = refC.left + refC.width;
 				};
 			case 'below':
@@ -16790,6 +17072,24 @@ ludo.layout.Canvas = new Class({
 
 	currentTranslate:{
 		left:0,top:0
+	},
+
+	zIndexAdjusted:false,
+	resize:function(){
+		this.parent();
+
+		if(!this.zIndexAdjusted){
+			this.zIndexAdjusted = true;
+			console.log("Adjusting");
+
+			for (var i = 0; i < this.children.length; i++) {
+				if(this.children[i].layout.zIndex != undefined){
+					console.log("appending " + this.children[i].id, this.children[i].node.el);
+					this.view.getCanvas().append(this.children[i]);
+				}
+			}
+		}
+
 	}
 
 

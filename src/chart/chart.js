@@ -9,13 +9,6 @@ ludo.chart.Chart = new Class({
 	css:{
 
 	},
-    /*
-     * Class providing data to the chart
-     * @config {chart.DataProvider} dataProvider
-     * @optional
-     * @default undefined
-     */
-    dataProvider:undefined,
 
 	__construct:function(config){
 		this.parent(config);
@@ -23,23 +16,14 @@ ludo.chart.Chart = new Class({
 	},
 
 	updateChildren:function(){
-		for(var i=0;i<this.children.length;i++){
-			if(this.children[i].rendered && this.children[i].update)this.children[i].onResize();
-		}
-	},
-
-	getRecords:function(){
-		return this.dataProvider.getRecords();
+		jQuery.each(this.children, function(index, child){
+			if(child.rendered && child.update)child.onResize();
+		});
 	},
 
 	insertJSON:function(){
 
 	},
-
-
-    getDataProvider:function(){
-        return this.dataProvider;
-    },
 
     resize:function(config){
         this.parent(config);

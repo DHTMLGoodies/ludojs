@@ -29,13 +29,15 @@ ludo.chart.Tooltip = new Class({
 
     _autoLeave: undefined,
 
+    animationDuration:100,
 
 
     __construct: function (config) {
         this.parent(config);
         this.offset = {x: 0,y:0};
-        this.setConfigParams(config, ['tpl', 'boxStyles', 'textStyles']);
+        this.setConfigParams(config, ['tpl', 'boxStyles', 'textStyles','animationDuration']);
         this.createDOM();
+
 
         var p = this.getParent();
 
@@ -123,7 +125,7 @@ ludo.chart.Tooltip = new Class({
                 this.node.animate({
                     'translate': [xy.x, xy.y]
                 }, {
-                    duration:100,
+                    duration:this.animationDuration,
                     queue:false,
                     validate:function(a,b){
                         return a == b;

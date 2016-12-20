@@ -1,3 +1,7 @@
+/**
+ * Base class for charts
+ * @class ludo.chart.Base
+ */
 ludo.chart.Base = new Class({
     Extends: ludo.canvas.Group,
     fragments: [],
@@ -31,14 +35,21 @@ ludo.chart.Base = new Class({
     clipPath: undefined,
     clipRect: undefined,
 
+    dataSource:undefined,
+
+    interactive:true,
+
+    revealAnim : false,
+    revealAnimDirection: 'right',
+    revealAnimDuration: 500,
+
     __construct: function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['animate', 'bgColor', 'duration', 'data']);
+        this.setConfigParams(config, ['revealAnim', 'revealAnimDirection', 'revealAnimDuration', 'interactive', 'dataSource', 'animate', 'bgColor', 'duration', 'data']);
         this.ds = this.getDataSource();
 
         this.easing = config.easing || ludo.canvas.easing.outSine;
         this.ds.on('load', this.create.bind(this));
-
 
         this.ds.on('update', this.onResize.bind(this));
 
@@ -53,6 +64,12 @@ ludo.chart.Base = new Class({
             var c = this.getCanvas();
             this.chartNode = c.$('g');
             this.append(this.chartNode);
+            var x = this.layout.xOffset || 0;
+            var y = this.layout.yOffset || 0;
+            if(x != 0 || y != 0){
+                this.chartNode.setTranslate(x,y);
+            }
+
         }
         return this.chartNode;
     },
@@ -116,15 +133,11 @@ ludo.chart.Base = new Class({
     },
 
     getRecords: function () {
-        return this.getParent().getDataSource().getData(this);
-    },
-
-    dataProvider: function () {
-        return this.parentComponent.getDataSource();
+        return this.ds.getData(this);
     },
 
     getDataSource: function () {
-        return this.parentComponent.getDataSource();
+        return this.dataSource ? this.dataSource : this.parentComponent.getDataSource();
     },
 
     getCenter: function () {
@@ -143,7 +156,7 @@ ludo.chart.Base = new Class({
     create: function () {
         this.renderBackgroundItems();
 
-        if (this.getDataSource().hasData()) {
+        if (this.ds.hasData()) {
             this.dataRendered = true;
             this.createFragments();
         }
@@ -156,6 +169,17 @@ ludo.chart.Base = new Class({
     },
 
     renderAnimation: function () {
+
+
+        if(this.revealAnim){
+            this.reveal();
+        }else{
+            jQuery.each(this.fragments, function(index, fr){
+                fr.animate();
+            });
+        }
+
+
 
     },
 
@@ -206,7 +230,7 @@ ludo.chart.Base = new Class({
     resize: function (coordinates) {
         this.parent(coordinates);
 
-        if (!this.dataRendered && this.getDataSource().hasData()) {
+        if (!this.dataRendered && this.ds.hasData()) {
             this.create();
         }
 
@@ -231,13 +255,14 @@ ludo.chart.Base = new Class({
 
     /**
      * Chart reveal animation.
+     * @function reveal
      * @param {String} direction direction for the animation, 'left', 'right', 'up' or 'down'. Default: 'right'
      * @param {Number} duration animation duration in milliseconds, default: 600
      * @memberof ludo.chart.Base.prototype
      */
     reveal: function (direction, duration) {
-        direction = direction || 'right';
-        duration = duration || 600;
+        direction = this.revealAnimDirection || 'right';
+        duration = this.revealAnimDuration || 600;
         var s = this.getSize();
         var c = this.getCanvas();
         if (this.clipPath == undefined) {
@@ -280,8 +305,14 @@ ludo.chart.Base = new Class({
                 anim.height = s.y;
                 break;
         }
-        this.clipRect.animate(anim, duration, undefined,
-        this.removeClipPath.bind(this));
+        this.clipRect.animate(
+            anim,
+            {
+                duration: duration,
+                easing: ludo.canvas.easing.inSine,
+                complete: this.removeClipPath.bind(this)
+            }
+        );
 
     },
 

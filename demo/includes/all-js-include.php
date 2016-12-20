@@ -234,6 +234,7 @@
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/chart/line-item.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/chart/line-dot.js"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/chart/area.js"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/chart/outline.js"></script>
 
 
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/movable.js"></script>

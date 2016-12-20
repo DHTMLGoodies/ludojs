@@ -1,157 +1,187 @@
 ludo.chart.LineItem = new Class({
 
     Extends: ludo.chart.Fragment,
-    type:'chart.LineItem',
+    type: 'chart.LineItem',
 
-    dots:undefined,
-    filled:false,
+    dots: undefined,
+    filled: false,
 
-    __construct:function(config){
-        if(config.filled != undefined)this.filled = config.filled;
+    __construct: function (config) {
+        if (config.filled != undefined)this.filled = config.filled;
         this.parent(config);
-
-
     },
 
-    createNodes:function(){
+    createNodes: function () {
         this.parent();
 
-        if(this.filled){
+        if (this.filled) {
             var bg = this.createNode('path', {
-               d: this.getPath(false, true)
+                d: this.getPath(false, true)
             });
             bg.css("fill", this.record.__color);
             bg.css("fill-opacity", 0.3);
+
+            var s = this.getParent().areaStyles;
+            if(s != undefined)
+                bg.css(s);
+            
         }
 
+
+
         var n = this.createNode('path', {
-            'd' : this.getPath(false, false)
+            'd': this.getPath(false, false)
         });
         n.css("fill", "none");
         n.attr("stroke", this.record.__color);
         n.attr("stroke-linejoin", "round");
-        n.attr("stroke-linecap", "round");
-
 
 
         this.dots = [];
 
         var c = this.record.getChildren();
-        for(var i=0;i<c.length;i++){
+        for (var i = 0; i < c.length; i++) {
             var d = new ludo.chart.LineDot(
                 {
-                    record:c[i],
-                    ds : this.ds,
+                    record: c[i],
+                    ds: this.ds,
                     renderTo: this.getParent().getChartNode(),
-                    parentComponent:this
+                    parentComponent: this
                 });
             this.dots.push(d);
-            d.on('enter', this.enterDot.bind(this));
-            d.on('leave', this.leaveDot.bind(this));
+
+            if (this.parentComponent.interactive) {
+                d.on('enter', this.enterDot.bind(this));
+                d.on('leave', this.leaveDot.bind(this));
+
+            }
+
+
         }
     },
 
-    dsEvent:function(){
+    dsEvent: function () {
 
     },
 
-    enterDot:function(){
-        if(this.nodes.length == 1){
+    enterDot: function () {
+        if (this.nodes.length == 1) {
             this.nodes[0].css('stroke-width', 3);
 
         }
     },
 
-    leaveDot:function(){
-        if(this.nodes.length == 1){
+    leaveDot: function () {
+        if (this.nodes.length == 1) {
             this.nodes[0].css('stroke-width', 2);
         }
     },
 
-    getPath:function(zero, filled){
-        var len = this.record.getChildren().length;
+    getPath: function (zero, filled) {
+        var len = this.length();
 
         var p = ["M"];
 
-        for(var i=0;i<len;i++){
-            if(i>0)p.push("L");
-            if(i==0 && filled){
-                p.push(this.xPos(i));
-                p.push(this.area.height);
+
+        var stacked = this.getParent().stacked;
+
+        for (var i = 0; i < len; i++) {
+            if (i > 0)p.push("L");
+            var x = this.xPos(i);
+            if (i == 0 && filled) {
+                if(stacked){
+                    for(var j=len-1;j>=0;j--){
+                        p.push(this.xPos(j));
+                        p.push(zero ? this.area.height : this.yPos(j, true))
+                    }
+                }else{
+                    p.push(x);
+                    p.push(this.area.height);
+                }
             }
-            p.push(this.xPos(i));
+            p.push(x);
             p.push(zero ? this.area.height : this.yPos(i));
 
-            if(i==len-1 && filled){
-                p.push(this.xPos(i));
-                p.push(this.area.height);
+            if (i == len - 1 && filled) {
+                if(!stacked){
+                    p.push(this.xPos(i));
+                    p.push(this.area.height);
+
+                }
                 p.push(" Z");
             }
         }
 
 
-
         return p.join(" ");
     },
 
-    resize:function(width,height){
-        this.parent(width,height);
+    resize: function (width, height) {
+        this.parent(width, height);
 
-        if(this.filled){
+        if (this.filled) {
             this.nodes[0].set("d", this.getPath(false, true));
         }
-        this.nodes[this.nodes.length-1].set("d", this.getPath());
+        this.nodes[this.nodes.length - 1].set("d", this.getPath());
 
         this.positionDots();
     },
 
-    xPos:function(index){
+    xPos: function (index) {
         var c = this.parentComponent.halfInset;
-        var len = this.record.getChildren().length;
-        if(!c)len--;
+        var len = this.length();
+        if (!c)len--;
         var colWidth = this.area.width / len;
         var x = colWidth * index;
-        if(!!c)x+=(colWidth / 2);
+        if (!!c)x += (colWidth / 2);
         return x;
     },
 
-    yPos:function(index){
-        if(!this.ds)return this.area.height;
-        var val = this.ds.valueOf(this.record.getChild(index), this);
+    yPos: function (index, startVal) {
+        if (!this.ds)return this.area.height;
+        var rec = this.record.getChild(index);
+        var val = this.ds.valueOf(rec, this);
+        if(this.parentComponent.stacked){
+            if(startVal){
+                val = this.ds.indexStartValueOf(rec);
+            }else{
+                val += this.ds.indexStartValueOf(rec);
+            }
+        }
         var min = this.ds.min();
         var max = this.ds.max();
-        return this.area.height - ((val - min ) / (max- min) * this.area.height);
+        return this.area.height - ((val - min ) / (max - min) * this.area.height);
     },
-    
-    animate:function(){
-        this.nodes[this.nodes.length-1].set('d', this.getPath(true));
 
-        if(this.filled){
+    animate: function () {
+        this.nodes[this.nodes.length - 1].set('d', this.getPath(true));
+
+        if (this.filled) {
             this.nodes[0].set('d', this.getPath(true, true));
         }
         this.hideDots();
 
         var newPath = this.getPath();
 
-        this.nodes[this.nodes.length-1].animate({
-            'd' : newPath
+        this.nodes[this.nodes.length - 1].animate({
+            'd': newPath
         }, 500, ludo.canvas.easing.outSine, this.showDots.bind(this));
 
-        if(this.filled){
+        if (this.filled) {
             this.nodes[0].animate({
-                'd' : this.getPath(false, true)
+                'd': this.getPath(false, true)
             }, 500, ludo.canvas.easing.outSine);
         }
     },
 
-    hideDots:function(){
-        jQuery.each(this.dots, function(index, dot){
+    hideDots: function () {
+        jQuery.each(this.dots, function (index, dot) {
             dot.hide();
         });
     },
 
-    showDots:function(){
-        jQuery.each(this.dots, function(index, dot){
+    showDots: function () {
+        jQuery.each(this.dots, function (index, dot) {
 
             dot.show();
         }.bind(this));
@@ -159,15 +189,19 @@ ludo.chart.LineItem = new Class({
         this.positionDots();
     },
 
-    positionDots:function(){
+    positionDots: function () {
         var p = this.getParent();
         var recs = this.record.getChildren();
-        jQuery.each(this.dots, function(index, dot){
+        jQuery.each(this.dots, function (index, dot) {
             var x = this.xPos(index);
             var y = this.yPos(index);
             dot.position(x, y);
             p.setPoint(recs[index], x, y);
         }.bind(this));
+    },
+
+    length: function () {
+        return this.record.getChildren != undefined ? this.record.getChildren().length : this.record.length;
     }
 
 

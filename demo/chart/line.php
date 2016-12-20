@@ -117,7 +117,8 @@ require_once("../includes/demo-header.php");
                                 layout:{
                                     alignParentRight:true,
                                     width:180,
-                                    height:'matchParent'
+                                    height:'matchParent',
+                                    xOffset:5
                                 },
                                 textStyles:{
                                     'fill': ludo.$C('text'),
@@ -213,6 +214,7 @@ require_once("../includes/demo-header.php");
                                 plugins:[
                                     {
                                         type:'chart.Tooltip',
+                                        animationDuration:40,
                                         textStyles:{
                                             'font-size':'12px',
                                             'fill': '#aeb0b0'
