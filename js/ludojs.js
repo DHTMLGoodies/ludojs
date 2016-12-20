@@ -1,7 +1,7 @@
-/* Generated Tue Dec 20 20:14:28 CET 2016 */
+/* Generated Tue Dec 20 20:22:27 CET 2016 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.298
+ludoJS - Javascript framework, 1.1.299
 Copyright (C) 2012-2016  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -13535,7 +13535,7 @@ ludo.chart.LineItem = new Class({
             var s = this.getParent().areaStyles;
             if(s != undefined)
                 bg.css(s);
-            
+
         }
 
 
@@ -17080,7 +17080,6 @@ ludo.layout.Canvas = new Class({
 
 		if(!this.zIndexAdjusted){
 			this.zIndexAdjusted = true;
-			console.log("Adjusting");
 
 			for (var i = 0; i < this.children.length; i++) {
 				if(this.children[i].layout.zIndex != undefined){

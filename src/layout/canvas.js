@@ -62,7 +62,6 @@ ludo.layout.Canvas = new Class({
 
 		if(!this.zIndexAdjusted){
 			this.zIndexAdjusted = true;
-			console.log("Adjusting");
 
 			for (var i = 0; i < this.children.length; i++) {
 				if(this.children[i].layout.zIndex != undefined){

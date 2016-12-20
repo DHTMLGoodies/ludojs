@@ -24,7 +24,7 @@ ludo.chart.LineItem = new Class({
             var s = this.getParent().areaStyles;
             if(s != undefined)
                 bg.css(s);
-            
+
         }
 
 

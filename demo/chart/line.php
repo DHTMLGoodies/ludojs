@@ -179,7 +179,6 @@ require_once("../includes/demo-header.php");
                                 id:'bar',
                                 type:'chart.Line',
                                 showDots:true,
-                                stacked:true,
                                 animate:true,
                                 orientation:'horizontal',
                                 bgColor:'#424242',
