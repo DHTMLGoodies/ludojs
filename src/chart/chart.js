@@ -30,11 +30,15 @@ ludo.chart.Chart = new Class({
 	},
 
 	enter:function(e){
-		//console.log("enter", e.target);
+		if(e.target.tagName == 'g'){
+			console.log("enter", e.target);
+		}
 	},
 
 	leave:function(e){
-		//console.log("leave", e.target);
+		if(e.target.tagName == 'g'){
+			console.log("leave", e.target);
+		}
 	},
 
 	insertJSON:function(){

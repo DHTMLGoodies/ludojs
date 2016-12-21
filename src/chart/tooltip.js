@@ -136,6 +136,11 @@ ludo.chart.Tooltip = new Class({
         this._autoLeave = false;
         if (rec == this.record)return;
 
+        if(fragment.getParent().node.el != this.node.el.parentNode){
+            fragment.getParent().append(this.node);
+
+        }
+
         this.record = rec;
 
         if (rec == undefined) {
@@ -276,7 +281,7 @@ ludo.chart.Tooltip = new Class({
 
         var size = this.rect.getBBox();
 
-        var pos = target.offset();
+        var pos = target.position();
         
         var tp = this.getParent().getTooltipPosition();
 

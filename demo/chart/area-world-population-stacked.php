@@ -356,7 +356,7 @@ require_once("../includes/demo-header.php");
                                 plugins:[
                                     {
                                         type:'chart.Tooltip',
-                                        animationDuration:10,
+                                        animationDuration:50,
                                         textStyles:{
                                             'font-size':'12px',
                                             'fill': '#aeb0b0'

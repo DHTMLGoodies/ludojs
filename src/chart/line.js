@@ -41,11 +41,8 @@ ludo.chart.Line = new Class({
         var closest;
         var s = new Date().getTime();
 
-
-
         var x = e.clientX - this.parentPos.left;
         var y = e.clientY - this.parentPos.top;
-
 
         var distance = 0;
         var selected = undefined;

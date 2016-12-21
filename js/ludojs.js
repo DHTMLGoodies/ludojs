@@ -1,7 +1,7 @@
-/* Generated Wed Dec 21 15:47:34 CET 2016 */
+/* Generated Wed Dec 21 15:50:53 CET 2016 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.302
+ludoJS - Javascript framework, 1.1.303
 Copyright (C) 2012-2016  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -13561,11 +13561,10 @@ ludo.chart.Line = new Class({
         var closest;
         var s = new Date().getTime();
 
-
-
         var x = e.clientX - this.parentPos.left;
         var y = e.clientY - this.parentPos.top;
 
+        console.log(x,y, this.node.relativePosition(e));
 
         var distance = 0;
         var selected = undefined;
