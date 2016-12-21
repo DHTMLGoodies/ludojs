@@ -20,8 +20,8 @@ require_once("../includes/demo-header.php");
                     {"year": "1850", "population": 111},
                     {"year": "1900", "population": 133},
                     {"year": "1950", "population": 221},
-                    {"year": "1999", "population": 973},
-                    {"year": "2008", "population": 86},
+                    {"year": "1999", "population": 783},
+                    {"year": "2008", "population": 973},
                     {"year": "2010", "population": 1022 },
                     {"year": "2012", "population": 1052 },
                     {"year": "2050", "population": 2478 }
