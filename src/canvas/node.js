@@ -144,25 +144,50 @@ ludo.canvas.Node = new Class({
             }
         }
     })(),
+
+    relativePosition:function(e){
+        var rect = this.el.getBoundingClientRect();
+
+        return {
+            x: e.clientX - rect.left,
+            y: e.clientY - rect.top
+        };
+    },
+
     getDOMEventFn: function (eventName, fn) {
         return function (e) {
             e = e || window.event;
 
-            var target = e.target || e.srcElement;
+            var target = e.currentTarget || e.target || e.srcElement;
+
             while (target && target.nodeType == 3) target = target.parentNode;
             target = target['correspondingUseElement'] || target;
 
-            var svgPos = this.svgPos(target);
+            var mouseX, mouseY;
+            var touches = e.touches;
+            if (touches && touches.length > 0) {
+                mouseX = touches[0].clientX;
+                mouseY = touches[0].clientY;
+
+            } else {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+            }
+
+
+            var off = this.el.ownerSVGElement ? this.el.ownerSVGElement.getBoundingClientRect() : { left:0, top: 0};
+
             e = {
                 target: target,
                 pageX: (e.pageX != null) ? e.pageX : e.clientX + document.scrollLeft,
                 pageY: (e.pageY != null) ? e.pageY : e.clientY + document.scrollTop,
-                clientX: e.clientX - svgPos.left,
-                clientY: e.clientY - svgPos.top,
+                clientX: mouseX - off.left, // Relative position to SVG element
+                clientY: mouseY - off.top,
                 event: e
             };
-
-
+            
+            
+            
             if (fn) {
                 fn.call(this, e, this, fn);
             }
@@ -172,10 +197,13 @@ ludo.canvas.Node = new Class({
     svgCoordinates:undefined,
     svgPos:function(target){
           if(this.svgCoordinates == undefined){
-              while(target.tagName.toLowerCase() != 'svg'){
+              while(target.tagName.toLowerCase() != 'g'){
                   target = target.parentNode;
               }
               this.svgCoordinates = $(target).position();
+
+              console.log(this.svgCoordinates);
+
           }
 
         return this.svgCoordinates;

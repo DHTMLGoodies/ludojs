@@ -34,12 +34,14 @@ ludo.chart.Line = new Class({
     },
 
     mousemove:function(e){
-
+        if(e.target.tagName!='g')return;
         if(this.parentPos == undefined){
             this.parentPos = this.node.position();
         }
         var closest;
         var s = new Date().getTime();
+
+
 
         var x = e.clientX - this.parentPos.left;
         var y = e.clientY - this.parentPos.top;
@@ -50,8 +52,9 @@ ludo.chart.Line = new Class({
 
         jQuery.each(this.points, function(record, pos){
             var xOff = pos[0] - x;
-            xOff*=(xOff*xOff*2);
-            distance = ludo.geometry.distanceBetweenPoints(0, y, xOff, pos[1]);
+
+            xOff*=(xOff*xOff);
+            distance = ludo.geometry.distanceBetweenPoints(x, y, xOff, pos[1]);
             if(closest == undefined || distance < closest){
                 closest = distance;
                 selected = record;
