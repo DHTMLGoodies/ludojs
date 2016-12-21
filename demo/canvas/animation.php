@@ -161,7 +161,7 @@ require_once("../includes/demo-header.php");
         circle.animate({
                 cx:x, cy:y
             }, {
-                duration:1200,
+                duration:800,
             easing:easing,
             progress:function(progress, vals){
                 var n = getIllustrationNode();
