@@ -98,6 +98,7 @@ ludo.chart.Base = new Class({
 
         if (this.fragmentType == undefined)return;
         var records = this.getRecords();
+
         for (var i = 0; i < records.length; i++) {
             this.createFragment(records[i]);
         }

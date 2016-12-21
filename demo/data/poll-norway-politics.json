@@ -1,0 +1,57 @@
+{
+  "name": "Poll",
+  "date": "2016-12-16",
+  "parties": [
+    {
+      "name": "Rødt",
+      "percentage": 1.5,
+      "__color": "#660000"
+    },
+    {
+      "name": "SV",
+      "percentage": 3.4,
+      "__color": "#770000"
+
+    },
+    {
+      "name": "MDG",
+      "percentage": 2.9,
+      "__color": "#689F38"
+    },
+    {
+      "name": "AP",
+      "percentage": 37.8,
+      "__color": "#D32F2F"
+    },
+    {
+      "name": "SP",
+      "percentage": 6.8,
+      "__color": "#388E3C"
+    },
+    {
+      "name": "V",
+      "percentage": 4.8,
+      "__color": "#81C784"
+    },
+    {
+      "name": "KrF",
+      "percentage": 4.0,
+      "__color": "#FBC02D"
+    },
+    {
+      "name": "H",
+      "percentage": 23.3,
+      "__color": "#0288D1"
+    },
+    {
+      "name": "Frp",
+      "percentage": 13,
+      "__color": "#0D47A1"
+    },
+    {
+      "name": "A",
+      "percentage": 2.1,
+      "__color": "#AAA"
+    }
+  ]
+}

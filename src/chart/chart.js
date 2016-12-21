@@ -21,6 +21,22 @@ ludo.chart.Chart = new Class({
 		});
 	},
 
+	__rendered:function(){
+		this.parent();
+		var c = this.getCanvas();
+		c.css('position', 'relative');
+		c.node.on("mouseenter", this.enter.bind(this));
+		c.node.on("mouseleave", this.leave.bind(this));
+	},
+
+	enter:function(e){
+		//console.log("enter", e.target);
+	},
+
+	leave:function(e){
+		//console.log("leave", e.target);
+	},
+
 	insertJSON:function(){
 
 	},

@@ -151,19 +151,34 @@ ludo.canvas.Node = new Class({
             var target = e.target || e.srcElement;
             while (target && target.nodeType == 3) target = target.parentNode;
             target = target['correspondingUseElement'] || target;
+
+            var svgPos = this.svgPos(target);
             e = {
                 target: target,
                 pageX: (e.pageX != null) ? e.pageX : e.clientX + document.scrollLeft,
                 pageY: (e.pageY != null) ? e.pageY : e.clientY + document.scrollTop,
-                clientX: e.offsetX != undefined ? e.offsetX : (e.pageX != null) ? e.pageX - window.pageXOffset : e.clientX,
-                clientY: e.offsetY != undefined ? e.offsetY : (e.pageY != null) ? e.pageY - window.pageYOffset : e.clientY,
+                clientX: e.clientX - svgPos.left,
+                clientY: e.clientY - svgPos.top,
                 event: e
             };
+
+
             if (fn) {
                 fn.call(this, e, this, fn);
             }
             return false;
         }.bind(this);
+    },
+    svgCoordinates:undefined,
+    svgPos:function(target){
+          if(this.svgCoordinates == undefined){
+              while(target.tagName.toLowerCase() != 'svg'){
+                  target = target.parentNode;
+              }
+              this.svgCoordinates = $(target).position();
+          }
+
+        return this.svgCoordinates;
     },
 
     /**

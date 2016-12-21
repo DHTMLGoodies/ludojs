@@ -44,12 +44,13 @@ ludo.chart.Line = new Class({
         var x = e.clientX - this.parentPos.left;
         var y = e.clientY - this.parentPos.top;
 
+
         var distance = 0;
         var selected = undefined;
 
         jQuery.each(this.points, function(record, pos){
             var xOff = pos[0] - x;
-            xOff*=(xOff*xOff);
+            xOff*=(xOff*xOff*2);
             distance = ludo.geometry.distanceBetweenPoints(0, y, xOff, pos[1]);
             if(closest == undefined || distance < closest){
                 closest = distance;

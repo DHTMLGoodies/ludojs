@@ -44,6 +44,7 @@ ludo.chart.Outline = new Class({
     },
 
     createOutline: function () {
+        if(!this.outline)return;
         var s = this.getSize();
         if (this.outline.left || this.outline.bottom || this.outline.top || this.outline.right) {
 

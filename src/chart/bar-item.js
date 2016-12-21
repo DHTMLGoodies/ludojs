@@ -1,6 +1,7 @@
 ludo.chart.BarItem = new Class({
 
     Extends: ludo.chart.Fragment,
+    type:'chart.BarItem',
 
     area: undefined,
 
@@ -12,6 +13,7 @@ ludo.chart.BarItem = new Class({
     createNodes: function () {
 
         var recs = this.record[this.ds.childKey]!= undefined ? this.record[this.ds.childKey] : [this.record];
+
 
         jQuery.each(recs, function (i, record) {
             var n = this.createNode('rect', {

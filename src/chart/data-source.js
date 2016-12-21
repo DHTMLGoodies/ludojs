@@ -298,6 +298,9 @@ ludo.chart.DataSource = new Class({
     },
 
     handleData: function (data) {
+        if(!jQuery.isArray(data)){
+            data = [data];
+        }
         this.data = data;
         this.map = {};
         this.startAngle = 0;
@@ -650,6 +653,7 @@ ludo.chart.DataSource = new Class({
 
         }.bind(this));
 
+
         return sum;
 
     },
@@ -782,6 +786,14 @@ ludo.chart.DataSource = new Class({
     },
 
     getData: function (caller) {
+        if(!caller){
+            console.warn("Caller not set");
+            console.trace();
+        }else if(!caller.type){
+            console.warn("Type not set");
+            console.trace();
+        }
+
         caller = caller || this;
         var allData = this.parent();
         var d = this.dataFor != undefined ? this.dataFor(caller, allData) : undefined;

@@ -1,7 +1,7 @@
-/* Generated Tue Dec 20 22:12:32 CET 2016 */
+/* Generated Wed Dec 21 11:34:25 CET 2016 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.300
+ludoJS - Javascript framework, 1.1.301
 Copyright (C) 2012-2016  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -4836,19 +4836,34 @@ ludo.canvas.Node = new Class({
             var target = e.target || e.srcElement;
             while (target && target.nodeType == 3) target = target.parentNode;
             target = target['correspondingUseElement'] || target;
+
+            var svgPos = this.svgPos(target);
             e = {
                 target: target,
                 pageX: (e.pageX != null) ? e.pageX : e.clientX + document.scrollLeft,
                 pageY: (e.pageY != null) ? e.pageY : e.clientY + document.scrollTop,
-                clientX: e.offsetX != undefined ? e.offsetX : (e.pageX != null) ? e.pageX - window.pageXOffset : e.clientX,
-                clientY: e.offsetY != undefined ? e.offsetY : (e.pageY != null) ? e.pageY - window.pageYOffset : e.clientY,
+                clientX: e.clientX - svgPos.left,
+                clientY: e.clientY - svgPos.top,
                 event: e
             };
+
+
             if (fn) {
                 fn.call(this, e, this, fn);
             }
             return false;
         }.bind(this);
+    },
+    svgCoordinates:undefined,
+    svgPos:function(target){
+          if(this.svgCoordinates == undefined){
+              while(target.tagName.toLowerCase() != 'svg'){
+                  target = target.parentNode;
+              }
+              this.svgCoordinates = $(target).position();
+          }
+
+        return this.svgCoordinates;
     },
 
     /**
@@ -10152,6 +10167,9 @@ ludo.chart.DataSource = new Class({
     },
 
     handleData: function (data) {
+        if(!jQuery.isArray(data)){
+            data = [data];
+        }
         this.data = data;
         this.map = {};
         this.startAngle = 0;
@@ -10504,6 +10522,7 @@ ludo.chart.DataSource = new Class({
 
         }.bind(this));
 
+
         return sum;
 
     },
@@ -10636,6 +10655,14 @@ ludo.chart.DataSource = new Class({
     },
 
     getData: function (caller) {
+        if(!caller){
+            console.warn("Caller not set");
+            console.trace();
+        }else if(!caller.type){
+            console.warn("Type not set");
+            console.trace();
+        }
+
         caller = caller || this;
         var allData = this.parent();
         var d = this.dataFor != undefined ? this.dataFor(caller, allData) : undefined;
@@ -10673,6 +10700,22 @@ ludo.chart.Chart = new Class({
 		jQuery.each(this.children, function(index, child){
 			if(child.rendered && child.update)child.onResize();
 		});
+	},
+
+	__rendered:function(){
+		this.parent();
+		var c = this.getCanvas();
+		c.css('position', 'relative');
+		c.node.on("mouseenter", this.enter.bind(this));
+		c.node.on("mouseleave", this.leave.bind(this));
+	},
+
+	enter:function(e){
+		//console.log("enter", e.target);
+	},
+
+	leave:function(e){
+		//console.log("leave", e.target);
 	},
 
 	insertJSON:function(){
@@ -11014,6 +11057,7 @@ ludo.chart.Base = new Class({
 
         if (this.fragmentType == undefined)return;
         var records = this.getRecords();
+
         for (var i = 0; i < records.length; i++) {
             this.createFragment(records[i]);
         }
@@ -13099,6 +13143,7 @@ ludo.chart.ChartValues = new Class({
 ludo.chart.Bar = new Class({
 
     Extends: ludo.chart.Base,
+    type:'chart.Bar',
 
     nodes: undefined,
     orientation: 'horizontal',
@@ -13219,7 +13264,7 @@ ludo.chart.Bar = new Class({
 
     resizeBars: function () {
         var s = this.getSize();
-        var d = this.ds.getData();
+        var d = this.ds.getData(this);
         var a = { x : 0, y:0 ,width:s.x,height:s.y};
         var availSize = this.orientation == 'horizontal' ? s.x / d.length : s.y / d.length;
 
@@ -13310,6 +13355,7 @@ ludo.chart.Bar = new Class({
 ludo.chart.BarItem = new Class({
 
     Extends: ludo.chart.Fragment,
+    type:'chart.BarItem',
 
     area: undefined,
 
@@ -13321,6 +13367,7 @@ ludo.chart.BarItem = new Class({
     createNodes: function () {
 
         var recs = this.record[this.ds.childKey]!= undefined ? this.record[this.ds.childKey] : [this.record];
+
 
         jQuery.each(recs, function (i, record) {
             var n = this.createNode('rect', {
@@ -13489,12 +13536,13 @@ ludo.chart.Line = new Class({
         var x = e.clientX - this.parentPos.left;
         var y = e.clientY - this.parentPos.top;
 
+
         var distance = 0;
         var selected = undefined;
 
         jQuery.each(this.points, function(record, pos){
             var xOff = pos[0] - x;
-            xOff*=(xOff*xOff);
+            xOff*=(xOff*xOff*2);
             distance = ludo.geometry.distanceBetweenPoints(0, y, xOff, pos[1]);
             if(closest == undefined || distance < closest){
                 closest = distance;
@@ -14123,6 +14171,7 @@ ludo.chart.Outline = new Class({
     },
 
     createOutline: function () {
+        if(!this.outline)return;
         var s = this.getSize();
         if (this.outline.left || this.outline.bottom || this.outline.top || this.outline.right) {
 

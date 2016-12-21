@@ -13,6 +13,7 @@
 ludo.chart.Bar = new Class({
 
     Extends: ludo.chart.Base,
+    type:'chart.Bar',
 
     nodes: undefined,
     orientation: 'horizontal',
@@ -133,7 +134,7 @@ ludo.chart.Bar = new Class({
 
     resizeBars: function () {
         var s = this.getSize();
-        var d = this.ds.getData();
+        var d = this.ds.getData(this);
         var a = { x : 0, y:0 ,width:s.x,height:s.y};
         var availSize = this.orientation == 'horizontal' ? s.x / d.length : s.y / d.length;
 
