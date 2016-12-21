@@ -31,7 +31,14 @@ ludo.chart.Line = new Class({
 
         
         this.node.on("mousemove", this.mousemove.bind(this));
+
+        this.chart().on('leavegroup', this.leaveGroup.bind(this));
     },
+
+    leaveGroup:function(){
+        this.currentHighlighted = undefined;
+    },
+
 
     mousemove:function(e){
         if(e.target.tagName!='g')return;

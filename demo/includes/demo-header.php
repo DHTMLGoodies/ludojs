@@ -28,7 +28,7 @@ $skin = isset($skin) ? $skin : 'twilight';
 
     <script type="text/javascript" src="<?php echo $prefix; ?>../jquery/jquery-3.1.0.min.js"></script>
 
-    <link rel="icon" type="image/gif" href="<?php echo $prefix; ?>../images/favicon.png" />
+    <link rel="icon" type="image/gif" href="<?php echo $prefix; ?>../images/favicon.png?rnd=1" />
 
     <style type="text/css">
     body{

@@ -23,6 +23,10 @@ ludo.chart.Fragment = new Class({
 
     },
 
+    chart:function(){
+        return this.parentComponent.chart();
+    },
+
     getNode:function(){
         return this.nodes[this.nodes.length-1];
     },

@@ -35,11 +35,11 @@ ludo.chart.Base = new Class({
     clipPath: undefined,
     clipRect: undefined,
 
-    dataSource:undefined,
+    dataSource: undefined,
 
-    interactive:true,
+    interactive: true,
 
-    revealAnim : false,
+    revealAnim: false,
     revealAnimDirection: 'right',
     revealAnimDuration: 500,
 
@@ -57,6 +57,19 @@ ludo.chart.Base = new Class({
         this.ds.on('blur', this.blur.bind(this));
         this.ds.on('enter', this.enter.bind(this));
         this.ds.on('leave', this.leave.bind(this));
+
+
+        this.node.on('mouseenter', this.enterGroup.bind(this));
+    },
+
+    chart: function () {
+        return this.getParent();
+    },
+
+    enterGroup: function (e) {
+        if (e.target.tagName == 'g') {
+            this.getParent().enterGroup(this);
+        }
     },
 
     getChartNode: function () {
@@ -66,8 +79,8 @@ ludo.chart.Base = new Class({
             this.append(this.chartNode);
             var x = this.layout.xOffset || 0;
             var y = this.layout.yOffset || 0;
-            if(x != 0 || y != 0){
-                this.chartNode.setTranslate(x,y);
+            if (x != 0 || y != 0) {
+                this.chartNode.setTranslate(x, y);
             }
 
         }
@@ -121,7 +134,7 @@ ludo.chart.Base = new Class({
         return f;
     },
 
-    getFragmentProperties:function(){
+    getFragmentProperties: function () {
         return {};
     },
 
@@ -172,28 +185,32 @@ ludo.chart.Base = new Class({
     renderAnimation: function () {
 
 
-        if(this.revealAnim){
+        if (this.revealAnim) {
             this.reveal();
-        }else{
-            jQuery.each(this.fragments, function(index, fr){
+        } else {
+            jQuery.each(this.fragments, function (index, fr) {
                 fr.animate();
             });
         }
 
 
-
     },
 
     renderBackgroundItems: function () {
-        if (this.bgColor != undefined) {
-            var s = this.getSize();
-            this.bgRect = new ludo.canvas.Rect({
-                    x: 0, y: 0, width: s.x, height: s.y
-                }
-            );
+
+        var s = this.getSize();
+        this.bgRect = new ludo.canvas.Rect({
+                x: 0, y: 0, width: s.x, height: s.y
+            }
+        );
+        if (this.bgColor) {
             this.bgRect.css('fill', this.bgColor);
-            this.append(this.bgRect);
+
+        } else {
+            this.bgRect.set("fill-opacity", 0);
         }
+        this.append(this.bgRect);
+
     },
 
     render: function () {
@@ -277,17 +294,18 @@ ludo.chart.Base = new Class({
 
         this.getChartNode().applyClipPath(this.clipPath);
         var r = this.clipRect;
-        r.set('x',0);
-        r.set('y',0);
-        r.set('width',0);
-        r.set('height',0);
+        r.set('x', 0);
+        r.set('y', 0);
+        r.set('width', 0);
+        r.set('height', 0);
 
         var anim = {};
 
-        switch(direction){
+        switch (direction) {
             case 'right':
                 r.set('height', s.y);
-                anim.width = s.x;break;
+                anim.width = s.x;
+                break;
             case 'up':
                 r.set('y', s.y);
                 r.set('width', s.x);
@@ -317,7 +335,7 @@ ludo.chart.Base = new Class({
 
     },
 
-    removeClipPath:function(){
+    removeClipPath: function () {
         this.getChartNode().removeAttr('clip-path');
     }
 });

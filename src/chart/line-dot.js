@@ -62,6 +62,7 @@ ludo.chart.LineDot = new Class({
 
         }
 
+        this.parentComponent.chart().on("leavegroup", this.leave.bind(this));
     },
 
     getPath: function (highlighted) {
@@ -150,6 +151,7 @@ ludo.chart.LineDot = new Class({
     },
 
     leave: function () {
+        if(!this.nodeHighlight)return;
         this.nodeHighlight.hide();
         var anim = {};
         this.node.set('stroke-width', 0);

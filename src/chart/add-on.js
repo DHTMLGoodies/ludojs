@@ -12,5 +12,9 @@ ludo.chart.AddOn = new Class({
 
     getDataSource: function(){
         return this.parentComponent.getDataSource();
+    },
+
+    chart:function(){
+        return this.parentComponent.chart();
     }
 });

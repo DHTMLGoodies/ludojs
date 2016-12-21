@@ -53,11 +53,10 @@ ludo.chart.LineItem = new Class({
             if (this.parentComponent.interactive) {
                 d.on('enter', this.enterDot.bind(this));
                 d.on('leave', this.leaveDot.bind(this));
-
             }
-
-
         }
+
+        this.chart().on("entergroup", this.leaveDot.bind(this));
     },
 
     dsEvent: function () {
@@ -81,7 +80,6 @@ ludo.chart.LineItem = new Class({
         var len = this.length();
 
         var p = ["M"];
-
 
         var stacked = this.getParent().stacked;
 

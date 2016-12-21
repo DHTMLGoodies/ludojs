@@ -61,6 +61,7 @@ require_once("../includes/demo-header.php");
 
                                 animate:true,
                                 layout:{
+                                    zIndex:100,
                                     leftOf:'labels',
                                     fillLeft:true,
                                     height:'matchParent'

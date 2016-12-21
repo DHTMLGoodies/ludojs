@@ -9,10 +9,19 @@ ludo.chart.Chart = new Class({
 	css:{
 
 	},
+	
+	currentGroup:undefined,
 
 	__construct:function(config){
 		this.parent(config);
 		this.layout.type = 'Canvas';
+
+
+	},
+
+	__rendered:function(){
+		this.parent();
+		this.getCanvas().on("mouseleave", this.enterGroup.bind(this));
 	},
 
 	updateChildren:function(){
@@ -20,27 +29,7 @@ ludo.chart.Chart = new Class({
 			if(child.rendered && child.update)child.onResize();
 		});
 	},
-
-	__rendered:function(){
-		this.parent();
-		var c = this.getCanvas();
-
-		c.node.on("mouseenter", this.enter.bind(this));
-		c.node.on("mouseleave", this.leave.bind(this));
-	},
-
-	enter:function(e){
-		if(e.target.tagName == 'g'){
-			console.log("enter", e.target);
-		}
-	},
-
-	leave:function(e){
-		if(e.target.tagName == 'g'){
-			console.log("leave", e.target);
-		}
-	},
-
+	
 	insertJSON:function(){
 
 	},
@@ -48,5 +37,15 @@ ludo.chart.Chart = new Class({
     resize:function(config){
         this.parent(config);
         this.updateChildren();
-    }
+    },
+	
+	enterGroup:function(group){
+		if(group.id != this.currentGroup){
+			if(this.currentGroup){
+				this.fireEvent('leavegroup', this.currentGroup);
+			}
+			this.currentGroup = group.id;
+			this.fireEvent('entergroup', group.id);
+		}
+	}
 });

@@ -77,6 +77,7 @@ ludo.chart.Tooltip = new Class({
 
     animationDuration:100,
 
+    group:undefined,
 
     __construct: function (config) {
         this.parent(config);
@@ -95,6 +96,13 @@ ludo.chart.Tooltip = new Class({
         } else {
 
         }
+
+        this.chart().on('entergroup', this.leaveGroup.bind(this));
+    },
+
+    leaveGroup:function(groupId){
+        if(!this.group)return;
+        if(groupId != this.group.id)this.hide();
     },
 
     createDOM: function () {
@@ -132,6 +140,8 @@ ludo.chart.Tooltip = new Class({
     },
 
     show: function (fragment, rec, node, event) {
+
+        this.group = fragment.getParent();
 
         this._autoLeave = false;
         if (rec == this.record)return;
@@ -327,6 +337,7 @@ ludo.chart.Tooltip = new Class({
         this.node.hide();
         this.rect.hide();
         this.shown = false;
+        this.record = undefined;
     },
 
     getParsedHtml: function () {

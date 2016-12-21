@@ -787,12 +787,11 @@ ludo.chart.DataSource = new Class({
 
     getData: function (caller) {
         if(!caller){
-            console.warn("Caller not set");
-            console.trace();
+            return this.parent();
         }else if(!caller.type){
             console.warn("Type not set");
             console.trace();
-        }
+        } 
 
         caller = caller || this;
         var allData = this.parent();
@@ -802,7 +801,7 @@ ludo.chart.DataSource = new Class({
 
     shapeOf: function () {
         return undefined;
-    },
+    }, 
 
     indexStartValueOf:function(record){
         return record.__indexStartVal || 0;
