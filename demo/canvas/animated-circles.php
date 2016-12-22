@@ -12,16 +12,16 @@ require_once("../includes/demo-header.php");
         layout: {
             width: 'matchParent',
             height: 'matchParent',
-            type:'tabs',
-            tabs:'left'
+            type: 'tabs',
+            tabs: 'left'
         },
-        children:[
+        children: [
             {
-                id:'demoView',
-                title:'Transformation Demo'
+                id: 'demoView',
+                title: 'Transformation Demo'
             },
             {
-                type:'SourceCodePreview'
+                type: 'SourceCodePreview'
             }
         ]
     });
@@ -30,47 +30,58 @@ require_once("../includes/demo-header.php");
     var c = ludo.$('demoView').getCanvas();
 
 
+    // Create color util instance for the circle colors
     var colorUtil = new ludo.color.Color();
-    
+
+    // Create array for the circle SVG nodes
     var circles = [];
 
-    var maxX = 800, maxY = 600;
-    
-    for(var i=0;i<50;i++){
-        
+    // Specify max x and y which is the size of the SVG
+    var maxX = v.getBody().width(), maxY = v.getBody().height();
+
+    // Create 50 SVG <circle> objects and put them in the circle array
+    for (var i = 0; i < 50; i++) {
+
         var circle = c.$('circle', {
-            r: Math.round(Math.random() * 20) + 5,
-            fill: colorUtil.randomColor()
+            r: Math.round(Math.random() * 20) + 5, // Random radius
+            fill: colorUtil.randomColor() // Random color
         });
 
-        circle.setTranslate(Math.round(Math.random() * maxX),Math.round(Math.random() * maxY));
+        // Random initial position
+        circle.setTranslate(Math.round(Math.random() * maxX), Math.round(Math.random() * maxY));
 
+        // Append circle to the SVG
         c.append(circle);
 
+        // Add circle to the array.
         circles.push(circle);
     }
 
 
-    function animate(circle){
+    // Recursively called animation function
+    function animate(circle) {
 
-        var fn = function(){
+
+        var fn = function () {
             animate.delay(Math.round(Math.random() * 2000) + 300, this, circle)
         };
 
-        circle.animate({
-            translate:[Math.round(Math.random() * maxX),Math.round(Math.random() * maxY)],
-            r: Math.round(Math.random() * 40) + 5
-
-        },
+        circle.animate(
             {
-                duration:1200,
-                complete:fn,
-                easing:ludo.canvas.easing.outCubic
+                translate: [Math.round(Math.random() * maxX), Math.round(Math.random() * maxY)],
+                r: Math.round(Math.random() * 40) + 5
+
+            },
+            {
+                duration: 1200, // 1.2 seconds
+                complete: fn, // call fn Function on complete
+                easing: ludo.canvas.easing.outCubic // Easing function
             });
 
     }
 
-    for(var i=0;i<circles.length;i++){
+    // Animate all circles
+    for (i = 0; i < circles.length; i++) {
         animate(circles[i]);
     }
 

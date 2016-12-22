@@ -14,6 +14,13 @@
 ludo.color.Color = new Class({
 
 
+    /**
+     * Function returning a random color
+     * @returns {string}
+     * @example
+     * var util = new ludo.color.Color();
+     * var color = util.randomColor(); // returns color in #RRGGBB format
+     */
     randomColor:function(){
         return this.rgbCode(
             {
