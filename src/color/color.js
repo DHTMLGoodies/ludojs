@@ -13,6 +13,16 @@
  */
 ludo.color.Color = new Class({
 
+
+    randomColor:function(){
+        return this.rgbCode(
+            {
+                r: Math.round(Math.random() * 255),
+                g: Math.round(Math.random() * 255),
+                b: Math.round(Math.random() * 255)
+            }
+        );
+    },
     /**
      * Converting color into RGB Object. This method accepts color in HSV format({h:120,s:40,v:100})
      * and in string format(RGB), example: '#669900'
