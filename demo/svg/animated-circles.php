@@ -61,22 +61,25 @@ require_once("../includes/demo-header.php");
     // Recursively called animation function
     function animate(circle) {
 
-
+        var maxX = c.width, maxY = c.height;
         var fn = function () {
             animate.delay(Math.round(Math.random() * 2000) + 300, this, circle)
         };
 
-        circle.animate(
-            {
-                translate: [Math.round(Math.random() * maxX), Math.round(Math.random() * maxY)],
-                r: Math.round(Math.random() * 40) + 5
+        var r = Math.round(Math.random() * 50) + 3;
 
-            },
-            {
-                duration: 1200, // 1.2 seconds
-                complete: fn, // call fn Function on complete
-                easing: ludo.svg.easing.outCubic // Easing function
-            });
+        circle.animate({
+            translate: [
+                r + Math.round(Math.random() * (maxX - (r * 2))),
+                r + Math.round(Math.random() * (maxY - (r * 2)))
+            ],
+            r: r
+
+        }, {
+            complete: fn,
+            easing: ludo.svg.easing.outCubic,
+            duration: (Math.random() * 1000) + 800
+        });
 
     }
 
