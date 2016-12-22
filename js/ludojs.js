@@ -1,7 +1,7 @@
-/* Generated Thu Dec 22 11:35:47 CET 2016 */
+/* Generated Thu Dec 22 13:07:05 CET 2016 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.311
+ludoJS - Javascript framework, 1.1.312
 Copyright (C) 2012-2016  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -4979,6 +4979,12 @@ ludo.svg.Node = new Class({
             if(value['id']!==undefined)value = 'url(#' + value.getId() + ')';
             this.el.setAttribute(key, value);
         }
+    },
+    
+    _setPlain:function(key, value){
+        this._attr[key] = value;
+        this.dirty = true;
+        this.el.setAttribute(key, value);
     },
 
     /**
@@ -37579,7 +37585,8 @@ ludo.svg.Animation = new Class({
     color: undefined,
     _queue:undefined,
     _animationIds:undefined,
-    benchmark:false,
+
+    testing:false,
     initialize:function(){
         this._queue = {};
         this._animationIds = {};
@@ -37721,7 +37728,8 @@ ludo.svg.Animation = new Class({
 
         }.bind(this));
 
-        var r = this.animationRate;
+        var progress = options.progress;
+        var startFn = options.start;
 
         var fn = function (t, d) {
 
@@ -37733,85 +37741,91 @@ ludo.svg.Animation = new Class({
                 }
             }
 
-            if (t < d) {
-                fn.delay(r, this, [t + 1, d]);
+            var isFinished = t >= d;
+
+            if (!isFinished && !this.testing) {
+                fn.delay(this.animationRate, this, [t + 1, d]);
             }
 
-            var bt;
-            if(this.benchmark){
-                bt = new Date().getTime();
-            }
             var vals;
 
-            if(t == 0 && options.start != undefined){
-                options.start.call(node);
+            if(t == 0 && startFn){
+                startFn.call(node);
             }
 
-
-
-            if(t > d)t = d;
+            if(isFinished)t = d;
             var delta = easing(t, 0, 1, d);
             var x,y;
 
-            jQuery.each(changes, function (key, value) {
+            for(var key in changes) {
+                if(changes.hasOwnProperty(key)) {
+                    var value = changes[key];
+                    if (special[key]) {
+                        switch (key) {
+                            case 'd':
+                                var v = [];
 
-                if (special[key]) {
-                    switch (key) {
-                        case 'd':
-                            var v = [];
+                                jQuery.each(start[key], function (index, v2) {
+                                    if (isNaN(v2)) {
+                                        v.push(v2);
+                                    } else {
+                                        v.push(v2 + (value[index] * delta))
+                                    }
+                                });
+                                node.set("d", v.join(" "));
+                                break;
+                            case 'stroke':
+                            case 'fill':
+                            case 'stop-color':
+                                var r = Math.round(start[key].r + (delta * value[0]));
+                                var g = Math.round(start[key].g + (delta * value[1]));
+                                var b = Math.round(start[key].b + (delta * value[2]));
+                                var c = this.color.toRGB(r, g, b);
+                                node.el.setAttribute(key, c);
+                                node._attr[key] = c;
+                                node.dirty = true;
 
-                            jQuery.each(start[key], function(index, v2){
-                                if(isNaN(v2)){
-                                    v.push(v2);
-                                }else{
-                                    v.push(v2 + (value[index] * delta))
-                                }
-                            });
-                            node.set("d", v.join(" "));
-                            break;
-                        case 'stroke':
-                        case 'fill':
-                        case 'stop-color':
-                            var r = Math.round(start[key].r + (delta * value[0]));
-                            var g = Math.round(start[key].g + (delta * value[1]));
-                            var b = Math.round(start[key].b + (delta * value[2]));
-                            node.set(key, this.color.toRGB(r,g,b));
-                            break;
-                        case 'translate':
-                            x = start[key][0] + (delta * value[0]);
-                            y = start[key][1] + (delta * value[1]);
-                            node.setTranslate(x, y);
-                            break;
-                        case 'rotate':
-                            var d = start[key] + (delta * value[0]);
-                            x = value[1];
-                            y = value[2];
-                            d = d % 360;
-                            node.setRotate(d,x,y);
-                            break;
-                    }
-                } else {
-                    var val = start[key] + (value * delta);
-                    node.set(key, val);
-                    if (options.progress != undefined) {
-                        if (vals == undefined) {
-                            vals = {};
+                                break;
+                            case 'translate':
+                                x = start[key][0] + (delta * value[0]);
+                                y = start[key][1] + (delta * value[1]);
+                                node._getMatrix().setTranslate(x, y);
+                                break;
+                            case 'rotate':
+                                var rotate = start[key] + (delta * value[0]);
+                                x = value[1];
+                                y = value[2];
+                                rotate = rotate % 360;
+                                node._getMatrix().setRotation(rotate, x, y);
+                                break;
                         }
-                        vals[key] = val;
+                    } else {
+                        var val = start[key] + (value * delta);
+                        node.el.setAttribute(key, val);
+                        node._attr[key] = val;
+                        node.dirty = true;
+
+                        if (progress) {
+                            if (vals == undefined) {
+                                vals = {};
+                            }
+                            vals[key] = val;
+                        }
                     }
                 }
 
-            }.bind(this));
+            }
 
+            /*
             if (options.step != undefined) {
-
                 options.step.call(node, node, vals, delta, t / d);
             }
+            */
 
-            if(options.progress != undefined){
-                options.progress.call(node, t/d, vals);
+            if(progress!= undefined){
+                progress.call(node, t/d, vals);
             }
-            if (t >= d) {
+            if (isFinished) {
                 if (options.complete != undefined) {
                     options.complete.call(node);
                 }
@@ -37819,19 +37833,16 @@ ludo.svg.Animation = new Class({
                 finishedFn.call(ludo.svgAnimation , animation);
             }
 
-            if(this.benchmark){
-                console.log('time ' + (new Date().getTime() - bt));
-            }
 
+            if(this.testing && !isFinished){
+                fn.call(this, t + 1, d);
+            }
         }.bind(this);
         animation.startTime = new Date().getTime();
         fn.call(this, 1, Math.ceil(duration / this.animationRate));
     },
     
     next:function(anim){
-        if(this.benchmark){
-            console.log('elapsed: ' + (new Date().getTime() - anim.startTime));
-        }
         var index = this._queue[anim.id].indexOf(anim);
         if(index >= 0){
             this._queue[anim.id].splice(index,1);

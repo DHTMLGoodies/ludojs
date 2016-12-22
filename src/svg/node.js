@@ -295,6 +295,12 @@ ludo.svg.Node = new Class({
             this.el.setAttribute(key, value);
         }
     },
+    
+    _setPlain:function(key, value){
+        this._attr[key] = value;
+        this.dirty = true;
+        this.el.setAttribute(key, value);
+    },
 
     /**
      * Remove SVG attribute
