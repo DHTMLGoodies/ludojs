@@ -1,5 +1,5 @@
 ludo.crop.Canvas = new Class({
-    Extends:ludo.canvas.Canvas,
+    Extends:ludo.svg.Canvas,
     type:'crop.Canvas',
     useController:true,
     svg:{
@@ -30,10 +30,10 @@ ludo.crop.Canvas = new Class({
     },
 
     showImage:function (image) {
-        this.canvas.setViewboxSize(image.width, image.height);
+        this.svg.setViewboxSize(image.width, image.height);
     },
 
     resizeDOM:function () {
-        this.canvas.scaleToParent();
+        this.svg.scaleToParent();
     }
 });

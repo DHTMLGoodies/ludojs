@@ -1,7 +1,7 @@
 TestCase("FilterTest", {
 
 	"test should be able to create filter":function () {
-		var filter = new ludo.canvas.Filter({ id:'myFilter'});
+		var filter = new ludo.svg.Filter({ id:'myFilter'});
 
 		assertEquals('myFilter', filter.get('id'));
 
@@ -10,15 +10,15 @@ TestCase("FilterTest", {
 
 	"test should have id by default":function () {
 		// given
-		var filter = new ludo.canvas.Filter();
+		var filter = new ludo.svg.Filter();
 
 		// then
 		assertNotUndefined(filter.get('id'));
 	},
 
 	"test should be able to apply filter to nodes":function () {
-		var filter = new ludo.canvas.Filter({ id:'myFilter'});
-		var circle = new ludo.canvas.Circle({cx:100, cy:100, r:50});
+		var filter = new ludo.svg.Filter({ id:'myFilter'});
+		var circle = new ludo.svg.Circle({cx:100, cy:100, r:50});
 
 		assertEquals('myFilter', filter.id);
 		circle.applyFilter(filter);
@@ -28,9 +28,9 @@ TestCase("FilterTest", {
 	},
 
 	"test should be able to add drop shadow":function () {
-		var canvas = new ludo.canvas.Canvas();
+		var canvas = new ludo.svg.Canvas();
 		$(document.body).append(canvas.getEl());
-		var filter = new ludo.canvas.Filter({ id:'myFilter'});
+		var filter = new ludo.svg.Filter({ id:'myFilter'});
 		filter.setDropShadow({
 			x:2, y:2, deviation : 3
 		});
@@ -43,7 +43,7 @@ TestCase("FilterTest", {
 
 	"test should be able to build custom filters": function(){
 		// given
-		var filter = new ludo.canvas.Filter();
+		var filter = new ludo.svg.Filter();
 
 		// when
 		filter.add('feGaussianBlur', { 'stdDeviation' : 2, result:'blur'  });

@@ -163,12 +163,12 @@ ludo.chart.LineItem = new Class({
 
         this.nodes[this.nodes.length - 1].animate({
             'd': newPath
-        }, 500, ludo.canvas.easing.outSine, this.showDots.bind(this));
+        }, 500, ludo.svg.easing.outSine, this.showDots.bind(this));
 
         if (this.filled) {
             this.nodes[0].animate({
                 'd': this.getPath(false, true)
-            }, 500, ludo.canvas.easing.outSine);
+            }, 500, ludo.svg.easing.outSine);
         }
     },
 

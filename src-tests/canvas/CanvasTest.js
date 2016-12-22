@@ -11,7 +11,7 @@ TestCase("CanvasTest", {
 
 	"test should have default properties":function () {
 		// when
-		var canvas = new ludo.canvas.Canvas();
+		var canvas = new ludo.svg.Canvas();
 
 		// then
 		assertEquals('http://www.w3.org/2000/svg', canvas.get('xmlns'));
@@ -20,7 +20,7 @@ TestCase("CanvasTest", {
 
 	"test should have tag name equal to svg":function () {
 		// when
-		var canvas = new ludo.canvas.Canvas();
+		var canvas = new ludo.svg.Canvas();
 
 		// then
 		assertEquals('svg', canvas.getEl().tagName);
@@ -30,7 +30,7 @@ TestCase("CanvasTest", {
 		// given
 		var parent = this.getParentNode();
 
-		var canvas = new ludo.canvas.Canvas({
+		var canvas = new ludo.svg.Canvas({
 			renderTo:parent
 		});
 
@@ -44,7 +44,7 @@ TestCase("CanvasTest", {
 		// given
 		var parent = this.getParentNode();
 
-		var canvas = new ludo.canvas.Canvas({
+		var canvas = new ludo.svg.Canvas({
 			renderTo:parent,
 			width:300, height:350
 		});
@@ -63,7 +63,7 @@ TestCase("CanvasTest", {
 			height:700,
 			renderTo:document.body
 		});
-		var canvas = new ludo.canvas.Canvas({
+		var canvas = new ludo.svg.Canvas({
 			renderTo:view
 		});
 
@@ -80,7 +80,7 @@ TestCase("CanvasTest", {
 	},
 
 	"test should be able to have title":function () {
-		var canvas = new ludo.canvas.Canvas({
+		var canvas = new ludo.svg.Canvas({
 			renderTo:this.getParentNode(),
 			title:'My Canvas'
 		});
@@ -102,7 +102,7 @@ TestCase("CanvasTest", {
 	},
 
 	"test should be able to have description":function () {
-		var canvas = new ludo.canvas.Canvas({
+		var canvas = new ludo.svg.Canvas({
 			renderTo:this.getParentNode(),
 			description:'Description'
 		});
@@ -113,12 +113,12 @@ TestCase("CanvasTest", {
 	},
 
 	"test should be able to apply paint object":function () {
-		var paint = new ludo.canvas.Paint({
+		var paint = new ludo.svg.Paint({
 			css:{
 				'background-color':'#FFFFFF'
 			}
 		});
-		var el = new ludo.canvas.Canvas({
+		var el = new ludo.svg.Canvas({
 			attr: { "class" :paint }
 		});
 
@@ -133,7 +133,7 @@ TestCase("CanvasTest", {
 			height:500
 		});
 		// when
-		var canvas = new ludo.canvas.Canvas({
+		var canvas = new ludo.svg.Canvas({
 			renderTo:w
 		});
 		// then
@@ -157,7 +157,7 @@ TestCase("CanvasTest", {
 
 	"test should be able to retrieve DEFS node": function(){
 		// given
-		var c = new ludo.canvas.Canvas();
+		var c = new ludo.svg.Canvas();
 		// when
 		var d = c.getDefs();
 
@@ -168,11 +168,11 @@ TestCase("CanvasTest", {
 
 	"test should be able to append Node to defs": function(){
 		// given
-		var c = new ludo.canvas.Canvas();
+		var c = new ludo.svg.Canvas();
 		var d = c.getDefs();
 
 		// when
-		var filter = new ludo.canvas.Filter();
+		var filter = new ludo.svg.Filter();
 		c.appendDef(filter);
 
 		// then

@@ -2,7 +2,7 @@ TestCase("TransformationTest", {
 
 	"test should be able to retrieve transformations":function () {
 		// given
-		var node = new ludo.canvas.Node('rect', {
+		var node = new ludo.svg.Node('rect', {
 			'transform':'translate(90, 80)'
 		});
 
@@ -15,7 +15,7 @@ TestCase("TransformationTest", {
 
 
 		// given
-		node = new ludo.canvas.Node('rect', {
+		node = new ludo.svg.Node('rect', {
 			'transform':'translate(10, 20) scale(2,1)'
 		});
 
@@ -32,7 +32,7 @@ TestCase("TransformationTest", {
 		assertEquals(1, scale.y);
 
 		// given
-		node = new ludo.canvas.Node('rect', {
+		node = new ludo.svg.Node('rect', {
 			'transform':'translate(10, 20) scale(1.5)'
 		});
 
@@ -44,7 +44,7 @@ TestCase("TransformationTest", {
 		assertEquals(1.5, scale.y);
 
 		// given
-		node = new ludo.canvas.Node('rect', {
+		node = new ludo.svg.Node('rect', {
 			'transform':'translate(10, 20) scale(1.5) skewX(10) skewY(20)'
 		});
 
@@ -57,7 +57,7 @@ TestCase("TransformationTest", {
 
 	"test should be able to retrieve rotate transformation":function () {
 		// given
-		var node = new ludo.canvas.Node('rect', {
+		var node = new ludo.svg.Node('rect', {
 			'transform':'rotate(20)'
 		});
 
@@ -68,7 +68,7 @@ TestCase("TransformationTest", {
 		assertEquals(20, rotation.degrees);
 
 		// given
-		node = new ludo.canvas.Node('rect', {
+		node = new ludo.svg.Node('rect', {
 			'transform':'rotate(30 10 15)'
 		});
 
@@ -84,7 +84,7 @@ TestCase("TransformationTest", {
 
 	"test should be able to set transformation":function () {
 		// given
-		var node = new ludo.canvas.Node('rect', {
+		var node = new ludo.svg.Node('rect', {
 
 				'transform':'rotate(20) translate(10,20)'
 
@@ -104,7 +104,7 @@ TestCase("TransformationTest", {
 
 	"test should be able to retrieve transformation keys": function(){
 		// given
-		var node = new ludo.canvas.Node('rect', {
+		var node = new ludo.svg.Node('rect', {
 
 				'transform':'rotate(20) skewX(40) translate(20 40)'
 
@@ -122,7 +122,7 @@ TestCase("TransformationTest", {
 
 	"test should be able to have cache of transformation values": function(){
 		// given
-		var node = new ludo.canvas.Node('rect', {
+		var node = new ludo.svg.Node('rect', {
 				'transform':'rotate(20) skewX(40) translate(20 40)'
 		});
 
@@ -143,7 +143,7 @@ TestCase("TransformationTest", {
 	"test should be able to get transformation cache as string": function(){
 		// given
 		var transformation = 'rotate(20) skewX(40) translate(20 40)';
-		var node = new ludo.canvas.Node('rect', {
+		var node = new ludo.svg.Node('rect', {
 			id:'myNode',
 			'transform':transformation
 
@@ -160,7 +160,7 @@ TestCase("TransformationTest", {
 
 	"test should be able to use translate method": function(){
 		// given
-		var node = new ludo.canvas.Node('rect', {
+		var node = new ludo.svg.Node('rect', {
 			id:'myNode2'
 		});
 
@@ -173,7 +173,7 @@ TestCase("TransformationTest", {
 
 	"test should be able to use scale method": function(){
 		// given
-		var node = new ludo.canvas.Node('rect', {
+		var node = new ludo.svg.Node('rect', {
 			id:'myNode3'
 		});
 
@@ -185,7 +185,7 @@ TestCase("TransformationTest", {
 	},
 	"test should be able to apply multiple transformations": function(){
 		// given
-		var node = new ludo.canvas.Node('rect', {
+		var node = new ludo.svg.Node('rect', {
 			id:'myNode'
 		});
 
@@ -201,7 +201,7 @@ TestCase("TransformationTest", {
 
 	"test should be able to retrieve scale transformations": function(){
 		// given
-		var node = new ludo.canvas.Node('rect', {
+		var node = new ludo.svg.Node('rect', {
 			id:'myNode'
 		});
 

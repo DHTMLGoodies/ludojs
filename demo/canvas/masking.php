@@ -115,11 +115,11 @@ require_once("../includes/demo-header.php");
         var a = toOpacity == 1 ? 0 : 1;
         stop.animate({
                 'stop-opacity': a
-            }, 2000, ludo.canvas.easing.inOutSine);
+            }, 2000, ludo.svg.easing.inOutSine);
 
         stop2.animate({
             'stop-opacity': toOpacity
-        }, 2000, ludo.canvas.easing.inOutSine,
+        }, 2000, ludo.svg.easing.inOutSine,
         animate);
         toOpacity = toOpacity == 1 ? 0 : 1;
     }

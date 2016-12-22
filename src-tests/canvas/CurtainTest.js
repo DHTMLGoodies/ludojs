@@ -119,7 +119,7 @@ TestCase("CurtainTest", {
 			layout:{ width:500, height:500},
 			renderTo:document.body
 		});
-		var rect = new ludo.canvas.Rect({ x:100, y:120, width:200, height:300, rx:5, ry:7 });
+		var rect = new ludo.svg.Rect({ x:100, y:120, width:200, height:300, rx:5, ry:7 });
 		v.getCanvas().append(rect);
 		return rect;
 	}

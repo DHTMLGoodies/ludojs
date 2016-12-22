@@ -53,13 +53,13 @@ ludo.chart.Outline = new Class({
                     x1: 0, y1: 0, x2: 0, y2: 0
                 };
 
-                var el = this.outline[key] = new ludo.canvas.Node('line', pos);
+                var el = this.outline[key] = new ludo.svg.Node('line', pos);
                 el.css(styles);
                 this.append(el);
             }.bind(this));
         } else {
 
-            var el = this.outline['around'] = new ludo.canvas.Rect({
+            var el = this.outline['around'] = new ludo.svg.Rect({
                 x: 0, y: 0, width: s.x, height: s.y
             });
             el.css(this.outline);

@@ -17,7 +17,7 @@ ludo.colorPicker.HueBar = new Class({
 		this.currentBarHeight = c.get('height');
 		c.addEvent('resize', this.positionSlider.bind(this));
 		c.node.css('width', '50px');
-        this.hueBar = new ludo.canvas.Rect({
+        this.hueBar = new ludo.svg.Rect({
             x:'30%',
             width:'40%',
             y: this.topMargin + '%',
@@ -32,18 +32,18 @@ ludo.colorPicker.HueBar = new Class({
     },
 	dd:undefined,
 	createSlider:function(){
-		this.slider = new ludo.canvas.Node('g', { x: 0, width:'100%', height:10, y: 0 });
+		this.slider = new ludo.svg.Node('g', { x: 0, width:'100%', height:10, y: 0 });
 		this.slider.css('cursor', 'pointer');
 
-		var symbol = new ludo.canvas.Node('symbol');
+		var symbol = new ludo.svg.Node('symbol');
 		this.getCanvas().appendDef(symbol);
-		var p = new ludo.canvas.Path('M 5 0 L 10 0 L 15 5 L 10 10 L 5 10 Z', { fill:'#FFF', stroke : '#555', 'stroke-width' :1});
+		var p = new ludo.svg.Path('M 5 0 L 10 0 L 15 5 L 10 10 L 5 10 Z', { fill:'#FFF', stroke : '#555', 'stroke-width' :1});
 		symbol.append(p);
 
-		var u = new ludo.canvas.Node('use');
+		var u = new ludo.svg.Node('use');
 		u.href(symbol);
 		this.slider.append(u);
-		var u2 = new ludo.canvas.Node('use', { x : '-100%', 'transform' : 'scale(-1,1)'});
+		var u2 = new ludo.svg.Node('use', { x : '-100%', 'transform' : 'scale(-1,1)'});
 		u2.href(symbol);
 		this.slider.append(u2);
 		this.getCanvas().append(this.slider);
@@ -52,7 +52,7 @@ ludo.colorPicker.HueBar = new Class({
 	},
 
 	makeSliderDragable:function(){
-		this.dd = new ludo.canvas.Drag({
+		this.dd = new ludo.svg.Drag({
 			directions:['Y'],
 			listeners:{
 				'before': this.setMinMaxForSliderDrag.bind(this),
@@ -89,7 +89,7 @@ ludo.colorPicker.HueBar = new Class({
 	},
 
     getGradient:function(){
-        var gradient = new ludo.canvas.Gradient({x1:'0%', y1:'100%', x2:'0%', y2:'0%'});
+        var gradient = new ludo.svg.Gradient({x1:'0%', y1:'100%', x2:'0%', y2:'0%'});
 
         for(var i=0;i<=360;i+=60){
             var prs = Math.round(i / 360 * 100);

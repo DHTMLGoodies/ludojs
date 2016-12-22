@@ -1,24 +1,24 @@
 TestCase("ElementTest", {
 
 	getRect:function () {
-		var paint = new ludo.canvas.Paint({
+		var paint = new ludo.svg.Paint({
 			css:{
 				'stroke-color':'#FFFFFF'
 			}
 		});
-		return new ludo.canvas.View({
+		return new ludo.svg.View({
 			tag:'rect',
 			paint:paint
 		});
 	},
 
 	"test be able to create an element":function () {
-		var paint = new ludo.canvas.Paint({
+		var paint = new ludo.svg.Paint({
 			css:{
 				'stroke-color':'#FFFFFF'
 			}
 		});
-		var el = new ludo.canvas.View({
+		var el = new ludo.svg.View({
 			tag:'rect',
 			paint:paint
 		});
@@ -39,12 +39,12 @@ TestCase("ElementTest", {
 	},
 
 	"test should be able to apply paint object":function () {
-		var paint = new ludo.canvas.Paint({
+		var paint = new ludo.svg.Paint({
 			css:{
 				'stroke-color':'#FFFFFF'
 			}
 		});
-		var el = new ludo.canvas.View({
+		var el = new ludo.svg.View({
 			tag:'rect',
 			attr:{ "class": paint }
 		});
@@ -55,7 +55,7 @@ TestCase("ElementTest", {
 	},
 
 	"test should be able to access node":function () {
-		var el = new ludo.canvas.View({
+		var el = new ludo.svg.View({
 			tag:'rect'
 		});
 
@@ -68,7 +68,7 @@ TestCase("ElementTest", {
 
 	"test should be able to access properties":function () {
 		// when
-		var element = new ludo.canvas.View({
+		var element = new ludo.svg.View({
 			tag:'rect',
 			attr:{x1:100, y1:150, x2:200, y2:250}
 		});

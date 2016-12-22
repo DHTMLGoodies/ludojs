@@ -2,7 +2,7 @@ TestCase("EllipseTest", {
 
 	"test should be able to create an ellipse":function () {
 		// given
-		var ellipse = new ludo.canvas.Ellipse({ cx:100, cy:150, rx:250, ry:200 });
+		var ellipse = new ludo.svg.Ellipse({ cx:100, cy:150, rx:250, ry:200 });
 
 		// then
 		assertEquals(100, ellipse.getCx());
@@ -13,7 +13,7 @@ TestCase("EllipseTest", {
 
 	"test should be able to update radius":function () {
 		// given
-		var ellipse = new ludo.canvas.Ellipse({ cx:100, cy:150, rx:250, ry:200 });
+		var ellipse = new ludo.svg.Ellipse({ cx:100, cy:150, rx:250, ry:200 });
 
 		// when
 		ellipse.setRadiusX(250);
@@ -26,7 +26,7 @@ TestCase("EllipseTest", {
 
 	"test should be able to get coordinates":function () {
 		// given
-		var ellipse = new ludo.canvas.Ellipse({ cx:500, cy:425, rx:250, ry:200 });
+		var ellipse = new ludo.svg.Ellipse({ cx:500, cy:425, rx:250, ry:200 });
 		ellipse.translate(100, 120);
 
 		// when

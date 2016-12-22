@@ -79,7 +79,7 @@ require_once("../includes/demo-header.php");
     function animate(){
         rect2.animate({
             rotate: [450, 60, 50 ]
-        }, 4000, ludo.canvas.easing.bounce, animate);
+        }, 4000, ludo.svg.easing.bounce, animate);
     }
 
     animate();
@@ -106,13 +106,13 @@ require_once("../includes/demo-header.php");
     function animateEllipseX(){
         ellipse.animate({
             rx: 100, ry: 50
-        }, 1500, ludo.canvas.easing.bounce, animateEllipseY);
+        }, 1500, ludo.svg.easing.bounce, animateEllipseY);
     }
     // Second animation function animating y radius.
     function animateEllipseY(){
         ellipse.animate({
             rx: 50, ry: 100
-        }, 1500, ludo.canvas.easing.bow, animateEllipseX);
+        }, 1500, ludo.svg.easing.bow, animateEllipseX);
     }
     // Run first animation function which triggers second on complete
     animateEllipseX();
@@ -184,13 +184,13 @@ require_once("../includes/demo-header.php");
     function animatePath(){
         path.animate({
             "d": arrow2
-        }, 1500, ludo.canvas.easing.outSine, animatePath2)
+        }, 1500, ludo.svg.easing.outSine, animatePath2)
     }
 
     function animatePath2(){
         path.animate({
             "d": arrow
-        }, 2500, ludo.canvas.easing.elastic, animatePath)
+        }, 2500, ludo.svg.easing.elastic, animatePath)
     }
 
     animatePath();

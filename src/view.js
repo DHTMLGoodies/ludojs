@@ -955,7 +955,7 @@ ludo.View = new Class({
 		   }
 	   });
 	    // Creating line style
-	    var paint = new ludo.canvas.Paint({
+	    var paint = new ludo.svg.Paint({
 		   css:{
 			   'fill':'#FFFFFF',
 			   'stroke':'#DEF',
@@ -964,11 +964,11 @@ ludo.View = new Class({
 	   });
 	 	// Get reference to canvas
 	    var canvas = win.getCanvas();
-	    canvas.append(new ludo.canvas.Node('line', { x1:100, y1:100, x2:200, y2:200, "class":paint }));
+	    canvas.append(new ludo.svg.Node('line', { x1:100, y1:100, x2:200, y2:200, "class":paint }));
 	 */
 	getCanvas:function () {
 		if (this.canvas === undefined) {
-			this.canvas = this.createDependency('canvas', new ludo.canvas.Canvas({
+			this.canvas = this.createDependency('canvas', new ludo.svg.Canvas({
 				renderTo:this
 			}));
 		}

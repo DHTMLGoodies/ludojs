@@ -65,7 +65,7 @@ ludo.chart.Fragment = new Class({
     createNode:function(tagName, properties, text, record){
         var node;
 
-        node = new ludo.canvas.Node(tagName, properties, text);
+        node = new ludo.svg.Node(tagName, properties, text);
 
         this.dependency['node-' + this.nodes.length] = node;
         this.nodes.push(node);
@@ -109,7 +109,7 @@ ludo.chart.Fragment = new Class({
     },
 
     dsEvent:function(e, method){
-        var id = ludo.svg.get(e.target, "ludojs-svg-id");
+        var id = ludo.svgEngine.get(e.target, "ludojs-svg-id");
         var rec = this.record;
         if(id){
             this.ds[method + 'Id'](id);
@@ -131,7 +131,7 @@ ludo.chart.Fragment = new Class({
     },
 
     createStyle:function(styles){
-        var p = new ludo.canvas.Paint(styles);
+        var p = new ludo.svg.Paint(styles);
         this.getCanvas().appendDef(p);
         return p;
     },

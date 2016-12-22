@@ -4,8 +4,8 @@ $pageTitle = 'Canvas Demo - ludoJS';
 require_once("../includes/demo-header.php");
 ?>
 
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/engine.js"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/mask.js"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/svg/engine.js"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/svg/mask.js"></script>
 
 
 <h1>Canvas API with Drag And Drop (iPad compatible)</h1>
@@ -22,7 +22,7 @@ google_ad_height = 280;
         src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 </script>-->
 <script type="text/javascript">
-    var dd = new ludo.canvas.Drag();
+    var dd = new ludo.svg.Drag();
     dd.addEvent('before', function (dragged) {
         ludo.svg.toFront(dragged.el.getEl());
     });
@@ -41,7 +41,7 @@ google_ad_height = 280;
     });
     var canvas = win.getCanvas();
 
-    var paint = new ludo.canvas.Paint({
+    var paint = new ludo.svg.Paint({
             'fill':'#999',
             'stroke':'#DEF',
             'stroke-width':'5',
@@ -50,7 +50,7 @@ google_ad_height = 280;
 
     });
     canvas.append(paint);
-    var paintTwo = new ludo.canvas.Paint({
+    var paintTwo = new ludo.svg.Paint({
         'fill':'orange',
         'stroke':'#D90000',
         'stroke-width':'5',
@@ -62,20 +62,20 @@ google_ad_height = 280;
 
     var d = new Date();
     for (var i = 0; i < 4; i++) {
-        var circle = new ludo.canvas.Node('circle', { cx:180 + (i * 40), cy:130 + (i * 40), r:35 + (i * 3) });
+        var circle = new ludo.svg.Node('circle', { cx:180 + (i * 40), cy:130 + (i * 40), r:35 + (i * 3) });
         canvas.append(circle);
         dd.add(circle);
     }
     if (window.console !== undefined)console.log(new Date().getTime() - d.getTime());
 
-    var gradient = new ludo.canvas.Gradient({
+    var gradient = new ludo.svg.Gradient({
         id:'myGradient'
     });
     canvas.append(gradient);
     gradient.addStop('0%', '#0FF');
     gradient.addStop('100%', '#FFF', 0);
 
-    var paintThree = new ludo.canvas.Paint({
+    var paintThree = new ludo.svg.Paint({
         'fill':gradient,
         'stroke':'#888',
         'stroke-width':'5',
@@ -84,32 +84,32 @@ google_ad_height = 280;
         selectors:'rect,circle'
     });
     canvas.append(paintThree);
-    circle = new ludo.canvas.Circle({cx:280, cy:280, r:85, "class": paintTwo});
+    circle = new ludo.svg.Circle({cx:280, cy:280, r:85, "class": paintTwo});
     canvas.append(circle);
 
     dd.add(circle);
-    var rect = new ludo.canvas.Rect({x:180, y:100, width:150, height:50, rx:5, ry:5});
+    var rect = new ludo.svg.Rect({x:180, y:100, width:150, height:50, rx:5, ry:5});
     canvas.append(rect);
 
     dd.add({
         el:rect
     });
 
-    var polygon = new ludo.canvas.Polygon('200,200 350,350,150,290 140 240', { "class" :paintTwo });
+    var polygon = new ludo.svg.Polygon('200,200 350,350,150,290 140 240', { "class" :paintTwo });
     canvas.append(polygon);
     dd.add(polygon);
 
-    var ellipse = new ludo.canvas.Ellipse({ cx:100, cy:125, rx:50, ry:70 });
+    var ellipse = new ludo.svg.Ellipse({ cx:100, cy:125, rx:50, ry:70 });
     canvas.append(ellipse);
     dd.add(ellipse);
 
-    var path = new ludo.canvas.Path('M 400 100 L 200 200 Q 350 150 300 100 Z', { "class" :paint })
+    var path = new ludo.svg.Path('M 400 100 L 200 200 Q 350 150 300 100 Z', { "class" :paint })
     canvas.append(path);
 
     dd.add(path);
 
 
-    var filter = new ludo.canvas.Filter({ id:'myFilter', filterUnits:'userSpaceOnUse'});
+    var filter = new ludo.svg.Filter({ id:'myFilter', filterUnits:'userSpaceOnUse'});
     canvas.append(filter);
     filter.add('feGaussianBlur', { "in":"SourceAlpha", "stdDeviation":4, result:"blur"});
     filter.add('feOffset', { "in":"blur", "dx":4, dy:"4", result:"offsetBlur"});
@@ -143,17 +143,17 @@ google_ad_height = 280;
 
     dd.add(topGroup);
 
-    var mask = new ludo.canvas.Mask();
+    var mask = new ludo.svg.Mask();
     canvas.appendDef(mask);
 
-    var gr = new ludo.canvas.Gradient({
+    var gr = new ludo.svg.Gradient({
         id:'gradient2'
     });
     canvas.append(gr);
     gr.addStop('0%', 'white', 0);
     gr.addStop('100%', 'white', 1);
 
-    var rect2 = new ludo.canvas.Rect({ x:0,y:0, width:500,height:500, fill:gr });
+    var rect2 = new ludo.svg.Rect({ x:0,y:0, width:500,height:500, fill:gr });
 
     mask.append(rect2);
     ellipse.applyMask(mask);

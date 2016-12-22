@@ -25,7 +25,7 @@ load:
   - ../../src/menu/menu.js
   - ../../src/menu/item.js
   - ../../src/chart/chart.js
-  - ../../src/canvas/group.js
+  - ../../src/svg/group.js
 
 test:
   - GridTest.js

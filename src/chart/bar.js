@@ -6,7 +6,7 @@
  * @param {String} config.orientation Bar chart orientation, __horizontal__ or __vertical__
  * @param {Number} config.barSize Fraction width of bars, default: 0.8
  * @param {Boolean} config.animate True to initially animate the chart, default: false
- * @param {Function} config.easing Easing method to use. default: ludo.canvas.easing.outSine
+ * @param {Function} config.easing Easing method to use. default: ludo.svg.easing.outSine
  * @param {Function} config.duration Animation duration in ms(1/1000s). Default: 300
  * @param {Boolean} config.stacked Stack child data items
  */
@@ -79,13 +79,13 @@ ludo.chart.Bar = new Class({
                     x1: 0, y1: 0, x2: 0, y2: 0
                 };
 
-                var el = this.outline[key] = new ludo.canvas.Node('line', pos);
+                var el = this.outline[key] = new ludo.svg.Node('line', pos);
                 el.css(styles);
                 this.append(el);
             }.bind(this));
         } else {
 
-            var el = this.outline['around'] = new ludo.canvas.Rect({
+            var el = this.outline['around'] = new ludo.svg.Rect({
                 x: 0, y: 0, width: s.x, height: s.y
             });
             el.css(this.outline);
@@ -95,7 +95,7 @@ ludo.chart.Bar = new Class({
 
     getLine: function (index) {
         if (this.nodes.lines[index] == undefined) {
-            var el = new ludo.canvas.Node('line', {x1: 0, y1: 0, x2: 0, y2: 0});
+            var el = new ludo.svg.Node('line', {x1: 0, y1: 0, x2: 0, y2: 0});
             this.append(el);
             this.nodes.lines.push(el);
         }

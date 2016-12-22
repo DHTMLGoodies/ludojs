@@ -3,7 +3,7 @@
  * @class ludo.chart.Base
  */
 ludo.chart.Base = new Class({
-    Extends: ludo.canvas.Group,
+    Extends: ludo.svg.Group,
     fragments: [],
     fragmentType: 'chart.Fragment',
     highlighted: undefined,
@@ -48,7 +48,7 @@ ludo.chart.Base = new Class({
         this.setConfigParams(config, ['revealAnim', 'revealAnimDirection', 'revealAnimDuration', 'interactive', 'dataSource', 'animate', 'bgColor', 'duration', 'data']);
         this.ds = this.getDataSource();
 
-        this.easing = config.easing || ludo.canvas.easing.outSine;
+        this.easing = config.easing || ludo.svg.easing.outSine;
         this.ds.on('load', this.create.bind(this));
 
         this.ds.on('update', this.onResize.bind(this));
@@ -199,7 +199,7 @@ ludo.chart.Base = new Class({
     renderBackgroundItems: function () {
 
         var s = this.getSize();
-        this.bgRect = new ludo.canvas.Rect({
+        this.bgRect = new ludo.svg.Rect({
                 x: 0, y: 0, width: s.x, height: s.y
             }
         );
@@ -328,7 +328,7 @@ ludo.chart.Base = new Class({
             anim,
             {
                 duration: duration,
-                easing: ludo.canvas.easing.inSine,
+                easing: ludo.svg.easing.inSine,
                 complete: this.removeClipPath.bind(this)
             }
         );

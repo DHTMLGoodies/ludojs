@@ -75,7 +75,7 @@ require_once("../includes/demo-header.php");
             {
                 duration: 1200, // 1.2 seconds
                 complete: fn, // call fn Function on complete
-                easing: ludo.canvas.easing.outCubic // Easing function
+                easing: ludo.svg.easing.outCubic // Easing function
             });
 
     }

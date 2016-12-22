@@ -2,7 +2,7 @@ TestCase("RadialGradientTest", {
 
 	"test should be able to create gradient": function(){
 		// when
-		var gradient = new ludo.canvas.RadialGradient();
+		var gradient = new ludo.svg.RadialGradient();
 
 		// then
 		assertEquals('radialGradient', gradient.getEl().tagName);
@@ -11,7 +11,7 @@ TestCase("RadialGradientTest", {
 
 	"test should be able to add properties": function(){
 		// when
-		var gradient = new ludo.canvas.RadialGradient({
+		var gradient = new ludo.svg.RadialGradient({
 			cx:400,cy:200,r:300,fx:400,fy:200
 		});
 
@@ -22,7 +22,7 @@ TestCase("RadialGradientTest", {
 
 	"test should use userSpaceOnUse as default for gradientUnits" :function(){
 		// when
-		var gradient = new ludo.canvas.RadialGradient({
+		var gradient = new ludo.svg.RadialGradient({
 			cx:400,cy:200,r:300,fx:400,fy:200
 		});
 

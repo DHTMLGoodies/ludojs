@@ -10,11 +10,11 @@ load:
   - ../../src/data-source/record.js
   - ../../src/layout/relative.js
   - ../../src/layout/canvas.js
-  - ../../src/canvas/node.js
-  - ../../src/canvas/named-node.js
-  - ../../src/canvas/view.js
-  - ../../src/canvas/canvas.js
-  - ../../src/canvas/engine.js
+  - ../../src/svg/node.js
+  - ../../src/svg/named-node.js
+  - ../../src/svg/view.js
+  - ../../src/svg/canvas.js
+  - ../../src/svg/engine.js
 
 
   - ../../src/chart/add-on.js

@@ -83,7 +83,7 @@ ludo.chart.ChartValues = new Class({
 
     getNode: function (index) {
         if (this.nodes[index] == undefined) {
-            var el = new ludo.canvas.Text("", {});
+            var el = new ludo.svg.Text("", {});
             this.nodes.push(el);
             if (this.orientation == 'horizontal') {
                 el.textAnchor('middle');

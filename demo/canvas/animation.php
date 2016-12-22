@@ -6,11 +6,11 @@ require_once("../includes/demo-header.php");
 
 <script type="text/javascript" class="source-code">
 
-    var easing = ludo.canvas.easing.linear;
+    var easing = ludo.svg.easing.linear;
 
     function setEasing(e){
 
-        easing = ludo.canvas.easing[e];
+        easing = ludo.svg.easing[e];
     }
 
     var v = new ludo.FramedView({
@@ -100,7 +100,7 @@ require_once("../includes/demo-header.php");
         fill: '#669900'
     });
 
-    var t = new ludo.canvas.Text('Click to run Animation', {
+    var t = new ludo.svg.Text('Click to run Animation', {
         x:c.width/2, y:c.height / 2
     });
 
@@ -115,7 +115,7 @@ require_once("../includes/demo-header.php");
         fill: '#E57373', 'fill-opacity' : 1
     });
 
-    var circle = new ludo.canvas.Circle({
+    var circle = new ludo.svg.Circle({
         cx: 100, cy: 110, r: 10
     });
     circle.addClass('box');
@@ -127,7 +127,7 @@ require_once("../includes/demo-header.php");
     function getIllustrationNode(){
         var node;
         if(illIndex >= illustrationNodes.length){
-            node = new ludo.canvas.Circle({ cx:0,cy:0, r: 3 });
+            node = new ludo.svg.Circle({ cx:0,cy:0, r: 3 });
             node.addClass('illustration');
             c.append(node);
             illustrationNodes.push(node);

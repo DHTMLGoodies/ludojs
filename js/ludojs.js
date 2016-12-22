@@ -1,7 +1,7 @@
-/* Generated Thu Dec 22 1:01:48 CET 2016 */
+/* Generated Thu Dec 22 9:59:33 CET 2016 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.308
+ludoJS - Javascript framework, 1.1.309
 Copyright (C) 2012-2016  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -2322,7 +2322,7 @@ Date.implement({
 window.ludo = {
     form:{ validator:{} },color:{}, dialog:{},remote:{},tree:{},model:{},tpl:{},video:{},storage:{},
     grid:{}, effect:{},paging:{},calendar:{},layout:{},progress:{},keyboard:{},chart:{},
-    dataSource:{},controller:{},card:{},canvas:{},socket:{},menu:{},view:{},audio:{}, ludoDB:{}, theme:{}
+    dataSource:{},controller:{},card:{},svg:{},socket:{},menu:{},view:{},audio:{}, ludoDB:{}, theme:{}
 };
 
 if (navigator.appName == 'Microsoft Internet Explorer'){
@@ -4662,8 +4662,8 @@ ludo.remote.Broadcaster = new Class({
 });
 
 ludo.remoteBroadcaster = new ludo.remote.Broadcaster();
-/* ../ludojs/src/canvas/engine.js */
-ludo.canvas.Engine = new Class({
+/* ../ludojs/src/svg/engine.js */
+ludo.svg.Engine = new Class({
 	/*
 	 * Returns property value of a SVG DOM node
 	 * @function get
@@ -4678,15 +4678,15 @@ ludo.canvas.Engine = new Class({
 		}
 	}
 });
-ludo.svg = new ludo.canvas.Engine();
+ludo.svgEngine = new ludo.svg.Engine();
 
 
 
-/* ../ludojs/src/canvas/node.js */
+/* ../ludojs/src/svg/node.js */
 /**
  Class for creating SVG DOM Nodes
  @namespace ludo.canvas
- @class ludo.canvas.Node
+ @class ludo.svg.Node
 
  @param {String} tag
  @param {Object} properties
@@ -4694,17 +4694,17 @@ ludo.svg = new ludo.canvas.Engine();
  @param {String} text
  @optional
  @example
- var paint = new ludo.canvas.Paint({
+ var paint = new ludo.svg.Paint({
 		'stroke-color' : '#000'
  	});
- var node = new ludo.canvas.Node('rect', { id:'myRect', x:20,y:20,width:100,height:100 , "class": paint, filter:filter });
+ var node = new ludo.svg.Node('rect', { id:'myRect', x:20,y:20,width:100,height:100 , "class": paint, filter:filter });
 
  or
  @example
- var node = new ludo.canvas.Node('title', {}, 'My title' );
+ var node = new ludo.svg.Node('title', {}, 'My title' );
 
  */
-ludo.canvas.Node = new Class({
+ludo.svg.Node = new Class({
     Extends: Events,
     el: undefined,
     tagName: undefined,
@@ -4790,7 +4790,7 @@ ludo.canvas.Node = new Class({
      * Add DOM events to SVG node
      * @param {String} event
      * @param {Function} fn
-     * @memberof ludo.canvas.Node.prototype
+     * @memberof ludo.svg.Node.prototype
      */
     on: function (event, fn) {
 
@@ -4814,7 +4814,7 @@ ludo.canvas.Node = new Class({
      * @param {Function} fn
      * @param {Object} el
      * @private
-     * @memberof ludo.canvas.Node.prototype
+     * @memberof ludo.svg.Node.prototype
      */
     _addEvent: (function () {
         if (document.addEventListener) {
@@ -4899,7 +4899,7 @@ ludo.canvas.Node = new Class({
      * @function append
      * @param {canvas.View|canvas.Node} node node
      * @return {canvas.Node} parent
-     * @memberof ludo.canvas.Node.prototype
+     * @memberof ludo.svg.Node.prototype
      */
     append: function (node) {
         this.el.appendChild(node.getEl());
@@ -4914,7 +4914,7 @@ ludo.canvas.Node = new Class({
     /**
      * Show SVG node, i.e. set display css property to ''
      * @function show
-     * @memberof ludo.canvas.Node.prototype
+     * @memberof ludo.svg.Node.prototype
      */
     show: function () {
         this.css('display','');
@@ -4923,7 +4923,7 @@ ludo.canvas.Node = new Class({
     /**
      * Hides SVG node, i.e. set display css property to 'none'
      * @function hide
-     * @memberof ludo.canvas.Node.prototype
+     * @memberof ludo.svg.Node.prototype
      */
     hide: function () {
         this.css('display','none');
@@ -4932,7 +4932,7 @@ ludo.canvas.Node = new Class({
     /**
      * Returns true if SVG node is hidden
      * @returns {boolean}
-     * @memberof ludo.canvas.Node.prototype
+     * @memberof ludo.svg.Node.prototype
      */
     isHidden: function () {
         return this.css('display') == 'none';
@@ -4949,9 +4949,9 @@ ludo.canvas.Node = new Class({
     /**
      * Set or get attribute.
      * @param {String} key
-     * @param {String|Number|ludo.canvas.Node} value
+     * @param {String|Number|ludo.svg.Node} value
      * @returns {*}
-     * @memberof ludo.canvas.Node.prototype
+     * @memberof ludo.svg.Node.prototype
      * @example
      * var x = node.attr("x"); // Get attribute
      * node.attr("x", 100); // Sets attribute
@@ -4962,11 +4962,11 @@ ludo.canvas.Node = new Class({
     },
 
     /**
-     * Set SVG node attribute. If a ludo.canvas.Node object is sent as value, the set function will
+     * Set SVG node attribute. If a ludo.svg.Node object is sent as value, the set function will
      * set an url attribute( url(#<id>).
      * @param {String} key
-     * @param {String|Number|ludo.canvas.Node} value
-     * @memberof ludo.canvas.Node.prototype
+     * @param {String|Number|ludo.svg.Node} value
+     * @memberof ludo.svg.Node.prototype
      */
     set: function (key, value) {
         this._attr[key] = value;
@@ -4984,7 +4984,7 @@ ludo.canvas.Node = new Class({
     /**
      * Remove SVG attribute
      * @param {String} key
-     * @memberof ludo.canvas.Node.prototype
+     * @memberof ludo.svg.Node.prototype
      */
     removeAttr:function(key){
         if (key.substring(0, 6) == "xlink:") {
@@ -5003,7 +5003,7 @@ ludo.canvas.Node = new Class({
      * Get SVG attribute
      * @param {String} key
      * @returns {*}
-     * @memberof ludo.canvas.Node.prototype
+     * @memberof ludo.svg.Node.prototype
      */
     get: function (key) {
         if (key.substring(0, 6) == "xlink:") {
@@ -5016,7 +5016,7 @@ ludo.canvas.Node = new Class({
     /**
      * Returns x and y translation, i.e. translated x and y coordinates
      * @function getTranslate
-     * @memberof ludo.canvas.Node.prototype
+     * @memberof ludo.svg.Node.prototype
      * @returns {Array}
      * @example
      * var translate = node.getTranslate(); // returns [x,y], example; [100,150]
@@ -5030,7 +5030,7 @@ ludo.canvas.Node = new Class({
      * Apply filter to node
      * @function applyFilter
      * @param {canvas.Filter} filter
-     * @memberof ludo.canvas.Node.prototype
+     * @memberof ludo.svg.Node.prototype
      */
     applyFilter: function (filter) {
         this.set('filter', filter.getUrl());
@@ -5039,7 +5039,7 @@ ludo.canvas.Node = new Class({
      * Apply mask to node
      * @function addMask
      * @param {canvas.Node} mask
-     * @memberof ludo.canvas.Node.prototype
+     * @memberof ludo.svg.Node.prototype
      */
     applyMask: function (mask) {
         this.set('mask', mask.getUrl());
@@ -5049,7 +5049,7 @@ ludo.canvas.Node = new Class({
      * Apply clip path to node
      * @function applyClipPath
      * @param {canvas.Node} clip
-     * @memberof ludo.canvas.Node.prototype
+     * @memberof ludo.svg.Node.prototype
      */
     applyClipPath: function (clip) {
         this.set('clip-path', clip.getUrl());
@@ -5059,7 +5059,7 @@ ludo.canvas.Node = new Class({
      Create url reference
      @function url
      @param {String} key
-     @memberof ludo.canvas.Node.prototype
+     @memberof ludo.svg.Node.prototype
      @param {canvas.Node|String} to
      @example
      node.url('filter', filterObj); // sets node property filter="url(#&lt;filterObj->id>)"
@@ -5076,7 +5076,7 @@ ludo.canvas.Node = new Class({
      * Update text content of node
      * @function text
      * @param {String} text
-     * @memberof ludo.canvas.Node.prototype
+     * @memberof ludo.svg.Node.prototype
      */
     text: function (text) {
         this.el.textContent = text;
@@ -5088,14 +5088,14 @@ ludo.canvas.Node = new Class({
      @param {Object} properties
      @param {String} text content
      @optional
-     @return {ludo.canvas.Node} added node
-     @memberof ludo.canvas.Node.prototype
+     @return {ludo.svg.Node} added node
+     @memberof ludo.svg.Node.prototype
      @example
-     var filter = new ludo.canvas.Filter();
+     var filter = new ludo.svg.Filter();
      filter.add('feGaussianBlur', { 'stdDeviation' : 2, result:'blur'  });
      */
     add: function (tagName, properties, text) {
-        var node = new ludo.canvas.Node(tagName, properties, text);
+        var node = new ludo.svg.Node(tagName, properties, text);
         this.append(node);
         return node;
     },
@@ -5128,7 +5128,7 @@ ludo.canvas.Node = new Class({
      * Add css class to SVG node
      * @function addClass
      * @param {String} className
-     * @memberof ludo.canvas.Node.prototype
+     * @memberof ludo.svg.Node.prototype
      */
     addClass: function (className) {
         if(!this.hasClass(className)){
@@ -5150,9 +5150,9 @@ ludo.canvas.Node = new Class({
      @function hasClass
      @param {String} className
      @return {Boolean}
-     @memberof ludo.canvas.Node.prototype
+     @memberof ludo.svg.Node.prototype
      @example
-     var node = new ludo.canvas.Node('rect', { id:'myId2'});
+     var node = new ludo.svg.Node('rect', { id:'myId2'});
      node.addClass('myClass');
      alert(node.hasClass('myClass'));
      */
@@ -5172,9 +5172,9 @@ ludo.canvas.Node = new Class({
      Remove css class name from css Node
      @function removeClass
      @param {String} className
-     @memberof ludo.canvas.Node.prototype
+     @memberof ludo.svg.Node.prototype
      @example
-     var node = new ludo.canvas.Node('rect', { id:'myId2'});
+     var node = new ludo.svg.Node('rect', { id:'myId2'});
      node.addClass('myClass');
      node.addClass('secondClass');
      node.removeClass('myClass');
@@ -5203,7 +5203,7 @@ ludo.canvas.Node = new Class({
      * Returns nodes position relative to parent
      * @function position()
      * @returns {Object}
-     * @memberof ludo.canvas.Node.prototype
+     * @memberof ludo.svg.Node.prototype
      * @example
      * var pos = node.position(); // returns {x: 100, y: 200 }
      *
@@ -5235,7 +5235,7 @@ ludo.canvas.Node = new Class({
 
     /**
      * Returns nodes position relative to top SVG element
-     * @memberof ludo.canvas.Node.prototype
+     * @memberof ludo.svg.Node.prototype
      * @returns {Object}
      * @example
      * var pos = node.offset(); // returns {x: 100, y: 200 }
@@ -5260,7 +5260,7 @@ ludo.canvas.Node = new Class({
      * Returns bounding box of el as an object with x,y, width and height.
      * @function getBBox
      * @return {Object}
-     * @memberof ludo.canvas.Node.prototype
+     * @memberof ludo.svg.Node.prototype
      */
     getBBox: function () {
 
@@ -5363,7 +5363,7 @@ ludo.canvas.Node = new Class({
      * where x is width and y is height.
      * @function getSize
      * @return {Object} size x and y
-     * @memberof ludo.canvas.Node.prototype
+     * @memberof ludo.svg.Node.prototype
      */
     getSize: function () {
         var b = this.getBBox();
@@ -5376,8 +5376,8 @@ ludo.canvas.Node = new Class({
     /**
      * The nearest ancestor 'svg' element. Null if the given element is the outermost svg element.
      * @function getCanvas
-     * @return {ludo.canvas.Node.el} svg
-     * @memberof ludo.canvas.Node.prototype
+     * @return {ludo.svg.Node.el} svg
+     * @memberof ludo.svg.Node.prototype
      */
     getCanvas: function () {
         return this.el.ownerSVGElement;
@@ -5385,8 +5385,8 @@ ludo.canvas.Node = new Class({
     /**
      * The element which established the current viewport. Often, the nearest ancestor ‘svg’ element. Null if the given element is the outermost svg element
      * @function getViewPort
-     * @return {ludo.canvas.Node.el} svg
-     * @memberof ludo.canvas.Node.prototype
+     * @return {ludo.svg.Node.el} svg
+     * @memberof ludo.svg.Node.prototype
      */
     getViewPort: function () {
         return this.el.viewPortElement;
@@ -5395,7 +5395,7 @@ ludo.canvas.Node = new Class({
     /**
      * Returns rotation as a [degrees, x, y]
      * @function getRotate
-     * @memberof ludo.canvas.Node.prototype
+     * @memberof ludo.svg.Node.prototype
      * @returns {Array}
      */
 
@@ -5408,7 +5408,7 @@ ludo.canvas.Node = new Class({
      * @function setScale
      * @param {Number} x
      * @param {Number} y (Optional y scale, assumes x if not set)
-     * @memberof ludo.canvas.Node.prototype
+     * @memberof ludo.svg.Node.prototype
      */
 
     setScale:function(x,y){
@@ -5421,7 +5421,7 @@ ludo.canvas.Node = new Class({
      * @function scale
      * @param {Number} x
      * @param {Number} y
-     * @memberof ludo.canvas.Node.prototype
+     * @memberof ludo.svg.Node.prototype
      */
     scale: function (x, y) {
         this._getMatrix().scale(x,y);
@@ -5433,7 +5433,7 @@ ludo.canvas.Node = new Class({
      * @param {Number} degrees Rotation in degrees
      * @param {Number} x Optional x coordinate to rotate about
      * @param {Number} y Optional x coordinate to rotate about
-     * @memberof ludo.canvas.Node.prototype
+     * @memberof ludo.svg.Node.prototype
      * @example
      * node.rotate(100); // Rotation is 100
      * node.rotate(50); // Rotation is 50
@@ -5448,7 +5448,7 @@ ludo.canvas.Node = new Class({
      * @param {Number} degrees Rotation in degrees
      * @param {Number} x Optional x coordinate to rotate about
      * @param {Number} y Optional x coordinate to rotate about
-     * @memberof ludo.canvas.Node.prototype
+     * @memberof ludo.svg.Node.prototype
      * @example
      * node.rotate(100); // Rotation is 100
      * node.rotate(50); // Rotation is 150
@@ -5463,7 +5463,7 @@ ludo.canvas.Node = new Class({
      * @function setTranslate
      * @param {Number} x
      * @param {Number} y
-     * @memberof ludo.canvas.Node.prototype
+     * @memberof ludo.svg.Node.prototype
      * @example
      * node.setTranslate(500,100);
      * node.setTranslate(550,200); // Node is offset by 550x200 ( second translation overwrites first)
@@ -5477,7 +5477,7 @@ ludo.canvas.Node = new Class({
      * @function translate
      * @param {Number} x
      * @param {Number} y
-     * @memberof ludo.canvas.Node.prototype
+     * @memberof ludo.svg.Node.prototype
      * @example
      * node.setTranslate(500,100);
      * node.setTranslate(550,200); // Node is offset by 1050x300 (first translation + second)
@@ -5490,7 +5490,7 @@ ludo.canvas.Node = new Class({
     _matrix:undefined,
     _getMatrix:function(){
         if(this._matrix == undefined){
-            this._matrix = new ludo.canvas.Matrix(this);
+            this._matrix = new ludo.svg.Matrix(this);
         }
         return this._matrix;
     },
@@ -5502,7 +5502,7 @@ ludo.canvas.Node = new Class({
     _curtain: undefined,
     curtain: function (config) {
         if (this._curtain === undefined) {
-            this._curtain = new ludo.canvas.Curtain(this, config);
+            this._curtain = new ludo.svg.Curtain(this, config);
         }
         return this._curtain;
     },
@@ -5513,28 +5513,28 @@ ludo.canvas.Node = new Class({
      * When animating colors, set colors using the set function and not the css function since CSS fill and stroke has highest priority.
      *
      * For demos, see
-     * <a href="../demo/canvas/animation.php">animation.php</a>
-     * <a href="../demo/canvas/animation.php">queued-animation.php</a>
-     * <a href="../demo/canvas/animation.php">transformation.php</a>
-     * <a href="../demo/canvas/animation.php">clipping.php</a>
-     * <a href="../demo/canvas/animation.php">masking.php</a>
+     * <a href="../demo/svg/animation.php">animation.php</a>
+     * <a href="../demo/svg/animation.php">queued-animation.php</a>
+     * <a href="../demo/svg/animation.php">transformation.php</a>
+     * <a href="../demo/svg/animation.php">clipping.php</a>
+     * <a href="../demo/svg/animation.php">masking.php</a>
      * @function animate
      * @param {Object} properties Properties to animate, example: { x: 100, width: 100 }
      * @param {Object} options Animation options
      * @param {Object} options.duration - Animation duration in milliseconds, default: 400/1000seconds
-     * @param {Function} options.easing Reference to ludo.canvas.easing easing function, example: ludo.canvas.easing.linear
+     * @param {Function} options.easing Reference to ludo.svg.easing easing function, example: ludo.svg.easing.linear
      * @param {Function} options.complete Function to execute on complete
      * @param {Function} options.progress Function executed after each animation step. Argument: completed from 0 to 1
      * @param {Boolean} options.queue True to queue animations for this SVG element. Default: true
      * @param {Function} options.validate Option function called before each step of the animation. If this function returns false, the animation will stop.
      * Arguments: 1) unique id of animation 2) unique id of latest animation for this SVG element. Useful if new animation should stop old animation.
-     * @memberof ludo.canvas.Node.prototype
+     * @memberof ludo.svg.Node.prototype
      * @example
      * // Animating using properties and options objects.
      * circle.animate({
      *      'cx': 100, cy: 100
      * },{
-     *      easing: ludo.canvas.easing.bounce,
+     *      easing: ludo.svg.easing.bounce,
      *      duration: 1000,
      *      complete:function(){
      *          console.log('Animation complete');
@@ -5547,7 +5547,7 @@ ludo.canvas.Node = new Class({
      * // or with duration, easing and complete function as parameters.
      * circle.animate({
      *      'cx': 100, cy: 100
-     * }, 400, ludo.canvas.easing.bounce, function(){ console.log('finished') });
+     * }, 400, ludo.svg.easing.bounce, function(){ console.log('finished') });
      *
      *
      */
@@ -5558,7 +5558,7 @@ ludo.canvas.Node = new Class({
             opt.easing = easing;
             opt.complete = complete;
         }else opt = options;
-        ludo.canvasAnimation.animate(this, properties, opt);
+        ludo.svgAnimation.animate(this, properties, opt);
         return this;
     },
 
@@ -5566,7 +5566,7 @@ ludo.canvas.Node = new Class({
 
     animation: function () {
         if (this._animation === undefined) {
-            this._animation = new ludo.canvas.Animation(this.getEl());
+            this._animation = new ludo.svg.Animation(this.getEl());
         }
         return this._animation;
     },
@@ -5574,7 +5574,7 @@ ludo.canvas.Node = new Class({
     /**
      * Bring nodes to front (z index)
      * @function toFront
-     * @memberof ludo.canvas.Node.prototype
+     * @memberof ludo.svg.Node.prototype
      */
     toFront:function () {
         if (Browser['ie'])this._toFront.delay(20, this); else this._toFront();
@@ -5587,7 +5587,7 @@ ludo.canvas.Node = new Class({
     /**
      * Bring nodes to back (z index)
      * @function toFront
-     * @memberof ludo.canvas.Node.prototype
+     * @memberof ludo.svg.Node.prototype
      */
     toBack:function () {
         if (Browser['ie']) this._toBack.delay(20, this); else this._toBack();
@@ -5599,7 +5599,7 @@ ludo.canvas.Node = new Class({
 });
 
 
-/* ../ludojs/src/canvas/view.js */
+/* ../ludojs/src/svg/view.js */
 /**
  * Base class for Canvas elements. canvas.View can be handled as
  * {{#crossLink "canvas.Node"}}{{/crossLink}}, but it extends ludo.Core which
@@ -5609,20 +5609,20 @@ ludo.canvas.Node = new Class({
  * or  {{#crossLink "canvas.Node/adopt"}}{{/crossLink}} methods.
  * A canvas element contains methods for transformations and other
  * @namespace ludo.canvas
- * @class ludo.canvas.View
+ * @class ludo.svg.View
  * @param {Object} config
  * @param {String} config.tag SVG tag name, example "path"
  * @param {Object} config.attr Attributes for the svg tag, example: attr: { "d" : "M 100 100 L 200 200 Z" }
  *
  * @augments ludo.Core
  */
-ludo.canvas.View = new Class({
+ludo.svg.View = new Class({
     Extends: ludo.Core,
 
     /**
      * Reference to canvas.Node
      * @property {canvas.Node} node
-     * @memberof ludo.canvas.View.prototype
+     * @memberof ludo.svg.View.prototype
      */
     node: undefined,
 
@@ -5637,18 +5637,18 @@ ludo.canvas.View = new Class({
     __construct: function (config) {
         this.parent(config);
         this.setConfigParams(config, ['tag', 'attr']);
-        this.node = new ludo.canvas.Node(this.tag, this.attr);
+        this.node = new ludo.svg.Node(this.tag, this.attr);
     },
 
     $:function(tag, properties){
-        return new ludo.canvas.Node(tag, properties);
+        return new ludo.svg.Node(tag, properties);
     },
 
     /**
      * Return canvas node for this element
      * @function getNode
      * @return {canvas.Node} node
-     * @memberof ludo.canvas.View.prototype
+     * @memberof ludo.svg.View.prototype
      */
     getNode: function () {
         return this.node;
@@ -5665,11 +5665,11 @@ ludo.canvas.View = new Class({
     /**
      Returns value of an attribute
      @function get
-     @memberof ludo.canvas.View.prototype
+     @memberof ludo.svg.View.prototype
      @param key
      @return {String} value
      @example
-     var element = new ludo.canvas.View('rect', {
+     var element = new ludo.svg.View('rect', {
 	 		attr:{x1:100,y1:150,x2:200,y2:250}
 	 	});
      alert(element.get('x1')); // outputs 100
@@ -5681,7 +5681,7 @@ ludo.canvas.View = new Class({
     /**
      * Inserts text to the node if the node supports it
      * @param html
-     * @memberof ludo.canvas.View.prototype
+     * @memberof ludo.svg.View.prototype
      */
     html: function (html) {
         this.node.html(html);
@@ -5691,7 +5691,7 @@ ludo.canvas.View = new Class({
      * Rotate node by this many degrees
      * @function rotate
      * @param {Number} degrees
-     * @memberof ludo.canvas.View.prototype
+     * @memberof ludo.svg.View.prototype
      */
     rotate: function (degrees) {
         this.node.rotate(degrees);
@@ -5700,7 +5700,7 @@ ludo.canvas.View = new Class({
     /**
      * Bring view to front (z index)
      * @function toFront
-     * @memberof ludo.canvas.View.prototype
+     * @memberof ludo.svg.View.prototype
      */
     toFront: function () {
         this.node.toFront();
@@ -5709,7 +5709,7 @@ ludo.canvas.View = new Class({
     /**
      * Move view back (z-index)
      * @function toBack
-     * @memberof ludo.canvas.View.prototype
+     * @memberof ludo.svg.View.prototype
      */
     toBack: function () {
         this.node.toBack();
@@ -5719,7 +5719,7 @@ ludo.canvas.View = new Class({
      * Skew X by this many degrees
      * @function skewX
      * @param {Number} degrees
-     * @memberof ludo.canvas.View.prototype
+     * @memberof ludo.svg.View.prototype
      */
     skewX: function (degrees) {
         this.node.skewX(degrees);
@@ -5729,7 +5729,7 @@ ludo.canvas.View = new Class({
      * Skew Y by this many degrees
      * @function skewY
      * @param {Number} degrees
-     * @memberof ludo.canvas.View.prototype
+     * @memberof ludo.svg.View.prototype
      */
     skewY: function (degrees) {
         this.node.skewY(degrees);
@@ -5738,7 +5738,7 @@ ludo.canvas.View = new Class({
     /**
      * Hide SVG element
      * @function hide
-     * @memberof ludo.canvas.View.prototype
+     * @memberof ludo.svg.View.prototype
      */
     hide:function(){
         this.node.hide();
@@ -5747,7 +5747,7 @@ ludo.canvas.View = new Class({
     /**
      * Show SVG element
      * @function show
-     * @memberof ludo.canvas.View.prototype
+     * @memberof ludo.svg.View.prototype
      */
     show:function(){
         this.node.show();
@@ -5757,7 +5757,7 @@ ludo.canvas.View = new Class({
      * Scale SVG element
      * @param {Number} x x-Ratio
      * @param {Number} y y-Ratio
-     * @memberof ludo.canvas.View.prototype
+     * @memberof ludo.svg.View.prototype
      */
     scale: function (x, y) {
         this.node.scale(x, y);
@@ -5767,7 +5767,7 @@ ludo.canvas.View = new Class({
      * Apply CSS attribute to node
      * @param {String} key
      * @param {String|Number} value
-     * @memberof ludo.canvas.View.prototype
+     * @memberof ludo.svg.View.prototype
      */
     css: function (key, value) {
         this.node.css(key, value);
@@ -5776,9 +5776,9 @@ ludo.canvas.View = new Class({
     /**
      * Append child node
      * @function append
-     * @param {ludo.canvas.View|ludo.canvas.Node} node
+     * @param {ludo.svg.View|ludo.svg.Node} node
      * @return {canvas.View} parent
-     * @memberof ludo.canvas.View.prototype
+     * @memberof ludo.svg.View.prototype
      */
     append: function (node) {
         this.node.append(node);
@@ -5789,7 +5789,7 @@ ludo.canvas.View = new Class({
      * Remove text and child nodes from element
      * @function empty
      * @return {canvas.View} this
-     * @memberof ludo.canvas.View.prototype
+     * @memberof ludo.svg.View.prototype
      */
     empty: function () {
         this.node.empty();
@@ -5803,26 +5803,26 @@ ludo.canvas.View = new Class({
      * @param {String} tagName
      * @param {Object} attributes
      * @param {String} text
-     * @returns {ludo.canvas.Node} created node
-     * @memberof ludo.canvas.View.prototype
+     * @returns {ludo.svg.Node} created node
+     * @memberof ludo.svg.View.prototype
      */
 
     add: function (tagName, attributes, text) {
         return this.node.add(tagName, attributes, text);
     }
-});/* ../ludojs/src/canvas/canvas.js */
+});/* ../ludojs/src/svg/canvas.js */
 /**
  Class used to create canvas(&lt;SVG>) object
  @namespace canvas
- @class ludo.canvas.Canvas
+ @class ludo.svg.Canvas
  @param {Object} config
  @example
- 	var canvas = new ludo.canvas.Canvas({
+ 	var canvas = new ludo.svg.Canvas({
  		renderTo:'idOfDiv'
  	});
  */
-ludo.canvas.Canvas = new Class({
-	Extends:ludo.canvas.View,
+ludo.svg.Canvas = new Class({
+	Extends:ludo.svg.View,
 	tag:'svg',
 	defaultProperties:{
 		xmlns:'http://www.w3.org/2000/svg',
@@ -5844,7 +5844,7 @@ ludo.canvas.Canvas = new Class({
 		if(this.title)this.createTitle();
 		if(this.description)this.createDescription();
 
-		ludo.canvas.setGlobalMatrix(this.node.el);
+		ludo.svg.setGlobalMatrix(this.node.el);
 
 		if (this.renderTo !== undefined) {
 			if(this.renderTo.getBody !== undefined){
@@ -5894,7 +5894,7 @@ ludo.canvas.Canvas = new Class({
      * Returns height of canvas
      * @function getHeight
      * @return {Number} height
-	 * @memberof ludo.canvas.Canvas.prototype
+	 * @memberof ludo.svg.Canvas.prototype
      */
 	getHeight:function(){
 		return this.height;
@@ -5904,7 +5904,7 @@ ludo.canvas.Canvas = new Class({
      * Returns width of canvas
      * @function getWidth
      * @return {Number} width
-	 * @memberof ludo.canvas.Canvas.prototype
+	 * @memberof ludo.svg.Canvas.prototype
      */
 	getWidth:function(){
 		return this.width;
@@ -5914,7 +5914,7 @@ ludo.canvas.Canvas = new Class({
      * Returns center point of canvas as an object with x and y coordinates
      * @function getCenter
      * @return {Object}
-	 * @memberof ludo.canvas.Canvas.prototype
+	 * @memberof ludo.svg.Canvas.prototype
      */
     getCenter:function(){
         return {
@@ -5930,17 +5930,17 @@ ludo.canvas.Canvas = new Class({
 	 * @param {Number} height Viewbox height
 	 * @param {Number} x Optional left/x position
 	 * @param {Number} y Optional top/y position
-	 * @memberof ludo.canvas.Canvas.prototype
+	 * @memberof ludo.svg.Canvas.prototype
 	 */
 	setViewBox:function (width, height, x, y) {
 		this.set('viewBox', (x || 0) + ' ' + (y || 0) + ' ' + width + ' ' + height);
 	},
 
 	createTitle:function(){
-		this.append(new ludo.canvas.Node('title',{}, this.title ));
+		this.append(new ludo.svg.Node('title',{}, this.title ));
 	},
 	createDescription:function(){
-		this.append(new ludo.canvas.Node('desc', {}, this.description ));
+		this.append(new ludo.svg.Node('desc', {}, this.description ));
 	},
 
 
@@ -5948,18 +5948,18 @@ ludo.canvas.Canvas = new Class({
 	 * Create a SVG Stylesheet
 	 * @param {String} className
 	 * @param {Object} styles
-	 * @memberof ludo.canvas.Canvas.prototype
+	 * @memberof ludo.svg.Canvas.prototype
 	 * @example
 	 * svg.addStyleSheet('box', { fill : '#669900', stroke: '#000' });
 	 * // Use the class
-	 * var rect = new ludo.canvas.Rect({
+	 * var rect = new ludo.svg.Rect({
      *   	x:0,y:0,width:500,height:500
      * });
 	 * svg.append(rect);
 	 * rect.addClass('box');
      */
 	addStyleSheet:function(className, styles){
-		var p = new ludo.canvas.Paint(styles, { className : className });
+		var p = new ludo.svg.Paint(styles, { className : className });
 		this.appendDef(p);
 	},
 
@@ -5970,11 +5970,11 @@ ludo.canvas.Canvas = new Class({
 	 * Returns reference to &lt;defs> node
 	 * @function getDefs
 	 * @return {canvas.Node} defs node
-	 * @memberof ludo.canvas.Canvas.prototype
+	 * @memberof ludo.svg.Canvas.prototype
 	 */
 	getDefs:function(){
 		if(this.defsNode === undefined){
-			this.defsNode = new ludo.canvas.Node('defs');
+			this.defsNode = new ludo.svg.Node('defs');
 			this.append(this.defsNode);
 		}
 		return this.defsNode;
@@ -5985,14 +5985,14 @@ ludo.canvas.Canvas = new Class({
 	 * @function appendDef
 	 * @param {canvas.Node|canvas.View} node
 	 * @return {canvas.Node} defs Node
-	 * @memberof ludo.canvas.Canvas.prototype
+	 * @memberof ludo.svg.Canvas.prototype
 	 */
 	appendDef:function(node){
 		return this.getDefs().append(node);
 	}
 });/* ../ludojs/src/layout/text-box.js */
 ludo.layout.TextBox = new Class({
-    Extends: ludo.canvas.Canvas,
+    Extends: ludo.svg.Canvas,
     rotation: 270,
     text: undefined,
     className: undefined,
@@ -6072,12 +6072,12 @@ ludo.layout.TextBox = new Class({
 
     createStyles: function () {
         this.styles = this.getStyles();
-        var p = this.paint = new ludo.canvas.Paint(this.styles);
+        var p = this.paint = new ludo.svg.Paint(this.styles);
         this.appendDef(p);
     },
 
     renderText: function () {
-        var el = this.textNode = new ludo.canvas.Node('text', {
+        var el = this.textNode = new ludo.svg.Node('text', {
             x: this.x,
             y: this.y + parseInt(this.styles['font-size']),
             "class": this.paint
@@ -9012,7 +9012,7 @@ ludo.View = new Class({
 		   }
 	   });
 	    // Creating line style
-	    var paint = new ludo.canvas.Paint({
+	    var paint = new ludo.svg.Paint({
 		   css:{
 			   'fill':'#FFFFFF',
 			   'stroke':'#DEF',
@@ -9021,11 +9021,11 @@ ludo.View = new Class({
 	   });
 	 	// Get reference to canvas
 	    var canvas = win.getCanvas();
-	    canvas.append(new ludo.canvas.Node('line', { x1:100, y1:100, x2:200, y2:200, "class":paint }));
+	    canvas.append(new ludo.svg.Node('line', { x1:100, y1:100, x2:200, y2:200, "class":paint }));
 	 */
 	getCanvas:function () {
 		if (this.canvas === undefined) {
-			this.canvas = this.createDependency('canvas', new ludo.canvas.Canvas({
+			this.canvas = this.createDependency('canvas', new ludo.svg.Canvas({
 				renderTo:this
 			}));
 		}
@@ -9154,8 +9154,8 @@ ludo.remote.Message = new Class({
 ludo.remote.ErrorMessage = new Class({
     Extends:ludo.remote.Message,
     messageTypes:['failure','serverError']
-});/* ../ludojs/src/canvas/effect.js */
-ludo.canvas.Effect = new Class({
+});/* ../ludojs/src/svg/effect.js */
+ludo.svg.Effect = new Class({
 
     fps:33,
 
@@ -9489,6 +9489,13 @@ ludo.chart.Record = new Class({
 ludo.color.Color = new Class({
 
 
+    /**
+     * Function returning a random color
+     * @returns {string}
+     * @example
+     * var util = new ludo.color.Color();
+     * var color = util.randomColor(); // returns color in #RRGGBB format
+     */
     randomColor:function(){
         return this.rgbCode(
             {
@@ -10834,7 +10841,7 @@ ludo.chart.Fragment = new Class({
     createNode:function(tagName, properties, text, record){
         var node;
 
-        node = new ludo.canvas.Node(tagName, properties, text);
+        node = new ludo.svg.Node(tagName, properties, text);
 
         this.dependency['node-' + this.nodes.length] = node;
         this.nodes.push(node);
@@ -10878,7 +10885,7 @@ ludo.chart.Fragment = new Class({
     },
 
     dsEvent:function(e, method){
-        var id = ludo.svg.get(e.target, "ludojs-svg-id");
+        var id = ludo.svgEngine.get(e.target, "ludojs-svg-id");
         var rec = this.record;
         if(id){
             this.ds[method + 'Id'](id);
@@ -10900,7 +10907,7 @@ ludo.chart.Fragment = new Class({
     },
 
     createStyle:function(styles){
-        var p = new ludo.canvas.Paint(styles);
+        var p = new ludo.svg.Paint(styles);
         this.getCanvas().appendDef(p);
         return p;
     },
@@ -10948,15 +10955,15 @@ ludo.chart.Fragment = new Class({
     animate:function(){
         
     }
-});/* ../ludojs/src/canvas/group.js */
+});/* ../ludojs/src/svg/group.js */
 /**
  * SVG Group DOM node which can be positioned as a child view
  * in the relative layout.
  * @namespace canvas
- * @class ludo.canvas.Group
+ * @class ludo.svg.Group
  */
-ludo.canvas.Group = new Class({
-    Extends:ludo.canvas.View,
+ludo.svg.Group = new Class({
+    Extends:ludo.svg.View,
     tag:'g',
     layout:{},
 
@@ -11006,7 +11013,7 @@ ludo.canvas.Group = new Class({
  * @class ludo.chart.Base
  */
 ludo.chart.Base = new Class({
-    Extends: ludo.canvas.Group,
+    Extends: ludo.svg.Group,
     fragments: [],
     fragmentType: 'chart.Fragment',
     highlighted: undefined,
@@ -11051,7 +11058,7 @@ ludo.chart.Base = new Class({
         this.setConfigParams(config, ['revealAnim', 'revealAnimDirection', 'revealAnimDuration', 'interactive', 'dataSource', 'animate', 'bgColor', 'duration', 'data']);
         this.ds = this.getDataSource();
 
-        this.easing = config.easing || ludo.canvas.easing.outSine;
+        this.easing = config.easing || ludo.svg.easing.outSine;
         this.ds.on('load', this.create.bind(this));
 
         this.ds.on('update', this.onResize.bind(this));
@@ -11202,7 +11209,7 @@ ludo.chart.Base = new Class({
     renderBackgroundItems: function () {
 
         var s = this.getSize();
-        this.bgRect = new ludo.canvas.Rect({
+        this.bgRect = new ludo.svg.Rect({
                 x: 0, y: 0, width: s.x, height: s.y
             }
         );
@@ -11331,7 +11338,7 @@ ludo.chart.Base = new Class({
             anim,
             {
                 duration: duration,
-                easing: ludo.canvas.easing.inSine,
+                easing: ludo.svg.easing.inSine,
                 complete: this.removeClipPath.bind(this)
             }
         );
@@ -11435,7 +11442,7 @@ ludo.chart.PieSlice = new Class({
             return;
         }
 
-        var e = new ludo.canvas.Effect();
+        var e = new ludo.svg.Effect();
 
         var config = e.getEffectConfig(
             [this.rendering.radius,this.rendering.angle, this.rendering.radians ],
@@ -11624,7 +11631,7 @@ ludo.chart.Pie = new Class({
     renderAnimation:function(){
         var r = this.getRecords();
         if(!r)return;
-        var e = new ludo.canvas.Effect();
+        var e = new ludo.svg.Effect();
 
         var radius = e.getEffectConfig([0], [this.getRadius()], 1);
         var radians = [];
@@ -11800,7 +11807,7 @@ ludo.chart.LabelListItem = new Class({
     createNodes:function () {
         var g = this.createNode('g');
 
-        this.bg = new ludo.canvas.Rect({
+        this.bg = new ludo.svg.Rect({
             x:0, y:0, width:10, height:10
         });
         this.bg.css('fill', '#fff');
@@ -11808,14 +11815,14 @@ ludo.chart.LabelListItem = new Class({
         g.append(this.bg);
 
         var colorBoxCoords = this.getCoordinatesForColorBox();
-        this.colorBox = new ludo.canvas.Rect(colorBoxCoords);
+        this.colorBox = new ludo.svg.Rect(colorBoxCoords);
         g.append(this.colorBox);
 
 
         this.colorBox.css(this.getBoxStyles());
 
 
-        this.textNode = new ludo.canvas.Text(this.getDataSource().textOf(this.record, this), {
+        this.textNode = new ludo.svg.Text(this.getDataSource().textOf(this.record, this), {
             x:colorBoxCoords.x + colorBoxCoords.width + 3, y : this.getYForText()
         });
         this.textNode.css(this.getTextStyles());
@@ -11961,7 +11968,7 @@ ludo.chart.PieSliceHighlighted = new Class({
 
         this.setConfigParams(config, ['styles','size']);
 
-        this.node = new ludo.canvas.Path();
+        this.node = new ludo.svg.Path();
         if(this.styles){
             this.node.css(this.styles);
         }else{
@@ -12029,18 +12036,18 @@ ludo.chart.PieSliceHighlighted = new Class({
 
 
     }
-});/* ../ludojs/src/canvas/paint.js */
+});/* ../ludojs/src/svg/paint.js */
 /**
  Class for styling of SVG DOM nodes
  @namespace ludo.canvas
- @class ludo.canvas.Paint
+ @class ludo.svg.Paint
  @param {Object} config
  @example
- 	var canvas = new ludo.canvas.Canvas({
+ 	var canvas = new ludo.svg.Canvas({
 		renderTo:'myDiv'
  	});
 
- 	var paint = new ludo.canvas.Paint({
+ 	var paint = new ludo.svg.Paint({
 		'stroke-width' : 5,
 		'stroke-opacity' : .5,
 		'stroke-color' : '#DEF'
@@ -12051,20 +12058,20 @@ ludo.chart.PieSliceHighlighted = new Class({
  	// alternative methods:
  	// paint.applyTo(node); and
  	// node.addClass(paint.getClassName());
-	var node = new ludo.canvas.Node('rect', { id:'myId2', 'class' : paint});
+	var node = new ludo.svg.Node('rect', { id:'myId2', 'class' : paint});
 
  	canvas.append(node);
 
  	// Paint object for all &lt;rect> and &lt;circle> tags:
 
-	var gradient = new ludo.canvas.Gradient({
+	var gradient = new ludo.svg.Gradient({
         id:'myGradient'
     });
     canvas.append(gradient);
     gradient.addStop('0%', '#0FF');
     gradient.addStop('100%', '#FFF', 0);
     // New paint object applied to all &lt;rect> and &lt;circle> tags.
- 	var paint = new ludo.canvas.Paint({
+ 	var paint = new ludo.svg.Paint({
 		'stroke-width' : 5,
 		'fill' : gradient,
 		'stroke-opacity' : .5,
@@ -12072,8 +12079,8 @@ ludo.chart.PieSliceHighlighted = new Class({
 	}, { selectors : 'rect, circle' );
  */
 
-ludo.canvas.Paint = new Class({
-	Extends:ludo.canvas.Node,
+ludo.svg.Paint = new Class({
+	Extends:ludo.svg.Node,
 	tagName:'style',
 	css:{},
 	nodes:[],
@@ -12109,9 +12116,9 @@ ludo.canvas.Paint = new Class({
 	 @function setStyle
 	 @param {String} style
 	 @param {String|Number}value
-	 @memberof ludo.canvas.Paint.prototype
+	 @memberof ludo.svg.Paint.prototype
 	 @example
-	 	var paint = new ludo.canvas.Paint({
+	 	var paint = new ludo.svg.Paint({
 	 		css:{
 	 			'stroke-opacity' : 0.5
 	 		}
@@ -12152,7 +12159,7 @@ ludo.canvas.Paint = new Class({
 	 * @function getStyle
 	 * @param {String} style
 	 * @return {String|Number} value
-	 * @memberof ludo.canvas.Paint.prototype
+	 * @memberof ludo.svg.Paint.prototype
 	 */
 	getStyle:function (style) {
 		if (this.mappings[style])style = this.mappings[style][0];
@@ -12167,7 +12174,7 @@ ludo.canvas.Paint = new Class({
 	 * Apply css to a SVG node. This is done by adding CSS class to the node
 	 * @function applyTo
 	 * @param {canvas.Node} node
-	 * @memberof ludo.canvas.Paint.prototype
+	 * @memberof ludo.svg.Paint.prototype
 	 */
 	applyTo:function (node) {
 		ludo.svg.addClass(node.el ? node.el : node, this.className);
@@ -12177,7 +12184,7 @@ ludo.canvas.Paint = new Class({
 	 * Returns class name of Paint object
 	 * @function getClassName
 	 * @return {String} className
-	 * @memberof ludo.canvas.Paint.prototype
+	 * @memberof ludo.svg.Paint.prototype
 	 */
 	getClassName:function () {
 		return this.className;
@@ -12187,14 +12194,14 @@ ludo.canvas.Paint = new Class({
 		return this.className;
 	}
 });
-/* ../ludojs/src/canvas/named-node.js */
+/* ../ludojs/src/svg/named-node.js */
 /**
  * Super class for canvas.Circle, canvas.Rect +++
  * @namespace ludo.canvas
- * @class ludo.canvas.NamedNode
+ * @class ludo.svg.NamedNode
  */
-ludo.canvas.NamedNode = new Class({
-	Extends: ludo.canvas.Node,
+ludo.svg.NamedNode = new Class({
+	Extends: ludo.svg.Node,
 
 	initialize:function (attributes, text) {
         attributes = attributes || {};
@@ -12204,22 +12211,22 @@ ludo.canvas.NamedNode = new Class({
 		}
 		this.parent(this.tagName, attributes, text);
 	}
-});/* ../ludojs/src/canvas/rect.js */
+});/* ../ludojs/src/svg/rect.js */
 /**
  Class for rect tags. It extends canvas.Node by adding setter and getter methods
  for x,y, width, height and rounded corners(rx and ry).
  @namespace ludo.canvas
- @class ludo.canvas.Rect
- @augments ludo.canvas.Node
+ @class ludo.svg.Rect
+ @augments ludo.svg.Node
  @param {Object} coordinates
  @param {canvas.NodeConfig} config
  @example
-	 var rect = new ludo.canvas.Rect(
+	 var rect = new ludo.svg.Rect(
  		{ x:100,y:100, width:200,height:100, "class":paintObject }
  	 );
  */
-ludo.canvas.Rect = new Class({
-	Extends: ludo.canvas.NamedNode,
+ludo.svg.Rect = new Class({
+	Extends: ludo.svg.NamedNode,
 	tagName : 'rect',
 
 	/**
@@ -12228,7 +12235,7 @@ ludo.canvas.Rect = new Class({
 	 * get actual position on canvas.
 	 * @function getX
 	 * @return {Number} x
-	 * @memberof ludo.canvas.Rect.prototype
+	 * @memberof ludo.svg.Rect.prototype
 	 */
 	getX:function(){
 		return this.el.x.animVal.value;
@@ -12238,7 +12245,7 @@ ludo.canvas.Rect = new Class({
 	 * Returns value of 'y' attribute.
 	 * @function getY
 	 * @return {Number} y
-	 * @memberof ludo.canvas.Rect.prototype
+	 * @memberof ludo.svg.Rect.prototype
 	 */
 	getY:function(){
 		return this.el.y.animVal.value;
@@ -12248,7 +12255,7 @@ ludo.canvas.Rect = new Class({
 	 * Returns width of rectangle
 	 * @function getWidth
 	 * @return {Number} width
-	 * @memberof ludo.canvas.Rect.prototype
+	 * @memberof ludo.svg.Rect.prototype
 	 */
 	getWidth:function(){
 		return this.el.width.animVal.value;
@@ -12258,7 +12265,7 @@ ludo.canvas.Rect = new Class({
 	 * Returns height of rectangle
 	 * @function getWidth
 	 * @return {Number} width
-	 * @memberof ludo.canvas.Rect.prototype
+	 * @memberof ludo.svg.Rect.prototype
 	 */
 	getHeight:function(){
 		return this.el.height.animVal.value;
@@ -12267,7 +12274,7 @@ ludo.canvas.Rect = new Class({
 	 * Return x-size of rounded corners
 	 * @function getRx
 	 * @return {Number} rx
-	 * @memberof ludo.canvas.Rect.prototype
+	 * @memberof ludo.svg.Rect.prototype
 	 */
 	getRx:function(){
 		return this.el.rx.animVal.value;
@@ -12277,7 +12284,7 @@ ludo.canvas.Rect = new Class({
 	 * Return y-size of rounded corners
 	 * @function getRy
 	 * @return {Number} ry
-	 * @memberof ludo.canvas.Rect.prototype
+	 * @memberof ludo.svg.Rect.prototype
 	 */
 	getRy:function(){
 		return this.el.ry.animVal.value;
@@ -12287,7 +12294,7 @@ ludo.canvas.Rect = new Class({
 	 * Set new x coordinate
 	 * @function setX
 	 * @param {Number} x
-	 * @memberof ludo.canvas.Rect.prototype
+	 * @memberof ludo.svg.Rect.prototype
 	 */
 	setX:function(x){
 		this.set('x', x);
@@ -12297,7 +12304,7 @@ ludo.canvas.Rect = new Class({
 	 * Set new y coordinate
 	 * @function setY
 	 * @param {Number} y
-	 * @memberof ludo.canvas.Rect.prototype
+	 * @memberof ludo.svg.Rect.prototype
 	 */
 	setY:function(y){
 		this.set('y', y);
@@ -12307,7 +12314,7 @@ ludo.canvas.Rect = new Class({
 	 * Set new width
 	 * @function setWidth
 	 * @param {Number} width
-	 * @memberof ludo.canvas.Rect.prototype
+	 * @memberof ludo.svg.Rect.prototype
 	 */
 	setWidth:function(width){
 		this.set('width', width);
@@ -12316,7 +12323,7 @@ ludo.canvas.Rect = new Class({
 	 * Set new height
 	 * @function setHeight
 	 * @param {Number} height
-	 * @memberof ludo.canvas.Rect.prototype
+	 * @memberof ludo.svg.Rect.prototype
 	 */
 	setHeight:function(height){
 		this.set('height', height);
@@ -12326,7 +12333,7 @@ ludo.canvas.Rect = new Class({
 	 * Set new width of rounded corners
 	 * @function setRx
 	 * @param {Number} rx
-	 * @memberof ludo.canvas.Rect.prototype
+	 * @memberof ludo.svg.Rect.prototype
 	 */
 	setRx:function(rx){
 		this.set('rx', rx);
@@ -12336,22 +12343,22 @@ ludo.canvas.Rect = new Class({
 	 * Set new height of rounded corners
 	 * @function setRy
 	 * @param {Number} ry
-	 * @memberof ludo.canvas.Rect.prototype
+	 * @memberof ludo.svg.Rect.prototype
 	 */
 	setRy:function(ry){
 		this.set('ry', ry);
 	}
 
 
-});/* ../ludojs/src/canvas/text-box.js */
+});/* ../ludojs/src/svg/text-box.js */
 /**
  * Text box class which handles simple HTML tags
  * and renders them in SVG format.
  * @namespace canvsa
- * @class ludo.canvas.TextBox
+ * @class ludo.svg.TextBox
  */
-ludo.canvas.TextBox = new Class({
-    Extends:ludo.canvas.Group,
+ludo.svg.TextBox = new Class({
+    Extends:ludo.svg.Group,
     tag:'g',
     text:undefined,
     css:{
@@ -12484,7 +12491,7 @@ ludo.canvas.TextBox = new Class({
 
     renderItems:function (items, parent) {
         for (var i = 0; i < items.length; i++) {
-            var n = new ludo.canvas.Node(items[i].tag, items[i].properties, items[i].text);
+            var n = new ludo.svg.Node(items[i].tag, items[i].properties, items[i].text);
             parent.append(n);
 
             if (items[i].children) {
@@ -12616,19 +12623,19 @@ ludo.chart.Tooltip = new Class({
     },
 
     createDOM: function () {
-        this.node = new ludo.canvas.Node('g');
+        this.node = new ludo.svg.Node('g');
         this.getParent().getCanvas().append(this.node);
         this.node.hide();
         this.node.toFront.delay(50, this.node);
 
-        this.rect = new ludo.canvas.Path();
+        this.rect = new ludo.svg.Path();
         this.rect.css(this.getBoxStyling());
         this.rect.set('stroke-linejoin', 'round');
         this.rect.set('stroke-linecap', 'round');
 
         this.node.append(this.rect);
 
-        this.textBox = new ludo.canvas.TextBox();
+        this.textBox = new ludo.svg.TextBox();
         this.node.append(this.textBox);
         this.textBox.getNode().setTranslate(6, 2);
         this.textBox.getNode().css(this.getTextStyles());
@@ -12927,7 +12934,7 @@ ludo.chart.Text = new Class({
             this.text = this.getDataSource().getText(this);
         }
         
-        this.n = new ludo.canvas.Text(this.text, {});
+        this.n = new ludo.svg.Text(this.text, {});
         
         this.n.attr('alignment-baseline', 'after-edge');
         
@@ -13081,7 +13088,7 @@ ludo.chart.ChartLabels = new Class({
             return undefined;
         }
         if (this.textNodes[index] == undefined) {
-            var el = new ludo.canvas.Text("", {});
+            var el = new ludo.svg.Text("", {});
             this.textNodes.push(el);
             if (this.orientation == 'horizontal') {
                 el.textAnchor('middle');
@@ -13194,7 +13201,7 @@ ludo.chart.ChartValues = new Class({
 
     getNode: function (index) {
         if (this.nodes[index] == undefined) {
-            var el = new ludo.canvas.Text("", {});
+            var el = new ludo.svg.Text("", {});
             this.nodes.push(el);
             if (this.orientation == 'horizontal') {
                 el.textAnchor('middle');
@@ -13218,7 +13225,7 @@ ludo.chart.ChartValues = new Class({
  * @param {String} config.orientation Bar chart orientation, __horizontal__ or __vertical__
  * @param {Number} config.barSize Fraction width of bars, default: 0.8
  * @param {Boolean} config.animate True to initially animate the chart, default: false
- * @param {Function} config.easing Easing method to use. default: ludo.canvas.easing.outSine
+ * @param {Function} config.easing Easing method to use. default: ludo.svg.easing.outSine
  * @param {Function} config.duration Animation duration in ms(1/1000s). Default: 300
  * @param {Boolean} config.stacked Stack child data items
  */
@@ -13291,13 +13298,13 @@ ludo.chart.Bar = new Class({
                     x1: 0, y1: 0, x2: 0, y2: 0
                 };
 
-                var el = this.outline[key] = new ludo.canvas.Node('line', pos);
+                var el = this.outline[key] = new ludo.svg.Node('line', pos);
                 el.css(styles);
                 this.append(el);
             }.bind(this));
         } else {
 
-            var el = this.outline['around'] = new ludo.canvas.Rect({
+            var el = this.outline['around'] = new ludo.svg.Rect({
                 x: 0, y: 0, width: s.x, height: s.y
             });
             el.css(this.outline);
@@ -13307,7 +13314,7 @@ ludo.chart.Bar = new Class({
 
     getLine: function (index) {
         if (this.nodes.lines[index] == undefined) {
-            var el = new ludo.canvas.Node('line', {x1: 0, y1: 0, x2: 0, y2: 0});
+            var el = new ludo.svg.Node('line', {x1: 0, y1: 0, x2: 0, y2: 0});
             this.append(el);
             this.nodes.lines.push(el);
         }
@@ -13878,12 +13885,12 @@ ludo.chart.LineItem = new Class({
 
         this.nodes[this.nodes.length - 1].animate({
             'd': newPath
-        }, 500, ludo.canvas.easing.outSine, this.showDots.bind(this));
+        }, 500, ludo.svg.easing.outSine, this.showDots.bind(this));
 
         if (this.filled) {
             this.nodes[0].animate({
                 'd': this.getPath(false, true)
-            }, 500, ludo.canvas.easing.outSine);
+            }, 500, ludo.svg.easing.outSine);
         }
     },
 
@@ -13918,14 +13925,14 @@ ludo.chart.LineItem = new Class({
     }
 
 
-});/* ../ludojs/src/canvas/path.js */
+});/* ../ludojs/src/svg/path.js */
 /**
  * Returns a path SVG element which can be adopted to a canvas.
  * @namespace ludo.canvas
- * @class ludo.canvas.Path
+ * @class ludo.svg.Path
  */
-ludo.canvas.Path = new Class({
-    Extends:ludo.canvas.NamedNode,
+ludo.svg.Path = new Class({
+    Extends:ludo.svg.NamedNode,
     tagName:'path',
     pointString:undefined,
     pointArray:undefined,
@@ -14111,16 +14118,16 @@ ludo.chart.LineDot = new Class({
     getNewNode: function () {
         switch (this.shape) {
             case 'circle':
-                return new ludo.canvas.Circle();
+                return new ludo.svg.Circle();
             default:
-                return new ludo.canvas.Path();
+                return new ludo.svg.Path();
         }
     },
 
 
     enter: function () {
         if (this.nodeHighlight == undefined) {
-            this.nodeHighlight = new ludo.canvas.Circle({
+            this.nodeHighlight = new ludo.svg.Circle({
                 r: this.size * 1.6, cx: 0, cy: 0
             });
             this.nodeHighlight.css({
@@ -14269,13 +14276,13 @@ ludo.chart.Outline = new Class({
                     x1: 0, y1: 0, x2: 0, y2: 0
                 };
 
-                var el = this.outline[key] = new ludo.canvas.Node('line', pos);
+                var el = this.outline[key] = new ludo.svg.Node('line', pos);
                 el.css(styles);
                 this.append(el);
             }.bind(this));
         } else {
 
-            var el = this.outline['around'] = new ludo.canvas.Rect({
+            var el = this.outline['around'] = new ludo.svg.Rect({
                 x: 0, y: 0, width: s.x, height: s.y
             });
             el.css(this.outline);
@@ -26975,15 +26982,15 @@ ludo.calendar.TimePicker = new Class({
             x: this.area.x, y: this.area.y, size: this.area.size
         };
 
-        this.clipPath = new ludo.canvas.Node('clipPath', {});
+        this.clipPath = new ludo.svg.Node('clipPath', {});
         canvas.append(this.clipPath);
-        this.clipCircle = new ludo.canvas.Circle({
+        this.clipCircle = new ludo.svg.Circle({
             cx: this.origo.x, cy: this.origo.y, r: 5
         });
         this.clipPath.append(this.clipCircle);
 
 
-        this.clockBackground = new ludo.canvas.Circle({
+        this.clockBackground = new ludo.svg.Circle({
             cx: this.origo.x, cy: this.origo.y, r: this.area.size / 2,
             css: {
                 'fill': this.clockBackground
@@ -26991,7 +26998,7 @@ ludo.calendar.TimePicker = new Class({
         });
         canvas.append(this.clockBackground);
 
-        this.hourGroup = new ludo.canvas.Group({
+        this.hourGroup = new ludo.svg.Group({
             css: {
                 'fill': this.hourColor,
                 'stroke-width': 0
@@ -27008,7 +27015,7 @@ ludo.calendar.TimePicker = new Class({
 
         canvas.append(this.hourGroup);
 
-        this.hourGroupInner = new ludo.canvas.Group({
+        this.hourGroupInner = new ludo.svg.Group({
             css: {
                 'fill': this.hourColor,
                 'stroke-width': 0
@@ -27019,7 +27026,7 @@ ludo.calendar.TimePicker = new Class({
         var i;
 
         for (i = 1; i <= 12; i++) {
-            var text = new ludo.canvas.Text("" + i, {
+            var text = new ludo.svg.Text("" + i, {
                 css: styles
             });
 
@@ -27035,7 +27042,7 @@ ludo.calendar.TimePicker = new Class({
 
         for (i = 13; i <= 24; i++) {
             var txt = i == 24 ? "00" : "" + i;
-            text = new ludo.canvas.Text(txt, {
+            text = new ludo.svg.Text(txt, {
                 css: styles
             });
             text.set("text-anchor", "middle");
@@ -27047,7 +27054,7 @@ ludo.calendar.TimePicker = new Class({
             this.hourGroupInner.append(text);
         }
 
-        this.centerDot = new ludo.canvas.Circle({
+        this.centerDot = new ludo.svg.Circle({
             cx: this.origo.x, cy: this.origo.y,
             r: 2,
             css: {
@@ -27055,7 +27062,7 @@ ludo.calendar.TimePicker = new Class({
             }
         });
 
-        this.needle = new ludo.canvas.Node('line',
+        this.needle = new ludo.svg.Node('line',
             {
                 x1: this.origo.x, y1: this.origo.y,
                 x2: 100, y2: 100,
@@ -27069,7 +27076,7 @@ ludo.calendar.TimePicker = new Class({
         canvas.append(this.needle);
 
 
-        this.minuteGroup = new ludo.canvas.Group({
+        this.minuteGroup = new ludo.svg.Group({
             css: {
                 'fill': this.minuteColor,
                 'stroke-width': 0
@@ -27080,7 +27087,7 @@ ludo.calendar.TimePicker = new Class({
         for (i = 0; i < 60; i += 5) {
             var m = "" + i;
             if (m.length == "1")m = "0" + m;
-            text = new ludo.canvas.Text(m, {
+            text = new ludo.svg.Text(m, {
                 css: styles
             });
             text.set("text-anchor", "middle");
@@ -27092,7 +27099,7 @@ ludo.calendar.TimePicker = new Class({
             this.minuteGroup.append(text);
         }
 
-        this.needleCircle = new ludo.canvas.Circle({
+        this.needleCircle = new ludo.svg.Circle({
             cx: this.origo.x, cy: this.origo.y, r: 10,
             css: {
                 'fill': this.handColor
@@ -27100,7 +27107,7 @@ ludo.calendar.TimePicker = new Class({
         });
         canvas.append(this.needleCircle);
 
-        this.needleCircleInnerMinutes = new ludo.canvas.Circle({
+        this.needleCircleInnerMinutes = new ludo.svg.Circle({
             cx: this.origo.x, cy: this.origo.y, r: 1,
             css: {
                 fill: this.minuteDotColor
@@ -27110,7 +27117,7 @@ ludo.calendar.TimePicker = new Class({
 
 
 
-        this.needleText = new ludo.canvas.Text("", {
+        this.needleText = new ludo.svg.Text("", {
             'fill': this.handTextColor,
             css: styles
 
@@ -36474,24 +36481,24 @@ ludo.video.YouTube = new Class({
 		return 'http://www.youtube.com/v/' + this.movieId;
 	}
 
-});/* ../ludojs/src/canvas/gradient.js */
+});/* ../ludojs/src/svg/gradient.js */
 /**
 Class for linear gradients
 @namespace canvas
-@class ludo.canvas.Gradient
+@class ludo.svg.Gradient
 @augments canvas.NamedNode
 
 @param {Object} config
 @example
-	var gradient = new ludo.canvas.Gradient({
+	var gradient = new ludo.svg.Gradient({
 		id:'myGradient'
 	});
 	gradient.addStop('0%', 'red');
 	gradient.addStop('100%', '#FFF', 1);
 
  */
-ludo.canvas.Gradient = new Class({
-	Extends:ludo.canvas.NamedNode,
+ludo.svg.Gradient = new Class({
+	Extends:ludo.svg.NamedNode,
 	tagName:'linearGradient',
 	stopTags:[],
 
@@ -36501,10 +36508,10 @@ ludo.canvas.Gradient = new Class({
 	 @param {String} offset
 	 @param {String} stopColor
 	 @param {Number|undefined} stopOpacity
-	 @return {ludo.canvas.Stop} stop
-	 @memberof ludo.canvas.Gradient.prototype
+	 @return {ludo.svg.Stop} stop
+	 @memberof ludo.svg.Gradient.prototype
 	 @example
-		 var gradient = new ludo.canvas.Gradient({
+		 var gradient = new ludo.svg.Gradient({
 			id:'myGradient'
 		 });
 		 gradient.addStop('0%', 'red');
@@ -36520,7 +36527,7 @@ ludo.canvas.Gradient = new Class({
 			if (stopOpacity > 1)stopOpacity = stopOpacity / 100;
 			attr['stop-opacity'] = stopOpacity
 		}
-		var stopTag = new ludo.canvas.Stop(attr);
+		var stopTag = new ludo.svg.Stop(attr);
 		this.append(stopTag);
 		this.stopTags.push(stopTag);
 		return stopTag;
@@ -36531,29 +36538,29 @@ ludo.canvas.Gradient = new Class({
 	 * @function getStop
 	 * @param {Number} index
 	 * @return {canvas.Stop} stop
-	 * @memberof ludo.canvas.Gradient.prototype
+	 * @memberof ludo.svg.Gradient.prototype
 	 */
 	getStop:function (index) {
 		return this.stopTags[index];
 	}
 
-});/* ../ludojs/src/canvas/radial-gradient.js */
+});/* ../ludojs/src/svg/radial-gradient.js */
 /**
  Class for creating Radial Gradients,
  see: http://www.w3.org/TR/SVG/pservers.html#RadialGradientElement
  @namespace ludo.canvas
- @class ludo.canvas.RadialGradient
+ @class ludo.svg.RadialGradient
  @augments canvas.Gradient
  @example
- 	var gradient = new ludo.canvas.RadialGradient({
+ 	var gradient = new ludo.svg.RadialGradient({
 		cx:400,cy:200,r:300,fx:400,fy:200
 	});
  	gradient.addStop('0%', 'red');
  	gradient.addStop('50%', 'blue');
  	gradient.addStop('100%', 'red');
  */
-ludo.canvas.RadialGradient = new Class({
-	Extends:ludo.canvas.Gradient,
+ludo.svg.RadialGradient = new Class({
+	Extends:ludo.svg.Gradient,
 	tagName:'radialGradient',
 
 	initialize:function (config) {
@@ -36581,15 +36588,15 @@ ludo.canvas.RadialGradient = new Class({
 	setFy:function (value) {
 		this.set('fy', value);
 	}
-});/* ../ludojs/src/canvas/stop.js */
+});/* ../ludojs/src/svg/stop.js */
 /**
  * Stop tag used by gradients
  * @namespace canvas
- * @class ludo.canvas.Stop
- * @augments ludo.canvas.Node
+ * @class ludo.svg.Stop
+ * @augments ludo.svg.Node
  */
-ludo.canvas.Stop = new Class({
-	Extends: ludo.canvas.Node,
+ludo.svg.Stop = new Class({
+	Extends: ludo.svg.Node,
 
 	initialize:function(config){
 		this.parent('stop', config);
@@ -36599,7 +36606,7 @@ ludo.canvas.Stop = new Class({
 	 Set new offset
 	 @function setOffset
 	 @param {String} offset
-	 @memberof ludo.canvas.Stop.prototype
+	 @memberof ludo.svg.Stop.prototype
 	 @example
 	 	gradient.getStop(0).setOffset('10%');
 	 */
@@ -36610,7 +36617,7 @@ ludo.canvas.Stop = new Class({
 	 Set new stop color
 	 @function setStopColor
 	 @param {String} stopColor
-	 @memberof ludo.canvas.Stop.prototype
+	 @memberof ludo.svg.Stop.prototype
 	 @example
 	 	gradient.getStop(0).setStopColor('#FFFFFF');
 	 */
@@ -36622,7 +36629,7 @@ ludo.canvas.Stop = new Class({
 	 * Returns value of offset attribute
 	 * @function getOffset
 	 * @return {String} offset
-	 * @memberof ludo.canvas.Stop.prototype
+	 * @memberof ludo.svg.Stop.prototype
 	 */
 	getOffset:function(){
 		return this.get('offset');
@@ -36632,7 +36639,7 @@ ludo.canvas.Stop = new Class({
 	 * Returns value of stop-color attribute
 	 * @function getStopColor
 	 * @return {String} stop color
-	 * @memberof ludo.canvas.Stop.prototype
+	 * @memberof ludo.svg.Stop.prototype
 	 */
 	getStopColor:function(){
 		return this.get('stop-color');
@@ -36642,7 +36649,7 @@ ludo.canvas.Stop = new Class({
 	 * Set new stop opacity(0 = transparent, 1 = full opacity)
 	 * @function setStopOpacity
 	 * @param {Number} stopOpacity
-	 * @memberof ludo.canvas.Stop.prototype
+	 * @memberof ludo.svg.Stop.prototype
 	 */
 	setStopOpacity:function(stopOpacity){
 		this.set('stop-opacity', stopOpacity);
@@ -36652,25 +36659,25 @@ ludo.canvas.Stop = new Class({
 	 * Returns value of stop-opacity property
 	 * @function getStopOpacity
 	 * @return {Number} stop opacity
-	 * @memberof ludo.canvas.Stop.prototype
+	 * @memberof ludo.svg.Stop.prototype
 	 */
 	getStopOpacity:function(){
 		return this.get('stop-opacity');
 	}
-});/* ../ludojs/src/canvas/drag.js */
+});/* ../ludojs/src/svg/drag.js */
 /**
  Class for dragging {{#crossLink "canvas/Node"}}{{/crossLink}} elements.
  @namespace canvas
- @class ludo.canvas.Drag
+ @class ludo.svg.Drag
  @augments effect.Drag
  
  @param {Object} config, see {{#crossLink "effect/Drag"}}{{/crossLink}}
  @example
-    var canvas = new ludo.canvas.Canvas({
+    var canvas = new ludo.svg.Canvas({
     	renderTo:document.body
     });
 
-	var paintThree = new ludo.canvas.Paint({
+	var paintThree = new ludo.svg.Paint({
 	  autoUpdate:true,
 	  css:{
 	  	  'fill' : '#DEF',
@@ -36679,13 +36686,13 @@ ludo.canvas.Stop = new Class({
 		  cursor:'pointer'
 	  }
 	});
- 	var circle = new ludo.canvas.Circle({cx:280, cy:280, r:85}, { paint:paintThree });
+ 	var circle = new ludo.svg.Circle({cx:280, cy:280, r:85}, { paint:paintThree });
     canvas.append(circle);
 
- 	var drag = new ludo.canvas.Drag();
+ 	var drag = new ludo.svg.Drag();
  	drag.add(circle);
 */
-ludo.canvas.Drag = new Class({
+ludo.svg.Drag = new Class({
 	Extends:ludo.effect.Drag,
 	
 	ludoEvents:function () {
@@ -36703,7 +36710,7 @@ ludo.canvas.Drag = new Class({
 	 * @function add
 	 * @param {ludo.effect.DraggableNode} node
 	 * @return {effect.DraggableNode} added node
-	 * @memberof ludo.canvas.Drag.prototype
+	 * @memberof ludo.svg.Drag.prototype
 	 */
 	add:function (node) {
 		node = this.getValidNode(node);
@@ -36784,8 +36791,8 @@ ludo.canvas.Drag = new Class({
 			left : t[0], top: t[1]
 		};
 	}
-});/* ../ludojs/src/canvas/event-manager.js */
-ludo.canvas.EventManager = new Class({
+});/* ../ludojs/src/svg/event-manager.js */
+ludo.svg.EventManager = new Class({
 	nodes:{},
 	currentNodeId:undefined,
     currentNodeFn:undefined,
@@ -36841,31 +36848,31 @@ ludo.canvas.EventManager = new Class({
 
 	}
 });
-ludo.canvasEventManager = new ludo.canvas.EventManager();/* ../ludojs/src/canvas/circle.js */
+ludo.canvasEventManager = new ludo.svg.EventManager();/* ../ludojs/src/svg/circle.js */
 /**
  Class for circle tags. It extends canvas.Node by adding setter and getter methods
  for radius, center x and center y.
  @namespace canvas
- @class ludo.canvas.Circle
+ @class ludo.svg.Circle
  @augments canvas.Node
  
  @param {Object} coordinates
  @param {canvas.NodeConfig} config
  @example
-	 var circle = new ludo.canvas.Circle(
+	 var circle = new ludo.svg.Circle(
  		{ cx:100, cy:100, r:200 },
 	 	{ paint:paintObject }
  	 );
  */
-ludo.canvas.Circle = new Class({
-	Extends:ludo.canvas.NamedNode,
+ludo.svg.Circle = new Class({
+	Extends:ludo.svg.NamedNode,
 	tagName:'circle',
 
 	/**
 	 * Set new radius
 	 * @function setRadius
 	 * @param {Number} radius
-	 * @memberof ludo.canvas.Circle.prototype
+	 * @memberof ludo.svg.Circle.prototype
 	 */
 	setRadius:function (radius) {
 		this.set('r', radius);
@@ -36875,7 +36882,7 @@ ludo.canvas.Circle = new Class({
 	 * Return curent radius
 	 * @function getRadius
 	 * @return {String|Number} radius
-	 * @memberof ludo.canvas.Circle.prototype
+	 * @memberof ludo.svg.Circle.prototype
 	 */
 	getRadius:function () {
 		return this.el.r.animVal.value;
@@ -36885,7 +36892,7 @@ ludo.canvas.Circle = new Class({
 	 * Set new center X
 	 * @function setCx
 	 * @param {Number} x
-	 * @memberof ludo.canvas.Circle.prototype
+	 * @memberof ludo.svg.Circle.prototype
 	 */
 	setCx:function (x) {
 		this.set('cx', x);
@@ -36894,7 +36901,7 @@ ludo.canvas.Circle = new Class({
 	 * Return current center X
 	 * @function getX
 	 * @return {String|Number} cx
-	 * @memberof ludo.canvas.Circle.prototype
+	 * @memberof ludo.svg.Circle.prototype
 	 */
 	getCx:function () {
 		return this.el.cx.animVal.value;
@@ -36904,7 +36911,7 @@ ludo.canvas.Circle = new Class({
 	 * Set new center Y
 	 * @function setCy
 	 * @param {Number} y
-	 * @memberof ludo.canvas.Circle.prototype
+	 * @memberof ludo.svg.Circle.prototype
 	 */
 	setCy:function (y) {
 		this.set('cy', y);
@@ -36913,7 +36920,7 @@ ludo.canvas.Circle = new Class({
 	 * Return current center Y
 	 * @function getCy
 	 * @return {String|Number} cy
-	 * @memberof ludo.canvas.Circle.prototype
+	 * @memberof ludo.svg.Circle.prototype
 	 */
 	getCy:function () {
 		return this.el.cy.animVal.value;
@@ -36923,7 +36930,7 @@ ludo.canvas.Circle = new Class({
 	 * Return position on canvas
 	 * @function getPosition()
 	 * @return {Object} x and y
-	 * @memberof ludo.canvas.Circle.prototype
+	 * @memberof ludo.svg.Circle.prototype
 	 */
 	getPosition:function(){
 		var translate = this.getTranslate();
@@ -36938,7 +36945,7 @@ ludo.canvas.Circle = new Class({
 	 * Returns diameter x diameter
 	 * @function getSize
 	 * @returns {{x: number, y: number}}
-	 * @memberof ludo.canvas.Circle.prototype
+	 * @memberof ludo.svg.Circle.prototype
      */
 	getSize:function(){
 		var r = this.getRadius();
@@ -36947,19 +36954,19 @@ ludo.canvas.Circle = new Class({
 			y: r*2
 		}
 	}
-});/* ../ludojs/src/canvas/polyline.js */
+});/* ../ludojs/src/svg/polyline.js */
 /**
  Class for drawing polylines.
  @namespace ludo.canvas
- @class ludo.canvas.Polyline
+ @class ludo.svg.Polyline
  @augments canvas.NamedNode
  @param {String} points
  @param {canvas.NodeConfig} config
  @example
- 	var polyline = new ludo.canvas.Polyline('20,20 40,25 60,40 80,120 120,140 200,180');
+ 	var polyline = new ludo.svg.Polyline('20,20 40,25 60,40 80,120 120,140 200,180');
  */
-ludo.canvas.Polyline = new Class({
-	Extends: ludo.canvas.NamedNode,
+ludo.svg.Polyline = new Class({
+	Extends: ludo.svg.NamedNode,
 	tagName : 'polyline',
 	pointString : '',
 	pointArray : undefined,
@@ -36978,7 +36985,7 @@ ludo.canvas.Polyline = new Class({
 	 * @function getPoint
 	 * @param {Number} index
 	 * @return {Object|undefined} x and y
-	 * @memberof ludo.canvas.Polyline.prototype
+	 * @memberof ludo.svg.Polyline.prototype
 	 */
 	getPoint:function(index){
 		if(this.pointArray === undefined)this.buildPointArray();
@@ -36996,9 +37003,9 @@ ludo.canvas.Polyline = new Class({
 	 @param {Number} index
 	 @param {Number} x
 	 @param {Number} y
-	 @memberof ludo.canvas.Polyline.prototype
+	 @memberof ludo.svg.Polyline.prototype
 	 @example
-		 var polyline = new ludo.canvas.Polyline('20,20 40,25 60,40 80,120 120,140 200,180');
+		 var polyline = new ludo.svg.Polyline('20,20 40,25 60,40 80,120 120,140 200,180');
 	     polyline.setPoint(0,10,5);
 	     polyline.setPoint(1,120,40);
 	 will change the points to
@@ -37025,7 +37032,7 @@ ludo.canvas.Polyline = new Class({
 	 * Get size of polyline (max X - min X) and (max X - min Y)
 	 * @function getSize
 	 * @return {Object} x and y
-	 * @memberof ludo.canvas.Polyline.prototype
+	 * @memberof ludo.svg.Polyline.prototype
 	 */
 	getSize:function(){
 		if(this.size === undefined){
@@ -37041,7 +37048,7 @@ ludo.canvas.Polyline = new Class({
 	 * Get position of polyline, min X and min Y)
 	 * @function getPosition
 	 * @return {Object} x and y
-	 * @memberof ludo.canvas.Polyline.prototype
+	 * @memberof ludo.svg.Polyline.prototype
 	 */
 	getPosition:function(){
 		if(this.position === undefined){
@@ -37070,41 +37077,41 @@ ludo.canvas.Polyline = new Class({
 			maxX: maxX, maxY: maxY
 		}
 	}
-});/* ../ludojs/src/canvas/polygon.js */
+});/* ../ludojs/src/svg/polygon.js */
 /**
  Class for drawing polygons.
  @namespace ludo.canvas
- @class ludo.canvas.Polygon
+ @class ludo.svg.Polygon
  @augments canvas.Polyline
  @param {String} points
  @param {canvas.NodeConfig} config
  @example
- 	var polyline = new ludo.canvas.Polygon('20,20 40,25 60,40 80,120 120,140 200,180');
+ 	var polyline = new ludo.svg.Polygon('20,20 40,25 60,40 80,120 120,140 200,180');
  */
-ludo.canvas.Polygon = new Class({
-	Extends: ludo.canvas.Polyline,
+ludo.svg.Polygon = new Class({
+	Extends: ludo.svg.Polyline,
 	tagName: 'polygon'
-});/* ../ludojs/src/canvas/ellipse.js */
+});/* ../ludojs/src/svg/ellipse.js */
 /**
  Class for drawing ellipses.
  @namespace ludo.canvas
- @class ludo.canvas.Ellipse
- @augments ludo.canvas.NamedNode
+ @class ludo.svg.Ellipse
+ @augments ludo.svg.NamedNode
  @param {Object} coordinates
- @param {ludo.canvas.NodeConfig} config
- @memberof ludo.canvas.Ellipse.prototype
+ @param {ludo.svg.NodeConfig} config
+ @memberof ludo.svg.Ellipse.prototype
  @example
- 	var ellipse = new ludo.canvas.Ellipse({ cx:500, cy:425, rx:250, ry:200 }, { paint: paintObject } );
+ 	var ellipse = new ludo.svg.Ellipse({ cx:500, cy:425, rx:250, ry:200 }, { paint: paintObject } );
  */
-ludo.canvas.Ellipse = new Class({
-	Extends:ludo.canvas.NamedNode,
+ludo.svg.Ellipse = new Class({
+	Extends:ludo.svg.NamedNode,
 	tagName:'ellipse',
 
 	/**
 	 * Set new x-radius
 	 * @function setRadiusX
 	 * @param {Number} radius
-	 * @memberof ludo.canvas.Ellipse.prototype
+	 * @memberof ludo.svg.Ellipse.prototype
 	 */
 	setRadiusX:function (radius) {
 		this.set('rx', radius);
@@ -37114,7 +37121,7 @@ ludo.canvas.Ellipse = new Class({
 	 * Set new y-radius
 	 * @function setRadiusY
 	 * @param {Number} radius
-	 * @memberof ludo.canvas.Ellipse.prototype
+	 * @memberof ludo.svg.Ellipse.prototype
 	 */
 	setRadiusY:function (radius) {
 		this.set('ry', radius);
@@ -37124,7 +37131,7 @@ ludo.canvas.Ellipse = new Class({
 	 * Return curent radius
 	 * @function getRadiusX
 	 * @return {String|Number} x-radius
-	 * @memberof ludo.canvas.Ellipse.prototype
+	 * @memberof ludo.svg.Ellipse.prototype
 	 */
 	getRadiusX:function () {
 		return this.el.rx.animVal.value;
@@ -37134,7 +37141,7 @@ ludo.canvas.Ellipse = new Class({
 	 * Return curent y-radius
 	 * @function getRadiusY
 	 * @return {String|Number} y-radius
-	 * @memberof ludo.canvas.Ellipse.prototype
+	 * @memberof ludo.svg.Ellipse.prototype
 	 */
 	getRadiusY:function () {
 		return this.el.ry.animVal.value;
@@ -37144,7 +37151,7 @@ ludo.canvas.Ellipse = new Class({
 	 * Set new center X
 	 * @function setCx
 	 * @param {Number} x
-	 * @memberof ludo.canvas.Ellipse.prototype
+	 * @memberof ludo.svg.Ellipse.prototype
 	 */
 	setCx:function (x) {
 		this.set('cx', x);
@@ -37153,7 +37160,7 @@ ludo.canvas.Ellipse = new Class({
 	 * Return current center X
 	 * @function getX
 	 * @return {String|Number} cx
-	 * @memberof ludo.canvas.Ellipse.prototype
+	 * @memberof ludo.svg.Ellipse.prototype
 	 */
 	getCx:function () {
 		return this.el.cx.animVal.value;
@@ -37163,7 +37170,7 @@ ludo.canvas.Ellipse = new Class({
 	 * Set new center Y
 	 * @function setCy
 	 * @param {Number} y
-	 * @memberof ludo.canvas.Ellipse.prototype
+	 * @memberof ludo.svg.Ellipse.prototype
 	 */
 	setCy:function (y) {
 		this.set('cy', y);
@@ -37172,7 +37179,7 @@ ludo.canvas.Ellipse = new Class({
 	 * Return current center Y
 	 * @function getCy
 	 * @return {String|Number} cy
-	 * @memberof ludo.canvas.Ellipse.prototype
+	 * @memberof ludo.svg.Ellipse.prototype
 	 */
 	getCy:function () {
 		return this.el.cy.animVal.value;
@@ -37182,7 +37189,7 @@ ludo.canvas.Ellipse = new Class({
 	 * Return position on canvas
 	 * @function getPosition()
 	 * @return {Object} x and y
-	 * @memberof ludo.canvas.Ellipse.prototype
+	 * @memberof ludo.svg.Ellipse.prototype
 	 */
 	getPosition:function () {
 		var translate = this.getTranslate();
@@ -37196,9 +37203,9 @@ ludo.canvas.Ellipse = new Class({
 	 Return size of ellipse
 	 @function getSize
 	 @return {Object} x and y
-	 @memberof ludo.canvas.Ellipse.prototype
+	 @memberof ludo.svg.Ellipse.prototype
 	 @example
-	 	var ellipse = new ludo.canvas.Ellipse({ cx:500, cy:425, rx:250, ry:200 });
+	 	var ellipse = new ludo.svg.Ellipse({ cx:500, cy:425, rx:250, ry:200 });
 	 	var size = ellipse.geSize(); // will return {x: 500, y: 400}
 	 which is rx*2 and ry*2
 
@@ -37209,17 +37216,17 @@ ludo.canvas.Ellipse = new Class({
 			y:this.getRadiusY() * 2
 		}
 	}
-});/* ../ludojs/src/canvas/text.js */
+});/* ../ludojs/src/svg/text.js */
 /**
- * @class ludo.canvas.Text
+ * @class ludo.svg.Text
  * @param {String} text
  * @param {Object} config
  * @param {Object} config.css layout properties
  * @param {Number} config.x left position
  * @param {Number} config.y top position
  */
-ludo.canvas.Text = new Class({
-	Extends: ludo.canvas.NamedNode,
+ludo.svg.Text = new Class({
+	Extends: ludo.svg.NamedNode,
 	tagName : 'text',
 
 	initialize:function(text, attributes){
@@ -37236,27 +37243,27 @@ ludo.canvas.Text = new Class({
 	/**
 	 * Set text anchor to start, middle, end or inherit
 	 * @function textAnchor
-	 * @memberof ludo.canvas.Text
+	 * @memberof ludo.svg.Text
 	 * @param anchor
      */
 	textAnchor:function(anchor){
 		this.set("text-anchor", anchor);
 	}
-});/* ../ludojs/src/canvas/filter.js */
+});/* ../ludojs/src/svg/filter.js */
 /**
  Class for SVG filter effects, example Drop Shadow
  Note! Filters will produce raster graphic, not Vector.
  Note! Filters are not supported by IE 9 and lower. (Support is added to IE10).
  Ref: http://caniuse.com/svg-filters
  @namespace ludo.canvas
- @class ludo.canvas.Filter
+ @class ludo.svg.Filter
  @augments canvas.NamedNode
  @param {Object} attributes
  @param {Object} config options
  *
  */
-ludo.canvas.Filter = new Class({
-	Extends:ludo.canvas.NamedNode,
+ludo.svg.Filter = new Class({
+	Extends:ludo.svg.NamedNode,
 	tagName:'filter',
 	mergeTags:{},
 	mergeTagsOrder : [
@@ -37282,7 +37289,7 @@ ludo.canvas.Filter = new Class({
 	 Set drop shadow
 	 @function setDropShadow
 	 @param {Object} properties
-	 @memberof ludo.canvas.Filter.prototype
+	 @memberof ludo.svg.Filter.prototype
 	 @example
 	 	filter.setDropShadow({
 	 		x: 2, y: 2, // Offset
@@ -37313,7 +37320,7 @@ ludo.canvas.Filter = new Class({
 			n = {};
 			var keys = this.effectNodes[effect];
 			for(var i=0;i<keys.length;i++){
-				n[keys[i]] = new ludo.canvas.Node(keys[i]);
+				n[keys[i]] = new ludo.svg.Node(keys[i]);
 				this.append(n[keys[i]]);
 			}
 			this.addFeMergeNode('SourceGraphic');
@@ -37336,7 +37343,7 @@ ludo.canvas.Filter = new Class({
 	mergeTag:undefined,
 	getMergeTag:function () {
 		if (this.mergeTag === undefined) {
-			this.mergeTag = new ludo.canvas.Node('feMerge');
+			this.mergeTag = new ludo.svg.Node('feMerge');
 			this.append(this.mergeTag);
 
 		}
@@ -37348,55 +37355,55 @@ ludo.canvas.Filter = new Class({
 	 * @function addFeMergeNode
 	 * @param {String} key
 	 * @return {canvas.Node} feMergeNode
-	 * @memberof ludo.canvas.Filter.prototype
+	 * @memberof ludo.svg.Filter.prototype
 	 */
 	addFeMergeNode:function (key) {
 		if (this.mergeTags[key] === undefined) {
-			this.mergeTags[key] = new ludo.canvas.Node('feMergeNode', { "in":key });
+			this.mergeTags[key] = new ludo.svg.Node('feMergeNode', { "in":key });
 			this.getMergeTag().append(this.mergeTags[key]);
 			this.updateMergeTag();
 		}
 		return this.mergeTags[key];
 	}
-});/* ../ludojs/src/canvas/mask.js */
+});/* ../ludojs/src/svg/mask.js */
 /**
  Class for masking of SVG DOM nodes
  @namespace ludo.canvas
- @class ludo.canvas.Mask
+ @class ludo.svg.Mask
  
  @param {Object} properties
  @example
-	 var mask = new ludo.canvas.Mask({ id : 'Mask' });
-	 canvas.appendDef(mask); // canvas is a ludo.canvas.Canvas object
+	 var mask = new ludo.svg.Mask({ id : 'Mask' });
+	 canvas.appendDef(mask); // canvas is a ludo.svg.Canvas object
 
-	 var gr = new ludo.canvas.Gradient({
+	 var gr = new ludo.svg.Gradient({
 		 id:'gradient'
 	 });
 	 gr.addStop('0%', 'white', 0);
 	 gr.addStop('100%', 'white', 1);
  	 canvas.append(gr);
 
-	 var rect2 = new ludo.canvas.Rect({ x:0,y:0, width:500,height:500, fill:gr });
+	 var rect2 = new ludo.svg.Rect({ x:0,y:0, width:500,height:500, fill:gr });
 	 mask.append(rect2); // Append rect to mask
 	 // create ellipsis with reference to mask
- 	 var ellipse = new ludo.canvas.Ellipse({ cx:100, cy:125, rx:50, ry:70,mask:mask });
+ 	 var ellipse = new ludo.svg.Ellipse({ cx:100, cy:125, rx:50, ry:70,mask:mask });
 
  */
-ludo.canvas.Mask = new Class({
-	Extends: ludo.canvas.NamedNode,
+ludo.svg.Mask = new Class({
+	Extends: ludo.svg.NamedNode,
 	tagName : 'mask'
-});/* ../ludojs/src/canvas/curtain.js */
+});/* ../ludojs/src/svg/curtain.js */
 /**
  Special animation class for SVG elements
  @namespace ludo.canvas
- @class ludo.canvas.Curtain
+ @class ludo.svg.Curtain
  
- @param {ludo.canvas.Node} node
+ @param {ludo.svg.Node} node
  @example
 	node.curtain().open('LeftRight');
  */
-ludo.canvas.Curtain = new Class({
-	Extends:ludo.canvas.Node,
+ludo.svg.Curtain = new Class({
+	Extends:ludo.svg.Node,
 	applyTo:undefined,
 	nodes:{},
 	bb:undefined,
@@ -37407,7 +37414,7 @@ ludo.canvas.Curtain = new Class({
 		this.parent('clipPath');
 		this.applyTo = node;
 
-		var g = new ludo.canvas.Node('g');
+		var g = new ludo.svg.Node('g');
 		g.append(this);
 		this.applyTo.getCanvas().appendChild(g.getEl());
 
@@ -37419,7 +37426,7 @@ ludo.canvas.Curtain = new Class({
 	 * @param {String} direction (LeftRight, TopBottom, BottomTop or RightLeft),
 	 * @param {Number} duration in seconds. Default: 1
 	 * @param {Number} fps (Frames per second). default: 33
-	 * @memberof ludo.canvas.Curtain.prototype
+	 * @memberof ludo.svg.Curtain.prototype
 	 */
 	open:function (direction, duration, fps) {
 		this.onStart();
@@ -37434,7 +37441,7 @@ ludo.canvas.Curtain = new Class({
 	 * @param {String} direction (LeftRight, TopBottom, BottomTop or RightLeft),
 	 * @param {Number} duration in seconds. Default: 1
 	 * @param {Number} fps (Frames per second). Default: 33
-	 *  @memberof ludo.canvas.Curtain.prototype
+	 *  @memberof ludo.svg.Curtain.prototype
 	 */
 	close:function (direction, duration, fps) {
 		this.onStart();
@@ -37536,7 +37543,7 @@ ludo.canvas.Curtain = new Class({
 
 	rect:function () {
 		if (this.nodes['rect'] === undefined) {
-			this.nodes['rect'] = new ludo.canvas.Rect({
+			this.nodes['rect'] = new ludo.svg.Rect({
 				x:this.bb.x, y:this.bb.y,
 				width:this.bb.width,
 				height:this.bb.height
@@ -37546,19 +37553,19 @@ ludo.canvas.Curtain = new Class({
 		return this.nodes['rect'];
 	}
 
-});/* ../ludojs/src/canvas/animation.js */
+});/* ../ludojs/src/svg/animation.js */
 /**
  * Animation of SVG DOM Nodes
- * @class ludo.canvas.Animation
+ * @class ludo.svg.Animation
  * @example
  * circle.animate({
  *      cx : 100, cy: 100, r: 10
  * }, 200,
- * ludo.canvas.easing.outCubic,
+ * ludo.svg.easing.outCubic,
  * function(){ console.log('finished') }
  * );
  */
-ludo.canvas.Animation = new Class({
+ludo.svg.Animation = new Class({
 
     animationRate: 13,
     color: undefined,
@@ -37631,7 +37638,7 @@ ludo.canvas.Animation = new Class({
         var options = animation.options;
 
         var duration = options.duration || 400;
-        var easing = options.easing || ludo.canvas.easing.inSine;
+        var easing = options.easing || ludo.svg.easing.inSine;
 
         var changes = {};
         var start = {};
@@ -37713,7 +37720,7 @@ ludo.canvas.Animation = new Class({
             if(options.validate != undefined){
                 var success = options.validate.call(this, animation.animationId, this._animationIds[animation.id]);
                 if(!success){
-                    finishedFn.call(ludo.canvasAnimation , animation);
+                    finishedFn.call(ludo.svgAnimation , animation);
                     return;
                 }
             }
@@ -37801,7 +37808,7 @@ ludo.canvas.Animation = new Class({
                     options.complete.call(node);
                 }
 
-                finishedFn.call(ludo.canvasAnimation , animation);
+                finishedFn.call(ludo.svgAnimation , animation);
             }
 
             if(this.benchmark){
@@ -37830,9 +37837,9 @@ ludo.canvas.Animation = new Class({
 
 });
 
-ludo.canvasAnimation = new ludo.canvas.Animation();
+ludo.svgAnimation = new ludo.svg.Animation();
 
-ludo.canvas.easing = {
+ludo.svg.easing = {
 
     /**
      *
@@ -37986,17 +37993,17 @@ ludo.canvas.easing = {
 
     bounce: function (t, b, c, d) {
         var progress = t / d;
-        progress = 1 - ludo.canvas.easing._bounce(1 - progress);
+        progress = 1 - ludo.svg.easing._bounce(1 - progress);
         return c * progress + b;
     },
 
     bow:function(t,b,c,d){
-        var progress = ludo.canvas.easing._back(t/d, 1.5);
+        var progress = ludo.svg.easing._back(t/d, 1.5);
         return c * progress + b;
     },
 
     elastic:function(t,b,c,d){
-        var progress = ludo.canvas.easing._elastic(t/d, 1.5);
+        var progress = ludo.svg.easing._elastic(t/d, 1.5);
         return c * progress + b;
     },
 
@@ -38020,8 +38027,8 @@ ludo.canvas.easing = {
 
 
 };
-/* ../ludojs/src/canvas/matrix.js */
-ludo.canvas.Matrix = new Class({
+/* ../ludojs/src/svg/matrix.js */
+ludo.svg.Matrix = new Class({
 
     a: 1, b: 0, c: 0, d: 1, e: 0, f: 0,
 
@@ -38117,7 +38124,7 @@ ludo.canvas.Matrix = new Class({
 
     getSVGMatrix: function () {
         if (this.matrix == undefined) {
-            this.matrix = ludo.canvas.SVGElement.createSVGMatrix();
+            this.matrix = ludo.svg.SVGElement.createSVGMatrix();
         }
         return this.matrix;
     },
@@ -38145,7 +38152,7 @@ ludo.canvas.Matrix = new Class({
     }
 });
 
-ludo.canvas.setGlobalMatrix = function (canvas) {
-    ludo.canvas.SVGElement = canvas;
-    ludo.canvas.globalMatrix = canvas.createSVGMatrix();
+ludo.svg.setGlobalMatrix = function (canvas) {
+    ludo.svg.SVGElement = canvas;
+    ludo.svg.globalMatrix = canvas.createSVGMatrix();
 };

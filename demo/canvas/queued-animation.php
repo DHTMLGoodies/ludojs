@@ -45,7 +45,7 @@ require_once("../includes/demo-header.php");
                 r: 20
             }, {
                 duration: 1200,
-                easing:ludo.canvas.easing.bounce
+                easing:ludo.svg.easing.bounce
             }
         ).animate({
                 translate: ['-100'],

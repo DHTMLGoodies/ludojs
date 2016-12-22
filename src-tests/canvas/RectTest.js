@@ -1,7 +1,7 @@
 TestCase("RectTest", {
 	"test should be able to create a rectangle": function(){
 		// given
-		var rect = new ludo.canvas.Rect({ x:100,y:120, width:200,height:300, rx:5, ry:7 });
+		var rect = new ludo.svg.Rect({ x:100,y:120, width:200,height:300, rx:5, ry:7 });
 
 		// then
 		assertEquals(100, rect.getX());
@@ -14,7 +14,7 @@ TestCase("RectTest", {
 
 	"test should be able to update coordinates": function(){
 		// given
-		var rect = new ludo.canvas.Rect({ x:100,y:120, width:200,height:300, rx:5, ry:7 });
+		var rect = new ludo.svg.Rect({ x:100,y:120, width:200,height:300, rx:5, ry:7 });
 
 		// when
 		rect.setX(200);

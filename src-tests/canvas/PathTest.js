@@ -1,7 +1,7 @@
 TestCase("PathTest", {
 	"test should be able to create path": function(){
 		var points = 'M150 0 L75 200 L225 200 Z';
-		var path = new ludo.canvas.Path(points);
+		var path = new ludo.svg.Path(points);
 
 		// when
 		var expected = 'M 150 0 L 75 200 L 225 200 Z';
@@ -13,7 +13,7 @@ TestCase("PathTest", {
 
 	"test should be able to get a point": function(){
 		// given
-		var path = new ludo.canvas.Path('M150 0 L75 200 L225 200 Z');
+		var path = new ludo.svg.Path('M150 0 L75 200 L225 200 Z');
 
 		// when
 		var point = path.getPoint(0);
@@ -28,7 +28,7 @@ TestCase("PathTest", {
 
 	"test should be able to update a point": function(){
 		// given
-		var path = new ludo.canvas.Path('M150 0 L75 200 L225 200 Z');
+		var path = new ludo.svg.Path('M150 0 L75 200 L225 200 Z');
 
 		// when
 		path.setPoint(0, 140, 10);
@@ -47,7 +47,7 @@ TestCase("PathTest", {
 
 	"test should be able to get size": function(){
 		// given
-		var path = new ludo.canvas.Path('M150 0 L75 200 L225 210 Z');
+		var path = new ludo.svg.Path('M150 0 L75 200 L225 210 Z');
 		// when
 		var size = path.getSize();
 
@@ -58,7 +58,7 @@ TestCase("PathTest", {
 
 	"test should be able to get position": function(){
 		// given
-		var path = new ludo.canvas.Path('M150 0 L75 200 L225 210 Z');
+		var path = new ludo.svg.Path('M150 0 L75 200 L225 210 Z');
 		// when
 		var pos = path.getPosition();
 

@@ -24,28 +24,28 @@ $rnd = date("YmdHis");
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/util/geometry.js?rnd=<?php echo $rnd; ?>"></script>
 
 
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/animation.js?rnd=<?php echo $rnd; ?>"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/engine.js?rnd=<?php echo $rnd; ?>"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/view.js?rnd=<?php echo $rnd; ?>"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/event-manager.js?rnd=<?php echo $rnd; ?>"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/node.js?rnd=<?php echo $rnd; ?>"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/named-node.js?rnd=<?php echo $rnd; ?>"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/canvas.js?rnd=<?php echo $rnd; ?>"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/filter.js?rnd=<?php echo $rnd; ?>"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/gradient.js?rnd=<?php echo $rnd; ?>"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/mask.js?rnd=<?php echo $rnd; ?>"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/polyline.js?rnd=<?php echo $rnd; ?>"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/polygon.js?rnd=<?php echo $rnd; ?>"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/paint.js?rnd=<?php echo $rnd; ?>"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/stop.js?rnd=<?php echo $rnd; ?>"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/rect.js?rnd=<?php echo $rnd; ?>"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/circle.js?rnd=<?php echo $rnd; ?>"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/path.js?rnd=<?php echo $rnd; ?>"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/group.js?rnd=<?php echo $rnd; ?>"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/text-box.js?rnd=<?php echo $rnd; ?>"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/effect.js?rnd=<?php echo $rnd; ?>"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/text.js?rnd=<?php echo $rnd; ?>"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/matrix.js?rnd=<?php echo $rnd; ?>"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/svg/animation.js?rnd=<?php echo $rnd; ?>"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/svg/engine.js?rnd=<?php echo $rnd; ?>"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/svg/view.js?rnd=<?php echo $rnd; ?>"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/svg/event-manager.js?rnd=<?php echo $rnd; ?>"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/svg/node.js?rnd=<?php echo $rnd; ?>"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/svg/named-node.js?rnd=<?php echo $rnd; ?>"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/svg/canvas.js?rnd=<?php echo $rnd; ?>"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/svg/filter.js?rnd=<?php echo $rnd; ?>"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/svg/gradient.js?rnd=<?php echo $rnd; ?>"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/svg/mask.js?rnd=<?php echo $rnd; ?>"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/svg/polyline.js?rnd=<?php echo $rnd; ?>"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/svg/polygon.js?rnd=<?php echo $rnd; ?>"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/svg/paint.js?rnd=<?php echo $rnd; ?>"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/svg/stop.js?rnd=<?php echo $rnd; ?>"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/svg/rect.js?rnd=<?php echo $rnd; ?>"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/svg/circle.js?rnd=<?php echo $rnd; ?>"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/svg/path.js?rnd=<?php echo $rnd; ?>"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/svg/group.js?rnd=<?php echo $rnd; ?>"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/svg/text-box.js?rnd=<?php echo $rnd; ?>"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/svg/effect.js?rnd=<?php echo $rnd; ?>"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/svg/text.js?rnd=<?php echo $rnd; ?>"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/svg/matrix.js?rnd=<?php echo $rnd; ?>"></script>
 
 
 
@@ -82,7 +82,7 @@ $rnd = date("YmdHis");
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/effect/drag-drop.js?rnd=<?php echo $rnd; ?>"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/effect/resize.js?rnd=<?php echo $rnd; ?>"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/effect.js?rnd=<?php echo $rnd; ?>"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/canvas/drag.js?rnd=<?php echo $rnd; ?>"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/svg/drag.js?rnd=<?php echo $rnd; ?>"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/tpl/parser.js?rnd=<?php echo $rnd; ?>"></script>
 
 

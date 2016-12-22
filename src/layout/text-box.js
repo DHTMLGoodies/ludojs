@@ -1,5 +1,5 @@
 ludo.layout.TextBox = new Class({
-    Extends: ludo.canvas.Canvas,
+    Extends: ludo.svg.Canvas,
     rotation: 270,
     text: undefined,
     className: undefined,
@@ -79,12 +79,12 @@ ludo.layout.TextBox = new Class({
 
     createStyles: function () {
         this.styles = this.getStyles();
-        var p = this.paint = new ludo.canvas.Paint(this.styles);
+        var p = this.paint = new ludo.svg.Paint(this.styles);
         this.appendDef(p);
     },
 
     renderText: function () {
-        var el = this.textNode = new ludo.canvas.Node('text', {
+        var el = this.textNode = new ludo.svg.Node('text', {
             x: this.x,
             y: this.y + parseInt(this.styles['font-size']),
             "class": this.paint

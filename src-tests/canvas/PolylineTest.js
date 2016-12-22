@@ -1,7 +1,7 @@
 TestCase("PolylineTest", {
 	"test should be able to create polyline": function(){
 		var points = '20,20 40,25 60,40 80,120 120,140 200,180';
-		var polyline = new ludo.canvas.Polyline(points);
+		var polyline = new ludo.svg.Polyline(points);
 
 		// then
 		assertEquals(points, polyline.get('points'));
@@ -9,7 +9,7 @@ TestCase("PolylineTest", {
 
 	"test should be able to retrieve specific points": function(){
 		// given
-		var polyline = new ludo.canvas.Polyline('20,20 40,25 60,40 80,120 120,140 200,180');
+		var polyline = new ludo.svg.Polyline('20,20 40,25 60,40 80,120 120,140 200,180');
 
 		// when
 		var point = polyline.getPoint(1);
@@ -26,7 +26,7 @@ TestCase("PolylineTest", {
 
 	"test should be able to update point": function(){
 		// given
-		var polyline = new ludo.canvas.Polyline('20,20 40,25 60,40 80,120 120,140 200,180');
+		var polyline = new ludo.svg.Polyline('20,20 40,25 60,40 80,120 120,140 200,180');
 
 		// when
 		polyline.setPoint(1, 50,60);
@@ -51,7 +51,7 @@ TestCase("PolylineTest", {
 
 	"test should be able to get size": function(){
 		// given
-		var polyline = new ludo.canvas.Polyline('20,20 40,25 60,40 80,120 120,140 200,180');
+		var polyline = new ludo.svg.Polyline('20,20 40,25 60,40 80,120 120,140 200,180');
 
 		var expected = {
 			height: 180 - 20,
@@ -68,7 +68,7 @@ TestCase("PolylineTest", {
 
 	"test should be able to get position": function(){
 		// given
-		var polyline = new ludo.canvas.Polyline('40,15, 20,20 40,25 60,40 80,120 120,140 200,180');
+		var polyline = new ludo.svg.Polyline('40,15, 20,20 40,25 60,40 80,120 120,140 200,180');
 
 		// when
 		var pos = polyline.getPosition();

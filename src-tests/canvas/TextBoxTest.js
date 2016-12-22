@@ -66,7 +66,7 @@ TestCase("TestBoxTest", {
 	},
 
 	getTextBox:function(config){
-		return new ludo.canvas.TextBox(config);
+		return new ludo.svg.TextBox(config);
 	}
 
 });

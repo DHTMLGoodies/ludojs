@@ -31,13 +31,13 @@ ludo.view.Collapsed = new Class({
 
 	renderTitle:function(){
 		this.el.style.display='';
-		var c = new ludo.canvas.Canvas({
+		var c = new ludo.svg.Canvas({
 			renderTo:this.el,
 			width:25,
 			height:200
 		});
 
-		var paint = new ludo.canvas.Paint({
+		var paint = new ludo.svg.Paint({
 			'font-size' : this.titleEl.getStyle('font-size'),
 			'font-family' : this.titleEl.getStyle('font-family'),
 			'font-weight' : this.titleEl.getStyle('font-weight'),
@@ -47,7 +47,7 @@ ludo.view.Collapsed = new Class({
 		var x = 4;
 		var y = 4;
 
-		var text = new ludo.canvas.Node('text', { x : x, y: y, height:12, "class": paint});
+		var text = new ludo.svg.Node('text', { x : x, y: y, height:12, "class": paint});
 		c.append(text);
 		text.text(this.component.title);
 		text.set('transform', this.getTransform(270, text.el));

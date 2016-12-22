@@ -270,15 +270,15 @@ ludo.calendar.TimePicker = new Class({
             x: this.area.x, y: this.area.y, size: this.area.size
         };
 
-        this.clipPath = new ludo.canvas.Node('clipPath', {});
+        this.clipPath = new ludo.svg.Node('clipPath', {});
         canvas.append(this.clipPath);
-        this.clipCircle = new ludo.canvas.Circle({
+        this.clipCircle = new ludo.svg.Circle({
             cx: this.origo.x, cy: this.origo.y, r: 5
         });
         this.clipPath.append(this.clipCircle);
 
 
-        this.clockBackground = new ludo.canvas.Circle({
+        this.clockBackground = new ludo.svg.Circle({
             cx: this.origo.x, cy: this.origo.y, r: this.area.size / 2,
             css: {
                 'fill': this.clockBackground
@@ -286,7 +286,7 @@ ludo.calendar.TimePicker = new Class({
         });
         canvas.append(this.clockBackground);
 
-        this.hourGroup = new ludo.canvas.Group({
+        this.hourGroup = new ludo.svg.Group({
             css: {
                 'fill': this.hourColor,
                 'stroke-width': 0
@@ -303,7 +303,7 @@ ludo.calendar.TimePicker = new Class({
 
         canvas.append(this.hourGroup);
 
-        this.hourGroupInner = new ludo.canvas.Group({
+        this.hourGroupInner = new ludo.svg.Group({
             css: {
                 'fill': this.hourColor,
                 'stroke-width': 0
@@ -314,7 +314,7 @@ ludo.calendar.TimePicker = new Class({
         var i;
 
         for (i = 1; i <= 12; i++) {
-            var text = new ludo.canvas.Text("" + i, {
+            var text = new ludo.svg.Text("" + i, {
                 css: styles
             });
 
@@ -330,7 +330,7 @@ ludo.calendar.TimePicker = new Class({
 
         for (i = 13; i <= 24; i++) {
             var txt = i == 24 ? "00" : "" + i;
-            text = new ludo.canvas.Text(txt, {
+            text = new ludo.svg.Text(txt, {
                 css: styles
             });
             text.set("text-anchor", "middle");
@@ -342,7 +342,7 @@ ludo.calendar.TimePicker = new Class({
             this.hourGroupInner.append(text);
         }
 
-        this.centerDot = new ludo.canvas.Circle({
+        this.centerDot = new ludo.svg.Circle({
             cx: this.origo.x, cy: this.origo.y,
             r: 2,
             css: {
@@ -350,7 +350,7 @@ ludo.calendar.TimePicker = new Class({
             }
         });
 
-        this.needle = new ludo.canvas.Node('line',
+        this.needle = new ludo.svg.Node('line',
             {
                 x1: this.origo.x, y1: this.origo.y,
                 x2: 100, y2: 100,
@@ -364,7 +364,7 @@ ludo.calendar.TimePicker = new Class({
         canvas.append(this.needle);
 
 
-        this.minuteGroup = new ludo.canvas.Group({
+        this.minuteGroup = new ludo.svg.Group({
             css: {
                 'fill': this.minuteColor,
                 'stroke-width': 0
@@ -375,7 +375,7 @@ ludo.calendar.TimePicker = new Class({
         for (i = 0; i < 60; i += 5) {
             var m = "" + i;
             if (m.length == "1")m = "0" + m;
-            text = new ludo.canvas.Text(m, {
+            text = new ludo.svg.Text(m, {
                 css: styles
             });
             text.set("text-anchor", "middle");
@@ -387,7 +387,7 @@ ludo.calendar.TimePicker = new Class({
             this.minuteGroup.append(text);
         }
 
-        this.needleCircle = new ludo.canvas.Circle({
+        this.needleCircle = new ludo.svg.Circle({
             cx: this.origo.x, cy: this.origo.y, r: 10,
             css: {
                 'fill': this.handColor
@@ -395,7 +395,7 @@ ludo.calendar.TimePicker = new Class({
         });
         canvas.append(this.needleCircle);
 
-        this.needleCircleInnerMinutes = new ludo.canvas.Circle({
+        this.needleCircleInnerMinutes = new ludo.svg.Circle({
             cx: this.origo.x, cy: this.origo.y, r: 1,
             css: {
                 fill: this.minuteDotColor
@@ -405,7 +405,7 @@ ludo.calendar.TimePicker = new Class({
 
 
 
-        this.needleText = new ludo.canvas.Text("", {
+        this.needleText = new ludo.svg.Text("", {
             'fill': this.handTextColor,
             css: styles
 

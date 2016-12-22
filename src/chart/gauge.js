@@ -16,7 +16,7 @@ ludo.chart.Gauge = new Class({
     },
 
     render:function () {
-        this.circle = new ludo.canvas.Circle(this.getCircleAttributes());
+        this.circle = new ludo.svg.Circle(this.getCircleAttributes());
         this.circle.css({
             'stroke':'#000',
             'fill':'#f2f2f2',

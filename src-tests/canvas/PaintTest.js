@@ -3,7 +3,7 @@ TestCase("PaintTest", {
 	"test should be able to set styles":function () {
 		// given
 
-		var paint = new ludo.canvas.Paint({
+		var paint = new ludo.svg.Paint({
 			'stroke-opacity':.5
 		});
 
@@ -21,7 +21,7 @@ TestCase("PaintTest", {
 	},
 
 	"test should be able to update a style":function () {
-		var paint = new ludo.canvas.Paint({
+		var paint = new ludo.svg.Paint({
 			'stroke-opacity':0.5,
 			'fill-opacity':1
 		});
@@ -38,7 +38,7 @@ TestCase("PaintTest", {
 
 
 	"test should be able to use standard css styles":function () {
-		var paint = new ludo.canvas.Paint({
+		var paint = new ludo.svg.Paint({
 			'color':'#FFF'
 		});
 		// then
@@ -48,7 +48,7 @@ TestCase("PaintTest", {
 
 	"test should be able to use gradient node as style value":function () {
 		// given
-		var gradient = new ludo.canvas.Gradient({
+		var gradient = new ludo.svg.Gradient({
 			id:'myGradient'
 		});
 		gradient.addStop('0%', 'red');
@@ -56,7 +56,7 @@ TestCase("PaintTest", {
 
 		assertEquals('myGradient', gradient.id);
 		// when
-		var paint = new ludo.canvas.Paint({
+		var paint = new ludo.svg.Paint({
 			'fill':gradient
 
 		});

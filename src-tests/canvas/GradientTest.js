@@ -2,14 +2,14 @@ TestCase("GradientTest", {
 
 	"test should be able to create gradient": function(){
 		// given
-		var gradient = new ludo.canvas.Gradient();
+		var gradient = new ludo.svg.Gradient();
 		// then
 		assertEquals('linearGradient', gradient.getEl().tagName);
 	},
 
 	"test should be able to add stops": function(){
 		// given
-		var gradient = new ludo.canvas.Gradient();
+		var gradient = new ludo.svg.Gradient();
 		gradient.addStop('0%', '#000000', 1);
 		gradient.addStop('100%', '#FFFFFF', 1);
 
@@ -20,7 +20,7 @@ TestCase("GradientTest", {
 
 	"test should have correct stop points": function(){
 		// given
-		var gradient = new ludo.canvas.Gradient();
+		var gradient = new ludo.svg.Gradient();
 		gradient.addStop('0%', '#000000', 1);
 		gradient.addStop('100%', '#FFFFFF', 1);
 
@@ -32,7 +32,7 @@ TestCase("GradientTest", {
 
 	"test should be able to get stop node": function(){
 		// given
-		var gradient = new ludo.canvas.Gradient();
+		var gradient = new ludo.svg.Gradient();
 		gradient.addStop('0%', '#000000', 1);
 		gradient.addStop('100%', '#FFFFFF', 1);
 
@@ -50,7 +50,7 @@ TestCase("GradientTest", {
 
 	"test should be able to update attributes of stop tags": function(){
 		// given
-		var gradient = new ludo.canvas.Gradient();
+		var gradient = new ludo.svg.Gradient();
 		gradient.addStop('0%', '#000000', 1);
 		gradient.addStop('100%', '#FFFFFF', 1);
 

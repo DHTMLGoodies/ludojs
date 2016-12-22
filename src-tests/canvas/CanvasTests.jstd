@@ -2,23 +2,23 @@ load:
   - ../../jquery/jquery-3.1.0.min.js
   - ../../js/ludojs.js
   - ../../js/ludojs.js
-  - ../../src/canvas/engine.js
-  - ../../src/canvas/curtain.js
-  - ../../src/canvas/node.js
-  - ../../src/canvas/named-node.js
-  - ../../src/canvas/view.js
-  - ../../src/canvas/canvas.js
-  - ../../src/canvas/rect.js
-  - ../../src/canvas/text-box.js
-  - ../../src/canvas/animation.js
-  - ../../src/canvas/paint.js
-  - ../../src/canvas/rect.js
-  - ../../src/canvas/circle.js
-  - ../../src/canvas/path.js
-  - ../../src/canvas/filter.js
-  - ../../src/canvas/ellipse.js
-  - ../../src/canvas/circle.js
-  - ../../src/canvas/matrix.js
+  - ../../src/svg/engine.js
+  - ../../src/svg/curtain.js
+  - ../../src/svg/node.js
+  - ../../src/svg/named-node.js
+  - ../../src/svg/view.js
+  - ../../src/svg/canvas.js
+  - ../../src/svg/rect.js
+  - ../../src/svg/text-box.js
+  - ../../src/svg/animation.js
+  - ../../src/svg/paint.js
+  - ../../src/svg/rect.js
+  - ../../src/svg/circle.js
+  - ../../src/svg/path.js
+  - ../../src/svg/filter.js
+  - ../../src/svg/ellipse.js
+  - ../../src/svg/circle.js
+  - ../../src/svg/matrix.js
 
 test:
   - DraggingTest.js

@@ -106,19 +106,19 @@ ludo.chart.Tooltip = new Class({
     },
 
     createDOM: function () {
-        this.node = new ludo.canvas.Node('g');
+        this.node = new ludo.svg.Node('g');
         this.getParent().getCanvas().append(this.node);
         this.node.hide();
         this.node.toFront.delay(50, this.node);
 
-        this.rect = new ludo.canvas.Path();
+        this.rect = new ludo.svg.Path();
         this.rect.css(this.getBoxStyling());
         this.rect.set('stroke-linejoin', 'round');
         this.rect.set('stroke-linecap', 'round');
 
         this.node.append(this.rect);
 
-        this.textBox = new ludo.canvas.TextBox();
+        this.textBox = new ludo.svg.TextBox();
         this.node.append(this.textBox);
         this.textBox.getNode().setTranslate(6, 2);
         this.textBox.getNode().css(this.getTextStyles());

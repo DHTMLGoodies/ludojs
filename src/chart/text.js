@@ -46,7 +46,7 @@ ludo.chart.Text = new Class({
             this.text = this.getDataSource().getText(this);
         }
         
-        this.n = new ludo.canvas.Text(this.text, {});
+        this.n = new ludo.svg.Text(this.text, {});
         
         this.n.attr('alignment-baseline', 'after-edge');
         

@@ -91,7 +91,7 @@ ludo.chart.PieSlice = new Class({
             return;
         }
 
-        var e = new ludo.canvas.Effect();
+        var e = new ludo.svg.Effect();
 
         var config = e.getEffectConfig(
             [this.rendering.radius,this.rendering.angle, this.rendering.radians ],

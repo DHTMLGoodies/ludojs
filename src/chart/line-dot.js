@@ -93,16 +93,16 @@ ludo.chart.LineDot = new Class({
     getNewNode: function () {
         switch (this.shape) {
             case 'circle':
-                return new ludo.canvas.Circle();
+                return new ludo.svg.Circle();
             default:
-                return new ludo.canvas.Path();
+                return new ludo.svg.Path();
         }
     },
 
 
     enter: function () {
         if (this.nodeHighlight == undefined) {
-            this.nodeHighlight = new ludo.canvas.Circle({
+            this.nodeHighlight = new ludo.svg.Circle({
                 r: this.size * 1.6, cx: 0, cy: 0
             });
             this.nodeHighlight.css({

@@ -8,10 +8,10 @@ ludo.chart.Needle = new Class({
             'stroke' : '#000',
             'line-join' : 'round'
         });
-        this.path = new ludo.canvas.Path();
+        this.path = new ludo.svg.Path();
         node.append(this.path);
 
-        var circle = new ludo.canvas.Circle({
+        var circle = new ludo.svg.Circle({
             cx:0,cy:0,r:5, fill : '#000'
         });
 

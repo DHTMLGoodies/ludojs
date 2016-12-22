@@ -6,7 +6,7 @@ ludo.chart.LabelListItem = new Class({
     createNodes:function () {
         var g = this.createNode('g');
 
-        this.bg = new ludo.canvas.Rect({
+        this.bg = new ludo.svg.Rect({
             x:0, y:0, width:10, height:10
         });
         this.bg.css('fill', '#fff');
@@ -14,14 +14,14 @@ ludo.chart.LabelListItem = new Class({
         g.append(this.bg);
 
         var colorBoxCoords = this.getCoordinatesForColorBox();
-        this.colorBox = new ludo.canvas.Rect(colorBoxCoords);
+        this.colorBox = new ludo.svg.Rect(colorBoxCoords);
         g.append(this.colorBox);
 
 
         this.colorBox.css(this.getBoxStyles());
 
 
-        this.textNode = new ludo.canvas.Text(this.getDataSource().textOf(this.record, this), {
+        this.textNode = new ludo.svg.Text(this.getDataSource().textOf(this.record, this), {
             x:colorBoxCoords.x + colorBoxCoords.width + 3, y : this.getYForText()
         });
         this.textNode.css(this.getTextStyles());

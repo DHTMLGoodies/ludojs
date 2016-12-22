@@ -4,20 +4,20 @@ $pageTitle = 'Gauge - ludoJS';
 require_once("../includes/demo-header.php");
 ?>
 
-<script type="text/javascript" src="../../src/canvas/canvas.js"></script>
-<script type="text/javascript" src="../../src/canvas/node.js"></script>
-<script type="text/javascript" src="../../src/canvas/named-node.js"></script>
+<script type="text/javascript" src="../../src/svg/canvas.js"></script>
+<script type="text/javascript" src="../../src/svg/node.js"></script>
+<script type="text/javascript" src="../../src/svg/named-node.js"></script>
 <script type="text/javascript" src="../../src/color/color.js"></script>
-<script type="text/javascript" src="../../src/canvas/group.js"></script>
-<script type="text/javascript" src="../../src/canvas/rect.js"></script>
-<script type="text/javascript" src="../../src/canvas/path.js"></script>
-<script type="text/javascript" src="../../src/canvas/engine.js"></script>
-<script type="text/javascript" src="../../src/canvas/effect.js"></script>
-<script type="text/javascript" src="../../src/canvas/group.js"></script>
-<script type="text/javascript" src="../../src/canvas/curtain.js"></script>
-<script type="text/javascript" src="../../src/canvas/animation.js"></script>
-<script type="text/javascript" src="../../src/canvas/event-manager.js"></script>
-<script type="text/javascript" src="../../src/canvas/text-box.js"></script>
+<script type="text/javascript" src="../../src/svg/group.js"></script>
+<script type="text/javascript" src="../../src/svg/rect.js"></script>
+<script type="text/javascript" src="../../src/svg/path.js"></script>
+<script type="text/javascript" src="../../src/svg/engine.js"></script>
+<script type="text/javascript" src="../../src/svg/effect.js"></script>
+<script type="text/javascript" src="../../src/svg/group.js"></script>
+<script type="text/javascript" src="../../src/svg/curtain.js"></script>
+<script type="text/javascript" src="../../src/svg/animation.js"></script>
+<script type="text/javascript" src="../../src/svg/event-manager.js"></script>
+<script type="text/javascript" src="../../src/svg/text-box.js"></script>
 
 <script type="text/javascript" src="../../src/data-source/collection.js"></script>
 <script type="text/javascript" src="../../src/chart/add-on.js"></script>
