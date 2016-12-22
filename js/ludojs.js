@@ -1,7 +1,7 @@
-/* Generated Wed Dec 21 20:32:53 CET 2016 */
+/* Generated Thu Dec 22 1:01:48 CET 2016 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.307
+ludoJS - Javascript framework, 1.1.308
 Copyright (C) 2012-2016  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -9488,6 +9488,16 @@ ludo.chart.Record = new Class({
  */
 ludo.color.Color = new Class({
 
+
+    randomColor:function(){
+        return this.rgbCode(
+            {
+                r: Math.round(Math.random() * 255),
+                g: Math.round(Math.random() * 255),
+                b: Math.round(Math.random() * 255)
+            }
+        );
+    },
     /**
      * Converting color into RGB Object. This method accepts color in HSV format({h:120,s:40,v:100})
      * and in string format(RGB), example: '#669900'
