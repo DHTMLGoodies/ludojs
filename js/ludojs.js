@@ -1,7 +1,7 @@
-/* Generated Thu Dec 22 9:59:33 CET 2016 */
+/* Generated Thu Dec 22 11:35:47 CET 2016 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.309
+ludoJS - Javascript framework, 1.1.311
 Copyright (C) 2012-2016  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -5640,6 +5640,14 @@ ludo.svg.View = new Class({
         this.node = new ludo.svg.Node(this.tag, this.attr);
     },
 
+    /**
+     * Creates a new SVG node
+     * @param {String} tag
+     * @param {Object} properties
+     * @returns {ludo.svg.Node}
+     * @example
+     * var circle = svg.$('circle', { r: 50, cx:100,cy:150, fill: '#ff0000' });
+     */
     $:function(tag, properties){
         return new ludo.svg.Node(tag, properties);
     },

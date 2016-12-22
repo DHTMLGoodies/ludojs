@@ -38,6 +38,14 @@ ludo.svg.View = new Class({
         this.node = new ludo.svg.Node(this.tag, this.attr);
     },
 
+    /**
+     * Creates a new SVG node
+     * @param {String} tag
+     * @param {Object} properties
+     * @returns {ludo.svg.Node}
+     * @example
+     * var circle = svg.$('circle', { r: 50, cx:100,cy:150, fill: '#ff0000' });
+     */
     $:function(tag, properties){
         return new ludo.svg.Node(tag, properties);
     },
