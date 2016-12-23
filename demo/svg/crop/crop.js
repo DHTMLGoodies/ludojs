@@ -268,6 +268,7 @@ svgCrop.Surface = new Class({
             this.clipPath.toFront();
         }
         this.ratio = 1;
+        this.imageNode.set('fill-opacity', 0);
         this.imageNode.removeAttr('width');
         this.imageNode.removeAttr('height');
         this.imageNode.set('xlink:href', picture);
@@ -318,6 +319,7 @@ svgCrop.Surface = new Class({
 
     imageLoaded: function () {
 
+        this.imageNode.set('fill-opacity', 1);
 
         var bbox = this.imageNode.getBBox();
         this.size = {x: 0, y: 0, width: bbox.width, height: bbox.height};
