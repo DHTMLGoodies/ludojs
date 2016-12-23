@@ -412,7 +412,7 @@ ludo.form.Element = new Class({
 
         var val = this.getFormEl() ? this.getValueOfFormEl().trim() : this.value;
         for (var i = 0; i < this.validators.length; i++) {
-            if (!this.validators[i].fn.apply(this, [val, this[this.validators[i].key]])){
+            if (!this.validators[i].fn.apply(this, [val, this[this.validators[i].key], this])){
                 return false;
             }
         }

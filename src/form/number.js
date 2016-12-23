@@ -65,6 +65,24 @@ ludo.form.Number = new Class({
         this.parent();
     },
 
+    /**
+     * Update min value
+     * @param {Number} minValue
+     * @memberof ludo.form.Number.prototype
+     */
+
+    setMinVal:function(minValue){
+        this.minValue = minValue;
+    },
+    /**
+     * Update max value
+     * @param {Number} maxValue
+     * @memberof ludo.form.Number.prototype
+     */
+    setMaxValue:function(maxValue){
+        this.maxValue = maxValue;
+    },
+
     _mouseWheel:function (e) {
         var delta = (e.originalEvent.wheelDelta || e.originalEvent.detail) / 120;
         if(delta == 0)return;
@@ -92,6 +110,6 @@ ludo.form.Number = new Class({
     },
 
     _get:function(){
-        return parseInt(this.parent());
+        return parseFloat(this.parent());
     }
 });

@@ -243,6 +243,7 @@ ludo.form.Manager = new Class({
      * @param {String|Number|Object} value
      */
     set: function (name, value) {
+
         if (this.map[name]) {
             this.map[name].val(value);
         } else if (this.hiddenFields != undefined && this.hiddenFields.indexOf(name) != -1) {
@@ -317,13 +318,14 @@ ludo.form.Manager = new Class({
         this.dirtyIds.erase(formComponent.getId());
 
         if (this.dirtyIds.length === 0) {
-
             this.fireEvent('clean');
         }
     },
 
     onChange: function (value, formComponent) {
-        this.fireEvent('change', [this, formComponent])
+        // TODO refactor into one
+        this.fireEvent('change', [formComponent.name, formComponent.val(), this, formComponent]);
+
     },
     /**
      * One form element is valid. Fire valid event if all form elements are valid
@@ -335,7 +337,6 @@ ludo.form.Manager = new Class({
     onValid: function (value, formComponent) {
         this.invalidIds.erase(formComponent.getId());
         if (this.invalidIds.length == 0) {
-
             this.fireEvent('valid', this);
         }
     },

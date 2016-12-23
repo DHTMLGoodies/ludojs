@@ -108,7 +108,6 @@ ludo.svg.Node = new Class({
      * @memberof ludo.svg.Node.prototype
      */
     on: function (event, fn) {
-
         switch (event.toLowerCase()) {
             case 'mouseenter':
                 ludo.canvasEventManager.addMouseEnter(this, fn);
@@ -121,6 +120,8 @@ ludo.svg.Node = new Class({
                 this.addEvent(event, fn);
         }
     },
+
+
     /**
      * Add event to DOM element
      * el is optional, default this.el
@@ -132,6 +133,9 @@ ludo.svg.Node = new Class({
      * @memberof ludo.svg.Node.prototype
      */
     _addEvent: (function () {
+
+
+
         if (document.addEventListener) {
             return function (ev, fn, el) {
                 if (el == undefined)el = this.el;
@@ -144,6 +148,14 @@ ludo.svg.Node = new Class({
             }
         }
     })(),
+
+
+    off:function(event, listener){
+        if (this.el.removeEventListener)
+            this.el.removeEventListener(event, listener, false);
+        else
+            this.el.detachEvent('on' + event, listener);
+    },
 
     relativePosition:function(e){
         var rect = this.el.getBoundingClientRect();
@@ -315,9 +327,10 @@ ludo.svg.Node = new Class({
         }
     },
 
-    remove: function (key) {
-        console.trace();
-        ludo.svg.remove(this.el, key);
+    remove: function () {
+        if(this.el.parentNode){
+            this.el.parentNode.removeChild(this.el);
+        }
     },
 
     /**
@@ -594,8 +607,8 @@ ludo.svg.Node = new Class({
             switch (this.tagName) {
                 case 'rect':
                     this._bbox = {
-                        x: attr.x,
-                        y: attr.y,
+                        x: attr.x || 0,
+                        y: attr.y || 0,
                         width: attr.width,
                         height: attr.height
                     };
@@ -623,6 +636,11 @@ ludo.svg.Node = new Class({
                 case 'polygon':
                     this._setBBoxOfPath('points');
                     break;
+                case 'image':
+                    var rect = this.el.getBoundingClientRect();
+                    this._bbox = {x: attr.x ||0, y: attr.y ||0 , width: rect.width, height: rect.height};
+                    break;
+
                 default:
                     this._bbox = {x: 0, y: 0, width: 0, height: 0};
 

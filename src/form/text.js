@@ -15,6 +15,7 @@
  * @param {Boolean} config.readonly True to make this form field read only. (Default: false)
  * @param {Boolean} config.selectOnFocus Automatically make the text selected on focus. Default: false
  * @param {Boolean} config.validateKeyStrokes True to run validation after every key stroke(Default: false)
+ * @param {Function} config.validator Optional validator function for the value.
  * @fires ludo.form.Text#key Fired when a key is pressed. Argument: {String} key pressed.
  * @augments ludo.form.Element
  *

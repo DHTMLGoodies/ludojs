@@ -25,6 +25,11 @@ ludo.util = {
 		return Array.prototype.slice.call(arguments);
 	},
 
+	clamp:function(num, min,max){
+		return Math.min(Math.max(num, min), max);
+
+	},
+	
 	type: function( obj ) {
 		if ( obj == null ) {
 			return String( obj );

@@ -1,7 +1,7 @@
-/* Generated Thu Dec 22 13:07:05 CET 2016 */
+/* Generated Fri Dec 23 23:53:50 CET 2016 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.312
+ludoJS - Javascript framework, 1.1.315
 Copyright (C) 2012-2016  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -2633,6 +2633,11 @@ ludo.util = {
 		return Array.prototype.slice.call(arguments);
 	},
 
+	clamp:function(num, min,max){
+		return Math.min(Math.max(num, min), max);
+
+	},
+	
 	type: function( obj ) {
 		if ( obj == null ) {
 			return String( obj );
@@ -4793,7 +4798,6 @@ ludo.svg.Node = new Class({
      * @memberof ludo.svg.Node.prototype
      */
     on: function (event, fn) {
-
         switch (event.toLowerCase()) {
             case 'mouseenter':
                 ludo.canvasEventManager.addMouseEnter(this, fn);
@@ -4806,6 +4810,8 @@ ludo.svg.Node = new Class({
                 this.addEvent(event, fn);
         }
     },
+
+
     /**
      * Add event to DOM element
      * el is optional, default this.el
@@ -4817,6 +4823,9 @@ ludo.svg.Node = new Class({
      * @memberof ludo.svg.Node.prototype
      */
     _addEvent: (function () {
+
+
+
         if (document.addEventListener) {
             return function (ev, fn, el) {
                 if (el == undefined)el = this.el;
@@ -4829,6 +4838,14 @@ ludo.svg.Node = new Class({
             }
         }
     })(),
+
+
+    off:function(event, listener){
+        if (this.el.removeEventListener)
+            this.el.removeEventListener(event, listener, false);
+        else
+            this.el.detachEvent('on' + event, listener);
+    },
 
     relativePosition:function(e){
         var rect = this.el.getBoundingClientRect();
@@ -5000,9 +5017,10 @@ ludo.svg.Node = new Class({
         }
     },
 
-    remove: function (key) {
-        console.trace();
-        ludo.svg.remove(this.el, key);
+    remove: function () {
+        if(this.el.parentNode){
+            this.el.parentNode.removeChild(this.el);
+        }
     },
 
     /**
@@ -5279,8 +5297,8 @@ ludo.svg.Node = new Class({
             switch (this.tagName) {
                 case 'rect':
                     this._bbox = {
-                        x: attr.x,
-                        y: attr.y,
+                        x: attr.x || 0,
+                        y: attr.y || 0,
                         width: attr.width,
                         height: attr.height
                     };
@@ -5308,6 +5326,11 @@ ludo.svg.Node = new Class({
                 case 'polygon':
                     this._setBBoxOfPath('points');
                     break;
+                case 'image':
+                    var rect = this.el.getBoundingClientRect();
+                    this._bbox = {x: attr.x ||0, y: attr.y ||0 , width: rect.width, height: rect.height};
+                    break;
+
                 default:
                     this._bbox = {x: 0, y: 0, width: 0, height: 0};
 
@@ -8706,52 +8729,52 @@ ludo.View = new Class({
 	 Resize View and it's children.
 	 @function resize
 	 @memberof ludo.View.prototype
-	 @param {Object} config Object with optional width and height properties. Example: { width: 200, height: 100 }
+	 @param {Object} size Object with optional width and height properties. Example: { width: 200, height: 100 }
 	 @example
 	 view.resize(
 	 { width: 200, height:200 }
 	 );
 	 */
-	resize:function (config) {
+	resize:function (size) {
 
 
 		if (this.isHidden()) {
 			return;
 		}
-		config = config || {};
+		size = size || {};
 
-		if (config.width) {
-			if (this.layout.aspectRatio && this.layout.preserveAspectRatio && config.width && !this.isMinimized()) {
-				config.height = config.width / this.layout.aspectRatio;
+		if (size.width) {
+			if (this.layout.aspectRatio && this.layout.preserveAspectRatio && size.width && !this.isMinimized()) {
+				size.height = size.width / this.layout.aspectRatio;
 			}
 			// TODO layout properties should not be set here.
-			this.layout.pixelWidth = config.width;
-			if (!isNaN(this.layout.width))this.layout.width = config.width;
-			var width = config.width - ludo.dom.getMBPW(this.els.container);
+			this.layout.pixelWidth = size.width;
+			if (!isNaN(this.layout.width))this.layout.width = size.width;
+			var width = size.width - ludo.dom.getMBPW(this.els.container);
 			if (width > 0) {
 				this.els.container.css('width', width);
 			}
 		}
 
-		if (config.height && !this.state.isMinimized) {
+		if (size.height && !this.state.isMinimized) {
 			// TODO refactor this part.
 			if (!this.state.isMinimized) {
-				this.layout.pixelHeight = config.height;
-				if (!isNaN(this.layout.height))this.layout.height = config.height;
+				this.layout.pixelHeight = size.height;
+				if (!isNaN(this.layout.height))this.layout.height = size.height;
 			}
-			var height = config.height - ludo.dom.getMBPH(this.els.container);
+			var height = size.height - ludo.dom.getMBPH(this.els.container);
 			if (height > 0) {
 				this.els.container.css('height', height);
 			}
 		}
 
-		if (config.left !== undefined || config.top !== undefined) {
-			this.setPosition(config);
+		if (size.left !== undefined || size.top !== undefined) {
+			this.setPosition(size);
 		}
 
 		this.resizeDOM();
 
-		if (config.height || config.width) {
+		if (size.height || size.width) {
 			this.fireEvent('resize');
 		}
 		if (this.children.length > 0)this.getLayout().resizeChildren();
@@ -9007,6 +9030,11 @@ ludo.View = new Class({
 
 	getHeightOfButtonBar:function () {
 		return 0;
+	},
+	
+	
+	svg:function(){
+		return this.getCanvas();
 	},
 
 	canvas:undefined,
@@ -18354,7 +18382,7 @@ ludo.Notification = new Class({
 	hideEffect:undefined,
 	effect:'fade',
 	effectDuration:1,
-	autoRemove:false,
+	autoRemove:true,
 
 	__construct:function (config) {
 		config.renderTo = config.renderTo || document.body;
@@ -29542,7 +29570,7 @@ ludo.form.Element = new Class({
 
         var val = this.getFormEl() ? this.getValueOfFormEl().trim() : this.value;
         for (var i = 0; i < this.validators.length; i++) {
-            if (!this.validators[i].fn.apply(this, [val, this[this.validators[i].key]])){
+            if (!this.validators[i].fn.apply(this, [val, this[this.validators[i].key], this])){
                 return false;
             }
         }
@@ -30575,6 +30603,7 @@ ludo.form.Manager = new Class({
      * @param {String|Number|Object} value
      */
     set: function (name, value) {
+
         if (this.map[name]) {
             this.map[name].val(value);
         } else if (this.hiddenFields != undefined && this.hiddenFields.indexOf(name) != -1) {
@@ -30649,13 +30678,14 @@ ludo.form.Manager = new Class({
         this.dirtyIds.erase(formComponent.getId());
 
         if (this.dirtyIds.length === 0) {
-
             this.fireEvent('clean');
         }
     },
 
     onChange: function (value, formComponent) {
-        this.fireEvent('change', [this, formComponent])
+        // TODO refactor into one
+        this.fireEvent('change', [formComponent.name, formComponent.val(), this, formComponent]);
+
     },
     /**
      * One form element is valid. Fire valid event if all form elements are valid
@@ -30667,7 +30697,6 @@ ludo.form.Manager = new Class({
     onValid: function (value, formComponent) {
         this.invalidIds.erase(formComponent.getId());
         if (this.invalidIds.length == 0) {
-
             this.fireEvent('valid', this);
         }
     },
@@ -31032,6 +31061,7 @@ ludo.form.CancelButton = new Class({
  * @param {Boolean} config.readonly True to make this form field read only. (Default: false)
  * @param {Boolean} config.selectOnFocus Automatically make the text selected on focus. Default: false
  * @param {Boolean} config.validateKeyStrokes True to run validation after every key stroke(Default: false)
+ * @param {Function} config.validator Optional validator function for the value.
  * @fires ludo.form.Text#key Fired when a key is pressed. Argument: {String} key pressed.
  * @augments ludo.form.Element
  *
@@ -31989,8 +32019,8 @@ ludo.form.DisplayField = new Class({
 		if(arguments.length == 0){
 			return this._get();
 		}
-		if (!value) {
-			this.getFormEl().html( '');
+		if (value.length == 0) {
+			this.getFormEl().html('');
 			return;
 		}
 		this.setTextContent(value);
@@ -32003,6 +32033,7 @@ ludo.form.DisplayField = new Class({
 
 	setTextContent:function(value){
         var html = this.tpl ? this.getTplParser().getCompiled({ value:value }) : value ? value : '';
+
         this.getFormEl().html( html);
 	},
 
@@ -32713,6 +32744,24 @@ ludo.form.Number = new Class({
         this.parent();
     },
 
+    /**
+     * Update min value
+     * @param {Number} minValue
+     * @memberof ludo.form.Number.prototype
+     */
+
+    setMinVal:function(minValue){
+        this.minValue = minValue;
+    },
+    /**
+     * Update max value
+     * @param {Number} maxValue
+     * @memberof ludo.form.Number.prototype
+     */
+    setMaxValue:function(maxValue){
+        this.maxValue = maxValue;
+    },
+
     _mouseWheel:function (e) {
         var delta = (e.originalEvent.wheelDelta || e.originalEvent.detail) / 120;
         if(delta == 0)return;
@@ -32740,7 +32789,7 @@ ludo.form.Number = new Class({
     },
 
     _get:function(){
-        return parseInt(this.parent());
+        return parseFloat(this.parent());
     }
 });/* ../ludojs/src/form/email.js */
 /**

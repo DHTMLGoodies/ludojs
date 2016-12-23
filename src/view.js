@@ -635,52 +635,52 @@ ludo.View = new Class({
 	 Resize View and it's children.
 	 @function resize
 	 @memberof ludo.View.prototype
-	 @param {Object} config Object with optional width and height properties. Example: { width: 200, height: 100 }
+	 @param {Object} size Object with optional width and height properties. Example: { width: 200, height: 100 }
 	 @example
 	 view.resize(
 	 { width: 200, height:200 }
 	 );
 	 */
-	resize:function (config) {
+	resize:function (size) {
 
 
 		if (this.isHidden()) {
 			return;
 		}
-		config = config || {};
+		size = size || {};
 
-		if (config.width) {
-			if (this.layout.aspectRatio && this.layout.preserveAspectRatio && config.width && !this.isMinimized()) {
-				config.height = config.width / this.layout.aspectRatio;
+		if (size.width) {
+			if (this.layout.aspectRatio && this.layout.preserveAspectRatio && size.width && !this.isMinimized()) {
+				size.height = size.width / this.layout.aspectRatio;
 			}
 			// TODO layout properties should not be set here.
-			this.layout.pixelWidth = config.width;
-			if (!isNaN(this.layout.width))this.layout.width = config.width;
-			var width = config.width - ludo.dom.getMBPW(this.els.container);
+			this.layout.pixelWidth = size.width;
+			if (!isNaN(this.layout.width))this.layout.width = size.width;
+			var width = size.width - ludo.dom.getMBPW(this.els.container);
 			if (width > 0) {
 				this.els.container.css('width', width);
 			}
 		}
 
-		if (config.height && !this.state.isMinimized) {
+		if (size.height && !this.state.isMinimized) {
 			// TODO refactor this part.
 			if (!this.state.isMinimized) {
-				this.layout.pixelHeight = config.height;
-				if (!isNaN(this.layout.height))this.layout.height = config.height;
+				this.layout.pixelHeight = size.height;
+				if (!isNaN(this.layout.height))this.layout.height = size.height;
 			}
-			var height = config.height - ludo.dom.getMBPH(this.els.container);
+			var height = size.height - ludo.dom.getMBPH(this.els.container);
 			if (height > 0) {
 				this.els.container.css('height', height);
 			}
 		}
 
-		if (config.left !== undefined || config.top !== undefined) {
-			this.setPosition(config);
+		if (size.left !== undefined || size.top !== undefined) {
+			this.setPosition(size);
 		}
 
 		this.resizeDOM();
 
-		if (config.height || config.width) {
+		if (size.height || size.width) {
 			this.fireEvent('resize');
 		}
 		if (this.children.length > 0)this.getLayout().resizeChildren();
@@ -936,6 +936,11 @@ ludo.View = new Class({
 
 	getHeightOfButtonBar:function () {
 		return 0;
+	},
+	
+	
+	svg:function(){
+		return this.getCanvas();
 	},
 
 	canvas:undefined,

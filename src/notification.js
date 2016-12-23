@@ -40,7 +40,7 @@ ludo.Notification = new Class({
 	hideEffect:undefined,
 	effect:'fade',
 	effectDuration:1,
-	autoRemove:false,
+	autoRemove:true,
 
 	__construct:function (config) {
 		config.renderTo = config.renderTo || document.body;

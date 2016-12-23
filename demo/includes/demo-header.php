@@ -1,5 +1,7 @@
 <?php
-if($sub)$prefix = '../'; else $prefix = '';
+if(!isset($prefix)){
+    if($sub)$prefix = '../'; else $prefix = '';
+}
 if(isset($_GET['skin']))$skin = $_GET['skin'];
 $skin = isset($skin) ? $skin : 'twilight';
 ?>
@@ -49,7 +51,7 @@ $skin = isset($skin) ? $skin : 'twilight';
         require_once("all-js-include.php");
     }else {
 
-        $ver = file_get_contents("../../zip/current-zip.txt");
+        $ver = file_get_contents($prefix. "../zip/current-zip.txt");
         ?>
        <script type="text/javascript" src="<?php echo $prefix; ?>../js/ludojs<?php echo isset($_GET['fullSource']) ? "" : "-minified"; ?>.js?ver=<?php echo $ver; ?>git"></script>
         <?php
