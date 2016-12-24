@@ -6175,8 +6175,8 @@ Collapse bar
 
 .ludo-twilight .ludo-menu-vertical .ludo-menu-item-over,
 .ludo-twilight .ludo-menu-vertical .ludo-menu-item-active {
-    background-color: #FFF;
-    border: 1px solid #c6c6c6;
+    background-color: #aeb0b0;
+    border: 1px solid #444;
     padding-left: 34px;
     padding-right: 19px;
     padding-top: 1px;

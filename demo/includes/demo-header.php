@@ -96,7 +96,7 @@ $skin = isset($skin) ? $skin : 'twilight';
 
     }else{
         ?>
-        <link rel="stylesheet" href="<?php echo $prefix; ?>../css/ludojs-all.css" type="text/css">
+        <link rel="stylesheet" href="<?php echo $prefix; ?>../css/ludojs-all.css?rnd=3" type="text/css">
         <?php
     }
 
