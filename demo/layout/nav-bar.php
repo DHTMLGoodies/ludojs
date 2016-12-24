@@ -1,6 +1,6 @@
 <?php
 $sub = true;
-$pageTitle = 'Slide in layout';
+$pageTitle = 'NavBar layout';
 require_once("../includes/demo-header.php");
 ?>
 
