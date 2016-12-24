@@ -23,6 +23,9 @@ require_once("../includes/demo-header.php");
                     type:'linear',
                     orientation:'vertical'
                 },
+                css:{
+                    'padding-top': '8px'
+                },
                 children:[
                     {
                         type:'form.Button',
@@ -31,7 +34,7 @@ require_once("../includes/demo-header.php");
                         icon:'../../images/twilight-skin/menu-icon-large.png',
                         iconPressed:'../../images/twilight-skin/menu-icon-large-pressed.png',
                         layout:{
-                            height:50,
+                            height:42,
                             width:100
                         },
                         listeners:{
