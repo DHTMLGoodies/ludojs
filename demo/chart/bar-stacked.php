@@ -155,13 +155,25 @@ require_once("../includes/demo-header.php");
                                 }
                             },
                             {
+                                type:'chart.BgLines',
+                                bgColor:'#424242',
+                                layout:{
+                                    rightOf:'barLabels',
+                                    fillRight:true,
+                                    fillUp:true,
+                                    above:'barValues'
+                                },
+                                x:{
+                                    stroke: '#535353'
+                                }
+                            },
+                            {
                                 name : 'bar',
                                 id:'bar',
                                 type:'chart.Bar',
                                 stacked:true,
                                 animate:true,
                                 orientation:'vertical',
-                                bgColor:'#424242',
                                 barSize:0.5, // Fraction bar width
                                 layout:{
                                     rightOf:'barLabels',

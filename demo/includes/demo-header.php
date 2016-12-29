@@ -9,6 +9,7 @@ $skin = isset($skin) ? $skin : 'twilight';
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?php echo $pageTitle; ?></title>
 
     <script type="text/javascript">
@@ -70,7 +71,7 @@ $skin = isset($skin) ? $skin : 'twilight';
         $skin = "generated";
         ?>
         <link rel="stylesheet" href="<?php echo $prefix; ?>../css/ludojs.css" type="text/css">
-        <link rel="stylesheet" href="<?php echo $prefix; ?>../css/ludojs-generated.css" type="text/css">
+        <link rel="stylesheet" href="<?php echo $prefix; ?>../css/ludojs-generated.css?rnd=2" type="text/css">
         <?php
 
     }else if(isset($_GET['gray'])){

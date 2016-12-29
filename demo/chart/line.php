@@ -175,13 +175,27 @@ require_once("../includes/demo-header.php");
                                 }
                             },
                             {
+                                type:'chart.BgLines',
+                                bgColor:'#424242',
+                                layout:{
+                                    rightOf:'barValues',
+                                    leftOf:'labelsRight',
+                                    below:'labelsTop',
+                                    above:'barLabels'
+                                },
+                                y:{
+                                    stroke: '#535353'
+                                }
+                            },
+                            
+                            {
                                 name : 'bar',
                                 id:'bar',
                                 type:'chart.Line',
                                 showDots:true,
                                 animate:true,
                                 orientation:'horizontal',
-                                bgColor:'#424242',
+
                                 layout:{
                                     rightOf:'barValues',
                                     leftOf:'labelsRight',
@@ -190,9 +204,6 @@ require_once("../includes/demo-header.php");
                                 },
                                 lineStyles:{
                                     'stroke-width' : 2
-                                },
-                                bgLines:{
-                                    stroke: '#535353'
                                 },
                                 outline:{
                                     'left': {

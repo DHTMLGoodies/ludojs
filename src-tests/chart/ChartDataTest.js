@@ -203,6 +203,83 @@ TestCase("ChartDataTest", {
         assertEquals(1, rec.__parent);
     },
 
+    "test should find min max of scatter chart": function(){
+        // given
+        var ds = this.getDataSourceScatter();
+
+        // then
+        assertEquals(30, ds.minX());
+        assertEquals(150, ds.maxX());
+        assertEquals(15, ds.minY());
+        assertEquals(105, ds.maxY());
+    },
+
+    "test should find parent of nodes in scatter chart": function(){
+        // given
+        var ds = this.getDataSourceScatter();
+
+        // when
+        var rec = ds.data[0].getChildren()[0];
+
+        // then
+        assertNotUndefined(rec);
+        assertEquals(ds.data[0], rec.getParent());
+    },
+
+    "test should find children in scatter chart": function(){
+        // given
+        var ds = this.getDataSourceScatter();
+
+        // when
+        var children = ds.getData()[0].getChildren();
+
+        // then
+        assertEquals(6, children.length);
+    },
+
+    "test should set x and y of scatter records": function(){
+        // given
+        var ds = this.getDataSourceScatter();
+
+        // when
+        var child = ds.getData()[0].getChild(0);
+
+        assertEquals(100, child.x);
+        assertEquals(105, child.y);
+
+    },
+
+    "test should handle rgba color codes": function(){
+        var ds = this.getDataSourceColor();
+
+        var rec = ds.getData()[0];
+
+        assertEquals('rgba(102,153,0,' + (100/255) + ')', rec.__color);
+
+    },
+
+    getDataSourceScatter:function(){
+        return new ludo.chart.ScatterDataSource({
+            childKey:'children',
+            data:[
+                {
+                    "name":"first series",
+                    "children":[
+                        [100,105],[150,90],[30,40],[55,70], [48,42],[77,99]
+                    ]
+                },
+                {
+                    "name":"Second series",
+                    "children":[
+                        [120,40],[115,15]
+                    ]
+                }
+
+            ]
+        });
+    },
+
+
 
     getDataSourceNested:function(){
 
@@ -297,6 +374,29 @@ TestCase("ChartDataTest", {
                     value: 100
                 },
                 {
+                    id:2,
+                    name:"Jane",
+                    value:200
+                }
+            ]
+        });
+
+    },
+
+    getDataSourceColor:function(){
+
+        return new ludo.chart.DataSource({
+            valueKey:'value',
+
+            data:[
+                {
+                    __color:'#66990064',
+                    id:1,
+                    "name": "John",
+                    value: 100
+                },
+                {
+                    __color:'#EEEEEE55',
                     id:2,
                     name:"Jane",
                     value:200

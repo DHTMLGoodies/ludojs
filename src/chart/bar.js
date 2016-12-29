@@ -43,7 +43,7 @@ ludo.chart.Bar = new Class({
     renderBackgroundItems: function () {
         this.parent();
 
-        this.createLines();
+
         this.createOutline();
     },
 
@@ -94,25 +94,16 @@ ludo.chart.Bar = new Class({
     },
 
     getLine: function (index) {
+        if(this.nodes.lines == undefined){
+            this.nodes.lines = [];
+        }
         if (this.nodes.lines[index] == undefined) {
             var el = new ludo.svg.Node('line', {x1: 0, y1: 0, x2: 0, y2: 0});
             this.append(el);
+            el.css(this.bgLines);
             this.nodes.lines.push(el);
         }
         return this.nodes.lines[index];
-    },
-
-    createLines: function () {
-        if (this.bgLines == undefined)return;
-
-        var inc = this.ds.getIncrements();
-
-        this.nodes.lines = [];
-
-        for (var i = 0; i < inc.length; i++) {
-            var el = this.getLine(i);
-            el.css(this.bgLines);
-        }
     },
 
     onResize: function () {
@@ -164,16 +155,22 @@ ludo.chart.Bar = new Class({
     resizeBgLines: function () {
         if (this.bgLines == undefined)return;
 
-        var inc = this.ds.getIncrements();
         var s = this.getSize();
         var min = this.ds.min();
         var max = this.ds.max();
 
+        var values = ludo.chart.LineUtil.values(min, max, this.orientation == 'vertical'? s.x : s.y);
+
+        jQuery.each(this.nodes.lines, function(i, line){
+            line.hide();
+        });
 
 
-        for (var i = 0; i < inc.length; i++) {
-            var r = (inc[i] - min) / (max - min);
+        for (var i = 0; i < values.length; i++) {
+            var r = (values[i] - min) / (max - min);
             var l = this.getLine(i);
+
+            l.show();
             if (this.orientation == 'horizontal') {
                 l.attr('x2', s.x);
                 l.attr('y1', s.y * r);

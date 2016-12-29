@@ -15,6 +15,8 @@ ludo.chart.ChartValues = new Class({
     increment: 10,
     padding: 0,
 
+    values:undefined,
+
     __construct: function (config) {
         this.parent(config);
         this.setConfigParams(config, ['orientation', 'styling', 'padding']);
@@ -37,19 +39,41 @@ ludo.chart.ChartValues = new Class({
     resizeNodes: function () {
         var ds = this.ds;
 
-        this.min = ds.min();
-        this.max = ds.max();
-        this.count = this.getCount();
-        this.size = this.getSize();
+        if(this.ds.minX != undefined){
+            if(this.orientation == 'horizontal'){
+                this.min = ds.minX();
+                this.max = ds.maxX();
+            }else{
+                this.min = ds.minY();
+                this.max = ds.maxY();
+            }
 
- 
+        }else{
+            this.min = ds.min();
+            this.max = ds.max();
+        }
+
+
+
+        this.size = this.getSize();
+        var availSize = this.orientation == 'horizontal' ? this.size.x : this.size.y;
+        this.values = ludo.chart.LineUtil.values(this.min, this.max, availSize, this);
+
+        this.count = this.values.length;
+
+
+        jQuery.each(this.nodes, function(index, node){
+            node.hide();
+        });
 
         for (var i = 0; i < this.count; i++) {
             var el = this.getNode(i);
+            el.show();
             var val = this.val(i);
 
             el.text(this.ds.valueForDisplay(val, this));
             var pos = this.getPos(val);
+
             el.attr('x', pos.x);
             el.attr('y', pos.y);
 
@@ -60,11 +84,12 @@ ludo.chart.ChartValues = new Class({
     },
 
     val: function (index) {
-        return this.ds.getIncrements()[index];
+        return this.values[index];
     },
 
     getCount: function () {
-        return this.ds.getIncrements().length;
+
+        return this.values.length;
     },
 
     getPos: function (val) {
@@ -86,7 +111,7 @@ ludo.chart.ChartValues = new Class({
             var el = new ludo.svg.Text("", {});
             this.nodes.push(el);
             if (this.orientation == 'horizontal') {
-                el.textAnchor('middle');
+                el.textAnchor(index == 0 ? 'start' : index == this.getCount() ? 'end' : 'middle');
             } else {
                 el.textAnchor('end');
                 el.attr('alignment-baseline', 'middle');

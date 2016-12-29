@@ -57,6 +57,8 @@ ludo.layout.Canvas = new Class({
 	},
 
 	zIndexAdjusted:false,
+	_rendered:false,
+
 	resize:function(){
 		this.parent();
 
@@ -65,10 +67,17 @@ ludo.layout.Canvas = new Class({
 
 			for (var i = 0; i < this.children.length; i++) {
 				if(this.children[i].layout.zIndex != undefined){
-					console.log("appending " + this.children[i].id, this.children[i].node.el);
 					this.view.getCanvas().append(this.children[i]);
 				}
 			}
+		}
+
+		if(!this._rendered){
+			this._rendered = true;
+
+			jQuery.each(this.children, function(i, child){
+				child.rendered();
+			});
 		}
 
 	}

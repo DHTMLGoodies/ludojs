@@ -29,6 +29,8 @@ load:
   - ../../src/chart/pie-slice.js
   - ../../src/chart/gauge.js
   - ../../src/chart/data-source.js
+  - ../../src/chart/scatter-data-source.js
+  - ../../src/chart/line-util.js
 
 test:
   - ChartTest.js
@@ -36,6 +38,7 @@ test:
   - ChartDataTest.js
   - TooltipTest.js
   - GaugeTest.js
+  - LineUtilTest.js
 
 
 plugin:

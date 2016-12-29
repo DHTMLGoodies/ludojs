@@ -5,7 +5,7 @@
     line-height: 20px;
 }
 
-.ludo-generated .ludo-window .ludo-body{
+.ludo-generated .ludo-window > .ludo-body{
     margin: 5px;
     border: 1px solid [C500];
 }

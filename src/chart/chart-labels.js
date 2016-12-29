@@ -3,6 +3,8 @@
  * @class ludo.chart.ChartLabels
  * @param {Object} config
  * @param {Object} config.styling Text styling for the labels.
+ * @param {Number} config.padding Optional space right of labels(vertical mode) or above labels(horizontal mode)
+ * @param {Boolean} config.halfInset When true, the first label will be offset 1/2 size vertically/or horizontally.
  */
 ludo.chart.ChartLabels = new Class({
     Extends: ludo.chart.Base,
@@ -15,10 +17,12 @@ ludo.chart.ChartLabels = new Class({
     textNodes: undefined,
 
     padding: 0,
+    
+    halfInset:true,
 
     __construct: function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['orientation', 'styling', 'padding']);
+        this.setConfigParams(config, ['orientation', 'styling', 'padding','halfInset']);
         if (this.orientation == undefined)this.orientation = 'horizontal';
         this.styling = this.styling || {};
         this.textNodes = [];
@@ -43,26 +47,27 @@ ludo.chart.ChartLabels = new Class({
         var size = this.getSize();
 
         var len = this.length();
+
         var i, el;
 
         if (this.orientation == 'horizontal') {
-            var width = size.x / len;
+            var width = size.x / (this.halfInset ? len : len-1);
             var y = this.getCenter().y;
             for (i = 0; i < len; i++) {
                 el = this.getTextNode(i);
                 if (el) {
-                    el.attr('x', (width * i) + (width / 2));
-                    el.attr('y', y);
+                    el.attr('x', (width * i) + (this.halfInset ? (width / 2) : 0));
+                    el.attr('y', y + this.padding);
 
                 }
             }
         } else {
-            var height = size.y / len;
+            var height = size.y / (this.halfInset ? len : len-1);;
             for (i = 0; i < len; i++) {
                 el = this.getTextNode(i);
                 if (el) {
                     el.attr('x', size.x - this.padding);
-                    el.attr('y', (i * height) + (height / 2));
+                    el.attr('y', (i * height) + (this.halfInset ? (height / 2) : 0));
 
                 }
             }

@@ -180,12 +180,25 @@ require_once("../includes/demo-header.php");
                                 }
                             },
                             {
+                                type:'chart.BgLines',
+                                bgColor:'#424242',
+                                layout:{
+                                    rightOf:'barLabels',
+                                    fillRight:true,
+                                    fillUp:true,
+                                    above:'barValues'
+                                },
+                                x:{
+                                    stroke: '#535353'
+                                }
+                            },
+                            {
                                 name : 'bar',
                                 type:'chart.Bar',
                                 animate:true,
                                 orientation:'vertical',
                                 id:'bar',
-                                bgColor:'#424242',
+
                                 barSize:0.9, // Fraction bar width
                                 layout:{
                                     rightOf:'barLabels',
@@ -193,9 +206,7 @@ require_once("../includes/demo-header.php");
                                     fillUp:true,
                                     above:'barValues'
                                 },
-                                lines:{
-                                    stroke: '#535353'
-                                },
+
                                 outline:{
                                     'left': {
                                         stroke: '#aeb0b0',

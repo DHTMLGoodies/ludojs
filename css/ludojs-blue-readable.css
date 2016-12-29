@@ -2514,7 +2514,7 @@ fieldset{
     line-height: 20px;
 }
 
-.ludo-blue .ludo-window .ludo-body {
+.ludo-blue .ludo-window > .ludo-body {
     margin: 5px;
     border: 1px solid #a6cbf5;
 }

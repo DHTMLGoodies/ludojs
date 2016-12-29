@@ -232,7 +232,7 @@ ludo.chart.DataSource = new Class({
     dataFor: undefined,
     sortFn: undefined,
 
-    _maxIndexSum:undefined,
+    _maxIndexSum: undefined,
 
 
     /**
@@ -283,7 +283,6 @@ ludo.chart.DataSource = new Class({
         this.parent(config);
 
 
-
         if (this.valueOf == undefined) {
             console.warn("Method valueOf(record, caller) not implemented in chart data source");
         }
@@ -298,7 +297,7 @@ ludo.chart.DataSource = new Class({
     },
 
     handleData: function (data) {
-        if(!jQuery.isArray(data)){
+        if (!jQuery.isArray(data)) {
             data = [data];
         }
         this.data = data;
@@ -442,92 +441,100 @@ ludo.chart.DataSource = new Class({
 
     parseChartBranch: function (branch, parent) {
 
-
         this.updateValues(branch, parent);
 
         var sum = this.sum(branch);
         var angle = parent && parent.angle ? parent.angle : 0;
         var i = 0;
         jQuery.each(branch, function (key, node) {
-            node.__sum = sum;
-            var val = this.value(node, this);
-            if (!isNaN(val)) {
 
-                node.__min = this.minVal;
-                node.__max = this.maxVal;
-                node.__maxAggr = this.maxValAggr;
-                node.__minAgr = this.minValAgr;
-                node.__fraction = val / sum;
-                node.__percent = Math.round(node.__fraction * 100);
-                node.__radians = ludo.geometry.toRadians(node.__fraction * 360);
-                node.__angle = angle;
+           branch[key] = this.parseNode(node, parent, i, sum, angle);
+
+            if (node.__radians) {
                 angle += node.__radians;
-
             }
-            node.__count = this.count;
-
-            if (node.index == undefined) {
-                node.__index = i++;
-            }
-
-            if (parent != undefined) {
-                node.__parent = parent.id;
-
-                node.getParent = function () {
-                    return parent;
-                }
-            } else {
-                node.getParent = function () {
-                    return undefined;
-                }
-            }
-
-
-            if (node.id == undefined) {
-                node.id = 'chart-node-' + String.uniqueID();
-            }
-            if (node.__uid == undefined) {
-                node.__uid = 'chart-node-' + String.uniqueID();
-            }
-            this.map[node.id] = node;
-
-
-            var c = this.childKey;
-            node.getChildren = function () {
-                return node[c];
-            };
-
-            node.getChild = function (index) {
-                return node[c][index];
-            };
-
-            this.setColor(node);
-
+            i++;
             if (node[this.childKey] != undefined) {
                 this.parseChartBranch(node[this.childKey], node);
             }
-
-
         }.bind(this));
-
-
 
         return branch;
     },
 
-    setSumIndexes:function(data){
-        var children = data[0].getChildren();
-        if(children == undefined)return;
+    parseNode: function (node, parent, i, sum, angle) {
+
+
+        node.__sum = sum;
+        var val = this.value(node, this);
+        if (!isNaN(val)) {
+
+            node.__min = this.minVal;
+            node.__max = this.maxVal;
+            node.__maxAggr = this.maxValAggr;
+            node.__minAgr = this.minValAgr;
+            node.__fraction = val / sum;
+            node.__percent = Math.round(node.__fraction * 100);
+            node.__radians = ludo.geometry.toRadians(node.__fraction * 360);
+            node.__angle = angle;
+
+
+        }
+        node.__count = this.count;
+
+        if (node.index == undefined) {
+            node.__index = i;
+        }
+
+        if (parent != undefined) {
+            node.__parent = parent.id;
+
+            node.getParent = function () {
+                return parent;
+            }
+        } else {
+            node.getParent = function () {
+                return undefined;
+            }
+        }
+
+
+        if (node.id == undefined) {
+            node.id = 'chart-node-' + String.uniqueID();
+        }
+        if (node.__uid == undefined) {
+            node.__uid = 'chart-node-' + String.uniqueID();
+        }
+        this.map[node.id] = node;
+
+
+        var c = this.childKey;
+        node.getChildren = function () {
+            return node[c];
+        };
+
+        node.getChild = function (index) {
+            return node[c][index];
+        };
+
+        this.setColor(node);
+
+        return node;
+    },
+
+    setSumIndexes: function (data) {
+        var children = data[0].getChildren != undefined ? data[0].getChildren() : undefined;
+        if (children == undefined)return;
         var sumIndexes = [];
-        jQuery.each(data, function(index, record){
+        jQuery.each(data, function (index, record) {
 
 
             var c = record.getChildren();
-            if(c && c.length){
-                jQuery.each(c, function(i, childRecord){
+            if (c && c.length) {
+                jQuery.each(c, function (i, childRecord) {
                     childRecord.__val = this.valueOf(childRecord, this) || 0;
 
-                    if(sumIndexes.length == i){
+                    if (sumIndexes.length == i) {
                         sumIndexes.push(0);
                     }
                     childRecord.__indexStartVal = sumIndexes[i];
@@ -538,13 +545,13 @@ ludo.chart.DataSource = new Class({
 
         this._maxIndexSum = undefined;
 
-        jQuery.each(data, function(index, record){
+        jQuery.each(data, function (index, record) {
             var c = record.getChildren();
-            if(c && c.length){
-                jQuery.each(c, function(i, childRecord){
-                    if(this._maxIndexSum == undefined){
+            if (c && c.length) {
+                jQuery.each(c, function (i, childRecord) {
+                    if (this._maxIndexSum == undefined) {
                         this._maxIndexSum = sumIndexes[i];
-                    }else{
+                    } else {
                         this._maxIndexSum = Math.max(this._maxIndexSum, sumIndexes[i]);
                     }
                     childRecord.__indexSum = sumIndexes[i];
@@ -555,7 +562,7 @@ ludo.chart.DataSource = new Class({
         }.bind(this));
     },
 
-    maxIndexSum:function(){
+    maxIndexSum: function () {
         return this._maxIndexSum;
     },
 
@@ -723,6 +730,13 @@ ludo.chart.DataSource = new Class({
     adjustColor: function (record) {
         var b, s;
         var u = this.colorUtil();
+
+        record.__color = this.rgba(record.__color);
+        record.__colorOver = this.rgba(record.__colorOver);
+        record.__stroke = this.rgba(record.__stroke);
+        record.__strokeOver = this.rgba(record.__strokeOver);
+
+
         if (this.minBrightness != undefined) {
             b = u.brightness(record.__color);
             if (b < this.minBrightness) {
@@ -748,6 +762,26 @@ ludo.chart.DataSource = new Class({
                 record.__color = u.saturation(record.__color, this.maxSaturation);
             }
         }
+    },
+
+    rgba:function(color){
+
+
+        if(color != undefined && color.indexOf('#') == 0 && color.length == 9){
+
+
+            var a = color.substr(7,2);
+            var c = color.substr(0,7);
+            var rgb = this.colorUtil().rgbColors(c);
+
+
+
+
+            return 'rgba(' + rgb.r + ',' + rgb.g + ',' + rgb.b + ',' + (a.toInt(16) / 255) + ')';
+        }
+
+
+        return color;
     },
 
     colorUtil: function () {
@@ -777,6 +811,22 @@ ludo.chart.DataSource = new Class({
         return Math.min(0, this.minVal);
     },
 
+    maxX:function(){
+        return this.max();
+    },
+
+    maxY:function(){
+        return this.max();
+    },
+
+    minX:function(){
+        return this.min();
+    },
+
+    minY:function(){
+        return this.min();
+    },
+
     valueForDisplay: function (value) {
         return value;
     },
@@ -786,12 +836,12 @@ ludo.chart.DataSource = new Class({
     },
 
     getData: function (caller) {
-        if(!caller){
+        if (!caller) {
             return this.parent();
-        }else if(!caller.type){
-            console.warn("Type not set");
+        } else if (!caller.type) {
+            console.warn("Type not set", caller);
             console.trace();
-        } 
+        }
 
         caller = caller || this;
         var allData = this.parent();
@@ -801,9 +851,9 @@ ludo.chart.DataSource = new Class({
 
     shapeOf: function () {
         return undefined;
-    }, 
+    },
 
-    indexStartValueOf:function(record){
+    indexStartValueOf: function (record) {
         return record.__indexStartVal || 0;
     }
 });

@@ -223,20 +223,29 @@ require_once("../includes/demo-header.php");
                                 }
                             },
                             {
-                                name : 'bar',
-                                type:'chart.Bar',
-                                animate:true,
-                                id:'bar',
+                                type:'chart.BgLines',
                                 bgColor:'#424242',
-                                barSize:0.9, // Fraction bar width
                                 layout:{
                                     rightOf:'barValues',
                                     fillRight:true,
                                     below:'labelsTop',
                                     above:'barLabels'
                                 },
-                                bgLines:{
+                                y:{
                                     stroke: '#535353'
+                                }
+                            },
+                            {
+                                name : 'bar',
+                                type:'chart.Bar',
+                                animate:true,
+                                id:'bar',
+                                barSize:0.9, // Fraction bar width
+                                layout:{
+                                    rightOf:'barValues',
+                                    fillRight:true,
+                                    below:'labelsTop',
+                                    above:'barLabels'
                                 },
                                 outline:{
                                     'left': {

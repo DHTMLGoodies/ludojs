@@ -225,7 +225,8 @@ $rnd = date("YmdHis");
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/chart/pie.js?rnd=<?php echo $rnd; ?>"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/chart/label-list.js?rnd=<?php echo $rnd; ?>"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/chart/label-list-item.js?rnd=<?php echo $rnd; ?>"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/chart/data-source.js?rnd=3"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/chart/data-source.js?rnd=<?php echo $rnd; ?>"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/chart/scatter-data-source.js?rnd=<?php echo $rnd; ?>"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/chart/bar.js?rnd=<?php echo $rnd; ?>"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/chart/text.js?rnd=<?php echo $rnd; ?>"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/chart/chart-labels.js?rnd=<?php echo $rnd; ?>"></script>
@@ -236,6 +237,12 @@ $rnd = date("YmdHis");
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/chart/line-dot.js?rnd=<?php echo $rnd; ?>"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/chart/area.js?rnd=<?php echo $rnd; ?>"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/chart/outline.js?rnd=<?php echo $rnd; ?>"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/chart/scatter.js?rnd=<?php echo $rnd; ?>"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/chart/scatter-series.js?rnd=<?php echo $rnd; ?>"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/chart/line-util.js?rnd=<?php echo $rnd; ?>"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/chart/bg-lines.js?rnd=<?php echo $rnd; ?>"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/chart/chart-util.js?rnd=<?php echo $rnd; ?>"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/chart/ticks.js?rnd=<?php echo $rnd; ?>"></script>
 
 
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/movable.js?rnd=<?php echo $rnd; ?>"></script>

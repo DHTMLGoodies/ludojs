@@ -326,6 +326,7 @@ require_once("../includes/demo-header.php");
                             {
                                 id:'barLabels',
                                 type:'chart.ChartLabels',
+                                halfInset:false,
                                 // Static labels instead of getting them from the data source.
                                 layout:{
                                     alignParentBottom:true,
@@ -369,12 +370,24 @@ require_once("../includes/demo-header.php");
                                 }
                             },
                             {
+                                type:'chart.BgLines',
+                                bgColor:'#333',
+                                layout:{
+                                    rightOf:'barValues',
+                                    leftOf:'labelsRight',
+                                    below:'chartSource',
+                                    above:'barLabels'
+                                },
+                                y:{
+                                    stroke: '#535353'
+                                }
+                            },
+                            {
                                 name : 'bar',
                                 id:'bar',
                                 type:'chart.Area',
-                                animate:false,
+                                animate:true,
                                 orientation:'horizontal',
-                                bgColor:'#424242',
                                 stacked:true,
                                 layout:{
                                     rightOf:'barValues',
@@ -384,9 +397,6 @@ require_once("../includes/demo-header.php");
                                 },
                                 lineStyles:{
                                     'stroke-width' : 2
-                                },
-                                bgLines:{
-                                    stroke: '#535353'
                                 },
                                 plugins:[
                                     {

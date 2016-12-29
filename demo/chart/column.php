@@ -16,6 +16,10 @@ require_once("../includes/demo-header.php");
             return record.fruit;
         },
 
+        valueForDisplay:function(value, caller){
+            return value;
+        },
+
         valueOf:function(record, caller){
             return record.people;
         },
@@ -117,7 +121,7 @@ require_once("../includes/demo-header.php");
                                 layout:{
                                     rightOf:'labelsLeft',
                                     below:'labelsTop',
-                                    above:'barLabels',
+                                    bottom:30,
                                     width:30
                                 },
                                 padding:4,
@@ -141,11 +145,23 @@ require_once("../includes/demo-header.php");
                                 }
                             },
                             {
+                                type:'chart.BgLines',
+                                bgColor:'#424242',
+                                layout:{
+                                    rightOf:'barValues',
+                                    fillRight:true,
+                                    below:'labelsTop',
+                                    above:'barLabels'
+                                },
+                                y:{
+                                    stroke: '#535353'
+                                }
+                            },
+                            {
                                 name : 'bar',
                                 type:'chart.Bar',
                                 animate:true,
                                 id:'bar',
-                                bgColor:'#424242',
                                 barSize:0.9, // Fraction bar width
                                 layout:{
                                     rightOf:'barValues',
@@ -153,9 +169,7 @@ require_once("../includes/demo-header.php");
                                     below:'labelsTop',
                                     above:'barLabels'
                                 },
-                                bgLines:{
-                                    stroke: '#535353'
-                                },
+
                                 outline:{
                                     'left': {
                                         stroke: '#aeb0b0',

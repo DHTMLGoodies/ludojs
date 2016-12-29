@@ -16,19 +16,14 @@ require_once("../../includes/demo-header.php");
             left:50,top:50,
             minWidth:400,
             minHeight:400,
-            type: 'relative'
+            type: 'fill'
         },
         children: [
             {
                 id: 'cropTool',
                 type: 'svgCrop.CropTool',
-                layout: {
-                    width: 'matchParent',
-                    height: 'matchParent'
-                },
                 listeners: {
                     'crop': function (cropArea) {
-
                         new ludo.Notification({
                                 html: 'Crop event : ' + JSON.stringify(cropArea),
                                 layout: {

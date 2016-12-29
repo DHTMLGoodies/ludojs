@@ -141,6 +141,7 @@ ludo.chart.Tooltip = new Class({
 
     show: function (fragment, rec, node, event) {
 
+
         this.group = fragment.getParent();
 
         this._autoLeave = false;
@@ -179,6 +180,7 @@ ludo.chart.Tooltip = new Class({
             this.move(event);
         } else {
             xy = this.getXY(fragment, node);
+
             if(this.offset.x != 0 || this.offset.y != 0){
                 this.updateRect(fragment);
             }
@@ -288,6 +290,8 @@ ludo.chart.Tooltip = new Class({
         this.offset.y = 0;
 
         var bounds = target.getBBox();
+
+
 
         var size = this.rect.getBBox();
 

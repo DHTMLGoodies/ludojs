@@ -112,6 +112,8 @@ ludo.chart.Base = new Class({
         if (this.fragmentType == undefined)return;
         var records = this.getRecords();
 
+
+
         for (var i = 0; i < records.length; i++) {
             this.createFragment(records[i]);
         }
@@ -183,8 +185,6 @@ ludo.chart.Base = new Class({
     },
 
     renderAnimation: function () {
-
-
         if (this.revealAnim) {
             this.reveal();
         } else {
@@ -192,8 +192,6 @@ ludo.chart.Base = new Class({
                 fr.animate();
             });
         }
-
-
     },
 
     renderBackgroundItems: function () {
@@ -234,7 +232,7 @@ ludo.chart.Base = new Class({
     },
 
     getCanvas: function () {
-        return this.parentComponent.getCanvas();
+        return this.parentComponent.svg();
     },
 
     getSquareSize: function () {
@@ -279,6 +277,7 @@ ludo.chart.Base = new Class({
      * @memberof ludo.chart.Base.prototype
      */
     reveal: function (direction, duration) {
+        console.log('reveal');
         direction = this.revealAnimDirection || 'right';
         duration = this.revealAnimDuration || 600;
         var s = this.getSize();
@@ -332,7 +331,6 @@ ludo.chart.Base = new Class({
                 complete: this.removeClipPath.bind(this)
             }
         );
-
     },
 
     removeClipPath: function () {

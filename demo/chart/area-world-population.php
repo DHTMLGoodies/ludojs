@@ -234,6 +234,7 @@ require_once("../includes/demo-header.php");
                             {
                                 id:'barLabels',
                                 type:'chart.ChartLabels',
+                                halfInset:false,
                                 // Static labels instead of getting them from the data source.
                                 layout:{
                                     alignParentBottom:true,

@@ -16,6 +16,7 @@ ludo.theme.Themes = new Class({
 
             border: '#424242',
             background: '#535353',
+            background2: '#535353',
             text : '#aeb0b0'
         },
         blue : {
@@ -29,6 +30,7 @@ ludo.theme.Themes = new Class({
 
             border: '#a6cbf5',
             background: '#535353',
+            background2: '#535353',
             text : '#000000'
 
         },
@@ -46,6 +48,7 @@ ludo.theme.Themes = new Class({
 
             border: '#d7d7d7',
             background: '#FFFFFF',
+            background2: '#e2e2e2',
             text : '#555555'
         }
     },

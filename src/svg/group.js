@@ -21,6 +21,10 @@ ludo.svg.Group = new Class({
         }
     },
 
+    rendered:function(){
+        
+    },
+    
     resize:function (coordinates) {
         if (coordinates.width) {
             this.width = coordinates.width;

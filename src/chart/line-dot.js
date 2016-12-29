@@ -39,15 +39,7 @@ ludo.chart.LineDot = new Class({
         this.node.css("fill", this.record.getParent().__color);
         this.node.css("stroke", this.record.getParent().__stroke);
 
-        switch (this.shape) {
-            case 'circle':
-                this.node.attr('r', this.size / 2);
-                break;
-            default:
-                this.node.set('d', this.getPath());
-                break;
-
-        }
+        this.node.set('d', this.getPath());
 
         this.renderTo.append(this.node);
 
@@ -66,37 +58,11 @@ ludo.chart.LineDot = new Class({
     },
 
     getPath: function (highlighted) {
-
-        var s = this.size;
-        if (this.shape == 'rotatedrect') {
-            s = Math.sqrt((s * s) + (s * s));
-        }
-
-        var min = -(s / 2);
-        var max = (s / 2);
-        if (highlighted) {
-            min *= 1.4;
-            max *= 1.4;
-        }
-        switch (this.shape) {
-            case 'rect':
-
-                return ['M', min, min, 'L', max, min, max, max, min, max, min, min].join(' ');
-            case 'triangle':
-                return ['M', 0, min, 'L', max, max, min, max, 0, min].join(' ');
-            case 'rotatedrect':
-                return ['M', min, 0, "L", 0, min, max, 0, 0, max, min, 0].join(' ');
-
-        }
+        return ludo.chart.ChartUtil.getShape(this.shape, highlighted ? this.size * 1.4 : this.size);
     },
 
     getNewNode: function () {
-        switch (this.shape) {
-            case 'circle':
-                return new ludo.svg.Circle();
-            default:
-                return new ludo.svg.Path();
-        }
+        return new ludo.svg.Path();
     },
 
 
@@ -123,15 +89,7 @@ ludo.chart.LineDot = new Class({
         this.node.set('stroke-width', 1);
 
         var anim = {};
-        switch (this.shape) {
-            case 'circle':
-                anim.r = this.size * 0.7;
-                break;
-            default:
-                anim.d = this.getPath(true);
-                break;
-
-        }
+        anim.d = this.getPath(true);
 
 
         if (!this.showDots) {
@@ -153,16 +111,9 @@ ludo.chart.LineDot = new Class({
     leave: function () {
         if(!this.nodeHighlight)return;
         this.nodeHighlight.hide();
-        var anim = {};
+        var anim = {d : this.getPath(false)};
         this.node.set('stroke-width', 0);
-        switch (this.shape) {
-            case 'circle':
-                anim.r = this.size / 2;
-                break;
-            default:
-                anim.d = this.getPath(false);
-                break;
-        }
+
 
         if (!this.showDots) {
             anim["fill-opacity"] = 0;

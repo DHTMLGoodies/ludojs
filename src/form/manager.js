@@ -21,7 +21,7 @@ It is convenient to place event handlers here instead of adding them to the indi
  Example: create a form.change event to listen to all changes to child form views.
   @param {Array} config.hiddenFields Array with name of form fields. example: hiddenFields:["id"]. There are noe &lt;input type="hidden">
   in ludoJS. Instead, you define hiddenFields which later can be populated using view.getForm().val(key, value).
- @fires ludo.form.Manager#change Event fired when the value of one of the child form view is changed(recursive)., arguments: form.Manager and form.Element(the element changed)
+ @fires ludo.form.Manager#change Event fired when the value of one of the child form view is changed(recursive)., arguments: 1) name of changed element, 2) Value of changed element, 3) form.Manager and 4) form.Element(the element changed)
  @fires ludo.form.Manager#valid Event fired when all child form views have a valid value.
  @fires ludo.form.Manager#invalid Event fired when one or more child form views have invalid value.
  @fires ludo.form.Manager#clean A form is considered clean when none of it's values has changed from it's original. Otherwise it's considered dirty. The clean event
@@ -311,7 +311,7 @@ ludo.form.Manager = new Class({
             this.dirtyIds.push(elId);
         }
 
-        this.fireEvent('dirty', formComponent);
+        this.fireEvent('dirty', this.eventArguments());
     },
 
     onClean: function (value, formComponent) {
@@ -324,8 +324,11 @@ ludo.form.Manager = new Class({
 
     onChange: function (value, formComponent) {
         // TODO refactor into one
-        this.fireEvent('change', [formComponent.name, formComponent.val(), this, formComponent]);
+        this.fireEvent('change', this.eventArguments());
+    },
 
+    eventArguments:function(formComponent){
+        return [formComponent.name, formComponent.val(), this, formComponent];
     },
     /**
      * One form element is valid. Fire valid event if all form elements are valid
@@ -354,7 +357,7 @@ ludo.form.Manager = new Class({
             this.invalidIds.push(elId);
         }
 
-        this.fireEvent('invalid', this);
+        this.fireEvent('invalid', this.eventArguments());
     },
     /**
      * Validate form and fire "invalid" or "valid" event
