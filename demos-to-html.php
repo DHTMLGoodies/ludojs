@@ -93,6 +93,8 @@ function move($path)
         $data = file_get_contents($path);
         file_put_contents($destination, $data);
     }
+
+    chmod($destination, 0755);
 }
 
 function createDirectory($dir)
