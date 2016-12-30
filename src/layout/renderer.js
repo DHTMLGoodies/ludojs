@@ -55,7 +55,6 @@ ludo.layout.Renderer = new Class({
     lastCoordinates: {},
 
     initialize: function (config) {
-
         this.view = config.view;
         this.fixReferences();
         this.setDefaultProperties();
@@ -63,7 +62,9 @@ ludo.layout.Renderer = new Class({
         ludo.dom.clearCache();
         this.addResizeEvent();
 
-        this.view.getLayout().on('addChild', this.clearFn.bind(this));
+        if(this.view.getLayout != undefined){
+            this.view.getLayout().on('addChild', this.clearFn.bind(this));
+        }
         this.view.on('addChild', this.clearFn.bind(this));
     },
 

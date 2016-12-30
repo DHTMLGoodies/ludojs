@@ -3,24 +3,6 @@ $sub = true;
 $pageTitle = 'Menu layout';
 require_once("../includes/demo-header.php");
 ?>
-
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/factory.js"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/base.js"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/renderer.js"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/linear.js"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/linear-horizontal.js"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/linear-horizontal.js"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/relative.js"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/menu.js"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/menu-horizontal.js"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/menu-vertical.js"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/menu-container.js"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/renderer.js"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/view.js"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/framed-view.js"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/window.js"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/menu/item.js"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../src/menu/context.js"></script>
 <script type="text/javascript" class="source-code">
 var w = new ludo.Window({
             title:'Window with menu',

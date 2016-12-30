@@ -139,6 +139,7 @@ ludo.util = {
     },
 
     getDragStartEvent:function () {
+
         return ludo.util.isTabletOrMobile() ? 'touchstart' : 'mousedown';
     },
 

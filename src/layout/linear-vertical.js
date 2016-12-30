@@ -55,7 +55,7 @@ ludo.layout.LinearVertical = new Class({
 						remainingHeight -= config.height;
 					}
 				} else {
-					config.height = this.getHeightOf(this.view.children[i]);
+					config.height = this.getHeightOf(this.view.children[i], config);
 				}
 
 				if (config.height < 0) {

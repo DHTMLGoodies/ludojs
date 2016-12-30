@@ -978,6 +978,13 @@ ludo.View = new Class({
 			}));
 		}
 		return this.canvas;
+	},
+
+	wrappedWidth:function(){
+		return undefined;
+	},
+	wrappedHeight:function(){
+		return undefined;
 	}
 });
 

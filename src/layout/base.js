@@ -413,7 +413,9 @@ ludo.layout.Base = new Class({
         return child.layout.width;
     },
 
-    getHeightOf: function (child) {
+    getHeightOf: function (child, size) {
+        var h = child.wrappedHeight != undefined ? child.wrappedHeight(size) : undefined;
+        if(h != undefined)return h;
         if(child.layout.height == 'wrap'){
             child.layout.height = child.getEl().outerHeight(true);
         }

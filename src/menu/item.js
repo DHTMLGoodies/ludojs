@@ -42,7 +42,9 @@ ludo.menu.Item = new Class({
         this.setConfigParams(config, ['orientation', 'icon', 'record', 'value', 'label', 'action', 'disabled', 'fire']);
 
         this._html = this._html || this.label;
-        if(this._html == '[')this.spacer = true;
+
+        console.log(this._html);
+        if(this._html == '|')this.spacer = true;
 
         if (this.spacer) {
             this.layout.height = 1;

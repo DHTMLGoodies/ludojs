@@ -1,7 +1,7 @@
-/* Generated Wed Dec 28 21:28:09 CET 2016 */
+/* Generated Fri Dec 30 17:30:57 CET 2016 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.328
+ludoJS - Javascript framework, 1.1.333
 Copyright (C) 2012-2016  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -2747,6 +2747,7 @@ ludo.util = {
     },
 
     getDragStartEvent:function () {
+
         return ludo.util.isTabletOrMobile() ? 'touchstart' : 'mousedown';
     },
 
@@ -3621,6 +3622,7 @@ ludo.theme.Themes = new Class({
 
             border: '#424242',
             background: '#535353',
+            background2: '#535353',
             text : '#aeb0b0'
         },
         blue : {
@@ -3634,6 +3636,7 @@ ludo.theme.Themes = new Class({
 
             border: '#a6cbf5',
             background: '#535353',
+            background2: '#535353',
             text : '#000000'
 
         },
@@ -3651,6 +3654,7 @@ ludo.theme.Themes = new Class({
 
             border: '#d7d7d7',
             background: '#FFFFFF',
+            background2: '#e2e2e2',
             text : '#555555'
         }
     },
@@ -4667,7 +4671,135 @@ ludo.remote.Broadcaster = new Class({
 });
 
 ludo.remoteBroadcaster = new ludo.remote.Broadcaster();
-/* ../ludojs/src/svg/engine.js */
+/* ../ludojs/src/svg/matrix.js */
+ludo.svg.Matrix = new Class({
+
+    a: 1, b: 0, c: 0, d: 1, e: 0, f: 0,
+
+    _translateCommited: [0, 0],
+
+    matrix: undefined,
+
+    node: undefined,
+
+    transformationObject: undefined,
+
+    currentRotation:undefined,
+
+    initialize: function (node) {
+        this.node = node;
+        this.currentRotation = [0,0,0];
+    },
+
+    getScale:function(){
+        var m = this.getSVGMatrix();
+        return [m.a, m.d];
+    },
+
+    setScale:function(x,y){
+        this.matrix = this.getSVGMatrix();
+        this.matrix.a = x;
+        this.matrix.d = arguments.length == 1 ? x : y;
+        this.update();
+
+    },
+
+    scale:function(x,y){
+        this.matrix = this.getSVGMatrix.scale(x,this.arguments.length == 1 ? x : y);
+        this.update();
+    },
+
+    getTranslate: function () {
+        var m = this.getSVGMatrix();
+        return [m.e, m.f];
+    },
+
+    setTranslate:function(x,y){
+        this.matrix = this.getSVGMatrix();
+        this.matrix.e = x;
+        this.matrix.f = y;
+        this.update();
+    },
+
+    translate: function (x, y) {
+        this.matrix = this.getSVGMatrix().translate(x,y);
+        this.update();
+    },
+
+    getRotation:function(){
+        return this.currentRotation;
+    },
+
+    setRotation:function(degrees, x, y){
+        if(this.currentRotation != undefined){
+            var a = this.currentRotation;
+            this.rotate(-a[0], a[1], a[2]);
+        }
+        this.rotate(degrees, x, y);
+    },
+
+    rotate: function (degrees, x, y) {
+
+        if(degrees < 0)degrees+=360;
+        degrees  = degrees % 360;
+
+        this.getSVGMatrix();
+
+        if (arguments.length > 1) {
+            this.matrix = this.matrix.translate(x, y);
+        }
+
+        this.matrix = this.matrix.rotate(degrees, x, y);
+
+        if (arguments.length > 1) {
+            this.matrix = this.matrix.translate(-x, -y);
+        }
+
+        this.currentRotation[0] = degrees;
+        this.currentRotation[1] = x;
+        this.currentRotation[2] = y;
+        this.update();
+    },
+
+    commitTranslate: function () {
+        this._translateCommited[0] = this.e;
+        this._translateCommited[1] = this.f;
+    },
+
+    getSVGMatrix: function () {
+        if (this.matrix == undefined) {
+            this.matrix = ludo.svg.SVGElement.createSVGMatrix();
+        }
+        return this.matrix;
+    },
+
+    update: function () {
+        this.getTransformObject().setMatrix(this.matrix);
+    },
+
+    getTransformObject: function () {
+        if (this.transformationObject == undefined) {
+            if (this.node.el.transform.baseVal.numberOfItems == 0) {
+                var owner;
+                if (this.node.el.ownerSVGElement) {
+                    owner = this.node.el.ownerSVGElement;
+                } else {
+                    owner = document.createElementNS("http://www.w3.org/2000/svg", 'svg');
+                }
+                var t = owner.createSVGTransform();
+                this.node.el.transform.baseVal.appendItem(t);
+            }
+            this.transformationObject = this.node.el.transform.baseVal.getItem(0);
+        }
+
+        return this.transformationObject;
+    }
+});
+
+ludo.svg.setGlobalMatrix = function (canvas) {
+    ludo.svg.SVGElement = canvas;
+    ludo.svg.globalMatrix = canvas.createSVGMatrix();
+};/* ../ludojs/src/svg/engine.js */
 ludo.svg.Engine = new Class({
 	/*
 	 * Returns property value of a SVG DOM node
@@ -6829,7 +6961,9 @@ ludo.layout.Base = new Class({
         return child.layout.width;
     },
 
-    getHeightOf: function (child) {
+    getHeightOf: function (child, size) {
+        var h = child.wrappedHeight != undefined ? child.wrappedHeight(size) : undefined;
+        if(h != undefined)return h;
         if(child.layout.height == 'wrap'){
             child.layout.height = child.getEl().outerHeight(true);
         }
@@ -7301,7 +7435,6 @@ ludo.layout.Renderer = new Class({
     lastCoordinates: {},
 
     initialize: function (config) {
-
         this.view = config.view;
         this.fixReferences();
         this.setDefaultProperties();
@@ -7309,7 +7442,9 @@ ludo.layout.Renderer = new Class({
         ludo.dom.clearCache();
         this.addResizeEvent();
 
-        this.view.getLayout().on('addChild', this.clearFn.bind(this));
+        if(this.view.getLayout != undefined){
+            this.view.getLayout().on('addChild', this.clearFn.bind(this));
+        }
         this.view.on('addChild', this.clearFn.bind(this));
     },
 
@@ -9090,6 +9225,13 @@ ludo.View = new Class({
 			}));
 		}
 		return this.canvas;
+	},
+
+	wrappedWidth:function(){
+		return undefined;
+	},
+	wrappedHeight:function(){
+		return undefined;
 	}
 });
 
@@ -11171,6 +11313,10 @@ ludo.svg.Group = new Class({
         }
     },
 
+    rendered:function(){
+        
+    },
+    
     resize:function (coordinates) {
         if (coordinates.width) {
             this.width = coordinates.width;
@@ -11479,6 +11625,7 @@ ludo.chart.Base = new Class({
      * @memberof ludo.chart.Base.prototype
      */
     reveal: function (direction, duration) {
+        console.log('reveal');
         direction = this.revealAnimDirection || 'right';
         duration = this.revealAnimDuration || 600;
         var s = this.getSize();
@@ -14511,15 +14658,16 @@ ludo.chart.LineUtil = {
 
     createTicks:function(){
         this._ticks = [];
-        var mult = 1;
+        var mult = 1/100;
 
         for(var i=0;i< 10; i++){
             this._ticks.push(-mult);
             this._ticks.push(-2 * mult);
             this._ticks.push(-5 * mult);
+            mult*=10;
         }
 
-        mult = 1;
+        mult = 0.1;
 
         this._ticks.push(0);
 
@@ -14527,8 +14675,8 @@ ludo.chart.LineUtil = {
             this._ticks.push(mult);
             this._ticks.push(2 * mult);
             this._ticks.push(5 * mult);
-
             mult*=10;
+
         }
     }
     
@@ -14537,6 +14685,7 @@ ludo.chart.Scatter = new Class({
     Extends:ludo.chart.Base,
     fragmentType:'chart.ScatterSeries',
     type:'chart.Scatter',
+    revealAnim:true,
 
     getTooltipPosition:function(){
         return 'above';
@@ -15788,7 +15937,7 @@ ludo.layout.LinearVertical = new Class({
 						remainingHeight -= config.height;
 					}
 				} else {
-					config.height = this.getHeightOf(this.view.children[i]);
+					config.height = this.getHeightOf(this.view.children[i], config);
 				}
 
 				if (config.height < 0) {
@@ -17744,6 +17893,8 @@ ludo.layout.Grid = new Class({
     },
 
     addChild: function (child, insertAt, pos) {
+        child.layout = child.layout || {};
+        
         child.layout.colspan = child.layout.colspan ||1;
         child.layout.rowspan = child.layout.rowspan ||1;
         child.layout.x = child.layout.x || 0;
@@ -17898,6 +18049,8 @@ ludo.layout.Canvas = new Class({
 	},
 
 	zIndexAdjusted:false,
+	_rendered:false,
+
 	resize:function(){
 		this.parent();
 
@@ -17906,10 +18059,17 @@ ludo.layout.Canvas = new Class({
 
 			for (var i = 0; i < this.children.length; i++) {
 				if(this.children[i].layout.zIndex != undefined){
-					console.log("appending " + this.children[i].id, this.children[i].node.el);
 					this.view.getCanvas().append(this.children[i]);
 				}
 			}
+		}
+
+		if(!this._rendered){
+			this._rendered = true;
+
+			jQuery.each(this.children, function(i, child){
+				child.rendered();
+			});
 		}
 
 	}
@@ -19690,6 +19850,9 @@ ludo.effect.Drag = new Class({
 
         var x = pos.left;
         var y = pos.top;
+
+        var p = e.touches != undefined && e.touches.length > 0 ? e.touches[0] : e;
+
         this.dragProcess = {
             active: true,
             dragged: id,
@@ -19699,8 +19862,8 @@ ludo.effect.Drag = new Class({
             elY: y,
             width: size.x,
             height: size.y,
-            mouseX: e.pageX,
-            mouseY: e.pageY
+            mouseX: p.pageX,
+            mouseY: p.pageY
         };
 
 
@@ -19859,10 +20022,12 @@ ludo.effect.Drag = new Class({
     getXDrag: function (e) {
         var posX;
 
+        var p = e.touches != undefined && e.touches.length > 0 ? e.touches[0] : e;
+
         if (this.mouseXOffset) {
-            posX = e.pageX + this.mouseXOffset;
+            posX = p.pageX + this.mouseXOffset;
         } else {
-            posX = e.pageX - this.dragProcess.mouseX + this.dragProcess.elX;
+            posX = p.pageX - this.dragProcess.mouseX + this.dragProcess.elX;
         }
 
         if (posX < this.dragProcess.minX) {
@@ -19876,10 +20041,12 @@ ludo.effect.Drag = new Class({
 
     getYDrag: function (e) {
         var posY;
+        var p = e.touches != undefined && e.touches.length > 0 ? e.touches[0] : e;
+
         if (this.mouseYOffset) {
-            posY = e.pageY + this.mouseYOffset;
+            posY = p.pageY + this.mouseYOffset;
         } else {
-            posY = e.pageY - this.dragProcess.mouseY + this.dragProcess.elY;
+            posY = p.pageY - this.dragProcess.mouseY + this.dragProcess.elY;
         }
 
         if (posY < this.dragProcess.minY) {
@@ -20333,12 +20500,14 @@ ludo.effect.Resize = new Class({
 
 		ludo.EffectObject.start();
 
+        var p = e.touches != undefined && e.touches.length > 0 ? e.touches[0] : e;
+
         this.dragProperties = {
             a:1,
             active:true,
             region:region,
-            start:{ x:e.pageX, y:e.pageY },
-            current:{x:e.pageX, y:e.pageY },
+            start:{ x:p.pageX, y:p.pageY },
+            current:{x:p.pageX, y:p.pageY },
             el: this.getShimCoordinates(),
             minWidth:this.minWidth,
             maxWidth:this.maxWidth,
@@ -20465,7 +20634,8 @@ ludo.effect.Resize = new Class({
     },
 
     getCurrentCoordinates:function (e) {
-        var ret = {x:e.pageX, y:e.pageY };
+        var p = e.touches != undefined && e.touches.length > 0 ? e.touches[0] : e;
+        var ret = {x:p.pageX, y:p.pageY };
         var d = this.dragProperties;
         if(d.preserveAspectRatio && d.region.length === 2)return ret;
         if (d.minX !== undefined && ret.x < d.minX)ret.x = d.minX;
@@ -27922,7 +28092,9 @@ ludo.menu.Item = new Class({
         this.setConfigParams(config, ['orientation', 'icon', 'record', 'value', 'label', 'action', 'disabled', 'fire']);
 
         this._html = this._html || this.label;
-        if(this._html == '[')this.spacer = true;
+
+        console.log(this._html);
+        if(this._html == '|')this.spacer = true;
 
         if (this.spacer) {
             this.layout.height = 1;
@@ -29098,7 +29270,6 @@ ludo.dataSource.HTML = new Class({
 	},
 
 	parseNewData:function (html) {
-		console.log(html);
 		this.parent();
 		this.data = html;
 		this.fireEvent('load', this.data);
@@ -38505,133 +38676,4 @@ ludo.svg.easing = {
     }
 
 
-};
-/* ../ludojs/src/svg/matrix.js */
-ludo.svg.Matrix = new Class({
-
-    a: 1, b: 0, c: 0, d: 1, e: 0, f: 0,
-
-    _translateCommited: [0, 0],
-
-    matrix: undefined,
-
-    node: undefined,
-
-    transformationObject: undefined,
-
-    currentRotation:undefined,
-
-    initialize: function (node) {
-        this.node = node;
-        this.currentRotation = [0,0,0];
-    },
-
-    getScale:function(){
-        var m = this.getSVGMatrix();
-        return [m.a, m.d];
-    },
-
-    setScale:function(x,y){
-        this.matrix = this.getSVGMatrix();
-        this.matrix.a = x;
-        this.matrix.d = arguments.length == 1 ? x : y;
-        this.update();
-
-    },
-
-    scale:function(x,y){
-        this.matrix = this.getSVGMatrix.scale(x,this.arguments.length == 1 ? x : y);
-        this.update();
-    },
-
-    getTranslate: function () {
-        var m = this.getSVGMatrix();
-        return [m.e, m.f];
-    },
-
-    setTranslate:function(x,y){
-        this.matrix = this.getSVGMatrix();
-        this.matrix.e = x;
-        this.matrix.f = y;
-        this.update();
-    },
-
-    translate: function (x, y) {
-        this.matrix = this.getSVGMatrix().translate(x,y);
-        this.update();
-    },
-
-    getRotation:function(){
-        return this.currentRotation;
-    },
-
-    setRotation:function(degrees, x, y){
-        if(this.currentRotation != undefined){
-            var a = this.currentRotation;
-            this.rotate(-a[0], a[1], a[2]);
-        }
-        this.rotate(degrees, x, y);
-    },
-
-    rotate: function (degrees, x, y) {
-
-        if(degrees < 0)degrees+=360;
-        degrees  = degrees % 360;
-
-        this.getSVGMatrix();
-
-        if (arguments.length > 1) {
-            this.matrix = this.matrix.translate(x, y);
-        }
-
-        this.matrix = this.matrix.rotate(degrees, x, y);
-
-        if (arguments.length > 1) {
-            this.matrix = this.matrix.translate(-x, -y);
-        }
-
-        this.currentRotation[0] = degrees;
-        this.currentRotation[1] = x;
-        this.currentRotation[2] = y;
-        this.update();
-    },
-
-    commitTranslate: function () {
-        this._translateCommited[0] = this.e;
-        this._translateCommited[1] = this.f;
-    },
-
-    getSVGMatrix: function () {
-        if (this.matrix == undefined) {
-            this.matrix = ludo.svg.SVGElement.createSVGMatrix();
-        }
-        return this.matrix;
-    },
-
-    update: function () {
-        this.getTransformObject().setMatrix(this.matrix);
-    },
-
-    getTransformObject: function () {
-        if (this.transformationObject == undefined) {
-            if (this.node.el.transform.baseVal.numberOfItems == 0) {
-                var owner;
-                if (this.node.el.ownerSVGElement) {
-                    owner = this.node.el.ownerSVGElement;
-                } else {
-                    owner = document.createElementNS("http://www.w3.org/2000/svg", 'svg');
-                }
-                var t = owner.createSVGTransform();
-                this.node.el.transform.baseVal.appendItem(t);
-            }
-            this.transformationObject = this.node.el.transform.baseVal.getItem(0);
-        }
-
-        return this.transformationObject;
-    }
-});
-
-ludo.svg.setGlobalMatrix = function (canvas) {
-    ludo.svg.SVGElement = canvas;
-    ludo.svg.globalMatrix = canvas.createSVGMatrix();
 };

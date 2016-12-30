@@ -139,12 +139,14 @@ ludo.effect.Resize = new Class({
 
 		ludo.EffectObject.start();
 
+        var p = e.touches != undefined && e.touches.length > 0 ? e.touches[0] : e;
+
         this.dragProperties = {
             a:1,
             active:true,
             region:region,
-            start:{ x:e.pageX, y:e.pageY },
-            current:{x:e.pageX, y:e.pageY },
+            start:{ x:p.pageX, y:p.pageY },
+            current:{x:p.pageX, y:p.pageY },
             el: this.getShimCoordinates(),
             minWidth:this.minWidth,
             maxWidth:this.maxWidth,
@@ -271,7 +273,8 @@ ludo.effect.Resize = new Class({
     },
 
     getCurrentCoordinates:function (e) {
-        var ret = {x:e.pageX, y:e.pageY };
+        var p = e.touches != undefined && e.touches.length > 0 ? e.touches[0] : e;
+        var ret = {x:p.pageX, y:p.pageY };
         var d = this.dragProperties;
         if(d.preserveAspectRatio && d.region.length === 2)return ret;
         if (d.minX !== undefined && ret.x < d.minX)ret.x = d.minX;

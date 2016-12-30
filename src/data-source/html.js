@@ -42,7 +42,6 @@ ludo.dataSource.HTML = new Class({
 	},
 
 	parseNewData:function (html) {
-		console.log(html);
 		this.parent();
 		this.data = html;
 		this.fireEvent('load', this.data);

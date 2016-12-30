@@ -12,7 +12,7 @@ $skin = isset($skin) ? $skin : 'twilight';
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?php echo $pageTitle; ?></title>
 
-    <script type="text/javascript">
+    <script class="analytics" type="text/javascript">
 
         if(location.hostname.indexOf('ludojs.com') >=0){
             var _gaq = _gaq || [];

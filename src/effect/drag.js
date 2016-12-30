@@ -324,6 +324,9 @@ ludo.effect.Drag = new Class({
 
         var x = pos.left;
         var y = pos.top;
+
+        var p = e.touches != undefined && e.touches.length > 0 ? e.touches[0] : e;
+
         this.dragProcess = {
             active: true,
             dragged: id,
@@ -333,8 +336,8 @@ ludo.effect.Drag = new Class({
             elY: y,
             width: size.x,
             height: size.y,
-            mouseX: e.pageX,
-            mouseY: e.pageY
+            mouseX: p.pageX,
+            mouseY: p.pageY
         };
 
 
@@ -493,10 +496,12 @@ ludo.effect.Drag = new Class({
     getXDrag: function (e) {
         var posX;
 
+        var p = e.touches != undefined && e.touches.length > 0 ? e.touches[0] : e;
+
         if (this.mouseXOffset) {
-            posX = e.pageX + this.mouseXOffset;
+            posX = p.pageX + this.mouseXOffset;
         } else {
-            posX = e.pageX - this.dragProcess.mouseX + this.dragProcess.elX;
+            posX = p.pageX - this.dragProcess.mouseX + this.dragProcess.elX;
         }
 
         if (posX < this.dragProcess.minX) {
@@ -510,10 +515,12 @@ ludo.effect.Drag = new Class({
 
     getYDrag: function (e) {
         var posY;
+        var p = e.touches != undefined && e.touches.length > 0 ? e.touches[0] : e;
+
         if (this.mouseYOffset) {
-            posY = e.pageY + this.mouseYOffset;
+            posY = p.pageY + this.mouseYOffset;
         } else {
-            posY = e.pageY - this.dragProcess.mouseY + this.dragProcess.elY;
+            posY = p.pageY - this.dragProcess.mouseY + this.dragProcess.elY;
         }
 
         if (posY < this.dragProcess.minY) {
