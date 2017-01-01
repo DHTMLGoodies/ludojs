@@ -3,7 +3,7 @@
  *
  * With this class, you can convert between RGB and HSV, darken and brighten colors,
  * increase and decrease saturation and brightness of a color etc.
- * 
+ *
  * @class ludo.color.Color
  * @example {@lang JavaScript}
  * var util = new ludo.color.Color();
@@ -24,9 +24,9 @@ ludo.color.Color = new Class({
     randomColor:function(){
         return this.rgbCode(
             {
-                r: Math.round(Math.random() * 255),
-                g: Math.round(Math.random() * 255),
-                b: Math.round(Math.random() * 255)
+                r: Math.floor(Math.random() * 255),
+                g: Math.floor(Math.random() * 255),
+                b: Math.floor(Math.random() * 255)
             }
         );
     },
