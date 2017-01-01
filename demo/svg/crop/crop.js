@@ -331,6 +331,8 @@ svgCrop.Surface = new Class({
         this.fireEvent('size', this.size);
         this.resizeAndPosition();
 
+        this.updateCoordinates();
+
 
     },
 
