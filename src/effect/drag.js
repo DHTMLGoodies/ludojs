@@ -779,55 +779,7 @@ ludo.effect.Drag = new Class({
     setShimText: function (text) {
         this.getShim().html(text);
     },
-
-    /**
-     * Fly/Slide dragged element back to it's original position
-     * @function flyBack
-     * @memberof ludo.effect.Effect.prototype
-     */
-    flyBack: function (duration) {
-        this.fly({
-            el: this.getShimOrEl(),
-            duration: duration,
-            from: {x: this.getLeft(), y: this.getTop()},
-            to: {x: this.getStartX(), y: this.getStartY()},
-            onComplete: this.flyBackComplete.bind(this)
-        });
-    },
-
-    /**
-     * Fly/Slide dragged element to position of shim. This will only
-     * work when useShim is set to true.
-     * @function flyToShim
-     * @param {Number} duration in seconds(default = .2)
-     * @memberof ludo.effect.Effect.prototype
-     */
-    flyToShim: function (duration) {
-        this.fly({
-            el: this.getEl(),
-            duration: duration,
-            from: {x: this.getStartX(), y: this.getStartY()},
-            to: {x: this.getLeft(), y: this.getTop()},
-            onComplete: this.flyToShimComplete.bind(this)
-        });
-    },
-
-    getStartX: function () {
-        return this.dragProcess.elX;
-    },
-
-    getStartY: function () {
-        return this.dragProcess.elY;
-    },
-
-    flyBackComplete: function () {
-
-        this.fireEvent('flyBack', [this, this.getShimOrEl()]);
-    },
-
-    flyToShimComplete: function () {
-        this.fireEvent('flyToShim', [this, this.getEl()]);
-    },
+    
 
     isActive: function () {
         return this.dragProcess.active;

@@ -26,6 +26,7 @@ require_once("../../includes/demo-header.php");
                     'crop': function (cropArea) {
                         new ludo.Notification({
                                 html: 'Crop event : ' + JSON.stringify(cropArea),
+                                effect:'slide',
                                 layout: {
                                     centerIn: ludo.$('cropTool')
                                 }

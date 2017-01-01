@@ -39,7 +39,7 @@ ludo.Notification = new Class({
 	showEffect:undefined,
 	hideEffect:undefined,
 	effect:'fade',
-	effectDuration:1,
+	effectDuration:0.4,
 	autoRemove:true,
 
 	__construct:function (config) {

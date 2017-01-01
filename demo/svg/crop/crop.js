@@ -233,11 +233,11 @@ svgCrop.Surface = new Class({
         if (this.clipPoints == undefined) {
             this.clipPoints = ['M', 0, 0, 'L', 1000, 0, 1000, 1000, 0, 1000,
                 0, 0, 'M',
-                300, 300, 'L',  // 13 14
-                700, 300,  // 16 17
-                700, 700,  // 18 19
-                300, 700, // 20 21
-                300, 300, 'Z']; // 22 23
+                0, 0, 'L',  // 13 14
+                2000, 3000,  // 16 17
+                0, 3000,  // 18 19
+                2000, 3000, // 20 21
+                2000, 3000, 'Z']; // 22 23
         }
         return this.clipPoints;
     },
@@ -318,6 +318,8 @@ svgCrop.Surface = new Class({
     },
 
     imageLoaded: function () {
+
+
 
         this.imageNode.set('opacity', 1);
 
