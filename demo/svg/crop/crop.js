@@ -35,7 +35,7 @@ svgCrop.CropTool = new Class({
                 layout:{
                     above:'bottom',
                     fillUp:true,
-                    width: 150
+                    width: 110
 
                 }
             },
@@ -231,7 +231,7 @@ svgCrop.Surface = new Class({
 
     getClipPoints: function () {
         if (this.clipPoints == undefined) {
-            this.clipPoints = ['M', 0, 0, 'L', 1000, 0, 1000, 1000, 0, 1000,
+            this.clipPoints = ['M', 0, 0, 'L', 3000, 0, 3000, 3000, 0, 3000,
                 0, 0, 'M',
                 0, 0, 'L',  // 13 14
                 2000, 3000,  // 16 17
@@ -363,6 +363,7 @@ svgCrop.Surface = new Class({
     },
 
     startDrag: function (action, event) {
+
         this.resizeAttr = {
             action: action,
             axis: (action == 'n' || action == 's') ? ['Y'] : action.length == 1 ? ['X'] : ['X', 'Y'],
@@ -416,8 +417,15 @@ svgCrop.Surface = new Class({
     drag: function (event) {
         if (this.resizeAttr == undefined)return;
 
-        var deltaX = event.pageX - this.resizeAttr.mouseX;
-        var deltaY = event.pageY - this.resizeAttr.mouseY;
+        var pX = event.pageX;
+        var py = event.pageY;
+        if (event.touches && event.touches.length > 0) {
+            pX = event.touches[0].pageX;
+            py = event.touches[0].pageY;
+        }
+
+        var deltaX = pX - this.resizeAttr.mouseX;
+        var deltaY = py - this.resizeAttr.mouseY;
 
         deltaX = ludo.util.clamp(deltaX, this.resizeAttr.minX, this.resizeAttr.maxX);
         deltaY = ludo.util.clamp(deltaY, this.resizeAttr.minY, this.resizeAttr.maxY);

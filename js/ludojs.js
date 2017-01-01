@@ -1,7 +1,7 @@
-/* Generated Sun Jan 1 7:51:47 CET 2017 */
+/* Generated Sun Jan 1 8:03:48 CET 2017 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.338
+ludoJS - Javascript framework, 1.1.339
 Copyright (C) 2012-2017  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -4998,10 +4998,14 @@ ludo.svg.Node = new Class({
 
             var mouseX, mouseY;
             var touches = e.touches;
+            var pX = event.pageX;
+            var py = event.pageY;
             if (touches && touches.length > 0) {
                 mouseX = touches[0].clientX;
                 mouseY = touches[0].clientY;
 
+                pX = touches[0].pageX;
+                py = touches[0].pageY;
             } else {
                 mouseX = e.clientX;
                 mouseY = e.clientY;
@@ -5012,8 +5016,8 @@ ludo.svg.Node = new Class({
 
             e = {
                 target: target,
-                pageX: (e.pageX != null) ? e.pageX : e.clientX + document.scrollLeft,
-                pageY: (e.pageY != null) ? e.pageY : e.clientY + document.scrollTop,
+                pageX: (pX != null) ? pX : mouseX + document.scrollLeft,
+                pageY: (py != null) ? py : mouseY + document.scrollTop,
                 clientX: mouseX - off.left, // Relative position to SVG element
                 clientY: mouseY - off.top,
                 event: e
