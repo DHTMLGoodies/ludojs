@@ -538,11 +538,13 @@ svgCrop.Handle = new Class({
 
     node: undefined,
     initialize: function (config) {
+
+        var hh = ludo.util.isTabletOrMobile();
         this.orientation = config.orientation;
         this.surface = config.surface;
 
         this.node = this.surface.getCanvas().$('circle', {
-            r: 5, cx: 0, cy: 0
+            r: hh ? 8: 5, cx: 0, cy: 0
         });
         this.node.css({
             'stroke-width': 1,
