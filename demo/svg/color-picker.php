@@ -24,18 +24,6 @@ require_once("../includes/demo-header.php");
         border-radius:2px;
     }
 </style>
-<script type="text/javascript"><!--
-google_ad_client = "ca-pub-0714236485040063";
-/* LudoJS */
-google_ad_slot = "6617755948";
-google_ad_width = 336;
-google_ad_height = 280;
-//--><!--
-</script>
-<script type="text/javascript"
-        src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
-</script>
-
 <style type="text/css">
     .ludo-body, div.ludo-framed-view-body {
 
@@ -48,13 +36,14 @@ google_ad_height = 280;
 </style>
 <script type="text/javascript">
 
-    var win = new ludo.Window({
+    var win = new ludo.FramedView({
         id:'canvasWindow',
         title:'Color picker created with SVG',
+        renderTo:document.body,
         layout:{
             type:'relative',
-            left:20, top:40,
-            width:600, height:490,
+            //  left:20, top:40,
+            width:'matchParent', height:'matchParent',
             minWidth:300, minHeight:400,
         },
         children:[

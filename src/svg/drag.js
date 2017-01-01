@@ -34,7 +34,6 @@ ludo.svg.Drag = new Class({
 	},
 
 	setStartTranslate:function (node) {
-
 		this.dragProcess.startTranslate = this.getPositionOf(node.el);
 	},
 
@@ -107,7 +106,7 @@ ludo.svg.Drag = new Class({
 			translate.y = pos.y;
 			this.dragProcess.currentY = pos.y;
 		}
-		node.translate(translate.x, translate.y);
+		node.setTranslate(translate.x, translate.y);
 
 
 	},

@@ -1,7 +1,7 @@
-/* Generated Sun Jan 1 8:03:48 CET 2017 */
+/* Generated Mon Jan 2 0:57:26 CET 2017 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.339
+ludoJS - Javascript framework, 1.1.340
 Copyright (C) 2012-2017  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -37333,7 +37333,6 @@ ludo.svg.Drag = new Class({
 	},
 
 	setStartTranslate:function (node) {
-
 		this.dragProcess.startTranslate = this.getPositionOf(node.el);
 	},
 
@@ -37406,7 +37405,7 @@ ludo.svg.Drag = new Class({
 			translate.y = pos.y;
 			this.dragProcess.currentY = pos.y;
 		}
-		node.translate(translate.x, translate.y);
+		node.setTranslate(translate.x, translate.y);
 
 
 	},

@@ -79,9 +79,9 @@ ludo.colorPicker.HueBar = new Class({
 	},
 
 	dragSlider:function(pos){
-		
 		pos.y -= this.currentBarHeight * (this.topMargin / 100);
 		pos.y += this.getSliderHeight() / 2;
+
 		var hue = 360 - (pos.y * 360 / (this.currentBarHeight * this.barHeight / 100));
 		hue = Math.max(0, hue);
 		this.currentHue = hue;
@@ -101,7 +101,10 @@ ludo.colorPicker.HueBar = new Class({
     },
 
 	barClick:function(e){
-		var hue = this.getHueByYPos(e.pageY);
+
+		var t = e.touches;
+		var pY = t != undefined && t.length >0 ? t[0].pageY: e.pageY;
+		var hue = this.getHueByYPos(pY);
 		if(hue !== this.currentHue){
 			this.currentHue = hue;
 			this.fireEvent('setHue', hue);
@@ -135,7 +138,7 @@ ludo.colorPicker.HueBar = new Class({
 		var h = this.hueBar.getHeight();
 		var y = h - (hue/360*h) - (this.getSliderHeight() / 2);
 		y += this.getCanvas().getHeight() * (this.topMargin / 100);
-		this.slider.translate(0, Math.round(y));
+		this.slider.setTranslate(0, Math.round(y));
 		this.currentHue = hue;
 	},
 

@@ -8,22 +8,22 @@ svgCrop.CropTool = new Class({
     __children: function () {
         return [
             {
-                id:'bottom',
-                css:{
-                    'border-top':'1px solid ' + ludo.$C('border'),
-                    padding:3
+                id: 'bottom',
+                css: {
+                    'border-top': '1px solid ' + ludo.$C('border'),
+                    padding: 3
                 },
-                layout:{
-                    height:32,
-                    alignParentBottom:true,
-                    width:'matchParent',
-                    type:'relative'
+                layout: {
+                    height: 32,
+                    alignParentBottom: true,
+                    width: 'matchParent',
+                    type: 'relative'
                 },
-                children:[
+                children: [
                     {
-                        type:'form.Button', value:'Crop',id:'cropButton',
-                        layout:{
-                            alignParentRight:true
+                        type: 'form.Button', value: 'Crop', id: 'cropButton',
+                        layout: {
+                            alignParentRight: true
                         }
                     }
                 ]
@@ -32,10 +32,10 @@ svgCrop.CropTool = new Class({
                 id: 'form',
                 name: 'form',
                 type: 'svgCrop.Form',
-                layout:{
-                    above:'bottom',
-                    fillUp:true,
-                    width: 110
+                layout: {
+                    above: 'bottom',
+                    fillUp: true,
+                    width: 100
 
                 }
             },
@@ -43,8 +43,8 @@ svgCrop.CropTool = new Class({
                 name: 'surface',
                 type: 'svgCrop.Surface',
                 layout: {
-                    above:'bottom',
-                    fillUp:true,
+                    above: 'bottom',
+                    fillUp: true,
                     rightOf: 'form',
                     fillRight: true
 
@@ -62,17 +62,17 @@ svgCrop.CropTool = new Class({
         ludo.$('cropButton').on('click', this.crop.bind(this));
     },
 
-    formUpdate:function(name, value){
+    formUpdate: function (name, value) {
         this.child["surface"].formUpdate(name, value);
 
 
     },
 
-    crop:function(){
+    crop: function () {
         this.fireEvent('crop', this.child['surface'].actualCropArea);
     },
 
-    setMinMax:function(size){
+    setMinMax: function (size) {
         this.child['form'].onPictureLoaded(size);
     },
 
@@ -97,36 +97,40 @@ svgCrop.Form = new Class({
         simple: true,
         columns: [{weight: 1}, {width: 40}]
     },
-    
-    pictureCoordinates:undefined,
 
-    __rendered:function(){
+    pictureCoordinates: undefined,
+
+    __rendered: function () {
         this.parent();
         this.getForm().on('invalid', this.onInvalid.bind(this));
     },
 
-    onInvalid:function(){
+    onInvalid: function () {
         this.getForm().rollback();
     },
 
-    onPictureLoaded:function(coordinates){
+    onPictureLoaded: function (coordinates) {
         this.pictureCoordinates = coordinates;
         this.populate(coordinates);
     },
-    
-    numberValidator:function(val, key, formField){
-        if(val.length==0 || !this.pictureCoordinates)return false;
+
+    numberValidator: function (val, key, formField) {
+        if (val.length == 0 || !this.pictureCoordinates)return false;
         val = parseInt(val);
 
-        switch(formField.name){
-            case 'x': return val >= 0 && val <= this.pictureCoordinates.width - 10;
-            case 'y': return val >= 0 && val <= this.pictureCoordinates.height - 10;
-            case 'width': return val > 10 && val <= this.pictureCoordinates.height - this.child['x'].val();
-            case 'height': return val > 10 && val <= this.pictureCoordinates.height - this.child['y'].val();
+        switch (formField.name) {
+            case 'x':
+                return val >= 0 && val <= this.pictureCoordinates.width - 10;
+            case 'y':
+                return val >= 0 && val <= this.pictureCoordinates.height - 10;
+            case 'width':
+                return val > 10 && val <= this.pictureCoordinates.height - this.child['x'].val();
+            case 'height':
+                return val > 10 && val <= this.pictureCoordinates.height - this.child['y'].val();
         }
     },
 
-    populate:function(coordinates){
+    populate: function (coordinates) {
         this.getForm().populate(coordinates);
         this.getForm().commit();
     },
@@ -137,23 +141,23 @@ svgCrop.Form = new Class({
                 type: 'form.Label', labelFor: 'x', label: 'X:'
             },
             {
-                type: 'form.Number', name: 'x', validator:this.numberValidator.bind(this)
+                type: 'form.Number', name: 'x', validator: this.numberValidator.bind(this)
             }, {
                 type: 'form.Label', labelFor: 'y', label: 'Y:'
             },
             {
-                type: 'form.Number', name: 'y', validator:this.numberValidator.bind(this)
+                type: 'form.Number', name: 'y', validator: this.numberValidator.bind(this)
             },
             {
                 type: 'form.Label', labelFor: 'width', label: 'Width:'
             },
             {
-                type: 'form.Number', name: 'width', validator:this.numberValidator.bind(this)
+                type: 'form.Number', name: 'width', validator: this.numberValidator.bind(this)
             }, {
                 type: 'form.Label', labelFor: 'height', label: 'Height:'
             },
             {
-                type: 'form.Number', name: 'height', validator:this.numberValidator.bind(this)
+                type: 'form.Number', name: 'height', validator: this.numberValidator.bind(this)
             }
         ]
     }
@@ -178,7 +182,7 @@ svgCrop.Surface = new Class({
 
     cropArea: undefined,
 
-    padding: 20,
+    padding: 25,
 
     group: undefined,
 
@@ -189,12 +193,12 @@ svgCrop.Surface = new Class({
 
     resizeAttr: undefined,
 
-    actualCropArea:undefined,
+    actualCropArea: undefined,
 
     __construct: function (config) {
         this.parent(config);
         this.imagePos = {x: 0, y: 0};
-        this.actualCropArea = {x: 0, y: 0, width:0,height:0}
+        this.actualCropArea = {x: 0, y: 0, width: 0, height: 0}
 
     },
 
@@ -217,13 +221,13 @@ svgCrop.Surface = new Class({
 
     },
 
-    formUpdate:function(key, value){
+    formUpdate: function (key, value) {
         var prev = this.cropArea[key];
         this.cropArea[key] = value * this.ratio;
-        var diff =  this.cropArea[key] - prev;
-        if(key == 'x'){
+        var diff = this.cropArea[key] - prev;
+        if (key == 'x') {
             this.cropArea['width'] -= diff;
-        }else if(key=='y'){
+        } else if (key == 'y') {
             this.cropArea['height'] -= diff;
         }
         this.updateCoordinates();
@@ -320,7 +324,6 @@ svgCrop.Surface = new Class({
     imageLoaded: function () {
 
 
-
         this.imageNode.set('opacity', 1);
 
         var bbox = this.imageNode.getBBox();
@@ -340,13 +343,12 @@ svgCrop.Surface = new Class({
 
     createHandles: function () {
 
-        if(this.rect == undefined){
+        if (this.rect == undefined) {
             this.rect = new svgCrop.Rect({
                 surface: this
             });
             this.rect.on('move', this.startDrag.bind(this));
         }
-
 
 
         if (this.handles == undefined) {
@@ -376,7 +378,7 @@ svgCrop.Surface = new Class({
 
         this.resizeAttr = Object.merge(this.resizeAttr, this.getMinMaxDelta(action));
 
-        if(this.resizeAttr.minX == 0 && this.resizeAttr.maxX == 0 && this.resizeAttr.minY == 0 && this.resizeAttr.maxY == 0){
+        if (this.resizeAttr.minX == 0 && this.resizeAttr.maxX == 0 && this.resizeAttr.minY == 0 && this.resizeAttr.maxY == 0) {
             this.resizeAttr = undefined;
         }
     },
@@ -386,7 +388,7 @@ svgCrop.Surface = new Class({
             minX: 0, minY: 0, maxX: 0, maxY: 0
         };
 
-        if(action =='move'){
+        if (action == 'move') {
             ret.minX = -this.cropArea.x;
             ret.maxX = this.cropArea.imageWidth - this.cropArea.width - this.cropArea.x;
             ret.minY = -this.cropArea.y;
@@ -430,11 +432,11 @@ svgCrop.Surface = new Class({
         deltaX = ludo.util.clamp(deltaX, this.resizeAttr.minX, this.resizeAttr.maxX);
         deltaY = ludo.util.clamp(deltaY, this.resizeAttr.minY, this.resizeAttr.maxY);
 
-        if(this.resizeAttr.action =='move'){
+        if (this.resizeAttr.action == 'move') {
             this.cropArea.x = this.resizeAttr.x + deltaX;
             this.cropArea.y = this.resizeAttr.y + deltaY;
 
-        }else{
+        } else {
             var xAttr = this.resizeAttr.xAttr;
             var yAttr = this.resizeAttr.yAttr;
             this.cropArea[xAttr] = this.resizeAttr[xAttr] + deltaX;
@@ -448,12 +450,11 @@ svgCrop.Surface = new Class({
         this.updateCoordinates();
 
 
-
         return false; // To avoid selection of text etc on page.
 
     },
 
-    updateCoordinates:function(){
+    updateCoordinates: function () {
         this.actualCropArea.x = Math.round(this.cropArea.x / this.ratio);
         this.actualCropArea.y = Math.round(this.cropArea.y / this.ratio);
         this.actualCropArea.width = Math.round(this.cropArea.width / this.ratio);
@@ -496,7 +497,7 @@ svgCrop.Surface = new Class({
 });
 
 svgCrop.Rect = new Class({
-    Extends:Events,
+    Extends: Events,
 
     surface: undefined,
 
@@ -516,7 +517,7 @@ svgCrop.Rect = new Class({
         this.node.on(ludo.util.getDragStartEvent(), this.startMove.bind(this));
     },
 
-    startMove:function(e){
+    startMove: function (e) {
         this.fireEvent('move', ['move', e]);
     },
 
@@ -543,9 +544,17 @@ svgCrop.Handle = new Class({
         this.orientation = config.orientation;
         this.surface = config.surface;
 
+
         this.node = this.surface.getCanvas().$('circle', {
-            r: hh ? 10: 5, cx: 0, cy: 0
+            r: hh ? 11: 5,
+            cx:0,cy:0
         });
+
+        /*
+        this.node = this.surface.getCanvas().$('path', {
+            d: this.getPath()
+        });
+        */
         this.node.css({
             'stroke-width': 1,
             'stroke': '#FFF'
@@ -558,6 +567,42 @@ svgCrop.Handle = new Class({
         this.surface.on('cropArea', fn);
 
         this.node.on(ludo.util.getDragStartEvent(), this.start.bind(this));
+    },
+
+    getPath: function () {
+        var hh = ludo.util.isTabletOrMobile();
+        var r = hh ? 12 : 6;
+        switch (this.orientation) {
+            case 'n':
+                return ['M', -r, 0, 'A', r, r, 180, 0, 1, r, 0].join(' ');
+            case 's':
+                return ['M', -r, 0, 'A', r, r, 180, 1, 0, r, 0].join(' ');
+            case 'e':
+                return ['M', 0, -r, 'A', r, r, 180, 0, 1, 0, r].join(' ');
+            case 'w':
+                return ['M', 0, -r, 'A', r, r, 180, 1, 0, 0, r].join(' ');
+            case 'nw':
+                return ['M', 0, r,
+                    'A', r, r, 180, 0, 1, 0, -r,
+                    'A', r, r, 90, 0, 1, r, 0].join(' ');
+            case 'se':
+                return ['M', 0, -r,
+                    'A', r, r, 180, 0, 1, 0, r,
+                    'A', r, r, 90, 0, 1, -r, 0].join(' ');
+            case 'ne':
+                return ['M', -r,0,
+                    'A', r, r, 180, 0, 1, r, 0,
+                    'A', r, r, 90, 0, 1, 0, r].join(' ');
+
+            case 'sw':
+                return ['M', r, 0,
+                    'A', r, r, 180, 0, 1, -r, 0,
+                    'A', r, r, 90, 0, 1, 0, -r].join(' ');
+
+            default:
+                return ['M', 0, 0, 'L', 1, 1].join(' ');
+        }
+
     },
 
     start: function (e) {
