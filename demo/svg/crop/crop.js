@@ -544,7 +544,7 @@ svgCrop.Handle = new Class({
         this.surface = config.surface;
 
         this.node = this.surface.getCanvas().$('circle', {
-            r: hh ? 8: 5, cx: 0, cy: 0
+            r: hh ? 10: 5, cx: 0, cy: 0
         });
         this.node.css({
             'stroke-width': 1,
