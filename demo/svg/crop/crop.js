@@ -14,7 +14,7 @@ svgCrop.CropTool = new Class({
                     padding:3
                 },
                 layout:{
-                    height:30,
+                    height:32,
                     alignParentBottom:true,
                     width:'matchParent',
                     type:'relative'

@@ -311,7 +311,7 @@ ludo.form.Manager = new Class({
             this.dirtyIds.push(elId);
         }
 
-        this.fireEvent('dirty', this.eventArguments());
+        this.fireEvent('dirty', this.eventArguments(formComponent));
     },
 
     onClean: function (value, formComponent) {
@@ -324,11 +324,13 @@ ludo.form.Manager = new Class({
 
     onChange: function (value, formComponent) {
         // TODO refactor into one
-        this.fireEvent('change', this.eventArguments());
+        this.fireEvent('change', this.eventArguments(formComponent));
     },
 
-    eventArguments:function(formComponent){
-        return [formComponent.name, formComponent.val(), this, formComponent];
+    eventArguments:function(f){
+        var n = f ? f.name : undefined;
+        var val = f? f.val(): undefined;
+        return [n, val, this, f];
     },
     /**
      * One form element is valid. Fire valid event if all form elements are valid
@@ -357,7 +359,7 @@ ludo.form.Manager = new Class({
             this.invalidIds.push(elId);
         }
 
-        this.fireEvent('invalid', this.eventArguments());
+        this.fireEvent('invalid', this.eventArguments(formComponent));
     },
     /**
      * Validate form and fire "invalid" or "valid" event
