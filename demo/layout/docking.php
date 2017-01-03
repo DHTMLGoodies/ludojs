@@ -24,22 +24,20 @@ require_once("../includes/demo-header.php");
             type:'linear',
             orientation:'horizontal'
         },
-        children:[ // Children for the accordion listed below
+        children:[ // Children for the docking layout view listed below
             {
                 id:'dockingLayoutView',
                 layout:{
-                    type:'docking',
-                    width:200,
-                    resizable:true, // Render children in an accordion
-                    easing: 'swing', // easing for the animation. linear and swing are available. More can be found in jQuery plugins
-                    duration: 300, // 1/2 s duration for the animations
-                    tabs:'left'
+                    type:'docking'// Render children in an docking layout
+                    width:200, // initial width
+                    resizable:true,  // width can be adjusted by dragging
+                    tabs:'left'// Position tabs to the left
                 },
                 children:[
                     {
                         type:'tree.Tree',
                         id:'tree',
-                        title: 'Project',// Title for the accordion
+                        title: 'Project',// Title for the docking
                         dataSource:{
                             url:'../resources/tree-data-source.php',
                             requestId:'getTree',
@@ -59,7 +57,7 @@ require_once("../includes/demo-header.php");
                     },
                     {
                         id:'methods',
-                        title: 'Methods', // Title for the accordion
+                        title: 'Methods', // Title for the docking
                         html:'Second view',
                         css:{ // CSS styling for the view
                             padding:5,
@@ -71,7 +69,6 @@ require_once("../includes/demo-header.php");
             },
             {
                 id:'sourcecode',
-                title: 'Source Code',// Title for the accordion
                 type:'SourceCodePreview',
                 css:{
                     padding:5
