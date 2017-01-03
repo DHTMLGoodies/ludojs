@@ -37,7 +37,13 @@ ludo.colorPicker.HueBar = new Class({
 
 		var symbol = new ludo.svg.Node('symbol');
 		this.getCanvas().appendDef(symbol);
-		var p = new ludo.svg.Path('M 5 0 L 10 0 L 15 5 L 10 10 L 5 10 Z', { fill:'#FFF', stroke : '#555', 'stroke-width' :1});
+
+
+		var hh = ludo.util.isTabletOrMobile();
+		var size = hh ? 15 : 12;
+
+		var path = ['M', size / 2 ,'0', 'L', size, 0 ,'L', size * 1.5, size/2, 'L' ,size, size,'L', (size/2), size, 'Z'].join(' ');
+		var p = new ludo.svg.Path(path, { fill:'#FFF', stroke : '#555', 'stroke-width' :1});
 		symbol.append(p);
 
 		var u = new ludo.svg.Node('use');

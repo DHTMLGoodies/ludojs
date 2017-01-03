@@ -10,7 +10,7 @@ require_once("../includes/demo-header.php");
 <script type="text/javascript" src="color-picker/controller.js"></script>
 <script type="text/javascript" src="color-picker/rgb.js"></script>
 <script type="text/javascript" src="color-picker/hsv.js"></script>
-<script type="text/javascript" src="color-picker/hue-bar.js?rnd=43"></script>
+<script type="text/javascript" src="color-picker/hue-bar.js?rnd=53"></script>
 <script type="text/javascript" src="color-picker/picker.js"></script>
 <script type="text/javascript" src="color-picker/preview.js"></script>
 <script type="text/javascript" src="color-picker/code-panel.js"></script>

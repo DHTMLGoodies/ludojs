@@ -73,6 +73,7 @@ $rnd = "RND". date("YmdHis");
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/collapse-bar.js?abc=<?php echo $rnd; ?>"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/table.js?abc=<?php echo $rnd; ?>"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/accordion.js?abc=<?php echo $rnd; ?>"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/layout/docking.js?abc=<?php echo $rnd; ?>"></script>
 
 
 

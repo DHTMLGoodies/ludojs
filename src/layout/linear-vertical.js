@@ -38,24 +38,25 @@ ludo.layout.LinearVertical = new Class({
 
 		var width = this.view.getBody().width();
 		for (i = 0; i < this.view.children.length; i++) {
-			if(!this.view.children[i].isHidden()){
+			var c = this.view.children[i];
+			if(!c.isHidden()){
 
-				var w = this.view.children[i].layout.width;
+				var w = c.layout.width;
 				var cW = w && !isNaN(w) ? w : width;
 
 				var config = {
-					width:cW
+					width:c.type == 'layout.Resizer' ? width: cW
 				};
 				
-				if (this.hasLayoutWeight(this.view.children[i])) {
-					if (this.view.children[i].id == this.idLastDynamic) {
+				if (this.hasLayoutWeight(c)) {
+					if (c.id == this.idLastDynamic) {
 						config.height = remainingHeight;
 					} else {
-						config.height = Math.round(stretchHeight * this.view.children[i].layout.weight / totalWeight);
+						config.height = Math.round(stretchHeight * c.layout.weight / totalWeight);
 						remainingHeight -= config.height;
 					}
 				} else {
-					config.height = this.getHeightOf(this.view.children[i], config);
+					config.height = this.getHeightOf(c, config);
 				}
 
 				if (config.height < 0) {
@@ -65,8 +66,8 @@ ludo.layout.LinearVertical = new Class({
 					config.top = tm;
 				}
 
-				this.resizeChild(this.view.children[i], config);
-				tm += this.view.children[i].getEl().outerHeight(true);
+				this.resizeChild(c, config);
+				tm += c.getEl().outerHeight(true);
 			}
 		}
 	},

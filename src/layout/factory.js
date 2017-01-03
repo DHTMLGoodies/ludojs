@@ -5,14 +5,6 @@
  */
 ludo.layout.Factory = new Class({
 
-    /**
-     * Returns layout manager, a layout.Base or subclass
-	 * @function getManager
-     * @param {ludo.View} view
-     * @return {ludo.layout.Base} manager
-	 * @private
-	 * @memberof ludo.layout.Factory.prototype
-     */
 	getManager:function(view){
 		return new ludo.layout[this.getLayoutClass(view)](view);
 	},
@@ -29,6 +21,8 @@ ludo.layout.Factory = new Class({
 		if(!view.layout || !view.layout.type)return 'Base';
 
 		switch(view.layout.type.toLowerCase()){
+			case "docking":
+				return "Docking";
 			case "accordion":
 				return "Accordion";
 			case "table":

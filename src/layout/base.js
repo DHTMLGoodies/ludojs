@@ -42,6 +42,10 @@ ludo.layout.Base = new Class({
 
 
     },
+    
+    prepareForChildrenOnCreate:function(){
+        
+    },
 
     onCreate: function () {
 
@@ -118,7 +122,7 @@ ludo.layout.Base = new Class({
         return $(this.view.els.body);
     },
 
-    layoutProperties: ['collapsible', 'collapsed'],
+    layoutProperties: ['collapsed'],
 
     getValidChild: function (child) {
         return child;
@@ -137,13 +141,6 @@ ludo.layout.Base = new Class({
                 child.layout[keys[i]] = child[keys[i]];
             }
         }
-        if (child.layout.collapseTo !== undefined) {
-            var view = ludo.get(child.layout.collapseTo);
-            if (view) {
-                var bar = view.getLayout().getCollapseBar(child.layout.collapsible);
-                if (bar)bar.addView(child);
-            }
-        }
     },
 
     addChildEvents: function () {
@@ -153,7 +150,6 @@ ludo.layout.Base = new Class({
 
 
     resizeChildren: function () {
-
         if (this.benchmarkTime) {
             var start = new Date().getTime();
         }
@@ -233,9 +229,6 @@ ludo.layout.Base = new Class({
         this.viewport.absHeight = this.getAvailHeight();
         this.viewport.width = this.getAvailWidth();
         this.viewport.height = this.getAvailHeight();
-        //this.viewport.width = this.getAvailWidth() - this.viewport.left - this.viewport.right;
-        //this.viewport.height = this.getAvailHeight() - this.viewport.top - this.viewport.bottom;
-
     },
 
     previousContentWidth: undefined,
@@ -333,7 +326,7 @@ ludo.layout.Base = new Class({
      */
     updateViewport: function (c) {
 
-        this.viewport[c.key] = c.value;
+        if(c)this.viewport[c.key] = c.value;
     },
 
     createRenderer: function () {
@@ -393,7 +386,7 @@ ludo.layout.Base = new Class({
             child.layout.height = newSize.height;
         }
     },
-    /**
+    /*
      * Clear temporary width or height values. This method is executed when a child
      * is shown or maximized
      * @function clearTemporaryValues
@@ -402,6 +395,7 @@ ludo.layout.Base = new Class({
      * @memberof ludo.layout.Base.prototype
      */
     clearTemporaryValues: function (child) {
+        if(child){}
         if (child.layout.cached_width !== undefined)child.layout.width = child.layout.cached_width;
         if (child.layout.cached_height !== undefined)child.layout.height = child.layout.cached_height;
         child.layout.cached_width = undefined;

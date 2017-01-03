@@ -29,7 +29,6 @@ ludo.view.TitleBar = new Class({
         var ret = [];
         var v = this.view;
         if (v.isMinimizable())ret.push('minimize');
-        if (v.isCollapsible())ret.push('collapse');
         if (v.isClosable())ret.push('close');
         return ret;
     },
@@ -122,9 +121,6 @@ ludo.view.TitleBar = new Class({
         b.attr('title', buttonConfig.title ? buttonConfig.title : buttonConfig.type.capitalize());
         b.attr('buttonType', buttonConfig.type);
 
-        if (buttonConfig.type === 'collapse') {
-            b.addClass('ludo-title-bar-button-collapse-' + this.getCollapseButtonDirection());
-        }
         this.els.buttonArray.push(b);
         return b;
     },
@@ -222,19 +218,6 @@ ludo.view.TitleBar = new Class({
             this.height = this.els.el.outerHeight();
         }
         return this.height;
-    },
-
-    getCollapseButtonDirection:function () {
-        var c = this.view;
-        if (ludo.util.isString(c.layout.collapsible)) {
-            return c.layout.collapsible;
-        }
-        var parent = c.getParent();
-        if (parent && parent.layout && parent.layout.type === 'linear' && parent.layout.orientation === 'horizontal') {
-            return parent.children.indexOf(c) === 0 ? 'left' : 'right';
-        } else {
-            return parent.children.indexOf(c) === 0 ? 'top' : 'bottom';
-        }
     }
 });
 

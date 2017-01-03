@@ -4,6 +4,11 @@ if(!isset($prefix)){
 }
 if(isset($_GET['skin']))$skin = $_GET['skin'];
 $skin = isset($skin) ? $skin : 'twilight';
+
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache");
+
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>

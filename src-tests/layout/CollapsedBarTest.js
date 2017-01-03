@@ -47,26 +47,7 @@ TestCase("CollapsedBar", {
 		assertTrue(ludo.dom.hasClass(bar.getEl(), 'ludo-collapse-bar'));
 		assertTrue(ludo.dom.hasClass(bar.getEl(), 'ludo-collapse-bar-vertical'));
 	},
-
-	"test should be able to set collapsible in layout object of view": function(){
-		new ludo.View({
-			layout:{
-				type : 'relative',
-				collapseBar:'right'
-			},
-			children:[{
-				id:'coll',
-				layout:{
-					collapsible:true
-				}
-			}]
-		});
-
-		// then
-		assertTrue(ludo.get('coll').isCollapsible());
-
-	},
-
+	
 	"test should be able to specify where to collapse view": function(){
 		var view = new ludo.View({
 			id:'myView',

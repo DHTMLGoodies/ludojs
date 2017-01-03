@@ -29,10 +29,11 @@ ludo.layout.Tabs = new Class({
     menu: undefined,
 
     tabTitles: undefined,
+    alwaysInFront:true,
 
     __construct: function (config) {
         this.parent(config);
-        if (config.tabPos !== undefined)this.tabPos = config.tabPos;
+        this.setConfigParams(config, ['tabPos']);
         this.lm = config.lm;
         this.hiddenTabs = [];
         this.tabTitles = {};
@@ -42,6 +43,7 @@ ludo.layout.Tabs = new Class({
         this.lm.addEvent('addChild', this.registerChild.bind(this));
         this.lm.addEvent('addChildRuntime', this.resizeTabs.bind(this));
         this.lm.addEvent('showChild', this.activateTabFor.bind(this));
+        this.lm.addEvent('hideChild', this.hideTabFor.bind(this));
         this.lm.addEvent('removeChild', this.removeTabFor.bind(this));
         this.addEvent('resize', this.resizeTabs.bind(this));
     },
@@ -452,6 +454,11 @@ ludo.layout.Tabs = new Class({
         var title = (child.title || child.layout.title || child.getTitle());
         this.tabTitles[child.id] = title;
         return title;
+    },
+
+    hideTabFor:function(){
+        this.activeTab.removeClass('ludo-tab-strip-tab-active');
+
     },
 
     activateTabFor: function (child) {

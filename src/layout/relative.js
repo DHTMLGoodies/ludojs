@@ -3,8 +3,8 @@
  For a demo, see <a href="../demo/layout/relative.php" onclick="var w=window.open(this.href);return false">Relative layout demo</a>.
  @namespace ludo.layout
  @class ludo.layout.Relative
- @param {object} config
  @summary layout: {type: "relative" }
+ @param {object} config
  @param {number|string} config.width Width in Pixels or "matchParent". 
  @param {number|string} config.height Height in pixels or "matchParent"
  @param {Boolean} config.alignParentTop Align at top edge of parent view
@@ -52,6 +52,7 @@
 ludo.layout.Relative = new Class({
 	Extends:ludo.layout.Base,
 	children:undefined,
+	type:'layout.Relative',
     /*
      * Array of valid layout properties
      * @property {Array} layoutFnProperties
@@ -518,6 +519,7 @@ ludo.layout.Relative = new Class({
 			renderTo:this.view.getBody(),
 			sibling:this.getSiblingForResize(child,direction),
 			layout:this.getResizerLayout(child, direction),
+			lm:this,
 			view:child,
 			listeners:{
 				'resize':function (change) {
@@ -757,7 +759,7 @@ ludo.layout.Relative = new Class({
      * Add events to child view
      * @function addChildEvents
      * @param {ludo.View} child
-     * @private
+	 * @protected
      */
 	addChildEvents:function(child){
 		child.addEvent('hide', this.hideChild.bind(this));

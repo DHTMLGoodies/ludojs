@@ -1,5 +1,6 @@
 ludo.layout.Resizer = new Class({
     Extends: ludo.Core,
+    type:'layout.Resizer',
     layout: {},
     orientation: undefined,
     view: undefined,
@@ -7,14 +8,21 @@ ludo.layout.Resizer = new Class({
     pos: undefined,
     isActive: false,
     hidden: false,
+    lm:undefined,
 
     __construct: function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['orientation', 'view', 'layout', 'pos', 'hidden']);
+        this.setConfigParams(config, ['orientation', 'view', 'layout', 'pos', 'hidden','lm']);
         this.createDOM(config.renderTo);
         this.addViewEvents();
         this.createDragable();
         if (this.hidden)this.hide();
+
+
+
+        
+        this.lm.on('collapse', this.hide.bind(this));
+        this.lm.on('expand', this.show.bind(this));
     },
 
     createDOM: function (renderTo) {
@@ -154,6 +162,7 @@ ludo.layout.Resizer = new Class({
     },
 
     resize: function (config) {
+
         this.el.css({
             left: '', top: '', right: '', bottom: ''
         });

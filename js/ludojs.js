@@ -1,7 +1,7 @@
-/* Generated Mon Jan 2 0:57:26 CET 2017 */
+/* Generated Tue Jan 3 19:11:18 CET 2017 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.340
+ludoJS - Javascript framework, 1.1.347
 Copyright (C) 2012-2017  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -6363,6 +6363,7 @@ ludo.layout.TextBox = new Class({
 });/* ../ludojs/src/layout/resizer.js */
 ludo.layout.Resizer = new Class({
     Extends: ludo.Core,
+    type:'layout.Resizer',
     layout: {},
     orientation: undefined,
     view: undefined,
@@ -6370,14 +6371,21 @@ ludo.layout.Resizer = new Class({
     pos: undefined,
     isActive: false,
     hidden: false,
+    lm:undefined,
 
     __construct: function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['orientation', 'view', 'layout', 'pos', 'hidden']);
+        this.setConfigParams(config, ['orientation', 'view', 'layout', 'pos', 'hidden','lm']);
         this.createDOM(config.renderTo);
         this.addViewEvents();
         this.createDragable();
         if (this.hidden)this.hide();
+
+
+
+        
+        this.lm.on('collapse', this.hide.bind(this));
+        this.lm.on('expand', this.show.bind(this));
     },
 
     createDOM: function (renderTo) {
@@ -6517,6 +6525,7 @@ ludo.layout.Resizer = new Class({
     },
 
     resize: function (config) {
+
         this.el.css({
             left: '', top: '', right: '', bottom: ''
         });
@@ -6594,6 +6603,10 @@ ludo.layout.Base = new Class({
 
 
     },
+    
+    prepareForChildrenOnCreate:function(){
+        
+    },
 
     onCreate: function () {
 
@@ -6670,7 +6683,7 @@ ludo.layout.Base = new Class({
         return $(this.view.els.body);
     },
 
-    layoutProperties: ['collapsible', 'collapsed'],
+    layoutProperties: ['collapsed'],
 
     getValidChild: function (child) {
         return child;
@@ -6689,13 +6702,6 @@ ludo.layout.Base = new Class({
                 child.layout[keys[i]] = child[keys[i]];
             }
         }
-        if (child.layout.collapseTo !== undefined) {
-            var view = ludo.get(child.layout.collapseTo);
-            if (view) {
-                var bar = view.getLayout().getCollapseBar(child.layout.collapsible);
-                if (bar)bar.addView(child);
-            }
-        }
     },
 
     addChildEvents: function () {
@@ -6705,7 +6711,6 @@ ludo.layout.Base = new Class({
 
 
     resizeChildren: function () {
-
         if (this.benchmarkTime) {
             var start = new Date().getTime();
         }
@@ -6785,9 +6790,6 @@ ludo.layout.Base = new Class({
         this.viewport.absHeight = this.getAvailHeight();
         this.viewport.width = this.getAvailWidth();
         this.viewport.height = this.getAvailHeight();
-        //this.viewport.width = this.getAvailWidth() - this.viewport.left - this.viewport.right;
-        //this.viewport.height = this.getAvailHeight() - this.viewport.top - this.viewport.bottom;
-
     },
 
     previousContentWidth: undefined,
@@ -6885,7 +6887,7 @@ ludo.layout.Base = new Class({
      */
     updateViewport: function (c) {
 
-        this.viewport[c.key] = c.value;
+        if(c)this.viewport[c.key] = c.value;
     },
 
     createRenderer: function () {
@@ -6945,7 +6947,7 @@ ludo.layout.Base = new Class({
             child.layout.height = newSize.height;
         }
     },
-    /**
+    /*
      * Clear temporary width or height values. This method is executed when a child
      * is shown or maximized
      * @function clearTemporaryValues
@@ -6954,6 +6956,7 @@ ludo.layout.Base = new Class({
      * @memberof ludo.layout.Base.prototype
      */
     clearTemporaryValues: function (child) {
+        if(child){}
         if (child.layout.cached_width !== undefined)child.layout.width = child.layout.cached_width;
         if (child.layout.cached_height !== undefined)child.layout.height = child.layout.cached_height;
         child.layout.cached_width = undefined;
@@ -6981,14 +6984,6 @@ ludo.layout.Base = new Class({
  */
 ludo.layout.Factory = new Class({
 
-    /**
-     * Returns layout manager, a layout.Base or subclass
-	 * @function getManager
-     * @param {ludo.View} view
-     * @return {ludo.layout.Base} manager
-	 * @private
-	 * @memberof ludo.layout.Factory.prototype
-     */
 	getManager:function(view){
 		return new ludo.layout[this.getLayoutClass(view)](view);
 	},
@@ -7005,6 +7000,8 @@ ludo.layout.Factory = new Class({
 		if(!view.layout || !view.layout.type)return 'Base';
 
 		switch(view.layout.type.toLowerCase()){
+			case "docking":
+				return "Docking";
 			case "accordion":
 				return "Accordion";
 			case "table":
@@ -7450,6 +7447,8 @@ ludo.layout.Renderer = new Class({
             this.view.getLayout().on('addChild', this.clearFn.bind(this));
         }
         this.view.on('addChild', this.clearFn.bind(this));
+
+        this.view.on('remove', this.removeEvents.bind(this));
     },
 
     fixReferences: function () {
@@ -7507,9 +7506,17 @@ ludo.layout.Renderer = new Class({
         this.view.layout.height = this.view.layout.height || 'matchParent';
     },
 
+    resizeFn:undefined,
+
     addResizeEvent: function () {
         // todo no resize should be done for absolute positioned views with a width. refactor the next line
         if (this.view.isWindow)return;
+        var node = this.getParentNode();
+        this.resizeFn =this.resize.bind(this);
+        node.on('resize', this.resizeFn);
+    },
+
+    getParentNode:function(){
         var node = this.view.getEl().parent();
         if (!node || !node.prop("tagName"))return;
         if (node.prop("tagName").toLowerCase() !== 'body') {
@@ -7517,7 +7524,11 @@ ludo.layout.Renderer = new Class({
         } else {
             node = $(window);
         }
-        node.on('resize', this.resize.bind(this));
+        return node;
+    },
+
+    removeEvents:function(){
+        this.getParentNode().off('resize', this.resizeFn);
     },
 
     buildResizeFn: function () {
@@ -7737,6 +7748,11 @@ ludo.layout.Renderer = new Class({
     },
 
     setViewport: function () {
+        if(!this.view.getEl || !this.view.getEl()){
+            console.trace();
+            console.log(this.view);
+            return;
+        }
         var el = this.view.getEl().parent();
         if (!el)return;
         this.viewport.width = el.width();
@@ -8254,7 +8270,7 @@ ludo.remote.Shim = new Class({
  @example {@lang XML}
  <!--  A basic rendered ludoJS view -->
  <div class="ludo-view">
- 	<div class="ludo-body"></div>
+ <div class="ludo-body"></div>
  </div>
  @namespace ludo
  @class ludo.View
@@ -8284,924 +8300,920 @@ ludo.remote.Shim = new Class({
  @fires ludo.View#resize Fired when a view has been resized.
 
  @example {@lang Javascript}
-	// Example 1: View render to &lt;body> tag
-    new ludo.View({
+ // Example 1: View render to &lt;body> tag
+ new ludo.View({
  		renderTo:document.body,
  		html : 'Hello'
 	}
 
-	// Example 2: Creating custom View
- 	myApp = {};
-    myApp.View = new Class({
+ // Example 2: Creating custom View
+ myApp = {};
+ myApp.View = new Class({
  		Extends: ludo.View,
  		type : 'myApp.View',
  		__rendered:function(){
  			this.html('My custom view');
 		}
 	}
-    children:[{
+ children:[{
 		type : 'myApp.View'
 	}]
  *
  */
 ludo.View = new Class({
-	Extends:ludo.Core,
-	type:'View',
-	cType:'View',
-	cls:'',
-	bodyCls:'',
-	cssSignature:undefined,
-	closable:true,
-	minimizable:false,
-	movable:false,
-	resizable:false,
-	alwaysInFront:false,
-	statefulProperties:['layout'],
-	els:{ },
-	state:{},
+    Extends: ludo.Core,
+    type: 'View',
+    cType: 'View',
+    cls: '',
+    bodyCls: '',
+    cssSignature: undefined,
+    closable: true,
+    minimizable: false,
+    movable: false,
+    resizable: false,
+    alwaysInFront: false,
+    statefulProperties: ['layout'],
+    els: {},
+    state: {},
 
-	defaultDS : 'dataSource.JSON',
-	tagBody:'div',
-	id:null,
-	children:[],
-	child:{},
-	dataSource:undefined,
-	socket:undefined,
-	parentComponent:null,
-	objMovable:null,
-	width:undefined,
-	height:undefined,
-	overflow:undefined,
-	_html:'',
+    defaultDS: 'dataSource.JSON',
+    tagBody: 'div',
+    id: null,
+    children: [],
+    child: {},
+    dataSource: undefined,
+    socket: undefined,
+    parentComponent: null,
+    objMovable: null,
+    width: undefined,
+    height: undefined,
+    overflow: undefined,
+    _html: '',
 
-	hidden:false,
+    hidden: false,
 
-	css:undefined,
-	elCss:undefined,
-	formConfig:undefined,
-	isRendered:false,
-	unRenderedChildren:[],
-	frame:false,
-	form:undefined,
-	layout:undefined,
-	tpl:'',
+    css: undefined,
+    elCss: undefined,
+    formConfig: undefined,
+    isRendered: false,
+    unRenderedChildren: [],
+    frame: false,
+    form: undefined,
+    layout: undefined,
+    tpl: '',
 
-	JSONParser:{ type:'tpl.Parser' },
-	initialItemsObject:[],
-	contextMenu:undefined,
-	lifeCycleComplete:false,
+    JSONParser: {type: 'tpl.Parser'},
+    initialItemsObject: [],
+    contextMenu: undefined,
+    lifeCycleComplete: false,
 
-	lifeCycle:function (config) {
-		this._createDOM();
-		if (!config.children) {
-			config.children = this.children;
-			this.children = [];
-		}
+    lifeCycle: function (config) {
+        this._createDOM();
+        if (!config.children) {
+            config.children = this.children;
+            this.children = [];
+        }
 
-		this.__construct(config);
+        this.__construct(config);
 
-		if (!config.children || !config.children.length) {
-			config.children = this.__children();
-		}
+        if (!config.children || !config.children.length) {
+            config.children = this.__children();
+        }
 
-		if (this.hidden) {
-			this.unRenderedChildren = config.children;
-		} else {
-			this.remainingLifeCycle(config);
-		}
-	},
+        if (this.hidden) {
+            this.unRenderedChildren = config.children;
+        } else {
+            this.remainingLifeCycle(config);
+        }
+    },
 
-	/**
-	 * Alternative to the "children" config array. By defining children in __children, you will have access to "this" referring to
-	 * the View instance. This is a method you override when creating your own Views.
-	 * @function __children
-	 * @memberof ludo.View.prototype
-	 * @return {Array|children}
-	 */
-	__children:function () {
-		return this.children;
-	},
+    /**
+     * Alternative to the "children" config array. By defining children in __children, you will have access to "this" referring to
+     * the View instance. This is a method you override when creating your own Views.
+     * @function __children
+     * @memberof ludo.View.prototype
+     * @return {Array|children}
+     */
+    __children: function () {
+        return this.children;
+    },
 
-	remainingLifeCycle:function (config) {
-		if (this.lifeCycleComplete)return;
-		if (!config && this.unRenderedChildren) {
-			config = { children:this.unRenderedChildren };
-		}
+    remainingLifeCycle: function (config) {
+        if (this.lifeCycleComplete)return;
+        if (!config && this.unRenderedChildren) {
+            config = {children: this.unRenderedChildren};
+        }
 
-		this.lifeCycleComplete = true;
-		this._styleDOM();
+        this.lifeCycleComplete = true;
+        this._styleDOM();
 
-		if (config.children) {
-			for (var i = 0; i < config.children.length; i++) {
-				config.children[i].id = config.children[i].id || config.children[i].name || 'ludo-' + String.uniqueID();
-			}
-			this.initialItemsObject = config.children;
-			this.addChildren(config.children);
-		}
-		this.ludoDOM();
-		this.ludoCSS();
-		this.ludoEvents();
+        if (config.children) {
+            this.getLayout().prepareForChildrenOnCreate(config.children);
+            for (var i = 0; i < config.children.length; i++) {
+                config.children[i].id = config.children[i].id || config.children[i].name || 'ludo-' + String.uniqueID();
+            }
+            this.initialItemsObject = config.children;
+            this.addChildren(config.children);
+        }
+        this.ludoDOM();
+        this.ludoCSS();
+        this.ludoEvents();
 
-		this.increaseZIndex();
+        this.increaseZIndex();
 
-		if (this.layout && this.layout.type && this.layout.type == 'tabs') {
-			this.getLayout().prepareView();
-		}
+        if (this.layout && this.layout.type && (this.layout.type == 'tabs' || this.layout.type == 'docking')) {
 
-		this.addCoreEvents();
-		this.__rendered();
+            this.getLayout().prepareView();
+        }
 
-		if (!this.parentComponent) {
-			ludo.dom.clearCache();
-			ludo.dom.clearCache.delay(50, this);
-			var r = this.getLayout().getRenderer();
-			r.resize();
+        this.addCoreEvents();
+        this.__rendered();
 
-		}
+        if (!this.parentComponent) {
+            ludo.dom.clearCache();
+            ludo.dom.clearCache.delay(50, this);
+            var r = this.getLayout().getRenderer();
+            r.resize();
 
-		// TODO remove 'render' and replace with 'rendered'
+        }
 
-		this.fireEvent('render', this);
-		this.fireEvent('rendered', this);
-	},
-	/**
-	 * Constructor for Views.
-	 * @function __construct
-	 * @param {Object} config
-	 * @memberof ludo.View.prototype
-	 */
-	__construct:function (config) {
-		this.parent(config);
-		config.els = config.els || {};
-		if (this.parentComponent)config.renderTo = undefined;
-		var keys = ['contextMenu', 'renderTo', 'tpl', 'elCss', 'socket', 'form', 'title', 'hidden',
-			'dataSource', 'movable', 'resizable', 'closable', 'minimizable', 'alwaysInFront',
-			'parentComponent', 'cls', 'bodyCls', 'objMovable', 'width', 'height', 'frame', 'formConfig',
-			'overflow'];
+        // TODO remove 'render' and replace with 'rendered'
 
-		if(config.css != undefined){
-			if(this.css != undefined){
-				this.css = Object.merge(this.css, config.css);
-			}else{
-				this.css = config.css;
-			}
-		}
-		if(config.html != undefined)this._html = config.html;
-		this.setConfigParams(config, keys);
+        this.fireEvent('render', this);
+        this.fireEvent('rendered', this);
+    },
+    /**
+     * Constructor for Views.
+     * @function __construct
+     * @param {Object} config
+     * @memberof ludo.View.prototype
+     */
+    __construct: function (config) {
+        this.parent(config);
+        config.els = config.els || {};
+        if (this.parentComponent)config.renderTo = undefined;
+        var keys = ['contextMenu', 'renderTo', 'tpl', 'elCss', 'socket', 'form', 'title', 'hidden',
+            'dataSource', 'movable', 'resizable', 'closable', 'minimizable', 'alwaysInFront',
+            'parentComponent', 'cls', 'bodyCls', 'objMovable', 'width', 'height', 'frame', 'formConfig',
+            'overflow'];
 
-		if (this.renderTo)this.renderTo = $(this.renderTo);
+        if (config.css != undefined) {
+            if (this.css != undefined) {
+                this.css = Object.merge(this.css, config.css);
+            } else {
+                this.css = config.css;
+            }
+        }
+        if (config.html != undefined)this._html = config.html;
+        this.setConfigParams(config, keys);
 
-		this.layout = ludo.layoutFactory.getValidLayoutObject(this, config);
+        if (this.renderTo)this.renderTo = $(this.renderTo);
 
-		this.insertDOMContainer();
-	},
+        this.layout = ludo.layoutFactory.getValidLayoutObject(this, config);
 
-	insertDOMContainer:function () {
-		if (this.hidden)this.els.container.css('display', 'none');
-		if (this.renderTo)this.renderTo.append(this.els.container);
-	},
+        this.insertDOMContainer();
+    },
 
-	/**
-	 The second life cycle method
-	 This method is typically used when you want to create your own DOM elements.
-	 @memberof ludo.View.prototype
-	 @function ludoDOM
-	 @private
-	 @example
-	 ludoDOM : function() {<br>
+    insertDOMContainer: function () {
+        if (this.hidden)this.els.container.css('display', 'none');
+        if (this.renderTo)this.renderTo.append(this.els.container);
+    },
+
+    /**
+     The second life cycle method
+     This method is typically used when you want to create your own DOM elements.
+     @memberof ludo.View.prototype
+     @function ludoDOM
+     @private
+     @example
+     ludoDOM : function() {<br>
 			 this.parent(); // Always call parent ludoDOM
 			 var myEl = $('<div>');
 			 myEl.html('My Content');
 			 this.getEl().append(myEl);
 		 }
-	 */
-	ludoDOM:function () {
-		if (this.contextMenu) {
-			if (!ludo.util.isArray(this.contextMenu)) {
-				this.contextMenu = [this.contextMenu];
-			}
-			for (var i = 0; i < this.contextMenu.length; i++) {
-				this.contextMenu[i].applyTo = this;
-				this.contextMenu[i].contextEl = this.isFormElement() ? this.getFormEl() : this.getEl();
-				new ludo.menu.Context(this.contextMenu[i]);
-			}
-			this.contextMenu = undefined;
-		}
+     */
+    ludoDOM: function () {
+        if (this.contextMenu) {
+            if (!ludo.util.isArray(this.contextMenu)) {
+                this.contextMenu = [this.contextMenu];
+            }
+            for (var i = 0; i < this.contextMenu.length; i++) {
+                this.contextMenu[i].applyTo = this;
+                this.contextMenu[i].contextEl = this.isFormElement() ? this.getFormEl() : this.getEl();
+                new ludo.menu.Context(this.contextMenu[i]);
+            }
+            this.contextMenu = undefined;
+        }
 
 
-	},
+    },
 
-	ludoCSS:function () {
+    ludoCSS: function () {
 
-	},
-	/**
-	 The third life cycle method
-	 This is the place where you add custom events
-	 @function ludoEvents
-	 @return void
-	 @private
-	 @example
-	 ludoEvents:function(){
+    },
+    /**
+     The third life cycle method
+     This is the place where you add custom events
+     @function ludoEvents
+     @return void
+     @private
+     @example
+     ludoEvents:function(){
 			 this.parent();
 			 this.addEvent('load', this.myMethodOnLoad.bind(this));
 		 }
-	 */
-	ludoEvents:function () {
-		if (this.dataSource) {
-			this.getDataSource();
-		}
-	},
+     */
+    ludoEvents: function () {
+        if (this.dataSource) {
+            this.getDataSource();
+        }
+    },
 
-	/**
-	 * The final life cycle method. When this method is executed, the view (including child views)
-	 * are fully rendered.
-	 * @memberof ludo.View.prototype
-	 * @function __rendered
-	 */
-	__rendered:function () {
-		if (!this.layout.height && !this.layout.above && !this.layout.sameHeightAs && !this.layout.alignWith) {
-			this.autoSetHeight();
-		}
-		if (!this.parentComponent) {
-			this.getLayout().createRenderer();
-		}
+    /**
+     * The final life cycle method. When this method is executed, the view (including child views)
+     * are fully rendered.
+     * @memberof ludo.View.prototype
+     * @function __rendered
+     */
+    __rendered: function () {
+        if (!this.layout.height && !this.layout.above && !this.layout.sameHeightAs && !this.layout.alignWith) {
+            this.autoSetHeight();
+        }
+        if (!this.parentComponent) {
+            this.getLayout().createRenderer();
+        }
 
-		this.isRendered = true;
-		if (this.form) {
-			this.getForm();
-		}
-	},
+        this.isRendered = true;
+        if (this.form) {
+            this.getForm();
+        }
+    },
 
 
-	/**
-	 * Parse and insert JSON into the view
-	 * The JSON will be sent to the JSON parser(defined in JSONParser) and
-	 * This method will be called automatically when you're using a JSON data-source
-	 * @function insertJSON
-	 * @param {Object} json
-	 * @return void
-	 * @memberof ludo.View.prototype
-	 */
-	JSON:function(json){
-		if (this.tpl) {
-			this.getBody().html(this.getTplParser().asString(json, this.tpl));
-		}
-	},
+    /**
+     * Parse and insert JSON into the view
+     * The JSON will be sent to the JSON parser(defined in JSONParser) and
+     * This method will be called automatically when you're using a JSON data-source
+     * @function insertJSON
+     * @param {Object} json
+     * @return void
+     * @memberof ludo.View.prototype
+     */
+    JSON: function (json) {
+        if (this.tpl) {
+            this.getBody().html(this.getTplParser().asString(json, this.tpl));
+        }
+    },
 
-	insertJSON:function (data) {
-		console.warn("Use of deprecated insertJSON");
-		if (this.tpl) {
-			this.getBody().html(this.getTplParser().asString(data, this.tpl));
-		}
-	},
+    insertJSON: function (data) {
+        console.warn("Use of deprecated insertJSON");
+        if (this.tpl) {
+            this.getBody().html(this.getTplParser().asString(data, this.tpl));
+        }
+    },
 
-	getTplParser:function () {
-		if (!this.tplParser) {
-			this.tplParser = this.createDependency('tplParser', this.JSONParser);
-		}
-		return this.tplParser;
-	},
+    getTplParser: function () {
+        if (!this.tplParser) {
+            this.tplParser = this.createDependency('tplParser', this.JSONParser);
+        }
+        return this.tplParser;
+    },
 
-	autoSetHeight:function () {
-		var size = this.getBody().outerHeight(true);
-		this.layout.height = size + ludo.dom.getMBPH(this.getEl());
-	},
+    autoSetHeight: function () {
+        var size = this.getBody().outerHeight(true);
+        this.layout.height = size + ludo.dom.getMBPH(this.getEl());
+    },
 
-	/**
-	 * Set HTML
-	 * @function html
-	 * @param html
-	 * @type string
-	 * @memberof ludo.View.prototype
-	 * @example
-	 var view = new ludo.View({
+    /**
+     * Set HTML
+     * @function html
+     * @param html
+     * @type string
+     * @memberof ludo.View.prototype
+     * @example
+     var view = new ludo.View({
 	 	renderTo:document.body,
 	 	layout:{ width:500,height:500 }
 	 });
-	 view.html('<h1>Heading</h1><p>Paragraph</p>');
+     view.html('<h1>Heading</h1><p>Paragraph</p>');
      */
 
-	html:function(html){
-		this.getBody().html(html);
-	},
+    html: function (html) {
+        console.trace();
+        this.getBody().html(html);
+    },
 
-	setHtml:function (html) {
-		console.warn("Use of deprecated setHTML");
-		console.trace();
-		this.getBody().html(html);
-	},
+    setHtml: function (html) {
+        console.warn("Use of deprecated setHTML");
+        console.trace();
+        this.getBody().html(html);
+    },
 
-	setContent:function () {
-		if (this._html) {
-			if (this.children.length) {
-				var el = $('<div>' + this._html + '</div>');
-				this.getBody().append(el);
-			} else {
-				this.getBody().html(this._html);
-			}
-		}
-	},
+    setContent: function () {
+        if (this._html) {
+            if (this.children.length) {
+                var el = $('<div>' + this._html + '</div>');
+                this.getBody().append(el);
+            } else {
 
-	/**
-	 * Load content from the server. This method will send an Ajax request to the server
-	 * using the properties specified in the remote object or data-source
-	 * @function load
-	 * @memberof ludo.View.prototype
-	 * @return void
-	 */
-	load:function () {
-		/*
-		 * This event is fired from the "load" method before a remote request is sent to the server.
-		 * @event beforeload
-		 * @param {String} url
-		 * @param {Object} this
-		 */
-		this.fireEvent('beforeload', [this.getUrl(), this]);
-		if (this.dataSource) {
-			this.getDataSource().load();
-		}
-	},
-	/**
-	 * Get reference to parent view
-	 * @function getParent
-	 * @return {Object} view | null
-	 * @memberof ludo.View.prototype
-	 */
-	getParent:function () {
-		return this.parentComponent ? this.parentComponent : null;
-	},
+                this.getBody().html(this._html);
+            }
+        }
+    },
 
-	setParentComponent:function (parentComponent) {
-		this.parentComponent = parentComponent;
-	},
+    /**
+     * Load content from the server. This method will send an Ajax request to the server
+     * using the properties specified in the remote object or data-source
+     * @function load
+     * @memberof ludo.View.prototype
+     * @return void
+     */
+    load: function () {
+        /*
+         * This event is fired from the "load" method before a remote request is sent to the server.
+         * @event beforeload
+         * @param {String} url
+         * @param {Object} this
+         */
+        this.fireEvent('beforeload', [this.getUrl(), this]);
+        if (this.dataSource) {
+            this.getDataSource().load();
+        }
+    },
+    /**
+     * Get reference to parent view
+     * @function getParent
+     * @return {Object} view | null
+     * @memberof ludo.View.prototype
+     */
+    getParent: function () {
+        return this.parentComponent ? this.parentComponent : null;
+    },
 
-	_createDOM:function () {
-		this.els.container = $('<div>');
-		this.els.body = $('<' + this.tagBody + '>');
-		this.els.container.append(this.els.body);
-	},
+    setParentComponent: function (parentComponent) {
+        this.parentComponent = parentComponent;
+    },
 
-	_styleDOM:function () {
-		this.els.container.addClass('ludo-view');
-		this.els.body.addClass('ludo-body');
+    _createDOM: function () {
+        this.els.container = $('<div>');
+        this.els.body = $('<' + this.tagBody + '>');
+        this.els.container.append(this.els.body);
+    },
 
-		this.els.container.attr("id", this.getId());
+    _styleDOM: function () {
+        this.els.container.addClass('ludo-view');
+        this.els.body.addClass('ludo-body');
 
-		this.els.body.css('height','100%');
-		if (this.overflow == 'hidden') {
-			this.els.body.css('overflow', 'hidden');
-		}
+        this.els.container.attr("id", this.getId());
 
-		if (ludo.util.isTabletOrMobile()) {
-			this.els.container.addClass('ludo-view-mobile');
-		}
+        this.els.body.css('height', '100%');
+        if (this.overflow == 'hidden') {
+            this.els.body.css('overflow', 'hidden');
+        }
 
-
-		if (this.cls) {
-			this.els.container.addClass(this.cls);
-		}
-		if (this.bodyCls)this.els.body.addClass(this.bodyCls);
-		if (this.type)this.els.container.addClass('ludo-' + (this.type.replace(/\./g, '-').toLowerCase()));
-		if (this.css)this.els.body.css(this.css);
-		if (this.elCss)this.els.container.css(this.elCss);
-
-		if (this.frame) {
-			this.els.container.addClass('ludo-container-frame');
-			this.els.body.addClass('ludo-body-frame');
-		}
-		if (this.cssSignature !== undefined)this.els.container.addClass(this.cssSignature);
-
-		this.setContent();
-	},
-
-	addCoreEvents:function () {
-		if (!this.getParent() && this.type !== 'Application') {
-			this.getEl().on('mousedown', this.increaseZIndex.bind(this));
-		}
-	},
-
-	increaseZIndex:function (e) {
-		if (e && e.target && e.target.tagName.toLowerCase() == 'a') {
-			return;
-		}
-
-		this.fireEvent('activate', this);
-		this.fireEvent('toFront', this);
-		this.setNewZIndex();
-	},
-
-	setNewZIndex:function () {
-		this.getEl().css('zIndex', ludo.util.getNewZIndex(this));
-	},
-
-	/**
-	 * Return reference to the Views DOM div element.
-	 * DOM "body" element
-	 * @function getEl
-	 * @return {HTMLElement} DOMElement
-	 * @memberof ludo.View.prototype
-	 */
-	getEl:function () {
-		return this.els.container ? this.els.container : null;
-	},
-	/**
-	 * Return reference to the "body" div HTML Element.
-	 * @memberof ludo.view.prototype
-	 * @function getBody
-	 * @return {HTMLElement} DOMElement
-	 */
-	getBody:function () {
-		return this.els.body;
-	},
-	/**
-	 * Hides the view
-	 * @function hide
-	 * @memberof ludo.view.prototype
-	 */
-	hide:function () {
-		if (!this.hidden && this.getEl().css('display') !== 'none') {
-			this.getEl().css('display', 'none');
-			this.hidden = true;
-
-			this.resizeParent();
-			this.fireEvent('hide', this);
-		}
-	},
-	/**
-	 * Hide component after n seconds
-	 * @function hideAfterDelay
-	 * @param {number} seconds
-	 * @default 1
-	 * @memberof ludo.View.prototype
-	 */
-	hideAfterDelay:function (seconds) {
-		this.hide.delay((seconds || 1) * 1000, this);
-	},
-	/**
-	 * Is this component hidden?
-	 * @memberof ludo.View.prototype
-	 * @function isHidden
-	 * @return {Boolean}
-	 */
-	isHidden:function () {
-		return this.hidden;
-	},
-
-	/**
-	 * Return true if this component is visible
-	 * @function isVisible
-	 * @return {Boolean}
-	 * @memberof ludo.View.prototype
-	 *
-	 */
-	isVisible:function () {
-		return !this.hidden;
-	},
-
-	/**
-	 * Make the view visible
-	 * @memberof ludo.View.prototype
-	 * @function show
-	 * @param {Boolean} skipEvents
-	 * @return void
-	 */
-	show:function (skipEvents) {
-		if (this.els.container.css('display') === 'none') {
-			this.els.container.css('display', '');
-			this.hidden = false;
-		}
-
-		if (!this.lifeCycleComplete) {
-			this.remainingLifeCycle();
-		}
-
-		if (!skipEvents)this.fireEvent('beforeshow', this);
-
-		this.setNewZIndex();
+        if (ludo.util.isTabletOrMobile()) {
+            this.els.container.addClass('ludo-view-mobile');
+        }
 
 
-		if (this.parentComponent) {
-			// this.resizeParent();
-		} else {
-			this.getLayout().getRenderer().resize();
-		}
+        if (this.cls) {
+            this.els.container.addClass(this.cls);
+        }
+        if (this.bodyCls)this.els.body.addClass(this.bodyCls);
+        if (this.type)this.els.container.addClass('ludo-' + (this.type.replace(/\./g, '-').toLowerCase()));
+        if (this.css)this.els.body.css(this.css);
+        if (this.elCss)this.els.container.css(this.elCss);
+
+        if (this.frame) {
+            this.els.container.addClass('ludo-container-frame');
+            this.els.body.addClass('ludo-body-frame');
+        }
+        if (this.cssSignature !== undefined)this.els.container.addClass(this.cssSignature);
+
+        this.setContent();
+    },
+
+    addCoreEvents: function () {
+        if (!this.getParent() && this.type !== 'Application') {
+            this.getEl().on('mousedown', this.increaseZIndex.bind(this));
+        }
+    },
+
+    increaseZIndex: function (e) {
+        if (e && e.target && e.target.tagName.toLowerCase() == 'a') {
+            return;
+        }
+
+        this.fireEvent('activate', this);
+        this.fireEvent('toFront', this);
+        this.setNewZIndex();
+    },
+
+    setNewZIndex: function () {
+        this.getEl().css('zIndex', ludo.util.getNewZIndex(this));
+    },
+
+    /**
+     * Return reference to the Views DOM div element.
+     * DOM "body" element
+     * @function getEl
+     * @return {HTMLElement} DOMElement
+     * @memberof ludo.View.prototype
+     */
+    getEl: function () {
+        return this.els.container ? this.els.container : null;
+    },
+    /**
+     * Return reference to the "body" div HTML Element.
+     * @memberof ludo.view.prototype
+     * @function getBody
+     * @return {HTMLElement} DOMElement
+     */
+    getBody: function () {
+        return this.els.body;
+    },
+    /**
+     * Hides the view
+     * @function hide
+     * @memberof ludo.view.prototype
+     */
+    hide: function () {
+        if (!this.hidden && this.getEl().css('display') !== 'none') {
+            this.getEl().css('display', 'none');
+            this.hidden = true;
+
+            this.resizeParent();
+            this.fireEvent('hide', this);
+        }
+    },
+    /**
+     * Hide component after n seconds
+     * @function hideAfterDelay
+     * @param {number} seconds
+     * @default 1
+     * @memberof ludo.View.prototype
+     */
+    hideAfterDelay: function (seconds) {
+        this.hide.delay((seconds || 1) * 1000, this);
+    },
+    /**
+     * Is this component hidden?
+     * @memberof ludo.View.prototype
+     * @function isHidden
+     * @return {Boolean}
+     */
+    isHidden: function () {
+        return this.hidden;
+    },
+
+    /**
+     * Return true if this component is visible
+     * @function isVisible
+     * @return {Boolean}
+     * @memberof ludo.View.prototype
+     *
+     */
+    isVisible: function () {
+        return !this.hidden;
+    },
+
+    /**
+     * Make the view visible
+     * @memberof ludo.View.prototype
+     * @function show
+     * @param {Boolean} skipEvents
+     * @return void
+     */
+    show: function (skipEvents) {
+        if (this.els.container.css('display') === 'none') {
+            this.els.container.css('display', '');
+            this.hidden = false;
+        }
+
+        if (!this.lifeCycleComplete) {
+            this.remainingLifeCycle();
+        }
+
+        if (!skipEvents)this.fireEvent('beforeshow', this);
+
+        this.setNewZIndex();
 
 
-		if (!skipEvents)this.fireEvent('show', this);
+        if (this.parentComponent) {
+            // this.resizeParent();
+        } else {
+            this.getLayout().getRenderer().resize();
+        }
 
 
-	},
-
-	resizeParent:function () {
-		var parent = this.getParent();
-		if (parent) {
-			if (parent.children.length > 0)parent.getLayout().resizeChildren();
-		}
-	},
-
-	/**
-	 * Call show() method of a child component
-	 * key must be id or name of child
-	 * @function showChild
-	 * @param {String} key
-	 * @return {Boolean} success
-	 * @memberof ludo.View.prototype
-	 */
-	showChild:function (key) {
-		var child = this.getChild(key);
-		if (child) {
-			child.show();
-			return true;
-		}
-		return false;
-	},
-
-	/**
-	 * Return Array of direct child views.
-	 * @memberof ludo.View.prototype
-	 * @function getChildren
-	 * @return Array of Child components
-	 */
-	getChildren:function () {
-		return this.children;
-	},
-	/**
-	 * Return Array of child views, recursive.
-	 * @memberof ludo.View.prototype
-	 * @function getAllChildren
-	 * @return Array of sub components
-	 */
-	getAllChildren:function () {
-		var ret = [];
-		for (var i = 0; i < this.children.length; i++) {
-			ret.push(this.children[i]);
-			if (this.children[i].hasChildren()) {
-				ret = ret.append(this.children[i].getChildren());
-			}
-		}
-		return ret;
-	},
-	/**
-	 * Returns true if this component contain any children
-	 * @memberof ludo.View.prototype
-	 * @function hasChildren
-	 * @return {Boolean}
-	 */
-	hasChildren:function () {
-		return this.children.length > 0;
-	},
-
-	/**
-	 * Set new title
-	 * @memberof ludo.View.prototype
-	 * @function setTitle
-	 * @param {String} title
-	 */
-	setTitle:function (title) {
-		this.title = title;
-		this.fireEvent('setTitle', [title, this]);
-	},
-
-	/**
-	 * Returns total width of component including padding, borders and margins
-	 * @memberof ludo.View.prototype
-	 * @function getWidth
-	 * @return {Number} width
-	 */
-	getWidth:function () {
-		return this.layout.pixelWidth ? this.layout.pixelWidth : this.layout.width ? this.layout.width : this.getBody().width();
-	},
-
-	/**
-	 * Get current height of component
-	 * @memberof ludo.View.prototype
-	 * @function getHeight
-	 * @return {Number}
-	 */
-	getHeight:function () {
-		return this.layout.pixelHeight ? this.layout.pixelHeight : this.layout.height;
-	},
-
-	/**
-	 Resize View and it's children.
-	 @function resize
-	 @memberof ludo.View.prototype
-	 @param {Object} size Object with optional width and height properties. Example: { width: 200, height: 100 }
-	 @example
-	 view.resize(
-	 { width: 200, height:200 }
-	 );
-	 */
-	resize:function (size) {
+        if (!skipEvents)this.fireEvent('show', this);
 
 
-		if (this.isHidden()) {
-			return;
-		}
-		size = size || {};
+    },
 
-		if (size.width) {
-			if (this.layout.aspectRatio && this.layout.preserveAspectRatio && size.width && !this.isMinimized()) {
-				size.height = size.width / this.layout.aspectRatio;
-			}
-			// TODO layout properties should not be set here.
-			this.layout.pixelWidth = size.width;
-			if (!isNaN(this.layout.width))this.layout.width = size.width;
-			var width = size.width - ludo.dom.getMBPW(this.els.container);
-			if (width > 0) {
-				this.els.container.css('width', width);
-			}
-		}
+    resizeParent: function () {
+        var parent = this.getParent();
+        if (parent) {
+            if (parent.children.length > 0)parent.getLayout().resizeChildren();
+        }
+    },
 
-		if (size.height && !this.state.isMinimized) {
-			// TODO refactor this part.
-			if (!this.state.isMinimized) {
-				this.layout.pixelHeight = size.height;
-				if (!isNaN(this.layout.height))this.layout.height = size.height;
-			}
-			var height = size.height - ludo.dom.getMBPH(this.els.container);
-			if (height > 0) {
-				this.els.container.css('height', height);
-			}
-		}
+    /**
+     * Call show() method of a child component
+     * key must be id or name of child
+     * @function showChild
+     * @param {String} key
+     * @return {Boolean} success
+     * @memberof ludo.View.prototype
+     */
+    showChild: function (key) {
+        var child = this.getChild(key);
+        if (child) {
+            child.show();
+            return true;
+        }
+        return false;
+    },
 
-		if (size.left !== undefined || size.top !== undefined) {
-			this.setPosition(size);
-		}
+    /**
+     * Return Array of direct child views.
+     * @memberof ludo.View.prototype
+     * @function getChildren
+     * @return Array of Child components
+     */
+    getChildren: function () {
+        return this.children;
+    },
+    /**
+     * Return Array of child views, recursive.
+     * @memberof ludo.View.prototype
+     * @function getAllChildren
+     * @return Array of sub components
+     */
+    getAllChildren: function () {
+        var ret = [];
+        for (var i = 0; i < this.children.length; i++) {
+            ret.push(this.children[i]);
+            if (this.children[i].hasChildren()) {
+                ret = ret.append(this.children[i].getChildren());
+            }
+        }
+        return ret;
+    },
+    /**
+     * Returns true if this component contain any children
+     * @memberof ludo.View.prototype
+     * @function hasChildren
+     * @return {Boolean}
+     */
+    hasChildren: function () {
+        return this.children.length > 0;
+    },
 
-		this.resizeDOM();
+    /**
+     * Set new title
+     * @memberof ludo.View.prototype
+     * @function setTitle
+     * @param {String} title
+     */
+    setTitle: function (title) {
+        this.title = title;
+        this.fireEvent('setTitle', [title, this]);
+    },
 
-		if (size.height || size.width) {
-			this.fireEvent('resize');
-		}
-		if (this.children.length > 0)this.getLayout().resizeChildren();
-	},
-	/*
-	 * Returns true component is collapsible
-	 * @function isCollapsible
-	 * @return {Boolean}
-	 */
-	isCollapsible:function () {
-		return this.layout && this.layout.collapsible ? true : false;
-	},
+    /**
+     * Returns total width of component including padding, borders and margins
+     * @memberof ludo.View.prototype
+     * @function getWidth
+     * @return {Number} width
+     */
+    getWidth: function () {
+        return this.layout.pixelWidth ? this.layout.pixelWidth : this.layout.width ? this.layout.width : this.getBody().width();
+    },
 
-	isChildOf:function (view) {
-		var p = this.parentComponent;
-		while (p) {
-			if (p.id === view.id)return true;
-			p = p.parentComponent;
-		}
-		return false;
-	},
+    /**
+     * Get current height of component
+     * @memberof ludo.View.prototype
+     * @function getHeight
+     * @return {Number}
+     */
+    getHeight: function () {
+        return this.layout.pixelHeight ? this.layout.pixelHeight : this.layout.height;
+    },
 
-	setPosition:function (pos) {
-		if (pos.left !== undefined && pos.left >= 0) {
-			this.els.container.css('left', pos.left);
-		}
-		if (pos.top !== undefined && pos.top >= 0) {
-			this.els.container.css('top', pos.top);
-		}
-	},
-
-	getLayout:function () {
-		if (!this.hasDependency('layoutManager')) {
-			this.createDependency('layoutManager', ludo.layoutFactory.getManager(this));
-		}
-		return this.getDependency('layoutManager');
-	},
-
-	resizeChildren:function () {
-		if (this.children.length > 0)this.getLayout().resizeChildren();
-	},
-
-	isMinimized:function () {
-		return false;
-	},
-
-	cachedInnerHeight:undefined,
-	resizeDOM:function () {
-		if (this.layout.pixelHeight > 0) {
-			var height = this.layout.pixelHeight ? this.layout.pixelHeight - ludo.dom.getMBPH(this.els.container) : this.els.container.css('height').replace('px', '');
-			height -= ludo.dom.getMBPH(this.els.body);
-			if (height <= 0 || isNaN(height)) {
-				return;
-			}
-			this.els.body.css('height', height);
-			this.cachedInnerHeight = height;
-		}
-	},
-
-	getInnerHeightOfBody:function () {
-		return this.cachedInnerHeight ? this.cachedInnerHeight : this.els.body.height();
-	},
-
-	getInnerWidthOfBody:function () {
-		return this.layout.pixelWidth ? this.layout.pixelWidth - ludo.dom.getMBPW(this.els.container) - ludo.dom.getMBPW(this.els.body) : ludo.dom.getInnerWidthOf(this.els.body);
-	},
-
-	/**
-	 * Add child components
-	 * Only param is an array of child objects. A Child object can be a component or a JSON object describing the component.
-	 * @function addChildren
-	 * @memberof ludo.View.prototype
-	 * @param {Array} children
-	 * @return {Array} of new children
-	 */
-	addChildren:function (children) {
-		var ret = [];
-		for (var i = 0, count = children.length; i < count; i++) {
-			ret.push(this.addChild(children[i]));
-		}
-		return ret;
-	},
-	/**
-	 * Add a child View. The method will returned the created view.
-	 * @memberof ludo.View.prototype
-	 * @function addChild
-	 * @param {Object|View} child. A Child object can be a View or a JSON config object for a new View.
-	 * @param {String} insertAt
-	 * @optional
-	 * @param {String} pos
-	 * @optional
-	 * @return {View} child
-	 */
-	addChild:function (child, insertAt, pos) {
-		child = this.getLayout().addChild(child, insertAt, pos);
-		if (child.name) {
-			this.child[child.name] = child;
-		}
-		child.addEvent('remove', this.removeChild.bind(this));
-		return child;
-	},
-
-	isMovable:function () {
-		return this.movable;
-	},
-
-	isClosable:function () {
-		return this.closable;
-	},
-
-	isMinimizable:function () {
-		return this.minimizable;
-	},
-	/**
-	 * Get child view by name or id
-	 * @memberof ludo.View.prototype
-	 * @function getChild
-	 * @param {String} childName id or name of child view
-	 *
-	 */
-	getChild:function (childName) {
-		for (var i = 0; i < this.children.length; i++) {
-			if (this.children[i].id == childName || this.children[i].name == childName) {
-				return this.children[i];
-			}
-		}
-		return undefined;
-	},
-
-	removeChild:function (child) {
-		this.children.erase(child);
-		child.parentComponent = null;
-		
-	},
-
-	disposeAllChildren:function(){
-		for (var i = this.children.length - 1; i >= 0; i--) {
-			this.children[i].remove();
-		}
-	},
-
-	/**
-	 * Hide and removes the view view
-	 * @memberof ludo.View.prototype
-	 * @function remove
-	 * @return void
-	 */
-	remove:function(){
-		this.fireEvent('remove', this);
-		ludo.util.dispose(this);
-	},
+    /**
+     Resize View and it's children.
+     @function resize
+     @memberof ludo.View.prototype
+     @param {Object} size Object with optional width and height properties. Example: { width: 200, height: 100 }
+     @example
+     view.resize(
+     { width: 200, height:200 }
+     );
+     */
+    resize: function (size) {
 
 
-	dispose:function () {
-		console.warn("Use of deprecated dispose");
-		console.trace();
+        if (this.isHidden()) {
+            return;
+        }
+        size = size || {};
+
+        if (size.width) {
+            if (this.layout.aspectRatio && this.layout.preserveAspectRatio && size.width && !this.isMinimized()) {
+                size.height = size.width / this.layout.aspectRatio;
+            }
+            // TODO layout properties should not be set here.
+            this.layout.pixelWidth = size.width;
+            if (!isNaN(this.layout.width))this.layout.width = size.width;
+            var width = size.width - ludo.dom.getMBPW(this.els.container);
+            if (width > 0) {
+                this.els.container.css('width', width);
+            }
+        }
+
+        if (size.height && !this.state.isMinimized) {
+            // TODO refactor this part.
+            if (!this.state.isMinimized) {
+                this.layout.pixelHeight = size.height;
+                if (!isNaN(this.layout.height))this.layout.height = size.height;
+            }
+            var height = size.height - ludo.dom.getMBPH(this.els.container);
+            if (height > 0) {
+                this.els.container.css('height', height);
+            }
+        }
+
+        if (size.left !== undefined || size.top !== undefined) {
+            this.setPosition(size);
+        }
+
+        this.resizeDOM();
+
+        if (size.height || size.width) {
+            this.fireEvent('resize', size);
+        }
+        if (this.children.length > 0)this.getLayout().resizeChildren();
+    },
+
+    isChildOf: function (view) {
+        var p = this.parentComponent;
+        while (p) {
+            if (p.id === view.id)return true;
+            p = p.parentComponent;
+        }
+        return false;
+    },
+
+    setPosition: function (pos) {
+        if (pos.left !== undefined && pos.left >= 0) {
+            this.els.container.css('left', pos.left);
+        }
+        if (pos.top !== undefined && pos.top >= 0) {
+            this.els.container.css('top', pos.top);
+        }
+    },
+
+    getLayout: function () {
+        if (!this.hasDependency('layoutManager')) {
+            this.createDependency('layoutManager', ludo.layoutFactory.getManager(this));
+        }
+        return this.getDependency('layoutManager');
+    },
+
+    resizeChildren: function () {
+        if (this.children.length > 0)this.getLayout().resizeChildren();
+    },
+
+    isMinimized: function () {
+        return false;
+    },
+
+    cachedInnerHeight: undefined,
+    resizeDOM: function () {
+        if (this.layout.pixelHeight > 0) {
+            var height = this.layout.pixelHeight ? this.layout.pixelHeight - ludo.dom.getMBPH(this.els.container) : this.els.container.css('height').replace('px', '');
+            height -= ludo.dom.getMBPH(this.els.body);
+            if (height <= 0 || isNaN(height)) {
+                return;
+            }
+            this.els.body.css('height', height);
+            this.cachedInnerHeight = height;
+        }
+    },
+
+    getInnerHeightOfBody: function () {
+        return this.cachedInnerHeight ? this.cachedInnerHeight : this.els.body.height();
+    },
+
+    getInnerWidthOfBody: function () {
+        return this.layout.pixelWidth ? this.layout.pixelWidth - ludo.dom.getMBPW(this.els.container) - ludo.dom.getMBPW(this.els.body) : ludo.dom.getInnerWidthOf(this.els.body);
+    },
+
+    /**
+     * Add child components
+     * Only param is an array of child objects. A Child object can be a component or a JSON object describing the component.
+     * @function addChildren
+     * @memberof ludo.View.prototype
+     * @param {Array} children
+     * @return {Array} of new children
+     */
+    addChildren: function (children) {
+        var ret = [];
+        for (var i = 0, count = children.length; i < count; i++) {
+            ret.push(this.addChild(children[i]));
+        }
+        return ret;
+    },
+    /**
+     * Add a child View. The method will returned the created view.
+     * @memberof ludo.View.prototype
+     * @function addChild
+     * @param {Object|View} child. A Child object can be a View or a JSON config object for a new View.
+     * @param {String} insertAt
+     * @optional
+     * @param {String} pos
+     * @optional
+     * @return {View} child
+     */
+    addChild: function (child, insertAt, pos) {
+        child = this.getLayout().addChild(child, insertAt, pos);
+        if (child.name) {
+            this.child[child.name] = child;
+        }
+        child.addEvent('remove', this.removeChild.bind(this));
+        return child;
+    },
+
+    isMovable: function () {
+        return this.movable;
+    },
+
+    isClosable: function () {
+        return this.closable;
+    },
+
+    isMinimizable: function () {
+        return this.minimizable;
+    },
+    /**
+     * Get child view by name or id
+     * @memberof ludo.View.prototype
+     * @function getChild
+     * @param {String} childName id or name of child view
+     *
+     */
+    getChild: function (childName) {
+        for (var i = 0; i < this.children.length; i++) {
+            if (this.children[i].id == childName || this.children[i].name == childName) {
+                return this.children[i];
+            }
+        }
+        return undefined;
+    },
+
+    removeChild: function (child) {
+        this.children.erase(child);
+        child.parentComponent = null;
+
+    },
+
+    disposeAllChildren: function () {
+        for (var i = this.children.length - 1; i >= 0; i--) {
+            this.children[i].remove();
+        }
+    },
+
+    /**
+     * Hide and removes the view view
+     * @memberof ludo.View.prototype
+     * @function remove
+     * @return void
+     */
+    remove: function () {
         this.fireEvent('remove', this);
         ludo.util.dispose(this);
-	},
-	/**
-	 * Returns title
-	 * @function getTitle
-	 * @memberOf ludo.View.prototype
-	 * @return string
-	 */
-	getTitle:function () {
-		return this.title;
-	},
+    },
 
-	dataSourceObj:undefined,
 
-	/**
-	 * @funtion getDataSource
-	 * @memberOf ludo.View.prototype
-	 * Returns object of type ludo.dataSource.*
-	 * @returns {undefined|*}
+    dispose: function () {
+        console.warn("Use of deprecated dispose");
+        console.trace();
+        this.fireEvent('remove', this);
+        ludo.util.dispose(this);
+    },
+    /**
+     * Returns title
+     * @function getTitle
+     * @memberOf ludo.View.prototype
+     * @return string
      */
-	getDataSource:function () {
-		if (!this.dataSourceObj && this.dataSource) {
-			var obj;
-			if (ludo.util.isString(this.dataSource)) {
-				obj = this.dataSourceObj = ludo.get(this.dataSource);
-			} else {
-				if (!this.dataSource.type) {
-					this.dataSource.type = this.defaultDS;
-				}
-                if(this.dataSource.shim && !this.dataSource.shim.renderTo){
+    getTitle: function () {
+        return this.title;
+    },
+
+    dataSourceObj: undefined,
+
+    /**
+     * @funtion getDataSource
+     * @memberOf ludo.View.prototype
+     * Returns object of type ludo.dataSource.*
+     * @returns {undefined|*}
+     */
+    getDataSource: function () {
+        if (!this.dataSourceObj && this.dataSource) {
+            var obj;
+            if (ludo.util.isString(this.dataSource)) {
+                obj = this.dataSourceObj = ludo.get(this.dataSource);
+            } else {
+                if (!this.dataSource.type) {
+                    this.dataSource.type = this.defaultDS;
+                }
+                if (this.dataSource.shim && !this.dataSource.shim.renderTo) {
                     this.dataSource.shim.renderTo = this.getEl()
                 }
-				obj = this.dataSourceObj = this.createDependency('viewDataSource', this.dataSource);
-			}
+                obj = this.dataSourceObj = this.createDependency('viewDataSource', this.dataSource);
+            }
 
-			var method = obj.getSourceType() === 'HTML' ? 'html' : 'insertJSON';
+            var method = obj.getSourceType() === 'HTML' ? 'html' : 'insertJSON';
 
-			if (obj.hasData()) {
-				this[method](obj.getData());
-			}
-			obj.addEvent('load', this[method].bind(this));
-		}
-		return this.dataSourceObj;
-	},
-	_shim:undefined,
-	shim:function(){
-		if(this._shim === undefined){
-			this._shim = new ludo.view.Shim({
-				txt : '',
-				renderTo:this.getEl()
-			});
-		}
-		return this._shim;
-	},
+            if (obj.hasData()) {
+                this[method](obj.getData());
+            }
+            obj.addEvent('load', this[method].bind(this));
+        }
+        return this.dataSourceObj;
+    },
+    _shim: undefined,
+    shim: function () {
+        if (this._shim === undefined) {
+            this._shim = new ludo.view.Shim({
+                txt: '',
+                renderTo: this.getEl()
+            });
+        }
+        return this._shim;
+    },
 
     /**
      Returns {@link ludo.form.Manager"} for this view.
      @function getForm     *
      @return {ludo.form.Manager}
-	 @memberof ludo.View.prototype
+     @memberof ludo.View.prototype
      @example
-        view.getForm().reset();
+     view.getForm().reset();
 
      to reset all form fields
 
      @example
-        view.getForm().save();
+     view.getForm().save();
 
      to submit the form
 
      @example
-        view.getForm().read(1);
+     view.getForm().read(1);
 
      to send a read request to the server for record with id 1.
      */
-	getForm:function () {
-		if (!this.hasDependency('formManager')) {
-			this.createDependency('formManager',
-				{
-					type:'ludo.form.Manager',
-					view:this,
-					form:this.form
-				});
-		}
-		return this.getDependency('formManager');
-	},
+    getForm: function () {
+        if (!this.hasDependency('formManager')) {
+            this.createDependency('formManager',
+                {
+                    type: 'ludo.form.Manager',
+                    view: this,
+                    form: this.form
+                });
+        }
+        return this.getDependency('formManager');
+    },
 
-	getParentForm:function () {
-		var parent = this.getParent();
-		return parent ? parent.hasDependency('formManager') ? parent.getDependency('formManager') : parent.getParentForm() : undefined;
-	},
+    getParentForm: function () {
+        var parent = this.getParent();
+        return parent ? parent.hasDependency('formManager') ? parent.getDependency('formManager') : parent.getParentForm() : undefined;
+    },
 
-	isFormElement:function () {
-		return false;
-	},
+    isFormElement: function () {
+        return false;
+    },
 
-	getHeightOfButtonBar:function () {
-		return 0;
-	},
-	
-	
-	svg:function(){
-		return this.getCanvas();
-	},
+    getHeightOfButtonBar: function () {
+        return 0;
+    },
 
-	canvas:undefined,
-	/**
-	 Returns drawable Canvas/SVG
-	 @function getCanvas
-	 @memberof ludo.View.prototype
-	 @return {canvas.Canvas} canvas
-	 @example
-	    var win = new ludo.Window({
+
+    svg: function () {
+        return this.getCanvas();
+    },
+
+    canvas: undefined,
+    /**
+     Returns drawable Canvas/SVG
+     @function getCanvas
+     @memberof ludo.View.prototype
+     @return {canvas.Canvas} canvas
+     @example
+     var win = new ludo.Window({
 		   id:'myWindow',
 		   left:50, top:50,
 		   width:410, height:490,
@@ -9210,33 +9222,33 @@ ludo.View = new Class({
 			   'background-color':'#FFF'
 		   }
 	   });
-	    // Creating line style
-	    var paint = new ludo.svg.Paint({
+     // Creating line style
+     var paint = new ludo.svg.Paint({
 		   css:{
 			   'fill':'#FFFFFF',
 			   'stroke':'#DEF',
 			   'stroke-width':'5'
 		   }
 	   });
-	 	// Get reference to canvas
-	    var canvas = win.getCanvas();
-	    canvas.append(new ludo.svg.Node('line', { x1:100, y1:100, x2:200, y2:200, "class":paint }));
-	 */
-	getCanvas:function () {
-		if (this.canvas === undefined) {
-			this.canvas = this.createDependency('canvas', new ludo.svg.Canvas({
-				renderTo:this
-			}));
-		}
-		return this.canvas;
-	},
+     // Get reference to canvas
+     var canvas = win.getCanvas();
+     canvas.append(new ludo.svg.Node('line', { x1:100, y1:100, x2:200, y2:200, "class":paint }));
+     */
+    getCanvas: function () {
+        if (this.canvas === undefined) {
+            this.canvas = this.createDependency('canvas', new ludo.svg.Canvas({
+                renderTo: this
+            }));
+        }
+        return this.canvas;
+    },
 
-	wrappedWidth:function(){
-		return undefined;
-	},
-	wrappedHeight:function(){
-		return undefined;
-	}
+    wrappedWidth: function () {
+        return undefined;
+    },
+    wrappedHeight: function () {
+        return undefined;
+    }
 });
 
 ludo.factory.registerClass('View', ludo.View);/* ../ludojs/src/remote/message.js */
@@ -11301,53 +11313,139 @@ ludo.chart.Fragment = new Class({
  * @class ludo.svg.Group
  */
 ludo.svg.Group = new Class({
-    Extends:ludo.svg.View,
-    tag:'g',
-    layout:{},
+    Extends: ludo.svg.View,
+    type: 'svg.Group',
+    tag: 'g',
+    layout: {},
 
-    __construct:function (config) {
+    /**
+     * Width of SVG group
+     * @property {Number} width
+     * @memberof ludo.svg.Group.prototype
+     */
+    width: undefined,
+
+
+    children: undefined,
+
+    parentGroup: undefined,
+
+    /**
+     * Height of SVG group
+     * @property {Number} height
+     * @memberof ludo.svg.Group.prototype
+     */
+    height: undefined,
+
+    child: undefined,
+
+    __construct: function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['layout', 'renderTo', 'parentComponent']);
+        this.setConfigParams(config, ['layout', 'renderTo', 'parentComponent', 'parentGroup', '__rendered']);
+
+        this.layout = this.layout || {};
+        this.layout.type = 'Canvas';
+
+        config.children = config.children || this.__children();
+        this.children = [];
+
+        this.child = {};
+
         if (this.renderTo) {
             this.renderTo.append(this);
         }
+
+
+
+        jQuery.each(config.children, function (i, child) {
+            child.layout = child.layout || {};
+            child.parentGroup = this;
+            this.children[i] = child = this.getLayout().addChild(child);
+            child.renderTo = this;
+            this.child[child.id || child.name] = child;
+        }.bind(this));
+
+
 
         if (config.css) {
             this.node.css(this.css);
         }
     },
 
-    rendered:function(){
-        
+    __children: function () {
+        return this.children || [];
     },
-    
-    resize:function (coordinates) {
+
+    __rendered: function () {
+
+
+    },
+
+    resize: function (coordinates) {
         if (coordinates.width) {
-            this.width = coordinates.width;
+            this.width = Math.max(0, coordinates.width);
             this.set('width', coordinates.width + 'px');
         }
         if (coordinates.height) {
-            this.height = coordinates.height;
+            this.height = Math.max(0, coordinates.height);
             this.set('height', coordinates.height + 'px');
         }
+
+        if (this.children.length > 0)this.getLayout().resizeChildren();
+
+        this.fireEvent('resize', coordinates);
     },
 
-    getSize:function () {
+    getSize: function () {
         return {
-            x:this.width || this.renderTo.width(),
-            y:this.height || this.renderTo.height()
+            x: this.width || this.renderTo.width(),
+            y: this.height || this.renderTo.height()
         }
     },
 
-    getCenter:function(){
+    getCenter: function () {
         var s = this.getSize();
         return {
-            x : s.x / 2, y: s.y / 2
+            x: s.x / 2, y: s.y / 2
         }
     },
 
-    isHidden:function () {
+    isHidden: function () {
         return false;
+    },
+
+    /**
+     * Returns or set position of a SVG group. On no arguments, position will be returned, otherwise,
+     * it will be set.
+     * @param {Number} x
+     * @param {Number} y
+     * @returns {{left: *, top: *}}
+     * @memberof ludo.svg.Group.prototype
+     */
+    position: function (x, y) {
+        if (arguments.length > 0) {
+            this.node.setTranslate(x, y);
+        } else {
+            var t = this.node.getTranslate();
+            return {left: t[0], top: t[1]};
+        }
+
+    },
+
+
+    getLayout: function () {
+        if (!this.hasDependency('layoutManager')) {
+            this.createDependency('layoutManager', ludo.layoutFactory.getManager(this));
+        }
+        return this.getDependency('layoutManager');
+    },
+
+    getBody: function () {
+        return this.node;
+    },
+
+    append: function (el) {
+        return this.node.append(el);
     }
 });/* ../ludojs/src/chart/base.js */
 /**
@@ -15791,6 +15889,7 @@ ludo.layout.Linear = new Class({
             hidden:child.isHidden(),
 			renderTo:this.view.getBody(),
 			layout:{ width:5,height:5 },
+			lm:child.getLayout(),
 			view:child,
 			listeners:{
 				'resize':function (change) {
@@ -15809,80 +15908,82 @@ ludo.layout.Linear = new Class({
  *
  */
 ludo.layout.LinearHorizontal = new Class({
-	Extends:ludo.layout.Linear,
+    Extends: ludo.layout.Linear,
+    type: 'layout.Linear',
+    resize: function () {
+        var totalWidth = this.viewport.width;
 
-	resize:function () {
-		var totalWidth = this.viewport.width;
+        var height = this.hasDynamicHeight() ? 'auto' : this.viewport.height;
+        if (height == 0) {
+            return;
+        }
 
-		var height = this.hasDynamicHeight() ? 'auto' : this.viewport.height;
-		if (height == 0) {
-			return;
-		}
+        var totalWidthOfItems = 0;
+        var totalWeight = 0;
+        for (var i = 0; i < this.view.children.length; i++) {
+            if (this.view.children[i].isVisible()) {
+                if (!this.hasLayoutWeight(this.view.children[i])) {
+                    var width = this.getWidthOf(this.view.children[i]);
+                    if (width) {
+                        totalWidthOfItems += width
+                    }
+                } else {
+                    totalWeight += this.view.children[i].layout.weight;
+                }
+            }
+        }
+        totalWeight = Math.max(1, totalWeight);
+        var remainingWidth;
+        totalWidth = remainingWidth = totalWidth - totalWidthOfItems;
 
-		var totalWidthOfItems = 0;
-		var totalWeight = 0;
-		for (var i = 0; i < this.view.children.length; i++) {
-			if (this.view.children[i].isVisible()) {
-				if (!this.hasLayoutWeight(this.view.children[i])) {
-					var width = this.getWidthOf(this.view.children[i]);
-					if (width) {
-						totalWidthOfItems += width
-					}
-				} else {
-					totalWeight += this.view.children[i].layout.weight;
-				}
-			}
-		}
-		totalWeight = Math.max(1, totalWeight);
-		var remainingWidth;
-		totalWidth = remainingWidth = totalWidth - totalWidthOfItems;
+        var currentLeft = this.viewport.left;
 
-		var currentLeft = this.viewport.left;
+        for (i = 0; i < this.view.children.length; i++) {
+            var c = this.view.children[i];
+            if (c.isVisible()) {
+                var config = {'height': height, 'left': currentLeft};
+                if (this.hasLayoutWeight(c)) {
+                    if (c.id == this.idLastDynamic) {
+                        config.width = remainingWidth;
+                    } else {
+                        config.width = Math.round(totalWidth * c.layout.weight / totalWeight);
+                        remainingWidth -= config.width;
+                    }
+                } else {
+                    config.width = this.getWidthOf(c);
+                }
 
-		for (i = 0; i < this.view.children.length; i++) {
-			if (this.view.children[i].isVisible()) {
-				var config = { 'height':height, 'left':currentLeft };
-				if (this.hasLayoutWeight(this.view.children[i])) {
-					if (this.view.children[i].id == this.idLastDynamic) {
-						config.width = remainingWidth;
-					} else {
-						config.width = Math.round(totalWidth * this.view.children[i].layout.weight / totalWeight);
-						remainingWidth -= config.width;
-					}
-				} else {
-					config.width = this.getWidthOf(this.view.children[i]);
-				}
-				this.resizeChild(this.view.children[i], config);
-				currentLeft += config.width;
-			}
-		}
+                this.resizeChild(c, config);
+                currentLeft += config.width;
+            }
+        }
 
-		for (i = 0; i < this.resizables.length; i++) {
-			this.resizables[i].colResize();
-		}
-	},
+        for (i = 0; i < this.resizables.length; i++) {
+            this.resizables[i].colResize();
+        }
+    },
 
-	resizeChild:function (child, resize) {
-		child.layout.width = resize.width;
-		child.layout.left = resize.left;
-		child.resize(resize);
-		child.saveState();
-	},
+    resizeChild: function (child, resize) {
+        child.layout.width = resize.width;
+        child.layout.left = resize.left;
+        child.resize(resize);
+        child.saveState();
+    },
 
-	onNewChild:function (child) {
-		this.parent(child);
-		child.getEl().css('position', 'absolute');
+    onNewChild: function (child) {
+        this.parent(child);
+        child.getEl().css('position', 'absolute');
 
-		if (this.isResizable(child)) {
-			var isLastSibling = this.isLastSibling(child);
-			var resizer = this.getResizableFor(child, isLastSibling ? 'left' : 'right');
-			this.addChild(resizer, child, isLastSibling ? 'before' : 'after');
-		}
-	},
+        if (this.isResizable(child)) {
+            var isLastSibling = this.isLastSibling(child);
+            var resizer = this.getResizableFor(child, isLastSibling ? 'left' : 'right');
+            this.addChild(resizer, child, isLastSibling ? 'before' : 'after');
+        }
+    },
 
-	hasDynamicHeight:function () {
-		return this.view.layout.height && this.view.layout.height == 'dynamic';
-	}
+    hasDynamicHeight: function () {
+        return this.view.layout.height && this.view.layout.height == 'dynamic';
+    }
 });/* ../ludojs/src/layout/linear-vertical.js */
 /**
  * This class arranges child views in a column layout (side by side).
@@ -15924,24 +16025,25 @@ ludo.layout.LinearVertical = new Class({
 
 		var width = this.view.getBody().width();
 		for (i = 0; i < this.view.children.length; i++) {
-			if(!this.view.children[i].isHidden()){
+			var c = this.view.children[i];
+			if(!c.isHidden()){
 
-				var w = this.view.children[i].layout.width;
+				var w = c.layout.width;
 				var cW = w && !isNaN(w) ? w : width;
 
 				var config = {
-					width:cW
+					width:c.type == 'layout.Resizer' ? width: cW
 				};
 				
-				if (this.hasLayoutWeight(this.view.children[i])) {
-					if (this.view.children[i].id == this.idLastDynamic) {
+				if (this.hasLayoutWeight(c)) {
+					if (c.id == this.idLastDynamic) {
 						config.height = remainingHeight;
 					} else {
-						config.height = Math.round(stretchHeight * this.view.children[i].layout.weight / totalWeight);
+						config.height = Math.round(stretchHeight * c.layout.weight / totalWeight);
 						remainingHeight -= config.height;
 					}
 				} else {
-					config.height = this.getHeightOf(this.view.children[i], config);
+					config.height = this.getHeightOf(c, config);
 				}
 
 				if (config.height < 0) {
@@ -15951,8 +16053,8 @@ ludo.layout.LinearVertical = new Class({
 					config.top = tm;
 				}
 
-				this.resizeChild(this.view.children[i], config);
-				tm += this.view.children[i].getEl().outerHeight(true);
+				this.resizeChild(c, config);
+				tm += c.getEl().outerHeight(true);
 			}
 		}
 	},
@@ -16449,10 +16551,11 @@ ludo.layout.Tabs = new Class({
     menu: undefined,
 
     tabTitles: undefined,
+    alwaysInFront:true,
 
     __construct: function (config) {
         this.parent(config);
-        if (config.tabPos !== undefined)this.tabPos = config.tabPos;
+        this.setConfigParams(config, ['tabPos']);
         this.lm = config.lm;
         this.hiddenTabs = [];
         this.tabTitles = {};
@@ -16462,6 +16565,7 @@ ludo.layout.Tabs = new Class({
         this.lm.addEvent('addChild', this.registerChild.bind(this));
         this.lm.addEvent('addChildRuntime', this.resizeTabs.bind(this));
         this.lm.addEvent('showChild', this.activateTabFor.bind(this));
+        this.lm.addEvent('hideChild', this.hideTabFor.bind(this));
         this.lm.addEvent('removeChild', this.removeTabFor.bind(this));
         this.addEvent('resize', this.resizeTabs.bind(this));
     },
@@ -16874,6 +16978,11 @@ ludo.layout.Tabs = new Class({
         return title;
     },
 
+    hideTabFor:function(){
+        this.activeTab.removeClass('ludo-tab-strip-tab-active');
+
+    },
+
     activateTabFor: function (child) {
         if (this.activeTab !== undefined) {
             this.activeTab.removeClass('ludo-tab-strip-tab-active');
@@ -16934,8 +17043,8 @@ ludo.layout.Tabs = new Class({
  For a demo, see <a href="../demo/layout/relative.php" onclick="var w=window.open(this.href);return false">Relative layout demo</a>.
  @namespace ludo.layout
  @class ludo.layout.Relative
- @param {object} config
  @summary layout: {type: "relative" }
+ @param {object} config
  @param {number|string} config.width Width in Pixels or "matchParent". 
  @param {number|string} config.height Height in pixels or "matchParent"
  @param {Boolean} config.alignParentTop Align at top edge of parent view
@@ -16983,6 +17092,7 @@ ludo.layout.Tabs = new Class({
 ludo.layout.Relative = new Class({
 	Extends:ludo.layout.Base,
 	children:undefined,
+	type:'layout.Relative',
     /*
      * Array of valid layout properties
      * @property {Array} layoutFnProperties
@@ -17449,6 +17559,7 @@ ludo.layout.Relative = new Class({
 			renderTo:this.view.getBody(),
 			sibling:this.getSiblingForResize(child,direction),
 			layout:this.getResizerLayout(child, direction),
+			lm:this,
 			view:child,
 			listeners:{
 				'resize':function (change) {
@@ -17688,7 +17799,7 @@ ludo.layout.Relative = new Class({
      * Add events to child view
      * @function addChildEvents
      * @param {ludo.View} child
-     * @private
+	 * @protected
      */
 	addChildEvents:function(child){
 		child.addEvent('hide', this.hideChild.bind(this));
@@ -17699,143 +17810,462 @@ ludo.layout.Relative = new Class({
 		child.addEvent('maximize', this.clearTemporaryValues.bind(this));
 	}
 });/* ../ludojs/src/layout/tab.js */
+/**
+ * Layout rendering child views in a tab layout. By default, the first child view will be displayed. You can override
+ * this by setting **layout.visible** to true for a specific child.
+ *
+ * For a demo, see <a href="../demo/layout/tab.php" onclick="var w=window.open(this.href);return false">Tab layout demo</a>.
+ * @class layout.Tab
+ * @namespace ludo.layout
+ * @summary layout: layout: {type: "tab" }
+ * @class ludo.layout.Tab
+ * @param {Object} config
+ * @param {String} config.tabPos Position of tabs, **left**, **top**, **right** or **bottom**
+ * @param {String} config.title **Option** for child views layout object. The title will be displayed on the tab.
+ * @param {Boolean} config.visible **Option** for child views layotu object. True to initially display a different
+ * tab than the first
+ * @example
+ *     var w = new ludo.Window({
+        left: 50, top: 50,
+        title: 'Tab layout',
+        width: 500, height: 400,
+        layout: {
+            type: 'tab',
+            tabs: 'top'
+        },
+        children:[
+            {
+                title:'first tab'
+            },
+            {
+                title:'second tab',
+                layout:{
+                    visible:true
+                }
+            }
+        ]
+        });
+ */
 ludo.layout.Tab = new Class({
-	Extends:ludo.layout.Relative,
-	visibleChild:undefined,
-	tabStrip:undefined,
+    Extends: ludo.layout.Relative,
+    visibleChild: undefined,
+    tabStrip: undefined,
+    type:'layout.Tab',
 
-	onCreate:function () {
-		this.parent();
-		this.view.getEl().addClass('ludo-layout-tab');
-		this.addChild(this.getTabs());
+    onCreate: function () {
+        this.parent();
+        this.view.getEl().addClass('ludo-layout-tab');
+        this.addChild(this.getTabs());
 
-		this.updateViewport(this.tabStrip.getChangedViewport());
-	},
+        this.updateViewport(this.tabStrip.getChangedViewport());
+    },
 
-	addChild:function (child, insertAt, pos) {
-		if (!this.isTabs(child) && (!child.layout || !child.layout.visible))child.hidden = true;
-		return this.parent(child, insertAt, pos);
-	},
+    afterCreate:function(){
 
-	onNewChild:function (child) {
+    },
 
-		if (!this.isTabs(child)) {
-			if(!child.isHidden()){
-				this.setVisibleChild(child);
-			}
-			var l = child.layout;
-			l.alignParentLeft = true;
-			l.alignParentTop = true;
-			l.fillRight = true;
-			l.fillDown = true;
-		}
-		this.parent(child);
-	},
+    addChild: function (child, insertAt, pos) {
 
-	setTemporarySize:function(){
 
-	},
+        if (!this.isTabs(child) && (!child.layout || !child.layout.visible))child.hidden = true;
+        return this.parent(child, insertAt, pos);
 
-	addChildEvents:function(child){
-		if(!this.isTabs(child)){
-			child.addEvent('show', this.showTab.bind(this));
-			child.addEvent('remove', this.onChildDispose.bind(this));
-		}
-	},
+    },
 
-	getTabPosition:function () {
-		return this.view.layout.tabs || 'top';
-	},
-	getTabs:function () {
-		if (this.tabStrip === undefined) {
-			this.tabStrip = new ludo.layout.Tabs({
-				lm : this,
-				parentComponent:this.view,
-				tabPos:this.getTabPosition(),
-				renderTo:this.view.getBody(),
-				layout:this.getTabsLayout()
-			});
-		}
-		return this.tabStrip;
-	},
+    onNewChild: function (child) {
 
-	setVisibleChild:function(child){
-		if(this.visibleChild)this.visibleChild.hide();
-		this.visibleChild = child;
-		this.fireEvent('showChild', child);
-	},
+        if (!this.isTabs(child)) {
+            var l = child.layout;
 
-	showTab:function(child){
-		if(child !== this.visibleChild){
-			this.setVisibleChild(child);
-			this.resize();
-		}
+            if (!child.isHidden()) {
+                this.setVisibleChild(child);
+            }
 
-	},
+            l.alignParentLeft = true;
+            l.alignParentTop = true;
+            l.fillRight = true;
+            l.fillDown = true;
 
-	resize:function(){
-		if(this.visibleChild === undefined){
-			if(this.view.children.length>1)this.view.children[1].show();
-		}else{
-			if (this.children === undefined || !this.visibleChild.layoutResizeFn) {
-				this.prepareResize();
-			}
-			this.tabStrip.layoutResizeFn.call(this.visibleChild, this);
-			if(!this.visibleChild.layoutResizeFn){
-				this.prepareResize();
-			}
-			this.visibleChild.layoutResizeFn.call(this.visibleChild, this);
-		}
-	},
+        }
+        this.parent(child);
+    },
 
-	getTabsLayout:function () {
-		switch (this.getTabPosition()) {
-			case 'top':
-				return {
-					absTop:true,
-					absLeft:true,
-					absWidth:true
-				};
-			case 'left':
-				return {
-					absTop:true,
-					absLeft:true,
-					absHeight:true
-				};
-			case 'right':
-				return {
-					absTop:true,
-					absRight:true,
-					absHeight:true
-				};
-			case 'bottom':
-				return {
-					absBottom:true,
-					absLeft:true,
-					absWidth:true
-				};
-		}
-		return undefined;
-	},
+    setTemporarySize: function () {
 
-	isTabs:function (view) {
-		return view.type === 'layout.Tabs';
-	},
+    },
 
-	onChildDispose:function(child){
-		if(this.visibleChild && this.visibleChild.id === child.id){
-			var i = this.view.children.indexOf(this.visibleChild);
-			if(i>1){
-				this.view.children[i-1].show();
-			}else{
-				if(this.view.children.length>2){
-					this.view.children[i+1].show();
-				}
-			}
-		}
+    addChildEvents: function (child) {
+        if (!this.isTabs(child)) {
+            child.addEvent('show', this.showTab.bind(this));
+            child.addEvent('remove', this.onChildDispose.bind(this));
+        }
+    },
 
-		this.fireEvent('removeChild', child);
-	}
+    getTabPosition: function () {
+        return this.view.layout.tabs || 'top';
+    },
+
+    canHaveNoActiveTabs:false,
+
+    getTabs: function () {
+        if (this.tabStrip === undefined) {
+            this.tabStrip = new ludo.layout.Tabs({
+                lm: this,
+                parentComponent: this.view,
+                tabPos: this.getTabPosition(),
+                renderTo: this.view.getBody(),
+                layout: this.getTabsLayout(),
+                canHaveNoActiveTabs:this.canHaveNoActiveTabs
+            });
+        }
+        return this.tabStrip;
+    },
+
+    setVisibleChild: function (child) {
+        if (this.visibleChild)this.visibleChild.hide();
+        this.visibleChild = child;
+        this.fireEvent('showChild', child);
+    },
+
+    showTab: function (child) {
+        if (child !== this.visibleChild) {
+            this.setVisibleChild(child);
+            this.resize();
+        }
+
+    },
+
+    resize: function () {
+
+        if (this.visibleChild === undefined && this.autoShowFirst()) {
+            if (this.view.children.length > 1)this.view.children[1].show();
+        } else {
+
+            if (this.children === undefined || (this.visibleChild && !this.visibleChild.layoutResizeFn)) {
+                this.prepareResize();
+            }
+
+            this.tabStrip.layoutResizeFn.call(this.visibleChild, this);
+
+            if (this.visibleChild) {
+
+                if (!this.visibleChild.layoutResizeFn) {
+                    this.prepareResize();
+                }
+                this.visibleChild.layoutResizeFn.call(this.visibleChild, this);
+            }
+        }
+    },
+
+    autoShowFirst: function () {
+        return true;
+    },
+
+    getTabsLayout: function () {
+        switch (this.getTabPosition()) {
+            case 'top':
+                return {
+                    absTop: true,
+                    absLeft: true,
+                    absWidth: true
+                };
+            case 'left':
+                return {
+                    absTop: true,
+                    absLeft: true,
+                    absHeight: true
+                };
+            case 'right':
+                return {
+                    absTop: true,
+                    absRight: true,
+                    absHeight: true
+                };
+            case 'bottom':
+                return {
+                    absBottom: true,
+                    absLeft: true,
+                    absWidth: true
+                };
+        }
+        return undefined;
+    },
+
+    isTabs: function (view) {
+        return view.type === 'layout.Tabs';
+    },
+
+    onChildDispose: function (child) {
+        if (this.visibleChild && this.visibleChild.id === child.id) {
+            var i = this.view.children.indexOf(this.visibleChild);
+            if (i > 1) {
+                this.view.children[i - 1].show();
+            } else {
+                if (this.view.children.length > 2) {
+                    this.view.children[i + 1].show();
+                }
+            }
+        }
+
+        this.fireEvent('removeChild', child);
+    }
+});/* ../ludojs/src/layout/docking.js */
+/**
+ * Docking Layout
+ * This layout extends <a href="ludo.layout.Tab.html">layout.Tab</a> and displays child views in a tab layout.
+ *
+ * The difference between the Docking Layout and the Tabs layout is that in the docking layout, you don't need
+ * to show any child views. When no child views are visible, the view with the docking layout will collapse to
+ * the size of the Tab Bar.
+ *
+ *
+ * Initially, no child view is displayed unless **layout.visible** is set on a child view.
+ *
+ *
+ * For a demo, see <a href="../demo/layout/docking.php" onclick="var w=window.open(this.href);return false">Docking layout demo</a>.
+ * @class ludo.layout.Docking
+ * @augments ludo.layout.Tab
+ * @summary layout: layout: {type: "tab" }
+ * @example
+ var w = new ludo.Window({
+        title:'Docking layout',
+        id:'dockingWindow',
+        layout:{
+            left:50, top:50,
+            width:700, height:600,
+            type:'linear',
+            orientation:'horizontal'
+        },
+        children:[ // Children for the accordion listed below
+            {
+                id:'dockingLayoutView',
+                layout:{
+                    type:'docking',
+                    width:200,
+                    resizable:true,
+                    tabs:'left'
+                },
+                children:[
+                    {
+                        id:'view1',
+                        title: 'Project',// Title for the accordion
+                        html:'<ul><li>Content</li><li>Content</li><li>Content</li><li>Content</li></ul>'
+                    },
+                    {
+                        id:'view2',
+                        title: 'Structure', // Title for the accordion
+                        html:'Second child view'
+                    }
+                ]
+            },
+            {
+                html:'<h1>Main View</h1>',
+                css:{
+                    padding:5,
+                    'border-left': '1px solid ' + ludo.$C('border')
+                },
+                layout:{
+                    weight:1
+                }
+            }
+        ]
+    });
+ */
+ludo.layout.Docking = new Class({
+    Extends: ludo.layout.Tab,
+    type: 'layout.Docking',
+    storedSize: undefined,
+    collapsed: true,
+
+    tabSize: undefined,
+    tabSizeKey: undefined,
+
+
+    prepareForChildrenOnCreate:function(children){
+
+        jQuery.each(children, function(i, child){
+            if(child.layout && child.layout.visible)this.collapsed = false;
+        }.bind(this));
+
+
+        if(this.collapsed){
+            this.storedSize = {
+                key: this.getTabSizeKey(),
+                value: this.view.layout[this.getTabSizeKey()]
+            };
+
+            this.view.layout[this.getTabSizeKey()] = this.pixelSize();
+        }
+    },
+
+    addChildEvents:function(child){
+        this.parent(child);
+        if (!this.isTabs(child)) {
+            child.addEvent('hide', this.hideTab.bind(this));
+
+        }
+    },
+
+    hideTab:function(child){
+        if (child == this.visibleChild) {
+           this.collapse();
+           this.fireEvent('hideChild', child);
+        }
+    },
+
+    setVisibleChild: function (child) {
+        if (!this.collapsed) {
+            this.visibleChild = child;
+            this.fireEvent('showChild', child);
+        }
+    },
+
+    collapse: function () {
+        this.fireEvent('collapse', this);
+
+        this.visibleChild = undefined;
+
+        this.collapsed = true;
+
+        this.storeSize();
+
+        switch (this.getTabPosition()) {
+            case 'top':
+            case 'bottom':
+                this.view.resize({
+                    height: this.pixelSize()
+                });
+                break;
+            case 'left':
+            case 'right':
+                this.view.layout.width = this.pixelSize();
+                this.view.resize({
+                    width: this.pixelSize()
+                });
+        }
+
+        this.resizeParentView();
+    },
+
+    storeSize:function(){
+        switch (this.getTabPosition()) {
+            case 'top':
+            case 'bottom':
+                if(this.storedSize == undefined)this.storedSize = {key:'height', value : this.viewport.height};
+
+                break;
+            case 'left':
+            case 'right':
+                if(this.storedSize == undefined){
+                    this.storedSize = {key:'width', value: this.viewport.width};
+                }
+
+        }
+    },
+
+
+    showTab: function (child) {
+        if (child == this.visibleChild) {
+            this.collapse();
+            this.fireEvent('hideChild', child);
+        } else {
+            if (this.collapsed) {
+                this.fireEvent('expand');
+                this.collapsed = false;
+
+                this.updateViewport(this.storedSize);
+                var r = {};
+                r[this.storedSize.key] = this.storedSize.value;
+
+                this.view.resize(r);
+                this.resize();
+
+                this.resizeParentView();
+
+            }
+            this.parent(child);
+        }
+
+    },
+
+    tabPixelSize:undefined,
+
+    isHorizontal:function(){
+        var pos= this.getTabPosition();
+        return pos == 'top' || pos == 'bottom';
+    },
+
+    pixelSize:function(){
+        if (this.tabPixelSize == undefined) {
+            if(this.isHorizontal()){
+                this.tabPixelSize = this.view.children[0].getBody().height();
+            }else{
+                this.tabPixelSize = this.view.children[0].getBody().width();
+            }
+
+        }
+        return this.tabPixelSize;
+    },
+
+    getTabSize: function () {
+        if (this.tabSize == undefined) {
+            if(this.isHorizontal()){
+                this.tabSize = {key: 'height', value: this.pixelSize()};
+            }else{
+                this.tabSize = {key: 'width', value:  this.pixelSize()};
+            }
+        }
+        return this.tabSize;
+    },
+
+    getTabSizeKey: function () {
+        if (this.tabSizeKey == undefined) {
+            switch (this.getTabPosition()) {
+                case 'top':
+                case 'bottom':
+                    this.tabSizeKey = 'height';
+                    break;
+                case 'left':
+                case 'right':
+                    this.tabSizeKey = 'width';
+            }
+
+        }
+        return this.tabSizeKey;
+    },
+
+    autoShowFirst: function () {
+        return false;
+    },
+
+    resizeParentView: function () {
+        if (this.view.parentComponent) {
+            this.view.parentComponent.getLayout().resize();
+        }
+    },
+
+    beforeFirstResize:function(){
+        if(this.collapsed){
+            this.fireEvent('collapse');
+        }
+    },
+
+    resizeChildren: function () {
+        this.parent();
+        if (!this.collapsed) {
+            var key = this.getTabSizeKey();
+            var val = this.viewport[key];
+
+            if (val > this.getTabSize().value) {
+                this.storedSize = {
+                    key: key,
+                    value: val
+                };
+
+            }
+
+        }
+    }
 });/* ../ludojs/src/layout/fill.js */
 /**
  * Layout for one single child spanning entire body of parent view
@@ -18001,85 +18431,105 @@ ludo.layout.Popup = new Class({
  * @augments layout.Relative
  */
 ludo.layout.Canvas = new Class({
-	Extends:ludo.layout.Relative,
+    Extends: ludo.layout.Relative,
+    type:'layout.Canvas',
 
-	addChild:function (child) {
-		child = this.getValidChild(child);
-		child = this.getNewComponent(child);
-
-		this.view.children.push(child);
-		var el = child;
-		this.view.getCanvas().append(el);
-
-		this.onNewChild(child);
-		this.addChildEvents(child);
-
-		this.fireEvent('addChild', [child, this]);
+    addChild: function (child) {
 
 
-
-		return child;
-	},
-
-	/**
-	 * Add events to child view
-	 * @function addChildEvents
-	 * @param {ludo.View} child
-	 * @private
-	 */
-	addChildEvents:function (child) {
-		child.addEvent('hide', this.hideChild.bind(this));
-		child.addEvent('show', this.clearTemporaryValues.bind(this));
-
-	},
-
-	/**
-	 * Position child at this coordinates
-	 * @function positionChild
-	 * @param {canvas.View} child
-	 * @param {String} property
-	 * @param {Number} value
-	 * @private
-	 */
-	positionChild:function (child, property, value) {
-
-		child[property] = value;
-		this.currentTranslate[property] = value;
-		child['node'].setTranslate(this.currentTranslate.left, this.currentTranslate.top);
-	},
-
-	currentTranslate:{
-		left:0,top:0
-	},
-
-	zIndexAdjusted:false,
-	_rendered:false,
-
-	resize:function(){
-		this.parent();
-
-		if(!this.zIndexAdjusted){
-			this.zIndexAdjusted = true;
-
-			for (var i = 0; i < this.children.length; i++) {
-				if(this.children[i].layout.zIndex != undefined){
-					this.view.getCanvas().append(this.children[i]);
-				}
-			}
-		}
-
-		if(!this._rendered){
-			this._rendered = true;
-
-			jQuery.each(this.children, function(i, child){
-				child.rendered();
-			});
-		}
-
-	}
+        child = this.getValidChild(child);
+        child = this.getNewComponent(child);
 
 
+        this.view.children.push(child);
 
+        var p = child.parentNode ? this.view : this.view.getCanvas();
+
+        p.append(child);
+
+        this.onNewChild(child);
+        this.addChildEvents(child);
+
+        this.fireEvent('addChild', [child, this]);
+
+
+        return child;
+    },
+
+    /**
+     * Add events to child view
+     * @function addChildEvents
+     * @param {ludo.View} child
+     * @private
+     */
+    addChildEvents: function (child) {
+        child.addEvent('hide', this.hideChild.bind(this));
+        child.addEvent('show', this.clearTemporaryValues.bind(this));
+
+    },
+
+    /**
+     * Position child at this coordinates
+     * @function positionChild
+     * @param {canvas.View} child
+     * @param {String} property
+     * @param {Number} value
+     * @private
+     */
+    positionChild: function (child, property, value) {
+
+        child[property] = value;
+        this.currentTranslate[property] = value;
+        child['node'].setTranslate(this.currentTranslate.left, this.currentTranslate.top);
+    },
+
+    currentTranslate: {
+        left: 0, top: 0
+    },
+
+    zIndexAdjusted: false,
+    _rendered: false,
+
+    resize: function () {
+        this.parent();
+
+
+        if (!this.zIndexAdjusted) {
+            this.zIndexAdjusted = true;
+
+            for (var i = 0; i < this.children.length; i++) {
+                if (this.children[i].layout.zIndex != undefined) {
+                    // TODO this needs to be refactored
+                    var p = this.view.parentNode ? this.view.parentNode: this.view.getCanvas();
+                    p.append(this.children[i]);
+                }
+            }
+        }
+
+        if (!this._rendered) {
+            this._rendered = true;
+            jQuery.each(this.view.children, function (i, child) {
+                if (child.__rendered != undefined) {
+                    child.__rendered();
+                }
+            });
+        }
+
+    },
+
+    getAvailWidth: function () {
+        if (!this.view.parentNode)return this.parent();
+        return this.view.width;
+    },
+
+    getAvailHeight: function () {
+        if (!this.view.parentNode)return this.parent();
+        return this.view.height;
+    },
+
+    getParentForNewChild: function () {
+        return this.view.node;
+    }
 });/* ../ludojs/src/layout/nav-bar.js */
 /**
  * In the Navigation Bar layout, you have to two child views. The first child view is the
@@ -20836,7 +21286,6 @@ ludo.view.TitleBar = new Class({
         var ret = [];
         var v = this.view;
         if (v.isMinimizable())ret.push('minimize');
-        if (v.isCollapsible())ret.push('collapse');
         if (v.isClosable())ret.push('close');
         return ret;
     },
@@ -20929,9 +21378,6 @@ ludo.view.TitleBar = new Class({
         b.attr('title', buttonConfig.title ? buttonConfig.title : buttonConfig.type.capitalize());
         b.attr('buttonType', buttonConfig.type);
 
-        if (buttonConfig.type === 'collapse') {
-            b.addClass('ludo-title-bar-button-collapse-' + this.getCollapseButtonDirection());
-        }
         this.els.buttonArray.push(b);
         return b;
     },
@@ -21029,19 +21475,6 @@ ludo.view.TitleBar = new Class({
             this.height = this.els.el.outerHeight();
         }
         return this.height;
-    },
-
-    getCollapseButtonDirection:function () {
-        var c = this.view;
-        if (ludo.util.isString(c.layout.collapsible)) {
-            return c.layout.collapsible;
-        }
-        var parent = c.getParent();
-        if (parent && parent.layout && parent.layout.type === 'linear' && parent.layout.orientation === 'horizontal') {
-            return parent.children.indexOf(c) === 0 ? 'left' : 'right';
-        } else {
-            return parent.children.indexOf(c) === 0 ? 'top' : 'bottom';
-        }
     }
 });
 

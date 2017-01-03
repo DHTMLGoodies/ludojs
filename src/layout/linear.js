@@ -76,6 +76,7 @@ ludo.layout.Linear = new Class({
             hidden:child.isHidden(),
 			renderTo:this.view.getBody(),
 			layout:{ width:5,height:5 },
+			lm:child.getLayout(),
 			view:child,
 			listeners:{
 				'resize':function (change) {
