@@ -139,6 +139,7 @@ ludo.calendar.TimePicker = new Class({
     mouseMove: function (e) {
         if (!this.dragActive)return;
         this.updateTimeByEvent(e);
+        return false;
 
     },
 

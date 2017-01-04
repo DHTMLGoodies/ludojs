@@ -1,7 +1,7 @@
-/* Generated Wed Jan 4 23:25:21 CET 2017 */
+/* Generated Wed Jan 4 23:40:32 CET 2017 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.363
+ludoJS - Javascript framework, 1.1.364
 Copyright (C) 2012-2017  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -6208,7 +6208,7 @@ ludo.layout.TextBox = new Class({
 
 
 
-       
+
     },
 
     createIE8Box: function () {
@@ -6240,14 +6240,14 @@ ludo.layout.TextBox = new Class({
         document.id(this.renderTo).appendChild(span);
 
     },
-    
+
     leave:function(){
-        this.textNode.removeClass(this.classNameOver);
-        this.textNode.addClass(this.className);
+        this.textNode.removeClass(this.classNameOver + 'svg');
+        this.textNode.addClass(this.className + 'svg');
     },
 
     enter:function(){
-        this.textNode.addClass(this.classNameOver);
+        this.textNode.addClass(this.classNameOver + 'svg');
     },
 
     deg2radians: Math.PI * 2 / 360,
@@ -6271,8 +6271,8 @@ ludo.layout.TextBox = new Class({
         this.stylesOver['font-size'] = this.styles['font-size'];
         this.stylesOver['line-height'] = this.styles['line-height'];
 
-        this.addStyleSheet(this.className, this.styles);
-        this.addStyleSheet(this.classNameOver, this.stylesOver);
+        this.addStyleSheet(this.className + 'svg', this.styles);
+        this.addStyleSheet(this.classNameOver + 'svg', this.stylesOver);
 
     },
 
@@ -6280,7 +6280,7 @@ ludo.layout.TextBox = new Class({
         var el = this.textNode = new ludo.svg.Node('text', {
             x: this.x,
             y: this.y + parseInt(this.styles['font-size']),
-            "class": this.className
+            "class": this.className + 'svg'
         });
         el.text(this.text);
         this.append(el);
@@ -6292,10 +6292,11 @@ ludo.layout.TextBox = new Class({
         node.css('display', 'none');
         $(document.body).append(node);
 
-        var lh = node.css('line-height').replace(/[^0-9]/g, '');
+        var lh = node.css('line-height').replace(/[^0-9\.]/g, '');
         if (!lh) {
             lh = node.css('font-size');
         }
+
 
         var fontSize = parseInt(node.css('font-size'));
         fontSize++;
@@ -6341,6 +6342,7 @@ ludo.layout.TextBox = new Class({
         var x = this.size.x;
         var y = this.size.y;
         var yOffset = (this.size.y - parseInt(this.styles['line-height'])) / 2;
+        console.log('line-height', this.styles['line-height']);
         var transformation = '';
         switch (this.rotation) {
             case 270:
@@ -27910,6 +27912,7 @@ ludo.calendar.TimePicker = new Class({
     mouseMove: function (e) {
         if (!this.dragActive)return;
         this.updateTimeByEvent(e);
+        return false;
 
     },
 
