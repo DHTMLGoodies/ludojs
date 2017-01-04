@@ -184,7 +184,7 @@ ludo.layout.TextBox = new Class({
 
         }
         this.textNode.set('transform', transformation);
-    },
+    }, 
 
     getSize: function () {
         switch (this.rotation) {
