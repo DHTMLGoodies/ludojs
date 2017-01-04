@@ -229,7 +229,7 @@ ludo.FramedView = new Class({
 				collapse:this.hide.bind(this)
 			});
 
-			if (this.isMovable() && !this.getParent()) {
+			if (this.movable && !this.getParent()) {
 				this.drag = this.createDependency('drag', new ludo.effect.Drag({
 					handle:this.titleBarObj.getEl(),
 					el:this.getEl(),

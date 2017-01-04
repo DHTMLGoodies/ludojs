@@ -514,6 +514,7 @@ ludo.layout.Relative = new Class({
 		var resizeProp = (direction === 'left' || direction === 'right') ? 'width' : 'height';
 		return new ludo.layout.Resizer({
 			name:'resizer-' + child.name,
+			hidden:child.isHidden(),
 			orientation:(direction === 'left' || direction === 'right') ? 'horizontal' : 'vertical',
 			pos:direction,
 			renderTo:this.view.getBody(),

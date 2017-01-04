@@ -2743,13 +2743,11 @@ Collapse bar
 }
 
 .ludo-twilight div.ludo-resize-handle-active{
-    background-color:#424242;
+    background-color:#666;
 }
 
 
-
-
-    /** Button **/
+/** Button **/
 
 .ludo-twilight .ludo-form-button-bg-right,
 .ludo-twilight .ludo-form-button-bg-left{
@@ -3190,6 +3188,14 @@ Tree
 
 .ludo-twilight div.ludo-tree-node-last-sibling{
     background-image:url(../images/twilight-skin/tree-dots-last-node-2.png);
+}
+
+.ludo-twilight .ludo-tree-node-expand{
+    top:5px;
+}
+
+.ludo-twilight .ludo-tree-node span.ludo-tree-node-spacer{
+    top:1px;
 }
 
 

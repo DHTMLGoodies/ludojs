@@ -83,6 +83,7 @@ ludo.layout.Docking = new Class({
             };
 
             this.view.layout[this.getTabSizeKey()] = this.pixelSize();
+
         }
     },
 
@@ -235,6 +236,7 @@ ludo.layout.Docking = new Class({
     beforeFirstResize:function(){
         if(this.collapsed){
             this.fireEvent('collapse');
+
         }
     },
 
@@ -249,9 +251,7 @@ ludo.layout.Docking = new Class({
                     key: key,
                     value: val
                 };
-
             }
-
         }
     }
 });

@@ -18,7 +18,7 @@ ludo.menu.DropDown = new Class({
 
     ludoEvents:function () {
         this.parent();
-        document.id(document.documentElement).addEvent('click', this.hideAfterDelay.bind(this));
+        $(document.documentElement).on('click', this.hideAfterDelay.bind(this));
     },
 
     hideAfterDelay:function () {

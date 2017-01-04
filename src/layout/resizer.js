@@ -16,10 +16,12 @@ ludo.layout.Resizer = new Class({
         this.createDOM(config.renderTo);
         this.addViewEvents();
         this.createDragable();
+
+
+        if(this.lm.type=='layout.Docking' && this.lm.collapsed){
+            this.hidden = true;
+        }
         if (this.hidden)this.hide();
-
-
-
         
         this.lm.on('collapse', this.hide.bind(this));
         this.lm.on('expand', this.show.bind(this));

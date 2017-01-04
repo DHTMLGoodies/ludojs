@@ -2,7 +2,7 @@
 ludo.form.CursorCommands = new Class({
     el : undefined,
     initialize : function(el){
-        this.el = document.id(el);
+        this.el = $(el);
     },
 
     getCaretPosition : function(){

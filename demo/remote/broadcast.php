@@ -29,10 +29,10 @@ require_once("../includes/demo-header.php");
                         withService('save').on(['start','success'],
                 function(arg){
                     var v = ludo.get('messagePanel');
-                    var html = v.getBody().innerHTML;
+                    var html = v.getBody().html();
                     html +='<br>';
                     html = html + JSON.encode(arg);
-                    v.setHtml(html);
+                    v.html(html);
 
                 }.bind(view));
             }.bind(this)

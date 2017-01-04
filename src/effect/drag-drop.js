@@ -62,7 +62,7 @@ ludo.effect.DragDrop = new Class({
 	 */
 	remove:function (id) {
 		if (this.els[id] !== undefined) {
-			var el = document.id(this.els[id].el);
+			var el = $(this.els[id].el);
 			el.unbind('mouseenter', this.enterDropTarget.bind(this));
 			el.unbind('mouseleave', this.leaveDropTarget.bind(this));
 			return this.parent(id);

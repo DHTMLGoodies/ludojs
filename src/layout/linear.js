@@ -68,6 +68,8 @@ ludo.layout.Linear = new Class({
 	},
 
 	getResizableFor:function (child, r) {
+
+
 		var resizeProp = (r === 'left' || r === 'right') ? 'width' : 'height';
 		return new ludo.layout.Resizer({
 			name:'resizer-' + child.name,

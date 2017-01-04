@@ -112,7 +112,6 @@ ludo.Core = new Class({
             config = this.appendPropertiesFromStore(config);
             this.addEvent('state', this.saveStatefulProperties.bind(this));
         }
-		// TODO support this.listeners
 		if (config.listeners !== undefined)this.addEvents(config.listeners);
 		if (this.controller !== undefined)ludo.controllerManager.assignSpecificControllerFor(this.controller, this);
         if (this.module || this.useController)ludo.controllerManager.registerComponent(this);
@@ -126,10 +125,7 @@ ludo.Core = new Class({
         }
     },
 
-
-	ludoEvents:function(){
-
-	},
+	ludoEvents:function(){},
 
 	appendPropertiesFromStore:function (config) {
 		var c = ludo.getLocalStorage().get(this.getKeyForLocalStore());
@@ -175,12 +171,6 @@ ludo.Core = new Class({
 	},
 
     // TODO refactor this to use only this.url or global url.
-	/**
-	 * Get url for component
-	 * function getUrl
-	 * return {String|undefined} url
-	 * @memberof ludo.Core.prototype
-	 */
 	getUrl:function () {
 		if (this.url) {
 			return this.url;

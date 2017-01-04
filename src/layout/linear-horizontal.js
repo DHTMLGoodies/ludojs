@@ -15,6 +15,8 @@ ludo.layout.LinearHorizontal = new Class({
             return;
         }
 
+
+
         var totalWidthOfItems = 0;
         var totalWeight = 0;
         for (var i = 0; i < this.view.children.length; i++) {
@@ -24,6 +26,7 @@ ludo.layout.LinearHorizontal = new Class({
                     if (width) {
                         totalWidthOfItems += width
                     }
+
                 } else {
                     totalWeight += this.view.children[i].layout.weight;
                 }
@@ -33,12 +36,15 @@ ludo.layout.LinearHorizontal = new Class({
         var remainingWidth;
         totalWidth = remainingWidth = totalWidth - totalWidthOfItems;
 
+
         var currentLeft = this.viewport.left;
 
         for (i = 0; i < this.view.children.length; i++) {
             var c = this.view.children[i];
+
             if (c.isVisible()) {
                 var config = {'height': height, 'left': currentLeft};
+
                 if (this.hasLayoutWeight(c)) {
                     if (c.id == this.idLastDynamic) {
                         config.width = remainingWidth;
@@ -49,7 +55,7 @@ ludo.layout.LinearHorizontal = new Class({
                 } else {
                     config.width = this.getWidthOf(c);
                 }
-
+                
                 this.resizeChild(c, config);
                 currentLeft += config.width;
             }

@@ -47,7 +47,7 @@ require_once("../includes/demo-header.php");
             'padding':5
         },
         setUsername:function (username) {
-            this.setHtml('Logged in as ' + username);
+            this.html('Logged in as ' + username);
         }
     });
     PopupDemo.PopupLayoutDemo = new Class({

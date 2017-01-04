@@ -333,13 +333,6 @@ ludo.View = new Class({
      */
 
     html: function (html) {
-        console.trace();
-        this.getBody().html(html);
-    },
-
-    setHtml: function (html) {
-        console.warn("Use of deprecated setHTML");
-        console.trace();
         this.getBody().html(html);
     },
 
@@ -357,7 +350,7 @@ ludo.View = new Class({
 
     /**
      * Load content from the server. This method will send an Ajax request to the server
-     * using the properties specified in the remote object or data-source
+     * using the data source
      * @function load
      * @memberof ludo.View.prototype
      * @return void
@@ -480,16 +473,7 @@ ludo.View = new Class({
             this.fireEvent('hide', this);
         }
     },
-    /**
-     * Hide component after n seconds
-     * @function hideAfterDelay
-     * @param {number} seconds
-     * @default 1
-     * @memberof ludo.View.prototype
-     */
-    hideAfterDelay: function (seconds) {
-        this.hide.delay((seconds || 1) * 1000, this);
-    },
+    
     /**
      * Is this component hidden?
      * @memberof ludo.View.prototype
@@ -533,9 +517,7 @@ ludo.View = new Class({
         this.setNewZIndex();
 
 
-        if (this.parentComponent) {
-            // this.resizeParent();
-        } else {
+        if (!this.parentComponent){
             this.getLayout().getRenderer().resize();
         }
 
@@ -740,9 +722,6 @@ ludo.View = new Class({
         return this.cachedInnerHeight ? this.cachedInnerHeight : this.els.body.height();
     },
 
-    getInnerWidthOfBody: function () {
-        return this.layout.pixelWidth ? this.layout.pixelWidth - ludo.dom.getMBPW(this.els.container) - ludo.dom.getMBPW(this.els.body) : ludo.dom.getInnerWidthOf(this.els.body);
-    },
 
     /**
      * Add child components
@@ -779,17 +758,6 @@ ludo.View = new Class({
         return child;
     },
 
-    isMovable: function () {
-        return this.movable;
-    },
-
-    isClosable: function () {
-        return this.closable;
-    },
-
-    isMinimizable: function () {
-        return this.minimizable;
-    },
     /**
      * Get child view by name or id
      * @memberof ludo.View.prototype
@@ -934,17 +902,12 @@ ludo.View = new Class({
         return 0;
     },
 
-
-    svg: function () {
-        return this.getCanvas();
-    },
-
-    canvas: undefined,
     /**
-     Returns drawable Canvas/SVG
-     @function getCanvas
+     Creates(if not exists) SVG surface and returns it. The SVG element is appended to the body of
+     the view.
+     @function svg
      @memberof ludo.View.prototype
-     @return {canvas.Canvas} canvas
+     @return {ludo.svg.Canvas} canvas
      @example
      var win = new ludo.Window({
 		   id:'myWindow',
@@ -955,18 +918,18 @@ ludo.View = new Class({
 			   'background-color':'#FFF'
 		   }
 	   });
-     // Creating line style
-     var paint = new ludo.svg.Paint({
-		   css:{
-			   'fill':'#FFFFFF',
-			   'stroke':'#DEF',
-			   'stroke-width':'5'
-		   }
-	   });
      // Get reference to canvas
      var canvas = win.getCanvas();
-     canvas.append(new ludo.svg.Node('line', { x1:100, y1:100, x2:200, y2:200, "class":paint }));
+     // Using the svg dollar function to create SVG DOM nodes.
+     var circle = canvas.$('circle', { cx:100,cy:100, r: 50, fill: "#000" });
+     canvas.append(circle);
      */
+    svg: function () {
+        return this.getCanvas();
+    },
+
+    canvas: undefined,
+
     getCanvas: function () {
         if (this.canvas === undefined) {
             this.canvas = this.createDependency('canvas', new ludo.svg.Canvas({

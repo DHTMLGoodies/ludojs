@@ -28,8 +28,8 @@ ludo.view.TitleBar = new Class({
     getDefaultButtons:function () {
         var ret = [];
         var v = this.view;
-        if (v.isMinimizable())ret.push('minimize');
-        if (v.isClosable())ret.push('close');
+        if (v.minimizable)ret.push('minimize');
+        if (v.closable)ret.push('close');
         return ret;
     },
 

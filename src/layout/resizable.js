@@ -89,9 +89,9 @@ ludo.layout.Resizable = new Class({
         this.setSizeOfDragHandle.delay(100, this);
         if (this.type === 'row') {
             if (Browser.ie) {
-                document.id(document.documentElement).addEvent('resize', this.resizeAndPosition.bind(this));
+                $(document.documentElement).on('resize', this.resizeAndPosition.bind(this));
             } else {
-                document.id(window).addEvent('resize', this.resizeAndPosition.bind(this));
+               $(window).on('resize', this.resizeAndPosition.bind(this));
             }
         }
     },

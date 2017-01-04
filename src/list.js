@@ -82,7 +82,7 @@ ludo.List = new Class({
     },
 
     getDOMForRecord:function(record){
-        return this.recordMap[record.uid] ? document.id(this.recordMap[record.uid]) : undefined;
+        return this.recordMap[record.uid] ? $('#' + this.recordMap[record.uid]) : undefined;
 
     },
 
