@@ -1,7 +1,7 @@
-/* Generated Wed Jan 4 23:40:32 CET 2017 */
+/* Generated Thu Jan 5 0:14:34 CET 2017 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.364
+ludoJS - Javascript framework, 1.1.365
 Copyright (C) 2012-2017  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -6342,7 +6342,6 @@ ludo.layout.TextBox = new Class({
         var x = this.size.x;
         var y = this.size.y;
         var yOffset = (this.size.y - parseInt(this.styles['line-height'])) / 2;
-        console.log('line-height', this.styles['line-height']);
         var transformation = '';
         switch (this.rotation) {
             case 270:

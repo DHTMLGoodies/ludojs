@@ -168,7 +168,6 @@ ludo.layout.TextBox = new Class({
         var x = this.size.x;
         var y = this.size.y;
         var yOffset = (this.size.y - parseInt(this.styles['line-height'])) / 2;
-        console.log('line-height', this.styles['line-height']);
         var transformation = '';
         switch (this.rotation) {
             case 270:

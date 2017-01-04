@@ -48,9 +48,8 @@ require_once("../includes/demo-header.php");
                         },
                         css:{
                             padding:5,
-                            'font-size' : '1.1em'
-                        },
-                        layout:{
+                            'font-size' : '1.1em',
+                            'border-right':'1px solid ' + ludo.$C('border')
 
                         }
 
@@ -62,21 +61,46 @@ require_once("../includes/demo-header.php");
                         css:{ // CSS styling for the view
                             padding:5,
                             'font-size' : '1.1em',
-                            'overflow-y': 'auto'
+                            'overflow-y': 'auto',
+                            'border-right':'1px solid ' + ludo.$C('border')
                         }
                     }
                 ]
             },
             {
-                id:'sourcecode',
-                type:'SourceCodePreview',
                 css:{
-                    padding:5
+                    'border-left':'1px solid ' + ludo.$C('border')
                 },
                 layout:{
+                    type:'tabs',
+                    tabs:'top',
                     weight:1
-                }
+                },
+                children:[
+                    {
+                        'title': 'Docking Layout',
+                        css:{
+                            padding:5
+                        },
+                        html:'<h4>You can see an example of the docking layout to the left</h4>' +
+                        '<p>Click on one of the tabs(Project, Methods) to see it in action</p>' +
+                        '<p>This demo is a combination of docking layout and tab layout.</p>'
+                    },
+                    {
+                        title:'Source Code',
+                        id:'sourcecode',
+                        type:'SourceCodePreview',
+                        css:{
+                            padding:5
+                        },
+                        layout:{
+                            weight:1
+                        }
+                    }
+
+                ]
             }
+
         ]
     });
 </script>
