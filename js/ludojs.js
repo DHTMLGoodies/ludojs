@@ -1,7 +1,7 @@
-/* Generated Wed Jan 4 21:15:16 CET 2017 */
+/* Generated Wed Jan 4 21:35:03 CET 2017 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.355
+ludoJS - Javascript framework, 1.1.358
 Copyright (C) 2012-2017  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -20728,10 +20728,11 @@ ludo.effect.Resize = new Class({
         el.addClass(this.getCssFor(region));
         if (cssClass)el.addClass(cssClass);
         el.html('<span></span>');
-        el.css('cursor', region + '-resize');
+        el.css('cursor', this.cursor(region) + '-resize');
         el.attr('region', region);
         el.on(ludo.util.getDragStartEvent(), this.startResize.bind(this));
-        this.els.applyTo.append(el)
+        this.els.applyTo.append(el);
+        console.log(this.cursor());
     },
 
     startResize:function (e) {
@@ -20852,8 +20853,18 @@ ludo.effect.Resize = new Class({
         return ret;
     },
 
+    cursor:function(region){
+        var r = region;
+        if(r == 'n' || r == 's')r = 'ns';
+        if(r == 'w' || r == 'e')r = 'we';
+        if(r == 'se' ||r == 'nw')r = 'nwse';
+        if(r == 'ne' ||r == 'sw')r = 'nesw';
+        return r;
+    },
+
     setBodyCursor:function () {
-        $(document.body).css('cursor', this.dragProperties.region + '-resize');
+
+        $(document.body).css('cursor', this.cursor(this.dragProperties.region) + '-resize');
     },
 
     revertBodyCursor:function () {

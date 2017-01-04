@@ -1,7 +1,7 @@
-/* Generated Wed Jan 4 21:15:16 CET 2017 */
+/* Generated Wed Jan 4 21:35:03 CET 2017 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.355
+ludoJS - Javascript framework, 1.1.358
 Copyright (C) 2012-2017  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -544,6 +544,7 @@ div.ludo-resize-handle-active {
     width: 5px;
     right: 0;
     height: 90%;
+    cursor: ew-resize;
 }
 
 .ludo-view-resize-region-w {
@@ -551,7 +552,7 @@ div.ludo-resize-handle-active {
     left: 0;
     top: 5%;
     width: 3px;
-    cursor: w-resize;
+    cursor: ew-resize;
 }
 
 .ludo-view-resize-region-n {
@@ -559,7 +560,7 @@ div.ludo-resize-handle-active {
     top: 0;
     left: 5%;
     height: 4px;
-    cursor: s-resize;
+    cursor: ns-resize;
 }
 
 .ludo-view-resize-region-nw, .ludo-view-resize-region-ne, .ludo-view-resize-region-sw {
@@ -570,28 +571,32 @@ div.ludo-resize-handle-active {
 .ludo-view-resize-region-nw {
     top: 0;
     left: 0;
+    cursor:nwse-resize;
 }
 
 .ludo-view-resize-region-ne {
     top: 0;
     right: 0;
+    cursor:nesw-resize;
+
 }
 
 .ludo-view-resize-region-sw {
     left: 0;
     bottom: 0;
+    cursor:nesw-resize;
 }
 
 .ludo-view-resize-region-se {
     background-image: none;
     background-repeat: no-repeat;
+    cursor:nwse-resize;
     position: absolute;
     bottom: 0;
     right: 0;
     z-index: 15500;
     width: 11px;
     height: 11px;
-    cursor: se-resize;
 }
 
 .ludo-view-resize-right {

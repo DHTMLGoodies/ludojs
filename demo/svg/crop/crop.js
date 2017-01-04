@@ -2,6 +2,8 @@ ludo.factory.ns("svgCrop");
 
 svgCrop.CropTool = new Class({
     Extends: ludo.View,
+    formView:undefined,
+    
     layout: {
         type: 'relative'
     },
@@ -29,15 +31,27 @@ svgCrop.CropTool = new Class({
                 ]
             },
             {
-                id: 'form',
-                name: 'form',
-                type: 'svgCrop.Form',
-                layout: {
+                id:'docking',
+                layout:{
+                    type:'docking',
+                    width:140,
                     above: 'bottom',
                     fillUp: true,
-                    width: 100
+                    tabs:'left'
 
-                }
+                },
+                children:[
+                    {
+                        title:'Crop Details',
+                        id: 'form',
+                        name: 'form',
+                        type: 'svgCrop.Form',
+                        layout: {
+                            visible:true
+
+                        }
+                    }
+                ]
             },
             {
                 name: 'surface',
@@ -45,7 +59,7 @@ svgCrop.CropTool = new Class({
                 layout: {
                     above: 'bottom',
                     fillUp: true,
-                    rightOf: 'form',
+                    rightOf: 'docking',
                     fillRight: true
 
                 }
@@ -55,10 +69,12 @@ svgCrop.CropTool = new Class({
 
     __rendered: function () {
         this.parent();
+        
+        this.formView = ludo.$('form');
         this.child["surface"].on("size", this.setMinMax.bind(this));
         this.child["surface"].on("crop", this.updateForm.bind(this));
 
-        this.child["form"].getForm().on('change', this.formUpdate.bind(this));
+        ludo.$('form').getForm().on('change', this.formUpdate.bind(this));
         ludo.$('cropButton').on('click', this.crop.bind(this));
     },
 
@@ -73,11 +89,11 @@ svgCrop.CropTool = new Class({
     },
 
     setMinMax: function (size) {
-        this.child['form'].onPictureLoaded(size);
+        ludo.$('form').onPictureLoaded(size);
     },
 
     updateForm: function (size) {
-        this.child["form"].populate(size);
+        ludo.$('form').populate(size);
     },
     setPicture: function (picture) {
         this.child["surface"].setPicture(picture);
