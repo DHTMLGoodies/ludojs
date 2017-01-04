@@ -129,7 +129,6 @@ ludo.effect.Resize = new Class({
         el.attr('region', region);
         el.on(ludo.util.getDragStartEvent(), this.startResize.bind(this));
         this.els.applyTo.append(el);
-        console.log(this.cursor());
     },
 
     startResize:function (e) {

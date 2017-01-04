@@ -3,6 +3,7 @@ ludo.layout.TextBox = new Class({
     rotation: 270,
     text: undefined,
     className: undefined,
+    classNameOver: undefined,
     width: 200, height: 200,
     size: {
         x: 0, y: 0
@@ -14,6 +15,7 @@ ludo.layout.TextBox = new Class({
         this.text = config.text;
         this.rotation = config.rotation;
         this.className = config.className;
+        this.classNameOver = config.classNameOver || config.className;
         this.renderTo = config.renderTo;
         if (config.x !== undefined)this.x = config.x;
         if (config.y !== undefined)this.y = config.y;
@@ -29,6 +31,8 @@ ludo.layout.TextBox = new Class({
         this.storeSize();
         this.rotate();
         this.resizeCanvas();
+
+
 
        
     },
@@ -62,8 +66,18 @@ ludo.layout.TextBox = new Class({
         document.id(this.renderTo).appendChild(span);
 
     },
+    
+    leave:function(){
+        this.textNode.removeClass(this.classNameOver);
+        this.textNode.addClass(this.className);
+    },
+
+    enter:function(){
+        this.textNode.addClass(this.classNameOver);
+    },
 
     deg2radians: Math.PI * 2 / 360,
+
     getIE8Transformation: function () {
         var rad = this.rotation * this.deg2radians;
         var costheta = Math.cos(rad);
@@ -78,24 +92,29 @@ ludo.layout.TextBox = new Class({
     },
 
     createStyles: function () {
-        this.styles = this.getStyles();
-        var p = this.paint = new ludo.svg.Paint(this.styles);
-        this.appendDef(p);
+        this.styles = this.getStyles(this.className);
+        this.stylesOver = this.getStyles(this.classNameOver);
+        this.stylesOver['font-size'] = this.styles['font-size'];
+        this.stylesOver['line-height'] = this.styles['line-height'];
+
+        this.addStyleSheet(this.className, this.styles);
+        this.addStyleSheet(this.classNameOver, this.stylesOver);
+
     },
 
     renderText: function () {
         var el = this.textNode = new ludo.svg.Node('text', {
             x: this.x,
             y: this.y + parseInt(this.styles['font-size']),
-            "class": this.paint
+            "class": this.className
         });
         el.text(this.text);
         this.append(el);
     },
 
-    getStyles: function () {
+    getStyles: function (className) {
         var node = $('<div>');
-        node.addClass(this.className);
+        node.addClass(className);
         node.css('display', 'none');
         $(document.body).append(node);
 

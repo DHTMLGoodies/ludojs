@@ -152,6 +152,10 @@ tab layout */
     color:#aeb0b0;
 }
 
+.ludo-twilight .ludo-tab-strip-tab-txt-svg-active{
+    color:#fff;
+}
+
 /** Accordion **/
 .ludo-twilight .ludo-accordion{
     border:1px solid #383838;

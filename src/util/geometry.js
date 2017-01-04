@@ -1,12 +1,15 @@
 
 ludo.geometry = {
 
+    deg2radians: Math.PI / 180,
+    rad2Degrees: 180 / Math.PI,
+
     toRadians: function (degrees) {
-        return (degrees * Math.PI) / 180;
+        return degrees * this.deg2radians;
     },
 
     toDegrees: function (radians) {
-        return radians * (180 / Math.PI);
+        return radians * this.rad2Degrees;
     },
 
     getPointDistanceFrom:function(originX, originY, radiansFromOrigin, distance){
