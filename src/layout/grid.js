@@ -43,6 +43,10 @@ ludo.layout.Grid = new Class({
     addChild: function (child, insertAt, pos) {
         child.layout = child.layout || {};
         
+        if(child.layout.x == undefined && child.layout.y == undefined){
+            child.layout.x = this.view.children.length % this.columns;
+            child.layout.y = Math.floor(this.view.children.length / this.columns);
+        }
         child.layout.colspan = child.layout.colspan ||1;
         child.layout.rowspan = child.layout.rowspan ||1;
         child.layout.x = child.layout.x || 0;

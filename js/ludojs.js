@@ -1,7 +1,7 @@
-/* Generated Tue Jan 3 19:11:18 CET 2017 */
+/* Generated Wed Jan 4 13:51:47 CET 2017 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.347
+ludoJS - Javascript framework, 1.1.348
 Copyright (C) 2012-2017  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -18329,6 +18329,10 @@ ludo.layout.Grid = new Class({
     addChild: function (child, insertAt, pos) {
         child.layout = child.layout || {};
         
+        if(child.layout.x == undefined && child.layout.y == undefined){
+            child.layout.x = this.view.children.length % this.columns;
+            child.layout.y = Math.floor(this.view.children.length / this.columns);
+        }
         child.layout.colspan = child.layout.colspan ||1;
         child.layout.rowspan = child.layout.rowspan ||1;
         child.layout.x = child.layout.x || 0;

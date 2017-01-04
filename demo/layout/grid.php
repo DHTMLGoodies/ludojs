@@ -23,15 +23,17 @@ var w = new ludo.Window({
     layout:{
         type:'grid',
         columns:5,
-        rows:5,
+        rows:4,
         padX:5,padY:5
     },
     children:[
         { html:'layout:{ colspan:2, x:0, y:0 }',cls:'customView', layout:{ colspan:2, x:0, y:0 } },
         { html:'layout: { x: 2, y: 0}',cls:'customView', layout: { x: 2, y: 0} },
-        { html:' layout: { x: 0, y: 1}',cls:'customView', layout: { x: 0, y: 1} },
+        { html:' layout: { x: 3, y: 0, colspan:2}',cls:'customView', layout: { x: 3, y: 0, colspan:2} },
+        { html:' layout: { x: 0, y: 1, rowspan:3}',cls:'customView', layout: { x: 0, y: 1, rowspan:3} },
         { html:'layout: { x: 1, y: 1} ',cls:'customView', layout: { x: 1, y: 1} },
-        { html:'layout: { x: 1, y: 2}',cls:'customView', layout: { x: 1, y: 2} }
+        { html:'layout: { x: 2, y: 1, colspan:3, rowspan:3}',cls:'customView', layout: { x: 2, y: 1, colspan:3, rowspan:3} },
+        { html:'layout: { x: 1, y: 2, rowspan:2 }',cls:'customView', layout: { x: 1, y: 2, rowspan:2 } }
     ],
     buttonBar:[
         { type : 'form.Button', value:'OK' }

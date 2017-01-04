@@ -28,7 +28,7 @@ require_once("../includes/demo-header.php");
             {
                 id:'dockingLayoutView',
                 layout:{
-                    type:'docking'// Render children in an docking layout
+                    type:'docking', // Render children in an docking layout
                     width:200, // initial width
                     resizable:true,  // width can be adjusted by dragging
                     tabs:'left'// Position tabs to the left
