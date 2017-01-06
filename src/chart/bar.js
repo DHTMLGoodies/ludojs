@@ -42,11 +42,8 @@ ludo.chart.Bar = new Class({
 
     renderBackgroundItems: function () {
         this.parent();
-
-
         this.createOutline();
     },
-
 
     render:function(){
         this.parent();

@@ -154,9 +154,9 @@ ludo.calendar.TimePicker = new Class({
 
     updateTimeByEvent: function (e) {
 
-
-        var posX = e.pageX - this.drag.elX;
-        var posY = e.pageY - this.drag.elY;
+        var p = e.touches && e.touches.length ? e.touches[0] : e;
+        var posX = p.pageX - this.drag.elX;
+        var posY = p.pageY - this.drag.elY;
 
         var angle = ludo.geometry.getAngleFrom(this.origo.x, this.origo.y, posX, posY);
         var distance = ludo.geometry.distanceBetweenPoints(this.origo.x, this.origo.y, posX, posY);

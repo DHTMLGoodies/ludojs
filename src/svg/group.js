@@ -31,6 +31,14 @@ ludo.svg.Group = new Class({
 
     child: undefined,
 
+    /**
+     * Object with left, top, width and height coordinates of group
+     * This object is updated on calls to position() and resize()
+     * @property {Object} bbox
+     * @memberof ludo.svg.Group.prototype
+     */
+    bbox:undefined,
+
     __construct: function (config) {
         this.parent(config);
         this.setConfigParams(config, ['layout', 'renderTo', 'parentComponent', 'parentGroup', '__rendered']);
@@ -47,7 +55,9 @@ ludo.svg.Group = new Class({
             this.renderTo.append(this);
         }
 
-
+        this.bbox = {
+            left:0,top:0,width:0,height:0
+        };
 
         jQuery.each(config.children, function (i, child) {
             child.layout = child.layout || {};
@@ -56,8 +66,6 @@ ludo.svg.Group = new Class({
             child.renderTo = this;
             this.child[child.id || child.name] = child;
         }.bind(this));
-
-
 
         if (config.css) {
             this.node.css(this.css);
@@ -75,11 +83,11 @@ ludo.svg.Group = new Class({
 
     resize: function (coordinates) {
         if (coordinates.width) {
-            this.width = Math.max(0, coordinates.width);
+            this.width = this.bbox.width = Math.max(0, coordinates.width);
             this.set('width', coordinates.width + 'px');
         }
         if (coordinates.height) {
-            this.height = Math.max(0, coordinates.height);
+            this.height =this.bbox.height =  Math.max(0, coordinates.height);
             this.set('height', coordinates.height + 'px');
         }
 
@@ -116,6 +124,7 @@ ludo.svg.Group = new Class({
      */
     position: function (x, y) {
         if (arguments.length > 0) {
+            this.bbox.left = x;this.bbox.top = y;
             this.node.setTranslate(x, y);
         } else {
             var t = this.node.getTranslate();

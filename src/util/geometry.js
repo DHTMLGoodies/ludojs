@@ -83,7 +83,11 @@ ludo.geometry = {
     },
 
     isWithinBox:function(x,y,boxX,boxY,boxWidth,boxHeight){
-        return x >= boxX && y >= boxY && x<= x + boxWidth && y <= y + boxHeight;
+        return x >= boxX && y >= boxY && x<= boxX + boxWidth && y <= boxY + boxHeight;
+    },
+    
+    isWithinBBox:function(x,y, bbox){
+        return x >= bbox.left && y >= bbox.top && x<= bbox.left + bbox.width && y <=bbox.top + bbox.height;
     }
 
 

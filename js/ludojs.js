@@ -1,7 +1,7 @@
-/* Generated Thu Jan 5 0:14:34 CET 2017 */
+/* Generated Fri Jan 6 15:01:28 CET 2017 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.365
+ludoJS - Javascript framework, 1.1.366
 Copyright (C) 2012-2017  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -4928,6 +4928,7 @@ ludo.svg.Node = new Class({
                 ludo.canvasEventManager.addMouseLeave(this, fn);
                 break;
             default:
+
                 this._addEvent(event, this.getDOMEventFn(event, fn), this.el);
                 this.addEvent(event, fn);
         }
@@ -4988,8 +4989,8 @@ ludo.svg.Node = new Class({
 
             var mouseX, mouseY;
             var touches = e.touches;
-            var pX = event.pageX;
-            var py = event.pageY;
+            var pX = e.pageX;
+            var py = e.pageY;
             if (touches && touches.length > 0) {
                 mouseX = touches[0].clientX;
                 mouseY = touches[0].clientY;
@@ -5001,8 +5002,9 @@ ludo.svg.Node = new Class({
                 mouseY = e.clientY;
             }
 
+            var svg = this.el.tagName == 'svg' ? this.el : this.el.ownerSVGElement;
 
-            var off = this.el.ownerSVGElement ? this.el.ownerSVGElement.getBoundingClientRect() : {left: 0, top: 0};
+            var off = svg ? svg.getBoundingClientRect() : {left: 0, top: 0};
 
             e = {
                 target: target,
@@ -6358,7 +6360,7 @@ ludo.layout.TextBox = new Class({
 
         }
         this.textNode.set('transform', transformation);
-    },
+    }, 
 
     getSize: function () {
         switch (this.rotation) {
@@ -10983,7 +10985,7 @@ ludo.chart.Chart = new Class({
 	__construct:function(config){
 		this.parent(config);
 		this.layout.type = 'Canvas';
-
+		this.getCanvas();
 
 	},
 
@@ -11314,6 +11316,14 @@ ludo.svg.Group = new Class({
 
     child: undefined,
 
+    /**
+     * Object with left, top, width and height coordinates of group
+     * This object is updated on calls to position() and resize()
+     * @property {Object} bbox
+     * @memberof ludo.svg.Group.prototype
+     */
+    bbox:undefined,
+
     __construct: function (config) {
         this.parent(config);
         this.setConfigParams(config, ['layout', 'renderTo', 'parentComponent', 'parentGroup', '__rendered']);
@@ -11330,7 +11340,9 @@ ludo.svg.Group = new Class({
             this.renderTo.append(this);
         }
 
-
+        this.bbox = {
+            left:0,top:0,width:0,height:0
+        };
 
         jQuery.each(config.children, function (i, child) {
             child.layout = child.layout || {};
@@ -11339,8 +11351,6 @@ ludo.svg.Group = new Class({
             child.renderTo = this;
             this.child[child.id || child.name] = child;
         }.bind(this));
-
-
 
         if (config.css) {
             this.node.css(this.css);
@@ -11358,11 +11368,11 @@ ludo.svg.Group = new Class({
 
     resize: function (coordinates) {
         if (coordinates.width) {
-            this.width = Math.max(0, coordinates.width);
+            this.width = this.bbox.width = Math.max(0, coordinates.width);
             this.set('width', coordinates.width + 'px');
         }
         if (coordinates.height) {
-            this.height = Math.max(0, coordinates.height);
+            this.height =this.bbox.height =  Math.max(0, coordinates.height);
             this.set('height', coordinates.height + 'px');
         }
 
@@ -11399,6 +11409,7 @@ ludo.svg.Group = new Class({
      */
     position: function (x, y) {
         if (arguments.length > 0) {
+            this.bbox.left = x;this.bbox.top = y;
             this.node.setTranslate(x, y);
         } else {
             var t = this.node.getTranslate();
@@ -11467,6 +11478,8 @@ ludo.chart.Base = new Class({
     revealAnim: false,
     revealAnimDirection: 'right',
     revealAnimDuration: 500,
+
+
 
     __construct: function (config) {
         this.parent(config);
@@ -11702,7 +11715,6 @@ ludo.chart.Base = new Class({
      * @memberof ludo.chart.Base.prototype
      */
     reveal: function (direction, duration) {
-        console.log('reveal');
         direction = this.revealAnimDirection || 'right';
         duration = this.revealAnimDuration || 600;
         var s = this.getSize();
@@ -13708,11 +13720,8 @@ ludo.chart.Bar = new Class({
 
     renderBackgroundItems: function () {
         this.parent();
-
-
         this.createOutline();
     },
-
 
     render:function(){
         this.parent();
@@ -14044,7 +14053,6 @@ ludo.chart.Line = new Class({
 
     currentHighlighted:undefined,
 
-    parentPos:undefined,
     showDots:true,
     revealAnim:true,
     
@@ -14055,26 +14063,30 @@ ludo.chart.Line = new Class({
         this.setConfigParams(config, ["halfInset","lineStyles","showDots"]);
 
         
-        this.node.on("mousemove", this.mousemove.bind(this));
+        // this.node.on("mousemove", this.mousemove.bind(this));
 
         this.chart().on('leavegroup', this.leaveGroup.bind(this));
+    },
+
+    __rendered:function(){
+        this.parent();
+        this.chart().getCanvas().node.on("mousemove", this.mousemove.bind(this));
     },
 
     leaveGroup:function(){
         this.currentHighlighted = undefined;
     },
 
-
     mousemove:function(e){
-        if(e.target.tagName!='g')return;
-        if(this.parentPos == undefined){
-            this.parentPos = this.node.position();
-        }
-        var closest;
-        var s = new Date().getTime();
 
-        var x = e.clientX - this.parentPos.left;
-        var y = e.clientY - this.parentPos.top;
+        var closest;
+        // var s = new Date().getTime();
+
+        if(!ludo.geometry.isWithinBBox(e.clientX,e.clientY, this.bbox))return;
+
+        var x = e.clientX - this.bbox.left;
+        var y = e.clientY - this.bbox.top;
+
 
         var distance = 0;
         var selected = undefined;
@@ -14118,31 +14130,21 @@ ludo.chart.Line = new Class({
                 fragment.getNode().css(s);
             });
         }
-
     },
-
-
-
-
 
     resizeLines:function(){
         var size = this.getSize();
-
         jQuery.each(this.fragments, function(key, fragment){
             fragment.resize(size.x, size.y);
         });
-        
-        
     },
 
     setPoint:function(record, x, y){
         if(this.points == undefined){
             this.points = {};
         }
-
         this.points[record.id] = [x,y];
     }
-
 });/* ../ludojs/src/chart/area.js */
 ludo.chart.Area = new Class({
     Extends: ludo.chart.Line,
@@ -18489,7 +18491,7 @@ ludo.layout.Canvas = new Class({
 
         child[property] = value;
         this.currentTranslate[property] = value;
-        child['node'].setTranslate(this.currentTranslate.left, this.currentTranslate.top);
+        child.position(this.currentTranslate.left, this.currentTranslate.top);
     },
 
     currentTranslate: {
@@ -27765,7 +27767,11 @@ ludo.geometry = {
     },
 
     isWithinBox:function(x,y,boxX,boxY,boxWidth,boxHeight){
-        return x >= boxX && y >= boxY && x<= x + boxWidth && y <= y + boxHeight;
+        return x >= boxX && y >= boxY && x<= boxX + boxWidth && y <= boxY + boxHeight;
+    },
+    
+    isWithinBBox:function(x,y, bbox){
+        return x >= bbox.left && y >= bbox.top && x<= bbox.left + bbox.width && y <=bbox.top + bbox.height;
     }
 
 
@@ -27926,9 +27932,9 @@ ludo.calendar.TimePicker = new Class({
 
     updateTimeByEvent: function (e) {
 
-
-        var posX = e.pageX - this.drag.elX;
-        var posY = e.pageY - this.drag.elY;
+        var p = e.touches && e.touches.length ? e.touches[0] : e;
+        var posX = p.pageX - this.drag.elX;
+        var posY = p.pageY - this.drag.elY;
 
         var angle = ludo.geometry.getAngleFrom(this.origo.x, this.origo.y, posX, posY);
         var distance = ludo.geometry.distanceBetweenPoints(this.origo.x, this.origo.y, posX, posY);

@@ -116,6 +116,7 @@ ludo.svg.Node = new Class({
                 ludo.canvasEventManager.addMouseLeave(this, fn);
                 break;
             default:
+
                 this._addEvent(event, this.getDOMEventFn(event, fn), this.el);
                 this.addEvent(event, fn);
         }
@@ -176,8 +177,8 @@ ludo.svg.Node = new Class({
 
             var mouseX, mouseY;
             var touches = e.touches;
-            var pX = event.pageX;
-            var py = event.pageY;
+            var pX = e.pageX;
+            var py = e.pageY;
             if (touches && touches.length > 0) {
                 mouseX = touches[0].clientX;
                 mouseY = touches[0].clientY;
@@ -189,8 +190,9 @@ ludo.svg.Node = new Class({
                 mouseY = e.clientY;
             }
 
+            var svg = this.el.tagName == 'svg' ? this.el : this.el.ownerSVGElement;
 
-            var off = this.el.ownerSVGElement ? this.el.ownerSVGElement.getBoundingClientRect() : {left: 0, top: 0};
+            var off = svg ? svg.getBoundingClientRect() : {left: 0, top: 0};
 
             e = {
                 target: target,

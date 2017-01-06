@@ -43,6 +43,8 @@ ludo.chart.Base = new Class({
     revealAnimDirection: 'right',
     revealAnimDuration: 500,
 
+
+
     __construct: function (config) {
         this.parent(config);
         this.setConfigParams(config, ['revealAnim', 'revealAnimDirection', 'revealAnimDuration', 'interactive', 'dataSource', 'animate', 'bgColor', 'duration', 'data']);
@@ -277,7 +279,6 @@ ludo.chart.Base = new Class({
      * @memberof ludo.chart.Base.prototype
      */
     reveal: function (direction, duration) {
-        console.log('reveal');
         direction = this.revealAnimDirection || 'right';
         duration = this.revealAnimDuration || 600;
         var s = this.getSize();

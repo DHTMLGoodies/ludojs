@@ -14,11 +14,11 @@ require_once("../includes/demo-header.php");
 </style>
 <script type="text/javascript" src="../../src/layout/relative.js"></script>
 <script type="text/javascript" class="source-code">
-    var w = new ludo.Window({
+    var w = new ludo.FramedView({
         title: 'Table layout',
+        renderTo:document.body,
         layout: {
-            left: 20, top: 20,
-            width: 600, height: 600,
+            width: 'matchParent', height: 'matchParent',
             type: 'tabs'
         },
         children: [
@@ -27,7 +27,7 @@ require_once("../includes/demo-header.php");
                 layout: {
                     type: 'table',
                     columns: [
-                        {width: 100}, {width: 200}, {weight: 1}
+                        {width: 80}, {width: 110}, {weight: 1}
                     ]
                 },
                 css: {

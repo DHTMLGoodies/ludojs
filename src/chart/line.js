@@ -19,7 +19,6 @@ ludo.chart.Line = new Class({
 
     currentHighlighted:undefined,
 
-    parentPos:undefined,
     showDots:true,
     revealAnim:true,
     
@@ -30,26 +29,30 @@ ludo.chart.Line = new Class({
         this.setConfigParams(config, ["halfInset","lineStyles","showDots"]);
 
         
-        this.node.on("mousemove", this.mousemove.bind(this));
+        // this.node.on("mousemove", this.mousemove.bind(this));
 
         this.chart().on('leavegroup', this.leaveGroup.bind(this));
+    },
+
+    __rendered:function(){
+        this.parent();
+        this.chart().getCanvas().node.on("mousemove", this.mousemove.bind(this));
     },
 
     leaveGroup:function(){
         this.currentHighlighted = undefined;
     },
 
-
     mousemove:function(e){
-        if(e.target.tagName!='g')return;
-        if(this.parentPos == undefined){
-            this.parentPos = this.node.position();
-        }
-        var closest;
-        var s = new Date().getTime();
 
-        var x = e.clientX - this.parentPos.left;
-        var y = e.clientY - this.parentPos.top;
+        var closest;
+        // var s = new Date().getTime();
+
+        if(!ludo.geometry.isWithinBBox(e.clientX,e.clientY, this.bbox))return;
+
+        var x = e.clientX - this.bbox.left;
+        var y = e.clientY - this.bbox.top;
+
 
         var distance = 0;
         var selected = undefined;
@@ -93,29 +96,19 @@ ludo.chart.Line = new Class({
                 fragment.getNode().css(s);
             });
         }
-
     },
-
-
-
-
 
     resizeLines:function(){
         var size = this.getSize();
-
         jQuery.each(this.fragments, function(key, fragment){
             fragment.resize(size.x, size.y);
         });
-        
-        
     },
 
     setPoint:function(record, x, y){
         if(this.points == undefined){
             this.points = {};
         }
-
         this.points[record.id] = [x,y];
     }
-
 });

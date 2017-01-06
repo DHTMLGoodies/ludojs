@@ -52,7 +52,7 @@ require_once("../includes/demo-header.php");
         },
 
         valueForDisplay:function(value, caller){
-            if(caller.type == 'chart.ChartValues')return value + '°C'
+            if(caller.type == 'chart.ChartValues')return value + '°C';
             return value;
         },
         // Function returning increments for lines and labels

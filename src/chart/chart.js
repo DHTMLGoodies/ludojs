@@ -15,7 +15,7 @@ ludo.chart.Chart = new Class({
 	__construct:function(config){
 		this.parent(config);
 		this.layout.type = 'Canvas';
-
+		this.getCanvas();
 
 	},
 
