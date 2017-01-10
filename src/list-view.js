@@ -186,7 +186,7 @@ ludo.ListView = new Class({
             this.dragAttr = undefined;
             return undefined;
         }
-        
+
         x = ludo.util.clamp(x, this.dragAttr.minX, this.dragAttr.maxX);
         var zl, zr;
         if (x > 0 && this.dragAttr.lastX <= 0) {
@@ -425,6 +425,7 @@ ludo.ListView = new Class({
             var fn = function () {
                 var v = ludo.$(vId);
                 v.undoSwipe(uid);
+                return false;
             };
             un.on('click', fn);
 

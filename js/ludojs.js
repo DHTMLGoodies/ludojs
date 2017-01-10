@@ -1,7 +1,7 @@
-/* Generated Tue Jan 10 17:18:23 CET 2017 */
+/* Generated Tue Jan 10 17:21:07 CET 2017 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.382
+ludoJS - Javascript framework, 1.1.383
 Copyright (C) 2012-2017  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -19672,7 +19672,7 @@ ludo.ListView = new Class({
             this.dragAttr = undefined;
             return undefined;
         }
-        
+
         x = ludo.util.clamp(x, this.dragAttr.minX, this.dragAttr.maxX);
         var zl, zr;
         if (x > 0 && this.dragAttr.lastX <= 0) {
@@ -19911,6 +19911,7 @@ ludo.ListView = new Class({
             var fn = function () {
                 var v = ludo.$(vId);
                 v.undoSwipe(uid);
+                return false;
             };
             un.on('click', fn);
 
