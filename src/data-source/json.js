@@ -8,6 +8,13 @@ ludo.dataSource.JSON = new Class({
     Extends:ludo.dataSource.Base,
     type:'dataSource.JSON',
 
+    _loaded:false,
+
+    isWaitingData:function(){
+        return !this._loaded && this._url() != undefined;  
+    },
+
+
     /**
      * Reload data from server
      * Components using this data-source will be automatically updated
@@ -36,6 +43,7 @@ ludo.dataSource.JSON = new Class({
             dataType: 'json',
             data: data,
             complete: function (response, status) {
+                this._loaded = true;
                 if(status == 'success'){
                     var json = response.responseJSON;
                     var data = this.dataHandler(json);

@@ -1,7 +1,7 @@
-/* Generated Tue Jan 10 17:10:57 CET 2017 */
+/* Generated Tue Jan 10 17:18:23 CET 2017 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.380
+ludoJS - Javascript framework, 1.1.382
 Copyright (C) 2012-2017  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -7339,6 +7339,13 @@ ludo.dataSource.JSON = new Class({
     Extends:ludo.dataSource.Base,
     type:'dataSource.JSON',
 
+    _loaded:false,
+
+    isWaitingData:function(){
+        return !this._loaded && this._url() != undefined;  
+    },
+
+
     /**
      * Reload data from server
      * Components using this data-source will be automatically updated
@@ -7367,6 +7374,7 @@ ludo.dataSource.JSON = new Class({
             dataType: 'json',
             data: data,
             complete: function (response, status) {
+                this._loaded = true;
                 if(status == 'success'){
                     var json = response.responseJSON;
                     var data = this.dataHandler(json);
@@ -19412,67 +19420,69 @@ ludo.layout.CollapseBar = new Class({
  * @param {String} config.emptyText Text to show on no data
  */
 ludo.CollectionView = new Class({
-	Extends: ludo.View,
+    Extends: ludo.View,
 
-	emptyText:undefined,
+    emptyText: undefined,
 
-	__construct:function (config) {
-		this.parent(config);
-		this.setConfigParams(config, ['emptyText']);
-	},
+    __construct: function (config) {
+        this.parent(config);
+        this.setConfigParams(config, ['emptyText']);
+    },
 
-	ludoEvents:function(){
-		this.parent();
-		if(this.emptyText && !this.getDataSource().hasRemoteSearch()){
-			this.getDataSource().getSearcher().addEvents({
-				'matches' : this.hideEmptyText.bind(this),
-				'noMatches' : this.showEmptyText.bind(this)
-			});
-		}
-	},
+    ludoEvents: function () {
+        this.parent();
+        if (this.emptyText && !this.getDataSource().hasRemoteSearch()) {
+            this.getDataSource().getSearcher().addEvents({
+                'matches': this.hideEmptyText.bind(this),
+                'noMatches': this.showEmptyText.bind(this)
+            });
+        }
+    },
 
-	hideEmptyText:function(){
-		this.emptyEl().css('display', 'none');
-	},
+    hideEmptyText: function () {
+        this.emptyEl().css('display', 'none');
+    },
 
-	showEmptyText:function(){
-		this.emptyEl().css('display',  '');
-		this._emptyEl.html(this.getEmptyText());
-	},
+    showEmptyText: function () {
+        this.emptyEl().css('display', '');
+        this._emptyEl.html(this.getEmptyText());
+    },
 
-	emptyEl:function(){
-		if(this._emptyEl === undefined){
-			this._emptyEl = $('<div class="ludo-empty-text" style="position:absolute">' + this.getEmptyText() + '</div>');
-			this.getBody().append(this._emptyEl);
-		}
-		return this._emptyEl;
-	},
+    emptyEl: function () {
+        if (this._emptyEl === undefined) {
+            this._emptyEl = $('<div class="ludo-empty-text" style="position:absolute">' + this.getEmptyText() + '</div>');
+            this.getBody().append(this._emptyEl);
+        }
+        return this._emptyEl;
+    },
 
-	getEmptyText:function(){
-		return ludo.util.isFunction(this.emptyText) ? this.emptyText.call() : this.emptyText;
-	},
+    getEmptyText: function () {
+        return ludo.util.isFunction(this.emptyText) ? this.emptyText.call() : this.emptyText;
+    },
 
-	_nodeContainer:undefined,
+    _nodeContainer: undefined,
 
-	nodeContainer:function(){
-		if(this._nodeContainer === undefined){
-			this._nodeContainer = $('<div style="position:relative">');
-			this.getBody().append(this._nodeContainer);
-	
-		}
-		return this._nodeContainer;
-	},
+    nodeContainer: function () {
+        if (this._nodeContainer === undefined) {
+            this._nodeContainer = $('<div style="position:relative">');
+            this.getBody().append(this._nodeContainer);
 
-	render:function(){
-		if(this.emptyText){
+        }
+        return this._nodeContainer;
+    },
 
-			this[this.getDataSource().getCount() > 0 ? 'hideEmptyText' : 'showEmptyText']();
-		}
-	},
+    render: function () {
+        if (this.emptyText) {
+            var ds = this.getDataSource();
 
-	JSON:function(){
+            var show = ds.isWaitingData() || ds.getCount() == 0;
+            this[show ? 'hideEmptyText' : 'showEmptyText']();
+        }
+    },
 
-	}
+    JSON: function () {
+
+    }
 });/* ../ludojs/src/list-view.js */
 /**
  * ListView

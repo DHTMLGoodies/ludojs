@@ -5,65 +5,67 @@
  * @param {String} config.emptyText Text to show on no data
  */
 ludo.CollectionView = new Class({
-	Extends: ludo.View,
+    Extends: ludo.View,
 
-	emptyText:undefined,
+    emptyText: undefined,
 
-	__construct:function (config) {
-		this.parent(config);
-		this.setConfigParams(config, ['emptyText']);
-	},
+    __construct: function (config) {
+        this.parent(config);
+        this.setConfigParams(config, ['emptyText']);
+    },
 
-	ludoEvents:function(){
-		this.parent();
-		if(this.emptyText && !this.getDataSource().hasRemoteSearch()){
-			this.getDataSource().getSearcher().addEvents({
-				'matches' : this.hideEmptyText.bind(this),
-				'noMatches' : this.showEmptyText.bind(this)
-			});
-		}
-	},
+    ludoEvents: function () {
+        this.parent();
+        if (this.emptyText && !this.getDataSource().hasRemoteSearch()) {
+            this.getDataSource().getSearcher().addEvents({
+                'matches': this.hideEmptyText.bind(this),
+                'noMatches': this.showEmptyText.bind(this)
+            });
+        }
+    },
 
-	hideEmptyText:function(){
-		this.emptyEl().css('display', 'none');
-	},
+    hideEmptyText: function () {
+        this.emptyEl().css('display', 'none');
+    },
 
-	showEmptyText:function(){
-		this.emptyEl().css('display',  '');
-		this._emptyEl.html(this.getEmptyText());
-	},
+    showEmptyText: function () {
+        this.emptyEl().css('display', '');
+        this._emptyEl.html(this.getEmptyText());
+    },
 
-	emptyEl:function(){
-		if(this._emptyEl === undefined){
-			this._emptyEl = $('<div class="ludo-empty-text" style="position:absolute">' + this.getEmptyText() + '</div>');
-			this.getBody().append(this._emptyEl);
-		}
-		return this._emptyEl;
-	},
+    emptyEl: function () {
+        if (this._emptyEl === undefined) {
+            this._emptyEl = $('<div class="ludo-empty-text" style="position:absolute">' + this.getEmptyText() + '</div>');
+            this.getBody().append(this._emptyEl);
+        }
+        return this._emptyEl;
+    },
 
-	getEmptyText:function(){
-		return ludo.util.isFunction(this.emptyText) ? this.emptyText.call() : this.emptyText;
-	},
+    getEmptyText: function () {
+        return ludo.util.isFunction(this.emptyText) ? this.emptyText.call() : this.emptyText;
+    },
 
-	_nodeContainer:undefined,
+    _nodeContainer: undefined,
 
-	nodeContainer:function(){
-		if(this._nodeContainer === undefined){
-			this._nodeContainer = $('<div style="position:relative">');
-			this.getBody().append(this._nodeContainer);
-	
-		}
-		return this._nodeContainer;
-	},
+    nodeContainer: function () {
+        if (this._nodeContainer === undefined) {
+            this._nodeContainer = $('<div style="position:relative">');
+            this.getBody().append(this._nodeContainer);
 
-	render:function(){
-		if(this.emptyText){
+        }
+        return this._nodeContainer;
+    },
 
-			this[this.getDataSource().getCount() > 0 ? 'hideEmptyText' : 'showEmptyText']();
-		}
-	},
+    render: function () {
+        if (this.emptyText) {
+            var ds = this.getDataSource();
 
-	JSON:function(){
+            var show = ds.isWaitingData() || ds.getCount() == 0;
+            this[show ? 'hideEmptyText' : 'showEmptyText']();
+        }
+    },
 
-	}
+    JSON: function () {
+
+    }
 });
