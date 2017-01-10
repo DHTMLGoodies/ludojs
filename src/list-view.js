@@ -2,7 +2,7 @@
  * ListView
  * Class rendering an array of JSON objects in a list.
  *
- * For demo, see <a href="../demo/list.php">list.php</a>
+ * For demo, see <a href="../demo/list-view.php">list.php</a>
  *
  * The list view depends on a <a href="data-source_collection.js.html">collection data source</a>. To update items in the list view during runtime,
  * update the datasource. To remove items from the list view, remove the item from the data source.
