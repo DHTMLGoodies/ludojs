@@ -49,7 +49,7 @@ ludo.CollectionView = new Class({
 
 	nodeContainer:function(){
 		if(this._nodeContainer === undefined){
-			this._nodeContainer = $('<div>');
+			this._nodeContainer = $('<div style="position:relative">');
 			this.getBody().append(this._nodeContainer);
 	
 		}
