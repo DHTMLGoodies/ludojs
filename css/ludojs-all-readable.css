@@ -6373,3 +6373,11 @@ On Off Switch */
 .ludo-twilight .ludo-form-el-invalid label{
     color:#EF9A9A;
 }
+
+/**
+Shim **/
+.ludo-twilight .ludo-shim-loading {
+    background-color:#0D47A1;
+    color:#FFF;
+    background-image:url(../images/twilight-skin/ajax-loader-shim.gif);
+}

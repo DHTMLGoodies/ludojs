@@ -1,7 +1,7 @@
-/* Generated Tue Jan 10 17:27:29 CET 2017 */
+/* Generated Tue Jan 10 17:56:15 CET 2017 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.384
+ludoJS - Javascript framework, 1.1.388
 Copyright (C) 2012-2017  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -7179,30 +7179,7 @@ ludo.dataSource.Base = new Class({
 
 	inLoadMode:false,
 	dataHandler:undefined,
-
-	/**
-	 Config of shim to show when content is being loaded form server. This config
-	 object supports two properties, "renderTo" and "txt". renderTo is optional
-	 and specifies where to render the shim. Default is inside body of parent
-	 view.
-	 "txt" specifies which text to display inside the shim. "txt" can be
-	 either a string or a function returning a string.
-	 @config {Object} shim
-	 @memberof ludo.dataSource.Base.prototype
-	 @example
-	 	shim:{
-			renderTo:ludo.get('myView').getBody(),
-			txt : 'Loading content. Please wait'
-	 	}
-	 renderTo is optional. Example where "txt" is defined as function:
-	 @example
-	 	shim:{
-	 		"txt": function(){
-	 			var val = ludo.get('searchField).getValue();
-	 			return val.length ? 'Searching for ' + val : 'Searching';
-	 		}
-	 	}
-	 */
+	
 	shim:undefined,
 
 	__construct:function (config) {
@@ -7388,6 +7365,8 @@ ludo.dataSource.JSON = new Class({
                 }else{
                     this.fireEvent('fail', [response.responseText, status, this]);
                 }
+                
+                this.fireEvent('complete');
 
             }.bind(this),
             fail: function (text, error) {
@@ -8228,17 +8207,17 @@ ludo.dom = {
 
  */
 ludo.view.Shim = new Class({
-    txt:'Loading content...',
-    el:undefined,
-    shim:undefined,
-    renderTo:undefined,
+    txt: 'Loading content...',
+    el: undefined,
+    shim: undefined,
+    renderTo: undefined,
 
-    initialize:function (config) {
+    initialize: function (config) {
         if (config.txt)this.txt = config.txt;
         this.renderTo = config.renderTo;
     },
 
-    getEl:function () {
+    getEl: function () {
         if (this.el === undefined) {
             this.el = $('<div class="ludo-shim-loading" style="display:none">' + this.getText(this.txt) + "</div>");
             this.getRenderTo().append(this.el);
@@ -8246,9 +8225,9 @@ ludo.view.Shim = new Class({
         return this.el;
     },
 
-    getShim:function () {
+    getShim: function () {
         if (this.shim === undefined) {
-			if(ludo.util.isString(this.renderTo))this.renderTo = ludo.get(this.renderTo).getEl();
+            if (ludo.util.isString(this.renderTo))this.renderTo = ludo.get(this.renderTo).getEl();
             this.shim = $('<div class="ludo-loader-shim" style="display:none"></div>');
             this.getRenderTo().append(this.shim);
 
@@ -8256,39 +8235,39 @@ ludo.view.Shim = new Class({
         return this.shim;
     },
 
-	getRenderTo:function(){
-		if(ludo.util.isString(this.renderTo)){
-			var view = ludo.get(this.renderTo);
-			if(!view)return undefined;
-			this.renderTo = ludo.get(this.renderTo).getEl();
-		}
-		return this.renderTo;
-	},
-
-    show:function (txt) {
-		this.getEl().html(this.getText(( txt && !ludo.util.isObject(txt) ) ? txt : this.txt));
-        this.css('');
-		this.resizeShim();
+    getRenderTo: function () {
+        if (ludo.util.isString(this.renderTo)) {
+            var view = ludo.get(this.renderTo);
+            if (!view)return undefined;
+            this.renderTo = ludo.get(this.renderTo).getEl();
+        }
+        return this.renderTo;
     },
 
-	resizeShim:function(){
-		var span = $(this.el).find('span');
-		var width = (span.width() + 5);
-		this.el.css('width',  width + 'px');
-		this.el.css('marginLeft',  (Math.round(width/2) * -1) + 'px');
-	},
+    show: function (txt) {
+        this.getEl().html(this.getText(( txt && !ludo.util.isObject(txt) ) ? txt : this.txt));
+        this.css('');
+        this.resizeShim();
+    },
 
-	getText:function(txt){
-		txt = ludo.util.isFunction(txt) ? txt.call() : txt ? txt : '';
-		return '<span>' + txt + '</span>';
-	},
+    resizeShim: function () {
+        var span = $(this.el).find('span');
+        var width = (span.width() + 5);
+        this.el.css('width', width + 'px');
+        this.el.css('marginLeft', (Math.round(width / 2) * -1) + 'px');
+    },
 
-    hide:function () {
+    getText: function (txt) {
+        txt = ludo.util.isFunction(txt) ? txt.call() : txt ? txt : '';
+        return '<span>' + txt + '</span>';
+    },
+
+    hide: function () {
         this.css('none');
     },
-    css:function (d) {
-        this.getShim().css('display',  d);
-        this.getEl().css('display',  d === '' && this.txt ? '' : 'none');
+    css: function (d) {
+        this.getShim().css('display', d);
+        this.getEl().css('display', d === '' && this.txt ? '' : 'none');
     }
 });/* ../ludojs/src/remote/shim.js */
 ludo.remote.Shim = new Class({
@@ -8335,6 +8314,7 @@ ludo.remote.Shim = new Class({
  @param {String} config.tpl A template for string when inserting JSON Content(the insertJSON method), example: "name:{firstname} {lastname}<br>"
  @param {Boolean} config.alwaysInFront True to make this view always appear in front of the other views.
  @param {Object} config.form Configuration for the form Manager. See <a href="ludo.form.Manager">ludo.form.Manager</a> for details.
+ @param {String} config.loadMessage Message to show if a data source is used and data is being loaded from server.
  @fires ludo.View#rendered Fired when the view has been rendered and resized. Argument: ludo.View
  @fires ludo.View#toFront Fired when view has brought to front. Argument: ludo.View
  @fires ludo.View#hide Fired when view has been hidden using the hide method. Argument: ludo.View
@@ -8409,6 +8389,7 @@ ludo.View = new Class({
     initialItemsObject: [],
     contextMenu: undefined,
     lifeCycleComplete: false,
+    loadMessage:undefined,
 
     lifeCycle: function (config) {
         this._createDOM();
@@ -8498,7 +8479,7 @@ ludo.View = new Class({
         var keys = ['contextMenu', 'renderTo', 'tpl', 'elCss', 'socket', 'form', 'title', 'hidden',
             'dataSource', 'movable', 'resizable', 'closable', 'minimizable', 'alwaysInFront',
             'parentComponent', 'cls', 'bodyCls', 'objMovable', 'width', 'height', 'frame', 'formConfig',
-            'overflow'];
+            'overflow','loadMessage'];
 
         if (config.css != undefined) {
             if (this.css != undefined) {
@@ -9146,7 +9127,10 @@ ludo.View = new Class({
      * @returns {undefined|*}
      */
     getDataSource: function () {
+
         if (!this.dataSourceObj && this.dataSource) {
+
+
             var obj;
             if (ludo.util.isString(this.dataSource)) {
                 obj = this.dataSourceObj = ludo.get(this.dataSource);
@@ -9154,11 +9138,22 @@ ludo.View = new Class({
                 if (!this.dataSource.type) {
                     this.dataSource.type = this.defaultDS;
                 }
-                if (this.dataSource.shim && !this.dataSource.shim.renderTo) {
-                    this.dataSource.shim.renderTo = this.getEl()
-                }
+
+
 
                 obj = this.dataSourceObj = this.createDependency('viewDataSource', this.dataSource);
+            }
+
+            if(this.loadMessage){
+                obj.on('init', function(){
+                    this.shim().show(this.loadMessage);
+                }.bind(this));
+                obj.on('complete', function(){
+                    this.shim().hide();
+                }.bind(this));
+                if(obj.isWaitingData()){
+                    this.shim().show(this.loadMessage);
+                }
             }
 
             var method = obj.getSourceType() === 'HTML' ? 'html' : 'JSON';

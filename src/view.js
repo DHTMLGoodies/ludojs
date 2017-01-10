@@ -25,6 +25,7 @@
  @param {String} config.tpl A template for string when inserting JSON Content(the insertJSON method), example: "name:{firstname} {lastname}<br>"
  @param {Boolean} config.alwaysInFront True to make this view always appear in front of the other views.
  @param {Object} config.form Configuration for the form Manager. See <a href="ludo.form.Manager">ludo.form.Manager</a> for details.
+ @param {String} config.loadMessage Message to show if a data source is used and data is being loaded from server.
  @fires ludo.View#rendered Fired when the view has been rendered and resized. Argument: ludo.View
  @fires ludo.View#toFront Fired when view has brought to front. Argument: ludo.View
  @fires ludo.View#hide Fired when view has been hidden using the hide method. Argument: ludo.View
@@ -99,6 +100,7 @@ ludo.View = new Class({
     initialItemsObject: [],
     contextMenu: undefined,
     lifeCycleComplete: false,
+    loadMessage:undefined,
 
     lifeCycle: function (config) {
         this._createDOM();
@@ -188,7 +190,7 @@ ludo.View = new Class({
         var keys = ['contextMenu', 'renderTo', 'tpl', 'elCss', 'socket', 'form', 'title', 'hidden',
             'dataSource', 'movable', 'resizable', 'closable', 'minimizable', 'alwaysInFront',
             'parentComponent', 'cls', 'bodyCls', 'objMovable', 'width', 'height', 'frame', 'formConfig',
-            'overflow'];
+            'overflow','loadMessage'];
 
         if (config.css != undefined) {
             if (this.css != undefined) {
@@ -836,7 +838,10 @@ ludo.View = new Class({
      * @returns {undefined|*}
      */
     getDataSource: function () {
+
         if (!this.dataSourceObj && this.dataSource) {
+
+
             var obj;
             if (ludo.util.isString(this.dataSource)) {
                 obj = this.dataSourceObj = ludo.get(this.dataSource);
@@ -844,11 +849,22 @@ ludo.View = new Class({
                 if (!this.dataSource.type) {
                     this.dataSource.type = this.defaultDS;
                 }
-                if (this.dataSource.shim && !this.dataSource.shim.renderTo) {
-                    this.dataSource.shim.renderTo = this.getEl()
-                }
+
+
 
                 obj = this.dataSourceObj = this.createDependency('viewDataSource', this.dataSource);
+            }
+
+            if(this.loadMessage){
+                obj.on('init', function(){
+                    this.shim().show(this.loadMessage);
+                }.bind(this));
+                obj.on('complete', function(){
+                    this.shim().hide();
+                }.bind(this));
+                if(obj.isWaitingData()){
+                    this.shim().show(this.loadMessage);
+                }
             }
 
             var method = obj.getSourceType() === 'HTML' ? 'html' : 'JSON';

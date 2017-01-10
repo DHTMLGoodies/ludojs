@@ -57,6 +57,8 @@ ludo.dataSource.JSON = new Class({
                 }else{
                     this.fireEvent('fail', [response.responseText, status, this]);
                 }
+                
+                this.fireEvent('complete');
 
             }.bind(this),
             fail: function (text, error) {

@@ -87,6 +87,7 @@ require_once("includes/demo-header.php");
          }
          ]
          */
+
         url:'data/list-data.json',
         id: 'myDataSource',
         searchConfig: {
@@ -154,8 +155,10 @@ require_once("includes/demo-header.php");
                             {
                                 id: 'myList',
                                 type: 'ListView',
-                                /* Items are swipable */
 
+                                loadMessage:'Loading data',
+           
+                                /* Items are swipable */
                                 swipable: true,
                                 emptyText:'No data found',
                                 undoTimeout:2000, /* Time to undo swipe before swipe event is triggered */
@@ -215,7 +218,7 @@ require_once("includes/demo-header.php");
                     },
                     {
                         id: 'mainView',
-                        html: 'Main View',
+                        html: 'ListView sample. The list is shown to the left. You can <ul><li>Filter the list</li><li>Swipe left or right</li><li>Update data and have your changes reflected in the list.</ul>',
                         layout: {
                             weight: 1
                         },
@@ -233,6 +236,7 @@ require_once("includes/demo-header.php");
 
         ]
     });
+
 
 </script>
 
