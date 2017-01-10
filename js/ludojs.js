@@ -1,7 +1,7 @@
-/* Generated Tue Jan 10 17:21:07 CET 2017 */
+/* Generated Tue Jan 10 17:27:29 CET 2017 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.383
+ludoJS - Javascript framework, 1.1.384
 Copyright (C) 2012-2017  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -19475,8 +19475,9 @@ ludo.CollectionView = new Class({
         if (this.emptyText) {
             var ds = this.getDataSource();
 
-            var show = ds.isWaitingData() || ds.getCount() == 0;
-            this[show ? 'hideEmptyText' : 'showEmptyText']();
+            var hasData = ds.isWaitingData() || ds.getCount() > 0;
+            
+            this[hasData ? 'hideEmptyText' : 'showEmptyText']();
         }
     },
 

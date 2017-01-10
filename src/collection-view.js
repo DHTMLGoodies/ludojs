@@ -60,8 +60,9 @@ ludo.CollectionView = new Class({
         if (this.emptyText) {
             var ds = this.getDataSource();
 
-            var show = ds.isWaitingData() || ds.getCount() == 0;
-            this[show ? 'hideEmptyText' : 'showEmptyText']();
+            var hasData = ds.isWaitingData() || ds.getCount() > 0;
+            
+            this[hasData ? 'hideEmptyText' : 'showEmptyText']();
         }
     },
 
