@@ -249,6 +249,7 @@ $rnd = "RND". date("YmdHis");
 
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/movable.js?abc=<?php echo $rnd; ?>"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/collection-view.js?abc=<?php echo $rnd; ?>"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/list-view.js?abc=<?php echo $rnd; ?>"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/tree/tree.js?abc=<?php echo $rnd; ?>"></script>
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/tree/drag-drop.js?abc=<?php echo $rnd; ?>"></script>
 

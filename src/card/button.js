@@ -28,14 +28,16 @@ ludo.card.Button = new Class({
         }else{
             this.onCreate();
         }
+
+    },
+
+    onRendered:function(){
+
     },
 
     onCreate:function(){
         this.applyTo = this.applyTo ? ludo.get(this.applyTo) : this.getParentComponent();
-        if(this.applyTo){
-            this.applyTo.getLayout().registerButton(this);
-        }
-        this.addButtonEvents();
+        this.applyTo.getLayout().on('rendered', this.onRendered.bind(this));
     },
 
     getParentComponent:function () {

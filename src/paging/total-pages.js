@@ -56,7 +56,7 @@ ludo.paging.TotalPages = new Class({
 		this.html(this.tpl.replace('{pages}', this.getDataSource().getPageCount()));
 	},
 
-	insertJSON:function () {
+	JSON:function () {
 
 	}
 });

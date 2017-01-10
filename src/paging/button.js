@@ -35,5 +35,5 @@ ludo.paging.Button = new Class({
 
     addDataSourceEvents:function(){},
 
-	insertJSON:function(){}
+	JSON:function(){}
 });

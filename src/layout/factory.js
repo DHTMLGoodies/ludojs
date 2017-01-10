@@ -20,6 +20,7 @@ ludo.layout.Factory = new Class({
 	getLayoutClass:function(view){
 		if(!view.layout || !view.layout.type)return 'Base';
 
+
 		switch(view.layout.type.toLowerCase()){
 			case "docking":
 				return "Docking";
@@ -57,7 +58,7 @@ ludo.layout.Factory = new Class({
 			case 'linear':
 				return ['Linear', (view.layout.orientation && view.layout.orientation.toLowerCase()=='horizontal') ? 'Horizontal' : 'Vertical'].join('');
 			default:
-				return 'LinearVertical';
+				return 'Base';
 		}
 	},
 

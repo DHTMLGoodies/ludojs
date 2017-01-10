@@ -65,7 +65,7 @@ ludo.progress.Bar = new Class({
         }
     },
 
-    insertJSON:function (json) {
+    JSON:function (json) {
         var data = json.data ? json.data : json;
         this.setPercent(data.percent);
     },

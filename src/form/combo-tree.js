@@ -349,7 +349,7 @@ ludo.form.ComboField = new Class({
 
     ludoEvents:function () {
         this.parent();
-        this.getBody().addEvent('click', this.clickEvent.bind(this));
+        this.getBody().on('click', this.clickEvent.bind(this));
     },
 
     clickEvent:function () {

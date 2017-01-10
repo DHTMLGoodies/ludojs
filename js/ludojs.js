@@ -1,7 +1,7 @@
-/* Generated Fri Jan 6 15:01:28 CET 2017 */
+/* Generated Tue Jan 10 15:03:55 CET 2017 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.366
+ludoJS - Javascript framework, 1.1.375
 Copyright (C) 2012-2017  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -2605,7 +2605,8 @@ ludo.FormMgrClass = new Class({
 });
 ludo.Form = new ludo.FormMgrClass();
 
-Events.prototype.on = Events.prototype.addEvent;/* ../ludojs/src/util.js */
+Events.prototype.on = Events.prototype.addEvent;
+Events.prototype.off = Events.prototype.removeEvent;/* ../ludojs/src/util.js */
 ludo.util = {
 	types:{},
 
@@ -2770,6 +2771,14 @@ ludo.util = {
 			if(obj.hasOwnProperty(key))l++;
 		}
 		return l;
+	},
+	
+	pageXY:function(e){
+		return e.touches && e.touches.length > 0 ? {
+			x: e.touches[0].pageX, y: e.touches[0].pageY
+		}: {
+			x: e.pageX, y: e.pageY
+		};
 	}
 };
 
@@ -3123,7 +3132,7 @@ ludo._Config = new Class({
 
 	setDefaultValues:function () {
 		this.storage = {
-			url:'/controller.php',
+			url:undefined,
 			documentRoot:'/',
 			socketUrl:'http://your-node-js-server-url:8080/',
 			modRewrite:false,
@@ -7013,6 +7022,7 @@ ludo.layout.Factory = new Class({
 	getLayoutClass:function(view){
 		if(!view.layout || !view.layout.type)return 'Base';
 
+
 		switch(view.layout.type.toLowerCase()){
 			case "docking":
 				return "Docking";
@@ -7050,7 +7060,7 @@ ludo.layout.Factory = new Class({
 			case 'linear':
 				return ['Linear', (view.layout.orientation && view.layout.orientation.toLowerCase()=='horizontal') ? 'Horizontal' : 'Vertical'].join('');
 			default:
-				return 'LinearVertical';
+				return 'Base';
 		}
 	},
 
@@ -7337,32 +7347,43 @@ ludo.dataSource.JSON = new Class({
      * @memberof ludo.dataSource.JSON.prototype
      */
     load:function () {
-        if(!this.url && !this.resource)return;
-        this.parent();
-        this.sendRequest(this.getPostData());
+        if(this._url()){
+            this.parent();
+            this.sendRequest(this.getPostData());
+
+        }
+    },
+
+    _url:function(){
+        return this.url || ludo.config.getUrl();
     },
 
     sendRequest:function(data){
         this.parent();
         $.ajax({
-            url: this.url,
+            url: this._url(),
             method: 'post',
             cache: false,
             dataType: 'json',
             data: data,
-            success: function (json) {
-                var data = this.dataHandler(json);
+            complete: function (response, status) {
+                if(status == 'success'){
+                    var json = response.responseJSON;
+                    var data = this.dataHandler(json);
+                    if(data === false){
+                        this.fireEvent('fail', ['error', 'error', this]);
+                    }else{
+                        this.parseNewData(data, json);
+                        this.fireEvent('success', [json, this]);
 
-                if(data === false){
-                    this.fireEvent('fail', ['Validation error', 'Validation error', this]);
+                    }
                 }else{
-                    this.parseNewData(data, json);
-                    this.fireEvent('success', [json, this]);
-
+                    this.fireEvent('fail', [response.responseText, status, this]);
                 }
+
             }.bind(this),
             fail: function (text, error) {
-
+                console.log('error');
                 this.fireEvent('fail', [text, error, this]);
             }.bind(this)
         });
@@ -8306,7 +8327,7 @@ ludo.remote.Shim = new Class({
  @param {String} config.tpl A template for string when inserting JSON Content(the insertJSON method), example: "name:{firstname} {lastname}<br>"
  @param {Boolean} config.alwaysInFront True to make this view always appear in front of the other views.
  @param {Object} config.form Configuration for the form Manager. See <a href="ludo.form.Manager">ludo.form.Manager</a> for details.
- @fires ludo.View#rendered Fired when view has been rendered on screen. Argument: ludo.View
+ @fires ludo.View#rendered Fired when the view has been rendered and resized. Argument: ludo.View
  @fires ludo.View#toFront Fired when view has brought to front. Argument: ludo.View
  @fires ludo.View#hide Fired when view has been hidden using the hide method. Argument: ludo.View
  @fires ludo.View#show Fired when view is displayed using the show method. Argument. ludo.View
@@ -8421,7 +8442,7 @@ ludo.View = new Class({
         this.lifeCycleComplete = true;
         this._styleDOM();
 
-        if (config.children) {
+        if (config.children && config.children.length > 0) {
             this.getLayout().prepareForChildrenOnCreate(config.children);
             for (var i = 0; i < config.children.length; i++) {
                 config.children[i].id = config.children[i].id || config.children[i].name || 'ludo-' + String.uniqueID();
@@ -8454,7 +8475,7 @@ ludo.View = new Class({
         // TODO remove 'render' and replace with 'rendered'
 
         this.fireEvent('render', this);
-        this.fireEvent('rendered', this);
+
     },
     /**
      * Constructor for Views.
@@ -8533,7 +8554,7 @@ ludo.View = new Class({
      @return void
      @private
      @example
-     ludoEvents:function(){
+     ludoEvents:function(){∂'
 			 this.parent();
 			 this.addEvent('load', this.myMethodOnLoad.bind(this));
 		 }
@@ -8569,14 +8590,16 @@ ludo.View = new Class({
      * Parse and insert JSON into the view
      * The JSON will be sent to the JSON parser(defined in JSONParser) and
      * This method will be called automatically when you're using a JSON data-source
-     * @function insertJSON
+     * @function JSON
      * @param {Object} json
+     * @param {String} tpl - Optional String template
      * @return void
      * @memberof ludo.View.prototype
      */
-    JSON: function (json) {
-        if (this.tpl) {
-            this.getBody().html(this.getTplParser().asString(json, this.tpl));
+    JSON: function (json, tpl) {
+        tpl = tpl || this.tpl;
+        if (tpl) {
+            this.getBody().html(this.getTplParser().asString(json, tpl));
         }
     },
 
@@ -8675,6 +8698,7 @@ ludo.View = new Class({
         this.els.container.attr("id", this.getId());
 
         this.els.body.css('height', '100%');
+
         if (this.overflow == 'hidden') {
             this.els.body.css('overflow', 'hidden');
         }
@@ -8898,6 +8922,8 @@ ludo.View = new Class({
         return this.layout.pixelHeight ? this.layout.pixelHeight : this.layout.height;
     },
 
+    _fr:false,
+
     /**
      Resize View and it's children.
      @function resize
@@ -8914,6 +8940,8 @@ ludo.View = new Class({
         if (this.isHidden()) {
             return;
         }
+
+
         size = size || {};
 
         if (size.width) {
@@ -8950,6 +8978,12 @@ ludo.View = new Class({
         if (size.height || size.width) {
             this.fireEvent('resize', size);
         }
+
+        if(this._fr == false){
+            this.fireEvent('rendered', this);
+            this._fr = true;
+        }
+
         if (this.children.length > 0)this.getLayout().resizeChildren();
     },
 
@@ -9115,10 +9149,11 @@ ludo.View = new Class({
                 if (this.dataSource.shim && !this.dataSource.shim.renderTo) {
                     this.dataSource.shim.renderTo = this.getEl()
                 }
+
                 obj = this.dataSourceObj = this.createDependency('viewDataSource', this.dataSource);
             }
 
-            var method = obj.getSourceType() === 'HTML' ? 'html' : 'insertJSON';
+            var method = obj.getSourceType() === 'HTML' ? 'html' : 'JSON';
 
             if (obj.hasData()) {
                 this[method](obj.getData());
@@ -10999,8 +11034,8 @@ ludo.chart.Chart = new Class({
 			if(child.rendered && child.update)child.onResize();
 		});
 	},
-	
-	insertJSON:function(){
+
+	JSON:function(){
 
 	},
 
@@ -11029,8 +11064,6 @@ ludo.chart.Chart = new Class({
  * @param {Function} minY function returning minY value for the chart
  * @param {Function} maxX Function returning maxX value for the chart
  * @param {Function} maxy Function returning maxY value for the chart
- * @example
- *
  *
  */
 ludo.chart.ScatterDataSource = new Class({
@@ -11608,6 +11641,7 @@ ludo.chart.Base = new Class({
     },
 
     create: function () {
+        console.log('create');
         this.renderBackgroundItems();
 
         if (this.ds.hasData()) {
@@ -16101,6 +16135,11 @@ ludo.layout.LinearVertical = new Class({
 ludo.layout.ViewPager = new Class({
     Extends: ludo.layout.Base,
     lastIndex:undefined,
+    /**
+     * Index of selected page
+     * @property {Number} selectedIndex
+     * @memberof ludo.layout.ViewPager.prototype
+     */
     selectedIndex: undefined,
     animate: true,
     initialAnimate: false,
@@ -16109,6 +16148,11 @@ ludo.layout.ViewPager = new Class({
     dragging: true,
     orientation: 'horizontal',
     parentDiv: undefined,
+    /**
+     * Number of child views/pages in view pager layout
+     * @property {Number} count
+     * @memberof ludo.layout.ViewPager.prototype
+     */
     count : undefined,
 
 
@@ -16366,25 +16410,47 @@ ludo.layout.ViewPager = new Class({
     },
 
     removeValidationEvents: function () {
-        if (this.selectedIndex != undefined) {
-            this.getVisiblePage().removeEvent('invalid', this.setInvalid);
-            this.getVisiblePage().removeEvent('valid', this.setValid);
+        if (this.selectedIndex != undefined && this.validFn) {
+            var f = this.getVisiblePage().getForm();
+            if(f != undefined){
+                f.off('invalid', this.validFn);
+                f.off('valid', this.invalidFn);
+            }
         }
     },
 
+    validFn:undefined,
+    invalidFn:undefined,
+
     addValidationEvents: function () {
-        var manager = this.getVisiblePage().getForm();
-        manager.addEvent('invalid', this.setInvalid.bind(this));
-        manager.addEvent('valid', this.setValid.bind(this));
-        manager.validate();
+        if(this.validFn == undefined){
+            this.validFn = this.setValid.bind(this);
+            this.invalidFn = this.setInvalid.bind(this);
+        }
+
+        var f = this.getVisiblePage().getForm();
+        f.on('invalid', this.invalidFn );
+        f.on('valid', this.validFn);
+        f.validate();
     },
     setInvalid: function () {
+        console.log('set invalid', arguments);
         this.fireEvent('invalid', [this, this.view, this.view.children[this.selectedIndex]]);
     },
 
     setValid: function () {
+        console.log('set valid', arguments);
         this.fireEvent('valid', [this, this.view, this.view.children[this.selectedIndex]]);
     },
+
+    isFormValid:function(){
+        var v = this.getVisiblePage();
+        if(v == undefined)return true;
+        var f = v.getForm();
+        if(f != undefined)return f.isValid();
+        return true;
+    },
+
     /**
      * Go to first child view
      * @function showFirstPage
@@ -16424,7 +16490,10 @@ ludo.layout.ViewPager = new Class({
         var animateX = this.orientation == 'horizontal';
         var parentSize = animateX ? this.viewport.width : this.viewport.height;
 
-        var min = this.selectedIndex < this.view.children.length-1 ? (parentSize * -1) : 0;
+        var min = 0;
+        if(this.selectedIndex < this.view.children.length-1 && isValid){
+            min = (parentSize * -1);
+        }
         var max = this.selectedIndex > 0 ? parentSize : 0;
 
 
@@ -16461,7 +16530,6 @@ ludo.layout.ViewPager = new Class({
                 key = 'top'
             }
 
-
             pos = Math.min(pos, this.touch.max);
             pos = Math.max(pos, (this.touch.min));
 
@@ -16469,8 +16537,6 @@ ludo.layout.ViewPager = new Class({
             this.touch.previousPos = pos;
 
             pos += this.touch.currentPos[key];
-
-
 
             this.parentDiv.css(key, pos + 'px');
             return false;
@@ -19377,15 +19443,8 @@ ludo.CollectionView = new Class({
 
 	emptyEl:function(){
 		if(this._emptyEl === undefined){
-			this._emptyEl = ludo.dom.create({
-				tag : 'div',
-				renderTo:this.getBody(),
-				cls : 'ludo-empty-text',
-				css:{
-					position : 'absolute'
-				},
-				html : this.getEmptyText()
-			})
+			this._emptyEl = $('<div class="ludo-empty-text" style="position:absolute">' + this.getEmptyText() + '</div>');
+			this.getBody().append(this._emptyEl);
 		}
 		return this._emptyEl;
 	},
@@ -19407,131 +19466,483 @@ ludo.CollectionView = new Class({
 
 	render:function(){
 		if(this.emptyText){
-			this[this.getDataSource().hasData() ? 'hideEmptyText' : 'showEmptyText']();
+
+			this[this.getDataSource().getCount() > 0 ? 'hideEmptyText' : 'showEmptyText']();
 		}
 	},
 
-	insertJSON:function(){
+	JSON:function(){
 
 	}
-});/* ../ludojs/src/list.js */
-ludo.List = new Class({
-    Extends:ludo.CollectionView,
-    defaultDS:'dataSource.Collection',
-    overflow:'scroll',
-    highlighted:undefined,
-    recordMap:{},
+});/* ../ludojs/src/list-view.js */
+/**
+ * ListView
+ * Class rendering an array of JSON objects in a list.
+ *
+ * For demo, see <a href="../demo/list.php">list.php</a>
+ *
+ * The list view depends on a <a href="data-source_collection.js.html">collection data source</a>. To update items in the list view during runtime,
+ * update the datasource. To remove items from the list view, remove the item from the data source.
+ *
+ * @class ludo.ListView
+ * @param {Object} config
+ * @param {Boolean} config.swipable True to support swiping of items to the left and/or right
+ * @param {Function} config.itemRenderer Function returning HTML for a list item. You may skip the renderer by creating a string template(tpl) instead
+ * @param {String} config.tpl Alternative to config.itemRenderer. This is a template string for all the records where you use curly braces to reference properties,
+ * example: '<div>{firstname} {lastname}</div>'
+ * @param {Function} config.backSideLeft Function returning html which is displayed behind the list item when swiping to the left(Optional)
+ * @param {Function} config.backSideRight Function returning html which is displayed behind the list item when swiping to the right(Optional)
+ * @param {Function} config.backSideUndo Optional function returning html for the undo which may be displayed after swiping. On click the swipe
+ * will be undone and the list item displayed as normal. If backSideUndo is defined, the swipe events(swipeLeft, swipeRight and swipe) will not
+ * be triggered until the config.undoTimeout has elapsed.
+ * @parma {Number} config.undoTimeout Visibility of undo background in milliseconds. When the undo background is not clicked the swipe events
+ * will be fired.
+ * @fires ludo.ListView#swipe Fired after swiping left or right. Arguments: 1) JSON Object/record
+ * @fires ludo.ListView#swipeRight Fired after swiping right. Arguments: 1) JSON Object/record
+ * @fires ludo.ListView#swipeLeft Fired after swiping left. Arguments: 1) JSON Object/record
+ */
+ludo.ListView = new Class({
+    type:'ListView',
+    Extends: ludo.CollectionView,
+    defaultDS: 'dataSource.Collection',
+    overflow: 'auto',
+    highlighted: undefined,
+    recordMap: {},
 
-    __construct:function (config) {
+    dragAttr: undefined,
+
+    swipable: false,
+
+    itemHeight: 0,
+
+    availHeight: undefined,
+
+    scrollTop: 0,
+
+    indexFirstVisible: 0,
+    indexLastVisible: 0,
+
+    outOfBounds: false,
+
+    itemsRendered: false,
+    itemRenderer:undefined,
+    backSideLeft: undefined,
+    backSideRight: undefined,
+    backSideUndo: undefined,
+    undoTimeout: 2000,
+    didUndo:false,
+
+    __construct: function (config) {
         this.parent(config);
+        this.setConfigParams(config, ['swipable', 'itemRenderer', 'backSideLeft', 'backSideRight', 'backSideUndo', 'undoTimeout']);
+
+        this.on('rendered', this.render.bind(this));
     },
 
-    ludoEvents:function () {
+    ludoEvents: function () {
         this.parent();
         this.getBody().on('click', this.onClick.bind(this));
     },
 
-    __rendered:function () {
+    __rendered: function () {
         this.parent();
 
+
+
+        if (this.swipable) {
+            $(document.body).on(ludo.util.getDragMoveEvent(), this.drag.bind(this));
+            $(document.body).on(ludo.util.getDragEndEvent(), this.dragEnd.bind(this));
+
+        }
+
+        this.getEl().addClass('ludo-list-view');
+        this.getBody().addClass('ludo-list-view-body');
+        this.getBody().css('overflow-x', 'hidden');
+        this.getBody().on('scroll', this.onScroll.bind(this));
         if (this.dataSource) {
-            if (this.dataSourceObj && this.dataSourceObj.hasData()) {
-                this.render();
-            }
+
             this.getDataSource().addEvents({
-                'change':this.render.bind(this),
-                'select':this.select.bind(this),
-                'deselect':this.deselect.bind(this),
-                'update':this.update.bind(this),
-                'delete':this.remove.bind(this)
+                'change': this.render.bind(this),
+                'select': this.select.bind(this),
+                'deselect': this.deselect.bind(this),
+                'update': this.update.bind(this),
+                'delete': this.remove.bind(this)
             });
         }
     },
 
-    render:function () {
-		this.parent();
+    onScroll: function (e) {
+        this.scrollTop = this.getBody().scrollTop();
+        this.lazyRender();
+    },
+
+
+    lazyRender: function () {
+        var count = this.getDataSource().getCount();
+        var index = this.indexLastVisible + 1;
+        this.outOfBounds = false;
         var d = this.getDataSource().getData();
 
-        var data = this.getTplParser().getCompiled(d, this.tpl);
+        while (!this.outOfBounds && index < count) {
+            var rec = d[index];
+
+            var dom = this.getRecordContainer(rec);
+            this.checkOutOfBounds(dom);
+
+            if (!this.outOfBounds) {
+                var html = this.itemRenderer != undefined ? this.itemRenderer.call(this, rec) : this.getTplParser().getCompiled(rec, this.tpl)[0];
+                this.addInnerDOM(dom, rec, html);
+                this.indexLastVisible = index;
+            }
+            index++;
+        }
+    },
+
+    startDrag: function (e) {
+        var el = this.getDragDom(e.target);
+        var p = ludo.util.pageXY(e);
+        var pos = el.position();
+        var width = el.outerWidth(true);
+
+        this.dragAttr = {
+            backLeft: el.parent().find('.ludo-list-item-back-left'),
+            backRight: el.parent().find('.ludo-list-item-back-right'),
+            backUndo: el.parent().find('.ludo-list-item-back-undo'),
+            recordUid: this.getRecordId(el),
+            elPos: pos,
+            mouse: p,
+            el: el,
+            parent: this.getRecordDOM(e.target),
+            minX: -width + pos.left,
+            maxX: width - pos.left,
+            lastX: pos.left
+        };
+
+        el.parent().find('.ludo-list-item-back-undo').css('z-index', 0);
+    },
+    drag: function (e) {
+        if (this.dragAttr == undefined)return;
+
+        var p = ludo.util.pageXY(e);
+
+        var x = p.x - this.dragAttr.mouse.x + this.dragAttr.elPos.left;
+        x = ludo.util.clamp(x, this.dragAttr.minX, this.dragAttr.maxX);
+        var zl, zr;
+        if (x > 0 && this.dragAttr.lastX <= 0) {
+            zl = 2;
+            zr = 1;
+        } else if (x < 0 && this.dragAttr.lastX >= 0) {
+            zl = 1;
+            zr = 2;
+        }
+        this.dragAttr.backLeft.css('z-index', zl);
+        this.dragAttr.backRight.css('z-index', zr);
+        this.dragAttr.lastX = x;
+        this.dragAttr.el.css('left', x);
+
+        return false;
+    },
+
+    onUndoTimeout:function(e, rec){
+        if(!this.didUndo){
+            this.fireEvent('swipe', rec);
+            this.fireEvent(e, rec);
+        }
+    },
+
+    dragEnd: function () {
+        if (this.dragAttr == undefined)return;
+
+        var center = this.dragAttr.el.outerWidth(true) / 2;
+        var pos = this.dragAttr.el.position();
+
+        if (pos.left > center * 1.2 || pos.left < -center * 1.2) {
+            var el = this.dragAttr.parent;
+            var uid = this.dragAttr.recordUid;
+            var mult = pos.left > 0 ? 1 : -1;
+            var rec = this.getDataSource().find({uid: uid});
+            var e = mult < 0 ? 'swipeLeft' : 'swipeRight';
+
+            this.didUndo = false;
+
+            var u = this.dragAttr.backUndo;
+            var fn;
+            if(u.length){
+                fn = function(){
+                    u.css('z-index', 3);
+                    this.onUndoTimeout.delay(this.undoTimeout, this, [e, rec]);
+                }.bind(this);
+            }else{
+                fn = function(){
+                    this.fireEvent('swipe', rec);
+                    this.fireEvent(e, rec);
+                }.bind(this);
+            }
+
+            this.dragAttr.el.animate({
+                left: el.outerWidth(true) * mult
+            }, {
+                duration: 100,
+                complete: fn
+            });
+
+        } else {
+            this.dragAttr.el.animate({
+                left: 0
+            }, {
+                duration: 100
+            });
+
+        }
+        this.dragAttr = undefined;
+    },
+
+    remove: function (rec) {
+        var uid = rec.uid != undefined ? rec.uid : rec;
+        var el = this.getDOMForRecord(uid);
+        if (el == undefined)return;
+        el.css('visibility', 'hidden');
+        el.animate({
+            height: 0
+        }, {
+            complete: function () {
+                el.remove();
+                this.indexLastVisible--;
+                this.lazyRender();
+            }.bind(this)
+        });
+
+        this.recordMap[uid] = undefined;
+    },
+
+    resize: function (size) {
+        this.parent(size);
+        this.availHeight = this.getBody().height();
+
+        if (this.itemsRendered) {
+            this.lazyRender();
+        }
+    },
+
+
+    render: function () {
+        this.parent();
+
+        if (this.availHeight == undefined) {
+            this.availHeight = this.getBody().height();
+        }
+        var s = new Date().getTime();
+        this.parent();
         var b = this.nodeContainer();
         b.html('');
+        this.recordMap = {};
 
-        for (var i = 0; i < data.length; i++) {
-            var id = 'list-' + d[i].uid;
-            var el = $('<div class="ludo-list-item" style="cursor:pointer" id="' + id + '">' + data[i] + '</div>');
-            b.append(el);
-            this.recordMap[d[i].uid] = id;
-
-            el.mouseenter(this.enter.bind(this));
-            el.mouseleave(this.leave.bind(this));
+        if (!this.dataSourceObj || !this.dataSourceObj.hasData()) {
+            return;
         }
+
+        var d = this.getDataSource().getData();
+        var htmlArray = this.getTplParser().getCompiled(d, this.tpl);
+
+        this.indexFirstVisible = undefined;
+        this.indexLastVisible = undefined;
+        this.outOfBounds = false;
+
+
+        jQuery.each(d, function (i, item) {
+            var html = this.itemsRendered != undefined ? this.itemRenderer.call(this, item) : htmlArray[i];
+            this.renderItem(i, item, html, b);
+
+        }.bind(this));
 
         var selected = this.getDataSource().getSelectedRecord();
-        if(selected){
+        if (selected) {
             this.select(selected);
         }
+
+        this.itemsRendered = true;
+
+        ludo.util.log('time to render list ', new Date().getTime() - s);
     },
 
-    enter:function(e){
+    renderItem: function (i, item, html) {
+        if (this.indexFirstVisible == undefined) {
+            this.indexFirstVisible = i;
+        }
+
+
+        var dom = this.itemDOM(item, html);
+
+        if (this.itemHeight == 0) {
+            this.itemHeight = dom.outerHeight(true);
+        }
+
+
+        if (!this.outOfBounds) {
+            this.checkOutOfBounds(dom);
+        }
+
+        if (!this.outOfBounds) {
+            this.indexLastVisible = i;
+        }
+
+    },
+
+    checkOutOfBounds: function (dom) {
+        var pos = dom.position();
+        this.outOfBounds = pos.top > this.scrollTop + this.availHeight;
+    },
+
+    getRecordContainer: function (record) {
+        var id = 'list-' + record.uid;
+        if (this.recordMap[record.uid] == undefined) {
+            var el = $('<div class="ludo-list-item" style="cursor:pointer" id="' + id + '"></div>');
+            this.recordMap[record.uid] = id;
+            this._nodeContainer.append(el);
+            return el;
+        }
+        return $('#' + id);
+    },
+
+
+    itemDOM: function (item, html) {
+        var el = this.getRecordContainer(item);
+        if (!this.outOfBounds) {
+            this.addInnerDOM(el, item, html);
+        } else {
+            el.css('height', this.itemHeight);
+        }
+
+        return el;
+    },
+
+    /**
+     * Undo swipe. This method can be called when the list item is swiped to the left
+     * or right. It cannot be called after a record has been removed from the data source
+     * using dataSource.remove.
+     *
+     * @function undoSwipe
+     * @param {Object|String} record record object or record.uid(unique id)
+     * @memberof ludo.ListView.prototype
+     */
+    undoSwipe: function (record) {
+        this.didUndo = true;
+        var dom = this.getDOMForRecord(record);
+        dom.find('.ludo-list-item-front').css('left', 0);
+    },
+
+    addInnerDOM: function (parent, record, html) {
+        if (this.backSideLeft != undefined) {
+            var l = this.backSideLeft(record);
+            if (l != undefined) {
+                var ln = $('<div class="ludo-list-item-back-left"></div>');
+                ln.append($(l));
+                parent.append(ln);
+            }
+        }
+
+        if (this.backSideRight != undefined) {
+            var r = this.backSideRight(record);
+            var rn = $('<div class="ludo-list-item-back-right"></div>');
+            rn.append($(r));
+            parent.append(rn);
+        }
+
+        if (this.backSideUndo != undefined) {
+            var u = this.backSideUndo(record);
+            var un = $('<div class="ludo-list-item-back-undo"></div>');
+            un.append($(u));
+            parent.append(un);
+            var vId = this.id;
+            var uid = record.uid;
+            var fn = function(){
+                var v = ludo.$(vId);
+                v.undoSwipe(uid);
+            };
+            un.on('click', fn);
+
+        }
+
+
+        var div = $('<div></div>');
+        div.addClass('ludo-list-item-front');
+        div.append($(html));
+
+        parent.append(div);
+
+        parent.mouseenter(this.enter.bind(this));
+        parent.mouseleave(this.leave.bind(this));
+
+        if (this.swipable) {
+            div.on(ludo.util.getDragStartEvent(), this.startDrag.bind(this));
+        }
+
+        parent.css('height', 'auto');
+    },
+
+
+    enter: function (e) {
         var el = this.getRecordDOM(e.target);
-        if(el)el.addClass('ludo-list-item-highlighted');
+        if (el)el.addClass('ludo-list-item-highlighted');
     },
 
-    leave:function(e){
+    leave: function (e) {
         var el = this.getRecordDOM(e.target);
-        if(el)el.removeClass('ludo-list-item-highlighted');
+        if (el)el.removeClass('ludo-list-item-highlighted');
     },
 
-    getRecordDOM:function(el){
+    getDragDom: function (el) {
         el = $(el);
-        if(!el.hasClass('ludo-list-item')){
-            el = el.closest('.ludo-list-item');
+        if (!el.hasClass('ludo-list-item-front')) {
+            el = el.closest('.ludo-list-item-front');
         }
         return el;
     },
 
-    getRecordId:function(el){
+    getRecordDOM: function (el) {
+        el = $(el);
+        if (!el.hasClass('ludo-list-item')) {
+            el = el.closest('.ludo-list-item');
+        }
+        return el.length > 0 ? el : undefined;
+    },
+
+    getRecordId: function (el) {
         el = this.getRecordDOM(el);
-        if(el){
+        if (el) {
+
             return el.attr("id").replace('list-', '');
         }
         return undefined;
     },
 
-    getDOMForRecord:function(record){
-        return this.recordMap[record.uid] ? $('#' + this.recordMap[record.uid]) : undefined;
+    getDOMForRecord: function (record) {
+        var uid = record.uid || record;
+        return this.recordMap[uid] ? $('#' + this.recordMap[uid]) : undefined;
 
     },
 
-    select:function (record) {
+    select: function (record) {
         var el = this.getDOMForRecord(record);
-        if(el)el.addClass('ludo-list-item-selected');
+        if (el)el.addClass('ludo-list-item-selected');
     },
 
-    deselect:function (record) {
+    deselect: function (record) {
         var el = this.getDOMForRecord(record);
-        if(el)ludo.dom.removeClass(el, 'ludo-list-item-selected');
+        if (el)el.removeClass('ludo-list-item-selected');
     },
 
-    update:function (record) {
+    update: function (record) {
         var el = this.getDOMForRecord(record);
-        if(el){
-            var content = this.getTplParser().asString(record, this.tpl);
-            el.html( content);
+        if (el) {
+            var html = this.itemRenderer != undefined ? this.itemRenderer.call(this, record): this.getTplParser().asString(record, this.tpl);
+            el.find('.ludo-list-item-front').html(html);
         }
     },
 
-    remove:function (record) {
-        var el = this.getDOMForRecord(record);
-        if(el){
-            el.dispose();
-            this.recordMap[record.uid] = undefined;
-        }
-    },
-
-    onClick:function (e) {
+    onClick: function (e) {
         var recId = this.getRecordId($(e.target));
-        if(recId)this.getDataSource().getRecord(recId).select();
+        if (recId)this.getDataSource().getRecord(recId).select();
     }
 });/* ../ludojs/src/notification.js */
 /**
@@ -22357,6 +22768,7 @@ ludo.dataSource.CollectionSearch = new Class({
 			this.dataSource.addEvent('beforeload', this.clearSearchIndex.bind(this));
 			this.dataSource.addEvent('beforeload', this.deleteSearch.bind(this));
 			this.dataSource.addEvent('update', this.clearSearchIndex.bind(this));
+			this.dataSource.addEvent('delete', this.onDelete.bind(this));
 		}
 	},
 	/**
@@ -22648,6 +23060,20 @@ ludo.dataSource.CollectionSearch = new Class({
 		return this.delay || 0;
 	},
 
+	onDelete:function(record){
+		if(this.searchResult && this.searchResult.length > 0){
+			for(var i=0;i<this.searchResult.length-1;i++){
+				var rec = this.searchResult[i];
+				if(rec.uid == record.uid){
+					this.clearSearchIndex();
+					this.searchResult.splice(i, 1);
+					console.log(this.searchResult.length);
+				}
+			}
+		}
+
+	},
+
 	clearSearchIndex:function () {
 		this.searchIndexCreated = false;
 	},
@@ -22772,7 +23198,7 @@ ludo.dataSource.CollectionSearch = new Class({
  @fires ludo.dataSource.Collection#notFirstPage Fired when navigating to a page which is not first page.  No arguments
  @fires ludo.dataSource.Collection#change Fires when data has been updated or page navigation occurs.
  @example
- 	dataSource:{
+ dataSource:{
 		url:'data-source/grid.php',
 		id:'myDataSource',
 		paging:{
@@ -22792,1058 +23218,1080 @@ ludo.dataSource.CollectionSearch = new Class({
 	}
  */
 ludo.dataSource.Collection = new Class({
-	Extends:ludo.dataSource.JSON,
-	sortFn:{},
+    Extends: ludo.dataSource.JSON,
+    sortFn: {},
 
-	selectedRecords:[],
+    selectedRecords: [],
 
-	primaryKey:'id',
-
-
-	paging:undefined,
-
-	dataCache:{},
-
-	sortedBy:{
-		column:undefined,
-		order:undefined
-	},
-
-	searchConfig:undefined,
-
-	statefulProperties:['sortedBy', 'paging'],
-
-	index:undefined,
-
-	searcherType:'dataSource.CollectionSearch',
-
-	uidMap:{},
+    primaryKey: 'id',
 
 
-	selected:undefined,
+    paging: undefined,
 
-	__construct:function (config) {
-		this.parent(config);
-        this.setConfigParams(config, ['searchConfig','sortFn','primaryKey','sortedBy','paging','selected']);
+    dataCache: {},
 
-		if (this.primaryKey && !ludo.util.isArray(this.primaryKey))this.primaryKey = [this.primaryKey];
-		if (this.paging) {
-			this.paging.offset = this.paging.offset || 0;
-			this.paging.initialOffset = this.paging.offset;
-			if (this.paging.initialOffset !== undefined) {
-				this.fireEvent('page', (this.paging.initialOffset / this.paging.size) + 1);
-			}
-			if (this.isCacheEnabled()) {
-				this.addEvent('load', this.populateCache.bind(this));
-			}
-		}
+    sortedBy: {
+        column: undefined,
+        order: undefined
+    },
 
-		this.addEvent('parsedata', this.createIndex.bind(this));
+    searchConfig: undefined,
+
+    statefulProperties: ['sortedBy', 'paging'],
+
+    index: undefined,
+
+    searcherType: 'dataSource.CollectionSearch',
+
+    uidMap: {},
 
 
-		if(this.selected){
-			this.addEvent('firstLoad', this.setInitialSelected.bind(this));
-		}
+    selected: undefined,
 
-		if(this.data && !this.index)this.createIndex();
-	},
+    __construct: function (config) {
+        this.parent(config);
+        this.setConfigParams(config, ['searchConfig', 'sortFn', 'primaryKey', 'sortedBy', 'paging', 'selected']);
 
-	hasRemoteSearch:function(){
-		return this.paging && this.paging.remotePaging;
-	},
+        if (this.primaryKey && !ludo.util.isArray(this.primaryKey))this.primaryKey = [this.primaryKey];
+        if (this.paging) {
+            this.paging.offset = this.paging.offset || 0;
+            this.paging.initialOffset = this.paging.offset;
+            if (this.paging.initialOffset !== undefined) {
+                this.fireEvent('page', (this.paging.initialOffset / this.paging.size) + 1);
+            }
+            if (this.isCacheEnabled()) {
+                this.addEvent('load', this.populateCache.bind(this));
+            }
+        }
 
-	setInitialSelected:function(){
-		this.selectRecord(this.selected);
-	},
+        this.addEvent('parsedata', this.createIndex.bind(this));
 
-	/**
-	 * Returns 1) If search is specified: number of records in search result, or 2) number of records in entire collection.
-	 * @function getCount
-	 * @return {Number} count
-	 * @memberof ludo.dataSource.Collection.prototype
-	 */
-	getCount:function () {
-		if (this.paging && this.paging.rows)return this.paging.rows;
-		if (this.searcher && this.searcher.hasData())return this.searcher.getCount();
-		return this.data ? this.data.length : 0;
-	},
 
-	isCacheEnabled:function () {
-		return this.paging && this.paging['remotePaging'] && this.paging.cache;
-	},
+        if (this.selected) {
+            this.addEvent('firstLoad', this.setInitialSelected.bind(this));
+        }
 
-	/**
-	 * Resort data-source
-	 * @function sort
-	 * @return void
-	 * @memberof ludo.dataSource.Collection.prototype
-	 */
-	sort:function () {
-		if (this.sortedBy.column && this.sortedBy.order) {
-			this.sortBy(this.sortedBy.column, this.sortedBy.order);
-		}
-	},
+        if (this.data && !this.index)this.createIndex();
+    },
 
-	/**
-	 Set sorted by column
-	 @function by
-	 @param {String} column
-	 @return {dataSource.Collection} this
-	 @memberof ludo.dataSource.Collection.prototype
-	 @example
-	 	collection.by('country').ascending().sort();
-	 or
-	 @example
-	 	collection.by('country').sort();
-	 */
-	by:function(column){
-		this.sortedBy.column = column;
-		this.sortedBy.order = this.getSortOrderFor(column);
-		return this;
-	},
-	/**
-	 Set sort order to ascending
-	 @function ascending
-	 @return {dataSource.Collection} this
-	 @memberof ludo.dataSource.Collection.prototype
-	 @example
-	 	collection.by('country').ascending().sort();
-	 */
-	ascending:function(){
-		this.sortedBy.order = 'asc';
-		return this;
-	},
-	/**
-	 Set sort order to descending
-	 @function descending
-	 @return {dataSource.Collection} this
-	 @memberof ludo.dataSource.Collection.prototype
-	 @example
-	 	collection.by('country').descending().sort();
-	 */
-	descending:function(){
-		this.sortedBy.order = 'desc';
-		return this;
-	},
+    hasRemoteSearch: function () {
+        return this.paging && this.paging.remotePaging;
+    },
 
-	/**
-	 Sort by column and order
+    setInitialSelected: function () {
+        this.selectRecord(this.selected);
+    },
 
-	 The second argument(order) is optional
-	 @function sortBy
-	 @param {String} column
-	 @param {String} order
+    /**
+     * Returns 1) If search is specified: number of records in search result, or 2) number of records in entire collection.
+     * @function getCount
+     * @return {Number} count
+     * @memberof ludo.dataSource.Collection.prototype
+     */
+    getCount: function () {
+        if (this.paging && this.paging.rows)return this.paging.rows;
+        if (this.searcher && this.searcher.hasData())return this.searcher.getCount();
+        return this.data ? this.data.length : 0;
+    },
+
+    isCacheEnabled: function () {
+        return this.paging && this.paging['remotePaging'] && this.paging.cache;
+    },
+
+    /**
+     * Resort data-source
+     * @function sort
+     * @return void
+     * @memberof ludo.dataSource.Collection.prototype
+     */
+    sort: function () {
+        if (this.sortedBy.column && this.sortedBy.order) {
+            this.sortBy(this.sortedBy.column, this.sortedBy.order);
+        }
+    },
+
+    /**
+     Set sorted by column
+     @function by
+     @param {String} column
+     @return {dataSource.Collection} this
+     @memberof ludo.dataSource.Collection.prototype
+     @example
+     collection.by('country').ascending().sort();
+     or
+     @example
+     collection.by('country').sort();
+     */
+    by: function (column) {
+        this.sortedBy.column = column;
+        this.sortedBy.order = this.getSortOrderFor(column);
+        return this;
+    },
+    /**
+     Set sort order to ascending
+     @function ascending
+     @return {dataSource.Collection} this
+     @memberof ludo.dataSource.Collection.prototype
+     @example
+     collection.by('country').ascending().sort();
+     */
+    ascending: function () {
+        this.sortedBy.order = 'asc';
+        return this;
+    },
+    /**
+     Set sort order to descending
+     @function descending
+     @return {dataSource.Collection} this
+     @memberof ludo.dataSource.Collection.prototype
+     @example
+     collection.by('country').descending().sort();
+     */
+    descending: function () {
+        this.sortedBy.order = 'desc';
+        return this;
+    },
+
+    /**
+     Sort by column and order
+
+     The second argument(order) is optional
+     @function sortBy
+     @param {String} column
+     @param {String} order
      @optional
-	 @return {dataSource.Collection} this
-	 @memberof ludo.dataSource.Collection.prototype
-	 @example
-	 	grid.getDataSource().sortBy('firstname', 'desc');
-	 which also can be written as
-	 @example
-	 	grid.getDataSource().by('firstname').descending().sort();
-	 */
-	sortBy:function (column, order) {
+     @return {dataSource.Collection} this
+     @memberof ludo.dataSource.Collection.prototype
+     @example
+     grid.getDataSource().sortBy('firstname', 'desc');
+     which also can be written as
+     @example
+     grid.getDataSource().by('firstname').descending().sort();
+     */
+    sortBy: function (column, order) {
         order = order || this.getSortOrderFor(column);
 
-		this.sortedBy = {
-			column:column,
-			order:order
-		};
+        this.sortedBy = {
+            column: column,
+            order: order
+        };
 
-		if (this.paging) {
-			this.paging.offset = this.paging.initialOffset || 0;
-			this.fireEvent('page', Math.round(this.paging.offset / this.paging.size) + 1);
-		}
+        if (this.paging) {
+            this.paging.offset = this.paging.initialOffset || 0;
+            this.fireEvent('page', Math.round(this.paging.offset / this.paging.size) + 1);
+        }
 
-		if (this.shouldSortOnServer()) {
-			this.loadOrGetFromCache();
-		} else {
-			var data = this._getData();
-			data.sort(this.getSortFnFor(column, order));
-			this.fireEvent('change');
-		}
+        if (this.shouldSortOnServer()) {
+            this.loadOrGetFromCache();
+        } else {
+            var data = this._getData();
+            data.sort(this.getSortFnFor(column, order));
+            this.fireEvent('change');
+        }
 
-		this.fireEvent('sort', this.sortedBy);
-        if(this.paging)this.firePageEvents();
-		this.fireEvent('state');
+        this.fireEvent('sort', this.sortedBy);
+        if (this.paging)this.firePageEvents();
+        this.fireEvent('state');
 
-		return this;
-	},
+        return this;
+    },
 
-	/**
-	 * Return current sorted by column
-	 * @function getSortedBy
-	 * @return {String} column
-	 * @memberof ludo.dataSource.Collection.prototype
-	 */
-	getSortedBy:function () {
-		return this.sortedBy.column;
-	},
-	/**
-	 * Return current sort order (asc|desc)
-	 * @function getSortOrder
-	 * @return {String} order
-	 * @memberof ludo.dataSource.Collection.prototype
-	 */
-	getSortOrder:function () {
-		return this.sortedBy.order;
-	},
+    /**
+     * Return current sorted by column
+     * @function getSortedBy
+     * @return {String} column
+     * @memberof ludo.dataSource.Collection.prototype
+     */
+    getSortedBy: function () {
+        return this.sortedBy.column;
+    },
+    /**
+     * Return current sort order (asc|desc)
+     * @function getSortOrder
+     * @return {String} order
+     * @memberof ludo.dataSource.Collection.prototype
+     */
+    getSortOrder: function () {
+        return this.sortedBy.order;
+    },
 
-	shouldSortOnServer:function () {
-		return this.paging && this.paging.remotePaging;
-	},
+    shouldSortOnServer: function () {
+        return this.paging && this.paging.remotePaging;
+    },
 
-	getSortFnFor:function (column, order) {
-		if (this.sortFn[column] !== undefined) {
-			return this.sortFn[column][order];
-		}
-		if (order === 'asc') {
-			return function (a, b) {
-				return a[column] + '_' + a[this.primaryKey] < b[column] + '_' + b[this.primaryKey] ? -1 : 1
-			};
-		} else {
-			return function (a, b) {
-				return a[column] + '_' + a[this.primaryKey] < b[column] + '_' +  b[this.primaryKey] ? 1 : -1
-			};
-		}
-	},
+    getSortFnFor: function (column, order) {
+        if (this.sortFn[column] !== undefined) {
+            return this.sortFn[column][order];
+        }
+        if (order === 'asc') {
+            return function (a, b) {
+                return a[column] + '_' + a[this.primaryKey] < b[column] + '_' + b[this.primaryKey] ? -1 : 1
+            };
+        } else {
+            return function (a, b) {
+                return a[column] + '_' + a[this.primaryKey] < b[column] + '_' + b[this.primaryKey] ? 1 : -1
+            };
+        }
+    },
 
-	getSortOrderFor:function (column) {
-		if (this.sortedBy.column === column) {
-			return this.sortedBy.order === 'asc' ? 'desc' : 'asc';
-		}
-		return 'asc';
-	},
+    getSortOrderFor: function (column) {
+        if (this.sortedBy.column === column) {
+            return this.sortedBy.order === 'asc' ? 'desc' : 'asc';
+        }
+        return 'asc';
+    },
 
-	/**
-	 * Add a record to data-source
-	 * @function addRecord
-	 * @param record
-	 * @return {Object} record
-	 * @memberof ludo.dataSource.Collection.prototype
-	 */
-	addRecord:function (record) {
+    /**
+     * Add a record to data-source
+     * @function addRecord
+     * @param record
+     * @return {Object} record
+     * @memberof ludo.dataSource.Collection.prototype
+     */
+    addRecord: function (record) {
         this.data = this.data || [];
-		this.data.push(record);
+        this.data.push(record);
 
-		if(!this.index)this.createIndex();
+        if (!this.index)this.createIndex();
 
-		this.fireEvent('add', record);
+        this.fireEvent('add', record);
 
-		return this.createRecord(record);
-	},
+        return this.createRecord(record);
+    },
 
-	/**
-	 * Returns plain object for a record from search. To get a
-	 * {{#crossLink "dataSource.Record"}}{{/crossLink}} object
-	 * use {{#crossLink "dataSource.Collection/getRecord"}}{{/crossLink}}
-	 *
-	 * collection.find({ capital : 'Oslo' });
-	 *
-	 * @function findRecord
-	 * @param {Object} search
-	 * @return {Object|undefined} record
-	 * @memberof ludo.dataSource.Collection.prototype
-	 */
-	findRecord:function (search) {
+    find: function (search) {
+        return this.findRecord(search);
+    },
 
-		if (!this.data)return undefined;
-		if(search['getUID'] !== undefined)search = search.getUID();
+    /**
+     * Returns plain object for a record from search. To get a
+     * {{#crossLink "dataSource.Record"}}{{/crossLink}} object
+     * use {{#crossLink "dataSource.Collection/getRecord"}}{{/crossLink}}
+     *
+     * collection.find({ capital : 'Oslo' });
+     *
+     * @function findRecord
+     * @param {Object} search
+     * @return {Object|undefined} record
+     * @memberof ludo.dataSource.Collection.prototype
+     */
+    findRecord: function (search) {
 
-		if(search.uid)search = search.uid;
-		var rec = this.getById(search);
-		if(rec)return rec;
+        if (!this.data)return undefined;
+        if (search['getUID'] !== undefined)search = search.getUID();
 
-		var searchMethod = ludo.util.isObject(search) ? 'isRecordMatchingSearch' : 'hasMatchInPrimaryKey';
+        if (search.uid)search = search.uid;
+        var rec = this.getById(search);
+        if (rec)return rec;
+
+        var searchMethod = ludo.util.isObject(search) ? 'isRecordMatchingSearch' : 'hasMatchInPrimaryKey';
 
 
-		for (var i = 0; i < this.data.length; i++) {
-			if (this[searchMethod](this.data[i], search)) {
-				return this.data[i];
-			}
-		}
-		return undefined;
-	},
+        for (var i = 0; i < this.data.length; i++) {
+            if (this[searchMethod](this.data[i], search)) {
+                return this.data[i];
+            }
+        }
+        return undefined;
+    },
 
-	isRecordMatchingSearch:function (record, search) {
-		for (var key in search) {
-			if (search.hasOwnProperty(key)) {
-				if (record[key] !== search[key]) {
-					return false;
-				}
-			}
-		}
-		return true;
-	},
+    isRecordMatchingSearch: function (record, search) {
+        for (var key in search) {
+            if (search.hasOwnProperty(key)) {
+                if (record[key] !== search[key]) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    },
 
-	hasMatchInPrimaryKey:function(record, search){
-		if(this.primaryKey){
-			for(var j=0;j<this.primaryKey.length;j++){
-				if(record[this.primaryKey[j]]  === search)return true;
-			}
-		}
-		return false;
-	},
+    hasMatchInPrimaryKey: function (record, search) {
+        if (this.primaryKey) {
+            for (var j = 0; j < this.primaryKey.length; j++) {
+                if (record[this.primaryKey[j]] === search)return true;
+            }
+        }
+        return false;
+    },
 
-	/**
-	 * Find specific records, example:
-	 * var records = collection.findRecords({ country:'Norway'});
-	 * @function findRecords
-	 * @param {Object} search
-	 * @return {Array} records
-	 * @memberof ludo.dataSource.Collection.prototype
-	 */
-	findRecords:function (search) {
-		var ret = [];
-		for (var i = 0; i < this.data.length; i++) {
-			if (this.isRecordMatchingSearch(this.data[i], search)) {
-				ret.push(this.data[i]);
-			}
-		}
-		return ret;
-	},
+    /**
+     * Find specific records, example:
+     * var records = collection.findRecords({ country:'Norway'});
+     * @function findRecords
+     * @param {Object} search
+     * @return {Array} records
+     * @memberof ludo.dataSource.Collection.prototype
+     */
+    findRecords: function (search) {
+        var ret = [];
+        for (var i = 0; i < this.data.length; i++) {
+            if (this.isRecordMatchingSearch(this.data[i], search)) {
+                ret.push(this.data[i]);
+            }
+        }
+        return ret;
+    },
 
-    getLinearData:function(){
+    getLinearData: function () {
         return this.data;
     },
 
-	/**
-	 * Select the first record matching search
-	 * @function selectRecord
-	 * @param {Object} search
-	 * @return {Object|undefined} record
-	 * @memberof ludo.dataSource.Collection.prototype
-	 */
-	selectRecord:function (search) {
-		var rec = this.findRecord(search);
-		if (rec) {
-			this._setSelectedRecord(rec);
-			return rec;
-		}
-		return undefined;
-	},
+    /**
+     * Select the first record matching search
+     * @function selectRecord
+     * @param {Object} search
+     * @return {Object|undefined} record
+     * @memberof ludo.dataSource.Collection.prototype
+     */
+    selectRecord: function (search) {
+        var rec = this.findRecord(search);
+        if (rec) {
+            this._setSelectedRecord(rec);
+            return rec;
+        }
+        return undefined;
+    },
 
 
-	/**
-	 * Select all records matching search
-	 * @function selectRecords
-	 * @param {Object} search
-	 * @return {Array} records
-	 * @memberof ludo.dataSource.Collection.prototype
-	 */
-	selectRecords:function (search) {
-		this.selectedRecords = this.findRecords(search);
-		for (var i = 0; i < this.selectedRecords.length; i++) {
-			this.fireSelect(this.selectedRecords[i]);
-		}
-		return this.selectedRecords;
-	},
+    /**
+     * Select all records matching search
+     * @function selectRecords
+     * @param {Object} search
+     * @return {Array} records
+     * @memberof ludo.dataSource.Collection.prototype
+     */
+    selectRecords: function (search) {
+        this.selectedRecords = this.findRecords(search);
+        for (var i = 0; i < this.selectedRecords.length; i++) {
+            this.fireSelect(this.selectedRecords[i]);
+        }
+        return this.selectedRecords;
+    },
 
-	/**
-	 * Select a specific record by index
-	 * @function selectRecordIndex
-	 * @param {number} index
-	 * @memberof ludo.dataSource.Collection.prototype
-	 */
-	selectRecordIndex:function (index) {
-		var data = this._getData();
-		if (data.length && index >= 0 && index < data.length) {
-			var rec = data[index];
-			this._setSelectedRecord(rec);
-			return rec;
-		}
-		return undefined;
-	},
+    /**
+     * Select a specific record by index
+     * @function selectRecordIndex
+     * @param {number} index
+     * @memberof ludo.dataSource.Collection.prototype
+     */
+    selectRecordIndex: function (index) {
+        var data = this._getData();
+        if (data.length && index >= 0 && index < data.length) {
+            var rec = data[index];
+            this._setSelectedRecord(rec);
+            return rec;
+        }
+        return undefined;
+    },
 
-	_getData:function () {
-		if (this.hasSearchResult())return this.searcher.getData();
-		return this.data;
-	},
+    _getData: function () {
+        if (this.hasSearchResult())return this.searcher.getData();
+        return this.data;
+    },
 
-	getRecordByIndex:function (index) {
-		if (this.data.length && index >= 0 && index < this.data.length) {
-			return this.data[index];
-		}
-		return undefined;
-	},
+    getRecordByIndex: function (index) {
+        if (this.data.length && index >= 0 && index < this.data.length) {
+            return this.data[index];
+        }
+        return undefined;
+    },
 
-	/**
-	 * Select previous record. If no record is currently selected, first record will be selected
-	 * @function previous
-	 * @return {Object} record
-	 * @memberof ludo.dataSource.Collection.prototype
-	 */
-	previous:function () {
-		var rec = this.getPreviousOf(this.getSelectedRecord());
-		if (rec) {
-			this._setSelectedRecord(rec);
-		}
-		return rec;
-	},
+    /**
+     * Select previous record. If no record is currently selected, first record will be selected
+     * @function previous
+     * @return {Object} record
+     * @memberof ludo.dataSource.Collection.prototype
+     */
+    previous: function () {
+        var rec = this.getPreviousOf(this.getSelectedRecord());
+        if (rec) {
+            this._setSelectedRecord(rec);
+        }
+        return rec;
+    },
 
-	/**
-	 * Returns previous record of given record
-	 * @function getPreviousOf
-	 * @param {Object} record
-	 * @return {Object} previous record
-	 * @memberof ludo.dataSource.Collection.prototype
-	 */
-	getPreviousOf:function (record) {
-		var data = this._getData();
-		if (record) {
-			var index = data.indexOf(record);
-            return index > 0 ? data[index-1] : undefined;
-		} else {
+    /**
+     * Returns previous record of given record
+     * @function getPreviousOf
+     * @param {Object} record
+     * @return {Object} previous record
+     * @memberof ludo.dataSource.Collection.prototype
+     */
+    getPreviousOf: function (record) {
+        var data = this._getData();
+        if (record) {
+            var index = data.indexOf(record);
+            return index > 0 ? data[index - 1] : undefined;
+        } else {
             return data.length > 0 ? data[0] : undefined;
-		}
-	},
+        }
+    },
 
-	/**
-	 * Select next record. If no record is currently selected, first record will be selected
-	 * @function next
-	 * @return {Object} record
-	 * @memberof ludo.dataSource.Collection.prototype
-	 */
-	next:function () {
-		var rec = this.getNextOf(this.getSelectedRecord());
-		if (rec) {
-			this._setSelectedRecord(rec);
-		}
-		return rec;
-	},
-	/**
-	 * Returns next record of given record.
-	 * @function getNextOf
-	 * @param {Object} record
-	 * @return {Object} next record
-	 * @memberof ludo.dataSource.Collection.prototype
-	 */
-	getNextOf:function (record) {
-		var data = this._getData();
-		if (record) {
-			var index = data.indexOf(record);
-            return index < data.length - 1 ? data[index+1] : undefined;
-		} else {
+    /**
+     * Select next record. If no record is currently selected, first record will be selected
+     * @function next
+     * @return {Object} record
+     * @memberof ludo.dataSource.Collection.prototype
+     */
+    next: function () {
+        var rec = this.getNextOf(this.getSelectedRecord());
+        if (rec) {
+            this._setSelectedRecord(rec);
+        }
+        return rec;
+    },
+    /**
+     * Returns next record of given record.
+     * @function getNextOf
+     * @param {Object} record
+     * @return {Object} next record
+     * @memberof ludo.dataSource.Collection.prototype
+     */
+    getNextOf: function (record) {
+        var data = this._getData();
+        if (record) {
+            var index = data.indexOf(record);
+            return index < data.length - 1 ? data[index + 1] : undefined;
+        } else {
             return data.length > 0 ? data[0] : undefined;
-		}
-	},
+        }
+    },
 
-	_setSelectedRecord:function (rec) {
-		if (this.selectedRecords.length) {
+    _setSelectedRecord: function (rec) {
+        if (this.selectedRecords.length) {
 
-			this.fireEvent('deselect', this.selectedRecords[0]);
-		}
-		this.selectedRecords = [rec];
-		this.fireSelect(Object.clone(rec));
-	},
+            this.fireEvent('deselect', this.selectedRecords[0]);
+        }
+        this.selectedRecords = [rec];
+        this.fireSelect(Object.clone(rec));
+    },
 
-	/**
-	 * Return first selected record
-	 * @function getSelectedRecord
-	 * @return {Object|undefined} record
-	 * @memberof ludo.dataSource.Collection.prototype
-	 */
-	getSelectedRecord:function () {
+    /**
+     * Return first selected record
+     * @function getSelectedRecord
+     * @return {Object|undefined} record
+     * @memberof ludo.dataSource.Collection.prototype
+     */
+    getSelectedRecord: function () {
         return this.selectedRecords.length > 0 ? this.selectedRecords[0] : undefined;
-	},
+    },
 
-	/**
-	 * Return selected records
-	 * @function getSelectedRecords
-	 * @return {Array} records
-	 * @memberof ludo.dataSource.Collection.prototype
-	 */
-	getSelectedRecords:function () {
-		return this.selectedRecords;
-	},
+    /**
+     * Return selected records
+     * @function getSelectedRecords
+     * @return {Array} records
+     * @memberof ludo.dataSource.Collection.prototype
+     */
+    getSelectedRecords: function () {
+        return this.selectedRecords;
+    },
 
-	/**
-	 Delete records matching search,
-	 @function deleteRecords
-	 @param {Object} search
-	 @memberof ludo.dataSource.Collection.prototype
-	 @example
-	 	grid.getDataSource().deleteRecords({ country: 'Norway' });
-	 will delete all records from collection where country is equal to "Norway". A delete event
-	 will be fired for each deleted record.
-	 */
-	deleteRecords:function (search) {
-		var records = this.findRecords(search);
-		for (var i = 0; i < records.length; i++) {
-			this.data.erase(records[i]);
-			this.fireEvent('delete', records[i]);
-		}
-	},
-	/**
-	 Delete a single record. Deletes first match when
-	 multiple matches found.
-	 @function deleteRecord
-	 @param {Object} search
-	 @memberof ludo.dataSource.Collection.prototype
-	 @example
-	 	grid.getDataSource().deleteRecord({ country: 'Norway' });
-	 Will delete first found record where country is equal to Norway. It will fire a
-	 delete event if a record is found and deleted.
-	 */
-	deleteRecord:function (search) {
-		var rec = this.findRecord(search);
-		if (rec) {
-			this.data.erase(rec);
+    /**
+     Delete records matching search,
+     @function deleteRecords
+     @param {Object} search
+     @memberof ludo.dataSource.Collection.prototype
+     @example
+     grid.getDataSource().deleteRecords({ country: 'Norway' });
+     will delete all records from collection where country is equal to "Norway". A delete event
+     will be fired for each deleted record.
+     */
+    deleteRecords: function (search) {
+        var records = this.findRecords(search);
+        for (var i = 0; i < records.length; i++) {
+            this.data.erase(records[i]);
+            this.fireEvent('delete', records[i]);
+        }
 
-			this.fireEvent('delete', rec);
-		}
-	},
+        this.onChange();
+    },
 
-	/**
-	 Select records from current selected record to record matching search,
-	 @function selectTo
-	 @param {Object} search
-	 @memberof ludo.dataSource.Collection.prototype
-	 @example
-	 	collection.selectRecord({ country: 'Norway' });
-	 	collection.selectTo({country: 'Denmark'});
-	 	var selectedRecords = collection.getSelectedRecords();
-	 */
-	selectTo:function (search) {
-		var selected = this.getSelectedRecord();
-		if (!selected) {
-			this.selectRecord(search);
-			return;
-		}
-		var rec = this.findRecord(search);
-		if (rec) {
-			this.selectedRecords = [];
-			var index = this.data.indexOf(rec);
-			var indexSelected = this.data.indexOf(selected);
-			var i;
-			if (index > indexSelected) {
-				for (i = indexSelected; i <= index; i++) {
-					this.selectedRecords.push(this.data[i]);
-					this.fireSelect(this.data[i]);
-				}
-			} else {
-				for (i = indexSelected; i >= index; i--) {
-					this.selectedRecords.push(this.data[i]);
-					this.fireSelect(this.data[i]);
-				}
-			}
-		}
-	},
+    /**
+     Delete ONE item from the data source.
+     @function deleteRecord
+     @param {Object|String} search
+     @memberof ludo.dataSource.Collection.prototype
+     @example
+     // delete first record where property country matches "Norway"
+     grid.getDataSource().deleteRecord({ country: 'Norway' });
 
-	/**
-	 * Update a record
-	 * @function updateRecord
-	 * @param {Object} search
-	 * @param {Object} updates
-	 * @return {dataSource.Record} record
-	 * @memberof ludo.dataSource.Collection.prototype
-	 */
-	updateRecord:function (search, updates) {
-		var rec = this.getRecord(search);
-		if (rec) {
-			rec.setProperties(updates);
-		}
-		return rec;
-	},
+     // delete first record where record.uid = 'uid_ixrky8vq'
+     grid.getDataSource().deleteRecord('uid_ixrky8vq');
 
-	getPostData:function () {
-		if (!this.paging) {
-			return this.parent();
-		}
-		var ret = this.postData || {};
-		ret._paging = {
-			size:this.paging.size,
-			offset:this.paging.offset
-		};
-		ret._sort = this.sortedBy;
-		return ret;
-	},
-	/**
-	 * When paging is enabled, go to previous page.
-	 * fire previousPage event
-	 * @function previousPage
-	 * @memberof ludo.dataSource.Collection.prototype
-	 */
-	previousPage:function () {
-		if (!this.paging || this.isOnFirstPage())return;
-		this.paging.offset -= this.paging.size;
+     // delete the first record in the data source
+     var rec = grid.getDataSource().getData()[0];
+     grid.getDataSource().deleteRecord(rec);
+     */
+    remove: function (search) {
+        var rec = this.findRecord(search);
+        if (rec) {
+            this.data.erase(rec);
 
-		this.onPageChange('previousPage');
-	},
+            this.fireEvent('delete', rec);
+            this.onChange();
+        }
+    },
 
-	/**
-	 * When paging is enabled, go to next page
-	 * fire nextPage event
-	 * @function nextPage
-	 * @memberof ludo.dataSource.Collection.prototype
-	 */
-	nextPage:function () {
-		if (!this.paging || this.isOnLastPage())return;
-		this.paging.offset += this.paging.size;
 
-		this.onPageChange('nextPage');
-	},
+    deleteRecord: function (search) {
+        this.remove(search);
+    },
 
-	/**
-	 * Go to last page
-	 * @function lastPage
-	 * @memberof ludo.dataSource.Collection.prototype
-	 */
-	lastPage:function () {
-		if (!this.paging || this.isOnLastPage())return;
-		var count = this.getCount();
-		var decr = count % this.paging.size;
-		if(decr === 0) decr = this.paging.size;
-		this.paging.offset = count - decr;
-		this.onPageChange('lastPage');
-	},
+    onChange: function () {
+        this.fireEvent('count', this.searcher != undefined ? this.searcher.getCount() : this.getCount());
+    },
 
-	/**
-	 * Go to first page
-	 * @function firstPage
-	 * @memberof ludo.dataSource.Collection.prototype
-	 */
-	firstPage:function () {
-		if (!this.paging || this.isOnFirstPage())return;
-		this.paging.offset = 0;
+    /**
+     Select records from current selected record to record matching search,
+     @function selectTo
+     @param {Object} search
+     @memberof ludo.dataSource.Collection.prototype
+     @example
+     collection.selectRecord({ country: 'Norway' });
+     collection.selectTo({country: 'Denmark'});
+     var selectedRecords = collection.getSelectedRecords();
+     */
+    selectTo: function (search) {
+        var selected = this.getSelectedRecord();
+        if (!selected) {
+            this.selectRecord(search);
+            return;
+        }
+        var rec = this.findRecord(search);
+        if (rec) {
+            this.selectedRecords = [];
+            var index = this.data.indexOf(rec);
+            var indexSelected = this.data.indexOf(selected);
+            var i;
+            if (index > indexSelected) {
+                for (i = indexSelected; i <= index; i++) {
+                    this.selectedRecords.push(this.data[i]);
+                    this.fireSelect(this.data[i]);
+                }
+            } else {
+                for (i = indexSelected; i >= index; i--) {
+                    this.selectedRecords.push(this.data[i]);
+                    this.fireSelect(this.data[i]);
+                }
+            }
+        }
+    },
 
-		this.onPageChange('firstPage');
-	},
+    /**
+     * Update a record
+     * @function updateRecord
+     * @param {Object} search
+     * @param {Object} updates
+     * @return {dataSource.Record} record
+     * @memberof ludo.dataSource.Collection.prototype
+     */
+    updateRecord: function (search, updates) {
+        var rec = this.getRecord(search);
+        if (rec) {
+            rec.setProperties(updates);
+        }
+        return rec;
+    },
 
-	isOnFirstPage:function () {
-		if (!this.paging)return true;
-		return this.paging.offset === undefined || this.paging.offset === 0;
-	},
+    getPostData: function () {
+        if (!this.paging) {
+            return this.parent();
+        }
+        var ret = this.postData || {};
+        ret._paging = {
+            size: this.paging.size,
+            offset: this.paging.offset
+        };
+        ret._sort = this.sortedBy;
+        return ret;
+    },
+    /**
+     * When paging is enabled, go to previous page.
+     * fire previousPage event
+     * @function previousPage
+     * @memberof ludo.dataSource.Collection.prototype
+     */
+    previousPage: function () {
+        if (!this.paging || this.isOnFirstPage())return;
+        this.paging.offset -= this.paging.size;
 
-	isOnLastPage:function () {
-		return this.paging.size + this.paging.offset >= this.getCount();
-	},
+        this.onPageChange('previousPage');
+    },
 
-	onPageChange:function (event) {
-		if (this.paging['remotePaging']) {
-			this.loadOrGetFromCache();
-		}
-		this.fireEvent('change');
-		this.fireEvent(event);
-		this.firePageEvents();
-	},
+    /**
+     * When paging is enabled, go to next page
+     * fire nextPage event
+     * @function nextPage
+     * @memberof ludo.dataSource.Collection.prototype
+     */
+    nextPage: function () {
+        if (!this.paging || this.isOnLastPage())return;
+        this.paging.offset += this.paging.size;
 
-	loadOrGetFromCache:function () {
-		if (this.isDataInCache()) {
-			this.data = this.dataCache[this.getCacheKey()].data;
-			this.fireEvent('change');
-		} else {
-			this.load();
-		}
-	},
+        this.onPageChange('nextPage');
+    },
 
-	populateCache:function () {
-		if (this.isCacheEnabled()) {
-			this.dataCache[this.getCacheKey()] = {
-				data:this.data,
-				time:new Date().getTime()
-			}
-		}
-	},
+    /**
+     * Go to last page
+     * @function lastPage
+     * @memberof ludo.dataSource.Collection.prototype
+     */
+    lastPage: function () {
+        if (!this.paging || this.isOnLastPage())return;
+        var count = this.getCount();
+        var decr = count % this.paging.size;
+        if (decr === 0) decr = this.paging.size;
+        this.paging.offset = count - decr;
+        this.onPageChange('lastPage');
+    },
 
-	isDataInCache:function () {
-		return this.dataCache[this.getCacheKey()] !== undefined && !this.isCacheOutOfDate();
-	},
+    /**
+     * Go to first page
+     * @function firstPage
+     * @memberof ludo.dataSource.Collection.prototype
+     */
+    firstPage: function () {
+        if (!this.paging || this.isOnFirstPage())return;
+        this.paging.offset = 0;
 
-    clearCache:function(){
+        this.onPageChange('firstPage');
+    },
+
+    isOnFirstPage: function () {
+        if (!this.paging)return true;
+        return this.paging.offset === undefined || this.paging.offset === 0;
+    },
+
+    isOnLastPage: function () {
+        return this.paging.size + this.paging.offset >= this.getCount();
+    },
+
+    onPageChange: function (event) {
+        if (this.paging['remotePaging']) {
+            this.loadOrGetFromCache();
+        }
+        this.fireEvent('change');
+        this.fireEvent(event);
+        this.firePageEvents();
+    },
+
+    loadOrGetFromCache: function () {
+        if (this.isDataInCache()) {
+            this.data = this.dataCache[this.getCacheKey()].data;
+            this.fireEvent('change');
+        } else {
+            this.load();
+        }
+    },
+
+    populateCache: function () {
+        if (this.isCacheEnabled()) {
+            this.dataCache[this.getCacheKey()] = {
+                data: this.data,
+                time: new Date().getTime()
+            }
+        }
+    },
+
+    isDataInCache: function () {
+        return this.dataCache[this.getCacheKey()] !== undefined && !this.isCacheOutOfDate();
+    },
+
+    clearCache: function () {
         this.dataCache = {};
     },
 
-	isCacheOutOfDate:function () {
-		if (!this.paging['cacheTimeout'])return false;
+    isCacheOutOfDate: function () {
+        if (!this.paging['cacheTimeout'])return false;
 
-		var created = this.dataCache[this.getCacheKey()].time;
-		return created + (this.paging['cacheTimeout'] * 1000) < (new Date().getTime());
-	},
+        var created = this.dataCache[this.getCacheKey()].time;
+        return created + (this.paging['cacheTimeout'] * 1000) < (new Date().getTime());
+    },
 
-	getCacheKey:function () {
-		var keys = [
-			'key', this.paging.offset, this.sortedBy.column, this.sortedBy.order
-		];
-		if (this.searcher !== undefined && this.searcher.hasData())keys.push(this.searcher.searchToString());
-		return keys.join('|');
-	},
+    getCacheKey: function () {
+        var keys = [
+            'key', this.paging.offset, this.sortedBy.column, this.sortedBy.order
+        ];
+        if (this.searcher !== undefined && this.searcher.hasData())keys.push(this.searcher.searchToString());
+        return keys.join('|');
+    },
 
-    hasData:function(){
+    hasData: function () {
         return this.data != undefined && this.data.length > 0;
     },
 
-	firePageEvents:function (skipState) {
-		if (this.isOnLastPage()) {
+    firePageEvents: function (skipState) {
+        if (this.isOnLastPage()) {
 
-			this.fireEvent('lastPage');
-		} else {
+            this.fireEvent('lastPage');
+        } else {
 
-			this.fireEvent('notLastPage');
-		}
+            this.fireEvent('notLastPage');
+        }
 
-		if (this.isOnFirstPage()) {
-			this.fireEvent('firstPage');
+        if (this.isOnFirstPage()) {
+            this.fireEvent('firstPage');
 
-		} else {
+        } else {
 
-			this.fireEvent('notFirstPage');
-		}
+            this.fireEvent('notFirstPage');
+        }
 
-		this.fireEvent('page', this.getPageNumber());
-		if (skipState === undefined)this.fireEvent('state');
-	},
+        this.fireEvent('page', this.getPageNumber());
+        if (skipState === undefined)this.fireEvent('state');
+    },
 
-	/**
-	 * Go to a specific page
-	 * @function toPage
-	 * @param {Number} pageNumber
-	 * @return {Boolean} success
-	 * @memberof ludo.dataSource.Collection.prototype
-	 */
-	toPage:function (pageNumber) {
-		if (pageNumber > 0 && pageNumber <= this.getPageCount() && !this.isOnPage(pageNumber)) {
-			this.paging.offset = (pageNumber - 1) * this.paging.size;
-
-			this.onPageChange('toPage');
-			return true;
-		}
-		return false;
-	},
-
-	/**
-	 * @function setPageSize
-	 * @param {Number} size
-	 * @memberof ludo.dataSource.Collection.prototype
+    /**
+     * Go to a specific page
+     * @function toPage
+     * @param {Number} pageNumber
+     * @return {Boolean} success
+     * @memberof ludo.dataSource.Collection.prototype
      */
-	setPageSize:function(size){
-		if(this.paging){
-			this.dataCache = {};
-			this.paging.size = parseInt(size);
-			this.paging.offset = 0;
+    toPage: function (pageNumber) {
+        if (pageNumber > 0 && pageNumber <= this.getPageCount() && !this.isOnPage(pageNumber)) {
+            this.paging.offset = (pageNumber - 1) * this.paging.size;
 
-			this.onPageChange('toPage');
-		}
-	},
+            this.onPageChange('toPage');
+            return true;
+        }
+        return false;
+    },
 
-	/**
-	 * True if on given page
-	 * @function isOnPage
-	 * @param {Number} pageNumber
-	 * @return {Boolean}
-	 * @memberof ludo.dataSource.Collection.prototype
-	 */
-	isOnPage:function (pageNumber) {
-		return pageNumber == this.getPageNumber();
-	},
+    /**
+     * @function setPageSize
+     * @param {Number} size
+     * @memberof ludo.dataSource.Collection.prototype
+     */
+    setPageSize: function (size) {
+        if (this.paging) {
+            this.dataCache = {};
+            this.paging.size = parseInt(size);
+            this.paging.offset = 0;
 
-	/**
-	 * Return current page number
-	 * @function getPageNumber
-	 * @return {Number} page
-	 * @memberof ludo.dataSource.Collection.prototype
-	 */
-	getPageNumber:function () {
+            this.onPageChange('toPage');
+        }
+    },
+
+    /**
+     * True if on given page
+     * @function isOnPage
+     * @param {Number} pageNumber
+     * @return {Boolean}
+     * @memberof ludo.dataSource.Collection.prototype
+     */
+    isOnPage: function (pageNumber) {
+        return pageNumber == this.getPageNumber();
+    },
+
+    /**
+     * Return current page number
+     * @function getPageNumber
+     * @return {Number} page
+     * @memberof ludo.dataSource.Collection.prototype
+     */
+    getPageNumber: function () {
         return this.paging ? Math.floor(this.paging.offset / this.paging.size) + 1 : 1;
-	},
+    },
 
-	/**
-	 * Return number of pages
-	 * @function getPageCount
-	 * @return {Number}
-	 * @memberof ludo.dataSource.Collection.prototype
-	 */
-	getPageCount:function () {
-        return this.paging ? Math.ceil(this.getCount() / this.paging.size) : 1;
-	},
-
-	/**
-	 * Return data in collection
-	 * @function getData
-	 * @memberof ludo.dataSource.Collection.prototype
-	 * @returns {Array}
+    /**
+     * Return number of pages
+     * @function getPageCount
+     * @return {Number}
+     * @memberof ludo.dataSource.Collection.prototype
      */
-	getData:function () {
-		if (this.hasSearchResult()){
-			if (this.paging && this.paging.size) {
-				return this.getDataForPage(this.searcher.getData());
-			}
-			return this.searcher.getData();
-		}
-		if (!this.paging || this.paging.remotePaging) {
-			return this.parent();
-		}
-		return this.getDataForPage(this.data);
-	},
+    getPageCount: function () {
+        return this.paging ? Math.ceil(this.getCount() / this.paging.size) : 1;
+    },
+
+    /**
+     * Return data in collection
+     * @function getData
+     * @memberof ludo.dataSource.Collection.prototype
+     * @returns {Array}
+     */
+    getData: function () {
+        if (this.hasSearchResult()) {
+            if (this.paging && this.paging.size) {
+                return this.getDataForPage(this.searcher.getData());
+            }
+            return this.searcher.getData();
+        }
+        if (!this.paging || this.paging.remotePaging) {
+            return this.parent();
+        }
+        return this.getDataForPage(this.data);
+    },
 
 
-	getDataForPage:function (data) {
-		if (!data || data.length == 0)return [];
-		var offset = this.paging.initialOffset || this.paging.offset;
-		if (offset > data.length) {
-			this.toPage(this.getPageCount());
-			offset = (this.getPageCount() - 1) * this.paging.size;
-		}
-		this.resetInitialOffset.delay(200, this);
-		return data.slice(offset, Math.min(data.length, offset + this.paging.size));
-	},
+    getDataForPage: function (data) {
+        if (!data || data.length == 0)return [];
+        var offset = this.paging.initialOffset || this.paging.offset;
+        if (offset > data.length) {
+            this.toPage(this.getPageCount());
+            offset = (this.getPageCount() - 1) * this.paging.size;
+        }
+        this.resetInitialOffset.delay(200, this);
+        return data.slice(offset, Math.min(data.length, offset + this.paging.size));
+    },
 
-	resetInitialOffset:function () {
-		this.paging.initialOffset = undefined;
-	},
+    resetInitialOffset: function () {
+        this.paging.initialOffset = undefined;
+    },
 
-	parseNewData:function (data, json) {
-		// TODO refactor this
-		if (json != undefined && this.paging && json.rows !==undefined)this.paging.rows = json.rows;
-		if (json != undefined && this.paging && json.response && json.response.rows !==undefined)this.paging.rows = json.response.rows;
-		this.parent(data, json);
+    parseNewData: function (data, json) {
+        // TODO refactor this
+        if (json != undefined && this.paging && json.rows !== undefined)this.paging.rows = json.rows;
+        if (json != undefined && this.paging && json.response && json.response.rows !== undefined)this.paging.rows = json.response.rows;
+        this.parent(data, json);
 
-		this.fireEvent('count', this.getCount());
-		if (this.shouldSortAfterLoad()) {
-			this.sort();
-		} else {
-			this.fireEvent('change');
-		}
-		if (this.paging !== undefined) {
-			this.firePageEvents(true);
-		}
-	},
+        this.fireEvent('count', this.getCount());
+        if (this.shouldSortAfterLoad()) {
+            this.sort();
+        } else {
+            this.fireEvent('change');
+        }
+        if (this.paging !== undefined) {
+            this.firePageEvents(true);
+        }
+    },
 
-	createIndex:function () {
-		this.index = {};
-		this.indexBranch(this.data);
-	},
+    createIndex: function () {
+        this.index = {};
+        this.indexBranch(this.data);
+    },
 
-	indexBranch:function(branch, parent){
-		for (var i = 0; i < branch.length; i++) {
-			this.indexRecord(branch[i], parent);
-			if(branch[i].children && branch[i].children.length)this.indexBranch(branch[i].children, branch[i]);
-		}
-	},
+    indexBranch: function (branch, parent) {
+        for (var i = 0; i < branch.length; i++) {
+            this.indexRecord(branch[i], parent);
+            if (branch[i].children && branch[i].children.length)this.indexBranch(branch[i].children, branch[i]);
+        }
+    },
 
-	indexRecord:function(record, parent){
-		if(!this.index)this.createIndex();
-		if(parent)record.parentUid = parent.uid;
-		var pk = this.getPrimaryKeyIndexFor(record);
-		if(pk)this.index[pk] = record;
-		if(!record.uid)record.uid = ['uid_', String.uniqueID()].join('');
-		this.index[record.uid] = record;
-	},
+    indexRecord: function (record, parent) {
+        if (!this.index)this.createIndex();
+        if (parent)record.parentUid = parent.uid;
+        var pk = this.getPrimaryKeyIndexFor(record);
+        if (pk)this.index[pk] = record;
+        if (!record.uid)record.uid = ['uid_', String.uniqueID()].join('');
+        this.index[record.uid] = record;
+    },
 
-	shouldSortAfterLoad:function(){
-		if(this.paging && this.paging.remotePaging)return false;
-		return this.sortedBy !== undefined && this.sortedBy.column && this.sortedBy.order;
-	},
+    shouldSortAfterLoad: function () {
+        if (this.paging && this.paging.remotePaging)return false;
+        return this.sortedBy !== undefined && this.sortedBy.column && this.sortedBy.order;
+    },
 
-	/**
-	 Filter collection based on given search term. To filter on multiple search terms, you should
-	 get a reference to the {{#crossLink "dataSource.CollectionSearch"}}{{/crossLink}} object and
-	 use the available {{#crossLink "dataSource.CollectionSearch"}}{{/crossLink}} methods to add
-	 multiple search terms.
-	 @function Search
-	 @param {String} search
-	 @memberof ludo.dataSource.Collection.prototype
-	 @example
-	 	ludo.get('myCollection').search('New York');
-	 	// or with the {{#crossLink "dataSource.CollectionSearch/add"}}{{/crossLink}} method
-	 	var searcher = ludo.get('myCollection').getSearcher();
-	 	searcher.where('New York').execute();
-	 	searcher.execute();
-	 */
-	search:function (search) {
-		this.getSearcher().search(search);
-	},
+    /**
+     Filter collection based on given search term. To filter on multiple search terms, you should
+     get a reference to the {{#crossLink "dataSource.CollectionSearch"}}{{/crossLink}} object and
+     use the available {{#crossLink "dataSource.CollectionSearch"}}{{/crossLink}} methods to add
+     multiple search terms.
+     @function Search
+     @param {String} search
+     @memberof ludo.dataSource.Collection.prototype
+     @example
+     ludo.get('myCollection').search('New York');
+     // or with the {{#crossLink "dataSource.CollectionSearch/add"}}{{/crossLink}} method
+     var searcher = ludo.get('myCollection').getSearcher();
+     searcher.where('New York').execute();
+     searcher.execute();
+     */
+    search: function (search) {
+        this.getSearcher().search(search);
+    },
 
-	/**
-	 * Executes a remote search for records with the given data
-	 * @function remoteSearch
-	 * @param {String|Object} search
-	 * @memberof ludo.dataSource.Collection.prototype
-	 */
-	remoteSearch:function(search){
-		this.postData = this.postData || {};
-		this.postData.search = search;
-		this.toPage(1);
-		this.load();
-	},
+    /**
+     * Executes a remote search for records with the given data
+     * @function remoteSearch
+     * @param {String|Object} search
+     * @memberof ludo.dataSource.Collection.prototype
+     */
+    remoteSearch: function (search) {
+        this.postData = this.postData || {};
+        this.postData.search = search;
+        this.toPage(1);
+        this.load();
+    },
 
-	afterSearch:function(){
-		var searcher = this.getSearcher();
-		this.fireEvent('count', searcher.hasData() ? searcher.getCount() : this.getCount());
-		if (this.paging !== undefined) {
-			this.paging.offset = 0;
-			this.firePageEvents(true);
-			this.fireEvent('pageCount', this.getPageCount());
-		}
-		this.fireEvent('change');
-	},
+    afterSearch: function () {
+        var searcher = this.getSearcher();
+        this.fireEvent('count', searcher.hasData() ? searcher.getCount() : this.getCount());
+        if (this.paging !== undefined) {
+            this.paging.offset = 0;
+            this.firePageEvents(true);
+            this.fireEvent('pageCount', this.getPageCount());
+        }
+        this.fireEvent('change');
+    },
 
-	searcher:undefined,
-	/**
-	 * Returns a {{#crossLink "dataSource.CollectionSearch"}}{{/crossLink}} object which
-	 * you can use to filter a collection.
-	 * @function getSearcher
-	 * @return {dataSource.CollectionSearch}
-	 * @memberof ludo.dataSource.Collection.prototype
-	 */
-	getSearcher:function () {
-		if (this.searcher === undefined) {
-			this.searchConfig = this.searchConfig || {};
-			var config = Object.merge({
-				type:this.searcherType,
-				dataSource:this
-			}, this.searchConfig);
-			this.searcher = ludo._new(config);
-			this.addSearcherEvents();
-		}
-		return this.searcher;
-	},
+    searcher: undefined,
+    /**
+     * Returns a {{#crossLink "dataSource.CollectionSearch"}}{{/crossLink}} object which
+     * you can use to filter a collection.
+     * @function getSearcher
+     * @return {dataSource.CollectionSearch}
+     * @memberof ludo.dataSource.Collection.prototype
+     */
+    getSearcher: function () {
+        if (this.searcher === undefined) {
+            this.searchConfig = this.searchConfig || {};
+            var config = Object.merge({
+                type: this.searcherType,
+                dataSource: this
+            }, this.searchConfig);
+            this.searcher = ludo._new(config);
+            this.addSearcherEvents();
+        }
+        return this.searcher;
+    },
 
-	addSearcherEvents:function(){
-		this.searcher.addEvent('search', this.afterSearch.bind(this));
-		this.searcher.addEvent('deleteSearch', this.afterSearch.bind(this));
-	},
+    addSearcherEvents: function () {
+        this.searcher.addEvent('search', this.afterSearch.bind(this));
+        this.searcher.addEvent('deleteSearch', this.afterSearch.bind(this));
+    },
 
-	hasSearchResult:function(){
-		return this.searcher !== undefined && this.searcher.hasData();
-	},
-	/**
-	 Return record by id or undefined if not found. Records are indexed by id. This method
-	 gives you quick access to a record by it's id. The method returns a reference to the
-	 actual record. You can use Object.clone(record) to create a copy of it in case you
-	 want to update the record but not make those changes to the collection.
-	 @function getById
-	 @param {String|Number|Object} id
-	 @return {Object} record
-	 @memberof ludo.dataSource.Collection.prototype
-	 @example
-	 	var collection = new ludo.dataSource.Collection({
+    hasSearchResult: function () {
+        return this.searcher !== undefined && this.searcher.hasData();
+    },
+    /**
+     Return record by id or undefined if not found. Records are indexed by id. This method
+     gives you quick access to a record by it's id. The method returns a reference to the
+     actual record. You can use Object.clone(record) to create a copy of it in case you
+     want to update the record but not make those changes to the collection.
+     @function getById
+     @param {String|Number|Object} id
+     @return {Object} record
+     @memberof ludo.dataSource.Collection.prototype
+     @example
+     var collection = new ludo.dataSource.Collection({
 	 		url : 'get-countries.php',
 	 		primaryKey:'country'
 	 	});
-	 	var record = collection.getById('Japan'); // Returns record for Japan if it exists.
-	 You can also define multiple keys as id
-	 @example
-		 var collection = new ludo.dataSource.Collection({
+     var record = collection.getById('Japan'); // Returns record for Japan if it exists.
+     You can also define multiple keys as id
+     @example
+     var collection = new ludo.dataSource.Collection({
 			url : 'get-countries.php',
 			primaryKey:['id', 'country']
 		 });
-	   	 var record = collection.getById({ id:1, country:'Japan' });
-	 This is especially useful when you have a {{#crossLink "dataSource.TreeCollection"}}{{/crossLink}}
-	 where child nodes may have same numeric id as it's parent.
-	 @example
-	 	{ id:1, type:'country', title : 'Japan',
-	 	 	children:[ { id:1, type:'city', title:'Tokyo }]
-	 By setting primaryKey to ['id', 'type'] will make it possible to distinguish between countries and cities.
-	 */
-	getById:function(id){
-		if(this.index[id] !== undefined){
-			return this.index[id];
-		}
+     var record = collection.getById({ id:1, country:'Japan' });
+     This is especially useful when you have a {{#crossLink "dataSource.TreeCollection"}}{{/crossLink}}
+     where child nodes may have same numeric id as it's parent.
+     @example
+     { id:1, type:'country', title : 'Japan',
+          children:[ { id:1, type:'city', title:'Tokyo }]
+ By setting primaryKey to ['id', 'type'] will make it possible to distinguish between countries and cities.
+ */
+    getById: function (id) {
+        if (this.index[id] !== undefined) {
+            return this.index[id];
+        }
 
-		if(this.primaryKey.length===1){
-			return this.index[id];
-		}else{
-			var key = [];
-			for(var i=0;i<this.primaryKey.length;i++){
-				key.push(id[this.primaryKey[i]]);
-			}
-			return this.index[key.join('')];
-		}
-	},
+        if (this.primaryKey.length === 1) {
+            return this.index[id];
+        } else {
+            var key = [];
+            for (var i = 0; i < this.primaryKey.length; i++) {
+                key.push(id[this.primaryKey[i]]);
+            }
+            return this.index[key.join('')];
+        }
+    },
 
-	recordObjects:{},
+    recordObjects: {},
 
-	/**
-	 Returns {{#crossLink "dataSource.Record"}}{{/crossLink}} object for a record.
-	 If you want to update a record, you should
-	 first get a reference to {{#crossLink "dataSource.Record"}}{{/crossLink}} and then call one
-	 of it's methods.
-	 @function getRecord
-	 @param {String|Object} search
-	 @return {dataSource.Record|undefined}
-	 @memberof ludo.dataSource.Collection.prototype
-	 @example
-		 var collection = new ludo.dataSource.Collection({
+    /**
+     Returns {{#crossLink "dataSource.Record"}}{{/crossLink}} object for a record.
+     If you want to update a record, you should
+     first get a reference to {{#crossLink "dataSource.Record"}}{{/crossLink}} and then call one
+     of it's methods.
+     @function getRecord
+     @param {String|Object} search
+     @return {dataSource.Record|undefined}
+     @memberof ludo.dataSource.Collection.prototype
+     @example
+     var collection = new ludo.dataSource.Collection({
 			url : 'get-countries.php',
 			primaryKey:'country'
 		 });
-	 	 collection.getRecord('Japan').set('capital', 'tokyo');
-	 */
-	getRecord:function(search){
-		var rec = this.findRecord(search);
-		if(rec){
-			return this.createRecord(rec);
-		}
-		return undefined;
-	},
+     collection.getRecord('Japan').set('capital', 'tokyo');
+     */
+    getRecord: function (search) {
+        var rec = this.findRecord(search);
+        if (rec) {
+            return this.createRecord(rec);
+        }
+        return undefined;
+    },
 
-	createRecord:function(data){
-		var id = data.uid;
-		if(!this.recordObjects[id]){
-			this.recordObjects[id] = this.recordInstance(data, this);
-			this.addRecordEvents(this.recordObjects[id]);
-		}
-		return this.recordObjects[id];
-	},
+    createRecord: function (data) {
+        var id = data.uid;
+        if (!this.recordObjects[id]) {
+            this.recordObjects[id] = this.recordInstance(data, this);
+            this.addRecordEvents(this.recordObjects[id]);
+        }
+        return this.recordObjects[id];
+    },
 
-    recordInstance:function(data){
+    recordInstance: function (data) {
         return new ludo.dataSource.Record(data, this);
     },
 
-	addRecordEvents:function(record){
-		record.addEvent('update', this.onRecordUpdate.bind(this));
-		record.addEvent('remove', this.onRecordDispose.bind(this));
-		record.addEvent('select', this.selectRecord.bind(this));
-	},
+    addRecordEvents: function (record) {
+        record.addEvent('update', this.onRecordUpdate.bind(this));
+        record.addEvent('remove', this.onRecordDispose.bind(this));
+        record.addEvent('select', this.selectRecord.bind(this));
+    },
 
-    fireSelect:function(record){
+    fireSelect: function (record) {
         this.fireEvent('select', record);
     },
 
-	onRecordUpdate:function(record){
-		this.indexRecord(record);
-		this.fireEvent('update', record);
-	},
+    onRecordUpdate: function (record) {
+        this.indexRecord(record);
+        this.fireEvent('update', record);
+    },
 
-	onRecordDispose:function(record){
-		var branch = this.getBranchFor(record);
-		if(branch){
-			var index = branch.indexOf(record);
-			if(index !== -1){
-				branch.splice(index,1);
-			}
-			this.removeFromIndex(record);
-			this.fireEvent('remove', record);
-		}
-	},
+    onRecordDispose: function (record) {
+        var branch = this.getBranchFor(record);
+        if (branch) {
+            var index = branch.indexOf(record);
+            if (index !== -1) {
+                branch.splice(index, 1);
+            }
+            this.removeFromIndex(record);
+            this.fireEvent('remove', record);
+        }
+    },
 
-	getBranchFor:function(record){
-		if(record.parentUid){
-			var parent = this.findRecord(record.parentUid);
-			return parent ? parent.children : undefined;
-		}else{
-			return this.data;
-		}
-	},
+    getBranchFor: function (record) {
+        if (record.parentUid) {
+            var parent = this.findRecord(record.parentUid);
+            return parent ? parent.children : undefined;
+        } else {
+            return this.data;
+        }
+    },
 
-	removeFromIndex:function(record){
-		this.recordObjects[record.uid] = undefined;
-		this.index[record.uid] = undefined;
-		var pk = this.getPrimaryKeyIndexFor(record);
-		if(pk)this.index[pk] = undefined;
-	},
+    removeFromIndex: function (record) {
+        this.recordObjects[record.uid] = undefined;
+        this.index[record.uid] = undefined;
+        var pk = this.getPrimaryKeyIndexFor(record);
+        if (pk)this.index[pk] = undefined;
+    },
 
-	getPrimaryKeyIndexFor:function(record){
-		if(this.primaryKey){
-			var key = [];
-			for(var j=0;j<this.primaryKey.length;j++){
-				key.push(record[this.primaryKey[j]]);
-			}
-			return key.join('');
-		}
-		return undefined;
-	}
+    getPrimaryKeyIndexFor: function (record) {
+        if (this.primaryKey) {
+            var key = [];
+            for (var j = 0; j < this.primaryKey.length; j++) {
+                key.push(record[this.primaryKey[j]]);
+            }
+            return key.join('');
+        }
+        return undefined;
+    }
 });
 
 ludo.factory.registerClass('dataSource.Collection', ludo.dataSource.Collection);/* ../ludojs/src/effect/drop-point.js */
@@ -26140,7 +26588,7 @@ ludo.grid.Grid = new Class({
 		this.showResizeHandles();
 	},
 
-	insertJSON:function () {
+	JSON:function () {
 
 	},
 
@@ -29323,7 +29771,7 @@ ludo.tree.Tree = new Class({
 		return undefined;
 	},
 
-	insertJSON:function () {
+	JSON:function () {
 
 		this.nodeCache = {};
 		this.renderedRecords = {};
@@ -29955,7 +30403,7 @@ ludo.progress.Base = new Class({
         }
 
         this.getDataSource().addEvents({
-            'load' : this.insertJSON.bind(this),
+            'load' : this.JSON.bind(this),
             'start' : this.start.bind(this),
             'finish' : this.finishEvent.bind(this)
         });
@@ -29963,7 +30411,7 @@ ludo.progress.Base = new Class({
 
     start:function(){
         this.fireEvent('start');
-        this.insertJSON({text:'',percent:0});
+        this.JSON({text:'',percent:0});
     },
 
     hideAfterDelay:function(){
@@ -30072,7 +30520,7 @@ ludo.progress.Bar = new Class({
         }
     },
 
-    insertJSON:function (json) {
+    JSON:function (json) {
         var data = json.data ? json.data : json;
         this.setPercent(data.percent);
     },
@@ -30470,7 +30918,7 @@ ludo.form.Element = new Class({
     hasFocus:function () {
         return this._focus;
     },
-    insertJSON:function (data) {
+    JSON:function (data) {
         this.populate(data);
     },
     populate:function () {
@@ -31018,7 +31466,7 @@ ludo.form.Button = new Class({
         $(document.body).on('mouseup', this.mouseUpBound);
         if (this.defaultSubmit) {
 			this.keyPressBound = this.keyPress.bind(this);
-            $(window).addEvent('keypress', this.keyPressBound);
+            $(window).on('keypress', this.keyPressBound);
         }
     },
 
@@ -32092,6 +32540,7 @@ ludo.form.CancelButton = new Class({
  * @param {Boolean} config.readonly True to make this form field read only. (Default: false)
  * @param {Boolean} config.selectOnFocus Automatically make the text selected on focus. Default: false
  * @param {Boolean} config.validateKeyStrokes True to run validation after every key stroke(Default: false)
+ * @param {Boolean} config.autoComplete False to disable browsers auto complete(default : true)
  * @param {Function} config.validator Optional validator function for the value.
  * @fires ludo.form.Text#key Fired when a key is pressed. Argument: {String} key pressed.
  * @augments ludo.form.Element
@@ -32117,11 +32566,12 @@ ludo.form.Text = new Class({
     formFieldWidth: undefined,
     readonly: false,
     selectOnFocus: false,
-
+    autoComplete:true,
 
     __construct: function (config) {
         this.parent(config);
-        var keys = ['placeholder', 'selectOnFocus', 'regex', 'minLength', 'maxLength', 'defaultValue', 'validateKeyStrokes', 'ucFirst', 'ucWords', 'readonly'];
+        
+        var keys = ['placeholder', 'selectOnFocus', 'regex', 'minLength', 'maxLength', 'defaultValue', 'autoComplete', 'validateKeyStrokes', 'ucFirst', 'ucWords', 'readonly'];
         this.setConfigParams(config, keys);
         if (this.regex && ludo.util.isString(this.regex)) {
             var tokens = this.regex.split(/\//g);
@@ -32140,6 +32590,11 @@ ludo.form.Text = new Class({
         this.parent();
         if(this.placeholder){
             this.getFormEl().attr('placeholder', this.placeholder);
+        }
+
+        if(!this.autoComplete){
+            this.getFormEl().attr('x-autocompletetype', String.uniqueID());
+            this.getFormEl().attr('autocomplete', 'false');
         }
     },
 
@@ -32886,7 +33341,7 @@ ludo.form.ComboField = new Class({
 
     ludoEvents:function () {
         this.parent();
-        this.getBody().addEvent('click', this.clickEvent.bind(this));
+        this.getBody().on('click', this.clickEvent.bind(this));
     },
 
     clickEvent:function () {
@@ -36678,7 +37133,7 @@ ludo.paging.Button = new Class({
 
     addDataSourceEvents:function(){},
 
-	insertJSON:function(){}
+	JSON:function(){}
 });/* ../ludojs/src/paging/next.js */
 /**
  Button used to navigate to next page in a dataSource.Collection
@@ -36878,7 +37333,7 @@ ludo.paging.PageInput = new Class({
         this.maxValue = this.getDataSource().getPageCount();
     },
 
-	insertJSON:function(){
+    JSON:function(){
 
 	}
 });/* ../ludojs/src/paging/current-page.js */
@@ -36929,11 +37384,16 @@ ludo.paging.CurrentPage = new Class({
         }
     },
 
+	resize:function(config){
+		this.parent(config);
+		this.getBody().css('line-height', (this.getBody().height() * 0.8) + 'px');
+	},
+
 	setPageNumber:function () {
 		this.html(this.tpl.replace('{page}', this.getDataSource().getPageNumber()));
 	},
 
-	insertJSON:function () {
+	JSON:function () {
 
 	}
 });/* ../ludojs/src/paging/total-pages.js */
@@ -36995,7 +37455,7 @@ ludo.paging.TotalPages = new Class({
 		this.html(this.tpl.replace('{pages}', this.getDataSource().getPageCount()));
 	},
 
-	insertJSON:function () {
+	JSON:function () {
 
 	}
 });/* ../ludojs/src/paging/nav-bar.js */
@@ -37069,7 +37529,7 @@ ludo.paging.NavBar = new Class({
 		}
 	},
 
-	insertJSON:function(){
+	JSON:function(){
 
 	}
 });/* ../ludojs/src/paging/page-size.js */
@@ -37135,7 +37595,7 @@ ludo.Panel = new Class({
 
 	__rendered:function () {
 		this.parent();
-		this.getBody().setStyle('display', 'block');
+		this.getBody().css('display', 'block');
 	},
 	autoSetHeight:function () {
 		this.parent();
@@ -37159,6 +37619,8 @@ ludo.Panel = new Class({
 	},
 
 	resizeDOM:function () {
+		this.parent();
+		return;
 		var height = this.getHeight();
 		if (height == 0) {
 			return;
@@ -37166,14 +37628,14 @@ ludo.Panel = new Class({
 
 		height -= (ludo.dom.getMBPH(this.getBody()) + ludo.dom.getMBPH(this.getEl()));
 		if (height > 0 && !isNaN(height)) {
-			this.getBody().style.height = height + 'px';
+			this.getBody().css('height', height);
 		}
 
 		var width = this.getWidth();
 		width -= (ludo.dom.getMBPW(this.getBody()) + ludo.dom.getMBPW(this.getEl()));
 
 		if (width > 0 && !isNaN(width)) {
-			this.getBody().style.width = width + 'px';
+			this.getBody().css('width', width);
 		}
 	},
 

@@ -177,10 +177,6 @@ tab layout */
     border-top: 1px solid #383838;
 }
 
-.ludo-twilight .ludo-framed-view .ludo-body {
-    overflow: hidden;
-}
-
 .ludo-twilight .ludo-accordion-collapsed {
     background-image:url(../images/twilight-skin/accordion-collapsed.png);
 }
@@ -590,7 +586,7 @@ Collapse bar
 }
 
 .ludo-twilight  .ludo-paging-first .ludo-form-button-value{
-    background-image:url(../images/twilight-skin/paging-first.png?rnd=1);
+    background-image:url(../images/twilight-skin/paging-first.png);
 }
 
 .ludo-twilight  .ludo-paging-next .ludo-form-button-value{
@@ -605,10 +601,10 @@ Collapse bar
     background-image:url(../images/twilight-skin/paging-next-disabled.png);
 }
 
-.ludo-paging-last .ludo-form-button-value{
+.ludo-twilight .ludo-paging-last .ludo-form-button-value{
     background-image:url(../images/twilight-skin/paging-last.png);
 }
-.ludo-form-button-disabled.ludo-paging-last .ludo-form-button-value{
+.ludo-twilight .ludo-form-button-disabled.ludo-paging-last .ludo-form-button-value{
     background-image:url(../images/twilight-skin/paging-last-disabled.png);
 }
 

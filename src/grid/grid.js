@@ -497,7 +497,7 @@ ludo.grid.Grid = new Class({
 		this.showResizeHandles();
 	},
 
-	insertJSON:function () {
+	JSON:function () {
 
 	},
 

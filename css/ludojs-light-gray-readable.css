@@ -941,7 +941,30 @@ div.ludo-tab-strip-right div.ludo-body {
     background-position: left center;
 }
 
-/* ../ludojs/css-source/window.css */
+/* ../ludojs/css-source/list-view.css */
+.ludo-list-item{
+    cursor:pointer;
+    position:relative;
+}
+
+.ludo-list-item-front{
+    position:relative;
+    z-index:10;
+}
+
+.ludo-list-item-back-left, .ludo-list-item-back-right, .ludo-list-item-back-undo{
+    position:absolute;
+    width:100%;
+    height:100%;
+}
+
+
+.ludo-list-view-body >.ludo-empty-text{
+    position:absolute;
+    text-align:center;
+    top:30%;
+    width:100%;
+}/* ../ludojs/css-source/window.css */
 .ludo-window{
     box-shadow:2px 2px 3px #888;
     position:absolute;

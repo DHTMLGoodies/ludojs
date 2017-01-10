@@ -263,7 +263,7 @@ ludo.tree.Tree = new Class({
 		return undefined;
 	},
 
-	insertJSON:function () {
+	JSON:function () {
 
 		this.nodeCache = {};
 		this.renderedRecords = {};

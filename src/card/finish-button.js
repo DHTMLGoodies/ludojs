@@ -4,35 +4,47 @@ ludo.card.FinishButton = new Class({
     value:'Finish',
     hidden:true,
 
-    addButtonEvents:function(){
+    onRendered:function(){
 		var lm;
         if (this.applyTo) {
 			lm = this.applyTo.getLayout();
             var fm = this.applyTo.getForm();
 
-            lm.addEvent('valid', this.enable.bind(this));
-            lm.addEvent('invalid', this.disable.bind(this));
-            lm.addEvent('lastcard', this.show.bind(this));
-            lm.addEvent('notlastpage', this.hide.bind(this));
+            lm.on('valid', this.enable.bind(this));
+            lm.on('invalid', this.disable.bind(this));
+            lm.on('lastpage', this.show.bind(this));
+            lm.on('notlastpage', this.hide.bind(this));
 
-            fm.addEvent('beforeSave', this.disable.bind(this));
-            fm.addEvent('success', this.setSubmitted.bind(this));
+            fm.on('submit.init', this.disable.bind(this));
+            fm.on('submit.success', this.setSubmitted.bind(this));
+            fm.on('submit.fail', this.setSubmitted.bind(this));
 
-            if(!lm.isValid()){
-                this.disabled = true;
+            if(!lm.isFormValid()){
+                this.disable();
+            }else{
+                this.enable();
             }
         }
-        this.addEvent('click', this.submit.bind(this));
+        this.on('click', this.submit.bind(this));
 
-        if(lm && lm.isOnLastPage()){
+        if(lm && lm.selectedIndex == lm.count - 1){
             this.show();
         }
     },
 
     enable:function(){
-        if(this.applyTo.getLayout().isValid()){
+
+        if(this.applyTo.getLayout().isFormValid()){
             this.parent();
+        }else{
+            console.log('not valid');
         }
+    },
+
+    disable:function(){
+        console.log('disable');
+        console.trace();
+        this.parent();
     },
 
     show:function(){
@@ -44,7 +56,7 @@ ludo.card.FinishButton = new Class({
     submitted : false,
     submit:function () {
         if (this.applyTo) {
-            this.applyTo.getForm().submit();
+            this.applyTo.getForm().save();
         }
     },
 

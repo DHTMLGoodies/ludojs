@@ -32,7 +32,7 @@ ludo.progress.Base = new Class({
         }
 
         this.getDataSource().addEvents({
-            'load' : this.insertJSON.bind(this),
+            'load' : this.JSON.bind(this),
             'start' : this.start.bind(this),
             'finish' : this.finishEvent.bind(this)
         });
@@ -40,7 +40,7 @@ ludo.progress.Base = new Class({
 
     start:function(){
         this.fireEvent('start');
-        this.insertJSON({text:'',percent:0});
+        this.JSON({text:'',percent:0});
     },
 
     hideAfterDelay:function(){

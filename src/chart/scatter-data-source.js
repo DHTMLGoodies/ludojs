@@ -8,8 +8,6 @@
  * @param {Function} minY function returning minY value for the chart
  * @param {Function} maxX Function returning maxX value for the chart
  * @param {Function} maxy Function returning maxY value for the chart
- * @example
- *
  *
  */
 ludo.chart.ScatterDataSource = new Class({

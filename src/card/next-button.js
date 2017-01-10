@@ -4,20 +4,24 @@ ludo.card.NextButton = new Class({
 	type:'page.NextButton',
 	value:'Next',
 
-	addButtonEvents:function () {
+	onRendered:function () {
+		window.alf = this.applyTo;
 		if (this.applyTo) {
 			var lm = this.applyTo.getLayout();
+			console.log(lm.count, lm.selectedIndex);
 			lm.addEvent('valid', this.enable.bind(this));
 			lm.addEvent('invalid', this.disable.bind(this));
-			if (!lm.isValid()) {
+			if (!lm.isFormValid()) {
 				this.disable();
+			}else{
+				this.enable();
 			}
 			if (this.autoHide) {
-				if (lm.isOnLastPage())this.hide(); else this.show();
+				if (lm.selectedIndex == lm.count-1)this.hide(); else this.show();
 				lm.addEvent('lastpage', this.hide.bind(this));
 				lm.addEvent('notlastpage', this.show.bind(this));
 			} else {
-				if (lm.isOnLastPage())this.disable(); else this.enable();
+				if (lm.selectedIndex == lm.count-1)this.disable(); else this.enable();
 				lm.addEvent('lastpage', this.disable.bind(this));
 				lm.addEvent('notlastpage', this.enable.bind(this));
 			}
@@ -27,9 +31,15 @@ ludo.card.NextButton = new Class({
 	},
 
 	enable:function () {
-		if (this.applyTo.getLayout().isValid()) {
+		console.log('enable',this.applyTo.getLayout().isFormValid() )
+		if (this.applyTo.getLayout().isFormValid()) {
 			this.parent();
 		}
+	},
+
+	disable:function(){
+		console.log('disable');
+		this.parent();
 	},
 
 	nextPage:function () {

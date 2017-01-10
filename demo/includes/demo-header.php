@@ -253,9 +253,7 @@ header("Pragma: no-cache");
         }
 
     </script>
-    <script type="text/javascript">
-    ludo.config.setUrl('../controller.php');
-    </script>
+
 </head>
 
 <body class="ludo-<?php echo $skin; ?>">

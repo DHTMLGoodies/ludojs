@@ -172,6 +172,7 @@ ludo.chart.Base = new Class({
     },
 
     create: function () {
+        console.log('create');
         this.renderBackgroundItems();
 
         if (this.ds.hasData()) {

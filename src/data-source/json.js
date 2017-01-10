@@ -16,32 +16,43 @@ ludo.dataSource.JSON = new Class({
      * @memberof ludo.dataSource.JSON.prototype
      */
     load:function () {
-        if(!this.url && !this.resource)return;
-        this.parent();
-        this.sendRequest(this.getPostData());
+        if(this._url()){
+            this.parent();
+            this.sendRequest(this.getPostData());
+
+        }
+    },
+
+    _url:function(){
+        return this.url || ludo.config.getUrl();
     },
 
     sendRequest:function(data){
         this.parent();
         $.ajax({
-            url: this.url,
+            url: this._url(),
             method: 'post',
             cache: false,
             dataType: 'json',
             data: data,
-            success: function (json) {
-                var data = this.dataHandler(json);
+            complete: function (response, status) {
+                if(status == 'success'){
+                    var json = response.responseJSON;
+                    var data = this.dataHandler(json);
+                    if(data === false){
+                        this.fireEvent('fail', ['error', 'error', this]);
+                    }else{
+                        this.parseNewData(data, json);
+                        this.fireEvent('success', [json, this]);
 
-                if(data === false){
-                    this.fireEvent('fail', ['Validation error', 'Validation error', this]);
+                    }
                 }else{
-                    this.parseNewData(data, json);
-                    this.fireEvent('success', [json, this]);
-
+                    this.fireEvent('fail', [response.responseText, status, this]);
                 }
+
             }.bind(this),
             fail: function (text, error) {
-
+                console.log('error');
                 this.fireEvent('fail', [text, error, this]);
             }.bind(this)
         });

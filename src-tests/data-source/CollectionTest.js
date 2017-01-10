@@ -347,7 +347,7 @@ TestCase("CollectionTest", {
 		var count = c.getCount();
 
 		// when
-		c.deleteRecord({
+		c.remove({
 			country:'Sweden'
 		});
 

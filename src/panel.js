@@ -24,7 +24,7 @@ ludo.Panel = new Class({
 
 	__rendered:function () {
 		this.parent();
-		this.getBody().setStyle('display', 'block');
+		this.getBody().css('display', 'block');
 	},
 	autoSetHeight:function () {
 		this.parent();
@@ -48,6 +48,8 @@ ludo.Panel = new Class({
 	},
 
 	resizeDOM:function () {
+		this.parent();
+		return;
 		var height = this.getHeight();
 		if (height == 0) {
 			return;
@@ -55,14 +57,14 @@ ludo.Panel = new Class({
 
 		height -= (ludo.dom.getMBPH(this.getBody()) + ludo.dom.getMBPH(this.getEl()));
 		if (height > 0 && !isNaN(height)) {
-			this.getBody().style.height = height + 'px';
+			this.getBody().css('height', height);
 		}
 
 		var width = this.getWidth();
 		width -= (ludo.dom.getMBPW(this.getBody()) + ludo.dom.getMBPW(this.getEl()));
 
 		if (width > 0 && !isNaN(width)) {
-			this.getBody().style.width = width + 'px';
+			this.getBody().css('width', width);
 		}
 	},
 

@@ -200,7 +200,7 @@ ludo.form.Button = new Class({
         $(document.body).on('mouseup', this.mouseUpBound);
         if (this.defaultSubmit) {
 			this.keyPressBound = this.keyPress.bind(this);
-            $(window).addEvent('keypress', this.keyPressBound);
+            $(window).on('keypress', this.keyPressBound);
         }
     },
 

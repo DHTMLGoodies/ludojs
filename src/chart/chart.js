@@ -29,8 +29,8 @@ ludo.chart.Chart = new Class({
 			if(child.rendered && child.update)child.onResize();
 		});
 	},
-	
-	insertJSON:function(){
+
+	JSON:function(){
 
 	},
 

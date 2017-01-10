@@ -24,7 +24,7 @@ ludo._Config = new Class({
 
 	setDefaultValues:function () {
 		this.storage = {
-			url:'/controller.php',
+			url:undefined,
 			documentRoot:'/',
 			socketUrl:'http://your-node-js-server-url:8080/',
 			modRewrite:false,

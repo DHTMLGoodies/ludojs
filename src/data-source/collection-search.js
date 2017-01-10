@@ -40,6 +40,7 @@ ludo.dataSource.CollectionSearch = new Class({
 			this.dataSource.addEvent('beforeload', this.clearSearchIndex.bind(this));
 			this.dataSource.addEvent('beforeload', this.deleteSearch.bind(this));
 			this.dataSource.addEvent('update', this.clearSearchIndex.bind(this));
+			this.dataSource.addEvent('delete', this.onDelete.bind(this));
 		}
 	},
 	/**
@@ -329,6 +330,20 @@ ludo.dataSource.CollectionSearch = new Class({
 
 	getSearchDelay:function () {
 		return this.delay || 0;
+	},
+
+	onDelete:function(record){
+		if(this.searchResult && this.searchResult.length > 0){
+			for(var i=0;i<this.searchResult.length-1;i++){
+				var rec = this.searchResult[i];
+				if(rec.uid == record.uid){
+					this.clearSearchIndex();
+					this.searchResult.splice(i, 1);
+					console.log(this.searchResult.length);
+				}
+			}
+		}
+
 	},
 
 	clearSearchIndex:function () {

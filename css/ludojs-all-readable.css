@@ -941,7 +941,30 @@ div.ludo-tab-strip-right div.ludo-body {
     background-position: left center;
 }
 
-/* ../ludojs/css-source/window.css */
+/* ../ludojs/css-source/list-view.css */
+.ludo-list-item{
+    cursor:pointer;
+    position:relative;
+}
+
+.ludo-list-item-front{
+    position:relative;
+    z-index:10;
+}
+
+.ludo-list-item-back-left, .ludo-list-item-back-right, .ludo-list-item-back-undo{
+    position:absolute;
+    width:100%;
+    height:100%;
+}
+
+
+.ludo-list-view-body >.ludo-empty-text{
+    position:absolute;
+    text-align:center;
+    top:30%;
+    width:100%;
+}/* ../ludojs/css-source/window.css */
 .ludo-window{
     box-shadow:2px 2px 3px #888;
     position:absolute;
@@ -3213,7 +3236,7 @@ tab layout */
 }
 
 .ludo-blue .ludo-layout-tab {
-    background-color: #FFF;
+
 }
 
 .ludo-blue .ludo-tab-close-left{
@@ -3238,20 +3261,20 @@ tab layout */
 
 
 .ludo-blue .ludo-tab-expand-box-top{
-    background-image:url(../images/blue-skin/tabs-expand-top.png?rnd=3);
+    background-image:url(../images/blue-skin/tabs-expand-top.png);
 }
 
 .ludo-blue .ludo-tab-expand-box-top-over{
-    background-image:url(../images/blue-skin/tabs-expand-top-over.png?rnd=3);
+    background-image:url(../images/blue-skin/tabs-expand-top-over.png);
 }
 
 
 .ludo-blue .ludo-tab-expand-box-bottom{
-    background-image:url(../images/blue-skin/tabs-expand-bottom.png?rnd=3);
+    background-image:url(../images/blue-skin/tabs-expand-bottom.png);
 }
 
 .ludo-blue .ludo-tab-expand-box-bottom-over{
-    background-image:url(../images/blue-skin/tabs-expand-bottom-over.png?rnd=3);
+    background-image:url(../images/blue-skin/tabs-expand-bottom-over.png);
 }
 
 
@@ -5826,10 +5849,6 @@ tab layout */
     border-top: 1px solid #383838;
 }
 
-.ludo-twilight .ludo-framed-view .ludo-body {
-    overflow: hidden;
-}
-
 .ludo-twilight .ludo-accordion-collapsed {
     background-image:url(../images/twilight-skin/accordion-collapsed.png);
 }
@@ -6239,7 +6258,7 @@ Collapse bar
 }
 
 .ludo-twilight  .ludo-paging-first .ludo-form-button-value{
-    background-image:url(../images/twilight-skin/paging-first.png?rnd=1);
+    background-image:url(../images/twilight-skin/paging-first.png);
 }
 
 .ludo-twilight  .ludo-paging-next .ludo-form-button-value{
@@ -6254,10 +6273,10 @@ Collapse bar
     background-image:url(../images/twilight-skin/paging-next-disabled.png);
 }
 
-.ludo-paging-last .ludo-form-button-value{
+.ludo-twilight .ludo-paging-last .ludo-form-button-value{
     background-image:url(../images/twilight-skin/paging-last.png);
 }
-.ludo-form-button-disabled.ludo-paging-last .ludo-form-button-value{
+.ludo-twilight .ludo-form-button-disabled.ludo-paging-last .ludo-form-button-value{
     background-image:url(../images/twilight-skin/paging-last-disabled.png);
 }
 

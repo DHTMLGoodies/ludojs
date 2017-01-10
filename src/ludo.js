@@ -289,3 +289,4 @@ ludo.FormMgrClass = new Class({
 ludo.Form = new ludo.FormMgrClass();
 
 Events.prototype.on = Events.prototype.addEvent;
+Events.prototype.off = Events.prototype.removeEvent;

@@ -1,0 +1,75 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>Nonsense Generator Help</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<style type="text/css">
+body,p,td
+{
+font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+
+h1
+{
+font-size: 14pt;
+}
+
+h2
+{
+font-size: 12pt;
+margin-left: 12pt;
+margin-top: 24pt;
+}
+
+h3
+{
+font-size: 11pt;
+margin-left: 24pt;
+margin-top: 24pt;
+}
+
+ol,li
+{
+font-size: 10pt;
+margin-left: 12pt;
+}
+
+p
+{
+font-size: 10pt;
+margin-left: 24pt;
+}
+</style>
+</head>
+
+<body>
+<h1><b><a href="http://www.jholman.com/scripts/nonsense/">Nonsense Generator</a> Help</b></h1>
+<h2><b>Installation Instructions</b></h2>
+<p>Upload <b>nonsense.php</b> and the entire <b>db </b>folder to a directory in 
+  your web space.</p>
+<h2>Usage Instructions</h2>
+<p><b>Step 1:</b></p>
+<p>Add the following code to any page that you want to put nonsensical sentences 
+  on. This should only be included once per page, and must come before any nonsensical 
+  sentences.<br>
+  <b>&lt;? include('path/to/nonsense.php'); ?&gt;</b></p>
+<p><b>path/to/: The relative path to nonsense.php from the page you're adding 
+  this code to. If they are in the same folder, simply use 'nonsense.php'.</b></p>
+<h3>Step 2:</h3>
+<p>Add the following code to any page to create nonsensical sentences. You can 
+  have multiple nonsensical sentences, but they must come after the code in the 
+  previous step.<br>
+  <b>&lt;? echo nonsense(N); ?&gt;</b></p>
+<p><b> N: The number of consecutive sentences that should be outputted.</b></p>
+<h2>Questions? Suggestions?</h2>
+<p>You can <a href="http://www.jholman.com/about/contact/">contact the author</a> 
+  if you have any questions or feedback.</p>
+<h2>Change Log</h2>
+<p><b>Version 2.0.3</b> (7/31/04) - Relicensed under the <a href="http://www.gnu.org/copyleft/gpl.html">GNU 
+  GPL</a> and updated the help file.</p>
+<p><b>Version 2.02</b> (4/23/04) - Fixed incorrect spelling of comparatives.</p>
+<p><b>Version 2.01</b> - Fixed a typo which caused conjunctions to not display.</p>
+<p> <b>Version 2.0</b> - Simplified the code. Added support for multiple sentences.</p>
+<p> <b>Version 1.0</b> - Original release.</p>
+</body>
+</html>

@@ -45,7 +45,7 @@ ludo.paging.PageInput = new Class({
         this.maxValue = this.getDataSource().getPageCount();
     },
 
-	insertJSON:function(){
+    JSON:function(){
 
 	}
 });

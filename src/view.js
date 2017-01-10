@@ -25,7 +25,7 @@
  @param {String} config.tpl A template for string when inserting JSON Content(the insertJSON method), example: "name:{firstname} {lastname}<br>"
  @param {Boolean} config.alwaysInFront True to make this view always appear in front of the other views.
  @param {Object} config.form Configuration for the form Manager. See <a href="ludo.form.Manager">ludo.form.Manager</a> for details.
- @fires ludo.View#rendered Fired when view has been rendered on screen. Argument: ludo.View
+ @fires ludo.View#rendered Fired when the view has been rendered and resized. Argument: ludo.View
  @fires ludo.View#toFront Fired when view has brought to front. Argument: ludo.View
  @fires ludo.View#hide Fired when view has been hidden using the hide method. Argument: ludo.View
  @fires ludo.View#show Fired when view is displayed using the show method. Argument. ludo.View
@@ -140,7 +140,7 @@ ludo.View = new Class({
         this.lifeCycleComplete = true;
         this._styleDOM();
 
-        if (config.children) {
+        if (config.children && config.children.length > 0) {
             this.getLayout().prepareForChildrenOnCreate(config.children);
             for (var i = 0; i < config.children.length; i++) {
                 config.children[i].id = config.children[i].id || config.children[i].name || 'ludo-' + String.uniqueID();
@@ -173,7 +173,7 @@ ludo.View = new Class({
         // TODO remove 'render' and replace with 'rendered'
 
         this.fireEvent('render', this);
-        this.fireEvent('rendered', this);
+
     },
     /**
      * Constructor for Views.
@@ -252,7 +252,7 @@ ludo.View = new Class({
      @return void
      @private
      @example
-     ludoEvents:function(){
+     ludoEvents:function(){∂'
 			 this.parent();
 			 this.addEvent('load', this.myMethodOnLoad.bind(this));
 		 }
@@ -288,14 +288,16 @@ ludo.View = new Class({
      * Parse and insert JSON into the view
      * The JSON will be sent to the JSON parser(defined in JSONParser) and
      * This method will be called automatically when you're using a JSON data-source
-     * @function insertJSON
+     * @function JSON
      * @param {Object} json
+     * @param {String} tpl - Optional String template
      * @return void
      * @memberof ludo.View.prototype
      */
-    JSON: function (json) {
-        if (this.tpl) {
-            this.getBody().html(this.getTplParser().asString(json, this.tpl));
+    JSON: function (json, tpl) {
+        tpl = tpl || this.tpl;
+        if (tpl) {
+            this.getBody().html(this.getTplParser().asString(json, tpl));
         }
     },
 
@@ -394,6 +396,7 @@ ludo.View = new Class({
         this.els.container.attr("id", this.getId());
 
         this.els.body.css('height', '100%');
+
         if (this.overflow == 'hidden') {
             this.els.body.css('overflow', 'hidden');
         }
@@ -617,6 +620,8 @@ ludo.View = new Class({
         return this.layout.pixelHeight ? this.layout.pixelHeight : this.layout.height;
     },
 
+    _fr:false,
+
     /**
      Resize View and it's children.
      @function resize
@@ -633,6 +638,8 @@ ludo.View = new Class({
         if (this.isHidden()) {
             return;
         }
+
+
         size = size || {};
 
         if (size.width) {
@@ -669,6 +676,12 @@ ludo.View = new Class({
         if (size.height || size.width) {
             this.fireEvent('resize', size);
         }
+
+        if(this._fr == false){
+            this.fireEvent('rendered', this);
+            this._fr = true;
+        }
+
         if (this.children.length > 0)this.getLayout().resizeChildren();
     },
 
@@ -834,10 +847,11 @@ ludo.View = new Class({
                 if (this.dataSource.shim && !this.dataSource.shim.renderTo) {
                     this.dataSource.shim.renderTo = this.getEl()
                 }
+
                 obj = this.dataSourceObj = this.createDependency('viewDataSource', this.dataSource);
             }
 
-            var method = obj.getSourceType() === 'HTML' ? 'html' : 'insertJSON';
+            var method = obj.getSourceType() === 'HTML' ? 'html' : 'JSON';
 
             if (obj.hasData()) {
                 this[method](obj.getData());

@@ -9,7 +9,7 @@ TestCase("ListTest", {
     },
 
     getList:function(){
-        return new ludo.List({
+        return new ludo.ListView({
             dataSource:{
                 data : this.getData()
             }

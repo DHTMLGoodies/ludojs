@@ -286,7 +286,7 @@ ludo.form.Element = new Class({
     hasFocus:function () {
         return this._focus;
     },
-    insertJSON:function (data) {
+    JSON:function (data) {
         this.populate(data);
     },
     populate:function () {

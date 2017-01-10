@@ -28,6 +28,11 @@
 ludo.layout.ViewPager = new Class({
     Extends: ludo.layout.Base,
     lastIndex:undefined,
+    /**
+     * Index of selected page
+     * @property {Number} selectedIndex
+     * @memberof ludo.layout.ViewPager.prototype
+     */
     selectedIndex: undefined,
     animate: true,
     initialAnimate: false,
@@ -36,6 +41,11 @@ ludo.layout.ViewPager = new Class({
     dragging: true,
     orientation: 'horizontal',
     parentDiv: undefined,
+    /**
+     * Number of child views/pages in view pager layout
+     * @property {Number} count
+     * @memberof ludo.layout.ViewPager.prototype
+     */
     count : undefined,
 
 
@@ -293,25 +303,47 @@ ludo.layout.ViewPager = new Class({
     },
 
     removeValidationEvents: function () {
-        if (this.selectedIndex != undefined) {
-            this.getVisiblePage().removeEvent('invalid', this.setInvalid);
-            this.getVisiblePage().removeEvent('valid', this.setValid);
+        if (this.selectedIndex != undefined && this.validFn) {
+            var f = this.getVisiblePage().getForm();
+            if(f != undefined){
+                f.off('invalid', this.validFn);
+                f.off('valid', this.invalidFn);
+            }
         }
     },
 
+    validFn:undefined,
+    invalidFn:undefined,
+
     addValidationEvents: function () {
-        var manager = this.getVisiblePage().getForm();
-        manager.addEvent('invalid', this.setInvalid.bind(this));
-        manager.addEvent('valid', this.setValid.bind(this));
-        manager.validate();
+        if(this.validFn == undefined){
+            this.validFn = this.setValid.bind(this);
+            this.invalidFn = this.setInvalid.bind(this);
+        }
+
+        var f = this.getVisiblePage().getForm();
+        f.on('invalid', this.invalidFn );
+        f.on('valid', this.validFn);
+        f.validate();
     },
     setInvalid: function () {
+        console.log('set invalid', arguments);
         this.fireEvent('invalid', [this, this.view, this.view.children[this.selectedIndex]]);
     },
 
     setValid: function () {
+        console.log('set valid', arguments);
         this.fireEvent('valid', [this, this.view, this.view.children[this.selectedIndex]]);
     },
+
+    isFormValid:function(){
+        var v = this.getVisiblePage();
+        if(v == undefined)return true;
+        var f = v.getForm();
+        if(f != undefined)return f.isValid();
+        return true;
+    },
+
     /**
      * Go to first child view
      * @function showFirstPage
@@ -351,7 +383,10 @@ ludo.layout.ViewPager = new Class({
         var animateX = this.orientation == 'horizontal';
         var parentSize = animateX ? this.viewport.width : this.viewport.height;
 
-        var min = this.selectedIndex < this.view.children.length-1 ? (parentSize * -1) : 0;
+        var min = 0;
+        if(this.selectedIndex < this.view.children.length-1 && isValid){
+            min = (parentSize * -1);
+        }
         var max = this.selectedIndex > 0 ? parentSize : 0;
 
 
@@ -388,7 +423,6 @@ ludo.layout.ViewPager = new Class({
                 key = 'top'
             }
 
-
             pos = Math.min(pos, this.touch.max);
             pos = Math.max(pos, (this.touch.min));
 
@@ -396,8 +430,6 @@ ludo.layout.ViewPager = new Class({
             this.touch.previousPos = pos;
 
             pos += this.touch.currentPos[key];
-
-
 
             this.parentDiv.css(key, pos + 'px');
             return false;

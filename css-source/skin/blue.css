@@ -697,7 +697,7 @@ tab layout */
 }
 
 .ludo-blue .ludo-layout-tab {
-    background-color: #FFF;
+
 }
 
 .ludo-blue .ludo-tab-close-left{
@@ -722,20 +722,20 @@ tab layout */
 
 
 .ludo-blue .ludo-tab-expand-box-top{
-    background-image:url(../images/blue-skin/tabs-expand-top.png?rnd=3);
+    background-image:url(../images/blue-skin/tabs-expand-top.png);
 }
 
 .ludo-blue .ludo-tab-expand-box-top-over{
-    background-image:url(../images/blue-skin/tabs-expand-top-over.png?rnd=3);
+    background-image:url(../images/blue-skin/tabs-expand-top-over.png);
 }
 
 
 .ludo-blue .ludo-tab-expand-box-bottom{
-    background-image:url(../images/blue-skin/tabs-expand-bottom.png?rnd=3);
+    background-image:url(../images/blue-skin/tabs-expand-bottom.png);
 }
 
 .ludo-blue .ludo-tab-expand-box-bottom-over{
-    background-image:url(../images/blue-skin/tabs-expand-bottom-over.png?rnd=3);
+    background-image:url(../images/blue-skin/tabs-expand-bottom-over.png);
 }
 
 

@@ -162,6 +162,14 @@ ludo.util = {
 			if(obj.hasOwnProperty(key))l++;
 		}
 		return l;
+	},
+	
+	pageXY:function(e){
+		return e.touches && e.touches.length > 0 ? {
+			x: e.touches[0].pageX, y: e.touches[0].pageY
+		}: {
+			x: e.pageX, y: e.pageY
+		};
 	}
 };
 
