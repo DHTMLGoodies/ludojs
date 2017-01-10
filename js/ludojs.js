@@ -1,7 +1,7 @@
-/* Generated Tue Jan 10 16:18:20 CET 2017 */
+/* Generated Tue Jan 10 17:08:27 CET 2017 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.377
+ludoJS - Javascript framework, 1.1.379
 Copyright (C) 2012-2017  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -19644,7 +19644,8 @@ ludo.ListView = new Class({
             parent: this.getRecordDOM(e.target),
             minX: -width + pos.left,
             maxX: width - pos.left,
-            lastX: pos.left
+            lastX: pos.left,
+            dragged:false
         };
 
         el.parent().find('.ludo-list-item-back-undo').css('z-index', 0);
@@ -19655,6 +19656,14 @@ ludo.ListView = new Class({
         var p = ludo.util.pageXY(e);
 
         var x = p.x - this.dragAttr.mouse.x + this.dragAttr.elPos.left;
+        var y = p.y - this.dragAttr.mouse.y + this.dragAttr.elPos.top;
+
+        if(!this.dragAttr.dragged && Math.abs(y) > Math.abs(x)){
+            this.dragAttr = undefined;
+            return undefined;
+        }
+
+
         x = ludo.util.clamp(x, this.dragAttr.minX, this.dragAttr.maxX);
         var zl, zr;
         if (x > 0 && this.dragAttr.lastX <= 0) {
@@ -19668,6 +19677,8 @@ ludo.ListView = new Class({
         this.dragAttr.backRight.css('z-index', zr);
         this.dragAttr.lastX = x;
         this.dragAttr.el.css('left', x);
+        this.dragAttr.dragged = true;
+
 
         return false;
     },
@@ -19858,7 +19869,7 @@ ludo.ListView = new Class({
     undoSwipe: function (record) {
         this.didUndo = true;
         var dom = this.getDOMForRecord(record);
-        dom.find('.ludo-list-item-front').css('left', 0);
+        dom.find('.ludo-list-item-front').animate({'left': 0}, {duration:100});
     },
 
     addInnerDOM: function (parent, record, html) {
@@ -20760,7 +20771,7 @@ ludo.effect.Drag = new Class({
              * @param {effect.Drag} this
              */
             this.fireEvent('drag', [pos, this.els[this.dragProcess.dragged], this]);
-            if (ludo.util.isTabletOrMobile())return false;
+            return false;
 
         }
         return undefined;

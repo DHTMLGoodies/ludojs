@@ -457,7 +457,7 @@ ludo.effect.Drag = new Class({
              * @param {effect.Drag} this
              */
             this.fireEvent('drag', [pos, this.els[this.dragProcess.dragged], this]);
-            if (ludo.util.isTabletOrMobile())return false;
+            return false;
 
         }
         return undefined;
