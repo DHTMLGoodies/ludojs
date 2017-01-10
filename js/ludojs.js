@@ -1,7 +1,7 @@
-/* Generated Tue Jan 10 15:03:55 CET 2017 */
+/* Generated Tue Jan 10 15:16:28 CET 2017 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.375
+ludoJS - Javascript framework, 1.1.376
 Copyright (C) 2012-2017  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -11641,7 +11641,6 @@ ludo.chart.Base = new Class({
     },
 
     create: function () {
-        console.log('create');
         this.renderBackgroundItems();
 
         if (this.ds.hasData()) {
@@ -19479,7 +19478,7 @@ ludo.CollectionView = new Class({
  * ListView
  * Class rendering an array of JSON objects in a list.
  *
- * For demo, see <a href="../demo/list.php">list.php</a>
+ * For demo, see <a href="../demo/list-view.php">list.php</a>
  *
  * The list view depends on a <a href="data-source_collection.js.html">collection data source</a>. To update items in the list view during runtime,
  * update the datasource. To remove items from the list view, remove the item from the data source.
