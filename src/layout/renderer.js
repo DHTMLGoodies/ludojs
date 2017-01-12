@@ -62,7 +62,7 @@ ludo.layout.Renderer = new Class({
         ludo.dom.clearCache();
         this.addResizeEvent();
 
-        if(this.view.getLayout != undefined){
+        if (this.view.getLayout != undefined) {
             this.view.getLayout().on('addChild', this.clearFn.bind(this));
         }
         this.view.on('addChild', this.clearFn.bind(this));
@@ -125,17 +125,19 @@ ludo.layout.Renderer = new Class({
         this.view.layout.height = this.view.layout.height || 'matchParent';
     },
 
-    resizeFn:undefined,
+    resizeFn: undefined,
 
     addResizeEvent: function () {
         // todo no resize should be done for absolute positioned views with a width. refactor the next line
         if (this.view.isWindow)return;
-        var node = this.getParentNode();
-        this.resizeFn =this.resize.bind(this);
-        node.on('resize', this.resizeFn);
+        this.resizeFn = this.resize.bind(this);
+        //var node = this.getParentNode();
+        // node.resize(this.resizeFn);
+
+        $(window).resize(this.resizeFn);
     },
 
-    getParentNode:function(){
+    getParentNode: function () {
         var node = this.view.getEl().parent();
         if (!node || !node.prop("tagName"))return;
         if (node.prop("tagName").toLowerCase() !== 'body') {
@@ -146,8 +148,9 @@ ludo.layout.Renderer = new Class({
         return node;
     },
 
-    removeEvents:function(){
-        this.getParentNode().off('resize', this.resizeFn);
+    removeEvents: function () {
+        // this.getParentNode().off('resize', this.resizeFn);
+        $(window).off('resize', this.resizeFn);
     },
 
     buildResizeFn: function () {
@@ -367,7 +370,7 @@ ludo.layout.Renderer = new Class({
     },
 
     setViewport: function () {
-        if(!this.view.getEl || !this.view.getEl()){
+        if (!this.view.getEl || !this.view.getEl()) {
             console.trace();
             console.log(this.view);
             return;

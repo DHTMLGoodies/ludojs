@@ -95,7 +95,7 @@
  * ListView
  * Class rendering an array of JSON objects in a list.
  *
- * For demo, see &lt;a href="../demo/list.php">list.php&lt;/a>
+ * For demo, see &lt;a href="../demo/list-view.php">list.php&lt;/a>
  *
  * The list view depends on a &lt;a href="data-source_collection.js.html">collection data source&lt;/a>. To update items in the list view during runtime,
  * update the datasource. To remove items from the list view, remove the item from the data source.
@@ -118,7 +118,7 @@
  * @fires ludo.ListView#swipeLeft Fired after swiping left. Arguments: 1) JSON Object/record
  */
 ludo.ListView = new Class({
-    type:'ListView',
+    type: 'ListView',
     Extends: ludo.CollectionView,
     defaultDS: 'dataSource.Collection',
     overflow: 'auto',
@@ -134,25 +134,30 @@ ludo.ListView = new Class({
     availHeight: undefined,
 
     scrollTop: 0,
-
+    lastScrollTop: 0,
     indexFirstVisible: 0,
     indexLastVisible: 0,
 
     outOfBounds: false,
 
     itemsRendered: false,
-    itemRenderer:undefined,
+    itemRenderer: undefined,
     backSideLeft: undefined,
     backSideRight: undefined,
     backSideUndo: undefined,
     undoTimeout: 2000,
-    didUndo:false,
+    didUndo: false,
+
+    scrollId: undefined,
+
+    renderedMap: undefined,
 
     __construct: function (config) {
         this.parent(config);
         this.setConfigParams(config, ['swipable', 'itemRenderer', 'backSideLeft', 'backSideRight', 'backSideUndo', 'undoTimeout']);
-
+        this.renderedMap = {};
         this.on('rendered', this.render.bind(this));
+
     },
 
     ludoEvents: function () {
@@ -162,7 +167,6 @@ ludo.ListView = new Class({
 
     __rendered: function () {
         this.parent();
-
 
 
         if (this.swipable) {
@@ -187,31 +191,57 @@ ludo.ListView = new Class({
         }
     },
 
-    onScroll: function (e) {
+    onScroll: function () {
+        this.lastScrollTop = this.scrollTop;
         this.scrollTop = this.getBody().scrollTop();
         this.lazyRender();
     },
 
-
     lazyRender: function () {
         var count = this.getDataSource().getCount();
-        var index = this.indexLastVisible + 1;
+        var index;
         this.outOfBounds = false;
         var d = this.getDataSource().getData();
 
-        while (!this.outOfBounds &amp;&amp; index &lt; count) {
-            var rec = d[index];
+        var rec, dom, html;
+        var countRecords = (Math.round(this.availHeight / this.itemHeight) * 3);
 
-            var dom = this.getRecordContainer(rec);
-            this.checkOutOfBounds(dom);
-
-            if (!this.outOfBounds) {
-                var html = this.itemRenderer != undefined ? this.itemRenderer.call(this, rec) : this.getTplParser().getCompiled(rec, this.tpl)[0];
-                this.addInnerDOM(dom, rec, html);
-                this.indexLastVisible = index;
+        index = Math.max(0, this.indexFirstVisible + 1);
+        while (this.outOfBounds != 1 &amp;&amp; index &lt; count) {
+            rec = d[index];
+            if (!this.renderedMap[rec.uid]) {
+                dom = this.getRecordContainer(rec);
+                this.checkOutOfBounds(dom);
+                if (!this.outOfBounds) {
+                    html = this.itemRenderer != undefined ? this.itemRenderer.call(this, rec) : this.getTplParser().getCompiled(rec, this.tpl)[0];
+                    this.addInnerDOM(dom, rec, html);
+                    this.indexLastVisible = index;
+                    this.indexFirstVisible = index - countRecords;
+                }
             }
             index++;
         }
+
+        this.outOfBounds = false;
+        index = this.indexLastVisible - 1;
+
+        while (this.outOfBounds != -1 &amp;&amp; index >= 0) {
+            rec = d[index];
+
+            if (!this.renderedMap[rec.uid]) {
+                dom = this.getRecordContainer(rec);
+                this.checkOutOfBounds(dom);
+
+                if (!this.outOfBounds) {
+                    html = this.itemRenderer != undefined ? this.itemRenderer.call(this, rec) : this.getTplParser().getCompiled(rec, this.tpl)[0];
+                    this.addInnerDOM(dom, rec, html);
+                    this.indexFirstVisible = index;
+                    this.indexLastVisible = Math.min(count, index + countRecords);
+                }
+            }
+            index--;
+        }
+
     },
 
     startDrag: function (e) {
@@ -231,7 +261,8 @@ ludo.ListView = new Class({
             parent: this.getRecordDOM(e.target),
             minX: -width + pos.left,
             maxX: width - pos.left,
-            lastX: pos.left
+            lastX: pos.left,
+            dragged:false
         };
 
         el.parent().find('.ludo-list-item-back-undo').css('z-index', 0);
@@ -242,6 +273,13 @@ ludo.ListView = new Class({
         var p = ludo.util.pageXY(e);
 
         var x = p.x - this.dragAttr.mouse.x + this.dragAttr.elPos.left;
+        var y = p.y - this.dragAttr.mouse.y + this.dragAttr.elPos.top;
+
+        if(!this.dragAttr.dragged &amp;&amp; Math.abs(y) > Math.abs(x)){
+            this.dragAttr = undefined;
+            return undefined;
+        }
+
         x = ludo.util.clamp(x, this.dragAttr.minX, this.dragAttr.maxX);
         var zl, zr;
         if (x > 0 &amp;&amp; this.dragAttr.lastX &lt;= 0) {
@@ -255,12 +293,14 @@ ludo.ListView = new Class({
         this.dragAttr.backRight.css('z-index', zr);
         this.dragAttr.lastX = x;
         this.dragAttr.el.css('left', x);
+        this.dragAttr.dragged = true;
+
 
         return false;
     },
 
-    onUndoTimeout:function(e, rec){
-        if(!this.didUndo){
+    onUndoTimeout: function (e, rec) {
+        if (!this.didUndo) {
             this.fireEvent('swipe', rec);
             this.fireEvent(e, rec);
         }
@@ -283,13 +323,13 @@ ludo.ListView = new Class({
 
             var u = this.dragAttr.backUndo;
             var fn;
-            if(u.length){
-                fn = function(){
+            if (u.length) {
+                fn = function () {
                     u.css('z-index', 3);
                     this.onUndoTimeout.delay(this.undoTimeout, this, [e, rec]);
                 }.bind(this);
-            }else{
-                fn = function(){
+            } else {
+                fn = function () {
                     this.fireEvent('swipe', rec);
                     this.fireEvent(e, rec);
                 }.bind(this);
@@ -378,7 +418,7 @@ ludo.ListView = new Class({
 
         this.itemsRendered = true;
 
-        ludo.util.log('time to render list ', new Date().getTime() - s);
+        ludo.util.log('time to render list ' + (new Date().getTime() - s));
     },
 
     renderItem: function (i, item, html) {
@@ -405,8 +445,9 @@ ludo.ListView = new Class({
     },
 
     checkOutOfBounds: function (dom) {
-        var pos = dom.position();
-        this.outOfBounds = pos.top > this.scrollTop + this.availHeight;
+        var top = dom[0].offsetTop != undefined ? dom[0].offsetTop : dom.position().top;
+        if (top &lt; this.scrollTop - this.itemHeight)this.outOfBounds = -1;
+        else this.outOfBounds = top > this.scrollTop + this.availHeight ? 1 : false;
     },
 
     getRecordContainer: function (record) {
@@ -444,10 +485,13 @@ ludo.ListView = new Class({
     undoSwipe: function (record) {
         this.didUndo = true;
         var dom = this.getDOMForRecord(record);
-        dom.find('.ludo-list-item-front').css('left', 0);
+        dom.find('.ludo-list-item-front').animate({'left': 0}, {duration:100});
     },
 
     addInnerDOM: function (parent, record, html) {
+
+        this.renderedMap[record.uid] = true;
+
         if (this.backSideLeft != undefined) {
             var l = this.backSideLeft(record);
             if (l != undefined) {
@@ -471,9 +515,10 @@ ludo.ListView = new Class({
             parent.append(un);
             var vId = this.id;
             var uid = record.uid;
-            var fn = function(){
+            var fn = function () {
                 var v = ludo.$(vId);
                 v.undoSwipe(uid);
+                return false;
             };
             un.on('click', fn);
 
@@ -551,7 +596,7 @@ ludo.ListView = new Class({
     update: function (record) {
         var el = this.getDOMForRecord(record);
         if (el) {
-            var html = this.itemRenderer != undefined ? this.itemRenderer.call(this, record): this.getTplParser().asString(record, this.tpl);
+            var html = this.itemRenderer != undefined ? this.itemRenderer.call(this, record) : this.getTplParser().asString(record, this.tpl);
             el.find('.ludo-list-item-front').html(html);
         }
     },
@@ -605,7 +650,7 @@ ludo.ListView = new Class({
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.2</a>
 	
-		on Tue Jan 10th 2017
+		on Thu Jan 12th 2017
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

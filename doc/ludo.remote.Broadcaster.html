@@ -213,208 +213,6 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="addResourceEvent"><span class="type-signature"></span>addResourceEvent<span class="signature">(eventType, resource, fn)</span><span class="type-signature"></span></h4>
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        <p>Listen to events from remote requests. EventType is either<br>     success, failure or serverError. resource is a name of resource<br>     specified in the request.</p>
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>eventType</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>resource</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>fn</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="remote_broadcaster.js.html">remote/broadcaster.js</a>,
-				 <a href="remote_broadcaster.js.html#sunlight-1-line-89">line 89</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-        <h5>Examples</h5>
-        
-    <pre class="sunlight-highlight-javascript">ludo.remoteBroadcaster.addEvent(&#x27;failure&#x27;, &#x27;Person&#x27;, function(response){
-            this.getBody().html( response.message&#x27;);
-        }.bind(this));
-     The event payload is an object in this format:
-     </pre>
-
-    <pre class="sunlight-highlight-javascript">{
-             &quot;code&quot;: 200,
-             &quot;message&quot;: &quot;A message&quot;,
-             &quot;resource&quot;: &quot;Which resource&quot;,
-             &quot;service&quot;: &quot;Which service&quot;
-         }</pre>
-
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
     <h4 class="name" id="addResourceEvent"><span class="type-signature"></span>addResourceEvent<span class="signature">(eventType, resource, services, fn)</span><span class="type-signature"></span></h4>
     
 </dt>
@@ -621,6 +419,208 @@
         <h5>Examples</h5>
         
     <pre class="sunlight-highlight-javascript">ludo.remoteBroadcaster.addEvent(&#x27;failure&#x27;, &#x27;Person&#x27;, [&#x27;save&#x27;], function(response){
+            this.getBody().html( response.message&#x27;);
+        }.bind(this));
+     The event payload is an object in this format:
+     </pre>
+
+    <pre class="sunlight-highlight-javascript">{
+             &quot;code&quot;: 200,
+             &quot;message&quot;: &quot;A message&quot;,
+             &quot;resource&quot;: &quot;Which resource&quot;,
+             &quot;service&quot;: &quot;Which service&quot;
+         }</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="addResourceEvent"><span class="type-signature"></span>addResourceEvent<span class="signature">(eventType, resource, fn)</span><span class="type-signature"></span></h4>
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Listen to events from remote requests. EventType is either<br>     success, failure or serverError. resource is a name of resource<br>     specified in the request.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>eventType</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>resource</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>fn</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="remote_broadcaster.js.html">remote/broadcaster.js</a>,
+				 <a href="remote_broadcaster.js.html#sunlight-1-line-89">line 89</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h5>Examples</h5>
+        
+    <pre class="sunlight-highlight-javascript">ludo.remoteBroadcaster.addEvent(&#x27;failure&#x27;, &#x27;Person&#x27;, function(response){
             this.getBody().html( response.message&#x27;);
         }.bind(this));
      The event payload is an object in this format:
@@ -1599,7 +1599,7 @@
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.2</a>
 	
-		on Tue Jan 10th 2017
+		on Thu Jan 12th 2017
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
