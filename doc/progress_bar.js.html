@@ -135,7 +135,7 @@ ludo.progress.Bar = new Class({
     textStyles: undefined,
     _text: undefined,
 
-    animationDuration: 100,
+    animationDuration: 50,
 
     debugRect: undefined,
 
@@ -277,6 +277,7 @@ ludo.progress.Bar = new Class({
         this.percent(this.progress / this.steps * 100);
 
         this.els.clipRect.set('height', this.svg().height);
+        this.els.clipRect.set('x', this.outerBorderWidth);
     },
 
     positionTextNode: function () {
@@ -360,11 +361,23 @@ ludo.progress.Bar = new Class({
         this.percent(percent, true);
     },
 
-
+    /**
+     * Update percentage value directly.
+     * @param {Number} percent New percentage value
+     * @param {Boolean} animate True to animate, default = false
+     * @memberof ludo.progress.Bar.prototype
+     */
     percent: function (percent, animate) {
         this.ratio(percent / 100, animate);
     },
 
+
+    /**
+     * Update ratio value (0-1) directly.
+     * @param {Number} ratio New ratio - 0 = starting, 1 = finished
+     * @param {Boolean} animate True to animate, default = false
+     * @memberof ludo.progress.Bar.prototype
+     */
     ratio: function (ratio, animate) {
         if (arguments.length == 0) {
             return this.progress / this.steps * 100;
@@ -376,7 +389,7 @@ ludo.progress.Bar = new Class({
             this.els.clipRect.animate({
                 width: w
             }, {
-                duration: this.animationDuration,
+                duration: this.animationDuration * Math.abs(diff) * 100,
                 complete: function () {
                     this.lastRatio = ratio;
                     this.fireEvent('animate', this.lastRatio * 100);
@@ -390,6 +403,9 @@ ludo.progress.Bar = new Class({
             });
         } else {
             this.els.clipRect.set('width', w);
+            this.lastRatio = ratio;
+            this.fireEvent('animate', this.lastRatio * 100);
+
         }
     }
 

@@ -1,7 +1,7 @@
-/* Generated Fri Jan 13 19:19:23 CET 2017 */
+/* Generated Fri Jan 13 19:35:49 CET 2017 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.399
+ludoJS - Javascript framework, 1.1.400
 Copyright (C) 2012-2017  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -30446,7 +30446,7 @@ ludo.progress.Bar = new Class({
     textStyles: undefined,
     _text: undefined,
 
-    animationDuration: 100,
+    animationDuration: 50,
 
     debugRect: undefined,
 
@@ -30468,6 +30468,12 @@ ludo.progress.Bar = new Class({
         this.renderBar();
     },
 
+    /**
+     * Increment progress bar
+     * @param {Number} by
+     * @param {Boolean} animate
+     * @memberof ludo.progress.Bar.prototype
+     */
     increment: function (by, animate) {
         by = by != undefined ? by : 1;
         animate = animate != undefined ? animate : true;
@@ -30501,6 +30507,12 @@ ludo.progress.Bar = new Class({
         this.increment(0, animate);
     },
 
+    /**
+     * Set new progress value
+     * @param {Number} progress
+     * @param {Boolean} animate
+     * @memberof ludo.progress.Bar.prototype
+     */
     setProgress: function (progress, animate) {
         this.increment(progress - this.progress, animate);
     },
@@ -30576,6 +30588,7 @@ ludo.progress.Bar = new Class({
         this.percent(this.progress / this.steps * 100);
 
         this.els.clipRect.set('height', this.svg().height);
+        this.els.clipRect.set('x', this.outerBorderWidth);
     },
 
     positionTextNode: function () {
@@ -30632,6 +30645,11 @@ ludo.progress.Bar = new Class({
         return path.join(' ');
     },
 
+    /**
+     * Display text on progress bar
+     * @param {String} text
+     * @memberof ludo.progress.Bar.prototype
+     */
     text: function (txt) {
         if (this.els.textNode == undefined) {
             this.els.textNode = this.svg().$('text');
@@ -30654,10 +30672,23 @@ ludo.progress.Bar = new Class({
         this.percent(percent, true);
     },
 
+    /**
+     * Update percentage value directly.
+     * @param {Number} percent New percentage value
+     * @param {Boolean} animate True to animate, default = false
+     * @memberof ludo.progress.Bar.prototype
+     */
     percent: function (percent, animate) {
         this.ratio(percent / 100, animate);
     },
 
+
+    /**
+     * Update ratio value (0-1) directly.
+     * @param {Number} ratio New ratio - 0 = starting, 1 = finished
+     * @param {Boolean} animate True to animate, default = false
+     * @memberof ludo.progress.Bar.prototype
+     */
     ratio: function (ratio, animate) {
         if (arguments.length == 0) {
             return this.progress / this.steps * 100;
@@ -30669,7 +30700,7 @@ ludo.progress.Bar = new Class({
             this.els.clipRect.animate({
                 width: w
             }, {
-                duration: this.animationDuration,
+                duration: this.animationDuration * Math.abs(diff) * 100,
                 complete: function () {
                     this.lastRatio = ratio;
                     this.fireEvent('animate', this.lastRatio * 100);
@@ -30683,6 +30714,9 @@ ludo.progress.Bar = new Class({
             });
         } else {
             this.els.clipRect.set('width', w);
+            this.lastRatio = ratio;
+            this.fireEvent('animate', this.lastRatio * 100);
+
         }
     }
 

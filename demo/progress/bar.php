@@ -60,7 +60,8 @@ require_once("../includes/demo-header.php");
                         value:'Rerun first button',
                         listeners:{
                             'click': function(){
-                                ludo.$('progress').setProgress(0);
+                                ludo.$('progress').setProgress(0, false);
+                                ludo.$('progress').percent(100, true);
                             }
                         },
                         layout:{
@@ -140,7 +141,7 @@ require_once("../includes/demo-header.php");
                         value:'Reset bar',
                         listeners:{
                             'click': function(){
-                                ludo.$('progress2').setProgress(0);
+                                ludo.$('progress2').setProgress(0, false);
                             }
                         },
                         layout:{
@@ -161,17 +162,12 @@ require_once("../includes/demo-header.php");
     });
 
     var p = ludo.$('progress');
-    p.on('animated', function () {
-        if (!p.finished() && p.steps == 100) {
-            p.increment(5);
-        }
-    }.bind(p));
 
     p.on('animate', function (percent) {
         p.text(percent.toFixed(0) + '%');
     }.bind(p));
 
-    p.increment(5);
+    p.increment(100);
 
 
 </script>
