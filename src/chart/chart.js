@@ -15,13 +15,13 @@ ludo.chart.Chart = new Class({
 	__construct:function(config){
 		this.parent(config);
 		this.layout.type = 'Canvas';
-		this.getCanvas();
+		this.svg();
 
 	},
 
 	__rendered:function(){
 		this.parent();
-		this.getCanvas().on("mouseleave", this.enterGroup.bind(this));
+		this.svg().on("mouseleave", this.enterGroup.bind(this));
 	},
 
 	updateChildren:function(){

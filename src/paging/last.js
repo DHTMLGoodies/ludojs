@@ -1,5 +1,5 @@
 /**
- Button used to navigate to last page in a dataSource.Collection
+ Button used to navigate to last page in a dataSource.JSONArray
  @namespace ludo.paging
  @class ludo.paging.Last
  @augments ludo.paging.Button
@@ -14,7 +14,7 @@
 		 }
  		...
  	}
- where 'myDataSource' is the id of a dataSource.Collection object used by a view.
+ where 'myDataSource' is the id of a dataSource.JSONArray object used by a view.
  */
 ludo.paging.Last = new Class({
 	Extends:ludo.paging.Button,

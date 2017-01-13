@@ -1,4 +1,4 @@
-/**
+/*
  Factory for automatic creation of children from server ludoDB config. This class is used
  internally by ludoJS when you specify a ludoDB config object in your view configuration.
  namespace ludoDB
@@ -51,14 +51,14 @@ ludo.ludoDB.Factory = new Class({
     },
 
     load:function () {
-        var arguments = [this.resource];
-        if (this.arguments)arguments.splice(1, 0, this.arguments);
+        var args = [this.resource];
+        if (this.arguments)args.splice(1, 0, this.arguments);
         var req = new ludo.remote.JSON({
             resource:'LudoJS',
             url:this.getUrl()
         });
         req.addEvent('success', this.parseNewData.bind(this));
-        req.send('form', arguments);
+        req.send('form', args);
     },
 
     parseNewData:function (req) {

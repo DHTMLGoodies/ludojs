@@ -17,7 +17,7 @@ ludo.layout.Canvas = new Class({
 
         this.view.children.push(child);
 
-        var p = child.parentNode ? this.view : this.view.getCanvas();
+        var p = child.parentNode ? this.view : this.view.svg();
 
         p.append(child);
 
@@ -74,7 +74,7 @@ ludo.layout.Canvas = new Class({
             for (var i = 0; i < this.children.length; i++) {
                 if (this.children[i].layout.zIndex != undefined) {
                     // TODO this needs to be refactored
-                    var p = this.view.parentNode ? this.view.parentNode: this.view.getCanvas();
+                    var p = this.view.parentNode ? this.view.parentNode: this.view.svg();
                     p.append(this.children[i]);
                 }
             }

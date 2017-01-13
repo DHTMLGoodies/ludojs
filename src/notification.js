@@ -6,7 +6,7 @@
  Custom CSS styling can be done by adding styles to the .ludo-notification class.
  
  @class ludo.Notification
- @augments ludo.View
+ @parent ludo.View
  @param {Object} config
  @param {String} config.html Message to display
  @param {Number} config.duration Seconds before notification is automatically hidden. Default is 3
@@ -14,7 +14,8 @@
  @param {String} config.showEffect Effect used when Notification is displayed(fade or slide)
  @param {String} config.hideEffect Effect used when Notification is hidden(fade or slide)
  @param {Number} config.effectDuration Duration of show/hide effect in seconds. Default: 1
- @param {Boolean} config.autoRemove True to automatically remove the view from DOM when hiding it.
+ @param {Boolean} config.autoRemove True to automatically destroy the view(remove from DOM) hiding it, default:true 
+ @summary new ludo.Notification({ ... });
  @example
 
  new ludo.Notification({

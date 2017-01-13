@@ -1,4 +1,8 @@
 /**
+ * @namespace ludo.grid
+ */
+
+/**
  @namespace ludo.grid
  @class ludo.grid.Grid
  @augments View
@@ -74,6 +78,7 @@
  @example
  	new ludo.grid.Grid({...})
  where {...} can be the same code as above. use the "renderTo" config property to specify where you want the grid to be rendered.
+
  */
 ludo.grid.Grid = new Class({
 	Extends:ludo.View,
@@ -165,7 +170,7 @@ ludo.grid.Grid = new Class({
 
 	emptyText:'No data',
 
-	defaultDS : 'dataSource.Collection',
+	defaultDS : 'dataSource.JSONArray',
 
 	__construct:function (config) {
 		this.parent(config);

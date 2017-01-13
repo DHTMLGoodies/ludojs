@@ -27,7 +27,7 @@ require_once("../includes/demo-header.php");
     });
 
     // Get reference to SVG surface
-    var c = ludo.$('demoView').getCanvas();
+    var c = ludo.$('demoView').svg();
 
 
     var c2 = c.$('circle', {cx: 0, cy: 0, r: 10, fill: '#00695C'});

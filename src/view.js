@@ -302,14 +302,7 @@ ludo.View = new Class({
             this.getBody().html(this.getTplParser().asString(json, tpl));
         }
     },
-
-    insertJSON: function (data) {
-        console.warn("Use of deprecated insertJSON");
-        if (this.tpl) {
-            this.getBody().html(this.getTplParser().asString(data, this.tpl));
-        }
-    },
-
+    
     getTplParser: function () {
         if (!this.tplParser) {
             this.tplParser = this.createDependency('tplParser', this.JSONParser);
@@ -392,35 +385,36 @@ ludo.View = new Class({
     },
 
     _styleDOM: function () {
-        this.els.container.addClass('ludo-view');
-        this.els.body.addClass('ludo-body');
+        var b = this.els.body;
+        var e = this.els.container;
+        e.addClass('ludo-view');
+        b.addClass('ludo-body');
 
-        this.els.container.attr("id", this.getId());
+        e.attr("id", this.getId());
 
-        this.els.body.css('height', '100%');
+        b.css('height', '100%');
 
         if (this.overflow == 'hidden') {
-            this.els.body.css('overflow', 'hidden');
+            b.css('overflow', 'hidden');
         }
 
         if (ludo.util.isTabletOrMobile()) {
-            this.els.container.addClass('ludo-view-mobile');
+            e.addClass('ludo-view-mobile');
         }
-
 
         if (this.cls) {
-            this.els.container.addClass(this.cls);
+            e.addClass(this.cls);
         }
-        if (this.bodyCls)this.els.body.addClass(this.bodyCls);
-        if (this.type)this.els.container.addClass('ludo-' + (this.type.replace(/\./g, '-').toLowerCase()));
-        if (this.css)this.els.body.css(this.css);
-        if (this.elCss)this.els.container.css(this.elCss);
+        if (this.bodyCls)b.addClass(this.bodyCls);
+        if (this.type)e.addClass('ludo-' + (this.type.replace(/\./g, '-').toLowerCase()));
+        if (this.css)b.css(this.css);
+        if (this.elCss)e.css(this.elCss);
 
         if (this.frame) {
-            this.els.container.addClass('ludo-container-frame');
-            this.els.body.addClass('ludo-body-frame');
+            e.addClass('ludo-container-frame');
+            b.addClass('ludo-body-frame');
         }
-        if (this.cssSignature !== undefined)this.els.container.addClass(this.cssSignature);
+        if (this.cssSignature !== undefined)e.addClass(this.cssSignature);
 
         this.setContent();
     },
@@ -528,8 +522,6 @@ ludo.View = new Class({
 
 
         if (!skipEvents)this.fireEvent('show', this);
-
-
     },
 
     resizeParent: function () {
@@ -631,26 +623,25 @@ ludo.View = new Class({
      @param {Object} size Object with optional width and height properties. Example: { width: 200, height: 100 }
      @example
      view.resize(
-     { width: 200, height:200 }
+        { width: 200, height:200 }
      );
      */
     resize: function (size) {
-
 
         if (this.isHidden()) {
             return;
         }
 
-
+        var l = this.layout;
         size = size || {};
 
         if (size.width) {
-            if (this.layout.aspectRatio && this.layout.preserveAspectRatio && size.width && !this.isMinimized()) {
-                size.height = size.width / this.layout.aspectRatio;
+            if (l.aspectRatio && l.preserveAspectRatio && size.width && !this.isMinimized()) {
+                size.height = size.width / l.aspectRatio;
             }
             // TODO layout properties should not be set here.
-            this.layout.pixelWidth = size.width;
-            if (!isNaN(this.layout.width))this.layout.width = size.width;
+            l.pixelWidth = size.width;
+            if (!isNaN(l.width))l.width = size.width;
             var width = size.width - ludo.dom.getMBPW(this.els.container);
             if (width > 0) {
                 this.els.container.css('width', width);
@@ -660,8 +651,8 @@ ludo.View = new Class({
         if (size.height && !this.state.isMinimized) {
             // TODO refactor this part.
             if (!this.state.isMinimized) {
-                this.layout.pixelHeight = size.height;
-                if (!isNaN(this.layout.height))this.layout.height = size.height;
+                l.pixelHeight = size.height;
+                if (!isNaN(l.height))l.height = size.height;
             }
             var height = size.height - ludo.dom.getMBPH(this.els.container);
             if (height > 0) {
@@ -849,9 +840,6 @@ ludo.View = new Class({
                 if (!this.dataSource.type) {
                     this.dataSource.type = this.defaultDS;
                 }
-
-
-
                 obj = this.dataSourceObj = this.createDependency('viewDataSource', this.dataSource);
             }
 
@@ -949,18 +937,12 @@ ludo.View = new Class({
 		   }
 	   });
      // Get reference to canvas
-     var canvas = win.getCanvas();
+     var canvas = win.svg();
      // Using the svg dollar function to create SVG DOM nodes.
      var circle = canvas.$('circle', { cx:100,cy:100, r: 50, fill: "#000" });
      canvas.append(circle);
      */
     svg: function () {
-        return this.getCanvas();
-    },
-
-    canvas: undefined,
-
-    getCanvas: function () {
         if (this.canvas === undefined) {
             this.canvas = this.createDependency('canvas', new ludo.svg.Canvas({
                 renderTo: this
@@ -968,6 +950,8 @@ ludo.View = new Class({
         }
         return this.canvas;
     },
+
+    canvas: undefined,
 
     wrappedWidth: function () {
         return undefined;

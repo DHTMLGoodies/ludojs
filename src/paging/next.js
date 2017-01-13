@@ -1,5 +1,5 @@
 /**
- Button used to navigate to next page in a dataSource.Collection
+ Button used to navigate to next page in a dataSource.JSONArray
  @namespace paging
  @class ludo.paging.Next
  @augments paging.Button
@@ -14,7 +14,7 @@
 		 }
  		...
  	}
- where 'myDataSource' is the id of a dataSource.Collection object used by a view.
+ where 'myDataSource' is the id of a dataSource.JSONArray object used by a view.
  */
 ludo.paging.Next = new Class({
 	Extends:ludo.paging.Button,

@@ -95,7 +95,7 @@ require_once("../includes/demo-header.php");
 
     });
 
-    var c = ludo.$('svgView').getCanvas();
+    var c = ludo.$('svgView').svg();
     c.addStyleSheet('box', {
         fill: '#669900'
     });

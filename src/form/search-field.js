@@ -1,10 +1,10 @@
 /**
- * Form field designed to search in dataSource.Collection
+ * Form field designed to search in dataSource.JSONArray
  * @namespace ludo.form
  * @class ludo.form.SearchField
  * @augments ludo.form.Text
  * @param {Object} config
- * @param {ludo.dataSource.Collection} searchIn Collection to search in
+ * @param {ludo.dataSource.JSONArray} searchIn Collection to search in
  * @param {Number} delay Delay in seconds after key press before search is executed. Default 0.
  * @param {Function} searchFn Custom search fn to execute instead of plain text search. Example:
  * <code>	 	searchFn:function(record){

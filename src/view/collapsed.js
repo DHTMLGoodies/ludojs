@@ -97,13 +97,13 @@ ludo.view.Collapsed = new Class({
             this.el.setStyles({
                 left:c.style.left,
                 top:c.style.top,
-                height:ludo.dom.getNumericStyle(c, 'height') + ludo.dom.getMH(c) + ludo.dom.getBH(c) + ludo.dom.getPH(c) - ludo.dom.getMH(a) - ludo.dom.getBH(a) - ludo.dom.getPH(a)
+                height:c.height() + ludo.dom.getMH(c) + ludo.dom.getBH(c) + ludo.dom.getPH(c) - ludo.dom.getMH(a) - ludo.dom.getBH(a) - ludo.dom.getPH(a)
             });
         } else {
             this.el.setStyles({
                 left:c.style.left,
                 top:c.style.top,
-                width:ludo.dom.getNumericStyle(c, 'width') + ludo.dom.getMW(c) + ludo.dom.getBW(c) + ludo.dom.getPW(c) - ludo.dom.getMW(a) - ludo.dom.getBW(a) - ludo.dom.getPW(a)
+                width:c.width() + ludo.dom.getMW(c) + ludo.dom.getBW(c) + ludo.dom.getPW(c) - ludo.dom.getMW(a) - ludo.dom.getBW(a) - ludo.dom.getPW(a)
             });
         }
     },
@@ -120,14 +120,14 @@ ludo.view.Collapsed = new Class({
     cachedWidthOfCollapsed:undefined,
     getCachedWidthOfCollapsed:function () {
         if (this.cachedWidthOfCollapsed === undefined) {
-            this.cachedWidthOfCollapsed = ludo.dom.getNumericStyle(this.el, 'width');
+            this.cachedWidthOfCollapsed = this.el.width();
         }
         return this.cachedWidthOfCollapsed;
     },
     cachedHeightOfCollapsed:undefined,
     getCachedHeightOfCollapsed:function () {
         if (this.cachedHeightOfCollapsed === undefined) {
-            this.cachedHeightOfCollapsed = ludo.dom.getNumericStyle(this.el, 'height');
+            this.cachedHeightOfCollapsed = this.el.height();
         }
         return this.cachedHeightOfCollapsed;
     },

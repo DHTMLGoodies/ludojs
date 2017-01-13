@@ -1,4 +1,8 @@
 /**
+ * Utilities for easy handling of colors
+ * @namespace ludo.color
+ */
+/**
  * A class with a lot of color conversion functions.
  *
  * With this class, you can convert between RGB and HSV, darken and brighten colors,
@@ -17,6 +21,7 @@ ludo.color.Color = new Class({
     /**
      * Function returning a random color
      * @returns {string}
+     * @memberof ludo.color.Color.prototype
      * @example
      * var util = new ludo.color.Color();
      * var color = util.randomColor(); // returns color in #RRGGBB format

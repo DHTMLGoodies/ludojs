@@ -1,6 +1,10 @@
 /**
+ * @namespace ludo.dataSource
+ */
+
+/**
  * Base class for data sources
- * @namespace dataSource
+ *
  * @class ludo.dataSource.Base
  * @augments ludo.Core, 'resource', 'service', 'arguments'
  * @param {String} url URL for the data source
@@ -14,6 +18,7 @@
  * </code>
  * @param {Function} dataHandler Custom function which receives data from server and returns data in appropriate format for the data source.
  * If this function returns false, it will trigger the fail event.
+ *
  */
 ludo.dataSource.Base = new Class({
 	Extends:ludo.Core,

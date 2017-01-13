@@ -4,13 +4,13 @@ TestCase("DraggingTest", {
 		document.body.innerHTML = '';
 	},
 
-	getCanvas:function(){
+	svg:function(){
 		var view = new ludo.View({
 			width:800,
 			height:800,
 			renderTo:document.body
 		});
-		return view.getCanvas();
+		return view.svg();
 	},
 
 	getDD:function(config){
@@ -44,7 +44,7 @@ TestCase("DraggingTest", {
 
 	"test should be able to drag svg node": function(){
 		// given
-		var canvas = this.getCanvas();
+		var canvas = this.svg();
 		var circle = new ludo.svg.Node('circle', {'cx' : 100, cy:100, r: 50 } );
 		canvas.append(circle);
 		var dd = this.getDD();
@@ -74,7 +74,7 @@ TestCase("DraggingTest", {
 
 	"test should be able to drag svg node step by step": function(){
 		// given
-		var canvas = this.getCanvas();
+		var canvas = this.svg();
 		var circle = new ludo.svg.Node('circle', {'cx' : 100, cy:100, r: 50 } );
 		canvas.append(circle);
 		var dd = this.getDD();
@@ -102,7 +102,7 @@ TestCase("DraggingTest", {
 
 	"test should be able to drag svg node a second time": function(){
 		// given
-		var canvas = this.getCanvas();
+		var canvas = this.svg();
 		var circle = new ludo.svg.Node('circle', { attr: {'cx' : 100, cy:100, r: 50} } );
 		canvas.append(circle);
 		var dd = this.getDD();
@@ -133,7 +133,7 @@ TestCase("DraggingTest", {
 
 	"test should be able to drag efficiently": function(){
 		// given
-		var canvas = this.getCanvas();
+		var canvas = this.svg();
 		var circle = new ludo.svg.Node('circle', { attr: {'cx' : 100, cy:100, r: 50} } );
 		canvas.append(circle);
 		var dd = this.getDD();

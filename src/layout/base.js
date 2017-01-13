@@ -1,5 +1,11 @@
 /**
+ *  @namespace ludo.layout
+ */
+/**
  * Base class for ludoJS layouts
+ *
+ * For tutorial on layouts, see <a href="http://www.ludojs.com/learn/layout.html">ludojs.com/learn/layout.html</a>
+ *
  * @namespace ludo.layout
  * @class ludo.layout.Base
  * @property {object} viewport
@@ -9,6 +15,7 @@
  * @fires ludo.layout.Base#addChild Fired after adding new child to parent view. Arguments: 1) Layout, 2) parent view, 3) child
  * @fires ludo.layout.Base#addChildRuntime Fired after adding new child to parent during runtime, i.e. after first rendering with
  * code <code>view.addChild()</code>. Arguments: 1) Layout, 2) parent view, 3) child
+ *
  */
 ludo.layout.Base = new Class({
     Extends: Events,
@@ -34,17 +41,16 @@ ludo.layout.Base = new Class({
         };
 
 
-
         if (view.getBody())this.onCreate();
 
         this.hasWrapWidth = !view.layout.weight && view.layout.width == 'wrap';
-        this.hasWrapHeight = !view.layout.weight &&  view.layout.height == 'wrap';
+        this.hasWrapHeight = !view.layout.weight && view.layout.height == 'wrap';
 
 
     },
-    
-    prepareForChildrenOnCreate:function(){
-        
+
+    prepareForChildrenOnCreate: function () {
+
     },
 
     onCreate: function () {
@@ -70,7 +76,6 @@ ludo.layout.Base = new Class({
      * @memberof ludo.layout.Base.prototype
      */
     addChild: function (child, insertAt, pos) {
-
 
 
         child = this.getValidChild(child);
@@ -326,7 +331,7 @@ ludo.layout.Base = new Class({
      */
     updateViewport: function (c) {
 
-        if(c)this.viewport[c.key] = c.value;
+        if (c)this.viewport[c.key] = c.value;
     },
 
     createRenderer: function () {
@@ -395,7 +400,8 @@ ludo.layout.Base = new Class({
      * @memberof ludo.layout.Base.prototype
      */
     clearTemporaryValues: function (child) {
-        if(child){}
+        if (child) {
+        }
         if (child.layout.cached_width !== undefined)child.layout.width = child.layout.cached_width;
         if (child.layout.cached_height !== undefined)child.layout.height = child.layout.cached_height;
         child.layout.cached_width = undefined;
@@ -409,8 +415,8 @@ ludo.layout.Base = new Class({
 
     getHeightOf: function (child, size) {
         var h = child.wrappedHeight != undefined ? child.wrappedHeight(size) : undefined;
-        if(h != undefined)return h;
-        if(child.layout.height == 'wrap'){
+        if (h != undefined)return h;
+        if (child.layout.height == 'wrap') {
             child.layout.height = child.getEl().outerHeight(true);
         }
         return isNaN(child.layout.height) ? child.getEl().outerHeight(true) : child.layout.height;

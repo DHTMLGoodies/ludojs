@@ -1,5 +1,5 @@
 /**
- * Class representing a record in a <a href="ludo.dataSource.Collection.html">Collection</a>
+ * Class representing a record in a <a href="ludo.dataSource.JSONArray.html">Collection</a>
  * Instances of this class are created by the collections getRecord method.
  * When you update a record
  * @namespace ludo.dataSource
@@ -56,7 +56,7 @@ ludo.dataSource.Record = new Class({
 	 @return {dataSource.Record|undefined}
 	 @memberof ludo.dataSource.Record.prototype
 	 @example
-	    var collection = new ludo.dataSource.Collection({
+	    var collection = new ludo.dataSource.JSONArray({
 	 		idField:'id'
 		});
 	 collection.getRecord(100).setProperties({ country:'Norway', capital:'Oslo' });

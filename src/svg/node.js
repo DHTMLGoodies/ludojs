@@ -1,4 +1,8 @@
 /**
+ * @namespace ludo.svg
+ */
+
+/**
  Class for creating SVG DOM Nodes
  @namespace ludo.canvas
  @class ludo.svg.Node
@@ -9,14 +13,27 @@
  @param {String} text
  @optional
  @example
- var paint = new ludo.svg.Paint({
-		'stroke-color' : '#000'
- 	});
- var node = new ludo.svg.Node('rect', { id:'myRect', x:20,y:20,width:100,height:100 , "class": paint, filter:filter });
+ var v = new ludo.View({
+    renderTo: document.body,
+    layout:{
+        width:'matchParent', height:'matchParent'
+    }
+ });
+ var svg = v.svg();
 
- or
- @example
- var node = new ludo.svg.Node('title', {}, 'My title' );
+ var circle = svg.$('circle', { cx: 100, cy: 100, r: 50 });
+ circle.css('fill', '#ff0000');
+
+ svg.append(circle);
+
+ circle.animate({
+    cx:300, cy: 200
+ },{
+    duration: 1000,
+    complete:function(){
+        console.log('completed');
+    }
+ });
 
  */
 ludo.svg.Node = new Class({
@@ -442,7 +459,8 @@ ludo.svg.Node = new Class({
      * Set or get CSS property
      * @param {String} key
      * @param {String|Number} value
-     * @returns {*}
+     * @returns {ludo.svg.Node}
+     * @memberof ludo.svg.Node.prototype
      * @example
      * var stroke = node.css('stroke'); // Get stroke css attribute
      * node.css('stroke', '#FFFFFF'); // set stroke css property
@@ -459,12 +477,14 @@ ludo.svg.Node = new Class({
         } else {
             this.el.style[String.camelCase(key)] = value;
         }
+        return this;
     },
 
     /**
      * Add css class to SVG node
      * @function addClass
      * @param {String} className
+     * @returns {ludo.svg.Node}
      * @memberof ludo.svg.Node.prototype
      */
     addClass: function (className) {
@@ -481,6 +501,7 @@ ludo.svg.Node = new Class({
         } else {
             this.set('class', className);
         }
+        return this;
     },
     /**
      Returns true if svg node has given css class name
@@ -522,6 +543,7 @@ ludo.svg.Node = new Class({
             this.classNameCache.erase(className);
             this.updateNodeClassNameById();
         }
+        return this;
     },
 
     updateNodeClassNameById: function () {
@@ -747,11 +769,11 @@ ludo.svg.Node = new Class({
 
     /**
      * The nearest ancestor 'svg' element. Null if the given element is the outermost svg element.
-     * @function getCanvas
+     * @function svg
      * @return {ludo.svg.Node.el} svg
      * @memberof ludo.svg.Node.prototype
      */
-    getCanvas: function () {
+    svg: function () {
         return this.el.ownerSVGElement;
     },
     /**

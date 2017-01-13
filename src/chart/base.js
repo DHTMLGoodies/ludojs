@@ -76,7 +76,7 @@ ludo.chart.Base = new Class({
 
     getChartNode: function () {
         if (this.chartNode == undefined) {
-            var c = this.getCanvas();
+            var c = this.svg();
             this.chartNode = c.$('g');
             this.append(this.chartNode);
             var x = this.layout.xOffset || 0;
@@ -233,7 +233,7 @@ ludo.chart.Base = new Class({
         }
     },
 
-    getCanvas: function () {
+    svg: function () {
         return this.parentComponent.svg();
     },
 
@@ -282,7 +282,7 @@ ludo.chart.Base = new Class({
         direction = this.revealAnimDirection || 'right';
         duration = this.revealAnimDuration || 600;
         var s = this.getSize();
-        var c = this.getCanvas();
+        var c = this.svg();
         if (this.clipPath == undefined) {
             this.clipPath = c.$('clipPath');
             c.appendDef(this.clipPath);

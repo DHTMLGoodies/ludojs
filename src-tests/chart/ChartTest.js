@@ -101,7 +101,7 @@ TestCase("ChartTest", {
         var f = c.children[0].getFragments()[0];
 
         // then
-        assertEquals(c.getCanvas(), f.getCanvas());
+        assertEquals(c.svg(), f.svg());
 
     },
 

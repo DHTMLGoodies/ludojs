@@ -2,6 +2,7 @@ TestCase("ThemeTests", {
 
     setUp:function(){
         document.body.className = '';
+        $(document.body).html('');
         ludo.Theme.clear();
     },
 
@@ -43,10 +44,19 @@ TestCase("ThemeTests", {
         var c = ludo.$C("border");
 
         // then
-        assertEquals('#aeb0b0', c);
+        assertEquals('#424242', c);
         
+    },
+
+    "test should be able to detect theme if set on div": function(){
+
+        // given
+        var c = $('<div><div class="ludo-twilight"></div></div>');
+        $(document.body).append(c);
+
+        // then
+        assertEquals('twilight', ludo.Theme.getCurrentTheme());
+
     }
     
-    
-
 });

@@ -2,7 +2,7 @@ TestCase("LayoutCanvasTest", {
 
 	"test should get correct layout manager":function () {
 		// given
-		var v = this.getCanvasWithTwoChildren();
+		var v = this.svgWithTwoChildren();
 
 		// then
 		assertEquals('Canvas', v.layout.type);
@@ -10,7 +10,7 @@ TestCase("LayoutCanvasTest", {
 
 	"test should render children":function () {
 		// given
-		var v = this.getCanvasWithTwoChildren();
+		var v = this.svgWithTwoChildren();
 		assertNotUndefined(v.canvas);
 
 		// when
@@ -22,7 +22,7 @@ TestCase("LayoutCanvasTest", {
 
 	"test should render one child correctly":function () {
 		// given
-		var v = this.getCanvasWithTheseChildren([
+		var v = this.svgWithTheseChildren([
 			{ type:'canvas.Group', layout:{
 				alignParentLeft:true,
 				alignParentTop:true,
@@ -40,7 +40,7 @@ TestCase("LayoutCanvasTest", {
 
 	"test should render children correctly":function () {
 		// given
-		var v = this.getCanvasWithTheseChildren([
+		var v = this.svgWithTheseChildren([
 			{
 				name:'chart',
 				type:'canvas.Group',
@@ -71,7 +71,7 @@ TestCase("LayoutCanvasTest", {
 		assertEquals('100px', v.children[1].get('width'));
 	},
 
-	getCanvasWithTwoChildren:function () {
+	svgWithTwoChildren:function () {
 		return new ludo.chart.Chart({
 			children:[
 				{
@@ -85,7 +85,7 @@ TestCase("LayoutCanvasTest", {
 		});
 	},
 
-	getCanvasWithTheseChildren:function (children) {
+	svgWithTheseChildren:function (children) {
 
 		var v = new ludo.View({
 			renderTo:document.body,

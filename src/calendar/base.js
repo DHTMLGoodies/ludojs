@@ -1,9 +1,14 @@
 /**
+ * Calendar related classes
+ * @namespace ludo.calendar
+ */
+/**
  * Base class for calendar related classes
  * @namespace calendar
  * @class ludo.calendar.Base
  *
  * @fires ludo.calendar.Base#setDate - Arguments Date and ludo.View(the view firing the event)
+ *
  */
 ludo.calendar.Base = new Class({
     Extends: ludo.View,
@@ -15,7 +20,7 @@ ludo.calendar.Base = new Class({
     __construct:function(config){
         this.parent(config);
         this.date = new Date();
-        this.translate();
+        this.translate();''
     },
 
     translate:function(){

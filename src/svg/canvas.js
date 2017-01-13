@@ -64,8 +64,7 @@ ludo.svg.Canvas = new Class({
 	fitParent:function(){
 		var size = { x: this.renderTo.width(), y: this.renderTo.height() };
 		if(size.x === 0 || size.y === 0)return;
-		size.x -= (ludo.dom.getPW(this.renderTo) + ludo.dom.getBW(this.renderTo));
-		size.y -= (ludo.dom.getPH(this.renderTo) + ludo.dom.getBH(this.renderTo));
+
 		this.set('width', size.x);
 		this.set('height', size.y);
 		this.setViewBox(size.x, size.y);

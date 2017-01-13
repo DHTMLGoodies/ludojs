@@ -9,7 +9,7 @@ ludo.colorPicker.Picker = new Class({
 	__rendered:function () {
 		this.parent();
 		this.colorObj = new ludo.color.Color();
-		var canvas = this.getCanvas();
+		var canvas = this.svg();
 
 		this.addLeftRightMask();
 		this.addTopBottomMask();
@@ -35,34 +35,34 @@ ludo.colorPicker.Picker = new Class({
 		this.circle = new ludo.svg.Circle({ cx : 100, cy:100, r: 5 });
 		this.circle.css('stroke', '#FFF');
 		this.circle.css('fill', 'none');
-		this.getCanvas().append(this.circle);
+		this.svg().append(this.circle);
 	},
 	getLeftRightGradient:function () {
 		var gradient = new ludo.svg.Gradient({x1:'0%', y1:'0%', x2:'100%', y2:'0%'});
 		gradient.addStop('0%', '#000', 1);
 		gradient.addStop('100%', '#FFF', 1);
-		this.getCanvas().appendDef(gradient);
+		this.svg().appendDef(gradient);
 		return gradient;
 	},
 
 	addLeftRightMask:function () {
 		this.maskLR = new ludo.svg.Mask();
-		this.getCanvas().appendDef(this.maskLR);
+		this.svg().appendDef(this.maskLR);
 		var gradient = new ludo.svg.Gradient({x1:'0%', y1:'0%', x2:'100%', y2:'0%'});
 		gradient.addStop('0%', '#FFF', 1);
 		gradient.addStop('100%', '#FFF', 0);
-		this.getCanvas().appendDef(gradient);
+		this.svg().appendDef(gradient);
 		var rect = new ludo.svg.Rect({ x:0, y:0, width:'100%', height:'100%', fill:gradient});
 		this.maskLR.append(rect);
 
 	},
 	addTopBottomMask:function () {
 		this.maskTB = new ludo.svg.Mask();
-		this.getCanvas().appendDef(this.maskTB);
+		this.svg().appendDef(this.maskTB);
 		var gradient = new ludo.svg.Gradient({x1:'0%', y1:'0%', x2:'0%', y2:'100%'});
 		gradient.addStop('0%', '#FFF', 0);
 		gradient.addStop('100%', '#FFF', 1);
-		this.getCanvas().appendDef(gradient);
+		this.svg().appendDef(gradient);
 		var rect = new ludo.svg.Rect({ x:0, y:0, width:'100%', height:'100%', fill:gradient});
 		this.maskTB.append(rect);
 	},

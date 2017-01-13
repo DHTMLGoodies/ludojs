@@ -133,7 +133,7 @@ ludo.chart.Fragment = new Class({
 
     createStyle:function(styles){
         var p = new ludo.svg.Paint(styles);
-        this.getCanvas().appendDef(p);
+        this.svg().appendDef(p);
         return p;
     },
 
@@ -149,10 +149,10 @@ ludo.chart.Fragment = new Class({
         this.clicked = true;
     },
 
-    getCanvas:function(){
+    svg:function(){
         return this.getParent().getParent().getCanvas();
     },
-
+    
     storeRendering:function(rendering){
         this.rendering = rendering;
     },

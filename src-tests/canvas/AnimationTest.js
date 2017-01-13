@@ -19,7 +19,7 @@ TestCase("AnimationTest", {
             }
         });
 
-        var svg = v.getCanvas();
+        var svg = v.svg();
 
         var circle = svg.$('circle', {r: 50, cx: 0, cy: 0});
         svg.append(circle);
@@ -71,7 +71,7 @@ TestCase("AnimationTest", {
             }
         });
 
-        var svg = v.getCanvas();
+        var svg = v.svg();
 
         var circle = svg.$('circle', {r: 50, cx: 0, cy: 0});
         svg.append(circle);

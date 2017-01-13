@@ -12,7 +12,7 @@
 		  }
  ...
  }
- where 'myDataSource' is the id of a dataSource.Collection object used by a view.
+ where 'myDataSource' is the id of a dataSource.JSONArray object used by a view.
  */
 ludo.paging.TotalPages = new Class({
 	Extends:ludo.View,

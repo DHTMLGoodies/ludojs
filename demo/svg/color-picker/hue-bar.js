@@ -13,7 +13,7 @@ ludo.colorPicker.HueBar = new Class({
     __rendered:function(){
         this.parent();
         this.colorObj = new ludo.color.Color();
-        var c = this.getCanvas();
+        var c = this.svg();
 		this.currentBarHeight = c.get('height');
 		c.addEvent('resize', this.positionSlider.bind(this));
 		c.node.css('width', '50px');
@@ -36,7 +36,7 @@ ludo.colorPicker.HueBar = new Class({
 		this.slider.css('cursor', 'pointer');
 
 		var symbol = new ludo.svg.Node('symbol');
-		this.getCanvas().appendDef(symbol);
+		this.svg().appendDef(symbol);
 
 
 		var hh = ludo.util.isTabletOrMobile();
@@ -52,7 +52,7 @@ ludo.colorPicker.HueBar = new Class({
 		var u2 = new ludo.svg.Node('use', { x : '-100%', 'transform' : 'scale(-1,1)'});
 		u2.href(symbol);
 		this.slider.append(u2);
-		this.getCanvas().append(this.slider);
+		this.svg().append(this.slider);
 
 		this.makeSliderDragable();
 	},
@@ -70,7 +70,7 @@ ludo.colorPicker.HueBar = new Class({
 	},
 
 	setMinMaxForSliderDrag:function(){
-		var height = this.getCanvas().get('height');
+		var height = this.svg().get('height');
 
 		this.dd.setMinY((height *(this.topMargin / 100)) - this.getSliderHeight() / 2);
 		this.dd.setMaxY((height *((100 - this.topMargin) / 100)) - this.getSliderHeight() / 2);
@@ -102,7 +102,7 @@ ludo.colorPicker.HueBar = new Class({
             var color = this.colorObj.rgbCode(this.colorObj.hsvToRGB(i, 100, 100));
             gradient.addStop(prs + '%', color, 1);
         }
-        this.getCanvas().appendDef(gradient);
+        this.svg().appendDef(gradient);
         return gradient;
     },
 
@@ -143,14 +143,14 @@ ludo.colorPicker.HueBar = new Class({
 		if(this.dragIsActive)return;
 		var h = this.hueBar.getHeight();
 		var y = h - (hue/360*h) - (this.getSliderHeight() / 2);
-		y += this.getCanvas().getHeight() * (this.topMargin / 100);
+		y += this.svg().getHeight() * (this.topMargin / 100);
 		this.slider.setTranslate(0, Math.round(y));
 		this.currentHue = hue;
 	},
 
 
 	positionSlider:function(){
-		this.currentBarHeight = this.getCanvas().getHeight();
+		this.currentBarHeight = this.svg().getHeight();
 		if(this.currentHue !== undefined)this.positionSliderByHue(this.currentHue);
 	}
 });

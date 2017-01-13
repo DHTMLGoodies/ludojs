@@ -36,7 +36,7 @@ ludo.chart.Line = new Class({
 
     __rendered:function(){
         this.parent();
-        this.chart().getCanvas().node.on("mousemove", this.mousemove.bind(this));
+        this.chart().svg().node.on("mousemove", this.mousemove.bind(this));
     },
 
     leaveGroup:function(){

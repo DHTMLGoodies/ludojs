@@ -280,7 +280,7 @@ svgCrop.Surface = new Class({
     },
 
     setPicture: function (picture) {
-        var s = this.getCanvas();
+        var s = this.svg();
         if (this.imageNode == undefined) {
             this.imageNode = s.$('image');
             this.imageNode.on('load', this.imageLoaded.bind(this));
@@ -491,7 +491,7 @@ svgCrop.Surface = new Class({
     },
 
     resizePicture: function () {
-        var s = this.getCanvas();
+        var s = this.svg();
         this.ratio = Math.min((s.width - this.padding) / this.size.width, (s.height - this.padding) / this.size.height);
         if (this.ratio > 1)this.ratio = 1;
 
@@ -503,7 +503,7 @@ svgCrop.Surface = new Class({
     },
 
     positionPicture: function () {
-        var s = this.getCanvas();
+        var s = this.svg();
         var x = s.width / 2 - (this.size.width * this.ratio) / 2;
         var y = s.height / 2 - (this.size.height * this.ratio) / 2;
         this.imagePos.x = x;
@@ -561,13 +561,13 @@ svgCrop.Handle = new Class({
         this.surface = config.surface;
 
 
-        this.node = this.surface.getCanvas().$('circle', {
+        this.node = this.surface.svg().$('circle', {
             r: hh ? 11: 5,
             cx:0,cy:0
         });
 
         /*
-        this.node = this.surface.getCanvas().$('path', {
+        this.node = this.surface.svg().$('path', {
             d: this.getPath()
         });
         */

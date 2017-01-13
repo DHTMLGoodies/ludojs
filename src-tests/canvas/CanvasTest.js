@@ -140,7 +140,7 @@ TestCase("CanvasTest", {
 		assertEquals(w.getBody().attr("id"), ludo.svg.get(canvas.getEl().parentNode, "id"));
 	},
 
-	"test should be able to create canvas by calling view.getCanvas":function(){
+	"test should be able to create canvas by calling view.svg":function(){
 		// given
 		var view = new ludo.View({
 			width:500,
@@ -149,7 +149,7 @@ TestCase("CanvasTest", {
 		});
 
 		// when
-		var canvas = view.getCanvas();
+		var canvas = view.svg();
 
 		// then
 		assertEquals('svg', canvas.getEl().tagName);

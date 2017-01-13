@@ -68,7 +68,6 @@ require_once("includes/demo-header.php");
                 },
                 css:{
                     overflow:'auto',
-                    'background-color': '#fff',
                     border:'1px solid #ddd'
                 },
                 type:'SourceCodePreview'

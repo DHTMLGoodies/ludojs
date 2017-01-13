@@ -2,7 +2,6 @@
  * Super class for form Views.
  * This class inherits from <a href="ludo.View.html">ludo.View</a>.
  * @module form
- * @namespace ludo.form
  * @class ludo.form.Element
  * @param {Object} config Configuration when creating the View. These properties and properties from superclass is available
  * @param {String} config.name Name of element. A call to parentView.getForm().values() will return &lt;name> : &lt;value>.
@@ -27,6 +26,7 @@
  * @fires ludo.form.Element#clean - Fired on new value which is the same as initial. Arguments. value, ludo.form.Element
  * @fires ludo.form.Element#value - Fired when a new valid value is set. Arguments. value, ludo.form.Element
  * @fires ludo.form.Element#invalid - Fired when a new value is set which is invalid. Arguments. value, ludo.form.Element
+ * @namespace ludo.form
  */
 ludo.form.Element = new Class({
     Extends:ludo.View,

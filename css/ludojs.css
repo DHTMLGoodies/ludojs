@@ -1,7 +1,7 @@
-/* Generated Tue Jan 10 17:56:15 CET 2017 */
+/* Generated Fri Jan 13 19:19:23 CET 2017 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.388
+ludoJS - Javascript framework, 1.1.399
 Copyright (C) 2012-2017  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -1730,85 +1730,7 @@ div.ludo-tree-movable-shim img{
 }
 
 
-/* ../ludojs/css-source/progress/progress-bar.css */
-.ludo-Progress-Bar-Bg{
-    width:300px;
-    height:20px;
-    position:relative;
-    margin-left:2px;
-    margin-right:2px;
-    margin-top:1px;
-    overflow:hidden;
-}
-.ludo-Progress-Bar-Bg-Left{
-    background-image:url('../images/progress-bar/progress-bg.png');
-    width:60%;
-    left:0;
-    position:absolute;
-    background-position:top left;
-    height:20px;
-    background-repeat:no-repeat;
-
-}
-.ludo-Progress-Bar-Bg-Right{
-    background-image:url('../images/progress-bar/progress-bg.png');
-    position:absolute;
-    background-position:top right;
-    right:0;
-    top:0;
-    width:60%;
-    height:20px;
-    background-repeat:no-repeat;
-}
-
-
-.ludo-Progress-Bar{
-    background-repeat:repeat-x;
-    background-position:top left;
-    position:absolute;
-    top:0;
-    left:0;
-    height:20px;
-    width:300px;
-    overflow:hidden;
-}
-
-.ludo-Progress-Bar-Left{
-    background-image:url('../images/progress-bar/progress-bg-filled.png');
-    background-repeat:no-repeat;
-    position:absolute;
-    left:0;
-    top:0;
-    height:20px;
-    width:55%;
-}
-
-.ludo-Progress-Bar-Right{
-    background-image:url('../images/progress-bar/progress-bg-filled.png');
-    background-repeat:no-repeat;
-    background-position:top right;
-    position:absolute;
-    top:0;
-    right:0;
-    height:20px;
-    width:55%;
-}
-
-.ludo-Progress-Bar-Percent{
-    width:100%;
-    height:100%;
-    text-align:center;
-    color:#000;
-    line-height:20px;
-    z-index:100;
-    position:relative;
-    font-family:arial;
-    font-size:0.9em;
-}
-
-.ludo-Progress-Bar-Message{
-    text-align:center;
-}/* ../ludojs/css-source/form/form.css */
+/* ../ludojs/css-source/form/form.css */
 .ludo-form-element div.ludo-body {
     padding: 2px;
 }

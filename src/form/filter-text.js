@@ -99,7 +99,7 @@ ludo.form.FilterText = new Class({
 
         var cell = this.els.cellInput;
 
-        var size = ludo.dom.getNumericStyle(this.els.formEl, 'width') + ludo.dom.getPW(this.els.formEl) + ludo.dom.getBW(this.els.formEl) + ludo.dom.getMW(this.els.formEl);
+        var size = this.els.formEl.outerWidth(true);
 
         var container = this.els.inputContainer = $('<div>');
         cell.append(container);

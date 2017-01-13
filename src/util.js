@@ -21,8 +21,8 @@ ludo.util = {
 		return ludo.util.type(obj) === 'function';
 	},
 
-	argsToArray:function(arguments){
-		return Array.prototype.slice.call(arguments);
+	argsToArray:function(args){
+		return Array.prototype.slice.call(args);
 	},
 
 	clamp:function(num, min,max){

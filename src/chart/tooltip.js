@@ -107,7 +107,7 @@ ludo.chart.Tooltip = new Class({
 
     createDOM: function () {
         this.node = new ludo.svg.Node('g');
-        this.getParent().getCanvas().append(this.node);
+        this.getParent().svg().append(this.node);
         this.node.hide();
         this.node.toFront.delay(50, this.node);
 
@@ -316,7 +316,7 @@ ludo.chart.Tooltip = new Class({
             default:
 
                 var x = pos.left + bounds.width / 2 - size.width / 2;
-                var aw = this.getParent().getCanvas().width;
+                var aw = this.getParent().svg().width;
                 var overflow = (x + size.width) - aw;
                 if(overflow > 0){
                     this.offset.x = overflow;

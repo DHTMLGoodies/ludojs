@@ -1,4 +1,8 @@
 /**
+ * Utility for saving data in Browsers local storage.
+ * @namespace ludo.storage
+ */
+/**
  * Class for saving data to local storage(browser cache).
  *
  * ludo.getLocalStorage() returns a singleton for ludo.storage.LocalStorage
@@ -8,6 +12,8 @@
  * @example
  * ludo.getLocalStorage().save('name', 'John');
  * ludo.getLocalStorage().save('myobject', { "a": 1, "b" : 2 ));
+ * ludo.getLocalStorage().get('myobject');
+ *
  */
 ludo.storage.LocalStorage = new Class({
 	supported:false,

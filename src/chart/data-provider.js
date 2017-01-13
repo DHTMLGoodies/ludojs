@@ -2,10 +2,10 @@
  * Special data source for charts
  * @namespace ludo.chart
  * @class ludo.chart.DataProvider
- * @augments dataSource.Collection
+ * @augments dataSource.JSONArray
  */
 ludo.chart.DataProvider = new Class({
-    Extends:ludo.dataSource.Collection,
+    Extends:ludo.dataSource.JSONArray,
     type:'chart.DataProvider',
     sum:undefined,
     recordValues:{},

@@ -756,12 +756,7 @@ ludo.layout.Relative = new Class({
 		if (l.above)l.bottom = undefined;
 	},
 
-    /**
-     * Add events to child view
-     * @function addChildEvents
-     * @param {ludo.View} child
-	 * @protected
-     */
+
 	addChildEvents:function(child){
 		child.addEvent('hide', this.hideChild.bind(this));
 		child.addEvent('show', this.clearTemporaryValues.bind(this));

@@ -45,14 +45,14 @@ ludo.remote.Base = new Class({
 	 * Return url for the request
 	 * @function getUrl
 	 * @param {String} service
-	 * @param {Array} arguments
+	 * @param {Array} args
 	 * @return {String}
 	 * @protected
 	 */
-	getUrl:function (service, arguments) {
+	getUrl:function (service, args) {
 		var ret = this.url !== undefined ? this.url : ludo.config.getUrl();
 		if (ludo.config.hasModRewriteUrls()) {
-			ret = ludo.config.getDocumentRoot() + this.getServicePath(service, arguments);
+			ret = ludo.config.getDocumentRoot() + this.getServicePath(service, args);
 		} else {
 			ret = this.url !== undefined ? ludo.util.isFunction(this.url) ? this.url.call() : this.url : ludo.config.getUrl();
 		}
@@ -61,20 +61,20 @@ ludo.remote.Base = new Class({
 	/**
 	 * @function getServicePath
 	 * @param {String} service
-	 * @param {Array} arguments
+	 * @param {Array} args
 	 * @return {String}
 	 * @protected
 	 */
-	getServicePath:function (service, arguments) {
+	getServicePath:function (service, args) {
 		var parts = [this.resource];
-		if (arguments && arguments.length)parts.push(arguments.join('/'));
+		if (args && args.length)parts.push(args.join('/'));
 		if (service)parts.push(service);
 		return parts.join('/');
 	},
 	/**
 	 * @function getDataForRequest
 	 * @param {String} service
-	 * @param {Array} arguments
+	 * @param {Array} args
 	 * @param {Object} data
 	 * @optional
 	 * @param {Object} additionalData
@@ -82,7 +82,7 @@ ludo.remote.Base = new Class({
 	 * @return {Object}
 	 * @protected
 	 */
-	getDataForRequest:function (service, arguments, data, additionalData) {
+	getDataForRequest:function (service, args, data, additionalData) {
 		var ret = {
 			data:data
 		};
@@ -92,7 +92,7 @@ ludo.remote.Base = new Class({
 			}
 		}
 		if (!ludo.config.hasModRewriteUrls() && this.resource) {
-			ret.request = this.getServicePath(service, arguments);
+			ret.request = this.getServicePath(service, args);
 		}
 
 		var injected = ludo.remoteInject.get(this.resource, service);

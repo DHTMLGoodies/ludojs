@@ -39,7 +39,7 @@ google_ad_height = 280;
             'background-color':'#FFF'
         }
     });
-    var canvas = win.getCanvas();
+    var canvas = win.svg();
 
     var paint = new ludo.svg.Paint({
             'fill':'#999',

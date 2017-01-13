@@ -49,7 +49,7 @@ ludo.form.Select = new Class({
 
     options:undefined,
 
-	defaultDS:'dataSource.Collection',
+	defaultDS:'dataSource.JSONArray',
 
     __construct:function (config) {
         this.parent(config);

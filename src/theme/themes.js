@@ -79,11 +79,14 @@ ludo.theme.Themes = new Class({
 
     getCurrentTheme:function(){
         if(this.currentTheme == undefined){
-            var b = $(document.body);
+            var b = $(document.documentElement);
             jQuery.each(this.themes, function(theme){
-                var cls = 'ludo-' + theme;
-                if(b.hasClass(cls)){
-                    this.currentTheme = theme;
+                if(!this.currentTheme){
+                    var cls = '.ludo-' + theme;
+                    var els = b.find(cls);
+                    if(els.length > 0){
+                        this.currentTheme = theme;
+                    }
                 }
             }.bind(this));
         }

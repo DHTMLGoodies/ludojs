@@ -92,8 +92,8 @@ ludo.layout.TextBox = new Class({
     },
 
     createStyles: function () {
-        this.styles = this.getStyles(this.className);
-        this.stylesOver = this.getStyles(this.classNameOver);
+        this.styles = ludo.svg.Util.textStyles(this.className);
+        this.stylesOver = ludo.svg.Util.textStyles(this.classNameOver);
         this.stylesOver['font-size'] = this.styles['font-size'];
         this.stylesOver['line-height'] = this.styles['line-height'];
 
@@ -110,51 +110,6 @@ ludo.layout.TextBox = new Class({
         });
         el.text(this.text);
         this.append(el);
-    },
-
-    getStyles: function (className) {
-        var node = $('<div>');
-        node.addClass(className);
-        node.css('display', 'none');
-        $(document.body).append(node);
-
-        var lh = node.css('line-height').replace(/[^0-9\.]/g, '');
-        if (!lh) {
-            lh = node.css('font-size');
-        }
-
-
-        var fontSize = parseInt(node.css('font-size'));
-        fontSize++;
-
-
-        var ret = {
-            'font-size': fontSize + "px",
-            'font-family': node.css('font-family'),
-            'font-weight': node.css('font-weight'),
-            'font-style': node.css('font-style'),
-            'line-height': lh,
-            'fill': this.toRGBColor(node.css('color')),
-            'stroke': 'none',
-            'stroke-opacity': 0
-        };
-        ret['line-height'] = ret['line-height'] || ret['font-size'];
-        node.remove();
-        return ret;
-    },
-
-    toRGBColor:function(val){
-        if(val.indexOf('rgb') >= 0){
-            if(this.colorUtil == undefined){
-                this.colorUtil = new ludo.color.Color();
-            }
-            val = val.replace(/[^0-9,]/g,'');
-            var colors = val.split(/,/g);
-            val = this.colorUtil.rgbCode(colors[0]/1, colors[1]/1, colors[2]/1);
-            return val;
-        }
-
-        return val;
     },
 
     storeSize: function () {

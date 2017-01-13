@@ -1,7 +1,7 @@
 /**
- * @module ludo
- * @main ludo
+ * @namespace ludo
  */
+
 window.ludo = {
     form:{ validator:{} },color:{}, dialog:{},remote:{},tree:{},model:{},tpl:{},video:{},storage:{},
     grid:{}, effect:{},paging:{},calendar:{},layout:{},progress:{},keyboard:{},chart:{},

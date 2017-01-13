@@ -43,6 +43,7 @@ ludo.svg.View = new Class({
      * @param {String} tag
      * @param {Object} properties
      * @returns {ludo.svg.Node}
+     * @memberof ludo.svg.View.prototype
      * @example
      * var circle = svg.$('circle', { r: 50, cx:100,cy:150, fill: '#ff0000' });
      */

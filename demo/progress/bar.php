@@ -1,0 +1,145 @@
+<?php
+$sub = true;
+$pageTitle = 'Progress Bar Demo';
+require_once("../includes/demo-header.php");
+?>
+
+<style type="text/css">
+    .ludo-progress-bg {
+        background-color: #444;
+        border: 2px solid #333333;
+    }
+
+    .ludo-progress-pr {
+        background-color: #1976D2;
+
+    }
+
+    .ludo-progress-text {
+        color: #FFFFFF;
+        font-size: 12px;
+    }
+
+</style>
+<script type="text/javascript" class="source-code">
+
+    var v = new ludo.View({
+        renderTo: document.body,
+        layout: {
+            width: 'matchParent', height: 'matchParent',
+            type: 'relative'
+        },
+
+        children: [
+            {
+                id: 'progress',
+                type: 'progress.Bar',
+                borderRadius: 3,
+                steps: 100,
+                elCss:{
+                    margin:2
+                },
+                layout: {
+                    width: 300,
+                    centerHorizontal: true,
+                    alignParentTop: true
+                }
+            },
+            {
+                id: 'progress2',
+                type: 'progress.Bar',
+                textSizeRatio:0.5,
+                steps:20,
+                elCss:{
+                    margin:4
+                },
+                progress:0,
+                backgroundStyles:{
+                    'stroke-width': 1
+                },
+                layout: {
+                    height:24,
+                    width: 'matchParent',
+                    centerHorizontal: true,
+                    below: 'progress'
+                },
+                barStyles:{
+                    fill:'#388E3C',
+                    stroke:'#388E3C'
+                },
+                listeners:{
+                    'animate':  function(percent){
+                        var prs = percent.toFixed(0);
+                        ludo.$('progress-status').html(prs + '% Completed');
+                    }
+                }
+            },
+            {
+                id:'progress-status',
+                type:'ludo.View',
+                layout:{
+                    height:40,
+                    width:300,
+                    centerHorizontal: true,
+                    below:'progress2'
+                },
+                css:{
+                    'font-size' : 25,
+                    'text-align': 'center'
+                }
+            },
+            {
+                id:'button',
+                type:'form.Button',
+                value:'Increment bar',
+                elCss:{
+                    'margin-top':10
+                },
+                listeners:{
+                    'click': function(){
+                        ludo.$('progress2').increment();
+                    }
+                },
+                layout:{
+                    width:120,
+                    centerHorizontal: true,
+                    below:'progress-status'
+                }
+            },
+            {
+                elCss:{
+                    'margin-top':10
+                },
+                type:'form.Button',
+                value:'Reset bar',
+                listeners:{
+                    'click': function(){
+                        ludo.$('progress2').setProgress(0);
+                    }
+                },
+                layout:{
+                    width:120,
+                    centerHorizontal: true,
+                    below:'button'
+                }
+            }
+        ]
+    });
+
+    var p = ludo.$('progress');
+    p.on('animated', function () {
+        if (!p.finished() && p.steps == 100) {
+            p.increment(5);
+        }
+    }.bind(p));
+
+    p.on('animate', function (percent) {
+        p.text(percent.toFixed(0) + '%');
+    }.bind(p));
+
+    p.increment(5);
+
+
+</script>
+</body>
+</html>

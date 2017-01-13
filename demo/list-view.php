@@ -70,7 +70,7 @@ require_once("includes/demo-header.php");
 
     var d = new Date();
 
-    var dataSource = new ludo.dataSource.Collection({
+    var dataSource = new ludo.dataSource.JSONArray({
         /** The url below contains an array of json objects like so:
          * [
          {

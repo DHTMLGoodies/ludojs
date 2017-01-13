@@ -27,7 +27,7 @@
 ludo.ListView = new Class({
     type: 'ListView',
     Extends: ludo.CollectionView,
-    defaultDS: 'dataSource.Collection',
+    defaultDS: 'dataSource.JSONArray',
     overflow: 'auto',
     highlighted: undefined,
     recordMap: {},

@@ -288,30 +288,135 @@ ludo.svg.Animation = new Class({
 
 ludo.svgAnimation = new ludo.svg.Animation();
 
+
+/**
+ * Easing methods for SVG animations.
+ *
+ * To see how the different functions work, see the <a href="../demo/svg/animation.php">SVG animation demo</a>.
+ *
+ * @class ludo.svg.easing
+ * @example
+ * circle.animate({
+ *      cx : 100, cy: 100, r: 10
+ * }, {
+ *      duration: 200,
+ *      easing: ludo.svg.easing.outCubic,
+ *      complete: function(){ console.log('finished') }
+ * });
+ */
+
+
 ludo.svg.easing = {
 
     /**
      *
-     * @param t current time
-     * @param b start value
-     * @param c change in value
-     * @param d duration
-     * @returns {*}
+     * @function linear
+     * @memberof ludo.svg.easing
+     * @example
+     * var v = new ludo.View({
+     *      renderTo: document.body,
+     *      layout:{
+     *          width:'matchParent', height:'matchParent'
+     *      }
+     * });
+     * var svg = v.svg();
+     *
+     * var circle = svg.$('circle', { cx: 100, cy: 100, r: 50 });
+     * circle.css('fill', '#ff0000');
+     * svg.append(circle);
+     * circle.animate({
+     *      cx:300, cy: 200
+     * },{
+     *      easing: ludo.svg.easing.linear
+     *      duration: 1000,
+     *      complete:function(){
+     *          console.log('completed');
+     *   }
+     * });
      */
     linear: function (t, b, c, d) {
         return c * t / d + b;
     },
 
+    /**
+     * inQuad easing functions
+     * @function inQuad
+     * @memberof ludo.svg.easing
+     * @example
+     * var v = new ludo.View({
+     *      renderTo: document.body, layout:{ width:'matchParent', height:'matchParent'  }
+     * });
+     * var svg = v.svg();
+     *
+     * var circle = svg.$('circle', { cx: 100, cy: 100, r: 50, fill: '#ff0000' });
+     * svg.append(circle);
+     *
+     * circle.animate({
+     *      cx:300, cy: 200
+     * },{
+     *      easing: ludo.svg.easing.inQuad
+     *      duration: 1000,
+     *      complete:function(){
+     *          console.log('completed');
+     *   }
+     * });
+     */
     inQuad: function (t, b, c, d) {
         t /= d;
         return c * t * t + b;
     },
 
+    /**
+     * outQuad easing functions
+     * @function outQuad
+     * @memberof ludo.svg.easing
+     * @example
+     * var v = new ludo.View({
+     *      renderTo: document.body, layout:{ width:'matchParent', height:'matchParent'  }
+     * });
+     * var svg = v.svg();
+     *
+     * var circle = svg.$('circle', { cx: 100, cy: 100, r: 50, fill: '#ff0000' });
+     * svg.append(circle);
+     *
+     * circle.animate({
+     *      cx:300, cy: 200
+     * },{
+     *      easing: ludo.svg.easing.outQuad
+     *      duration: 1000,
+     *      complete:function(){
+     *          console.log('completed');
+     *   }
+     * });
+     */
     outQuad: function (t, b, c, d) {
         t /= d;
         return -c * t * (t - 2) + b;
     },
 
+    /**
+     * inOutQuad easing functions
+     * @function inOutQuad
+     * @memberof ludo.svg.easing
+     * @example
+     * var v = new ludo.View({
+     *      renderTo: document.body, layout:{ width:'matchParent', height:'matchParent'  }
+     * });
+     * var svg = v.svg();
+     *
+     * var circle = svg.$('circle', { cx: 100, cy: 100, r: 50, fill: '#ff0000' });
+     * svg.append(circle);
+     *
+     * circle.animate({
+     *      cx:300, cy: 200
+     * },{
+     *      easing: ludo.svg.easing.inOutQuad
+     *      duration: 1000,
+     *      complete:function(){
+     *          console.log('completed');
+     *   }
+     * });
+     */
     inOutQuad: function (t, b, c, d) {
         t /= d / 2;
         if (t < 1) return c / 2 * t * t + b;
@@ -319,18 +424,86 @@ ludo.svg.easing = {
         return -c / 2 * (t * (t - 2) - 1) + b;
     },
 
-
+    /**
+     * inCubic easing functions
+     * @function inCubic
+     * @memberof ludo.svg.easing
+     * @example
+     * var v = new ludo.View({
+     *      renderTo: document.body, layout:{ width:'matchParent', height:'matchParent'  }
+     * });
+     * var svg = v.svg();
+     *
+     * var circle = svg.$('circle', { cx: 100, cy: 100, r: 50, fill: '#ff0000' });
+     * svg.append(circle);
+     *
+     * circle.animate({
+     *      cx:300, cy: 200
+     * },{
+     *      easing: ludo.svg.easing.inCubic
+     *      duration: 1000,
+     *      complete:function(){
+     *          console.log('completed');
+     *   }
+     * });
+     */
     inCubic: function (t, b, c, d) {
         t /= d;
         return c * t * t * t + b;
     },
 
+    /**
+     * outCubic easing functions
+     * @function outCubic
+     * @memberof ludo.svg.easing
+     * @example
+     * var v = new ludo.View({
+     *      renderTo: document.body, layout:{ width:'matchParent', height:'matchParent'  }
+     * });
+     * var svg = v.svg();
+     *
+     * var circle = svg.$('circle', { cx: 100, cy: 100, r: 50, fill: '#ff0000' });
+     * svg.append(circle);
+     *
+     * circle.animate({
+     *      cx:300, cy: 200
+     * },{
+     *      easing: ludo.svg.easing.outCubic
+     *      duration: 1000,
+     *      complete:function(){
+     *          console.log('completed');
+     *   }
+     * });
+     */
     outCubic: function (t, b, c, d) {
         t /= d;
         t--;
         return c * (t * t * t + 1) + b;
     },
 
+    /**
+     * inOutCubic easing functions
+     * @function inOutCubic
+     * @memberof ludo.svg.easing
+     * @example
+     * var v = new ludo.View({
+     *      renderTo: document.body, layout:{ width:'matchParent', height:'matchParent'  }
+     * });
+     * var svg = v.svg();
+     *
+     * var circle = svg.$('circle', { cx: 100, cy: 100, r: 50, fill: '#ff0000' });
+     * svg.append(circle);
+     *
+     * circle.animate({
+     *      cx:300, cy: 200
+     * },{
+     *      easing: ludo.svg.easing.inOutCubic
+     *      duration: 1000,
+     *      complete:function(){
+     *          console.log('completed');
+     *   }
+     * });
+     */
     inOutCubic: function (t, b, c, d) {
         t /= d / 2;
         if (t < 1) return c / 2 * t * t * t + b;
@@ -338,17 +511,86 @@ ludo.svg.easing = {
         return c / 2 * (t * t * t + 2) + b;
     },
 
+    /**
+     * inQuart easing functions
+     * @function inQuart
+     * @memberof ludo.svg.easing
+     * @example
+     * var v = new ludo.View({
+     *      renderTo: document.body, layout:{ width:'matchParent', height:'matchParent'  }
+     * });
+     * var svg = v.svg();
+     *
+     * var circle = svg.$('circle', { cx: 100, cy: 100, r: 50, fill: '#ff0000' });
+     * svg.append(circle);
+     *
+     * circle.animate({
+     *      cx:300, cy: 200
+     * },{
+     *      easing: ludo.svg.easing.inQuart
+     *      duration: 1000,
+     *      complete:function(){
+     *          console.log('completed');
+     *   }
+     * });
+     */
     inQuart: function (t, b, c, d) {
         t /= d;
         return c * t * t * t * t + b;
     },
 
+    /**
+     * outQuart easing functions
+     * @function outQuart
+     * @memberof ludo.svg.easing
+     * @example
+     * var v = new ludo.View({
+     *      renderTo: document.body, layout:{ width:'matchParent', height:'matchParent'  }
+     * });
+     * var svg = v.svg();
+     *
+     * var circle = svg.$('circle', { cx: 100, cy: 100, r: 50, fill: '#ff0000' });
+     * svg.append(circle);
+     *
+     * circle.animate({
+     *      cx:300, cy: 200
+     * },{
+     *      easing: ludo.svg.easing.outQuart
+     *      duration: 1000,
+     *      complete:function(){
+     *          console.log('completed');
+     *   }
+     * });
+     */
     outQuart: function (t, b, c, d) {
         t /= d;
         t--;
         return -c * (t * t * t * t - 1) + b;
     },
 
+    /**
+     * inOutQuart easing functions
+     * @function inOutQuart
+     * @memberof ludo.svg.easing
+     * @example
+     * var v = new ludo.View({
+     *      renderTo: document.body, layout:{ width:'matchParent', height:'matchParent'  }
+     * });
+     * var svg = v.svg();
+     *
+     * var circle = svg.$('circle', { cx: 100, cy: 100, r: 50, fill: '#ff0000' });
+     * svg.append(circle);
+     *
+     * circle.animate({
+     *      cx:300, cy: 200
+     * },{
+     *      easing: ludo.svg.easing.inOutQuart
+     *      duration: 1000,
+     *      complete:function(){
+     *          console.log('completed');
+     *   }
+     * });
+     */
     inOutQuart: function (t, b, c, d) {
         t /= d / 2;
         if (t < 1) return c / 2 * t * t * t * t + b;
@@ -356,17 +598,86 @@ ludo.svg.easing = {
         return -c / 2 * (t * t * t * t - 2) + b;
     },
 
+    /**
+     * inQuint easing functions
+     * @function inQuint
+     * @memberof ludo.svg.easing
+     * @example
+     * var v = new ludo.View({
+     *      renderTo: document.body, layout:{ width:'matchParent', height:'matchParent'  }
+     * });
+     * var svg = v.svg();
+     *
+     * var circle = svg.$('circle', { cx: 100, cy: 100, r: 50, fill: '#ff0000' });
+     * svg.append(circle);
+     *
+     * circle.animate({
+     *      cx:300, cy: 200
+     * },{
+     *      easing: ludo.svg.easing.inQuint
+     *      duration: 1000,
+     *      complete:function(){
+     *          console.log('completed');
+     *   }
+     * });
+     */
     inQuint: function (t, b, c, d) {
         t /= d;
         return c * t * t * t * t * t + b;
     },
 
+    /**
+     * outQuint easing functions
+     * @function outQuint
+     * @memberof ludo.svg.easing
+     * @example
+     * var v = new ludo.View({
+     *      renderTo: document.body, layout:{ width:'matchParent', height:'matchParent'  }
+     * });
+     * var svg = v.svg();
+     *
+     * var circle = svg.$('circle', { cx: 100, cy: 100, r: 50, fill: '#ff0000' });
+     * svg.append(circle);
+     *
+     * circle.animate({
+     *      cx:300, cy: 200
+     * },{
+     *      easing: ludo.svg.easing.outQuint
+     *      duration: 1000,
+     *      complete:function(){
+     *          console.log('completed');
+     *   }
+     * });
+     */
     outQuint: function (t, b, c, d) {
         t /= d;
         t--;
         return c * (t * t * t * t * t + 1) + b;
     },
 
+    /**
+     * inOutQuint easing functions
+     * @function inOutQuint
+     * @memberof ludo.svg.easing
+     * @example
+     * var v = new ludo.View({
+     *      renderTo: document.body, layout:{ width:'matchParent', height:'matchParent'  }
+     * });
+     * var svg = v.svg();
+     *
+     * var circle = svg.$('circle', { cx: 100, cy: 100, r: 50, fill: '#ff0000' });
+     * svg.append(circle);
+     *
+     * circle.animate({
+     *      cx:300, cy: 200
+     * },{
+     *      easing: ludo.svg.easing.inOutQuint
+     *      duration: 1000,
+     *      complete:function(){
+     *          console.log('completed');
+     *   }
+     * });
+     */
     inOutQuint: function (t, b, c, d) {
         t /= d / 2;
         if (t < 1) return c / 2 * t * t * t * t * t + b;
@@ -374,33 +685,170 @@ ludo.svg.easing = {
         return c / 2 * (t * t * t * t * t + 2) + b;
     },
 
+    /**
+     * inSine easing functions
+     * @function inSine
+     * @memberof ludo.svg.easing
+     * @example
+     * var v = new ludo.View({
+     *      renderTo: document.body, layout:{ width:'matchParent', height:'matchParent'  }
+     * });
+     * var svg = v.svg();
+     *
+     * var circle = svg.$('circle', { cx: 100, cy: 100, r: 50, fill: '#ff0000' });
+     * svg.append(circle);
+     *
+     * circle.animate({
+     *      cx:300, cy: 200
+     * },{
+     *      easing: ludo.svg.easing.inSine
+     *      duration: 1000,
+     *      complete:function(){
+     *          console.log('completed');
+     *   }
+     * });
+     */
     inSine: function (t, b, c, d) {
         return -c * Math.cos(t / d * (Math.PI / 2)) + c + b;
     },
 
-    // sinusoidal easing out - decelerating to zero velocity
+    /**
+     * outSine easing functions
+     * @function outSine
+     * @memberof ludo.svg.easing
+     * @example
+     * var v = new ludo.View({
+     *      renderTo: document.body, layout:{ width:'matchParent', height:'matchParent'  }
+     * });
+     * var svg = v.svg();
+     *
+     * var circle = svg.$('circle', { cx: 100, cy: 100, r: 50, fill: '#ff0000' });
+     * svg.append(circle);
+     *
+     * circle.animate({
+     *      cx:300, cy: 200
+     * },{
+     *      easing: ludo.svg.easing.outSine
+     *      duration: 1000,
+     *      complete:function(){
+     *          console.log('completed');
+     *   }
+     * });
+     */
     outSine: function (t, b, c, d) {
         return c * Math.sin(t / d * (Math.PI / 2)) + b;
     },
 
-    // sinusoidal easing in/out - accelerating until halfway, then decelerating
+    /**
+     * outSine easing functions
+     * sinusoidal easing in/out - accelerating until halfway, then decelerating
+     * @function outSine
+     * @memberof ludo.svg.easing
+     * @example
+     * var v = new ludo.View({
+     *      renderTo: document.body, layout:{ width:'matchParent', height:'matchParent'  }
+     * });
+     * var svg = v.svg();
+     *
+     * var circle = svg.$('circle', { cx: 100, cy: 100, r: 50, fill: '#ff0000' });
+     * svg.append(circle);
+     *
+     * circle.animate({
+     *      cx:300, cy: 200
+     * },{
+     *      easing: ludo.svg.easing.outSine
+     *      duration: 1000,
+     *      complete:function(){
+     *          console.log('completed');
+     *   }
+     * });
+     */
     inOutSine: function (t, b, c, d) {
         return -c / 2 * (Math.cos(Math.PI * t / d) - 1) + b;
     },
 
-    // exponential easing in - accelerating from zero velocity
+
+    /**
+     * inExpo easing functions
+     * exponential easing in - accelerating from zero velocity
+     * @function inExpo
+     * @memberof ludo.svg.easing
+     * @example
+     * var v = new ludo.View({
+     *      renderTo: document.body, layout:{ width:'matchParent', height:'matchParent'  }
+     * });
+     * var svg = v.svg();
+     *
+     * var circle = svg.$('circle', { cx: 100, cy: 100, r: 50, fill: '#ff0000' });
+     * svg.append(circle);
+     *
+     * circle.animate({
+     *      cx:300, cy: 200
+     * },{
+     *      easing: ludo.svg.easing.inExpo
+     *      duration: 1000,
+     *      complete:function(){
+     *          console.log('completed');
+     *   }
+     * });
+     */
     inExpo: function (t, b, c, d) {
         return c * Math.pow(2, 10 * (t / d - 1)) + b;
     },
 
-
-    // exponential easing out - decelerating to zero velocity
+    /**
+     * outExpo easing functions
+     * exponential easing out - decelerating to zero velocity
+     * @function outExpo
+     * @memberof ludo.svg.easing
+     * @example
+     * var v = new ludo.View({
+     *      renderTo: document.body, layout:{ width:'matchParent', height:'matchParent'  }
+     * });
+     * var svg = v.svg();
+     *
+     * var circle = svg.$('circle', { cx: 100, cy: 100, r: 50, fill: '#ff0000' });
+     * svg.append(circle);
+     *
+     * circle.animate({
+     *      cx:300, cy: 200
+     * },{
+     *      easing: ludo.svg.easing.outExpo
+     *      duration: 1000,
+     *      complete:function(){
+     *          console.log('completed');
+     *   }
+     * });
+     */
     outExpo: function (t, b, c, d) {
         return c * ( -Math.pow(2, -10 * t / d) + 1 ) + b;
     },
 
 
-    // exponential easing in/out - accelerating until halfway, then decelerating
+    /**
+     * inOutExpo easing functions
+     * exponential easing in/out - accelerating until halfway, then decelerating
+     * @function inOutExpo
+     * @memberof ludo.svg.easing
+     * @example
+     * var v = new ludo.View({
+     *      renderTo: document.body, layout:{ width:'matchParent', height:'matchParent'  }
+     * });
+     * var svg = v.svg();
+     *
+     * var circle = svg.$('circle', { cx: 100, cy: 100, r: 50, fill: '#ff0000' });
+     * svg.append(circle);
+     *
+     * circle.animate({
+     *      cx:300, cy: 200
+     * },{
+     *      easing: ludo.svg.easing.inOutExpo
+     *      duration: 1000,
+     *      complete:function(){
+     *          console.log('completed');
+     *   }
+     * });
+     */
     inOutExpo: function (t, b, c, d) {
         t /= d / 2;
         if (t < 1) return c / 2 * Math.pow(2, 10 * (t - 1)) + b;
@@ -408,22 +856,90 @@ ludo.svg.easing = {
         return c / 2 * ( -Math.pow(2, -10 * t) + 2 ) + b;
     },
 
-    // circular easing in - accelerating from zero velocity
+    /**
+     * inCirc easing functions
+     * circular easing in - accelerating from zero velocity
+     * @function inCirc
+     * @memberof ludo.svg.easing
+     * @example
+     * var v = new ludo.View({
+     *      renderTo: document.body, layout:{ width:'matchParent', height:'matchParent'  }
+     * });
+     * var svg = v.svg();
+     *
+     * var circle = svg.$('circle', { cx: 100, cy: 100, r: 50, fill: '#ff0000' });
+     * svg.append(circle);
+     *
+     * circle.animate({
+     *      cx:300, cy: 200
+     * },{
+     *      easing: ludo.svg.easing.inCirc
+     *      duration: 1000,
+     *      complete:function(){
+     *          console.log('completed');
+     *   }
+     * });
+     */
     inCirc: function (t, b, c, d) {
         t /= d;
         return -c * (Math.sqrt(1 - t * t) - 1) + b;
     },
 
 
-    // circular easing out - decelerating to zero velocity
+    /**
+     * outCirc easing functions
+     * circular easing out - decelerating to zero velocity
+     * @function outCirc
+     * @memberof ludo.svg.easing
+     * @example
+     * var v = new ludo.View({
+     *      renderTo: document.body, layout:{ width:'matchParent', height:'matchParent'  }
+     * });
+     * var svg = v.svg();
+     *
+     * var circle = svg.$('circle', { cx: 100, cy: 100, r: 50, fill: '#ff0000' });
+     * svg.append(circle);
+     *
+     * circle.animate({
+     *      cx:300, cy: 200
+     * },{
+     *      easing: ludo.svg.easing.outCirc
+     *      duration: 1000,
+     *      complete:function(){
+     *          console.log('completed');
+     *   }
+     * });
+     */
     outCirc: function (t, b, c, d) {
         t /= d;
         t--;
         return c * Math.sqrt(1 - t * t) + b;
     },
 
-
-    // circular easing in/out - acceleration until halfway, then deceleration
+    /**
+     * inOutCirc easing functions
+     * circular easing in/out - acceleration until halfway, then deceleration
+     * @function inOutCirc
+     * @memberof ludo.svg.easing
+     * @example
+     * var v = new ludo.View({
+     *      renderTo: document.body, layout:{ width:'matchParent', height:'matchParent'  }
+     * });
+     * var svg = v.svg();
+     *
+     * var circle = svg.$('circle', { cx: 100, cy: 100, r: 50, fill: '#ff0000' });
+     * svg.append(circle);
+     *
+     * circle.animate({
+     *      cx:300, cy: 200
+     * },{
+     *      easing: ludo.svg.easing.inOutCirc
+     *      duration: 1000,
+     *      complete:function(){
+     *          console.log('completed');
+     *   }
+     * });
+     */
     inOutCirc: function (t, b, c, d) {
         t /= d / 2;
         if (t < 1) return -c / 2 * (Math.sqrt(1 - t * t) - 1) + b;
@@ -432,25 +948,85 @@ ludo.svg.easing = {
     },
 
     /**
+     * bounce easing functions
+     * @function bounce
+     * @memberof ludo.svg.easing
+     * @example
+     * var v = new ludo.View({
+     *      renderTo: document.body, layout:{ width:'matchParent', height:'matchParent'  }
+     * });
+     * var svg = v.svg();
      *
-     * @param t current time
-     * @param b start value
-     * @param c change in value
-     * @param d duration
-     * @returns {*}
+     * var circle = svg.$('circle', { cx: 100, cy: 100, r: 50, fill: '#ff0000' });
+     * svg.append(circle);
+     *
+     * circle.animate({
+     *      cx:300, cy: 200
+     * },{
+     *      easing: ludo.svg.easing.bounce
+     *      duration: 1000,
+     *      complete:function(){
+     *          console.log('completed');
+     *   }
+     * });
      */
-
     bounce: function (t, b, c, d) {
         var progress = t / d;
         progress = 1 - ludo.svg.easing._bounce(1 - progress);
         return c * progress + b;
     },
 
+    /**
+     * bounce easing functions
+     * @function bounce
+     * @memberof ludo.svg.easing
+     * @example
+     * var v = new ludo.View({
+     *      renderTo: document.body, layout:{ width:'matchParent', height:'matchParent'  }
+     * });
+     * var svg = v.svg();
+     *
+     * var circle = svg.$('circle', { cx: 100, cy: 100, r: 50, fill: '#ff0000' });
+     * svg.append(circle);
+     *
+     * circle.animate({
+     *      cx:300, cy: 200
+     * },{
+     *      easing: ludo.svg.easing.outCirc
+     *      duration: 1000,
+     *      complete:function(){
+     *          console.log('completed');
+     *   }
+     * });
+     */
     bow:function(t,b,c,d){
-        var progress = ludo.svg.easing._back(t/d, 1.5);
+        var progress = ludo.svg.easing._bow(t/d, 1.5);
         return c * progress + b;
     },
 
+    /**
+     * elastic easing functions
+     * @function elastic
+     * @memberof ludo.svg.easing
+     * @example
+     * var v = new ludo.View({
+     *      renderTo: document.body, layout:{ width:'matchParent', height:'matchParent'  }
+     * });
+     * var svg = v.svg();
+     *
+     * var circle = svg.$('circle', { cx: 100, cy: 100, r: 50, fill: '#ff0000' });
+     * svg.append(circle);
+     *
+     * circle.animate({
+     *      cx:300, cy: 200
+     * },{
+     *      easing: ludo.svg.easing.elastic
+     *      duration: 1000,
+     *      complete:function(){
+     *          console.log('completed');
+     *   }
+     * });
+     */
     elastic:function(t,b,c,d){
         var progress = ludo.svg.easing._elastic(t/d, 1.5);
         return c * progress + b;
@@ -469,7 +1045,7 @@ ludo.svg.easing = {
         }
     },
 
-    _back:function(progress, x){
+    _bow:function(progress, x){
         return Math.pow(progress, 2) * ((x + 1) * progress - x)
 
     }

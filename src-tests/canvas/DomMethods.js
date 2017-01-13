@@ -7,7 +7,7 @@ TestCase("DomMethods", {
 			}
 		});
 
-		var c = v.getCanvas();
+		var c = v.svg();
 
 		var rect = c.$('rect', { x : 150, y: 200, width:20,height:20 });
 		c.append(rect);
@@ -27,7 +27,7 @@ TestCase("DomMethods", {
 			}
 		});
 
-		var c = v.getCanvas();
+		var c = v.svg();
 
 		var g = c.$('g');
 		c.append(g);

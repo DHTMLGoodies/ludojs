@@ -245,7 +245,7 @@ ludo.calendar.TimePicker = new Class({
 
 
     renderClock: function () {
-        var canvas = this.getCanvas();
+        var canvas = this.svg();
         canvas.getNode().on(ludo.util.getDragStartEvent(), this.mouseDown.bind(this));
         $(document.body).on(ludo.util.getDragMoveEvent(), this.mouseMove.bind(this));
         $(document.body).on(ludo.util.getDragEndEvent(), this.mouseUp.bind(this));
@@ -467,7 +467,7 @@ ludo.calendar.TimePicker = new Class({
     },
 
     resizeSVG: function () {
-        var canvas = this.getCanvas();
+        var canvas = this.svg();
         canvas.fitParent();
         var size = Math.min(canvas.width, canvas.height);
 

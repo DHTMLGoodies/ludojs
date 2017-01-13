@@ -39,7 +39,7 @@ ludo.view.TitleBar = new Class({
         var left = 0;
         if (this.view.icon) {
             this.createIconDOM();
-            left += ludo.dom.getNumericStyle(el, 'width');
+            left += el.width();
         }
         this.createTitleDOM();
         el.append(this.getButtonContainer());

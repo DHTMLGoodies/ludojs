@@ -26,7 +26,7 @@ require_once("../includes/demo-header.php");
         ]
     });
     // Get reference to SVG surface
-    var c = ludo.$('demoView').getCanvas();
+    var c = ludo.$('demoView').svg();
 
     // Create color util for easy color generation
     var colorUtil = new ludo.color.Color();

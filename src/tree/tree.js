@@ -1,6 +1,8 @@
 /**
- * Tree widget
  * @namespace ludo.tree
+ */
+/**
+ * Tree widget
  * @class ludo.tree.Tree
  * @param {Object} config
  * @param {Object} config.defaults: Default values for properties not present in data, example:
@@ -31,6 +33,7 @@
  * </code>
  * tplKey refers to the "type" attribute. When type is "country", it should use the "country" tpl. When type is "city",
  * it should use the "city" template.
+ *
  */
 ludo.tree.Tree = new Class({
 	Extends:ludo.CollectionView,
@@ -75,7 +78,7 @@ ludo.tree.Tree = new Class({
 	tplKey:undefined,
 	dataSource:{
 	},
-    defaultDS: 'dataSource.TreeCollection',
+    defaultDS: 'dataSource.JSONTree',
 
 	/*
 	 Default values when not present in node.

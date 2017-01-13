@@ -27,7 +27,7 @@ require_once("../includes/demo-header.php");
     });
 
     // Get reference to SVG surface
-    var c = ludo.$('demoView').getCanvas();
+    var c = ludo.$('demoView').svg();
 
 
     // Rotation of rectangle
