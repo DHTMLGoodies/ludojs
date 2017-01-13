@@ -1,7 +1,7 @@
-/* Generated Fri Jan 13 19:35:49 CET 2017 */
+/* Generated Fri Jan 13 20:33:50 CET 2017 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.400
+ludoJS - Javascript framework, 1.1.401
 Copyright (C) 2012-2017  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -30446,7 +30446,7 @@ ludo.progress.Bar = new Class({
     textStyles: undefined,
     _text: undefined,
 
-    animationDuration: 50,
+    animationDuration: 100,
 
     debugRect: undefined,
 
@@ -30700,7 +30700,7 @@ ludo.progress.Bar = new Class({
             this.els.clipRect.animate({
                 width: w
             }, {
-                duration: this.animationDuration * Math.abs(diff) * 100,
+                duration: this.animationDuration,
                 complete: function () {
                     this.lastRatio = ratio;
                     this.fireEvent('animate', this.lastRatio * 100);

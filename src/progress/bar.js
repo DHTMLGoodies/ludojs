@@ -42,7 +42,7 @@ ludo.progress.Bar = new Class({
     textStyles: undefined,
     _text: undefined,
 
-    animationDuration: 50,
+    animationDuration: 100,
 
     debugRect: undefined,
 
@@ -296,7 +296,7 @@ ludo.progress.Bar = new Class({
             this.els.clipRect.animate({
                 width: w
             }, {
-                duration: this.animationDuration * Math.abs(diff) * 100,
+                duration: this.animationDuration,
                 complete: function () {
                     this.lastRatio = ratio;
                     this.fireEvent('animate', this.lastRatio * 100);

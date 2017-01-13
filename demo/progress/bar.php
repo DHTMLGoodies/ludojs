@@ -42,6 +42,7 @@ require_once("../includes/demo-header.php");
                         type: 'progress.Bar',
                         borderRadius: 3,
                         steps: 100,
+                        animationDuration:1000,
                         elCss:{
                             margin:2
                         },
