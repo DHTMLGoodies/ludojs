@@ -1,3 +1,24 @@
+/* Generated Fri Jan 13 20:35:24 CET 2017 */
+/************************************************************************************************************
+@fileoverview
+ludoJS - Javascript framework, 1.1.402
+Copyright (C) 2012-2017  ludoJS.com, Alf Magne Kalleland
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 2.1 of the License, or (at your option) any later version.
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+You should have received a copy of the GNU Lesser General Public
+License along with this library; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ludoJS.com., hereby disclaims all copyright interest in this script
+written by Alf Magne Kalleland.
+Alf Magne Kalleland, 2017
+Owner of ludoJS.com
+************************************************************************************************************/
 /* ../ludojs/src/../mootools/MooTools-Core-1.6.0.js */
 /* MooTools: the javascript framework. license: MIT-style license. copyright: Copyright (c) 2006-2016 [Valerio Proietti](http://mad4milk.net/).*/ 
 /*!
