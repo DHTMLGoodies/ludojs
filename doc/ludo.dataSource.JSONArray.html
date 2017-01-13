@@ -1,0 +1,5864 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<title>LudoJS Class: JSONArray</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/site.ludojs.css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top navbar-inverse">
+<div class="container">
+	<div class="navbar-header">
+		<a class="navbar-brand" href="index.html">LudoJS</a>
+		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#topNavigation">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+        </button>
+	</div>
+	<div class="navbar-collapse collapse" id="topNavigation">
+		<ul class="nav navbar-nav">
+			
+			<li class="dropdown">
+				<a href="namespaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Namespaces<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="ludo.html">ludo</a></li><li><a href="ludo.calendar.html">ludo.calendar</a></li><li><a href="ludo.chart.html">ludo.chart</a></li><li><a href="ludo.color.html">ludo.color</a></li><li><a href="ludo.dataSource.html">ludo.dataSource</a></li><li><a href="ludo.dialog.html">ludo.dialog</a></li><li><a href="ludo.form.html">ludo.form</a></li><li><a href="ludo.grid.html">ludo.grid</a></li><li><a href="ludo.layout.html">ludo.layout</a></li><li><a href="ludo.progress.html">ludo.progress</a></li><li><a href="ludo.storage.html">ludo.storage</a></li><li><a href="ludo.svg.html">ludo.svg</a></li><li><a href="ludo.tree.html">ludo.tree</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="module-language.html">language</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="JSONTreeSearch.html">JSONTreeSearch</a></li><li><a href="layout.layout.Linear.html">layout.layout.Linear</a></li><li><a href="ludo.Application.html">ludo.Application</a></li><li><a href="ludo.calendar.Base.html">ludo.calendar.Base</a></li><li><a href="ludo.calendar.Calendar.html">ludo.calendar.Calendar</a></li><li><a href="ludo.calendar.Days.html">ludo.calendar.Days</a></li><li><a href="ludo.calendar.MonthSelector.html">ludo.calendar.MonthSelector</a></li><li><a href="ludo.calendar.MonthYearSelector.html">ludo.calendar.MonthYearSelector</a></li><li><a href="ludo.calendar.NavBar.html">ludo.calendar.NavBar</a></li><li><a href="ludo.calendar.TimePicker.html">ludo.calendar.TimePicker</a></li><li><a href="ludo.calendar.Today.html">ludo.calendar.Today</a></li><li><a href="ludo.calendar.YearSelector.html">ludo.calendar.YearSelector</a></li><li><a href="ludo.chart.Bar.html">ludo.chart.Bar</a></li><li><a href="ludo.chart.Base.html">ludo.chart.Base</a></li><li><a href="ludo.chart.ChartLabels.html">ludo.chart.ChartLabels</a></li><li><a href="ludo.chart.DataProvider.html">ludo.chart.DataProvider</a></li><li><a href="ludo.chart.DataSource.html">ludo.chart.DataSource</a></li><li><a href="ludo.chart.LabelList.html">ludo.chart.LabelList</a></li><li><a href="ludo.chart.Line.html">ludo.chart.Line</a></li><li><a href="ludo.chart.Pie.html">ludo.chart.Pie</a></li><li><a href="ludo.chart.PieSliceHighlighted.html">ludo.chart.PieSliceHighlighted</a></li><li><a href="ludo.chart.Record.html">ludo.chart.Record</a></li><li><a href="ludo.chart.ScatterDataSource.html">ludo.chart.ScatterDataSource</a></li><li><a href="ludo.chart.Text.html">ludo.chart.Text</a></li><li><a href="ludo.chart.Tooltip.html">ludo.chart.Tooltip</a></li><li><a href="ludo.CollectionView.html">ludo.CollectionView</a></li><li><a href="ludo.color.Color.html">ludo.color.Color</a></li><li><a href="ludo.controller.Controller.html">ludo.controller.Controller</a></li><li><a href="ludo.controller.Manager.html">ludo.controller.Manager</a></li><li><a href="ludo.Core.html">ludo.Core</a></li><li><a href="ludo.dataSource.Base.html">ludo.dataSource.Base</a></li><li><a href="ludo.dataSource.HTML.html">ludo.dataSource.HTML</a></li><li><a href="ludo.dataSource.JSON.html">ludo.dataSource.JSON</a></li><li><a href="ludo.dataSource.JSONArray.html">ludo.dataSource.JSONArray</a></li><li><a href="ludo.dataSource.JSONArraySearch.html">ludo.dataSource.JSONArraySearch</a></li><li><a href="ludo.dataSource.JSONTree.html">ludo.dataSource.JSONTree</a></li><li><a href="ludo.dataSource.Record.html">ludo.dataSource.Record</a></li><li><a href="ludo.dataSource.SearchParser.html">ludo.dataSource.SearchParser</a></li><li><a href="ludo.dialog.Alert.html">ludo.dialog.Alert</a></li><li><a href="ludo.dialog.Confirm.html">ludo.dialog.Confirm</a></li><li><a href="ludo.dialog.Dialog.html">ludo.dialog.Dialog</a></li><li><a href="ludo.dialog.Prompt.html">ludo.dialog.Prompt</a></li><li><a href="ludo.effect.Drag.html">ludo.effect.Drag</a></li><li><a href="ludo.effect.DragDrop.html">ludo.effect.DragDrop</a></li><li><a href="ludo.effect.DropPoint.html">ludo.effect.DropPoint</a></li><li><a href="ludo.effect.Effect.html">ludo.effect.Effect</a></li><li><a href="ludo.form.Button.html">ludo.form.Button</a></li><li><a href="ludo.form.CancelButton.html">ludo.form.CancelButton</a></li><li><a href="ludo.form.Checkbox.html">ludo.form.Checkbox</a></li><li><a href="ludo.form.Combo.html">ludo.form.Combo</a></li><li><a href="ludo.form.ComboTree.html">ludo.form.ComboTree</a></li><li><a href="ludo.form.Date.html">ludo.form.Date</a></li><li><a href="ludo.form.DisplayField.html">ludo.form.DisplayField</a></li><li><a href="ludo.form.Email.html">ludo.form.Email</a></li><li><a href="ludo.form.File.html">ludo.form.File</a></li><li><a href="ludo.form.Label.html">ludo.form.Label</a></li><li><a href="ludo.form.LabelElement.html">ludo.form.LabelElement</a></li><li><a href="ludo.form.Manager.html">ludo.form.Manager</a></li><li><a href="ludo.form.Number.html">ludo.form.Number</a></li><li><a href="ludo.form.OnOff.html">ludo.form.OnOff</a></li><li><a href="ludo.form.Password.html">ludo.form.Password</a></li><li><a href="ludo.form.Radio.html">ludo.form.Radio</a></li><li><a href="ludo.form.RadioGroup.html">ludo.form.RadioGroup</a></li><li><a href="ludo.form.ResetButton.html">ludo.form.ResetButton</a></li><li><a href="ludo.form.SearchField.html">ludo.form.SearchField</a></li><li><a href="ludo.form.Seekbar.html">ludo.form.Seekbar</a></li><li><a href="ludo.form.Select.html">ludo.form.Select</a></li><li><a href="ludo.form.Spinner.html">ludo.form.Spinner</a></li><li><a href="ludo.form.StrongPassword.html">ludo.form.StrongPassword</a></li><li><a href="ludo.form.SubmitButton.html">ludo.form.SubmitButton</a></li><li><a href="ludo.form.Text.html">ludo.form.Text</a></li><li><a href="ludo.form.Textarea.html">ludo.form.Textarea</a></li><li><a href="ludo.form.TinbyButton.html">ludo.form.TinbyButton</a></li><li><a href="ludo.form.ToggleButton.html">ludo.form.ToggleButton</a></li><li><a href="ludo.form.ToggleGroup.html">ludo.form.ToggleGroup</a></li><li><a href="ludo.form.validator.Base.html">ludo.form.validator.Base</a></li><li><a href="ludo.form.validator.Md5.html">ludo.form.validator.Md5</a></li><li><a href="ludo.FramedView.html">ludo.FramedView</a></li><li><a href="ludo.grid.ColumnManager.html">ludo.grid.ColumnManager</a></li><li><a href="ludo.grid.Grid.html">ludo.grid.Grid</a></li><li><a href="ludo.grid.RowManager.html">ludo.grid.RowManager</a></li><li><a href="ludo.layout.Accordion.html">ludo.layout.Accordion</a></li><li><a href="ludo.layout.Base.html">ludo.layout.Base</a></li><li><a href="ludo.layout.Canvas.html">ludo.layout.Canvas</a></li><li><a href="ludo.layout.Docking.html">ludo.layout.Docking</a></li><li><a href="ludo.layout.Factory.html">ludo.layout.Factory</a></li><li><a href="ludo.layout.Fill.html">ludo.layout.Fill</a></li><li><a href="ludo.layout.Grid.html">ludo.layout.Grid</a></li><li><a href="ludo.layout.LinearHorizontal.html">ludo.layout.LinearHorizontal</a></li><li><a href="ludo.layout.LinearVertical.html">ludo.layout.LinearVertical</a></li><li><a href="ludo.layout.Menu.html">ludo.layout.Menu</a></li><li><a href="ludo.layout.NavBar.html">ludo.layout.NavBar</a></li><li><a href="ludo.layout.Popup.html">ludo.layout.Popup</a></li><li><a href="ludo.layout.Relative.html">ludo.layout.Relative</a></li><li><a href="ludo.layout.Renderer.html">ludo.layout.Renderer</a></li><li><a href="ludo.layout.Tab.html">ludo.layout.Tab</a></li><li><a href="ludo.layout.Table.html">ludo.layout.Table</a></li><li><a href="ludo.Layout.Tabs.html">ludo.Layout.Tabs</a></li><li><a href="ludo.layout.ViewPager.html">ludo.layout.ViewPager</a></li><li><a href="ludo.ListView.html">ludo.ListView</a></li><li><a href="ludo.menu.Button.html">ludo.menu.Button</a></li><li><a href="ludo.menu.Context.html">ludo.menu.Context</a></li><li><a href="ludo.menu.DropDown.html">ludo.menu.DropDown</a></li><li><a href="ludo.menu.Menu.html">ludo.menu.Menu</a></li><li><a href="ludo.menu.MenuItem.html">ludo.menu.MenuItem</a></li><li><a href="ludo.Notification.html">ludo.Notification</a></li><li><a href="ludo.ObjectFactory.html">ludo.ObjectFactory</a></li><li><a href="ludo.paging.Button.html">ludo.paging.Button</a></li><li><a href="ludo.paging.First.html">ludo.paging.First</a></li><li><a href="ludo.paging.Last.html">ludo.paging.Last</a></li><li><a href="ludo.paging.NavBar.html">ludo.paging.NavBar</a></li><li><a href="ludo.paging.Next.html">ludo.paging.Next</a></li><li><a href="ludo.paging.PageInput.html">ludo.paging.PageInput</a></li><li><a href="ludo.paging.PageSize.html">ludo.paging.PageSize</a></li><li><a href="ludo.paging.TotalPages.html">ludo.paging.TotalPages</a></li><li><a href="ludo.Panel.html">ludo.Panel</a></li><li><a href="ludo.progress.Bar.html">ludo.progress.Bar</a></li><li><a href="ludo.remote.Base.html">ludo.remote.Base</a></li><li><a href="ludo.remote.Broadcaster.html">ludo.remote.Broadcaster</a></li><li><a href="ludo.remote.ErrorMessage.html">ludo.remote.ErrorMessage</a></li><li><a href="ludo.remote.HTML.html">ludo.remote.HTML</a></li><li><a href="ludo.remote.html#.JSON">ludo.remote.JSON</a></li><li><a href="ludo.storage.LocalStorage.html">ludo.storage.LocalStorage</a></li><li><a href="ludo.svg.Animation.html">ludo.svg.Animation</a></li><li><a href="ludo.svg.Canvas.html">ludo.svg.Canvas</a></li><li><a href="ludo.svg.Circle.html">ludo.svg.Circle</a></li><li><a href="ludo.svg.Drag.html">ludo.svg.Drag</a></li><li><a href="ludo.svg.easing.html">ludo.svg.easing</a></li><li><a href="ludo.svg.Ellipse_ludo.svg.Ellipse.html">ludo.svg.Ellipse#ludo.svg.Ellipse</a></li><li><a href="ludo.svg.Filter.html">ludo.svg.Filter</a></li><li><a href="ludo.svg.Gradient.html">ludo.svg.Gradient</a></li><li><a href="ludo.svg.Group.html">ludo.svg.Group</a></li><li><a href="ludo.svg.Mask.html">ludo.svg.Mask</a></li><li><a href="ludo.svg.NamedNode.html">ludo.svg.NamedNode</a></li><li><a href="ludo.svg.Node.html">ludo.svg.Node</a></li><li><a href="ludo.svg.Paint.html">ludo.svg.Paint</a></li><li><a href="ludo.svg.Path.html">ludo.svg.Path</a></li><li><a href="ludo.svg.Polygon.html">ludo.svg.Polygon</a></li><li><a href="ludo.svg.Polyline.html">ludo.svg.Polyline</a></li><li><a href="ludo.svg.RadialGradient.html">ludo.svg.RadialGradient</a></li><li><a href="ludo.svg.Rect.html">ludo.svg.Rect</a></li><li><a href="ludo.svg.Stop.html">ludo.svg.Stop</a></li><li><a href="ludo.svg.Text.html">ludo.svg.Text</a></li><li><a href="ludo.svg.TextBox.html">ludo.svg.TextBox</a></li><li><a href="ludo.svg.View.html">ludo.svg.View</a></li><li><a href="ludo.tpl.Parser.html">ludo.tpl.Parser</a></li><li><a href="ludo.tree.Filter.html">ludo.tree.Filter</a></li><li><a href="ludo.tree.Modifications.html">ludo.tree.Modifications</a></li><li><a href="ludo.tree.Tree.html">ludo.tree.Tree</a></li><li><a href="ludo.video.YouTube.html">ludo.video.YouTube</a></li><li><a href="ludo.View.html">ludo.View</a></li><li><a href="ludo.view.ViewPagerNav.html">ludo.view.ViewPagerNav</a></li><li><a href="ludo.Window.html">ludo.Window</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="global.html#getDataForRequest">getDataForRequest</a></li><li><a href="global.html#getResource">getResource</a></li><li><a href="global.html#getResponseCode">getResponseCode</a></li><li><a href="global.html#getResponseMessage">getResponseMessage</a></li><li><a href="global.html#getServicePath">getServicePath</a></li><li><a href="global.html#getUrl">getUrl</a></li>
+				</ul>
+			</li>
+			
+		</ul>
+        
+            <div class="col-sm-3 col-md-3">
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        
+	</div>
+
+</div>
+</div>
+
+
+<div class="container" id="toc-content">
+<div class="row">
+
+	
+	<div class="col-md-8">
+	
+		<div id="main">
+			
+
+	<h1 class="page-title">ludo.dataSource.JSONArray</h1>
+<section>
+
+<header>
+    
+        <h2>
+            <span class="ancestors"><a href="ludo.html">ludo</a><a href="ludo.dataSource.html">.dataSource</a>.</span>
+        
+
+        </h2>
+        
+    
+</header>
+
+
+<article>
+    <div class="container-overview">
+    
+        
+<hr>
+<dt>
+    <h4 class="name" id="JSONArray"><span class="type-signature"></span>new ludo.dataSource.JSONArray<span class="signature">(config)</span><span class="type-signature"></span></h4>
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Data source collection</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>config</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <h6 class="method-params-label method-subparams-label">Properties</h6>
+                
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>sortFn</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>custom sort functions, which should return -1 if record a is smaller than<br> record b and 1 if record b is larger than record a. Example:<br> <code><br> sortFn:{<br>            'population':{<br>                'asc' : function(a,b){<br>                    return parseInt(a.population) &lt; parseInt(b.population) ? -1 : 1<br>                },<br>                'desc' : function(a,b){<br>                    return parseInt(a.population) &gt; parseInt(b.population) ? -1 : 1<br>                }<br>            }<br>         }<br> </code></p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>primaryKey</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Primary key, example: primaryKey: &quot;id&quot;</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>paging</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Example:<br> <code><br> paging:{<br>             size:10, // Number of rows per page<br>              remotePaging:true, // Load only records per page from server, i.e. new request per page<br>              cache : true, // Store pages in cache, i.e no request if data for page is in cache,<br>              cacheTimeout:30 // Optional time in second before cache is considered out of date, i.e. new server request<br>        }<br> </code></p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>searchConfig</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Example:<br> <code><br> searchConfig:{<br>             index:['city','country'],<br>             delay:.5<br>         }<br> </code><br> which makes the record keys/columns &quot;city&quot; and &quot;country&quot; searchable. It waits .5 seconds<br> before the search is executed. This is useful when searching large collections and you<br> want to delay the search until the user has finished entering into a search box.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="data-source_json-array.js.html">data-source/json-array.js</a>,
+				 <a href="data-source_json-array.js.html#sunlight-1-line-1">line 1</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+    <h5>Fires:</h5>
+    <ul>
+        <li>ludo.dataSource.JSONArray#sort Fires on sort.event: Arguments: {String} sortedBy key</li>
+    
+        <li>ludo.dataSource.JSONArray#add Fires when a new record has been added to the collection.event: Arguments: {Object} record</li>
+    
+        <li>ludo.dataSource.JSONArray#deselect Fires when a record has been deselected, arguments.event: {Object} deselected record</li>
+    
+        <li>ludo.dataSource.JSONArray#select Fires when a record has selected, arguments.event: {Object} selected record</li>
+    
+        <li>ludo.dataSource.JSONArray#delete Fires when a record has been deleted, arguments.event: {Object} deleted record</li>
+    
+        <li>ludo.dataSource.JSONArray#page Fires on navigation to new page when paging is enabled.event: Arguments: {Number} page index</li>
+    
+        <li>ludo.dataSource.JSONArray#previousPage Fires when paging is enabled and navigating to current page -1.event: No arguments</li>
+    
+        <li>ludo.dataSource.JSONArray#nextPage Fires when paging is enabled and navigating to current page +1.event: No arguments</li>
+    
+        <li>ludo.dataSource.JSONArray#firstPage Fired when navigating to first page.event:  No arguments</li>
+    
+        <li>ludo.dataSource.JSONArray#lastPage Fired when navigating to last page.event:  No arguments</li>
+    
+        <li>ludo.dataSource.JSONArray#notLastPage Fired when navigating to a page which is not last page.event:  No arguments</li>
+    
+        <li>ludo.dataSource.JSONArray#notFirstPage Fired when navigating to a page which is not first page.event:  No arguments</li>
+    
+        <li>ludo.dataSource.JSONArray#event:change Fires when data has been updated or page navigation occurs.</li>
+    </ul>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">dataSource:{
+		url:&#x27;data-source/grid.php&#x27;,
+		id:&#x27;myDataSource&#x27;,
+		paging:{
+			size:12,
+			remotePaging:false,
+			cache:false,
+			cacheTimeout:1000
+		},
+		searchConfig:{
+			index:[&#x27;capital&#x27;, &#x27;country&#x27;]
+		},
+		listeners:{
+			select:function (record) {
+				console.log(record);
+			}
+		}
+	}</pre>
+
+
+    
+</dd>
+
+    
+    </div>
+
+    
+        <h3 class="subsection-title">Extends</h3>
+
+        
+
+
+    <ul>
+        <li>dataSource.JSON</li>
+    </ul>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        <dl>
+            
+<hr>
+<dt>
+    <h4 class="name" id="addRecord"><span class="type-signature"></span>addRecord<span class="signature">(record)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Add a record to data-source</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>record</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="data-source_json-array.js.html">data-source/json-array.js</a>,
+				 <a href="data-source_json-array.js.html#sunlight-1-line-300">line 300</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>record</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="ascending"><span class="type-signature"></span>ascending<span class="signature">()</span><span class="type-signature"> &rarr; {dataSource.JSONArray}</span></h4>
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Set sort order to ascending</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="data-source_json-array.js.html">data-source/json-array.js</a>,
+				 <a href="data-source_json-array.js.html#sunlight-1-line-186">line 186</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>this</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">dataSource.JSONArray</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">collection.by(&#x27;country&#x27;).ascending().sort();</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="by"><span class="type-signature"></span>by<span class="signature">(column)</span><span class="type-signature"> &rarr; {dataSource.JSONArray}</span></h4>
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Set sorted by column</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>column</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="data-source_json-array.js.html">data-source/json-array.js</a>,
+				 <a href="data-source_json-array.js.html#sunlight-1-line-169">line 169</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>this</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">dataSource.JSONArray</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+        <h5>Examples</h5>
+        
+    <pre class="sunlight-highlight-javascript">collection.by(&#x27;country&#x27;).ascending().sort();
+     or
+     </pre>
+
+    <pre class="sunlight-highlight-javascript">collection.by(&#x27;country&#x27;).sort();</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="deleteRecord"><span class="type-signature"></span>deleteRecord<span class="signature">(search)</span><span class="type-signature"></span></h4>
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Delete ONE item from the data source.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>search</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+|
+
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="data-source_json-array.js.html">data-source/json-array.js</a>,
+				 <a href="data-source_json-array.js.html#sunlight-1-line-566">line 566</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">// delete first record where property country matches &quot;Norway&quot;
+     grid.getDataSource().deleteRecord({ country: &#x27;Norway&#x27; });
+
+     // delete first record where record.uid = &#x27;uid_ixrky8vq&#x27;
+     grid.getDataSource().deleteRecord(&#x27;uid_ixrky8vq&#x27;);
+
+     // delete the first record in the data source
+     var rec = grid.getDataSource().getData()[0];
+     grid.getDataSource().deleteRecord(rec);</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="deleteRecords"><span class="type-signature"></span>deleteRecords<span class="signature">(search)</span><span class="type-signature"></span></h4>
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Delete records matching search,</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>search</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="data-source_json-array.js.html">data-source/json-array.js</a>,
+				 <a href="data-source_json-array.js.html#sunlight-1-line-546">line 546</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">grid.getDataSource().deleteRecords({ country: &#x27;Norway&#x27; });
+     will delete all records from collection where country is equal to &quot;Norway&quot;. A delete event
+     will be fired for each deleted record.</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="descending"><span class="type-signature"></span>descending<span class="signature">()</span><span class="type-signature"> &rarr; {dataSource.JSONArray}</span></h4>
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Set sort order to descending</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="data-source_json-array.js.html">data-source/json-array.js</a>,
+				 <a href="data-source_json-array.js.html#sunlight-1-line-198">line 198</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>this</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">dataSource.JSONArray</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">collection.by(&#x27;country&#x27;).descending().sort();</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="findRecord"><span class="type-signature"></span>findRecord<span class="signature">(search)</span><span class="type-signature"> &rarr; {Object|undefined}</span></h4>
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Returns plain object for a record from search. To get a<br>{{#crossLink &quot;dataSource.Record&quot;}}{{/crossLink}} object<br>use {{#crossLink &quot;dataSource.JSONArray/getRecord&quot;}}{{/crossLink}}</p>
+<p>collection.find({ capital : 'Oslo' });</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>search</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="data-source_json-array.js.html">data-source/json-array.js</a>,
+				 <a href="data-source_json-array.js.html#sunlight-1-line-322">line 322</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>record</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+|
+
+<span class="param-type">undefined</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="findRecords"><span class="type-signature"></span>findRecords<span class="signature">(search)</span><span class="type-signature"> &rarr; {Array}</span></h4>
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Find specific records, example:<br>var records = collection.findRecords({ country:'Norway'});</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>search</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="data-source_json-array.js.html">data-source/json-array.js</a>,
+				 <a href="data-source_json-array.js.html#sunlight-1-line-374">line 374</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>records</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Array</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="firstPage"><span class="type-signature"></span>firstPage<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Go to first page</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="data-source_json-array.js.html">data-source/json-array.js</a>,
+				 <a href="data-source_json-array.js.html#sunlight-1-line-705">line 705</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getById"><span class="type-signature"></span>getById<span class="signature">(id)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Return record by id or undefined if not found. Records are indexed by id. This method<br>     gives you quick access to a record by it's id. The method returns a reference to the<br>     actual record. You can use Object.clone(record) to create a copy of it in case you<br>     want to update the record but not make those changes to the collection.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>id</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+|
+
+<span class="param-type">Number</span>
+|
+
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="data-source_json-array.js.html">data-source/json-array.js</a>,
+				 <a href="data-source_json-array.js.html#sunlight-1-line-1014">line 1014</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>record</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+        <h5>Examples</h5>
+        
+    <pre class="sunlight-highlight-javascript">var collection = new ludo.dataSource.JSONArray({
+	 		url : &#x27;get-countries.php&#x27;,
+	 		primaryKey:&#x27;country&#x27;
+	 	});
+     var record = collection.getById(&#x27;Japan&#x27;); // Returns record for Japan if it exists.
+     You can also define multiple keys as id
+     </pre>
+
+    <pre class="sunlight-highlight-javascript">var collection = new ludo.dataSource.JSONArray({
+			url : &#x27;get-countries.php&#x27;,
+			primaryKey:[&#x27;id&#x27;, &#x27;country&#x27;]
+		 });
+     var record = collection.getById({ id:1, country:&#x27;Japan&#x27; });
+     This is especially useful when you have a {{#crossLink &quot;dataSource.JSONTree&quot;}}{{/crossLink}}
+     where child nodes may have same numeric id as it&#x27;s parent.
+     </pre>
+
+    <pre class="sunlight-highlight-javascript">{ id:1, type:&#x27;country&#x27;, title : &#x27;Japan&#x27;,
+          children:[ { id:1, type:&#x27;city&#x27;, title:&#x27;Tokyo }]
+ By setting primaryKey to [&#x27;id&#x27;, &#x27;type&#x27;] will make it possible to distinguish between countries and cities.</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getCount"><span class="type-signature"></span>getCount<span class="signature">()</span><span class="type-signature"> &rarr; {Number}</span></h4>
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Returns 1) If search is specified: number of records in search result, or 2) number of records in entire collection.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="data-source_json-array.js.html">data-source/json-array.js</a>,
+				 <a href="data-source_json-array.js.html#sunlight-1-line-141">line 141</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>count</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Number</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getData"><span class="type-signature"></span>getData<span class="signature">()</span><span class="type-signature"> &rarr; {Array}</span></h4>
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Return data in collection</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="data-source_json-array.js.html">data-source/json-array.js</a>,
+				 <a href="data-source_json-array.js.html#sunlight-1-line-864">line 864</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Array</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getNextOf"><span class="type-signature"></span>getNextOf<span class="signature">(record)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Returns next record of given record.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>record</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="data-source_json-array.js.html">data-source/json-array.js</a>,
+				 <a href="data-source_json-array.js.html#sunlight-1-line-500">line 500</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>next record</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getPageCount"><span class="type-signature"></span>getPageCount<span class="signature">()</span><span class="type-signature"> &rarr; {Number}</span></h4>
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Return number of pages</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="data-source_json-array.js.html">data-source/json-array.js</a>,
+				 <a href="data-source_json-array.js.html#sunlight-1-line-854">line 854</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Number</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getPageNumber"><span class="type-signature"></span>getPageNumber<span class="signature">()</span><span class="type-signature"> &rarr; {Number}</span></h4>
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Return current page number</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="data-source_json-array.js.html">data-source/json-array.js</a>,
+				 <a href="data-source_json-array.js.html#sunlight-1-line-844">line 844</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>page</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Number</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getPreviousOf"><span class="type-signature"></span>getPreviousOf<span class="signature">(record)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Returns previous record of given record</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>record</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="data-source_json-array.js.html">data-source/json-array.js</a>,
+				 <a href="data-source_json-array.js.html#sunlight-1-line-470">line 470</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>previous record</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getRecord"><span class="type-signature"></span>getRecord<span class="signature">(search)</span><span class="type-signature"> &rarr; {dataSource.Record|undefined}</span></h4>
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Returns {{#crossLink &quot;dataSource.Record&quot;}}{{/crossLink}} object for a record.<br>     If you want to update a record, you should<br>     first get a reference to {{#crossLink &quot;dataSource.Record&quot;}}{{/crossLink}} and then call one<br>     of it's methods.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>search</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+|
+
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="data-source_json-array.js.html">data-source/json-array.js</a>,
+				 <a href="data-source_json-array.js.html#sunlight-1-line-1061">line 1061</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">dataSource.Record</span>
+|
+
+<span class="param-type">undefined</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">var collection = new ludo.dataSource.JSONArray({
+			url : &#x27;get-countries.php&#x27;,
+			primaryKey:&#x27;country&#x27;
+		 });
+     collection.getRecord(&#x27;Japan&#x27;).set(&#x27;capital&#x27;, &#x27;tokyo&#x27;);</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getSearcher"><span class="type-signature"></span>getSearcher<span class="signature">()</span><span class="type-signature"> &rarr; {dataSource.JSONArraySearch}</span></h4>
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Returns a {{#crossLink &quot;dataSource.JSONArraySearch&quot;}}{{/crossLink}} object which<br>you can use to filter a collection.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="data-source_json-array.js.html">data-source/json-array.js</a>,
+				 <a href="data-source_json-array.js.html#sunlight-1-line-986">line 986</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">dataSource.JSONArraySearch</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getSelectedRecord"><span class="type-signature"></span>getSelectedRecord<span class="signature">()</span><span class="type-signature"> &rarr; {Object|undefined}</span></h4>
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Return first selected record</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="data-source_json-array.js.html">data-source/json-array.js</a>,
+				 <a href="data-source_json-array.js.html#sunlight-1-line-526">line 526</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>record</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+|
+
+<span class="param-type">undefined</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getSelectedRecords"><span class="type-signature"></span>getSelectedRecords<span class="signature">()</span><span class="type-signature"> &rarr; {Array}</span></h4>
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Return selected records</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="data-source_json-array.js.html">data-source/json-array.js</a>,
+				 <a href="data-source_json-array.js.html#sunlight-1-line-536">line 536</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>records</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Array</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getSortedBy"><span class="type-signature"></span>getSortedBy<span class="signature">()</span><span class="type-signature"> &rarr; {String}</span></h4>
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Return current sorted by column</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="data-source_json-array.js.html">data-source/json-array.js</a>,
+				 <a href="data-source_json-array.js.html#sunlight-1-line-255">line 255</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>column</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">String</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getSortOrder"><span class="type-signature"></span>getSortOrder<span class="signature">()</span><span class="type-signature"> &rarr; {String}</span></h4>
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Return current sort order (asc|desc)</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="data-source_json-array.js.html">data-source/json-array.js</a>,
+				 <a href="data-source_json-array.js.html#sunlight-1-line-264">line 264</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>order</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">String</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="isOnPage"><span class="type-signature"></span>isOnPage<span class="signature">(pageNumber)</span><span class="type-signature"> &rarr; {Boolean}</span></h4>
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>True if on given page</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>pageNumber</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="data-source_json-array.js.html">data-source/json-array.js</a>,
+				 <a href="data-source_json-array.js.html#sunlight-1-line-833">line 833</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Boolean</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="lastPage"><span class="type-signature"></span>lastPage<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Go to last page</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="data-source_json-array.js.html">data-source/json-array.js</a>,
+				 <a href="data-source_json-array.js.html#sunlight-1-line-691">line 691</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="next"><span class="type-signature"></span>next<span class="signature">()</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Select next record. If no record is currently selected, first record will be selected</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="data-source_json-array.js.html">data-source/json-array.js</a>,
+				 <a href="data-source_json-array.js.html#sunlight-1-line-487">line 487</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>record</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="nextPage"><span class="type-signature"></span>nextPage<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>When paging is enabled, go to next page<br>fire nextPage event</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="data-source_json-array.js.html">data-source/json-array.js</a>,
+				 <a href="data-source_json-array.js.html#sunlight-1-line-678">line 678</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="previous"><span class="type-signature"></span>previous<span class="signature">()</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Select previous record. If no record is currently selected, first record will be selected</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="data-source_json-array.js.html">data-source/json-array.js</a>,
+				 <a href="data-source_json-array.js.html#sunlight-1-line-456">line 456</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>record</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="previousPage"><span class="type-signature"></span>previousPage<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>When paging is enabled, go to previous page.<br>fire previousPage event</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="data-source_json-array.js.html">data-source/json-array.js</a>,
+				 <a href="data-source_json-array.js.html#sunlight-1-line-665">line 665</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="remoteSearch"><span class="type-signature"></span>remoteSearch<span class="signature">(search)</span><span class="type-signature"></span></h4>
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Executes a remote search for records with the given data</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>search</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+|
+
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="data-source_json-array.js.html">data-source/json-array.js</a>,
+				 <a href="data-source_json-array.js.html#sunlight-1-line-961">line 961</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="Search"><span class="type-signature"></span>Search<span class="signature">(search)</span><span class="type-signature"></span></h4>
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Filter collection based on given search term. To filter on multiple search terms, you should<br>     get a reference to the {{#crossLink &quot;dataSource.JSONArraySearch&quot;}}{{/crossLink}} object and<br>     use the available {{#crossLink &quot;dataSource.JSONArraySearch&quot;}}{{/crossLink}} methods to add<br>     multiple search terms.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>search</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="data-source_json-array.js.html">data-source/json-array.js</a>,
+				 <a href="data-source_json-array.js.html#sunlight-1-line-942">line 942</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">ludo.get(&#x27;myCollection&#x27;).search(&#x27;New York&#x27;);
+     // or with the {{#crossLink &quot;dataSource.JSONArraySearch/add&quot;}}{{/crossLink}} method
+     var searcher = ludo.get(&#x27;myCollection&#x27;).getSearcher();
+     searcher.where(&#x27;New York&#x27;).execute();
+     searcher.execute();</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="selectRecord"><span class="type-signature"></span>selectRecord<span class="signature">(search)</span><span class="type-signature"> &rarr; {Object|undefined}</span></h4>
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Select the first record matching search</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>search</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="data-source_json-array.js.html">data-source/json-array.js</a>,
+				 <a href="data-source_json-array.js.html#sunlight-1-line-396">line 396</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>record</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+|
+
+<span class="param-type">undefined</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="selectRecordIndex"><span class="type-signature"></span>selectRecordIndex<span class="signature">(index)</span><span class="type-signature"></span></h4>
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Select a specific record by index</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>index</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="data-source_json-array.js.html">data-source/json-array.js</a>,
+				 <a href="data-source_json-array.js.html#sunlight-1-line-428">line 428</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="selectRecords"><span class="type-signature"></span>selectRecords<span class="signature">(search)</span><span class="type-signature"> &rarr; {Array}</span></h4>
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Select all records matching search</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>search</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="data-source_json-array.js.html">data-source/json-array.js</a>,
+				 <a href="data-source_json-array.js.html#sunlight-1-line-413">line 413</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>records</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Array</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="selectTo"><span class="type-signature"></span>selectTo<span class="signature">(search)</span><span class="type-signature"></span></h4>
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Select records from current selected record to record matching search,</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>search</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="data-source_json-array.js.html">data-source/json-array.js</a>,
+				 <a href="data-source_json-array.js.html#sunlight-1-line-601">line 601</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">collection.selectRecord({ country: &#x27;Norway&#x27; });
+     collection.selectTo({country: &#x27;Denmark&#x27;});
+     var selectedRecords = collection.getSelectedRecords();</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="setPageSize"><span class="type-signature"></span>setPageSize<span class="signature">(size)</span><span class="type-signature"></span></h4>
+    
+</dt>
+<dd>
+
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>size</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="data-source_json-array.js.html">data-source/json-array.js</a>,
+				 <a href="data-source_json-array.js.html#sunlight-1-line-818">line 818</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="sort"><span class="type-signature"></span>sort<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Resort data-source</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="data-source_json-array.js.html">data-source/json-array.js</a>,
+				 <a href="data-source_json-array.js.html#sunlight-1-line-157">line 157</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>void</p>
+</div>
+
+
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="sortBy"><span class="type-signature"></span>sortBy<span class="signature">(column, order)</span><span class="type-signature"> &rarr; {dataSource.JSONArray}</span></h4>
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Sort by column and order</p>
+<pre class="prettyprint source"><code> The second argument(order) is optional</code></pre>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>column</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>order</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="data-source_json-array.js.html">data-source/json-array.js</a>,
+				 <a href="data-source_json-array.js.html#sunlight-1-line-211">line 211</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>this</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">dataSource.JSONArray</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+        <h5>Examples</h5>
+        
+    <pre class="sunlight-highlight-javascript">grid.getDataSource().sortBy(&#x27;firstname&#x27;, &#x27;desc&#x27;);
+     which also can be written as
+     </pre>
+
+    <pre class="sunlight-highlight-javascript">grid.getDataSource().by(&#x27;firstname&#x27;).descending().sort();</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="toPage"><span class="type-signature"></span>toPage<span class="signature">(pageNumber)</span><span class="type-signature"> &rarr; {Boolean}</span></h4>
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Go to a specific page</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>pageNumber</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="data-source_json-array.js.html">data-source/json-array.js</a>,
+				 <a href="data-source_json-array.js.html#sunlight-1-line-801">line 801</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>success</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Boolean</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="updateRecord"><span class="type-signature"></span>updateRecord<span class="signature">(search, updates)</span><span class="type-signature"> &rarr; {dataSource.Record}</span></h4>
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Update a record</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>search</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>updates</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="data-source_json-array.js.html">data-source/json-array.js</a>,
+				 <a href="data-source_json-array.js.html#sunlight-1-line-637">line 637</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>record</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">dataSource.Record</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        </dl>
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+		</div>
+	</div>
+
+	<div class="clearfix"></div>
+
+	
+		<div class="col-md-3">
+			<div id="toc" class="col-md-3 hidden-xs hidden-sm hidden-md"></div>
+		</div>
+	
+
+</div>
+</div>
+
+
+    <div class="modal fade" id="searchResults">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Search results</h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
+
+<footer>
+
+
+	<span class="copyright">
+	© LudoJS.com 2012-2016
+	</span>
+
+<span class="jsdoc-message">
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.2</a>
+	
+		on Fri Jan 13th 2017
+	
+	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
+</span>
+</footer>
+
+<script src="scripts/docstrap.lib.js"></script>
+<script src="scripts/toc.js"></script>
+
+    <script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+
+<script>
+$( function () {
+	$( "[id*='$']" ).each( function () {
+		var $this = $( this );
+
+		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+	} );
+
+	$( ".tutorial-section pre, .readme-section pre, pre.prettyprint.source" ).each( function () {
+		var $this = $( this );
+
+		var example = $this.find( "code" );
+		exampleText = example.html();
+		var lang = /{@lang (.*?)}/.exec( exampleText );
+		if ( lang && lang[1] ) {
+			exampleText = exampleText.replace( lang[0], "" );
+			example.html( exampleText );
+			lang = lang[1];
+		} else {
+			var langClassMatch = example.parent()[0].className.match(/lang\-(\S+)/);
+			lang = langClassMatch ? langClassMatch[1] : "javascript";
+		}
+
+		if ( lang ) {
+
+			$this
+			.addClass( "sunlight-highlight-" + lang )
+			.addClass( "linenums" )
+			.html( example.html() );
+
+		}
+	} );
+
+	Sunlight.highlightAll( {
+		lineNumbers : true,
+		showMenu : true,
+		enableDoclinks : true
+	} );
+
+	$.catchAnchorLinks( {
+        navbarOffset: 10
+	} );
+	$( "#toc" ).toc( {
+		anchorName  : function ( i, heading, prefix ) {
+			return $( heading ).attr( "id" ) || ( prefix + i );
+		},
+		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
+		showAndHide : false,
+		smoothScrolling: true
+	} );
+
+	$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+	$( '.dropdown-toggle' ).dropdown();
+
+    $( "table" ).each( function () {
+      var $this = $( this );
+      $this.addClass('table');
+    } );
+
+} );
+</script>
+
+
+
+<!--Navigation and Symbol Display-->
+
+
+<!--Google Analytics-->
+
+<script>
+	(function ( i, s, o, g, r, a, m ) {
+		i['GoogleAnalyticsObject'] = r;
+		i[r] = i[r] || function () {
+			(i[r].q = i[r].q || []).push( arguments )
+		}, i[r].l = 1 * new Date();
+		a = s.createElement( o ),
+			m = s.getElementsByTagName( o )[0];
+		a.async = 1;
+		a.src = g;
+		m.parentNode.insertBefore( a, m )
+	})( window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga' );
+
+	ga( 'create', 'UA-34153510-1', 'http://www.ludojs.com' );
+	ga( 'send', 'pageview' );
+</script>
+
+
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            SearcherDisplay.init();
+        });
+    </script>
+
+
+</body>
+</html>

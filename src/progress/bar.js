@@ -64,6 +64,12 @@ ludo.progress.Bar = new Class({
         this.renderBar();
     },
 
+    /**
+     * Increment progress bar
+     * @param {Number} by
+     * @param {Boolean} animate
+     * @memberof ludo.progress.Bar.prototype
+     */
     increment: function (by, animate) {
         by = by != undefined ? by : 1;
         animate = animate != undefined ? animate : true;
@@ -97,6 +103,12 @@ ludo.progress.Bar = new Class({
         this.increment(0, animate);
     },
 
+    /**
+     * Set new progress value
+     * @param {Number} progress
+     * @param {Boolean} animate
+     * @memberof ludo.progress.Bar.prototype
+     */
     setProgress: function (progress, animate) {
         this.increment(progress - this.progress, animate);
     },
@@ -228,6 +240,11 @@ ludo.progress.Bar = new Class({
         return path.join(' ');
     },
 
+    /**
+     * Display text on progress bar
+     * @param {String} text
+     * @memberof ludo.progress.Bar.prototype
+     */
     text: function (txt) {
         if (this.els.textNode == undefined) {
             this.els.textNode = this.svg().$('text');
@@ -249,6 +266,7 @@ ludo.progress.Bar = new Class({
     animate: function (percent) {
         this.percent(percent, true);
     },
+
 
     percent: function (percent, animate) {
         this.ratio(percent / 100, animate);
