@@ -267,11 +267,23 @@ ludo.progress.Bar = new Class({
         this.percent(percent, true);
     },
 
-
+    /**
+     * Update percentage value directly.
+     * @param {Number} percent New percentage value
+     * @param {Boolean} animate True to animate, default = false
+     * @memberof ludo.progress.Bar.prototype
+     */
     percent: function (percent, animate) {
         this.ratio(percent / 100, animate);
     },
 
+
+    /**
+     * Update ratio value (0-1) directly.
+     * @param {Number} ratio New ratio - 0 = starting, 1 = finished
+     * @param {Boolean} animate True to animate, default = false
+     * @memberof ludo.progress.Bar.prototype
+     */
     ratio: function (ratio, animate) {
         if (arguments.length == 0) {
             return this.progress / this.steps * 100;
