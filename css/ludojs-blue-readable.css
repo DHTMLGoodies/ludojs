@@ -1709,7 +1709,22 @@ div.ludo-tree-movable-shim img{
 }
 
 
-/* ../ludojs/css-source/form/form.css */
+/* ../ludojs/css-source/progress/bar.css */
+.ludo-progress-bg {
+    background-color: #444;
+    border: 2px solid #333333;
+}
+
+.ludo-progress-pr {
+    background-color: #1976D2;
+
+}
+
+.ludo-progress-text {
+    color: #FFFFFF;
+    font-size: 12px;
+    font-family:arial, sans-serif;
+}/* ../ludojs/css-source/form/form.css */
 .ludo-form-element div.ludo-body {
     padding: 2px;
 }

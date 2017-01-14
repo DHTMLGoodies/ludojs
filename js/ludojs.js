@@ -1,28 +1,7 @@
-/* Generated Sat Jan 14 17:27:06 CET 2017 */
+/* Generated Sat Jan 14 17:39:50 CET 2017 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.405
-Copyright (C) 2012-2017  ludoJS.com, Alf Magne Kalleland
-This library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Lesser General Public
-License as published by the Free Software Foundation; either
-version 2.1 of the License, or (at your option) any later version.
-This library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Lesser General Public License for more details.
-You should have received a copy of the GNU Lesser General Public
-License along with this library; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-ludoJS.com., hereby disclaims all copyright interest in this script
-written by Alf Magne Kalleland.
-Alf Magne Kalleland, 2017
-Owner of ludoJS.com
-************************************************************************************************************/
-/* Generated Sat Jan 14 17:27:04 CET 2017 */
-/************************************************************************************************************
-@fileoverview
-ludoJS - Javascript framework, 1.1.404
+ludoJS - Javascript framework, 1.1.407
 Copyright (C) 2012-2017  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -30621,13 +30600,13 @@ ludo.progress.Bar = new Class({
 
     updatePatternSize: function () {
         if (this.patternSize != undefined) {
-            this.els.bgPattern.set('width', this.patternSize.x / this.svg().width);
-            this.els.bgPattern.set('height', this.patternSize.y / this.svg().height);
+            this.els.bgPattern.set('width', Math.min(1, this.patternSize.x / this.svg().width));
+            this.els.bgPattern.set('height', Math.min(1, this.patternSize.y / this.svg().height));
         }
 
         if(this.frontPatternSize){
-            this.els.frontPattern.set('width', this.frontPatternSize.x / this.svg().width);
-            this.els.frontPattern.set('height', this.frontPatternSize.y / this.svg().height);
+            this.els.frontPattern.set('width', Math.min(1, this.frontPatternSize.x / this.svg().width));
+            this.els.frontPattern.set('height', Math.min(1, this.frontPatternSize.y / this.svg().height));
         }
     },
 

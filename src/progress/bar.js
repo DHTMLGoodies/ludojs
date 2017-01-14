@@ -190,13 +190,13 @@ ludo.progress.Bar = new Class({
 
     updatePatternSize: function () {
         if (this.patternSize != undefined) {
-            this.els.bgPattern.set('width', this.patternSize.x / this.svg().width);
-            this.els.bgPattern.set('height', this.patternSize.y / this.svg().height);
+            this.els.bgPattern.set('width', Math.min(1, this.patternSize.x / this.svg().width));
+            this.els.bgPattern.set('height', Math.min(1, this.patternSize.y / this.svg().height));
         }
 
         if(this.frontPatternSize){
-            this.els.frontPattern.set('width', this.frontPatternSize.x / this.svg().width);
-            this.els.frontPattern.set('height', this.frontPatternSize.y / this.svg().height);
+            this.els.frontPattern.set('width', Math.min(1, this.frontPatternSize.x / this.svg().width));
+            this.els.frontPattern.set('height', Math.min(1, this.frontPatternSize.y / this.svg().height));
         }
     },
 
