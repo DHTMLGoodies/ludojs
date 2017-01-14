@@ -409,6 +409,11 @@ ludo.svg.Node = new Class({
         this.set('clip-path', clip.getUrl());
     },
 
+    
+    setPattern:function(pattern){
+        this.set('fill', pattern.getUrl());
+    },
+    
     /**
      Create url reference
      @function url

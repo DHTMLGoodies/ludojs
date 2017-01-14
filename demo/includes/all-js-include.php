@@ -149,6 +149,7 @@ $rnd = "RND". date("YmdHis");
 
 
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/progress/bar.js?abc=<?php echo $rnd; ?>"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../src/progress/donut.js?abc=<?php echo $rnd; ?>"></script>
 
 
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/card/button.js?abc=<?php echo $rnd; ?>"></script>

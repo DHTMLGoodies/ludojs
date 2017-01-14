@@ -9,6 +9,7 @@ ludo.svg.Util = {
 
         var ret = {
             'fill': ludo.svg.Util.toRGBColor(node.css('background-color')),
+            'fill-opacity': node.css('opacity'),
             'stroke': ludo.svg.Util.toRGBColor(node.css('border-color')),
             'stroke-width': node.css('border-width').replace('px', '')
         };

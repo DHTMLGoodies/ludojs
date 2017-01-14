@@ -1,7 +1,7 @@
-/* Generated Fri Jan 13 20:35:24 CET 2017 */
+/* Generated Sat Jan 14 2:22:46 CET 2017 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.402
+ludoJS - Javascript framework, 1.1.403
 Copyright (C) 2012-2017  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -30701,6 +30701,7 @@ ludo.progress.Bar = new Class({
                 width: w
             }, {
                 duration: this.animationDuration,
+                easing:ludo.svg.easing.outSine,
                 complete: function () {
                     this.lastRatio = ratio;
                     this.fireEvent('animate', this.lastRatio * 100);

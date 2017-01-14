@@ -74,17 +74,23 @@ require_once("../includes/demo-header.php");
                     {
                         id: 'progress2',
                         type: 'progress.Bar',
-                        textSizeRatio:0.5,
-                        steps:20,
                         elCss:{
                             margin:4
                         },
-                        progress:0,
-                        backgroundStyles:{
-                            'stroke-width': 1
+                        textSizeRatio:0.5, // Size of text relative to height of progress bar
+                        borderRadius:3, // Border radius, if not set it will be height / 2
+                        steps:100, // Number of steps
+                        progress:88, // Current progress
+                        // Background pattern displayed on top of background
+                        // The background pattern usually don't have 100% opacity
+                        bgPattern:'../images/rect-pattern.png',
+                        // Front pattern displayed on top of moving progress bar, also with some transparency
+                        frontPattern:'../images/progress-pattern.png',
+                        backgroundStyles:{ /* Custom styles fro the background */
+                            'stroke-width': 2
                         },
                         layout: {
-                            height:24,
+                            height:26,
                             width: 'matchParent',
                             centerHorizontal: true,
                             below: 'buttontop'
@@ -119,6 +125,7 @@ require_once("../includes/demo-header.php");
                         id:'button',
                         type:'form.Button',
                         value:'Increment bar',
+
                         elCss:{
                             'margin-top':10
                         },
@@ -149,6 +156,15 @@ require_once("../includes/demo-header.php");
                             width:120,
                             centerHorizontal: true,
                             below:'button'
+                        }
+                    },
+                    {
+                        id:'donutProgress',
+                        type:'progress.Donut',
+                        layout:{
+                            width:150,height:150,
+                            centerHorizontal:true,
+                            below:'resetButton'
                         }
                     }
                 ]
