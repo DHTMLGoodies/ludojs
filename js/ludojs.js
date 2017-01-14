@@ -1,7 +1,28 @@
-/* Generated Sat Jan 14 2:22:46 CET 2017 */
+/* Generated Sat Jan 14 17:27:06 CET 2017 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.403
+ludoJS - Javascript framework, 1.1.405
+Copyright (C) 2012-2017  ludoJS.com, Alf Magne Kalleland
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 2.1 of the License, or (at your option) any later version.
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+You should have received a copy of the GNU Lesser General Public
+License along with this library; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ludoJS.com., hereby disclaims all copyright interest in this script
+written by Alf Magne Kalleland.
+Alf Magne Kalleland, 2017
+Owner of ludoJS.com
+************************************************************************************************************/
+/* Generated Sat Jan 14 17:27:04 CET 2017 */
+/************************************************************************************************************
+@fileoverview
+ludoJS - Javascript framework, 1.1.404
 Copyright (C) 2012-2017  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -4839,6 +4860,7 @@ ludo.svg.Util = {
 
         var ret = {
             'fill': ludo.svg.Util.toRGBColor(node.css('background-color')),
+            'fill-opacity': node.css('opacity'),
             'stroke': ludo.svg.Util.toRGBColor(node.css('border-color')),
             'stroke-width': node.css('border-width').replace('px', '')
         };
@@ -5304,6 +5326,11 @@ ludo.svg.Node = new Class({
         this.set('clip-path', clip.getUrl());
     },
 
+    
+    setPattern:function(pattern){
+        this.set('fill', pattern.getUrl());
+    },
+    
     /**
      Create url reference
      @function url
@@ -30434,7 +30461,7 @@ ludo.progress.Bar = new Class({
     progress: 0,
     lastProgress: 0,
     lastSteps: 0,
-    lastRatio:0,
+    lastRatio: 0,
     outerBorderWidth: 0,
     innerBorderWidth: 0,
 
@@ -30449,11 +30476,15 @@ ludo.progress.Bar = new Class({
     animationDuration: 100,
 
     debugRect: undefined,
+    bgPattern: undefined,
+    frontPattern: undefined,
+    patternSize: undefined,
+    frontPatternSize: undefined,
 
     __construct: function (config) {
         this.parent(config);
         this.setConfigParams(config, ['animationDuration', 'steps', 'progress', 'borderRadius', 'textSizeRatio', 'backgroundStyles',
-            'barStyles', 'textStyles']);
+            'barStyles', 'textStyles', 'bgPattern', 'frontPattern']);
         if (!this.layout.height) {
             this.layout.height = 25;
         }
@@ -30464,7 +30495,6 @@ ludo.progress.Bar = new Class({
 
     __rendered: function () {
         this.parent();
-        this.svg().set('fill', '#000066');
         this.renderBar();
     },
 
@@ -30487,7 +30517,7 @@ ludo.progress.Bar = new Class({
         }
     },
 
-    onChange:function(){
+    onChange: function () {
         var ratio = this.progress / this.steps;
         this.fireEvent('change', [ratio * 100, this.progress, this.steps, this, ratio]);
     },
@@ -30517,10 +30547,8 @@ ludo.progress.Bar = new Class({
         this.increment(progress - this.progress, animate);
     },
 
-    renderBar: function () {
-
+    createClipPath: function () {
         var s = this.svg();
-
 
         this.els.clipPath = s.$('clipPath');
         s.appendDef(this.els.clipPath);
@@ -30529,6 +30557,88 @@ ludo.progress.Bar = new Class({
             x: 0, y: 0, width: 0, height: 0
         });
         this.els.clipPath.append(this.els.clipRect);
+
+        this.els.clipPathBg = s.$('clipPath');
+        this.els.clipPathBgPath = s.$('path');
+        this.els.clipPathBg.append(this.els.clipPathBgPath);
+        s.append(this.els.clipPathBg);
+
+    },
+
+    getPattern: function (image, sizeKey) {
+        var s = this.svg();
+        var pattern = s.$('pattern');
+        pattern.set('width', 0.2);
+        pattern.set('height', 1);
+        pattern.set('x', 0);
+        pattern.set('y', 0);
+        var img = s.$('image');
+        var that = this;
+        img.on('load', function () {
+            var bbox = this.getBBox();
+            that[sizeKey] = {
+                x: bbox.width, y: bbox.height
+            };
+
+            that.updatePatternSize();
+
+        }.bind(img));
+        img.set('xlink:href', image);
+        pattern.append(img);
+        s.appendDef(pattern);
+        return pattern;
+    },
+
+    createPattern: function () {
+        var s = this.svg();
+
+        if(this.bgPattern){
+            this.els.bgPattern = this.getPattern(this.bgPattern, 'patternSize');
+
+            this.els.patternRect = s.$('rect');
+            s.append(this.els.patternRect);
+
+            this.els.patternRect.setPattern(this.els.bgPattern);
+            this.els.patternRect.set('x', 0);
+            this.els.patternRect.set('y', 0);
+            this.els.patternRect.applyClipPath(this.els.clipPathBg);
+
+        }
+
+        if(this.frontPattern){
+            this.els.frontPattern = this.getPattern(this.frontPattern, 'frontPatternSize');
+
+            this.els.frontPatternPath = s.$('path');
+            s.append(this.els.frontPatternPath);
+
+            this.els.frontPatternPath.setPattern(this.els.frontPattern);
+
+            this.els.frontPatternPath.applyClipPath(this.els.clipPath);
+        }
+
+
+    },
+
+    updatePatternSize: function () {
+        if (this.patternSize != undefined) {
+            this.els.bgPattern.set('width', this.patternSize.x / this.svg().width);
+            this.els.bgPattern.set('height', this.patternSize.y / this.svg().height);
+        }
+
+        if(this.frontPatternSize){
+            this.els.frontPattern.set('width', this.frontPatternSize.x / this.svg().width);
+            this.els.frontPattern.set('height', this.frontPatternSize.y / this.svg().height);
+        }
+    },
+
+    renderBar: function () {
+
+        var s = this.svg();
+
+
+        this.createClipPath();
+
+        this.createPattern();
 
         var cls = 'ludo-progress-bg';
         var styles = ludo.svg.Util.pathStyles(cls);
@@ -30546,9 +30656,15 @@ ludo.progress.Bar = new Class({
         }
         bg.set('stroke-linecap', 'round');
         bg.set('stroke-linejoin', 'round');
+        if(this.els.patternRect){
+            this.els.patternRect.toFront();
+        }
+
 
         this.els.g = s.$('g');
         s.append(this.els.g);
+
+
         var el = this.els.bar = s.$('path');
 
 
@@ -30571,17 +30687,34 @@ ludo.progress.Bar = new Class({
             this.text(this._text);
         }
 
+        if(this.els.frontPatternPath){
+            this.els.frontPatternPath.toFront();
+        }
+
     },
 
-    bar:function(){
+    bar: function () {
         return this.els.bar;
     },
 
     resizeItems: function () {
-        var p = this.bgPath()
-        this.els.bg.set('d', p);
+
+        this.els.bg.set('d', this.bgPath());
+
+
+        if (this.els.patternRect) {
+            this.els.patternRect.set('width', this.svg().width);
+            this.els.patternRect.set('height', this.svg().height);
+        }
+
         var padding = (this.outerBorderWidth / 2) + (this.innerBorderWidth / 2);
         this.els.bar.set('d', this.bgPath(padding));
+
+        if(this.els.frontPatternPath){
+            this.els.frontPatternPath.set('d', this.bgPath(padding));
+        }
+
+        this.els.clipPathBgPath.set('d', this.bgPath(padding));
 
         this.positionTextNode();
 
@@ -30701,7 +30834,7 @@ ludo.progress.Bar = new Class({
                 width: w
             }, {
                 duration: this.animationDuration,
-                easing:ludo.svg.easing.outSine,
+                easing: ludo.svg.easing.outSine,
                 complete: function () {
                     this.lastRatio = ratio;
                     this.fireEvent('animate', this.lastRatio * 100);
@@ -30720,6 +30853,67 @@ ludo.progress.Bar = new Class({
 
         }
     }
+
+});/* ../ludojs/src/progress/donut.js */
+/**
+ * Created by alfmagne1 on 14/01/2017.
+ */
+ludo.progress.Donut = new Class({
+    Extends: ludo.View,
+    steps: 10,
+    progress: 0,
+
+
+    __construct: function (config) {
+        this.parent(config);
+
+        this.setConfigParams(config, ['progress', 'steps','text']);
+
+    },
+
+
+    __rendered: function () {
+        this.parent();
+        this.renderBar();
+    },
+
+    renderBar:function(){
+        var s = this.svg();
+
+        this.createStyles();
+
+        this.els.bg = s.$('path');
+
+    },
+
+    createStyles:function(){
+        var s = this.svg();
+        var cls = 'ludo-progress-bg';
+        var styles = ludo.svg.Util.pathStyles(cls);
+        s.addStyleSheet(cls + '-svg', styles);
+    },
+
+    resize:function(){
+
+    },
+
+    bgPath:function(){
+
+        var s = this.rect();
+        var c = s/2;
+
+
+
+    },
+
+    resizeBar:function(){
+
+    },
+
+    rect:function(){
+        return Math.min(this.svg().width, this.svg().height);
+    }
+
 
 });/* ../ludojs/src/form/validator/fns.js */
 ludo.form.validator.required = function(value, required){
