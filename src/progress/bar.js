@@ -2,7 +2,7 @@
  * @namespace ludo.progress
  */
 /**
- * Progress bar class
+ * Donut Progress Bar
  *
  * Demo: <a href="../demo/progress/bar.php">Progress Bar Demo</a>
  *
@@ -12,9 +12,11 @@
  * @param {Object} config
  * @param {Number} config.steps Number of progress bar steps, default = 10
  * @param {Number} config.progress Initial step, default = 0
+ * @param {String} config.bgPattern Path to background image for the progress bar background. The background ima
+ * @param {String} config.frontPattern Path to background image for the progress bar. The background images will be repeated if smaller than the progress bar. If bigger, it will be scaled down.
  * @param {float} config.textSizeRatio Size of text relative to height of progress bar, default = 0.6
  * @param {float} config.borderRadius Fixed border radius, default = height / 2
- * @param {float} config.backgroundStyles SVG background styles
+ * @param {float} config.bgStyles SVG background styles
  * @param {float} config.barStyles SVG moving bar styles
  * @param {float} config.textStyles Styling of text on progress bar
  * @param {Function} config.easing Easing function for animation. default: ludo.svg.easing.linear
@@ -39,7 +41,7 @@ ludo.progress.Bar = new Class({
     borderRadius: undefined,
     textSizeRatio: 0.6,
 
-    backgroundStyles: undefined,
+    bgStyles: undefined,
     barStyles: undefined,
     textStyles: undefined,
     _text: undefined,
@@ -55,7 +57,7 @@ ludo.progress.Bar = new Class({
     __construct: function (config) {
         this.parent(config);
         this.setConfigParams(config, ['animationDuration', 'steps', 'progress', 'borderRadius', 'textSizeRatio', 
-            'backgroundStyles',
+            'bgStyles',
             'barStyles', 'textStyles', 'bgPattern', 'frontPattern','easing']);
         if (!this.layout.height) {
             this.layout.height = 25;
@@ -215,8 +217,7 @@ ludo.progress.Bar = new Class({
     renderBar: function () {
 
         var s = this.svg();
-
-
+        
         this.createClipPath();
 
         this.createPattern();
@@ -226,16 +227,17 @@ ludo.progress.Bar = new Class({
         var cls = 'ludo-progress-bg';
         var styles = ludo.svg.Util.pathStyles(cls);
         this.outerBorderWidth = parseInt(styles['stroke-width']);
-
-
+        
         s.addStyleSheet(cls + '-svg', styles);
         var bg = this.els.bg = s.$('path');
 
         bg.addClass(cls + '-svg');
 
         s.append(bg);
-        if (this.backgroundStyles != undefined) {
-            bg.css(this.backgroundStyles);
+        if (this.bgStyles != undefined) {
+            bg.css(this.bgStyles);
+            if(this.bgStyles['stroke-width'] != undefined)this.outerBorderWidth = parseInt(this.bgStyles['stroke-width']);
+
         }
         bg.set('stroke-linecap', 'round');
         bg.set('stroke-linejoin', 'round');
@@ -253,15 +255,17 @@ ludo.progress.Bar = new Class({
 
         cls = 'ludo-progress-pr';
         styles = ludo.svg.Util.pathStyles(cls);
+        this.innerBorderWidth = parseInt(styles['stroke-width']);
         s.addStyleSheet(cls + '-svg', styles);
         el.addClass(cls + '-svg');
         this.els.g.append(el);
         if (this.barStyles != undefined) {
             el.css(this.barStyles);
+            if(this.barStyles['stroke-width'] != undefined)this.innerBorderWidth = parseInt(this.barStyles['stroke-width']);
         }
         el.set('stroke-linecap', 'round');
         el.set('stroke-linejoin', 'round');
-        this.innerBorderWidth = parseInt(styles['stroke-width']);
+
 
         this.els.g.applyClipPath(this.els.clipPath);
 

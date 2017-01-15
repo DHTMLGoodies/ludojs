@@ -13,7 +13,7 @@
  * @param {Number} config.progress Initial step, default = 0
  * @param {float} config.textSizeRatio Size of text relative to height of progress bar, default = 0.6
  * @param {float} config.borderRadius Fixed border radius, default = height / 2
- * @param {float} config.backgroundStyles SVG background styles
+ * @param {float} config.bgStyles SVG background styles
  * @param {float} config.barStyles SVG moving bar styles
  * @param {float} config.textStyles Styling of text on progress bar
  * @param {Function} config.easing Easing function for animation. default: ludo.svg.easing.linear
@@ -78,10 +78,10 @@ ludo.progress.Donut = new Class({
         s.append(this.els.bg);
         this.els.bg.set('fill-rule', 'evenodd');
 
-        if(this.backgroundStyles){
-            this.els.bg.css(this.backgroundStyles);
-            if(this.backgroundStyles['stroke-width'] != undefined){
-                this.outerBorderWidth = parseInt(this.els.bg.css('stroke-width'));
+        if(this.bgStyles){
+            this.els.bg.css(this.bgStyles);
+            if(this.bgStyles['stroke-width'] != undefined){
+                this.outerBorderWidth = parseInt(this.bgStyles['stroke-width']);
             }
         }
 
@@ -95,6 +95,9 @@ ludo.progress.Donut = new Class({
         this.els.frontGroup.applyClipPath(this.els.clipPath);
         if(this.barStyles){
             this.els.bar.css(this.barStyles);
+            if(this.barStyles['stroke-width'] != undefined){
+                this.outerBorderWidth = parseInt(this.barStyles['stroke-width']);
+            }
         }
         if (this._text != undefined) {
             this.text(this._text);

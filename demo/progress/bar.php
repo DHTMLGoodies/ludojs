@@ -100,7 +100,7 @@ require_once("../includes/demo-header.php");
                         bgPattern: '../images/rect-pattern.png',
                         // Front pattern displayed on top of moving progress bar, also with some transparency
                         frontPattern: '../images/progress-pattern.png',
-                        backgroundStyles: {
+                        bgStyles: {
                             /* Custom styles fro the background */
                             'stroke-width': 2
                         },
@@ -183,6 +183,9 @@ require_once("../includes/demo-header.php");
                         },
                         frontPattern:'../images/pattern-color-wheel.png',
                         bgPattern:'../images/pattern-wheel.png',
+                        bgStyles:{
+                            'stroke-width': 1
+                        },
                         animationDuration: 2000,
                         easing: ludo.svg.easing.outSine,
                         layout: {
@@ -237,7 +240,7 @@ require_once("../includes/demo-header.php");
                         },
                         textSizeRatio: 0.27,
                         animationDuration: 2000,
-                        backgroundStyles: {
+                        bgStyles: {
                             'stroke-width': 0
 
                         },
