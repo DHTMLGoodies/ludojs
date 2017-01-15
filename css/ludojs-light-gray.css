@@ -1,7 +1,7 @@
-/* Generated Sun Jan 15 16:35:24 CET 2017 */
+/* Generated Sun Jan 15 16:38:04 CET 2017 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.416
+ludoJS - Javascript framework, 1.1.418
 Copyright (C) 2012-2017  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
