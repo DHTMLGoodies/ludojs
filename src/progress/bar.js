@@ -2,7 +2,16 @@
  * @namespace ludo.progress
  */
 /**
- * Donut Progress Bar
+ *  Progress Bar
+ *  The progress bar is created using SVG. It is made out of 4 elements in this stacking order(bottom to top)
+ *
+ *  1) The background svg path rendered with the css class '.ludo-progress-bg' and styles defined in bgStyles object
+ *  2) Eventual background image defined in bgPattern. If the background path(1) has a border, the background image will be
+ *  shrinked to fit inside. The background image will be repeated when smaller than the progress bar. If bigger, it will be scaled
+ *  down.
+ *  3) Progress Bar SVG path
+ *  4) Eventual background image defined in frontPattern.
+ * 
  *
  * Demo: <a href="../demo/progress/bar.php">Progress Bar Demo</a>
  *
@@ -12,7 +21,7 @@
  * @param {Object} config
  * @param {Number} config.steps Number of progress bar steps, default = 10
  * @param {Number} config.progress Initial step, default = 0
- * @param {String} config.bgPattern Path to background image for the progress bar background. The background ima
+ * @param {String} config.bgPattern Path to background image for the progress bar background.
  * @param {String} config.frontPattern Path to background image for the progress bar. The background images will be repeated if smaller than the progress bar. If bigger, it will be scaled down.
  * @param {float} config.textSizeRatio Size of text relative to height of progress bar, default = 0.6
  * @param {float} config.borderRadius Fixed border radius, default = height / 2

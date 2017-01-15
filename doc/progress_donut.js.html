@@ -96,7 +96,14 @@
  */
 /**
  * Donut Progress bar
- * 
+ *  The progress bar is created using SVG. It is made out of 4 elements in this stacking order(bottom to top)
+ *
+ *  1) The background svg path rendered with the css class '.ludo-progress-bg' and styles defined in bgStyles object
+ *  2) Eventual background image defined in bgPattern. If the background path(1) has a border, the background image will be
+ *  shrinked to fit inside. The background image will be repeated when smaller than the progress bar. If bigger, it will be scaled
+ *  down.
+ *  3) Progress Bar SVG path
+ *  4) Eventual background image defined in frontPattern.
  * 
  * @augments ludo.progress.Bar
  * @param {Object} config
@@ -109,6 +116,8 @@
  * @param {float} config.bgStyles SVG background styles
  * @param {float} config.barStyles SVG moving bar styles
  * @param {float} config.textStyles Styling of text on progress bar
+ * @param {String} config.bgPattern Path to background image for the progress bar background. 
+ * @param {String} config.frontPattern Path to background image for the progress bar. The background images will be repeated if smaller than the progress bar. If bigger, it will be scaled down.
  * @param {Function} config.easing Easing function for animation. default: ludo.svg.easing.linear
  * @param {Number} config.animationDuration Animation duration in milliseconds (1/1000s) - default: 100
  * @fires ludo.progress.Bar#change Fired when value is changed. Arguments. 1) Percent completed 2) current step 3) number of steps, 4) ludo.progress.Bar 4) Current percentage.
