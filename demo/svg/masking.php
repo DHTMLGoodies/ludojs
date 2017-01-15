@@ -54,6 +54,8 @@ require_once("../includes/demo-header.php");
     gradient.append(stop2);
     c.appendDef(gradient);
 
+
+
     // Create mask
     var mask = c.$('mask');
     // Append rectangle to the clip path
@@ -125,6 +127,7 @@ require_once("../includes/demo-header.php");
     }
 
     animate();
+
 
 
 

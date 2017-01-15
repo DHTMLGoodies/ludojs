@@ -52,14 +52,19 @@ ludo.progress.Bar = new Class({
 
     __construct: function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['animationDuration', 'steps', 'progress', 'borderRadius', 'textSizeRatio', 'backgroundStyles',
-            'barStyles', 'textStyles', 'bgPattern', 'frontPattern']);
+        this.setConfigParams(config, ['animationDuration', 'steps', 'progress', 'borderRadius', 'textSizeRatio', 
+            'backgroundStyles',
+            'barStyles', 'textStyles', 'bgPattern', 'frontPattern','easing']);
         if (!this.layout.height) {
             this.layout.height = 25;
+        }
+        if(this.easing == undefined){
+            this.easing = ludo.svg.easing.linear;
         }
         if (config.text != undefined) {
             this._text = config.text;
         }
+        
     },
 
     __rendered: function () {
@@ -78,6 +83,7 @@ ludo.progress.Bar = new Class({
         animate = animate != undefined ? animate : true;
         this.lastProgress = this.progress;
         this.progress += by;
+        this.progress = Math.max(0, this.progress);
         this.progress = Math.min(this.progress, this.steps);
         if (this.progress != this.lastProgress || this.steps != this.lastSteps) {
             var ratio = this.progress / this.steps;
@@ -403,7 +409,7 @@ ludo.progress.Bar = new Class({
                 width: w
             }, {
                 duration: this.animationDuration,
-                easing: ludo.svg.easing.outSine,
+                easing: this.easing,
                 complete: function () {
                     this.lastRatio = ratio;
                     this.fireEvent('animate', this.lastRatio * 100);

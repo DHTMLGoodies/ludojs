@@ -13,7 +13,6 @@ ludo.svg.Util = {
             'stroke': ludo.svg.Util.toRGBColor(node.css('border-color')),
             'stroke-width': node.css('border-width').replace('px', '')
         };
-        ret['line-height'] = ret['line-height'] || ret['font-size'];
         node.remove();
         return ret;
     },

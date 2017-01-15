@@ -29,6 +29,7 @@ ludo.svg.Animation = new Class({
     },
 
     getPathSegments:function(path){
+        if(path.substr == undefined)return path;
         path = path.replace(/,/g, " ");
         path = path.replace(/\s+/g, " ");
         var tokens = path.split(/\s/g);
@@ -43,6 +44,7 @@ ludo.svg.Animation = new Class({
     
     animate:function(node, properties,options){
         if(this.color == undefined)this.colorUtil();
+
         this.queue({ node: node, properties:properties, options: options });
     },
 
@@ -85,6 +87,7 @@ ludo.svg.Animation = new Class({
         var duration = options.duration || 400;
         var easing = options.easing || ludo.svg.easing.inSine;
 
+
         var changes = {};
         var start = {};
         var special = {};
@@ -104,7 +107,6 @@ ludo.svg.Animation = new Class({
                     jQuery.each(changes[key], function(index, value){
                         if(!isNaN(value)){
                             changes[key][index] = value - start[key][index];
-
                         }
                     });
                     break;
@@ -160,7 +162,8 @@ ludo.svg.Animation = new Class({
 
         var progress = options.progress;
         var startFn = options.start;
-
+        var stepFn = options.step;
+        
         var fn = function (t, d) {
 
             if(options.validate != undefined){
@@ -190,6 +193,8 @@ ludo.svg.Animation = new Class({
             for(var key in changes) {
                 if(changes.hasOwnProperty(key)) {
                     var value = changes[key];
+                    
+                    
                     if (special[key]) {
                         switch (key) {
                             case 'd':
@@ -202,6 +207,9 @@ ludo.svg.Animation = new Class({
                                         v.push(v2 + (value[index] * delta))
                                     }
                                 });
+
+                                if(stepFn != undefined)value = stepFn.call(this, v, delta, t/d) || value;
+                                
                                 node.set("d", v.join(" "));
                                 break;
                             case 'stroke':
@@ -231,6 +239,7 @@ ludo.svg.Animation = new Class({
                         }
                     } else {
                         var val = start[key] + (value * delta);
+                        if(stepFn != undefined)val = stepFn.call(this, val, delta, t/d) || val;
                         node.el.setAttribute(key, val);
                         node._attr[key] = val;
                         node.dirty = true;

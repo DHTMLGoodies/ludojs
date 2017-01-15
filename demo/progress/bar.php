@@ -20,6 +20,15 @@ require_once("../includes/demo-header.php");
         font-size: 12px;
     }
 
+    .ludo-progress-donut-bg{
+        background-color: #444444;
+        border: 2px solid #333333;
+    }
+    
+    .ludo-progress-donut-bar{
+        background-color: #1976D2;
+    }
+
 </style>
 <script type="text/javascript" class="source-code">
 
@@ -58,7 +67,7 @@ require_once("../includes/demo-header.php");
                             'margin-top':10
                         },
                         type:'form.Button',
-                        value:'Rerun first button',
+                        value:'Rerun first Progress Bar',
                         listeners:{
                             'click': function(){
                                 ludo.$('progress').setProgress(0, false);
@@ -66,7 +75,7 @@ require_once("../includes/demo-header.php");
                             }
                         },
                         layout:{
-                            width:120,
+                            width:150,
                             centerHorizontal: true,
                             below:'progress'
                         }
@@ -161,11 +170,53 @@ require_once("../includes/demo-header.php");
                     {
                         id:'donutProgress',
                         type:'progress.Donut',
+                        steps:100,
+                        progress:0,
+                        innerRadius:0.7,
+                        animationDuration:2000,
+                        easing:ludo.svg.easing.outSine,
                         layout:{
                             width:150,height:150,
                             centerHorizontal:true,
                             below:'resetButton'
-                        }
+                        },
+                        listeners:{
+                            animate:function(percent){
+                                this.text(percent.toFixed(0) + '%');
+                            },
+                            animated:function(){
+                                ludo.$('donutProgress2').increment(100);
+                            }
+                        },
+                        text:'0%'
+                    },
+                    {
+                        id:'donutProgress2',
+                        type:'progress.Donut',
+                        steps:100,
+                        progress:0,
+                        innerRadius:0.8,
+                        textSizeRatio:0.27,
+                        animationDuration:2000,
+                        backgroundStyles:{
+                            'stroke-width': 0
+
+                        },
+                        barStyles:{
+                            'fill': '#DDD',
+                            'stroke-width': 0
+                        },
+                        layout:{
+                            width:50,height:50,
+                            centerHorizontal:true,
+                            below:'donutProgress'
+                        },
+                        listeners:{
+                            animate:function(percent){
+                                this.text(percent.toFixed(0) + '%');
+                            }
+                        },
+                        text:'0%'
                     }
                 ]
             },
@@ -186,6 +237,8 @@ require_once("../includes/demo-header.php");
 
     p.increment(100);
 
+    var donut = ludo.$('donutProgress');
+    donut.increment(100);
 
 </script>
 </body>

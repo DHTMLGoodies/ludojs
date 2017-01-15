@@ -82,7 +82,7 @@ require_once("../includes/demo-header.php");
             {
                 id:'svgView',
                 css: {
-                    'background-color': '#aeb0b0'
+                    'border-top': '1px solid ' + ludo.$C('border')
                 },
                 layout:{
                     weight:1

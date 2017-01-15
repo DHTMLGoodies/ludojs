@@ -13,3 +13,12 @@
     font-size: 12px;
     font-family:arial, sans-serif;
 }
+
+.ludo-progress-donut-bg{
+    background-color: #444444;
+    border: 2px solid #333333;
+}
+
+.ludo-progress-donut-bar{
+    background-color: #1976D2;
+}
