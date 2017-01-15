@@ -2543,7 +2543,9 @@ fieldset{
 }
 
 .ludo-twilight .ludo-window{
-    box-shadow:2px 2px 3px #111;
+    box-shadow:2px 2px 3px #222;
+    -webkit-box-shadow: 2px 2px 3px #222;
+    -moz-box-shadow:    2px 2px 3px #222;
 }
 
 /**
