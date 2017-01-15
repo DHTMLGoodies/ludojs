@@ -19,8 +19,7 @@
  * @param {Number} config.steps Number of progress bar steps, default = 10
  * @param {Number} config.progress Initial step, default = 0
  * @param {Number} config.startAngle Start angle in range 0-360. Default = 0(top)
- * @param {float} config.textSizeRatio Size of text relative to height of progress bar, default = 0.6
- * @param {float} config.borderRadius Fixed border radius, default = height / 2
+ * @param {float} config.textSizeRatio Size of text relative to inner radius, default: 0.3
  * @param {float} config.bgStyles SVG background styles
  * @param {float} config.barStyles SVG moving bar styles
  * @param {float} config.textStyles Styling of text on progress bar

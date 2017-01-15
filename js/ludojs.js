@@ -1,7 +1,7 @@
-/* Generated Sun Jan 15 16:55:34 CET 2017 */
+/* Generated Mon Jan 16 0:43:26 CET 2017 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.428
+ludoJS - Javascript framework, 1.1.429
 Copyright (C) 2012-2017  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -30432,7 +30432,7 @@ ludo.getController = function (controller) {
  *  down.
  *  3) Progress Bar SVG path
  *  4) Eventual background image defined in frontPattern.
- * 
+ *
  *
  * Demo: <a href="../demo/progress/bar.php">Progress Bar Demo</a>
  *
@@ -30586,11 +30586,13 @@ ludo.progress.Bar = new Class({
         pattern.set('y', 0);
         var img = this.els[imageKey] = s.$('image');
         var that = this;
+        img.set('opacity', 0);
         img.on('load', function () {
             var bbox = this.getBBox();
             that[sizeKey] = {
                 x: bbox.width, y: bbox.height
             };
+            img.set('opacity', 1);
 
             that.updatePatternSize();
 
@@ -30935,8 +30937,7 @@ ludo.progress.Bar = new Class({
  * @param {Number} config.steps Number of progress bar steps, default = 10
  * @param {Number} config.progress Initial step, default = 0
  * @param {Number} config.startAngle Start angle in range 0-360. Default = 0(top)
- * @param {float} config.textSizeRatio Size of text relative to height of progress bar, default = 0.6
- * @param {float} config.borderRadius Fixed border radius, default = height / 2
+ * @param {float} config.textSizeRatio Size of text relative to inner radius, default: 0.3
  * @param {float} config.bgStyles SVG background styles
  * @param {float} config.barStyles SVG moving bar styles
  * @param {float} config.textStyles Styling of text on progress bar

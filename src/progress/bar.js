@@ -11,7 +11,7 @@
  *  down.
  *  3) Progress Bar SVG path
  *  4) Eventual background image defined in frontPattern.
- * 
+ *
  *
  * Demo: <a href="../demo/progress/bar.php">Progress Bar Demo</a>
  *
@@ -165,11 +165,13 @@ ludo.progress.Bar = new Class({
         pattern.set('y', 0);
         var img = this.els[imageKey] = s.$('image');
         var that = this;
+        img.set('opacity', 0);
         img.on('load', function () {
             var bbox = this.getBBox();
             that[sizeKey] = {
                 x: bbox.width, y: bbox.height
             };
+            img.set('opacity', 1);
 
             that.updatePatternSize();
 

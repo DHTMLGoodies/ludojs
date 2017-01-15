@@ -92,14 +92,17 @@ function move($path)
         $destination = str_replace(".php", ".html", $destination);
         $content = getHTMLContent($path);
         $result = file_put_contents($destination, $content);
-        echo "Moving " . $path . " to " . $destination . "<br>";
+        echo "Moving " . $path . " to " . $destination . "<br>\n";
         if(!$result){
-            echo "Failed<br>";
+            echo "Failed<br>\n";
         }
     } else {
-        echo "Copy directly " . $path . " to " . $destination . "<br>";
+        echo "Copy directly " . $path . " to " . $destination . "<br>\n";
         $data = file_get_contents($path);
-        file_put_contents($destination, $data);
+        $result = file_put_contents($destination, $data);
+        if(!$result){
+            echo "Failed<br>\n";
+        }
     }
 
     chmod($destination, 0755);
@@ -116,7 +119,7 @@ function createDirectory($dir)
 
 function parseDirectory($dir)
 {
-    echo "<h1>Parsing $dir </h1>";
+    echo "<h1>Parsing $dir </h1>\n";
     createDirectory($dir);
 
     if ($handle = opendir($dir)) {
