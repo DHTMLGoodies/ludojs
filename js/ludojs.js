@@ -1,7 +1,7 @@
-/* Generated Sun Jan 15 16:10:56 CET 2017 */
+/* Generated Sun Jan 15 16:35:24 CET 2017 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.415
+ludoJS - Javascript framework, 1.1.416
 Copyright (C) 2012-2017  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -30423,7 +30423,16 @@ ludo.getController = function (controller) {
  * @namespace ludo.progress
  */
 /**
- * Donut Progress Bar
+ *  Progress Bar
+ *  The progress bar is created using SVG. It is made out of 4 elements in this stacking order(bottom to top)
+ *
+ *  1) The background svg path rendered with the css class '.ludo-progress-bg' and styles defined in bgStyles object
+ *  2) Eventual background image defined in bgPattern. If the background path(1) has a border, the background image will be
+ *  shrinked to fit inside. The background image will be repeated when smaller than the progress bar. If bigger, it will be scaled
+ *  down.
+ *  3) Progress Bar SVG path
+ *  4) Eventual background image defined in frontPattern.
+ * 
  *
  * Demo: <a href="../demo/progress/bar.php">Progress Bar Demo</a>
  *
@@ -30433,7 +30442,7 @@ ludo.getController = function (controller) {
  * @param {Object} config
  * @param {Number} config.steps Number of progress bar steps, default = 10
  * @param {Number} config.progress Initial step, default = 0
- * @param {String} config.bgPattern Path to background image for the progress bar background. The background ima
+ * @param {String} config.bgPattern Path to background image for the progress bar background.
  * @param {String} config.frontPattern Path to background image for the progress bar. The background images will be repeated if smaller than the progress bar. If bigger, it will be scaled down.
  * @param {float} config.textSizeRatio Size of text relative to height of progress bar, default = 0.6
  * @param {float} config.borderRadius Fixed border radius, default = height / 2
@@ -30910,7 +30919,14 @@ ludo.progress.Bar = new Class({
  */
 /**
  * Donut Progress bar
- * 
+ *  The progress bar is created using SVG. It is made out of 4 elements in this stacking order(bottom to top)
+ *
+ *  1) The background svg path rendered with the css class '.ludo-progress-bg' and styles defined in bgStyles object
+ *  2) Eventual background image defined in bgPattern. If the background path(1) has a border, the background image will be
+ *  shrinked to fit inside. The background image will be repeated when smaller than the progress bar. If bigger, it will be scaled
+ *  down.
+ *  3) Progress Bar SVG path
+ *  4) Eventual background image defined in frontPattern.
  * 
  * @augments ludo.progress.Bar
  * @param {Object} config
@@ -30918,11 +30934,14 @@ ludo.progress.Bar = new Class({
  * default: function(outerRadius){ return outerRadius * 0.5 }
  * @param {Number} config.steps Number of progress bar steps, default = 10
  * @param {Number} config.progress Initial step, default = 0
+ * @param {Number} config.startAngle Start angle in range 0-360. Default = 0(top)
  * @param {float} config.textSizeRatio Size of text relative to height of progress bar, default = 0.6
  * @param {float} config.borderRadius Fixed border radius, default = height / 2
  * @param {float} config.bgStyles SVG background styles
  * @param {float} config.barStyles SVG moving bar styles
  * @param {float} config.textStyles Styling of text on progress bar
+ * @param {String} config.bgPattern Path to background image for the progress bar background. 
+ * @param {String} config.frontPattern Path to background image for the progress bar. The background images will be repeated if smaller than the progress bar. If bigger, it will be scaled down.
  * @param {Function} config.easing Easing function for animation. default: ludo.svg.easing.linear
  * @param {Number} config.animationDuration Animation duration in milliseconds (1/1000s) - default: 100
  * @fires ludo.progress.Bar#change Fired when value is changed. Arguments. 1) Percent completed 2) current step 3) number of steps, 4) ludo.progress.Bar 4) Current percentage.
@@ -30940,11 +30959,13 @@ ludo.progress.Donut = new Class({
     outerBorderWidth: 0,
     innerBorderWidth: 0,
 
+    startAngle : 0,
+
 
 
     __construct:function(config){
         this.parent(config);
-        this.setConfigParams(config, ['innerRadius']);
+        this.setConfigParams(config, ['innerRadius', 'startAngle']);
     },
 
 
@@ -31177,7 +31198,7 @@ ludo.progress.Donut = new Class({
             var p= this.clipArray(ratio).join(' ');
             var s = this.rect();
             var c = s / 2;
-
+            var a = this.startAngle;
             var diff = ratio - this.lastRatio;
             this.els.clip.set('d', this.clipArray(this.lastRatio).join(' '));
             this.els.clip.animate({
@@ -31187,7 +31208,7 @@ ludo.progress.Donut = new Class({
                 duration:this.animationDuration,
                 step:function(value, delta, elapsed){
                     if(ratio == 1 && elapsed == 1)value[9] = 359.99999;
-                    var d = value[9] - 90;
+                    var d = value[9] - 90 + a;
 
                     var r = ludo.geometry.toRadians(d);
                     var x = c + (Math.cos(r) * 30000);
@@ -31218,18 +31239,22 @@ ludo.progress.Donut = new Class({
 
     clipArray: function (ratio) {
         var degrees = 360 * ratio;
-        var radians = ludo.geometry.toRadians(degrees - 90);
+        var radians = ludo.geometry.toRadians(degrees - 90 + this.startAngle);
         var s = this.rect();
         var c = s / 2;
 
         var radius = 30000;
+
+        var radStart = ludo.geometry.toRadians(- 90 + this.startAngle);
+        var xStart = c + (Math.cos(radStart) * radius)
+        var yStart = c + (Math.sin(radStart) * radius)
 
         var x = c + (Math.cos(radians) * radius);
         var y = c + (Math.sin(radians) * radius);
 
         return [
             'M', c, c,
-            'L', c, c -radius,
+            'L', xStart, yStart,
             'A', radius, radius, degrees , 1, 1, x, y, 'Z'
         ]
 

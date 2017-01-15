@@ -186,6 +186,7 @@ require_once("../includes/demo-header.php");
                         bgStyles:{
                             'stroke-width': 1
                         },
+                        
                         animationDuration: 2000,
                         easing: ludo.svg.easing.outSine,
                         layout: {
@@ -298,6 +299,7 @@ require_once("../includes/demo-header.php");
                 {
                     id: 'donutProgress3',
                     type: 'progress.Donut',
+                    startAngle:180, // Custom start angle
                     steps: 100,
                     progress: 0,
                     innerRadius: function(outerRadius){

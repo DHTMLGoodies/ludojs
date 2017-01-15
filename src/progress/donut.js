@@ -18,6 +18,7 @@
  * default: function(outerRadius){ return outerRadius * 0.5 }
  * @param {Number} config.steps Number of progress bar steps, default = 10
  * @param {Number} config.progress Initial step, default = 0
+ * @param {Number} config.startAngle Start angle in range 0-360. Default = 0(top)
  * @param {float} config.textSizeRatio Size of text relative to height of progress bar, default = 0.6
  * @param {float} config.borderRadius Fixed border radius, default = height / 2
  * @param {float} config.bgStyles SVG background styles
@@ -42,11 +43,13 @@ ludo.progress.Donut = new Class({
     outerBorderWidth: 0,
     innerBorderWidth: 0,
 
+    startAngle : 0,
+
 
 
     __construct:function(config){
         this.parent(config);
-        this.setConfigParams(config, ['innerRadius']);
+        this.setConfigParams(config, ['innerRadius', 'startAngle']);
     },
 
 
@@ -279,7 +282,7 @@ ludo.progress.Donut = new Class({
             var p= this.clipArray(ratio).join(' ');
             var s = this.rect();
             var c = s / 2;
-
+            var a = this.startAngle;
             var diff = ratio - this.lastRatio;
             this.els.clip.set('d', this.clipArray(this.lastRatio).join(' '));
             this.els.clip.animate({
@@ -289,7 +292,7 @@ ludo.progress.Donut = new Class({
                 duration:this.animationDuration,
                 step:function(value, delta, elapsed){
                     if(ratio == 1 && elapsed == 1)value[9] = 359.99999;
-                    var d = value[9] - 90;
+                    var d = value[9] - 90 + a;
 
                     var r = ludo.geometry.toRadians(d);
                     var x = c + (Math.cos(r) * 30000);
@@ -320,18 +323,22 @@ ludo.progress.Donut = new Class({
 
     clipArray: function (ratio) {
         var degrees = 360 * ratio;
-        var radians = ludo.geometry.toRadians(degrees - 90);
+        var radians = ludo.geometry.toRadians(degrees - 90 + this.startAngle);
         var s = this.rect();
         var c = s / 2;
 
         var radius = 30000;
+
+        var radStart = ludo.geometry.toRadians(- 90 + this.startAngle);
+        var xStart = c + (Math.cos(radStart) * radius)
+        var yStart = c + (Math.sin(radStart) * radius)
 
         var x = c + (Math.cos(radians) * radius);
         var y = c + (Math.sin(radians) * radius);
 
         return [
             'M', c, c,
-            'L', c, c -radius,
+            'L', xStart, yStart,
             'A', radius, radius, degrees , 1, 1, x, y, 'Z'
         ]
 
