@@ -6,6 +6,7 @@
  * Time: 16:55
  */
 
+ob_start();
 
 
 function deleteDir($dirPath) {
@@ -39,8 +40,12 @@ deleteDir("samples");
 
 chdir("demo");
 
+
+
 $path = "./";
 
+
+$results = array();
 
 function extension($file)
 {
@@ -86,8 +91,11 @@ function move($path)
     if (shouldBeParsed($path)) {
         $destination = str_replace(".php", ".html", $destination);
         $content = getHTMLContent($path);
-        file_put_contents($destination, $content);
+        $result = file_put_contents($destination, $content);
         echo "Moving " . $path . " to " . $destination . "<br>";
+        if(!$result){
+            echo "Failed<br>";
+        }
     } else {
         echo "Copy directly " . $path . " to " . $destination . "<br>";
         $data = file_get_contents($path);
@@ -135,3 +143,7 @@ function parseDirectory($dir)
 
 parseDirectory($path);
 
+
+$data = ob_get_contents();
+file_put_contents("../to-html-result.txt", $data);
+echo $data;
