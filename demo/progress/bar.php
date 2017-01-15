@@ -288,6 +288,7 @@ require_once("../includes/demo-header.php");
     function showWindow(){
         new ludo.Window({
             title:'Color Progress',
+            id:'progressWindow',
             layout:{
                 type:'fill',
                 height:300,width:300,

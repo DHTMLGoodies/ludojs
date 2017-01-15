@@ -1,7 +1,7 @@
-/* Generated Sun Jan 15 15:53:13 CET 2017 */
+/* Generated Sun Jan 15 16:00:11 CET 2017 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.412
+ludoJS - Javascript framework, 1.1.413
 Copyright (C) 2012-2017  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -2681,7 +2681,9 @@ ludo.util = {
 
 	getNewZIndex:function (view) {
 		var ret = ludo.CmpMgr.getNewZIndex();
-		if (view.renderTo == document.body && view.els.container.css('position')==='absolute') {
+
+		var p = view.getEl().parent();
+		if (p.length > 0 && p[0] == document.body && view.els.container.css('position')==='absolute') {
 			ret += 10000;
 		}
 		if (view.alwaysInFront) {

@@ -72,7 +72,9 @@ ludo.util = {
 
 	getNewZIndex:function (view) {
 		var ret = ludo.CmpMgr.getNewZIndex();
-		if (view.renderTo == document.body && view.els.container.css('position')==='absolute') {
+
+		var p = view.getEl().parent();
+		if (p.length > 0 && p[0] == document.body && view.els.container.css('position')==='absolute') {
 			ret += 10000;
 		}
 		if (view.alwaysInFront) {
