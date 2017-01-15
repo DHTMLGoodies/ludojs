@@ -1,7 +1,7 @@
-/* Generated Sun Jan 15 15:36:51 CET 2017 */
+/* Generated Sun Jan 15 15:53:13 CET 2017 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.410
+ludoJS - Javascript framework, 1.1.412
 Copyright (C) 2012-2017  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -5295,12 +5295,22 @@ ludo.svg.Node = new Class({
     },
 
     /**
-     * Apply clip path to node
-     * @function applyClipPath
+     * Apply clip path to node. Passed argument should be a "clipPath" node
+     * @function clip
      * @param {canvas.Node} clip
      * @memberof ludo.svg.Node.prototype
+     * @example
+     * var svg = view.svg();
+     *
+     * var clipPath = s.$('clipPath');
+     * var clipCircle = s.$('circle', { cx:50,cy:50,r:50 });
+     * clipPath.append(clipPath);
+     * s.appendDef(clipPath); // Append clip path to &lt;defs> node of &lt;svg>
+     *
+     * var rect = s.$('rect', { x:50, y:150, width:100,height:100, fill: '#ff0000' });
+     * rect.clip(clipPath);
      */
-    applyClipPath: function (clip) {
+    clip: function (clip) {
         this.set('clip-path', clip.getUrl());
     },
 
@@ -11823,7 +11833,7 @@ ludo.chart.Base = new Class({
             this.clipPath.append(this.clipRect);
         }
 
-        this.getChartNode().applyClipPath(this.clipPath);
+        this.getChartNode().clip(this.clipPath);
         var r = this.clipRect;
         r.set('x', 0);
         r.set('y', 0);
@@ -28756,7 +28766,7 @@ ludo.calendar.TimePicker = new Class({
         this.needleText.set("alignment-baseline", "middle");
         canvas.append(this.needleText);
 
-        this.needleText.applyClipPath(this.clipPath);
+        this.needleText.clip(this.clipPath);
 
         this.showHours();
 
@@ -30411,7 +30421,7 @@ ludo.getController = function (controller) {
  * @namespace ludo.progress
  */
 /**
- * Progress bar class
+ * Donut Progress Bar
  *
  * Demo: <a href="../demo/progress/bar.php">Progress Bar Demo</a>
  *
@@ -30421,9 +30431,11 @@ ludo.getController = function (controller) {
  * @param {Object} config
  * @param {Number} config.steps Number of progress bar steps, default = 10
  * @param {Number} config.progress Initial step, default = 0
+ * @param {String} config.bgPattern Path to background image for the progress bar background. The background ima
+ * @param {String} config.frontPattern Path to background image for the progress bar. The background images will be repeated if smaller than the progress bar. If bigger, it will be scaled down.
  * @param {float} config.textSizeRatio Size of text relative to height of progress bar, default = 0.6
  * @param {float} config.borderRadius Fixed border radius, default = height / 2
- * @param {float} config.backgroundStyles SVG background styles
+ * @param {float} config.bgStyles SVG background styles
  * @param {float} config.barStyles SVG moving bar styles
  * @param {float} config.textStyles Styling of text on progress bar
  * @param {Function} config.easing Easing function for animation. default: ludo.svg.easing.linear
@@ -30448,7 +30460,7 @@ ludo.progress.Bar = new Class({
     borderRadius: undefined,
     textSizeRatio: 0.6,
 
-    backgroundStyles: undefined,
+    bgStyles: undefined,
     barStyles: undefined,
     textStyles: undefined,
     _text: undefined,
@@ -30464,7 +30476,7 @@ ludo.progress.Bar = new Class({
     __construct: function (config) {
         this.parent(config);
         this.setConfigParams(config, ['animationDuration', 'steps', 'progress', 'borderRadius', 'textSizeRatio', 
-            'backgroundStyles',
+            'bgStyles',
             'barStyles', 'textStyles', 'bgPattern', 'frontPattern','easing']);
         if (!this.layout.height) {
             this.layout.height = 25;
@@ -30598,14 +30610,14 @@ ludo.progress.Bar = new Class({
             this.els.patternRect.setPattern(this.els.bgPattern);
             this.els.patternRect.set('x', 0);
             this.els.patternRect.set('y', 0);
-            this.els.patternRect.applyClipPath(this.els.clipPathBg);
+            this.els.patternRect.clip(this.els.clipPathBg);
         }
 
         if(this.frontPattern){
             this.els.frontPatternPath = s.$('path');
             s.append(this.els.frontPatternPath);
             this.els.frontPatternPath.setPattern(this.els.frontPattern);
-            this.els.frontPatternPath.applyClipPath(this.els.clipPath);
+            this.els.frontPatternPath.clip(this.els.clipPath);
         }
     },
 
@@ -30624,8 +30636,7 @@ ludo.progress.Bar = new Class({
     renderBar: function () {
 
         var s = this.svg();
-
-
+        
         this.createClipPath();
 
         this.createPattern();
@@ -30635,16 +30646,17 @@ ludo.progress.Bar = new Class({
         var cls = 'ludo-progress-bg';
         var styles = ludo.svg.Util.pathStyles(cls);
         this.outerBorderWidth = parseInt(styles['stroke-width']);
-
-
+        
         s.addStyleSheet(cls + '-svg', styles);
         var bg = this.els.bg = s.$('path');
 
         bg.addClass(cls + '-svg');
 
         s.append(bg);
-        if (this.backgroundStyles != undefined) {
-            bg.css(this.backgroundStyles);
+        if (this.bgStyles != undefined) {
+            bg.css(this.bgStyles);
+            if(this.bgStyles['stroke-width'] != undefined)this.outerBorderWidth = parseInt(this.bgStyles['stroke-width']);
+
         }
         bg.set('stroke-linecap', 'round');
         bg.set('stroke-linejoin', 'round');
@@ -30662,17 +30674,19 @@ ludo.progress.Bar = new Class({
 
         cls = 'ludo-progress-pr';
         styles = ludo.svg.Util.pathStyles(cls);
+        this.innerBorderWidth = parseInt(styles['stroke-width']);
         s.addStyleSheet(cls + '-svg', styles);
         el.addClass(cls + '-svg');
         this.els.g.append(el);
         if (this.barStyles != undefined) {
             el.css(this.barStyles);
+            if(this.barStyles['stroke-width'] != undefined)this.innerBorderWidth = parseInt(this.barStyles['stroke-width']);
         }
         el.set('stroke-linecap', 'round');
         el.set('stroke-linejoin', 'round');
-        this.innerBorderWidth = parseInt(styles['stroke-width']);
 
-        this.els.g.applyClipPath(this.els.clipPath);
+
+        this.els.g.clip(this.els.clipPath);
 
 
         if (this._text != undefined) {
@@ -30904,7 +30918,7 @@ ludo.progress.Bar = new Class({
  * @param {Number} config.progress Initial step, default = 0
  * @param {float} config.textSizeRatio Size of text relative to height of progress bar, default = 0.6
  * @param {float} config.borderRadius Fixed border radius, default = height / 2
- * @param {float} config.backgroundStyles SVG background styles
+ * @param {float} config.bgStyles SVG background styles
  * @param {float} config.barStyles SVG moving bar styles
  * @param {float} config.textStyles Styling of text on progress bar
  * @param {Function} config.easing Easing function for animation. default: ludo.svg.easing.linear
@@ -30949,7 +30963,7 @@ ludo.progress.Donut = new Class({
             this.els.frontPatternPath = s.$('path');
             this.els.frontGroup.append(this.els.frontPatternPath);
             this.els.frontPatternPath.setPattern(this.els.frontPattern);
-            this.els.frontPatternPath.applyClipPath(this.els.clipPath);
+            this.els.frontPatternPath.clip(this.els.clipPath);
             this.els.frontPatternPath.set('fill-rule', 'evenodd');
         }
     },
@@ -30969,10 +30983,10 @@ ludo.progress.Donut = new Class({
         s.append(this.els.bg);
         this.els.bg.set('fill-rule', 'evenodd');
 
-        if(this.backgroundStyles){
-            this.els.bg.css(this.backgroundStyles);
-            if(this.backgroundStyles['stroke-width'] != undefined){
-                this.outerBorderWidth = parseInt(this.els.bg.css('stroke-width'));
+        if(this.bgStyles){
+            this.els.bg.css(this.bgStyles);
+            if(this.bgStyles['stroke-width'] != undefined){
+                this.outerBorderWidth = parseInt(this.bgStyles['stroke-width']);
             }
         }
 
@@ -30983,9 +30997,12 @@ ludo.progress.Donut = new Class({
         this.els.bar.addClass('ludo-progress-donut-bar-svg');
         this.els.frontGroup.append(this.els.bar);
         this.els.bar.set('fill-rule', 'evenodd');
-        this.els.frontGroup.applyClipPath(this.els.clipPath);
+        this.els.frontGroup.clip(this.els.clipPath);
         if(this.barStyles){
             this.els.bar.css(this.barStyles);
+            if(this.barStyles['stroke-width'] != undefined){
+                this.outerBorderWidth = parseInt(this.barStyles['stroke-width']);
+            }
         }
         if (this._text != undefined) {
             this.text(this._text);

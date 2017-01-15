@@ -58,7 +58,7 @@ ludo.progress.Donut = new Class({
             this.els.frontPatternPath = s.$('path');
             this.els.frontGroup.append(this.els.frontPatternPath);
             this.els.frontPatternPath.setPattern(this.els.frontPattern);
-            this.els.frontPatternPath.applyClipPath(this.els.clipPath);
+            this.els.frontPatternPath.clip(this.els.clipPath);
             this.els.frontPatternPath.set('fill-rule', 'evenodd');
         }
     },
@@ -92,7 +92,7 @@ ludo.progress.Donut = new Class({
         this.els.bar.addClass('ludo-progress-donut-bar-svg');
         this.els.frontGroup.append(this.els.bar);
         this.els.bar.set('fill-rule', 'evenodd');
-        this.els.frontGroup.applyClipPath(this.els.clipPath);
+        this.els.frontGroup.clip(this.els.clipPath);
         if(this.barStyles){
             this.els.bar.css(this.barStyles);
             if(this.barStyles['stroke-width'] != undefined){

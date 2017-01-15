@@ -415,7 +415,7 @@ ludo.calendar.TimePicker = new Class({
         this.needleText.set("alignment-baseline", "middle");
         canvas.append(this.needleText);
 
-        this.needleText.applyClipPath(this.clipPath);
+        this.needleText.clip(this.clipPath);
 
         this.showHours();
 

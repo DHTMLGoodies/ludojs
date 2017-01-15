@@ -292,7 +292,7 @@ ludo.chart.Base = new Class({
             this.clipPath.append(this.clipRect);
         }
 
-        this.getChartNode().applyClipPath(this.clipPath);
+        this.getChartNode().clip(this.clipPath);
         var r = this.clipRect;
         r.set('x', 0);
         r.set('y', 0);

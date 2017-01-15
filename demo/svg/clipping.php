@@ -54,7 +54,7 @@ require_once("../includes/demo-header.php");
     c.append(clipPath);
 
     // Apply clip path to the g tag.
-    g.applyClipPath(clipPath);
+    g.clip(clipPath);
 
     var rect = new ludo.svg.Rect({
         x:0,y:0,width:w,height:h

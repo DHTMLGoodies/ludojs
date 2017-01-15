@@ -191,14 +191,14 @@ ludo.progress.Bar = new Class({
             this.els.patternRect.setPattern(this.els.bgPattern);
             this.els.patternRect.set('x', 0);
             this.els.patternRect.set('y', 0);
-            this.els.patternRect.applyClipPath(this.els.clipPathBg);
+            this.els.patternRect.clip(this.els.clipPathBg);
         }
 
         if(this.frontPattern){
             this.els.frontPatternPath = s.$('path');
             s.append(this.els.frontPatternPath);
             this.els.frontPatternPath.setPattern(this.els.frontPattern);
-            this.els.frontPatternPath.applyClipPath(this.els.clipPath);
+            this.els.frontPatternPath.clip(this.els.clipPath);
         }
     },
 
@@ -267,7 +267,7 @@ ludo.progress.Bar = new Class({
         el.set('stroke-linejoin', 'round');
 
 
-        this.els.g.applyClipPath(this.els.clipPath);
+        this.els.g.clip(this.els.clipPath);
 
 
         if (this._text != undefined) {

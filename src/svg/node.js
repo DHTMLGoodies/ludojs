@@ -400,12 +400,22 @@ ludo.svg.Node = new Class({
     },
 
     /**
-     * Apply clip path to node
-     * @function applyClipPath
+     * Apply clip path to node. Passed argument should be a "clipPath" node
+     * @function clip
      * @param {canvas.Node} clip
      * @memberof ludo.svg.Node.prototype
+     * @example
+     * var svg = view.svg();
+     *
+     * var clipPath = s.$('clipPath');
+     * var clipCircle = s.$('circle', { cx:50,cy:50,r:50 });
+     * clipPath.append(clipPath);
+     * s.appendDef(clipPath); // Append clip path to &lt;defs> node of &lt;svg>
+     *
+     * var rect = s.$('rect', { x:50, y:150, width:100,height:100, fill: '#ff0000' });
+     * rect.clip(clipPath);
      */
-    applyClipPath: function (clip) {
+    clip: function (clip) {
         this.set('clip-path', clip.getUrl());
     },
 
