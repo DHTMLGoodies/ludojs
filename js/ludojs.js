@@ -1,7 +1,7 @@
-/* Generated Sun Jan 15 4:30:45 CET 2017 */
+/* Generated Sun Jan 15 15:36:51 CET 2017 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.408
+ludoJS - Javascript framework, 1.1.410
 Copyright (C) 2012-2017  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -30426,10 +30426,12 @@ ludo.getController = function (controller) {
  * @param {float} config.backgroundStyles SVG background styles
  * @param {float} config.barStyles SVG moving bar styles
  * @param {float} config.textStyles Styling of text on progress bar
+ * @param {Function} config.easing Easing function for animation. default: ludo.svg.easing.linear
  * @param {Number} config.animationDuration Animation duration in milliseconds (1/1000s) - default: 100
- * @fires ludo.progress.Bar#change Fired when value is changed. Arguments. 1) Percent completed 2) current step 3) number of steps, 4) ludo.progress.Bar 4) Current percentage
- * @fires ludo.progress.Bar#animate Fired when value is animated. Arguments. 1) Animated percent completed
- * @fires ludo.progress.Bar#animated Fired when animation is complete. Arguments: 1) Percent completed
+ * @fires ludo.progress.Bar#change Fired when value is changed. Arguments. 1) Percent completed 2) current step 3) number of steps, 4) ludo.progress.Bar 4) Current percentage.
+ * If animated, the change event will be triggered once animation is complete.
+ * @fires ludo.progress.Bar#animate Fired during progress animation and when value is changed. This is a good event
+ * to listen to when you want to update texts for the progress bar. Arguments. 1) Animated percent completed
  */
 ludo.progress.Bar = new Class({
     Extends: ludo.View,
@@ -30467,6 +30469,7 @@ ludo.progress.Bar = new Class({
         if (!this.layout.height) {
             this.layout.height = 25;
         }
+        this.lastSteps = this.steps;
         if(this.easing == undefined){
             this.easing = ludo.svg.easing.linear;
         }
@@ -30479,6 +30482,12 @@ ludo.progress.Bar = new Class({
     __rendered: function () {
         this.parent();
         this.renderBar();
+
+
+        if(this.progress != 0){
+            this.onChange();
+        }
+
     },
 
     /**
@@ -30490,13 +30499,13 @@ ludo.progress.Bar = new Class({
     increment: function (by, animate) {
         by = by != undefined ? by : 1;
         animate = animate != undefined ? animate : true;
-        this.lastProgress = this.progress;
+        if(by != 0)this.lastProgress = this.progress;
         this.progress += by;
         this.progress = Math.max(0, this.progress);
         this.progress = Math.min(this.progress, this.steps);
+
         if (this.progress != this.lastProgress || this.steps != this.lastSteps) {
             var ratio = this.progress / this.steps;
-            this.onChange();
             this.ratio(ratio, animate);
         }
     },
@@ -30506,16 +30515,12 @@ ludo.progress.Bar = new Class({
         this.fireEvent('change', [ratio * 100, this.progress, this.steps, this, ratio]);
     },
 
-    finished: function () {
-        return this.progress >= this.steps;
-    },
-
     resize: function (size) {
         this.parent(size);
         this.resizeItems();
     },
 
-    setMax: function (steps, animate) {
+    setSteps: function (steps, animate) {
         this.lastSteps = this.steps;
         this.steps = steps;
         this.increment(0, animate);
@@ -30523,7 +30528,7 @@ ludo.progress.Bar = new Class({
 
     /**
      * Set new progress value
-     * @param {Number} progress
+     * @param {Number} progress
      * @param {Boolean} animate
      * @memberof ludo.progress.Bar.prototype
      */
@@ -30549,14 +30554,14 @@ ludo.progress.Bar = new Class({
 
     },
 
-    getPattern: function (image, sizeKey) {
+    getPattern: function (image, sizeKey, imageKey) {
         var s = this.svg();
         var pattern = s.$('pattern');
         pattern.set('width', 0.2);
         pattern.set('height', 1);
         pattern.set('x', 0);
         pattern.set('y', 0);
-        var img = s.$('image');
+        var img = this.els[imageKey] = s.$('image');
         var that = this;
         img.on('load', function () {
             var bbox = this.getBBox();
@@ -30574,33 +30579,34 @@ ludo.progress.Bar = new Class({
     },
 
     createPattern: function () {
-        var s = this.svg();
+
 
         if(this.bgPattern){
-            this.els.bgPattern = this.getPattern(this.bgPattern, 'patternSize');
+            this.els.bgPattern = this.getPattern(this.bgPattern, 'patternSize','bgImage');
+        }
 
+        if(this.frontPattern){
+            this.els.frontPattern = this.getPattern(this.frontPattern, 'frontPatternSize','frontImage');
+        }
+    },
+
+    applyPattern:function(){
+        var s = this.svg();
+        if(this.bgPattern){
             this.els.patternRect = s.$('rect');
             s.append(this.els.patternRect);
-
             this.els.patternRect.setPattern(this.els.bgPattern);
             this.els.patternRect.set('x', 0);
             this.els.patternRect.set('y', 0);
             this.els.patternRect.applyClipPath(this.els.clipPathBg);
-
         }
 
         if(this.frontPattern){
-            this.els.frontPattern = this.getPattern(this.frontPattern, 'frontPatternSize');
-
             this.els.frontPatternPath = s.$('path');
             s.append(this.els.frontPatternPath);
-
             this.els.frontPatternPath.setPattern(this.els.frontPattern);
-
             this.els.frontPatternPath.applyClipPath(this.els.clipPath);
         }
-
-
     },
 
     updatePatternSize: function () {
@@ -30623,6 +30629,8 @@ ludo.progress.Bar = new Class({
         this.createClipPath();
 
         this.createPattern();
+
+        this.applyPattern();
 
         var cls = 'ludo-progress-bg';
         var styles = ludo.svg.Util.pathStyles(cls);
@@ -30706,6 +30714,10 @@ ludo.progress.Bar = new Class({
 
         this.els.clipRect.set('height', this.svg().height);
         this.els.clipRect.set('x', this.outerBorderWidth);
+
+        this.updatePatternSize();
+        this.ratio(this.progress / this.steps, false);
+
     },
 
     positionTextNode: function () {
@@ -30763,10 +30775,27 @@ ludo.progress.Bar = new Class({
     },
 
     /**
-     * Display text on progress bar
+     * Display text on progress bar.
      * @param {String} text
      * @memberof ludo.progress.Bar.prototype
-     */
+     * @example
+     {
+         id: 'progress',
+         type: 'progress.Bar',
+         borderRadius: 3,
+         steps: 100,
+         layout: {
+             width: 300,
+             height:30
+         },
+         listeners:{
+            // Update text on animate
+             animate:function (percent) {
+                 this.text(percent.toFixed(0) + '%');
+             }
+          }
+      }
+          */
     text: function (txt) {
         if (this.els.textNode == undefined) {
             this.els.textNode = this.svg().$('text');
@@ -30790,26 +30819,46 @@ ludo.progress.Bar = new Class({
     },
 
     /**
-     * Update percentage value directly.
+     * Update or get percent completed.
      * @param {Number} percent New percentage value
      * @param {Boolean} animate True to animate, default = false
      * @memberof ludo.progress.Bar.prototype
+     * @example
+     * var progressBar = ludo.$('progressBar');
+     * // get percent completed with no decimals
+     * var percent = progressBar.percent();
+     * // update percent and animate it
+     * progressBar.percent(20, true);
      */
     percent: function (percent, animate) {
+        if(arguments.length == 0){
+            return (this.progress / this.steps * 100).toFixed(0);
+        }
         this.ratio(percent / 100, animate);
     },
 
 
     /**
-     * Update ratio value (0-1) directly.
+     * Get or set ratio. To get current ratio, send no arguments to this function.
+     * 
+     * The ratio is also updated automatically when you use the increment function.
+     * 
      * @param {Number} ratio New ratio - 0 = starting, 1 = finished
      * @param {Boolean} animate True to animate, default = false
      * @memberof ludo.progress.Bar.prototype
+     * @example
+     * var progressBar = ludo.$('progressBar');
+     * // get ratio
+     * var ratio = progressBar.ratio();
+     * // set ratio
+     * progressBar.ratio(0.5, true);
+     * 
      */
     ratio: function (ratio, animate) {
         if (arguments.length == 0) {
-            return this.progress / this.steps * 100;
+            return this.progress / this.steps;
         }
+        ratio = ludo.util.clamp(ratio, 0, 1);
         var w = (this.svg().width - this.outerBorderWidth) * ratio;
 
         if (animate) {
@@ -30823,7 +30872,6 @@ ludo.progress.Bar = new Class({
                     this.lastRatio = ratio;
                     this.fireEvent('animate', this.lastRatio * 100);
                     this.onChange();
-                    this.fireEvent('animated', this.lastRatio * 100);
                 }.bind(this),
                 progress: function (t) {
                     var prs = Math.min(100, (this.lastRatio + (diff * t)) * 100);
@@ -30832,9 +30880,11 @@ ludo.progress.Bar = new Class({
             });
         } else {
             this.els.clipRect.set('width', w);
+            if(ratio != this.lastRatio){
+                this.onChange();
+            }
             this.lastRatio = ratio;
             this.fireEvent('animate', this.lastRatio * 100);
-
         }
     }
 
@@ -30844,9 +30894,26 @@ ludo.progress.Bar = new Class({
  */
 /**
  * Donut Progress bar
+ * 
+ * 
  * @augments ludo.progress.Bar
  * @param {Object} config
- * @param {Number} config.innerRadius - Inner radius size in fraction of outer radius. Outer radius is measured as min(view width, view height).
+ * @param {Function} config.innerRadius - Function returning inner radius. Arguments to this function : 1) outer radius.
+ * default: function(outerRadius){ return outerRadius * 0.5 }
+ * @param {Number} config.steps Number of progress bar steps, default = 10
+ * @param {Number} config.progress Initial step, default = 0
+ * @param {float} config.textSizeRatio Size of text relative to height of progress bar, default = 0.6
+ * @param {float} config.borderRadius Fixed border radius, default = height / 2
+ * @param {float} config.backgroundStyles SVG background styles
+ * @param {float} config.barStyles SVG moving bar styles
+ * @param {float} config.textStyles Styling of text on progress bar
+ * @param {Function} config.easing Easing function for animation. default: ludo.svg.easing.linear
+ * @param {Number} config.animationDuration Animation duration in milliseconds (1/1000s) - default: 100
+ * @fires ludo.progress.Bar#change Fired when value is changed. Arguments. 1) Percent completed 2) current step 3) number of steps, 4) ludo.progress.Bar 4) Current percentage.
+ * If animated, the change event will be triggered once animation is complete.
+ * @fires ludo.progress.Bar#animate Fired during progress animation and when value is changed. This is a good event
+ * to listen to when you want to update texts for the progress bar. Arguments. 1) Animated percent completed
+
  */
 ludo.progress.Donut = new Class({
     Extends: ludo.progress.Bar,
@@ -30857,18 +30924,45 @@ ludo.progress.Donut = new Class({
     outerBorderWidth: 0,
     innerBorderWidth: 0,
 
-    innerRadius:0.5,
+
 
     __construct:function(config){
         this.parent(config);
         this.setConfigParams(config, ['innerRadius']);
     },
 
+
+    applyPattern:function(){
+
+        var s = this.svg();
+
+
+        if(this.bgPattern){
+            this.els.bgPatternPath = s.$('path');
+            s.append(this.els.bgPatternPath);
+            this.els.bgPatternPath.setPattern(this.els.bgPattern);
+            this.els.bgPatternPath.set('fill-rule', 'evenodd');
+        }
+
+
+        if(this.frontPattern){
+            this.els.frontPatternPath = s.$('path');
+            this.els.frontGroup.append(this.els.frontPatternPath);
+            this.els.frontPatternPath.setPattern(this.els.frontPattern);
+            this.els.frontPatternPath.applyClipPath(this.els.clipPath);
+            this.els.frontPatternPath.set('fill-rule', 'evenodd');
+        }
+    },
+
+
     renderBar: function () {
         var s = this.svg();
 
         this.createStyles();
         this.createClipPath();
+
+        this.createPattern();
+
 
         this.els.bg = s.$('path');
         this.els.bg.addClass('ludo-progress-donut-bg-svg');
@@ -30882,11 +30976,14 @@ ludo.progress.Donut = new Class({
             }
         }
 
+        this.els.frontGroup = s.$('g');
+        s.append(this.els.frontGroup);
+
         this.els.bar = s.$('path');
         this.els.bar.addClass('ludo-progress-donut-bar-svg');
-        s.append(this.els.bar);
+        this.els.frontGroup.append(this.els.bar);
         this.els.bar.set('fill-rule', 'evenodd');
-        this.els.bar.applyClipPath(this.els.clipPath);
+        this.els.frontGroup.applyClipPath(this.els.clipPath);
         if(this.barStyles){
             this.els.bar.css(this.barStyles);
         }
@@ -30894,9 +30991,17 @@ ludo.progress.Donut = new Class({
             this.text(this._text);
         }
 
+        this.applyPattern();
+
+        this.els.frontGroup.toFront();
+
         this.els.debug = s.$('path');
         s.append(this.els.debug);
         this.els.debug.css('fill', '#ff0000');
+
+        if(this.els.frontPatternPath){
+            this.els.frontPatternPath.toFront();
+        }
 
     },
 
@@ -30935,15 +31040,54 @@ ludo.progress.Donut = new Class({
 
     },
 
+
+    updatePatternSize: function () {
+        var s = this.rect();
+
+        if (this.patternSize != undefined) {
+
+            if(this.patternSize.x > s){
+                this.els.bgImage.set('width', s);
+                this.els.bgImage.set('height', s);
+            }
+
+            this.els.bgPattern.set('width', Math.min(1, this.patternSize.x /s));
+            this.els.bgPattern.set('height', Math.min(1, this.patternSize.y / s));
+        }
+
+        if(this.frontPatternSize){
+
+            if(this.frontPatternSize.x > s){
+                this.els.frontImage.set('width', s);
+                this.els.frontImage.set('height', s);
+            }
+            this.els.frontPattern.set('width', Math.min(1, this.frontPatternSize.x /s));
+            this.els.frontPattern.set('height', Math.min(1, this.frontPatternSize.y / s));
+        }
+    },
+    
     resizeItems: function () {
         var s = this.rect();
         var c = s / 2;
         var radius = c - 2;
-        var innerRadius = radius * this.innerRadius;
+        var innerRadius = this.innerRadius(radius);
 
         this.els.bg.set('d', this.bgPath(radius, innerRadius));
 
         this.els.bar.set('d', this.bgPath(radius - this.outerBorderWidth, innerRadius + this.outerBorderWidth));
+
+        if(this.els.bgPatternPath){
+            this.els.bgPatternPath.set('d', this.bgPath(radius - this.outerBorderWidth, innerRadius + this.outerBorderWidth));
+        }
+
+        if(this.els.frontPatternPath){
+            var p = this.bgPath(radius - this.outerBorderWidth - this.innerBorderWidth, innerRadius + this.outerBorderWidth + this.innerBorderWidth);
+            this.els.frontPatternPath.set('d', p);
+        }
+
+
+
+        this.updatePatternSize();
 
         this.positionTextNode();
     },
@@ -30977,7 +31121,7 @@ ludo.progress.Donut = new Class({
             var c = this.rect() / 2;
             this.els.textNode.set('x', c);
             this.els.textNode.set('y', c);
-            this.els.textNode.css('font-size', this.rect() * this.innerRadius * this.textSizeRatio);
+            this.els.textNode.css('font-size',  this.innerRadius(this.rect()) * this.textSizeRatio);
         }
     },
 
@@ -31006,6 +31150,10 @@ ludo.progress.Donut = new Class({
     },
 
     ratio: function (ratio, animate) {
+        if (arguments.length == 0) {
+            return this.progress / this.steps;
+        }
+        ratio = ludo.util.clamp(ratio, 0, 1);
         if(animate){
             var p= this.clipArray(ratio).join(' ');
             var s = this.rect();
@@ -31028,7 +31176,6 @@ ludo.progress.Donut = new Class({
                     value[12] = x;
                     value[13] = y;
                     return value;
-
                 },
                 progress: function (t) {
                     var prs = Math.min(100, (this.lastRatio + (diff * t)) * 100);
@@ -31038,14 +31185,15 @@ ludo.progress.Donut = new Class({
                     this.lastRatio = ratio;
                     this.fireEvent('animate', this.lastRatio * 100);
                     this.onChange();
-                    this.fireEvent('animated', this.lastRatio * 100);
                 }.bind(this)
             });
         }else{
             var path = this.clipArray(Math.min(ratio, 0.9999999));
             this.els.clip.set('d', path.join(' '));
+            if(ratio != this.ratio){
+                this.fireEvent('animate', this.lastRatio * 100);
+            }
             this.lastRatio = ratio;
-            this.fireEvent('animate', this.lastRatio * 100);
         }
     },
 
@@ -31066,6 +31214,10 @@ ludo.progress.Donut = new Class({
             'A', radius, radius, degrees , 1, 1, x, y, 'Z'
         ]
 
+    },
+
+    innerRadius:function(outerRadius){
+        return outerRadius * 0.5;
     }
 });/* ../ludojs/src/form/validator/fns.js */
 ludo.form.validator.required = function(value, required){

@@ -90,7 +90,7 @@ ludo.progress.Bar = new Class({
     increment: function (by, animate) {
         by = by != undefined ? by : 1;
         animate = animate != undefined ? animate : true;
-        this.lastProgress = this.progress;
+        if(by != 0)this.lastProgress = this.progress;
         this.progress += by;
         this.progress = Math.max(0, this.progress);
         this.progress = Math.min(this.progress, this.steps);

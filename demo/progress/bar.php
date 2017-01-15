@@ -207,6 +207,7 @@ require_once("../includes/demo-header.php");
                         text: '0%'
                     },
                     {
+                        // Donut progress with no styling
                         id: 'donutProgress4',
                         type: 'progress.Donut',
                         elCss:{
@@ -259,6 +260,9 @@ require_once("../includes/demo-header.php");
                     {
                         type:'form.Button',
                         value:'Progress in Window',
+                        elCss:{
+                            'margin-top': 10
+                        },
                         layout:{
                            width:150,
                             below:'donutProgress2',
@@ -338,9 +342,6 @@ require_once("../includes/demo-header.php");
 
 
     var p = ludo.$('progress');
-
-
-
     p.increment(100);
 
     var donut = ludo.$('donutProgress');
