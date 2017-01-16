@@ -293,7 +293,7 @@ require_once("../includes/demo-header.php");
                                     'stroke-width': 0
                                 },
                                 layout: {
-                                    width: 50, height: 50,
+                                    width: 55, height: 55,
                                     alignParentTop:true,
                                     centerHorizontal:true
                                 },
@@ -313,7 +313,7 @@ require_once("../includes/demo-header.php");
                                 negativeColor:'#F57C00',
                                 layout:{
                                     width:'matchParent',
-                                    height:40,
+                                    height:45,
                                     below:'donutProgress5'
                                 },
                                 listeners:{

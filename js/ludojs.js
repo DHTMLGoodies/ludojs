@@ -1,24 +1,3 @@
-/* Generated Mon Jan 16 2:18:44 CET 2017 */
-/************************************************************************************************************
-@fileoverview
-ludoJS - Javascript framework, 1.1.430
-Copyright (C) 2012-2017  ludoJS.com, Alf Magne Kalleland
-This library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Lesser General Public
-License as published by the Free Software Foundation; either
-version 2.1 of the License, or (at your option) any later version.
-This library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Lesser General Public License for more details.
-You should have received a copy of the GNU Lesser General Public
-License along with this library; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-ludoJS.com., hereby disclaims all copyright interest in this script
-written by Alf Magne Kalleland.
-Alf Magne Kalleland, 2017
-Owner of ludoJS.com
-************************************************************************************************************/
 /* ../ludojs/src/../mootools/MooTools-Core-1.6.0.js */
 /* MooTools: the javascript framework. license: MIT-style license. copyright: Copyright (c) 2006-2016 [Valerio Proietti](http://mad4milk.net/).*/ 
 /*!
@@ -20727,8 +20706,9 @@ ludo.effect.Drag = new Class({
             mouseY: p.pageY
         };
 
+        var dp = this.dragProcess;
 
-        this.dragProcess.el = this.getShimOrEl();
+        dp.el = this.getShimOrEl();
 
         this.fireEvent('before', [this.els[id], this, {x: x, y: y}]);
 
@@ -20736,12 +20716,12 @@ ludo.effect.Drag = new Class({
             return undefined;
         }
 
-        this.dragProcess.minX = this.getMinX();
-        this.dragProcess.maxX = this.getMaxX();
-        this.dragProcess.minY = this.getMinY();
-        this.dragProcess.maxY = this.getMaxY();
-        this.dragProcess.dragX = this.canDragAlongX();
-        this.dragProcess.dragY = this.canDragAlongY();
+        dp.minX = this.getMinX();
+        dp.maxX = this.getMaxX();
+        dp.minY = this.getMinY();
+        dp.maxY = this.getMaxY();
+        dp.dragX = this.canDragAlongX();
+        dp.dragY = this.canDragAlongY();
 
         if (this.delay) {
             this.setActiveAfterDelay();
@@ -30912,6 +30892,7 @@ ludo.progress.Bar = new Class({
             });
         } else {
             this.els.clipRect.set('width', w);
+            
             if(ratio != this.lastRatio){
                 this.onChange();
             }
@@ -31236,9 +31217,11 @@ ludo.progress.Donut = new Class({
         }else{
             var path = this.clipArray(Math.min(ratio, 0.9999999));
             this.els.clip.set('d', path.join(' '));
-            if(ratio != this.ratio){
-                this.fireEvent('animate', this.lastRatio * 100);
+
+            if(ratio != this.lastRatio){
+                this.onChange();
             }
+            this.fireEvent('animate', this.lastRatio * 100);
             this.lastRatio = ratio;
         }
     },

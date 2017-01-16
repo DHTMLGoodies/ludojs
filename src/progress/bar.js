@@ -486,6 +486,7 @@ ludo.progress.Bar = new Class({
             });
         } else {
             this.els.clipRect.set('width', w);
+            
             if(ratio != this.lastRatio){
                 this.onChange();
             }

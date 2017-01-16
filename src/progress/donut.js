@@ -313,9 +313,11 @@ ludo.progress.Donut = new Class({
         }else{
             var path = this.clipArray(Math.min(ratio, 0.9999999));
             this.els.clip.set('d', path.join(' '));
-            if(ratio != this.ratio){
-                this.fireEvent('animate', this.lastRatio * 100);
+
+            if(ratio != this.lastRatio){
+                this.onChange();
             }
+            this.fireEvent('animate', this.lastRatio * 100);
             this.lastRatio = ratio;
         }
     },
