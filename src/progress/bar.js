@@ -158,11 +158,11 @@ ludo.progress.Bar = new Class({
 
     getPattern: function (image, sizeKey, imageKey) {
         var s = this.svg();
-        var pattern = s.$('pattern');
-        pattern.set('width', 0.2);
-        pattern.set('height', 1);
-        pattern.set('x', 0);
-        pattern.set('y', 0);
+        var p = s.$('pattern');
+        p.set('width', 0.2);
+        p.set('height', 1);
+        p.set('x', 0);
+        p.set('y', 0);
         var img = this.els[imageKey] = s.$('image');
         var that = this;
         img.set('opacity', 0);
@@ -177,9 +177,9 @@ ludo.progress.Bar = new Class({
 
         }.bind(img));
         img.set('xlink:href', image);
-        pattern.append(img);
-        s.appendDef(pattern);
-        return pattern;
+        p.append(img);
+        s.appendDef(p);
+        return p;
     },
 
     createPattern: function () {

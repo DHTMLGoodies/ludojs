@@ -133,6 +133,7 @@ ludo.view.TitleBar = new Class({
         return function (e) {
             this.leaveButton(e);
             var event = type;
+
             if (toggle) {
                 if (this.toggleStatus[type]) {
                     event = this.toggleStatus[type];

@@ -151,7 +151,7 @@ require_once("../includes/demo-header.php");
                         },
                         layout: {
                             width: 120,
-                            centerHorizontal: true,
+                            alignParentLeft:true,
                             below: 'progress-status'
                         }
                     },
@@ -191,7 +191,7 @@ require_once("../includes/demo-header.php");
                         easing: ludo.svg.easing.outSine,
                         layout: {
                             width: 150, height: 150,
-                            centerHorizontal: true,
+                            alignParentLeft:true,
                             below: 'resetButton'
                         },
                         elCss:{
@@ -251,7 +251,7 @@ require_once("../includes/demo-header.php");
                         },
                         layout: {
                             width: 50, height: 50,
-                            centerHorizontal: true,
+                            alignParentLeft:true,
                             below: 'donutProgress'
                         },
                         listeners: {
@@ -262,14 +262,79 @@ require_once("../includes/demo-header.php");
                         text: '0%'
                     },
                     {
+                        id:'seekbarAndProgress',
+                        type:'FramedView',
+                        title:'Progress and Seekbar connected',
+                        layout:{
+                            below:'donutProgress2',
+                            width:300,
+                            height:150,
+                            centerHorizontal:true,
+                            type:'relative'
+                        },
+                        children:[
+                            {
+                                id: 'donutProgress5',
+                                type: 'progress.Donut',
+                                steps: 100,
+                                progress: 0,
+                                startAngle:180,
+                                innerRadius: function(outerRadius){
+                                    return outerRadius * 0.8
+                                },
+                                textSizeRatio: 0.27,
+                                animationDuration: 2000,
+                                bgStyles: {
+                                    'stroke-width': 0
+
+                                },
+                                barStyles: {
+                                    'fill': '#F57C00',
+                                    'stroke-width': 0
+                                },
+                                layout: {
+                                    width: 50, height: 50,
+                                    alignParentTop:true,
+                                    centerHorizontal:true
+                                },
+                                listeners: {
+                                    animate: function (percent) {
+                                        this.text(percent.toFixed(0));
+                                    }
+                                },
+                                text: '0%'
+                            },
+                            {
+                                type:'form.Seekbar',
+                                minValue:0,
+                                maxValue:100,
+                                orientation:'horizontal',
+                                thumbColor:'#F57C00',
+                                negativeColor:'#F57C00',
+                                layout:{
+                                    width:'matchParent',
+                                    height:40,
+                                    below:'donutProgress5'
+                                },
+                                listeners:{
+                                    'change': function(val){
+                                        ludo.$('donutProgress5').setProgress(val, false);
+                                    }
+                                }
+
+                            }
+                        ]
+                    },
+                    {
+                        id:'progressWinButton',
                         type:'form.Button',
                         value:'Progress in Window',
                         elCss:{
                             'margin-top': 10
                         },
                         layout:{
-                           width:150,
-                            below:'donutProgress2',
+                            width:150,
+                            below:'seekbarAndProgress',
                             centerHorizontal:true
                         },
                         listeners:{
@@ -293,7 +358,7 @@ require_once("../includes/demo-header.php");
             layout:{
                 type:'fill',
                 height:300,width:300,
-                left:100, top: 100
+                left:20, top: 20
             },
             children:[
                 {

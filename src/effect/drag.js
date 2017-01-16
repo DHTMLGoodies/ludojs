@@ -340,8 +340,9 @@ ludo.effect.Drag = new Class({
             mouseY: p.pageY
         };
 
+        var dp = this.dragProcess;
 
-        this.dragProcess.el = this.getShimOrEl();
+        dp.el = this.getShimOrEl();
 
         this.fireEvent('before', [this.els[id], this, {x: x, y: y}]);
 
@@ -349,12 +350,12 @@ ludo.effect.Drag = new Class({
             return undefined;
         }
 
-        this.dragProcess.minX = this.getMinX();
-        this.dragProcess.maxX = this.getMaxX();
-        this.dragProcess.minY = this.getMinY();
-        this.dragProcess.maxY = this.getMaxY();
-        this.dragProcess.dragX = this.canDragAlongX();
-        this.dragProcess.dragY = this.canDragAlongY();
+        dp.minX = this.getMinX();
+        dp.maxX = this.getMaxX();
+        dp.minY = this.getMinY();
+        dp.maxY = this.getMaxY();
+        dp.dragX = this.canDragAlongX();
+        dp.dragY = this.canDragAlongY();
 
         if (this.delay) {
             this.setActiveAfterDelay();
@@ -365,7 +366,11 @@ ludo.effect.Drag = new Class({
             if (this.fireEffectEvents)ludo.EffectObject.start();
         }
 
-        return false;
+        if(!ludo.util.isTabletOrMobile()){
+            return false;
+        }
+
+
     },
 
     getPositionedParent: function (el) {
