@@ -271,15 +271,15 @@ ludo.calendar.TimePicker = new Class({
             x: this.area.x, y: this.area.y, size: this.area.size
         };
 
-        this.clipPath = new ludo.svg.Node('clipPath', {});
+        this.clipPath = canvas.$('clipPath', {});
         canvas.append(this.clipPath);
-        this.clipCircle = new ludo.svg.Circle({
+        this.clipCircle = new canvas.$('circle', {
             cx: this.origo.x, cy: this.origo.y, r: 5
         });
         this.clipPath.append(this.clipCircle);
 
 
-        this.clockBackground = new ludo.svg.Circle({
+        this.clockBackground = canvas.$('circle', {
             cx: this.origo.x, cy: this.origo.y, r: this.area.size / 2,
             css: {
                 'fill': this.clockBackground
@@ -343,7 +343,7 @@ ludo.calendar.TimePicker = new Class({
             this.hourGroupInner.append(text);
         }
 
-        this.centerDot = new ludo.svg.Circle({
+        this.centerDot = canvas.$('circle', {
             cx: this.origo.x, cy: this.origo.y,
             r: 2,
             css: {
@@ -351,7 +351,7 @@ ludo.calendar.TimePicker = new Class({
             }
         });
 
-        this.needle = new ludo.svg.Node('line',
+        this.needle = canvas.$('line',
             {
                 x1: this.origo.x, y1: this.origo.y,
                 x2: 100, y2: 100,
@@ -388,7 +388,7 @@ ludo.calendar.TimePicker = new Class({
             this.minuteGroup.append(text);
         }
 
-        this.needleCircle = new ludo.svg.Circle({
+        this.needleCircle = canvas.$('circle', {
             cx: this.origo.x, cy: this.origo.y, r: 10,
             css: {
                 'fill': this.handColor
@@ -396,7 +396,7 @@ ludo.calendar.TimePicker = new Class({
         });
         canvas.append(this.needleCircle);
 
-        this.needleCircleInnerMinutes = new ludo.svg.Circle({
+        this.needleCircleInnerMinutes = canvas.$('circle', {
             cx: this.origo.x, cy: this.origo.y, r: 1,
             css: {
                 fill: this.minuteDotColor
@@ -404,8 +404,7 @@ ludo.calendar.TimePicker = new Class({
         });
         canvas.append(this.needleCircleInnerMinutes);
 
-
-
+        
         this.needleText = new ludo.svg.Text("", {
             'fill': this.handTextColor,
             css: styles

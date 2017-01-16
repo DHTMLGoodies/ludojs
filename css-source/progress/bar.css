@@ -11,14 +11,17 @@
 .ludo-progress-text {
     color: #FFFFFF;
     font-size: 12px;
-    font-family:arial, sans-serif;
+}
+.ludo-progress-donut-text {
+    color: #FFFFFF;
+    font-size: 12px;
 }
 
-.ludo-progress-donut-bg{
+.ludo-progress-donut-bg {
     background-color: #444444;
     border: 2px solid #333333;
 }
 
-.ludo-progress-donut-bar{
+.ludo-progress-donut-bar {
     background-color: #1976D2;
 }

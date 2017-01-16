@@ -84,26 +84,33 @@ google_ad_height = 280;
         selectors:'rect,circle'
     });
     canvas.append(paintThree);
-    circle = new ludo.svg.Circle({cx:280, cy:280, r:85, "class": paintTwo});
+    circle = new ludo.svg.Node('circle', {cx:280, cy:280, r:85, "class": paintTwo});
     canvas.append(circle);
 
     dd.add(circle);
-    var rect = new ludo.svg.Rect({x:180, y:100, width:150, height:50, rx:5, ry:5});
+    var rect = new ludo.svg.Node('rect', {x:180, y:100, width:150, height:50, rx:5, ry:5});
     canvas.append(rect);
 
     dd.add({
         el:rect
     });
 
-    var polygon = new ludo.svg.Polygon('200,200 350,350,150,290 140 240', { "class" :paintTwo });
+    var polygon = new ludo.svg.Node('polygon', {
+        points: '200,200 350,350,150,290 140 240',
+        "class" :paintTwo
+    });
     canvas.append(polygon);
     dd.add(polygon);
 
-    var ellipse = new ludo.svg.Ellipse({ cx:100, cy:125, rx:50, ry:70 });
+    var ellipse = new ludo.svg.Node('ellipse', { cx:100, cy:125, rx:50, ry:70 });
     canvas.append(ellipse);
     dd.add(ellipse);
 
-    var path = new ludo.svg.Path('M 400 100 L 200 200 Q 350 150 300 100 Z', { "class" :paint })
+    var path = new ludo.svg.Node('path', {
+        d: 'M 400 100 L 200 200 Q 350 150 300 100 Z',
+        "class" :paint
+    });
+
     canvas.append(path);
 
     dd.add(path);
@@ -153,7 +160,7 @@ google_ad_height = 280;
     gr.addStop('0%', 'white', 0);
     gr.addStop('100%', 'white', 1);
 
-    var rect2 = new ludo.svg.Rect({ x:0,y:0, width:500,height:500, fill:gr });
+    var rect2 = new ludo.svg.Node('rect', { x:0,y:0, width:500,height:500, fill:gr });
 
     mask.append(rect2);
     ellipse.applyMask(mask);

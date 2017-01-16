@@ -360,7 +360,7 @@ svgCrop.Surface = new Class({
     createHandles: function () {
 
         if (this.rect == undefined) {
-            this.rect = new svgCrop.Rect({
+            this.rect = new svgCrop.Node('rect', {
                 surface: this
             });
             this.rect.on('move', this.startDrag.bind(this));

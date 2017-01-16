@@ -19,6 +19,10 @@ require_once("../includes/demo-header.php");
         color: #FFFFFF;
         font-size: 12px;
     }
+    .ludo-progress-donut-text {
+        color: #FFFFFF;
+        font-size: 12px;
+    }
 
     .ludo-progress-donut-bg {
         background-color: #444444;

@@ -56,7 +56,7 @@ require_once("../includes/demo-header.php");
     // Apply clip path to the g tag.
     g.clip(clipPath);
 
-    var rect = new ludo.svg.Rect({
+    var rect = new ludo.svg.Node('rect', {
         x:0,y:0,width:w,height:h
     });
     rect.css('fill', '#918777');

@@ -9,9 +9,6 @@
     margin: 5px;
     border: 1px solid #c6c6c6;
 }
-.ludo-light-gray .ludo-framed-view .ludo-body {
-    overflow: hidden;
-}
 
 .ludo-light-gray .ludo-view-with-buttonbar {
     padding-bottom: 5px !important;
@@ -72,7 +69,9 @@
     border-top: 0 solid #AAAAAA;
 }
 
-.ludo-light-gray div.ludo-window, .ludo-light-gray .ludo-light-gray div.ludo-framed-view-shim, .ludo-light-gray .ludo-light-gray div.ludo-dashboard-insertion-marker {
+.ludo-light-gray div.ludo-window,
+.ludo-light-gray div.ludo-framed-view-shim,
+.ludo-light-gray div.ludo-dashboard-insertion-marker {
     border-radius: 3px;
 }
 
@@ -103,7 +102,8 @@
     display: block;
 }
 
-.ludo-light-gray div.ludo-application, .ludo-light-gray .ludo-light-gray div.ludo-application-content {
+.ludo-light-gray div.ludo-application,
+.ludo-light-gray div.ludo-application-content {
     border-width: 0 !important;
 }
 
@@ -171,11 +171,11 @@
     background-image: url('../images/button/button-bg-light-down.png');
 }
 
-.ludo-light-gray div.ludo-form-button-selected .ludo-form-button-m-bg-left, .ludo-light-gray .ludo-light-gray div.ludo-form-button-selected .ludo-form-button-m-bg-right {
+.ludo-light-gray div.ludo-form-button-selected .ludo-form-button-m-bg-left, .ludo-light-gray div.ludo-form-button-selected .ludo-form-button-m-bg-right {
     background-image: url('../images/button/button-bg-light-over.png');
 }
 
-.ludo-light-gray div.ludo-form-button-disabled .ludo-form-button-m-bg-left, .ludo-light-gray .ludo-light-gray div.ludo-form-button-disabled .ludo-form-button-m-bg-right {
+.ludo-light-gray div.ludo-form-button-disabled .ludo-form-button-m-bg-left, .ludo-light-gray div.ludo-form-button-disabled .ludo-form-button-m-bg-right {
     background-image: url('../images/button/button-bg-light-disabled.png') !important;
 }
 
@@ -196,11 +196,11 @@
     background-image: url('../images/light-gray-skin/xl-button-over.png');
 }
 
-.ludo-light-gray div.ludo-form-button-selected .ludo-form-button-xl-bg-left, .ludo-light-gray .ludo-light-gray div.ludo-form-button-selected .ludo-form-button-xl-bg-right {
+.ludo-light-gray div.ludo-form-button-selected .ludo-form-button-xl-bg-left, .ludo-light-gray div.ludo-form-button-selected .ludo-form-button-xl-bg-right {
     background-image: url('../images/light-gray-skin/xl-button-selected.png');
 }
 
-.ludo-light-gray div.ludo-form-button-disabled .ludo-form-button-xl-bg-left, .ludo-light-gray .ludo-light-gray div.ludo-form-button-disabled .ludo-form-button-xl-bg-right {
+.ludo-light-gray div.ludo-form-button-disabled .ludo-form-button-xl-bg-left, .ludo-light-gray div.ludo-form-button-disabled .ludo-form-button-xl-bg-right {
     background-image: url('../images/light-gray-skin/xl-button-disabled.png') !important;
 }
 
@@ -221,11 +221,11 @@
     background-image: url('../images/light-gray-skin/l-button-over.png');
 }
 
-.ludo-light-gray div.ludo-form-button-selected .ludo-form-button-l-bg-left, .ludo-light-gray .ludo-light-gray div.ludo-form-button-selected .ludo-form-button-l-bg-right {
+.ludo-light-gray div.ludo-form-button-selected .ludo-form-button-l-bg-left, .ludo-light-gray div.ludo-form-button-selected .ludo-form-button-l-bg-right {
     background-image: url('../images/light-gray-skin/l-button-selected.png');
 }
 
-.ludo-light-gray div.ludo-form-button-disabled .ludo-form-button-l-bg-left, .ludo-light-gray .ludo-light-gray div.ludo-form-button-disabled .ludo-form-button-l-bg-right {
+.ludo-light-gray div.ludo-form-button-disabled .ludo-form-button-l-bg-left, .ludo-light-gray div.ludo-form-button-disabled .ludo-form-button-l-bg-right {
     background-image: url('../images/light-gray-skin/l-button-disabled.png') !important;
 }
 
@@ -840,3 +840,14 @@ tab layout */
 .ludo-light-gray .ludo-accordion-titlebar-below-expanded{
     border-top: 1px solid #c6c6c6;
 }
+
+/** Progress */
+.ludo-light-gray .ludo-progress-donut-text {
+    color: #333333;
+}
+
+
+.ludo-light-gray .ludo-progress-text {
+    color: #FFF;
+}
+

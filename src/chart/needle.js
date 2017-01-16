@@ -11,7 +11,7 @@ ludo.chart.Needle = new Class({
         this.path = new ludo.svg.Path();
         node.append(this.path);
 
-        var circle = new ludo.svg.Circle({
+        var circle = new ludo.svg.Node('circle', {
             cx:0,cy:0,r:5, fill : '#000'
         });
 

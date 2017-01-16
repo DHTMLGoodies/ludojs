@@ -224,9 +224,9 @@ ludo.progress.Donut = new Class({
     text: function (txt) {
         if (this.els.textNode == undefined) {
             this.els.textNode = this.svg().$('text');
-            var styles = ludo.svg.Util.textStyles('ludo-progress-text');
-            this.svg().addStyleSheet('ludo-progress-text-svg', styles);
-            this.els.textNode.addClass('ludo-progress-text-svg');
+            var styles = ludo.svg.Util.textStyles('ludo-progress-donut-text');
+            this.svg().addStyleSheet('ludo-progress-donut-text-svg', styles);
+            this.els.textNode.addClass('ludo-progress-donut-text-svg');
             this.els.textNode.set('text-anchor', 'middle');
             this.els.textNode.set('alignment-baseline', 'central');
             this.svg().append(this.els.textNode);

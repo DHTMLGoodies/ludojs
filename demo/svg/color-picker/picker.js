@@ -14,15 +14,15 @@ ludo.colorPicker.Picker = new Class({
 		this.addLeftRightMask();
 		this.addTopBottomMask();
 
-		this.colorRect = new ludo.svg.Rect({
+		this.colorRect = new ludo.svg.Node('rect', {
 			x:0, y:0, width:'100%', height:'100%', fill:'#F00'
 		});
 		canvas.append(this.colorRect);
 
-		var rect = new ludo.svg.Rect({ x:0, y:0, width:'100%', height:'100%', fill:this.getLeftRightGradient(), mask:this.maskTB});
+		var rect = new ludo.svg.Node('rect', { x:0, y:0, width:'100%', height:'100%', fill:this.getLeftRightGradient(), mask:this.maskTB});
 		canvas.append(rect);
 
-		this.rect = new ludo.svg.Rect({ x:0, y:0, width:'100%', height:'100%', fill:this.getLeftRightGradient(), mask:this.maskLR});
+		this.rect = new ludo.svg.Node('rect', { x:0, y:0, width:'100%', height:'100%', fill:this.getLeftRightGradient(), mask:this.maskLR});
 		this.rect.css('cursor', 'crosshair');
 		canvas.append(this.rect);
 		this.rect.on('click', this.receiveClick.bind(this));
@@ -32,7 +32,7 @@ ludo.colorPicker.Picker = new Class({
 	},
 
 	createCircle:function(){
-		this.circle = new ludo.svg.Circle({ cx : 100, cy:100, r: 5 });
+		this.circle = new ludo.svg.Node('circle', { cx : 100, cy:100, r: 5 });
 		this.circle.css('stroke', '#FFF');
 		this.circle.css('fill', 'none');
 		this.svg().append(this.circle);
@@ -52,7 +52,7 @@ ludo.colorPicker.Picker = new Class({
 		gradient.addStop('0%', '#FFF', 1);
 		gradient.addStop('100%', '#FFF', 0);
 		this.svg().appendDef(gradient);
-		var rect = new ludo.svg.Rect({ x:0, y:0, width:'100%', height:'100%', fill:gradient});
+		var rect = new ludo.svg.Node('rect', { x:0, y:0, width:'100%', height:'100%', fill:gradient});
 		this.maskLR.append(rect);
 
 	},
@@ -63,7 +63,7 @@ ludo.colorPicker.Picker = new Class({
 		gradient.addStop('0%', '#FFF', 0);
 		gradient.addStop('100%', '#FFF', 1);
 		this.svg().appendDef(gradient);
-		var rect = new ludo.svg.Rect({ x:0, y:0, width:'100%', height:'100%', fill:gradient});
+		var rect = new ludo.svg.Node('rect', { x:0, y:0, width:'100%', height:'100%', fill:gradient});
 		this.maskTB.append(rect);
 	},
 

@@ -17,7 +17,7 @@ ludo.colorPicker.HueBar = new Class({
 		this.currentBarHeight = c.get('height');
 		c.addEvent('resize', this.positionSlider.bind(this));
 		c.node.css('width', '50px');
-        this.hueBar = new ludo.svg.Rect({
+        this.hueBar = new ludo.svg.Node('rect', {
             x:'30%',
             width:'40%',
             y: this.topMargin + '%',
@@ -121,7 +121,7 @@ ludo.colorPicker.HueBar = new Class({
 	getHueByYPos:function(pos){
 		var top = this.getBody().offset().top;
 		top += this.currentBarHeight * (this.topMargin / 100);
-		var height = this.hueBar.getHeight();
+		var height = this.hueBar.get('height');
 		var cursor = pos - top;
 		return Math.round(360 - (cursor / height * 360));
 	},
@@ -141,7 +141,7 @@ ludo.colorPicker.HueBar = new Class({
 
 	positionSliderByHue:function(hue){
 		if(this.dragIsActive)return;
-		var h = this.hueBar.getHeight();
+		var h = this.hueBar.get('height');
 		var y = h - (hue/360*h) - (this.getSliderHeight() / 2);
 		y += this.svg().getHeight() * (this.topMargin / 100);
 		this.slider.setTranslate(0, Math.round(y));

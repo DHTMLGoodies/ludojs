@@ -18,7 +18,7 @@ TestCase("FilterTest", {
 
 	"test should be able to apply filter to nodes":function () {
 		var filter = new ludo.svg.Filter({ id:'myFilter'});
-		var circle = new ludo.svg.Circle({cx:100, cy:100, r:50});
+		var circle = new ludo.svg.Node('circle', {cx:100, cy:100, r:50});
 
 		assertEquals('myFilter', filter.id);
 		circle.applyFilter(filter);

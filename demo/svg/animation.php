@@ -115,7 +115,7 @@ require_once("../includes/demo-header.php");
         fill: '#E57373', 'fill-opacity' : 1
     });
 
-    var circle = new ludo.svg.Circle({
+    var circle = new ludo.svg.Node('circle', {
         cx: 100, cy: 110, r: 10
     });
     circle.addClass('box');
@@ -127,7 +127,7 @@ require_once("../includes/demo-header.php");
     function getIllustrationNode(){
         var node;
         if(illIndex >= illustrationNodes.length){
-            node = new ludo.svg.Circle({ cx:0,cy:0, r: 3 });
+            node = new ludo.svg.Node('circle', { cx:0,cy:0, r: 3 });
             node.addClass('illustration');
             c.append(node);
             illustrationNodes.push(node);

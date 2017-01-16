@@ -68,7 +68,7 @@ ludo.chart.LineDot = new Class({
 
     enter: function () {
         if (this.nodeHighlight == undefined) {
-            this.nodeHighlight = new ludo.svg.Circle({
+            this.nodeHighlight = new ludo.svg.Node('circle', {
                 r: this.size * 1.6, cx: 0, cy: 0
             });
             this.nodeHighlight.css({

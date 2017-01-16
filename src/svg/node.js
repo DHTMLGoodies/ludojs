@@ -363,7 +363,7 @@ ludo.svg.Node = new Class({
         if (key.substring(0, 6) == "xlink:") {
             return this.el.getAttributeNS("http://www.w3.org/1999/xlink", key.substring(6));
         } else {
-            return this.el.getAttribute(key);
+            return this.el[key] != undefined && this.el[key].animVal != undefined ? this.el[key].animVal.value : this.el.getAttribute(key);
         }
     },
 
