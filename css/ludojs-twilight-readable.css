@@ -2780,7 +2780,7 @@ Collapse bar
 }
 
 .ludo-twilight .ludo-calendar-header td{
-    font-size:11px;
+    font-size:12px;
     color:#aeb0b0;
 }
 
@@ -2800,18 +2800,25 @@ Collapse bar
 }
 
 .ludo-twilight .calendar-day-today{
-
+    border:1px solid #444;
 }
 
-.ludo-twilight  td.calendar-day-selected {
-    background-color: #fff;
-    border:1px solid transparent;
-
-}
 
 .ludo-twilight .calendar-day-mouse-over {
     background-color: transparent;
     border:1px solid #fff;
+}
+
+
+.ludo-twilight .calendar-day-td-selected span{
+    color:#535353;
+}
+
+
+.ludo-twilight  div.calendar-day-selected {
+    background-color: #fff;
+    border:1px solid transparent;
+
 }
 
 
@@ -2835,8 +2842,7 @@ Collapse bar
 }
 
 .ludo-twilight .ludo-calendar-body-days td{
-
-    font-size:11px;
+    font-size:12px;
 }
 .ludo-twilight .calendar-sunday{
     color:#D32F2F;

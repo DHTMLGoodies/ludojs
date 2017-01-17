@@ -46,10 +46,11 @@ ludo.calendar.Days = new Class({
     },
 
     touchStart:function (e) {
+        var p = e.touches && e.touches.length > 0 ? e.touches[0] : e;
         this.touch = {
             enabled:true,
-            x1:e.pageX, x2:e.pageX,
-            y1:e.pageY, y2:e.pageY
+            x1:p.pageX, x2:p.pageX,
+            y1:p.pageY, y2:p.pageY
         };
 
         if (e.target.tagName.toLowerCase() == 'window') {
@@ -59,8 +60,10 @@ ludo.calendar.Days = new Class({
     },
     touchMove:function (e) {
         if (this.touch.enabled) {
-            this.touch.x2 = e.pageX;
-            this.touch.y2 = e.pageY;
+            var p = e.touches && e.touches.length > 0 ? e.touches[0] : e;
+
+            this.touch.x2 = p.pageX;
+            this.touch.y2 = p.pageY;
 
             var left = this.touch.x2 - this.touch.x1;
             var top = this.touch.y2 - this.touch.y1;
@@ -89,11 +92,12 @@ ludo.calendar.Days = new Class({
             var absX = Math.abs(diffX);
             var absY = Math.abs(diffY);
 
+  
             if (absX > 100 || absY > 100) {
                 if (absX > absY) {
-                    this.data[diffX > 0 ? 'decrement' : 'increment']('month', 1);
+                    this.date[diffX > 0 ? 'decrement' : 'increment']('month', 1);
                 } else {
-                    this.data[diffY > 0 ? 'decrement' : 'increment']('year', 1);
+                    this.date[diffY > 0 ? 'decrement' : 'increment']('year', 1);
                 }
                 this.sendSetDateEvent();
                 this.showMonth();
@@ -170,8 +174,7 @@ ludo.calendar.Days = new Class({
             left:0,
             top:0
         });
-        el.on('mousemove', this.mouseOverDays.bind(this));
-        el.on('mouseleave', this.removeClsFromMouseOverDay.bind(this));
+
         this.getBody().append(el);
     },
     showMonth:function () {
@@ -186,6 +189,7 @@ ludo.calendar.Days = new Class({
         el.css('position', 'absolute');
 
         this.els.daysContainer.append(el);
+
 
         var html = ['<table ', 'cellpadding="0" cellspacing="0" border="0" width="100%" style="height:100%">'];
         html.push(this.getColGroup().join(''));
@@ -203,8 +207,10 @@ ludo.calendar.Days = new Class({
         }
         var thisMonthStarted = false;
         var nextMonthStarted = false;
+        var clsInner;
         for (var i = 0; i < days.length; i++) {
-            cls = '';
+            cls = 'calendar-day-cell ';
+            clsInner = '';
             if (i % 8 == 0) {
                 if (i)html.push('</tr>');
                 html.push('<tr>');
@@ -223,40 +229,64 @@ ludo.calendar.Days = new Class({
                         cls = cls + ' calendar-day-selected';
                     }
                     if (days[i] == today) {
-                        cls = cls + ' calendar-day-today';
+                        clsInner = ' calendar-day-today';
                     }
                     cls = cls + ' calendar-day-' + days[i];
                 }
             }
 
-            html.push('<td class="' + cls + '">' + days[i] + '</td>');
+            html.push('<td style="position:relative" class="calendar-day-c ' + cls + '"><div class="calendar-day-div' + clsInner + '" style="position:absolute;left:0;top:0;width:100%;height:100%;"></div><span style="position:relative">' + days[i] + '</span></td>');
         }
+
+
 
         html.push('</table>');
         el.html( html.join(''));
+
+
+
+        var divs = el.find('.calendar-day-div');
+
+        divs.on('mouseover', this.mouseOverDays.bind(this));
+        divs.on('mouseout', this.removeClsFromMouseOverDay.bind(this));
+
         this.resizeMonthView.delay(20, this);
+
+        this.resizeToday();
 
     },
 
     mouseOverDays:function (e) {
         var el = $(e.target);
-        this.removeClsFromMouseOverDay();
-        if (!el.hasClass('calendar-day') || el.hasClass('calendar-day-inactive')) {
+        if(!el.hasClass('calendar-day-div')){
             return;
         }
+        this.removeClsFromMouseOverDay();
+
+        if(this.els.mouseOverDay != undefined && c[0] == this.els.mouseOverDay[0])return;
+
+        var p = el.parent();
+        if(p.hasClass('calendar-week') || p.hasClass('calendar-day-inactive')){
+            return;
+        }
+
+        this.resizeHighlighted(el);
+
         el.addClass('calendar-day-mouse-over');
         this.els.mouseOverDay = el;
     },
 
-    removeClsFromMouseOverDay:function () {
+    removeClsFromMouseOverDay:function (e) {
+
+        if(e && e.target.className != 'calendar-day-div')return;
         if (this.els.mouseOverDay) {
+            this.resizeHighlighted(this.els.mouseOverDay);
             this.els.mouseOverDay.removeClass('calendar-day-mouse-over');
             this.els.mouseOverDay = undefined;
         }
     },
 
     isValueMonth:function () {
-
         return this.value ? this.value.get('month') == this.date.get('month') && this.value.get('year') == this.date.get('year') : false;
     },
 
@@ -288,7 +318,7 @@ ludo.calendar.Days = new Class({
             var daysInLastMonth = lastMonth.getLastDayOfMonth();
             var count = dayOfWeek || 7;
             ret.push(this.getNextWeek());
-            for (i = count - 1; i > 0; i--) {
+            for (i = count - 1; i >= 0; i--) {
                 ret.push(daysInLastMonth - i);
             }
             if (ret.length % 8 == 0) {
@@ -317,6 +347,21 @@ ludo.calendar.Days = new Class({
         return ret;
     },
 
+    resizeHighlighted:function(el){
+        var p = el.parent();
+        var w = p.width();
+        var h= p.height();
+
+        var size = Math.min(h, w);
+        size -= Math.floor(size / 10);
+
+        el.css({
+            width:size, height:size,
+            left:Math.max(0, (w-size)/2),
+            top:Math.max(0, (h-size)/2)
+        });
+    },
+
     selectDay:function (e) {
         var el = $(e.target);
         if (!el.hasClass('calendar-day')) {
@@ -326,25 +371,38 @@ ludo.calendar.Days = new Class({
         if (el.hasClass('calendar-day-inactive')) {
             return;
         }
+        this.removeClsFromMouseOverDay();
         this.removeClsFromSelectedDay();
 
-        el.addClass('calendar-day-selected');
+        el.addClass('calendar-day-td-selected');
+        el.children('div').addClass('calendar-day-selected');
+
+        this.resizeHighlighted(el.children('div'), el);
         this.value = this.date.clone();
-        this.value.set('date', el.html());
+
+        this.value.set('date', el.find('span').html());
         this.fireEvent('change', [this.value, this]);
     },
 
     removeClsFromSelectedDay:function () {
+
         if (this.els.monthView && this.isValueMonth()) {
             var el = this.els.monthView.find('.calendar-day-' + this.value.get('date'));
-            if (el)el.removeClass('calendar-day-selected');
+            if (el){
+                el.removeClass('calendar-day-td-selected');
+                el.children('div').removeClass('calendar-day-selected');
+                el.children('div').css({
+                    width:'100%', height:'100%'
+                });
+
+            }
         }
     },
 
     addClsForSelectedDay:function () {
         if (this.els.monthView && this.isValueMonth()) {
             var el = this.els.monthView.find('.calendar-day-' + this.value.get('date'));
-            if (el)el.addClass('calendar-day-selected');
+            if (el)el.children('div').addClass('calendar-day-selected');
         }
     },
 
@@ -381,5 +439,56 @@ ludo.calendar.Days = new Class({
         this.removeClsFromSelectedDay();
         this.value = date.clone();
         this.addClsForSelectedDay();
+    },
+
+    resizeSelected:function(){
+        if (this.els.monthView && this.isValueMonth()) {
+            var el = this.els.monthView.find('.calendar-day-' + this.value.get('date'));
+            if (el){
+                this.resizeHighlighted(el.children('div'));
+
+            }
+        }
+    },
+
+    resizeToday:function(){
+        this.resizeCell('.calendar-day-today');
+    },
+
+    resizeMO:function(){
+        this.resizeCell('.calendar-day-mouse-over');
+    },
+
+    resizeCell:function(cls){
+        var el = this.els.monthView.find(cls);
+        if(el.length> 0){
+            this.resizeHighlighted(el);
+        }
+    },
+
+
+    resize:function(config){
+        this.parent(config);
+
+        this.els.monthView.find('.calendar-day-div').css({
+            width:'100%', height:'100%'
+        });
+
+        this.resizeSelected();
+        this.resizeToday();
+        this.resizeMO();
+
+
+
+        /*
+        var els = this.els.monthView.find('.calendar-day-c');
+        if(els.length > 0){
+            var h = $(els[0]).height();
+            console.log(h);
+            this.els.monthView.find('.calendar-day-c').css('font-size', (h / 2.2) + 'px' );
+
+        }
+        */
+
     }
 });

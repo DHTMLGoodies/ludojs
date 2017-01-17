@@ -4,6 +4,14 @@ $pageTitle = 'Calendar demo';
 require_once("../includes/demo-header.php");
 ?>
 
+<style type="text/css">
+
+    .calendar-day-cell{
+        float:left;
+
+    }
+
+</style>
 
 <script type="text/javascript" class="source-code">
 var w = new ludo.Window({
@@ -15,7 +23,13 @@ var w = new ludo.Window({
     },
     layout:'fill',
     children:[
-        { type:'calendar.Calendar', name:'title',minDate:'1971-01-01',date:'2016-11-21' }
+        {
+            sundayFirst:true,
+            type:'calendar.Calendar',
+            name:'title',
+            minDate:'1971-01-01',
+            date:'2017-01-16'
+        }
     ]
 });
 </script>

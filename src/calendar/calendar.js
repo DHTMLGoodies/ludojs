@@ -12,29 +12,26 @@
  * @fires ludo.calendar.Calendar#setDate - Arguments Date and ludo.View(the view firing the event)
  */
 ludo.calendar.Calendar = new Class({
-    Extends:ludo.calendar.Base,
-    layout:{
-		type:'linear',
-		orientation:'vertical'
-	},
+    Extends: ludo.calendar.Base,
+    layout: {
+        type: 'linear',
+        orientation: 'vertical'
+    },
 
-    value:undefined,
-    children:[
-        { type:'calendar.NavBar', name:'info'},
-        { type:'calendar.Days', name:'days'},
-        { type:'calendar.Today', name:'today'}
-    ],
+    value: undefined,
 
-    inputFormat:'Y-m-d',
-    date:undefined,
-    minDate:undefined,
-    maxDate:undefined,
+    inputFormat: 'Y-m-d',
+    date: undefined,
+    minDate: undefined,
+    maxDate: undefined,
 
-    __construct:function (config) {
+    __construct: function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['inputFormat','value','minDate','maxDate','date']);
+        this.setConfigParams(config, ['inputFormat', 'value', 'minDate', 'maxDate', 'date', 'sundayFirst']);
+
+
         this.date = this.date || this.value;
-        this.date = this.date ?  Date.parse(this.date) : new Date();
+        this.date = this.date ? Date.parse(this.date) : new Date();
 
         this.value = this.date;
 
@@ -49,15 +46,15 @@ ludo.calendar.Calendar = new Class({
      * @memberof ludo.calendar.Calendar.prototype
      *
      */
-    setYear:function (year) {
+    setYear: function (year) {
         this.date.set('year', year);
         this.setDate(this.date);
     },
 
-    setDate:function(date, sentByComponent){
+    setDate: function (date, sentByComponent) {
         this.date = date;
-        for(var i=0;i<this.children.length;i++){
-            if(!sentByComponent || this.children[i].id!==sentByComponent.id){
+        for (var i = 0; i < this.children.length; i++) {
+            if (!sentByComponent || this.children[i].id !== sentByComponent.id) {
                 this.children[i].setDate(this.date);
             }
         }
@@ -69,7 +66,7 @@ ludo.calendar.Calendar = new Class({
      * @return {Object} selected date
      * @memberof ludo.calendar.Calendar.prototype
      */
-    getDate : function(){
+    getDate: function () {
         return this.value;
     },
 
@@ -80,25 +77,25 @@ ludo.calendar.Calendar = new Class({
      * @returns {*}
      * @memberof ludo.calendar.Calendar.prototype
      */
-    val:function(date, sentByComponent){
-        if(arguments.length == 0){
+    val: function (date, sentByComponent) {
+        if (arguments.length == 0) {
             return this.value.format(this.inputFormat);
         }
         this.value = Date.parse(date);
         this.fireEvent('change', [this.value, this]);
     },
 
-    getValue:function(){
+    getValue: function () {
         console.warn("Use of deprecated calendar.getValue");
         console.trace();
         return this.value.format(this.inputFormat);
     },
     /*
      * Set new current date
-	 * @function setValue
+     * @function setValue
      * @param {Date} date
      */
-    setValue:function(date){
+    setValue: function (date) {
         console.warn("Use of deprecated calendar.setValue");
         console.trace();
         this.value = Date.parse(date);
@@ -107,26 +104,34 @@ ludo.calendar.Calendar = new Class({
 
     /**
      * Set current month
-	 * @function setMonth
+     * @function setMonth
      * @param {Number} month (1-12)
      * @memberof ludo.calendar.Calendar.prototype
-	 * @return void
+     * @return void
      */
-    setMonth:function (month) {
+    setMonth: function (month) {
         month = month - 1;
         this.date.set('month', month);
         this.setDate(this.date);
     },
 
-    __rendered:function () {
+    __rendered: function () {
         this.parent();
-        for(var i=0;i<this.children.length;i++){
+        for (var i = 0; i < this.children.length; i++) {
             var c = this.children[i];
             c.setDate(this.date);
             c.val(this.date);
             c.addEvent('setdate', this.setDate.bind(this));
             c.addEvent('change', this.val.bind(this));
         }
-		this.getLayout().resize();
+        this.getLayout().resize();
+    },
+
+    __children: function () {
+        return [
+            {type: 'calendar.NavBar', name: 'info'},
+            {type: 'calendar.Days', name: 'days', sundayFirst: this.sundayFirst},
+            {type: 'calendar.Today', name: 'today'}
+        ]
     }
 });

@@ -20,7 +20,8 @@ ludo.calendar.Base = new Class({
     __construct:function(config){
         this.parent(config);
         this.date = new Date();
-        this.translate();''
+        this.setConfigParams(config, ['sundayFirst']);
+        this.translate();
     },
 
     translate:function(){
