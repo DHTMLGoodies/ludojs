@@ -20,6 +20,7 @@ ludo.view.ButtonBar = new Class({
 	buttonBarCss:undefined,
 
     __construct:function (config) {
+
         this.setConfigParams(config, ['align','component','buttonBarCss']);
         config.children = this.getValidChildren(config.children);
         if (this.align == 'right' || config.align == 'center') {

@@ -449,6 +449,6 @@ div.ludo-FramedView {
 }
 
 
-.ludo-view, .ludo-body, .ludo-view div{
+.ludo-view, .ludo-body, .ludo-view div, .ludo-view span, .ludo-view *{
     box-sizing: content-box !important;
 }

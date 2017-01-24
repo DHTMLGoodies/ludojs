@@ -437,6 +437,22 @@ div.ludo-FramedView {
     overflow: hidden;
     position: relative;
 }
+
+
+.ludo-noselect {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari*/
+    -khtml-user-select: none; /* Konqueror */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
+}
+
+
+.ludo-view, .ludo-body, .ludo-view div, .ludo-view span, .ludo-view *{
+    box-sizing: content-box !important;
+}
 /* ../ludojs/css-source/resize.css */
 .ludo-column-resize-handle {
     opacity: 0.05;
@@ -888,20 +904,20 @@ div.ludo-tab-strip-right div.ludo-body {
 }
 
 .ludo-tab-expand-box-top{
-    background-image:url(../images/layout/tabs-expand-top.png?rnd=3);
+    background-image:url(../images/layout/tabs-expand-top.png);
 }
 
 .ludo-tab-expand-box-top-over{
-    background-image:url(../images/layout/tabs-expand-top-over.png?rnd=3);
+    background-image:url(../images/layout/tabs-expand-top-over.png);
 }
 
 
 .ludo-tab-expand-box-bottom{
-    background-image:url(../images/layout/tabs-expand-bottom.png?rnd=3);
+    background-image:url(../images/layout/tabs-expand-bottom.png);
 }
 
 .ludo-tab-expand-box-bottom-over{
-    background-image:url(../images/layout/tabs-expand-bottom-over.png?rnd=3);
+    background-image:url(../images/layout/tabs-expand-bottom-over.png);
 }
 
 
@@ -1015,6 +1031,7 @@ div.ludo-tab-strip-right div.ludo-body {
 }
 
 .ludo-grid-header-cell {
+    box-sizing: content-box;
     position: absolute;
     overflow: hidden;
     padding-left: 5px;
@@ -2466,7 +2483,7 @@ div.ludo-spinbox-arrow-overeffect{
     padding-right:0;
 }
 
-fieldset{
+.ludo-view fieldset{
     padding:0;
     margin:2px;
 }/* ../ludojs/css-source/dialog/dialog.css */
