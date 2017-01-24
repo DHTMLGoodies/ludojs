@@ -49,6 +49,7 @@ ludo.dialog.Dialog = new Class({
 			}
 		}
 		this.parent(config);
+	
         this.setConfigParams(config, ['modal','autoRemove','autoHideOnBtnClick']);
 	},
 
@@ -77,7 +78,6 @@ ludo.dialog.Dialog = new Class({
 	__rendered:function () {
 		this.parent();
 		if (!this.isHidden()) {
-            this.center();
 			this.showShim();
 		}
 		var buttons = this.getButtons();
@@ -106,7 +106,9 @@ ludo.dialog.Dialog = new Class({
 	},
 
 	showShim:function () {
-        this.center();
+        if(!this.layout){
+			this.center();
+		}
 		if (this.isModal()) {
 			this.getShim().css({
 				display:'',

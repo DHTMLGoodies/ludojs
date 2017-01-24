@@ -51,7 +51,7 @@ ludo.layout.TextBox = new Class({
         s.visibility = 'hidden';
         s.position = 'absolute';
         span.className = this.className;
-        document.body.append(span);
+        $(document.body).append(span);
 
         s.fontSize = '12px';
         s.fontWeight = 'normal';

@@ -89,13 +89,18 @@ ludo.Core = new Class({
 
     applyplugins:function(){
         if (this.plugins) {
-            for (var i = 0; i < this.plugins.length; i++) {
-                this.plugins[i].parentComponent = this;
-                this.plugins[i] = this.createDependency('plugins' + i, this.plugins[i]);
-            }
+			jQuery.each(this.plugins, function(i, plugin){
+				this.addPlugin(plugin, i);
+			}.bind(this));
         }
     },
 
+	addPlugin:function(plugin, i){
+		i = i != undefined ? i : this.plugins.length;
+		plugin.parentComponent = this;
+		this.plugins[i] = this.createDependency('plugins' + i, plugin);
+	},
+	
 	__construct:function(config){
         this.setConfigParams(config, ['url','name','controller','module','submodule','stateful','id','useController','plugins']);
 

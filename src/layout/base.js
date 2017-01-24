@@ -413,8 +413,22 @@ ludo.layout.Base = new Class({
         return child.layout.width;
     },
 
-    getHeightOf: function (child, size) {
-        var h = child.wrappedHeight != undefined ? child.wrappedHeight(size) : undefined;
+
+
+    heightSizeForWrap:function(forChild){
+        var ret = {
+            width: this.viewport.width, height:this.viewport.height
+        };
+        jQuery.each(this.view.children, function(i, child){
+            if(child.id != forChild.id && child.layout != undefined && !isNaN(child.layout.height)){
+                ret.height -= child.layout.height
+            }
+        });
+        return ret;
+    },
+
+    getHeightOf: function (child) {
+        var h = child.wrappedHeight != undefined ? child.wrappedHeight(this.heightSizeForWrap(child)) : undefined;
         if (h != undefined)return h;
         if (child.layout.height == 'wrap') {
             child.layout.height = child.getEl().outerHeight(true);

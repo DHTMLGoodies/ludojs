@@ -46,6 +46,7 @@ ludo.grid.GridHeader = new Class({
 	renderColumns:function () {
 		var countRows = this.columnManager.getCountRows();
 
+		this.measureCellHeight();
 		for (var i = 0; i < countRows; i++) {
 			var columns = this.columnManager.getColumnsInRow(i);
 			var left = 0;
@@ -59,6 +60,7 @@ ludo.grid.GridHeader = new Class({
 					cell.css('top', i * this.cellHeight);
 					var height = (this.columnManager.getRowSpanOf(columns[j]) * this.cellHeight) - this.spacing.height;
 					var spacing = (j==columns.length-1) ? this.spacing.width - 1 : this.spacing.width;
+
 					cell.css('width', width - spacing);
 					cell.css('height', height);
 					cell.css('line-height', height + 'px');
@@ -97,8 +99,8 @@ ludo.grid.GridHeader = new Class({
 		this.cellHeight = el.height() + ludo.dom.getMH(el);
 
 		this.spacing = {
-			width:ludo.dom.getMBPW(el),
-			height:ludo.dom.getMBPH(el)
+			width:el.outerWidth() - el.width(),
+			height:el.outerHeight() - el.height()
 		};
 		el.remove();
 	},

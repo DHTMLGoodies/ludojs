@@ -296,8 +296,9 @@ ludo.layout.Renderer = new Class({
                 };
             case 'centerIn':
                 return function () {
+                    value = value.getEl != undefined ? value.getEl() : value;
                     var pos = value.offset();
-                    c.top = (pos.top + value.height()) / 2 - (c.height / 2);
+                    c.top = (pos.top + (value.height() / 2)) - (c.height / 2);
                     c.left = (pos.left + value.outerWidth()) / 2 - (c.width / 2);
                 };
             case 'centerHorizontalIn':
@@ -306,7 +307,7 @@ ludo.layout.Renderer = new Class({
                 };
             case 'centerVerticalIn':
                 return function () {
-                    c.top = (value.offset().top + value.height()) / 2 - (c.height / 2);
+                    c.top = (value.offset().top + (value.height() / 2)) - (c.height / 2);
                 };
             case 'sameWidthAs':
                 return function () {

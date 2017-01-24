@@ -179,3 +179,5 @@ var ludoUtilTypes = "Boolean Number String Function Array Date RegExp Object Err
 for(var i=0;i<ludoUtilTypes.length;i++){
 	ludo.util.types[ "[object " + ludoUtilTypes[i] + "]" ] = ludoUtilTypes[i].toLowerCase();
 }
+
+ludo.isMobile = ludo.util.isTabletOrMobile();

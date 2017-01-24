@@ -60,7 +60,7 @@ ludo.progress.Bar = new Class({
     debugRect: undefined,
     bgPattern: undefined,
     frontPattern: undefined,
-    patternSize: undefined,
+    bgPatternSize: undefined,
     frontPatternSize: undefined,
 
     __construct: function (config) {
@@ -159,8 +159,6 @@ ludo.progress.Bar = new Class({
     getPattern: function (image, sizeKey, imageKey) {
         var s = this.svg();
         var p = s.$('pattern');
-        p.set('width', 0.2);
-        p.set('height', 1);
         p.set('x', 0);
         p.set('y', 0);
         var img = this.els[imageKey] = s.$('image');
@@ -186,11 +184,11 @@ ludo.progress.Bar = new Class({
 
 
         if(this.bgPattern){
-            this.els.bgPattern = this.getPattern(this.bgPattern, 'patternSize','bgImage');
+            this.els.bgPattern = this.getPattern(this.bgPattern, 'bgPatternSize','bgPatternImage');
         }
 
         if(this.frontPattern){
-            this.els.frontPattern = this.getPattern(this.frontPattern, 'frontPatternSize','frontImage');
+            this.els.frontPattern = this.getPattern(this.frontPattern, 'frontPatternSize','frontPatternImage');
         }
     },
 
@@ -214,9 +212,9 @@ ludo.progress.Bar = new Class({
     },
 
     updatePatternSize: function () {
-        if (this.patternSize != undefined) {
-            this.els.bgPattern.set('width', Math.min(1, this.patternSize.x / this.svg().width));
-            this.els.bgPattern.set('height', Math.min(1, this.patternSize.y / this.svg().height));
+        if (this.bgPatternSize != undefined) {
+            this.els.bgPattern.set('width', Math.min(1, this.bgPatternSize.x / this.svg().width));
+            this.els.bgPattern.set('height', Math.min(1, this.bgPatternSize.y / this.svg().height));
         }
 
         if(this.frontPatternSize){

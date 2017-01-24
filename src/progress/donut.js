@@ -11,10 +11,11 @@
  *  down.
  *  3) Progress Bar SVG path
  *  4) Eventual background image defined in frontPattern.
- * 
+ *
  * @augments ludo.progress.Bar
  * @param {Object} config
- * @param {Function} config.innerRadius - Function returning inner radius. Arguments to this function : 1) outer radius.
+ * @param {Function} config.innerRadius - Function returning inner radius. Arguments to this function : 1) total radius of progress bar( min(width,height)).
+ * @param {Function} config.outerRadius - Function returning outer radius radius. Arguments to this function : 1) total radius of progress bar( min(width,height)). default: (size / 2)
  * default: function(outerRadius){ return outerRadius * 0.5 }
  * @param {Number} config.steps Number of progress bar steps, default = 10
  * @param {Number} config.progress Initial step, default = 0
@@ -23,7 +24,7 @@
  * @param {float} config.bgStyles SVG background styles
  * @param {float} config.barStyles SVG moving bar styles
  * @param {float} config.textStyles Styling of text on progress bar
- * @param {String} config.bgPattern Path to background image for the progress bar background. 
+ * @param {String} config.bgPattern Path to background image for the progress bar background.
  * @param {String} config.frontPattern Path to background image for the progress bar. The background images will be repeated if smaller than the progress bar. If bigger, it will be scaled down.
  * @param {Function} config.easing Easing function for animation. default: ludo.svg.easing.linear
  * @param {Number} config.animationDuration Animation duration in milliseconds (1/1000s) - default: 100
@@ -42,22 +43,28 @@ ludo.progress.Donut = new Class({
     outerBorderWidth: 0,
     innerBorderWidth: 0,
 
-    startAngle : 0,
+    startAngle: 0,
 
+    bgPattern2:undefined,
 
-
-    __construct:function(config){
+    __construct: function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['innerRadius', 'startAngle']);
+        this.setConfigParams(config, ['innerRadius', 'outerRadius', 'startAngle','bgPattern2','outerPattern']);
     },
 
 
-    applyPattern:function(){
+    applyPattern: function () {
 
         var s = this.svg();
 
+        if(this.outerPattern){
 
-        if(this.bgPattern){
+            this.els.outerPatternPath = s.$('path');
+            s.append(this.els.outerPatternPath);
+            this.els.outerPatternPath.setPattern(this.els.outerPattern);
+            this.els.outerPatternPath.set('fill-rule', 'evenodd');
+        }
+        if (this.bgPattern) {
             this.els.bgPatternPath = s.$('path');
             s.append(this.els.bgPatternPath);
             this.els.bgPatternPath.setPattern(this.els.bgPattern);
@@ -65,12 +72,33 @@ ludo.progress.Donut = new Class({
         }
 
 
-        if(this.frontPattern){
+        if (this.frontPattern) {
             this.els.frontPatternPath = s.$('path');
             this.els.frontGroup.append(this.els.frontPatternPath);
             this.els.frontPatternPath.setPattern(this.els.frontPattern);
             this.els.frontPatternPath.clip(this.els.clipPath);
             this.els.frontPatternPath.set('fill-rule', 'evenodd');
+        }
+
+        if(this.bgPattern2){
+
+            this.els.bgPatternPath2 = s.$('circle');
+            s.append(this.els.bgPatternPath2);
+            this.els.bgPatternPath2.setPattern(this.els.bgPattern2);
+        }
+
+    },
+
+    createPattern:function(){
+        if(this.outerPattern){
+            this.els.outerPattern = this.getPattern(this.outerPattern, 'outerPatternSize','outerPatternImage');
+        }
+
+
+        this.parent();
+
+        if(this.bgPattern2){
+            this.els.bgPattern2 = this.getPattern(this.bgPattern2, 'bgPattern2Size','bgPatternImage2');
         }
     },
 
@@ -89,9 +117,9 @@ ludo.progress.Donut = new Class({
         s.append(this.els.bg);
         this.els.bg.set('fill-rule', 'evenodd');
 
-        if(this.bgStyles){
+        if (this.bgStyles) {
             this.els.bg.css(this.bgStyles);
-            if(this.bgStyles['stroke-width'] != undefined){
+            if (this.bgStyles['stroke-width'] != undefined) {
                 this.outerBorderWidth = parseInt(this.bgStyles['stroke-width']);
             }
         }
@@ -104,9 +132,9 @@ ludo.progress.Donut = new Class({
         this.els.frontGroup.append(this.els.bar);
         this.els.bar.set('fill-rule', 'evenodd');
         this.els.frontGroup.clip(this.els.clipPath);
-        if(this.barStyles){
+        if (this.barStyles) {
             this.els.bar.css(this.barStyles);
-            if(this.barStyles['stroke-width'] != undefined){
+            if (this.barStyles['stroke-width'] != undefined) {
                 this.outerBorderWidth = parseInt(this.barStyles['stroke-width']);
             }
         }
@@ -122,10 +150,17 @@ ludo.progress.Donut = new Class({
         s.append(this.els.debug);
         this.els.debug.css('fill', '#ff0000');
 
-        if(this.els.frontPatternPath){
+        if (this.els.frontPatternPath) {
             this.els.frontPatternPath.toFront();
         }
 
+        if(this.els.textNode){
+            this.els.textNode.toFront();
+        }
+
+        if(this.els.outerPatternSize){
+            this.els.outerPatternSize.toBack();
+        }
     },
 
     createClipPath: function () {
@@ -167,52 +202,94 @@ ludo.progress.Donut = new Class({
     updatePatternSize: function () {
         var s = this.rect();
 
-        if (this.patternSize != undefined) {
+        if (this.bgPatternSize != undefined) {
 
-            if(this.patternSize.x > s){
-                this.els.bgImage.set('width', s);
-                this.els.bgImage.set('height', s);
+            if (this.bgPatternSize.x > s) {
+                this.els.bgPatternImage.set('width', s);
+                this.els.bgPatternImage.set('height', s);
             }
 
-            this.els.bgPattern.set('width', Math.min(1, this.patternSize.x /s));
-            this.els.bgPattern.set('height', Math.min(1, this.patternSize.y / s));
+            this.els.bgPattern.set('width', Math.min(1, this.bgPatternSize.x / s));
+            this.els.bgPattern.set('height', Math.min(1, this.bgPatternSize.y / s));
         }
 
-        if(this.frontPatternSize){
+        if (this.frontPatternSize) {
 
-            if(this.frontPatternSize.x > s){
-                this.els.frontImage.set('width', s);
-                this.els.frontImage.set('height', s);
+            if (this.frontPatternSize.x > s) {
+                this.els.frontPatternImage.set('width', s);
+                this.els.frontPatternImage.set('height', s);
             }
-            this.els.frontPattern.set('width', Math.min(1, this.frontPatternSize.x /s));
+            this.els.frontPattern.set('width', Math.min(1, this.frontPatternSize.x / s));
             this.els.frontPattern.set('height', Math.min(1, this.frontPatternSize.y / s));
         }
+
+        if(this.bgPattern2Size){
+
+            var r = this.innerRadius(s/2) * 2;
+            if (this.bgPattern2Size.x > r) {
+                this.els.bgPatternImage2.set('width', r);
+                this.els.bgPatternImage2.set('height', r);
+            }
+
+            this.els.bgPattern2.set('width', Math.min(1, this.bgPattern2Size.x / r));
+            this.els.bgPattern2.set('height', Math.min(1, this.bgPattern2Size.y / r));
+
+
+        }
+        if(this.outerPatternSize){
+
+            if (this.outerPatternSize.x > s) {
+                this.els.outerPatternImage.set('width', s);
+                this.els.outerPatternImage.set('height', s);
+            }
+
+            this.els.outerPattern.set('width', Math.min(1, this.outerPatternSize.x / s));
+            this.els.outerPattern.set('height', Math.min(1, this.outerPatternSize.y / s));
+
+
+        }
     },
-    
+
     resizeItems: function () {
         var s = this.rect();
         var c = s / 2;
-        var radius = c - 2;
-        var innerRadius = this.innerRadius(radius);
+        var radius = this.outerRadius(c);
+        var innerRadius = this.innerRadius(c);
 
+        console.log(innerRadius);
         this.els.bg.set('d', this.bgPath(radius, innerRadius));
 
         this.els.bar.set('d', this.bgPath(radius - this.outerBorderWidth, innerRadius + this.outerBorderWidth));
 
-        if(this.els.bgPatternPath){
+        if (this.els.bgPatternPath) {
             this.els.bgPatternPath.set('d', this.bgPath(radius - this.outerBorderWidth, innerRadius + this.outerBorderWidth));
         }
 
-        if(this.els.frontPatternPath){
+        if (this.els.frontPatternPath) {
             var p = this.bgPath(radius - this.outerBorderWidth - this.innerBorderWidth, innerRadius + this.outerBorderWidth + this.innerBorderWidth);
             this.els.frontPatternPath.set('d', p);
         }
 
+        if(this.els.bgPatternPath2){
+            this.els.bgPatternPath2.set('cx', c);
+            this.els.bgPatternPath2.set('cy', c);
+            this.els.bgPatternPath2.set('r', innerRadius);
+        }
 
+
+        if(this.els.outerPatternPath){
+
+            this.els.outerPatternPath.set('d', this.bgPath(c, radius - this.outerBorderWidth));
+
+        }
 
         this.updatePatternSize();
 
         this.positionTextNode();
+    },
+
+    outerRadius:function(size){
+        return size - 2;
     },
 
 
@@ -244,7 +321,7 @@ ludo.progress.Donut = new Class({
             var c = this.rect() / 2;
             this.els.textNode.set('x', c);
             this.els.textNode.set('y', c);
-            this.els.textNode.css('font-size',  this.innerRadius(this.rect()) * this.textSizeRatio);
+            this.els.textNode.css('font-size', this.innerRadius(this.rect()) * this.textSizeRatio);
         }
     },
 
@@ -277,20 +354,20 @@ ludo.progress.Donut = new Class({
             return this.progress / this.steps;
         }
         ratio = ludo.util.clamp(ratio, 0, 1);
-        if(animate){
-            var p= this.clipArray(ratio).join(' ');
+        if (animate) {
+            var p = this.clipArray(ratio).join(' ');
             var s = this.rect();
             var c = s / 2;
             var a = this.startAngle;
             var diff = ratio - this.lastRatio;
             this.els.clip.set('d', this.clipArray(this.lastRatio).join(' '));
             this.els.clip.animate({
-                d : p
-            },{
-                easing:this.easing,
-                duration:this.animationDuration,
-                step:function(value, delta, elapsed){
-                    if(ratio == 1 && elapsed == 1)value[9] = 359.99999;
+                d: p
+            }, {
+                easing: this.easing,
+                duration: this.animationDuration,
+                step: function (value, delta, elapsed) {
+                    if (ratio == 1 && elapsed == 1)value[9] = 359.99999;
                     var d = value[9] - 90 + a;
 
                     var r = ludo.geometry.toRadians(d);
@@ -304,17 +381,17 @@ ludo.progress.Donut = new Class({
                     var prs = Math.min(100, (this.lastRatio + (diff * t)) * 100);
                     this.fireEvent('animate', prs);
                 }.bind(this),
-                complete:function(){
+                complete: function () {
                     this.lastRatio = ratio;
                     this.fireEvent('animate', this.lastRatio * 100);
                     this.onChange();
                 }.bind(this)
             });
-        }else{
+        } else {
             var path = this.clipArray(Math.min(ratio, 0.9999999));
             this.els.clip.set('d', path.join(' '));
 
-            if(ratio != this.lastRatio){
+            if (ratio != this.lastRatio) {
                 this.onChange();
             }
             this.fireEvent('animate', this.lastRatio * 100);
@@ -330,7 +407,7 @@ ludo.progress.Donut = new Class({
 
         var radius = 30000;
 
-        var radStart = ludo.geometry.toRadians(- 90 + this.startAngle);
+        var radStart = ludo.geometry.toRadians(-90 + this.startAngle);
         var xStart = c + (Math.cos(radStart) * radius)
         var yStart = c + (Math.sin(radStart) * radius)
 
@@ -340,12 +417,12 @@ ludo.progress.Donut = new Class({
         return [
             'M', c, c,
             'L', xStart, yStart,
-            'A', radius, radius, degrees , 1, 1, x, y, 'Z'
+            'A', radius, radius, degrees, 1, 1, x, y, 'Z'
         ]
 
     },
 
-    innerRadius:function(outerRadius){
+    innerRadius: function (outerRadius) {
         return outerRadius * 0.5;
     }
 });

@@ -517,7 +517,7 @@ ludo.grid.Grid = new Class({
 		if (height < 0) {
 			return;
 		}
-		this.els.body.css('height', height);
+		this.els.body.css('height', height - this.gridHeader.getHeight());
 		this.cachedInnerHeight = height;
 
 
@@ -527,7 +527,7 @@ ludo.grid.Grid = new Class({
 			this.resizeDOM.delay(100, this);
 			return;
 		}
-		this.els.dataContainerTop.css('height', contentHeight - this.gridHeader.getHeight());
+		this.els.dataContainerTop.css('height', contentHeight);
 
 		this.scrollbar.vertical.resize();
 		this.scrollbar.horizontal.resize();
@@ -539,7 +539,7 @@ ludo.grid.Grid = new Class({
 			applyTo:this.getBody(),
 			parent:this.getBody()
 		}));
-		this.scrollbar.horizontal.getEl().insertBefore(this.getBody());
+		this.scrollbar.horizontal.getEl().insertAfter(this.getBody());
 
 		this.scrollbar.vertical = this.createDependency('scrollVertical', new ludo.Scroller({
 			type:'vertical',

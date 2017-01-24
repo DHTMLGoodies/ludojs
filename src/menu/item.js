@@ -43,7 +43,6 @@ ludo.menu.Item = new Class({
 
         this._html = this._html || this.label;
 
-        console.log(this._html);
         if(this._html == '|')this.spacer = true;
 
         if (this.spacer) {

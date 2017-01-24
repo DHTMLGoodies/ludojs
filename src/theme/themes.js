@@ -77,6 +77,14 @@ ludo.theme.Themes = new Class({
         $(document.body).addClass("ludo-" + theme);
     },
 
+    getThemeEl:function(){
+        var theme = this.getCurrentTheme();
+        if(theme != undefined){
+            return $('.ludo-' + theme);
+        }
+        return $(document.body);
+    },
+
     getCurrentTheme:function(){
         if(this.currentTheme == undefined){
             var b = $(document.documentElement);

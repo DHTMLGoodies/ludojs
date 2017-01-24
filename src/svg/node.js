@@ -286,11 +286,16 @@ ludo.svg.Node = new Class({
         return this.css('display') == 'none';
     },
 
-    setProperties: function (p) {
+    
+    setAttributes:function(p){
         jQuery.each(p, function(key, val){
 
             this.set(key, val);
         }.bind(this));
+    },
+    
+    setProperties: function (p) {
+        this.setProperties(p);
     },
 
     /**
@@ -325,6 +330,9 @@ ludo.svg.Node = new Class({
         } else {
             if (value != undefined && value['id'] !== undefined)value = 'url(#' + value.getId() + ')';
             this.el.setAttribute(key, value);
+            if(key == 'class' && value.length == 0){
+                this.classNameCache = [];
+            }
         }
     },
 
@@ -518,6 +526,7 @@ ludo.svg.Node = new Class({
         }
         return this;
     },
+    // TODO this may be problematic if you set class names other ways than via these methods (jan, 2017)
     /**
      Returns true if svg node has given css class name
      @function hasClass
@@ -560,6 +569,12 @@ ludo.svg.Node = new Class({
         }
         return this;
     },
+
+    removeAllClasses:function(){
+        this.set('class', '');
+        this.classNameCache = [];
+    },
+
 
     updateNodeClassNameById: function () {
         this.set('class', this.classNameCache.join(' '));

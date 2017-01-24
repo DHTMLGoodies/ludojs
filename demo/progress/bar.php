@@ -19,6 +19,7 @@ require_once("../includes/demo-header.php");
         color: #FFFFFF;
         font-size: 12px;
     }
+
     .ludo-progress-donut-text {
         color: #FFFFFF;
         font-size: 12px;
@@ -64,8 +65,8 @@ require_once("../includes/demo-header.php");
                             centerHorizontal: true,
                             alignParentTop: true
                         },
-                        listeners:{
-                            animate:function (percent) {
+                        listeners: {
+                            animate: function (percent) {
                                 this.text(percent.toFixed(0) + '%');
                             }
                         }
@@ -155,7 +156,7 @@ require_once("../includes/demo-header.php");
                         },
                         layout: {
                             width: 120,
-                            alignParentLeft:true,
+                            alignParentLeft: true,
                             below: 'progress-status'
                         }
                     },
@@ -173,7 +174,7 @@ require_once("../includes/demo-header.php");
                         },
                         layout: {
                             width: 120,
-                            rightOf:'button',
+                            rightOf: 'button',
                             below: 'progress-status'
                         }
                     },
@@ -182,23 +183,23 @@ require_once("../includes/demo-header.php");
                         type: 'progress.Donut',
                         steps: 100,
                         progress: 0,
-                        innerRadius: function(outerRadius){
+                        innerRadius: function (outerRadius) {
                             return outerRadius * 0.7
                         },
-                        frontPattern:'../images/pattern-color-wheel.png',
-                        bgPattern:'../images/pattern-wheel.png',
-                        bgStyles:{
+                        frontPattern: '../images/pattern-color-wheel.png',
+                        bgPattern: '../images/pattern-wheel.png',
+                        bgStyles: {
                             'stroke-width': 1
                         },
-                        
+
                         animationDuration: 2000,
                         easing: ludo.svg.easing.outSine,
                         layout: {
                             width: 150, height: 150,
-                            alignParentLeft:true,
+                            alignParentLeft: true,
                             below: 'resetButton'
                         },
-                        elCss:{
+                        elCss: {
                             'margin-top': 20
                         },
                         listeners: {
@@ -218,29 +219,71 @@ require_once("../includes/demo-header.php");
                         // Donut progress with no styling
                         id: 'donutProgress4',
                         type: 'progress.Donut',
-                        elCss:{
+                        elCss: {
                             'margin-top': 20
                         },
                         steps: 100,
                         progress: 88,
                         layout: {
                             width: 150, height: 150,
-                            rightOf:'donutProgress',
+                            rightOf: 'donutProgress',
                             below: 'resetButton'
                         },
-                        listeners:{
-                            'change':function(percent){
+                        listeners: {
+                            'change': function (percent) {
                                 this.text(percent.toFixed(0) + '%');
                             }
                         },
                         text: '0%'
                     },
                     {
+                        id: 'donutProgress7',
+                        type: 'progress.Donut',
+                        outerPattern: '../images/progress-wheel-inside.png',
+                        bgPattern: '../images/progress-wheel.png',
+                        frontPattern: '../images/pattern-color-wheel.png',
+                        bgPattern2: '../images/progress-wheel-inside.png',
+                        elCss: {
+                            'margin-top': 20
+                        },
+                        animationDuration:4000,
+                        steps: 100,
+                        progress: 12,
+                        layout: {
+                            width: 150, height: 150,
+                            rightOf: 'donutProgress4',
+                            below: 'resetButton'
+                        },
+                        bgStyles: {
+                            'stroke-width': 1,
+                            'stroke': '#666'
+                        },
+                        barStyles:{
+                            'stroke-width': 0
+                        },
+                        listeners: {
+                            'animate': function (percent) {
+                                this.text(percent.toFixed(0) + '%');
+                            }
+                        },
+                        textStyles:{
+                            fill: '#8b7f76'
+                        },
+                        text: '0%',
+                        textSizeRatio:0.2,
+                        outerRadius:function(totalRadius){
+                            return totalRadius - 20;
+                        },
+                        innerRadius: function (outerRadius) {
+                            return outerRadius - 30;
+                        }
+                    },
+                    {
                         id: 'donutProgress2',
                         type: 'progress.Donut',
                         steps: 100,
                         progress: 0,
-                        innerRadius: function(outerRadius){
+                        innerRadius: function (outerRadius) {
                             return outerRadius * 0.8
                         },
                         textSizeRatio: 0.27,
@@ -255,7 +298,7 @@ require_once("../includes/demo-header.php");
                         },
                         layout: {
                             width: 50, height: 50,
-                            alignParentLeft:true,
+                            alignParentLeft: true,
                             below: 'donutProgress'
                         },
                         listeners: {
@@ -266,24 +309,24 @@ require_once("../includes/demo-header.php");
                         text: '0%'
                     },
                     {
-                        id:'seekbarAndProgress',
-                        type:'FramedView',
-                        title:'Progress and Seekbar connected',
-                        layout:{
-                            below:'donutProgress2',
-                            width:300,
-                            height:150,
-                            centerHorizontal:true,
-                            type:'relative'
+                        id: 'seekbarAndProgress',
+                        type: 'FramedView',
+                        title: 'Progress and Seekbar connected',
+                        layout: {
+                            below: 'donutProgress2',
+                            width: 300,
+                            height: 150,
+                            centerHorizontal: true,
+                            type: 'relative'
                         },
-                        children:[
+                        children: [
                             {
                                 id: 'donutProgress5',
                                 type: 'progress.Donut',
                                 steps: 100,
                                 progress: 0,
-                                startAngle:180,
-                                innerRadius: function(outerRadius){
+                                startAngle: 180,
+                                innerRadius: function (outerRadius) {
                                     return outerRadius * 0.8
                                 },
                                 textSizeRatio: 0.27,
@@ -298,8 +341,8 @@ require_once("../includes/demo-header.php");
                                 },
                                 layout: {
                                     width: 55, height: 55,
-                                    alignParentTop:true,
-                                    centerHorizontal:true
+                                    alignParentTop: true,
+                                    centerHorizontal: true
                                 },
                                 listeners: {
                                     animate: function (percent) {
@@ -309,19 +352,19 @@ require_once("../includes/demo-header.php");
                                 text: '0%'
                             },
                             {
-                                type:'form.Seekbar',
-                                minValue:0,
-                                maxValue:100,
-                                orientation:'horizontal',
-                                thumbColor:'#F57C00',
-                                negativeColor:'#F57C00',
-                                layout:{
-                                    width:'matchParent',
-                                    height:45,
-                                    below:'donutProgress5'
+                                type: 'form.Seekbar',
+                                minValue: 0,
+                                maxValue: 100,
+                                orientation: 'horizontal',
+                                thumbColor: '#F57C00',
+                                negativeColor: '#F57C00',
+                                layout: {
+                                    width: 'matchParent',
+                                    height: 45,
+                                    below: 'donutProgress5'
                                 },
-                                listeners:{
-                                    'change': function(val){
+                                listeners: {
+                                    'change': function (val) {
                                         ludo.$('donutProgress5').setProgress(val, false);
                                     }
                                 }
@@ -330,18 +373,18 @@ require_once("../includes/demo-header.php");
                         ]
                     },
                     {
-                        id:'progressWinButton',
-                        type:'form.Button',
-                        value:'Progress in Window',
-                        elCss:{
+                        id: 'progressWinButton',
+                        type: 'form.Button',
+                        value: 'Progress in Window',
+                        elCss: {
                             'margin-top': 10
                         },
-                        layout:{
-                            width:150,
-                            below:'seekbarAndProgress',
-                            centerHorizontal:true
+                        layout: {
+                            width: 150,
+                            below: 'seekbarAndProgress',
+                            centerHorizontal: true
                         },
-                        listeners:{
+                        listeners: {
                             'click': showWindow
                         }
                     }
@@ -355,27 +398,27 @@ require_once("../includes/demo-header.php");
 
     });
 
-    function showWindow(){
+    function showWindow() {
         new ludo.Window({
-            title:'Color Progress',
-            id:'progressWindow',
-            layout:{
-                type:'fill',
-                height:300,width:300,
-                left:20, top: 20
+            title: 'Color Progress',
+            id: 'progressWindow',
+            layout: {
+                type: 'fill',
+                height: 300, width: 300,
+                left: 20, top: 20
             },
-            children:[
+            children: [
                 {
                     id: 'donutProgress3',
                     type: 'progress.Donut',
-                    startAngle:180, // Custom start angle
+                    startAngle: 180, // Custom start angle
                     steps: 100,
                     progress: 0,
-                    innerRadius: function(outerRadius){
+                    innerRadius: function (outerRadius) {
                         return outerRadius * 0.7
                     },
-                    frontPattern:'../images/pattern-color-wheel.png',
-                    bgPattern:'../images/pattern-wheel.png',
+                    frontPattern: '../images/pattern-color-wheel.png',
+                    bgPattern: '../images/pattern-wheel.png',
                     easing: ludo.svg.easing.outSine,
                     listeners: {
                         animate: function (percent) {
@@ -391,20 +434,20 @@ require_once("../includes/demo-header.php");
                     text: '0%'
                 }
             ],
-            buttonBar:{
-                children:[
+            buttonBar: {
+                children: [
                     {
-                        type:'form.Button', value:'Increment',
-                        listeners:{
-                            click:function(){
+                        type: 'form.Button', value: 'Increment',
+                        listeners: {
+                            click: function () {
                                 ludo.$('donutProgress3').increment(10)
                             }
                         }
                     },
                     {
-                        type:'form.Button', value:'Reset',
-                        listeners:{
-                            click:function(){
+                        type: 'form.Button', value: 'Reset',
+                        listeners: {
+                            click: function () {
                                 ludo.$('donutProgress3').setProgress(0)
                             }
                         }
@@ -421,6 +464,8 @@ require_once("../includes/demo-header.php");
 
     var donut = ludo.$('donutProgress');
     donut.increment(100);
+    ludo.$('donutProgress7').increment(100);
+
 
 </script>
 </body>

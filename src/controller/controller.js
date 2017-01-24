@@ -125,6 +125,7 @@ ludo.controller.Controller = new Class({
 			return this.isInSameNamespaceAs(component);
 		}
 		var key = this.getModuleKeyFor(component);
+
 		if (this.isAppliedDirectlyToModule(key)) {
 			return true;
 		}
