@@ -54,11 +54,11 @@ ludo.dialog.Prompt = new Class({
     },
 
     getValue : function(){
-        return this.input.getValue()
+        return this.input.val()
     },
 
     buttonClick : function(value, button){
-        this.fireEvent(button.value.toLowerCase(), [this.getValue(), this]);
+        this.fireEvent(button.value.toLowerCase(), [this.val(), this]);
         if (this.autoHideOnBtnClick) {
             this.hide();
         }

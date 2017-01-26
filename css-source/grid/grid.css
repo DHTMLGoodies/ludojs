@@ -45,6 +45,10 @@
     padding-right: 5px;
     height: 20px;
     cursor: default;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .ludo-grid-Grid div.last-header-cell {

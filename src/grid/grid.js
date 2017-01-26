@@ -278,9 +278,6 @@ ludo.grid.Grid = new Class({
 			this.els.dataContainer.css('cursor', 'pointer');
 		}
 
-
-
-
 		this.positionVerticalScrollbar.delay(100, this);
 
 		if (this.getParent()) {
@@ -635,7 +632,7 @@ ludo.grid.Grid = new Class({
 			this.columnManager.clearStretchedWidths();
 
 			var totalWidth = this.columnManager.getTotalWidth();
-			var viewSize = this.getBody().width() - ludo.dom.getPW(this.getBody()) - ludo.dom.getBW(this.getBody());
+			var viewSize = this.getBody().width();
 			var restSize = viewSize - totalWidth;
 			if (restSize <= 0) {
 				return;
@@ -655,10 +652,6 @@ ludo.grid.Grid = new Class({
 			this.emptyTextEl().css('display', this.currentData.length > 0 ? 'none' : '');
 		}
 
-		if (Browser['ie']) {
-			this.populateDataIE();
-			return;
-		}
 		var contentHtml = [];
 		var keys = this.columnManager.getLeafKeys();
 		for (var i = 0; i < keys.length; i++) {
@@ -705,24 +698,6 @@ ludo.grid.Grid = new Class({
 		}
 		ret += this.columnManager.getAlignmentOf(col);
 		return ret;
-	},
-
-	populateDataIE:function () {
-		this.els.dataContainer.html( '');
-		this.createDataColumnElements();
-		this.resizeColumns();
-		var keys = this.columnManager.getLeafKeys();
-
-		for (var i = 0; i < keys.length; i++) {
-			if (this.columnManager.isHidden(keys[i])) {
-				this.els.dataColumns[keys[i]].css('display', 'none');
-			} else {
-				this.els.dataColumns[keys[i]].css('display', '');
-				this.els.dataColumns[keys[i]].html(this.getHtmlTextForColumn(keys[i]));
-			}
-		}
-		this.resizeVerticalScrollbar();
-		this.highlightActiveRecord();
 	},
 
 	resizeVerticalScrollbar:function () {

@@ -299,7 +299,7 @@ ludo.layout.Renderer = new Class({
                     value = value.getEl != undefined ? value.getEl() : value;
                     var pos = value.offset();
                     c.top = (pos.top + (value.height() / 2)) - (c.height / 2);
-                    c.left = (pos.left + value.outerWidth()) / 2 - (c.width / 2);
+                    c.left = (pos.left + value.outerWidth()/ 2)  - (c.width / 2);
                 };
             case 'centerHorizontalIn':
                 return function () {
