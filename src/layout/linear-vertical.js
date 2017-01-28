@@ -2,6 +2,12 @@
  * This class arranges child views in a column layout (side by side).
  * @namespace ludo.layout
  * @class ludo.layout.LinearVertical
+ * @param {Object} config
+ * @param {Boolean} config.resizable - child property
+ * @param {String} config.resizePos - child property - Optional position of resize handle - "above" to resize this and previous child,
+ * or "below" to resize this and next sibling
+ * @param {Number|String} config.height - child property - Numeric height or "wrap"
+ * @param {Boolean} config.weight - Dynamic height
  *
  */
 ludo.layout.LinearVertical = new Class({
@@ -10,11 +16,7 @@ ludo.layout.LinearVertical = new Class({
 		this.parent();
 	},
 	resize:function () {
-
-
 		var availHeight = this.viewport.height;
-
-
 		var s = {
 			width:this.viewport.width,
 			height: availHeight
@@ -113,8 +115,6 @@ ludo.layout.LinearVertical = new Class({
 			}else{
 				rPos = isLastSibling ? 'above' : 'below';
 			}
-
-			console.log(rPos);
 			var resizer = this.getResizableFor(child, rPos);
 			this.addChild(resizer, child, rPos == 'above' ? 'before' : 'after');
 		}
