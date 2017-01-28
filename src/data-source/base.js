@@ -33,12 +33,18 @@ ludo.dataSource.Base = new Class({
 	dataHandler:undefined,
 	
 	shim:undefined,
+	
+	__waiting:false,
 
 	__construct:function (config) {
 		this.parent(config);
 		if(config.data != undefined)this.autoload = false;
 		this.setConfigParams(config, ['method', 'url', 'autoload', 'shim','dataHandler']);
 
+		
+		this.on('init', this.setWaiting.bind(this));
+		this.on('complete', this.setDone.bind(this));
+		
 		if(this.postData == undefined){
 			this.postData = {};
 		}
@@ -55,9 +61,15 @@ ludo.dataSource.Base = new Class({
 		if(config.data != undefined){
 			this.setData(config.data);
 		}
-
-
-
+		
+	},
+	
+	setWaiting:function(){
+		this.__waiting = true;
+	},
+	
+	setDone:function(){
+		this.__waiting = false;	
 	},
 
 	setPostData:function(key, value){

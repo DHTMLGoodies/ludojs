@@ -11,7 +11,7 @@ ludo.dataSource.JSON = new Class({
     _loaded:false,
 
     isWaitingData:function(){
-        return !this._loaded && this._url() != undefined;  
+        return this.__waiting;
     },
 
 
@@ -59,11 +59,13 @@ ludo.dataSource.JSON = new Class({
                 }
                 
                 this.fireEvent('complete');
+                
 
             }.bind(this),
             fail: function (text, error) {
                 console.log('error', error);
                 this.fireEvent('fail', [text, error, this]);
+                this.fireEvent('complete');
             }.bind(this)
         });
     },

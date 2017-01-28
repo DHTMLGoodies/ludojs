@@ -858,7 +858,7 @@ ludo.View = new Class({
                 obj.on('complete', function(){
                     this.shim().hide();
                 }.bind(this));
-                if(obj.isWaitingData()){
+                if(obj.isWaitingData() ){
                     this.shim().show(this.loadMessage);
                 }
             }

@@ -19,9 +19,11 @@ ludo.dataSource.HTML = new Class({
 			success: function(data){
 				this.parseNewData(data);
 				this.fireEvent('success', [data, this]);
+				this.fireEvent('complete');
 			}.bind(this),
 			fail:function(text, error){
 				this.fireEvent('fail', [text, error, this]);
+				this.fireEvent('complete');
 			}.bind(this),
 			dataType: 'html'
 		});
