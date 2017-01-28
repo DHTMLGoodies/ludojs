@@ -72,6 +72,10 @@ ludo.dataSource.Base = new Class({
 		this.__waiting = false;	
 	},
 
+	isWaitingData:function(){
+		return this.__waiting;
+	},
+
 	setPostData:function(key, value){
 		this.postData[key] = value;
 	},

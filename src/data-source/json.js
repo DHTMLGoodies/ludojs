@@ -10,9 +10,7 @@ ludo.dataSource.JSON = new Class({
 
     _loaded:false,
 
-    isWaitingData:function(){
-        return this.__waiting;
-    },
+
 
 
     /**
