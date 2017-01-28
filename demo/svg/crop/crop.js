@@ -226,8 +226,8 @@ svgCrop.Surface = new Class({
         this.group = s.$('g');
         s.append(this.group);
 
-        $(document.documentElement).on(ludo.util.getDragMoveEvent(), this.drag.bind(this));
-        $(document.documentElement).on(ludo.util.getDragEndEvent(), this.endDrag.bind(this));
+        jQuery(document.documentElement).on(ludo.util.getDragMoveEvent(), this.drag.bind(this));
+        jQuery(document.documentElement).on(ludo.util.getDragEndEvent(), this.endDrag.bind(this));
         this.clipPath = s.$('path');
         this.clipPath.set('fill', '#000');
         this.clipPath.set('fill-opacity', 0.6);

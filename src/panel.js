@@ -12,7 +12,7 @@ ludo.Panel = new Class({
 	_createDOM:function () {
 		this.parent();
 		this.getEl().addClass('ludo-panel');
-		this.els.legend = $('<legend>');
+		this.els.legend = jQuery('<legend>');
 		this.els.body.append(this.els.legend);
 		this.getEl().addClass('ludo-panel');
 	},

@@ -158,7 +158,7 @@ ludo.Window = new Class({
     },
 
     center: function () {
-        var b = $(document.body);
+        var b = jQuery(document.body);
         var bodySize = {x: b.width(), y: b.height()};
         var x = Math.round((bodySize.x / 2) - (this.getWidth() / 2));
         var y = Math.round((bodySize.y / 2) - (this.getHeight() / 2));

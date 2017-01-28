@@ -46,7 +46,7 @@ ludo.effect.DragDrop = new Class({
 	},
 
 	getDropIdByEvent:function (e) {
-		var el = $(e.target);
+		var el = jQuery(e.target);
 		if (!el.hasClass('ludo-drop')) {
 			el = el.getParent('.ludo-drop');
 		}
@@ -62,7 +62,7 @@ ludo.effect.DragDrop = new Class({
 	 */
 	remove:function (id) {
 		if (this.els[id] !== undefined) {
-			var el = $(this.els[id].el);
+			var el = jQuery(this.els[id].el);
 			el.unbind('mouseenter', this.enterDropTarget.bind(this));
 			el.unbind('mouseleave', this.leaveDropTarget.bind(this));
 			return this.parent(id);

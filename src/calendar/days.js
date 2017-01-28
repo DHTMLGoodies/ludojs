@@ -108,7 +108,7 @@ ludo.calendar.Days = new Class({
 
     },
     createCalendarHeader:function () {
-        var el = this.els.daysHeader = $('<div>');
+        var el = this.els.daysHeader = jQuery('<div>');
         el.addClass('ludo-calendar-header');
         this.getBody().append(el);
 
@@ -165,7 +165,7 @@ ludo.calendar.Days = new Class({
     },
 
     createCalendarView:function () {
-        var el = this.els.daysContainer = $('<div>');
+        var el = this.els.daysContainer = jQuery('<div>');
         el.addClass('ludo-calendar-container-days');
         el.css({
             position:'relative',
@@ -182,7 +182,7 @@ ludo.calendar.Days = new Class({
             this.els.monthView.remove();
         }
 
-        var el = this.els.monthView = $('<div>');
+        var el = this.els.monthView = jQuery('<div>');
         el.on('click', this.selectDay.bind(this));
         el.addClass('ludo-calendar-body-days');
         this.resizeMonthView();
@@ -257,7 +257,7 @@ ludo.calendar.Days = new Class({
     },
 
     mouseOverDays:function (e) {
-        var el = $(e.target);
+        var el = jQuery(e.target);
         if(!el.hasClass('calendar-day-div')){
             return;
         }
@@ -363,7 +363,7 @@ ludo.calendar.Days = new Class({
     },
 
     selectDay:function (e) {
-        var el = $(e.target);
+        var el = jQuery(e.target);
         if (!el.hasClass('calendar-day')) {
             el = el.closest('.calendar-day');
             if (!el)return;
@@ -483,7 +483,7 @@ ludo.calendar.Days = new Class({
         /*
         var els = this.els.monthView.find('.calendar-day-c');
         if(els.length > 0){
-            var h = $(els[0]).height();
+            var h = jQuery(els[0]).height();
             console.log(h);
             this.els.monthView.find('.calendar-day-c').css('font-size', (h / 2.2) + 'px' );
 

@@ -22,15 +22,17 @@ ludo.form.Textarea = new Class({
             paddingRight:0,paddingTop:0
         });
     },
+
+    offX:undefined, offY:undefined,
+
     resizeDOM:function () {
         this.parent();
-        if (this.layout && this.layout.weight) {
-            var height = this.getEl().offsetHeight;
-            height -= (ludo.dom.getMBPH(this.getEl()) + ludo.dom.getMBPH(this.getBody()) + ludo.dom.getMH(this.els.formEl.parent()));
-			height -=1;
-            if (height > 0) {
-                this.els.formEl.style.height = height+'px';
-            }
+
+        if(this.offX == undefined){
+            this.offX = (this.els.formEl.outerWidth() - this.els.formEl.width()) + (this.getInputCell().outerWidth() - this.getInputCell().width());
+            this.offY = (this.els.formEl.outerWidth() - this.els.formEl.width()) + (this.getInputCell().outerHeight() - this.getInputCell().height());
         }
+        this.els.formEl.css('width', this.getBody().width() - this.offX);
+        this.els.formEl.css('height', this.getBody().height() - this.offY - 2);
     }
 });

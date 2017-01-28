@@ -241,6 +241,7 @@ ludo.dataSource.JSONArray = new Class({
             this.loadOrGetFromCache();
         } else {
             var data = this._getData();
+            if(!data)return this;
             data.sort(this.getSortFnFor(column, order));
             this.fireEvent('change');
         }

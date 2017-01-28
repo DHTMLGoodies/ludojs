@@ -202,7 +202,7 @@ ludo.View = new Class({
         if (config.html != undefined)this._html = config.html;
         this.setConfigParams(config, keys);
 
-        if (this.renderTo)this.renderTo = $(this.renderTo);
+        if (this.renderTo)this.renderTo = jQuery(this.renderTo);
 
         this.layout = ludo.layoutFactory.getValidLayoutObject(this, config);
 
@@ -223,7 +223,7 @@ ludo.View = new Class({
      @example
      ludoDOM : function() {<br>
 			 this.parent(); // Always call parent ludoDOM
-			 var myEl = $('<div>');
+			 var myEl = jQuery('<div>');
 			 myEl.html('My Content');
 			 this.getEl().append(myEl);
 		 }
@@ -276,6 +276,9 @@ ludo.View = new Class({
             this.autoSetHeight();
         }
         if (!this.parentComponent) {
+            this.getEl().addClass('ludo-view-top');
+        }
+        if (!this.parentComponent) {
             this.getLayout().createRenderer();
         }
 
@@ -299,7 +302,12 @@ ludo.View = new Class({
     JSON: function (json, tpl) {
         tpl = tpl || this.tpl;
         if (tpl) {
-            this.getBody().html(this.getTplParser().asString(json, tpl));
+
+            if(jQuery.isFunction(tpl)){
+                this.getBody().html(tpl.call(this, json));
+            }else{
+                this.getBody().html(this.getTplParser().asString(json, tpl));
+            }
         }
     },
     
@@ -336,7 +344,7 @@ ludo.View = new Class({
     setContent: function () {
         if (this._html) {
             if (this.children.length) {
-                var el = $('<div>' + this._html + '</div>');
+                var el = jQuery('<div>' + this._html + '</div>');
                 this.getBody().append(el);
             } else {
 
@@ -379,8 +387,8 @@ ludo.View = new Class({
     },
 
     _createDOM: function () {
-        this.els.container = $('<div>');
-        this.els.body = $('<' + this.tagBody + '>');
+        this.els.container = jQuery('<div>');
+        this.els.body = jQuery('<' + this.tagBody + '>');
         this.els.container.append(this.els.body);
     },
 

@@ -316,7 +316,7 @@ ludo.FramedView = new Class({
 		if (!this.els.buttonBar) {
 			this.els.buttonBar = this.els.buttonBar || {};
 
-			var el = this.els.buttonBar.el = $('<div class="ludo-view-buttonbar"></div>');
+			var el = this.els.buttonBar.el = jQuery('<div class="ludo-view-buttonbar"></div>');
 			this.els.container.append(el);
 
 			this.getEl().addClass('ludo-view-with-buttonbar');

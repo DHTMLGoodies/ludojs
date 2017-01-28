@@ -41,14 +41,14 @@ ludo.form.Checkbox = new Class({
             this.els.formEl.on('click', this.valueChange.bind(this));
         }
         if (this.checked) {
-            this.getFormEl().checked = true;
+            this.getFormEl().prop('checked', true);
             this.toggleImage();
         }
     },
 
     addRadioImage:function () {
-        var div = this.els.radioImageDiv = $('<div>');
-        var radioDivInner = $('<div>');
+        var div = this.els.radioImageDiv = jQuery('<div>');
+        var radioDivInner = jQuery('<div>');
         radioDivInner.addClass('ludo-radio-image-inner');
         radioDivInner.setStyles({
             'width':'100%',
@@ -85,7 +85,7 @@ ludo.form.Checkbox = new Class({
      * @memberof ludo.form.Checkbox.prototype
      */
     isChecked:function () {
-        return this.getFormEl().attr('checked') ? true : false;
+        return this.getFormEl().prop('checked') ? true : false;
     },
     /**
      * Set checkbox to checked
@@ -143,9 +143,9 @@ ludo.form.Checkbox = new Class({
 
     setCheckedProperty:function(checked){
         if(checked){
-            this.getFormEl().attr('checked', '1');
+            this.getFormEl().prop('checked', true);
         }else{
-            this.getFormEl().removeAttr('checked');
+            this.getFormEl().prop('checked', false);
         }
     },
 

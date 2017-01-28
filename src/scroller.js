@@ -19,7 +19,7 @@ ludo.Scroller = new Class({
             this.setApplyTo(config.applyTo);
 
         }
-        this.renderTo = config.parent ? $(config.parent) : null;
+        this.renderTo = config.parent ? jQuery(config.parent) : null;
         if (config.mouseWheelSizeCls) {
             this.determineMouseWheelSize(config.mouseWheelSizeCls);
         }
@@ -33,10 +33,10 @@ ludo.Scroller = new Class({
     },
 
     determineMouseWheelSize:function (cls) {
-        var el = $('<div>');
+        var el = jQuery('<div>');
         el.addClass(cls);
         el.css('visibility', 'hidden');
-        $(document.body).append(el);
+        jQuery(document.body).append(el);
         this.wheelSize = el.height();
         if (!this.wheelSize) {
             this.wheelSize = 25;
@@ -45,7 +45,7 @@ ludo.Scroller = new Class({
     },
 
     createElements:function () {
-        this.els.el = $('<div>');
+        this.els.el = jQuery('<div>');
         this.els.el.addClass('ludo-scroller');
         this.els.el.addClass('ludo-scroller-' + this.type);
         this.els.el.css({
@@ -76,7 +76,7 @@ ludo.Scroller = new Class({
 
         this.els.el.scroll(this.performScroll.bind(this));
 
-        this.els.elInner = $('<div>');
+        this.els.elInner = jQuery('<div>');
         this.els.elInner.css('position', 'relative');
         this.els.elInner.html('&nbsp;');
 
@@ -90,7 +90,7 @@ ludo.Scroller = new Class({
                 this.els.applyTo[i].on('mousewheel', this.eventScroll.bind(this));
             }
         }
-        $(window).on('resize', this.resize.bind(this));
+        jQuery(window).on('resize', this.resize.bind(this));
     },
 
     resize:function () {

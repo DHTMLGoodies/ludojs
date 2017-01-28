@@ -197,10 +197,10 @@ ludo.form.Button = new Class({
 
 		// TODO need to bound in order to remove event later. Make this easier and more intuitive
 		this.mouseUpBound = this.mouseUp.bind(this);
-        $(document.body).on('mouseup', this.mouseUpBound);
+        jQuery(document.body).on('mouseup', this.mouseUpBound);
         if (this.defaultSubmit) {
 			this.keyPressBound = this.keyPress.bind(this);
-            $(window).on('keypress', this.keyPressBound);
+            jQuery(window).on('keypress', this.keyPressBound);
         }
     },
 
@@ -229,12 +229,12 @@ ludo.form.Button = new Class({
 
 	remove:function(){
 		this.parent();
-		$(document.body).off('mouseup', this.mouseUpBound);
-		if (this.defaultSubmit) $(window).off('keypress', this.keyPressBound);
+		jQuery(document.body).off('mouseup', this.mouseUpBound);
+		if (this.defaultSubmit) jQuery(window).off('keypress', this.keyPressBound);
 	},
 
     addLabel:function () {
-        var txt = this.els.txt = $('<div>');
+        var txt = this.els.txt = jQuery('<div>');
         txt.addClass('ludo-form-button-value');
         txt.css({
             'width':'100%',
@@ -249,7 +249,7 @@ ludo.form.Button = new Class({
     },
 
     addIcon:function () {
-        var el = this.els.icon = $('<div>');
+        var el = this.els.icon = jQuery('<div>');
         el.css({
             position:'absolute',
             width:this.iconWidths[this.size],
@@ -274,7 +274,7 @@ ludo.form.Button = new Class({
     },
 
     addLeftEdge:function () {
-        var bg = this.els.buttonLeftludo = $('<div>');
+        var bg = this.els.buttonLeftludo = jQuery('<div>');
         bg.addClass('ludo-form-button-bg-left');
         bg.addClass('ludo-form-button-' + this.size +'-bg-left');
         bg.css({
@@ -286,7 +286,7 @@ ludo.form.Button = new Class({
     },
 
     addRightEdge:function () {
-        var bg = $('<div>');
+        var bg = jQuery('<div>');
         bg.addClass('ludo-form-button-bg-right');
         bg.addClass('ludo-form-button-' + this.size + '-bg-right');
         bg.css({

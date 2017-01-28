@@ -158,7 +158,7 @@ ludo.tree.DragDrop = new Class({
     },
 
     createInsertionMarker : function() {
-        var el = this.els.insertionMarker = $('<div>');
+        var el = this.els.insertionMarker = jQuery('<div>');
         el.setStyle('display','none');
         document.body.append(el);
     },

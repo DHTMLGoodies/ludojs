@@ -34,7 +34,7 @@ ludo.view.TitleBar = new Class({
     },
 
     createDOM:function () {
-        var el = this.els.el = $('<div>');
+        var el = this.els.el = jQuery('<div>');
         el.addClass(this.view.boldTitle ? 'ludo-framed-view-titlebar' : 'ludo-view-titlebar');
         var left = 0;
         if (this.view.icon) {
@@ -62,7 +62,7 @@ ludo.view.TitleBar = new Class({
 
     createTitleDOM:function () {
 
-        this.els.title = $('<div class="ludo-framed-view-titlebar-title"></div>');
+        this.els.title = jQuery('<div class="ludo-framed-view-titlebar-title"></div>');
         this.els.el.append(this.els.title);
 
         this.setTitle(this.view.title);
@@ -75,7 +75,7 @@ ludo.view.TitleBar = new Class({
     getButtonContainer:function () {
 
 
-        var el = this.els.controls = $('<div class="ludo-title-bar-button-container"></div>');
+        var el = this.els.controls = jQuery('<div class="ludo-title-bar-button-container"></div>');
         el.css('cursor.default');
 
         this.createEdge('left', el);
@@ -90,7 +90,7 @@ ludo.view.TitleBar = new Class({
     },
 
     createEdge:function (pos, parent) {
-        var el = $('<div class="ludo-title-bar-button-container-' + pos + '-edge"></div>');
+        var el = jQuery('<div class="ludo-title-bar-button-container-' + pos + '-edge"></div>');
         parent.append(el);
 
         el.attr("style", 'position:absolute;z-index:1;' + pos + ':0;top:0;width:55%;height:100%;background-repeat:no-repeat;background-position:top ' + pos);
@@ -110,7 +110,7 @@ ludo.view.TitleBar = new Class({
     getButton:function (buttonConfig) {
         buttonConfig = ludo.util.isString(buttonConfig) ? { type:buttonConfig } : buttonConfig;
 
-        var b = this.els.buttons[buttonConfig.type] = $('<div>');
+        var b = this.els.buttons[buttonConfig.type] = jQuery('<div>');
         b.id = 'b-' + String.uniqueID();
         b.attr("class", 'ludo-title-bar-button ludo-title-bar-button-' + buttonConfig.type);
 
@@ -164,13 +164,13 @@ ludo.view.TitleBar = new Class({
     },
 
     enterButton:function (e) {
-        var el = $(e.target);
+        var el = jQuery(e.target);
         var type = el.attr('buttonType');
         el.addClass('ludo-title-bar-button-' + type + '-over');
     },
 
     leaveButton:function (e) {
-        var el = $(e.target);
+        var el = jQuery(e.target);
         el.removeClass('ludo-title-bar-button-' + el.attr('buttonType') + '-over');
     },
 
@@ -199,7 +199,7 @@ ludo.view.TitleBar = new Class({
             this.els.controls.css('display',  width > 0 ? '' : 'none');
         }
         if (this.icon) {
-            this.els.title.css('left', $(this.els.icon).css('width'));
+            this.els.title.css('left', jQuery(this.els.icon).css('width'));
         }
     },
 

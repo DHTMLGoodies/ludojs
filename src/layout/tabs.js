@@ -15,6 +15,10 @@ ludo.layout.Tabs = new Class({
     currentZIndex: 3,
     activeTabId: undefined,
 
+    css:{
+        overflow:'hidden'
+    },
+
     tabParent: undefined,
 
     tabPositions: undefined,
@@ -185,7 +189,7 @@ ludo.layout.Tabs = new Class({
                 this.tabMenuEl = this.getBody();
                 return this.tabMenuEl;
             }
-            this.tabMenuEl = $('<div class="ludo-tab-expand-box ludo-tab-expand-box-' + this.tabPos + '"></div>');
+            this.tabMenuEl = jQuery('<div class="ludo-tab-expand-box ludo-tab-expand-box-' + this.tabPos + '"></div>');
             this.getBody().append(this.tabMenuEl);
 
             var s = this.getBody().outerHeight() - this.elLine.height();
@@ -209,11 +213,11 @@ ludo.layout.Tabs = new Class({
     },
 
     enterMenuIcon: function (e) {
-        $(e.target).addClass('ludo-tab-expand-box-' + this.tabPos + '-over');
+        jQuery(e.target).addClass('ludo-tab-expand-box-' + this.tabPos + '-over');
     },
 
     leaveMenuIcon: function (e) {
-        $(e.target).removeClass('ludo-tab-expand-box-' + this.tabPos + '-over');
+        jQuery(e.target).removeClass('ludo-tab-expand-box-' + this.tabPos + '-over');
     },
 
     getMenu: function () {
@@ -250,7 +254,7 @@ ludo.layout.Tabs = new Class({
             this.menu.getEl().mousedown(ludo.util.cancelEvent);
             ;
             ludo.EffectObject.on('start', this.hideMenu.bind(this));
-            $(document.documentElement).mousedown(this.domClick.bind(this));
+            jQuery(document.documentElement).mousedown(this.domClick.bind(this));
 
         }
         return this.menu;
@@ -303,7 +307,7 @@ ludo.layout.Tabs = new Class({
     createTabFor: function (child) {
 
         if (this.tabParent == undefined) {
-            this.tabParent = $('<div style="position:absolute" class="ludo-tab-layout-parent-for-tabs ludo-tab-layout-parent-for-tabs-' + this.tabPos + '"></div>');
+            this.tabParent = jQuery('<div style="position:absolute" class="ludo-tab-layout-parent-for-tabs ludo-tab-layout-parent-for-tabs-' + this.tabPos + '"></div>');
             if (this.tabPos == 'top' || this.tabPos == 'bottom') {
                 this.tabParent.css({
                     height: this.getBody().height(),
@@ -340,7 +344,7 @@ ludo.layout.Tabs = new Class({
     },
 
     addCloseButton: function (node, child) {
-        var el = $('<div>');
+        var el = jQuery('<div>');
         el.addClass('ludo-tab-close ludo-tab-close-' + this.tabPos);
         el.mouseenter(this.enterCloseButton.bind(this));
         el.mouseleave(this.leaveCloseButton.bind(this));
@@ -384,11 +388,11 @@ ludo.layout.Tabs = new Class({
     },
 
     enterCloseButton: function (e) {
-        $(e.target).addClass('ludo-tab-close-' + this.tabPos + '-over');
+        jQuery(e.target).addClass('ludo-tab-close-' + this.tabPos + '-over');
     },
 
     leaveCloseButton: function (e) {
-        $(e.target).removeClass('ludo-tab-close-' + this.tabPos + '-over');
+        jQuery(e.target).removeClass('ludo-tab-close-' + this.tabPos + '-over');
     },
 
     getPosAttribute: function () {
@@ -409,7 +413,7 @@ ludo.layout.Tabs = new Class({
 
 
     getPlainTabFor: function (child) {
-        var el = $('<div>');
+        var el = jQuery('<div>');
         this.getBody().append(el);
         el.className = 'ludo-tab-strip-tab ludo-tab-strip-tab-' + this.tabPos;
         el.html('<div class="ludo-tab-strip-tab-bg"></div><span style="z-index:2">' + this.getTitleFor(child) + '</span>');
@@ -417,10 +421,10 @@ ludo.layout.Tabs = new Class({
     },
 
     getSVGTabFor: function (child) {
-        var el = $('<div><div class="ludo-tab-strip-tab-bg"></div></div>');
+        var el = jQuery('<div><div class="ludo-tab-strip-tab-bg"></div></div>');
         this.getBody().append(el);
 
-        var svgEl = $('<div style="z-index:2;position:relative">');
+        var svgEl = jQuery('<div style="z-index:2;position:relative">');
         el.append(svgEl);
         var box = new ludo.layout.TextBox({
             renderTo: svgEl,
@@ -506,7 +510,7 @@ ludo.layout.Tabs = new Class({
         this.getEl().addClass('ludo-tab-strip');
         this.getEl().addClass('ludo-tab-strip-' + this.tabPos);
 
-        var el = $('<div>');
+        var el = jQuery('<div>');
         el.addClass('ludo-tab-strip-line');
         this.elLine = el;
         this.getBody().append(el);

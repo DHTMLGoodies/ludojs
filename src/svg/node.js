@@ -233,7 +233,7 @@ ludo.svg.Node = new Class({
             while (target.tagName.toLowerCase() != 'g') {
                 target = target.parentNode;
             }
-            this.svgCoordinates = $(target).position();
+            this.svgCoordinates = jQuery(target).position();
 
             console.log(this.svgCoordinates);
 

@@ -11,6 +11,7 @@
  * one with weight of 1 and one width weight of 2, the first column will use get its fixed with of 100.
  * The second one will get a width of 100(300(remaining width) * 1(weight) / 3(total weight)) and last column a width of 200
  * (300(remaining width) * 2(weight) / 3(total weight))
+ * @param {Number} config.rowHeight Optional fixed height of every row
  * @param {Number} config.row true to create a new row. (Option for child layout)
  * @param {Number} config.vAlign Optional Vertical alignment of View(top|middle|bottom|baseline). Default: "top"(Option for child layout)
  * @param {Number} config.simple true when there are no colspan or rowspan. When this option is true, you don't need to set row:true to specify new rows.
@@ -61,13 +62,15 @@ ludo.layout.Table = new Class({
     fixedWidth: undefined,
     totalWeight: undefined,
     countCellsInNextRow: undefined,
-    simple:false,
+    simple: false,
+    rowHeight: undefined,
 
     onCreate: function () {
         this.parent();
 
         this.countChildren = 0;
         this.cols = this.view.layout.columns;
+        if (this.view.layout.rowHeight != undefined)this.rowHeight = this.view.layout.rowHeight;
         this.fixedWidth = 0;
         this.totalWeight = 0;
         this.simple = this.view.layout.simple || this.simple;
@@ -77,12 +80,12 @@ ludo.layout.Table = new Class({
             var numWidth = col.width != undefined ? col.width : 0;
             this.fixedWidth += numWidth;
             this.totalWeight += (col.weight != undefined ? col.weight : 0);
-            var width = numWidth != undefined ? ' width="' + numWidth + '"' : "";
+            var width = numWidth != undefined && numWidth > 0 ? ' width="' + numWidth + '"' : "";
             cols.push('<col' + width + '>');
         }
 
-        this.table = $('<table style="padding:0;margin:0;border-collapse: collapse"><colgroup>' + (cols.join('')) + '</table>');
-        this.tbody = $('<tbody></tbody>');
+        this.table = jQuery('<table style="padding:0;margin:0;border-collapse: collapse"><colgroup>' + (cols.join('')) + '</table>');
+        this.tbody = jQuery('<tbody></tbody>');
         this.table.append(this.tbody);
 
         this.view.getBody().append(this.table);
@@ -96,7 +99,7 @@ ludo.layout.Table = new Class({
     getParentForNewChild: function (child) {
         if (this.countChildren == 0 || child.layout.row || (this.simple && this.countChildren % this.cols.length == 0)) {
             child.layout.row = true;
-            this.currentRow = $('<tr></tr>');
+            this.currentRow = jQuery('<tr style="border:none;padding:0;margin:0"></tr>');
             this.tbody.append(this.currentRow);
             this.countCellsInNextRow = this.cols.length;
 
@@ -106,7 +109,7 @@ ludo.layout.Table = new Class({
 
         var vAlign = child.layout.vAlign ? child.layout.vAlign : "top";
 
-        var cell = $('<td style="vertical-align:' + vAlign + ';margin:0;padding:0" colspan="' + colspan + '" rowspan="' + rowspan + '"></td>');
+        var cell = jQuery('<td style="vertical-align:' + vAlign + ';margin:0;padding:0" colspan="' + colspan + '" rowspan="' + rowspan + '"></td>');
         this.currentRow.append(cell);
         this.countChildren++;
         return cell;
@@ -122,7 +125,7 @@ ludo.layout.Table = new Class({
             if (child.layout.row)curCellIndex = 0;
 
             var config = {};
-
+            if (this.rowHeight != undefined)config.height = this.rowHeight;
             if (child.layout.height != undefined)config.height = child.layout.height;
 
             config.width = this.getWidthOfChild(child, curCellIndex);
@@ -134,13 +137,13 @@ ludo.layout.Table = new Class({
 
     },
 
-    getWrappedHeight:function(){
+    getWrappedHeight: function () {
         return this.parent() + this.table.outerHeight();
     },
 
     getWidthOfChild: function (child, colIndex) {
         var colspan = child.layout.colspan ? child.layout.colspan : 1;
-        if(child.layout.width)return child.layout.width;
+        if (child.layout.width)return child.layout.width;
         var width = 0;
         var totalWidth = this.view.getBody().width();
         var weightWidth = totalWidth - this.fixedWidth;

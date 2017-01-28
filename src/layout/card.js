@@ -34,7 +34,7 @@ ludo.layout.Card = new Class({
 
 	getParentForNewChild:function(child){
 		if(this.parentDiv == undefined){
-			this.parentDiv = $('<div style="position:absolute"></div>');
+			this.parentDiv = jQuery('<div style="position:absolute"></div>');
 			this.view.getBody().append(this.parentDiv);
 			this.parentDiv.on(ludo.util.getDragStartEvent(), this.touchStart.bind(this));
 		}

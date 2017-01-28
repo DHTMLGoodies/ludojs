@@ -100,8 +100,8 @@ ludo.effect.Resize = new Class({
     },
 
     addDragEvents:function () {
-        $(document.body).on(ludo.util.getDragEndEvent(), this.stopResize.bind(this));
-        $(document.body).on(ludo.util.getDragMoveEvent(), this.resize.bind(this));
+        jQuery(document.body).on(ludo.util.getDragEndEvent(), this.stopResize.bind(this));
+        jQuery(document.body).on(ludo.util.getDragMoveEvent(), this.resize.bind(this));
     },
 
     /**
@@ -120,7 +120,7 @@ ludo.effect.Resize = new Class({
      */
 
     addHandle:function (region, cssClass) {
-        var el = this.els.handle[region] = $('<div>');
+        var el = this.els.handle[region] = jQuery('<div>');
         el.addClass('ludo-view-resize-el');
         el.addClass(this.getCssFor(region));
         if (cssClass)el.addClass(cssClass);
@@ -133,7 +133,7 @@ ludo.effect.Resize = new Class({
 
     startResize:function (e) {
 
-        var region = $(e.target).attr('region');
+        var region = jQuery(e.target).attr('region');
 
         this.fireEvent('start', region);
 
@@ -260,11 +260,11 @@ ludo.effect.Resize = new Class({
 
     setBodyCursor:function () {
 
-        $(document.body).css('cursor', this.cursor(this.dragProperties.region) + '-resize');
+        jQuery(document.body).css('cursor', this.cursor(this.dragProperties.region) + '-resize');
     },
 
     revertBodyCursor:function () {
-        $(document.body).css('cursor', 'default');
+        jQuery(document.body).css('cursor', 'default');
     },
 
     resize:function (e) {
@@ -469,13 +469,13 @@ ludo.effect.Resize = new Class({
 
     getShim:function () {
         if (!this.els.shim) {
-            var el = this.els.shim = $('<div>');
+            var el = this.els.shim = jQuery('<div>');
             el.addClass('ludo-shim-resize');
             el.css({
                 position:'absolute',
                 'z-index':50000
             });
-            $(document.body).append(el);
+            jQuery(document.body).append(el);
         }
 
         return this.els.shim;
@@ -507,10 +507,10 @@ ludo.effect.Resize = new Class({
     },
 
     getBodyWidth:function () {
-        return $(document.documentElement).width();
+        return jQuery(document.documentElement).width();
     },
     getBodyHeight:function () {
-        return $(document.documentElement).height();
+        return jQuery(document.documentElement).height();
     },
 
     getScalingFactors:function () {

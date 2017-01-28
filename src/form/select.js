@@ -8,60 +8,60 @@
  @param {Object} config.emptyItem. Object shown when no value selected, example: { "text": "Please select", value: "" }
  @param {Array} config.options. Array of values, example: [{value:1, text: "First item"},{value:2, text:"Second item" }]
  @example
-	 {
-		 type:'form.Select',
-		 name:'country',
-		 valueKey:'id',
-		 textKey:'title',
-		 emptyItem:{
-			 id:'',title:'Where do you live?'
-		 },
-		 dataSource:{
-			 resource:'Country',
-			 service:'read'
-		 }
-	 }
+ {
+     type:'form.Select',
+     name:'country',
+     valueKey:'id',
+     textKey:'title',
+     emptyItem:{
+         id:'',title:'Where do you live?'
+     },
+     dataSource:{
+         resource:'Country',
+         service:'read'
+     }
+ }
  to populate the select box from the Country service on the server. The "id" column will be used as value for the options
  and title for the displayed text.
 
  @example
-	 {
-		 type:'form.Select',
-		 emptyItem:{
-			 value:'',text:'Please select an option'
-		 },
-		 options:[
-			 { value:'1',text : 'Option a' },
-			 { value:'2',text : 'Option b' },
-			 { value:'3',text : 'Option c' }
-		 ]
-	 }
+ {
+     type:'form.Select',
+     emptyItem:{
+         value:'',text:'Please select an option'
+     },
+     options:[
+         { value:'1',text : 'Option a' },
+         { value:'2',text : 'Option b' },
+         { value:'3',text : 'Option c' }
+     ]
+ }
  */
 ludo.form.Select = new Class({
-    Extends:ludo.form.Element,
-    type:'form.Select',
-    emptyItem:undefined,
-    valueKey:'value',
-    textKey:'text',
-    inputTag:'select',
-    inputType:'',
-	dataSource:{},
+    Extends: ludo.form.Element,
+    type: 'form.Select',
+    emptyItem: undefined,
+    valueKey: 'value',
+    textKey: 'text',
+    inputTag: 'select',
+    inputType: '',
+    dataSource: {},
 
-    options:undefined,
+    options: undefined,
 
-	defaultDS:'dataSource.JSONArray',
+    defaultDS: 'dataSource.JSONArray',
 
-    __construct:function (config) {
+    __construct: function (config) {
         this.parent(config);
         this.setConfigParams(config, ['emptyItem', 'options', 'valueKey', 'textKey']);
-        if(!this.emptyItem && this.inlineLabel){
+        if (!this.emptyItem && this.inlineLabel) {
             this.emptyItem = {};
             this.emptyItem[this.textKey] = this.inlineLabel;
             this.inlineLabel = undefined;
         }
     },
 
-    ludoEvents:function () {
+    ludoEvents: function () {
         this.parent();
         if (this.dataSource) {
             if (this.options && this.dataSourceObj) {
@@ -69,7 +69,7 @@ ludo.form.Select = new Class({
                     this.dataSourceObj.addRecord(this.options[i]);
                 }
             }
-			this.populate();
+            this.populate();
             var ds = this.getDataSource();
             ds.addEvent('select', this.selectRecord.bind(this));
             ds.addEvent('update', this.populate.bind(this));
@@ -78,25 +78,36 @@ ludo.form.Select = new Class({
         }
     },
 
-    selectRecord:function (record) {
-        this._set(record[this.valueKey]);
+    selectRecord: function (record) {
+        if (!jQuery.isPlainObject(record)) {
+            this.__set(record);
+        } else {
+            this._set(record[this.valueKey]);
+
+        }
         this.toggleDirtyFlag();
     },
 
-    populate:function () {
+    populate: function () {
         var data = this.dataSourceObj.getData() || [];
 
         this.getFormEl().find('option').remove();
         if (this.emptyItem) {
-            this.addOption(this.emptyItem[ this.valueKey ], this.emptyItem[ this.textKey ]);
+            this.addOption(this.emptyItem[this.valueKey], this.emptyItem[this.textKey]);
         }
-        for (var i = 0, count = data.length; i < count; i++) {
-            this.addOption(data[i][ this.valueKey ], data[i][ this.textKey ]);
-        }
+
+        var isObj = data.length > 0 && jQuery.isPlainObject(data[0]);
+        jQuery.each(data, function (i, item) {
+            if (isObj) {
+                this.addOption(item[this.valueKey], item[this.textKey]);
+            } else {
+                this.addOption(item, item);
+            }
+        }.bind(this));
 
         if (this.value) {
             this._set(this.value);
-			this.setFormElValue(this.value);
+            this.setFormElValue(this.value);
         }
     },
 
@@ -107,12 +118,12 @@ ludo.form.Select = new Class({
      * @param {String} text
      * @memberof ludo.form.Select.prototype
      */
-    addOption:function (value, text) {
-        var option = $('<option value="' + value + '">' + text + '</option>');
+    addOption: function (value, text) {
+        var option = jQuery('<option value="' + value + '">' + text + '</option>');
         this.getFormEl().append(option);
     },
 
-    resizeDOM:function () {
+    resizeDOM: function () {
         this.parent();
     }
 });

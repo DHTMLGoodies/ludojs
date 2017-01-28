@@ -74,7 +74,7 @@ ludo.form.OnOff = new Class({
         this.width = 100;
         this.height= 30;
 
-        this.el = $('<div class="on-off-switch"></div>');
+        this.el = jQuery('<div class="on-off-switch"></div>');
         this.getBody().append(this.el);
 
         this.renderTrack();
@@ -96,10 +96,10 @@ ludo.form.OnOff = new Class({
         this.thumb.on("mouseenter", this.enterThumb.bind(this));
         this.thumb.on("mouseleave", this.leaveThumb.bind(this));
 
-        $(document.documentElement).on("touchmove", this.drag.bind(this));
-        $(document.documentElement).on("mousemove", this.drag.bind(this));
-        $(document.documentElement).on("mouseup", this.endDrag.bind(this));
-        $(document.documentElement).on("touchend", this.endDrag.bind(this));
+        jQuery(document.documentElement).on("touchmove", this.drag.bind(this));
+        jQuery(document.documentElement).on("mousemove", this.drag.bind(this));
+        jQuery(document.documentElement).on("mouseup", this.endDrag.bind(this));
+        jQuery(document.documentElement).on("touchend", this.endDrag.bind(this));
     },
 
     __rendered:function(){
@@ -203,28 +203,28 @@ ludo.form.OnOff = new Class({
 
     renderTrack: function () {
 
-        this.track = $('<div class="on-off-switch-track" style="border-width:' + this.trackBorderWidth + 'px"></div>');
+        this.track = jQuery('<div class="on-off-switch-track" style="border-width:' + this.trackBorderWidth + 'px"></div>');
 
         if (this.trackBorderColor) {
             this.track.css("border-color", this.trackBorderColor);
         }
         this.el.append(this.track);
 
-        this.onOffTrackContainer = $('<div style="position:absolute"></div>');
+        this.onOffTrackContainer = jQuery('<div style="position:absolute"></div>');
         this.track.append(this.onOffTrackContainer);
 
 
-        this.trackOn = $('<div class="on-off-switch-track-on" style="border-radius:' + 0 + 'px;border-width:' + this.trackBorderWidth + 'px"><div class="track-on-gradient"></div></div>');
+        this.trackOn = jQuery('<div class="on-off-switch-track-on" style="border-radius:' + 0 + 'px;border-width:' + this.trackBorderWidth + 'px"><div class="track-on-gradient"></div></div>');
         this.onOffTrackContainer.append(this.trackOn);
-        this.onTextEl = $('<div class="on-off-switch-text on-off-switch-text-on">' + this.textOn + '</div>');
+        this.onTextEl = jQuery('<div class="on-off-switch-text on-off-switch-text-on">' + this.textOn + '</div>');
         this.trackOn.append(this.onTextEl);
 
         if (this.textColorOn) {
             this.onTextEl.css("color", this.textColorOn);
         }
 
-        this.trackOff = $('<div class="on-off-switch-track-off" style="overflow:hidden;border-radius:' + 0 + 'px;border-width:' + this.trackBorderWidth + 'px"><div class="track-off-gradient"></div></div>');
-        this.offTextEl = $('<div class="on-off-switch-text on-off-switch-text-off">' + this.textOff + '</div>');
+        this.trackOff = jQuery('<div class="on-off-switch-track-off" style="overflow:hidden;border-radius:' + 0 + 'px;border-width:' + this.trackBorderWidth + 'px"><div class="track-off-gradient"></div></div>');
+        this.offTextEl = jQuery('<div class="on-off-switch-text on-off-switch-text-off">' + this.textOff + '</div>');
         this.onOffTrackContainer.append(this.trackOff);
         this.trackOff.append(this.offTextEl);
 
@@ -235,8 +235,8 @@ ludo.form.OnOff = new Class({
         this.styleText(this.onTextEl);
         this.styleText(this.offTextEl);
 
-        this.whiteEl = $('<div class="on-off-switch-track-white"></div>');
-        this.whiteEl2 = $('<div class="on-off-switch-track-white"></div>');
+        this.whiteEl = jQuery('<div class="on-off-switch-track-white"></div>');
+        this.whiteEl2 = jQuery('<div class="on-off-switch-track-white"></div>');
         this.trackOn.append(this.whiteEl);
         this.trackOff.append(this.whiteEl2);
 
@@ -256,10 +256,10 @@ ludo.form.OnOff = new Class({
 
     renderThumb: function () {
         var borderSize = this.getBorderSize();
-        this.thumb = $('<div class="on-off-switch-thumb" ></div>');
-        var shadow = this.thumbShadow = $('<div class="on-off-switch-thumb-shadow" style="border-width:' + borderSize + 'px;"></div>');
+        this.thumb = jQuery('<div class="on-off-switch-thumb" ></div>');
+        var shadow = this.thumbShadow = jQuery('<div class="on-off-switch-thumb-shadow" style="border-width:' + borderSize + 'px;"></div>');
         this.thumb.append(shadow);
-        this.thumbColor = $('<div class="on-off-switch-thumb-color" style="left:' + borderSize + 'px;top:' + borderSize + 'px"></div>');
+        this.thumbColor = jQuery('<div class="on-off-switch-thumb-color" style="left:' + borderSize + 'px;top:' + borderSize + 'px"></div>');
         this.thumb.append(this.thumbColor);
         if (this.trackColorOff) {
             this.trackOff.css("background-color", this.trackColorOff);

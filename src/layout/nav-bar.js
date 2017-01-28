@@ -126,7 +126,7 @@ ludo.layout.NavBar = new Class({
 
     getParentForNewChild:function () {
         if (!this.slideEl) {
-            this.slideEl = $('<div style="height:100%;position:absolute"></div>');
+            this.slideEl = jQuery('<div style="height:100%;position:absolute"></div>');
             this.view.getBody().append(this.slideEl);
 
         }

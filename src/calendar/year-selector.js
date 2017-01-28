@@ -34,7 +34,7 @@ ludo.calendar.YearSelector = new Class({
     },
 
     getDomForAYear:function (year) {
-        var el = $('<div>');
+        var el = jQuery('<div>');
         el.html( '<span>' + year + '</span>');
         el.setProperty('year', year);
         el.addClass('ludo-calendar-year');

@@ -4,7 +4,7 @@ ludo.Effect = new Class({
 
 	initialize:function(){
 		if(ludo.util.isIe()){
-			$(document.documentElement).on('selectstart', this.cancelSelection.bind(this));
+			jQuery(document.documentElement).on('selectstart', this.cancelSelection.bind(this));
 		}
 	},
 
@@ -26,11 +26,11 @@ ludo.Effect = new Class({
 	},
 
 	disableSelection:function(){
-		$(document.body).addClass("ludo-unselectable");
+		jQuery(document.body).addClass("ludo-unselectable");
 	},
 
 	enableSelection:function(){
-		$(document.body).removeClass('ludo-unselectable');
+		jQuery(document.body).removeClass('ludo-unselectable');
 	},
 
 	cancelSelection:function(){

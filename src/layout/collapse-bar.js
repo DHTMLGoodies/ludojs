@@ -78,7 +78,7 @@ ludo.layout.CollapseBar = new Class({
 	},
 
 	addButton:function(view){
-		var button = this.buttons[view.id] = $('<div>');
+		var button = this.buttons[view.id] = jQuery('<div>');
 		button.attr("id", 'button-' + view.id);
 		button.mouseenter(this.enterButton.bind(this));
 		button.mouseleave(this.leaveButton.bind(this));
@@ -172,7 +172,7 @@ ludo.layout.CollapseBar = new Class({
 	},
 
 	getButtonByDom:function(el){
-		el = $(el);
+		el = jQuery(el);
 		var tag = el.prop("tagName").toLowerCase();
 		while(tag === 'svg' || tag === 'text' || !el.hasClass('collapse-bar-button')){
 			el = el.parent();

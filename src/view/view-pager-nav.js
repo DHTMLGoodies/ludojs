@@ -45,8 +45,8 @@ ludo.view.ViewPagerNav = new Class({
         this.getBody().empty();
 
         for(var i=0;i<this.viewPager.count;i++){
-            var parent = $('<div class="ludojs-viewpager-dot-parent" style="position:absolute"></div>');
-            var dot = $('<div class="ludojs-viewpager-dot" style="position:absolute"></div>');
+            var parent = jQuery('<div class="ludojs-viewpager-dot-parent" style="position:absolute"></div>');
+            var dot = jQuery('<div class="ludojs-viewpager-dot" style="position:absolute"></div>');
             parent.attr('data-index', i);
             parent.append(dot);
             this.getBody().append(parent);
@@ -59,7 +59,7 @@ ludo.view.ViewPagerNav = new Class({
     },
 
     clickDot:function(e){
-        var index = parseInt($(e.currentTarget).attr("data-index"));
+        var index = parseInt(jQuery(e.currentTarget).attr("data-index"));
         this.viewPager.goToPage(index);
     },
 

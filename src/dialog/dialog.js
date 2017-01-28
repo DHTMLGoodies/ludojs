@@ -60,8 +60,8 @@ ludo.dialog.Dialog = new Class({
 
     getShim:function(){
         if(this.els.shim === undefined){
-            var el = this.els.shim = $('<div>');
-			$(document.body).append(el);
+            var el = this.els.shim = jQuery('<div>');
+			jQuery(document.body).append(el);
 			el.addClass('ludo-dialog-shim');
             el.css('display', 'none');
         }
@@ -119,7 +119,7 @@ ludo.dialog.Dialog = new Class({
 	},
 
 	resizeShim:function () {
-		var b = $(document.body);
+		var b = jQuery(document.body);
 		var size = { x: b.width(), y: b.height() };
         this.getShim().css('width',  size.x);
         this.getShim().css('height',  size.y + 'px');

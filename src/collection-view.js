@@ -35,7 +35,7 @@ ludo.CollectionView = new Class({
 
     emptyEl: function () {
         if (this._emptyEl === undefined) {
-            this._emptyEl = $('<div class="ludo-empty-text" style="position:absolute">' + this.getEmptyText() + '</div>');
+            this._emptyEl = jQuery('<div class="ludo-empty-text" style="position:absolute">' + this.getEmptyText() + '</div>');
             this.getBody().append(this._emptyEl);
         }
         return this._emptyEl;
@@ -49,7 +49,7 @@ ludo.CollectionView = new Class({
 
     nodeContainer: function () {
         if (this._nodeContainer === undefined) {
-            this._nodeContainer = $('<div style="position:relative">');
+            this._nodeContainer = jQuery('<div style="position:relative">');
             this.getBody().append(this._nodeContainer);
 
         }

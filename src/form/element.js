@@ -94,7 +94,7 @@ ludo.form.Element = new Class({
             this.setLinkWith(config.linkWith);
         }
 
-        if (this.dataSource) {
+        if (this.dataSource && !this.dataSource.data) {
             this.isReady = false;
         }
         this.initialValue = this.constructorValue = this.value;
@@ -323,11 +323,6 @@ ludo.form.Element = new Class({
 
     _set:function(value){
 
-        if (!this.isReady) {
-            if(value)this._set.delay(50, this, value);
-            return;
-        }
-
         if (value == this.value) {
             return value;
         }
@@ -359,30 +354,7 @@ ludo.form.Element = new Class({
     setValue:function (value) {
         console.warn("Use of deprecated setValue");
         console.trace();
-        if (!this.isReady) {
-            if(value)this.val.delay(50, this, value);
-            return;
-        }
-
-        if (value == this.value) {
-            return;
-        }
-
-        this.setFormElValue(value);
-        this.value = value;
-
-
-
-        this.validate();
-
-        if (this.wasValid) {
-
-            this.fireEvent('valueChange', [this._get(), this]);
-            if (this.stateful)this.fireEvent('state');
-            if (this.linkWith)this.updateLinked();
-        }
-
-        this.fireEvent('value', value);
+        return this._set(value);
     },
 
     setFormElValue:function(value){
@@ -508,6 +480,9 @@ ludo.form.Element = new Class({
 
     setReady:function () {
         this.isReady = true;
+        var val = this.value;
+        this.value = undefined;
+        if(val)this._set(val);
     },
 
     updateLinked:function () {
@@ -543,9 +518,9 @@ ludo.form.Element = new Class({
             return;
         }
 
-        this.els.inputCell = $('<div class="input-cell"></div>');
+        this.els.inputCell = jQuery('<div class="input-cell"></div>');
         this.getBody().append(this.els.inputCell);
-        this.els.formEl = $('<' + this.inputTag + '>');
+        this.els.formEl = jQuery('<' + this.inputTag + '>');
 
         if (this.inputType) {
             this.els.formEl.attr('type', this.inputType);

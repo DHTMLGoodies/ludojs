@@ -45,7 +45,7 @@ ludo.ColResize = new Class({
 
     getHandle:function (key, isVisible) {
 
-        var el = $('<div>');
+        var el = jQuery('<div>');
         el.addClass('ludo-column-resize-handle');
         el.css({
             'top':0,
@@ -66,9 +66,9 @@ ludo.ColResize = new Class({
     },
 
     startColResize:function (e) {
-        var columnName = $(e.target).attr('col-reference');
+        var columnName = jQuery(e.target).attr('col-reference');
         this.fireEvent('startresize', columnName);
-        $(e.target).addClass('ludo-resize-handle-active');
+        jQuery(e.target).addClass('ludo-resize-handle-active');
         var offset = this.getLeftOffsetOfColResizeHandle();
 
         var r = this.resizeProperties;
@@ -76,11 +76,11 @@ ludo.ColResize = new Class({
         r.max = this.getMaxPos() - offset;
 
         r.mouseX = this.resizeProperties.currentX = e.pageX;
-        r.elX = parseInt($(e.target).css('left').replace('px', ''));
+        r.elX = parseInt(jQuery(e.target).css('left').replace('px', ''));
         r.currentX = this.resizeProperties.elX;
 
         r.active = true;
-        r.el = $(e.target);
+        r.el = jQuery(e.target);
         r.index = columnName;
 
         return false;
@@ -143,10 +143,10 @@ ludo.ColResize = new Class({
     },
 
     mouseOverResizeHandle:function (e) {
-        $(e.target).addClass('ludo-grid-resize-handle-over');
+        jQuery(e.target).addClass('ludo-grid-resize-handle-over');
     },
     mouseOutResizeHandle:function (e) {
-        $(e.target).removeClass('ludo-grid-resize-handle-over');
+        jQuery(e.target).removeClass('ludo-grid-resize-handle-over');
     },
 
     isActive:function(){

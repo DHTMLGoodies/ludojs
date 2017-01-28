@@ -51,7 +51,18 @@ ludo.layout.LinearVertical = new Class({
 				var config = {
 					width:c.type == 'layout.Resizer' ? width: cW
 				};
-				
+
+				if(w && c.layout.align){
+					switch(c.layout.align){
+						case 'right':
+							config.left = this.viewport.width - c.layout.width;
+							break;
+						case 'center':
+							config.left = (this.viewport.width / 2) - (c.layout.width / 2);
+							break;
+					}
+				}
+
 				if (this.hasLayoutWeight(c)) {
 					if (c.id == this.idLastDynamic) {
 						config.height = remainingHeight;
@@ -96,8 +107,16 @@ ludo.layout.LinearVertical = new Class({
 		if (this.isResizable(child)) {
 			var isLastSibling = this.isLastSibling(child);
 
-			var resizer = this.getResizableFor(child, isLastSibling ? 'above' : 'below');
-			this.addChild(resizer, child, isLastSibling ? 'before' : 'after');
+			var rPos;
+			if(child.layout && child.layout.resizePos){
+				rPos = child.layout.resizePos;
+			}else{
+				rPos = isLastSibling ? 'above' : 'below';
+			}
+
+			console.log(rPos);
+			var resizer = this.getResizableFor(child, rPos);
+			this.addChild(resizer, child, rPos == 'above' ? 'before' : 'after');
 		}
 
 		child.getEl().css('position', 'absolute');

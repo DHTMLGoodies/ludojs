@@ -85,7 +85,7 @@ ludo.form.Spinner = new Class({
     },
 
     createSpinnerContainer:function () {
-        var el = this.els.spinnerContainer = $('<div class="ludo.spinbox-container"></div>');
+        var el = this.els.spinnerContainer = jQuery('<div class="ludo.spinbox-container"></div>');
         this.getFormEl().parent().append(el);
         el.append(this.getFormEl());
     },
@@ -96,7 +96,7 @@ ludo.form.Spinner = new Class({
             cls:''
         }, config);
 
-        var el = $('<' + config.tag + '>');
+        var el = jQuery('<' + config.tag + '>');
         el.addClass(config.cls);
 
         if (config.renderTo) {
@@ -195,17 +195,17 @@ ludo.form.Spinner = new Class({
         this.els.downArrow.on('mousedown', this._arrowMouseDown.bind(this));
         this.els.downArrow.on('mouseup', this._arrowMouseUp.bind(this));
 
-        $(document.documentElement).on('mouseup', this._clearMode.bind(this));
+        jQuery(document.documentElement).on('mouseup', this._clearMode.bind(this));
 
         if (this.els.label) {
             this.els.label.css('cursor', 'w-resize');
-            $(this.els.label).on({
+            jQuery(this.els.label).on({
                 'mousedown':this._initNudge.bind(this),
                 'selectstart':function () {
                     return false;
                 }
             });
-            $(document.documentElement).on('mousemove', this._nudge.bind(this));
+            jQuery(document.documentElement).on('mousemove', this._nudge.bind(this));
         }
     },
     _arrowMode:function () {
@@ -235,8 +235,8 @@ ludo.form.Spinner = new Class({
         }
     },
     _arrowMouseDown:function (e) {
-        $(e.target).addClass('ludo-spinbox-arrow-downeffect');
-        var m = $(e.target).hasClass("ludo-spinbox-arrow-up") ? "up":"down";
+        jQuery(e.target).addClass('ludo-spinbox-arrow-downeffect');
+        var m = jQuery(e.target).hasClass("ludo-spinbox-arrow-up") ? "up":"down";
         this._startMode({
             name:'mousedown',
             mode: m,
@@ -246,13 +246,13 @@ ludo.form.Spinner = new Class({
         });
     },
     _arrowMouseUp:function (e) {
-        $(e.target).removeClass('ludo-spinbox-arrow-downeffect');
+        jQuery(e.target).removeClass('ludo-spinbox-arrow-downeffect');
     },
     _arrowMouseOver:function (e) {
-        $(e.target).addClass('ludo-spinbox-arrow-overeffect');
+        jQuery(e.target).addClass('ludo-spinbox-arrow-overeffect');
     },
     _arrowMouseOut:function (e) {
-        $(e.target).removeClass('ludo-spinbox-arrow-overeffect');
+        jQuery(e.target).removeClass('ludo-spinbox-arrow-overeffect');
     },
     incrementBy:function (value, shiftKey) {
         value = value * (shiftKey ? this.shiftIncrement : this.increment);

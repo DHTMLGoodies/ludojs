@@ -3,11 +3,6 @@ $sub = false;
 $pageTitle = 'Searchable list';
 require_once("includes/demo-header.php");
 ?>
-
-
-<script type="text/javascript" src="../src/tpl/parser.js"></script>
-<script type="text/javascript" src="../src/list-view.js"></script>
-<script type="text/javascript" src="../src/data-source/collection.js"></script>
 <style type="text/css">
     .ludo-list-item {
 

@@ -144,7 +144,7 @@ ludo.dom = {
 	},
 
 	isInFamily:function (el, id) {
-		el = $(el);
+		el = jQuery(el);
 		if (el.attr("id") === id)return true;
 		return el.parent('#' + id);
 	},
@@ -261,9 +261,9 @@ ludo.dom = {
     create:function(node){
 		console.info("use of deprecated ludo.dom.create");
 		console.trace();
-        var el = $('<' + (node.tag || 'div') + '>');
+        var el = jQuery('<' + (node.tag || 'div') + '>');
         if(node.cls)el.addClass(node.cls);
-        if(node.renderTo)$(node.renderTo).append(el);
+        if(node.renderTo)jQuery(node.renderTo).append(el);
         if(node.css){
 			el.css(node.css);
           }

@@ -57,8 +57,8 @@ ludo.layout.MenuContainer = new Class({
     },
 
     createDom: function () {
-        this.el = $('<div style="position:absolute;display:none"></div>');
-        $(document.body).append(this.el);
+        this.el = jQuery('<div style="position:absolute;display:none"></div>');
+        jQuery(document.body).append(this.el);
 
         this.el.addClass('ludo-menu-vertical-' + this.getSubMenuVAlign());
         if (this.getSubMenuHAlign().indexOf('left') === 0) {
@@ -68,7 +68,7 @@ ludo.layout.MenuContainer = new Class({
         if (this.getParentLayoutOrientation() === 'horizontal' && this.getSubMenuVAlign().indexOf('above') === 0) {
             this.lm.view.parentComponent.getEl().addClass('ludo-menu-horizontal-up');
         }
-        this.body = $('<div>');
+        this.body = jQuery('<div>');
         this.el.append(this.body);
 
     },

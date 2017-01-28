@@ -57,8 +57,8 @@ require_once("../includes/demo-header.php");
             this.getBody().empty();
 
             for(var i=0;i<this.viewPager.count;i++){
-                var parent = $('<div class="navigator-dot-parent" style="position:absolute"></div>');
-                var dot = $('<div class="navigator-dot" style="position:absolute"></div>');
+                var parent = jQuery('<div class="navigator-dot-parent" style="position:absolute"></div>');
+                var dot = jQuery('<div class="navigator-dot" style="position:absolute"></div>');
                 dot.css('background-color', this.color);
                 parent.attr('data-index', i);
                 parent.append(dot);
@@ -73,7 +73,7 @@ require_once("../includes/demo-header.php");
 
         clickDot:function(e){
 
-            var index = parseInt($(e.currentTarget).attr("data-index"));
+            var index = parseInt(jQuery(e.currentTarget).attr("data-index"));
             this.viewPager.goToPage(index);
         },
 

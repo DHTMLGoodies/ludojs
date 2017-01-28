@@ -101,7 +101,7 @@ ludo.form.FilterText = new Class({
 
         var size = this.els.formEl.outerWidth(true);
 
-        var container = this.els.inputContainer = $('<div>');
+        var container = this.els.inputContainer = jQuery('<div>');
         cell.append(container);
         container.append(this.els.formEl);
         container.addClass('ludo-form-text-autocomplete-container');
@@ -122,7 +122,7 @@ ludo.form.FilterText = new Class({
             'z-index':100
         });
 
-        var el = this.els.autoComplete = $('<input>');
+        var el = this.els.autoComplete = jQuery('<input>');
         el.addClass('ludo-form-text-autocomplete');
         el.disabled = true;
         el.css('zIndex', 99);
@@ -130,8 +130,8 @@ ludo.form.FilterText = new Class({
         el.css('cursor', 'none');
         this.els.inputContainer.append(el);
 
-        this.els.formElDiv = $('<div>');
-        this.els.hiddenEl = $('<div>');
+        this.els.formElDiv = jQuery('<div>');
+        this.els.hiddenEl = jQuery('<div>');
         this.setRecord(this.getEmptyItem());
     },
 
@@ -143,7 +143,7 @@ ludo.form.FilterText = new Class({
     },
 
     createHiddenInput:function () {
-        var hiddenInput = this.els.hiddenInput = $('<input type="hidden">');
+        var hiddenInput = this.els.hiddenInput = jQuery('<input type="hidden">');
         hiddenInput.val(this.value);
         this.getEl().append(hiddenInput);
     },
@@ -212,7 +212,7 @@ ludo.form.FilterText = new Class({
     },
 
     autoHideFilter:function (e) {
-        var t = $(e.target);
+        var t = jQuery(e.target);
         var id = t.attr("id");
         if (id && id == this.getFormEl().attr("id")) {
             return;
@@ -525,7 +525,7 @@ ludo.form.TextFilterContainer = new Class({
         var len = Math.min(records.length, this.maxDisplayed);
 
         for (var i = 0; i < len; i++) {
-            var div = this.els.recordNodes[i] = $('<div>');
+            var div = this.els.recordNodes[i] = jQuery('<div>');
             div.attr('recordIndex', i);
             div.className = 'ludo-form-autocomplete-suggestion';
             div.html( records[i][this.formComponent.displayField]);

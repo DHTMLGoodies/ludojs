@@ -226,7 +226,7 @@ header("Pragma: no-cache");
             cls: 'source-code-preview-parent',
             bodyCls : 'source-code-preview',
             __rendered:function(){
-                var el = $(document.body).find('.source-code');
+                var el = jQuery(document.body).find('.source-code');
                 if(el){
                     this.getBody().html(el.html());
                     new ludo.CodeHighlight(this.getBody());

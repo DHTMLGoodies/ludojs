@@ -20,28 +20,28 @@ ludo.video.Video = new Class({
 
 	setContent:function () {
 		var el = this.els.body;
-		var obj = $('<object>');
+		var obj = jQuery('<object>');
 		obj.attr({
 			'width':'100%',
 			'height':'100%'
 		});
 		el.append(obj);
 
-		var param = $('<param>');
+		var param = jQuery('<param>');
 		param.attr({
 			'name':'movie',
 			'value':this.getUrl()
 		});
 		obj.append(param);
 
-		var param2 = $('<param>');
+		var param2 = jQuery('<param>');
 		param2.attr({
 			'name':'wmode',
 			'value':'transparent'
 		});
 		obj.append(param2);
 
-		var embed = this.els.embed = $('<embed>');
+		var embed = this.els.embed = jQuery('<embed>');
 		embed.attr({
 			'src':this.getVideoUrl(),
 			'type':'application/x-shockwave-flash',

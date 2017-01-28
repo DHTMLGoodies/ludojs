@@ -23,7 +23,7 @@ ludo.form.Label = new Class({
     ludoDOM:function(){
         this.parent();
         
-        this.els.label = $('<label class="input-label" for="el-' + this.labelFor + '">' + this.label + '</label>');
+        this.els.label = jQuery('<label class="input-label" for="el-' + this.labelFor + '">' + this.label + '</label>');
         this.getBody().append(this.els.label);
     },
 

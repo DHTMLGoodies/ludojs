@@ -117,6 +117,10 @@ ludo.layout.Tab = new Class({
 
     showTab: function (child) {
         if (child !== this.visibleChild) {
+            if(this.visibleChild){
+                this.visibleChild.getEl().css('visibility', 'hidden');
+            }
+            child.getEl().css('visibility', 'visible');
             this.setVisibleChild(child);
             this.resize();
         }

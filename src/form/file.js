@@ -118,7 +118,7 @@ ludo.form.File = new Class({
 	__rendered:function () {
 		this.parent();
 
-		var cell = $('<div>');
+		var cell = jQuery('<div>');
 		cell.width(this.buttonWidth);
 		cell.css('textAlign', 'right');
 		this.getBody().append(cell);
@@ -167,7 +167,7 @@ ludo.form.File = new Class({
 	},
 
 	createFormElementForComponent:function () {
-		var formEl = this.els.form = $('<form method="post action="' + this.getUploadUrl() + '" enctype="multipart/form-data" target="' + this.getIframeName() + '">');
+		var formEl = this.els.form = jQuery('<form method="post action="' + this.getUploadUrl() + '" enctype="multipart/form-data" target="' + this.getIframeName() + '">');
 
 		formEl.css({ margin:0, padding:0, border:0});
 		this.getEl().append(formEl);
@@ -183,14 +183,14 @@ ludo.form.File = new Class({
     },
 
 	addElToForm:function(name,value){
-		var el =$('<input type="hidden" name="' + name + '">');
+		var el =jQuery('<input type="hidden" name="' + name + '">');
 		el.val(value);
 		this.els.form.append(el);
 	},
 
 	createIframe:function () {
 		this.iframeName = this.getIframeName();
-		var el = this.els.iframe = $('<iframe name="' + this.iframeName + '">');
+		var el = this.els.iframe = jQuery('<iframe name="' + this.iframeName + '">');
 		el.css({
 			width:1, height:1,
 			visibility:'hidden',

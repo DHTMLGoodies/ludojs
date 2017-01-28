@@ -190,10 +190,10 @@ ludo.effect.Drag = new Class({
      */
     add: function (node) {
         node = this.getValidNode(node);
-        var el = $(node.el);
+        var el = jQuery(node.el);
         this.setPositioning(el);
 
-        var handle = node.handle ? $(node.handle) : el;
+        var handle = node.handle ? jQuery(node.handle) : el;
 
         handle.attr("id",  handle.id || 'ludo-' + String.uniqueID());
         handle.addClass("ludo-drag");
@@ -201,7 +201,7 @@ ludo.effect.Drag = new Class({
         handle.on(ludo.util.getDragStartEvent(), this.startDrag.bind(this));
         handle.attr('forId', node.id);
         this.els[node.id] = Object.merge(node, {
-            el: $(el),
+            el: jQuery(el),
             handle: handle
         });
         return this.els[node.id];
@@ -216,7 +216,7 @@ ludo.effect.Drag = new Class({
      */
     remove: function (id) {
         if (this.els[id] !== undefined) {
-            var el = $("#" + this.els[id].handle);
+            var el = jQuery("#" + this.els[id].handle);
             el.off(ludo.util.getDragStartEvent(), this.startDrag.bind(this));
             this.els[id] = undefined;
             return true;
@@ -235,12 +235,12 @@ ludo.effect.Drag = new Class({
     getValidNode: function (node) {
         if (!this.isElConfigObject(node)) {
             node = {
-                el: $(node)
+                el: jQuery(node)
             };
         }
         if (typeof node.el === 'string') {
             if (node.el.substr(0, 1) != "#")node.el = "#" + node.el;
-            node.el = $(node.el);
+            node.el = jQuery(node.el);
         }
         node.id = node.id || node.el.attr("id") || 'ludo-' + String.uniqueID();
         if (!node.el.attr("id"))node.el.attr("id", node.id);
@@ -268,7 +268,7 @@ ludo.effect.Drag = new Class({
     },
 
     getIdByEvent: function (e) {
-        var el = $(e.target);
+        var el = jQuery(e.target);
         if (!el.hasClass('ludo-drag')) {
             el = el.closest('.ludo-drag');
         }
@@ -300,7 +300,7 @@ ludo.effect.Drag = new Class({
 
     getPositionOf: function (el) {
 
-        return $(el).position();
+        return jQuery(el).position();
     },
 
     setDragCoordinates: function () {
@@ -710,14 +710,14 @@ ludo.effect.Drag = new Class({
      */
     getShim: function () {
         if (this.shim === undefined) {
-            this.shim = $('<div>');
+            this.shim = jQuery('<div>');
             this.shim.addClass('ludo-shim');
             this.shim.css({
                 position: 'absolute',
                 'z-index': 50000,
                 display: 'none'
             });
-            $(document.body).append(this.shim);
+            jQuery(document.body).append(this.shim);
 
             if (this.shimCls) {
                 for (var i = 0; i < this.shimCls.length; i++) {

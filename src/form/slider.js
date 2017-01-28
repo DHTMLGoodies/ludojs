@@ -59,7 +59,7 @@ ludo.form.Slider = new Class({
     addInput:function () {
         this.parent();
 
-        var el = this.els.slider = $('<div>');
+        var el = this.els.slider = jQuery('<div>');
         this.els.slider.on('click', this.sliderClick.bind(this));
 
         el.addClass('ludo-form-slider-container');
@@ -73,13 +73,13 @@ ludo.form.Slider = new Class({
     },
 
     createSliderHandle:function () {
-        this.els.sliderHandle = $('<div class="ludo-form-slider-handle"></div>');
+        this.els.sliderHandle = jQuery('<div class="ludo-form-slider-handle"></div>');
         this.els.slider.append(this.els.sliderHandle);
         this.drag = new ludo.effect.Drag(this.getDragConfig());
     },
 
     addSliderBg:function (pos) {
-        this.els['bg' + pos] = $('<div class="ludo-form-slider-bg-' + pos + '"></div>');
+        this.els['bg' + pos] = jQuery('<div class="ludo-form-slider-bg-' + pos + '"></div>');
         this.els.slider.append(this.els['bg' + pos])
     },
 
@@ -97,7 +97,7 @@ ludo.form.Slider = new Class({
     },
 
     sliderClick:function (e) {
-        if (!$(e.target).hasClass('ludo-form-slider-handle')) {
+        if (!jQuery(e.target).hasClass('ludo-form-slider-handle')) {
             var pos = this.els.slider.position();
             var offset = Math.round(this.getHandleSize() / 2);
             this.receivePosition({

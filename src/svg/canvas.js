@@ -39,7 +39,7 @@ ludo.svg.Canvas = new Class({
 				this.view.addEvent('resize', this.fitParent.bind(this));
 				this.renderTo = this.view.getBody();
 			}else{
-				this.renderTo = $(this.renderTo);
+				this.renderTo = jQuery(this.renderTo);
 			}
 			this.renderTo.append(this.getEl());
 			this.setInitialSize(config);

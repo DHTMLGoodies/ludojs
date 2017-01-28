@@ -32,7 +32,7 @@ ludo.grid.GridHeader = new Class({
 	},
 
 	createDOM:function () {
-		this.el = $('<div>');
+		this.el = jQuery('<div>');
 		this.el.addClass('ludo-header');
 		this.el.addClass('testing');
 		this.el.insertBefore(this.grid.getBody().first());
@@ -93,7 +93,7 @@ ludo.grid.GridHeader = new Class({
 
 	measureCellHeight:function () {
 		if(this.grid.isHidden())return;
-		var el = $('<div>');
+		var el = jQuery('<div>');
 		el.addClass('ludo-grid-header-cell');
 		this.grid.getBody().append(el);
 		this.cellHeight = el.height() + ludo.dom.getMH(el);
@@ -111,13 +111,13 @@ ludo.grid.GridHeader = new Class({
 		if (this.cells[col]) {
 			return this.cells[col];
 		}
-		var el = this.cells[col] = $('<div>');
+		var el = this.cells[col] = jQuery('<div>');
 		el.attr('col', col);
 		el.addClass('ludo-grid-header-cell');
 		el.addClass('ludo-header-' + this.columnManager.getHeaderAlignmentOf(col));
 
 
-		var span = $('<span class="ludo-cell-text">' + this.columnManager.getHeadingFor(col) + '</span>');
+		var span = jQuery('<span class="ludo-cell-text">' + this.columnManager.getHeadingFor(col) + '</span>');
 		el.append(span);
 
 
@@ -158,10 +158,10 @@ ludo.grid.GridHeader = new Class({
 	cellBg:{},
 
 	createTopAndBottomBackgrounds:function (col) {
-		var top = $('<div>');
+		var top = jQuery('<div>');
 		top.addClass('ludo-grid-header-cell-top');
 		this.cells[col].append(top);
-		var bottom = $('<div>');
+		var bottom = jQuery('<div>');
 		bottom.addClass('ludo-grid-header-cell-bottom');
 		this.cells[col].append(bottom);
 		this.cellBg[col] = {
@@ -273,7 +273,7 @@ ludo.grid.GridHeader = new Class({
 	},
 
 	getColByDOM:function (el) {
-		el = $(el);
+		el = jQuery(el);
 		var ret = el.attr('col');
 		if (!ret && ret != '0') {
 			ret = el.parent().attr('col');
@@ -299,7 +299,7 @@ ludo.grid.GridHeader = new Class({
 	},
 
 	addDOMForDropTargets:function (parent, column) {
-		var left = $('<div>');
+		var left = jQuery('<div>');
 		left.css({
 			position:'absolute',
 			'z-index':15,
@@ -308,7 +308,7 @@ ludo.grid.GridHeader = new Class({
 		});
 
 		parent.append(left);
-		var right = $('<div>');
+		var right = jQuery('<div>');
 		right.css({
 			position:'absolute',
 			'z-index':15,

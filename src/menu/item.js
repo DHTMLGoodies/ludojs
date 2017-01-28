@@ -92,7 +92,7 @@ ludo.menu.Item = new Class({
         }
 
 		if(this.children.length){
-			var el = this.els.expand = $('<div>');
+			var el = this.els.expand = jQuery('<div>');
 		    el.addClass('ludo-menu-item-expand');
 		    el.addClass('-expand');
 		    this.getEl().append(el);
@@ -166,7 +166,7 @@ ludo.menu.Item = new Class({
     },
 
     createIcon:function () {
-        var el = this.els.icon = $('<div class="ludo-menu-item-icon">');
+        var el = this.els.icon = jQuery('<div class="ludo-menu-item-icon">');
         el.css({
             'background-position':'center center',
             'background-repeat':'no-repeat',

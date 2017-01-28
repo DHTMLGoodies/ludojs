@@ -31,7 +31,7 @@ ludo.Application = new Class({
             padding:0,
             border:0
         };
-        $(document.body).css(styles);
-        $(document.documentElement).css(styles);
+        jQuery(document.body).css(styles);
+        jQuery(document.documentElement).css(styles);
     }
 });

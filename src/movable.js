@@ -40,8 +40,8 @@ ludo.Movable = new Class({
         this.createElements();
         this.id = String.uniqueID();
 
-        $(document.body).on('mouseup', this.stopMove.bind(this));
-        $(document.body).on('mousemove', this.mouseMove.bind(this));
+        jQuery(document.body).on('mouseup', this.stopMove.bind(this));
+        jQuery(document.body).on('mousemove', this.mouseMove.bind(this));
     },
 
 
@@ -139,14 +139,14 @@ ludo.Movable = new Class({
     },
 
     createShim : function() {
-        var el = this.els.shim = $('<div>');
+        var el = this.els.shim = jQuery('<div>');
         el.addClass('ludo-framed-view-shim');
         el.setStyle('display','none');
         document.body.append(el);
     },
 
     createInsertionMarker : function() {
-        var el = this.els.insertionMarker = $('<div>');
+        var el = this.els.insertionMarker = jQuery('<div>');
         el.setStyle('display','none');
         document.body.append(el);
     },

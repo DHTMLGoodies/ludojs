@@ -432,7 +432,6 @@ div.ludo-FramedView {
 
 .ludo-view {
     border-width: 1px;
-    background-color: #FFF;
     overflow: hidden;
     position: relative;
 }

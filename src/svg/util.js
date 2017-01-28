@@ -2,7 +2,7 @@ ludo.svg.Util = {
 
     pathStyles:function(className){
 
-        var node = $('<div>');
+        var node = jQuery('<div>');
         node.addClass(className);
         node.css('display', 'none');
         ludo.Theme.getThemeEl().append(node);
@@ -18,14 +18,12 @@ ludo.svg.Util = {
     },
 
     textStyles: function (className) {
-        var node = $('<div>');
+        var node = jQuery('<div>');
         node.addClass(className);
 
         node.css('display', 'none');
         ludo.Theme.getThemeEl().append(node);
 
-        console.log(className)
-      
         var lh = node.css('line-height').replace(/[^0-9\.]/g, '');
         if (!lh) {
             lh = node.css('font-size');

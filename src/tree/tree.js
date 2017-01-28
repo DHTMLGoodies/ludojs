@@ -154,7 +154,7 @@ ludo.tree.Tree = new Class({
 			if(e.target.tagName.toLowerCase() === 'span' && this.isSelectable(record)) {
 				this.getDataSource().selectRecord(record);
             }
-            if($(e.target).hasClass('ludo-tree-node-expand')){
+            if(jQuery(e.target).hasClass('ludo-tree-node-expand')){
                 this.expandOrCollapse(record, e.target);
             }else{
                 this.expand(record, e.target);
@@ -184,7 +184,7 @@ ludo.tree.Tree = new Class({
 
 	getDomElement:function (record, cls) {
 		var el = this.getDomByRecord(record);
-		if (el)return $(el).find(cls).first();
+		if (el)return jQuery(el).find(cls).first();
 		return undefined;
 	},
 

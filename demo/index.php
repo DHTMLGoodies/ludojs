@@ -4,7 +4,7 @@ require_once("includes/demo-header.php");
 ?>
 
 <script type="text/javascript">
-$(document).ready(function(){
+jQuery(document).ready(function(){
     console.log("ready");
 
 });

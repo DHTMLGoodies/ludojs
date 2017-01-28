@@ -28,13 +28,13 @@ ludo.colorPicker.ColorScheme = new Class({
 
 	createDefaultColorBoxes:function(){
 		this.getBody().html('');
-		var c = $('<div>');
+		var c = jQuery('<div>');
 		this.getBody().append(c);
 
 		c.css('height', '100%');
 		c.css('width', '2000px');
 		for(var i=0;i<9;i++){
-			var box = this.colorBoxes[i] =  $('<div class="color-scheme-box" style="position:relative;float:left;display:none;cursor:pointer"></div>');
+			var box = this.colorBoxes[i] =  jQuery('<div class="color-scheme-box" style="position:relative;float:left;display:none;cursor:pointer"></div>');
 
 			box.on('click', this.boxClick.bind(this));
 			c.append(box);
@@ -42,7 +42,7 @@ ludo.colorPicker.ColorScheme = new Class({
 	},
 
 	boxClick:function(e){
-		this.fireEvent('setColor', $(e.target).attr("title"));
+		this.fireEvent('setColor', jQuery(e.target).attr("title"));
 	},
 
 	generateMonochromaticScheme:function(color){

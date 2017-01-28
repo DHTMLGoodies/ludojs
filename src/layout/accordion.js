@@ -91,8 +91,8 @@ ludo.layout.Accordion = new Class({
         var style = child.hidden ? "none": "";
 
 
-        $('#accordion-title-' + id).css('display', style);
-        $('#accordion-' + id).css('display', style);
+        jQuery('#accordion-title-' + id).css('display', style);
+        jQuery('#accordion-' + id).css('display', style);
 
         this.measureTitleHeight();
         this.resize();
@@ -116,10 +116,10 @@ ludo.layout.Accordion = new Class({
     },
 
     getParentForNewChild: function (child) {
-        var el = $('<div class="ludo-framed-view-titlebar ludo-accordion-titlebar"></div>');
+        var el = jQuery('<div class="ludo-framed-view-titlebar ludo-accordion-titlebar"></div>');
 
-        var title = $('<div class="ludo-framed-view-titlebar-title ludo-accordion-title"></div>');
-        var expand = $('<div class="ludo-accordion-collapsed"></div>');
+        var title = jQuery('<div class="ludo-framed-view-titlebar-title ludo-accordion-title"></div>');
+        var expand = jQuery('<div class="ludo-accordion-collapsed"></div>');
         expand.attr("id", "accordion-expand-" + child.id);
         el.attr("id", "accordion-title-" + child.id);
         el.attr("data-accordion-for", child.id);
@@ -134,7 +134,7 @@ ludo.layout.Accordion = new Class({
 
         this.titleEls.push(el);
 
-        var container = $('<div class="ludo-accordion-container" style="height:0"></div>');
+        var container = jQuery('<div class="ludo-accordion-container" style="height:0"></div>');
         container.attr("id", "accordion-" + child.id);
         this.view.getBody().append(container);
 
@@ -154,8 +154,8 @@ ludo.layout.Accordion = new Class({
     expandChild: function (id) {
         if (this.busy)return;
 
-        var view = $("#accordion-" + id);
-        var expand = $("#accordion-expand" + id);
+        var view = jQuery("#accordion-" + id);
+        var expand = jQuery("#accordion-expand" + id);
 
         if (id == this.expandedChild)return;
         var h = this.viewport.height - this.titleHeight;
@@ -168,7 +168,7 @@ ludo.layout.Accordion = new Class({
 
 
             view.height(0);
-            $(function () {
+            jQuery(function () {
                 el.animate({height: 0, easing: e}, d, fn);
                 view.animate({height: h, easing: e}, d);
             });
@@ -189,9 +189,9 @@ ludo.layout.Accordion = new Class({
             this.expandIcon.removeClass('ludo-accordion-expanded');
 
         }
-        this.expandIcon = $('#accordion-expand-' + id);
+        this.expandIcon = jQuery('#accordion-expand-' + id);
         this.expandIcon.addClass('ludo-accordion-expanded');
-        this.expandedTitle = $("#accordion-title-" + id);
+        this.expandedTitle = jQuery("#accordion-title-" + id);
         if (this.titleNextOfOpened) {
             this.titleNextOfOpened.removeClass('ludo-accordion-titlebar-below-expanded');
         }
@@ -231,7 +231,7 @@ ludo.layout.Accordion = new Class({
     beforeFirstResize: function () {
         this.measureTitleHeight();
         this.expandedChild = this.firstExpanded().id;
-        this.expandedView = $('#accordion-' + this.expandedChild);
+        this.expandedView = jQuery('#accordion-' + this.expandedChild);
         this.expandedView.css('height', this.viewport.height - this.titleHeight);
         this.toggleTitle(this.expandedChild);
 

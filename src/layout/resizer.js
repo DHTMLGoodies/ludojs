@@ -28,7 +28,7 @@ ludo.layout.Resizer = new Class({
     },
 
     createDOM: function (renderTo) {
-        this.el = $('<div>');
+        this.el = jQuery('<div>');
         this.el.on('mouseenter', this.enterResizer.bind(this));
         this.el.on('mouseleave', this.leaveResizer.bind(this));
         this.el.addClass("ludo-resize-handle");

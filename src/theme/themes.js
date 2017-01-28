@@ -69,25 +69,25 @@ ludo.theme.Themes = new Class({
         if(current == theme)return;
 
         if(current){
-            $(document.body).removeClass("ludo-" + this.currentTheme);
+            jQuery(document.body).removeClass("ludo-" + this.currentTheme);
         }
 
         this.currentTheme = theme;
 
-        $(document.body).addClass("ludo-" + theme);
+        jQuery(document.body).addClass("ludo-" + theme);
     },
 
     getThemeEl:function(){
         var theme = this.getCurrentTheme();
         if(theme != undefined){
-            return $('.ludo-' + theme);
+            return jQuery('.ludo-' + theme);
         }
-        return $(document.body);
+        return jQuery(document.body);
     },
 
     getCurrentTheme:function(){
         if(this.currentTheme == undefined){
-            var b = $(document.documentElement);
+            var b = jQuery(document.documentElement);
             jQuery.each(this.themes, function(theme){
                 if(!this.currentTheme){
                     var cls = '.ludo-' + theme;

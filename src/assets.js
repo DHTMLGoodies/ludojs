@@ -4,7 +4,7 @@ var Asset = {
 
         if (!properties) properties = {};
 
-        var script = $('<script src="' + source + '" type="javascript"></script>'),
+        var script = jQuery('<script src="' + source + '" type="javascript"></script>'),
             doc = properties.document || document,
             load = properties.onload || properties.onLoad;
 
@@ -24,7 +24,7 @@ var Asset = {
 
         this.addProperties(script, properties);
 
-        $(doc.head).append(script);
+        jQuery(doc.head).append(script);
 
 
         return script;
@@ -42,7 +42,7 @@ var Asset = {
     css: function(source, properties){
         if (!properties) properties = {};
 
-        var link = $('<link rel="stylesheet" type="text/css" media="screen" href="' + source + '" />');
+        var link = jQuery('<link rel="stylesheet" type="text/css" media="screen" href="' + source + '" />');
 
         var load = properties.onload || properties.onLoad,
             doc = properties.document || document;
@@ -55,7 +55,7 @@ var Asset = {
 
         this.addProperties(link, properties);
 
-        $(doc.head).append(link);
+        jQuery(doc.head).append(link);
 
 
         return link;

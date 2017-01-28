@@ -39,7 +39,7 @@ ludo.layout.TextBox = new Class({
 
     createIE8Box: function () {
         var span = document.createElement('span');
-        $(this.renderTo).append($(span));
+        jQuery(this.renderTo).append(jQuery(span));
         span.innerHTML = this.text;
         this.setIE8Transformation(span);
         return span;
@@ -51,7 +51,7 @@ ludo.layout.TextBox = new Class({
         s.visibility = 'hidden';
         s.position = 'absolute';
         span.className = this.className;
-        $(document.body).append(span);
+        jQuery(document.body).append(span);
 
         s.fontSize = '12px';
         s.fontWeight = 'normal';

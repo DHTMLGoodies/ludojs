@@ -15,7 +15,7 @@ ludo.view.Shim = new Class({
 
     getEl: function () {
         if (this.el === undefined) {
-            this.el = $('<div class="ludo-shim-loading" style="display:none">' + this.getText(this.txt) + "</div>");
+            this.el = jQuery('<div class="ludo-shim-loading" style="display:none">' + this.getText(this.txt) + "</div>");
             this.getRenderTo().append(this.el);
         }
         return this.el;
@@ -24,7 +24,7 @@ ludo.view.Shim = new Class({
     getShim: function () {
         if (this.shim === undefined) {
             if (ludo.util.isString(this.renderTo))this.renderTo = ludo.get(this.renderTo).getEl();
-            this.shim = $('<div class="ludo-loader-shim" style="display:none"></div>');
+            this.shim = jQuery('<div class="ludo-loader-shim" style="display:none"></div>');
             this.getRenderTo().append(this.shim);
 
         }
@@ -47,7 +47,7 @@ ludo.view.Shim = new Class({
     },
 
     resizeShim: function () {
-        var span = $(this.el).find('span');
+        var span = jQuery(this.el).find('span');
         var width = (span.width() + 5);
         this.el.css('width', width + 'px');
         this.el.css('marginLeft', (Math.round(width / 2) * -1) + 'px');

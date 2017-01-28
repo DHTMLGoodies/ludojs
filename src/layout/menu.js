@@ -39,7 +39,8 @@ ludo.layout.Menu = new Class({
 	Extends:ludo.layout.Base,
 	active:false,
 	alwaysActive:false,
-
+	type:'layout.Menu',
+	
 	onCreate:function () {
 		this.menuContainer = new ludo.layout.MenuContainer(this);
 		if (this.view.layout.active) {
@@ -47,7 +48,7 @@ ludo.layout.Menu = new Class({
 		}
 
 		if (this.view.id === this.getTopMenuComponent().id) {
-			$(document.documentElement).on('click', this.autoHideMenus.bind(this));
+			jQuery(document.documentElement).on('click', this.autoHideMenus.bind(this));
 			ludo.EffectObject.addEvent('start', this.hideAllMenus.bind(this));
 		}
 	},
@@ -268,7 +269,7 @@ ludo.layout.Menu = new Class({
 
 	autoHideMenus:function (e) {
 		if (this.active || this.alwaysActive) {
-			var parent = $(e.target).parents('.ludo-menu');
+			var parent = jQuery(e.target).parents('.ludo-menu');
 
 			if (e.target.className && e.target.className.indexOf && e.target.className.indexOf('ludo-menu-item') === -1 && parent.length == 0) {
 				this.hideAllMenus();

@@ -112,6 +112,10 @@ ludo.layout.Docking = new Class({
     collapse: function () {
         this.fireEvent('collapse', this);
 
+        if(this.visibleChild){
+            this.visibleChild.getEl().css('visibility', 'hidden');
+            this.fireEvent('hideChild', this.visibleChild);
+        }
         this.visibleChild = undefined;
 
         this.collapsed = true;
@@ -154,7 +158,9 @@ ludo.layout.Docking = new Class({
 
 
     showTab: function (child) {
+
         if (child == this.visibleChild) {
+            this.visibleChild.getEl().css('visibility', 'hidden');
             this.collapse();
             this.fireEvent('hideChild', child);
         } else {

@@ -36,6 +36,7 @@ ludo.dataSource.Base = new Class({
 
 	__construct:function (config) {
 		this.parent(config);
+		if(config.data != undefined)this.autoload = false;
 		this.setConfigParams(config, ['method', 'url', 'autoload', 'shim','dataHandler']);
 
 		if(this.postData == undefined){

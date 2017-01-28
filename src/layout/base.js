@@ -81,7 +81,7 @@ ludo.layout.Base = new Class({
         child = this.getValidChild(child);
         child = this.getNewComponent(child);
         var parentEl = this.getParentForNewChild(child);
-        parentEl = $(parentEl);
+        parentEl = jQuery(parentEl);
         if (insertAt) {
             var children = [];
             for (var i = 0; i < this.view.children.length; i++) {
@@ -124,7 +124,7 @@ ludo.layout.Base = new Class({
      * @memberof ludo.layout.Base.prototype
      */
     getParentForNewChild: function () {
-        return $(this.view.els.body);
+        return jQuery(this.view.els.body);
     },
 
     layoutProperties: ['collapsed'],

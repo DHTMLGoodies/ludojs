@@ -24,7 +24,7 @@ ludo.calendar.MonthSelector = new Class({
 
     },
     createMonthTooltip:function(){
-        var el = this.els.monthTip = $('<div>');
+        var el = this.els.monthTip = jQuery('<div>');
         el.setStyles({
             'position' : 'absolute',
             display:'none'
@@ -36,7 +36,7 @@ ludo.calendar.MonthSelector = new Class({
     },
 
     createMonthContainer:function(){
-        var el = this.els.monthContainer = $('<div>');
+        var el = this.els.monthContainer = jQuery('<div>');
         el.addClass('ludo-calendar-month-container');
         el.setStyles({
             position:'absolute', width : '3000px', left:0,top:0
@@ -50,7 +50,7 @@ ludo.calendar.MonthSelector = new Class({
         var month = this.date.get('month');
 
         for(var i=0;i<this.months.length;i++){
-            var el = $('<div>');
+            var el = jQuery('<div>');
             el.addClass('ludo-calendar-month');
             el.setProperty('month', i);
             this.els.monthContainer.append(el);

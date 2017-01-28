@@ -102,14 +102,14 @@ ludo.layout.Renderer = new Class({
                                 el = view.getEl();
                                 view.addEvent('resize', this.clearFn.bind(this));
                             } else {
-                                el = $(val);
+                                el = jQuery(val);
                             }
                         } else {
                             if (val.getEl !== undefined) {
                                 el = val.getEl();
                                 val.addEvent('resize', this.clearFn.bind(this));
                             } else {
-                                el = $(val);
+                                el = jQuery(val);
                             }
                         }
                         if (el)this.view.layout[key] = el; else this.view.layout[key] = undefined;
@@ -134,23 +134,23 @@ ludo.layout.Renderer = new Class({
         //var node = this.getParentNode();
         // node.resize(this.resizeFn);
 
-        $(window).resize(this.resizeFn);
+        jQuery(window).resize(this.resizeFn);
     },
 
     getParentNode: function () {
         var node = this.view.getEl().parent();
         if (!node || !node.prop("tagName"))return;
         if (node.prop("tagName").toLowerCase() !== 'body') {
-            node = $(node);
+            node = jQuery(node);
         } else {
-            node = $(window);
+            node = jQuery(window);
         }
         return node;
     },
 
     removeEvents: function () {
         // this.getParentNode().off('resize', this.resizeFn);
-        $(window).off('resize', this.resizeFn);
+        jQuery(window).off('resize', this.resizeFn);
     },
 
     buildResizeFn: function () {
@@ -252,7 +252,7 @@ ludo.layout.Renderer = new Class({
                 };
             case 'above':
                 return function (view, renderer) {
-                    c.bottom = renderer.viewport.height - value.offset().top;
+                    c.top = value.offset().top - c.height;
                 };
             case 'below':
                 return function () {

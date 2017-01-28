@@ -12,7 +12,7 @@ ludo.view.Collapsed = new Class({
 
     createDOM:function () {
 		var cls = this.component.layout.collapsible == 'left' || this.component.layout.collapsible == 'right' ? 'cols' : 'rows';
-        var el = this.el = $('<div>');
+        var el = this.el = jQuery('<div>');
         el.css('display', 'none');
         el.css('margin',  this.component.getEl().css('margin'));
         el.mouseenter(this.mouseEnterCollapsed.bind(this));
@@ -20,7 +20,7 @@ ludo.view.Collapsed = new Class({
         el.addEvent('click', this.expand.bind(this));
         el.addClass('ludo-view-collapsed');
         ludo.dom.addClass(el, 'ludo-view-collapsed-' +cls);
-        var title = this.titleEl = $('<div>');
+        var title = this.titleEl = jQuery('<div>');
         title.addClass('ludo-view-collapsed-title');
         ludo.dom.addClass(title, 'ludo-view-collapsed-title-' + cls);
         title.html( '<span>' + this.component.title + '</span>');

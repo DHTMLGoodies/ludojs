@@ -36,10 +36,10 @@ ludo.menu.Button = new Class({
     },
 
     ludoDOM: function () {
-        var el = this.el = $('<div>');
+        var el = this.el = jQuery('<div>');
         el.id = 'ludo-menu-button-' + String.uniqueID();
         el.addClass('ludo-menu-button');
-        $(this.renderTo).append(el);
+        jQuery(this.renderTo).append(el);
         el.css({
             position: 'absolute',
             height: '100%'
@@ -56,7 +56,7 @@ ludo.menu.Button = new Class({
         this.buttonEl.mouseleave(this.leaveButton.bind(this));
 
         if (!this.alwaysVisible) {
-            var el = $(this.renderTo);
+            var el = jQuery(this.renderTo);
             el.on('mouseenter', this.show.bind(this));
             el.on('mouseleave', this.hide.bind(this));
             this.hide();
@@ -81,7 +81,7 @@ ludo.menu.Button = new Class({
     },
 
     createButtonEl: function () {
-        var el = this.buttonEl = $('<div>');
+        var el = this.buttonEl = jQuery('<div>');
         el.addClass('ludo-menu-button-arrow');
         this.getEl().append(el);
     },
@@ -150,9 +150,9 @@ ludo.menu.Button = new Class({
             this.menu.hidden = true;
             this.menu = this.createDependency('menuForButton', this.menu);
             this.menu._button = this.getEl().id;
-            $(document.body).on('mouseup', this.autoHideMenu.bind(this));
+            jQuery(document.body).on('mouseup', this.autoHideMenu.bind(this));
         } else {
-            $(document.body).append(this.menu.getEl());
+            jQuery(document.body).append(this.menu.getEl());
         }
 
         this.menu.addEvent('show', this.showIf.bind(this));

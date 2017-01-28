@@ -77,8 +77,8 @@ ludo.ListView = new Class({
 
 
         if (this.swipable) {
-            $(document.body).on(ludo.util.getDragMoveEvent(), this.drag.bind(this));
-            $(document.body).on(ludo.util.getDragEndEvent(), this.dragEnd.bind(this));
+            jQuery(document.body).on(ludo.util.getDragMoveEvent(), this.drag.bind(this));
+            jQuery(document.body).on(ludo.util.getDragEndEvent(), this.dragEnd.bind(this));
 
         }
 
@@ -291,6 +291,8 @@ ludo.ListView = new Class({
     render: function () {
         this.parent();
 
+        console.log('render list', this.getDataSource().getData());
+
         if (this.availHeight == undefined) {
             this.availHeight = this.getBody().height();
         }
@@ -305,6 +307,7 @@ ludo.ListView = new Class({
         }
 
         var d = this.getDataSource().getData();
+        console.log(d);
         var htmlArray = this.getTplParser().getCompiled(d, this.tpl);
 
         this.indexFirstVisible = undefined;
@@ -360,12 +363,12 @@ ludo.ListView = new Class({
     getRecordContainer: function (record) {
         var id = 'list-' + record.uid;
         if (this.recordMap[record.uid] == undefined) {
-            var el = $('<div class="ludo-list-item" style="cursor:pointer" id="' + id + '"></div>');
+            var el = jQuery('<div class="ludo-list-item" style="cursor:pointer" id="' + id + '"></div>');
             this.recordMap[record.uid] = id;
             this._nodeContainer.append(el);
             return el;
         }
-        return $('#' + id);
+        return jQuery('#' + id);
     },
 
 
@@ -402,23 +405,23 @@ ludo.ListView = new Class({
         if (this.backSideLeft != undefined) {
             var l = this.backSideLeft(record);
             if (l != undefined) {
-                var ln = $('<div class="ludo-list-item-back-left"></div>');
-                ln.append($(l));
+                var ln = jQuery('<div class="ludo-list-item-back-left"></div>');
+                ln.append(jQuery(l));
                 parent.append(ln);
             }
         }
 
         if (this.backSideRight != undefined) {
             var r = this.backSideRight(record);
-            var rn = $('<div class="ludo-list-item-back-right"></div>');
-            rn.append($(r));
+            var rn = jQuery('<div class="ludo-list-item-back-right"></div>');
+            rn.append(jQuery(r));
             parent.append(rn);
         }
 
         if (this.backSideUndo != undefined) {
             var u = this.backSideUndo(record);
-            var un = $('<div class="ludo-list-item-back-undo"></div>');
-            un.append($(u));
+            var un = jQuery('<div class="ludo-list-item-back-undo"></div>');
+            un.append(jQuery(u));
             parent.append(un);
             var vId = this.id;
             var uid = record.uid;
@@ -432,9 +435,9 @@ ludo.ListView = new Class({
         }
 
 
-        var div = $('<div></div>');
+        var div = jQuery('<div></div>');
         div.addClass('ludo-list-item-front');
-        div.append($(html));
+        div.append(jQuery(html));
 
         parent.append(div);
 
@@ -460,7 +463,7 @@ ludo.ListView = new Class({
     },
 
     getDragDom: function (el) {
-        el = $(el);
+        el = jQuery(el);
         if (!el.hasClass('ludo-list-item-front')) {
             el = el.closest('.ludo-list-item-front');
         }
@@ -468,7 +471,7 @@ ludo.ListView = new Class({
     },
 
     getRecordDOM: function (el) {
-        el = $(el);
+        el = jQuery(el);
         if (!el.hasClass('ludo-list-item')) {
             el = el.closest('.ludo-list-item');
         }
@@ -486,7 +489,7 @@ ludo.ListView = new Class({
 
     getDOMForRecord: function (record) {
         var uid = record.uid || record;
-        return this.recordMap[uid] ? $('#' + this.recordMap[uid]) : undefined;
+        return this.recordMap[uid] ? jQuery('#' + this.recordMap[uid]) : undefined;
 
     },
 
@@ -509,7 +512,7 @@ ludo.ListView = new Class({
     },
 
     onClick: function (e) {
-        var recId = this.getRecordId($(e.target));
+        var recId = this.getRecordId(jQuery(e.target));
         if (recId)this.getDataSource().getRecord(recId).select();
     }
 });

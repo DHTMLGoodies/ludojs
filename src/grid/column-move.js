@@ -24,7 +24,7 @@ ludo.grid.ColumnMove = new Class({
 	},
 
 	setZIndex:function(shim){
-		$(shim).css('zIndex', 50000);
+		jQuery(shim).css('zIndex', 50000);
 	},
 
 	getMarker:function () {

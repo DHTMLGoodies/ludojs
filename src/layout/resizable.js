@@ -53,7 +53,7 @@ ludo.layout.Resizable = new Class({
     },
 
     createDOM:function () {
-        this.el = $('<div>');
+        this.el = jQuery('<div>');
         this.el.addClass('ludo-resize-handle');
         ludo.dom.addClass(this.el, 'ludo-resize-handle-' + this.type);
         var styles = {
@@ -89,9 +89,9 @@ ludo.layout.Resizable = new Class({
         this.setSizeOfDragHandle.delay(100, this);
         if (this.type === 'row') {
             if (Browser.ie) {
-                $(document.documentElement).on('resize', this.resizeAndPosition.bind(this));
+                jQuery(document.documentElement).on('resize', this.resizeAndPosition.bind(this));
             } else {
-               $(window).on('resize', this.resizeAndPosition.bind(this));
+               jQuery(window).on('resize', this.resizeAndPosition.bind(this));
             }
         }
     },

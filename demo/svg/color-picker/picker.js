@@ -92,7 +92,7 @@ ludo.colorPicker.Picker = new Class({
 	getBodyPos:function(){
 		var b = this.getBody();
 
-		var pos = $(b).offset();
+		var pos = jQuery(b).offset();
 		pos.left += ludo.dom.getBW(b)/2;
 		pos.top += ludo.dom.getBH(b)/2;
 		return pos;

@@ -25,7 +25,7 @@ ludo.tree.FilterTree = new Class({
 	ludoEvents:function () {
 		this.parent();
 
-		$(document.body).on('click', this.autoHide.bind(this));
+		jQuery(document.body).on('click', this.autoHide.bind(this));
 	},
 
 	ludoDOM:function () {
@@ -73,7 +73,7 @@ ludo.tree.FilterTree = new Class({
 
 		this.resize.delay(100, this);
 
-		var hiddenEl = this.els.hiddenEl = $('<div>');
+		var hiddenEl = this.els.hiddenEl = jQuery('<div>');
 		hiddenEl.id = 'el-' + String.uniqueID();
 		hiddenEl.setStyles({
 			position:'absolute',

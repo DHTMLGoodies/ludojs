@@ -49,7 +49,7 @@ ludo.menu.Context = new Class({
 	contextEl:undefined,
 
 	__construct:function (config) {
-		this.renderTo = document.body;
+		this.renderTo = $(document.body);
 		this.parent(config);
 		this.setConfigParams(config, ['selector', 'recordType', 'record', 'applyTo','contextEl']);
 		if (this.recordType)this.record = { type:this.recordType };
@@ -62,9 +62,9 @@ ludo.menu.Context = new Class({
 	},
 	ludoEvents:function () {
 		this.parent();
-		$(document.documentElement).on('click', this.hideAfterDelay.bind(this));
+		jQuery(document.documentElement).on('click', this.hideAfterDelay.bind(this));
 		if(this.contextEl){
-			$(this.contextEl).on('contextmenu', this.show.bind(this));
+			jQuery(this.contextEl).on('contextmenu', this.show.bind(this));
 		}
 	},
 
@@ -93,7 +93,8 @@ ludo.menu.Context = new Class({
 	show:function (e) {
 		if (this.selector) {
 			var domEl = this.getValidDomElement(e.target);
-			if (!domEl) {
+
+			if (!domEl.length) {
 				return undefined;
 			}
 			this.fireEvent('selectorclick', domEl);
@@ -136,7 +137,7 @@ ludo.menu.Context = new Class({
 			x:e.pageX,
 			y:e.pageY
 		};
-		var b = $(document.body);
+		var b = jQuery(document.body);
 		var clientWidth = b.width();
 		var clientHeight = b.height();
 		var size = {
@@ -159,7 +160,7 @@ ludo.menu.Context = new Class({
 	},
 
 	getValidDomElement:function (el) {
-		el = $(el);
+		el = jQuery(el);
 		if (!this.selector) {
 			return true;
 		}

@@ -72,8 +72,8 @@ ludo.color.Boxes = new Class({
     },
 
     clickOnColorBox:function(e){
-        if($(e.target).hasClass('ludo-color-box')){
-            this.fireEvent('setColor', $(e.target).attr('rgbColor'));
+        if(jQuery(e.target).hasClass('ludo-color-box')){
+            this.fireEvent('setColor', jQuery(e.target).attr('rgbColor'));
         }
     }
 });

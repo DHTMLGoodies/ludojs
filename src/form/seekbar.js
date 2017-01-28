@@ -93,12 +93,12 @@ ludo.form.Seekbar = new Class({
     },
 
     renderSeekbar:function(){
-        this.el = $('<div class="dhtmlgoodies-seekbar" style="position:relative;width:100%;height:100%"></div>');
+        this.el = jQuery('<div class="dhtmlgoodies-seekbar" style="position:relative;width:100%;height:100%"></div>');
 
         this.getBody().append(this.el);
 
-        this.els.negative = $('<div class="seekbar-negative" style="position:absolute;z-index:1"></div>');
-        this.els.positive = $('<div class="seekbar-positive" style="position:absolute;z-index:1"></div>');
+        this.els.negative = jQuery('<div class="seekbar-negative" style="position:absolute;z-index:1"></div>');
+        this.els.positive = jQuery('<div class="seekbar-positive" style="position:absolute;z-index:1"></div>');
 
         if (this.negativeColor != undefined) {
             this.els.negative.css("background-color", this.negativeColor);
@@ -107,9 +107,9 @@ ludo.form.Seekbar = new Class({
             this.els.positive.css("background-color", this.positiveColor);
         }
 
-        this.els.thumb = $('<div style="position:absolute;z-index:4"></div>');
-        this.els.thumbInner = $('<div class="seekbar-thumb-needle" style="position:absolute;z-index:5;background-color:' + this.thumbColor + '"></div>');
-        this.els.thumbOuter = $('<div class="seekbar-thumb" style="position:absolute;z-index:5;width:100%;height:100%;background-color:' + this.thumbColor + '"></div>');
+        this.els.thumb = jQuery('<div style="position:absolute;z-index:4"></div>');
+        this.els.thumbInner = jQuery('<div class="seekbar-thumb-needle" style="position:absolute;z-index:5;background-color:' + this.thumbColor + '"></div>');
+        this.els.thumbOuter = jQuery('<div class="seekbar-thumb" style="position:absolute;z-index:5;width:100%;height:100%;background-color:' + this.thumbColor + '"></div>');
 
         if (this.thumbColor != undefined) {
             this.els.thumbInner.css("background-color", this.thumbColor);
@@ -126,13 +126,13 @@ ludo.form.Seekbar = new Class({
         this.el.append(this.els.positive);
         this.el.append(this.els.thumb);
 
-        this.els.eventEl = $('<div style="position:absolute;z-index:3;width:100%;height:100%"></div>');
+        this.els.eventEl = jQuery('<div style="position:absolute;z-index:3;width:100%;height:100%"></div>');
         this.el.append(this.els.eventEl);
         this.els.eventEl.on("click", this.clickOnBar.bind(this));
 
         this.els.thumb.on(ludo.util.getDragStartEvent(), this.startDragging.bind(this));
-        $(document.documentElement).on(ludo.util.getDragMoveEvent(), this.drag.bind(this));
-        $(document.documentElement).on(ludo.util.getDragEndEvent(), this.endDrag.bind(this));
+        jQuery(document.documentElement).on(ludo.util.getDragMoveEvent(), this.drag.bind(this));
+        jQuery(document.documentElement).on(ludo.util.getDragEndEvent(), this.endDrag.bind(this));
     },
 
     clickOnBar: function (e) {

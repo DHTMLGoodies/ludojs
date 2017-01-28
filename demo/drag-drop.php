@@ -75,7 +75,7 @@ new ludo.effect.Effect().fly({
 	});
 
 	dragDrop.addEvent('before', function (dragged, dragDrop) {
-		$(dragged.el).css('z-index', getZIndex());
+		jQuery(dragged.el).css('z-index', getZIndex());
         dragDrop.setShimText(dragged.txt);
 	});
     dragDrop.addEvent('end', function(dragged, dragDrop){
@@ -92,7 +92,7 @@ new ludo.effect.Effect().fly({
         dragDrop.hideShim();
     });
 	for (var i = 0; i < 10; i++) {
-		var el = $('<div>');
+		var el = jQuery('<div>');
         el.addClass('box');
 		el.css({
 			width:100 + Math.round(Math.random() * 200),
@@ -105,7 +105,7 @@ new ludo.effect.Effect().fly({
         if(i%2==0){
             el.html('I will fly back');
         }
-		$(document.body).append(el);
+		jQuery(document.body).append(el);
 		dragDrop.add({
 			el:el,
 			txt:'Box number ' + (i + 1),

@@ -93,7 +93,10 @@ ludo.Notification = new Class({
 		}
 	},
 
-	show:function () {
+	show:function (html) {
+		if(arguments.length == 1){
+			this.html(html);
+		}
 		this.parent();
 
 		if (this.showEffect) {

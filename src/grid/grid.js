@@ -218,7 +218,7 @@ ludo.grid.Grid = new Class({
 		this.getEl().addClass('ludo-grid-Grid');
 
 		var b = this.getBody();
-		var t = this.els.dataContainerTop = $('<div>');
+		var t = this.els.dataContainerTop = jQuery('<div>');
 
 		t.addClass('ludo-grid-data-container');
 		t.css({
@@ -229,7 +229,7 @@ ludo.grid.Grid = new Class({
 		b.append(t);
 		b.css('overflow', 'visible');
 
-		this.els.dataContainer = $('<div>');
+		this.els.dataContainer = jQuery('<div>');
 		t.append(this.els.dataContainer);
 
 		this.els.dataContainer.css('position', 'relative');
@@ -320,7 +320,7 @@ ludo.grid.Grid = new Class({
 	},
 
 	getColumnByDom:function(el){
-		el = $(el);
+		el = jQuery(el);
 		if (!el.hasClass('ludo-grid-data-cell')) {
 			el = el.closest('.ludo-grid-data-cell');
 		}
@@ -433,7 +433,7 @@ ludo.grid.Grid = new Class({
 	},
 
 	getRecordByDOM:function (el) {
-		el = $(el);
+		el = jQuery(el);
 		if (!el.hasClass('ludo-grid-data-cell')) {
 			el = el.parent('.ludo-grid-data-cell');
 		}
@@ -585,10 +585,10 @@ ludo.grid.Grid = new Class({
 	},
 
 	mouseOverResizeHandle:function (e) {
-		$(e.target).addClass('ludo-grid-resize-handle-over');
+		jQuery(e.target).addClass('ludo-grid-resize-handle-over');
 	},
 	mouseOutResizeHandle:function (e) {
-		$(e.target).removeClass('ludo-grid-resize-handle-over');
+		jQuery(e.target).removeClass('ludo-grid-resize-handle-over');
 	},
 
 	resizeColumns:function () {
@@ -670,7 +670,7 @@ ludo.grid.Grid = new Class({
 		var count;
 		for (i = 0, count = columns.length; i < count; i++) {
 
-			this.els.dataColumns[$(columns[i]).attr('col')] = $(columns[i]);
+			this.els.dataColumns[jQuery(columns[i]).attr('col')] = jQuery(columns[i]);
 		}
 
 		this.fireEvent('renderdata', [this, this]);
@@ -682,7 +682,7 @@ ludo.grid.Grid = new Class({
 
 	emptyTextEl:function(){
 		if(this.els.emptyText === undefined){
-			this.els.emptyText = $('<div class="ludo-grid-empty-text">' + this.emptyText + '</div>');
+			this.els.emptyText = jQuery('<div class="ludo-grid-empty-text">' + this.emptyText + '</div>');
 			this.getEl().append(this.els.emptyText);
 
 		}
@@ -719,7 +719,7 @@ ludo.grid.Grid = new Class({
 		this.els.dataColumns = {};
 		var keys = this.columnManager.getLeafKeys();
 		for (var i = 0; i < keys.length; i++) {
-			var el = $('<div>');
+			var el = jQuery('<div>');
 			this.els.dataContainer.append(el);
 			el.addClass('ludo-grid-data-column');
 			
