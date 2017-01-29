@@ -46,7 +46,7 @@ ludo.calendar.Days = new Class({
     },
 
     touchStart:function (e) {
-        var p = e.touches && e.touches.length > 0 ? e.touches[0] : e;
+        var p = ludo.util.pageXY(e);
         this.touch = {
             enabled:true,
             x1:p.pageX, x2:p.pageX,
@@ -60,7 +60,7 @@ ludo.calendar.Days = new Class({
     },
     touchMove:function (e) {
         if (this.touch.enabled) {
-            var p = e.touches && e.touches.length > 0 ? e.touches[0] : e;
+            var p = ludo.util.pageXY(e);
 
             this.touch.x2 = p.pageX;
             this.touch.y2 = p.pageY;

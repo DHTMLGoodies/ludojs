@@ -139,7 +139,7 @@ ludo.effect.Resize = new Class({
 
 		ludo.EffectObject.start();
 
-        var p = e.touches != undefined && e.touches.length > 0 ? e.touches[0] : e;
+        var p = ludo.util.pageXY(e);
 
         this.dragProperties = {
             a:1,
@@ -283,7 +283,7 @@ ludo.effect.Resize = new Class({
     },
 
     getCurrentCoordinates:function (e) {
-        var p = e.touches != undefined && e.touches.length > 0 ? e.touches[0] : e;
+        var p = ludo.util.pageXY(e);
         var ret = {x:p.pageX, y:p.pageY };
         var d = this.dragProperties;
         if(d.preserveAspectRatio && d.region.length === 2)return ret;

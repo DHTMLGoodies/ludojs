@@ -29,14 +29,20 @@ ludo.CollectionView = new Class({
     },
 
     showEmptyText: function () {
-        this.emptyEl().css('display', '');
-        this._emptyEl.html(this.getEmptyText());
+        var el = this.emptyEl();
+        el.css('display', '');
+        el.html(this.getEmptyText());
+
+        el.css({
+            top: this.getEl().height() / 2 - (el.height() / 2)
+        });
     },
 
     emptyEl: function () {
         if (this._emptyEl === undefined) {
-            this._emptyEl = jQuery('<div class="ludo-empty-text" style="position:absolute">' + this.getEmptyText() + '</div>');
-            this.getBody().append(this._emptyEl);
+            this._emptyEl = jQuery('<div class="ludo-empty-text" style="width:100%;position:absolute">' + this.getEmptyText() + '</div>');
+            this._emptyEl.css('z-index', 2000);
+            this.getEl().append(this._emptyEl);
         }
         return this._emptyEl;
     },

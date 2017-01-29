@@ -79,7 +79,7 @@ ludo.layout.Tabs = new Class({
     },
 
     showAllTabs: function () {
-        $.each(this.tabs, function (key) {
+        jQuery.each(this.tabs, function (key) {
             this.tabs[key].show();
 
         }.bind(this));
@@ -89,7 +89,7 @@ ludo.layout.Tabs = new Class({
         var pos = 0;
         var size;
 
-        $.each(this.tabs, function (key) {
+        jQuery.each(this.tabs, function (key) {
 
             var node = this.tabs[key];
             if (this.tabPos === 'top' || this.tabPos === 'bottom') {
@@ -133,7 +133,7 @@ ludo.layout.Tabs = new Class({
 
         var pos = Math.abs(this.tabParent.position().left);
 
-        $.each(this.tabPositions, function (id, position) {
+        jQuery.each(this.tabPositions, function (id, position) {
             if (position.pos < pos || position.pos + position.size > pos + size) {
                 this.hiddenTabs.push(id);
 
@@ -294,7 +294,7 @@ ludo.layout.Tabs = new Class({
         menu.show();
 
         menu.disposeAllChildren();
-        $.each(this.hiddenTabs, function (index, id) {
+        jQuery.each(this.hiddenTabs, function (index, id) {
             menu.addChild({
                 label: this.tabTitles[id],
                 action: id

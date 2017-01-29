@@ -15,7 +15,7 @@
 }
 
 
-.ludo-list-view-body >.ludo-empty-text{
+.ludo-list-view >.ludo-empty-text{
     position:absolute;
     text-align:center;
     top:30%;

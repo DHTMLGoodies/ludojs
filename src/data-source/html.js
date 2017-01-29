@@ -13,7 +13,7 @@ ludo.dataSource.HTML = new Class({
 	},
 
 	sendRequest:function(data){
-		$.ajax({
+		jQuery.ajax({
 			url: this.url,
 			data: data,
 			success: function(data){

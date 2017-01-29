@@ -9,8 +9,8 @@ date_default_timezone_set("Europe/Berlin");
 $rnd = "RND". date("YmdHis");
 
 ?>
-<script type="text/javascript" src="<?php echo $prefix; ?>../mootools/MooTools-Core-1.6.0.js"></script>
-<script type="text/javascript" src="<?php echo $prefix; ?>../mootools/MooTools-More-1.6.0.js"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../mootools/MooTools-Core-1.6.0.js?abc=<?php echo $rnd; ?>"></script>
+<script type="text/javascript" src="<?php echo $prefix; ?>../mootools/MooTools-More-1.6.0.js?abc=<?php echo $rnd; ?>"></script>
 
 
 <script type="text/javascript" src="<?php echo $prefix; ?>../src/ludo.js?abc=<?php echo $rnd; ?>"></script>

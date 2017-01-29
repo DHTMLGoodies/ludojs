@@ -113,7 +113,7 @@ ludo.remote.JSON = new Class({
             payload = payload.data;
         }
 
-        $.ajax({
+        jQuery.ajax({
             url:this.getUrl(service, resourceArguments),
             method:this.method,
             cache:false,
@@ -121,7 +121,7 @@ ludo.remote.JSON = new Class({
             data:payload,
             success:function (json) {
                 this.remoteData = json;
-                if ($.type(json) != "array" || json.success || json.success === undefined) {
+                if (jQuery.type(json) != "array" || json.success || json.success === undefined) {
                     this.fireEvent('success', this);
                 } else {
                     this.fireEvent('failure', this);
@@ -144,7 +144,7 @@ ludo.remote.JSON = new Class({
      * @memberof ludo.remote.JSON.prototype
      */
     getResponseData:function () {
-        if(this.remoteData && $.type(this.remoteData) == "array") return this.remoteData;
+        if(this.remoteData && jQuery.type(this.remoteData) == "array") return this.remoteData;
 		if(!this.remoteData.response && !this.remoteData.data){
             return undefined;
         }

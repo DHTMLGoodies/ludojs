@@ -34,7 +34,7 @@ ludo.dataSource.JSON = new Class({
 
     sendRequest:function(data){
         this.parent();
-        $.ajax({
+        jQuery.ajax({
             url: this._url(),
             method: 'post',
             cache: false,

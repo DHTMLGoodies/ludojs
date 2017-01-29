@@ -177,6 +177,9 @@ ludo.grid.Grid = new Class({
 
         this.setConfigParams(config, ['columns','fill','headerMenu','columnManager','rowManager','mouseOverEffect','emptyText','highlightRecord']);
 
+		if(this.columns == undefined){
+			this.columns = this.__columns();
+		}
 		if(this.columnManager){
 			ludo.util.warn('Deprecated columnManager used, use columns instead');
 		}
@@ -211,6 +214,10 @@ ludo.grid.Grid = new Class({
 
 		this.uniqueId = String.uniqueID();
 
+	},
+
+	__columns:function(){
+		return undefined;
 	},
 
 	ludoDOM:function () {
@@ -286,6 +293,10 @@ ludo.grid.Grid = new Class({
 			});
 			ludo.dom.clearCache();
 			this.getParent().resize.delay(100, this.getParent());
+		}
+
+		if(this.emptyText){
+			this.emptyTextEl().css('display', '');
 		}
 	},
 
@@ -647,6 +658,7 @@ ludo.grid.Grid = new Class({
 		this.fireEvent('state');
 		this.currentOverRecord = undefined;
 		this.currentData = this.getDataSource().getData();
+
 
 		if(this.emptyText){
 			this.emptyTextEl().css('display', this.currentData.length > 0 ? 'none' : '');

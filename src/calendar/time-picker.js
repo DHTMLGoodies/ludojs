@@ -154,7 +154,7 @@ ludo.calendar.TimePicker = new Class({
 
     updateTimeByEvent: function (e) {
 
-        var p = e.touches && e.touches.length ? e.touches[0] : e;
+        var p = ludo.util.pageXY(e);
         var posX = p.pageX - this.drag.elX;
         var posY = p.pageY - this.drag.elY;
 

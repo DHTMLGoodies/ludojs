@@ -291,8 +291,6 @@ ludo.ListView = new Class({
     render: function () {
         this.parent();
 
-        console.log('render list', this.getDataSource().getData());
-
         if (this.availHeight == undefined) {
             this.availHeight = this.getBody().height();
         }
@@ -303,11 +301,13 @@ ludo.ListView = new Class({
         this.recordMap = {};
 
         if (!this.dataSourceObj || !this.dataSourceObj.hasData()) {
+            this.showEmptyText();
             return;
         }
 
+        this.hideEmptyText();
+
         var d = this.getDataSource().getData();
-        console.log(d);
         var htmlArray = this.getTplParser().getCompiled(d, this.tpl);
 
         this.indexFirstVisible = undefined;
@@ -320,6 +320,7 @@ ludo.ListView = new Class({
             this.renderItem(i, item, html, b);
 
         }.bind(this));
+        
 
         var selected = this.getDataSource().getSelectedRecord();
         if (selected) {

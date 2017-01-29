@@ -102,7 +102,7 @@ ludo.util = {
 
         view.disposeAllChildren();
 
-		$.each(view.els, function(key){
+		jQuery.each(view.els, function(key){
 
 			if(key != 'parent' && view.els[key] && view.els[key].prop  && view.els[key].prop("tagName")){
 				view.els[key].off();
@@ -175,10 +175,14 @@ ludo.util = {
 	},
 	
 	pageXY:function(e){
-		return e.touches && e.touches.length > 0 ? {
-			x: e.touches[0].pageX, y: e.touches[0].pageY
-		}: {
-			x: e.pageX, y: e.pageY
+
+		var eventEl = e.touches && e.touches.length > 0 ? e.touches[0] :
+			e.originalEvent != undefined && e.originalEvent.touches != undefined && e.originalEvent.touches.length > 0 ? e.originalEvent.touches[0]:
+				e;
+		return {
+			x: eventEl.pageX, y: eventEl.pageY,
+			clientX : eventEl.clientX, clientY: eventEl.clientY,
+			pageX: eventEl.pageX, pageY: eventEl.pageY
 		};
 	}
 };

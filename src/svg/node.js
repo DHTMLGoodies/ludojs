@@ -194,6 +194,7 @@ ludo.svg.Node = new Class({
 
             var mouseX, mouseY;
             var touches = e.touches;
+            if(!touches && e.originalEvent)touches = e.originalEvent.touches;
             var pX = e.pageX;
             var py = e.pageY;
             if (touches && touches.length > 0) {
@@ -494,7 +495,7 @@ ludo.svg.Node = new Class({
         }
         else if (arguments.length == 1) {
             var el = this.el;
-            $.each(key, function (attr, val) {
+            jQuery.each(key, function (attr, val) {
                 el.style[String.camelCase(attr)] = val;
             });
         } else {

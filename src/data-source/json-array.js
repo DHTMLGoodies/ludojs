@@ -276,6 +276,26 @@ ludo.dataSource.JSONArray = new Class({
         return this.paging && this.paging.remotePaging;
     },
 
+    /**
+     * Set sort function for a column
+     * @param {string} key
+     * @param {object} sortFns
+     * @example
+     * setSortFn('score', {
+     *  'asc' : function(recA, recB){
+     *      return recA.score < recB.score ? -1 : 1;
+     *  },
+     *  'desc': function(recA, recB){
+     *      return recA.score < recB.score ? 1 : -1;
+     *  }
+     *
+     * });
+     */
+    setSortFn:function(column, sortFns){
+
+        this.sortFn[column] = sortFns;
+    },
+
     getSortFnFor: function (column, order) {
         if (this.sortFn[column] !== undefined) {
             return this.sortFn[column][order];

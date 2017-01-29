@@ -142,7 +142,7 @@ ludo.form.Manager = new Class({
 
     addTypeEvents:function(type){
         if(this.configs[type].listeners != undefined){
-            $.each(this.configs[type].listeners, function(key, value){
+            jQuery.each(this.configs[type].listeners, function(key, value){
                 this.on(type + '.' + key, value);
             }.bind(this));
         }
@@ -231,7 +231,7 @@ ludo.form.Manager = new Class({
      *
      */
     populate: function (json) {
-        $.each(json, this.set.bind(this));
+        jQuery.each(json, this.set.bind(this));
     },
 
 
@@ -443,7 +443,7 @@ ludo.form.Manager = new Class({
             this.fireEvent('submit.init', this);
             this.beforeRequest();
 
-            $.ajax({
+            jQuery.ajax({
                 url: url,
                 method: this.methodFor('submit'),
                 cache: false,
@@ -491,7 +491,7 @@ ludo.form.Manager = new Class({
         this.beforeRequest();
         var url = this.getUrl('read');
         if(url != undefined){
-            $.ajax({
+            jQuery.ajax({
                 url: url,
                 method: this.methodFor('read'),
                 cache: false,

@@ -9,7 +9,7 @@ ludo.remote.HTML = new Class({
 	HTML:undefined,
 
 	sendToServer:function (service, resourceArguments, serviceArguments, additionalData) {
-		$.ajax({
+		jQuery.ajax({
 			dataType: "html",
 			method: this.method,
 			url:this.getUrl(service, resourceArguments),

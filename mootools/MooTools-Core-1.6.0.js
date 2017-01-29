@@ -1,459 +1,448 @@
-/* MooTools: the javascript framework. license: MIT-style license. copyright: Copyright (c) 2006-2016 [Valerio Proietti](http://mad4milk.net/).*/ 
+/* MooTools: the javascript framework. license: MIT-style license. copyright: Copyright (c) 2006-2016 [Valerio Proietti](http://mad4milk.net/).*/
 /*!
-Web Build: http://mootools.net/core/builder/e7289bd0058c6790cb2b769822285f97
-*/ 
+ Web Build: http://mootools.net/core/builder/e7289bd0058c6790cb2b769822285f97
+ */
 /*
----
+ ---
 
-name: Core
+ name: Core
 
-description: The heart of MooTools.
+ description: The heart of MooTools.
 
-license: MIT-style license.
+ license: MIT-style license.
 
-copyright: Copyright (c) 2006-2015 [Valerio Proietti](http://mad4milk.net/).
+ copyright: Copyright (c) 2006-2015 [Valerio Proietti](http://mad4milk.net/).
 
-authors: The MooTools production team (http://mootools.net/developers/)
+ authors: The MooTools production team (http://mootools.net/developers/)
 
-inspiration:
-  - Class implementation inspired by [Base.js](http://dean.edwards.name/weblog/2006/03/base/) Copyright (c) 2006 Dean Edwards, [GNU Lesser General Public License](http://opensource.org/licenses/lgpl-license.php)
-  - Some functionality inspired by [Prototype.js](http://prototypejs.org) Copyright (c) 2005-2007 Sam Stephenson, [MIT License](http://opensource.org/licenses/mit-license.php)
+ inspiration:
+ - Class implementation inspired by [Base.js](http://dean.edwards.name/weblog/2006/03/base/) Copyright (c) 2006 Dean Edwards, [GNU Lesser General Public License](http://opensource.org/licenses/lgpl-license.php)
+ - Some functionality inspired by [Prototype.js](http://prototypejs.org) Copyright (c) 2005-2007 Sam Stephenson, [MIT License](http://opensource.org/licenses/mit-license.php)
 
-provides: [Core, MooTools, Type, typeOf, instanceOf, Native]
+ provides: [Core, MooTools, Type, typeOf, instanceOf, Native]
 
-...
-*/
+ ...
+ */
 /*! MooTools: the javascript framework. license: MIT-style license. copyright: Copyright (c) 2006-2015 [Valerio Proietti](http://mad4milk.net/).*/
 (function(){
 
-this.MooTools = {
-	version: '1.6.0',
-	build: '529422872adfff401b901b8b6c7ca5114ee95e2b'
-};
+	this.MooTools = {
+		version: '1.6.0',
+		build: '529422872adfff401b901b8b6c7ca5114ee95e2b'
+	};
 
 // typeOf, instanceOf
 
-var typeOf = this.typeOf = function(item){
-	if (item == null) return 'null';
-	if (item.$family != null) return item.$family();
+	var typeOf = this.typeOf = function(item){
+		if (item == null) return 'null';
+		if (item.$family != null) return item.$family();
 
-	if (item.nodeName){
-		if (item.nodeType == 1) return 'element';
-		if (item.nodeType == 3) return (/\S/).test(item.nodeValue) ? 'textnode' : 'whitespace';
-	} else if (typeof item.length == 'number'){
-		if ('callee' in item) return 'arguments';
-		if ('item' in item) return 'collection';
-	}
+		if (item.nodeName){
+			if (item.nodeType == 1) return 'element';
+			if (item.nodeType == 3) return (/\S/).test(item.nodeValue) ? 'textnode' : 'whitespace';
+		} else if (typeof item.length == 'number'){
+			if ('callee' in item) return 'arguments';
+			if ('item' in item) return 'collection';
+		}
 
-	return typeof item;
-};
+		return typeof item;
+	};
 
-var instanceOf = this.instanceOf = function(item, object){
-	if (item == null) return false;
-	var constructor = item.$constructor || item.constructor;
-	while (constructor){
-		if (constructor === object) return true;
-		constructor = constructor.parent;
-	}
+	var instanceOf = this.instanceOf = function(item, object){
+		if (item == null) return false;
+		var constructor = item.$constructor || item.constructor;
+		while (constructor){
+			if (constructor === object) return true;
+			constructor = constructor.parent;
+		}
+		/*<ltIE8>*/
+		if (!item.hasOwnProperty) return false;
+		/*</ltIE8>*/
+		return item instanceof object;
+	};
+
+	var hasOwnProperty = Object.prototype.hasOwnProperty;
+
 	/*<ltIE8>*/
-	if (!item.hasOwnProperty) return false;
-	/*</ltIE8>*/
-	return item instanceof object;
-};
-
-var hasOwnProperty = Object.prototype.hasOwnProperty;
-
-/*<ltIE8>*/
-var enumerables = true;
-for (var i in {toString: 1}) enumerables = null;
-if (enumerables) enumerables = ['hasOwnProperty', 'valueOf', 'isPrototypeOf', 'propertyIsEnumerable', 'toLocaleString', 'toString', 'constructor'];
-function forEachObjectEnumberableKey(object, fn, bind){
-	if (enumerables) for (var i = enumerables.length; i--;){
-		var k = enumerables[i];
-		// signature has key-value, so overloadSetter can directly pass the
-		// method function, without swapping arguments.
-		if (hasOwnProperty.call(object, k)) fn.call(bind, k, object[k]);
+	var enumerables = true;
+	for (var i in {toString: 1}) enumerables = null;
+	if (enumerables) enumerables = ['hasOwnProperty', 'valueOf', 'isPrototypeOf', 'propertyIsEnumerable', 'toLocaleString', 'toString', 'constructor'];
+	function forEachObjectEnumberableKey(object, fn, bind){
+		if (enumerables) for (var i = enumerables.length; i--;){
+			var k = enumerables[i];
+			// signature has key-value, so overloadSetter can directly pass the
+			// method function, without swapping arguments.
+			if (hasOwnProperty.call(object, k)) fn.call(bind, k, object[k]);
+		}
 	}
-}
-/*</ltIE8>*/
+	/*</ltIE8>*/
 
 // Function overloading
 
-var Function = this.Function;
+	var Function = this.Function;
 
-Function.prototype.overloadSetter = function(usePlural){
-	var self = this;
-	return function(a, b){
-		if (a == null) return this;
-		if (usePlural || typeof a != 'string'){
-			for (var k in a) self.call(this, k, a[k]);
-			/*<ltIE8>*/
-			forEachObjectEnumberableKey(a, self, this);
-			/*</ltIE8>*/
-		} else {
-			self.call(this, a, b);
-		}
-		return this;
+	Function.prototype.overloadSetter = function(usePlural){
+		var self = this;
+		return function(a, b){
+			if (a == null) return this;
+			if (usePlural || typeof a != 'string'){
+				for (var k in a) self.call(this, k, a[k]);
+				/*<ltIE8>*/
+				forEachObjectEnumberableKey(a, self, this);
+				/*</ltIE8>*/
+			} else {
+				self.call(this, a, b);
+			}
+			return this;
+		};
 	};
-};
 
-Function.prototype.overloadGetter = function(usePlural){
-	var self = this;
-	return function(a){
-		var args, result;
-		if (typeof a != 'string') args = a;
-		else if (arguments.length > 1) args = arguments;
-		else if (usePlural) args = [a];
-		if (args){
-			result = {};
-			for (var i = 0; i < args.length; i++) result[args[i]] = self.call(this, args[i]);
-		} else {
-			result = self.call(this, a);
-		}
-		return result;
+	Function.prototype.overloadGetter = function(usePlural){
+		var self = this;
+		return function(a){
+			var args, result;
+			if (typeof a != 'string') args = a;
+			else if (arguments.length > 1) args = arguments;
+			else if (usePlural) args = [a];
+			if (args){
+				result = {};
+				for (var i = 0; i < args.length; i++) result[args[i]] = self.call(this, args[i]);
+			} else {
+				result = self.call(this, a);
+			}
+			return result;
+		};
 	};
-};
 
-Function.prototype.extend = function(key, value){
-	this[key] = value;
-}.overloadSetter();
+	Function.prototype.extend = function(key, value){
+		this[key] = value;
+	}.overloadSetter();
 
-Function.prototype.implement = function(key, value){
-	this.prototype[key] = value;
-}.overloadSetter();
+	Function.prototype.implement = function(key, value){
+		this.prototype[key] = value;
+	}.overloadSetter();
 
 // From
 
-var slice = Array.prototype.slice;
+	var slice = Array.prototype.slice;
 
-Array.convert = function(item){
-	if (item == null) return [];
-	return (Type.isEnumerable(item) && typeof item != 'string') ? (typeOf(item) == 'array') ? item : slice.call(item) : [item];
-};
-
-Function.convert = function(item){
-	return (typeOf(item) == 'function') ? item : function(){
-		return item;
+	Array.convert = function(item){
+		if (item == null) return [];
+		return (Type.isEnumerable(item) && typeof item != 'string') ? (typeOf(item) == 'array') ? item : slice.call(item) : [item];
 	};
-};
+
+	Function.convert = function(item){
+		return (typeOf(item) == 'function') ? item : function(){
+			return item;
+		};
+	};
 
 
-Number.convert = function(item){
-	var number = parseFloat(item);
-	return isFinite(number) ? number : null;
-};
+	Number.convert = function(item){
+		var number = parseFloat(item);
+		return isFinite(number) ? number : null;
+	};
 
-String.convert = function(item){
-	return item + '';
-};
+	String.convert = function(item){
+		return item + '';
+	};
 
 
 
-Function.from = Function.convert;
-Number.from = Number.convert;
-String.from = String.convert;
+	Function.from = Function.convert;
+	Number.from = Number.convert;
+	String.from = String.convert;
 
 // hide, protect
 
-Function.implement({
+	Function.implement({
 
-	hide: function(){
-		this.$hidden = true;
-		return this;
-	},
+		hide: function(){
+			this.$hidden = true;
+			return this;
+		},
 
-	protect: function(){
-		this.$protected = true;
-		return this;
-	}
+		protect: function(){
+			this.$protected = true;
+			return this;
+		}
 
-});
+	});
 
 // Type
 
-var Type = this.Type = function(name, object){
-	if (name){
-		var lower = name.toLowerCase();
-		var typeCheck = function(item){
-			return (typeOf(item) == lower);
-		};
+	var Type = this.Type = function(name, object){
+		if (name){
+			var lower = name.toLowerCase();
+			var typeCheck = function(item){
+				return (typeOf(item) == lower);
+			};
 
-		Type['is' + name] = typeCheck;
-		if (object != null){
-			object.prototype.$family = (function(){
-				return lower;
-			}).hide();
-			
+			Type['is' + name] = typeCheck;
+			if (object != null){
+				object.prototype.$family = (function(){
+					return lower;
+				}).hide();
+
+			}
 		}
-	}
 
-	if (object == null) return null;
+		if (object == null) return null;
 
-	object.extend(this);
-	object.$constructor = Type;
-	object.prototype.$constructor = object;
+		object.extend(this);
+		object.$constructor = Type;
+		object.prototype.$constructor = object;
 
-	return object;
-};
+		return object;
+	};
 
-var toString = Object.prototype.toString;
+	var toString = Object.prototype.toString;
 
-Type.isEnumerable = function(item){
-	return (item != null && typeof item.length == 'number' && toString.call(item) != '[object Function]' );
-};
+	Type.isEnumerable = function(item){
+		return (item != null && typeof item.length == 'number' && toString.call(item) != '[object Function]' );
+	};
 
-var hooks = {};
+	var hooks = {};
 
-var hooksOf = function(object){
-	var type = typeOf(object.prototype);
-	return hooks[type] || (hooks[type] = []);
-};
+	var hooksOf = function(object){
+		var type = typeOf(object.prototype);
+		return hooks[type] || (hooks[type] = []);
+	};
 
-var implement = function(name, method){
-	if (method && method.$hidden) return;
+	var implement = function(name, method){
+		if (method && method.$hidden) return;
 
-	var hooks = hooksOf(this);
+		var hooks = hooksOf(this);
 
-	for (var i = 0; i < hooks.length; i++){
-		var hook = hooks[i];
-		if (typeOf(hook) == 'type') implement.call(hook, name, method);
-		else hook.call(this, name, method);
-	}
+		for (var i = 0; i < hooks.length; i++){
+			var hook = hooks[i];
+			if (typeOf(hook) == 'type') implement.call(hook, name, method);
+			else hook.call(this, name, method);
+		}
 
-	var previous = this.prototype[name];
-	if (previous == null || !previous.$protected) this.prototype[name] = method;
+		var previous = this.prototype[name];
+		if (previous == null || !previous.$protected) this.prototype[name] = method;
 
-	if (this[name] == null && typeOf(method) == 'function') extend.call(this, name, function(item){
-		return method.apply(item, slice.call(arguments, 1));
+		if (this[name] == null && typeOf(method) == 'function') extend.call(this, name, function(item){
+			return method.apply(item, slice.call(arguments, 1));
+		});
+	};
+
+	var extend = function(name, method){
+		if (method && method.$hidden) return;
+		var previous = this[name];
+		if (previous == null || !previous.$protected) this[name] = method;
+	};
+
+	Type.implement({
+
+		implement: implement.overloadSetter(),
+
+		extend: extend.overloadSetter(),
+
+		alias: function(name, existing){
+			implement.call(this, name, this.prototype[existing]);
+		}.overloadSetter(),
+
+		mirror: function(hook){
+			hooksOf(this).push(hook);
+			return this;
+		}
+
 	});
-};
 
-var extend = function(name, method){
-	if (method && method.$hidden) return;
-	var previous = this[name];
-	if (previous == null || !previous.$protected) this[name] = method;
-};
-
-Type.implement({
-
-	implement: implement.overloadSetter(),
-
-	extend: extend.overloadSetter(),
-
-	alias: function(name, existing){
-		implement.call(this, name, this.prototype[existing]);
-	}.overloadSetter(),
-
-	mirror: function(hook){
-		hooksOf(this).push(hook);
-		return this;
-	}
-
-});
-
-new Type('Type', Type);
+	new Type('Type', Type);
 
 // Default Types
 
-var force = function(name, object, methods){
-	var isType = (object != Object),
-		prototype = object.prototype;
+	var force = function(name, object, methods){
+		var isType = (object != Object),
+			prototype = object.prototype;
 
-	if (isType) object = new Type(name, object);
+		if (isType) object = new Type(name, object);
 
-	for (var i = 0, l = methods.length; i < l; i++){
-		var key = methods[i],
-			generic = object[key],
-			proto = prototype[key];
+		for (var i = 0, l = methods.length; i < l; i++){
+			var key = methods[i],
+				generic = object[key],
+				proto = prototype[key];
 
-		if (generic) generic.protect();
-		if (isType && proto) object.implement(key, proto.protect());
-	}
+			if (generic) generic.protect();
+			if (isType && proto) object.implement(key, proto.protect());
+		}
 
-	if (isType){
-		var methodsEnumerable = prototype.propertyIsEnumerable(methods[0]);
-		object.forEachMethod = function(fn){
-			if (!methodsEnumerable) for (var i = 0, l = methods.length; i < l; i++){
-				fn.call(prototype, prototype[methods[i]], methods[i]);
-			}
-			for (var key in prototype) fn.call(prototype, prototype[key], key);
-		};
-	}
+		if (isType){
+			var methodsEnumerable = prototype.propertyIsEnumerable(methods[0]);
+			object.forEachMethod = function(fn){
+				if (!methodsEnumerable) for (var i = 0, l = methods.length; i < l; i++){
+					fn.call(prototype, prototype[methods[i]], methods[i]);
+				}
+				for (var key in prototype) fn.call(prototype, prototype[key], key);
+			};
+		}
 
-	return force;
-};
+		return force;
+	};
 
-force('String', String, [
-	'charAt', 'charCodeAt', 'concat', 'contains', 'indexOf', 'lastIndexOf', 'match', 'quote', 'replace', 'search',
-	'slice', 'split', 'substr', 'substring', 'trim', 'toLowerCase', 'toUpperCase'
-])('Array', Array, [
-	'pop', 'push', 'reverse', 'shift', 'sort', 'splice', 'unshift', 'concat', 'join', 'slice',
-	'indexOf', 'lastIndexOf', 'filter', 'forEach', 'every', 'map', 'some', 'reduce', 'reduceRight', 'contains'
-])('Number', Number, [
-	'toExponential', 'toFixed', 'toLocaleString', 'toPrecision'
-])('Function', Function, [
-	'apply', 'call', 'bind'
-])('RegExp', RegExp, [
-	'exec', 'test'
-])('Object', Object, [
-	'create', 'defineProperty', 'defineProperties', 'keys',
-	'getPrototypeOf', 'getOwnPropertyDescriptor', 'getOwnPropertyNames',
-	'preventExtensions', 'isExtensible', 'seal', 'isSealed', 'freeze', 'isFrozen'
-])('Date', Date, ['now']);
+	force('String', String, [
+		'charAt', 'charCodeAt', 'concat', 'contains', 'indexOf', 'lastIndexOf', 'match', 'quote', 'replace', 'search',
+		'slice', 'split', 'substr', 'substring', 'trim', 'toLowerCase', 'toUpperCase'
+	])('Array', Array, [
+		'pop', 'push', 'reverse', 'shift', 'sort', 'splice', 'unshift', 'concat', 'join', 'slice',
+		'indexOf', 'lastIndexOf', 'filter', 'forEach', 'every', 'map', 'some', 'reduce', 'reduceRight', 'contains'
+	])('Number', Number, [
+		'toExponential', 'toFixed', 'toLocaleString', 'toPrecision'
+	])('Function', Function, [
+		'apply', 'call', 'bind'
+	])('RegExp', RegExp, [
+		'exec', 'test'
+	])('Object', Object, [
+		'create', 'defineProperty', 'defineProperties', 'keys',
+		'getPrototypeOf', 'getOwnPropertyDescriptor', 'getOwnPropertyNames',
+		'preventExtensions', 'isExtensible', 'seal', 'isSealed', 'freeze', 'isFrozen'
+	])('Date', Date, ['now']);
 
-Object.extend = extend.overloadSetter();
+	Object.extend = extend.overloadSetter();
 
-Date.extend('now', function(){
-	return +(new Date);
-});
+	Date.extend('now', function(){
+		return +(new Date);
+	});
 
-new Type('Boolean', Boolean);
+	new Type('Boolean', Boolean);
 
 // fixes NaN returning as Number
 
-Number.prototype.$family = function(){
-	return isFinite(this) ? 'number' : 'null';
-}.hide();
+	Number.prototype.$family = function(){
+		return isFinite(this) ? 'number' : 'null';
+	}.hide();
 
 // Number.random
 
-Number.extend('random', function(min, max){
-	return Math.floor(Math.random() * (max - min + 1) + min);
-});
+	Number.extend('random', function(min, max){
+		return Math.floor(Math.random() * (max - min + 1) + min);
+	});
 
 // forEach, each, keys
 
-Array.implement({
 
-	/*<!ES5>*/
-	forEach: function(fn, bind){
-		for (var i = 0, l = this.length; i < l; i++){
-			if (i in this) fn.call(bind, this[i], i, this);
+	Object.extend({
+
+		keys: function(object){
+			var keys = [];
+			for (var k in object){
+				if (hasOwnProperty.call(object, k)) keys.push(k);
+			}
+			/*<ltIE8>*/
+			forEachObjectEnumberableKey(object, function(k){
+				keys.push(k);
+			});
+			/*</ltIE8>*/
+			return keys;
+		},
+
+		forEach: function(object, fn, bind){
+			Object.keys(object).forEach(function(key){
+				fn.call(bind, object[key], key, object);
+			});
 		}
-	},
-	/*</!ES5>*/
 
-	each: function(fn, bind){
-		Array.forEach(this, fn, bind);
-		return this;
-	}
+	});
 
-});
-
-Object.extend({
-
-	keys: function(object){
-		var keys = [];
-		for (var k in object){
-			if (hasOwnProperty.call(object, k)) keys.push(k);
-		}
-		/*<ltIE8>*/
-		forEachObjectEnumberableKey(object, function(k){
-			keys.push(k);
-		});
-		/*</ltIE8>*/
-		return keys;
-	},
-
-	forEach: function(object, fn, bind){
-		Object.keys(object).forEach(function(key){
-			fn.call(bind, object[key], key, object);
-		});
-	}
-
-});
-
-Object.each = Object.forEach;
+	Object.each = Object.forEach;
 
 
 // Array & Object cloning, Object merging and appending
 
-var cloneOf = function(item){
-	switch (typeOf(item)){
-		case 'array': return item.clone();
-		case 'object': return Object.clone(item);
-		default: return item;
-	}
-};
+	var cloneOf = function(item){
+		switch (typeOf(item)){
+			case 'array': return item.clone();
+			case 'object': return Object.clone(item);
+			default: return item;
+		}
+	};
 
-Array.implement('clone', function(){
-	var i = this.length, clone = new Array(i);
-	while (i--) clone[i] = cloneOf(this[i]);
-	return clone;
-});
+	Array.implement('clone', function(){
+		var i = this.length, clone = new Array(i);
+		while (i--) clone[i] = cloneOf(this[i]);
+		return clone;
+	});
 
-var mergeOne = function(source, key, current){
-	switch (typeOf(current)){
-		case 'object':
-			if (typeOf(source[key]) == 'object') Object.merge(source[key], current);
-			else source[key] = Object.clone(current);
-			break;
-		case 'array': source[key] = current.clone(); break;
-		default: source[key] = current;
-	}
-	return source;
-};
-
-Object.extend({
-
-	merge: function(source, k, v){
-		if (typeOf(k) == 'string') return mergeOne(source, k, v);
-		for (var i = 1, l = arguments.length; i < l; i++){
-			var object = arguments[i];
-			for (var key in object) mergeOne(source, key, object[key]);
+	var mergeOne = function(source, key, current){
+		switch (typeOf(current)){
+			case 'object':
+				if (typeOf(source[key]) == 'object') Object.merge(source[key], current);
+				else source[key] = Object.clone(current);
+				break;
+			case 'array': source[key] = current.clone(); break;
+			default: source[key] = current;
 		}
 		return source;
-	},
+	};
 
-	clone: function(object){
-		var clone = {};
-		for (var key in object) clone[key] = cloneOf(object[key]);
-		return clone;
-	},
+	Object.extend({
 
-	append: function(original){
-		for (var i = 1, l = arguments.length; i < l; i++){
-			var extended = arguments[i] || {};
-			for (var key in extended) original[key] = extended[key];
+		merge: function(source, k, v){
+			if (typeOf(k) == 'string') return mergeOne(source, k, v);
+			for (var i = 1, l = arguments.length; i < l; i++){
+				var object = arguments[i];
+				for (var key in object) mergeOne(source, key, object[key]);
+			}
+			return source;
+		},
+
+		clone: function(object){
+			var clone = {};
+			for (var key in object) clone[key] = cloneOf(object[key]);
+			return clone;
+		},
+
+		append: function(original){
+			for (var i = 1, l = arguments.length; i < l; i++){
+				var extended = arguments[i] || {};
+				for (var key in extended) original[key] = extended[key];
+			}
+			return original;
 		}
-		return original;
-	}
 
-});
+	});
 
 // Object-less types
 
-['Object', 'WhiteSpace', 'TextNode', 'Collection', 'Arguments'].each(function(name){
-	new Type(name);
-});
+	jQuery.each(['Object', 'WhiteSpace', 'TextNode', 'Collection', 'Arguments'], function(i, name){
+		new Type(name);
+	});
+	/*
+	['Object', 'WhiteSpace', 'TextNode', 'Collection', 'Arguments'].each(function(name){
+		new Type(name);
+	});
+	*/
 
 // Unique ID
 
-var UID = Date.now();
+	var UID = Date.now();
 
-String.extend('uniqueID', function(){
-	return (UID++).toString(36);
-});
+	String.extend('uniqueID', function(){
+		return (UID++).toString(36);
+	});
 
 
 
 })();
 
 /*
----
+ ---
 
-name: Array
+ name: Array
 
-description: Contains Array Prototypes like each, contains, and erase.
+ description: Contains Array Prototypes like each, contains, and erase.
 
-license: MIT-style license.
+ license: MIT-style license.
 
-requires: [Type]
+ requires: [Type]
 
-provides: Array
+ provides: Array
 
-...
-*/
+ ...
+ */
 
 Array.implement({
 
@@ -612,20 +601,20 @@ Array.implement({
 
 
 /*
----
+ ---
 
-name: Function
+ name: Function
 
-description: Contains Function Prototypes like create, bind, pass, and delay.
+ description: Contains Function Prototypes like create, bind, pass, and delay.
 
-license: MIT-style license.
+ license: MIT-style license.
 
-requires: Type
+ requires: Type
 
-provides: Function
+ provides: Function
 
-...
-*/
+ ...
+ */
 
 Function.extend({
 
@@ -692,20 +681,20 @@ Function.implement({
 
 
 /*
----
+ ---
 
-name: Number
+ name: Number
 
-description: Contains Number Prototypes like limit, round, times, and ceil.
+ description: Contains Number Prototypes like limit, round, times, and ceil.
 
-license: MIT-style license.
+ license: MIT-style license.
 
-requires: Type
+ requires: Type
 
-provides: Number
+ provides: Number
 
-...
-*/
+ ...
+ */
 
 Number.implement({
 
@@ -736,33 +725,40 @@ Number.alias('each', 'times');
 
 (function(math){
 
-var methods = {};
+	var methods = {};
 
-math.each(function(name){
-	if (!Number[name]) methods[name] = function(){
-		return Math[name].apply(null, [this].concat(Array.convert(arguments)));
-	};
-});
+	jQuery.each(math, function(i, name){
+		if (!Number[name]) methods[name] = function(){
+			return Math[name].apply(null, [this].concat(Array.convert(arguments)));
+		};
+	});
 
-Number.implement(methods);
+	/*
+	math.each(function(name){
+		if (!Number[name]) methods[name] = function(){
+			return Math[name].apply(null, [this].concat(Array.convert(arguments)));
+		};
+	});*/
+
+	Number.implement(methods);
 
 })(['abs', 'acos', 'asin', 'atan', 'atan2', 'ceil', 'cos', 'exp', 'floor', 'log', 'max', 'min', 'pow', 'sin', 'sqrt', 'tan']);
 
 /*
----
+ ---
 
-name: String
+ name: String
 
-description: Contains String Prototypes like camelCase, capitalize, test, and toInt.
+ description: Contains String Prototypes like camelCase, capitalize, test, and toInt.
 
-license: MIT-style license.
+ license: MIT-style license.
 
-requires: [Type, Array]
+ requires: [Type, Array]
 
-provides: String
+ provides: String
 
-...
-*/
+ ...
+ */
 
 String.implement({
 
@@ -836,437 +832,445 @@ String.implement({
 
 
 /*
----
+ ---
 
-name: Browser
+ name: Browser
 
-description: The Browser Object. Contains Browser initialization, Window and Document, and the Browser Hash.
+ description: The Browser Object. Contains Browser initialization, Window and Document, and the Browser Hash.
 
-license: MIT-style license.
+ license: MIT-style license.
 
-requires: [Array, Function, Number, String]
+ requires: [Array, Function, Number, String]
 
-provides: [Browser, Window, Document]
+ provides: [Browser, Window, Document]
 
-...
-*/
+ ...
+ */
 
 (function(){
 
-var document = this.document;
-var window = document.window = this;
+	var document = this.document;
+	var window = document.window = this;
 
-var parse = function(ua, platform){
-	ua = ua.toLowerCase();
-	platform = (platform ? platform.toLowerCase() : '');
+	var parse = function(ua, platform){
+		ua = ua.toLowerCase();
+		platform = (platform ? platform.toLowerCase() : '');
 
-	// chrome is included in the edge UA, so need to check for edge first,
-	// before checking if it's chrome.
-	var UA = ua.match(/(edge)[\s\/:]([\w\d\.]+)/);
-	if (!UA){
-		UA = ua.match(/(opera|ie|firefox|chrome|trident|crios|version)[\s\/:]([\w\d\.]+)?.*?(safari|(?:rv[\s\/:]|version[\s\/:])([\w\d\.]+)|$)/) || [null, 'unknown', 0];
-	}
+		// chrome is included in the edge UA, so need to check for edge first,
+		// before checking if it's chrome.
+		var UA = ua.match(/(edge)[\s\/:]([\w\d\.]+)/);
+		if (!UA){
+			UA = ua.match(/(opera|ie|firefox|chrome|trident|crios|version)[\s\/:]([\w\d\.]+)?.*?(safari|(?:rv[\s\/:]|version[\s\/:])([\w\d\.]+)|$)/) || [null, 'unknown', 0];
+		}
 
-	if (UA[1] == 'trident'){
-		UA[1] = 'ie';
-		if (UA[4]) UA[2] = UA[4];
-	} else if (UA[1] == 'crios'){
-		UA[1] = 'chrome';
-	}
+		if (UA[1] == 'trident'){
+			UA[1] = 'ie';
+			if (UA[4]) UA[2] = UA[4];
+		} else if (UA[1] == 'crios'){
+			UA[1] = 'chrome';
+		}
 
-	platform = ua.match(/ip(?:ad|od|hone)/) ? 'ios' : (ua.match(/(?:webos|android)/) || ua.match(/mac|win|linux/) || ['other'])[0];
-	if (platform == 'win') platform = 'windows';
+		platform = ua.match(/ip(?:ad|od|hone)/) ? 'ios' : (ua.match(/(?:webos|android)/) || ua.match(/mac|win|linux/) || ['other'])[0];
+		if (platform == 'win') platform = 'windows';
 
-	return {
-		extend: Function.prototype.extend,
-		name: (UA[1] == 'version') ? UA[3] : UA[1],
-		version: parseFloat((UA[1] == 'opera' && UA[4]) ? UA[4] : UA[2]),
-		platform: platform
+		return {
+			extend: Function.prototype.extend,
+			name: (UA[1] == 'version') ? UA[3] : UA[1],
+			version: parseFloat((UA[1] == 'opera' && UA[4]) ? UA[4] : UA[2]),
+			platform: platform
+		};
 	};
-};
 
-var Browser = this.Browser = parse(navigator.userAgent, navigator.platform);
+	var Browser = this.Browser = parse(navigator.userAgent, navigator.platform);
 
-if (Browser.name == 'ie' && document.documentMode){
-	Browser.version = document.documentMode;
-}
+	if (Browser.name == 'ie' && document.documentMode){
+		Browser.version = document.documentMode;
+	}
 
-Browser.extend({
-	Features: {
-		xpath: !!(document.evaluate),
-		air: !!(window.runtime),
-		query: !!(document.querySelector),
-		json: !!(window.JSON)
-	},
-	parseUA: parse
-});
+	Browser.extend({
+		Features: {
+			xpath: !!(document.evaluate),
+			air: !!(window.runtime),
+			query: !!(document.querySelector),
+			json: !!(window.JSON)
+		},
+		parseUA: parse
+	});
 
 
 
 // Request
 
-Browser.Request = (function(){
+	Browser.Request = (function(){
 
-	var XMLHTTP = function(){
-		return new XMLHttpRequest();
-	};
+		var XMLHTTP = function(){
+			return new XMLHttpRequest();
+		};
 
-	var MSXML2 = function(){
-		return new ActiveXObject('MSXML2.XMLHTTP');
-	};
+		var MSXML2 = function(){
+			return new ActiveXObject('MSXML2.XMLHTTP');
+		};
 
-	var MSXML = function(){
-		return new ActiveXObject('Microsoft.XMLHTTP');
-	};
+		var MSXML = function(){
+			return new ActiveXObject('Microsoft.XMLHTTP');
+		};
 
-	return Function.attempt(function(){
-		XMLHTTP();
-		return XMLHTTP;
-	}, function(){
-		MSXML2();
-		return MSXML2;
-	}, function(){
-		MSXML();
-		return MSXML;
-	});
+		return Function.attempt(function(){
+			XMLHTTP();
+			return XMLHTTP;
+		}, function(){
+			MSXML2();
+			return MSXML2;
+		}, function(){
+			MSXML();
+			return MSXML;
+		});
 
-})();
+	})();
 
-Browser.Features.xhr = !!(Browser.Request);
+	Browser.Features.xhr = !!(Browser.Request);
 
 
 
 // String scripts
 
-Browser.exec = function(text){
-	if (!text) return text;
-	if (window.execScript){
-		window.execScript(text);
-	} else {
-		var script = document.createElement('script');
-		script.setAttribute('type', 'text/javascript');
-		script.text = text;
-		document.head.appendChild(script);
-		document.head.removeChild(script);
-	}
-	return text;
-};
+	Browser.exec = function(text){
+		if (!text) return text;
+		if (window.execScript){
+			window.execScript(text);
+		} else {
+			var script = document.createElement('script');
+			script.setAttribute('type', 'text/javascript');
+			script.text = text;
+			document.head.appendChild(script);
+			document.head.removeChild(script);
+		}
+		return text;
+	};
 
-String.implement('stripScripts', function(exec){
-	var scripts = '';
-	var text = this.replace(/<script[^>]*>([\s\S]*?)<\/script>/gi, function(all, code){
-		scripts += code + '\n';
-		return '';
+	String.implement('stripScripts', function(exec){
+		var scripts = '';
+		var text = this.replace(/<script[^>]*>([\s\S]*?)<\/script>/gi, function(all, code){
+			scripts += code + '\n';
+			return '';
+		});
+		if (exec === true) Browser.exec(scripts);
+		else if (typeOf(exec) == 'function') exec(scripts, text);
+		return text;
 	});
-	if (exec === true) Browser.exec(scripts);
-	else if (typeOf(exec) == 'function') exec(scripts, text);
-	return text;
-});
 
 // Window, Document
 
-Browser.extend({
-	Document: this.Document,
-	Window: this.Window,
-	Element: this.Element,
-	Event: this.Event
-});
+	Browser.extend({
+		Document: this.Document,
+		Window: this.Window,
+		Element: this.Element,
+		Event: this.Event
+	});
 
-this.Window = this.$constructor = new Type('Window', function(){});
+	this.Window = this.$constructor = new Type('Window', function(){});
 
-this.$family = Function.convert('window').hide();
+	this.$family = Function.convert('window').hide();
 
-Window.mirror(function(name, method){
-	window[name] = method;
-});
+	Window.mirror(function(name, method){
+		window[name] = method;
+	});
 
-this.Document = document.$constructor = new Type('Document', function(){});
+	this.Document = document.$constructor = new Type('Document', function(){});
 
-document.$family = Function.convert('document').hide();
+	document.$family = Function.convert('document').hide();
 
-Document.mirror(function(name, method){
-	document[name] = method;
-});
+	Document.mirror(function(name, method){
+		document[name] = method;
+	});
 
-document.html = document.documentElement;
-if (!document.head) document.head = document.getElementsByTagName('head')[0];
+	document.html = document.documentElement;
+	if (!document.head) document.head = document.getElementsByTagName('head')[0];
 
-if (document.execCommand) try {
-	document.execCommand('BackgroundImageCache', false, true);
-} catch (e){}
+	if (document.execCommand) try {
+		document.execCommand('BackgroundImageCache', false, true);
+	} catch (e){}
 
-/*<ltIE9>*/
-if (this.attachEvent && !this.addEventListener){
-	var unloadEvent = function(){
-		this.detachEvent('onunload', unloadEvent);
-		document.head = document.html = document.window = null;
-		window = this.Window = document = null;
-	};
-	this.attachEvent('onunload', unloadEvent);
-}
+	/*<ltIE9>*/
+	if (this.attachEvent && !this.addEventListener){
+		var unloadEvent = function(){
+			this.detachEvent('onunload', unloadEvent);
+			document.head = document.html = document.window = null;
+			window = this.Window = document = null;
+		};
+		this.attachEvent('onunload', unloadEvent);
+	}
 
 // IE fails on collections and <select>.options (refers to <select>)
-var arrayFrom = Array.convert;
-try {
-	arrayFrom(document.html.childNodes);
-} catch (e){
-	Array.convert = function(item){
-		if (typeof item != 'string' && Type.isEnumerable(item) && typeOf(item) != 'array'){
-			var i = item.length, array = new Array(i);
-			while (i--) array[i] = item[i];
-			return array;
-		}
-		return arrayFrom(item);
+	var arrayFrom = Array.convert;
+	try {
+		arrayFrom(document.html.childNodes);
+	} catch (e){
+		Array.convert = function(item){
+			if (typeof item != 'string' && Type.isEnumerable(item) && typeOf(item) != 'array'){
+				var i = item.length, array = new Array(i);
+				while (i--) array[i] = item[i];
+				return array;
+			}
+			return arrayFrom(item);
+		};
+
+		var prototype = Array.prototype,
+			slice = prototype.slice;
+		['pop', 'push', 'reverse', 'shift', 'sort', 'splice', 'unshift', 'concat', 'join', 'slice'].each(function(name){
+			var method = prototype[name];
+			Array[name] = function(item){
+				return method.apply(Array.convert(item), slice.call(arguments, 1));
+			};
+		});
+	}
+	/*</ltIE9>*/
+
+
+
+})();
+
+/*
+ ---
+
+ name: Class
+
+ description: Contains the Class Function for easily creating, extending, and implementing reusable Classes.
+
+ license: MIT-style license.
+
+ requires: [Array, String, Function, Number]
+
+ provides: Class
+
+ ...
+ */
+
+(function(){
+
+	var Class = this.Class = new Type('Class', function(params){
+		if (instanceOf(params, Function)) params = {initialize: params};
+
+		var newClass = function(){
+			reset(this);
+			if (newClass.$prototyping) return this;
+			this.$caller = null;
+			this.$family = null;
+			var value = (this.initialize) ? this.initialize.apply(this, arguments) : this;
+			this.$caller = this.caller = null;
+			return value;
+		}.extend(this).implement(params);
+
+		newClass.$constructor = Class;
+		newClass.prototype.$constructor = newClass;
+		newClass.prototype.parent = parent;
+
+		return newClass;
+	});
+
+	var parent = function(){
+		if (!this.$caller) throw new Error('The method "parent" cannot be called.');
+		var name = this.$caller.$name,
+			parent = this.$caller.$owner.parent,
+			previous = (parent) ? parent.prototype[name] : null;
+		if (!previous) throw new Error('The method "' + name + '" has no parent.');
+		return previous.apply(this, arguments);
 	};
 
-	var prototype = Array.prototype,
-		slice = prototype.slice;
-	['pop', 'push', 'reverse', 'shift', 'sort', 'splice', 'unshift', 'concat', 'join', 'slice'].each(function(name){
-		var method = prototype[name];
-		Array[name] = function(item){
-			return method.apply(Array.convert(item), slice.call(arguments, 1));
-		};
-	});
-}
-/*</ltIE9>*/
-
-
-
-})();
-
-/*
----
-
-name: Class
-
-description: Contains the Class Function for easily creating, extending, and implementing reusable Classes.
-
-license: MIT-style license.
-
-requires: [Array, String, Function, Number]
-
-provides: Class
-
-...
-*/
-
-(function(){
-
-var Class = this.Class = new Type('Class', function(params){
-	if (instanceOf(params, Function)) params = {initialize: params};
-
-	var newClass = function(){
-		reset(this);
-		if (newClass.$prototyping) return this;
-		this.$caller = null;
-		this.$family = null;
-		var value = (this.initialize) ? this.initialize.apply(this, arguments) : this;
-		this.$caller = this.caller = null;
-		return value;
-	}.extend(this).implement(params);
-
-	newClass.$constructor = Class;
-	newClass.prototype.$constructor = newClass;
-	newClass.prototype.parent = parent;
-
-	return newClass;
-});
-
-var parent = function(){
-	if (!this.$caller) throw new Error('The method "parent" cannot be called.');
-	var name = this.$caller.$name,
-		parent = this.$caller.$owner.parent,
-		previous = (parent) ? parent.prototype[name] : null;
-	if (!previous) throw new Error('The method "' + name + '" has no parent.');
-	return previous.apply(this, arguments);
-};
-
-var reset = function(object){
-	for (var key in object){
-		var value = object[key];
-		switch (typeOf(value)){
-			case 'object':
-				var F = function(){};
-				F.prototype = value;
-				object[key] = reset(new F);
-				break;
-			case 'array': object[key] = value.clone(); break;
-		}
-	}
-	return object;
-};
-
-var wrap = function(self, key, method){
-	if (method.$origin) method = method.$origin;
-	var wrapper = function(){
-		if (method.$protected && this.$caller == null) throw new Error('The method "' + key + '" cannot be called.');
-		var caller = this.caller, current = this.$caller;
-		this.caller = current; this.$caller = wrapper;
-		var result = method.apply(this, arguments);
-		this.$caller = current; this.caller = caller;
-		return result;
-	}.extend({$owner: self, $origin: method, $name: key});
-	return wrapper;
-};
-
-var implement = function(key, value, retain){
-	if (Class.Mutators.hasOwnProperty(key)){
-		value = Class.Mutators[key].call(this, value);
-		if (value == null) return this;
-	}
-
-	if (typeOf(value) == 'function'){
-		if (value.$hidden) return this;
-		this.prototype[key] = (retain) ? value : wrap(this, key, value);
-	} else {
-		Object.merge(this.prototype, key, value);
-	}
-
-	return this;
-};
-
-var getInstance = function(klass){
-	klass.$prototyping = true;
-	var proto = new klass;
-	delete klass.$prototyping;
-	return proto;
-};
-
-Class.implement('implement', implement.overloadSetter());
-
-Class.Mutators = {
-
-	Extends: function(parent){
-		this.parent = parent;
-		this.prototype = getInstance(parent);
-	},
-
-	Implements: function(items){
-		Array.convert(items).each(function(item){
-			var instance = new item;
-			for (var key in instance) implement.call(this, key, instance[key], true);
-		}, this);
-	}
-};
-
-})();
-
-/*
----
-
-name: Class.Extras
-
-description: Contains Utility Classes that can be implemented into your own Classes to ease the execution of many common tasks.
-
-license: MIT-style license.
-
-requires: Class
-
-provides: [Class.Extras, Chain, Events, Options]
-
-...
-*/
-
-(function(){
-
-this.Chain = new Class({
-
-	$chain: [],
-
-	chain: function(){
-		this.$chain.append(Array.flatten(arguments));
-		return this;
-	},
-
-	callChain: function(){
-		return (this.$chain.length) ? this.$chain.shift().apply(this, arguments) : false;
-	},
-
-	clearChain: function(){
-		this.$chain.empty();
-		return this;
-	}
-
-});
-
-var removeOn = function(string){
-	return string.replace(/^on([A-Z])/, function(full, first){
-		return first.toLowerCase();
-	});
-};
-
-this.Events = new Class({
-
-	$events: {},
-
-	addEvent: function(type, fn, internal){
-		type = removeOn(type);
-
-		
-
-		this.$events[type] = (this.$events[type] || []).include(fn);
-		if (internal) fn.internal = true;
-		return this;
-	},
-
-	addEvents: function(events){
-		for (var type in events) this.addEvent(type, events[type]);
-		return this;
-	},
-
-	fireEvent: function(type, args, delay){
-		type = removeOn(type);
-		var events = this.$events[type];
-		if (!events) return this;
-		args = Array.convert(args);
-		events.each(function(fn){
-			if (delay) fn.delay(delay, this, args);
-			else fn.apply(this, args);
-		}, this);
-		return this;
-	},
-
-	removeEvent: function(type, fn){
-		type = removeOn(type);
-		var events = this.$events[type];
-		if (events && !fn.internal){
-			var index = events.indexOf(fn);
-			if (index != -1) delete events[index];
-		}
-		return this;
-	},
-
-	removeEvents: function(events){
-		var type;
-		if (typeOf(events) == 'object'){
-			for (type in events) this.removeEvent(type, events[type]);
-			return this;
-		}
-		if (events) events = removeOn(events);
-		for (type in this.$events){
-			if (events && events != type) continue;
-			var fns = this.$events[type];
-			for (var i = fns.length; i--;) if (i in fns){
-				this.removeEvent(type, fns[i]);
+	var reset = function(object){
+		for (var key in object){
+			var value = object[key];
+			switch (typeOf(value)){
+				case 'object':
+					var F = function(){};
+					F.prototype = value;
+					object[key] = reset(new F);
+					break;
+				case 'array': object[key] = value.clone(); break;
 			}
 		}
-		return this;
-	}
+		return object;
+	};
 
-});
+	var wrap = function(self, key, method){
+		if (method.$origin) method = method.$origin;
+		var wrapper = function(){
+			if (method.$protected && this.$caller == null) throw new Error('The method "' + key + '" cannot be called.');
+			var caller = this.caller, current = this.$caller;
+			this.caller = current; this.$caller = wrapper;
+			var result = method.apply(this, arguments);
+			this.$caller = current; this.caller = caller;
+			return result;
+		}.extend({$owner: self, $origin: method, $name: key});
+		return wrapper;
+	};
 
-this.Options = new Class({
-
-	setOptions: function(){
-		var options = this.options = Object.merge.apply(null, [{}, this.options].append(arguments));
-		if (this.addEvent) for (var option in options){
-			if (typeOf(options[option]) != 'function' || !(/^on[A-Z]/).test(option)) continue;
-			this.addEvent(option, options[option]);
-			delete options[option];
+	var implement = function(key, value, retain){
+		if (Class.Mutators.hasOwnProperty(key)){
+			value = Class.Mutators[key].call(this, value);
+			if (value == null) return this;
 		}
-		return this;
-	}
 
-});
+		if (typeOf(value) == 'function'){
+			if (value.$hidden) return this;
+			this.prototype[key] = (retain) ? value : wrap(this, key, value);
+		} else {
+			Object.merge(this.prototype, key, value);
+		}
+
+		return this;
+	};
+
+	var getInstance = function(klass){
+		klass.$prototyping = true;
+		var proto = new klass;
+		delete klass.$prototyping;
+		return proto;
+	};
+
+	Class.implement('implement', implement.overloadSetter());
+
+	Class.Mutators = {
+
+		Extends: function(parent){
+			this.parent = parent;
+			this.prototype = getInstance(parent);
+		},
+
+		Implements: function(items){
+			Array.convert(items).each(function(item){
+				var instance = new item;
+				for (var key in instance) implement.call(this, key, instance[key], true);
+			}, this);
+		}
+	};
+
+})();
+
+/*
+ ---
+
+ name: Class.Extras
+
+ description: Contains Utility Classes that can be implemented into your own Classes to ease the execution of many common tasks.
+
+ license: MIT-style license.
+
+ requires: Class
+
+ provides: [Class.Extras, Chain, Events, Options]
+
+ ...
+ */
+
+(function(){
+
+	this.Chain = new Class({
+
+		$chain: [],
+
+		chain: function(){
+			this.$chain.append(Array.flatten(arguments));
+			return this;
+		},
+
+		callChain: function(){
+			return (this.$chain.length) ? this.$chain.shift().apply(this, arguments) : false;
+		},
+
+		clearChain: function(){
+			this.$chain.empty();
+			return this;
+		}
+
+	});
+
+	var removeOn = function(string){
+		return string.replace(/^on([A-Z])/, function(full, first){
+			return first.toLowerCase();
+		});
+	};
+
+	this.Events = new Class({
+
+		$events: {},
+
+		addEvent: function(type, fn, internal){
+			type = removeOn(type);
+
+
+
+			this.$events[type] = (this.$events[type] || []).include(fn);
+			if (internal) fn.internal = true;
+			return this;
+		},
+
+		addEvents: function(events){
+			for (var type in events) this.addEvent(type, events[type]);
+			return this;
+		},
+
+		fireEvent: function(type, args, delay){
+			type = removeOn(type);
+			var events = this.$events[type];
+			if (!events) return this;
+			args = Array.convert(args);
+
+			jQuery.each(events, function(i, fn){
+				if (delay) fn.delay(delay, this, args);
+				else fn.apply(this, args);
+			}.bind(this));
+
+			/*
+			events.each(function(fn){
+				if (delay) fn.delay(delay, this, args);
+				else fn.apply(this, args);
+			}, this);
+			*/
+			return this;
+		},
+
+		removeEvent: function(type, fn){
+			type = removeOn(type);
+			var events = this.$events[type];
+			if (events && !fn.internal){
+				var index = events.indexOf(fn);
+				if (index != -1) delete events[index];
+			}
+			return this;
+		},
+
+		removeEvents: function(events){
+			var type;
+			if (typeOf(events) == 'object'){
+				for (type in events) this.removeEvent(type, events[type]);
+				return this;
+			}
+			if (events) events = removeOn(events);
+			for (type in this.$events){
+				if (events && events != type) continue;
+				var fns = this.$events[type];
+				for (var i = fns.length; i--;) if (i in fns){
+					this.removeEvent(type, fns[i]);
+				}
+			}
+			return this;
+		}
+
+	});
+
+	this.Options = new Class({
+
+		setOptions: function(){
+			var options = this.options = Object.merge.apply(null, [{}, this.options].append(arguments));
+			if (this.addEvent) for (var option in options){
+				if (typeOf(options[option]) != 'function' || !(/^on[A-Z]/).test(option)) continue;
+				this.addEvent(option, options[option]);
+				delete options[option];
+			}
+			return this;
+		}
+
+	});
 
 })();
