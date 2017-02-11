@@ -24,7 +24,7 @@
     line-height: 30px;
     border: 1px solid #999;
     border-radius: 5px;
-    webkit-border-radius: 5px;
+    -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     z-index: 40000;
     background-color: #FFF;
@@ -433,7 +433,6 @@ div.ludo-FramedView {
 
 .ludo-view {
     border-width: 1px;
-    background-color: #FFF;
     overflow: hidden;
     position: relative;
 }
@@ -975,7 +974,7 @@ div.ludo-tab-strip-right div.ludo-body {
 }
 
 
-.ludo-list-view-body >.ludo-empty-text{
+.ludo-list-view >.ludo-empty-text{
     position:absolute;
     text-align:center;
     top:30%;
@@ -1038,6 +1037,10 @@ div.ludo-tab-strip-right div.ludo-body {
     padding-right: 5px;
     height: 20px;
     cursor: default;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .ludo-grid-Grid div.last-header-cell {
@@ -1922,8 +1925,11 @@ div.ludo-form-button-disabled .ludo-form-button-m-bg-right {
     font-family: arial, sans-serif;
 }
 
-.ludo-body input {
+.ludo-body input,.ludo-body select {
     font-size: 12px;
+}
+.ludo-body select{
+    height:auto;
 }
 
 .ludo-form-autocomplete-suggestion-over {
@@ -2007,7 +2013,7 @@ div.ludo-menu-menu label {
 }
 
 .ludo-form-text-element {
-    border: 1px solid #ccc;
+    border: 1px solid transparent;
     background-color: #FFF;
     padding: 1px;
 }
@@ -2522,11 +2528,10 @@ div.ludo-spinbox-arrow-overeffect{
 .ludo-twilight .ludo-body{
     color:#aeb0b0;
 }
-.ludo-twilight .ludo-view{
+.ludo-twilight .ludo-view-top{
     background-color:#535353;
     color:#aeb0b0;
 }
-
 
 .ludo-twilight .ludo-framed-view-titlebar-title{
     line-height:24px;
@@ -3135,17 +3140,21 @@ Collapse bar
 .ludo-twilight .ludo-form-element,
 .ludo-twilight .ludo-form-text-element
 {
-    background-color:#535354;
-    border-color:#7a7a7a;
+    background-color:transparent;
+
     color:#eee;
     border-top-color: transparent;
     border-left-color: transparent;
     border-right-color: transparent;
 }
 
+.ludo-twilight input[type="text"]{
+    border-bottom:1px solid #7a7a7a;
+}
+
 .ludo-twilight div.ludo-form-textarea .ludo-form-text-element{
 
-    border:1px solid #aeb0b0;
+    border:1px solid #444;
 }
 
 .ludo-twilight .form-combo-child{
@@ -3222,7 +3231,9 @@ Shim **/
     color:#FFF;
     background-image:url(../images/twilight-skin/ajax-loader-shim.gif);
 }
-
+.ludo-twilight .ludo-loader-shim{
+    background-color:#000;
+}
 /**
 Progress bar
 */
@@ -3241,3 +3252,32 @@ Progress bar
     color: #FFFFFF;
     font-size: 12px;
 }
+
+/** List View */
+
+
+.ludo-twilight .ludo-list-item-back-left{
+    background-color:#388E3C;
+    color:#FFF;
+}
+
+.ludo-twilight .ludo-list-item-back-right{
+    background-color:#D32F2F;
+    color:#FFF;
+}
+
+.ludo-twilight .ludo-list-item-back-undo{
+    background-color:#455A64;
+    color:#FFF;
+}
+
+.ludo-twilight div.ludo-list-item-highlighted .ludo-list-item-front {
+    background-color: #666;
+}
+
+.ludo-twilight div.ludo-list-item-selected .ludo-list-item-front {
+    background-color: #444;
+    color: #ccc;
+
+}
+

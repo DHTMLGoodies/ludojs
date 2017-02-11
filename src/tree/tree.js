@@ -141,9 +141,9 @@ ludo.tree.Tree = new Class({
 
 	ludoDOM:function () {
 		this.parent();
-		this.getBody().css('overflowY', 'auto');
-		this.getBody().on("click", this.onClick.bind(this));
-		this.getBody().on("dblclick", this.onDblClick.bind(this));
+		this.$b().css('overflowY', 'auto');
+		this.$b().on("click", this.onClick.bind(this));
+		this.$b().on("dblclick", this.onDblClick.bind(this));
 
 
 	},
@@ -251,13 +251,13 @@ ludo.tree.Tree = new Class({
 		if (this.nodeCache[cacheKey] === undefined)this.nodeCache[cacheKey] = {};
 		var uid = record.getUID ? record.getUID() : record.uid;
 		if (!this.nodeCache[cacheKey][uid]) {
-			this.nodeCache[cacheKey][uid] = this.getBody().find("#" + idPrefix + uid);
+			this.nodeCache[cacheKey][uid] = this.$b().find("#" + idPrefix + uid);
 		}
 		return this.nodeCache[cacheKey][uid];
 	},
 
 	getRecordByDOM:function (el) {
-		var b = this.getBody();
+		var b = this.$b();
 		while (el !== b && (!el.className || el.className.indexOf('ludo-tree-a-node') === -1)) {
 			el = el.parentNode;
 		}
@@ -404,7 +404,7 @@ ludo.tree.Tree = new Class({
 	},
 
 	addChild:function (record, parentRecord) {
-		var childContainer = parentRecord ? this.getChildContainer(parentRecord) : this.getBody();
+		var childContainer = parentRecord ? this.getChildContainer(parentRecord) : this.$b();
 		if (childContainer) {
 			var node = this.getDomByRecord(record) || this.getNewNodeFor(record);
 			childContainer.appendChild(node);

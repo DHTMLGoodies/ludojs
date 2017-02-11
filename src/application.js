@@ -19,7 +19,7 @@ ludo.Application = new Class({
     __rendered:function () {
         this.parent();
         this.getEl().addClass('ludo-application');
-        this.getBody().addClass('ludo-application-content');
+        this.$b().addClass('ludo-application-content');
     },
 
     setBorderStyles:function () {

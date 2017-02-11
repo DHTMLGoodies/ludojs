@@ -6,9 +6,9 @@ TestCase("layout.Accordion", {
     "test should not show hidden views": function(){
         var v = this.getAccordion();
 
-        var children = v.getBody().find('.ludo-body');
+        var children = v.$b().find('.ludo-body');
 
-        assertEquals(v.getBody()[0].innerHTML, 3, children.length);
+        assertEquals(v.$b()[0].innerHTML, 3, children.length);
 
     },
 
@@ -16,7 +16,7 @@ TestCase("layout.Accordion", {
         // given
         var v = this.getAccordion();
 
-        var titles = v.getBody().find('.ludo-framed-view-titlebar');
+        var titles = v.$b().find('.ludo-framed-view-titlebar');
 
         var child = $(titles[0]);
         // when

@@ -180,7 +180,7 @@ ludo.form.Button = new Class({
             this.addIcon();
         }
 
-        var b = this.getBody();
+        var b = this.$b();
 
         b.css('padding-left', 0);
         this.getEl().on('selectstart', ludo.util.cancelEvent);
@@ -188,7 +188,7 @@ ludo.form.Button = new Class({
 
     ludoEvents:function () {
         this.parent();
-        var el = this.getBody();
+        var el = this.$b();
 
         el.on('click', this.click.bind(this));
         el.mouseenter(this.mouseOver.bind(this));
@@ -210,7 +210,7 @@ ludo.form.Button = new Class({
             this.disable();
         }
         if (this.toggle && this.active) {
-            this.getBody().addClass('ludo-form-button-pressed');
+            this.$b().addClass('ludo-form-button-pressed');
         }
 
         this.component = this.getParentComponent();
@@ -245,7 +245,7 @@ ludo.form.Button = new Class({
             'z-index':7
         });
         txt.html(this.value);
-        this.getBody().append(txt);
+        this.$b().append(txt);
     },
 
     addIcon:function () {
@@ -282,7 +282,7 @@ ludo.form.Button = new Class({
             'left':0,
             'z-index':5
         });
-        this.getBody().append(bg);
+        this.$b().append(bg);
     },
 
     addRightEdge:function () {
@@ -294,7 +294,7 @@ ludo.form.Button = new Class({
             'right':0,
             'z-index':6
         });
-        this.getBody().append(bg);
+        this.$b().append(bg);
     },
 
     disable:function () {
@@ -341,13 +341,13 @@ ludo.form.Button = new Class({
     mouseOver:function () {
 
         if (!this.isDisabled()) {
-            this.getBody().addClass('ludo-form-button-over');
+            this.$b().addClass('ludo-form-button-over');
             this.fireEvent('mouseover', this);
         }
     },
     mouseOut:function () {
         if (!this.isDisabled()) {
-            this.getBody().removeClass('ludo-form-button-over');
+            this.$b().removeClass('ludo-form-button-over');
             this.fireEvent('mouseout', this);
         }
 
@@ -356,7 +356,7 @@ ludo.form.Button = new Class({
     mouseDown:function () {
         if (!this.isDisabled()) {
 			this.isDown = true;
-            this.getBody().addClass('ludo-form-button-down');
+            this.$b().addClass('ludo-form-button-down');
             this.fireEvent('mousedown', this);
 
             if(this.els.icon && this.iconPressed){
@@ -368,7 +368,7 @@ ludo.form.Button = new Class({
     mouseUp:function () {
         if (this.isDown && !this.isDisabled()) {
 
-            this.getBody().removeClass('ludo-form-button-down');
+            this.$b().removeClass('ludo-form-button-down');
             this.fireEvent('mouseup', this);
         }
 
@@ -420,9 +420,9 @@ ludo.form.Button = new Class({
     resizeDOM:function () {
         // TODO refactor - buttons too tall in relative layout
         if(this.borderSize == undefined)
-            this.borderSize = ludo.dom.getBH(this.getBody());
+            this.borderSize = ludo.dom.getBH(this.$b());
 
-        this.getBody().css('height', this.heights[this.size]  - this.borderSize);
+        this.$b().css('height', this.heights[this.size]  - this.borderSize);
     },
 
     validate:function () {
@@ -438,11 +438,11 @@ ludo.form.Button = new Class({
     },
 
     select:function () {
-        this.getBody().addClass('ludo-form-button-selected');
+        this.$b().addClass('ludo-form-button-selected');
     },
 
     deSelect:function () {
-        this.getBody().removeClass('ludo-form-button-selected');
+        this.$b().removeClass('ludo-form-button-selected');
     },
 
     turnOn:function () {
@@ -454,7 +454,7 @@ ludo.form.Button = new Class({
          * @param Component this
          */
         this.fireEvent('on', [this._get(), this]);
-        this.getBody().addClass('ludo-form-button-pressed');
+        this.$b().addClass('ludo-form-button-pressed');
     },
 
     turnOff:function () {
@@ -466,7 +466,7 @@ ludo.form.Button = new Class({
          * @param Component this
          */
         this.fireEvent('off', [this._get(), this]);
-        this.getBody().removeClass('ludo-form-button-pressed');
+        this.$b().removeClass('ludo-form-button-pressed');
     },
 
     /**

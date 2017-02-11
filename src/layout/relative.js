@@ -67,7 +67,8 @@ ludo.layout.Relative = new Class({
 		'sameWidthAs', 'sameHeightAs',
 		'centerInParent', 'centerHorizontal', 'centerVertical',
 		'fillLeft', 'fillRight', 'fillUp', 'fillDown',
-		'absBottom','absWidth','absHeight','absLeft','absTop','absRight','offsetX','offsetY'
+		'absBottom','absWidth','absHeight','absLeft','absTop','absRight','offsetX','offsetY',
+		'widthOffset','heightOffset'
 	],
 
 	newChildCoordinates:{},
@@ -75,7 +76,7 @@ ludo.layout.Relative = new Class({
 
 	onCreate:function () {
 		this.parent();
-		this.view.getBody().css('position', 'relative');
+		this.view.$b().css('position', 'relative');
 
 	},
 
@@ -309,7 +310,8 @@ ludo.layout.Relative = new Class({
 			switch (child.layout[property]) {
 				case 'matchParent':
 					return function (lm) {
-						c[property] = lm.viewport[property];
+						var off = child.layout[property + 'Offset'] || 0;
+						c[property] = lm.viewport[property] + off;
 					};
 				case 'wrap':
 					var ws = ludo.dom.getWrappedSizeOfView(child);
@@ -517,7 +519,7 @@ ludo.layout.Relative = new Class({
 			hidden:child.isHidden(),
 			orientation:(direction === 'left' || direction === 'right') ? 'horizontal' : 'vertical',
 			pos:direction,
-			renderTo:this.view.getBody(),
+			renderTo:this.view.$b(),
 			sibling:this.getSiblingForResize(child,direction),
 			layout:this.getResizerLayout(child, direction),
 			lm:this,
@@ -565,13 +567,13 @@ ludo.layout.Relative = new Class({
 		if(resize.orientation === 'horizontal'){
 			var min = this.toPixels(child.layout.minWidth || 10);
 			resize.setMinWidth(min);
-			var max = child.layout.maxWidth || this.view.getBody().width();
+			var max = child.layout.maxWidth || this.view.$b().width();
 			max = this.toPixels(max, true);
 			resize.setMaxWidth(max);
 		}else{
 			var minHeight = this.toPixels(child.layout.minHeight || 10);
 			resize.setMinHeight(minHeight);
-			resize.setMaxHeight(child.layout.maxHeight || this.view.getBody().height());
+			resize.setMaxHeight(child.layout.maxHeight || this.view.$b().height());
 		}
 	},
 

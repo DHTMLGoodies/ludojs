@@ -59,6 +59,8 @@ ludo.ListView = new Class({
 
     renderedMap: undefined,
 
+    swipeEnded:0,
+
     __construct: function (config) {
         this.parent(config);
         this.setConfigParams(config, ['swipable', 'itemRenderer', 'backSideLeft', 'backSideRight', 'backSideUndo', 'undoTimeout']);
@@ -69,7 +71,7 @@ ludo.ListView = new Class({
 
     ludoEvents: function () {
         this.parent();
-        this.getBody().on('click', this.onClick.bind(this));
+        this.$b().on('click', this.onClick.bind(this));
     },
 
     __rendered: function () {
@@ -83,9 +85,9 @@ ludo.ListView = new Class({
         }
 
         this.getEl().addClass('ludo-list-view');
-        this.getBody().addClass('ludo-list-view-body');
-        this.getBody().css('overflow-x', 'hidden');
-        this.getBody().on('scroll', this.onScroll.bind(this));
+        this.$b().addClass('ludo-list-view-body');
+        this.$b().css('overflow-x', 'hidden');
+        this.$b().on('scroll', this.onScroll.bind(this));
         if (this.dataSource) {
 
             this.getDataSource().addEvents({
@@ -100,7 +102,7 @@ ludo.ListView = new Class({
 
     onScroll: function () {
         this.lastScrollTop = this.scrollTop;
-        this.scrollTop = this.getBody().scrollTop();
+        this.scrollTop = this.$b().scrollTop();
         this.lazyRender();
     },
 
@@ -157,6 +159,11 @@ ludo.ListView = new Class({
         var pos = el.position();
         var width = el.outerWidth(true);
 
+        this.swipeEnded = 0;
+
+        var minX = this.backSideRight != undefined ? -width + pos.left : pos.left;
+        var maxX = this.backSideLeft != undefined ? width - pos.left : pos.left;
+
         this.dragAttr = {
             backLeft: el.parent().find('.ludo-list-item-back-left'),
             backRight: el.parent().find('.ludo-list-item-back-right'),
@@ -166,8 +173,8 @@ ludo.ListView = new Class({
             mouse: p,
             el: el,
             parent: this.getRecordDOM(e.target),
-            minX: -width + pos.left,
-            maxX: width - pos.left,
+            minX: minX,
+            maxX: maxX,
             lastX: pos.left,
             dragged:false
         };
@@ -187,6 +194,8 @@ ludo.ListView = new Class({
             return undefined;
         }
 
+
+
         x = ludo.util.clamp(x, this.dragAttr.minX, this.dragAttr.maxX);
         var zl, zr;
         if (x > 0 && this.dragAttr.lastX <= 0) {
@@ -202,6 +211,9 @@ ludo.ListView = new Class({
         this.dragAttr.el.css('left', x);
         this.dragAttr.dragged = true;
 
+        if(this.swipeEnded > 0 || Math.abs(p.x - this.dragAttr.mouse.x) > 5 ){
+            this.swipeEnded = new Date().getTime();
+        }
 
         return false;
     },
@@ -215,6 +227,8 @@ ludo.ListView = new Class({
 
     dragEnd: function () {
         if (this.dragAttr == undefined)return;
+
+        if(this.swipeEnded)this.swipeEnded = new Date().getTime();
 
         var center = this.dragAttr.el.outerWidth(true) / 2;
         var pos = this.dragAttr.el.position();
@@ -276,11 +290,15 @@ ludo.ListView = new Class({
         });
 
         this.recordMap[uid] = undefined;
+
+        if (!this.dataSourceObj || !this.dataSourceObj.hasData()) {
+            this.showEmptyText();
+        }
     },
 
     resize: function (size) {
         this.parent(size);
-        this.availHeight = this.getBody().height();
+        this.availHeight = this.$b().height();
 
         if (this.itemsRendered) {
             this.lazyRender();
@@ -292,7 +310,7 @@ ludo.ListView = new Class({
         this.parent();
 
         if (this.availHeight == undefined) {
-            this.availHeight = this.getBody().height();
+            this.availHeight = this.$b().height();
         }
         var s = new Date().getTime();
         this.parent();
@@ -320,7 +338,7 @@ ludo.ListView = new Class({
             this.renderItem(i, item, html, b);
 
         }.bind(this));
-        
+
 
         var selected = this.getDataSource().getSelectedRecord();
         if (selected) {
@@ -513,6 +531,8 @@ ludo.ListView = new Class({
     },
 
     onClick: function (e) {
+        var n = new Date().getTime();
+        if(n - this.swipeEnded < 50)return;
         var recId = this.getRecordId(jQuery(e.target));
         if (recId)this.getDataSource().getRecord(recId).select();
     }

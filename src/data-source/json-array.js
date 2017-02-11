@@ -375,7 +375,7 @@ ludo.dataSource.JSONArray = new Class({
     isRecordMatchingSearch: function (record, search) {
         for (var key in search) {
             if (search.hasOwnProperty(key)) {
-                if (record[key] !== search[key]) {
+                if (record[key] != search[key]) {
                     return false;
                 }
             }

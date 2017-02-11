@@ -33,12 +33,12 @@ ludo.calendar.Days = new Class({
     },
     ludoDOM:function () {
         this.parent();
-        this.getBody().addClass('ludo-calendar-view');
+        this.$b().addClass('ludo-calendar-view');
     },
     ludoEvents:function () {
         this.parent();
         if (ludo.util.isTabletOrMobile()) {
-            var el = this.getBody();
+            var el = this.$b();
             el.on('touchstart', this.touchStart.bind(this));
             this.getEventEl().on('touchmove', this.touchMove.bind(this));
             this.getEventEl().on('touchend', this.touchEnd.bind(this));
@@ -110,7 +110,7 @@ ludo.calendar.Days = new Class({
     createCalendarHeader:function () {
         var el = this.els.daysHeader = jQuery('<div>');
         el.addClass('ludo-calendar-header');
-        this.getBody().append(el);
+        this.$b().append(el);
 
         var html = ['<table ', 'cellpadding="0" cellspacing="0" border="0" width="100%">'];
         html.push(this.getColGroup().join(''));
@@ -130,7 +130,7 @@ ludo.calendar.Days = new Class({
             return;
         }
         this.parent();
-        var b = this.getBody();
+        var b = this.$b();
         var h = this.els.daysHeader;
         var size = { x:b.width(),y:b.height() };
 
@@ -175,7 +175,7 @@ ludo.calendar.Days = new Class({
             top:0
         });
 
-        this.getBody().append(el);
+        this.$b().append(el);
     },
     showMonth:function () {
         if (this.els.monthView) {

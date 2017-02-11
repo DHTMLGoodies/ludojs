@@ -134,7 +134,7 @@ ludo.layout.Renderer = new Class({
         //var node = this.getParentNode();
         // node.resize(this.resizeFn);
 
-        jQuery(window).resize(this.resizeFn);
+        jQuery(window).on('resize', this.resizeFn);
     },
 
     getParentNode: function () {
@@ -150,7 +150,7 @@ ludo.layout.Renderer = new Class({
 
     removeEvents: function () {
         // this.getParentNode().off('resize', this.resizeFn);
-        jQuery(window).off('resize', this.resizeFn);
+        if(this.resizeFn) jQuery(window).off('resize', this.resizeFn);
     },
 
     buildResizeFn: function () {
@@ -345,6 +345,8 @@ ludo.layout.Renderer = new Class({
     },
 
     resize: function () {
+        
+
         if (this.view.isHidden())return;
         if (this.fn === undefined)this.buildResizeFn();
         this.setViewport();

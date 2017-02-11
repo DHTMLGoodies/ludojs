@@ -12,7 +12,7 @@ ludo.form.Form = new Class({
 
     ludoDOM:function () {
         this.parent();
-        this.getBody().dispose();
+        this.$b().dispose();
 
         this.els.body = new Element('form');
         this.getEl().append(this.els.body);
@@ -22,7 +22,7 @@ ludo.form.Form = new Class({
             border:0,
             margin:0
         });
-        this.getBody().setStyles({
+        this.$b().setStyles({
             padding:0,
             border:0,
             margin:0

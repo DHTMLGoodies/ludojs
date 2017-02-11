@@ -34,14 +34,14 @@ ludo.layout.Base = new Class({
         this.id = String.uniqueID();
         this.view = view;
         this.viewport = {
-            top: parseInt(this.view.getBody().css('padding-top')),
-            left: parseInt(this.view.getBody().css('padding-left')),
+            top: parseInt(this.view.$b().css('padding-top')),
+            left: parseInt(this.view.$b().css('padding-left')),
             width: 0, height: 0,
             bottom: 0, right: 0
         };
 
 
-        if (view.getBody())this.onCreate();
+        if (view.$b())this.onCreate();
 
         this.hasWrapWidth = !view.layout.weight && view.layout.width == 'wrap';
         this.hasWrapHeight = !view.layout.weight && view.layout.height == 'wrap';
@@ -221,7 +221,7 @@ ludo.layout.Base = new Class({
     },
 
     getWrappedHeight: function () {
-        return this.view.getEl().outerHeight(true) - this.view.getBody().height();
+        return this.view.getEl().outerHeight(true) - this.view.$b().height();
     },
 
     getWrappedWidth: function () {
@@ -255,7 +255,7 @@ ludo.layout.Base = new Class({
     },
 
     getNewComponent: function (config) {
-        config.renderTo = this.view.getBody();
+        config.renderTo = this.view.$b();
         config.type = config.type || this.view.cType;
         config.parentComponent = this.view;
         return ludo.factory.create(config);
@@ -276,7 +276,7 @@ ludo.layout.Base = new Class({
 
     resize: function () {
         var config = {};
-        config.width = this.view.getBody().width();
+        config.width = this.view.$b().width();
         if (config.width < 0) {
             config.width = undefined;
         }
@@ -286,11 +286,11 @@ ludo.layout.Base = new Class({
     },
 
     getAvailWidth: function () {
-        return this.view.getBody().width();
+        return this.view.$b().width();
     },
 
     getAvailHeight: function () {
-        return this.view.getBody().height();
+        return this.view.$b().height();
     },
 
     addCollapseBars: function () {

@@ -15,7 +15,7 @@ ludo.layout.NavBar = new Class({
     slideEl:undefined,
 
     onCreate:function(){
-        this.view.getBody().css('overflowX', 'hidden');
+        this.view.$b().css('overflowX', 'hidden');
 
     },
 
@@ -127,7 +127,7 @@ ludo.layout.NavBar = new Class({
     getParentForNewChild:function () {
         if (!this.slideEl) {
             this.slideEl = jQuery('<div style="height:100%;position:absolute"></div>');
-            this.view.getBody().append(this.slideEl);
+            this.view.$b().append(this.slideEl);
 
         }
         return this.slideEl;

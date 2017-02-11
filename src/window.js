@@ -77,12 +77,12 @@ ludo.Window = new Class({
     },
 
     hideBody: function () {
-        this.getBody().css('display', 'none');
+        this.$b().css('display', 'none');
         if (this.els.buttonBar)this.els.buttonBar.el.css('display', 'none');
     },
 
     showBody: function () {
-        this.getBody().css('display', '');
+        this.$b().css('display', '');
         if (this.els.buttonBar)this.els.buttonBar.el.css('display', '');
     },
 
@@ -120,14 +120,14 @@ ludo.Window = new Class({
     },
 
     focusFirstFormField: function () {
-        var els = this.getBody().children('input');
+        var els = this.$b().children('input');
         for (var i = 0, count = els.length; i < count; i++) {
             if (els[i].type && els[i].type.toLowerCase() === 'text') {
                 els[i].focus();
                 return;
             }
         }
-        var el = this.getBody().find('textarea');
+        var el = this.$b().find('textarea');
         if (el) {
             el.focus();
         }

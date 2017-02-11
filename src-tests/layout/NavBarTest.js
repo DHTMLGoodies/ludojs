@@ -18,7 +18,7 @@ TestCase("NavBar", {
 
         // then
         assertEquals('-300px', v.getLayout().slideEl.css("left"));
-        assertEquals('hidden', v.getBody().css("overflowX"));
+        assertEquals('hidden', v.$b().css("overflowX"));
     },
 
 

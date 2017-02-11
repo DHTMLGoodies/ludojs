@@ -51,8 +51,8 @@ TestCase("ViewTest", {
 			}
 		}
 
-		if(obj.getBody && obj.els && obj.getBody()){
-			this.assertNoEvents(obj.getBody());
+		if(obj.$b && obj.els && obj.$b()){
+			this.assertNoEvents(obj.$b());
 		}
 		if(obj.els && obj.getEl && obj.getEl()){
 			this.assertNoEvents(obj.getEl());

@@ -165,8 +165,12 @@ ludo.form.Text = new Class({
         return end > start;
     },
 
-    selectText: function () {
+    select:function(){
         this.getFormEl().select();
+    },
+
+    selectText: function () {
+        this.select();
     },
 
     getSelectionStart: function () {

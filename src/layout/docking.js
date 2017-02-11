@@ -193,9 +193,9 @@ ludo.layout.Docking = new Class({
     pixelSize:function(){
         if (this.tabPixelSize == undefined) {
             if(this.isHorizontal()){
-                this.tabPixelSize = this.view.children[0].getBody().height();
+                this.tabPixelSize = this.view.children[0].$b().height();
             }else{
-                this.tabPixelSize = this.view.children[0].getBody().width();
+                this.tabPixelSize = this.view.children[0].$b().width();
             }
 
         }

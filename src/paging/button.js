@@ -16,7 +16,7 @@ ludo.paging.Button = new Class({
 
     ludoDOM:function(){
         this.parent();
-        this.getBody().addClass(this.buttonCls);
+        this.$b().addClass(this.buttonCls);
     },
 
     ludoEvents:function(){

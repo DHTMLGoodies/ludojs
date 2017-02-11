@@ -37,7 +37,7 @@ ludo.layout.Grid = new Class({
         this.padX = l.padX || 0;
         this.padY = l.padY || 0;
 
-        this.view.getBody().css('position', 'relative');
+        this.view.$b().css('position', 'relative');
     },
 
     addChild: function (child, insertAt, pos) {

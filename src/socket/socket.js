@@ -36,9 +36,9 @@
 		  },
 
 		  appendMessage:function (msg) {
-			  var html = this.getBody().get('html');
+			  var html = this.$b().get('html');
 			  html = html + '>' + msg.message + '<br>';
-			  this.getBody().html( html);
+			  this.$b().html( html);
 		  }
 	  });
 

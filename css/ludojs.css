@@ -1,7 +1,7 @@
-/* Generated Wed Jan 25 0:32:22 CET 2017 */
+/* Generated Sun Feb 12 0:51:49 CET 2017 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.446
+ludoJS - Javascript framework, 1.1.449
 Copyright (C) 2012-2017  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -45,7 +45,7 @@ Owner of ludoJS.com
     line-height: 30px;
     border: 1px solid #999;
     border-radius: 5px;
-    webkit-border-radius: 5px;
+    -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     z-index: 40000;
     background-color: #FFF;
@@ -454,7 +454,6 @@ div.ludo-FramedView {
 
 .ludo-view {
     border-width: 1px;
-    background-color: #FFF;
     overflow: hidden;
     position: relative;
 }
@@ -996,7 +995,7 @@ div.ludo-tab-strip-right div.ludo-body {
 }
 
 
-.ludo-list-view-body >.ludo-empty-text{
+.ludo-list-view >.ludo-empty-text{
     position:absolute;
     text-align:center;
     top:30%;
@@ -1059,6 +1058,10 @@ div.ludo-tab-strip-right div.ludo-body {
     padding-right: 5px;
     height: 20px;
     cursor: default;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .ludo-grid-Grid div.last-header-cell {
@@ -1943,8 +1946,11 @@ div.ludo-form-button-disabled .ludo-form-button-m-bg-right {
     font-family: arial, sans-serif;
 }
 
-.ludo-body input {
+.ludo-body input,.ludo-body select {
     font-size: 12px;
+}
+.ludo-body select{
+    height:auto;
 }
 
 .ludo-form-autocomplete-suggestion-over {
@@ -2028,7 +2034,7 @@ div.ludo-menu-menu label {
 }
 
 .ludo-form-text-element {
-    border: 1px solid #ccc;
+    border: 1px solid transparent;
     background-color: #FFF;
     padding: 1px;
 }

@@ -127,9 +127,9 @@ ludo.FramedView = new Class({
 		this.els.container.addClass('ludo-framed-view');
 
 		if(this.hasTitleBar()){
-			this.getTitleBar().getEl().insertBefore(this.getBody());
+			this.getTitleBar().getEl().insertBefore(this.$b());
 		}
-		this.getBody().addClass('ludo-framed-view-body');
+		this.$b().addClass('ludo-framed-view-body');
 
 		if (!this.getParent() && this.isResizable()) {
 			this.getResizer().addHandle('s');
@@ -183,8 +183,6 @@ ludo.FramedView = new Class({
 
         if(height >= 0){
             this.els.body.css('height', height);
-            this.cachedInnerHeight = height;
-
             if (this.buttonBarComponent) {
                 this.buttonBarComponent.resize();
             }
@@ -212,6 +210,10 @@ ludo.FramedView = new Class({
 
 	hasTitleBar:function(){
 		return !this.titleBarHidden;
+	},
+
+	titleBarButton:function(name){
+		return this.getTitleBar().button(name);
 	},
 
 	getTitleBar:function(){

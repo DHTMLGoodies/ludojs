@@ -14,7 +14,7 @@ TestCase("GridTest", {
 		// then
 		assertEquals('absolute', pos);
 
-		assertEquals('relative', view.getBody().css('position'));
+		assertEquals('relative', view.$b().css('position'));
 	},
 
 	"test find correct col width": function(){

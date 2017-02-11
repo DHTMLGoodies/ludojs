@@ -296,7 +296,7 @@ ludo.svg.Node = new Class({
     },
     
     setProperties: function (p) {
-        this.setProperties(p);
+        this.setAttributes(p);
     },
 
     /**

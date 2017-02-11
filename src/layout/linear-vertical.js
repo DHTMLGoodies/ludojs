@@ -42,7 +42,7 @@ ludo.layout.LinearVertical = new Class({
         var remainingHeight;
 		var stretchHeight = remainingHeight = (availHeight - totalHeightOfItems);
 
-		var width = this.view.getBody().width();
+		var width = this.view.$b().width();
 		for (i = 0; i < this.view.children.length; i++) {
 			var c = this.view.children[i];
 			if(!c.isHidden()){
@@ -53,6 +53,11 @@ ludo.layout.LinearVertical = new Class({
 				var config = {
 					width:c.type == 'layout.Resizer' ? width: cW
 				};
+
+				if(config.width < this.viewport.width && c.layout.anchor != undefined){
+					var off = this.viewport.width;
+					config.left = off * c.layout.anchor - (config.width * c.layout.anchor);
+				}
 
 				if(w && c.layout.align){
 					switch(c.layout.align){

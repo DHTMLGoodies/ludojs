@@ -184,8 +184,8 @@ ludo.effect.Resize = new Class({
         if (this.minHeight !== undefined)minWidth = this.minHeight * ratio;
 
         var coords = this.getEl().offset();
-        var absMaxWidth = this.getBodyWidth() - coords.left;
-        var absMaxHeight = this.getBodyHeight() - coords.top;
+        var absMaxWidth = this.$bWidth() - coords.left;
+        var absMaxHeight = this.$bHeight() - coords.top;
 
         d.minWidth = Math.max(minWidth || 0, this.minWidth || 0);
         d.maxWidth = Math.min(maxWidth || absMaxWidth, this.maxWidth || absMaxWidth);
@@ -506,10 +506,10 @@ ludo.effect.Resize = new Class({
         return this.aspectRatio;
     },
 
-    getBodyWidth:function () {
+    $bWidth:function () {
         return jQuery(document.documentElement).width();
     },
-    getBodyHeight:function () {
+    $bHeight:function () {
         return jQuery(document.documentElement).height();
     },
 

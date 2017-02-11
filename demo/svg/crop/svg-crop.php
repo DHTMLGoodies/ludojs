@@ -4,7 +4,7 @@ $prefix = "../../";
 $pageTitle = 'SVG Crop Tool';
 require_once("../../includes/demo-header.php");
 ?>
-<script type="text/javascript" src="crop.js?rnd=4"></script>
+<script type="text/javascript" src="crop.js?rnd=5"></script>
 <script type="text/javascript" class="source-code">
 
 

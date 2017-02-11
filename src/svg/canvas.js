@@ -34,10 +34,10 @@ ludo.svg.Canvas = new Class({
 		ludo.svg.setGlobalMatrix(this.node.el);
 
 		if (this.renderTo !== undefined) {
-			if(this.renderTo.getBody !== undefined){
+			if(this.renderTo.$b !== undefined){
 				this.view = this.renderTo;
 				this.view.addEvent('resize', this.fitParent.bind(this));
-				this.renderTo = this.view.getBody();
+				this.renderTo = this.view.$b();
 			}else{
 				this.renderTo = jQuery(this.renderTo);
 			}

@@ -24,7 +24,7 @@ ludo.form.Label = new Class({
         this.parent();
         
         this.els.label = jQuery('<label class="input-label" for="el-' + this.labelFor + '">' + this.label + '</label>');
-        this.getBody().append(this.els.label);
+        this.$b().append(this.els.label);
     },
 
     ludoEvents:function(){
@@ -48,23 +48,23 @@ ludo.form.Label = new Class({
 
     resizeDOM:function(){
         this.parent();
-        this.els.label.css('line-height', this.getBody().height() + 'px');
+        this.els.label.css('line-height', this.$b().height() + 'px');
     },
 
     onEnable:function(){
-        this.getBody().removeClass('ludo-form-label-disabled');
+        this.$b().removeClass('ludo-form-label-disabled');
     },
 
     onDisable:function(){
-        this.getBody().addClass('ludo-form-label-disabled');
+        this.$b().addClass('ludo-form-label-disabled');
     },
 
     onValid:function(){
-        this.getBody().removeClass('ludo-form-el-invalid');
+        this.$b().removeClass('ludo-form-el-invalid');
     },
 
     onInvalid:function(){
-        this.getBody().removeClass('ludo-form-el-invalid');
-        this.getBody().addClass('ludo-form-el-invalid');
+        this.$b().removeClass('ludo-form-el-invalid');
+        this.$b().addClass('ludo-form-el-invalid');
     }
 });

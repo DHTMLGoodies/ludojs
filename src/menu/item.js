@@ -38,6 +38,7 @@ ludo.menu.Item = new Class({
     fire:undefined,
 
     __construct:function (config) {
+
         this.parent(config);
         this.setConfigParams(config, ['orientation', 'icon', 'record', 'value', 'label', 'action', 'disabled', 'fire']);
 
@@ -64,7 +65,7 @@ ludo.menu.Item = new Class({
 
     resizeDOM:function(){
         this.parent();
-        this.getBody().css('lineHeight', this.cachedInnerHeight + 'px');
+        this.$b().css('lineHeight', this.$b().height + 'px');
     },
 	resizeParent:function(){
 
@@ -110,7 +111,7 @@ ludo.menu.Item = new Class({
     __rendered:function () {
         this.parent();
         if (this.isSpacer()) {
-            this.getBody().css('visibility', 'hidden');
+            this.$b().css('visibility', 'hidden');
         }
     },
 

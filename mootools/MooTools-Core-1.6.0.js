@@ -1218,7 +1218,7 @@ String.implement({
 
 			jQuery.each(events, function(i, fn){
 				if (delay) fn.delay(delay, this, args);
-				else fn.apply(this, args);
+				else if(fn)fn.apply(this, args);
 			}.bind(this));
 
 			/*

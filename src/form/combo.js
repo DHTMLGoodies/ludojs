@@ -37,9 +37,9 @@ ludo.form.Combo = new Class({
         c.layout = c.layout || {};
         if(this.childLayout)c.layout = Object.merge(c.layout, this.childLayout);
 
-        c.layout.below = c.layout.below || this.getBody();
-        if(c.left === undefined)c.layout.alignLeft = c.layout.alignLeft || this.getBody();
-        if(!c.layout.width)c.layout.sameWidthAs = c.layout.sameWidthAs || this.getBody();
+        c.layout.below = c.layout.below || this.$b();
+        if(c.left === undefined)c.layout.alignLeft = c.layout.alignLeft || this.$b();
+        if(!c.layout.width)c.layout.sameWidthAs = c.layout.sameWidthAs || this.$b();
         c.layout.height = c.layout.height || 200;
         c.alwaysInFront = true;
         c.cls = c.cls ? c.cls + ' ' + 'form-combo-child' : 'form-combo-child';

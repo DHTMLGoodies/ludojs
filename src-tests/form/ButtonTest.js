@@ -20,7 +20,7 @@ TestCase("ButtonTest", {
 		button.mouseOver();
 
 		// then
-		assertTrue(button.getBody().hasClass('ludo-form-button-over'));
+		assertTrue(button.$b().hasClass('ludo-form-button-over'));
 	},
 	"test should not add mouse over effect when button is disabled":function () {
 		// given
@@ -32,7 +32,7 @@ TestCase("ButtonTest", {
 		button.mouseOver();
 
 		// then
-		assertFalse(button.getBody().hasClass('ludo-form-button-over'));
+		assertFalse(button.$b().hasClass('ludo-form-button-over'));
 	},
 	"test should be able to update icon":function () {
 		// given

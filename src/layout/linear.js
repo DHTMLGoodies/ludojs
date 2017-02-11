@@ -26,8 +26,8 @@ ludo.layout.Linear = new Class({
 
     onCreate:function(){
         // TODO refactor this.
-        this.view.getBody().css('overflow', 'hidden');
-        this.view.getBody().css('position', 'relative');
+        this.view.$b().css('overflow', 'hidden');
+        this.view.$b().css('position', 'relative');
         this.parent();
     },
 
@@ -60,10 +60,10 @@ ludo.layout.Linear = new Class({
 	beforeResize:function (resize, child) {
 		if (resize.orientation === 'horizontal') {
 			resize.setMinWidth(child.layout.minWidth || 10);
-			resize.setMaxWidth(child.layout.maxWidth || this.view.getBody().width());
+			resize.setMaxWidth(child.layout.maxWidth || this.view.$b().width());
 		} else {
 			resize.setMinHeight(child.layout.minHeight || 10);
-			resize.setMaxHeight(child.layout.maxHeight || this.view.getBody().height());
+			resize.setMaxHeight(child.layout.maxHeight || this.view.$b().height());
 		}
 	},
 
@@ -76,7 +76,7 @@ ludo.layout.Linear = new Class({
 			orientation:(r === 'left' || r === 'right') ? 'horizontal' : 'vertical',
 			pos:r,
             hidden:child.isHidden(),
-			renderTo:this.view.getBody(),
+			renderTo:this.view.$b(),
 			layout:{ width:5,height:5 },
 			lm:child.getLayout(),
 			view:child,

@@ -48,12 +48,12 @@ require_once("../includes/demo-header.php");
                 updatePreviews:function(){
                     var color = this.getColorCode();
                     if(this.currentColor != color){
-                        ludo.get('colorPreview').getBody().css('background-color', color);
+                        ludo.get('colorPreview').$b().css('background-color', color);
                         ludo.get('colorCode').html(color);
                         this.currentColor = color;
 
                         var complementary = this.colorUtil.offsetHue(color, 180);
-                        ludo.get('colorPreviewComplementary').getBody().css('background-color', complementary);
+                        ludo.get('colorPreviewComplementary').$b().css('background-color', complementary);
                         ludo.get('colorCodeComplementary').html(complementary);
                     }
                 },

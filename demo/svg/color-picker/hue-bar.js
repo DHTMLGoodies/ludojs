@@ -119,7 +119,7 @@ ludo.colorPicker.HueBar = new Class({
 	},
 
 	getHueByYPos:function(pos){
-		var top = this.getBody().offset().top;
+		var top = this.$b().offset().top;
 		top += this.currentBarHeight * (this.topMargin / 100);
 		var height = this.hueBar.get('height');
 		var cursor = pos - top;

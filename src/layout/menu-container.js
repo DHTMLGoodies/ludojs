@@ -77,7 +77,7 @@ ludo.layout.MenuContainer = new Class({
         return this.el;
     },
 
-    getBody: function () {
+    $b: function () {
         return this.body;
     },
 

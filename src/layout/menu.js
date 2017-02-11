@@ -79,7 +79,7 @@ ludo.layout.Menu = new Class({
 	getParentForNewChild:function () {
 		if (this.parentForNewChild === undefined) {
 			var isTop = !this.hasMenuLayout(this.view.parentComponent);
-			var p = isTop ? this.parent() : this.getMenuContainer().getBody();
+			var p = isTop ? this.parent() : this.getMenuContainer().$b();
 
 
 			p.parent().addClass('ludo-menu');

@@ -88,7 +88,7 @@ ludo.layout.Table = new Class({
         this.tbody = jQuery('<tbody></tbody>');
         this.table.append(this.tbody);
 
-        this.view.getBody().append(this.table);
+        this.view.$b().append(this.table);
 
     },
 
@@ -111,7 +111,7 @@ ludo.layout.Table = new Class({
 
         var cell = jQuery('<td style="vertical-align:' + vAlign + ';margin:0;padding:0" colspan="' + colspan + '" rowspan="' + rowspan + '"></td>');
         this.currentRow.append(cell);
-        this.countChildren++;
+        this.countChildren+= colspan;
         return cell;
     },
 
@@ -145,7 +145,7 @@ ludo.layout.Table = new Class({
         var colspan = child.layout.colspan ? child.layout.colspan : 1;
         if (child.layout.width)return child.layout.width;
         var width = 0;
-        var totalWidth = this.view.getBody().width();
+        var totalWidth = this.view.$b().width();
         var weightWidth = totalWidth - this.fixedWidth;
         for (var i = colIndex; i < colIndex + colspan; i++) {
             if (this.cols[i].width) {

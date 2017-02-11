@@ -19,7 +19,7 @@ ludo.calendar.MonthSelector = new Class({
 
     autoResize:function(){
         var height = this.els.monthContainer.offsetHeight;
-        height += ludo.dom.getMH(this.els.monthContainer) + ludo.dom.getMBPH(this.getBody()) + ludo.dom.getMBPH(this.getEl());
+        height += ludo.dom.getMH(this.els.monthContainer) + ludo.dom.getMBPH(this.$b()) + ludo.dom.getMBPH(this.getEl());
         this.layout.height = height;
 
     },
@@ -41,7 +41,7 @@ ludo.calendar.MonthSelector = new Class({
         el.setStyles({
             position:'absolute', width : '3000px', left:0,top:0
         });
-        this.getBody().append(el);
+        this.$b().append(el);
     },
 
     renderMonths:function(){

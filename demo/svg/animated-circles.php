@@ -37,7 +37,7 @@ require_once("../includes/demo-header.php");
     var circles = [];
 
     // Specify max x and y which is the size of the SVG
-    var maxX = v.getBody().width(), maxY = v.getBody().height();
+    var maxX = v.$b().width(), maxY = v.$b().height();
 
     // Create 50 SVG <circle> objects and put them in the circle array
     for (var i = 0; i < 50; i++) {

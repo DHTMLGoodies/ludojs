@@ -128,10 +128,10 @@ ludo.calendar.TimePicker = new Class({
     mouseDown: function (e) {
         this.dragActive = true;
 
-        var offset = this.getBody().offset();
+        var offset = this.$b().offset();
         this.drag = {
-            elX: offset.left + parseInt(this.getBody().css("paddingLeft")) + parseInt(this.getBody().css("border-left-width")),
-            elY: offset.top + parseInt(this.getBody().css("paddingLeft")) + parseInt(this.getBody().css("border-top-width"))
+            elX: offset.left + parseInt(this.$b().css("paddingLeft")) + parseInt(this.$b().css("border-left-width")),
+            elY: offset.top + parseInt(this.$b().css("paddingLeft")) + parseInt(this.$b().css("border-top-width"))
         };
         this.updateTimeByEvent(e);
     },

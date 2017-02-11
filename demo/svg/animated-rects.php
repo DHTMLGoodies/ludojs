@@ -37,7 +37,7 @@ require_once("../includes/demo-header.php");
     var rects = [];
 
     // Specify max x and y which is the size of the SVG
-    var maxX = v.getBody().width(), maxY = v.getBody().height();
+    var maxX = v.$b().width(), maxY = v.$b().height();
     var spacing = 4;
 
     // Create 50 SVG <rect> objects and put them in the rect array

@@ -183,7 +183,7 @@ ludo.dom = {
 
 	scrollIntoView:function (domNode, view) {
 		var c = view.getEl();
-		var el = view.getBody();
+		var el = view.$b();
 		var viewHeight = c.offsetHeight - ludo.dom.getPH(c) - ludo.dom.getBH(c) - ludo.dom.getMBPH(el);
 
 		var pos = domNode.getPosition(el).y;
@@ -205,39 +205,18 @@ ludo.dom = {
 		}
 	},
 
-	getInnerWidthOf:function (el) {
-		console.warn("Use of deprecated getInnerWidthOf");
-		console.trace();
-		return el.width();
-
-	},
-
-	getInnerHeightOf:function (el) {
-		if (el.style.height && el.style.height.indexOf('%') == -1) {
-			return ludo.dom.getNumericStyle(el, 'height');
-		}
-		return el.offsetHeight - ludo.dom.getPH(el) - ludo.dom.getBH(el);
-	},
-
-	getTotalWidthOf:function (el) {
-		return el.offsetWidth + ludo.dom.getMW(el);
-	},
-
 	getWrappedSizeOfView:function (view) {
-
-		view.cachedInnerHeight = undefined;
 		view.getEl().css('height', 'auto');
-		view.getBody().css('height', 'auto');
+		view.$b().css('height', 'auto');
 
 		var el = view.getEl();
-		var b = view.getBody();
+		var b = view.$b();
 		b.css('position', 'absolute');
 		
 		var width = b.outerWidth();
 		b.css('position', 'relative');
 		var height = b.outerHeight();
-
-
+		
 		return {
 			x:width + ludo.dom.getMBPW(el),
 			y:height + ludo.dom.getMBPH(el) + (view.getHeightOfTitleBar ? view.getHeightOfTitleBar() : 0)
@@ -251,7 +230,7 @@ ludo.dom = {
 	 * @return {Number}
 	 */
 	getMeasuredWidth:function (view) {
-		var el = view.getBody();
+		var el = view.$b();
 		var size = el.measure(function () {
 			return this.getSize();
 		});

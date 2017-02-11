@@ -495,8 +495,8 @@ ludo.form.TextFilterContainer = new Class({
             height:this.layout.height
         });
 
-        this.getBody().css('overflow', 'hidden');
-        this.getBody().addClass('ludo-filter-text-options');
+        this.$b().css('overflow', 'hidden');
+        this.$b().addClass('ludo-filter-text-options');
     },
 
     keyUp:function(){
@@ -517,7 +517,7 @@ ludo.form.TextFilterContainer = new Class({
 
     populate:function (records) {
         this.records = records;
-        this.getBody().html( '');
+        this.$b().html( '');
 
 
         this.els.recordNodes = [];
@@ -529,7 +529,7 @@ ludo.form.TextFilterContainer = new Class({
             div.attr('recordIndex', i);
             div.className = 'ludo-form-autocomplete-suggestion';
             div.html( records[i][this.formComponent.displayField]);
-            this.getBody().append(div);
+            this.$b().append(div);
             div.on('click', this.setRecord.bind(this));
             div.mouseenter(this.mouseEnterRecord.bind(this));
             div.mouseleave(this.mouseLeaveRecord.bind(this));
@@ -539,12 +539,12 @@ ludo.form.TextFilterContainer = new Class({
     },
 
     autoResize:function (countRecords) {
-        var div = this.getBody().getElement('.ludo-form-autocomplete-suggestion');
+        var div = this.$b().getElement('.ludo-form-autocomplete-suggestion');
         var height = countRecords * this.getHeightOfSuggestionElement(div);
         height += ludo.dom.getMH(this.getEl());
-        height += ludo.dom.getMH(this.getBody());
-        height += ludo.dom.getBH(this.getBody());
-        height += ludo.dom.getPH(this.getBody());
+        height += ludo.dom.getMH(this.$b());
+        height += ludo.dom.getBH(this.$b());
+        height += ludo.dom.getPH(this.$b());
 
 
         this.resize({

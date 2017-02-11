@@ -43,7 +43,7 @@ TestCase("MessageTest", {
         );
 
         // then
-        assertEquals("My message", this.getInnerText(message.getBody()));
+        assertEquals("My message", this.getInnerText(message.$b()));
     },
 
 
@@ -61,7 +61,7 @@ TestCase("MessageTest", {
      );
 
      // then
-     assertEquals("My message", this.getInnerText(message.getBody()));
+     assertEquals("My message", this.getInnerText(message.$b()));
  },
 
     "test should be able to listen to multiple resources": function(){
@@ -78,7 +78,7 @@ TestCase("MessageTest", {
         );
 
         // then
-        assertEquals("My message 2", this.getInnerText(message.getBody()));
+        assertEquals("My message 2", this.getInnerText(message.$b()));
     },
 
     getInnerText:function(el){

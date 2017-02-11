@@ -506,7 +506,7 @@ TestCase("RelativeTest", {
 			renderTo:document.body,
 			children:children
 		});
-		view.getBody().css('position', 'relative');
+		view.$b().css('position', 'relative');
 		return view;
 	},
 

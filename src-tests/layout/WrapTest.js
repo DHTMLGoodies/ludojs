@@ -21,7 +21,7 @@ TestCase("LayoutWrapTest", {
         });
 
         // when
-        var height = view.getBody().height();
+        var height = view.$b().height();
 
         // then
         assertEquals(200, height);

@@ -35,7 +35,7 @@ ludo.layout.Card = new Class({
 	getParentForNewChild:function(child){
 		if(this.parentDiv == undefined){
 			this.parentDiv = jQuery('<div style="position:absolute"></div>');
-			this.view.getBody().append(this.parentDiv);
+			this.view.$b().append(this.parentDiv);
 			this.parentDiv.on(ludo.util.getDragStartEvent(), this.touchStart.bind(this));
 		}
 		return this.parentDiv;
@@ -417,19 +417,19 @@ ludo.layout.Card = new Class({
 	},
 
 	animateFromRight:function () {
-		this.animateAlongX(this.visiblePage.getParent().getBody().width(), 0);
+		this.animateAlongX(this.visiblePage.getParent().$b().width(), 0);
 	},
 
 	animateFromLeft:function () {
-		this.animateAlongX(this.visiblePage.getParent().getBody().width() * -1, 0);
+		this.animateAlongX(this.visiblePage.getParent().$b().width() * -1, 0);
 	},
 
 	animateFromTop:function () {
-		this.animateAlongY(this.visiblePage.getParent().getBody().height() * -1, 0);
+		this.animateAlongY(this.visiblePage.getParent().$b().height() * -1, 0);
 	},
 
 	animateFromBottom:function () {
-		this.animateAlongY(this.visiblePage.getParent().getBody().height(), 0);
+		this.animateAlongY(this.visiblePage.getParent().$b().height(), 0);
 	},
 
 	animateAlongX:function (from, to) {

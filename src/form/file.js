@@ -121,7 +121,7 @@ ludo.form.File = new Class({
 		var cell = jQuery('<div>');
 		cell.width(this.buttonWidth);
 		cell.css('textAlign', 'right');
-		this.getBody().append(cell);
+		this.$b().append(cell);
 		cell.append(this.getFormEl());
 
 		var btn = new ludo.form.Button({
@@ -171,7 +171,7 @@ ludo.form.File = new Class({
 
 		formEl.css({ margin:0, padding:0, border:0});
 		this.getEl().append(formEl);
-		formEl.append(this.getBody());
+		formEl.append(this.$b());
 
 		this.addElToForm('ludo-file-upload-name',this.getName());
 		this.addElToForm('request', this.getResource() + '/save');

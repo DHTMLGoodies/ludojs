@@ -47,7 +47,7 @@ ludo.paging.CurrentPage = new Class({
 
 	resize:function(config){
 		this.parent(config);
-		this.getBody().css('line-height', (this.getBody().height() * 0.8) + 'px');
+		this.$b().css('line-height', (this.$b().height() * 0.8) + 'px');
 	},
 
 	setPageNumber:function () {

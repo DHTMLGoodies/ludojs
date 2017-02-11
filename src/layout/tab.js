@@ -101,7 +101,7 @@ ludo.layout.Tab = new Class({
                 lm: this,
                 parentComponent: this.view,
                 tabPos: this.getTabPosition(),
-                renderTo: this.view.getBody(),
+                renderTo: this.view.$b(),
                 layout: this.getTabsLayout(),
                 canHaveNoActiveTabs:this.canHaveNoActiveTabs
             });

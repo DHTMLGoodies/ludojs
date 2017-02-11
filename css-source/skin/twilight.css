@@ -721,7 +721,9 @@ Shim **/
     color:#FFF;
     background-image:url(../images/twilight-skin/ajax-loader-shim.gif);
 }
-
+.ludo-twilight .ludo-loader-shim{
+    background-color:#000;
+}
 /**
 Progress bar
 */

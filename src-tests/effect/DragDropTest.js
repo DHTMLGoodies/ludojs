@@ -6,7 +6,7 @@ TestCase("DragDropTest", {
 		if (window.dragDropMock === undefined) {
 			window.DragDropMock = new Class({
 				Extends:ludo.effect.DragDrop,
-				getBodyWidth:function () {
+				$bWidth:function () {
 					return 1900;
 				}
 			});

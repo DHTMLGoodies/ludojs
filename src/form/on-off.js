@@ -75,7 +75,7 @@ ludo.form.OnOff = new Class({
         this.height= 30;
 
         this.el = jQuery('<div class="on-off-switch"></div>');
-        this.getBody().append(this.el);
+        this.$b().append(this.el);
 
         this.renderTrack();
         this.renderThumb();
@@ -109,8 +109,8 @@ ludo.form.OnOff = new Class({
 
     resizeDOM:function(){
         this.parent();
-        var width = this.width = this.getBody().width() - (this.trackBorderWidth * 2);
-        var height = this.height = this.getBody().height() - (this.trackBorderWidth * 2);
+        var width = this.width = this.$b().width() - (this.trackBorderWidth * 2);
+        var height = this.height = this.$b().height() - (this.trackBorderWidth * 2);
 
         var trackWidth = width - (this.trackBorderWidth * 2);
         var innerTrackWidth = trackWidth - (this.height / 2);

@@ -97,7 +97,7 @@ ludo.remote.Broadcaster = new Class({
      @memberof ludo.remote.Broadcaster.prototype
      @example
         ludo.remoteBroadcaster.addEvent('failure', 'Person', function(response){
-            this.getBody().html( response.message');
+            this.$b().html( response.message');
         }.bind(this));
      The event payload is an object in this format:
      @example
@@ -121,7 +121,7 @@ ludo.remote.Broadcaster = new Class({
      @memberof ludo.remote.Broadcaster.prototype
      @example
         ludo.remoteBroadcaster.addEvent('failure', 'Person', ['save'], function(response){
-            this.getBody().html( response.message');
+            this.$b().html( response.message');
         }.bind(this));
      The event payload is an object in this format:
      @example

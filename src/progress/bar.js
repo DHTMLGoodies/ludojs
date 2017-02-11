@@ -326,7 +326,7 @@ ludo.progress.Bar = new Class({
 
     positionTextNode: function () {
         if (this.els.textNode) {
-            this.els.textNode.set('x', this.getBody().width() / 2);
+            this.els.textNode.set('x', this.$b().width() / 2);
             this.els.textNode.set('y', (this.svg().height / 2));
             this.els.textNode.css('font-size', this.svg().height * this.textSizeRatio);
         }

@@ -57,6 +57,7 @@ ludo.layout.Tabs = new Class({
     __rendered: function () {
         this.parent();
         this.resizeTabs();
+        this.$b().css('overflow','hidden');
     },
 
     registerChild: function (layout, parent, child) {
@@ -125,7 +126,7 @@ ludo.layout.Tabs = new Class({
 
         this.hiddenTabs = [];
 
-        var size = this.getBody().width();
+        var size = this.$b().width();
         var menu = this.getMenuIcon();
 
 
@@ -160,7 +161,7 @@ ludo.layout.Tabs = new Class({
 
     moveCurrentIntoView: function () {
 
-        var size = this.getBody().width();
+        var size = this.$b().width();
         var menu = this.getMenuIcon();
         size -= menu.outerWidth(true);
         var pos = Math.abs(this.tabParent.position().left);
@@ -179,20 +180,20 @@ ludo.layout.Tabs = new Class({
     },
 
     haveTabsOutOfView: function () {
-        return this.maxPos > this.getBody().width();
+        return this.maxPos > this.$b().width();
     },
 
     getMenuIcon: function () {
         if (this.tabMenuEl == undefined) {
 
             if (this.tabPos == 'left' || this.tabPos == 'right') {
-                this.tabMenuEl = this.getBody();
+                this.tabMenuEl = this.$b();
                 return this.tabMenuEl;
             }
             this.tabMenuEl = jQuery('<div class="ludo-tab-expand-box ludo-tab-expand-box-' + this.tabPos + '"></div>');
-            this.getBody().append(this.tabMenuEl);
+            this.$b().append(this.tabMenuEl);
 
-            var s = this.getBody().outerHeight() - this.elLine.height();
+            var s = this.$b().outerHeight() - this.elLine.height();
             var k = this.tabPos == 'top' || this.tabPos == 'bottom' ? 'height' : 'width';
             this.tabMenuEl.css(k, s);
 
@@ -310,17 +311,17 @@ ludo.layout.Tabs = new Class({
             this.tabParent = jQuery('<div style="position:absolute" class="ludo-tab-layout-parent-for-tabs ludo-tab-layout-parent-for-tabs-' + this.tabPos + '"></div>');
             if (this.tabPos == 'top' || this.tabPos == 'bottom') {
                 this.tabParent.css({
-                    height: this.getBody().height(),
+                    height: this.$b().height(),
                     width: 10000
                 });
             } else {
                 this.tabParent.css({
-                    width: this.getBody().width(),
+                    width: this.$b().width(),
                     height: 10000
                 });
             }
 
-            this.getBody().append(this.tabParent);
+            this.$b().append(this.tabParent);
         }
         var node;
         if (this.tabPos === 'top' || this.tabPos == 'bottom') {
@@ -414,7 +415,7 @@ ludo.layout.Tabs = new Class({
 
     getPlainTabFor: function (child) {
         var el = jQuery('<div>');
-        this.getBody().append(el);
+        this.$b().append(el);
         el.className = 'ludo-tab-strip-tab ludo-tab-strip-tab-' + this.tabPos;
         el.html('<div class="ludo-tab-strip-tab-bg"></div><span style="z-index:2">' + this.getTitleFor(child) + '</span>');
         return el;
@@ -422,7 +423,7 @@ ludo.layout.Tabs = new Class({
 
     getSVGTabFor: function (child) {
         var el = jQuery('<div><div class="ludo-tab-strip-tab-bg"></div></div>');
-        this.getBody().append(el);
+        this.$b().append(el);
 
         var svgEl = jQuery('<div style="z-index:2;position:relative">');
         el.append(svgEl);
@@ -513,7 +514,7 @@ ludo.layout.Tabs = new Class({
         var el = jQuery('<div>');
         el.addClass('ludo-tab-strip-line');
         this.elLine = el;
-        this.getBody().append(el);
+        this.$b().append(el);
 
         this.getMenuIcon();
     },

@@ -60,7 +60,7 @@ ludo.form.Checkbox = new Class({
         div.addClass('ludo-radio-image');
         div.addEvent('click', this.clickOnImage.bind(this));
         this.getImageCell().append(div);
-        this.getBody().getElement('.checkbox-image-row').style.display = '';
+        this.$b().getElement('.checkbox-image-row').style.display = '';
     },
 
     getImageCell:function () {

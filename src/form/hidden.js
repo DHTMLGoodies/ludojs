@@ -14,7 +14,7 @@ ludo.form.Hidden = new Class({
         this.els.formEl = new Element('input');
         this.els.formEl.attr('type', 'hidden');
         this.els.formEl.id = this.getFormElId();
-        this.getBody().append(this.els.formEl);
+        this.$b().append(this.els.formEl);
     },
 
     __rendered : function(){

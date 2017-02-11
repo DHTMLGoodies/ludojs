@@ -10,7 +10,7 @@ require_once("../includes/demo-header.php");
         if (!ludo.get('green'))return;
         if (!ludo.get('blue'))return;
         var color = 'rgb(' + ludo.get('red').getValue() + ',' + ludo.get('green').getValue() + ',' + ludo.get('blue').getValue() + ')';
-        ludo.get('colorPreview').getBody().setStyle('background-color', color);
+        ludo.get('colorPreview').$b().setStyle('background-color', color);
     }
     var w = new ludo.Window({
         width:520, height:300,

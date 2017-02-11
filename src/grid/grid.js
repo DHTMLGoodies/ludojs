@@ -224,7 +224,7 @@ ludo.grid.Grid = new Class({
 		this.parent();
 		this.getEl().addClass('ludo-grid-Grid');
 
-		var b = this.getBody();
+		var b = this.$b();
 		var t = this.els.dataContainerTop = jQuery('<div>');
 
 		t.addClass('ludo-grid-data-container');
@@ -267,9 +267,9 @@ ludo.grid.Grid = new Class({
             });
             this.getDataSource().addEvent('select', this.selectDOMForRecord.bind(this));
 		}
-		this.getBody().on('selectstart', ludo.util.cancelEvent);
-		this.getBody().on('click', this.cellClick.bind(this));
-		this.getBody().on('dblclick', this.cellDoubleClick.bind(this));
+		this.$b().on('selectstart', ludo.util.cancelEvent);
+		this.$b().on('click', this.cellClick.bind(this));
+		this.$b().on('dblclick', this.cellDoubleClick.bind(this));
 
 
 		if (this.mouseOverEffect) {
@@ -288,16 +288,14 @@ ludo.grid.Grid = new Class({
 		this.positionVerticalScrollbar.delay(100, this);
 
 		if (this.getParent()) {
-			this.getParent().getBody().css({
+			this.getParent().$b().css({
 				'padding':0
 			});
 			ludo.dom.clearCache();
 			this.getParent().resize.delay(100, this.getParent());
 		}
 
-		if(this.emptyText){
-			this.emptyTextEl().css('display', '');
-		}
+		this.toggleEmptyText();
 	},
 
 	currentOverRecord:undefined,
@@ -410,7 +408,7 @@ ludo.grid.Grid = new Class({
 
 		var keys = this.columnManager.getLeafKeys();
 		for (var i = 0; i < keys.length; i++) {
-			var col = this.getBody().find('#ludo-grid-column-' + keys[i] + '-' + this.uniqueId);
+			var col = this.$b().find('#ludo-grid-column-' + keys[i] + '-' + this.uniqueId);
 			divId = 'cell-' + keys[i] + '-' + record.uid + '-' + this.uniqueId;
 			div = col.find('#' + divId);
 			if (div) {
@@ -525,11 +523,8 @@ ludo.grid.Grid = new Class({
 		if (height < 0) {
 			return;
 		}
-		this.els.body.css('height', height - this.gridHeader.getHeight());
-		this.cachedInnerHeight = height;
-
-
-		var contentHeight = this.getBody().height();
+		this.$b().css('height', height - this.gridHeader.getHeight());
+		var contentHeight = this.$b().height();
 
 		if (contentHeight == 0) {
 			this.resizeDOM.delay(100, this);
@@ -544,10 +539,10 @@ ludo.grid.Grid = new Class({
 	createScrollbars:function () {
 		this.scrollbar.horizontal = this.createDependency('scrollHorizontal', new ludo.Scroller({
 			type:'horizontal',
-			applyTo:this.getBody(),
-			parent:this.getBody()
+			applyTo:this.$b(),
+			parent:this.$b()
 		}));
-		this.scrollbar.horizontal.getEl().insertAfter(this.getBody());
+		this.scrollbar.horizontal.getEl().insertAfter(this.$b());
 
 		this.scrollbar.vertical = this.createDependency('scrollVertical', new ludo.Scroller({
 			type:'vertical',
@@ -583,7 +578,7 @@ ludo.grid.Grid = new Class({
 		var keys = this.columnManager.getLeafKeys();
 		for (var i = 0; i < keys.length; i++) {
 			var el = this.colResizeHandler.getHandle(keys[i], this.columnManager.isResizable(keys[i]));
-			this.getBody().append(el);
+			this.$b().append(el);
 			el.addClass('ludo-grid-resize-handle');
 		}
 	},
@@ -643,13 +638,20 @@ ludo.grid.Grid = new Class({
 			this.columnManager.clearStretchedWidths();
 
 			var totalWidth = this.columnManager.getTotalWidth();
-			var viewSize = this.getBody().width();
+			var viewSize = this.$b().width();
 			var restSize = viewSize - totalWidth;
 			if (restSize <= 0) {
 				return;
 			}
 			var width = this.columnManager.getWidthOf(this.columnManager.getLastVisible()) + restSize;
 			this.columnManager.setStretchedWidth(width)
+		}
+	},
+
+	toggleEmptyText:function(){
+
+		if(this.emptyText){
+			this.emptyTextEl().css('display', (!this.currentData || this.currentData.length) > 0 ? 'none' : '');
 		}
 	},
 
@@ -660,9 +662,7 @@ ludo.grid.Grid = new Class({
 		this.currentData = this.getDataSource().getData();
 
 
-		if(this.emptyText){
-			this.emptyTextEl().css('display', this.currentData.length > 0 ? 'none' : '');
-		}
+		this.toggleEmptyText();
 
 		var contentHtml = [];
 		var keys = this.columnManager.getLeafKeys();

@@ -228,8 +228,8 @@ header("Pragma: no-cache");
             __rendered:function(){
                 var el = jQuery(document.body).find('.source-code');
                 if(el){
-                    this.getBody().html(el.html());
-                    new ludo.CodeHighlight(this.getBody());
+                    this.$b().html(el.html());
+                    new ludo.CodeHighlight(this.$b());
                 }
             }
 

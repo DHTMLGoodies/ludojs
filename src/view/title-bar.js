@@ -19,8 +19,8 @@ ludo.view.TitleBar = new Class({
 
         if (!this.buttons)this.buttons = this.getDefaultButtons();
 
-        this.view.addEvent('setTitle', this.setTitle.bind(this));
-        this.view.addEvent('resize', this.resizeDOM.bind(this));
+        this.view.on('setTitle', this.setTitle.bind(this));
+        this.view.on('resize', this.resizeDOM.bind(this));
         this.createDOM();
         this.setSizeOfButtonContainer();
     },
@@ -73,16 +73,14 @@ ludo.view.TitleBar = new Class({
     },
 
     getButtonContainer:function () {
-
-
         var el = this.els.controls = jQuery('<div class="ludo-title-bar-button-container"></div>');
-        el.css('cursor.default');
+        el.css('cursor', 'pointer');
 
         this.createEdge('left', el);
         this.createEdge('right', el);
 
         for (var i = 0; i < this.buttons.length; i++) {
-            el.append(this.getButton(this.buttons[i]));
+            el.append(this.getButtonDOM(this.buttons[i]));
         }
 
         this.addBorderToButtons();
@@ -98,16 +96,15 @@ ludo.view.TitleBar = new Class({
 
     },
 
-    shouldShowCollapseButton:function () {
-        var parent = this.view.getParent();
-        return parent.layout && parent.layout.type ? parent.layout.type === 'linear' || parent.layout.type == 'relative' : false;
-    },
-
     resizeButtonContainer:function () {
         this.els.controls.css('width', this.getWidthOfButtons());
     },
 
-    getButton:function (buttonConfig) {
+    button:function(name){
+        return this.els.buttons[name];
+    },
+
+    getButtonDOM:function (buttonConfig) {
         buttonConfig = ludo.util.isString(buttonConfig) ? { type:buttonConfig } : buttonConfig;
 
         var b = this.els.buttons[buttonConfig.type] = jQuery('<div>');
@@ -115,11 +112,18 @@ ludo.view.TitleBar = new Class({
         b.attr("class", 'ludo-title-bar-button ludo-title-bar-button-' + buttonConfig.type);
 
         b.on("click", this.getButtonClickFn(buttonConfig.type));
+        if(buttonConfig.listener){
+            b.on('click', buttonConfig.listener.bind(this));
+        }
         b.mouseenter(this.enterButton.bind(this));
         b.mouseleave(this.leaveButton.bind(this));
 
         b.attr('title', buttonConfig.title ? buttonConfig.title : buttonConfig.type.capitalize());
         b.attr('buttonType', buttonConfig.type);
+
+        if(buttonConfig.icon){
+            b.css('background-image', 'url('+ buttonConfig.icon + ')');
+        }
 
         this.els.buttonArray.push(b);
         return b;
@@ -132,6 +136,7 @@ ludo.view.TitleBar = new Class({
 
         return function (e) {
             this.leaveButton(e);
+            var el = jQuery(e.target);
             var event = type;
 
             if (toggle) {
@@ -141,9 +146,9 @@ ludo.view.TitleBar = new Class({
                     event = this.getNextToggle(toggle, event);
 
                 }
-                ludo.dom.removeClass(e.target, 'ludo-title-bar-button-' + event);
+                el.removeClass('ludo-title-bar-button-' + event);
                 this.toggleStatus[type] = event;
-                ludo.dom.addClass(e.target, 'ludo-title-bar-button-' + this.getNextToggle(toggle, event));
+                el.addClass('ludo-title-bar-button-' + this.getNextToggle(toggle, event));
             }
             this.fireEvent(event);
         }.bind(this);

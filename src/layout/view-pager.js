@@ -67,7 +67,7 @@ ludo.layout.ViewPager = new Class({
     getParentForNewChild: function () {
         if (this.parentDiv == undefined) {
             this.parentDiv = jQuery('<div style="position:absolute"></div>');
-            this.view.getBody().append(this.parentDiv);
+            this.view.$b().append(this.parentDiv);
             this.parentDiv.on(ludo.util.getDragStartEvent(), this.touchStart.bind(this));
         }
         return this.parentDiv;

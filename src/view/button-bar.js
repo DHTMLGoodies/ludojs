@@ -39,7 +39,7 @@ ludo.view.ButtonBar = new Class({
     },
     ludoDOM:function () {
         this.parent();
-        this.getBody().addClass('ludo-content-buttons');
+        this.$b().addClass('ludo-content-buttons');
     },
 
     __rendered:function () {

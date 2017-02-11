@@ -519,7 +519,7 @@ ludo.form.Element = new Class({
         }
 
         this.els.inputCell = jQuery('<div class="input-cell"></div>');
-        this.getBody().append(this.els.inputCell);
+        this.$b().append(this.els.inputCell);
         this.els.formEl = jQuery('<' + this.inputTag + '>');
 
         if (this.inputType) {

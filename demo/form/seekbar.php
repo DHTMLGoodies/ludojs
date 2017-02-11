@@ -28,7 +28,7 @@ require_once("../includes/demo-header.php");
     function updateColor(){
         var color = colorUtil.rgbCode(ludo.get('red').val(), ludo.get('green').val(), ludo.get('blue').val());
 
-        ludo.get('preview').getBody().css({
+        ludo.get('preview').$b().css({
             'background-color': color
         });
 
@@ -42,7 +42,7 @@ require_once("../includes/demo-header.php");
 
         var rgbColors = colorUtil.rgbObject(color);
 
-        ludo.get('preview').getBody().css({
+        ludo.get('preview').$b().css({
             'background-color': '#' + color
         });
 

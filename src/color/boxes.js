@@ -8,12 +8,12 @@ ludo.color.Boxes = new Class({
 
     ludoDOM:function(){
         this.parent();
-        this.getBody().css('overflowY', 'auto');
+        this.$b().css('overflowY', 'auto');
     },
 
     ludoEvents:function(){
         this.parent();
-        this.getBody().on('click', this.clickOnColorBox.bind(this));
+        this.$b().on('click', this.clickOnColorBox.bind(this));
     },
 
     __rendered:function(){
@@ -35,7 +35,7 @@ ludo.color.Boxes = new Class({
                 html.push('</div>');
             }
         }
-        this.getBody().html(html.join(''));
+        this.$b().html(html.join(''));
 
     },
 

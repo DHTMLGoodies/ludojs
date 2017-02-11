@@ -76,7 +76,6 @@ ludo.View = new Class({
     children: [],
     child: {},
     dataSource: undefined,
-    socket: undefined,
     parentComponent: null,
     objMovable: null,
     width: undefined,
@@ -187,7 +186,7 @@ ludo.View = new Class({
         this.parent(config);
         config.els = config.els || {};
         if (this.parentComponent)config.renderTo = undefined;
-        var keys = ['contextMenu', 'renderTo', 'tpl', 'elCss', 'socket', 'form', 'title', 'hidden',
+        var keys = ['contextMenu', 'renderTo', 'tpl', 'elCss', 'form', 'title', 'hidden',
             'dataSource', 'movable', 'resizable', 'closable', 'minimizable', 'alwaysInFront',
             'parentComponent', 'cls', 'bodyCls', 'objMovable', 'width', 'height', 'frame', 'formConfig',
             'overflow','loadMessage'];
@@ -304,9 +303,9 @@ ludo.View = new Class({
         if (tpl) {
 
             if(jQuery.isFunction(tpl)){
-                this.getBody().html(tpl.call(this, json));
+                this.$b().html(tpl.call(this, json));
             }else{
-                this.getBody().html(this.getTplParser().asString(json, tpl));
+                this.$b().html(this.getTplParser().asString(json, tpl));
             }
         }
     },
@@ -319,7 +318,7 @@ ludo.View = new Class({
     },
 
     autoSetHeight: function () {
-        var size = this.getBody().outerHeight(true);
+        var size = this.$b().outerHeight(true);
         this.layout.height = size + ludo.dom.getMBPH(this.getEl());
     },
 
@@ -338,17 +337,17 @@ ludo.View = new Class({
      */
 
     html: function (html) {
-        this.getBody().html(html);
+        this.$b().html(html);
     },
 
     setContent: function () {
         if (this._html) {
             if (this.children.length) {
                 var el = jQuery('<div>' + this._html + '</div>');
-                this.getBody().append(el);
+                this.$b().append(el);
             } else {
 
-                this.getBody().html(this._html);
+                this.$b().html(this._html);
             }
         }
     },
@@ -460,12 +459,17 @@ ludo.View = new Class({
     /**
      * Return reference to the "body" div HTML Element.
      * @memberof ludo.view.prototype
-     * @function getBody
+     * @function $b
      * @return {HTMLElement} DOMElement
      */
-    getBody: function () {
+    $b: function () {
         return this.els.body;
     },
+
+    getBody:function(){
+        return this.els.body;
+    },
+    
     /**
      * Hides the view
      * @function hide
@@ -609,7 +613,7 @@ ludo.View = new Class({
      * @return {Number} width
      */
     getWidth: function () {
-        return this.layout.pixelWidth ? this.layout.pixelWidth : this.layout.width ? this.layout.width : this.getBody().width();
+        return this.layout.pixelWidth ? this.layout.pixelWidth : this.layout.width ? this.layout.width : this.$b().width();
     },
 
     /**
@@ -628,54 +632,54 @@ ludo.View = new Class({
      Resize View and it's children.
      @function resize
      @memberof ludo.View.prototype
-     @param {Object} size Object with optional width and height properties. Example: { width: 200, height: 100 }
+     @param {Object} p Object with optional width and height properties. Example: { width: 200, height: 100 }
      @example
      view.resize(
         { width: 200, height:200 }
      );
      */
-    resize: function (size) {
+    resize: function (p) {
 
         if (this.isHidden()) {
             return;
         }
 
         var l = this.layout;
-        size = size || {};
+        p = p || {};
 
-        if (size.width) {
-            if (l.aspectRatio && l.preserveAspectRatio && size.width && !this.isMinimized()) {
-                size.height = size.width / l.aspectRatio;
+        if (p.width) {
+            if (l.aspectRatio && l.preserveAspectRatio && p.width && !this.isMinimized()) {
+                p.height = p.width / l.aspectRatio;
             }
             // TODO layout properties should not be set here.
-            l.pixelWidth = size.width;
-            if (!isNaN(l.width))l.width = size.width;
-            var width = size.width - ludo.dom.getMBPW(this.els.container);
-            if (width > 0) {
-                this.els.container.css('width', width);
+            l.pixelWidth = p.width;
+            if (!isNaN(l.width))l.width = p.width;
+            var w = p.width - ludo.dom.getMBPW(this.els.container);
+            if (w > 0) {
+                this.els.container.css('width', w);
             }
         }
 
-        if (size.height && !this.state.isMinimized) {
+        if (p.height && !this.state.isMinimized) {
             // TODO refactor this part.
             if (!this.state.isMinimized) {
-                l.pixelHeight = size.height;
-                if (!isNaN(l.height))l.height = size.height;
+                l.pixelHeight = p.height;
+                if (!isNaN(l.height))l.height = p.height;
             }
-            var height = size.height - ludo.dom.getMBPH(this.els.container);
-            if (height > 0) {
-                this.els.container.css('height', height);
+            var h = p.height - ludo.dom.getMBPH(this.els.container);
+            if (h > 0) {
+                this.els.container.css('height', h);
             }
         }
 
-        if (size.left !== undefined || size.top !== undefined) {
-            this.setPosition(size);
+        if (p.left !== undefined || p.top !== undefined) {
+            this.setPosition(p);
         }
 
         this.resizeDOM();
 
-        if (size.height || size.width) {
-            this.fireEvent('resize', size);
+        if (p.height || p.width) {
+            this.fireEvent('resize', p);
         }
 
         if(this._fr == false){
@@ -719,7 +723,6 @@ ludo.View = new Class({
         return false;
     },
 
-    cachedInnerHeight: undefined,
     resizeDOM: function () {
         if (this.layout.pixelHeight > 0) {
             var height = this.layout.pixelHeight ? this.layout.pixelHeight - ludo.dom.getMBPH(this.els.container) : this.els.container.css('height').replace('px', '');
@@ -728,14 +731,8 @@ ludo.View = new Class({
                 return;
             }
             this.els.body.css('height', height);
-            this.cachedInnerHeight = height;
         }
     },
-
-    getInnerHeightOfBody: function () {
-        return this.cachedInnerHeight ? this.cachedInnerHeight : this.els.body.height();
-    },
-
 
     /**
      * Add child components
@@ -839,8 +836,6 @@ ludo.View = new Class({
     getDataSource: function () {
 
         if (!this.dataSourceObj && this.dataSource) {
-
-
             var obj;
             if (ludo.util.isString(this.dataSource)) {
                 obj = this.dataSourceObj = ludo.get(this.dataSource);

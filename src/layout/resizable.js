@@ -80,7 +80,7 @@ ludo.layout.Resizable = new Class({
 
         this.addResizeEvents();
 
-        this.component.getParent().getBody().append(this.el);
+        this.component.getParent().$b().append(this.el);
 
         if (this.cls) {
             this.el.addClass(this.cls);
@@ -156,7 +156,7 @@ ludo.layout.Resizable = new Class({
     },
 
     resizeAndPosition:function () {
-        var coordinates = this.component.getEl().getCoordinates(this.component.getParent().getBody());
+        var coordinates = this.component.getEl().getCoordinates(this.component.getParent().$b());
         var pos;
         if (this.position === 'after') {
             pos = coordinates.top + coordinates.height;

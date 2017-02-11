@@ -35,8 +35,8 @@ ludo.grid.GridHeader = new Class({
 		this.el = jQuery('<div>');
 		this.el.addClass('ludo-header');
 		this.el.addClass('testing');
-		this.el.insertBefore(this.grid.getBody().first());
-	//	this.el.inject(this.grid.getBody().getFirst(), 'before');
+		this.el.insertBefore(this.grid.$b().first());
+	//	this.el.inject(this.grid.$b().getFirst(), 'before');
 
 		var countRows = this.columnManager.getCountRows();
 		this.el.css('height', this.cellHeight * countRows + ludo.dom.getMBPH(this.el));
@@ -95,7 +95,7 @@ ludo.grid.GridHeader = new Class({
 		if(this.grid.isHidden())return;
 		var el = jQuery('<div>');
 		el.addClass('ludo-grid-header-cell');
-		this.grid.getBody().append(el);
+		this.grid.$b().append(el);
 		this.cellHeight = el.height() + ludo.dom.getMH(el);
 
 		this.spacing = {

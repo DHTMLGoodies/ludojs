@@ -101,8 +101,8 @@ TestCase("MenuTest", {
         var grandChild = cmp.child['b'].child['ba'];
 
         // then
-        assertEquals(cmp.child['b'].getLayout().getMenuContainer().getBody().attr("id"), grandChild.getEl().parent().attr("id"));
-        assertEquals(cmp.getBody().attr("id"), child.getEl().parent().attr("id"));
+        assertEquals(cmp.child['b'].getLayout().getMenuContainer().$b().attr("id"), grandChild.getEl().parent().attr("id"));
+        assertEquals(cmp.$b().attr("id"), child.getEl().parent().attr("id"));
     },
 
     "test width of horizontal menu items should be wrap":function () {
@@ -163,7 +163,7 @@ TestCase("MenuTest", {
         var child = c.child['b'];
 
         // then
-        assertEquals(c.getBody().attr("id"), child.getEl().parent().attr("id"));
+        assertEquals(c.$b().attr("id"), child.getEl().parent().attr("id"));
     },
 
     "test should assign css class to menu containers":function () {

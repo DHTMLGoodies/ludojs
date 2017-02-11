@@ -8,7 +8,7 @@ ludo.colorPicker.Preview = new Class({
         this.controller.addEvent('setRGB', this.setColor.bind(this));
     },
     setColor:function (color) {
-        this.getBody().css('background-color', color);
+        this.$b().css('background-color', color);
     }
 
 });

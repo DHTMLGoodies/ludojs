@@ -54,7 +54,7 @@ require_once("../includes/demo-header.php");
             this.dotParents = [];
             this.dots = [];
 
-            this.getBody().empty();
+            this.$b().empty();
 
             for(var i=0;i<this.viewPager.count;i++){
                 var parent = jQuery('<div class="navigator-dot-parent" style="position:absolute"></div>');
@@ -62,7 +62,7 @@ require_once("../includes/demo-header.php");
                 dot.css('background-color', this.color);
                 parent.attr('data-index', i);
                 parent.append(dot);
-                this.getBody().append(parent);
+                this.$b().append(parent);
                 this.dotParents.push(parent);
                 this.dots.push(dot);
 
@@ -83,12 +83,12 @@ require_once("../includes/demo-header.php");
         },
         
         resizeAndPositionDots:function(){
-            this.dotSizeSelected = this.getBody().height();
+            this.dotSizeSelected = this.$b().height();
             this.dotSize = this.dotSizeSelected * 0.5;
 
             var totalWidthOfDots = this.dotSizeSelected * this.viewPager.count;
             var totalSpacing = this.spacing * this.viewPager.count;
-            var left = (this.getBody().width() / 2) - (totalWidthOfDots / 2) - (totalSpacing / 2);
+            var left = (this.$b().width() / 2) - (totalWidthOfDots / 2) - (totalSpacing / 2);
             for(var i=0;i<this.viewPager.count;i++){
                 this.dotParents[i].css({
                     left: left,

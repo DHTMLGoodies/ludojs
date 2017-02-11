@@ -20,16 +20,16 @@ ludo.colorPicker.ColorScheme = new Class({
 	__rendered:function(){
 		this.parent();
 		this.colorObj = new ludo.color.Color();
-		this.getBody().html('<div class="default-color-scheme-box">Generate color scheme using the buttons below</div>');
+		this.$b().html('<div class="default-color-scheme-box">Generate color scheme using the buttons below</div>');
 		if(this.colors !== undefined){
 			this.renderColorBoxes(this.colors);
 		}
 	},
 
 	createDefaultColorBoxes:function(){
-		this.getBody().html('');
+		this.$b().html('');
 		var c = jQuery('<div>');
-		this.getBody().append(c);
+		this.$b().append(c);
 
 		c.css('height', '100%');
 		c.css('width', '2000px');

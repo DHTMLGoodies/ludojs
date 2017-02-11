@@ -18,12 +18,12 @@ ludo.Anchor = new Class({
         this.els.anchor.html( this._html);
         this.els.anchor.setProperty('href', '#');
         this.els.anchor.addEvent('click', this.anchorClick.bind(this));
-        this.getBody().append(this.els.anchor);
+        this.$b().append(this.els.anchor);
     },
 
     ludoEvents:function () {
         this.parent();
-        this.getBody().addEvent('click', this.anchorClick.bind(this))
+        this.$b().addEvent('click', this.anchorClick.bind(this))
     },
 
     getAnchorTag:function () {

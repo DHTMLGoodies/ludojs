@@ -33,12 +33,12 @@ ludo.calendar.Selector = new Class({
         el.css({
             position:'absolute', width:'3000px', left:0, top:0
         });
-        this.getBody().append(el);
+        this.$b().append(el);
     },
     autoResize:function () {
         var height = this.els.calendarContainer.height();
         height += ludo.dom.getMH(this.els.calendarContainer);
-        this.layout.height = height + ludo.dom.getMBPH(this.getBody()) + ludo.dom.getMBPH(this.getEl());
+        this.layout.height = height + ludo.dom.getMBPH(this.$b()) + ludo.dom.getMBPH(this.getEl());
 
     },
 
@@ -71,7 +71,7 @@ ludo.calendar.Selector = new Class({
 
     getCenterPos:function (domEl) {
         domEl = jQuery(domEl);
-        return Math.round((this.getBody().outerWidth() / 2) - domEl.position().left - (domEl.outerWidth() / 2));
+        return Math.round((this.$b().outerWidth() / 2) - domEl.position().left - (domEl.outerWidth() / 2));
     },
 
     setMinDate:function (date) {

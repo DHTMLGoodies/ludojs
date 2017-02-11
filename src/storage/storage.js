@@ -6,7 +6,7 @@
  * Class for saving data to local storage(browser cache).
  *
  * ludo.getLocalStorage() returns a singleton for ludo.storage.LocalStorage
- * 
+ *
  * @class ludo.storage.LocalStorage
  * @type {Type}
  * @example
@@ -16,65 +16,72 @@
  *
  */
 ludo.storage.LocalStorage = new Class({
-	supported:false,
-	initialize:function(){
-		this.supported = typeof(Storage)!=="undefined";
-	},
+    supported: false,
+    initialize: function () {
+        this.supported = typeof(Storage) !== "undefined";
+    },
 
-	/**
-	 * @function save
-	 * @param {String} key
-	 * @param {String|Number|Array|Object} value
-	 * @memberof ludo.storage.LocalStorage.prototype
+    /**
+     * @function save
+     * @param {String} key
+     * @param {String|Number|Array|Object} value
+     * @memberof ludo.storage.LocalStorage.prototype
      */
-	save:function(key,value){
-		if(!this.supported)return;
-		var type = 'simple';
-		if(ludo.util.isObject(value) || ludo.util.isArray(value)){
-			value = JSON.stringify(value);
-			type = 'object';
-		}
-		localStorage[key] = value;
-		localStorage[this.getTypeKey(key)] = type;
-	},
+    save: function (key, value) {
+        if (!this.supported)return;
+        var type = 'simple';
+        if (jQuery.isPlainObject(value) || jQuery.isArray(value)) {
+            value = JSON.stringify(value);
+            type = 'object';
+        }
+        localStorage[key] = value;
+        localStorage[this.getTypeKey(key)] = type;
+    },
 
-	/**
-	 * Get value from local storage
-	 * @function get
-	 * @param {string} key
-	 * @param {mixed} defaultValue
-	 * @memberof ludo.storage.LocalStorage.prototype
-	 * @returns {*}
+    getNumeric:function(key, defaultValue){
+        return this.get(key, defaultValue) / 1;
+    },
+
+    /**
+     * Get value from local storage
+     * @function get
+     * @param {string} key
+     * @param {string|object|array} defaultValue
+     * @memberof ludo.storage.LocalStorage.prototype
+     * @returns {*}
      */
-	get:function(key, defaultValue){
-		if(!this.supported)return defaultValue;
-		var type = this.getType(key);
-		if(type==='object'){
-			return JSON.parse(localStorage[key]);
-		}
-		return localStorage[key] ? localStorage[key] : defaultValue;
-	},
+    get: function (key, defaultValue) {
+        if (!this.supported)return defaultValue;
+        var type = this.getType(key);
+        if (type === 'object') {
+            var ret = JSON.parse(localStorage[key]);
+            return ret ? ret : defaultValue;
+        }
 
-	getTypeKey:function(key){
-		return key + '___type';
-	},
+        var val = localStorage.getItem(key);
+        return  val ? val : defaultValue;
+    },
 
-	getType:function(key){
-		key = this.getTypeKey(key);
-		if(localStorage[key]!==undefined){
-			return localStorage[key];
-		}
-		return 'simple';
-	},
+    getTypeKey: function (key) {
+        return key + '___type';
+    },
 
-	clearLocalStore:function(){
-		localStorage.clear();
-	}
+    getType: function (key) {
+        key = this.getTypeKey(key);
+        if (localStorage[key] !== undefined) {
+            return localStorage[key];
+        }
+        return 'simple';
+    },
+
+    empty: function () {
+        localStorage.clear();
+    }
 });
 
 ludo.localStorage = undefined;
-ludo.getLocalStorage = function(){
-	if(!ludo.localStorage)ludo.localStorage = new ludo.storage.LocalStorage();
-	return ludo.localStorage;
+ludo.getLocalStorage = function () {
+    if (!ludo.localStorage)ludo.localStorage = new ludo.storage.LocalStorage();
+    return ludo.localStorage;
 };
 

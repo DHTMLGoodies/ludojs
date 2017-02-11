@@ -19,8 +19,8 @@ ludo.form.TinyButton = new Class({
     ludoDOM:function () {
         this.parent();
         this.getEl().addClass('ludo-form-button-s');
-        this.getBody().addClass('ludo-form-tiny-button');
-        this.getBody().setStyle('padding-left', 0);
+        this.$b().addClass('ludo-form-tiny-button');
+        this.$b().setStyle('padding-left', 0);
         this.els.txt.style.height = '15px';
     },
 

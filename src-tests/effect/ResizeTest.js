@@ -3,10 +3,10 @@ TestCase("ResizeTest", {
 		if (ludo.ResizeMock === undefined) {
 			ludo.ResizeMock = new Class({
 				Extends:ludo.effect.Resize,
-				getBodyWidth:function () {
+				$bWidth:function () {
 					return 1900;
 				},
-				getBodyHeight:function () {
+				$bHeight:function () {
 					return 1200;
 				}
 			});
@@ -49,11 +49,11 @@ TestCase("ResizeTest", {
 	    // when
 	    resize.startResize(this.getEventMock('e'));
 	    // then
-	    assertEquals('e-resize', this.getBodyCursor());
+	    assertEquals('e-resize', this.$bCursor());
 	    // when
 	    resize.startResize(this.getEventMock('se'));
 	    // then
-	    assertEquals('se-resize', this.getBodyCursor());
+	    assertEquals('se-resize', this.$bCursor());
 	}
 	
 	,
@@ -66,7 +66,7 @@ TestCase("ResizeTest", {
 	    resize.stopResize(e);
 	
 	    // then
-	    assertEquals('default', this.getBodyCursor());
+	    assertEquals('default', this.$bCursor());
 	}
 	
 	,
@@ -736,7 +736,7 @@ TestCase("ResizeTest", {
 	    resize.startResize(e);
 	
 	    var top = 300;
-	    var maxHeight = resize.getBodyHeight() - top;
+	    var maxHeight = resize.$bHeight() - top;
 	    var expectedMax = maxHeight * resize.getAspectRatio();
 	
 	    // then
@@ -776,7 +776,7 @@ TestCase("ResizeTest", {
 	    });
 	},
 
-	getBodyCursor:function(){
+	$bCursor:function(){
 		return document.body.style.cursor;
 	}
 

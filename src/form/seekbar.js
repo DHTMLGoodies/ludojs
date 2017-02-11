@@ -95,7 +95,7 @@ ludo.form.Seekbar = new Class({
     renderSeekbar:function(){
         this.el = jQuery('<div class="dhtmlgoodies-seekbar" style="position:relative;width:100%;height:100%"></div>');
 
-        this.getBody().append(this.el);
+        this.$b().append(this.el);
 
         this.els.negative = jQuery('<div class="seekbar-negative" style="position:absolute;z-index:1"></div>');
         this.els.positive = jQuery('<div class="seekbar-positive" style="position:absolute;z-index:1"></div>');

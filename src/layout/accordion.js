@@ -130,13 +130,13 @@ ludo.layout.Accordion = new Class({
         if (child.title) {
             title.html(child.title);
         }
-        this.view.getBody().append(el);
+        this.view.$b().append(el);
 
         this.titleEls.push(el);
 
         var container = jQuery('<div class="ludo-accordion-container" style="height:0"></div>');
         container.attr("id", "accordion-" + child.id);
-        this.view.getBody().append(container);
+        this.view.$b().append(container);
 
         if (child.hidden) {
             el.css('display', 'none');

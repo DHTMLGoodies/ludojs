@@ -220,7 +220,7 @@ svgCrop.Surface = new Class({
 
     __rendered: function () {
         this.parent();
-        this.getBody().css('background-color', '#444');
+        this.$b().css('background-color', '#444');
 
         var s = this.svg();
         this.group = s.$('g');
@@ -360,7 +360,7 @@ svgCrop.Surface = new Class({
     createHandles: function () {
 
         if (this.rect == undefined) {
-            this.rect = new svgCrop.Node('rect', {
+            this.rect = new svgCrop.Rect({
                 surface: this
             });
             this.rect.on('move', this.startDrag.bind(this));
@@ -520,6 +520,7 @@ svgCrop.Rect = new Class({
     node: undefined,
 
     initialize: function (config) {
+
         this.surface = config.surface;
         this.node = this.surface.svg().$('rect');
         this.node.set('stroke-dasharray', '1,5');
@@ -538,7 +539,7 @@ svgCrop.Rect = new Class({
     },
 
     resize: function (cropArea) {
-        this.node.setProperties({
+        this.node.setAttributes({
             x: cropArea.imageX + cropArea.x,
             y: cropArea.imageY + cropArea.y,
             width: cropArea.width,
@@ -566,11 +567,6 @@ svgCrop.Handle = new Class({
             cx:0,cy:0
         });
 
-        /*
-        this.node = this.surface.svg().$('path', {
-            d: this.getPath()
-        });
-        */
         this.node.css({
             'stroke-width': 1,
             'stroke': '#FFF'

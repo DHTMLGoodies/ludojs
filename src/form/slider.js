@@ -64,7 +64,7 @@ ludo.form.Slider = new Class({
 
         el.addClass('ludo-form-slider-container');
         el.addClass('ludo-form-slider-' + this.getDirection());
-        this.getBody().append(el);
+        this.$b().append(el);
 
         this.addSliderBg('first');
         this.addSliderBg('last');
@@ -127,7 +127,7 @@ ludo.form.Slider = new Class({
 
     getDirection:function () {
         if (this.direction === undefined) {
-            var size = this.getBody().getSize();
+            var size = this.$b().getSize();
             if (size.x >= size.y) {
                 this.direction = 'horizontal';
             } else {
@@ -165,7 +165,7 @@ ludo.form.Slider = new Class({
         if (this.direction == 'horizontal') {
             this.sliderSize = this.els.slider.width();
         } else {
-            this.sliderSize = this.getBody().height() - ludo.dom.getMH(this.els.slider);
+            this.sliderSize = this.$b().height() - ludo.dom.getMH(this.els.slider);
             this.els.slider.css('height',  this.getHeight() + 'px');
         }
         this.sliderSize -= this.getHandleSize();

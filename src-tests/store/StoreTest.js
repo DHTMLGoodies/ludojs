@@ -1,6 +1,9 @@
 TestCase("StoreTest", {
 
 	setUp:function () {
+
+		ludo.getLocalStorage().empty();
+		
 		if (ludo.StateFulCmp === undefined) {
 			ludo.StateFulCmp = new Class({
 				Extends:ludo.Core,
@@ -50,6 +53,17 @@ TestCase("StoreTest", {
 
 
 	},
+
+
+	"test should return default value": function(){
+		// when
+		var val = ludo.getLocalStorage().get('name', 'alf');
+
+		// then
+		assertEquals('alf', val);
+	},
+
+
 	"test_should_be_able_to_have_stateful_components":function () {
 		// given
 		var id = 'cmp-' + String.uniqueID();

@@ -138,7 +138,7 @@ var w = new ludo.Window({
                                                 var color = this.colorUtil.rgbCode(
                                                     ludo.get('red').val(), ludo.get('green').val(), ludo.get('blue').val()
                                                 );
-                                                this.getBody().css('background-color', color);
+                                                this.$b().css('background-color', color);
                                             },
                                             listeners:{
                                                 'rendered': function(){

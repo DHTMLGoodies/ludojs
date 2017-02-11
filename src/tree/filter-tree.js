@@ -87,7 +87,7 @@ ludo.tree.FilterTree = new Class({
 		});
 		hiddenEl.addEvent('click', this.arrowClick.bind(this));
 
-		this.getBody().append(hiddenEl);
+		this.$b().append(hiddenEl);
 	},
 
 	arrowClick:function () {

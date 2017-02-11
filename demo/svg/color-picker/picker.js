@@ -68,12 +68,12 @@ ludo.colorPicker.Picker = new Class({
 	},
 
 	receiveClick:function (e) {
-		var bodyPos = this.getBodyPos();
+		var bodyPos = this.$bPos();
 		var pos = {
 			x:e.pageX - bodyPos.left,
 			y:e.pageY - bodyPos.top
 		};
-		var size = this.getBodySize();
+		var size = this.$bSize();
 
 		var s = (size.y - pos.y) / size.y * 100;
 		this.positionCircleBySaturation(s);
@@ -89,8 +89,8 @@ ludo.colorPicker.Picker = new Class({
 		this.updateCircleStyleByBrightness(v);
 	},
 
-	getBodyPos:function(){
-		var b = this.getBody();
+	$bPos:function(){
+		var b = this.$b();
 
 		var pos = jQuery(b).offset();
 		pos.left += ludo.dom.getBW(b)/2;
@@ -98,8 +98,8 @@ ludo.colorPicker.Picker = new Class({
 		return pos;
 	},
 
-	getBodySize:function(){
-		var b = this.getBody();
+	$bSize:function(){
+		var b = this.$b();
 		return {
 			x:b.width(),
 			y:b.height()

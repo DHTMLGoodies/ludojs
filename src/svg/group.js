@@ -141,7 +141,7 @@ ludo.svg.Group = new Class({
         return this.getDependency('layoutManager');
     },
 
-    getBody: function () {
+    $b: function () {
         return this.node;
     },
 

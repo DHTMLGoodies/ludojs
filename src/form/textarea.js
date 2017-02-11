@@ -32,7 +32,7 @@ ludo.form.Textarea = new Class({
             this.offX = (this.els.formEl.outerWidth() - this.els.formEl.width()) + (this.getInputCell().outerWidth() - this.getInputCell().width());
             this.offY = (this.els.formEl.outerWidth() - this.els.formEl.width()) + (this.getInputCell().outerHeight() - this.getInputCell().height());
         }
-        this.els.formEl.css('width', this.getBody().width() - this.offX);
-        this.els.formEl.css('height', this.getBody().height() - this.offY - 2);
+        this.els.formEl.css('width', this.$b().width() - this.offX);
+        this.els.formEl.css('height', this.$b().height() - this.offY - 2);
     }
 });

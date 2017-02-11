@@ -349,7 +349,7 @@ ludo.form.ComboField = new Class({
 
     ludoEvents:function () {
         this.parent();
-        this.getBody().on('click', this.clickEvent.bind(this));
+        this.$b().on('click', this.clickEvent.bind(this));
     },
 
     clickEvent:function () {
@@ -364,17 +364,17 @@ ludo.form.ComboField = new Class({
         this.parent();
         var el = jQuery('<div>');
         el.addClass('ludo-Filter-Tree-Field-Arrow');
-        this.getBody().append(el);
+        this.$b().append(el);
 
         var left = jQuery('<div>');
         left.addClass('ludo-Filter-Tree-Bg-Left');
-        this.getBody().append(left);
+        this.$b().append(left);
         var right = jQuery('<div>');
         right.addClass('ludo-Filter-Tree-Bg-Right');
-        this.getBody().append(right);
+        this.$b().append(right);
 
         var valueField = this.els.valueField = jQuery('<div>');
         valueField.addClass('ludo-Filter-Tree-Combo-Value');
-        this.getBody().append(valueField);
+        this.$b().append(valueField);
     }
 });
