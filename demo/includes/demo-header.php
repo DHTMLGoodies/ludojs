@@ -17,7 +17,7 @@ header("Pragma: no-cache");
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?php echo $pageTitle; ?></title>
-
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
     <script class="analytics" type="text/javascript">
 
         if(location.hostname.indexOf('ludojs.com') >=0){

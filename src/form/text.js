@@ -92,7 +92,6 @@ ludo.form.Text = new Class({
     },
 
     sendKeyEvent: function () {
-
         this.fireEvent('key', this.els.formEl.val());
     },
 
