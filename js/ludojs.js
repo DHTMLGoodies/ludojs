@@ -1,7 +1,7 @@
-/* Generated Mon Feb 27 23:34:08 CET 2017 */
+/* Generated Mon Feb 27 23:37:23 CET 2017 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.450
+ludoJS - Javascript framework, 1.1.451
 Copyright (C) 2012-2017  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -11462,7 +11462,7 @@ ludo.chart.Fragment = new Class({
     },
 
     svg:function(){
-        return this.getParent().getParent().getCanvas();
+        return this.getParent().getParent().svg();
     },
     
     storeRendering:function(rendering){

@@ -150,7 +150,7 @@ ludo.chart.Fragment = new Class({
     },
 
     svg:function(){
-        return this.getParent().getParent().getCanvas();
+        return this.getParent().getParent().svg();
     },
     
     storeRendering:function(rendering){
