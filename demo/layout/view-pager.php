@@ -11,7 +11,7 @@ require_once("../includes/demo-header.php");
     var w = new ludo.Window({
         id:'myWindow',
         left:50, top:50,
-        width:310, height:285,
+        width:310, height:295,
         resizable:false,
         minimizable:true,
         title:'Swipe between pages',

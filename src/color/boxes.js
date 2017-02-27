@@ -3,7 +3,7 @@ ludo.color.Boxes = new Class({
 
     __construct:function(config){
         this.parent(config);
-        this.setConfigParams(config, ['colors']);
+        this.__params(config, ['colors']);
     },
 
     ludoDOM:function(){

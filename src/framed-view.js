@@ -96,7 +96,7 @@ ludo.FramedView = new Class({
             }
         }
 
-        this.setConfigParams(config,['buttonBar', 'hasMenu','menuConfig','icon','titleBarHidden','titleBar','buttons','boldTitle','minimized']);
+        this.__params(config,['buttonBar', 'hasMenu','menuConfig','icon','titleBarHidden','titleBar','buttons','boldTitle','minimized']);
 
 	},
 
@@ -124,7 +124,7 @@ ludo.FramedView = new Class({
 	ludoDOM:function () {
 		this.parent();
 
-		this.els.container.addClass('ludo-framed-view');
+		this.$e.addClass('ludo-framed-view');
 
 		if(this.hasTitleBar()){
 			this.getTitleBar().getEl().insertBefore(this.$b());
@@ -149,7 +149,7 @@ ludo.FramedView = new Class({
         if (this.buttonBar) {
             this.getButtonBar()
         } else {
-			this.els.container.addClass('ludo-view-no-buttonbar')
+			this.$e.addClass('ludo-view-no-buttonbar')
         }
 		this.parent();
 		if (this.minimized) {
@@ -179,7 +179,7 @@ ludo.FramedView = new Class({
 
 	resizeDOM:function () {
 		var height = this.getHeight();
-		height -= (ludo.dom.getMBPH(this.els.container) + ludo.dom.getMBPH(this.els.body) +  this.getHeightOfTitleAndButtonBar());
+		height -= (ludo.dom.getMBPH(this.$e) + ludo.dom.getMBPH(this.els.body) +  this.getHeightOfTitleAndButtonBar());
 
         if(height >= 0){
             this.els.body.css('height', height);
@@ -300,7 +300,7 @@ ludo.FramedView = new Class({
 		if (!this.hidden) {
             var height = this.layout.height;
             var newHeight = this.getHeightOfTitleBar();
-            this.els.container.css('height', this.getHeightOfTitleBar());
+            this.$e.css('height', this.getHeightOfTitleBar());
             this.els.body.css('visibility', 'hidden');
             this.hideResizeHandles();
 
@@ -319,7 +319,7 @@ ludo.FramedView = new Class({
 			this.els.buttonBar = this.els.buttonBar || {};
 
 			var el = this.els.buttonBar.el = jQuery('<div class="ludo-view-buttonbar"></div>');
-			this.els.container.append(el);
+			this.$e.append(el);
 
 			this.getEl().addClass('ludo-view-with-buttonbar');
 			this.buttonBar.renderTo = el;

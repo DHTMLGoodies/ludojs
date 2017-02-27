@@ -17,7 +17,7 @@ ludo.form.Label = new Class({
 
     __construct:function(config){
         this.parent(config);
-        this.setConfigParams(config, ['label','labelFor']);
+        this.__params(config, ['label','labelFor']);
     },
 
     ludoDOM:function(){

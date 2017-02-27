@@ -21,7 +21,7 @@ ludo.chart.ScatterDataSource = new Class({
 
     __construct:function(config){
         this.parent(config);
-        this.setConfigParams(config, ['minX','maxX', 'minY','maxY']);
+        this.__params(config, ['minX','maxX', 'minY','maxY']);
 
 
     },

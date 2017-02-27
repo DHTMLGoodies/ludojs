@@ -81,7 +81,7 @@ ludo.form.Element = new Class({
 
         var keys = ['label', 'suffix', 'formCss', 'validator', 'stretchField', 'required', 'twin', 'disabled','submittable',
             'value', 'data'];
-        this.setConfigParams(config, keys);
+        this.__params(config, keys);
 
         this.elementId = ('el-' + this.name).trim();
         this.formCss = defaultConfig.formCss || this.formCss;

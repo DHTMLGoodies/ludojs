@@ -5,7 +5,7 @@ ludo.chart.Outline = new Class({
 
     __construct:function(config){
         this.parent(config);
-        this.setConfigParams(config, ['outline']);
+        this.__params(config, ['outline']);
         this.createOutline();
     },
 

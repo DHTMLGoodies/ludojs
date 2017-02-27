@@ -19,7 +19,7 @@ ludo.chart.ChartValues = new Class({
 
     __construct: function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['orientation', 'styling', 'padding']);
+        this.__params(config, ['orientation', 'styling', 'padding']);
         if (this.orientation == undefined)this.orientation = 'horizontal';
         this.styling = this.styling || {};
         this.nodes = [];

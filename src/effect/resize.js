@@ -79,7 +79,7 @@ ludo.effect.Resize = new Class({
     aspectRatioMinMaxSet:false,
 
     __construct:function (config) {
-        this.setConfigParams(config, ['useShim','minX','maxX','minY','maxY','maxWidth','minWidth','minHeight','maxHeight','preserveAspectRatio']);
+        this.__params(config, ['useShim','minX','maxX','minY','maxY','maxWidth','minWidth','minHeight','maxHeight','preserveAspectRatio']);
         if (config.component) {
             this.component = config.component;
             this.els.applyTo = this.component.getEl();

@@ -13,7 +13,7 @@ ludo.grid.GridHeader = new Class({
 
 	__construct:function (config) {
 		this.parent(config);
-        this.setConfigParams(config, ['columnManager','headerMenu','grid']);
+        this.__params(config, ['columnManager','headerMenu','grid']);
 
 		this.measureCellHeight();
 		this.createDOM();
@@ -22,22 +22,18 @@ ludo.grid.GridHeader = new Class({
 	ludoEvents:function () {
 		this.parent();
         var c = this.columnManager;
-		c.addEvent('resize', this.renderColumns.bind(this));
-		c.addEvent('stretch', this.renderColumns.bind(this));
-		c.addEvent('movecolumn', this.renderColumns.bind(this));
-		c.addEvent('hidecolumn', this.renderColumns.bind(this));
-		c.addEvent('showcolumn', this.renderColumns.bind(this));
+		c.on('resize', this.renderColumns.bind(this));
+		c.on('stretch', this.renderColumns.bind(this));
+		c.on('movecolumn', this.renderColumns.bind(this));
+		c.on('hidecolumn', this.renderColumns.bind(this));
+		c.on('showcolumn', this.renderColumns.bind(this));
 		this.grid.addEvent('render', this.renderColumns.bind(this));
 		this.grid.getDataSource().addEvent('sort', this.updateSortArrow.bind(this));
 	},
 
 	createDOM:function () {
-		this.el = jQuery('<div>');
-		this.el.addClass('ludo-header');
-		this.el.addClass('testing');
+		this.el = jQuery('<div class="ludo-header">');
 		this.el.insertBefore(this.grid.$b().first());
-	//	this.el.inject(this.grid.$b().getFirst(), 'before');
-
 		var countRows = this.columnManager.getCountRows();
 		this.el.css('height', this.cellHeight * countRows + ludo.dom.getMBPH(this.el));
 		this.renderColumns();
@@ -116,11 +112,8 @@ ludo.grid.GridHeader = new Class({
 		el.addClass('ludo-grid-header-cell');
 		el.addClass('ludo-header-' + this.columnManager.getHeaderAlignmentOf(col));
 
-
 		var span = jQuery('<span class="ludo-cell-text">' + this.columnManager.getHeadingFor(col) + '</span>');
 		el.append(span);
-
-
 
 		this.createTopAndBottomBackgrounds(col);
 		this.addDOMForDropTargets(el, col);

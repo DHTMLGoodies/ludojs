@@ -65,7 +65,7 @@ ludo.progress.Bar = new Class({
 
     __construct: function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['animationDuration', 'steps', 'progress', 'borderRadius', 'textSizeRatio', 
+        this.__params(config, ['animationDuration', 'steps', 'progress', 'borderRadius', 'textSizeRatio', 
             'bgStyles',
             'barStyles', 'textStyles', 'bgPattern', 'frontPattern','easing']);
         if (!this.layout.height) {

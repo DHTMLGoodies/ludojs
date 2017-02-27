@@ -1,7 +1,7 @@
-/* Generated Sun Feb 12 0:51:49 CET 2017 */
+/* Generated Mon Feb 27 23:34:08 CET 2017 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.449
+ludoJS - Javascript framework, 1.1.450
 Copyright (C) 2012-2017  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -352,8 +352,7 @@ Owner of ludoJS.com
 }
 
 .ludo-body {
-    overflow-y: auto;
-    overflow-x: hidden;
+    overflow:hidden;
 }
 
 .ludo-menu .ludo-body {
@@ -379,7 +378,6 @@ div.ludo-content-child-of-fullscreen {
 
 .ludo-view {
     overflow: hidden;
-    font-family:arial;
 }
 
 .ludo-richcomponent .ludo-view-resize {
@@ -1019,7 +1017,6 @@ div.ludo-tab-strip-right div.ludo-body {
 }
 
 .ludo-grid-Grid .ludo-body div {
-    font-family: arial, helvetica;
     -moz-user-select: none;
 }
 .ludo-header{

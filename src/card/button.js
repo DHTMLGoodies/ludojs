@@ -22,7 +22,7 @@ ludo.card.Button = new Class({
 
     __construct:function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['autoHide', 'applyTo']);
+        this.__params(config, ['autoHide', 'applyTo']);
         if(config.applyTo && !ludo.get(config.applyTo)){
             this.onCreate.delay(50, this);
         }else{

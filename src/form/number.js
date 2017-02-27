@@ -26,7 +26,7 @@ ludo.form.Number = new Class({
 
     __construct:function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['disableWheel','shiftIncrement','reverseWheel','minValue','maxValue']);
+        this.__params(config, ['disableWheel','shiftIncrement','reverseWheel','minValue','maxValue']);
 
         if (this.minValue !== undefined)this.minValue = parseInt(this.minValue);
         if (this.maxValue !== undefined)this.maxValue = parseInt(this.maxValue);

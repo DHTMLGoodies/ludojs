@@ -40,7 +40,7 @@ ludo.menu.Item = new Class({
     __construct:function (config) {
 
         this.parent(config);
-        this.setConfigParams(config, ['orientation', 'icon', 'record', 'value', 'label', 'action', 'disabled', 'fire']);
+        this.__params(config, ['orientation', 'icon', 'record', 'value', 'label', 'action', 'disabled', 'fire']);
 
         this._html = this._html || this.label;
 

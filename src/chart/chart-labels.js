@@ -22,7 +22,7 @@ ludo.chart.ChartLabels = new Class({
 
     __construct: function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['orientation', 'styling', 'padding','halfInset']);
+        this.__params(config, ['orientation', 'styling', 'padding','halfInset']);
         if (this.orientation == undefined)this.orientation = 'horizontal';
         this.styling = this.styling || {};
         this.textNodes = [];

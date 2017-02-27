@@ -11,7 +11,7 @@ ludo.chart.Ticks = new Class({
 
     __construct: function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['axis', 'vAlign', 'styles']);
+        this.__params(config, ['axis', 'vAlign', 'styles']);
         this.vAlign = this.vAlign || (this.axis == 'x' ? 'top' : 'right');
         this.ticks = [];
         this.styling = this.styling || {};

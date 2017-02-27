@@ -26,7 +26,7 @@ ludo.chart.Line = new Class({
     
     __construct:function(config){
         this.parent(config);
-        this.setConfigParams(config, ["halfInset","lineStyles","showDots"]);
+        this.__params(config, ["halfInset","lineStyles","showDots"]);
 
         
         // this.node.on("mousemove", this.mousemove.bind(this));

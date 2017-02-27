@@ -277,7 +277,7 @@ ludo.chart.DataSource = new Class({
 
 
     __construct: function (config) {
-        this.setConfigParams(config, ['indexStartValueOf', 'minBrightness', 'maxBrightness', 'minSaturation',
+        this.__params(config, ['indexStartValueOf', 'minBrightness', 'maxBrightness', 'minSaturation',
             'maxSaturation', 'shapeOf', 'dataFor', 'sortFn', 'shouldInheritColor', 'childKey', 'valueKey',
             'color', 'valueOf', 'textOf', 'getText', 'max', 'min', 'increments', 'strokeOf', 'strokeOverOf', 'valueForDisplay']);
         this.parent(config);

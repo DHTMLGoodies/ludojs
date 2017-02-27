@@ -47,7 +47,7 @@ ludo.chart.Base = new Class({
 
     __construct: function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['revealAnim', 'revealAnimDirection', 'revealAnimDuration', 'interactive', 'dataSource', 'animate', 'bgColor', 'duration', 'data']);
+        this.__params(config, ['revealAnim', 'revealAnimDirection', 'revealAnimDuration', 'interactive', 'dataSource', 'animate', 'bgColor', 'duration', 'data']);
         this.ds = this.getDataSource();
 
         this.easing = config.easing || ludo.svg.easing.outSine;

@@ -199,7 +199,7 @@ ludo.View = new Class({
             }
         }
         if (config.html != undefined)this._html = config.html;
-        this.setConfigParams(config, keys);
+        this.__params(config, keys);
 
         if (this.renderTo)this.renderTo = jQuery(this.renderTo);
 
@@ -209,8 +209,8 @@ ludo.View = new Class({
     },
 
     insertDOMContainer: function () {
-        if (this.hidden)this.els.container.css('display', 'none');
-        if (this.renderTo)this.renderTo.append(this.els.container);
+        if (this.hidden)this.$e.css('display', 'none');
+        if (this.renderTo)this.renderTo.append(this.$e);
     },
 
     /**
@@ -386,14 +386,14 @@ ludo.View = new Class({
     },
 
     _createDOM: function () {
-        this.els.container = jQuery('<div>');
+        this.els.container = this.$e = jQuery('<div>');
         this.els.body = jQuery('<' + this.tagBody + '>');
-        this.els.container.append(this.els.body);
+        this.$e.append(this.els.body);
     },
 
     _styleDOM: function () {
         var b = this.els.body;
-        var e = this.els.container;
+        var e = this.$e;
         e.addClass('ludo-view');
         b.addClass('ludo-body');
 
@@ -401,8 +401,8 @@ ludo.View = new Class({
 
         b.css('height', '100%');
 
-        if (this.overflow == 'hidden') {
-            b.css('overflow', 'hidden');
+        if (this.overflow != undefined) {
+            b.css('overflow-Y', this.overflow);
         }
 
         if (ludo.util.isTabletOrMobile()) {
@@ -454,7 +454,7 @@ ludo.View = new Class({
      * @memberof ludo.View.prototype
      */
     getEl: function () {
-        return this.els.container ? this.els.container : null;
+        return this.$e ? this.$e : null;
     },
     /**
      * Return reference to the "body" div HTML Element.
@@ -514,8 +514,8 @@ ludo.View = new Class({
      * @return void
      */
     show: function (skipEvents) {
-        if (this.els.container.css('display') === 'none') {
-            this.els.container.css('display', '');
+        if (this.$e.css('display') === 'none') {
+            this.$e.css('display', '');
             this.hidden = false;
         }
 
@@ -654,9 +654,9 @@ ludo.View = new Class({
             // TODO layout properties should not be set here.
             l.pixelWidth = p.width;
             if (!isNaN(l.width))l.width = p.width;
-            var w = p.width - ludo.dom.getMBPW(this.els.container);
+            var w = p.width - ludo.dom.getMBPW(this.$e);
             if (w > 0) {
-                this.els.container.css('width', w);
+                this.$e.css('width', w);
             }
         }
 
@@ -666,9 +666,9 @@ ludo.View = new Class({
                 l.pixelHeight = p.height;
                 if (!isNaN(l.height))l.height = p.height;
             }
-            var h = p.height - ludo.dom.getMBPH(this.els.container);
+            var h = p.height - ludo.dom.getMBPH(this.$e);
             if (h > 0) {
-                this.els.container.css('height', h);
+                this.$e.css('height', h);
             }
         }
 
@@ -701,10 +701,10 @@ ludo.View = new Class({
 
     setPosition: function (pos) {
         if (pos.left !== undefined && pos.left >= 0) {
-            this.els.container.css('left', pos.left);
+            this.$e.css('left', pos.left);
         }
         if (pos.top !== undefined && pos.top >= 0) {
-            this.els.container.css('top', pos.top);
+            this.$e.css('top', pos.top);
         }
     },
 
@@ -725,7 +725,7 @@ ludo.View = new Class({
 
     resizeDOM: function () {
         if (this.layout.pixelHeight > 0) {
-            var height = this.layout.pixelHeight ? this.layout.pixelHeight - ludo.dom.getMBPH(this.els.container) : this.els.container.css('height').replace('px', '');
+            var height = this.layout.pixelHeight ? this.layout.pixelHeight - ludo.dom.getMBPH(this.$e) : this.$e.css('height').replace('px', '');
             height -= ludo.dom.getMBPH(this.els.body);
             if (height <= 0 || isNaN(height)) {
                 return;

@@ -80,7 +80,7 @@ ludo.form.Seekbar = new Class({
 
     __construct:function(config){
         this.parent(config);
-        this.setConfigParams(config, ["increments", "orientation", "reverse", "minValue", "maxValue", "value", "valueListener", "negativeColor", "positiveColor", "needleSize", "barSize"]);
+        this.__params(config, ["increments", "orientation", "reverse", "minValue", "maxValue", "value", "valueListener", "negativeColor", "positiveColor", "needleSize", "barSize"]);
 
         if (config.thumbColor != undefined) {
             if (config.thumbColor.length == 9) {

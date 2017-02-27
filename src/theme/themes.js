@@ -104,6 +104,8 @@ ludo.theme.Themes = new Class({
 
     color:function(colorName){
         var theme = this.getCurrentTheme();
+
+
         if(!theme)return undefined;
         if(this.themes[theme] != undefined){
             return this.themes[theme][colorName];

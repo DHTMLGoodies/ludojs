@@ -117,8 +117,7 @@ ludo.form.Manager = new Class({
         this.view = config.view;
         config.form = config.form || {};
 
-
-        this.setConfigParams(config.form, ['method', 'url', 'hiddenFields']);
+        this.__params(config.form, ['method', 'url', 'hiddenFields']);
         this.hiddenValues = {};
 
         this.configs = {};
@@ -163,13 +162,13 @@ ludo.form.Manager = new Class({
         children.push(this.view);
 
         var c;
+
         for (var i = 0, len = children.length; i < len; i++) {
             c = children[i];
-            if (c['getProgressBarId'] !== undefined) {
-                this.registerProgressBar(c);
-            }
-            else if (c.isFormElement() && c.submittable) {
+            if (c.isFormElement() && c.submittable) {
                 this.registerFormElement(c);
+            }else if(c._btn){
+                c.on('click', this.btnClick.bind(this));
             }
         }
 
@@ -234,6 +233,10 @@ ludo.form.Manager = new Class({
         jQuery.each(json, this.set.bind(this));
     },
 
+    btnClick:function(el, btn){
+        console.log('click');
+        this.fireEvent('btnClick', [btn.name, btn.val()]);
+    },
 
     /**
      * Set value of a form element
@@ -547,7 +550,7 @@ ludo.form.Manager = new Class({
      * @memberof ludo.form.Manager.prototype
      */
     rollback:function(){
-        this.reset();  
+        this.reset();
     },
     /**
      * Reset value of all form Views back to it's commited value.

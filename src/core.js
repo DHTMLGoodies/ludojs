@@ -102,7 +102,7 @@ ludo.Core = new Class({
 	},
 	
 	__construct:function(config){
-        this.setConfigParams(config, ['url','name','controller','module','submodule','stateful','id','useController','plugins']);
+        this.__params(config, ['url','name','controller','module','submodule','stateful','id','useController','plugins']);
 
 		// TODO new code 2016 - custom functions
 		if(config != undefined){
@@ -124,7 +124,7 @@ ludo.Core = new Class({
 		ludo.CmpMgr.registerComponent(this);
 	},
 
-    setConfigParams:function(config, keys){
+    __params:function(config, keys){
         for(var i=0;i<keys.length;i++){
             if(config[keys[i]] !== undefined)this[keys[i]] = config[keys[i]];
         }

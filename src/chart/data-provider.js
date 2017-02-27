@@ -16,7 +16,7 @@ ludo.chart.DataProvider = new Class({
 
     __construct:function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['startColor']);
+        this.__params(config, ['startColor']);
     },
 
     ludoEvents:function () {

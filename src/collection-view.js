@@ -11,7 +11,7 @@ ludo.CollectionView = new Class({
 
     __construct: function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['emptyText']);
+        this.__params(config, ['emptyText']);
     },
 
     ludoEvents: function () {

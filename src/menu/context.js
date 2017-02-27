@@ -51,7 +51,7 @@ ludo.menu.Context = new Class({
 	__construct:function (config) {
 		this.renderTo = jQuery(document.body);
 		this.parent(config);
-		this.setConfigParams(config, ['selector', 'recordType', 'record', 'applyTo','contextEl']);
+		this.__params(config, ['selector', 'recordType', 'record', 'applyTo','contextEl']);
 		if (this.recordType)this.record = { type:this.recordType };
 
 	},

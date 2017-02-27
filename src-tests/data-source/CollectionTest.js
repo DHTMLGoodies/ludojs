@@ -8,11 +8,11 @@ TestCase("CollectionTest", {
 		if (ludo.MyDataSource2 === undefined) {
 			var d = this.getData();
 			ludo.MyDataSource2 = new Class({
-				Extends:ludo.dataSource.Collection,
+				Extends:ludo.dataSource.JSONArray,
 				autoload:true,
 				load:function () {
                     var json = Object.clone(d);
-					this.loadComplete(json.data, json);
+					this.parseNewData(json.data, json);
 				}
 			});
 		}
@@ -24,11 +24,11 @@ TestCase("CollectionTest", {
         if (ludo.MyDataSourceWithData === undefined) {
             var d = this.getData();
             ludo.MyDataSourceWithData = new Class({
-                Extends:ludo.dataSource.Collection,
+                Extends:ludo.dataSource.JSONArray,
                 autoload:false,
                 load:function () {
                     var json = Object.clone(d);
-                    this.loadComplete(json.data, json);
+                    this.parseNewData(json.data, json);
                 }
             });
         }
@@ -41,12 +41,12 @@ TestCase("CollectionTest", {
         if (ludo.MyDataSourceWithDataInSpec === undefined) {
             var d = this.getData();
             ludo.MyDataSourceWithDataInSpec = new Class({
-                Extends:ludo.dataSource.Collection,
+                Extends:ludo.dataSource.JSONArray,
                 autoload:false,
                 data:this.getData().data.slice(0),
                 load:function () {
                     var json = Object.clone(d);
-                    this.loadComplete(json.data, json);
+                    this.parseNewData(json.data, json);
                 }
             });
         }
@@ -287,7 +287,7 @@ TestCase("CollectionTest", {
 	},
 
 	"test should not return records when a match is not found": function(){
-		var c = new ludo.dataSource.Collection();
+		var c = new ludo.dataSource.JSONArray();
 
 		c.addRecord({
 			id : 100,
@@ -303,7 +303,7 @@ TestCase("CollectionTest", {
 	},
 
 	"test should get record by id if it does not exists": function(){
-		var c = new ludo.dataSource.Collection();
+		var c = new ludo.dataSource.JSONArray();
 
 		c.addRecord({
 			id : 100,

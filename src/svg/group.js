@@ -41,7 +41,7 @@ ludo.svg.Group = new Class({
 
     __construct: function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['layout', 'renderTo', 'parentComponent', 'parentGroup', '__rendered']);
+        this.__params(config, ['layout', 'renderTo', 'parentComponent', 'parentGroup', '__rendered']);
 
         this.layout = this.layout || {};
         this.layout.type = 'Canvas';

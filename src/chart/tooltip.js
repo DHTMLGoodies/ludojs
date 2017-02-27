@@ -82,7 +82,7 @@ ludo.chart.Tooltip = new Class({
     __construct: function (config) {
         this.parent(config);
         this.offset = {x: 0,y:0};
-        this.setConfigParams(config, ['tpl', 'boxStyles', 'textStyles','animationDuration']);
+        this.__params(config, ['tpl', 'boxStyles', 'textStyles','animationDuration']);
         this.createDOM();
 
 

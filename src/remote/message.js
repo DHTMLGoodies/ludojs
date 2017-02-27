@@ -33,7 +33,7 @@ ludo.remote.Message = new Class({
 
     __construct:function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['listenTo']);
+        this.__params(config, ['listenTo']);
         if (!ludo.util.isArray(this.listenTo))this.listenTo = [this.listenTo];
 		this.validateListenTo();
 

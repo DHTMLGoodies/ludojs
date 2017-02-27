@@ -1,13 +1,13 @@
 load:
-  - ../../mootools/mootools-core-1.4.5.js
-  - ../../mootools/mootools-more-1.4.0.1.js
+
+  - ../../jquery/jquery-3.1.1.js
   - ../../js/ludojs.js
   - ../../src/data-source/base.js
   - ../../src/data-source/json.js
-  - ../../src/data-source/collection.js
-  - ../../src/data-source/tree-collection.js
-  - ../../src/data-source/collection-search.js
-  - ../../src/data-source/tree-collection-search.js
+  - ../../src/data-source/json-array.js
+  - ../../src/data-source/json-array-search.js
+  - ../../src/data-source/json-tree.js
+  - ../../src/data-source/json-tree-search.js
 
 test:
   - SearchParserTest.js

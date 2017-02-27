@@ -38,7 +38,7 @@ ludo.form.LabelElement = new Class({
 
     __construct: function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['label', 'field']);
+        this.__params(config, ['label', 'field']);
 
         if(!this.label.type)this.label.type='form.Label';
         this.label.labelFor = this.field.name;

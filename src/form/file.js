@@ -105,7 +105,7 @@ ludo.form.File = new Class({
 
 	__construct:function (config) {
 		this.parent(config);
-        this.setConfigParams(config, ['resource','instantUpload','labelButton','labelRemove','labelDelete','buttonWidth']);
+        this.__params(config, ['resource','instantUpload','labelButton','labelRemove','labelDelete','buttonWidth']);
 		if (config.accept) {
 			this.accept = config.accept.toLowerCase().split(/,/g);
 		}

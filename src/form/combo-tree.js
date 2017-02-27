@@ -84,7 +84,7 @@ ludo.form.ComboTree = new Class({
 
     __construct:function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['searchable','inputConfig','treeConfig','emptyText']);
+        this.__params(config, ['searchable','inputConfig','treeConfig','emptyText']);
 
         if (this.treeConfig.type === undefined)this.treeConfig.type = 'tree.Tree';
         this.inputConfig.type = 'form.Text';

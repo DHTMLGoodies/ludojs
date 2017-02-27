@@ -39,7 +39,7 @@ ludo.layout.Tabs = new Class({
 
     __construct: function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['tabPos']);
+        this.__params(config, ['tabPos']);
         this.lm = config.lm;
         this.hiddenTabs = [];
         this.tabTitles = {};

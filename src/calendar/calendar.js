@@ -27,7 +27,7 @@ ludo.calendar.Calendar = new Class({
 
     __construct: function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['inputFormat', 'value', 'minDate', 'maxDate', 'date', 'sundayFirst']);
+        this.__params(config, ['inputFormat', 'value', 'minDate', 'maxDate', 'date', 'sundayFirst']);
 
 
         this.date = this.date || this.value;

@@ -17,7 +17,7 @@ ludo.form.ResetButton = new Class({
 
     __construct:function(config){
         this.parent(config);
-        this.setConfigParams(config, ['applyTo']);
+        this.__params(config, ['applyTo']);
     },
     
     __rendered:function () {

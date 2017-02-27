@@ -46,7 +46,7 @@ ludo.Notification = new Class({
 	__construct:function (config) {
 		config.renderTo = config.renderTo || document.body;
 		
-        this.setConfigParams(config, ['autoRemove','showEffect','hideEffect','effect','effectDuration','duration']);
+        this.__params(config, ['autoRemove','showEffect','hideEffect','effect','effectDuration','duration']);
 		this.showEffect = this.showEffect || this.effect;
 		this.hideEffect = this.hideEffect || this.effect;
 		if (!config.layout && !this.layout) {

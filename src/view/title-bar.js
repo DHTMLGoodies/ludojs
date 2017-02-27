@@ -15,7 +15,7 @@ ludo.view.TitleBar = new Class({
     __construct:function (config) {
         this.parent(config);
 
-        this.setConfigParams(config, ['view', 'buttons']);
+        this.__params(config, ['view', 'buttons']);
 
         if (!this.buttons)this.buttons = this.getDefaultButtons();
 

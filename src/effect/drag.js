@@ -138,7 +138,7 @@ ludo.effect.Drag = new Class({
             });
         }
 
-        this.setConfigParams(config, ['useShim', 'autoHideShim', 'directions', 'delay', 'minX', 'maxX', 'minY', 'maxY',
+        this.__params(config, ['useShim', 'autoHideShim', 'directions', 'delay', 'minX', 'maxX', 'minY', 'maxY',
             'minPos', 'maxPos', 'unit', 'shimCls', 'mouseYOffset', 'mouseXOffset', 'fireEffectEvents']);
     },
 

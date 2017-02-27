@@ -6,7 +6,11 @@
 ludo.layout.Factory = new Class({
 
 	getManager:function(view){
-		return new ludo.layout[this.getLayoutClass(view)](view);
+		var cls = this.getLayoutClass(view);
+		if(ludo.layout[cls] == undefined){
+			console.error("layout class " + cls + " is not valid")
+		}
+		return new ludo.layout[cls](view);
 	},
 
     /**

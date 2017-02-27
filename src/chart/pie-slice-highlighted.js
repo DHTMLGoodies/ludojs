@@ -46,7 +46,7 @@ ludo.chart.PieSliceHighlighted = new Class({
     __construct:function (config) {
         this.parent(config);
 
-        this.setConfigParams(config, ['styles','size']);
+        this.__params(config, ['styles','size']);
 
         this.node = new ludo.svg.Path();
         if(this.styles){

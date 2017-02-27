@@ -13,7 +13,7 @@ ludo.form.DeleteButton = new Class({
 	__construct:function(config){
 		this.parent(config);
 		// TODO create base class for delete, submit and cancel button
-		this.setConfigParams(config, ['applyTo']);
+		this.__params(config, ['applyTo']);
 	},
 
 	__rendered:function () {

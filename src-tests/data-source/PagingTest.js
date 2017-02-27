@@ -91,24 +91,24 @@ TestCase("PagingTest", {
 
 			data.rows = data.data.length;
 			ludo.CustomDataSource = new Class({
-				Extends:ludo.dataSource.Collection,
+				Extends:ludo.dataSource.JSONArray,
 				autoload:true,
 				load:function () {
 					this.fireEvent('beforeload');
                     var json = Object.clone(data);
-					this.loadComplete(json.data, json);
+					this.parseNewData(json.data, json);
 				}
 			});
 		}
 	},
 
-	getCollection:function (config) {
+	getJSONArray:function (config) {
 		config = config || {};
 		return new ludo.CustomDataSource(config);
 	},
 	"test_should_be_able_to_add_paging":function () {
 		// given
-		var c = this.getCollection({
+		var c = this.getJSONArray({
 			paging:{
 				size:10,
 				remotePaging:true
@@ -125,7 +125,7 @@ TestCase("PagingTest", {
 	},
 	"test_should_only_return_paged_size_of_data_from_get_data":function () {
 		// given
-		var c = this.getCollection({
+		var c = this.getJSONArray({
 			paging:{
 				size:10
 			}
@@ -138,7 +138,7 @@ TestCase("PagingTest", {
 	},
 	"test_should_send_sorting_when_paging_on_server":function () {
 		// given
-		var c = this.getCollection({
+		var c = this.getJSONArray({
 			paging:{
 				size:10,
 				remotePaging:true
@@ -156,7 +156,7 @@ TestCase("PagingTest", {
 	},
 	"test_should_load_data_when_sorting_and_paging_on_server":function () {
 		// given
-		var c = this.getCollection({
+		var c = this.getJSONArray({
 			paging:{
 				size:10,
 				remotePaging:true
@@ -175,7 +175,7 @@ TestCase("PagingTest", {
 	},
 	"test_should_be_able_to_show_next_records":function () {
 		// given
-		var c = this.getCollection({
+		var c = this.getJSONArray({
 			paging:{
 				size:10
 			}
@@ -193,7 +193,7 @@ TestCase("PagingTest", {
 	},
 	"test_should_set_offset_to_zero_when_sorting":function () {
 		// given
-		var c = this.getCollection({
+		var c = this.getJSONArray({
 			paging:{
 				size:10
 			}
@@ -208,7 +208,7 @@ TestCase("PagingTest", {
 	},
 	"test_should_return_total_count_of_records_on_server_on_get_count":function () {
 		// given
-		var c = this.getCollection({
+		var c = this.getJSONArray({
 			paging:{
 				size:10
 			}
@@ -221,7 +221,7 @@ TestCase("PagingTest", {
 	},
 	"test_should_be_able_to_go_to_last_page":function () {
 		// given
-		var c = this.getCollection({
+		var c = this.getJSONArray({
 			paging:{
 				size:10
 			}
@@ -235,7 +235,7 @@ TestCase("PagingTest", {
 	},
 	"test_should_fire_last_page_event_when_going_to_last_page":function () {
 		// given
-		var c = this.getCollection({
+		var c = this.getJSONArray({
 			paging:{
 				size:50
 			}
@@ -254,7 +254,7 @@ TestCase("PagingTest", {
 	"test_should_not_be_able_to_go_to_next_page_when_on_last_page":function () {
 
 		// given
-		var c = this.getCollection({
+		var c = this.getJSONArray({
 			paging:{
 				size:50
 			}
@@ -273,7 +273,7 @@ TestCase("PagingTest", {
 	},
 	"test_should_be_able_to_go_to_previous_page":function () {
 		// given
-		var c = this.getCollection({
+		var c = this.getJSONArray({
 			paging:{
 				size:10
 			}
@@ -290,7 +290,7 @@ TestCase("PagingTest", {
 	},
 	"test_should_not_be_able_to_go_to_previous_page_when_on_first_page":function () {
 		// given
-		var c = this.getCollection({
+		var c = this.getJSONArray({
 			paging:{
 				size:10
 			}
@@ -308,7 +308,7 @@ TestCase("PagingTest", {
 	},
 	"test_should_be_able_to_go_to_first_page":function () {
 		// given
-		var c = this.getCollection({
+		var c = this.getJSONArray({
 			paging:{
 				size:10
 			}
@@ -325,7 +325,7 @@ TestCase("PagingTest", {
 	},
 	"test_should_be_able_to_get_number_of_pages":function () {
 		// given
-		var c = this.getCollection({
+		var c = this.getJSONArray({
 			paging:{
 				size:10
 			}
@@ -336,7 +336,7 @@ TestCase("PagingTest", {
 	},
 	"test_should_be_able_to_go_to_a_page":function () {
 		// given
-		var c = this.getCollection({
+		var c = this.getJSONArray({
 			paging:{
 				size:10
 			}
@@ -351,7 +351,7 @@ TestCase("PagingTest", {
 	},
 	"test_should_fire_not_last_page_event_when_moving_away_from_last_page":function () {
 		// given
-		var c = this.getCollection({
+		var c = this.getJSONArray({
 			paging:{
 				size:10
 			}
@@ -370,7 +370,7 @@ TestCase("PagingTest", {
 	},
 	"test_should_fire_not_first_page_event_when_moving_away_from_first_page":function () {
 		// given
-		var c = this.getCollection({
+		var c = this.getJSONArray({
 			paging:{
 				size:10
 			}
@@ -388,7 +388,7 @@ TestCase("PagingTest", {
 	},
 	"test_should_be_able_to_have_cache":function () {
 		// given
-		var c = this.getCollection({
+		var c = this.getJSONArray({
 			paging:{
 				size:10,
 				cache:true,
@@ -407,7 +407,7 @@ TestCase("PagingTest", {
 	},
 	"test_should_be_able_to_go_to_next_page_when_not_using_page_query":function () {
 		// given
-		var c = this.getCollection({
+		var c = this.getJSONArray({
 			paging:{
 				size:10,
 				remotePaging:false
@@ -423,7 +423,7 @@ TestCase("PagingTest", {
 	},
 	"test_should_be_able_to_go_to_page_when_page_query_is_false":function () {
 		// given
-		var c = this.getCollection({
+		var c = this.getJSONArray({
 			paging:{
 				size:10,
 				remotePaging:false

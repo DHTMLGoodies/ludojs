@@ -22,7 +22,7 @@ ludo.form.Date = new Class({
 
     __construct: function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['displayFormat', 'inputFormat']);
+        this.__params(config, ['displayFormat', 'inputFormat']);
 
         this.displayFormat = this.displayFormat.replace(/([a-z])/gi, '%$1');
         this.inputFormat = this.inputFormat.replace(/([a-z])/gi, '%$1');

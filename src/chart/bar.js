@@ -28,7 +28,7 @@ ludo.chart.Bar = new Class({
 
     __construct: function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['outline', 'bgLines', 'orientation','stacked']);
+        this.__params(config, ['outline', 'bgLines', 'orientation','stacked']);
 
         this.barSize = config.barSize || .8;
         this.lineIncrement = config.lineIncrement || 10;

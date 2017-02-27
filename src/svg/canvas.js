@@ -26,7 +26,7 @@ ludo.svg.Canvas = new Class({
 		config.attr = Object.merge(config.attr, this.defaultProperties);
 		this.parent(config);
 
-        this.setConfigParams(config, ['renderTo','title','description']);
+        this.__params(config, ['renderTo','title','description']);
 
 		if(this.title)this.createTitle();
 		if(this.description)this.createDescription();

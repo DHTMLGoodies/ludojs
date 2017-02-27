@@ -13,7 +13,7 @@ ludo.chart.Fragment = new Class({
 
     __construct:function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['record','parentComponent']);
+        this.__params(config, ['record','parentComponent']);
         var s = this.parentComponent.getSize();
         this.area = {
             x: 0, y: 0, width: s.x, height: s.y

@@ -330,8 +330,7 @@
 }
 
 .ludo-body {
-    overflow-y: auto;
-    overflow-x: hidden;
+    overflow:hidden;
 }
 
 .ludo-menu .ludo-body {
@@ -357,7 +356,6 @@ div.ludo-content-child-of-fullscreen {
 
 .ludo-view {
     overflow: hidden;
-    font-family:arial;
 }
 
 .ludo-richcomponent .ludo-view-resize {

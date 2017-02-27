@@ -12,7 +12,7 @@ ludo.chart.Gauge = new Class({
 
     __construct:function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['startOffset', 'endOffset','min','max']);
+        this.__params(config, ['startOffset', 'endOffset','min','max']);
     },
 
     render:function () {

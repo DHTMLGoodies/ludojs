@@ -26,7 +26,7 @@ ludo.menu.Button = new Class({
 
     __construct: function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['alwaysVisible', 'region', 'renderTo', 'menu', 'autoPosition', 'toggleOnClick']);
+        this.__params(config, ['alwaysVisible', 'region', 'renderTo', 'menu', 'autoPosition', 'toggleOnClick']);
     },
 
     ludoEvents: function () {

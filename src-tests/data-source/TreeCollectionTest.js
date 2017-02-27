@@ -1,4 +1,4 @@
-TestCase("TreeCollection", {
+TestCase("JSONTree", {
 
 	"test should be able to get children":function () {
 		// given
@@ -163,11 +163,11 @@ TestCase("TreeCollection", {
 		if (ludo.MyDataSource3 === undefined) {
 			var d = this.getData();
 			ludo.MyDataSource3 = new Class({
-				Extends:ludo.dataSource.TreeCollection,
+				Extends:ludo.dataSource.JSONTree,
 				autoload:true,
 				load:function () {
                     var data = Object.clone(d);
-					this.loadComplete(data.data,data);
+					this.parseNewData(data.data, data);
 				}
 			});
 		}

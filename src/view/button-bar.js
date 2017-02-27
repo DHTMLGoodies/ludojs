@@ -21,7 +21,7 @@ ludo.view.ButtonBar = new Class({
 
     __construct:function (config) {
 
-        this.setConfigParams(config, ['align','component','buttonBarCss']);
+        this.__params(config, ['align','component','buttonBarCss']);
         config.children = this.getValidChildren(config.children);
         if (this.align == 'right' || config.align == 'center') {
             config.children = this.getItemsWithSpacer(config.children);

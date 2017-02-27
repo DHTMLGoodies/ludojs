@@ -62,7 +62,7 @@ ludo.form.OnOff = new Class({
 
     __construct:function(config){
         this.parent(config);
-        this.setConfigParams(config, ["textOn", "textOff", "trackColorOn", "trackColorOff",
+        this.__params(config, ["textOn", "textOff", "trackColorOn", "trackColorOff",
             "textColorOn", "textColorOff", "listeners", "trackBorderColor", "textSizeRatio","checked",
         "valOn","valOff"]);
     },

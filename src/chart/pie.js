@@ -138,7 +138,7 @@ ludo.chart.Pie = new Class({
 
     __construct:function(config){
         this.parent(config);
-        this.setConfigParams(config, ['highlightSize']);
+        this.__params(config, ['highlightSize']);
 
 
     },

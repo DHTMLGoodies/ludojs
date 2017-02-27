@@ -25,7 +25,7 @@ ludo.chart.Text = new Class({
 
     __construct: function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['rotate', 'text', 'styling', 'anchor']);
+        this.__params(config, ['rotate', 'text', 'styling', 'anchor']);
         if (this.anchor == undefined) {
             this.anchor = [0.5, 0.5];
         }

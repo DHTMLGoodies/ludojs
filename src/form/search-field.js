@@ -27,7 +27,7 @@ ludo.form.SearchField = new Class({
 
 	__construct:function (config) {
 		this.parent(config);
-        this.setConfigParams(config, ['searchIn','delay','searchFn','remote']);
+        this.__params(config, ['searchIn','delay','searchFn','remote']);
 
 		if (this.searchFn !== undefined)this.searchFn = this.searchFn.bind(this);
 		this.addEvent('key', this.queue.bind(this));

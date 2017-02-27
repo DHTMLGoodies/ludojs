@@ -106,7 +106,7 @@ ludo.dataSource.JSONArray = new Class({
 
     __construct: function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['searchConfig', 'sortFn', 'primaryKey', 'sortedBy', 'paging', 'selected']);
+        this.__params(config, ['searchConfig', 'sortFn', 'primaryKey', 'sortedBy', 'paging', 'selected']);
 
         if (this.primaryKey && !ludo.util.isArray(this.primaryKey))this.primaryKey = [this.primaryKey];
         if (this.paging) {
@@ -241,7 +241,7 @@ ludo.dataSource.JSONArray = new Class({
             this.loadOrGetFromCache();
         } else {
             var data = this._getData();
-            if(!data)return this;
+            if (!data)return this;
             data.sort(this.getSortFnFor(column, order));
             this.fireEvent('change');
         }
@@ -291,7 +291,7 @@ ludo.dataSource.JSONArray = new Class({
      *
      * });
      */
-    setSortFn:function(column, sortFns){
+    setSortFn: function (column, sortFns) {
 
         this.sortFn[column] = sortFns;
     },
@@ -362,7 +362,6 @@ ludo.dataSource.JSONArray = new Class({
         if (rec)return rec;
 
         var searchMethod = ludo.util.isObject(search) ? 'isRecordMatchingSearch' : 'hasMatchInPrimaryKey';
-
 
         for (var i = 0; i < this.data.length; i++) {
             if (this[searchMethod](this.data[i], search)) {
@@ -800,10 +799,8 @@ ludo.dataSource.JSONArray = new Class({
 
     firePageEvents: function (skipState) {
         if (this.isOnLastPage()) {
-
             this.fireEvent('lastPage');
         } else {
-
             this.fireEvent('notLastPage');
         }
 
@@ -811,7 +808,6 @@ ludo.dataSource.JSONArray = new Class({
             this.fireEvent('firstPage');
 
         } else {
-
             this.fireEvent('notFirstPage');
         }
 
@@ -919,8 +915,10 @@ ludo.dataSource.JSONArray = new Class({
 
     parseNewData: function (data, json) {
         // TODO refactor this
-        if (json != undefined && this.paging && json.rows !== undefined)this.paging.rows = json.rows;
-        if (json != undefined && this.paging && json.response && json.response.rows !== undefined)this.paging.rows = json.response.rows;
+        if (json != undefined) {
+            if (this.paging && json.rows !== undefined)this.paging.rows = json.rows;
+            if (this.paging && json.response && json.response.rows !== undefined)this.paging.rows = json.response.rows;
+        }
         this.parent(data, json);
 
         this.fireEvent('count', this.getCount());
@@ -1025,8 +1023,9 @@ ludo.dataSource.JSONArray = new Class({
     },
 
     addSearcherEvents: function () {
-        this.searcher.addEvent('search', this.afterSearch.bind(this));
-        this.searcher.addEvent('deleteSearch', this.afterSearch.bind(this));
+        var s = this.searcher;
+        s.on('search', this.afterSearch.bind(this));
+        s.on('deleteSearch', this.afterSearch.bind(this));
     },
 
     hasSearchResult: function () {

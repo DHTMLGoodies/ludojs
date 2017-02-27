@@ -74,7 +74,7 @@ ludo.calendar.TimePicker = new Class({
 
     __construct: function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['hours', 'minutes','handColor', 'minuteDotColor', 'clockBackground','handTextColor',
+        this.__params(config, ['hours', 'minutes','handColor', 'minuteDotColor', 'clockBackground','handTextColor',
         'hourColor', 'minuteColor']);
 
         var d = new Date();

@@ -29,7 +29,7 @@ ludo.dataSource.JSONArraySearch = new Class({
 
 	__construct:function (config) {
 		this.parent(config);
-        this.setConfigParams(config, ['dataSource','index','delay']);
+        this.__params(config, ['dataSource','index','delay']);
 		this.searchParser = new ludo.dataSource.SearchParser();
 		this.clear();
 	},

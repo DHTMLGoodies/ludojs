@@ -15,12 +15,12 @@ ludo.grid.ColumnMove = new Class({
 
 	__construct:function (config) {
 		this.parent(config);
-        this.setConfigParams(config, ['gridHeader','columnManager']);
+        this.__params(config, ['gridHeader','columnManager']);
 	},
 
 	ludoEvents:function(){
 		this.parent();
-		this.addEvent('createShim', this.setZIndex.bind(this));
+		this.on('createShim', this.setZIndex.bind(this));
 	},
 
 	setZIndex:function(shim){

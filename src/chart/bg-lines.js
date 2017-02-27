@@ -14,7 +14,7 @@ ludo.chart.BgLines = new Class({
         this.lines = {
             x:[],y:[]
         };
-        this.setConfigParams(config, ['x','y']);
+        this.__params(config, ['x','y']);
     },
 
 

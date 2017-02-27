@@ -63,7 +63,7 @@ ludo.ListView = new Class({
 
     __construct: function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['swipable', 'itemRenderer', 'backSideLeft', 'backSideRight', 'backSideUndo', 'undoTimeout']);
+        this.__params(config, ['swipable', 'itemRenderer', 'backSideLeft', 'backSideRight', 'backSideUndo', 'undoTimeout']);
         this.renderedMap = {};
         this.on('rendered', this.render.bind(this));
 
@@ -312,7 +312,6 @@ ludo.ListView = new Class({
         if (this.availHeight == undefined) {
             this.availHeight = this.$b().height();
         }
-        var s = new Date().getTime();
         this.parent();
         var b = this.nodeContainer();
         b.html('');
@@ -346,8 +345,6 @@ ludo.ListView = new Class({
         }
 
         this.itemsRendered = true;
-
-        ludo.util.log('time to render list ' + (new Date().getTime() - s));
     },
 
     renderItem: function (i, item, html) {

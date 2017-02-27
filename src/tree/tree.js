@@ -118,7 +118,7 @@ ludo.tree.Tree = new Class({
 
 	__construct:function(config){
 		this.parent(config);
-		this.setConfigParams(config, ['defaults','categoryConfig','categoryKey']);
+		this.__params(config, ['defaults','categoryConfig','categoryKey']);
 	},
 
 	ludoEvents:function () {

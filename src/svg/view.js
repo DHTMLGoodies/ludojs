@@ -34,7 +34,7 @@ ludo.svg.View = new Class({
 
     __construct: function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['tag', 'attr']);
+        this.__params(config, ['tag', 'attr']);
         this.node = new ludo.svg.Node(this.tag, this.attr);
     },
 

@@ -106,7 +106,7 @@ ludo.form.Button = new Class({
     selected:false,
 
     overflow:'hidden',
-
+    _btn:true,
     /*
      * Path to button icon
      * @attribute {String} icon
@@ -148,7 +148,7 @@ ludo.form.Button = new Class({
         this.layout.width = this.layout.width || Math.max(len * 10, 80);
 
 
-        this.setConfigParams(config, ['size','menu','icon','toggle','disableOnInvalid','defaultSubmit','disabled','selected','formView','iconPressed']);
+        this.__params(config, ['size','menu','icon','toggle','disableOnInvalid','defaultSubmit','disabled','selected','formView','iconPressed']);
 
         if (config.toggleGroup !== undefined) {
             if (ludo.util.type(config.toggleGroup) === 'string') {

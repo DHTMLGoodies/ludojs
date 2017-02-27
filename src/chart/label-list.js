@@ -41,7 +41,7 @@ ludo.chart.LabelList = new Class({
 
     __construct:function(config){
         this.parent(config);
-        this.setConfigParams(config, ['orientation', 'textStyles', 'boxStyles', 'textStylesOver','boxStylesOver']);
+        this.__params(config, ['orientation', 'textStyles', 'boxStyles', 'textStylesOver','boxStylesOver']);
     },
 
     render:function(){

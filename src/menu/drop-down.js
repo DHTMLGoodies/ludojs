@@ -11,7 +11,7 @@ ludo.menu.DropDown = new Class({
     __construct:function (config) {
         config.renderTo = document.body;
         this.parent(config);
-		this.setConfigParams(config, ['applyTo']);
+		this.__params(config, ['applyTo']);
 		this.layout.below = this.layout.below || this.applyTo;
 		this.layout.alignLeft = this.layout.alignLeft || this.applyTo;
     },

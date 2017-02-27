@@ -331,8 +331,7 @@
 }
 
 .ludo-body {
-    overflow-y: auto;
-    overflow-x: hidden;
+    overflow:hidden;
 }
 
 .ludo-menu .ludo-body {
@@ -358,7 +357,6 @@ div.ludo-content-child-of-fullscreen {
 
 .ludo-view {
     overflow: hidden;
-    font-family:arial;
 }
 
 .ludo-richcomponent .ludo-view-resize {
@@ -998,7 +996,6 @@ div.ludo-tab-strip-right div.ludo-body {
 }
 
 .ludo-grid-Grid .ludo-body div {
-    font-family: arial, helvetica;
     -moz-user-select: none;
 }
 .ludo-header{

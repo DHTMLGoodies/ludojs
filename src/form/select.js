@@ -53,7 +53,7 @@ ludo.form.Select = new Class({
 
     __construct: function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['emptyItem', 'options', 'valueKey', 'textKey']);
+        this.__params(config, ['emptyItem', 'options', 'valueKey', 'textKey']);
         if (!this.emptyItem && this.inlineLabel) {
             this.emptyItem = {};
             this.emptyItem[this.textKey] = this.inlineLabel;

@@ -27,7 +27,7 @@ ludo.dialog.Prompt = new Class({
                 }
             ]
         }
-        this.setConfigParams(config, ['label','value','inputConfig']);
+        this.__params(config, ['label','value','inputConfig']);
         this.parent(config);
     },
 

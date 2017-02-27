@@ -47,7 +47,7 @@ ludo.form.Text = new Class({
         this.parent(config);
         
         var keys = ['placeholder', 'selectOnFocus', 'regex', 'minLength', 'maxLength', 'defaultValue', 'autoComplete', 'validateKeyStrokes', 'ucFirst', 'ucWords', 'readonly'];
-        this.setConfigParams(config, keys);
+        this.__params(config, keys);
         if (this.regex && ludo.util.isString(this.regex)) {
             var tokens = this.regex.split(/\//g);
             var flags = tokens.length > 1 ? tokens.pop() : '';

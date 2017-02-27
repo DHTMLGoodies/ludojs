@@ -31,7 +31,7 @@ ludo.form.Spinner = new Class({
 
     __construct:function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['increment', 'decimals']);
+        this.__params(config, ['increment', 'decimals']);
     },
 
     mode:{},

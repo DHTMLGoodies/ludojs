@@ -43,7 +43,7 @@ ludo.ludoDB.Factory = new Class({
 
     __construct:function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['url', 'resource', 'arguments']);
+        this.__params(config, ['url', 'resource', 'arguments']);
         if (this.arguments && !ludo.util.isArray(this.arguments)) {
             this.arguments = [this.arguments];
         }

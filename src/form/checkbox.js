@@ -23,7 +23,7 @@ ludo.form.Checkbox = new Class({
         config = config || {};
         config.value = config.value || '1';
         this.parent(config);
-        this.setConfigParams(config, ['inputType','image','checked']);
+        this.__params(config, ['inputType','image','checked']);
         this.initialValue = this.constructorValue = this.checked ? this.value : '';
     },
 

@@ -2,13 +2,13 @@ TestCase("CollectionSearch", {
 	getCollection:function (config) {
 		if (ludo.MyDataSource === undefined) {
 			ludo.MyDataSource = new Class({
-				Extends:ludo.dataSource.Collection,
+				Extends:ludo.dataSource.JSONArray,
 				autoload:true,
 				load:function () {
                     var json = Object.clone(data);
-					this.loadComplete(json.data, json);
+					this.parseNewData(json.data, json);
 				}
-			});
+			}); 
 		}
 		config = config || {};
 		return new ludo.MyDataSource(config);

@@ -49,7 +49,7 @@ ludo.progress.Donut = new Class({
 
     __construct: function (config) {
         this.parent(config);
-        this.setConfigParams(config, ['innerRadius', 'outerRadius', 'startAngle','bgPattern2','outerPattern']);
+        this.__params(config, ['innerRadius', 'outerRadius', 'startAngle','bgPattern2','outerPattern']);
     },
 
 

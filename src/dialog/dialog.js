@@ -50,7 +50,7 @@ ludo.dialog.Dialog = new Class({
 		}
 		this.parent(config);
 	
-        this.setConfigParams(config, ['modal','autoRemove','autoHideOnBtnClick']);
+        this.__params(config, ['modal','autoRemove','autoHideOnBtnClick']);
 	},
 
 	ludoDOM:function () {
