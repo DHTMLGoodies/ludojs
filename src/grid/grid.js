@@ -635,7 +635,9 @@ ludo.grid.Grid = new Class({
         }
 
         var totalWidth = this.cm.getTotalWidth();
-        this.els.dataContainerTop.css('width', Math.min(Math.floor(this.$b().width()), totalWidth));
+        this.els.dataContainerTop.css('width', totalWidth);
+        // this.els.dataContainerTop.css('width', Math.min(Math.floor(this.$b().width()), totalWidth));
+
         this.sb.h.setContentSize(totalWidth);
 
     },

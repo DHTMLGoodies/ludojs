@@ -1,7 +1,7 @@
-/* Generated Mon Feb 27 23:37:23 CET 2017 */
+/* Generated Thu Mar 2 20:26:38 CET 2017 */
 /************************************************************************************************************
 @fileoverview
-ludoJS - Javascript framework, 1.1.451
+ludoJS - Javascript framework, 1.1.452
 Copyright (C) 2012-2017  ludoJS.com, Alf Magne Kalleland
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -27055,7 +27055,9 @@ ludo.grid.Grid = new Class({
         }
 
         var totalWidth = this.cm.getTotalWidth();
-        this.els.dataContainerTop.css('width', Math.min(Math.floor(this.$b().width()), totalWidth));
+        this.els.dataContainerTop.css('width', totalWidth);
+        // this.els.dataContainerTop.css('width', Math.min(Math.floor(this.$b().width()), totalWidth));
+
         this.sb.h.setContentSize(totalWidth);
 
     },
